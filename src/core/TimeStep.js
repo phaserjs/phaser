@@ -436,11 +436,14 @@ var TimeStep = new Class({
      *
      * @method Phaser.Core.TimeStep#step
      * @since 3.0.0
-     * 
-     * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
      */
-    step: function (time)
+    step: function ()
     {
+        //  Because the timestamp passed in from raf represents the beginning of the main thread frame that we’re currently in,
+        //  not the actual time now. As we want to compare this time value against Event timeStamps and the like, we need a
+        //  more accurate one:
+        var time = window.performance.now();
+
         var before = time - this.lastTime;
 
         if (before < 0)
@@ -562,7 +565,7 @@ var TimeStep = new Class({
      */
     tick: function ()
     {
-        this.step(window.performance.now());
+        this.step();
     },
 
     /**
