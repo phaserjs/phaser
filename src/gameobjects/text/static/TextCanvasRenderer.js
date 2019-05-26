@@ -21,10 +21,12 @@
  */
 var TextCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    if (src.text !== '')
+    if ((src.width === 0) || (src.height === 0))
     {
-        renderer.batchSprite(src, src.frame, camera, parentMatrix);
+        return;
     }
+
+    renderer.batchSprite(src, src.frame, camera, parentMatrix);
 };
 
 module.exports = TextCanvasRenderer;

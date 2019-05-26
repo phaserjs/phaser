@@ -185,7 +185,7 @@ var Text = new Class({
          * @private
          * @since 3.12.0
          */
-        this._text = '';
+        this._text = undefined;
 
         /**
          * Specify a padding value which is added to the line width and height when calculating the Text size.
