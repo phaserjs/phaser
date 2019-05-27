@@ -3,9 +3,7 @@
  *
  *     key.length * frame.length * frameQuantity * (yoyo ? 2 : 1) * (1 + repeat)
  *
- * In the simplest case, 1 + `repeat` objects will be created.
- *
- * If `max` is positive, then the total created will not exceed `max`.
+ * If `max` is nonzero, then the total created will not exceed `max`.
  *
  * `key` is required. {@link Phaser.GameObjects.Group#defaultKey} is not used.
  *
