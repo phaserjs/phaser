@@ -460,6 +460,7 @@ var TextureManager = new Class({
     {
         if (skipCache === undefined) { skipCache = false; }
 
+
         if (skipCache)
         {
             return new CanvasTexture(this, key, source, source.width, source.height);
@@ -469,9 +470,11 @@ var TextureManager = new Class({
             this.list[key] = new CanvasTexture(this, key, source, source.width, source.height);
 
             this.emit(Events.ADD, key, this.list[key]);
-            
+
             return this.list[key];
         }
+
+        return null;
     },
 
     /**
