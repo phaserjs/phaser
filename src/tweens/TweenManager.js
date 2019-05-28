@@ -193,7 +193,7 @@ var TweenManager = new Class({
      * @method Phaser.Tweens.TweenManager#create
      * @since 3.0.0
      *
-     * @param {object} config - The configuration object for the Tween as per {@link Phaser.Tweens.Builders.TweenBuilder}.
+     * @param {Phaser.Types.Tweens.TweenBuilderConfig} config - The configuration object for the Tween.
      *
      * @return {Phaser.Tweens.Tween} The created Tween object.
      */
@@ -208,7 +208,7 @@ var TweenManager = new Class({
      * @method Phaser.Tweens.TweenManager#add
      * @since 3.0.0
      *
-     * @param {object} config - The configuration object for the Tween as per the {@link Phaser.Tweens.Builders.TweenBuilder}.
+     * @param {Phaser.Types.Tweens.TweenBuilderConfig} config - The configuration object for the Tween.
      *
      * @return {Phaser.Tweens.Tween} The created Tween.
      */
