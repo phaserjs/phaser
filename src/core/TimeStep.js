@@ -185,37 +185,39 @@ var TimeStep = new Class({
         this.forceSetTimeOut = GetValue(config, 'forceSetTimeOut', false);
 
         /**
-         * [description]
+         * The time, calculated at the start of the current step, as smoothed by the delta value.
          *
          * @name Phaser.Core.TimeStep#time
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
         this.time = 0;
 
         /**
-         * [description]
+         * The time at which the game started running. This value is adjusted if the game is then
+         * paused and resumes.
          *
          * @name Phaser.Core.TimeStep#startTime
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
         this.startTime = 0;
 
         /**
-         * [description]
+         * The time, as returned by `performance.now` of the previous step.
          *
          * @name Phaser.Core.TimeStep#lastTime
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
         this.lastTime = 0;
 
         /**
-         * [description]
+         * The current frame the game is on. This counter is incremented once every game step, regardless of how much
+         * time has passed and is unaffected by delta smoothing.
          *
          * @name Phaser.Core.TimeStep#frame
          * @type {integer}
@@ -226,7 +228,8 @@ var TimeStep = new Class({
         this.frame = 0;
 
         /**
-         * [description]
+         * Is the browser currently considered in focus by the Page Visibility API?
+         * This value is set in the `blur` method, which is called automatically by the Game instance.
          *
          * @name Phaser.Core.TimeStep#inFocus
          * @type {boolean}
@@ -237,10 +240,10 @@ var TimeStep = new Class({
         this.inFocus = true;
 
         /**
-         * [description]
+         * The timestamp at which the game became paused, as determined by the Page Visibility API.
          *
          * @name Phaser.Core.TimeStep#_pauseTime
-         * @type {integer}
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -248,7 +251,7 @@ var TimeStep = new Class({
         this._pauseTime = 0;
 
         /**
-         * [description]
+         * An internal counter to allow for the browser 'cooling down' after coming back into focus.
          *
          * @name Phaser.Core.TimeStep#_coolDown
          * @type {integer}
@@ -259,7 +262,7 @@ var TimeStep = new Class({
         this._coolDown = 0;
 
         /**
-         * [description]
+         * The delta time, in ms, since the last game step. This is a clamped and smoothed average value.
          *
          * @name Phaser.Core.TimeStep#delta
          * @type {integer}
@@ -269,7 +272,7 @@ var TimeStep = new Class({
         this.delta = 0;
 
         /**
-         * [description]
+         * Internal index of the delta history position.
          *
          * @name Phaser.Core.TimeStep#deltaIndex
          * @type {integer}
@@ -279,7 +282,7 @@ var TimeStep = new Class({
         this.deltaIndex = 0;
 
         /**
-         * [description]
+         * Internal array holding the previous delta values, used for delta smoothing.
          *
          * @name Phaser.Core.TimeStep#deltaHistory
          * @type {integer[]}
@@ -288,7 +291,9 @@ var TimeStep = new Class({
         this.deltaHistory = [];
 
         /**
-         * [description]
+         * The maximum number of delta values that are retained in order to calculate a smoothed moving average.
+         * 
+         * This can be changed in the Game Config via the `fps.deltaHistory` property. The default is 10.
          *
          * @name Phaser.Core.TimeStep#deltaSmoothingMax
          * @type {integer}
@@ -298,7 +303,10 @@ var TimeStep = new Class({
         this.deltaSmoothingMax = GetValue(config, 'deltaHistory', 10);
 
         /**
-         * [description]
+         * The number of frames that the cooldown is set to after the browser panics over the FPS rate, usually
+         * as a result of switching tabs and regaining focus.
+         * 
+         * This can be changed in the Game Config via the `fps.panicMax` property. The default is 120.
          *
          * @name Phaser.Core.TimeStep#panicMax
          * @type {integer}
@@ -309,8 +317,9 @@ var TimeStep = new Class({
 
         /**
          * The actual elapsed time in ms between one update and the next.
-         * Unlike with `delta` no smoothing, capping, or averaging is applied to this value.
-         * So please be careful when using this value in calculations.
+         * 
+         * Unlike with `delta`, no smoothing, capping, or averaging is applied to this value.
+         * So please be careful when using this value in math calculations.
          *
          * @name Phaser.Core.TimeStep#rawDelta
          * @type {number}
@@ -318,10 +327,21 @@ var TimeStep = new Class({
          * @since 3.0.0
          */
         this.rawDelta = 0;
+
+        /**
+         * The time, as returned by `performance.now` at the very start of the current step.
+         * This can differ from the `time` value in that it isn't calculated based on the delta value.
+         *
+         * @name Phaser.Core.TimeStep#now
+         * @type {number}
+         * @default 0
+         * @since 3.18.0
+         */
+        this.now = 0;
     },
 
     /**
-     * Called when the DOM window.onBlur event triggers.
+     * Called by the Game instance when the DOM window.onBlur event triggers.
      *
      * @method Phaser.Core.TimeStep#blur
      * @since 3.0.0
@@ -332,7 +352,7 @@ var TimeStep = new Class({
     },
 
     /**
-     * Called when the DOM window.onFocus event triggers.
+     * Called by the Game instance when the DOM window.onFocus event triggers.
      *
      * @method Phaser.Core.TimeStep#focus
      * @since 3.0.0
@@ -369,7 +389,8 @@ var TimeStep = new Class({
     },
 
     /**
-     * [description]
+     * Resets the time, lastTime, fps averages and delta history.
+     * Called automatically when a browser sleeps them resumes.
      *
      * @method Phaser.Core.TimeStep#resetDelta
      * @since 3.0.0
@@ -382,7 +403,6 @@ var TimeStep = new Class({
         this.lastTime = now;
         this.nextFpsUpdate = now + 1000;
         this.framesThisSecond = 0;
-        this.frame = 0;
 
         //  Pre-populate smoothing array
 
@@ -437,11 +457,17 @@ var TimeStep = new Class({
      *
      * @method Phaser.Core.TimeStep#step
      * @since 3.0.0
-     * 
-     * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
      */
-    step: function (time)
+    step: function ()
     {
+        //  Because the timestamp passed in from raf represents the beginning of the main thread frame that we’re currently in,
+        //  not the actual time now. As we want to compare this time value against Event timeStamps and the like, we need a
+        //  more accurate one:
+
+        var time = window.performance.now();
+
+        this.now = time;
+
         var before = time - this.lastTime;
 
         if (before < 0)
@@ -556,14 +582,14 @@ var TimeStep = new Class({
     },
 
     /**
-     * Manually calls TimeStep.step, passing in the performance.now value to it.
+     * Manually calls `TimeStep.step`.
      *
      * @method Phaser.Core.TimeStep#tick
      * @since 3.0.0
      */
     tick: function ()
     {
-        this.step(window.performance.now());
+        this.step();
     },
 
     /**
@@ -606,7 +632,7 @@ var TimeStep = new Class({
 
         this.running = true;
 
-        this.step(window.performance.now());
+        this.step();
     },
 
     /**

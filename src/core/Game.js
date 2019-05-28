@@ -604,6 +604,7 @@ var Game = new Class({
 
     /**
      * Returns the current game frame.
+     * 
      * When the game starts running, the frame is incremented every time Request Animation Frame, or Set Timeout, fires.
      *
      * @method Phaser.Game#getFrame
@@ -617,8 +618,7 @@ var Game = new Class({
     },
 
     /**
-     * Returns the current game timestamp.
-     * When the game starts running, the frame is incremented every time Request Animation Frame, or Set Timeout, fires.
+     * Returns the time that the current game step started at, as based on `performance.now`.
      *
      * @method Phaser.Game#getTime
      * @since 3.16.0
@@ -627,7 +627,7 @@ var Game = new Class({
      */
     getTime: function ()
     {
-        return this.loop.frame.time;
+        return this.loop.now;
     },
 
     /**

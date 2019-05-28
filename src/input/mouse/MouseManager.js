@@ -288,17 +288,14 @@ var MouseManager = new Class({
 
         this.onMouseMove = function (event)
         {
-            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
             {
-                // Do nothing if event already handled
-                return;
-            }
-
-            _this.manager.queueMouseMove(event);
+                _this.manager.onMouseMove(event);
     
-            if (_this.capture)
-            {
-                event.preventDefault();
+                if (_this.capture)
+                {
+                    event.preventDefault();
+                }
             }
         };
 
@@ -309,86 +306,62 @@ var MouseManager = new Class({
                 window.focus();
             }
 
-            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
             {
-                // Do nothing if event already handled
-                return;
-            }
+                _this.manager.onMouseDown(event);
     
-            _this.manager.queueMouseDown(event);
-    
-            if (_this.capture && event.target === canvas)
-            {
-                event.preventDefault();
+                if (_this.capture && event.target === canvas)
+                {
+                    event.preventDefault();
+                }
             }
         };
 
         this.onMouseDownWindow = function (event)
         {
-            if (event.defaultPrevented || !_this.enabled || !_this.manager)
-            {
-                // Do nothing if event already handled
-                return;
-            }
-
-            if (event.target !== canvas)
+            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled && event.target !== canvas)
             {
                 //  Only process the event if the target isn't the canvas
-                _this.manager.queueMouseDown(event);
+                _this.manager.onMouseDown(event);
             }
         };
 
         this.onMouseUp = function (event)
         {
-            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
             {
-                // Do nothing if event already handled
-                return;
-            }
+                _this.manager.onMouseUp(event);
     
-            _this.manager.queueMouseUp(event);
-    
-            if (_this.capture && event.target === canvas)
-            {
-                event.preventDefault();
+                if (_this.capture && event.target === canvas)
+                {
+                    event.preventDefault();
+                }
             }
         };
 
         this.onMouseUpWindow = function (event)
         {
-            if (event.defaultPrevented || !_this.enabled || !_this.manager)
-            {
-                // Do nothing if event already handled
-                return;
-            }
-
-            if (event.target !== canvas)
+            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled && event.target !== canvas)
             {
                 //  Only process the event if the target isn't the canvas
-                _this.manager.queueMouseUp(event);
+                _this.manager.onMouseUp(event);
             }
         };
 
         this.onMouseOver = function (event)
         {
-            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
             {
-                // Do nothing if event already handled
-                return;
+                _this.manager.setCanvasOver(event);
             }
-    
-            _this.manager.setCanvasOver(event);
         };
 
         this.onMouseOut = function (event)
         {
-            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
             {
-                // Do nothing if event already handled
-                return;
+                _this.manager.setCanvasOut(event);
             }
-    
-            _this.manager.setCanvasOut(event);
         };
 
         var target = this.target;

@@ -205,118 +205,88 @@ var TouchManager = new Class({
                 window.focus();
             }
 
-            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
             {
-                //  Do nothing if event already handled
-                return;
-            }
+                _this.manager.onTouchStart(event);
     
-            _this.manager.queueTouchStart(event);
-    
-            if (_this.capture && event.target === canvas)
-            {
-                event.preventDefault();
+                if (_this.capture && event.target === canvas)
+                {
+                    event.preventDefault();
+                }
             }
         };
 
         this.onTouchStartWindow = function (event)
         {
-            if (event.defaultPrevented || !_this.enabled || !_this.manager)
-            {
-                //  Do nothing if event already handled
-                return;
-            }
-    
-            if (event.target !== canvas)
+            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled && event.target !== canvas)
             {
                 //  Only process the event if the target isn't the canvas
-                _this.manager.queueTouchStart(event);
+                _this.manager.onTouchStart(event);
             }
         };
 
         this.onTouchMove = function (event)
         {
-            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
             {
-                //  Do nothing if event already handled
-                return;
-            }
+                _this.manager.onTouchMove(event);
     
-            _this.manager.queueTouchMove(event);
-    
-            if (_this.capture)
-            {
-                event.preventDefault();
+                if (_this.capture)
+                {
+                    event.preventDefault();
+                }
             }
         };
 
         this.onTouchEnd = function (event)
         {
-            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
             {
-                //  Do nothing if event already handled
-                return;
-            }
+                _this.manager.onTouchEnd(event);
     
-            _this.manager.queueTouchEnd(event);
-    
-            if (_this.capture && event.target === canvas)
-            {
-                event.preventDefault();
+                if (_this.capture && event.target === canvas)
+                {
+                    event.preventDefault();
+                }
             }
         };
 
         this.onTouchEndWindow = function (event)
         {
-            if (event.defaultPrevented || !_this.enabled || !_this.manager)
-            {
-                //  Do nothing if event already handled
-                return;
-            }
-    
-            if (event.target !== canvas)
+            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled && event.target !== canvas)
             {
                 //  Only process the event if the target isn't the canvas
-                _this.manager.queueTouchEnd(event);
+                _this.manager.onTouchEnd(event);
             }
         };
 
         this.onTouchCancel = function (event)
         {
-            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
             {
-                //  Do nothing if event already handled
-                return;
-            }
+                _this.manager.onTouchCancel(event);
     
-            _this.manager.queueTouchCancel(event);
-    
-            if (_this.capture)
-            {
-                event.preventDefault();
+                if (_this.capture)
+                {
+                    event.preventDefault();
+                }
             }
         };
 
         this.onTouchOver = function (event)
         {
-            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
             {
-                // Do nothing if event already handled
-                return;
+                _this.manager.setCanvasOver(event);
             }
-    
-            _this.manager.setCanvasOver(event);
         };
 
         this.onTouchOut = function (event)
         {
-            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
             {
-                // Do nothing if event already handled
-                return;
+                _this.manager.setCanvasOut(event);
             }
-    
-            _this.manager.setCanvasOut(event);
         };
 
         var target = this.target;

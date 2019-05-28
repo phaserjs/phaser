@@ -271,11 +271,6 @@ var Config = new Class({
         this.inputSmoothFactor = GetValue(config, 'input.smoothFactor', 0);
 
         /**
-         * @const {boolean} Phaser.Core.Config#inputQueue - Should Phaser use a queued input system for native DOM Events or not?
-         */
-        this.inputQueue = GetValue(config, 'input.queue', false);
-
-        /**
          * @const {boolean} Phaser.Core.Config#inputWindowEvents - Should Phaser listen for input events on the Window? If you disable this, events like 'POINTER_UP_OUTSIDE' will no longer fire.
          */
         this.inputWindowEvents = GetValue(config, 'input.windowEvents', true);
