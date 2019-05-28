@@ -50,7 +50,11 @@ The following changes took place in the Pointer class:
 * `Pointer.justMoved` has been removed as it's not used internally and makes no sense under the DOM event system.
 * The `Pointer.reset` method has been removed as it's no longer required internally.
 
+#### Input System Bug Fixes
 
+* Calling `setPollAlways()` would cause the `'pointerdown'` event to fire multiple times. Fix #4541 (thanks @Neyromantik)
+* The pointer events were intermittently not registered, causing `pointerup` to often fail. Fix #4538 (thanks @paulsymphony)
+* Due to a regression in 3.16 the drag events were not performing as fast as before, causing drags to feel lagged. Fix #4500 (thanks @aliblong)
 
 ### New Features
 
