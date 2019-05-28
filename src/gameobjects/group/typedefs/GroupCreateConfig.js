@@ -3,18 +3,16 @@
  *
  *     key.length * frame.length * frameQuantity * (yoyo ? 2 : 1) * (1 + repeat)
  *
- * In the simplest case, 1 + `repeat` objects will be created.
- *
- * If `max` is positive, then the total created will not exceed `max`.
+ * If `max` is nonzero, then the total created will not exceed `max`.
  *
  * `key` is required. {@link Phaser.GameObjects.Group#defaultKey} is not used.
- * 
+ *
  * @typedef {object} Phaser.Types.GameObjects.Group.GroupCreateConfig
  * @since 3.0.0
  *
  * @property {?Phaser.Types.GameObjects.Group.GroupClassTypeConstructor} [classType] - The class of each new Game Object.
- * @property {string} [key] - The texture key of each new Game Object.
- * @property {?(string|integer)} [frame=null] - The texture frame of each new Game Object.
+ * @property {(string|string[])} [key] - The texture key of each new Game Object.
+ * @property {?(string|string[]|integer|integer[])} [frame=null] - The texture frame of each new Game Object.
  * @property {?boolean} [visible=true] - The visible state of each new Game Object.
  * @property {?boolean} [active=true] - The active state of each new Game Object.
  * @property {?number} [repeat=0] - The number of times each `key` × `frame` combination will be *repeated* (after the first combination).
