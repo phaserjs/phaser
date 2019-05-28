@@ -697,10 +697,7 @@ var InputPlugin = new Class({
                     break;
             }
 
-            if (pointersTotal < 3 || !pointer.wasTouch)
-            {
-                total += this.processOverOutEvents(pointer);
-            }
+            total += this.processOverOutEvents(pointer);
 
             if (total > 0)
             {
