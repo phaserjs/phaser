@@ -60,6 +60,14 @@ Pointer calls reset itself
 * The ScaleManager full screen call had an arrow function in it. Despite being within a conditional block of code it still broke really old browsers like IE11, so has been removed. Fix #4530 (thanks @jorbascrumps @CNDW)
 * `Game.getTime` would return `NaN` because it incorrectly accessed the time value from the TimeStep.
 
+### Examples, Documentation and TypeScript
+
+My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
+
+@PhaserEditor2D @samme
+
+
+
 
 ## Version 3.17.0 - Motoko - 10th May 2019
 
