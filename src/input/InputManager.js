@@ -732,7 +732,7 @@ var InputManager = new Class({
             pointer.updateMotion();
         });
 
-        this.updateInputPlugins(CONST.TOUCH_START, event.timeStamp, changed);
+        this.updateInputPlugins(CONST.TOUCH_START, changed);
     },
 
     /**
@@ -753,7 +753,7 @@ var InputManager = new Class({
             pointer.updateMotion();
         });
 
-        this.updateInputPlugins(CONST.TOUCH_MOVE, event.timeStamp, changed);
+        this.updateInputPlugins(CONST.TOUCH_MOVE, changed);
     },
 
     /**
@@ -774,7 +774,7 @@ var InputManager = new Class({
             pointer.updateMotion();
         });
 
-        this.updateInputPlugins(CONST.TOUCH_END, event.timeStamp, changed);
+        this.updateInputPlugins(CONST.TOUCH_END, changed);
     },
 
     /**
@@ -795,7 +795,7 @@ var InputManager = new Class({
             pointer.updateMotion();
         });
 
-        this.updateInputPlugins(CONST.TOUCH_CANCEL, event.timeStamp, changed);
+        this.updateInputPlugins(CONST.TOUCH_CANCEL, changed);
     },
 
     /**
@@ -813,7 +813,7 @@ var InputManager = new Class({
 
         this.mousePointer.updateMotion();
 
-        this.updateInputPlugins(CONST.MOUSE_DOWN, event.timeStamp, this.mousePointerContainer);
+        this.updateInputPlugins(CONST.MOUSE_DOWN, this.mousePointerContainer);
     },
 
     /**
@@ -831,7 +831,7 @@ var InputManager = new Class({
 
         this.mousePointer.updateMotion();
 
-        this.updateInputPlugins(CONST.MOUSE_MOVE, event.timeStamp, this.mousePointerContainer);
+        this.updateInputPlugins(CONST.MOUSE_MOVE, this.mousePointerContainer);
     },
 
     /**
@@ -849,7 +849,7 @@ var InputManager = new Class({
 
         this.mousePointer.updateMotion();
 
-        this.updateInputPlugins(CONST.MOUSE_UP, event.timeStamp, this.mousePointerContainer);
+        this.updateInputPlugins(CONST.MOUSE_UP, this.mousePointerContainer);
     },
 
     /**
