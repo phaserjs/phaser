@@ -630,21 +630,19 @@ var InputPlugin = new Class({
      * @fires Phaser.Input.Events#UPDATE
      * @since 3.0.0
      *
-     * @param {integer} type - The type of input event to process.
+     * @param {integer} type - The type of event to process.
+     * @param {Phaser.Input.Pointer[]} pointers - An array of Pointers on which the event occurred.
      * 
      * @return {boolean} `true` if this Scene has captured the input events from all other Scenes, otherwise `false`.
      */
-    update: function (type)
+    update: function (type, pointers)
     {
         if (!this.isActive())
         {
             return false;
         }
 
-        var manager = this.manager;
-
-        var pointers = manager.pointers;
-        var pointersTotal = manager.pointersTotal;
+        var pointersTotal = pointers.length;
         var captured = false;
 
         for (var i = 0; i < pointersTotal; i++)

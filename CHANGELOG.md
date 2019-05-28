@@ -55,8 +55,8 @@ The following changes took place in the Pointer class:
 * Calling `setPollAlways()` would cause the `'pointerdown'` event to fire multiple times. Fix #4541 (thanks @Neyromantik)
 * The pointer events were intermittently not registered, causing `pointerup` to often fail. Fix #4538 (thanks @paulsymphony)
 * Due to a regression in 3.16 the drag events were not performing as fast as before, causing drags to feel lagged. Fix #4500 (thanks @aliblong)
+* Over and Out events should now work for any pointer in multi-touch environments, not just the first touch pointer registered.
 
-TODO: No need to iterate pointers in `update` any more, can pass in from manager handler.
 
 ### New Features
 

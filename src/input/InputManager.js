@@ -291,6 +291,16 @@ var InputManager = new Class({
          */
         this._tempSkip = false;
 
+        /**
+         * An internal private array that avoids needing to create a new array on every DOM mouse event.
+         *
+         * @name Phaser.Input.InputManager#mousePointerContainer
+         * @type {Phaser.Input.Pointer[]}
+         * @private
+         * @since 3.18.0
+         */
+        this.mousePointerContainer = [ this.mousePointer ];
+
         game.events.once(GameEvents.BOOT, this.boot, this);
     },
 
@@ -678,13 +688,12 @@ var InputManager = new Class({
      * @method Phaser.Input.InputManager#updateInputPlugins
      * @since 3.16.0
      *
-     * @param {number} time - The time value from the most recent Game step. Typically a high-resolution timer value, or Date.now().
-     * @param {number} delta - The delta value since the last frame. This is smoothed to avoid delta spikes by the TimeStep class.
+     * @param {integer} type - The type of event to process.
+     * @param {Phaser.Input.Pointer[]} pointers - An array of Pointers on which the event occurred.
      */
-    updateInputPlugins: function (type, time)
+    updateInputPlugins: function (type, pointers)
     {
         var scenes = this.game.scene.getScenes(true, true);
-        var delta = this.game.loop.delta;
 
         this._tempSkip = false;
 
@@ -694,7 +703,7 @@ var InputManager = new Class({
 
             if (scene.sys.input)
             {
-                var capture = scene.sys.input.update(type, time, delta);
+                var capture = scene.sys.input.update(type, pointers);
 
                 if ((capture && this.globalTopOnly) || this._tempSkip)
                 {
@@ -723,7 +732,7 @@ var InputManager = new Class({
             pointer.updateMotion();
         });
 
-        this.updateInputPlugins(CONST.TOUCH_START, event.timeStamp);
+        this.updateInputPlugins(CONST.TOUCH_START, event.timeStamp, changed);
     },
 
     /**
@@ -744,7 +753,7 @@ var InputManager = new Class({
             pointer.updateMotion();
         });
 
-        this.updateInputPlugins(CONST.TOUCH_MOVE, event.timeStamp);
+        this.updateInputPlugins(CONST.TOUCH_MOVE, event.timeStamp, changed);
     },
 
     /**
@@ -765,7 +774,7 @@ var InputManager = new Class({
             pointer.updateMotion();
         });
 
-        this.updateInputPlugins(CONST.TOUCH_END, event.timeStamp);
+        this.updateInputPlugins(CONST.TOUCH_END, event.timeStamp, changed);
     },
 
     /**
@@ -786,7 +795,7 @@ var InputManager = new Class({
             pointer.updateMotion();
         });
 
-        this.updateInputPlugins(CONST.TOUCH_CANCEL, event.timeStamp);
+        this.updateInputPlugins(CONST.TOUCH_CANCEL, event.timeStamp, changed);
     },
 
     /**
@@ -804,7 +813,7 @@ var InputManager = new Class({
 
         this.mousePointer.updateMotion();
 
-        this.updateInputPlugins(CONST.MOUSE_DOWN, event.timeStamp);
+        this.updateInputPlugins(CONST.MOUSE_DOWN, event.timeStamp, this.mousePointerContainer);
     },
 
     /**
@@ -822,7 +831,7 @@ var InputManager = new Class({
 
         this.mousePointer.updateMotion();
 
-        this.updateInputPlugins(CONST.MOUSE_MOVE, event.timeStamp);
+        this.updateInputPlugins(CONST.MOUSE_MOVE, event.timeStamp, this.mousePointerContainer);
     },
 
     /**
@@ -840,7 +849,7 @@ var InputManager = new Class({
 
         this.mousePointer.updateMotion();
 
-        this.updateInputPlugins(CONST.MOUSE_UP, event.timeStamp);
+        this.updateInputPlugins(CONST.MOUSE_UP, event.timeStamp, this.mousePointerContainer);
     },
 
     /**
