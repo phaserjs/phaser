@@ -70,6 +70,7 @@ var Pointer = new Class({
 
         /**
          * The DOM element the Pointer was pressed down on, taken from the DOM event.
+         * In a default set-up this will be the Canvas that Phaser is rendering to, or the Window element.
          *
          * @name Phaser.Input.Pointer#downElement
          * @type {any}
@@ -80,6 +81,7 @@ var Pointer = new Class({
 
         /**
          * The DOM element the Pointer was released on, taken from the DOM event.
+         * In a default set-up this will be the Canvas that Phaser is rendering to, or the Window element.
          *
          * @name Phaser.Input.Pointer#upElement
          * @type {any}
@@ -348,46 +350,6 @@ var Pointer = new Class({
         this.isDown = false;
 
         /**
-         * A dirty flag for this Pointer, used internally by the Input Plugin.
-         *
-         * @name Phaser.Input.Pointer#dirty
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.dirty = false;
-
-        /**
-         * Is this Pointer considered as being "just down" or not?
-         *
-         * @name Phaser.Input.Pointer#justDown
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.justDown = false;
-
-        /**
-         * Is this Pointer considered as being "just up" or not?
-         *
-         * @name Phaser.Input.Pointer#justUp
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.justUp = false;
-
-        /**
-         * Is this Pointer considered as being "just moved" or not?
-         *
-         * @name Phaser.Input.Pointer#justMoved
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.justMoved = false;
-
-        /**
          * Did the previous input event come from a Touch input (true) or Mouse? (false)
          *
          * @name Phaser.Input.Pointer#wasTouch
@@ -466,15 +428,6 @@ var Pointer = new Class({
          * @since 3.16.0
          */
         this.time = 0;
-
-        /**
-         * The game frame when this Pointer was most recently updated by a DOM Event.
-         *
-         * @name Phaser.Input.Pointer#lastAction
-         * @type {integer}
-         * @since 3.18.0
-         */
-        this.lastAction = -1;
     },
 
     /**
@@ -492,36 +445,6 @@ var Pointer = new Class({
     positionToCamera: function (camera, output)
     {
         return camera.getWorldPoint(this.x, this.y, output);
-    },
-
-    /**
-     * Resets the temporal properties of this Pointer.
-     * This method is called automatically each frame by the Input Manager.
-     *
-     * @method Phaser.Input.Pointer#reset
-     * @private
-     * @since 3.0.0
-     */
-    reset: function (time)
-    {
-        var currentFrame = this.manager.game.getFrame();
-
-        if (this.lastAction < currentFrame)
-        {
-            //  There was a DOM Event just prior to the game step
-            this.dirty = false;
-
-            this.justDown = false;
-            this.justUp = false;
-            this.justMoved = false;
-
-            this.time = time;
-
-            this.movementX = 0;
-            this.movementY = 0;
-
-            this.lastAction = currentFrame;
-        }
     },
 
     /**
@@ -583,14 +506,6 @@ var Pointer = new Class({
      */
     up: function (event)
     {
-        var time = event.timeStamp;
-        var currentFrame = this.manager.game.getFrame();
-
-        if (currentFrame > this.lastAction)
-        {
-            this.reset(time);
-        }
-
         if ('buttons' in event)
         {
             this.buttons = event.buttons;
@@ -609,13 +524,10 @@ var Pointer = new Class({
             this.primaryDown = false;
             this.upX = this.x;
             this.upY = this.y;
-            this.upTime = time;
+            this.upTime = event.timeStamp;
         }
 
-        this.justUp = true;
         this.isDown = false;
-
-        this.dirty = true;
 
         this.wasTouch = false;
     },
@@ -631,14 +543,6 @@ var Pointer = new Class({
      */
     down: function (event)
     {
-        var time = event.timeStamp;
-        var currentFrame = this.manager.game.getFrame();
-
-        if (currentFrame > this.lastAction)
-        {
-            this.reset(time);
-        }
-
         if ('buttons' in event)
         {
             this.buttons = event.buttons;
@@ -657,13 +561,10 @@ var Pointer = new Class({
             this.primaryDown = true;
             this.downX = this.x;
             this.downY = this.y;
-            this.downTime = time;
+            this.downTime = event.timeStamp;
         }
 
-        this.justDown = true;
         this.isDown = true;
-
-        this.dirty = true;
 
         this.wasTouch = false;
     },
@@ -679,14 +580,6 @@ var Pointer = new Class({
      */
     move: function (event)
     {
-        var time = event.timeStamp;
-        var currentFrame = this.manager.game.getFrame();
-
-        if (currentFrame > this.lastAction)
-        {
-            this.reset(time);
-        }
-
         if ('buttons' in event)
         {
             this.buttons = event.buttons;
@@ -699,16 +592,12 @@ var Pointer = new Class({
 
         if (this.manager.mouse.locked)
         {
-            // Multiple DOM events may occur within one frame, but only one Phaser event will fire
+            //  Multiple DOM events may occur within one frame, but only one Phaser event will fire
             this.movementX += event.movementX || event.mozMovementX || event.webkitMovementX || 0;
             this.movementY += event.movementY || event.mozMovementY || event.webkitMovementY || 0;
         }
 
-        this.justMoved = true;
-
-        this.moveTime = time;
-
-        this.dirty = true;
+        this.moveTime = event.timeStamp;
 
         this.wasTouch = false;
     },
@@ -721,9 +610,8 @@ var Pointer = new Class({
      * @since 3.0.0
      *
      * @param {TouchEvent} event - The Touch Event to process.
-     * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
      */
-    touchstart: function (event, time)
+    touchstart: function (event)
     {
         if (event['pointerId'])
         {
@@ -746,12 +634,9 @@ var Pointer = new Class({
         this.primaryDown = true;
         this.downX = this.x;
         this.downY = this.y;
-        this.downTime = time;
+        this.downTime = event.timeStamp;
 
-        this.justDown = true;
         this.isDown = true;
-
-        this.dirty = true;
 
         this.wasTouch = true;
         this.wasCanceled = false;
@@ -765,20 +650,15 @@ var Pointer = new Class({
      * @since 3.0.0
      *
      * @param {TouchEvent} event - The Touch Event to process.
-     * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
      */
-    touchmove: function (event, time)
+    touchmove: function (event)
     {
         this.event = event;
 
         //  Sets the local x/y properties
         this.manager.transformPointer(this, event.pageX, event.pageY, true);
 
-        this.justMoved = true;
-
-        this.moveTime = time;
-
-        this.dirty = true;
+        this.moveTime = event.timeStamp;
 
         this.wasTouch = true;
     },
@@ -791,9 +671,8 @@ var Pointer = new Class({
      * @since 3.0.0
      *
      * @param {TouchEvent} event - The Touch Event to process.
-     * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
      */
-    touchend: function (event, time)
+    touchend: function (event)
     {
         this.buttons = 0;
 
@@ -807,12 +686,9 @@ var Pointer = new Class({
         this.primaryDown = false;
         this.upX = this.x;
         this.upY = this.y;
-        this.upTime = time;
+        this.upTime = event.timeStamp;
 
-        this.justUp = true;
         this.isDown = false;
-
-        this.dirty = true;
 
         this.wasTouch = true;
         this.wasCanceled = false;
@@ -837,10 +713,7 @@ var Pointer = new Class({
 
         this.primaryDown = false;
 
-        this.justUp = false;
         this.isDown = false;
-
-        this.dirty = true;
 
         this.wasTouch = true;
         this.wasCanceled = true;
