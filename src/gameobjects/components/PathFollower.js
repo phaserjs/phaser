@@ -108,7 +108,7 @@ var PathFollower = {
      * @since 3.0.0
      *
      * @param {Phaser.Curves.Path} path - The Path this PathFollower is following. It can only follow one Path at a time.
-     * @param {Phaser.Types.GameObjects.PathFollower.PathConfig} [config] - Settings for the PathFollower.
+     * @param {(number|Phaser.Types.GameObjects.PathFollower.PathConfig|Phaser.Types.Tweens.NumberTweenBuilderConfig)} [config] - Settings for the PathFollower.
      *
      * @return {Phaser.GameObjects.PathFollower} This Game Object.
      */
@@ -178,7 +178,7 @@ var PathFollower = {
      * @method Phaser.GameObjects.Components.PathFollower#startFollow
      * @since 3.3.0
      *
-     * @param {(number|Phaser.Types.GameObjects.PathFollower.PathConfig)} [config={}] - The duration of the follow, or a PathFollower config object.
+     * @param {(number|Phaser.Types.GameObjects.PathFollower.PathConfig|Phaser.Types.Tweens.NumberTweenBuilderConfig)} [config={}] - The duration of the follow, or a PathFollower config object.
      * @param {number} [startAt=0] - Optional start position of the follow, between 0 and 1.
      *
      * @return {Phaser.GameObjects.PathFollower} This Game Object.
