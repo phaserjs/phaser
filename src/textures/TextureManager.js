@@ -460,7 +460,6 @@ var TextureManager = new Class({
     {
         if (skipCache === undefined) { skipCache = false; }
 
-
         if (skipCache)
         {
             return new CanvasTexture(this, key, source, source.width, source.height);
@@ -475,6 +474,7 @@ var TextureManager = new Class({
         }
 
         return null;
+        
     },
 
     /**
