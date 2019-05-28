@@ -675,20 +675,26 @@ var InputPlugin = new Class({
                 }
             }
 
-            if (type === CONST.MOUSE_DOWN)
+            switch (type)
             {
-                total += this.processDragDownEvent(pointer);
-                total += this.processDownEvents(pointer);
-            }
-            else if (type === CONST.MOUSE_UP)
-            {
-                total += this.processDragUpEvent(pointer);
-                total += this.processUpEvents(pointer);
-            }
-            else if (type === CONST.MOUSE_MOVE)
-            {
-                total += this.processDragMoveEvent(pointer);
-                total += this.processMoveEvents(pointer);
+                case CONST.MOUSE_DOWN:
+                case CONST.TOUCH_START:
+                    total += this.processDragDownEvent(pointer);
+                    total += this.processDownEvents(pointer);
+                    break;
+
+                case CONST.MOUSE_UP:
+                case CONST.TOUCH_END:
+                case CONST.TOUCH_CANCEL:
+                    total += this.processDragUpEvent(pointer);
+                    total += this.processUpEvents(pointer);
+                    break;
+
+                case CONST.MOUSE_MOVE:
+                case CONST.TOUCH_MOVE:
+                    total += this.processDragMoveEvent(pointer);
+                    total += this.processMoveEvents(pointer);
+                    break;
             }
 
             if (pointersTotal < 3 || !pointer.wasTouch)
