@@ -56,6 +56,8 @@ The following changes took place in the Pointer class:
 * The pointer events were intermittently not registered, causing `pointerup` to often fail. Fix #4538 (thanks @paulsymphony)
 * Due to a regression in 3.16 the drag events were not performing as fast as before, causing drags to feel lagged. Fix #4500 (thanks @aliblong)
 
+TODO: No need to iterate pointers in `update` any more, can pass in from manager handler.
+
 ### New Features
 
 * `Matter.Factory.velocity` is a new method that allows you to set the velocity on a Matter Body directly.
