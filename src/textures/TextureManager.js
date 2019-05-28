@@ -460,22 +460,18 @@ var TextureManager = new Class({
     {
         if (skipCache === undefined) { skipCache = false; }
 
-        var texture = null;
-
         if (skipCache)
         {
-            texture = new CanvasTexture(this, key, source, source.width, source.height);
+            return new CanvasTexture(this, key, source, source.width, source.height);
         }
         else if (this.checkKey(key))
         {
-            texture = new CanvasTexture(this, key, source, source.width, source.height);
+            this.list[key] = new CanvasTexture(this, key, source, source.width, source.height);
 
-            this.list[key] = texture;
-
-            this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD, key, this.list[key]);
+            
+            return this.list[key];
         }
-
-        return texture;
     },
 
     /**
