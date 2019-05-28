@@ -474,7 +474,6 @@ var TextureManager = new Class({
         }
 
         return null;
-        
     },
 
     /**
