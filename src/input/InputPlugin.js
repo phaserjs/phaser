@@ -547,7 +547,13 @@ var InputPlugin = new Class({
             return false;
         }
 
-        if (this.pollRate > 0)
+        var rate = this.pollRate;
+
+        if (rate === -1)
+        {
+            return false;
+        }
+        else if (rate > 0)
         {
             this._pollTimer -= delta;
 
@@ -561,10 +567,6 @@ var InputPlugin = new Class({
                 //  Not enough time has elapsed since the last poll, so abort now
                 return false;
             }
-        }
-        else
-        {
-            return false;
         }
 
         //  We got this far? Then we should poll for movement
