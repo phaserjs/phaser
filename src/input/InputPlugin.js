@@ -7,6 +7,7 @@
 var Circle = require('../geom/circle/Circle');
 var CircleContains = require('../geom/circle/Contains');
 var Class = require('../utils/Class');
+var CONST = require('./const');
 var CreateInteractiveObject = require('./CreateInteractiveObject');
 var CreatePixelPerfectHandler = require('./CreatePixelPerfectHandler');
 var DistanceBetween = require('../math/distance/DistanceBetween');
@@ -114,7 +115,7 @@ var InputPlugin = new Class({
         this.pluginEvents = new EventEmitter();
 
         /**
-         * If set, the Input Plugin will run its update loop every frame.
+         * If `true` this Input Plugin will process DOM input events.
          *
          * @name Phaser.Input.InputPlugin#enabled
          * @type {boolean}
@@ -181,7 +182,7 @@ var InputPlugin = new Class({
          * 
          * This property only controls how often they will be polled if they have not been updated.
          * You should set this if you want to have Game Objects constantly check against the pointers, even
-         * if the pointer didn't move itself.
+         * if the pointer didn't itself move.
          * 
          * Set to 0 to poll constantly. Set to -1 to only poll on user movement.
          *
@@ -409,7 +410,6 @@ var InputPlugin = new Class({
         eventEmitter.on(SceneEvents.TRANSITION_OUT, this.transitionOut, this);
         eventEmitter.on(SceneEvents.TRANSITION_COMPLETE, this.transitionComplete, this);
         eventEmitter.on(SceneEvents.PRE_UPDATE, this.preUpdate, this);
-        eventEmitter.on(SceneEvents.UPDATE, this.pluginUpdate, this);
         eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
 
         this.manager.events.on(Events.GAME_OUT, this.onGameOut, this);
@@ -461,8 +461,8 @@ var InputPlugin = new Class({
      * deleting old Game Objects.
      *
      * @method Phaser.Input.InputPlugin#preUpdate
-     * @fires Phaser.Input.Events#PRE_UPDATE
      * @private
+     * @fires Phaser.Input.Events#PRE_UPDATE
      * @since 3.0.0
      */
     preUpdate: function ()
@@ -521,43 +521,29 @@ var InputPlugin = new Class({
     },
 
     /**
-     * The internal update loop for the plugins belonging to this Input class.
-     * Called automatically by the Scene Systems step.
+     * This is called automatically by the Input Manager.
+     * It emits events for plugins to listen to and also handles polling updates, if enabled.
      *
-     * @method Phaser.Input.InputPlugin#pluginUpdate
-     * @private
-     * @since 3.17.0
+     * @method Phaser.Input.InputPlugin#updatePoll
+     * @since 3.18.0
      *
-     * @param {number} time - The time value from the most recent Game step. Typically a high-resolution timer value, or Date.now().
-     * @param {number} delta - The delta value since the last frame. This is smoothed to avoid delta spikes by the TimeStep class.
+     * @return {boolean} `true` if the plugin and the Scene it belongs to is active.
      */
-    pluginUpdate: function (time, delta)
-    {
-        this.pluginEvents.emit(Events.UPDATE, time, delta);
-
-        if (this.pollRate > -1 && !this._updatedThisFrame)
-        {
-            this.updatePoll(time, delta);
-        }
-        else
-        {
-            if (!this.isActive())
-            {
-                return;
-            }
-    
-            this.pluginEvents.emit(Events.UPDATE, time, delta);
-        }
-
-        this._updatedThisFrame = false;
-    },
-
     updatePoll: function (time, delta)
     {
-        console.log('poll');
-
         if (!this.isActive())
         {
+            return false;
+        }
+
+        //  So the Gamepad and Keyboard update, regardless
+        this.pluginEvents.emit(Events.UPDATE, time, delta);
+
+        //  Nothing else? Let's leave
+        if (this._list.length === 0 || this._updatedThisFrame)
+        {
+            this._updatedThisFrame = false;
+
             return false;
         }
 
@@ -573,18 +559,24 @@ var InputPlugin = new Class({
             else
             {
                 //  Not enough time has elapsed since the last poll, so abort now
-                return;
+                return false;
             }
+        }
+        else
+        {
+            return false;
         }
 
         //  We got this far? Then we should poll for movement
         var manager = this.manager;
+
         var pointers = manager.pointers;
         var pointersTotal = manager.pointersTotal;
         var captured = false;
 
         for (var i = 0; i < pointersTotal; i++)
         {
+            var total = 0;
             var pointer = pointers[i];
 
             //  Always reset this array
@@ -610,23 +602,14 @@ var InputPlugin = new Class({
                 }
             }
 
-            var total = 0;
-
-            //  TODO: Enable for touch - the method needs recoding to take ALL pointers at once
-            //  and process them all together, in the same batch, otherwise the justOut and stillOver
-            //  arrays will get corrupted in multi-touch enabled games. For now, we'll enable it for
-            //  single touch games (which is probably the majority anyway).
             if (pointersTotal < 3 || !pointer.wasTouch)
             {
                 total += this.processOverOutEvents(pointer);
             }
 
-            if (pointer.justMoved)
-            {
-                total += this.processMoveEvents(pointer);
-            }
+            this.processDragThresholdEvent(pointer);
 
-            if (total > 0 && manager.globalTopOnly)
+            if (total > 0)
             {
                 //  We interacted with an event in this Scene, so block any Scenes below us from doing the same this frame
                 captured = true;
@@ -637,20 +620,19 @@ var InputPlugin = new Class({
     },
 
     /**
-     * The internal update loop for the Input Plugin.
-     * Called when a DOM Event is processed by the Input Manager.
+     * This method is called when a DOM Event is received by the Input Manager. It handles dispatching the events
+     * to relevant input enabled Game Objects in this scene.
      *
      * @method Phaser.Input.InputPlugin#update
-     * @fires Phaser.Input.Events#UPDATE
      * @private
+     * @fires Phaser.Input.Events#UPDATE
      * @since 3.0.0
      *
-     * @param {number} time - The time value from the most recent Game step. Typically a high-resolution timer value, or Date.now().
-     * @param {number} delta - The delta value since the last frame. This is smoothed to avoid delta spikes by the TimeStep class.
+     * @param {integer} type - The type of input event to process.
      * 
      * @return {boolean} `true` if this Scene has captured the input events from all other Scenes, otherwise `false`.
      */
-    update: function (time, delta)
+    update: function (type)
     {
         if (!this.isActive())
         {
@@ -665,6 +647,7 @@ var InputPlugin = new Class({
 
         for (var i = 0; i < pointersTotal; i++)
         {
+            var total = 0;
             var pointer = pointers[i];
 
             //  Always reset this array
@@ -690,33 +673,28 @@ var InputPlugin = new Class({
                 }
             }
 
-            var total = this.processDragEvents(pointer, time);
+            if (type === CONST.MOUSE_DOWN)
+            {
+                total += this.processDragDownEvent(pointer);
+                total += this.processDownEvents(pointer);
+            }
+            else if (type === CONST.MOUSE_UP)
+            {
+                total += this.processDragUpEvent(pointer);
+                total += this.processUpEvents(pointer);
+            }
+            else if (type === CONST.MOUSE_MOVE)
+            {
+                total += this.processDragMoveEvent(pointer);
+                total += this.processMoveEvents(pointer);
+            }
 
-            //  TODO: Enable for touch - the method needs recoding to take ALL pointers at once
-            //  and process them all together, in the same batch, otherwise the justOut and stillOver
-            //  arrays will get corrupted in multi-touch enabled games. For now, we'll enable it for
-            //  single touch games (which is probably the majority anyway).
             if (pointersTotal < 3 || !pointer.wasTouch)
             {
                 total += this.processOverOutEvents(pointer);
             }
 
-            if (pointer.justDown)
-            {
-                total += this.processDownEvents(pointer);
-            }
-
-            if (pointer.justMoved)
-            {
-                total += this.processMoveEvents(pointer);
-            }
-
-            if (pointer.justUp)
-            {
-                total += this.processUpEvents(pointer);
-            }
-
-            if (total > 0 && manager.globalTopOnly)
+            if (total > 0)
             {
                 //  We interacted with an event in this Scene, so block any Scenes below us from doing the same this frame
                 captured = true;
@@ -1031,195 +1009,239 @@ var InputPlugin = new Class({
     },
 
     /**
-     * An internal method that handles the Pointer drag events.
+     * Checks to see if a Pointer is ready to drag the objects below it, based on either a distance
+     * or time threshold.
      *
-     * @method Phaser.Input.InputPlugin#processDragEvents
+     * @method Phaser.Input.InputPlugin#processDragThresholdEvent
      * @private
-     * @fires Phaser.Input.Events#DRAG_END
+     * @since 3.18.0
+     *
+     * @param {Phaser.Input.Pointer} pointer - The Pointer to check the drag thresholds on.
+     * @param {number} time - The current time.
+     */
+    processDragThresholdEvent: function (pointer, time)
+    {
+        var passed = false;
+        var timeThreshold = this.dragTimeThreshold;
+        var distanceThreshold = this.dragDistanceThreshold;
+
+        if (distanceThreshold > 0 && DistanceBetween(pointer.x, pointer.y, pointer.downX, pointer.downY) >= distanceThreshold)
+        {
+            //  It has moved far enough to be considered a drag
+            passed = true;
+        }
+        else if (timeThreshold > 0 && (time >= pointer.downTime + timeThreshold))
+        {
+            //  It has been held down long enough to be considered a drag
+            passed = true;
+        }
+
+        if (passed)
+        {
+            this.setDragState(pointer, 3);
+
+            return this.processDragStartList(pointer);
+        }
+    },
+
+    /**
+     * Processes the drag list for the given pointer and dispatches the start events for each object on it.
+     *
+     * @method Phaser.Input.InputPlugin#processDragStartList
+     * @private
+     * @fires Phaser.Input.Events#DRAG_START
+     * @fires Phaser.Input.Events#GAMEOBJECT_DRAG_START
+     * @since 3.18.0
+     *
+     * @param {Phaser.Input.Pointer} pointer - The Pointer to process the drag event on.
+     * 
+     * @return {integer} The number of items that DRAG_START was called on.
+     */
+    processDragStartList: function (pointer)
+    {
+        //  3 = Pointer meets criteria and is freshly down, notify the draglist
+        if (this.getDragState(pointer) !== 3)
+        {
+            return 0;
+        }
+
+        var list = this._drag[pointer.id];
+
+        for (var i = 0; i < list.length; i++)
+        {
+            var gameObject = list[i];
+
+            var input = gameObject.input;
+
+            input.dragState = 2;
+
+            input.dragX = pointer.x - gameObject.x;
+            input.dragY = pointer.y - gameObject.y;
+
+            input.dragStartX = gameObject.x;
+            input.dragStartY = gameObject.y;
+
+            gameObject.emit(Events.GAMEOBJECT_DRAG_START, pointer, input.dragX, input.dragY);
+
+            this.emit(Events.DRAG_START, pointer, gameObject);
+        }
+
+        this.setDragState(pointer, 4);
+
+        return list.length;
+    },
+
+    /**
+     * Processes a 'drag down' event for the given pointer. Checks the pointer state, builds-up the drag list
+     * and prepares them all for interaction.
+     *
+     * @method Phaser.Input.InputPlugin#processDragDownEvent
+     * @private
+     * @since 3.18.0
+     *
+     * @param {Phaser.Input.Pointer} pointer - The Pointer to process the drag event on.
+     * 
+     * @return {integer} The number of items that were collected on the drag list.
+     */
+    processDragDownEvent: function (pointer)
+    {
+        var currentlyOver = this._temp;
+
+        if (this._draggable.length === 0 || currentlyOver.length === 0 || !pointer.primaryDown || this.getDragState(pointer) !== 0)
+        {
+            //  There are no draggable items, no over items or the pointer isn't down, so let's not even bother going further
+            return 0;
+        }
+
+        //  1 = Primary button down and objects below, so collect a draglist
+        this.setDragState(pointer, 1);
+
+        //  Get draggable objects, sort them, pick the top (or all) and store them somewhere
+        var draglist = [];
+
+        for (var i = 0; i < currentlyOver.length; i++)
+        {
+            var gameObject = currentlyOver[i];
+
+            if (gameObject.input.draggable && (gameObject.input.dragState === 0))
+            {
+                draglist.push(gameObject);
+            }
+        }
+
+        if (draglist.length === 0)
+        {
+            this.setDragState(pointer, 0);
+
+            return 0;
+        }
+        else if (draglist.length > 1)
+        {
+            this.sortGameObjects(draglist);
+
+            if (this.topOnly)
+            {
+                draglist.splice(1);
+            }
+        }
+
+        //  draglist now contains all potential candidates for dragging
+        this._drag[pointer.id] = draglist;
+
+        if (this.dragDistanceThreshold === 0 || this.dragTimeThreshold === 0)
+        {
+            //  No drag criteria, so snap immediately to mode 3
+            this.setDragState(pointer, 3);
+
+            return this.processDragStartList(pointer);
+        }
+        else
+        {
+            //  Check the distance / time on the next event
+            this.setDragState(pointer, 2);
+
+            return 0;
+        }
+    },
+
+    /**
+     * Processes a 'drag move' event for the given pointer. 
+     *
+     * @method Phaser.Input.InputPlugin#processDragMoveEvent
+     * @private
      * @fires Phaser.Input.Events#DRAG_ENTER
      * @fires Phaser.Input.Events#DRAG
      * @fires Phaser.Input.Events#DRAG_LEAVE
      * @fires Phaser.Input.Events#DRAG_OVER
-     * @fires Phaser.Input.Events#DRAG_START
-     * @fires Phaser.Input.Events#DROP
-     * @fires Phaser.Input.Events#GAMEOBJECT_DOWN
-     * @fires Phaser.Input.Events#GAMEOBJECT_DRAG_END
      * @fires Phaser.Input.Events#GAMEOBJECT_DRAG_ENTER
      * @fires Phaser.Input.Events#GAMEOBJECT_DRAG
      * @fires Phaser.Input.Events#GAMEOBJECT_DRAG_LEAVE
      * @fires Phaser.Input.Events#GAMEOBJECT_DRAG_OVER
-     * @fires Phaser.Input.Events#GAMEOBJECT_DRAG_START
-     * @fires Phaser.Input.Events#GAMEOBJECT_DROP
-     * @since 3.0.0
+     * @since 3.18.0
      *
-     * @param {Phaser.Input.Pointer} pointer - The Pointer to check against the Game Objects.
-     * @param {number} time - The time stamp of the most recent Game step.
-     *
-     * @return {integer} The total number of objects interacted with.
+     * @param {Phaser.Input.Pointer} pointer - The Pointer to process the drag event on.
+     * 
+     * @return {integer} The number of items that were updated by this drag event.
      */
-    processDragEvents: function (pointer, time)
+    processDragMoveEvent: function (pointer)
     {
-        if (this._draggable.length === 0)
+        if (this.getDragState(pointer) !== 4)
         {
-            //  There are no draggable items, so let's not even bother going further
             return 0;
         }
 
-        var i;
-        var gameObject;
-        var list;
-        var input;
-        var currentlyOver = this._temp;
-
-        //  0 = Not dragging anything
-        //  1 = Primary button down and objects below, so collect a draglist
-        //  2 = Pointer being checked if meets drag criteria
-        //  3 = Pointer meets criteria, notify the draglist
         //  4 = Pointer actively dragging the draglist and has moved
-        //  5 = Pointer actively dragging but has been released, notify draglist
+        var dropZones = this._tempZones;
 
-        if (this.getDragState(pointer) === 0 && pointer.primaryDown && pointer.justDown && currentlyOver.length > 0)
+        var list = this._drag[pointer.id];
+
+        for (var i = 0; i < list.length; i++)
         {
-            this.setDragState(pointer, 1);
-        }
-        else if (this.getDragState(pointer) > 0 && !pointer.primaryDown && pointer.justUp)
-        {
-            this.setDragState(pointer, 5);
-        }
+            var gameObject = list[i];
 
-        //  Process the various drag states
+            var input = gameObject.input;
 
-        //  1 = Primary button down and objects below, so collect a draglist
-        if (this.getDragState(pointer) === 1)
-        {
-            //  Get draggable objects, sort them, pick the top (or all) and store them somewhere
-            var draglist = [];
+            var target = input.target;
 
-            for (i = 0; i < currentlyOver.length; i++)
+            //  If this GO has a target then let's check it
+            if (target)
             {
-                gameObject = currentlyOver[i];
+                var index = dropZones.indexOf(target);
 
-                if (gameObject.input.draggable && (gameObject.input.dragState === 0))
+                //  Got a target, are we still over it?
+                if (index === 0)
                 {
-                    draglist.push(gameObject);
+                    //  We're still over it, and it's still the top of the display list, phew ...
+                    gameObject.emit(Events.GAMEOBJECT_DRAG_OVER, pointer, target);
+
+                    this.emit(Events.DRAG_OVER, pointer, gameObject, target);
                 }
-            }
-
-            if (draglist.length === 0)
-            {
-                this.setDragState(pointer, 0);
-
-                return 0;
-            }
-            else if (draglist.length > 1)
-            {
-                this.sortGameObjects(draglist);
-
-                if (this.topOnly)
+                else if (index > 0)
                 {
-                    draglist.splice(1);
+                    //  Still over it but it's no longer top of the display list (targets must always be at the top)
+                    gameObject.emit(Events.GAMEOBJECT_DRAG_LEAVE, pointer, target);
+
+                    this.emit(Events.DRAG_LEAVE, pointer, gameObject, target);
+
+                    input.target = dropZones[0];
+
+                    target = input.target;
+
+                    gameObject.emit(Events.GAMEOBJECT_DRAG_ENTER, pointer, target);
+
+                    this.emit(Events.DRAG_ENTER, pointer, gameObject, target);
                 }
-            }
-
-            //  draglist now contains all potential candidates for dragging
-            this._drag[pointer.id] = draglist;
-
-            if (this.dragDistanceThreshold === 0 && this.dragTimeThreshold === 0)
-            {
-                //  No drag criteria, so snap immediately to mode 3
-                this.setDragState(pointer, 3);
-            }
-            else
-            {
-                //  Check the distance / time
-                this.setDragState(pointer, 2);
-            }
-        }
-
-        //  2 = Pointer being checked if meets drag criteria
-        if (this.getDragState(pointer) === 2)
-        {
-            //  Has it moved far enough to be considered a drag?
-            if (this.dragDistanceThreshold > 0 && DistanceBetween(pointer.x, pointer.y, pointer.downX, pointer.downY) >= this.dragDistanceThreshold)
-            {
-                //  Alrighty, we've got a drag going on ...
-                this.setDragState(pointer, 3);
-            }
-
-            //  Held down long enough to be considered a drag?
-            if (this.dragTimeThreshold > 0 && (time >= pointer.downTime + this.dragTimeThreshold))
-            {
-                //  Alrighty, we've got a drag going on ...
-                this.setDragState(pointer, 3);
-            }
-        }
-
-        //  3 = Pointer meets criteria and is freshly down, notify the draglist
-        if (this.getDragState(pointer) === 3)
-        {
-            list = this._drag[pointer.id];
-
-            for (i = 0; i < list.length; i++)
-            {
-                gameObject = list[i];
-
-                input = gameObject.input;
-
-                input.dragState = 2;
-
-                input.dragX = pointer.x - gameObject.x;
-                input.dragY = pointer.y - gameObject.y;
-
-                input.dragStartX = gameObject.x;
-                input.dragStartY = gameObject.y;
-
-                gameObject.emit(Events.GAMEOBJECT_DRAG_START, pointer, input.dragX, input.dragY);
-
-                this.emit(Events.DRAG_START, pointer, gameObject);
-            }
-
-            this.setDragState(pointer, 4);
-
-            return list.length;
-        }
-
-        var target;
-
-        //  4 = Pointer actively dragging the draglist and has moved
-        if (this.getDragState(pointer) === 4 && pointer.justMoved && !pointer.justUp)
-        {
-            var dropZones = this._tempZones;
-
-            list = this._drag[pointer.id];
-
-            for (i = 0; i < list.length; i++)
-            {
-                gameObject = list[i];
-
-                input = gameObject.input;
-
-                target = input.target;
-
-                //  If this GO has a target then let's check it
-                if (target)
+                else
                 {
-                    var index = dropZones.indexOf(target);
+                    //  Nope, we've moved on (or the target has!), leave the old target
+                    gameObject.emit(Events.GAMEOBJECT_DRAG_LEAVE, pointer, target);
 
-                    //  Got a target, are we still over it?
-                    if (index === 0)
+                    this.emit(Events.DRAG_LEAVE, pointer, gameObject, target);
+
+                    //  Anything new to replace it?
+                    //  Yup!
+                    if (dropZones[0])
                     {
-                        //  We're still over it, and it's still the top of the display list, phew ...
-                        gameObject.emit(Events.GAMEOBJECT_DRAG_OVER, pointer, target);
-
-                        this.emit(Events.DRAG_OVER, pointer, gameObject, target);
-                    }
-                    else if (index > 0)
-                    {
-                        //  Still over it but it's no longer top of the display list (targets must always be at the top)
-                        gameObject.emit(Events.GAMEOBJECT_DRAG_LEAVE, pointer, target);
-
-                        this.emit(Events.DRAG_LEAVE, pointer, gameObject, target);
-
                         input.target = dropZones[0];
 
                         target = input.target;
@@ -1230,100 +1252,96 @@ var InputPlugin = new Class({
                     }
                     else
                     {
-                        //  Nope, we've moved on (or the target has!), leave the old target
-                        gameObject.emit(Events.GAMEOBJECT_DRAG_LEAVE, pointer, target);
-
-                        this.emit(Events.DRAG_LEAVE, pointer, gameObject, target);
-
-                        //  Anything new to replace it?
-                        //  Yup!
-                        if (dropZones[0])
-                        {
-                            input.target = dropZones[0];
-
-                            target = input.target;
-
-                            gameObject.emit(Events.GAMEOBJECT_DRAG_ENTER, pointer, target);
-
-                            this.emit(Events.DRAG_ENTER, pointer, gameObject, target);
-                        }
-                        else
-                        {
-                            //  Nope
-                            input.target = null;
-                        }
-                    }
-                }
-                else if (!target && dropZones[0])
-                {
-                    input.target = dropZones[0];
-
-                    target = input.target;
-
-                    gameObject.emit(Events.GAMEOBJECT_DRAG_ENTER, pointer, target);
-
-                    this.emit(Events.DRAG_ENTER, pointer, gameObject, target);
-                }
-
-                var dragX = pointer.x - gameObject.input.dragX;
-                var dragY = pointer.y - gameObject.input.dragY;
-
-                gameObject.emit(Events.GAMEOBJECT_DRAG, pointer, dragX, dragY);
-
-                this.emit(Events.DRAG, pointer, gameObject, dragX, dragY);
-            }
-
-            return list.length;
-        }
-
-        //  5 = Pointer was actively dragging but has been released, notify draglist
-        if (this.getDragState(pointer) === 5)
-        {
-            list = this._drag[pointer.id];
-
-            for (i = 0; i < list.length; i++)
-            {
-                gameObject = list[i];
-
-                input = gameObject.input;
-
-                if (input && input.dragState === 2)
-                {
-                    input.dragState = 0;
-
-                    input.dragX = input.localX - gameObject.displayOriginX;
-                    input.dragY = input.localY - gameObject.displayOriginY;
-
-                    var dropped = false;
-
-                    target = input.target;
-
-                    if (target)
-                    {
-                        gameObject.emit(Events.GAMEOBJECT_DROP, pointer, target);
-
-                        this.emit(Events.DROP, pointer, gameObject, target);
-
+                        //  Nope
                         input.target = null;
-
-                        dropped = true;
-                    }
-
-                    //  And finally the dragend event
-
-                    if (gameObject.input)
-                    {
-                        gameObject.emit(Events.GAMEOBJECT_DRAG_END, pointer, input.dragX, input.dragY, dropped);
-
-                        this.emit(Events.DRAG_END, pointer, gameObject, dropped);
                     }
                 }
             }
+            else if (!target && dropZones[0])
+            {
+                input.target = dropZones[0];
 
-            this.setDragState(pointer, 0);
+                target = input.target;
 
-            list.splice(0);
+                gameObject.emit(Events.GAMEOBJECT_DRAG_ENTER, pointer, target);
+
+                this.emit(Events.DRAG_ENTER, pointer, gameObject, target);
+            }
+
+            var dragX = pointer.x - gameObject.input.dragX;
+            var dragY = pointer.y - gameObject.input.dragY;
+
+            gameObject.emit(Events.GAMEOBJECT_DRAG, pointer, dragX, dragY);
+
+            this.emit(Events.DRAG, pointer, gameObject, dragX, dragY);
         }
+
+        return list.length;
+    },
+
+    /**
+     * Processes a 'drag down' event for the given pointer. Checks the pointer state, builds-up the drag list
+     * and prepares them all for interaction.
+     *
+     * @method Phaser.Input.InputPlugin#processDragUpEvent
+     * @fires Phaser.Input.Events#DRAG_END
+     * @fires Phaser.Input.Events#DROP
+     * @fires Phaser.Input.Events#GAMEOBJECT_DRAG_END
+     * @fires Phaser.Input.Events#GAMEOBJECT_DROP
+     * @private
+     * @since 3.18.0
+     *
+     * @param {Phaser.Input.Pointer} pointer - The Pointer to process the drag event on.
+     * 
+     * @return {integer} The number of items that were updated by this drag event.
+     */
+    processDragUpEvent: function (pointer)
+    {
+        //  5 = Pointer was actively dragging but has been released, notify draglist
+        var list = this._drag[pointer.id];
+
+        for (var i = 0; i < list.length; i++)
+        {
+            var gameObject = list[i];
+
+            var input = gameObject.input;
+
+            if (input && input.dragState === 2)
+            {
+                input.dragState = 0;
+
+                input.dragX = input.localX - gameObject.displayOriginX;
+                input.dragY = input.localY - gameObject.displayOriginY;
+
+                var dropped = false;
+
+                var target = input.target;
+
+                if (target)
+                {
+                    gameObject.emit(Events.GAMEOBJECT_DROP, pointer, target);
+
+                    this.emit(Events.DROP, pointer, gameObject, target);
+
+                    input.target = null;
+
+                    dropped = true;
+                }
+
+                //  And finally the dragend event
+
+                if (gameObject.input)
+                {
+                    gameObject.emit(Events.GAMEOBJECT_DRAG_END, pointer, input.dragX, input.dragY, dropped);
+
+                    this.emit(Events.DRAG_END, pointer, gameObject, dropped);
+                }
+            }
+        }
+
+        this.setDragState(pointer, 0);
+
+        list.splice(0);
 
         return 0;
     },
@@ -1332,10 +1350,10 @@ var InputPlugin = new Class({
      * An internal method that handles the Pointer movement event.
      *
      * @method Phaser.Input.InputPlugin#processMoveEvents
+     * @private
      * @fires Phaser.Input.Events#GAMEOBJECT_POINTER_MOVE
      * @fires Phaser.Input.Events#GAMEOBJECT_MOVE
      * @fires Phaser.Input.Events#POINTER_MOVE
-     * @private
      * @since 3.0.0
      *
      * @param {Phaser.Input.Pointer} pointer - The pointer to check for events against.
@@ -2218,7 +2236,10 @@ var InputPlugin = new Class({
     },
 
     /**
-     * Causes the Input Manager to stop emitting any events for the remainder of this game step.
+     * This method should be called from within an input event handler, such as `pointerdown`.
+     * 
+     * When called, it stops the Input Manager from allowing _this specific event_ to be processed by any other Scene
+     * not yet handled in the scene list.
      *
      * @method Phaser.Input.InputPlugin#stopPropagation
      * @since 3.0.0
@@ -2227,10 +2248,7 @@ var InputPlugin = new Class({
      */
     stopPropagation: function ()
     {
-        if (this.manager.globalTopOnly)
-        {
-            this.manager.ignoreEvents = true;
-        }
+        this.manager._tempSkip = true;
 
         return this;
     },
