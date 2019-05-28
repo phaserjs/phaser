@@ -243,12 +243,12 @@ var TweenManager = new Class({
     },
 
     /**
-     * Create a Tween and add it to the active Tween list.
+     * Create a Number Tween and add it to the active Tween list.
      *
      * @method Phaser.Tweens.TweenManager#addCounter
      * @since 3.0.0
      *
-     * @param {object} config - The configuration object for the Number Tween as per the {@link Phaser.Tweens.Builders.NumberTweenBuilder}.
+     * @param {Phaser.Types.Tweens.NumberTweenBuilderConfig} config - The configuration object for the Number Tween.
      *
      * @return {Phaser.Tweens.Tween} The created Number Tween.
      */
