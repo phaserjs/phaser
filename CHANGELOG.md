@@ -9,7 +9,8 @@ The old 'input queue' legacy system, which was deprecated in 3.16, has been remo
 * Removed the `inputQueue` Game config property.
 * Removed the `useQueue`, `queue` and `_updatedThisFrame` properties from the Input Manager.
 * Removed the `legacyUpdate` and `update` methods from the Input Manager.
-* The Input Manager no longer listens for the `GameEvents.POST_STEP` event. Processing has been moved to a `GameEvents.POST_RENDER` event handler.
+* Removed the `ignoreEvents` property as this should now be handled on a per-event basis.
+* The Input Manager no longer listens for the `GameEvents.POST_STEP` event.
 
 As a result, all of the following Input Manager methods have been renamed:
 
@@ -32,8 +33,24 @@ Also, CSS cursors can now be set directly:
 
 * Cursors are now set and reset immediately on the canvas, leading to the removal of `_setCursor` and `_customCursor` properties.
 
-Pointer.lastAction
-Pointer calls reset itself
+The following changes took place in the Input Plugin class:
+
+* The method `processDragEvents` has been removed as it's now split across smaller, more explicit methods.
+* `processDragDownEvent` is a new method that handles a down event for drag enabled Game Objects.
+* `processDragMoveEvent` is a new method that handles a move event for drag enabled Game Objects.
+* `processDragUpEvent` is a new method that handles an up event for drag enabled Game Objects.
+* `processDragStartList` is a new internal method that builds a drag list for a pointer.
+* `processDragThresholdEvent` is a new internal method that tests when a pointer with drag thresholds can drag.
+
+The following changes took place in the Pointer class:
+
+* `Pointer.dirty` has been removed as it's no longer required.
+* `Pointer.justDown` has been removed as it's not used internally and makes no sense under the DOM event system.
+* `Pointer.justUp` has been removed as it's not used internally and makes no sense under the DOM event system.
+* `Pointer.justMoved` has been removed as it's not used internally and makes no sense under the DOM event system.
+* The `Pointer.reset` method has been removed as it's no longer required internally.
+
+
 
 ### New Features
 
