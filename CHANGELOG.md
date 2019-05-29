@@ -63,6 +63,10 @@ The following changes took place in the Pointer class:
 * `Matter.Factory.velocity` is a new method that allows you to set the velocity on a Matter Body directly.
 * `Matter.Factory.angularVelocity` is a new method that allows you to set the angular velocity on a Matter Body directly.
 * `Matter.Factory.force` is a new method that allows you to apply a force from a world position on a Matter Body directly.
+* `GetBounds.getTopCenter` is a new method that will return the top-center point from the bounds of a Game Object.
+* `GetBounds.getBottomCenter` is a new method that will return the bottom-center point from the bounds of a Game Object.
+* `GetBounds.getLeftCenter` is a new method that will return the left-center point from the bounds of a Game Object.
+* `GetBounds.getRightCenter` is a new method that will return the right-center point from the bounds of a Game Object.
 
 ### Updates
 
@@ -74,6 +78,7 @@ The following changes took place in the Pointer class:
 * The `TimeStep.step` method no longer uses the time value passed to the raf callback, as it's not actually the current point in time, but rather the time that the main thread began at. Which doesn't help if we're comparing it to event timestamps.
 * `TimeStep.now` is a new property that holds the exact `performance.now` value, as set at the start of the current game step.
 * `Matter.Factory.fromVertices` can now take a vertices path string as its `vertexSets` argument, as well as an array of vertices.
+* `GetBounds.prepareBoundsOutput` is a new private method that handles processing the output point. All of the bounds methods now use this, allowing us to remove a lot of duplicated code.
 
 ### Bug Fixes
 
