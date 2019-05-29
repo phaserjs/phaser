@@ -73,6 +73,7 @@ The following changes took place in the Pointer class:
 * The `TimeStep` will no longer set its `frame` property to zero in the `resetDelta` method. Instead, this property is incremented every step, no matter what, giving an accurate indication of exactly which frame something happened on internally.
 * The `TimeStep.step` method no longer uses the time value passed to the raf callback, as it's not actually the current point in time, but rather the time that the main thread began at. Which doesn't help if we're comparing it to event timestamps.
 * `TimeStep.now` is a new property that holds the exact `performance.now` value, as set at the start of the current game step.
+* `Matter.Factory.fromVertices` can now take a vertices path string as its `vertexSets` argument, as well as an array of vertices.
 
 ### Bug Fixes
 

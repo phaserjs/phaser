@@ -14,6 +14,7 @@ var MatterImage = require('./MatterImage');
 var MatterSprite = require('./MatterSprite');
 var MatterTileBody = require('./MatterTileBody');
 var PointerConstraint = require('./PointerConstraint');
+var Vertices = require('./lib/geometry/Vertices');
 
 /**
  * @classdesc
@@ -162,16 +163,21 @@ var Factory = new Class({
      *
      * @param {number} x - The X coordinate of the center of the Body.
      * @param {number} y - The Y coordinate of the center of the Body.
-     * @param {array} vertexSets - [description]
-     * @param {object} options - [description]
-     * @param {boolean} flagInternal - Flag internal edges (coincident part edges)
-     * @param {boolean} removeCollinear - Whether Matter.js will discard collinear edges (to improve performance).
-     * @param {number} minimumArea - During decomposition discard parts that have an area less than this
+     * @param {(string|array)} vertexSets - [description]
+     * @param {object} [options] - [description]
+     * @param {boolean} [flagInternal=false] - Flag internal edges (coincident part edges)
+     * @param {number} [removeCollinear=0.01] - Whether Matter.js will discard collinear edges (to improve performance).
+     * @param {number} [minimumArea=10] - During decomposition discard parts that have an area less than this.
      *
      * @return {MatterJS.Body} A Matter JS Body.
      */
     fromVertices: function (x, y, vertexSets, options, flagInternal, removeCollinear, minimumArea)
     {
+        if (typeof vertexSets === 'string')
+        {
+            vertexSets = Vertices.fromPath(vertexSets);
+        }
+
         var body = Bodies.fromVertices(x, y, vertexSets, options, flagInternal, removeCollinear, minimumArea);
 
         this.world.add(body);
