@@ -23,7 +23,7 @@ var TweenData = require('../tween/TweenData');
  * @since 3.0.0
  *
  * @param {(Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline)} parent - The owner of the new Tween.
- * @param {Phaser.Types.Tweens.TweenBuilderConfig} config - Configuration for the new Tween.
+ * @param {Phaser.Types.Tweens.TweenBuilderConfig|object} config - Configuration for the new Tween.
  * @param {Phaser.Types.Tweens.TweenConfigDefaults} defaults - Tween configuration defaults.
  *
  * @return {Phaser.Tweens.Tween} The new tween.
