@@ -159,9 +159,17 @@ var PluginManager = new Class({
             mapping = GetFastValue(entry, 'mapping', null);
             data = GetFastValue(entry, 'data', null);
 
-            if (key && plugin)
+            if (key)
             {
-                this.install(key, plugin, start, mapping, data);
+                if (plugin)
+                {
+                    this.install(key, plugin, start, mapping, data);
+                }
+                else
+                {
+                    console.warn('Missing `plugin` for key: ' + key);
+                }
+                
             }
         }
 
@@ -181,9 +189,16 @@ var PluginManager = new Class({
             plugin = GetFastValue(entry, 'plugin', null);
             mapping = GetFastValue(entry, 'mapping', null);
 
-            if (key && plugin)
+            if (key)
             {
-                this.installScenePlugin(key, plugin, mapping);
+                if (plugin)
+                {
+                    this.installScenePlugin(key, plugin, mapping);
+                }
+                else
+                {
+                    console.warn('Missing `plugin` for key: ' + key);
+                }
             }
         }
 
