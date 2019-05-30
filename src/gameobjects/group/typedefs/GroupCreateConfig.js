@@ -10,7 +10,7 @@
  * @typedef {object} Phaser.Types.GameObjects.Group.GroupCreateConfig
  * @since 3.0.0
  *
- * @property {?Phaser.Types.GameObjects.Group.GroupClassTypeConstructor} [classType] - The class of each new Game Object.
+ * @property {?Function} [classType] - The class of each new Game Object.
  * @property {(string|string[])} [key] - The texture key of each new Game Object.
  * @property {?(string|string[]|integer|integer[])} [frame=null] - The texture frame of each new Game Object.
  * @property {?boolean} [visible=true] - The visible state of each new Game Object.

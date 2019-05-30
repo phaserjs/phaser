@@ -2,7 +2,7 @@
  * @typedef {object} Phaser.Types.GameObjects.Group.GroupConfig
  * @since 3.0.0
  *
- * @property {?Phaser.Types.GameObjects.Group.GroupClassTypeConstructor} [classType=Sprite] - Sets {@link Phaser.GameObjects.Group#classType}.
+ * @property {?Function} [classType=Sprite] - Sets {@link Phaser.GameObjects.Group#classType}.
  * @property {?boolean} [active=true] - Sets {@link Phaser.GameObjects.Group#active}.
  * @property {?number} [maxSize=-1] - Sets {@link Phaser.GameObjects.Group#maxSize}.
  * @property {?string} [defaultKey=null] - Sets {@link Phaser.GameObjects.Group#defaultKey}.
