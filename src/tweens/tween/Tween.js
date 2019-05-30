@@ -1423,7 +1423,7 @@ Tween.TYPES = [
  * @method Phaser.GameObjects.GameObjectFactory#tween
  * @since 3.0.0
  *
- * @param {object} config - The Tween configuration.
+ * @param {Phaser.Types.Tweens.TweenBuilderConfig|object} config - The Tween configuration.
  *
  * @return {Phaser.Tweens.Tween} The Tween that was created.
  */
@@ -1448,7 +1448,7 @@ GameObjectFactory.register('tween', function (config)
  * @method Phaser.GameObjects.GameObjectCreator#tween
  * @since 3.0.0
  *
- * @param {object} config - The Tween configuration.
+ * @param {Phaser.Types.Tweens.TweenBuilderConfig|object} config - The Tween configuration.
  *
  * @return {Phaser.Tweens.Tween} The Tween that was created.
  */
