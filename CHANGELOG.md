@@ -79,6 +79,7 @@ The following changes took place in the Pointer class:
 * `TimeStep.now` is a new property that holds the exact `performance.now` value, as set at the start of the current game step.
 * `Matter.Factory.fromVertices` can now take a vertices path string as its `vertexSets` argument, as well as an array of vertices.
 * `GetBounds.prepareBoundsOutput` is a new private method that handles processing the output point. All of the bounds methods now use this, allowing us to remove a lot of duplicated code.
+* The PluginManager will now display a console warning if it skips installing a plugin (during boot) because the plugin value is missing or empty (thanks @samme)
 
 ### Bug Fixes
 
