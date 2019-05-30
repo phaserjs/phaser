@@ -534,8 +534,8 @@ var Tilemap = new Class({
      *
      * @param {(integer|string)} layerID - The layer array index value, or if a string is given, the layer name from Tiled.
      * @param {(string|string[]|Phaser.Tilemaps.Tileset|Phaser.Tilemaps.Tileset[])} tileset - The tileset, or an array of tilesets, used to render this layer. Can be a string or a Tileset object.
-     * @param {number} x - The x position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
-     * @param {number} y - The y position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
+     * @param {number} [x=0] - The x position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
+     * @param {number} [y=0] - The y position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
      *
      * @return {?Phaser.Tilemaps.DynamicTilemapLayer} Returns the new layer was created, or null if it failed.
      */
