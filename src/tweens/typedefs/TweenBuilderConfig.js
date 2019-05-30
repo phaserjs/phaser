@@ -5,7 +5,7 @@
  * @property {any} targets - The object, or an array of objects, to run the tween on.
  * @property {number} [delay=0] - The number of milliseconds to delay before the tween will start.
  * @property {number} [duration=1000] - The duration of the tween in milliseconds.
- * @property {string} [ease='Power0'] - The easing equation to use for the tween.
+ * @property {(string|function)} [ease='Power0'] - The easing equation to use for the tween.
  * @property {array} [easeParams] - Optional easing parameters.
  * @property {number} [hold=0] - The number of milliseconds to hold the tween for before yoyo'ing.
  * @property {number} [repeat=0] - The number of times each property tween repeats.
