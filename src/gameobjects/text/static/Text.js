@@ -185,7 +185,7 @@ var Text = new Class({
          * @private
          * @since 3.12.0
          */
-        this._text = '';
+        this._text = undefined;
 
         /**
          * Specify a padding value which is added to the line width and height when calculating the Text size.
@@ -1118,36 +1118,34 @@ var Text = new Class({
 
         var padding = this.padding;
 
-        var w = textSize.width + padding.left + padding.right;
-        var h = textSize.height + padding.top + padding.bottom;
+        var textWidth;
 
         if (style.fixedWidth === 0)
         {
-            this.width = w;
+            this.width = textSize.width + padding.left + padding.right;
+            textWidth = textSize.width;
         }
         else
         {
             this.width = style.fixedWidth;
+            textWidth = this.width - padding.left - padding.right;
+            if (textWidth < textSize.width) 
+            {
+                textWidth = textSize.width;
+            }
         }
 
         if (style.fixedHeight === 0)
         {
-            this.height = h;
+            this.height = textSize.height + padding.top + padding.bottom;
         }
         else
         {
             this.height = style.fixedHeight;
         }
 
-        if (w > this.width)
-        {
-            w = this.width;
-        }
-
-        if (h > this.height)
-        {
-            h = this.height;
-        }
+        var w = this.width;
+        var h = this.height;
 
         this.updateDisplayOrigin();
 
@@ -1208,11 +1206,11 @@ var Text = new Class({
             }
             else if (style.align === 'right')
             {
-                linePositionX += textSize.width - textSize.lineWidths[i];
+                linePositionX += textWidth - textSize.lineWidths[i];
             }
             else if (style.align === 'center')
             {
-                linePositionX += (textSize.width - textSize.lineWidths[i]) / 2;
+                linePositionX += (textWidth - textSize.lineWidths[i]) / 2;
             }
 
             if (this.autoRound)
