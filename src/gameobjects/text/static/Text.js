@@ -1123,13 +1123,16 @@ var Text = new Class({
         if (style.fixedWidth === 0)
         {
             this.width = textSize.width + padding.left + padding.right;
+
             textWidth = textSize.width;
         }
         else
         {
             this.width = style.fixedWidth;
+
             textWidth = this.width - padding.left - padding.right;
-            if (textWidth < textSize.width) 
+
+            if (textWidth < textSize.width)
             {
                 textWidth = textSize.width;
             }
@@ -1162,7 +1165,8 @@ var Text = new Class({
 
             this.frame.setSize(w, h);
 
-            style.syncFont(canvas, context); // Resizing resets the context
+            //  Because resizing the canvas resets the context
+            style.syncFont(canvas, context);
         }
         else
         {
