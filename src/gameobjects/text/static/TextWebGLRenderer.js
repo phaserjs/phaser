@@ -23,7 +23,7 @@ var Utils = require('../../../renderer/webgl/Utils');
  */
 var TextWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    if (src.text === '')
+    if ((src.width === 0) || (src.height === 0))
     {
         return;
     }
