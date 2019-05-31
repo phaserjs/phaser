@@ -5,6 +5,7 @@
  */
 
 var Body = require('./lib/body/Body');
+var Bodies = require('./lib/factory/Bodies');
 var Class = require('../../utils/Class');
 var Factory = require('./Factory');
 var GetFastValue = require('../../utils/object/GetFastValue');
@@ -100,6 +101,15 @@ var MatterPhysics = new Class({
          * @since 3.18.0
          */
         this.body = Body;
+
+        /**
+         * A reference to the `Matter.Bodies` module which contains methods for creating bodies.
+         *
+         * @name Phaser.Physics.Matter.MatterPhysics#bodies
+         * @type {MatterJS.Bodies}
+         * @since 3.18.0
+         */
+        this.bodies = Bodies;
 
         //  Matter plugins
 
