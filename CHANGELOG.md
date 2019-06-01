@@ -80,6 +80,8 @@ The following changes took place in the Pointer class:
 * `Matter.Factory.fromVertices` can now take a vertices path string as its `vertexSets` argument, as well as an array of vertices.
 * `GetBounds.prepareBoundsOutput` is a new private method that handles processing the output point. All of the bounds methods now use this, allowing us to remove a lot of duplicated code.
 * The PluginManager will now display a console warning if it skips installing a plugin (during boot) because the plugin value is missing or empty (thanks @samme)
+* When creating a Matter Constraint via the Factory you can now optionally provide a `length`. If not given, it will determine the length automatically from the position of the two bodies.
+* When creating a Matter Game Object you can now pass in a pre-created Matter body instead of a config object.
 
 ### Bug Fixes
 
