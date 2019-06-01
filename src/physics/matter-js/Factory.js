@@ -440,7 +440,7 @@ var Factory = new Class({
      *
      * @param {MatterJS.Body} bodyA - [description]
      * @param {MatterJS.Body} bodyB - [description]
-     * @param {number} length - [description]
+     * @param {number} [length] - [description]
      * @param {number} [stiffness=1] - [description]
      * @param {object} [options={}] - [description]
      *
@@ -453,7 +453,12 @@ var Factory = new Class({
 
         options.bodyA = (bodyA.type === 'body') ? bodyA : bodyA.body;
         options.bodyB = (bodyB.type === 'body') ? bodyB : bodyB.body;
-        options.length = length;
+
+        if (length)
+        {
+            options.length = length;
+        }
+
         options.stiffness = stiffness;
 
         var constraint = Constraint.create(options);
@@ -605,7 +610,7 @@ var Factory = new Class({
      * @since 3.3.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to inject the Matter Body in to.
-     * @param {object} options - [description]
+     * @param {(object|MatterJS.Body)} options - A Matter Body configuration object, or an instance of a Matter Body.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that had the Matter Body injected into it.
      */

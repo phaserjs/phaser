@@ -31,7 +31,7 @@ function hasGetterOrSetter (def)
  *
  * @param {Phaser.Physics.Matter.World} world - The Matter world to add the body to.
  * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that will have the Matter body applied to it.
- * @param {object} options - Matter options config object.
+ * @param {(object|MatterJS.Body)} options - A Matter Body configuration object, or an instance of a Matter Body.
  *
  * @return {Phaser.GameObjects.GameObject} The Game Object that was created with the Matter body.
  */
@@ -90,14 +90,21 @@ var MatterGameObject = function (world, gameObject, options)
 
     gameObject._tempVec2 = new Vector2(x, y);
 
-    var shape = GetFastValue(options, 'shape', null);
-
-    if (!shape)
+    if (options.hasOwnProperty('type') && options.type === 'body')
     {
-        shape = 'rectangle';
+        gameObject.setExistingBody(options, true);
     }
+    else
+    {
+        var shape = GetFastValue(options, 'shape', null);
 
-    gameObject.setBody(shape, options);
+        if (!shape)
+        {
+            shape = 'rectangle';
+        }
+    
+        gameObject.setBody(shape, options);
+    }
 
     return gameObject;
 };
