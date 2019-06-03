@@ -264,7 +264,7 @@ var Timeline = new Class({
     },
 
     /**
-     * Gets the value of the time scale applied to this Timeline. A value of 1 runs in real-time. A value of 0.5 runs 50% slower, and so on. 
+     * Gets the value of the time scale applied to this Timeline. A value of 1 runs in real-time. A value of 0.5 runs 50% slower, and so on.
      *
      * @method Phaser.Tweens.Timeline#getTimeScale
      * @since 3.0.0
@@ -290,12 +290,12 @@ var Timeline = new Class({
     },
 
     /**
-     * [description]
+     * Creates a new Tween and adds it to this Timeline.
      *
      * @method Phaser.Tweens.Timeline#add
      * @since 3.0.0
      *
-     * @param {object} config - [description]
+     * @param {(Phaser.Types.Tweens.TweenBuilderConfig|object)} config - The configuration object for the Tween.
      *
      * @return {Phaser.Tweens.Timeline} This Timeline object.
      */
@@ -305,12 +305,12 @@ var Timeline = new Class({
     },
 
     /**
-     * [description]
+     * Adds a Tween to this Timeline.
      *
      * @method Phaser.Tweens.Timeline#queue
      * @since 3.0.0
      *
-     * @param {Phaser.Tweens.Tween} tween - [description]
+     * @param {Phaser.Tweens.Tween} tween - The tween
      *
      * @return {Phaser.Tweens.Timeline} This Timeline object.
      */
@@ -330,14 +330,14 @@ var Timeline = new Class({
     },
 
     /**
-     * [description]
+     * Checks whether a tween has an offset value.
      *
      * @method Phaser.Tweens.Timeline#hasOffset
      * @since 3.0.0
      *
-     * @param {Phaser.Tweens.Tween} tween - [description]
+     * @param {Phaser.Tweens.Tween} tween - The tween
      *
-     * @return {boolean} [description]
+     * @return {boolean} True if the tween has a non-null offset.
      */
     hasOffset: function (tween)
     {
@@ -604,12 +604,14 @@ var Timeline = new Class({
     },
 
     /**
-     * [description]
+     * Updates the Timeline's `state` and fires callbacks and events.
      *
      * @method Phaser.Tweens.Timeline#nextState
      * @fires Phaser.Tweens.Events#TIMELINE_COMPLETE
      * @fires Phaser.Tweens.Events#TIMELINE_LOOP
      * @since 3.0.0
+     *
+     * @see Phaser.Tweens.Timeline#update
      */
     nextState: function ()
     {
@@ -674,7 +676,7 @@ var Timeline = new Class({
      * @fires Phaser.Tweens.Events#TIMELINE_UPDATE
      * @since 3.0.0
      *
-     * @param {number} timestamp - [description]
+     * @param {number} timestamp - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      *
      * @return {boolean} Returns `true` if this Timeline has finished and should be removed from the Tween Manager.
