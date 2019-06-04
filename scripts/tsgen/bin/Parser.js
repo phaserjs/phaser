@@ -400,7 +400,7 @@ class Parser {
         if (name.indexOf('*') != -1) {
             name = name.split('*').join('any');
         }
-        if (name.indexOf('.<') != -1) {
+        if (name.indexOf('.<') != -1 && name !== 'Array.<function()>') {
             name = name.split('.<').join('<');
         }
         return name;
@@ -410,6 +410,8 @@ class Parser {
             return 'number';
         if (name === 'function')
             return 'Function';
+        if (name === 'Array.<function()>')
+            return 'Function[]';
         if (name === 'array')
             return 'any[]';
         if (name.startsWith('Array<')) {

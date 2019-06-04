@@ -490,7 +490,7 @@ export class Parser {
         if (name.indexOf('*') != -1) {
             name = (<string>name).split('*').join('any');
         }
-        if (name.indexOf('.<') != -1) {
+        if (name.indexOf('.<') != -1 && name !== 'Array.<function()>') {
             name = (<string>name).split('.<').join('<');
         }
         return name;
@@ -499,6 +499,7 @@ export class Parser {
     private processTypeName(name: string): string {
         if (name === 'float') return 'number';
         if (name === 'function') return 'Function';
+        if (name === 'Array.<function()>') return 'Function[]';
         if (name === 'array') return 'any[]';
 
         if (name.startsWith('Array<')) {
