@@ -57,6 +57,7 @@ var WebGLRenderer = new Class({
 
         var contextCreationConfig = {
             alpha: gameConfig.transparent,
+            desynchronized: gameConfig.desynchronized,
             depth: false,
             antialias: gameConfig.antialias,
             premultipliedAlpha: gameConfig.premultipliedAlpha,

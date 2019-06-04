@@ -338,6 +338,11 @@ var Config = new Class({
         this.antialias = GetValue(renderConfig, 'antialias', true);
 
         /**
+         * @const {boolean} Phaser.Core.Config#desynchronized - When set to `true` it will create a desynchronized context for both 2D and WebGL. See https://developers.google.com/web/updates/2019/05/desynchronized for details.
+         */
+        this.desynchronized = GetValue(renderConfig, 'desynchronized', false);
+
+        /**
          * @const {boolean} Phaser.Core.Config#roundPixels - Draw texture-based Game Objects at only whole-integer positions. Game Objects without textures, like Graphics, ignore this property.
          */
         this.roundPixels = GetValue(renderConfig, 'roundPixels', false);
