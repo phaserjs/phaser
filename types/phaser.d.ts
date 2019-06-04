@@ -4032,13 +4032,13 @@ declare namespace Phaser {
 
         /**
          * Returns the current game frame.
+         * 
          * When the game starts running, the frame is incremented every time Request Animation Frame, or Set Timeout, fires.
          */
         getFrame(): number;
 
         /**
-         * Returns the current game timestamp.
-         * When the game starts running, the frame is incremented every time Request Animation Frame, or Set Timeout, fires.
+         * Returns the time that the current game step started at, as based on `performance.now`.
          */
         getTime(): number;
 
@@ -4263,11 +4263,6 @@ declare namespace Phaser {
              * The smoothing factor to apply during Pointer movement. See {@link Phaser.Input.Pointer#smoothFactor}.
              */
             readonly inputSmoothFactor: integer;
-
-            /**
-             * Should Phaser use a queued input system for native DOM Events or not?
-             */
-            readonly inputQueue: boolean;
 
             /**
              * Should Phaser listen for input events on the Window? If you disable this, events like 'POINTER_UP_OUTSIDE' will no longer fire.
@@ -4680,69 +4675,84 @@ declare namespace Phaser {
             readonly forceSetTimeOut: boolean;
 
             /**
-             * [description]
+             * The time, calculated at the start of the current step, as smoothed by the delta value.
              */
-            time: integer;
+            time: number;
 
             /**
-             * [description]
+             * The time at which the game started running. This value is adjusted if the game is then
+             * paused and resumes.
              */
-            startTime: integer;
+            startTime: number;
 
             /**
-             * [description]
+             * The time, as returned by `performance.now` of the previous step.
              */
-            lastTime: integer;
+            lastTime: number;
 
             /**
-             * [description]
+             * The current frame the game is on. This counter is incremented once every game step, regardless of how much
+             * time has passed and is unaffected by delta smoothing.
              */
             readonly frame: integer;
 
             /**
-             * [description]
+             * Is the browser currently considered in focus by the Page Visibility API?
+             * This value is set in the `blur` method, which is called automatically by the Game instance.
              */
             readonly inFocus: boolean;
 
             /**
-             * [description]
+             * The delta time, in ms, since the last game step. This is a clamped and smoothed average value.
              */
             delta: integer;
 
             /**
-             * [description]
+             * Internal index of the delta history position.
              */
             deltaIndex: integer;
 
             /**
-             * [description]
+             * Internal array holding the previous delta values, used for delta smoothing.
              */
             deltaHistory: integer[];
 
             /**
-             * [description]
+             * The maximum number of delta values that are retained in order to calculate a smoothed moving average.
+             * 
+             * This can be changed in the Game Config via the `fps.deltaHistory` property. The default is 10.
              */
             deltaSmoothingMax: integer;
 
             /**
-             * [description]
+             * The number of frames that the cooldown is set to after the browser panics over the FPS rate, usually
+             * as a result of switching tabs and regaining focus.
+             * 
+             * This can be changed in the Game Config via the `fps.panicMax` property. The default is 120.
              */
             panicMax: integer;
 
             /**
              * The actual elapsed time in ms between one update and the next.
-             * Unlike with `delta` no smoothing, capping, or averaging is applied to this value.
-             * So please be careful when using this value in calculations.
+             * 
+             * Unlike with `delta`, no smoothing, capping, or averaging is applied to this value.
+             * So please be careful when using this value in math calculations.
              */
             rawDelta: number;
 
             /**
-             * Called when the DOM window.onBlur event triggers.
+             * The time, as returned by `performance.now` at the very start of the current step.
+             * This can differ from the `time` value in that it isn't calculated based on the delta value.
+             */
+            now: number;
+
+            /**
+             * Called by the Game instance when the DOM window.onBlur event triggers.
              */
             blur(): void;
 
             /**
-             * Called when the DOM window.onFocus event triggers.
+             * Called by the Game instance when the DOM window.onFocus event triggers.
              */
             focus(): void;
 
@@ -4757,7 +4767,8 @@ declare namespace Phaser {
             resume(): void;
 
             /**
-             * [description]
+             * Resets the time, lastTime, fps averages and delta history.
+             * Called automatically when a browser sleeps them resumes.
              */
             resetDelta(): void;
 
@@ -4772,12 +4783,11 @@ declare namespace Phaser {
              * The main step method. This is called each time the browser updates, either by Request Animation Frame,
              * or by Set Timeout. It is responsible for calculating the delta values, frame totals, cool down history and more.
              * You generally should never call this method directly.
-             * @param time The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
              */
-            step(time: number): void;
+            step(): void;
 
             /**
-             * Manually calls TimeStep.step, passing in the performance.now value to it.
+             * Manually calls `TimeStep.step`.
              */
             tick(): void;
 
@@ -10722,6 +10732,13 @@ declare namespace Phaser {
                  */
                 getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
                 /**
+                 * Gets the top-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+                /**
                  * Gets the top-right corner coordinate of this Game Object, regardless of origin.
                  * The returned point is calculated in local space and does not factor in any parent containers
                  * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -10729,12 +10746,33 @@ declare namespace Phaser {
                  */
                 getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
                 /**
+                 * Gets the left-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+                /**
+                 * Gets the right-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+                /**
                  * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
                  * The returned point is calculated in local space and does not factor in any parent containers
                  * @param output An object to store the values in. If not provided a new Vector2 will be created.
                  * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
                  */
                 getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+                /**
+                 * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
                 /**
                  * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
                  * The returned point is calculated in local space and does not factor in any parent containers
@@ -10887,7 +10925,7 @@ declare namespace Phaser {
                  * @param path The Path this PathFollower is following. It can only follow one Path at a time.
                  * @param config Settings for the PathFollower.
                  */
-                setPath(path: Phaser.Curves.Path, config?: Phaser.Types.GameObjects.PathFollower.PathConfig): Phaser.GameObjects.PathFollower;
+                setPath(path: Phaser.Curves.Path, config?: number | Phaser.Types.GameObjects.PathFollower.PathConfig | Phaser.Types.Tweens.NumberTweenBuilderConfig): Phaser.GameObjects.PathFollower;
                 /**
                  * Set whether the PathFollower should automatically rotate to point in the direction of the Path.
                  * @param value Whether the PathFollower should automatically rotate to point in the direction of the Path.
@@ -10905,7 +10943,7 @@ declare namespace Phaser {
                  * @param config The duration of the follow, or a PathFollower config object. Default {}.
                  * @param startAt Optional start position of the follow, between 0 and 1. Default 0.
                  */
-                startFollow(config?: number | Phaser.Types.GameObjects.PathFollower.PathConfig, startAt?: number): Phaser.GameObjects.PathFollower;
+                startFollow(config?: number | Phaser.Types.GameObjects.PathFollower.PathConfig | Phaser.Types.Tweens.NumberTweenBuilderConfig, startAt?: number): Phaser.GameObjects.PathFollower;
                 /**
                  * Pauses this PathFollower. It will still continue to render, but it will remain motionless at the
                  * point on the Path at which you paused it.
@@ -14632,7 +14670,7 @@ declare namespace Phaser {
              * Note: This method will only be available if Tweens have been built into Phaser.
              * @param config The Tween configuration.
              */
-            tween(config: object): Phaser.Tweens.Tween;
+            tween(config: Phaser.Types.Tweens.TweenBuilderConfig | object): Phaser.Tweens.Tween;
 
         }
 
@@ -15375,7 +15413,7 @@ declare namespace Phaser {
              * Note: This method will only be available Tweens have been built into Phaser.
              * @param config The Tween configuration.
              */
-            tween(config: object): Phaser.Tweens.Tween;
+            tween(config: Phaser.Types.Tweens.TweenBuilderConfig | object): Phaser.Tweens.Tween;
 
         }
 
@@ -16368,7 +16406,7 @@ declare namespace Phaser {
             /**
              * The class to create new group members from.
              */
-            classType: Phaser.Types.GameObjects.Group.GroupClassTypeConstructor;
+            classType: Function;
 
             /**
              * Whether this group runs its {@link Phaser.GameObjects.Group#preUpdate} method
@@ -16887,6 +16925,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -16895,12 +16941,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -17925,6 +17995,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -17933,12 +18011,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -19143,7 +19245,7 @@ declare namespace Phaser {
                  * @param x The x-coordinate of the particle origin.
                  * @param y The y-coordinate of the particle origin.
                  */
-                setPosition(x: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object, y: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setPosition(x: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType, y: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets or modifies a rectangular boundary constraining the particles.
@@ -19161,39 +19263,39 @@ declare namespace Phaser {
                  * Changes the emitter to point mode.
                  * @param value The speed, in pixels per second.
                  */
-                setSpeedX(value: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setSpeedX(value: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the initial vertical speed of emitted particles.
                  * Changes the emitter to point mode.
                  * @param value The speed, in pixels per second.
                  */
-                setSpeedY(value: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setSpeedY(value: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the initial radial speed of emitted particles.
                  * Changes the emitter to radial mode.
                  * @param value The speed, in pixels per second.
                  */
-                setSpeed(value: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setSpeed(value: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the horizontal scale of emitted particles.
                  * @param value The scale, relative to 1.
                  */
-                setScaleX(value: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setScaleX(value: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the vertical scale of emitted particles.
                  * @param value The scale, relative to 1.
                  */
-                setScaleY(value: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setScaleY(value: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the scale of emitted particles.
                  * @param value The scale, relative to 1.
                  */
-                setScale(value: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setScale(value: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the horizontal gravity applied to emitted particles.
@@ -19218,31 +19320,31 @@ declare namespace Phaser {
                  * Sets the opacity of emitted particles.
                  * @param value A value between 0 (transparent) and 1 (opaque).
                  */
-                setAlpha(value: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setAlpha(value: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the angle of a {@link Phaser.GameObjects.Particles.ParticleEmitter#radial} particle stream.
                  * @param value The angle of the initial velocity of emitted particles.
                  */
-                setEmitterAngle(value: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setEmitterAngle(value: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the angle of a {@link Phaser.GameObjects.Particles.ParticleEmitter#radial} particle stream.
                  * @param value The angle of the initial velocity of emitted particles.
                  */
-                setAngle(value: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setAngle(value: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the lifespan of newly emitted particles.
                  * @param value The particle lifespan, in ms.
                  */
-                setLifespan(value: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setLifespan(value: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the number of particles released at each flow cycle or explosion.
                  * @param quantity The number of particles to release at each flow cycle or explosion.
                  */
-                setQuantity(quantity: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setQuantity(quantity: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the emitter's {@link Phaser.GameObjects.Particles.ParticleEmitter#frequency}
@@ -19250,7 +19352,7 @@ declare namespace Phaser {
                  * @param frequency The time interval (>= 0) of each flow cycle, in ms; or -1 to put the emitter in explosion mode.
                  * @param quantity The number of particles to release at each flow cycle or explosion.
                  */
-                setFrequency(frequency: number, quantity?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setFrequency(frequency: number, quantity?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets or removes the {@link Phaser.GameObjects.Particles.ParticleEmitter#emitZone}.
@@ -19364,7 +19466,7 @@ declare namespace Phaser {
                  * @param frequency The time interval (>= 0) of each flow cycle, in ms.
                  * @param count The number of particles to emit at each flow cycle. Default 1.
                  */
-                flow(frequency: number, count?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                flow(frequency: number, count?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Puts the emitter in explode mode (frequency = -1), stopping any current particle flow, and emits several particles all at once.
@@ -20337,6 +20439,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -20345,12 +20455,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -20969,7 +21103,7 @@ declare namespace Phaser {
              * @param path The Path this PathFollower is following. It can only follow one Path at a time.
              * @param config Settings for the PathFollower.
              */
-            setPath(path: Phaser.Curves.Path, config?: Phaser.Types.GameObjects.PathFollower.PathConfig): Phaser.GameObjects.PathFollower;
+            setPath(path: Phaser.Curves.Path, config?: number | Phaser.Types.GameObjects.PathFollower.PathConfig | Phaser.Types.Tweens.NumberTweenBuilderConfig): Phaser.GameObjects.PathFollower;
 
             /**
              * Set whether the PathFollower should automatically rotate to point in the direction of the Path.
@@ -20990,7 +21124,7 @@ declare namespace Phaser {
              * @param config The duration of the follow, or a PathFollower config object. Default {}.
              * @param startAt Optional start position of the follow, between 0 and 1. Default 0.
              */
-            startFollow(config?: number | Phaser.Types.GameObjects.PathFollower.PathConfig, startAt?: number): Phaser.GameObjects.PathFollower;
+            startFollow(config?: number | Phaser.Types.GameObjects.PathFollower.PathConfig | Phaser.Types.Tweens.NumberTweenBuilderConfig, startAt?: number): Phaser.GameObjects.PathFollower;
 
             /**
              * Pauses this PathFollower. It will still continue to render, but it will remain motionless at the
@@ -21272,6 +21406,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -21280,12 +21422,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -22209,6 +22375,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -22217,12 +22391,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -23041,6 +23239,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -23049,12 +23255,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -23679,6 +23909,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -23687,12 +23925,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -24303,6 +24565,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -24311,12 +24581,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -24922,6 +25216,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -24930,12 +25232,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -25626,6 +25952,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -25634,12 +25968,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -26297,6 +26655,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -26305,12 +26671,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -26982,6 +27372,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -26990,12 +27388,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -27620,6 +28042,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -27628,12 +28058,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -28242,6 +28696,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -28250,12 +28712,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -28847,6 +29333,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -28855,12 +29349,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -29542,6 +30060,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -29550,12 +30076,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -30190,6 +30740,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -30198,12 +30756,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -30812,6 +31394,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -30820,12 +31410,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -31429,6 +32043,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -31437,12 +32059,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -32094,7 +32740,7 @@ declare namespace Phaser {
              * @param text The text this Text object will display.
              * @param style The text style configuration object.
              */
-            constructor(scene: Phaser.Scene, x: number, y: number, text: string | string[], style: object);
+            constructor(scene: Phaser.Scene, x: number, y: number, text: string | string[], style: Phaser.Types.GameObjects.Text.TextSyle);
 
             /**
              * Returns an object containing dimensions of the Text object.
@@ -32737,6 +33383,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -32745,12 +33399,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -33223,7 +33901,7 @@ declare namespace Phaser {
              * @param text The Text object that this TextStyle is styling.
              * @param style The style settings to set.
              */
-            constructor(text: Phaser.GameObjects.Text, style: object);
+            constructor(text: Phaser.GameObjects.Text, style: Phaser.Types.GameObjects.Text.TextSyle);
 
             /**
              * The Text object that this TextStyle is styling.
@@ -33336,12 +34014,12 @@ declare namespace Phaser {
             testString: string;
 
             /**
-             * The amount of horizontal padding adding to the width of the text when calculating the font metrics.
+             * The amount of horizontal padding added to the width of the text when calculating the font metrics.
              */
             baselineX: number;
 
             /**
-             * The amount of vertical padding adding to the width of the text when calculating the font metrics.
+             * The amount of vertical padding added to the height of the text when calculating the font metrics.
              */
             baselineY: number;
 
@@ -33351,7 +34029,7 @@ declare namespace Phaser {
              * @param updateText Whether to update the text immediately. Default true.
              * @param setDefaults Use the default values is not set, or the local values. Default false.
              */
-            setStyle(style: object, updateText?: boolean, setDefaults?: boolean): Phaser.GameObjects.Text;
+            setStyle(style: Phaser.Types.GameObjects.Text.TextSyle, updateText?: boolean, setDefaults?: boolean): Phaser.GameObjects.Text;
 
             /**
              * Synchronize the font settings to the given Canvas Rendering Context.
@@ -34000,6 +34678,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -34008,12 +34694,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -34682,6 +35392,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -34690,12 +35408,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -38288,7 +39030,7 @@ declare namespace Phaser {
          * 
          * Keyboard and Gamepad are plugins, handled directly by the InputPlugin class.
          * 
-         * It then manages the event queue, pointer creation and general hit test related operations.
+         * It then manages the events, pointer creation and general hit test related operations.
          * 
          * You rarely need to interact with the Input Manager directly, and as such, all of its properties and methods
          * should be considered private. Instead, you should use the Input Plugin, which is a Scene level system, responsible
@@ -38333,11 +39075,6 @@ declare namespace Phaser {
              * The Event Emitter instance that the Input Manager uses to emit events from.
              */
             events: Phaser.Events.EventEmitter;
-
-            /**
-             * A standard FIFO queue for the native DOM events waiting to be handled by the Input Manager.
-             */
-            queue: any[];
 
             /**
              * Are any mouse or touch pointers currently over the game canvas?
@@ -38402,36 +39139,12 @@ declare namespace Phaser {
             activePointer: Phaser.Input.Pointer;
 
             /**
-             * Reset every frame. Set to `true` if any of the Pointers are dirty this frame.
-             */
-            dirty: boolean;
-
-            /**
              * If the top-most Scene in the Scene List receives an input it will stop input from
              * propagating any lower down the scene list, i.e. if you have a UI Scene at the top
              * and click something on it, that click will not then be passed down to any other
              * Scene below. Disable this to have input events passed through all Scenes, all the time.
              */
             globalTopOnly: boolean;
-
-            /**
-             * An internal flag that controls if the Input Manager will ignore or process native DOM events this frame.
-             * Set via the InputPlugin.stopPropagation method.
-             */
-            ignoreEvents: boolean;
-
-            /**
-             * Use the internal event queue or not?
-             * 
-             * Set this via the Game Config with the `inputQueue` property.
-             * 
-             * Phaser 3.15.1 and earlier used a event queue by default.
-             * 
-             * This was changed in version 3.16 to use an immediate-mode system.
-             * The previous queue based version remains and is left under this flag for backwards
-             * compatibility. This flag, along with the legacy system, will be removed in a future version.
-             */
-            useQueue: boolean;
 
             /**
              * The time this Input Manager was last updated.
@@ -38486,100 +39199,10 @@ declare namespace Phaser {
              * Internal method that gets a list of all the active Input Plugins in the game
              * and updates each of them in turn, in reverse order (top to bottom), to allow
              * for DOM top-level event handling simulation.
-             * @param time The time value from the most recent Game step. Typically a high-resolution timer value, or Date.now().
-             * @param delta The delta value since the last frame. This is smoothed to avoid delta spikes by the TimeStep class.
+             * @param type The type of event to process.
+             * @param pointers An array of Pointers on which the event occurred.
              */
-            updateInputPlugins(time: number, delta: number): void;
-
-            /**
-             * **Note:** As of Phaser 3.16 this method is no longer required _unless_ you have set `input.queue = true`
-             * in your game config, to force it to use the legacy event queue system. This method is deprecated and
-             * will be removed in a future version.
-             * 
-             * Adds a callback to be invoked whenever the native DOM `mouseup` or `touchend` events are received.
-             * By setting the `isOnce` argument you can control if the callback is called once,
-             * or every time the DOM event occurs.
-             * 
-             * Callbacks passed to this method are invoked _immediately_ when the DOM event happens,
-             * within the scope of the DOM event handler. Therefore, they are considered as 'native'
-             * from the perspective of the browser. This means they can be used for tasks such as
-             * opening new browser windows, or anything which explicitly requires user input to activate.
-             * However, as a result of this, they come with their own risks, and as such should not be used
-             * for general game input, but instead be reserved for special circumstances.
-             * 
-             * If all you're trying to do is execute a callback when a pointer is released, then
-             * please use the internal Input event system instead.
-             * 
-             * Please understand that these callbacks are invoked when the browser feels like doing so,
-             * which may be entirely out of the normal flow of the Phaser Game Loop. Therefore, you should absolutely keep
-             * Phaser related operations to a minimum in these callbacks. For example, don't destroy Game Objects,
-             * change Scenes or manipulate internal systems, otherwise you run a very real risk of creating
-             * heisenbugs (https://en.wikipedia.org/wiki/Heisenbug) that prove a challenge to reproduce, never mind
-             * solve.
-             * @param callback The callback to be invoked on this dom event.
-             * @param isOnce `true` if the callback will only be invoked once, `false` to call every time this event happens. Default true.
-             */
-            addUpCallback(callback: Function, isOnce?: boolean): this;
-
-            /**
-             * **Note:** As of Phaser 3.16 this method is no longer required _unless_ you have set `input.queue = true`
-             * in your game config, to force it to use the legacy event queue system. This method is deprecated and
-             * will be removed in a future version.
-             * 
-             * Adds a callback to be invoked whenever the native DOM `mousedown` or `touchstart` events are received.
-             * By setting the `isOnce` argument you can control if the callback is called once,
-             * or every time the DOM event occurs.
-             * 
-             * Callbacks passed to this method are invoked _immediately_ when the DOM event happens,
-             * within the scope of the DOM event handler. Therefore, they are considered as 'native'
-             * from the perspective of the browser. This means they can be used for tasks such as
-             * opening new browser windows, or anything which explicitly requires user input to activate.
-             * However, as a result of this, they come with their own risks, and as such should not be used
-             * for general game input, but instead be reserved for special circumstances.
-             * 
-             * If all you're trying to do is execute a callback when a pointer is down, then
-             * please use the internal Input event system instead.
-             * 
-             * Please understand that these callbacks are invoked when the browser feels like doing so,
-             * which may be entirely out of the normal flow of the Phaser Game Loop. Therefore, you should absolutely keep
-             * Phaser related operations to a minimum in these callbacks. For example, don't destroy Game Objects,
-             * change Scenes or manipulate internal systems, otherwise you run a very real risk of creating
-             * heisenbugs (https://en.wikipedia.org/wiki/Heisenbug) that prove a challenge to reproduce, never mind
-             * solve.
-             * @param callback The callback to be invoked on this dom event.
-             * @param isOnce `true` if the callback will only be invoked once, `false` to call every time this event happens. Default true.
-             */
-            addDownCallback(callback: Function, isOnce?: boolean): this;
-
-            /**
-             * **Note:** As of Phaser 3.16 this method is no longer required _unless_ you have set `input.queue = true`
-             * in your game config, to force it to use the legacy event queue system. This method is deprecated and
-             * will be removed in a future version.
-             * 
-             * Adds a callback to be invoked whenever the native DOM `mousemove` or `touchmove` events are received.
-             * By setting the `isOnce` argument you can control if the callback is called once,
-             * or every time the DOM event occurs.
-             * 
-             * Callbacks passed to this method are invoked _immediately_ when the DOM event happens,
-             * within the scope of the DOM event handler. Therefore, they are considered as 'native'
-             * from the perspective of the browser. This means they can be used for tasks such as
-             * opening new browser windows, or anything which explicitly requires user input to activate.
-             * However, as a result of this, they come with their own risks, and as such should not be used
-             * for general game input, but instead be reserved for special circumstances.
-             * 
-             * If all you're trying to do is execute a callback when a pointer is moved, then
-             * please use the internal Input event system instead.
-             * 
-             * Please understand that these callbacks are invoked when the browser feels like doing so,
-             * which may be entirely out of the normal flow of the Phaser Game Loop. Therefore, you should absolutely keep
-             * Phaser related operations to a minimum in these callbacks. For example, don't destroy Game Objects,
-             * change Scenes or manipulate internal systems, otherwise you run a very real risk of creating
-             * heisenbugs (https://en.wikipedia.org/wiki/Heisenbug) that prove a challenge to reproduce, never mind
-             * solve.
-             * @param callback The callback to be invoked on this dom event.
-             * @param isOnce `true` if the callback will only be invoked once, `false` to call every time this event happens. Default false.
-             */
-            addMoveCallback(callback: Function, isOnce?: boolean): this;
+            updateInputPlugins(type: integer, pointers: Phaser.Input.Pointer[]): void;
 
             /**
              * Performs a hit test using the given Pointer and camera, against an array of interactive Game Objects.
@@ -38697,7 +39320,7 @@ declare namespace Phaser {
             manager: Phaser.Input.InputManager;
 
             /**
-             * If set, the Input Plugin will run its update loop every frame.
+             * If `true` this Input Plugin will process DOM input events.
              */
             enabled: boolean;
 
@@ -38739,7 +39362,7 @@ declare namespace Phaser {
              * 
              * This property only controls how often they will be polled if they have not been updated.
              * You should set this if you want to have Game Objects constantly check against the pointers, even
-             * if the pointer didn't move itself.
+             * if the pointer didn't itself move.
              * 
              * Set to 0 to poll constantly. Set to -1 to only poll on user movement.
              */
@@ -38759,6 +39382,12 @@ declare namespace Phaser {
              * Checks to see if both this plugin and the Scene to which it belongs is active.
              */
             isActive(): boolean;
+
+            /**
+             * This is called automatically by the Input Manager.
+             * It emits events for plugins to listen to and also handles polling updates, if enabled.
+             */
+            updatePoll(): boolean;
 
             /**
              * Clears a Game Object so it no longer has an Interactive Object associated with it.
@@ -39008,99 +39637,12 @@ declare namespace Phaser {
             sortGameObjects(gameObjects: Phaser.GameObjects.GameObject[]): Phaser.GameObjects.GameObject[];
 
             /**
-             * Causes the Input Manager to stop emitting any events for the remainder of this game step.
+             * This method should be called from within an input event handler, such as `pointerdown`.
+             * 
+             * When called, it stops the Input Manager from allowing _this specific event_ to be processed by any other Scene
+             * not yet handled in the scene list.
              */
             stopPropagation(): Phaser.Input.InputPlugin;
-
-            /**
-             * **Note:** As of Phaser 3.16 this method is no longer required _unless_ you have set `input.queue = true`
-             * in your game config, to force it to use the legacy event queue system. This method is deprecated and
-             * will be removed in a future version.
-             * 
-             * Adds a callback to be invoked whenever the native DOM `mouseup` or `touchend` events are received.
-             * By setting the `isOnce` argument you can control if the callback is called once,
-             * or every time the DOM event occurs.
-             * 
-             * Callbacks passed to this method are invoked _immediately_ when the DOM event happens,
-             * within the scope of the DOM event handler. Therefore, they are considered as 'native'
-             * from the perspective of the browser. This means they can be used for tasks such as
-             * opening new browser windows, or anything which explicitly requires user input to activate.
-             * However, as a result of this, they come with their own risks, and as such should not be used
-             * for general game input, but instead be reserved for special circumstances.
-             * 
-             * If all you're trying to do is execute a callback when a pointer is released, then
-             * please use the internal Input event system instead.
-             * 
-             * Please understand that these callbacks are invoked when the browser feels like doing so,
-             * which may be entirely out of the normal flow of the Phaser Game Loop. Therefore, you should absolutely keep
-             * Phaser related operations to a minimum in these callbacks. For example, don't destroy Game Objects,
-             * change Scenes or manipulate internal systems, otherwise you run a very real risk of creating
-             * heisenbugs (https://en.wikipedia.org/wiki/Heisenbug) that prove a challenge to reproduce, never mind
-             * solve.
-             * @param callback The callback to be invoked on this DOM event.
-             * @param isOnce `true` if the callback will only be invoked once, `false` to call every time this event happens. Default true.
-             */
-            addUpCallback(callback: Function, isOnce?: boolean): this;
-
-            /**
-             * **Note:** As of Phaser 3.16 this method is no longer required _unless_ you have set `input.queue = true`
-             * in your game config, to force it to use the legacy event queue system. This method is deprecated and
-             * will be removed in a future version.
-             * 
-             * Adds a callback to be invoked whenever the native DOM `mousedown` or `touchstart` events are received.
-             * By setting the `isOnce` argument you can control if the callback is called once,
-             * or every time the DOM event occurs.
-             * 
-             * Callbacks passed to this method are invoked _immediately_ when the DOM event happens,
-             * within the scope of the DOM event handler. Therefore, they are considered as 'native'
-             * from the perspective of the browser. This means they can be used for tasks such as
-             * opening new browser windows, or anything which explicitly requires user input to activate.
-             * However, as a result of this, they come with their own risks, and as such should not be used
-             * for general game input, but instead be reserved for special circumstances.
-             * 
-             * If all you're trying to do is execute a callback when a pointer is down, then
-             * please use the internal Input event system instead.
-             * 
-             * Please understand that these callbacks are invoked when the browser feels like doing so,
-             * which may be entirely out of the normal flow of the Phaser Game Loop. Therefore, you should absolutely keep
-             * Phaser related operations to a minimum in these callbacks. For example, don't destroy Game Objects,
-             * change Scenes or manipulate internal systems, otherwise you run a very real risk of creating
-             * heisenbugs (https://en.wikipedia.org/wiki/Heisenbug) that prove a challenge to reproduce, never mind
-             * solve.
-             * @param callback The callback to be invoked on this dom event.
-             * @param isOnce `true` if the callback will only be invoked once, `false` to call every time this event happens. Default true.
-             */
-            addDownCallback(callback: Function, isOnce?: boolean): this;
-
-            /**
-             * **Note:** As of Phaser 3.16 this method is no longer required _unless_ you have set `input.queue = true`
-             * in your game config, to force it to use the legacy event queue system. This method is deprecated and
-             * will be removed in a future version.
-             * 
-             * Adds a callback to be invoked whenever the native DOM `mousemove` or `touchmove` events are received.
-             * By setting the `isOnce` argument you can control if the callback is called once,
-             * or every time the DOM event occurs.
-             * 
-             * Callbacks passed to this method are invoked _immediately_ when the DOM event happens,
-             * within the scope of the DOM event handler. Therefore, they are considered as 'native'
-             * from the perspective of the browser. This means they can be used for tasks such as
-             * opening new browser windows, or anything which explicitly requires user input to activate.
-             * However, as a result of this, they come with their own risks, and as such should not be used
-             * for general game input, but instead be reserved for special circumstances.
-             * 
-             * If all you're trying to do is execute a callback when a pointer is moved, then
-             * please use the internal Input event system instead.
-             * 
-             * Please understand that these callbacks are invoked when the browser feels like doing so,
-             * which may be entirely out of the normal flow of the Phaser Game Loop. Therefore, you should absolutely keep
-             * Phaser related operations to a minimum in these callbacks. For example, don't destroy Game Objects,
-             * change Scenes or manipulate internal systems, otherwise you run a very real risk of creating
-             * heisenbugs (https://en.wikipedia.org/wiki/Heisenbug) that prove a challenge to reproduce, never mind
-             * solve.
-             * @param callback The callback to be invoked on this dom event.
-             * @param isOnce `true` if the callback will only be invoked once, `false` to call every time this event happens. Default false.
-             */
-            addMoveCallback(callback: Function, isOnce?: boolean): this;
 
             /**
              * Adds new Pointer objects to the Input Manager.
@@ -40825,11 +41367,13 @@ declare namespace Phaser {
 
             /**
              * The DOM element the Pointer was pressed down on, taken from the DOM event.
+             * In a default set-up this will be the Canvas that Phaser is rendering to, or the Window element.
              */
             readonly downElement: any;
 
             /**
              * The DOM element the Pointer was released on, taken from the DOM event.
+             * In a default set-up this will be the Canvas that Phaser is rendering to, or the Window element.
              */
             readonly upElement: any;
 
@@ -40983,26 +41527,6 @@ declare namespace Phaser {
             isDown: boolean;
 
             /**
-             * A dirty flag for this Pointer, used internally by the Input Plugin.
-             */
-            dirty: boolean;
-
-            /**
-             * Is this Pointer considered as being "just down" or not?
-             */
-            justDown: boolean;
-
-            /**
-             * Is this Pointer considered as being "just up" or not?
-             */
-            justUp: boolean;
-
-            /**
-             * Is this Pointer considered as being "just moved" or not?
-             */
-            justMoved: boolean;
-
-            /**
              * Did the previous input event come from a Touch input (true) or Mouse? (false)
              */
             wasTouch: boolean;
@@ -41042,7 +41566,7 @@ declare namespace Phaser {
             active: boolean;
 
             /**
-             * Time when this Pointer was most recently updated by the Game step.
+             * Time when this Pointer was most recently updated by a DOM Event.
              */
             time: number;
 
@@ -48037,7 +48561,7 @@ declare namespace Phaser {
                 /**
                  * A scene or scenes to add to the game. If several are given, the first is started; the remainder are started only if they have `{ active: true }`. See the `sceneConfig` argument in `Phaser.Scenes.SceneManager#add`.
                  */
-                scene?: Phaser.Scene | Phaser.Scene[] | Phaser.Types.Scenes.SettingsConfig | Phaser.Types.Scenes.SettingsConfig[] | Phaser.Types.Scenes.CreateSceneFromObjectConfig | Phaser.Types.Scenes.CreateSceneFromObjectConfig[] | Function;
+                scene?: Phaser.Scene | Phaser.Scene[] | Phaser.Types.Scenes.SettingsConfig | Phaser.Types.Scenes.SettingsConfig[] | Phaser.Types.Scenes.CreateSceneFromObjectConfig | Phaser.Types.Scenes.CreateSceneFromObjectConfig[] | Function | Function[];
                 /**
                  * Seed for the random number generator.
                  */
@@ -48163,10 +48687,6 @@ declare namespace Phaser {
                  * The smoothing factor to apply during Pointer movement. See {@link Phaser.Input.Pointer#smoothFactor}.
                  */
                 smoothFactor?: number;
-                /**
-                 * Should Phaser use a queued input system for native DOM Events or not?
-                 */
-                inputQueue?: boolean;
                 /**
                  * Should Phaser listen for input events on the Window? If you disable this, events like 'POINTER_UP_OUTSIDE' will no longer fire.
                  */
@@ -49069,16 +49589,11 @@ declare namespace Phaser {
             namespace Group {
                 type GroupCallback = (item: Phaser.GameObjects.GameObject)=>void;
 
-                /**
-                 * A constructor function (class) that can be assigned to `classType`.
-                 */
-                type GroupClassTypeConstructor = (scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | integer)=>void;
-
                 type GroupConfig = {
                     /**
                      * Sets {@link Phaser.GameObjects.Group#classType}.
                      */
-                    classType?: Phaser.Types.GameObjects.Group.GroupClassTypeConstructor;
+                    classType?: Function;
                     /**
                      * Sets {@link Phaser.GameObjects.Group#active}.
                      */
@@ -49118,9 +49633,7 @@ declare namespace Phaser {
                  * 
                  *     key.length * frame.length * frameQuantity * (yoyo ? 2 : 1) * (1 + repeat)
                  * 
-                 * In the simplest case, 1 + `repeat` objects will be created.
-                 * 
-                 * If `max` is positive, then the total created will not exceed `max`.
+                 * If `max` is nonzero, then the total created will not exceed `max`.
                  * 
                  * `key` is required. {@link Phaser.GameObjects.Group#defaultKey} is not used.
                  */
@@ -49128,15 +49641,15 @@ declare namespace Phaser {
                     /**
                      * The class of each new Game Object.
                      */
-                    classType?: Phaser.Types.GameObjects.Group.GroupClassTypeConstructor;
+                    classType?: Function;
                     /**
                      * The texture key of each new Game Object.
                      */
-                    key?: string;
+                    key?: string | string[];
                     /**
                      * The texture frame of each new Game Object.
                      */
-                    frame?: string | integer;
+                    frame?: string | string[] | integer | integer[];
                     /**
                      * The visible state of each new Game Object.
                      */
@@ -49296,10 +49809,14 @@ declare namespace Phaser {
                  */
                 type EmitterOpOnEmitCallback = (particle: Phaser.GameObjects.Particles.Particle, key: string, value: number)=>void;
 
+                type EmitterOpOnEmitType = number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | Phaser.Types.GameObjects.Particles.EmitterOpRandomConfig | Phaser.Types.GameObjects.Particles.EmitterOpRandomMinMaxConfig | Phaser.Types.GameObjects.Particles.EmitterOpRandomStartEndConfig | Phaser.Types.GameObjects.Particles.EmitterOpSteppedConfig | Phaser.Types.GameObjects.Particles.EmitterOpCustomEmitConfig;
+
                 /**
                  * The returned value updates the property for the duration of the particle's life.
                  */
                 type EmitterOpOnUpdateCallback = (particle: Phaser.GameObjects.Particles.Particle, key: string, t: number, value: number)=>void;
+
+                type EmitterOpOnUpdateType = Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback | Phaser.Types.GameObjects.Particles.EmitterOpEaseConfig | Phaser.Types.GameObjects.Particles.EmitterOpCustomUpdateConfig;
 
                 /**
                  * Defines an operation yielding a random value within a range.
@@ -49526,91 +50043,91 @@ declare namespace Phaser {
                     /**
                      * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#accelerationX} (emit only).
                      */
-                    accelerationX?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    accelerationX?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType;
                     /**
                      * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#accelerationY} (emit only).
                      */
-                    accelerationY?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    accelerationY?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType;
                     /**
                      * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#alpha}.
                      */
-                    alpha?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback | object;
+                    alpha?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType;
                     /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#angle} (emit only)
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#angle}.
                      */
-                    angle?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    angle?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType;
                     /**
                      * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#bounce} (emit only).
                      */
-                    bounce?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    bounce?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType;
                     /**
                      * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#delay} (emit only).
                      */
-                    delay?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    delay?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType;
                     /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#lifespan} (emit only).
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#lifespan}.
                      */
-                    lifespan?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    lifespan?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType;
                     /**
                      * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxVelocityX} (emit only).
                      */
-                    maxVelocityX?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    maxVelocityX?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType;
                     /**
                      * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxVelocityY} (emit only).
                      */
-                    maxVelocityY?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    maxVelocityY?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType;
                     /**
                      * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#moveToX} (emit only).
                      */
-                    moveToX?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    moveToX?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType;
                     /**
                      * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#moveToY} (emit only).
                      */
-                    moveToY?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    moveToY?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType;
                     /**
                      * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#quantity} (emit only).
                      */
-                    quantity?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    quantity?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType;
                     /**
                      * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#rotate}.
                      */
-                    rotate?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback | object;
+                    rotate?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType;
                     /**
                      * As {@link Phaser.GameObjects.Particles.ParticleEmitter#setScale}.
                      */
-                    scale?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback | object;
+                    scale?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType;
                     /**
                      * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#scaleX}.
                      */
-                    scaleX?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback | object;
+                    scaleX?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType;
                     /**
                      * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#scaleY}.
                      */
-                    scaleY?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback | object;
+                    scaleY?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType;
                     /**
                      * As {@link Phaser.GameObjects.Particles.ParticleEmitter#setSpeed} (emit only).
                      */
-                    speed?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    speed?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType;
                     /**
                      * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#speedX} (emit only).
                      */
-                    speedX?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    speedX?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType;
                     /**
                      * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#speedY} (emit only).
                      */
-                    speedY?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    speedY?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType;
                     /**
                      * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#tint}.
                      */
-                    tint?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    tint?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType;
                     /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#x} (emit only).
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#x}.
                      */
-                    x?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    x?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType;
                     /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#y} (emit only).
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#y}.
                      */
-                    y?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    y?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType;
                     /**
                      * As {@link Phaser.GameObjects.Particles.ParticleEmitter#setEmitZone}.
                      */
@@ -49720,7 +50237,7 @@ declare namespace Phaser {
                     /**
                      * The duration of the path follow in ms. Must be `> 0`.
                      */
-                    duration: number;
+                    duration?: number;
                     /**
                      * The start position of the path follow, between 0 and 1. Must be less than `to`.
                      */
@@ -49810,6 +50327,140 @@ declare namespace Phaser {
                      * The size of the font.
                      */
                     fontSize: number;
+                };
+
+                /**
+                 * A Text Shadow configuration object as used by the Text Style.
+                 */
+                type TextShadow = {
+                    /**
+                     * The horizontal offset of the shadow.
+                     */
+                    offsetX?: number;
+                    /**
+                     * The vertical offset of the shadow.
+                     */
+                    offsetY?: number;
+                    /**
+                     * The color of the shadow, given as a CSS string value.
+                     */
+                    color?: string;
+                    /**
+                     * The amount of blur applied to the shadow. Leave as zero for a hard shadow.
+                     */
+                    blur?: number;
+                    /**
+                     * Apply the shadow to the stroke effect on the Text object?
+                     */
+                    stroke?: boolean;
+                    /**
+                     * Apply the shadow to the fill effect on the Text object?
+                     */
+                    fill?: boolean;
+                };
+
+                /**
+                 * A Text Style configuration object as used by the Text Game Object.
+                 */
+                type TextSyle = {
+                    /**
+                     * The font the Text object will render with. This is a Canvas style font string.
+                     */
+                    fontFamily?: string;
+                    /**
+                     * The font size, as a CSS size string.
+                     */
+                    fontSize?: string;
+                    /**
+                     * Any addition font styles, such as 'strong'.
+                     */
+                    fontStyle?: string;
+                    /**
+                     * A solid fill color that is rendered behind the Text object. Given as a CSS string color such as `#ff0`.
+                     */
+                    backgroundColor?: string;
+                    /**
+                     * The color the Text is drawn in. Given as a CSS string color such as `#fff` or `rgb()`.
+                     */
+                    color?: string;
+                    /**
+                     * The color used to stroke the Text if the `strokeThickness` property is greater than zero.
+                     */
+                    stroke?: string;
+                    /**
+                     * The thickness of the stroke around the Text. Set to zero for no stroke.
+                     */
+                    strokeThickness?: number;
+                    /**
+                     * The Text shadow configuration object.
+                     */
+                    shadow?: Phaser.Types.GameObjects.Text.TextShadow;
+                    /**
+                     * The alignment of the Text. This only impacts multi-line text.
+                     */
+                    align?: string;
+                    /**
+                     * The maximum number of lines to display within the Text object.
+                     */
+                    maxLines?: integer;
+                    /**
+                     * Force the Text object to have the exact width specified in this property. Leave as zero for it to change accordingly to content.
+                     */
+                    fixedWidth?: number;
+                    /**
+                     * Force the Text object to have the exact height specified in this property. Leave as zero for it to change accordingly to content.
+                     */
+                    fixedHeight?: number;
+                    /**
+                     * Sets the resolution (DPI setting) of the Text object. Leave at zero for it to use the game resolution.
+                     */
+                    resolution?: number;
+                    /**
+                     * Set to `true` if this Text object should render from right-to-left.
+                     */
+                    rtl?: boolean;
+                    /**
+                     * This is the string used to aid Canvas in calculating the height of the font.
+                     */
+                    testString?: string;
+                    /**
+                     * The amount of horizontal padding added to the width of the text when calculating the font metrics.
+                     */
+                    baselineX?: number;
+                    /**
+                     * The amount of vertical padding added to the height of the text when calculating the font metrics.
+                     */
+                    baselineY?: number;
+                    /**
+                     * The Text Word wrap configuration object.
+                     */
+                    wordWrap?: Phaser.Types.GameObjects.Text.TextWordWrap;
+                    /**
+                     * A Text Metrics object. Use this to avoid expensive font size calculations in text heavy games.
+                     */
+                    metrics?: Phaser.Types.GameObjects.Text.TextMetrics;
+                };
+
+                /**
+                 * A Text Word Wrap configuration object as used by the Text Style configuration.
+                 */
+                type TextWordWrap = {
+                    /**
+                     * The width at which text should be considered for word-wrapping.
+                     */
+                    width?: number;
+                    /**
+                     * Provide a custom callback when word wrapping is enabled.
+                     */
+                    callback?: TextStyleWordWrapCallback;
+                    /**
+                     * The context in which the word wrap callback is invoked.
+                     */
+                    callbackScope?: any;
+                    /**
+                     * Use basic or advanced word wrapping?
+                     */
+                    useAdvancedWrap?: boolean;
                 };
 
             }
@@ -52506,6 +53157,453 @@ declare namespace Phaser {
                 flipY?: boolean;
             };
 
+            type GetEndCallback = (target: any, key: string, value: number)=>void;
+
+            type GetStartCallback = (target: any, key: string, value: number)=>void;
+
+            type NumberTweenBuilderConfig = {
+                /**
+                 * The start number.
+                 */
+                from?: number;
+                /**
+                 * The end number.
+                 */
+                to?: number;
+                /**
+                 * The number of milliseconds to delay before the tween will start.
+                 */
+                delay?: number;
+                /**
+                 * The duration of the tween in milliseconds.
+                 */
+                duration?: number;
+                /**
+                 * The easing equation to use for the tween.
+                 */
+                ease?: string | Function;
+                /**
+                 * Optional easing parameters.
+                 */
+                easeParams?: any[];
+                /**
+                 * The number of milliseconds to hold the tween for before yoyo'ing.
+                 */
+                hold?: number;
+                /**
+                 * The number of times to repeat the tween.
+                 */
+                repeat?: number;
+                /**
+                 * The number of milliseconds to pause before a tween will repeat.
+                 */
+                repeatDelay?: number;
+                /**
+                 * Should the tween complete, then reverse the values incrementally to get back to the starting tween values? The reverse tweening will also take `duration` milliseconds to complete.
+                 */
+                yoyo?: boolean;
+                /**
+                 * Used when the Tween is part of a Timeline.
+                 */
+                offset?: number | Function | object | any[];
+                /**
+                 * The time the tween will wait before the onComplete event is dispatched once it has completed, in ms.
+                 */
+                completeDelay?: number | Function | object | any[];
+                /**
+                 * The number of times the tween will repeat. (A value of 1 means the tween will play twice, as it repeated once.) The first loop starts after every property tween has completed once.
+                 */
+                loop?: number | Function | object | any[];
+                /**
+                 * The time the tween will pause before starting either a yoyo or returning to the start for a repeat.
+                 */
+                loopDelay?: number | Function | object | any[];
+                /**
+                 * Does the tween start in a paused state (true) or playing (false)?
+                 */
+                paused?: boolean;
+                /**
+                 * Use frames or milliseconds?
+                 */
+                useFrames?: boolean;
+                /**
+                 * Scope (this) for the callbacks. The default scope is the tween.
+                 */
+                callbackScope?: any;
+                /**
+                 * A function to call when the tween completes.
+                 */
+                onComplete?: Phaser.Types.Tweens.TweenOnCompleteCallback;
+                /**
+                 * Additional parameters to pass to `onComplete`.
+                 */
+                onCompleteParams?: any[];
+                /**
+                 * Scope (this) for `onComplete`.
+                 */
+                onCompleteScope?: any;
+                /**
+                 * A function to call each time the tween loops.
+                 */
+                onLoop?: Phaser.Types.Tweens.TweenOnLoopCallback;
+                /**
+                 * Additional parameters to pass to `onLoop`.
+                 */
+                onLoopParams?: any[];
+                /**
+                 * Scope (this) for `onLoop`.
+                 */
+                onLoopScope?: any;
+                /**
+                 * A function to call each time the tween repeats. Called once per property per target.
+                 */
+                onRepeat?: Phaser.Types.Tweens.TweenOnRepeatCallback;
+                /**
+                 * Additional parameters to pass to `onRepeat`.
+                 */
+                onRepeatParams?: any[];
+                /**
+                 * Scope (this) for `onRepeat`.
+                 */
+                onRepeatScope?: any;
+                /**
+                 * A function to call when the tween starts.
+                 */
+                onStart?: Phaser.Types.Tweens.TweenOnStartCallback;
+                /**
+                 * Additional parameters to pass to `onStart`.
+                 */
+                onStartParams?: any[];
+                /**
+                 * Scope (this) for `onStart`.
+                 */
+                onStartScope?: any;
+                /**
+                 * A function to call each time the tween steps. Called once per property per target.
+                 */
+                onUpdate?: Phaser.Types.Tweens.TweenOnUpdateCallback;
+                /**
+                 * Additional parameters to pass to `onUpdate`.
+                 */
+                onUpdateParams?: any[];
+                /**
+                 * Scope (this) for `onUpdate`.
+                 */
+                onUpdateScope?: any;
+                /**
+                 * A function to call each time the tween yoyos. Called once per property per target.
+                 */
+                onYoyo?: Phaser.Types.Tweens.TweenOnYoyoCallback;
+                /**
+                 * Additional parameters to pass to `onYoyo`.
+                 */
+                onYoyoParams?: any[];
+                /**
+                 * Scope (this) for `onYoyo`.
+                 */
+                onYoyoScope?: any;
+            };
+
+            type TimelineBuilderConfig = {
+                /**
+                 * An array of tween configuration objects to create and add into the new Timeline. If this doesn't exist or is empty, the Timeline will start off paused and none of the other configuration settings will be read. If it's a function, it will be called and its return value will be used as the array.
+                 */
+                tweens?: Phaser.Types.Tweens.TweenBuilderConfig[] | object[] | Function;
+                /**
+                 * An array (or function which returns one) of default targets to which to apply the Timeline. Each individual Tween configuration can override this value.
+                 */
+                targets?: any;
+                /**
+                 * If specified, each Tween in the Timeline will get an equal portion of this duration, usually in milliseconds, by default. Each individual Tween configuration can override the Tween's duration.
+                 */
+                totalDuration?: number;
+                /**
+                 * If `totalDuration` is not specified, the default duration, usually in milliseconds, of each Tween which will be created. Each individual Tween configuration can override the Tween's duration.
+                 */
+                duration?: number;
+                /**
+                 * The number of milliseconds to delay before the tween will start. Each individual Tween configuration can override this value.
+                 */
+                delay?: number;
+                /**
+                 * Optional easing parameters. Each individual Tween configuration can override this value.
+                 */
+                easeParams?: any[];
+                /**
+                 * The easing equation to use for each tween. Each individual Tween configuration can override this value.
+                 */
+                ease?: string | Function;
+                /**
+                 * The number of milliseconds to hold each tween before yoyoing. Each individual Tween configuration can override this value.
+                 */
+                hold?: number;
+                /**
+                 * The number of times to repeat each tween. Each individual Tween configuration can override this value.
+                 */
+                repeat?: integer;
+                /**
+                 * The number of milliseconds to pause before each tween will repeat. Each individual Tween configuration can override this value.
+                 */
+                repeatDelay?: number;
+                /**
+                 * Should each tween complete, then reverse the values incrementally to get back to the starting tween values? The reverse tweening will also take `duration` milliseconds to complete. Each individual Tween configuration can override this value.
+                 */
+                yoyo?: boolean;
+                /**
+                 * Horizontally flip the target of the Tween when it completes (before it yoyos, if set to do so). Only works for targets that support the `flipX` property. Each individual Tween configuration can override this value.
+                 */
+                flipX?: boolean;
+                /**
+                 * Vertically flip the target of the Tween when it completes (before it yoyos, if set to do so). Only works for targets that support the `flipY` property. Each individual Tween configuration can override this value.
+                 */
+                flipY?: boolean;
+                /**
+                 * If specified, the time to wait, usually in milliseconds, before the Timeline completes.
+                 */
+                completeDelay?: number | Function | object | any[];
+                /**
+                 * How many times the Timeline should loop, or -1 to loop indefinitely.
+                 */
+                loop?: number | Function | object | any[];
+                /**
+                 * The time, usually in milliseconds, between each loop.
+                 */
+                loopDelay?: number | Function | object | any[];
+                /**
+                 * If `true`, the Timeline will start paused.
+                 */
+                paused?: boolean;
+                /**
+                 * If `true`, all duration in the Timeline will be in frames instead of milliseconds.
+                 */
+                useFrames?: boolean;
+                /**
+                 * The default scope (`this` value) to use for each callback registered by the Timeline Builder. If not specified, the Timeline itself will be used.
+                 */
+                callbackScope?: any;
+                /**
+                 * If specified, the `onStart` callback for the Timeline, called every time it starts playing.
+                 */
+                onStart?: Phaser.Types.Tweens.TimelineOnStartCallback;
+                /**
+                 * The scope (`this` value) to use for the `onStart` callback. If not specified, the `callbackScope` will be used.
+                 */
+                onStartScope?: any;
+                /**
+                 * Additional arguments to pass to the `onStart` callback. The Timeline will always be the first argument.
+                 */
+                onStartParams?: any[];
+                /**
+                 * If specified, the `onUpdate` callback for the Timeline, called every frame it's active, regardless of its Tweens.
+                 */
+                onUpdate?: Phaser.Types.Tweens.TimelineOnUpdateCallback;
+                /**
+                 * The scope (`this` value) to use for the `onUpdate` callback. If not specified, the `callbackScope` will be used.
+                 */
+                onUpdateScope?: any;
+                /**
+                 * Additional arguments to pass to the `onUpdate` callback. The Timeline will always be the first argument.
+                 */
+                onUpdateParams?: any[];
+                /**
+                 * If specified, the `onLoop` callback for the Timeline, called every time it loops.
+                 */
+                onLoop?: Phaser.Types.Tweens.TimelineOnLoopCallback;
+                /**
+                 * The scope (`this` value) to use for the `onLoop` callback. If not specified, the `callbackScope` will be used.
+                 */
+                onLoopScope?: any;
+                /**
+                 * Additional arguments to pass to the `onLoop` callback. The Timeline will always be the first argument.
+                 */
+                onLoopParams?: any[];
+                /**
+                 * If specified, the `onYoyo` callback for the Timeline, called every time it yoyos.
+                 */
+                onYoyo?: Phaser.Types.Tweens.TimelineOnYoyoCallback;
+                /**
+                 * The scope (`this` value) to use for the `onYoyo` callback. If not specified, the `callbackScope` will be used.
+                 */
+                onYoyoScope?: any;
+                /**
+                 * Additional arguments to pass to the `onYoyo` callback. The first argument will always be `null`, while the Timeline will always be the second argument.
+                 */
+                onYoyoParams?: any[];
+                /**
+                 * If specified, the `onComplete` callback for the Timeline, called after it completes.
+                 */
+                onComplete?: Phaser.Types.Tweens.TimelineOnCompleteCallback;
+                /**
+                 * The scope (`this` value) to use for the `onComplete` callback. If not specified, the `callbackScope` will be used.
+                 */
+                onCompleteScope?: any;
+                /**
+                 * Additional arguments to pass to the `onComplete` callback. The Timeline will always be the first argument.
+                 */
+                onCompleteParams?: any[];
+            };
+
+            type TimelineOnCompleteCallback = (timeline: Phaser.Tweens.Timeline, ...param: any[])=>void;
+
+            type TimelineOnLoopCallback = (timeline: Phaser.Tweens.Timeline, ...param: any[])=>void;
+
+            type TimelineOnStartCallback = (timeline: Phaser.Tweens.Timeline, ...param: any[])=>void;
+
+            type TimelineOnUpdateCallback = (timeline: Phaser.Tweens.Timeline, ...param: any[])=>void;
+
+            type TimelineOnYoyoCallback = (timeline: Phaser.Tweens.Timeline, ...param: any[])=>void;
+
+            type TweenBuilderConfig = {
+                /**
+                 * The object, or an array of objects, to run the tween on.
+                 */
+                targets: any;
+                /**
+                 * The number of milliseconds to delay before the tween will start.
+                 */
+                delay?: number;
+                /**
+                 * The duration of the tween in milliseconds.
+                 */
+                duration?: number;
+                /**
+                 * The easing equation to use for the tween.
+                 */
+                ease?: string | Function;
+                /**
+                 * Optional easing parameters.
+                 */
+                easeParams?: any[];
+                /**
+                 * The number of milliseconds to hold the tween for before yoyo'ing.
+                 */
+                hold?: number;
+                /**
+                 * The number of times each property tween repeats.
+                 */
+                repeat?: number;
+                /**
+                 * The number of milliseconds to pause before a repeat.
+                 */
+                repeatDelay?: number;
+                /**
+                 * Should the tween complete, then reverse the values incrementally to get back to the starting tween values? The reverse tweening will also take `duration` milliseconds to complete.
+                 */
+                yoyo?: boolean;
+                /**
+                 * Horizontally flip the target of the Tween when it completes (before it yoyos, if set to do so). Only works for targets that support the `flipX` property.
+                 */
+                flipX?: boolean;
+                /**
+                 * Vertically flip the target of the Tween when it completes (before it yoyos, if set to do so). Only works for targets that support the `flipY` property.
+                 */
+                flipY?: boolean;
+                /**
+                 * Used when the Tween is part of a Timeline.
+                 */
+                offset?: number | Function | object | any[];
+                /**
+                 * The time the tween will wait before the onComplete event is dispatched once it has completed, in ms.
+                 */
+                completeDelay?: number | Function | object | any[];
+                /**
+                 * The number of times the tween will repeat. (A value of 1 means the tween will play twice, as it repeated once.) The first loop starts after every property tween has completed once.
+                 */
+                loop?: number | Function | object | any[];
+                /**
+                 * The time the tween will pause before starting either a yoyo or returning to the start for a repeat.
+                 */
+                loopDelay?: number | Function | object | any[];
+                /**
+                 * Does the tween start in a paused state (true) or playing (false)?
+                 */
+                paused?: boolean;
+                /**
+                 * The properties to tween.
+                 */
+                props?: {[key: string]:  (number|string|Phaser.Types.Tweens.GetEndCallback|Phaser.Types.Tweens.TweenPropConfig)};
+                /**
+                 * Use frames or milliseconds?
+                 */
+                useFrames?: boolean;
+                /**
+                 * Scope (this) for the callbacks. The default scope is the tween.
+                 */
+                callbackScope?: any;
+                /**
+                 * A function to call when the tween completes.
+                 */
+                onComplete?: Phaser.Types.Tweens.TweenOnCompleteCallback;
+                /**
+                 * Additional parameters to pass to `onComplete`.
+                 */
+                onCompleteParams?: any[];
+                /**
+                 * Scope (this) for `onComplete`.
+                 */
+                onCompleteScope?: any;
+                /**
+                 * A function to call each time the tween loops.
+                 */
+                onLoop?: Phaser.Types.Tweens.TweenOnLoopCallback;
+                /**
+                 * Additional parameters to pass to `onLoop`.
+                 */
+                onLoopParams?: any[];
+                /**
+                 * Scope (this) for `onLoop`.
+                 */
+                onLoopScope?: any;
+                /**
+                 * A function to call each time the tween repeats. Called once per property per target.
+                 */
+                onRepeat?: Phaser.Types.Tweens.TweenOnRepeatCallback;
+                /**
+                 * Additional parameters to pass to `onRepeat`.
+                 */
+                onRepeatParams?: any[];
+                /**
+                 * Scope (this) for `onRepeat`.
+                 */
+                onRepeatScope?: any;
+                /**
+                 * A function to call when the tween starts.
+                 */
+                onStart?: Phaser.Types.Tweens.TweenOnStartCallback;
+                /**
+                 * Additional parameters to pass to `onStart`.
+                 */
+                onStartParams?: any[];
+                /**
+                 * Scope (this) for `onStart`.
+                 */
+                onStartScope?: any;
+                /**
+                 * A function to call each time the tween steps. Called once per property per target.
+                 */
+                onUpdate?: Phaser.Types.Tweens.TweenOnUpdateCallback;
+                /**
+                 * Additional parameters to pass to `onUpdate`.
+                 */
+                onUpdateParams?: any[];
+                /**
+                 * Scope (this) for `onUpdate`.
+                 */
+                onUpdateScope?: any;
+                /**
+                 * A function to call each time the tween yoyos. Called once per property per target.
+                 */
+                onYoyo?: Phaser.Types.Tweens.TweenOnYoyoCallback;
+                /**
+                 * Additional parameters to pass to `onYoyo`.
+                 */
+                onYoyoParams?: any[];
+                /**
+                 * Scope (this) for `onYoyo`.
+                 */
+                onYoyoScope?: any;
+            };
+
             type TweenDataConfig = {
                 /**
                  * The target to tween.
@@ -52626,6 +53724,69 @@ declare namespace Phaser {
                  * Time in ms/frames before the repeat will start.
                  */
                 repeatDelay: Function;
+            };
+
+            type TweenOnCompleteCallback = (tween: Phaser.Tweens.Tween, targets: any[], ...param: any[])=>void;
+
+            type TweenOnLoopCallback = (tween: Phaser.Tweens.Tween, targets: any[], ...param: any[])=>void;
+
+            type TweenOnRepeatCallback = (tween: Phaser.Tweens.Tween, target: any, ...param: any[])=>void;
+
+            type TweenOnStartCallback = (tween: Phaser.Tweens.Tween, targets: any[], ...param: any[])=>void;
+
+            type TweenOnUpdateCallback = (tween: Phaser.Tweens.Tween, target: any, ...param: any[])=>void;
+
+            type TweenOnYoyoCallback = (tween: Phaser.Tweens.Tween, target: any, ...param: any[])=>void;
+
+            type TweenPropConfig = {
+                /**
+                 * What the property will be at the END of the Tween.
+                 */
+                value?: number | string | Phaser.Types.Tweens.GetEndCallback | Phaser.Types.Tweens.TweenPropConfig;
+                /**
+                 * What the property will be at the END of the Tween.
+                 */
+                getEnd?: Phaser.Types.Tweens.GetEndCallback;
+                /**
+                 * What the property will be at the START of the Tween.
+                 */
+                getStart?: Phaser.Types.Tweens.GetStartCallback;
+                /**
+                 * The ease function this tween uses.
+                 */
+                ease?: string | Function;
+                /**
+                 * Time in ms/frames before tween will start.
+                 */
+                delay?: number;
+                /**
+                 * Duration of the tween in ms/frames.
+                 */
+                duration?: number;
+                /**
+                 * Determines whether the tween should return back to its start value after hold has expired.
+                 */
+                yoyo?: boolean;
+                /**
+                 * Time in ms/frames the tween will pause before repeating or returning to its starting value if yoyo is set to true.
+                 */
+                hold?: number;
+                /**
+                 * Number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
+                 */
+                repeat?: number;
+                /**
+                 * Time in ms/frames before the repeat will start.
+                 */
+                repeatDelay?: number;
+                /**
+                 * Should toggleFlipX be called when yoyo or repeat happens?
+                 */
+                flipX?: boolean;
+                /**
+                 * Should toggleFlipY be called when yoyo or repeat happens?
+                 */
+                flipY?: boolean;
             };
 
         }
@@ -52845,6 +54006,14 @@ declare namespace Phaser {
                 getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
                 /**
+                 * Gets the top-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
                  * Gets the top-right corner coordinate of this Game Object, regardless of origin.
                  * The returned point is calculated in local space and does not factor in any parent containers
                  * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -52853,12 +54022,36 @@ declare namespace Phaser {
                 getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
                 /**
+                 * Gets the left-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
+                 * Gets the right-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
                  * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
                  * The returned point is calculated in local space and does not factor in any parent containers
                  * @param output An object to store the values in. If not provided a new Vector2 will be created.
                  * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
                  */
                 getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
+                 * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
                 /**
                  * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -54239,6 +55432,14 @@ declare namespace Phaser {
                 getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
                 /**
+                 * Gets the top-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
                  * Gets the top-right corner coordinate of this Game Object, regardless of origin.
                  * The returned point is calculated in local space and does not factor in any parent containers
                  * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -54247,12 +55448,36 @@ declare namespace Phaser {
                 getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
                 /**
+                 * Gets the left-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
+                 * Gets the right-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
                  * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
                  * The returned point is calculated in local space and does not factor in any parent containers
                  * @param output An object to store the values in. If not provided a new Vector2 will be created.
                  * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
                  */
                 getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
+                 * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
                 /**
                  * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -56635,7 +57860,7 @@ declare namespace Phaser {
                  * 
                  * This should be either `Phaser.Physics.Arcade.Image`, `Phaser.Physics.Arcade.Sprite`, or a class extending one of those.
                  */
-                classType: Phaser.Types.GameObjects.Group.GroupClassTypeConstructor;
+                classType: Function;
 
                 /**
                  * The physics type of the Group's members.
@@ -59062,6 +60287,14 @@ declare namespace Phaser {
                 getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
                 /**
+                 * Gets the top-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
                  * Gets the top-right corner coordinate of this Game Object, regardless of origin.
                  * The returned point is calculated in local space and does not factor in any parent containers
                  * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -59070,12 +60303,36 @@ declare namespace Phaser {
                 getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
                 /**
+                 * Gets the left-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
+                 * Gets the right-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
                  * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
                  * The returned point is calculated in local space and does not factor in any parent containers
                  * @param output An object to store the values in. If not provided a new Vector2 will be created.
                  * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
                  */
                 getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
+                 * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
                 /**
                  * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -60221,6 +61478,14 @@ declare namespace Phaser {
                 getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
                 /**
+                 * Gets the top-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
                  * Gets the top-right corner coordinate of this Game Object, regardless of origin.
                  * The returned point is calculated in local space and does not factor in any parent containers
                  * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -60229,12 +61494,36 @@ declare namespace Phaser {
                 getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
                 /**
+                 * Gets the left-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
+                 * Gets the right-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
                  * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
                  * The returned point is calculated in local space and does not factor in any parent containers
                  * @param output An object to store the values in. If not provided a new Vector2 will be created.
                  * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
                  */
                 getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
+                 * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
                 /**
                  * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -62036,11 +63325,11 @@ declare namespace Phaser {
                  * @param y The Y coordinate of the center of the Body.
                  * @param vertexSets [description]
                  * @param options [description]
-                 * @param flagInternal Flag internal edges (coincident part edges)
-                 * @param removeCollinear Whether Matter.js will discard collinear edges (to improve performance).
-                 * @param minimumArea During decomposition discard parts that have an area less than this
+                 * @param flagInternal Flag internal edges (coincident part edges) Default false.
+                 * @param removeCollinear Whether Matter.js will discard collinear edges (to improve performance). Default 0.01.
+                 * @param minimumArea During decomposition discard parts that have an area less than this. Default 10.
                  */
-                fromVertices(x: number, y: number, vertexSets: any[], options: object, flagInternal: boolean, removeCollinear: boolean, minimumArea: number): MatterJS.Body;
+                fromVertices(x: number, y: number, vertexSets: string | any[], options?: object, flagInternal?: boolean, removeCollinear?: number, minimumArea?: number): MatterJS.Body;
 
                 /**
                  * Create a new composite containing Matter Image objects created in a grid arrangement.
@@ -62167,7 +63456,7 @@ declare namespace Phaser {
                  * @param stiffness [description] Default 1.
                  * @param options [description] Default {}.
                  */
-                constraint(bodyA: MatterJS.Body, bodyB: MatterJS.Body, length: number, stiffness?: number, options?: object): MatterJS.Constraint;
+                constraint(bodyA: MatterJS.Body, bodyB: MatterJS.Body, length?: number, stiffness?: number, options?: object): MatterJS.Constraint;
 
                 /**
                  * [description]
@@ -62220,9 +63509,35 @@ declare namespace Phaser {
                 /**
                  * [description]
                  * @param gameObject The Game Object to inject the Matter Body in to.
-                 * @param options [description]
+                 * @param options A Matter Body configuration object, or an instance of a Matter Body.
                  */
-                gameObject(gameObject: Phaser.GameObjects.GameObject, options: object): Phaser.GameObjects.GameObject;
+                gameObject(gameObject: Phaser.GameObjects.GameObject, options: object | MatterJS.Body): Phaser.GameObjects.GameObject;
+
+                /**
+                 * Instantly sets the linear velocity of the given body. Position, angle, force etc. are unchanged.
+                 * 
+                 * See also `force`.
+                 * @param body The Matter Body to set the velocity on.
+                 * @param velocity The velocity to set. An object with public `x` and `y` components.
+                 */
+                velocity(body: MatterJS.Body, velocity: Phaser.Types.Math.Vector2Like): MatterJS.Body;
+
+                /**
+                 * Instantly sets the angular velocity of the given body. Position, angle, force etc. are unchanged.
+                 * 
+                 * See also `force`.
+                 * @param body The Matter Body to set the velocity on.
+                 * @param velocity The angular velocity to set.
+                 */
+                angularVelocity(body: MatterJS.Body, velocity: number): MatterJS.Body;
+
+                /**
+                 * Applies a force to a body from a given world-space position, including resulting torque.
+                 * @param body The Matter Body to set the force on.
+                 * @param position The world position to apply the force from. An object with public `x` and `y` components.
+                 * @param force The force to set. An object with public `x` and `y` components.
+                 */
+                force(body: MatterJS.Body, position: Phaser.Types.Math.Vector2Like, force: Phaser.Types.Math.Vector2Like): MatterJS.Body;
 
                 /**
                  * Destroys this Factory.
@@ -62235,9 +63550,9 @@ declare namespace Phaser {
              * [description]
              * @param world The Matter world to add the body to.
              * @param gameObject The Game Object that will have the Matter body applied to it.
-             * @param options Matter options config object.
+             * @param options A Matter Body configuration object, or an instance of a Matter Body.
              */
-            function MatterGameObject(world: Phaser.Physics.Matter.World, gameObject: Phaser.GameObjects.GameObject, options: object): Phaser.GameObjects.GameObject;
+            function MatterGameObject(world: Phaser.Physics.Matter.World, gameObject: Phaser.GameObjects.GameObject, options: object | MatterJS.Body): Phaser.GameObjects.GameObject;
 
             /**
              * A Matter Physics Image Game Object.
@@ -62453,6 +63768,14 @@ declare namespace Phaser {
                 getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
                 /**
+                 * Gets the top-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
                  * Gets the top-right corner coordinate of this Game Object, regardless of origin.
                  * The returned point is calculated in local space and does not factor in any parent containers
                  * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -62461,12 +63784,36 @@ declare namespace Phaser {
                 getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
                 /**
+                 * Gets the left-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
+                 * Gets the right-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
                  * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
                  * The returned point is calculated in local space and does not factor in any parent containers
                  * @param output An object to store the values in. If not provided a new Vector2 will be created.
                  * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
                  */
                 getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
+                 * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
                 /**
                  * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -63340,6 +64687,16 @@ declare namespace Phaser {
                 verts: MatterJS.Vertices;
 
                 /**
+                 * A reference to the `Matter.Body` module which contains methods for creating and manipulating body models.
+                 */
+                body: MatterJS.Body;
+
+                /**
+                 * A reference to the `Matter.Bodies` module which contains methods for creating bodies.
+                 */
+                bodies: MatterJS.Bodies;
+
+                /**
                  * [description]
                  */
                 getConfig(): object;
@@ -63620,6 +64977,14 @@ declare namespace Phaser {
                 getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
                 /**
+                 * Gets the top-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
                  * Gets the top-right corner coordinate of this Game Object, regardless of origin.
                  * The returned point is calculated in local space and does not factor in any parent containers
                  * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -63628,12 +64993,36 @@ declare namespace Phaser {
                 getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
                 /**
+                 * Gets the left-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
+                 * Gets the right-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
                  * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
                  * The returned point is calculated in local space and does not factor in any parent containers
                  * @param output An object to store the values in. If not provided a new Vector2 will be created.
                  * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
                  */
                 getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+                /**
+                 * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+                 * The returned point is calculated in local space and does not factor in any parent containers
+                 * @param output An object to store the values in. If not provided a new Vector2 will be created.
+                 * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+                 */
+                getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
                 /**
                  * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -73972,6 +75361,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -73980,12 +75377,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -75637,6 +77058,14 @@ declare namespace Phaser {
             getTopLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the top-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getTopCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the top-right corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
@@ -75645,12 +77074,36 @@ declare namespace Phaser {
             getTopRight<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
+             * Gets the left-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getLeftCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the right-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getRightCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
              * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
              * The returned point is calculated in local space and does not factor in any parent containers
              * @param output An object to store the values in. If not provided a new Vector2 will be created.
              * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
              */
             getBottomLeft<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
+
+            /**
+             * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+             * The returned point is calculated in local space and does not factor in any parent containers
+             * @param output An object to store the values in. If not provided a new Vector2 will be created.
+             * @param includeParent If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector? Default false.
+             */
+            getBottomCenter<O extends Phaser.Math.Vector2>(output?: O, includeParent?: boolean): O;
 
             /**
              * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
@@ -76629,10 +78082,10 @@ declare namespace Phaser {
              * information.
              * @param layerID The layer array index value, or if a string is given, the layer name from Tiled.
              * @param tileset The tileset, or an array of tilesets, used to render this layer. Can be a string or a Tileset object.
-             * @param x The x position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
-             * @param y The y position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
+             * @param x The x position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0. Default 0.
+             * @param y The y position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0. Default 0.
              */
-            createDynamicLayer(layerID: integer | string, tileset: string | string[] | Phaser.Tilemaps.Tileset | Phaser.Tilemaps.Tileset[], x: number, y: number): Phaser.Tilemaps.DynamicTilemapLayer;
+            createDynamicLayer(layerID: integer | string, tileset: string | string[] | Phaser.Tilemaps.Tileset | Phaser.Tilemaps.Tileset[], x?: number, y?: number): Phaser.Tilemaps.DynamicTilemapLayer;
 
             /**
              * Creates a Sprite for every object matching the given gid in the map data. All properties from
@@ -77830,57 +79283,27 @@ declare namespace Phaser {
             function GetValueOp(key: string, propertyValue: any): Function;
 
             /**
-             * [description]
-             * @param parent [description]
-             * @param config [description]
-             * @param defaults [description]
+             * Creates a new Number Tween.
+             * @param parent The owner of the new Tween.
+             * @param config Configuration for the new Tween.
+             * @param defaults Tween configuration defaults.
              */
-            function NumberTweenBuilder(parent: Phaser.Tweens.TweenManager | Phaser.Tweens.Timeline, config: object, defaults: Phaser.Types.Tweens.TweenConfigDefaults): Phaser.Tweens.Tween;
+            function NumberTweenBuilder(parent: Phaser.Tweens.TweenManager | Phaser.Tweens.Timeline, config: Phaser.Types.Tweens.NumberTweenBuilderConfig, defaults: Phaser.Types.Tweens.TweenConfigDefaults): Phaser.Tweens.Tween;
 
             /**
              * Builds a Timeline of Tweens based on a configuration object.
-             * 
-             * The configuration object (`config`) can have the following properties:
-             * 
-             * `tweens` - an array of tween configuration objects to create and add into the new Timeline, as described by `TweenBuilder`. If this doesn't exist or is empty, the Timeline will start off paused and none of the other configuration settings will be read. If it's a function, it will be called and its return value will be used as the array.
-             * `targets` - an array (or function which returns one) of default targets to which to apply the Timeline. Each individual Tween configuration can override this value.
-             * `totalDuration` - if specified, each Tween in the Timeline will get an equal portion of this duration, usually in milliseconds, by default. Each individual Tween configuration can override the Tween's duration.
-             * `duration` - if `totalDuration` is not specified, the default duration, usually in milliseconds, of each Tween which will be created. Each individual Tween configuration can override the Tween's duration.
-             * `delay`, `easeParams`, `ease`, `hold`, `repeat`, `repeatDelay`, `yoyo`, `flipX`, `flipY` - the default settings for each Tween which will be created, as specified by `TweenBuilder`. Each individual Tween configuration can override any of these values.
-             * `completeDelay` - if specified, the time to wait, usually in milliseconds, before the Timeline completes.
-             * `loop` - how many times the Timeline should loop, or -1 to loop indefinitely.
-             * `loopDelay` - the time, usually in milliseconds, between each loop
-             * `paused` - if `true`, the Timeline will start paused
-             * `useFrames` - if `true`, all duration in the Timeline will be in frames instead of milliseconds
-             * `callbackScope` - the default scope (`this` value) to use for each callback registered by the Timeline Builder. If not specified, the Timeline itself will be used.
-             * `onStart` - if specified, the `onStart` callback for the Timeline, called every time it starts playing
-             * `onStartScope` - the scope (`this` value) to use for the `onStart` callback. If not specified, the `callbackScope` will be used.
-             * `onStartParams` - additional arguments to pass to the `onStart` callback. The Timeline will always be the first argument.
-             * `onUpdate` - if specified, the `onUpdate` callback for the Timeline, called every frame it's active, regardless of its Tweens
-             * `onUpdateScope` - the scope (`this` value) to use for the `onUpdate` callback. If not specified, the `callbackScope` will be used.
-             * `onUpdateParams` - additional arguments to pass to the `onUpdate` callback. The Timeline will always be the first argument.
-             * `onLoop` - if specified, the `onLoop` callback for the Timeline, called every time it loops
-             * `onLoopScope` - the scope (`this` value) to use for the `onLoop` callback. If not specified, the `callbackScope` will be used.
-             * `onLoopParams` - additional arguments to pass to the `onLoop` callback. The Timeline will always be the first argument.
-             * `onYoyo` - if specified, the `onYoyo` callback for the Timeline, called every time it yoyos
-             * `onYoyoScope` - the scope (`this` value) to use for the `onYoyo` callback. If not specified, the `callbackScope` will be used.
-             * `onYoyoParams` - additional arguments to pass to the `onYoyo` callback. The first argument will always be `null`, while the Timeline will always be the second argument.
-             * `onComplete` - if specified, the `onComplete` callback for the Timeline, called after it completes
-             * `onCompleteScope` - the scope (`this` value) to use for the `onComplete` callback. If not specified, the `callbackScope` will be used.
-             * `onCompleteParams` - additional arguments to pass to the `onComplete` callback. The Timeline will always be the first argument.
              * @param manager The Tween Manager to which the Timeline will belong.
-             * @param config The configuration object for the Timeline, as described above.
+             * @param config The configuration object for the Timeline.
              */
-            function TimelineBuilder(manager: Phaser.Tweens.TweenManager, config: object): Phaser.Tweens.Timeline;
+            function TimelineBuilder(manager: Phaser.Tweens.TweenManager, config: Phaser.Types.Tweens.TimelineBuilderConfig): Phaser.Tweens.Timeline;
 
             /**
-             * [description]
-             * @param parent [description]
-             * @param config [description]
+             * Creates a new Tween.
+             * @param parent The owner of the new Tween.
+             * @param config Configuration for the new Tween.
              * @param defaults Tween configuration defaults.
-             * `
              */
-            function TweenBuilder(parent: Phaser.Tweens.TweenManager | Phaser.Tweens.Timeline, config: object, defaults: Phaser.Types.Tweens.TweenConfigDefaults): Phaser.Tweens.Tween;
+            function TweenBuilder(parent: Phaser.Tweens.TweenManager | Phaser.Tweens.Timeline, config: Phaser.Types.Tweens.TweenBuilderConfig | object, defaults: Phaser.Types.Tweens.TweenConfigDefaults): Phaser.Tweens.Tween;
 
         }
 
@@ -78138,20 +79561,20 @@ declare namespace Phaser {
             isPlaying(): boolean;
 
             /**
-             * [description]
-             * @param config [description]
+             * Creates a new Tween and adds it to this Timeline.
+             * @param config The configuration object for the Tween.
              */
-            add(config: object): Phaser.Tweens.Timeline;
+            add(config: Phaser.Types.Tweens.TweenBuilderConfig | object): Phaser.Tweens.Timeline;
 
             /**
-             * [description]
-             * @param tween [description]
+             * Adds a Tween to this Timeline.
+             * @param tween The tween
              */
             queue(tween: Phaser.Tweens.Tween): Phaser.Tweens.Timeline;
 
             /**
-             * [description]
-             * @param tween [description]
+             * Checks whether a tween has an offset value.
+             * @param tween The tween
              */
             hasOffset(tween: Phaser.Tweens.Tween): boolean;
 
@@ -78211,14 +79634,14 @@ declare namespace Phaser {
             play(): void;
 
             /**
-             * [description]
+             * Updates the Timeline's `state` and fires callbacks and events.
              */
             nextState(): void;
 
             /**
              * Returns 'true' if this Timeline has finished and should be removed from the Tween Manager.
              * Otherwise, returns false.
-             * @param timestamp [description]
+             * @param timestamp The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
              * @param delta The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
              */
             update(timestamp: number, delta: number): boolean;
@@ -78692,25 +80115,25 @@ declare namespace Phaser {
              * Create a Tween Timeline and return it, but do NOT add it to the active or pending Tween lists.
              * @param config The configuration object for the Timeline and its Tweens.
              */
-            createTimeline(config: object): Phaser.Tweens.Timeline;
+            createTimeline(config: Phaser.Types.Tweens.TimelineBuilderConfig): Phaser.Tweens.Timeline;
 
             /**
              * Create a Tween Timeline and add it to the active Tween list/
              * @param config The configuration object for the Timeline and its Tweens.
              */
-            timeline(config: object): Phaser.Tweens.Timeline;
+            timeline(config: Phaser.Types.Tweens.TimelineBuilderConfig): Phaser.Tweens.Timeline;
 
             /**
              * Create a Tween and return it, but do NOT add it to the active or pending Tween lists.
-             * @param config The configuration object for the Tween as per {@link Phaser.Tweens.Builders.TweenBuilder}.
+             * @param config The configuration object for the Tween.
              */
-            create(config: object): Phaser.Tweens.Tween;
+            create(config: Phaser.Types.Tweens.TweenBuilderConfig | object): Phaser.Tweens.Tween;
 
             /**
              * Create a Tween and add it to the active Tween list.
-             * @param config The configuration object for the Tween as per the {@link Phaser.Tweens.Builders.TweenBuilder}.
+             * @param config The configuration object for the Tween.
              */
-            add(config: object): Phaser.Tweens.Tween;
+            add(config: Phaser.Types.Tweens.TweenBuilderConfig | object): Phaser.Tweens.Tween;
 
             /**
              * Add an existing tween into the active Tween list.
@@ -78719,10 +80142,10 @@ declare namespace Phaser {
             existing(tween: Phaser.Tweens.Tween): Phaser.Tweens.TweenManager;
 
             /**
-             * Create a Tween and add it to the active Tween list.
-             * @param config The configuration object for the Number Tween as per the {@link Phaser.Tweens.Builders.NumberTweenBuilder}.
+             * Create a Number Tween and add it to the active Tween list.
+             * @param config The configuration object for the Number Tween.
              */
-            addCounter(config: object): Phaser.Tweens.Tween;
+            addCounter(config: Phaser.Types.Tweens.NumberTweenBuilderConfig): Phaser.Tweens.Tween;
 
             /**
              * Updates the Tween Manager's internal lists at the start of the frame.
@@ -80424,6 +81847,13 @@ declare namespace MatterJS {
      * Factories for commonly used body configurations (such as rectangles, circles and other polygons) can be found in the module `Matter.Bodies`.
      */
     class Body {
+    }
+
+    /**
+     * The `Matter.Bodies` module contains factory methods for creating rigid body models 
+     * with commonly used body configurations (such as rectangles, circles and other polygons).
+     */
+    class Bodies {
     }
 
     /**
