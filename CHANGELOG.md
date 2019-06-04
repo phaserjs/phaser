@@ -10,6 +10,7 @@
 * The pointer events were intermittently not registered, causing `pointerup` to often fail. Fix #4538 (thanks @paulsymphony)
 * Due to a regression in 3.16 the drag events were not performing as fast as before, causing drags to feel lagged. Fix #4500 (thanks @aliblong)
 * Over and Out events now work for any number of pointers in multi-touch environments, not just the first touch pointer registered. They also now fire correctly on touch start and touch end / cancel events.
+* The Touch Manager will now listen for Touch Cancel events on the Window object (if `inputWindowEvents` is enabled in the game config, which it is by default). This allows it to prevent touch cancel actions, like opening the dock on iOS, from causing genuinely active points from entering an active locked state.
 
 #### Input System API Changes
 
@@ -20,7 +21,7 @@ The old 'input queue' legacy system, which was deprecated in 3.16, has been remo
 * Removed the `legacyUpdate` and `update` methods from the Input Manager.
 * Removed the `ignoreEvents` property as this should now be handled on a per-event basis.
 * The Input Manager no longer listens for the `GameEvents.POST_STEP` event.
-* The following Input Manager methods no longer require the `time` argument, as it's taken from the event timeStamp: `startPointer`, `updatePointer`, `stopPointer` and `cancelPointer`. All of these methods also now calculate the pointer motion updates.
+* The following Input Manager methods are no longer required so have been removed: `startPointer`, `updatePointer`, `stopPointer` and `cancelPointer`.
 
 As a result, all of the following Input Manager methods have been renamed:
 
@@ -105,7 +106,7 @@ The following changes took place in the Pointer class:
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@PhaserEditor2D @samme @Nallebeorn
+@PhaserEditor2D @samme @Nallebeorn @Punkiebe
 
 
 
