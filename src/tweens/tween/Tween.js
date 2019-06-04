@@ -1261,7 +1261,7 @@ var Tween = new Class({
      * @param {Phaser.Types.Tweens.TweenDataConfig} tweenData - The TweenData property to update.
      * @param {number} delta - Either a value in ms, or 1 if Tween.useFrames is true
      *
-     * @return {boolean} [description]
+     * @return {boolean} True if the tween is not complete (e.g., playing), or false if the tween is complete.
      */
     updateTweenData: function (tween, tweenData, delta)
     {
