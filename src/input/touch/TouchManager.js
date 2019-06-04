@@ -134,6 +134,16 @@ var TouchManager = new Class({
         this.onTouchCancel = NOOP;
 
         /**
+         * The Touch Cancel event handler function specifically for events on the Window.
+         * Initially empty and bound in the `startListeners` method.
+         *
+         * @name Phaser.Input.Touch.TouchManager#onTouchCancelWindow
+         * @type {function}
+         * @since 3.18.0
+         */
+        this.onTouchCancelWindow = NOOP;
+
+        /**
          * The Touch Over event handler function.
          * Initially empty and bound in the `startListeners` method.
          *
@@ -273,6 +283,14 @@ var TouchManager = new Class({
             }
         };
 
+        this.onTouchCancelWindow = function (event)
+        {
+            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
+            {
+                _this.manager.onTouchCancel(event);
+            }
+        };
+
         this.onTouchOver = function (event)
         {
             if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
@@ -310,6 +328,7 @@ var TouchManager = new Class({
         {
             window.addEventListener('touchstart', this.onTouchStartWindow, nonPassive);
             window.addEventListener('touchend', this.onTouchEndWindow, nonPassive);
+            window.addEventListener('touchcancel', this.onTouchCancelWindow, nonPassive);
         }
 
         this.enabled = true;
