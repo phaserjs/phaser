@@ -76,6 +76,8 @@ The following changes took place in the Pointer class:
 * `GetBounds.getBottomCenter` is a new method that will return the bottom-center point from the bounds of a Game Object.
 * `GetBounds.getLeftCenter` is a new method that will return the left-center point from the bounds of a Game Object.
 * `GetBounds.getRightCenter` is a new method that will return the right-center point from the bounds of a Game Object.
+* You can now create a desynchronized 2D or WebGL canvas by setting the Game Config property `desynchronized` to `true` (the default is `false`). For more details about what this means see https://developers.google.com/web/updates/2019/05/desynchronized.
+* The CanvasRenderer can now use the `transparent` Game Config property in order to tell the browser an opaque background is in use, leading to faster rendering in a 2D context.
 
 ### Updates
 
