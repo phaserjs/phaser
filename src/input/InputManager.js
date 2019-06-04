@@ -470,18 +470,17 @@ var InputManager = new Class({
     //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
 
     /**
-     * Called by the main update loop when a Touch Start Event is received.
+     * Called by InputManager.onTouchStart when a Touch Start Event is received.
      *
      * @method Phaser.Input.InputManager#startPointer
      * @private
      * @since 3.10.0
      *
      * @param {TouchEvent} event - The native DOM event to be processed.
-     * @param {number} time - The time stamp value of this game step.
      * 
      * @return {Phaser.Input.Pointer[]} An array containing all the Pointer instances that were modified by this event.
      */
-    startPointer: function (event, time)
+    startPointer: function (event)
     {
         var pointers = this.pointers;
         var changed = [];
@@ -496,7 +495,9 @@ var InputManager = new Class({
 
                 if (!pointer.active)
                 {
-                    pointer.touchstart(changedTouch, time);
+                    pointer.touchstart(changedTouch, event);
+
+                    pointer.updateMotion();
 
                     this.activePointer = pointer;
 
@@ -511,18 +512,17 @@ var InputManager = new Class({
     },
 
     /**
-     * Called by the main update loop when a Touch Move Event is received.
+     * Called by InputManager.onTouchMove when a Touch Move Event is received.
      *
      * @method Phaser.Input.InputManager#updatePointer
      * @private
      * @since 3.10.0
      *
      * @param {TouchEvent} event - The native DOM event to be processed.
-     * @param {number} time - The time stamp value of this game step.
      * 
      * @return {Phaser.Input.Pointer[]} An array containing all the Pointer instances that were modified by this event.
      */
-    updatePointer: function (event, time)
+    updatePointer: function (event)
     {
         var pointers = this.pointers;
         var changed = [];
@@ -537,7 +537,9 @@ var InputManager = new Class({
 
                 if (pointer.active && pointer.identifier === changedTouch.identifier)
                 {
-                    pointer.touchmove(changedTouch, time);
+                    pointer.touchmove(changedTouch, event);
+
+                    pointer.updateMotion();
 
                     this.activePointer = pointer;
 
@@ -556,18 +558,17 @@ var InputManager = new Class({
     //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
 
     /**
-     * Called by the main update loop when a Touch End Event is received.
+     * Called by InputManager.onTouchEnd when a Touch End Event is received.
      *
      * @method Phaser.Input.InputManager#stopPointer
      * @private
      * @since 3.10.0
      *
      * @param {TouchEvent} event - The native DOM event to be processed.
-     * @param {number} time - The time stamp value of this game step.
      * 
      * @return {Phaser.Input.Pointer[]} An array containing all the Pointer instances that were modified by this event.
      */
-    stopPointer: function (event, time)
+    stopPointer: function (event)
     {
         var pointers = this.pointers;
         var changed = [];
@@ -582,7 +583,9 @@ var InputManager = new Class({
 
                 if (pointer.active && pointer.identifier === changedTouch.identifier)
                 {
-                    pointer.touchend(changedTouch, time);
+                    pointer.touchend(changedTouch, event);
+
+                    pointer.updateMotion();
 
                     changed.push(pointer);
 
@@ -595,18 +598,17 @@ var InputManager = new Class({
     },
 
     /**
-     * Called by the main update loop when a Touch Cancel Event is received.
+     * Called by InputManager.onTouchCancel when a Touch Cancel Event is received.
      *
      * @method Phaser.Input.InputManager#cancelPointer
      * @private
      * @since 3.15.0
      *
      * @param {TouchEvent} event - The native DOM event to be processed.
-     * @param {number} time - The time stamp value of this game step.
      * 
      * @return {Phaser.Input.Pointer[]} An array containing all the Pointer instances that were modified by this event.
      */
-    cancelPointer: function (event, time)
+    cancelPointer: function (event)
     {
         var pointers = this.pointers;
         var changed = [];
@@ -621,7 +623,9 @@ var InputManager = new Class({
 
                 if (pointer.active && pointer.identifier === changedTouch.identifier)
                 {
-                    pointer.touchend(changedTouch, time);
+                    pointer.touchend(changedTouch, event);
+
+                    pointer.updateMotion();
 
                     changed.push(pointer);
 
@@ -725,12 +729,7 @@ var InputManager = new Class({
      */
     onTouchStart: function (event)
     {
-        var changed = this.startPointer(event, event.timeStamp);
-
-        changed.forEach(function (pointer)
-        {
-            pointer.updateMotion();
-        });
+        var changed = this.startPointer(event);
 
         this.updateInputPlugins(CONST.TOUCH_START, changed);
     },
@@ -746,12 +745,7 @@ var InputManager = new Class({
      */
     onTouchMove: function (event)
     {
-        var changed = this.updatePointer(event, event.timeStamp);
-
-        changed.forEach(function (pointer)
-        {
-            pointer.updateMotion();
-        });
+        var changed = this.updatePointer(event);
 
         this.updateInputPlugins(CONST.TOUCH_MOVE, changed);
     },
@@ -767,12 +761,7 @@ var InputManager = new Class({
      */
     onTouchEnd: function (event)
     {
-        var changed = this.stopPointer(event, event.timeStamp);
-
-        changed.forEach(function (pointer)
-        {
-            pointer.updateMotion();
-        });
+        var changed = this.stopPointer(event);
 
         this.updateInputPlugins(CONST.TOUCH_END, changed);
     },
@@ -788,12 +777,7 @@ var InputManager = new Class({
      */
     onTouchCancel: function (event)
     {
-        var changed = this.cancelPointer(event, event.timeStamp);
-
-        changed.forEach(function (pointer)
-        {
-            pointer.updateMotion();
-        });
+        var changed = this.cancelPointer(event);
 
         this.updateInputPlugins(CONST.TOUCH_CANCEL, changed);
     },
