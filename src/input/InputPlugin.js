@@ -321,7 +321,7 @@ var InputPlugin = new Class({
          * A list of all Interactive Objects currently considered as being 'draggable' by any pointer, indexed by pointer ID.
          *
          * @name Phaser.Input.InputPlugin#_drag
-         * @type {{0:Array,2:Array,3:Array,4:Array,5:Array,6:Array,7:Array,8:Array,9:Array}}
+         * @type {{0:Array,1:Array,2:Array,3:Array,4:Array,5:Array,6:Array,7:Array,8:Array,9:Array,10:Array}}
          * @private
          * @since 3.0.0
          */
@@ -341,7 +341,7 @@ var InputPlugin = new Class({
          * A list of all Interactive Objects currently considered as being 'over' by any pointer, indexed by pointer ID.
          *
          * @name Phaser.Input.InputPlugin#_over
-         * @type {{0:Array,2:Array,3:Array,4:Array,5:Array,6:Array,7:Array,8:Array,9:Array}}
+         * @type {{0:Array,1:Array,2:Array,3:Array,4:Array,5:Array,6:Array,7:Array,8:Array,9:Array,10:Array}}
          * @private
          * @since 3.0.0
          */
@@ -676,26 +676,37 @@ var InputPlugin = new Class({
             switch (type)
             {
                 case CONST.MOUSE_DOWN:
-                case CONST.TOUCH_START:
                     total += this.processDragDownEvent(pointer);
                     total += this.processDownEvents(pointer);
+                    total += this.processOverOutEvents(pointer);
                     break;
 
                 case CONST.MOUSE_UP:
+                    total += this.processDragUpEvent(pointer);
+                    total += this.processUpEvents(pointer);
+                    total += this.processOverOutEvents(pointer);
+                    break;
+
+                case CONST.TOUCH_START:
+                    total += this.processDragDownEvent(pointer);
+                    total += this.processDownEvents(pointer);
+                    total += this.processOverEvents(pointer);
+                    break;
+
                 case CONST.TOUCH_END:
                 case CONST.TOUCH_CANCEL:
                     total += this.processDragUpEvent(pointer);
                     total += this.processUpEvents(pointer);
+                    total += this.processOutEvents(pointer);
                     break;
 
                 case CONST.MOUSE_MOVE:
                 case CONST.TOUCH_MOVE:
                     total += this.processDragMoveEvent(pointer);
                     total += this.processMoveEvents(pointer);
+                    total += this.processOverOutEvents(pointer);
                     break;
             }
-
-            total += this.processOverOutEvents(pointer);
 
             if (total > 0)
             {
@@ -1418,6 +1429,169 @@ var InputPlugin = new Class({
     },
 
     /**
+     * An internal method that handles the Pointer over events.
+     * This is called when a touch input hits the canvas, having previously been off of it.
+     *
+     * @method Phaser.Input.InputPlugin#processOverEvents
+     * @private
+     * @fires Phaser.Input.Events#GAMEOBJECT_POINTER_OVER
+     * @fires Phaser.Input.Events#GAMEOBJECT_OVER
+     * @fires Phaser.Input.Events#POINTER_OVER
+     * @since 3.18.0
+     *
+     * @param {Phaser.Input.Pointer} pointer - The pointer to check for events against.
+     *
+     * @return {integer} The total number of objects interacted with.
+     */
+    processOverEvents: function (pointer)
+    {
+        var currentlyOver = this._temp;
+
+        var totalInteracted = 0;
+
+        var total = currentlyOver.length;
+
+        var justOver = [];
+
+        if (total > 0)
+        {
+            var manager = this.manager;
+    
+            var _eventData = this._eventData;
+            var _eventContainer = this._eventContainer;
+    
+            _eventData.cancelled = false;
+    
+            var aborted = false;
+
+            for (var i = 0; i < total; i++)
+            {
+                var gameObject = currentlyOver[i];
+
+                if (!gameObject.input)
+                {
+                    continue;
+                }
+
+                justOver.push(gameObject);
+
+                manager.setCursor(gameObject.input);
+
+                gameObject.emit(Events.GAMEOBJECT_POINTER_OVER, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
+
+                totalInteracted++;
+
+                if (_eventData.cancelled || !gameObject.input)
+                {
+                    aborted = true;
+                    break;
+                }
+
+                this.emit(Events.GAMEOBJECT_OVER, pointer, gameObject, _eventContainer);
+
+                if (_eventData.cancelled || !gameObject.input)
+                {
+                    aborted = true;
+                    break;
+                }
+            }
+
+            if (!aborted)
+            {
+                this.emit(Events.POINTER_OVER, pointer, justOver);
+            }
+        }
+
+        //  Then sort it into display list order
+        this._over[pointer.id] = justOver;
+
+        return totalInteracted;
+    },
+
+    /**
+     * An internal method that handles the Pointer out events.
+     * This is called when a touch input leaves the canvas, as it can never be 'over' in this case.
+     *
+     * @method Phaser.Input.InputPlugin#processOutEvents
+     * @private
+     * @fires Phaser.Input.Events#GAMEOBJECT_POINTER_OUT
+     * @fires Phaser.Input.Events#GAMEOBJECT_OUT
+     * @fires Phaser.Input.Events#POINTER_OUT
+     * @since 3.18.0
+     *
+     * @param {Phaser.Input.Pointer} pointer - The pointer to check for events against.
+     *
+     * @return {integer} The total number of objects interacted with.
+     */
+    processOutEvents: function (pointer)
+    {
+        var previouslyOver = this._over[pointer.id];
+
+        var totalInteracted = 0;
+
+        var total = previouslyOver.length;
+
+        if (total > 0)
+        {
+            var manager = this.manager;
+
+            var _eventData = this._eventData;
+            var _eventContainer = this._eventContainer;
+    
+            _eventData.cancelled = false;
+    
+            var aborted = false;
+
+            this.sortGameObjects(previouslyOver);
+
+            for (var i = 0; i < total; i++)
+            {
+                var gameObject = previouslyOver[i];
+    
+                //  Call onOut for everything in the previouslyOver array
+                for (i = 0; i < total; i++)
+                {
+                    gameObject = previouslyOver[i];
+    
+                    if (!gameObject.input)
+                    {
+                        continue;
+                    }
+    
+                    manager.resetCursor(gameObject.input);
+
+                    gameObject.emit(Events.GAMEOBJECT_POINTER_OUT, pointer, _eventContainer);
+    
+                    totalInteracted++;
+    
+                    if (_eventData.cancelled || !gameObject.input)
+                    {
+                        aborted = true;
+                        break;
+                    }
+    
+                    this.emit(Events.GAMEOBJECT_OUT, pointer, gameObject, _eventContainer);
+    
+                    if (_eventData.cancelled || !gameObject.input)
+                    {
+                        aborted = true;
+                        break;
+                    }
+                }
+    
+                if (!aborted)
+                {
+                    this.emit(Events.POINTER_OUT, pointer, previouslyOver);
+                }
+            }
+
+            this._over[pointer.id] = [];
+        }
+
+        return totalInteracted;
+    },
+
+    /**
      * An internal method that handles the Pointer over and out events.
      *
      * @method Phaser.Input.InputPlugin#processOverOutEvents
@@ -1509,9 +1683,10 @@ var InputPlugin = new Class({
                     continue;
                 }
 
-                gameObject.emit(Events.GAMEOBJECT_POINTER_OUT, pointer, _eventContainer);
-
+                //  Reset cursor before we emit the event, in case they want to change it during the event
                 manager.resetCursor(gameObject.input);
+
+                gameObject.emit(Events.GAMEOBJECT_POINTER_OUT, pointer, _eventContainer);
 
                 totalInteracted++;
 
@@ -1557,9 +1732,10 @@ var InputPlugin = new Class({
                     continue;
                 }
 
-                gameObject.emit(Events.GAMEOBJECT_POINTER_OVER, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
-
+                //  Set cursor before we emit the event, in case they want to change it during the event
                 manager.setCursor(gameObject.input);
+
+                gameObject.emit(Events.GAMEOBJECT_POINTER_OVER, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
                 totalInteracted++;
 
@@ -1630,14 +1806,6 @@ var InputPlugin = new Class({
             }
 
             gameObject.emit(Events.GAMEOBJECT_POINTER_UP, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
-
-            //  Clear over and emit 'pointerout' on touch.
-            if (pointer.wasTouch && gameObject.input)
-            {
-                this._over[pointer.id] = [];
-
-                gameObject.emit(Events.GAMEOBJECT_POINTER_OUT, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
-            }
 
             if (_eventData.cancelled || !gameObject.input)
             {
