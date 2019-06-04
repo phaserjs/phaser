@@ -465,178 +465,6 @@ var InputManager = new Class({
         }
     },
 
-    //  event.targetTouches = list of all touches on the TARGET ELEMENT (i.e. game dom element)
-    //  event.touches = list of all touches on the ENTIRE DOCUMENT, not just the target element
-    //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
-
-    /**
-     * Called by InputManager.onTouchStart when a Touch Start Event is received.
-     *
-     * @method Phaser.Input.InputManager#startPointer
-     * @private
-     * @since 3.10.0
-     *
-     * @param {TouchEvent} event - The native DOM event to be processed.
-     * 
-     * @return {Phaser.Input.Pointer[]} An array containing all the Pointer instances that were modified by this event.
-     */
-    startPointer: function (event)
-    {
-        var pointers = this.pointers;
-        var changed = [];
-
-        for (var c = 0; c < event.changedTouches.length; c++)
-        {
-            var changedTouch = event.changedTouches[c];
-
-            for (var i = 1; i < this.pointersTotal; i++)
-            {
-                var pointer = pointers[i];
-
-                if (!pointer.active)
-                {
-                    pointer.touchstart(changedTouch, event);
-
-                    pointer.updateMotion();
-
-                    this.activePointer = pointer;
-
-                    changed.push(pointer);
-
-                    break;
-                }
-            }
-        }
-
-        return changed;
-    },
-
-    /**
-     * Called by InputManager.onTouchMove when a Touch Move Event is received.
-     *
-     * @method Phaser.Input.InputManager#updatePointer
-     * @private
-     * @since 3.10.0
-     *
-     * @param {TouchEvent} event - The native DOM event to be processed.
-     * 
-     * @return {Phaser.Input.Pointer[]} An array containing all the Pointer instances that were modified by this event.
-     */
-    updatePointer: function (event)
-    {
-        var pointers = this.pointers;
-        var changed = [];
-
-        for (var c = 0; c < event.changedTouches.length; c++)
-        {
-            var changedTouch = event.changedTouches[c];
-
-            for (var i = 1; i < this.pointersTotal; i++)
-            {
-                var pointer = pointers[i];
-
-                if (pointer.active && pointer.identifier === changedTouch.identifier)
-                {
-                    pointer.touchmove(changedTouch, event);
-
-                    pointer.updateMotion();
-
-                    this.activePointer = pointer;
-
-                    changed.push(pointer);
-
-                    break;
-                }
-            }
-        }
-
-        return changed;
-    },
-
-    //  For touch end its a list of the touch points that have been removed from the surface
-    //  https://developer.mozilla.org/en-US/docs/DOM/TouchList
-    //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
-
-    /**
-     * Called by InputManager.onTouchEnd when a Touch End Event is received.
-     *
-     * @method Phaser.Input.InputManager#stopPointer
-     * @private
-     * @since 3.10.0
-     *
-     * @param {TouchEvent} event - The native DOM event to be processed.
-     * 
-     * @return {Phaser.Input.Pointer[]} An array containing all the Pointer instances that were modified by this event.
-     */
-    stopPointer: function (event)
-    {
-        var pointers = this.pointers;
-        var changed = [];
-
-        for (var c = 0; c < event.changedTouches.length; c++)
-        {
-            var changedTouch = event.changedTouches[c];
-
-            for (var i = 1; i < this.pointersTotal; i++)
-            {
-                var pointer = pointers[i];
-
-                if (pointer.active && pointer.identifier === changedTouch.identifier)
-                {
-                    pointer.touchend(changedTouch, event);
-
-                    pointer.updateMotion();
-
-                    changed.push(pointer);
-
-                    break;
-                }
-            }
-        }
-
-        return changed;
-    },
-
-    /**
-     * Called by InputManager.onTouchCancel when a Touch Cancel Event is received.
-     *
-     * @method Phaser.Input.InputManager#cancelPointer
-     * @private
-     * @since 3.15.0
-     *
-     * @param {TouchEvent} event - The native DOM event to be processed.
-     * 
-     * @return {Phaser.Input.Pointer[]} An array containing all the Pointer instances that were modified by this event.
-     */
-    cancelPointer: function (event)
-    {
-        var pointers = this.pointers;
-        var changed = [];
-
-        for (var c = 0; c < event.changedTouches.length; c++)
-        {
-            var changedTouch = event.changedTouches[c];
-
-            for (var i = 1; i < this.pointersTotal; i++)
-            {
-                var pointer = pointers[i];
-
-                if (pointer.active && pointer.identifier === changedTouch.identifier)
-                {
-                    pointer.touchend(changedTouch, event);
-
-                    pointer.updateMotion();
-
-                    changed.push(pointer);
-
-                    break;
-                }
-            }
-        }
-
-        return changed;
-    },
-
     /**
      * Adds new Pointer objects to the Input Manager.
      *
@@ -718,6 +546,10 @@ var InputManager = new Class({
         }
     },
 
+    //  event.targetTouches = list of all touches on the TARGET ELEMENT (i.e. game dom element)
+    //  event.touches = list of all touches on the ENTIRE DOCUMENT, not just the target element
+    //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
+
     /**
      * Processes a touch start event, as passed in by the TouchManager.
      *
@@ -729,7 +561,29 @@ var InputManager = new Class({
      */
     onTouchStart: function (event)
     {
-        var changed = this.startPointer(event);
+        var pointers = this.pointers;
+        var changed = [];
+
+        for (var c = 0; c < event.changedTouches.length; c++)
+        {
+            var changedTouch = event.changedTouches[c];
+
+            for (var i = 1; i < this.pointersTotal; i++)
+            {
+                var pointer = pointers[i];
+
+                if (!pointer.active)
+                {
+                    pointer.touchstart(changedTouch, event);
+
+                    this.activePointer = pointer;
+
+                    changed.push(pointer);
+
+                    break;
+                }
+            }
+        }
 
         this.updateInputPlugins(CONST.TOUCH_START, changed);
     },
@@ -745,10 +599,36 @@ var InputManager = new Class({
      */
     onTouchMove: function (event)
     {
-        var changed = this.updatePointer(event);
+        var pointers = this.pointers;
+        var changed = [];
+
+        for (var c = 0; c < event.changedTouches.length; c++)
+        {
+            var changedTouch = event.changedTouches[c];
+
+            for (var i = 1; i < this.pointersTotal; i++)
+            {
+                var pointer = pointers[i];
+
+                if (pointer.active && pointer.identifier === changedTouch.identifier)
+                {
+                    pointer.touchmove(changedTouch, event);
+
+                    this.activePointer = pointer;
+
+                    changed.push(pointer);
+
+                    break;
+                }
+            }
+        }
 
         this.updateInputPlugins(CONST.TOUCH_MOVE, changed);
     },
+
+    //  For touch end its a list of the touch points that have been removed from the surface
+    //  https://developer.mozilla.org/en-US/docs/DOM/TouchList
+    //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
 
     /**
      * Processes a touch end event, as passed in by the TouchManager.
@@ -761,7 +641,27 @@ var InputManager = new Class({
      */
     onTouchEnd: function (event)
     {
-        var changed = this.stopPointer(event);
+        var pointers = this.pointers;
+        var changed = [];
+
+        for (var c = 0; c < event.changedTouches.length; c++)
+        {
+            var changedTouch = event.changedTouches[c];
+
+            for (var i = 1; i < this.pointersTotal; i++)
+            {
+                var pointer = pointers[i];
+
+                if (pointer.active && pointer.identifier === changedTouch.identifier)
+                {
+                    pointer.touchend(changedTouch, event);
+
+                    changed.push(pointer);
+
+                    break;
+                }
+            }
+        }
 
         this.updateInputPlugins(CONST.TOUCH_END, changed);
     },
@@ -777,7 +677,27 @@ var InputManager = new Class({
      */
     onTouchCancel: function (event)
     {
-        var changed = this.cancelPointer(event);
+        var pointers = this.pointers;
+        var changed = [];
+
+        for (var c = 0; c < event.changedTouches.length; c++)
+        {
+            var changedTouch = event.changedTouches[c];
+
+            for (var i = 1; i < this.pointersTotal; i++)
+            {
+                var pointer = pointers[i];
+
+                if (pointer.active && pointer.identifier === changedTouch.identifier)
+                {
+                    pointer.touchcancel(changedTouch, event);
+
+                    changed.push(pointer);
+
+                    break;
+                }
+            }
+        }
 
         this.updateInputPlugins(CONST.TOUCH_CANCEL, changed);
     },
