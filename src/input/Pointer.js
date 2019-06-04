@@ -641,6 +641,8 @@ var Pointer = new Class({
 
         this.wasTouch = true;
         this.wasCanceled = false;
+
+        this.updateMotion();
     },
 
     /**
@@ -663,6 +665,8 @@ var Pointer = new Class({
         this.moveTime = touch.timeStamp;
 
         this.wasTouch = true;
+
+        this.updateMotion();
     },
 
     /**
@@ -697,6 +701,8 @@ var Pointer = new Class({
         this.wasCanceled = false;
         
         this.active = false;
+
+        this.updateMotion();
     },
 
     /**
