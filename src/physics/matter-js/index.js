@@ -37,6 +37,15 @@ module.exports = {
 
 /**
  * @classdesc
+ * The `Matter.Bodies` module contains factory methods for creating rigid body models 
+ * with commonly used body configurations (such as rectangles, circles and other polygons).
+ *
+ * @class MatterJS.Bodies
+ * @since 3.18.0
+ */
+
+/**
+ * @classdesc
  * The `Matter.Composite` module contains methods for creating and manipulating composite bodies.
  * A composite body is a collection of `Matter.Body`, `Matter.Constraint` and other `Matter.Composite`, therefore composites form a tree structure.
  * It is important to use the functions in this module to modify composites, rather than directly modifying their properties.

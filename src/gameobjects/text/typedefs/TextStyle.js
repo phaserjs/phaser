@@ -7,7 +7,7 @@
  * @property {string} [fontFamily='Courier'] - The font the Text object will render with. This is a Canvas style font string.
  * @property {string} [fontSize='16px'] - The font size, as a CSS size string.
  * @property {string} [fontStyle] - Any addition font styles, such as 'strong'.
- * @property {strng} [backgroundColor] - A solid fill color that is rendered behind the Text object. Given as a CSS string color such as `#ff0`.
+ * @property {string} [backgroundColor] - A solid fill color that is rendered behind the Text object. Given as a CSS string color such as `#ff0`.
  * @property {string} [color='#fff'] - The color the Text is drawn in. Given as a CSS string color such as `#fff` or `rgb()`.
  * @property {string} [stroke='#fff'] - The color used to stroke the Text if the `strokeThickness` property is greater than zero.
  * @property {number} [strokeThickness=0] - The thickness of the stroke around the Text. Set to zero for no stroke.
