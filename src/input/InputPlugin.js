@@ -47,8 +47,13 @@ var TriangleContains = require('../geom/triangle/Contains');
  * sprite.setInteractive();
  * sprite.on('pointerdown', callback, context);
  * ```
+ * 
+ * There are lots of game configuration options available relating to input.
+ * See the [Input Config object]{@linkcode Phaser.Types.Core.InputConfig} for more details, including how to deal with Phaser
+ * listening for input events outside of the canvas, how to set a default number of pointers, input
+ * capture settings and more.
  *
- * Please see the Input examples and tutorials for more information.
+ * Please also see the Input examples and tutorials for further information.
  *
  * @class InputPlugin
  * @extends Phaser.Events.EventEmitter
