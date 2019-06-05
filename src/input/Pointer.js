@@ -428,6 +428,37 @@ var Pointer = new Class({
          * @since 3.16.0
          */
         this.time = 0;
+
+        /**
+         * The horizontal scroll amount that occurred due to the user moving a mouse wheel or similar input device.
+         *
+         * @name Phaser.Input.Pointer#deltaX
+         * @type {number}
+         * @default 0
+         * @since 3.18.0
+         */
+        this.deltaX = 0;
+
+        /**
+         * The vertical scroll amount that occurred due to the user moving a mouse wheel or similar input device.
+         * This value will typically be less than 0 if the user scrolls up and greater than zero if scrolling down.
+         *
+         * @name Phaser.Input.Pointer#deltaY
+         * @type {number}
+         * @default 0
+         * @since 3.18.0
+         */
+        this.deltaY = 0;
+
+        /**
+         * The z-axis scroll amount that occurred due to the user moving a mouse wheel or similar input device.
+         *
+         * @name Phaser.Input.Pointer#deltaX
+         * @type {number}
+         * @default 0
+         * @since 3.18.0
+         */
+        this.deltaZ = 0;
     },
 
     /**
@@ -598,6 +629,34 @@ var Pointer = new Class({
         }
 
         this.moveTime = event.timeStamp;
+
+        this.wasTouch = false;
+    },
+
+    /**
+     * Internal method to handle a Mouse Wheel Event.
+     *
+     * @method Phaser.Input.Pointer#wheel
+     * @private
+     * @since 3.18.0
+     *
+     * @param {WheelEvent} event - The Wheel Event to process.
+     */
+    wheel: function (event)
+    {
+        if ('buttons' in event)
+        {
+            this.buttons = event.buttons;
+        }
+
+        this.event = event;
+
+        //  Sets the local x/y properties
+        this.manager.transformPointer(this, event.pageX, event.pageY, false);
+
+        this.deltaX = event.deltaX;
+        this.deltaY = event.deltaY;
+        this.deltaZ = event.deltaZ;
 
         this.wasTouch = false;
     },
