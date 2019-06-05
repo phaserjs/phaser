@@ -3,6 +3,7 @@
  * @since 3.0.0
  *
  * @property {?Function} [classType=Sprite] - Sets {@link Phaser.GameObjects.Group#classType}.
+ * @property {?string} [name=''] - Sets Sets {@link Phaser.GameObjects.Group#name}.
  * @property {?boolean} [active=true] - Sets {@link Phaser.GameObjects.Group#active}.
  * @property {?number} [maxSize=-1] - Sets {@link Phaser.GameObjects.Group#maxSize}.
  * @property {?string} [defaultKey=null] - Sets {@link Phaser.GameObjects.Group#defaultKey}.
