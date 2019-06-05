@@ -609,10 +609,7 @@ var InputPlugin = new Class({
                 }
             }
 
-            if (pointersTotal < 3 || !pointer.wasTouch)
-            {
-                total += this.processOverOutEvents(pointer);
-            }
+            total += this.processOverOutEvents(pointer);
 
             this.processDragThresholdEvent(pointer);
 
@@ -710,6 +707,10 @@ var InputPlugin = new Class({
                     total += this.processDragMoveEvent(pointer);
                     total += this.processMoveEvents(pointer);
                     total += this.processOverOutEvents(pointer);
+                    break;
+
+                case CONST.MOUSE_WHEEL:
+                    total += this.processWheelEvent(pointer);
                     break;
             }
 
@@ -1428,6 +1429,73 @@ var InputPlugin = new Class({
         if (!aborted)
         {
             this.emit(Events.POINTER_MOVE, pointer, currentlyOver);
+        }
+
+        return total;
+    },
+
+    /**
+     * An internal method that handles a mouse wheel event.
+     *
+     * @method Phaser.Input.InputPlugin#processWheelEvent
+     * @private
+     * @fires Phaser.Input.Events#GAMEOBJECT_POINTER_WHEEL
+     * @fires Phaser.Input.Events#GAMEOBJECT_WHEEL
+     * @fires Phaser.Input.Events#POINTER_WHEEL
+     * @since 3.18.0
+     *
+     * @param {Phaser.Input.Pointer} pointer - The pointer to check for events against.
+     *
+     * @return {integer} The total number of objects interacted with.
+     */
+    processWheelEvent: function (pointer)
+    {
+        var total = 0;
+        var currentlyOver = this._temp;
+
+        var _eventData = this._eventData;
+        var _eventContainer = this._eventContainer;
+
+        _eventData.cancelled = false;
+
+        var aborted = false;
+
+        var dx = pointer.deltaX;
+        var dy = pointer.deltaY;
+        var dz = pointer.deltaZ;
+
+        //  Go through all objects the pointer was over and fire their events / callbacks
+        for (var i = 0; i < currentlyOver.length; i++)
+        {
+            var gameObject = currentlyOver[i];
+
+            if (!gameObject.input)
+            {
+                continue;
+            }
+
+            total++;
+
+            gameObject.emit(Events.GAMEOBJECT_POINTER_WHEEL, pointer, dx, dy, dz, _eventContainer);
+
+            if (_eventData.cancelled || !gameObject.input)
+            {
+                aborted = true;
+                break;
+            }
+
+            this.emit(Events.GAMEOBJECT_WHEEL, pointer, gameObject, dx, dy, dz, _eventContainer);
+
+            if (_eventData.cancelled || !gameObject.input)
+            {
+                aborted = true;
+                break;
+            }
+        }
+
+        if (!aborted)
+        {
+            this.emit(Events.POINTER_WHEEL, pointer, currentlyOver, dx, dy, dz);
         }
 
         return total;

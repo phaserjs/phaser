@@ -757,6 +757,22 @@ var InputManager = new Class({
     },
 
     /**
+     * Processes a mouse wheel event, as passed in by the MouseManager.
+     *
+     * @method Phaser.Input.InputManager#onMouseWheel
+     * @private
+     * @since 3.18.0
+     *
+     * @param {WheelEvent} event - The native DOM Wheel event.
+     */
+    onMouseWheel: function (event)
+    {
+        this.mousePointer.wheel(event);
+
+        this.updateInputPlugins(CONST.MOUSE_WHEEL, this.mousePointerContainer);
+    },
+
+    /**
      * Checks if the given Game Object should be considered as a candidate for input or not.
      *
      * Checks if the Game Object has an input component that is enabled, that it will render,

@@ -161,6 +161,17 @@ var MouseManager = new Class({
         this.onMouseOut = NOOP;
 
         /**
+         * The Mouse Wheel Event handler.
+         * This function is sent the native DOM MouseEvent.
+         * Initially empty and bound in the `startListeners` method.
+         *
+         * @name Phaser.Input.Mouse.MouseManager#onMouseWheel
+         * @type {function}
+         * @since 3.18.0
+         */
+        this.onMouseWheel = NOOP;
+
+        /**
          * Internal pointerLockChange handler.
          * This function is sent the native DOM MouseEvent.
          * Initially empty and bound in the `startListeners` method.
@@ -364,6 +375,14 @@ var MouseManager = new Class({
             }
         };
 
+        this.onMouseWheel = function (event)
+        {
+            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
+            {
+                _this.manager.onMouseWheel(event);
+            }
+        };
+
         var target = this.target;
 
         if (!target)
@@ -379,6 +398,7 @@ var MouseManager = new Class({
         target.addEventListener('mouseup', this.onMouseUp, (this.capture) ? nonPassive : passive);
         target.addEventListener('mouseover', this.onMouseOver, (this.capture) ? nonPassive : passive);
         target.addEventListener('mouseout', this.onMouseOut, (this.capture) ? nonPassive : passive);
+        target.addEventListener('wheel', this.onMouseWheel, (this.capture) ? nonPassive : passive);
 
         if (window && this.manager.game.config.inputWindowEvents)
         {
