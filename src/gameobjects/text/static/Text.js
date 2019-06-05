@@ -276,6 +276,8 @@ var Text = new Class({
 
         this.initRTL();
 
+        this.setText(text);
+
         if (style && style.padding)
         {
             this.setPadding(style.padding);
@@ -285,8 +287,6 @@ var Text = new Class({
         {
             this.lineSpacing = style.lineSpacing;
         }
-
-        this.setText(text);
 
         if (scene.sys.game.config.renderType === CONST.WEBGL)
         {
@@ -1015,7 +1015,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setPadding
      * @since 3.0.0
      *
-     * @param {(number|object)} left - The left padding value, or a padding config object.
+     * @param {(number|Phaser.Types.GameObjects.Text.TextPadding)} left - The left padding value, or a padding config object.
      * @param {number} top - The top padding value.
      * @param {number} right - The right padding value.
      * @param {number} bottom - The bottom padding value.
