@@ -120,6 +120,7 @@ The following changes took place in the Pointer class:
 * The ScaleManager full screen call had an arrow function in it. Despite being within a conditional block of code it still broke really old browsers like IE11, so has been removed. Fix #4530 (thanks @jorbascrumps @CNDW)
 * `Game.getTime` would return `NaN` because it incorrectly accessed the time value from the TimeStep.
 * Text with a `fixedWidth` or `fixedHeight` could cause the canvas to be cropped if less than the size of the Text itself (thanks @rexrainbow)
+* Changing the `radius` of an Arc Game Object wouldn't update the size, causing origin issues. It now updates the size and origin correctly in WebGL. Fix #4542 (thanks @@PhaserEditor2D)
 
 ### Examples, Documentation and TypeScript
 

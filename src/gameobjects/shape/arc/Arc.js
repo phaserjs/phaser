@@ -164,6 +164,8 @@ var Arc = new Class({
         {
             this.geom.radius = value;
 
+            this.setSize(value, value);
+            this.updateDisplayOrigin();
             this.updateData();
         }
 
