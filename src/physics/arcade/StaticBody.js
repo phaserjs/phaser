@@ -800,7 +800,7 @@ var StaticBody = new Class({
 
         if (this.debugShowBody)
         {
-            graphic.lineStyle(1, this.debugBodyColor, 1);
+            graphic.lineStyle(graphic.defaultStrokeWidth, this.debugBodyColor, 1);
 
             if (this.isCircle)
             {
