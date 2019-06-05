@@ -4,13 +4,27 @@
 
 ### Input System Changes
 
+#### Mouse Wheel Support
+
+3.18 now includes native support for reading mouse wheel events.
+
+* `POINTER_WHEEL` is a new event dispatched by the Input Plugin allowing you to listen for global wheel events.
+* `GAMEOBJECT_WHEEL` is a new event dispatched by the Input Plugin allowing you to listen for global wheel events over all interactive Game Objects in a Scene.
+* `GAMEOBJECT_POINTER_WHEEL` is a new event dispatched by a Game Object allowing you to listen for wheel events specifically on that Game Object.
+* `Pointer.deltaX` is a new property that holds the horizontal scroll amount that occurred due to the user moving a mouse wheel or similar input device.
+* `Pointer.deltaY` is a new property that holds the vertical scroll amount that occurred due to the user moving a mouse wheel or similar input device.
+* `Pointer.deltaZ` is a new property that holds the z-axis scroll amount that occurred due to the user moving a mouse wheel or similar input device.
+* `Pointer.wheel` is a new internal method that handles the wheel event.
+* `InputManager.onMouseWheel` is a new internal method that handles processing the wheel event.
+* `InputManager.processWheelEvent` is a new internal method that handles processing the wheel event sent by the Input Manager.
+
 #### Input System Bug Fixes
 
 * Calling `setPollAlways()` would cause the `'pointerdown'` event to fire multiple times. Fix #4541 (thanks @Neyromantik)
 * The pointer events were intermittently not registered, causing `pointerup` to often fail. Fix #4538 (thanks @paulsymphony)
 * Due to a regression in 3.16 the drag events were not performing as fast as before, causing drags to feel lagged. Fix #4500 (thanks @aliblong)
+* The Touch Manager will now listen for Touch Cancel events on the Window object (if `inputWindowEvents` is enabled in the game config, which it is by default). This allows it to prevent touch cancel actions, like opening the dock on iOS, from causing genuinely active pointers to enter an active locked state.
 * Over and Out events now work for any number of pointers in multi-touch environments, not just the first touch pointer registered. They also now fire correctly on touch start and touch end / cancel events.
-* The Touch Manager will now listen for Touch Cancel events on the Window object (if `inputWindowEvents` is enabled in the game config, which it is by default). This allows it to prevent touch cancel actions, like opening the dock on iOS, from causing genuinely active points from entering an active locked state.
 
 #### Input System API Changes
 
@@ -78,6 +92,7 @@ The following changes took place in the Pointer class:
 * `GetBounds.getRightCenter` is a new method that will return the right-center point from the bounds of a Game Object.
 * You can now create a desynchronized 2D or WebGL canvas by setting the Game Config property `desynchronized` to `true` (the default is `false`). For more details about what this means see https://developers.google.com/web/updates/2019/05/desynchronized.
 * The CanvasRenderer can now use the `transparent` Game Config property in order to tell the browser an opaque background is in use, leading to faster rendering in a 2D context.
+* `GameObject.scale` is a new property, that exists as part of the Transform component, that allows you to set the horizontal and vertical scale of a Game Object via a setter, rather than using the `setScale` method. This is handy for uniformly scaling objects via tweens, for example.
 
 ### Updates
 
