@@ -108,6 +108,8 @@ The following changes took place in the Pointer class:
 * The PluginManager will now display a console warning if it skips installing a plugin (during boot) because the plugin value is missing or empty (thanks @samme)
 * When creating a Matter Constraint via the Factory you can now optionally provide a `length`. If not given, it will determine the length automatically from the position of the two bodies.
 * When creating a Matter Game Object you can now pass in a pre-created Matter body instead of a config object.
+* When Debug Draw is enabled for Arcade Physics it will now use `Graphics.defaultStrokeWidth` to drawn the body with, this makes static bodies consistent with dynamic ones (thanks @samme)
+
 
 ### Bug Fixes
 
