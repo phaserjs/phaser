@@ -114,6 +114,17 @@ var Group = new Class({
         this.classType = GetFastValue(config, 'classType', Sprite);
 
         /**
+         * The name of this group.
+         * Empty by default and never populated by Phaser, this is left for developers to use.
+         *
+         * @name Phaser.GameObjects.Group#name
+         * @type {string}
+         * @default ''
+         * @since 3.18.0
+         */
+        this.name = GetFastValue(config, 'name', '');
+
+        /**
          * Whether this group runs its {@link Phaser.GameObjects.Group#preUpdate} method
          * (which may update any members).
          *
