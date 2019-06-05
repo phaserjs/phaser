@@ -109,7 +109,7 @@ The following changes took place in the Pointer class:
 * When creating a Matter Constraint via the Factory you can now optionally provide a `length`. If not given, it will determine the length automatically from the position of the two bodies.
 * When creating a Matter Game Object you can now pass in a pre-created Matter body instead of a config object.
 * When Debug Draw is enabled for Arcade Physics it will now use `Graphics.defaultStrokeWidth` to drawn the body with, this makes static bodies consistent with dynamic ones (thanks @samme)
-
+* `Group.name` is a new property that allows you to set a name for a Group, just like you can with all other Game Objects. Phaser itself doesn't use this, it's there for you to take advantage of (thanks @samme)
 
 ### Bug Fixes
 
