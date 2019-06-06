@@ -321,7 +321,7 @@ var RenderTexture = new Class({
      * @since 3.10.0
      *
      * @param {number} width - The new width of the Render Texture.
-     * @param {number} [height] - The new height of the Render Texture. If not specified, will be set the same as the `width`.
+     * @param {number} [height=width] - The new height of the Render Texture. If not specified, will be set the same as the `width`.
      *
      * @return {this} This Render Texture.
      */
@@ -331,10 +331,9 @@ var RenderTexture = new Class({
 
         if (width !== this.width || height !== this.height)
         {
-            
-            if (this.frame.name === '__BASE') // resize the texture
+            if (this.frame.name === '__BASE')
             {
-
+                //  Tesize the texture
                 this.canvas.width = width;
                 this.canvas.height = height;
 
@@ -360,14 +359,23 @@ var RenderTexture = new Class({
 
                 this.width = width;
                 this.height = height;
-
             }
         }
-        else // resize the frame
+        else
         {
+            //  Resize the frame
+
             var baseFrame = this.texture.getSourceImage();
-            if (this.frame.cutX + width > baseFrame.width) { width = baseFrame.width - this.frame.cutX; }
-            if (this.frame.cutY + height > baseFrame.height) { height = baseFrame.height - this.frame.cutY; }
+
+            if (this.frame.cutX + width > baseFrame.width)
+            {
+                width = baseFrame.width - this.frame.cutX;
+            }
+
+            if (this.frame.cutY + height > baseFrame.height)
+            {
+                height = baseFrame.height - this.frame.cutY;
+            }
 
             this.frame.setSize(width, height, this.frame.cutX, this.frame.cutY);
         }
@@ -713,7 +721,7 @@ var RenderTexture = new Class({
     
             pipeline.projOrtho(0, this.texture.width, 0, this.texture.height, -1000.0, 1000.0);
 
-            this.batchList(entries, x + this.frame.cutX, y + this.frame.cutY, alpha, tint);
+            this.batchList(entries, x, y, alpha, tint);
 
             pipeline.flush();
 
@@ -727,7 +735,7 @@ var RenderTexture = new Class({
         {
             this.renderer.setContext(this.context);
 
-            this.batchList(entries, x + this.frame.cutX, y + this.frame.cutY, alpha, tint);
+            this.batchList(entries, x, y, alpha, tint);
 
             this.renderer.setContext();
         }
@@ -833,8 +841,8 @@ var RenderTexture = new Class({
      * @since 3.12.0
      *
      * @param {array} children - The array of Game Objects to draw.
-     * @param {number} x - The x position to offset the Game Object by.
-     * @param {number} y - The y position to offset the Game Object by.
+     * @param {number} [x] - The x position to offset the Game Object by.
+     * @param {number} [y] - The y position to offset the Game Object by.
      * @param {number} [alpha] - The alpha to use. If not specified it uses the `globalAlpha` property.
      * @param {number} [tint] - The tint color to use. If not specified it uses the `globalTint` property.
      */
@@ -885,13 +893,16 @@ var RenderTexture = new Class({
      * @since 3.12.0
      *
      * @param {array} children - The array of Game Objects to draw.
-     * @param {number} x - The x position to offset the Game Object by.
-     * @param {number} y - The y position to offset the Game Object by.
+     * @param {number} [x=0] - The x position to offset the Game Object by.
+     * @param {number} [y=0] - The y position to offset the Game Object by.
      */
     batchGroup: function (children, x, y)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
+
+        x += this.frame.cutX;
+        y += this.frame.cutY;
 
         for (var i = 0; i < children.length; i++)
         {
@@ -915,8 +926,8 @@ var RenderTexture = new Class({
      * @since 3.12.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to draw.
-     * @param {number} x - The x position to draw the Game Object at.
-     * @param {number} y - The y position to draw the Game Object at.
+     * @param {number} [x] - The x position to draw the Game Object at.
+     * @param {number} [y] - The y position to draw the Game Object at.
      */
     batchGameObjectWebGL: function (gameObject, x, y)
     {
@@ -931,8 +942,8 @@ var RenderTexture = new Class({
             this.renderer.setBlendMode(gameObject.blendMode);
         }
 
-        gameObject.setPosition(x, y);
-
+        gameObject.setPosition(x + this.frame.cutX, y + this.frame.cutY);
+        
         gameObject.renderWebGL(this.renderer, gameObject, 0, this.camera, null);
 
         gameObject.setPosition(prevX, prevY);
@@ -946,8 +957,8 @@ var RenderTexture = new Class({
      * @since 3.12.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to draw.
-     * @param {number} x - The x position to draw the Game Object at.
-     * @param {number} y - The y position to draw the Game Object at.
+     * @param {number} [x] - The x position to draw the Game Object at.
+     * @param {number} [y] - The y position to draw the Game Object at.
      */
     batchGameObjectCanvas: function (gameObject, x, y)
     {
@@ -964,7 +975,7 @@ var RenderTexture = new Class({
             gameObject.blendMode = BlendModes.ERASE;
         }
 
-        gameObject.setPosition(x, y);
+        gameObject.setPosition(x + this.frame.cutX, y + this.frame.cutY);
 
         gameObject.renderCanvas(this.renderer, gameObject, 0, this.camera, null);
 
@@ -985,8 +996,8 @@ var RenderTexture = new Class({
      *
      * @param {string} key - The key of the texture to be used, as stored in the Texture Manager.
      * @param {(string|integer)} [frame] - The name or index of the frame within the Texture.
-     * @param {number} x - The x position to offset the Game Object by.
-     * @param {number} y - The y position to offset the Game Object by.
+     * @param {number} [x=0] - The x position to offset the Game Object by.
+     * @param {number} [y=0] - The y position to offset the Game Object by.
      * @param {number} [alpha] - The alpha to use. If not specified it uses the `globalAlpha` property.
      * @param {number} [tint] - The tint color to use. If not specified it uses the `globalTint` property.
      * 
@@ -1010,14 +1021,17 @@ var RenderTexture = new Class({
      * @since 3.12.0
      *
      * @param {Phaser.Textures.Frame} textureFrame - The Texture Frame to draw.
-     * @param {number} x - The x position to draw the Frame at.
-     * @param {number} y - The y position to draw the Frame at.
+     * @param {number} [x=0] - The x position to draw the Frame at.
+     * @param {number} [y=0] - The y position to draw the Frame at.
      * @param {number} [tint] - A tint color to be applied to the frame drawn to the Render Texture.
      */
     batchTextureFrame: function (textureFrame, x, y, alpha, tint)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
+
+        x += this.frame.cutX;
+        y += this.frame.cutY;
 
         if (this.gl)
         {
