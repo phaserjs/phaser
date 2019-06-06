@@ -609,6 +609,7 @@ var Tilemap = new Class({
         if (scene === undefined) { scene = this.scene; }
 
         var objectLayer = this.getObjectLayer(name);
+
         if (!objectLayer)
         {
             console.warn('Cannot create from object. Invalid objectgroup name given: ' + name);
@@ -1455,7 +1456,7 @@ var Tilemap = new Class({
 
     /**
      * Randomizes the indexes of a rectangular region of tiles (in tile coordinates) within the
-     * specified layer. Each tile will recieve a new index. If an array of indexes is passed in, then
+     * specified layer. Each tile will receive a new index. If an array of indexes is passed in, then
      * those will be used for randomly assigning new tile indexes. If an array is not provided, the
      * indexes found within the region (excluding -1) will be used for randomly assigning new tile
      * indexes. This method only modifies tile indexes and does not change collision information.
