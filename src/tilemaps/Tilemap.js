@@ -561,8 +561,16 @@ var Tilemap = new Class({
         this.currentLayerIndex = index;
 
         //  Default the x/y position to match Tiled layer offset, if it exists.
-        if (x === undefined && this.layers[index].x) { x = this.layers[index].x; }
-        if (y === undefined && this.layers[index].y) { y = this.layers[index].y; }
+
+        if (x === undefined)
+        {
+            x = layerData.x;
+        }
+
+        if (y === undefined)
+        {
+            y = layerData.y;
+        }
 
         var layer = new DynamicTilemapLayer(this.scene, this, index, tileset, x, y);
 

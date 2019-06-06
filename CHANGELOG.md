@@ -123,6 +123,7 @@ The following changes took place in the Pointer class:
 * Changing the `radius` of an Arc Game Object wouldn't update the size, causing origin issues. It now updates the size and origin correctly in WebGL. Fix #4542 (thanks @@PhaserEditor2D)
 * Setting `padding` in a Text style configuration object would cause an error about calling split on undefined. Padding can now be applied both in the config and via `setPadding`.
 * `Tilemap.createBlankDynamicLayer` would fail if you provided a string for the tileset as the base tile width and height were incorrectly read from the tileset argument. Fix #4495 (thanks @jppresents)
+* `Tilemap.createDynamicLayer` would fail if you called it without setting the `x` and `y` arguments, even though they were flagged as being optional. Fix #4508 (thanks @jackfreak)
 
 ### Examples, Documentation and TypeScript
 
