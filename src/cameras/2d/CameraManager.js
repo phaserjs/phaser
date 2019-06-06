@@ -9,6 +9,7 @@ var Class = require('../../utils/Class');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var PluginCache = require('../../plugins/PluginCache');
 var RectangleContains = require('../../geom/rectangle/Contains');
+var ScaleEvents = require('../../scale/events');
 var SceneEvents = require('../../scene/events');
 
 /**
@@ -158,6 +159,8 @@ var CameraManager = new Class({
 
         //  Create a default camera
         this.default = new Camera(0, 0, sys.scale.width, sys.scale.height).setScene(this.scene);
+
+        sys.game.scale.on(ScaleEvents.RESIZE, this.onResize, this);
 
         this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
     },
@@ -642,6 +645,31 @@ var CameraManager = new Class({
         for (var i = 0; i < this.cameras.length; i++)
         {
             this.cameras[i].update(time, delta);
+        }
+    },
+
+    /**
+     * The event handler that manages the `resize` event dispatched by the Scale Manager.
+     *
+     * @method Phaser.Cameras.Scene2D.CameraManager#onResize
+     * @since 3.18.0
+     *
+     * @param {Phaser.Structs.Size} gameSize - The default Game Size object. This is the un-modified game dimensions.
+     * @param {Phaser.Structs.Size} baseSize - The base Size object. The game dimensions multiplied by the resolution. The canvas width / height values match this.
+     */
+    onResize: function (gameSize, baseSize, displaySize, resolution, previousWidth, previousHeight)
+    {
+        for (var i = 0; i < this.cameras.length; i++)
+        {
+            var cam = this.cameras[i];
+
+            //  if camera is at 0x0 and was the size of the previous game size, then we can safely assume it
+            //  should be updated to match the new game size too
+
+            if (cam._x === 0 && cam._y === 0 && cam._width === previousWidth && cam._height === previousHeight)
+            {
+                cam.setSize(baseSize.width, baseSize.height);
+            }
         }
     },
 
