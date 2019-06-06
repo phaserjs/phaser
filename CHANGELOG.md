@@ -113,6 +113,9 @@ The following changes took place in the Pointer class:
 * Calling `ScaleManager.setGameSize` will now adjust the size of the canvas element as well. Fix #4482 (thanks @sudhirquestai)
 * `Scale.Events.RESIZE` now sends two new arguments to the handler: `previousWidth` and `previousHeight`. If, and only if, the Game Size has changed, these arguments contain the previous size, before the change took place.
 * The Camera Manager has a new method `onSize` which is invoked by handling the Scale Manager `RESIZE` event. When it receives it, it will iterate the cameras it manages. If the camera _doesn't_ have a custom offset and _is_ the size of the game, then it will be automatically resized for you. This means you no longer need to call `this.cameras.resize(width, height)` from within your own resize handler, although you can still do so if you wish, as that will resize _every_ Camera being managed to the new size, instead of just 'full size' cameras.
+* `Graphics.translate` has been renamed to `Graphics.translateCanvas` to make it clearer what it's actually translating (i.e. the drawing buffer, not the Graphics object itself)
+* `Graphics.scale` has been renamed to `Graphics.scaleCanvas` to make it clearer what it's actually scaling (i.e. the drawing buffer, not the Graphics object itself)
+* `Graphics.rotate` has been renamed to `Graphics.rotateCanvas` to make it clearer what it's actually rotating (i.e. the drawing buffer, not the Graphics object itself)
 
 ### Bug Fixes
 

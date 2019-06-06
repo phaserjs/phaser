@@ -1335,9 +1335,15 @@ var Graphics = new Class({
     },
 
     /**
-     * Translate the graphics.
+     * Inserts a translation command into this Graphics objects command buffer.
+     * 
+     * All objects drawn _after_ calling this method will be translated
+     * by the given amount.
+     * 
+     * This does not change the position of the Graphics object itself,
+     * only of the objects drawn by it after calling this method.
      *
-     * @method Phaser.GameObjects.Graphics#translate
+     * @method Phaser.GameObjects.Graphics#translateCanvas
      * @since 3.0.0
      *
      * @param {number} x - The horizontal translation to apply.
@@ -1345,7 +1351,7 @@ var Graphics = new Class({
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
-    translate: function (x, y)
+    translateCanvas: function (x, y)
     {
         this.commandBuffer.push(
             Commands.TRANSLATE,
@@ -1356,9 +1362,15 @@ var Graphics = new Class({
     },
 
     /**
-     * Scale the graphics.
+     * Inserts a scale command into this Graphics objects command buffer.
+     * 
+     * All objects drawn _after_ calling this method will be scaled
+     * by the given amount.
+     * 
+     * This does not change the scale of the Graphics object itself,
+     * only of the objects drawn by it after calling this method.
      *
-     * @method Phaser.GameObjects.Graphics#scale
+     * @method Phaser.GameObjects.Graphics#scaleCanvas
      * @since 3.0.0
      *
      * @param {number} x - The horizontal scale to apply.
@@ -1366,7 +1378,7 @@ var Graphics = new Class({
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
-    scale: function (x, y)
+    scaleCanvas: function (x, y)
     {
         this.commandBuffer.push(
             Commands.SCALE,
@@ -1377,16 +1389,22 @@ var Graphics = new Class({
     },
 
     /**
-     * Rotate the graphics.
+     * Inserts a rotation command into this Graphics objects command buffer.
+     * 
+     * All objects drawn _after_ calling this method will be rotated
+     * by the given amount.
+     * 
+     * This does not change the rotation of the Graphics object itself,
+     * only of the objects drawn by it after calling this method.
      *
-     * @method Phaser.GameObjects.Graphics#rotate
+     * @method Phaser.GameObjects.Graphics#rotateCanvas
      * @since 3.0.0
      *
      * @param {number} radians - The rotation angle, in radians.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
-    rotate: function (radians)
+    rotateCanvas: function (radians)
     {
         this.commandBuffer.push(
             Commands.ROTATE,
