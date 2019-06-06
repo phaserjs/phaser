@@ -464,16 +464,16 @@ var Tilemap = new Class({
      * @param {integer} [tileWidth] - The width of the tiles the layer uses for calculations. If not specified, it will default to the map's tileWidth.
      * @param {integer} [tileHeight] - The height of the tiles the layer uses for calculations. If not specified, it will default to the map's tileHeight.
      *
-     * @return {?Phaser.Tilemaps.DynamicTilemapLayer} Returns the new layer was created, or null if it failed.
+     * @return {?Phaser.Tilemaps.DynamicTilemapLayer} Returns the new layer that was created, or `null` if it failed.
      */
     createBlankDynamicLayer: function (name, tileset, x, y, width, height, tileWidth, tileHeight)
     {
-        if (tileWidth === undefined) { tileWidth = tileset.tileWidth; }
-        if (tileHeight === undefined) { tileHeight = tileset.tileHeight; }
-        if (width === undefined) { width = this.width; }
-        if (height === undefined) { height = this.height; }
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
+        if (width === undefined) { width = this.width; }
+        if (height === undefined) { height = this.height; }
+        if (tileWidth === undefined) { tileWidth = this.tileWidth; }
+        if (tileHeight === undefined) { tileHeight = this.tileHeight; }
 
         var index = this.getLayerIndex(name);
 

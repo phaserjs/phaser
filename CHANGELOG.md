@@ -122,6 +122,7 @@ The following changes took place in the Pointer class:
 * Text with a `fixedWidth` or `fixedHeight` could cause the canvas to be cropped if less than the size of the Text itself (thanks @rexrainbow)
 * Changing the `radius` of an Arc Game Object wouldn't update the size, causing origin issues. It now updates the size and origin correctly in WebGL. Fix #4542 (thanks @@PhaserEditor2D)
 * Setting `padding` in a Text style configuration object would cause an error about calling split on undefined. Padding can now be applied both in the config and via `setPadding`.
+* `Tilemap.createBlankDynamicLayer` would fail if you provided a string for the tileset as the base tile width and height were incorrectly read from the tileset argument. Fix #4495 (thanks @jppresents)
 
 ### Examples, Documentation and TypeScript
 
