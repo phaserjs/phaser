@@ -10,6 +10,7 @@ var CameraEvents = require('../../cameras/2d/events');
 var Class = require('../../utils/Class');
 var CONST = require('../../const');
 var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
+var ScaleEvents = require('../../scale/events');
 var SpliceOne = require('../../utils/array/SpliceOne');
 var TextureEvents = require('../../textures/events');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
@@ -689,7 +690,7 @@ var WebGLRenderer = new Class({
 
         this.setPipeline(this.pipelines.TextureTintPipeline);
 
-        this.game.scale.on('resize', this.onResize, this);
+        this.game.scale.on(ScaleEvents.RESIZE, this.onResize, this);
 
         var baseSize = this.game.scale.baseSize;
 

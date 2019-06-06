@@ -10,6 +10,7 @@ var CameraEvents = require('../../cameras/2d/events');
 var Class = require('../../utils/Class');
 var CONST = require('../../const');
 var GetBlendModes = require('./utils/GetBlendModes');
+var ScaleEvents = require('../../scale/events');
 var ScaleModes = require('../ScaleModes');
 var Smoothing = require('../../display/canvas/Smoothing');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
@@ -228,7 +229,7 @@ var CanvasRenderer = new Class({
      */
     init: function ()
     {
-        this.game.scale.on('resize', this.onResize, this);
+        this.game.scale.on(ScaleEvents.RESIZE, this.onResize, this);
 
         var baseSize = this.game.scale.baseSize;
 
