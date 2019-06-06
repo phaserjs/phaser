@@ -721,6 +721,10 @@ var ScaleManager = new Class({
 
     /**
      * This method will set a new size for your game.
+     * 
+     * It should only be used if you're looking to change the base size of your game and are using
+     * one of the Scale Manager scaling modes, i.e. `FIT`. If you're using `NO_SCALE` and wish to
+     * change the game and canvas size directly, then please use the `resize` method instead.
      *
      * @method Phaser.Scale.ScaleManager#setGameSize
      * @fires Phaser.Scale.Events#RESIZE
@@ -742,18 +746,29 @@ var ScaleManager = new Class({
             height = Math.floor(height);
         }
 
+        var previousWidth = this.width;
+        var previousHeight = this.height;
+
+        //  The un-modified game size, as requested in the game config (the raw width / height) as used for world bounds, etc
         this.gameSize.resize(width, height);
+
+        //  The modified game size, which is the w/h * resolution
         this.baseSize.resize(width * resolution, height * resolution);
 
-        this.updateBounds();
+        if (autoRound)
+        {
+            this.baseSize.width = Math.floor(this.baseSize.width);
+            this.baseSize.height = Math.floor(this.baseSize.height);
+        }
 
-        this.displayScale.set(width / this.canvasBounds.width, height / this.canvasBounds.height);
+        //  The size used for the canvas style, factoring in the scale mode and parent and zoom value
+        //  We just use the w/h here as this is what sets the aspect ratio (which doesn't then change)
+        this.displaySize.setSize(width, height);
 
-        this.emit(Events.RESIZE, this.gameSize, this.baseSize, this.displaySize, this.resolution);
+        this.canvas.width = this.baseSize.width;
+        this.canvas.height = this.baseSize.height;
 
-        this.updateOrientation();
-
-        return this.refresh();
+        return this.refresh(previousWidth, previousHeight);
     },
 
     /**
@@ -764,7 +779,7 @@ var ScaleManager = new Class({
      * If all you want to do is change the size of the parent, see the `setParentSize` method.
      * 
      * If all you want is to change the base size of the game, but still have the Scale Manager
-     * manage all the scaling, then see the `setGameSize` method.
+     * manage all the scaling (i.e. you're **not** using `NO_SCALE`), then see the `setGameSize` method.
      * 
      * This method will set the `gameSize`, `baseSize` and `displaySize` components to the given
      * dimensions. It will then resize the canvas width and height to the values given, by
@@ -797,10 +812,23 @@ var ScaleManager = new Class({
             height = Math.floor(height);
         }
 
+        var previousWidth = this.width;
+        var previousHeight = this.height;
+
+        //  The un-modified game size, as requested in the game config (the raw width / height) as used for world bounds, etc
         this.gameSize.resize(width, height);
 
+        //  The modified game size, which is the w/h * resolution
         this.baseSize.resize(width * resolution, height * resolution);
 
+        if (autoRound)
+        {
+            this.baseSize.width = Math.floor(this.baseSize.width);
+            this.baseSize.height = Math.floor(this.baseSize.height);
+        }
+
+        //  The size used for the canvas style, factoring in the scale mode and parent and zoom value
+        //  We just use the w/h here as this is what sets the aspect ratio (which doesn't then change)
         this.displaySize.setSize((width * zoom) * resolution, (height * zoom) * resolution);
 
         this.canvas.width = this.baseSize.width;
@@ -823,19 +851,7 @@ var ScaleManager = new Class({
             style.height = styleHeight + 'px';
         }
 
-        this.getParentBounds();
-
-        this.updateCenter();
-
-        this.updateBounds();
-
-        this.displayScale.set(width / this.canvasBounds.width, height / this.canvasBounds.height);
-
-        this.emit(Events.RESIZE, this.gameSize, this.baseSize, this.displaySize, this.resolution);
-
-        this.updateOrientation();
-
-        return this;
+        return this.refresh(previousWidth, previousHeight);
     },
 
     /**
@@ -884,10 +900,16 @@ var ScaleManager = new Class({
      * @fires Phaser.Scale.Events#RESIZE
      * @since 3.16.0
      * 
+     * @param {number} [previousWidth] - The previous width of the game. Only set if the gameSize has changed.
+     * @param {number} [previousHeight] - The previous height of the game. Only set if the gameSize has changed.
+     * 
      * @return {this} The Scale Manager instance.
      */
-    refresh: function ()
+    refresh: function (previousWidth, previousHeight)
     {
+        if (previousWidth === undefined) { previousWidth = this.width; }
+        if (previousHeight === undefined) { previousHeight = this.height; }
+
         this.updateScale();
         this.updateBounds();
         this.updateOrientation();
@@ -909,7 +931,7 @@ var ScaleManager = new Class({
             domStyle.marginTop = canvasStyle.marginTop;
         }
 
-        this.emit(Events.RESIZE, this.gameSize, this.baseSize, this.displaySize, this.resolution);
+        this.emit(Events.RESIZE, this.gameSize, this.baseSize, this.displaySize, this.resolution, previousWidth, previousHeight);
 
         return this;
     },
