@@ -535,9 +535,9 @@ var EmitterOp = new Class({
     },
 
     /**
-     * An `onEmit` callback that returns an eased value between the
-     * {@link Phaser.GameObjects.Particles.EmitterOp#start} and {@link Phaser.GameObjects.Particles.EmitterOp#end}
-     * range.
+     * An `onEmit` callback for an eased property.
+     *
+     * It prepares the particle for easing by {@link Phaser.GameObjects.Particles.EmitterOp#easeValueUpdate}.
      *
      * @method Phaser.GameObjects.Particles.EmitterOp#easedValueEmit
      * @since 3.0.0
@@ -545,7 +545,7 @@ var EmitterOp = new Class({
      * @param {Phaser.GameObjects.Particles.Particle} particle - The particle.
      * @param {string} key - The name of the property.
      *
-     * @return {number} The new value of the property.
+     * @return {number} {@link Phaser.GameObjects.Particles.EmitterOp#start}, as the new value of the property.
      */
     easedValueEmit: function (particle, key)
     {
