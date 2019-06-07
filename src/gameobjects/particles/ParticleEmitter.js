@@ -182,7 +182,7 @@ var ParticleEmitter = new Class({
          * @since 3.0.0
          * @see Phaser.GameObjects.Particles.ParticleEmitter#setPosition
          */
-        this.x = new EmitterOp(config, 'x', 0);
+        this.x = new EmitterOp(config, 'x', 0, true);
 
         /**
          * The y-coordinate of the particle origin (where particles will be emitted).
@@ -193,7 +193,7 @@ var ParticleEmitter = new Class({
          * @since 3.0.0
          * @see Phaser.GameObjects.Particles.ParticleEmitter#setPosition
          */
-        this.y = new EmitterOp(config, 'y', 0);
+        this.y = new EmitterOp(config, 'y', 0, true);
 
         /**
          * A radial emitter will emit particles in all directions between angle min and max,
@@ -396,7 +396,7 @@ var ParticleEmitter = new Class({
          * @since 3.0.0
          * @see Phaser.GameObjects.Particles.ParticleEmitter#setLifespan
          */
-        this.lifespan = new EmitterOp(config, 'lifespan', 1000);
+        this.lifespan = new EmitterOp(config, 'lifespan', 1000, true);
 
         /**
          * The angle of the initial velocity of emitted particles, in degrees.
@@ -407,7 +407,7 @@ var ParticleEmitter = new Class({
          * @since 3.0.0
          * @see Phaser.GameObjects.Particles.ParticleEmitter#setAngle
          */
-        this.angle = new EmitterOp(config, 'angle', { min: 0, max: 360 });
+        this.angle = new EmitterOp(config, 'angle', { min: 0, max: 360 }, true);
 
         /**
          * The rotation of emitted particles, in degrees.
@@ -1082,8 +1082,8 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setPosition
      * @since 3.0.0
      *
-     * @param {(Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType)} x - The x-coordinate of the particle origin.
-     * @param {(Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType)} y - The y-coordinate of the particle origin.
+     * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} x - The x-coordinate of the particle origin.
+     * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} y - The y-coordinate of the particle origin.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1346,7 +1346,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setAngle
      * @since 3.0.0
      *
-     * @param {(Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType)} value - The angle of the initial velocity of emitted particles.
+     * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} value - The angle of the initial velocity of emitted particles.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1363,7 +1363,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setLifespan
      * @since 3.0.0
      *
-     * @param {(Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType)} value - The particle lifespan, in ms.
+     * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} value - The particle lifespan, in ms.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
