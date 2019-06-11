@@ -1208,7 +1208,14 @@ var Body = new Class({
 
         gameObject.setPosition(x, y);
 
-        gameObject.getTopLeft(this.position);
+        if (gameObject.getTopLeft)
+        {
+            gameObject.getTopLeft(this.position);
+        }
+        else
+        {
+            this.position.set(x, y);
+        }
 
         this.prev.copy(this.position);
 
