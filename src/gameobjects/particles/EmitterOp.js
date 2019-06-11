@@ -275,7 +275,7 @@ var EmitterOp = new Class({
             this.start = this.has(value, 'start') ? value.start : value.min;
             this.end = this.has(value, 'end') ? value.end : value.max;
 
-            var isRandom = (this.hasBoth(value, 'min', 'max') || this.has(value, 'random'));
+            var isRandom = (this.hasBoth(value, 'min', 'max') || !!value.random);
 
             //  A random starting value (using 'min | max' instead of 'start | end' automatically implies a random value)
 
