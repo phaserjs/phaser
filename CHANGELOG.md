@@ -121,6 +121,7 @@ The following changes took place in the Pointer class:
 * `Graphics.translate` has been renamed to `Graphics.translateCanvas` to make it clearer what it's actually translating (i.e. the drawing buffer, not the Graphics object itself)
 * `Graphics.scale` has been renamed to `Graphics.scaleCanvas` to make it clearer what it's actually scaling (i.e. the drawing buffer, not the Graphics object itself)
 * `Graphics.rotate` has been renamed to `Graphics.rotateCanvas` to make it clearer what it's actually rotating (i.e. the drawing buffer, not the Graphics object itself)
+* The `width` and `height` of an Arc / Circle Shape Game Object is now set to be the diameter of the arc, not the radius (thanks @rexrainbow)
 
 ### Bug Fixes
 
@@ -141,7 +142,7 @@ The following changes took place in the Pointer class:
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@PhaserEditor2D @samme @Nallebeorn @Punkiebe @rootasjey
+@PhaserEditor2D @samme @Nallebeorn @Punkiebe @rootasjey @Sun0fABeach
 
 
 
