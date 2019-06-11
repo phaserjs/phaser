@@ -93,6 +93,8 @@ The following changes took place in the Pointer class:
 * You can now create a desynchronized 2D or WebGL canvas by setting the Game Config property `desynchronized` to `true` (the default is `false`). For more details about what this means see https://developers.google.com/web/updates/2019/05/desynchronized.
 * The CanvasRenderer can now use the `transparent` Game Config property in order to tell the browser an opaque background is in use, leading to faster rendering in a 2D context.
 * `GameObject.scale` is a new property, that exists as part of the Transform component, that allows you to set the horizontal and vertical scale of a Game Object via a setter, rather than using the `setScale` method. This is handy for uniformly scaling objects via tweens, for example.
+* `Base64ToArrayBuffer` is a new utility function that will convert a base64 string into an ArrayBuffer. It works with plain base64 strings, or those with data uri headers attached to them. The resulting ArrayBuffer can be fed to any suitable function that may need it, such as audio decoding.
+* `ArrayBufferToBase64` is a new utility function that converts an ArrayBuffer into a base64 string. You can also optionally included a media type, such as `image/jpeg` which will result in a data uri being returned instead of a plain base64 string.
 
 ### Updates
 
