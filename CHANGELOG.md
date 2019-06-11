@@ -122,6 +122,9 @@ The following changes took place in the Pointer class:
 * `Graphics.scale` has been renamed to `Graphics.scaleCanvas` to make it clearer what it's actually scaling (i.e. the drawing buffer, not the Graphics object itself)
 * `Graphics.rotate` has been renamed to `Graphics.rotateCanvas` to make it clearer what it's actually rotating (i.e. the drawing buffer, not the Graphics object itself)
 * The `width` and `height` of an Arc / Circle Shape Game Object is now set to be the diameter of the arc, not the radius (thanks @rexrainbow)
+* `LineStyleCanvas` now takes an `altColor` argument which is used to override the context color.
+* `LineStyleCanvas` now takes an `altAlpha` argument which is used to override the context alpha.
+* `FillStyleCanvas` now takes an `altAlpha` argument which is used to override the context alpha.
 
 ### Bug Fixes
 
@@ -137,6 +140,7 @@ The following changes took place in the Pointer class:
 * `Tilemap.createBlankDynamicLayer` would fail if you provided a string for the tileset as the base tile width and height were incorrectly read from the tileset argument. Fix #4495 (thanks @jppresents)
 * `Tilemap.createDynamicLayer` would fail if you called it without setting the `x` and `y` arguments, even though they were flagged as being optional. Fix #4508 (thanks @jackfreak)
 * `RenderTexture.draw` didn't work if no `x` and `y` arguments were provided, even though they are optional, due to a problem with the way the frame cut values were added. The class has been refactored to prevent this, fixing issues like `RenderTexture.erase` not working with Groups. Fix #4528 (thanks @jbgomez21 @telinc1)
+* The `Grid` Game Object wouldn't render in Canvas mode at all. Fix #4585 (thanks @fyyyyy)
 
 ### Examples, Documentation and TypeScript
 
