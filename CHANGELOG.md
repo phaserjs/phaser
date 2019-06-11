@@ -141,6 +141,7 @@ The following changes took place in the Pointer class:
 * `Tilemap.createDynamicLayer` would fail if you called it without setting the `x` and `y` arguments, even though they were flagged as being optional. Fix #4508 (thanks @jackfreak)
 * `RenderTexture.draw` didn't work if no `x` and `y` arguments were provided, even though they are optional, due to a problem with the way the frame cut values were added. The class has been refactored to prevent this, fixing issues like `RenderTexture.erase` not working with Groups. Fix #4528 (thanks @jbgomez21 @telinc1)
 * The `Grid` Game Object wouldn't render in Canvas mode at all. Fix #4585 (thanks @fyyyyy)
+* If you had a `Graphics` object in the display list immediately after an object with a Bitmap Mask it would throw an error `Uncaught TypeError: Cannot set property 'TL' of undefined`. Fix #4581 (thanks @Petah)
 
 ### Examples, Documentation and TypeScript
 

@@ -47,13 +47,13 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
         return;
     }
 
-    var pipeline = renderer.currentPipeline;
+    var pipeline = this.pipeline;
+
+    renderer.setPipeline(pipeline, src);
 
     var camMatrix = src._tempMatrix1;
     var graphicsMatrix = src._tempMatrix2;
     var currentMatrix = src._tempMatrix3;
-
-    renderer.setPipeline(pipeline);
 
     currentMatrix.loadIdentity();
 
