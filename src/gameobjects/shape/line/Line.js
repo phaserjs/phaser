@@ -24,6 +24,9 @@ var LineRender = require('./LineRender');
  * 
  * If you need to draw multiple lines in a sequence you may wish to use the Polygon Shape instead.
  *
+ * Be aware that as with all Game Objects the default origin is 0.5. If you need to draw a Line
+ * between two points and want the x1/y1 values to match the x/y values, then set the origin to 0.
+ *
  * @class Line
  * @extends Phaser.GameObjects.Shape
  * @memberof Phaser.GameObjects
