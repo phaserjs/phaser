@@ -520,15 +520,13 @@ var StaticBody = new Class({
      *
      * @param {integer} [width] - The width of the Body in pixels. Cannot be zero. If not given, and the parent Game Object has a frame, it will use the frame width.
      * @param {integer} [height] - The height of the Body in pixels. Cannot be zero. If not given, and the parent Game Object has a frame, it will use the frame height.
-     * @param {number} [offsetX] - The horizontal offset of the Body from the Game Object's center.
-     * @param {number} [offsetY] - The vertical offset of the Body from the Game Object's center.
+     * @param {boolean} [center=true] - Modify the Body's `offset`, placing the Body's center on its Game Object's center. Only works if the Game Object has the `getCenter` method.
      *
      * @return {Phaser.Physics.Arcade.StaticBody} This Static Body object.
      */
-    setSize: function (width, height, offsetX, offsetY)
+    setSize: function (width, height, center)
     {
-        if (offsetX === undefined) { offsetX = this.offset.x; }
-        if (offsetY === undefined) { offsetY = this.offset.y; }
+        if (center === undefined) { center = true; }
 
         var gameObject = this.gameObject;
 
@@ -550,7 +548,19 @@ var StaticBody = new Class({
         this.halfWidth = Math.floor(width / 2);
         this.halfHeight = Math.floor(height / 2);
 
-        this.offset.set(offsetX, offsetY);
+        if (center && gameObject.getCenter)
+        {
+            var ox = gameObject.displayWidth / 2;
+            var oy = gameObject.displayHeight / 2;
+
+            this.position.x -= this.offset.x;
+            this.position.y -= this.offset.y;
+
+            this.offset.set(ox - this.halfWidth, oy - this.halfHeight);
+
+            this.position.x += this.offset.x;
+            this.position.y += this.offset.y;
+        }
 
         this.updateCenter();
 
@@ -638,7 +648,7 @@ var StaticBody = new Class({
         this.world.staticTree.remove(this);
 
         gameObject.setPosition(x, y);
-        
+
         gameObject.getTopLeft(this.position);
 
         this.updateCenter();
