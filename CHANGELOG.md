@@ -134,6 +134,7 @@ The following changes took place in the Pointer class:
 * `LineStyleCanvas` now takes an `altColor` argument which is used to override the context color.
 * `LineStyleCanvas` now takes an `altAlpha` argument which is used to override the context alpha.
 * `FillStyleCanvas` now takes an `altAlpha` argument which is used to override the context alpha.
+* `StaticPhysicsGroup` can now take a `classType` property in its Group Config and will use the value of it, rather than override it. If none is provided it'll default to `ArcadeSprite`. Fix #4401 (thanks @Legomite)
 
 ### Bug Fixes
 

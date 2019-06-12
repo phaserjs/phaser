@@ -7,6 +7,7 @@
 var ArcadeSprite = require('./ArcadeSprite');
 var Class = require('../../utils/Class');
 var CONST = require('./const');
+var GetFastValue = require('../../utils/object/GetFastValue');
 var Group = require('../../gameobjects/group/Group');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
 
@@ -55,7 +56,7 @@ var StaticPhysicsGroup = new Class({
             config.createCallback = this.createCallbackHandler;
             config.removeCallback = this.removeCallbackHandler;
             config.createMultipleCallback = this.createMultipleCallbackHandler;
-            config.classType = ArcadeSprite;
+            config.classType = GetFastValue(config, 'classType', ArcadeSprite);
         }
         else if (Array.isArray(children) && IsPlainObject(children[0]))
         {
@@ -68,7 +69,7 @@ var StaticPhysicsGroup = new Class({
                 singleConfig.createCallback = this.createCallbackHandler;
                 singleConfig.removeCallback = this.removeCallbackHandler;
                 singleConfig.createMultipleCallback = this.createMultipleCallbackHandler;
-                singleConfig.classType = ArcadeSprite;
+                singleConfig.classType = GetFastValue(singleConfig, 'classType', ArcadeSprite);
             });
         }
 
