@@ -9,7 +9,7 @@ var ImageCollection = require('../../ImageCollection');
 var ParseObject = require('./ParseObject');
 
 /**
- * Tilesets & Image Collections
+ * Tilesets and Image Collections
  *
  * @function Phaser.Tilemaps.Parsers.Tiled.ParseTilesets
  * @since 3.0.0
