@@ -22,6 +22,7 @@ module.exports = {
     IsPlainObject: require('./IsPlainObject'),
     Merge: require('./Merge'),
     MergeRight: require('./MergeRight'),
+    Pick: require('./Pick'),
     SetValue: require('./SetValue')
 
 };
