@@ -14,7 +14,7 @@ module.exports = {
     Parse2DArray: require('./Parse2DArray'),
     ParseCSV: require('./ParseCSV'),
 
-    Impact: require('./impact/ParseWeltmeister'),
-    Tiled: require('./tiled/ParseJSONTiled')
+    Impact: require('./impact/'),
+    Tiled: require('./tiled/')
 
 };

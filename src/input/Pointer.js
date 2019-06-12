@@ -104,6 +104,24 @@ var Pointer = new Class({
         this.camera = null;
 
         /**
+         * A read-only property that indicates which button was pressed, or released, on the pointer
+         * during the most recent event. It is only set during `up` and `down` events.
+         * 
+         * On Touch devices the value is always 0.
+         * 
+         * Users may change the configuration of buttons on their pointing device so that if an event's button property
+         * is zero, it may not have been caused by the button that is physically left–most on the pointing device;
+         * however, it should behave as if the left button was clicked in the standard button layout.
+         *
+         * @name Phaser.Input.Pointer#button
+         * @type {integer}
+         * @readonly
+         * @default 0
+         * @since 3.18.0
+         */
+        this.button = 0;
+
+        /**
          * 0: No button or un-initialized
          * 1: Left button
          * 2: Right button
@@ -544,6 +562,8 @@ var Pointer = new Class({
 
         this.event = event;
 
+        this.button = event.button;
+
         this.upElement = event.target;
 
         //  Sets the local x/y properties
@@ -580,6 +600,8 @@ var Pointer = new Class({
         }
 
         this.event = event;
+
+        this.button = event.button;
 
         this.downElement = event.target;
 
@@ -874,6 +896,71 @@ var Pointer = new Class({
     forwardButtonDown: function ()
     {
         return (this.buttons & 16) ? true : false;
+    },
+
+    /**
+     * Checks to see if the left button was just released on this Pointer.
+     *
+     * @method Phaser.Input.Pointer#leftButtonReleased
+     * @since 3.18.0
+     *
+     * @return {boolean} `true` if the left button was just released.
+     */
+    leftButtonReleased: function ()
+    {
+        return (this.button === 0 && !this.isDown);
+    },
+
+    /**
+     * Checks to see if the right button was just released on this Pointer.
+     *
+     * @method Phaser.Input.Pointer#rightButtonReleased
+     * @since 3.18.0
+     *
+     * @return {boolean} `true` if the right button was just released.
+     */
+    rightButtonReleased: function ()
+    {
+        return (this.button === 2 && !this.isDown);
+    },
+
+    /**
+     * Checks to see if the middle button was just released on this Pointer.
+     *
+     * @method Phaser.Input.Pointer#middleButtonReleased
+     * @since 3.18.0
+     *
+     * @return {boolean} `true` if the middle button was just released.
+     */
+    middleButtonReleased: function ()
+    {
+        return (this.button === 1 && !this.isDown);
+    },
+
+    /**
+     * Checks to see if the back button was just released on this Pointer.
+     *
+     * @method Phaser.Input.Pointer#backButtonReleased
+     * @since 3.18.0
+     *
+     * @return {boolean} `true` if the back button was just released.
+     */
+    backButtonReleased: function ()
+    {
+        return (this.button === 3 && !this.isDown);
+    },
+
+    /**
+     * Checks to see if the forward button was just released on this Pointer.
+     *
+     * @method Phaser.Input.Pointer#forwardButtonReleased
+     * @since 3.18.0
+     *
+     * @return {boolean} `true` if the forward button was just released.
+     */
+    forwardButtonReleased: function ()
+    {
+        return (this.button === 4 && !this.isDown);
     },
 
     /**

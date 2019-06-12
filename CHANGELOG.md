@@ -18,6 +18,15 @@
 * `InputManager.onMouseWheel` is a new internal method that handles processing the wheel event.
 * `InputManager.processWheelEvent` is a new internal method that handles processing the wheel event sent by the Input Manager.
 
+#### Button Released Support
+
+* `Pointer.button` is a new property that indicates which button was pressed, or released, on the pointer during the most recent event. It is only set during `up` and `down` events and is always 0 for Touch inputs.
+* `Pointer.leftButtonReleased` is a new method that returns `true` if it was the left mouse button that was just released. This can be checked in a `pointerup` event handler to find out which button was released.
+* `Pointer.rightButtonReleased` is a new method that returns `true` if it was the right mouse button that was just released. This can be checked in a `pointerup` event handler to find out which button was released (thanks @BobtheUltimateProgrammer)
+* `Pointer.middleButtonReleased` is a new method that returns `true` if it was the middle mouse button that was just released. This can be checked in a `pointerup` event handler to find out which button was released.
+* `Pointer.backButtonReleased` is a new method that returns `true` if it was the back mouse button that was just released. This can be checked in a `pointerup` event handler to find out which button was released.
+* `Pointer.forwardButtonReleased` is a new method that returns `true` if it was the forward mouse button that was just released. This can be checked in a `pointerup` event handler to find out which button was released.
+
 #### Input System Bug Fixes
 
 * Calling `setPollAlways()` would cause the `'pointerdown'` event to fire multiple times. Fix #4541 (thanks @Neyromantik)
@@ -98,6 +107,7 @@ The following changes took place in the Pointer class:
 *`WebAudioSoundManager.decodeAudio` is a new method that allows you to decode audio data into a format ready for playback and stored in the audio cache. The audio data can be provided as an ArrayBuffer, a base64 string or a data uri. Listen for the events to know when the data is ready for use.
 * `Phaser.Sound.Events#DECODED` is a new event emitted by the Web Audio Sound Manager when it has finished decoding audio data.
 * `Phaser.Sound.Events#DECODED_ALL` is a new event emitted by the Web Audio Sound Manager when it has finished decoding all of the audio data files passed to the `decodeAudio` method.
+* `Phaser.Utils.Objects.Pick` is a new function that will take an object and an array of keys and return a new object containing just the keys provided in the array.
 
 ### Updates
 
@@ -125,6 +135,24 @@ The following changes took place in the Pointer class:
 * `LineStyleCanvas` now takes an `altColor` argument which is used to override the context color.
 * `LineStyleCanvas` now takes an `altAlpha` argument which is used to override the context alpha.
 * `FillStyleCanvas` now takes an `altAlpha` argument which is used to override the context alpha.
+* `StaticPhysicsGroup` can now take a `classType` property in its Group Config and will use the value of it, rather than override it. If none is provided it'll default to `ArcadeSprite`. Fix #4401 (thanks @Legomite)
+* `Phaser.Tilemaps.Parsers.Tiled` used to run the static function `ParseJSONTiled`. `Parsers.Tiled` is now just a namespace, so access the function within it: `Phaser.Tilemaps.Parsers.Tiled.ParseJSONTiled`.
+* `Phaser.Tilemaps.Parsers.Impact` used to run the static function `ParseWeltmeister`. `Parsers.Impact` is now just a namespace, so access the function within it: `Phaser.Tilemaps.Parsers.Impact.ParseWeltmeister`.
+* `Phaser.Tilemaps.Parsers.Tiled.AssignTileProperties` is now a public static function, available to be called directly.
+* `Phaser.Tilemaps.Parsers.Tiled.Base64Decode` is now a public static function, available to be called directly.
+* `Phaser.Tilemaps.Parsers.Tiled.BuildTilesetIndex` is now a public static function, available to be called directly.
+* `Phaser.Tilemaps.Parsers.Tiled.ParseGID` is now a public static function, available to be called directly.
+* `Phaser.Tilemaps.Parsers.Tiled.ParseImageLayers` is now a public static function, available to be called directly.
+* `Phaser.Tilemaps.Parsers.Tiled.ParseJSONTiled` is now a public static function, available to be called directly.
+* `Phaser.Tilemaps.Parsers.Tiled.ParseObject` is now a public static function, available to be called directly.
+* `Phaser.Tilemaps.Parsers.Tiled.ParseObjectLayers` is now a public static function, available to be called directly.
+* `Phaser.Tilemaps.Parsers.Tiled.ParseTileLayers` is now a public static function, available to be called directly.
+* `Phaser.Tilemaps.Parsers.Tiled.ParseTilesets` is now a public static function, available to be called directly.
+* `Phaser.Tilemaps.Parsers.Tiled.ParseTilesets` is now a public static function, available to be called directly.
+* `Phaser.Tilemaps.Parsers.Impact.ParseTileLayers` is now a public static function, available to be called directly.
+* `Phaser.Tilemaps.Parsers.Impact.ParseTilesets` is now a public static function, available to be called directly.
+* `Phaser.Tilemaps.Parsers.Impact.ParseWeltmeister` is now a public static function, available to be called directly.
+* `Phaser.Tilemaps.Parsers.Tiled.Pick` has been removed. It is now available under `Phaser.Utils.Objects.Pick`, which is a more logical place for it.
 
 ### Bug Fixes
 
@@ -143,6 +171,7 @@ The following changes took place in the Pointer class:
 * The `Grid` Game Object wouldn't render in Canvas mode at all. Fix #4585 (thanks @fyyyyy)
 * If you had a `Graphics` object in the display list immediately after an object with a Bitmap Mask it would throw an error `Uncaught TypeError: Cannot set property 'TL' of undefined`. Fix #4581 (thanks @Petah @Loonride)
 * Calling Arcade Physics `Body.reset` on a Game Object that doesn't have any bounds, like a Container, would throw an error about being unable to access `getTopLeft`. If this is the case, it will now set the position to the given x/y values (thanks Jazz)
+* All of the `Tilemaps.Parsers.Tiled` static functions are now available to be called directly. Fix #4318 (thanks @jestarray)
 
 ### Examples, Documentation and TypeScript
 
