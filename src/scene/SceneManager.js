@@ -610,6 +610,11 @@ var SceneManager = new Class({
             settings.status = CONST.CREATING;
 
             scene.create.call(scene, settings.data);
+
+            if (settings.status === CONST.DESTROYED)
+            {
+                return;
+            }
         }
 
         if (settings.isTransition)
@@ -823,7 +828,7 @@ var SceneManager = new Class({
 
     /**
      * Returns an array of all the current Scenes being managed by this Scene Manager.
-     * 
+     *
      * You can filter the output by the active state of the Scene and choose to have
      * the array returned in normal or reversed order.
      *
@@ -1161,25 +1166,25 @@ var SceneManager = new Class({
                 scene.sys.start(data);
 
                 var loader;
-    
+
                 if (scene.sys.load)
                 {
                     loader = scene.sys.load;
                 }
-    
+
                 //  Files payload?
                 if (loader && scene.sys.settings.hasOwnProperty('pack'))
                 {
                     loader.reset();
-    
+
                     if (loader.addPack({ payload: scene.sys.settings.pack }))
                     {
                         scene.sys.settings.status = CONST.LOADING;
-    
+
                         loader.once(LoaderEvents.COMPLETE, this.payloadComplete, this);
-    
+
                         loader.start();
-    
+
                         return this;
                     }
                 }
