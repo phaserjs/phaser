@@ -153,6 +153,7 @@ The following changes took place in the Pointer class:
 * `Phaser.Tilemaps.Parsers.Impact.ParseTilesets` is now a public static function, available to be called directly.
 * `Phaser.Tilemaps.Parsers.Impact.ParseWeltmeister` is now a public static function, available to be called directly.
 * `Phaser.Tilemaps.Parsers.Tiled.Pick` has been removed. It is now available under `Phaser.Utils.Objects.Pick`, which is a more logical place for it.
+* You can now call `this.scene.remove` at the end of a Scene's `create` method without it throwing an error. Why you'd ever want to do this is beyond me, but you now can (thanks @samme)
 
 ### Bug Fixes
 
