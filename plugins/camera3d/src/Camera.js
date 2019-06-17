@@ -112,13 +112,12 @@ var Camera = new Class({
          */
         this.position = new Vector3();
 
-        //  The mapping from 3D size units to pixels.
-        //  In the default case 1 3D unit = 128 pixels. So a sprite that is
-        //  256 x 128 px in size will be 2 x 1 units.
-        //  Change to whatever best fits your game assets.
 
         /**
-         * [description]
+         *  The mapping from 3D size units to pixels.
+         *  In the default case 1 3D unit = 128 pixels. So a sprite that is
+         *  256 x 128 px in size will be 2 x 1 units.
+         *  Change to whatever best fits your game assets.
          *
          * @name Phaser.Cameras.Sprite3D#pixelScale
          * @type {number}
