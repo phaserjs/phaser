@@ -843,15 +843,14 @@ var Body = new Class({
     },
 
     /**
-     * Prepares the Body for a physics step by resetting all the states and syncing the position
-     * with the parent Game Object.
+     * Prepares the Body for a physics step by resetting the `wasTouching`, `touching` and `blocked` states.
      * 
-     * This method is only ever called once per game step.
+     * This method is only called if the physics world is going to run a step this frame.
      *
-     * @method Phaser.Physics.Arcade.Body#preUpdate
-     * @since 3.17.0
+     * @method Phaser.Physics.Arcade.Body#resetFlags
+     * @since 3.18.0
      */
-    preUpdate: function ()
+    resetFlags: function ()
     {
         //  Store and reset collision flags
         this.wasTouching.none = this.touching.none;
@@ -877,8 +876,26 @@ var Body = new Class({
         this.overlapY = 0;
 
         this.embedded = false;
+    },
 
-        //  Updates the transform values
+    /**
+     * Syncs the position body position with the parent Game Object.
+     * 
+     * This method is called every game frame, regardless if the world steps or not.
+     *
+     * @method Phaser.Physics.Arcade.Body#preUpdate
+     * @since 3.17.0
+     * 
+     * @param {boolean} willStep - Will this Body run an update as well?
+     * @param {number} delta - The delta time, in seconds, elapsed since the last frame.
+     */
+    preUpdate: function (willStep, delta)
+    {
+        if (willStep)
+        {
+            this.resetFlags();
+        }
+
         this.updateBounds();
 
         var sprite = this.transform;
@@ -897,18 +914,22 @@ var Body = new Class({
             this.prev.x = this.position.x;
             this.prev.y = this.position.y;
         }
+
+        if (willStep)
+        {
+            this.update(delta);
+        }
     },
 
     /**
-     * Performs a single physics step and updates the body velocity, angle, speed and other
-     * properties.
+     * Performs a single physics step and updates the body velocity, angle, speed and other properties.
      * 
-     * This method can be called multiple times per game step.
+     * This method can be called multiple times per game frame, depending on the physics step rate.
      * 
      * The results are synced back to the Game Object in `postUpdate`.
      *
      * @method Phaser.Physics.Arcade.Body#update
-     * @fires Phaser.Physics.Arcade.World#worldbounds
+     * @fires Phaser.Physics.Arcade.Events#WORLD_BOUNDS
      * @since 3.0.0
      *
      * @param {number} delta - The delta time, in seconds, elapsed since the last frame.
@@ -947,7 +968,7 @@ var Body = new Class({
     /**
      * Feeds the Body results back into the parent Game Object.
      * 
-     * This method is only ever called once per game step.
+     * This method is called every game frame, regardless if the world steps or not.
      *
      * @method Phaser.Physics.Arcade.Body#postUpdate
      * @since 3.0.0
