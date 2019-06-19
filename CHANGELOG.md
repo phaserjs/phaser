@@ -183,6 +183,7 @@ The following changes took place in the Pointer class:
 * Setting `random: false` in a Particle Emitter config option no longer causes it to think random is true (thanks @samme)
 * `Zone.setSize` didn't update the displayOrigin, causing touch events to be inaccurate as the origin was out. Fix #4131 (thanks @rexrainbow)
 * `Tween.restart` wouldn't restart the tween properly. Fix #4594 (thanks @NokFrt)
+* Looped Tween Timelines would mess-up the tween values on every loop repeat, causing the loop to fail. They now loop correctly due to a fix in the Tween.play method. Fix #4558 (thanks @peteroravec)
 
 ### Examples, Documentation and TypeScript
 

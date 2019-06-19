@@ -628,9 +628,6 @@ var Timeline = new Class({
         if (this.loopCounter > 0)
         {
             //  Reset the elapsed time
-            //  TODO: Probably ought to be set to the remainder from elapsed - duration
-            //  as the tweens nearly always over-run by a few ms due to rAf
-
             this.elapsed = 0;
             this.progress = 0;
 

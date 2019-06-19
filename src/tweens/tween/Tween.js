@@ -665,7 +665,7 @@ var Tween = new Class({
         {
             return this;
         }
-        else if (this.state === TWEEN_CONST.PENDING_REMOVE || this.state === TWEEN_CONST.REMOVED)
+        else if (!this.parentIsTimeline && (this.state === TWEEN_CONST.PENDING_REMOVE || this.state === TWEEN_CONST.REMOVED))
         {
             this.seek(0);
             this.parent.makeActive(this);
