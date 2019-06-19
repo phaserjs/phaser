@@ -34,6 +34,7 @@
 * Due to a regression in 3.16 the drag events were not performing as fast as before, causing drags to feel lagged. Fix #4500 (thanks @aliblong)
 * The Touch Manager will now listen for Touch Cancel events on the Window object (if `inputWindowEvents` is enabled in the game config, which it is by default). This allows it to prevent touch cancel actions, like opening the dock on iOS, from causing genuinely active pointers to enter an active locked state.
 * Over and Out events now work for any number of pointers in multi-touch environments, not just the first touch pointer registered. They also now fire correctly on touch start and touch end / cancel events.
+* If you enable a Game Object for drag and place it inside a rotated Container (of any depth), the `dragX` and `dragY` values sent to the `drag` callback didn't factor the rotation in, so you had to do it manually. This is now done automatically, so the values account for parent rotation before being sent to the event handler. Fix #4437 (thanks @aliblong)
 
 #### Input System API Changes
 
@@ -157,6 +158,7 @@ The following changes took place in the Pointer class:
 * You can now call `this.scene.remove` at the end of a Scene's `create` method without it throwing an error. Why you'd ever want to do this is beyond me, but you now can (thanks @samme)
 * The `Arcade.StaticBody.setSize` arguments have changed from `(width, height, offsetX, offsetY)` to `(width, height, center)`. They now match Dynamic Body setSize and the Size Component method (thanks @samme)
 * When enabling Arcade Physics Body debug it will now draw only the faces marked for collision, allowing you to easily see if a face is disabled or not (thanks @BdR76)
+* `Transform.getParentRotation` is a new method available to all GameObjects that will return the sum total rotation of all of the Game Objects parent Containers, if it has any.
 
 ### Bug Fixes
 
