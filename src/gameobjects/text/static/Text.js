@@ -946,14 +946,16 @@ var Text = new Class({
     },
 
     /**
-     * Set the text alignment.
-     *
-     * Expects values like `'left'`, `'right'`, `'center'` or `'justified'`.
+     * Set the alignment of the text in this Text object.
+     * 
+     * The argument can be one of: `left`, `right`, `center` or `justify`.
+     * 
+     * Alignment only works if the Text object has more than one line of text.
      *
      * @method Phaser.GameObjects.Text#setAlign
      * @since 3.0.0
      *
-     * @param {string} align - The text alignment.
+     * @param {string} [align='left'] - The text alignment for multi-line text.
      *
      * @return {Phaser.GameObjects.Text} This Text object.
      */
@@ -1215,6 +1217,33 @@ var Text = new Class({
             else if (style.align === 'center')
             {
                 linePositionX += (textWidth - textSize.lineWidths[i]) / 2;
+            }
+            else if (style.align === 'justify')
+            {
+                //  To justify text line its width must be no less than 85% of defined width
+                var minimumLengthToApplyJustification = 0.85;
+
+                if (textSize.lineWidths[i] / textSize.width >= minimumLengthToApplyJustification)
+                {
+                    var extraSpace = textSize.width - textSize.lineWidths[i];
+                    var spaceSize = context.measureText(' ').width;
+                    var trimmedLine = lines[i].trim();
+                    var array = trimmedLine.split(' ');
+            
+                    extraSpace += (lines[i].length - trimmedLine.length) * spaceSize;
+            
+                    var extraSpaceCharacters = Math.floor(extraSpace / spaceSize);
+                    var idx = 0;
+
+                    while (extraSpaceCharacters > 0)
+                    {
+                        array[idx] += ' ';
+                        idx = (idx + 1) % (array.length - 1 || 1);
+                        --extraSpaceCharacters;
+                    }
+            
+                    lines[i] = array.join(' ');
+                }
             }
 
             if (this.autoRound)

@@ -949,14 +949,16 @@ var TextStyle = new Class({
     },
 
     /**
-     * Set the text alignment.
-     *
-     * Expects values like `'left'`, `'right'`, `'center'` or `'justified'`.
+     * Set the alignment of the text in this Text object.
+     * 
+     * The argument can be one of: `left`, `right`, `center` or `justify`.
+     * 
+     * Alignment only works if the Text object has more than one line of text.
      *
      * @method Phaser.GameObjects.TextStyle#setAlign
      * @since 3.0.0
      *
-     * @param {string} align - The text alignment.
+     * @param {string} [align='left'] - The text alignment for multi-line text.
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
