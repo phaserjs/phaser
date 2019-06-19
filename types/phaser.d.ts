@@ -2553,20 +2553,28 @@ declare namespace Phaser {
 
                 /**
                  * The horizontally flipped state of the Game Object.
+                 * 
                  * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
                  * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 flipX: boolean;
 
                 /**
                  * The vertically flipped state of the Game Object.
+                 * 
                  * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
                  * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 flipY: boolean;
 
                 /**
                  * Toggles the horizontal flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 toggleFlipX(): this;
 
@@ -2577,6 +2585,10 @@ declare namespace Phaser {
 
                 /**
                  * Sets the horizontal flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  * @param value The flipped state. `false` for no flip, or `true` to be flipped.
                  */
                 setFlipX(value: boolean): this;
@@ -2589,6 +2601,10 @@ declare namespace Phaser {
 
                 /**
                  * Sets the horizontal and vertical flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped will render inversed on the flipped axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  * @param x The horizontal flipped state. `false` for no flip, or `true` to be flipped.
                  * @param y The horizontal flipped state. `false` for no flip, or `true` to be flipped.
                  */
@@ -2891,6 +2907,13 @@ declare namespace Phaser {
                  * @param delta The delta time, in ms, elapsed since the last frame.
                  */
                 protected update(time: integer, delta: number): void;
+
+                /**
+                 * The event handler that manages the `resize` event dispatched by the Scale Manager.
+                 * @param gameSize The default Game Size object. This is the un-modified game dimensions.
+                 * @param baseSize The base Size object. The game dimensions multiplied by the resolution. The canvas width / height values match this.
+                 */
+                onResize(gameSize: Phaser.Structs.Size, baseSize: Phaser.Structs.Size): void;
 
                 /**
                  * Resizes all cameras to the given dimensions.
@@ -4318,6 +4341,11 @@ declare namespace Phaser {
              * When set to `true`, WebGL uses linear interpolation to draw scaled or rotated textures, giving a smooth appearance. When set to `false`, WebGL uses nearest-neighbor interpolation, giving a crisper appearance. `false` also disables antialiasing of the game canvas itself, if the browser supports it, when the game canvas is scaled.
              */
             readonly antialias: boolean;
+
+            /**
+             * When set to `true` it will create a desynchronized context for both 2D and WebGL. See https://developers.google.com/web/updates/2019/05/desynchronized for details.
+             */
+            readonly desynchronized: boolean;
 
             /**
              * Draw texture-based Game Objects at only whole-integer positions. Game Objects without textures, like Graphics, ignore this property.
@@ -8374,6 +8402,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -8478,6 +8515,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -9234,6 +9278,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -9338,6 +9391,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -9855,6 +9915,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -9959,6 +10028,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -10673,18 +10749,26 @@ declare namespace Phaser {
             interface Flip {
                 /**
                  * The horizontally flipped state of the Game Object.
+                 * 
                  * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
                  * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 flipX: boolean;
                 /**
                  * The vertically flipped state of the Game Object.
+                 * 
                  * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
                  * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 flipY: boolean;
                 /**
                  * Toggles the horizontal flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 toggleFlipX(): this;
                 /**
@@ -10693,6 +10777,10 @@ declare namespace Phaser {
                 toggleFlipY(): this;
                 /**
                  * Sets the horizontal flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  * @param value The flipped state. `false` for no flip, or `true` to be flipped.
                  */
                 setFlipX(value: boolean): this;
@@ -10703,6 +10791,10 @@ declare namespace Phaser {
                 setFlipY(value: boolean): this;
                 /**
                  * Sets the horizontal and vertical flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped will render inversed on the flipped axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  * @param x The horizontal flipped state. `false` for no flip, or `true` to be flipped.
                  * @param y The horizontal flipped state. `false` for no flip, or `true` to be flipped.
                  */
@@ -11362,6 +11454,14 @@ declare namespace Phaser {
                  */
                 w: number;
                 /**
+                 * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+                 * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+                 * 
+                 * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+                 * isn't the case, use the `scaleX` or `scaleY` properties instead.
+                 */
+                scale: number;
+                /**
                  * The horizontal scale of this Game Object.
                  */
                 scaleX: number;
@@ -11452,6 +11552,12 @@ declare namespace Phaser {
                  * @param parentMatrix A temporary matrix to hold parent values during the calculations.
                  */
                 getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+                /**
+                 * Gets the sum total rotation of all of this Game Objects parent Containers.
+                 * 
+                 * The returned value is in radians and will be zero if this Game Object has no parent container.
+                 */
+                getParentRotation(): number;
             }
 
             /**
@@ -12513,6 +12619,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -12617,6 +12732,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -13382,6 +13504,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -13486,6 +13617,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -13667,20 +13805,28 @@ declare namespace Phaser {
 
             /**
              * The horizontally flipped state of the Game Object.
+             * 
              * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
              * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             flipX: boolean;
 
             /**
              * The vertically flipped state of the Game Object.
+             * 
              * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
              * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             flipY: boolean;
 
             /**
              * Toggles the horizontal flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             toggleFlipX(): this;
 
@@ -13691,6 +13837,10 @@ declare namespace Phaser {
 
             /**
              * Sets the horizontal flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              * @param value The flipped state. `false` for no flip, or `true` to be flipped.
              */
             setFlipX(value: boolean): this;
@@ -13703,6 +13853,10 @@ declare namespace Phaser {
 
             /**
              * Sets the horizontal and vertical flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped will render inversed on the flipped axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              * @param x The horizontal flipped state. `false` for no flip, or `true` to be flipped.
              * @param y The horizontal flipped state. `false` for no flip, or `true` to be flipped.
              */
@@ -14052,6 +14206,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -14156,6 +14319,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -15906,24 +16076,42 @@ declare namespace Phaser {
             restore(): Phaser.GameObjects.Graphics;
 
             /**
-             * Translate the graphics.
+             * Inserts a translation command into this Graphics objects command buffer.
+             * 
+             * All objects drawn _after_ calling this method will be translated
+             * by the given amount.
+             * 
+             * This does not change the position of the Graphics object itself,
+             * only of the objects drawn by it after calling this method.
              * @param x The horizontal translation to apply.
              * @param y The vertical translation to apply.
              */
-            translate(x: number, y: number): Phaser.GameObjects.Graphics;
+            translateCanvas(x: number, y: number): Phaser.GameObjects.Graphics;
 
             /**
-             * Scale the graphics.
+             * Inserts a scale command into this Graphics objects command buffer.
+             * 
+             * All objects drawn _after_ calling this method will be scaled
+             * by the given amount.
+             * 
+             * This does not change the scale of the Graphics object itself,
+             * only of the objects drawn by it after calling this method.
              * @param x The horizontal scale to apply.
              * @param y The vertical scale to apply.
              */
-            scale(x: number, y: number): Phaser.GameObjects.Graphics;
+            scaleCanvas(x: number, y: number): Phaser.GameObjects.Graphics;
 
             /**
-             * Rotate the graphics.
+             * Inserts a rotation command into this Graphics objects command buffer.
+             * 
+             * All objects drawn _after_ calling this method will be rotated
+             * by the given amount.
+             * 
+             * This does not change the rotation of the Graphics object itself,
+             * only of the objects drawn by it after calling this method.
              * @param radians The rotation angle, in radians.
              */
-            rotate(radians: number): Phaser.GameObjects.Graphics;
+            rotateCanvas(radians: number): Phaser.GameObjects.Graphics;
 
             /**
              * Clear the command buffer and reset the fill style and line style to their defaults.
@@ -16191,6 +16379,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -16295,6 +16492,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -16407,6 +16611,12 @@ declare namespace Phaser {
              * The class to create new group members from.
              */
             classType: Function;
+
+            /**
+             * The name of this group.
+             * Empty by default and never populated by Phaser, this is left for developers to use.
+             */
+            name: string;
 
             /**
              * Whether this group runs its {@link Phaser.GameObjects.Group#preUpdate} method
@@ -16863,20 +17073,28 @@ declare namespace Phaser {
 
             /**
              * The horizontally flipped state of the Game Object.
+             * 
              * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
              * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             flipX: boolean;
 
             /**
              * The vertically flipped state of the Game Object.
+             * 
              * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
              * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             flipY: boolean;
 
             /**
              * Toggles the horizontal flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             toggleFlipX(): this;
 
@@ -16887,6 +17105,10 @@ declare namespace Phaser {
 
             /**
              * Sets the horizontal flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              * @param value The flipped state. `false` for no flip, or `true` to be flipped.
              */
             setFlipX(value: boolean): this;
@@ -16899,6 +17121,10 @@ declare namespace Phaser {
 
             /**
              * Sets the horizontal and vertical flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped will render inversed on the flipped axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              * @param x The horizontal flipped state. `false` for no flip, or `true` to be flipped.
              * @param y The horizontal flipped state. `false` for no flip, or `true` to be flipped.
              */
@@ -17452,6 +17678,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -17556,6 +17791,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -18277,6 +18519,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -18381,6 +18632,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -18634,9 +18892,9 @@ declare namespace Phaser {
                 steppedEmit(): number;
 
                 /**
-                 * An `onEmit` callback that returns an eased value between the
-                 * {@link Phaser.GameObjects.Particles.EmitterOp#start} and {@link Phaser.GameObjects.Particles.EmitterOp#end}
-                 * range.
+                 * An `onEmit` callback for an eased property.
+                 * 
+                 * It prepares the particle for easing by {@link Phaser.GameObjects.Particles.EmitterOp#easeValueUpdate}.
                  * @param particle The particle.
                  * @param key The name of the property.
                  */
@@ -19245,7 +19503,7 @@ declare namespace Phaser {
                  * @param x The x-coordinate of the particle origin.
                  * @param y The y-coordinate of the particle origin.
                  */
-                setPosition(x: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType, y: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType): Phaser.GameObjects.Particles.ParticleEmitter;
+                setPosition(x: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType, y: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets or modifies a rectangular boundary constraining the particles.
@@ -19332,13 +19590,13 @@ declare namespace Phaser {
                  * Sets the angle of a {@link Phaser.GameObjects.Particles.ParticleEmitter#radial} particle stream.
                  * @param value The angle of the initial velocity of emitted particles.
                  */
-                setAngle(value: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType): Phaser.GameObjects.Particles.ParticleEmitter;
+                setAngle(value: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the lifespan of newly emitted particles.
                  * @param value The particle lifespan, in ms.
                  */
-                setLifespan(value: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType): Phaser.GameObjects.Particles.ParticleEmitter;
+                setLifespan(value: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the number of particles released at each flow cycle or explosion.
@@ -19932,6 +20190,15 @@ declare namespace Phaser {
                 w: number;
 
                 /**
+                 * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+                 * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+                 * 
+                 * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+                 * isn't the case, use the `scaleX` or `scaleY` properties instead.
+                 */
+                scale: number;
+
+                /**
                  * The horizontal scale of this Game Object.
                  */
                 scaleX: number;
@@ -20036,6 +20303,13 @@ declare namespace Phaser {
                  * @param parentMatrix A temporary matrix to hold parent values during the calculations.
                  */
                 getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+                /**
+                 * Gets the sum total rotation of all of this Game Objects parent Containers.
+                 * 
+                 * The returned value is in radians and will be zero if this Game Object has no parent container.
+                 */
+                getParentRotation(): number;
 
                 /**
                  * The visible state of the Game Object.
@@ -20377,20 +20651,28 @@ declare namespace Phaser {
 
             /**
              * The horizontally flipped state of the Game Object.
+             * 
              * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
              * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             flipX: boolean;
 
             /**
              * The vertically flipped state of the Game Object.
+             * 
              * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
              * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             flipY: boolean;
 
             /**
              * Toggles the horizontal flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             toggleFlipX(): this;
 
@@ -20401,6 +20683,10 @@ declare namespace Phaser {
 
             /**
              * Sets the horizontal flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              * @param value The flipped state. `false` for no flip, or `true` to be flipped.
              */
             setFlipX(value: boolean): this;
@@ -20413,6 +20699,10 @@ declare namespace Phaser {
 
             /**
              * Sets the horizontal and vertical flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped will render inversed on the flipped axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              * @param x The horizontal flipped state. `false` for no flip, or `true` to be flipped.
              * @param y The horizontal flipped state. `false` for no flip, or `true` to be flipped.
              */
@@ -20966,6 +21256,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -21070,6 +21369,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -21673,6 +21979,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -21777,6 +22092,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -21960,7 +22282,7 @@ declare namespace Phaser {
              * 
              * If the dimensions given are the same as those already being used, calling this method will do nothing.
              * @param width The new width of the Render Texture.
-             * @param height The new height of the Render Texture. If not specified, will be set the same as the `width`.
+             * @param height The new height of the Render Texture. If not specified, will be set the same as the `width`. Default width.
              */
             resize(width: number, height?: number): this;
 
@@ -22313,20 +22635,28 @@ declare namespace Phaser {
 
             /**
              * The horizontally flipped state of the Game Object.
+             * 
              * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
              * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             flipX: boolean;
 
             /**
              * The vertically flipped state of the Game Object.
+             * 
              * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
              * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             flipY: boolean;
 
             /**
              * Toggles the horizontal flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             toggleFlipX(): this;
 
@@ -22337,6 +22667,10 @@ declare namespace Phaser {
 
             /**
              * Sets the horizontal flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              * @param value The flipped state. `false` for no flip, or `true` to be flipped.
              */
             setFlipX(value: boolean): this;
@@ -22349,6 +22683,10 @@ declare namespace Phaser {
 
             /**
              * Sets the horizontal and vertical flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped will render inversed on the flipped axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              * @param x The horizontal flipped state. `false` for no flip, or `true` to be flipped.
              * @param y The horizontal flipped state. `false` for no flip, or `true` to be flipped.
              */
@@ -22758,6 +23096,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -22862,6 +23209,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -23497,6 +23851,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -23601,6 +23964,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -24200,6 +24570,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -24304,6 +24683,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -24856,6 +25242,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -24960,6 +25355,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -25507,6 +25909,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -25611,6 +26022,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -26243,6 +26661,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -26347,6 +26774,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -26946,6 +27380,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -27050,6 +27493,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -27663,6 +28113,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -27769,6 +28228,13 @@ declare namespace Phaser {
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
 
             /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
+
+            /**
              * The visible state of the Game Object.
              * 
              * An invisible Game Object will skip rendering, but will still process update logic.
@@ -27798,6 +28264,9 @@ declare namespace Phaser {
          * thickness for the start and end of the line, allowing you to render lines that taper-off.
          * 
          * If you need to draw multiple lines in a sequence you may wish to use the Polygon Shape instead.
+         * 
+         * Be aware that as with all Game Objects the default origin is 0.5. If you need to draw a Line
+         * between two points and want the x1/y1 values to match the x/y values, then set the origin to 0.
          */
         class Line extends Phaser.GameObjects.Shape {
             /**
@@ -28333,6 +28802,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -28437,6 +28915,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -28987,6 +29472,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -29091,6 +29585,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -29624,6 +30125,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -29728,6 +30238,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -30351,6 +30868,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -30455,6 +30981,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -31031,6 +31564,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -31135,6 +31677,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -31685,6 +32234,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -31789,6 +32347,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -31981,20 +32546,28 @@ declare namespace Phaser {
 
             /**
              * The horizontally flipped state of the Game Object.
+             * 
              * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
              * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             flipX: boolean;
 
             /**
              * The vertically flipped state of the Game Object.
+             * 
              * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
              * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             flipY: boolean;
 
             /**
              * Toggles the horizontal flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             toggleFlipX(): this;
 
@@ -32005,6 +32578,10 @@ declare namespace Phaser {
 
             /**
              * Sets the horizontal flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              * @param value The flipped state. `false` for no flip, or `true` to be flipped.
              */
             setFlipX(value: boolean): this;
@@ -32017,6 +32594,10 @@ declare namespace Phaser {
 
             /**
              * Sets the horizontal and vertical flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped will render inversed on the flipped axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              * @param x The horizontal flipped state. `false` for no flip, or `true` to be flipped.
              * @param y The horizontal flipped state. `false` for no flip, or `true` to be flipped.
              */
@@ -32570,6 +33151,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -32674,6 +33264,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -33032,12 +33629,14 @@ declare namespace Phaser {
             setWordWrapCallback(callback: TextStyleWordWrapCallback, scope?: object): Phaser.GameObjects.Text;
 
             /**
-             * Set the text alignment.
+             * Set the alignment of the text in this Text object.
              * 
-             * Expects values like `'left'`, `'right'`, `'center'` or `'justified'`.
-             * @param align The text alignment.
+             * The argument can be one of: `left`, `right`, `center` or `justify`.
+             * 
+             * Alignment only works if the Text object has more than one line of text.
+             * @param align The text alignment for multi-line text. Default 'left'.
              */
-            setAlign(align: string): Phaser.GameObjects.Text;
+            setAlign(align?: string): Phaser.GameObjects.Text;
 
             /**
              * Set the resolution used by this Text object.
@@ -33073,7 +33672,7 @@ declare namespace Phaser {
              * @param right The right padding value.
              * @param bottom The bottom padding value.
              */
-            setPadding(left: number | object, top: number, right: number, bottom: number): Phaser.GameObjects.Text;
+            setPadding(left: number | Phaser.Types.GameObjects.Text.TextPadding, top: number, right: number, bottom: number): Phaser.GameObjects.Text;
 
             /**
              * Set the maximum number of lines to draw.
@@ -33321,20 +33920,28 @@ declare namespace Phaser {
 
             /**
              * The horizontally flipped state of the Game Object.
+             * 
              * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
              * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             flipX: boolean;
 
             /**
              * The vertically flipped state of the Game Object.
+             * 
              * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
              * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             flipY: boolean;
 
             /**
              * Toggles the horizontal flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             toggleFlipX(): this;
 
@@ -33345,6 +33952,10 @@ declare namespace Phaser {
 
             /**
              * Sets the horizontal flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              * @param value The flipped state. `false` for no flip, or `true` to be flipped.
              */
             setFlipX(value: boolean): this;
@@ -33357,6 +33968,10 @@ declare namespace Phaser {
 
             /**
              * Sets the horizontal and vertical flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped will render inversed on the flipped axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              * @param x The horizontal flipped state. `false` for no flip, or `true` to be flipped.
              * @param y The horizontal flipped state. `false` for no flip, or `true` to be flipped.
              */
@@ -33766,6 +34381,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -33870,6 +34494,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -34209,12 +34840,14 @@ declare namespace Phaser {
             setWordWrapCallback(callback: TextStyleWordWrapCallback, scope?: object): Phaser.GameObjects.Text;
 
             /**
-             * Set the text alignment.
+             * Set the alignment of the text in this Text object.
              * 
-             * Expects values like `'left'`, `'right'`, `'center'` or `'justified'`.
-             * @param align The text alignment.
+             * The argument can be one of: `left`, `right`, `center` or `justify`.
+             * 
+             * Alignment only works if the Text object has more than one line of text.
+             * @param align The text alignment for multi-line text. Default 'left'.
              */
-            setAlign(align: string): Phaser.GameObjects.Text;
+            setAlign(align?: string): Phaser.GameObjects.Text;
 
             /**
              * Set the maximum number of lines to draw.
@@ -34616,20 +35249,28 @@ declare namespace Phaser {
 
             /**
              * The horizontally flipped state of the Game Object.
+             * 
              * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
              * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             flipX: boolean;
 
             /**
              * The vertically flipped state of the Game Object.
+             * 
              * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
              * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             flipY: boolean;
 
             /**
              * Toggles the horizontal flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             toggleFlipX(): this;
 
@@ -34640,6 +35281,10 @@ declare namespace Phaser {
 
             /**
              * Sets the horizontal flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              * @param value The flipped state. `false` for no flip, or `true` to be flipped.
              */
             setFlipX(value: boolean): this;
@@ -34652,6 +35297,10 @@ declare namespace Phaser {
 
             /**
              * Sets the horizontal and vertical flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped will render inversed on the flipped axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              * @param x The horizontal flipped state. `false` for no flip, or `true` to be flipped.
              * @param y The horizontal flipped state. `false` for no flip, or `true` to be flipped.
              */
@@ -35061,6 +35710,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -35165,6 +35823,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -35534,6 +36199,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -35638,6 +36312,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The horizontal scroll factor of this Game Object.
@@ -37791,14 +38472,19 @@ declare namespace Phaser {
         var TOUCH_END: integer;
 
         /**
+         * The pointer lock has changed.
+         */
+        var POINTER_LOCK_CHANGE: integer;
+
+        /**
          * A touch pointer has been been cancelled by the browser.
          */
         var TOUCH_CANCEL: integer;
 
         /**
-         * The pointer lock has changed.
+         * The mouse wheel changes.
          */
-        var POINTER_LOCK_CHANGE: integer;
+        var MOUSE_WHEEL: integer;
 
         /**
          * Creates a new Interactive Object.
@@ -38226,6 +38912,28 @@ declare namespace Phaser {
             const GAMEOBJECT_POINTER_UP: any;
 
             /**
+             * The Game Object Pointer Wheel Event.
+             * 
+             * This event is dispatched by an interactive Game Object if a pointer has its wheel moved while over it.
+             * 
+             * Listen to this event from a Game Object using: `gameObject.on('wheel', listener)`.
+             * Note that the scope of the listener is automatically set to be the Game Object instance itself.
+             * 
+             * To receive this event, the Game Object must have been set as interactive.
+             * See [GameObject.setInteractive]{@link Phaser.GameObjects.GameObject#setInteractive} for more details.
+             * 
+             * The event hierarchy is as follows:
+             * 
+             * 1. [GAMEOBJECT_POINTER_WHEEL]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_POINTER_WHEEL}
+             * 2. [GAMEOBJECT_WHEEL]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_WHEEL}
+             * 3. [POINTER_WHEEL]{@linkcode Phaser.Input.Events#event:POINTER_WHEEL}
+             * 
+             * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
+             * the propagation of this event.
+             */
+            const GAMEOBJECT_POINTER_WHEEL: any;
+
+            /**
              * The Game Object Up Input Event.
              * 
              * This event is dispatched by the Input Plugin belonging to a Scene if a pointer is released while over _any_ interactive Game Object.
@@ -38247,6 +38955,29 @@ declare namespace Phaser {
              * the propagation of this event.
              */
             const GAMEOBJECT_UP: any;
+
+            /**
+             * The Game Object Wheel Input Event.
+             * 
+             * This event is dispatched by the Input Plugin belonging to a Scene if a pointer has its wheel moved while over _any_ interactive Game Object.
+             * 
+             * Listen to this event from within a Scene using: `this.input.on('gameobjectwheel', listener)`.
+             * 
+             * To receive this event, the Game Objects must have been set as interactive.
+             * See [GameObject.setInteractive]{@link Phaser.GameObjects.GameObject#setInteractive} for more details.
+             * 
+             * To listen for this event from a _specific_ Game Object, use the [GAMEOBJECT_POINTER_WHEEL]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_POINTER_WHEEL} event instead.
+             * 
+             * The event hierarchy is as follows:
+             * 
+             * 1. [GAMEOBJECT_POINTER_WHEEL]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_POINTER_WHEEL}
+             * 2. [GAMEOBJECT_WHEEL]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_WHEEL}
+             * 3. [POINTER_WHEEL]{@linkcode Phaser.Input.Events#event:POINTER_WHEEL}
+             * 
+             * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
+             * the propagation of this event.
+             */
+            const GAMEOBJECT_WHEEL: any;
 
             /**
              * The Input Plugin Game Out Event.
@@ -38422,6 +39153,24 @@ declare namespace Phaser {
              * the propagation of this event.
              */
             const POINTER_UP_OUTSIDE: any;
+
+            /**
+             * The Pointer Wheel Input Event.
+             * 
+             * This event is dispatched by the Input Plugin belonging to a Scene if a pointer has its wheel updated.
+             * 
+             * Listen to this event from within a Scene using: `this.input.on('wheel', listener)`.
+             * 
+             * The event hierarchy is as follows:
+             * 
+             * 1. [GAMEOBJECT_POINTER_WHEEL]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_POINTER_WHEEL}
+             * 2. [GAMEOBJECT_WHEEL]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_WHEEL}
+             * 3. [POINTER_WHEEL]{@linkcode Phaser.Input.Events#event:POINTER_WHEEL}
+             * 
+             * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
+             * the propagation of this event.
+             */
+            const POINTER_WHEEL: any;
 
             /**
              * The Input Plugin Pre-Update Event.
@@ -39284,7 +40033,12 @@ declare namespace Phaser {
          * sprite.on('pointerdown', callback, context);
          * ```
          * 
-         * Please see the Input examples and tutorials for more information.
+         * There are lots of game configuration options available relating to input.
+         * See the [Input Config object]{@linkcode Phaser.Types.Core.InputConfig} for more details, including how to deal with Phaser
+         * listening for input events outside of the canvas, how to set a default number of pointers, input
+         * capture settings and more.
+         * 
+         * Please also see the Input examples and tutorials for further information.
          */
         class InputPlugin extends Phaser.Events.EventEmitter {
             /**
@@ -41270,6 +42024,13 @@ declare namespace Phaser {
                 onMouseOut: Function;
 
                 /**
+                 * The Mouse Wheel Event handler.
+                 * This function is sent the native DOM MouseEvent.
+                 * Initially empty and bound in the `startListeners` method.
+                 */
+                onMouseWheel: Function;
+
+                /**
                  * Internal pointerLockChange handler.
                  * This function is sent the native DOM MouseEvent.
                  * Initially empty and bound in the `startListeners` method.
@@ -41384,6 +42145,18 @@ declare namespace Phaser {
              * in the list should multiple cameras be positioned on-top of each other.
              */
             camera: Phaser.Cameras.Scene2D.Camera;
+
+            /**
+             * A read-only property that indicates which button was pressed, or released, on the pointer
+             * during the most recent event. It is only set during `up` and `down` events.
+             * 
+             * On Touch devices the value is always 0.
+             * 
+             * Users may change the configuration of buttons on their pointing device so that if an event's button property
+             * is zero, it may not have been caused by the button that is physically left–most on the pointing device;
+             * however, it should behave as if the left button was clicked in the standard button layout.
+             */
+            readonly button: integer;
 
             /**
              * 0: No button or un-initialized
@@ -41571,6 +42344,22 @@ declare namespace Phaser {
             time: number;
 
             /**
+             * The horizontal scroll amount that occurred due to the user moving a mouse wheel or similar input device.
+             */
+            deltaX: number;
+
+            /**
+             * The vertical scroll amount that occurred due to the user moving a mouse wheel or similar input device.
+             * This value will typically be less than 0 if the user scrolls up and greater than zero if scrolling down.
+             */
+            deltaY: number;
+
+            /**
+             * The z-axis scroll amount that occurred due to the user moving a mouse wheel or similar input device.
+             */
+            deltaZ: number;
+
+            /**
              * Takes a Camera and returns a Vector2 containing the translated position of this Pointer
              * within that Camera. This can be used to convert this Pointers position into camera space.
              * @param camera The Camera to use for the translation.
@@ -41607,6 +42396,31 @@ declare namespace Phaser {
              * Checks to see if the forward button is being held down on this Pointer.
              */
             forwardButtonDown(): boolean;
+
+            /**
+             * Checks to see if the left button was just released on this Pointer.
+             */
+            leftButtonReleased(): boolean;
+
+            /**
+             * Checks to see if the right button was just released on this Pointer.
+             */
+            rightButtonReleased(): boolean;
+
+            /**
+             * Checks to see if the middle button was just released on this Pointer.
+             */
+            middleButtonReleased(): boolean;
+
+            /**
+             * Checks to see if the back button was just released on this Pointer.
+             */
+            backButtonReleased(): boolean;
+
+            /**
+             * Checks to see if the forward button was just released on this Pointer.
+             */
+            forwardButtonReleased(): boolean;
 
             /**
              * If the Pointer has a button pressed down at the time this method is called, it will return the
@@ -41780,6 +42594,12 @@ declare namespace Phaser {
                  * Initially empty and bound in the `startListeners` method.
                  */
                 onTouchCancel: Function;
+
+                /**
+                 * The Touch Cancel event handler function specifically for events on the Window.
+                 * Initially empty and bound in the `startListeners` method.
+                 */
+                onTouchCancelWindow: Function;
 
                 /**
                  * The Touch Over event handler function.
@@ -48834,6 +49654,10 @@ declare namespace Phaser {
                  */
                 antialias?: boolean;
                 /**
+                 * When set to `true` it will create a desynchronized context for both 2D and WebGL. See https://developers.google.com/web/updates/2019/05/desynchronized for details.
+                 */
+                desynchronized?: boolean;
+                /**
                  * Sets `antialias` and `roundPixels` to true. This is the best setting for pixel-art games.
                  */
                 pixelArt?: boolean;
@@ -48842,7 +49666,7 @@ declare namespace Phaser {
                  */
                 roundPixels?: boolean;
                 /**
-                 * Whether the game canvas will be transparent.
+                 * Whether the game canvas will be transparent. Boolean that indicates if the canvas contains an alpha channel. If set to false, the browser now knows that the backdrop is always opaque, which can speed up drawing of transparent content and images.
                  */
                 transparent?: boolean;
                 /**
@@ -49595,6 +50419,10 @@ declare namespace Phaser {
                      */
                     classType?: Function;
                     /**
+                     * Sets {@link Phaser.GameObjects.Group#name}.
+                     */
+                    name?: string;
+                    /**
                      * Sets {@link Phaser.GameObjects.Group#active}.
                      */
                     active?: boolean;
@@ -50053,9 +50881,9 @@ declare namespace Phaser {
                      */
                     alpha?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType;
                     /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#angle}.
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#angle} (emit only).
                      */
-                    angle?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType;
+                    angle?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType;
                     /**
                      * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#bounce} (emit only).
                      */
@@ -50065,9 +50893,9 @@ declare namespace Phaser {
                      */
                     delay?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType;
                     /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#lifespan}.
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#lifespan} (emit only).
                      */
-                    lifespan?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType;
+                    lifespan?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType;
                     /**
                      * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxVelocityX} (emit only).
                      */
@@ -50121,13 +50949,13 @@ declare namespace Phaser {
                      */
                     tint?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType;
                     /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#x}.
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#x} (emit only).
                      */
-                    x?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType;
+                    x?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType;
                     /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#y}.
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#y} (emit only).
                      */
-                    y?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType;
+                    y?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType;
                     /**
                      * As {@link Phaser.GameObjects.Particles.ParticleEmitter#setEmitZone}.
                      */
@@ -50330,6 +51158,36 @@ declare namespace Phaser {
                 };
 
                 /**
+                 * A Text Padding configuration object as used by the Text Style.
+                 */
+                type TextPadding = {
+                    /**
+                     * If set this value is used for both the left and right padding.
+                     */
+                    x?: number;
+                    /**
+                     * If set this value is used for both the top and bottom padding.
+                     */
+                    y?: number;
+                    /**
+                     * The amount of padding added to the left of the Text object.
+                     */
+                    left?: number;
+                    /**
+                     * The amount of padding added to the right of the Text object.
+                     */
+                    right?: number;
+                    /**
+                     * The amount of padding added to the top of the Text object.
+                     */
+                    top?: number;
+                    /**
+                     * The amount of padding added to the bottom of the Text object.
+                     */
+                    bottom?: number;
+                };
+
+                /**
                  * A Text Shadow configuration object as used by the Text Style.
                  */
                 type TextShadow = {
@@ -50396,7 +51254,11 @@ declare namespace Phaser {
                      */
                     shadow?: Phaser.Types.GameObjects.Text.TextShadow;
                     /**
-                     * The alignment of the Text. This only impacts multi-line text.
+                     * A Text Padding object.
+                     */
+                    padding?: Phaser.Types.GameObjects.Text.TextPadding;
+                    /**
+                     * The alignment of the Text. This only impacts multi-line text. Either `left`, `right`, `center` or `justify`.
                      */
                     align?: string;
                     /**
@@ -50834,13 +51696,21 @@ declare namespace Phaser {
                  */
                 dragState: 0 | 1 | 2;
                 /**
-                 * The x coordinate that the Pointer started dragging this Interactive Object from.
+                 * The x coordinate of the Game Object that owns this Interactive Object when the drag started.
                  */
                 dragStartX: number;
                 /**
-                 * The y coordinate that the Pointer started dragging this Interactive Object from.
+                 * The y coordinate of the Game Object that owns this Interactive Object when the drag started.
                  */
                 dragStartY: number;
+                /**
+                 * The x coordinate that the Pointer started dragging this Interactive Object from.
+                 */
+                dragStartXGlobal: number;
+                /**
+                 * The y coordinate that the Pointer started dragging this Interactive Object from.
+                 */
+                dragStartYGlobal: number;
                 /**
                  * The x coordinate that this Interactive Object is currently being dragged to.
                  */
@@ -52757,6 +53627,23 @@ declare namespace Phaser {
                 spritemap: object;
             };
 
+            /**
+             * A Audio Data object.
+             * 
+             * You can pass an array of these objects to the WebAudioSoundManager `decodeAudio` method to have it decode
+             * them all at once.
+             */
+            type DecodeAudioConfig = {
+                /**
+                 * The string-based key to be used to reference the decoded audio in the audio cache.
+                 */
+                key: string;
+                /**
+                 * The audio data, either a base64 encoded string, an audio media-type data uri, or an ArrayBuffer instance.
+                 */
+                data: ArrayBuffer | string;
+            };
+
             type EachActiveSoundCallback = (manager: Phaser.Sound.BaseSoundManager, sound: Phaser.Sound.BaseSound, index: number, sounds: Phaser.Sound.BaseSound[])=>void;
 
             /**
@@ -53014,6 +53901,37 @@ declare namespace Phaser {
                 tiles?: any[];
             };
 
+            type ObjectLayerConfig = {
+                /**
+                 * The name of the Object Layer.
+                 */
+                name?: string;
+                /**
+                 * The opacity of the layer, between 0 and 1.
+                 */
+                opacity?: number;
+                /**
+                 * The custom properties defined on the Object Layer, keyed by their name.
+                 */
+                properties?: any;
+                /**
+                 * The type of each custom property defined on the Object Layer, keyed by its name.
+                 */
+                propertytypes?: any;
+                /**
+                 * The type of the layer, which should be `objectgroup`.
+                 */
+                type?: string;
+                /**
+                 * Whether the layer is shown (`true`) or hidden (`false`).
+                 */
+                visible?: boolean;
+                /**
+                 * An array of all objects on this Object Layer.
+                 */
+                objects?: any[];
+            };
+
             type StyleConfig = {
                 /**
                  * Color to use for drawing a filled rectangle at non-colliding tile locations. If set to null, non-colliding tiles will not be drawn.
@@ -53027,6 +53945,85 @@ declare namespace Phaser {
                  * Color to use for drawing a line at interesting tile faces. If set to null, interesting tile faces will not be drawn.
                  */
                 faceColor?: Phaser.Display.Color | number | null;
+            };
+
+            type TiledObject = {
+                /**
+                 * The unique object ID.
+                 */
+                id: integer;
+                /**
+                 * The name this object was assigned in Tiled.
+                 */
+                name: string;
+                /**
+                 * The type, as assigned in Tiled.
+                 */
+                type: string;
+                /**
+                 * The visible state of this object.
+                 */
+                visible?: boolean;
+                /**
+                 * The horizontal position of this object, in pixels, relative to the tilemap.
+                 */
+                x?: number;
+                /**
+                 * The vertical position of this object, in pixels, relative to the tilemap.
+                 */
+                y?: number;
+                /**
+                 * The width of this object, in pixels.
+                 */
+                width?: number;
+                /**
+                 * The height of this object, in pixels.
+                 */
+                height?: number;
+                /**
+                 * The rotation of the object in clockwise degrees.
+                 */
+                rotation?: number;
+                /**
+                 * Custom properties object.
+                 */
+                properties?: any;
+                /**
+                 * Only set if of type 'tile'.
+                 */
+                gid?: integer;
+                /**
+                 * Only set if a tile object. The horizontal flip value.
+                 */
+                flippedHorizontal?: boolean;
+                /**
+                 * Only set if a tile object. The vertical flip value.
+                 */
+                flippedVertical?: boolean;
+                /**
+                 * Only set if a tile object. The diagonal flip value.
+                 */
+                flippedAntiDiagonal?: boolean;
+                /**
+                 * Only set if a polyline object. An array of objects corresponding to points, where each point has an `x` property and a `y` property.
+                 */
+                polyline?: Phaser.Types.Math.Vector2Like[];
+                /**
+                 * Only set if a polygon object. An array of objects corresponding to points, where each point has an `x` property and a `y` property.
+                 */
+                polygon?: Phaser.Types.Math.Vector2Like[];
+                /**
+                 * Only set if a text object. Contains the text objects properties.
+                 */
+                text?: any;
+                /**
+                 * Only set, and set to `true`, if a rectangle object.
+                 */
+                rectangle?: boolean;
+                /**
+                 * Only set, and set to `true`, if a ellipse object.
+                 */
+                ellipse?: boolean;
             };
 
             type TilemapConfig = {
@@ -53944,20 +54941,28 @@ declare namespace Phaser {
 
                 /**
                  * The horizontally flipped state of the Game Object.
+                 * 
                  * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
                  * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 flipX: boolean;
 
                 /**
                  * The vertically flipped state of the Game Object.
+                 * 
                  * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
                  * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 flipY: boolean;
 
                 /**
                  * Toggles the horizontal flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 toggleFlipX(): this;
 
@@ -53968,6 +54973,10 @@ declare namespace Phaser {
 
                 /**
                  * Sets the horizontal flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  * @param value The flipped state. `false` for no flip, or `true` to be flipped.
                  */
                 setFlipX(value: boolean): this;
@@ -53980,6 +54989,10 @@ declare namespace Phaser {
 
                 /**
                  * Sets the horizontal and vertical flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped will render inversed on the flipped axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  * @param x The horizontal flipped state. `false` for no flip, or `true` to be flipped.
                  * @param y The horizontal flipped state. `false` for no flip, or `true` to be flipped.
                  */
@@ -54533,6 +55546,15 @@ declare namespace Phaser {
                 w: number;
 
                 /**
+                 * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+                 * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+                 * 
+                 * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+                 * isn't the case, use the `scaleX` or `scaleY` properties instead.
+                 */
+                scale: number;
+
+                /**
                  * The horizontal scale of this Game Object.
                  */
                 scaleX: number;
@@ -54637,6 +55659,13 @@ declare namespace Phaser {
                  * @param parentMatrix A temporary matrix to hold parent values during the calculations.
                  */
                 getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+                /**
+                 * Gets the sum total rotation of all of this Game Objects parent Containers.
+                 * 
+                 * The returned value is in radians and will be zero if this Game Object has no parent container.
+                 */
+                getParentRotation(): number;
 
                 /**
                  * The visible state of the Game Object.
@@ -55370,20 +56399,28 @@ declare namespace Phaser {
 
                 /**
                  * The horizontally flipped state of the Game Object.
+                 * 
                  * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
                  * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 flipX: boolean;
 
                 /**
                  * The vertically flipped state of the Game Object.
+                 * 
                  * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
                  * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 flipY: boolean;
 
                 /**
                  * Toggles the horizontal flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 toggleFlipX(): this;
 
@@ -55394,6 +56431,10 @@ declare namespace Phaser {
 
                 /**
                  * Sets the horizontal flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  * @param value The flipped state. `false` for no flip, or `true` to be flipped.
                  */
                 setFlipX(value: boolean): this;
@@ -55406,6 +56447,10 @@ declare namespace Phaser {
 
                 /**
                  * Sets the horizontal and vertical flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped will render inversed on the flipped axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  * @param x The horizontal flipped state. `false` for no flip, or `true` to be flipped.
                  * @param y The horizontal flipped state. `false` for no flip, or `true` to be flipped.
                  */
@@ -55959,6 +57004,15 @@ declare namespace Phaser {
                 w: number;
 
                 /**
+                 * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+                 * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+                 * 
+                 * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+                 * isn't the case, use the `scaleX` or `scaleY` properties instead.
+                 */
+                scale: number;
+
+                /**
                  * The horizontal scale of this Game Object.
                  */
                 scaleX: number;
@@ -56063,6 +57117,13 @@ declare namespace Phaser {
                  * @param parentMatrix A temporary matrix to hold parent values during the calculations.
                  */
                 getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+                /**
+                 * Gets the sum total rotation of all of this Game Objects parent Containers.
+                 * 
+                 * The returned value is in radians and will be zero if this Game Object has no parent container.
+                 */
+                getParentRotation(): number;
 
                 /**
                  * The visible state of the Game Object.
@@ -56653,7 +57714,7 @@ declare namespace Phaser {
                 mass: number;
 
                 /**
-                 * The calculated angle of this Body's velocity vector, in degrees, during the last step.
+                 * The calculated angle of this Body's velocity vector, in radians, during the last step.
                  */
                 angle: number;
 
@@ -56758,18 +57819,25 @@ declare namespace Phaser {
                 updateCenter(): void;
 
                 /**
-                 * Prepares the Body for a physics step by resetting all the states and syncing the position
-                 * with the parent Game Object.
+                 * Prepares the Body for a physics step by resetting the `wasTouching`, `touching` and `blocked` states.
                  * 
-                 * This method is only ever called once per game step.
+                 * This method is only called if the physics world is going to run a step this frame.
                  */
-                preUpdate(): void;
+                resetFlags(): void;
 
                 /**
-                 * Performs a single physics step and updates the body velocity, angle, speed and other
-                 * properties.
+                 * Syncs the position body position with the parent Game Object.
                  * 
-                 * This method can be called multiple times per game step.
+                 * This method is called every game frame, regardless if the world steps or not.
+                 * @param willStep Will this Body run an update as well?
+                 * @param delta The delta time, in seconds, elapsed since the last frame.
+                 */
+                preUpdate(willStep: boolean, delta: number): void;
+
+                /**
+                 * Performs a single physics step and updates the body velocity, angle, speed and other properties.
+                 * 
+                 * This method can be called multiple times per game frame, depending on the physics step rate.
                  * 
                  * The results are synced back to the Game Object in `postUpdate`.
                  * @param delta The delta time, in seconds, elapsed since the last frame.
@@ -56779,7 +57847,7 @@ declare namespace Phaser {
                 /**
                  * Feeds the Body results back into the parent Game Object.
                  * 
-                 * This method is only ever called once per game step.
+                 * This method is called every game frame, regardless if the world steps or not.
                  */
                 postUpdate(): void;
 
@@ -57699,6 +58767,18 @@ declare namespace Phaser {
                  */
                 const WORLD_BOUNDS: any;
 
+                /**
+                 * The Arcade Physics World Step Event.
+                 * 
+                 * This event is dispatched by an Arcade Physics World instance whenever a physics step is run.
+                 * It is emitted _after_ the bodies and colliders have been updated.
+                 * 
+                 * In high framerate settings this can be multiple times per game frame.
+                 * 
+                 * Listen to it from a Scene using: `this.physics.world.on('worldstep', listener)`.
+                 */
+                const WORLD_STEP: any;
+
             }
 
             /**
@@ -58164,10 +59244,9 @@ declare namespace Phaser {
                  * Resets the width and height to match current frame, if no width and height provided and a frame is found.
                  * @param width The width of the Body in pixels. Cannot be zero. If not given, and the parent Game Object has a frame, it will use the frame width.
                  * @param height The height of the Body in pixels. Cannot be zero. If not given, and the parent Game Object has a frame, it will use the frame height.
-                 * @param offsetX The horizontal offset of the Body from the Game Object's center.
-                 * @param offsetY The vertical offset of the Body from the Game Object's center.
+                 * @param center Modify the Body's `offset`, placing the Body's center on its Game Object's center. Only works if the Game Object has the `getCenter` method. Default true.
                  */
-                setSize(width?: integer, height?: integer, offsetX?: number, offsetY?: number): Phaser.Physics.Arcade.StaticBody;
+                setSize(width?: integer, height?: integer, center?: boolean): Phaser.Physics.Arcade.StaticBody;
 
                 /**
                  * Sets this Static Body to have a circular body and sets its sizes and position.
@@ -60225,20 +61304,28 @@ declare namespace Phaser {
 
                 /**
                  * The horizontally flipped state of the Game Object.
+                 * 
                  * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
                  * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 flipX: boolean;
 
                 /**
                  * The vertically flipped state of the Game Object.
+                 * 
                  * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
                  * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 flipY: boolean;
 
                 /**
                  * Toggles the horizontal flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 toggleFlipX(): this;
 
@@ -60249,6 +61336,10 @@ declare namespace Phaser {
 
                 /**
                  * Sets the horizontal flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  * @param value The flipped state. `false` for no flip, or `true` to be flipped.
                  */
                 setFlipX(value: boolean): this;
@@ -60261,6 +61352,10 @@ declare namespace Phaser {
 
                 /**
                  * Sets the horizontal and vertical flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped will render inversed on the flipped axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  * @param x The horizontal flipped state. `false` for no flip, or `true` to be flipped.
                  * @param y The horizontal flipped state. `false` for no flip, or `true` to be flipped.
                  */
@@ -60814,6 +61909,15 @@ declare namespace Phaser {
                 w: number;
 
                 /**
+                 * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+                 * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+                 * 
+                 * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+                 * isn't the case, use the `scaleX` or `scaleY` properties instead.
+                 */
+                scale: number;
+
+                /**
                  * The horizontal scale of this Game Object.
                  */
                 scaleX: number;
@@ -60918,6 +62022,13 @@ declare namespace Phaser {
                  * @param parentMatrix A temporary matrix to hold parent values during the calculations.
                  */
                 getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+                /**
+                 * Gets the sum total rotation of all of this Game Objects parent Containers.
+                 * 
+                 * The returned value is in radians and will be zero if this Game Object has no parent container.
+                 */
+                getParentRotation(): number;
 
                 /**
                  * The visible state of the Game Object.
@@ -61416,20 +62527,28 @@ declare namespace Phaser {
 
                 /**
                  * The horizontally flipped state of the Game Object.
+                 * 
                  * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
                  * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 flipX: boolean;
 
                 /**
                  * The vertically flipped state of the Game Object.
+                 * 
                  * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
                  * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 flipY: boolean;
 
                 /**
                  * Toggles the horizontal flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 toggleFlipX(): this;
 
@@ -61440,6 +62559,10 @@ declare namespace Phaser {
 
                 /**
                  * Sets the horizontal flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  * @param value The flipped state. `false` for no flip, or `true` to be flipped.
                  */
                 setFlipX(value: boolean): this;
@@ -61452,6 +62575,10 @@ declare namespace Phaser {
 
                 /**
                  * Sets the horizontal and vertical flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped will render inversed on the flipped axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  * @param x The horizontal flipped state. `false` for no flip, or `true` to be flipped.
                  * @param y The horizontal flipped state. `false` for no flip, or `true` to be flipped.
                  */
@@ -62005,6 +63132,15 @@ declare namespace Phaser {
                 w: number;
 
                 /**
+                 * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+                 * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+                 * 
+                 * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+                 * isn't the case, use the `scaleX` or `scaleY` properties instead.
+                 */
+                scale: number;
+
+                /**
                  * The horizontal scale of this Game Object.
                  */
                 scaleX: number;
@@ -62109,6 +63245,13 @@ declare namespace Phaser {
                  * @param parentMatrix A temporary matrix to hold parent values during the calculations.
                  */
                 getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+                /**
+                 * Gets the sum total rotation of all of this Game Objects parent Containers.
+                 * 
+                 * The returned value is in radians and will be zero if this Game Object has no parent container.
+                 */
+                getParentRotation(): number;
 
                 /**
                  * The visible state of the Game Object.
@@ -63706,20 +64849,28 @@ declare namespace Phaser {
 
                 /**
                  * The horizontally flipped state of the Game Object.
+                 * 
                  * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
                  * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 flipX: boolean;
 
                 /**
                  * The vertically flipped state of the Game Object.
+                 * 
                  * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
                  * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 flipY: boolean;
 
                 /**
                  * Toggles the horizontal flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 toggleFlipX(): this;
 
@@ -63730,6 +64881,10 @@ declare namespace Phaser {
 
                 /**
                  * Sets the horizontal flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  * @param value The flipped state. `false` for no flip, or `true` to be flipped.
                  */
                 setFlipX(value: boolean): this;
@@ -63742,6 +64897,10 @@ declare namespace Phaser {
 
                 /**
                  * Sets the horizontal and vertical flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped will render inversed on the flipped axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  * @param x The horizontal flipped state. `false` for no flip, or `true` to be flipped.
                  * @param y The horizontal flipped state. `false` for no flip, or `true` to be flipped.
                  */
@@ -64295,6 +65454,15 @@ declare namespace Phaser {
                 w: number;
 
                 /**
+                 * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+                 * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+                 * 
+                 * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+                 * isn't the case, use the `scaleX` or `scaleY` properties instead.
+                 */
+                scale: number;
+
+                /**
                  * The horizontal scale of this Game Object.
                  */
                 scaleX: number;
@@ -64399,6 +65567,13 @@ declare namespace Phaser {
                  * @param parentMatrix A temporary matrix to hold parent values during the calculations.
                  */
                 getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+                /**
+                 * Gets the sum total rotation of all of this Game Objects parent Containers.
+                 * 
+                 * The returned value is in radians and will be zero if this Game Object has no parent container.
+                 */
+                getParentRotation(): number;
 
                 /**
                  * The visible state of the Game Object.
@@ -64915,20 +66090,28 @@ declare namespace Phaser {
 
                 /**
                  * The horizontally flipped state of the Game Object.
+                 * 
                  * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
                  * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 flipX: boolean;
 
                 /**
                  * The vertically flipped state of the Game Object.
+                 * 
                  * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
                  * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 flipY: boolean;
 
                 /**
                  * Toggles the horizontal flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  */
                 toggleFlipX(): this;
 
@@ -64939,6 +66122,10 @@ declare namespace Phaser {
 
                 /**
                  * Sets the horizontal flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  * @param value The flipped state. `false` for no flip, or `true` to be flipped.
                  */
                 setFlipX(value: boolean): this;
@@ -64951,6 +66138,10 @@ declare namespace Phaser {
 
                 /**
                  * Sets the horizontal and vertical flipped state of this Game Object.
+                 * 
+                 * A Game Object that is flipped will render inversed on the flipped axis.
+                 * Flipping always takes place from the middle of the texture and does not impact the scale value.
+                 * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
                  * @param x The horizontal flipped state. `false` for no flip, or `true` to be flipped.
                  * @param y The horizontal flipped state. `false` for no flip, or `true` to be flipped.
                  */
@@ -65504,6 +66695,15 @@ declare namespace Phaser {
                 w: number;
 
                 /**
+                 * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+                 * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+                 * 
+                 * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+                 * isn't the case, use the `scaleX` or `scaleY` properties instead.
+                 */
+                scale: number;
+
+                /**
                  * The horizontal scale of this Game Object.
                  */
                 scaleX: number;
@@ -65608,6 +66808,13 @@ declare namespace Phaser {
                  * @param parentMatrix A temporary matrix to hold parent values during the calculations.
                  */
                 getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+                /**
+                 * Gets the sum total rotation of all of this Game Objects parent Containers.
+                 * 
+                 * The returned value is in radians and will be zero if this Game Object has no parent container.
+                 */
+                getParentRotation(): number;
 
                 /**
                  * The visible state of the Game Object.
@@ -69658,6 +70865,10 @@ declare namespace Phaser {
 
             /**
              * This method will set a new size for your game.
+             * 
+             * It should only be used if you're looking to change the base size of your game and are using
+             * one of the Scale Manager scaling modes, i.e. `FIT`. If you're using `NO_SCALE` and wish to
+             * change the game and canvas size directly, then please use the `resize` method instead.
              * @param width The new width of the game.
              * @param height The new height of the game.
              */
@@ -69671,7 +70882,7 @@ declare namespace Phaser {
              * If all you want to do is change the size of the parent, see the `setParentSize` method.
              * 
              * If all you want is to change the base size of the game, but still have the Scale Manager
-             * manage all the scaling, then see the `setGameSize` method.
+             * manage all the scaling (i.e. you're **not** using `NO_SCALE`), then see the `setGameSize` method.
              * 
              * This method will set the `gameSize`, `baseSize` and `displaySize` components to the given
              * dimensions. It will then resize the canvas width and height to the values given, by
@@ -69705,8 +70916,10 @@ declare namespace Phaser {
              * 
              * This is called automatically by the Scale Manager when the browser window size changes,
              * as long as it is using a Scale Mode other than 'NONE'.
+             * @param previousWidth The previous width of the game. Only set if the gameSize has changed.
+             * @param previousHeight The previous height of the game. Only set if the gameSize has changed.
              */
-            refresh(): this;
+            refresh(previousWidth?: number, previousHeight?: number): this;
 
             /**
              * Internal method that checks the current screen orientation, only if the internal check flag is set.
@@ -71708,6 +72921,38 @@ declare namespace Phaser {
             const COMPLETE: any;
 
             /**
+             * The Audio Data Decoded All Event.
+             * 
+             * This event is dispatched by the Web Audio Sound Manager as a result of calling the `decodeAudio` method,
+             * once all files passed to the method have been decoded (or errored).
+             * 
+             * Use `Phaser.Sound.Events#DECODED` to listen for single sounds being decoded, and `DECODED_ALL` to
+             * listen for them all completing.
+             * 
+             * Listen to it from the Sound Manager in a Scene using `this.sound.on('decodedall', listener)`, i.e.:
+             * 
+             * ```javascript
+             * this.sound.once('decodedall', handler);
+             * this.sound.decodeAudio([ audioFiles ]);
+             * ```
+             */
+            const DECODED_ALL: any;
+
+            /**
+             * The Audio Data Decoded Event.
+             * 
+             * This event is dispatched by the Web Audio Sound Manager as a result of calling the `decodeAudio` method.
+             * 
+             * Listen to it from the Sound Manager in a Scene using `this.sound.on('decoded', listener)`, i.e.:
+             * 
+             * ```javascript
+             * this.sound.on('decoded', handler);
+             * this.sound.decodeAudio(key, audioData);
+             * ```
+             */
+            const DECODED: any;
+
+            /**
              * The Sound Destroy Event.
              * 
              * This event is dispatched by both Web Audio and HTML5 Audio Sound objects when they are destroyed, either
@@ -72419,6 +73664,24 @@ declare namespace Phaser {
              * @param config An optional config object containing default sound settings.
              */
             add(key: string, config?: Phaser.Types.Sound.SoundConfig): Phaser.Sound.WebAudioSound;
+
+            /**
+             * Decode audio data into a format ready for playback via Web Audio.
+             * 
+             * The audio data can be a base64 encoded string, an audio media-type data uri, or an ArrayBuffer instance.
+             * 
+             * The `audioKey` is the key that will be used to save the decoded audio to the audio cache.
+             * 
+             * Instead of passing a single entry you can instead pass an array of `Phaser.Types.Sound.DecodeAudioConfig`
+             * objects as the first and only argument.
+             * 
+             * Decoding is an async process, so be sure to listen for the events to know when decoding has completed.
+             * 
+             * Once the audio has decoded it can be added to the Sound Manager or played via its key.
+             * @param audioKey The string-based key to be used to reference the decoded audio in the audio cache, or an array of audio config objects.
+             * @param audioData The audio data, either a base64 encoded string, an audio media-type data uri, or an ArrayBuffer instance.
+             */
+            decodeAudio(audioKey?: Phaser.Types.Sound.DecodeAudioConfig[] | string, audioData?: ArrayBuffer | string): void;
 
             /**
              * Unlocks Web Audio API on the initial input event.
@@ -75299,20 +76562,28 @@ declare namespace Phaser {
 
             /**
              * The horizontally flipped state of the Game Object.
+             * 
              * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
              * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             flipX: boolean;
 
             /**
              * The vertically flipped state of the Game Object.
+             * 
              * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
              * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             flipY: boolean;
 
             /**
              * Toggles the horizontal flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             toggleFlipX(): this;
 
@@ -75323,6 +76594,10 @@ declare namespace Phaser {
 
             /**
              * Sets the horizontal flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              * @param value The flipped state. `false` for no flip, or `true` to be flipped.
              */
             setFlipX(value: boolean): this;
@@ -75335,6 +76610,10 @@ declare namespace Phaser {
 
             /**
              * Sets the horizontal and vertical flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped will render inversed on the flipped axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              * @param x The horizontal flipped state. `false` for no flip, or `true` to be flipped.
              * @param y The horizontal flipped state. `false` for no flip, or `true` to be flipped.
              */
@@ -75595,6 +76874,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -75699,6 +76987,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -76067,7 +77362,7 @@ declare namespace Phaser {
              * 
              * @param config The data for the layer from the Tiled JSON object.
              */
-            constructor(config?: object);
+            constructor(config?: Phaser.Types.Tilemaps.ObjectLayerConfig);
 
             /**
              * The name of the Object Layer.
@@ -76102,15 +77397,23 @@ declare namespace Phaser {
             /**
              * An array of all objects on this Object Layer.
              * 
-             * Each Tiled object corresponds to a JavaScript object in this array. It has an `id` (unique), `name` (as assigned in Tiled), `type` (as assigned in Tiled), `rotation` (in clockwise degrees), `properties` (if any), `visible` state (`true` if visible, `false` otherwise), `x` and `y` coordinates (in pixels, relative to the tilemap), and a `width` and `height` (in pixels).
+             * Each Tiled object corresponds to a JavaScript object in this array. It has an `id` (unique),
+             * `name` (as assigned in Tiled), `type` (as assigned in Tiled), `rotation` (in clockwise degrees),
+             * `properties` (if any), `visible` state (`true` if visible, `false` otherwise),
+             * `x` and `y` coordinates (in pixels, relative to the tilemap), and a `width` and `height` (in pixels).
              * 
-             * An object tile has a `gid` property (GID of the represented tile), a `flippedHorizontal` property, a `flippedVertical` property, and `flippedAntiDiagonal` property. The {@link http://docs.mapeditor.org/en/latest/reference/tmx-map-format/|Tiled documentation} contains information on flipping and rotation.
+             * An object tile has a `gid` property (GID of the represented tile), a `flippedHorizontal` property,
+             * a `flippedVertical` property, and `flippedAntiDiagonal` property.
+             * The {@link http://docs.mapeditor.org/en/latest/reference/tmx-map-format/|Tiled documentation} contains
+             * information on flipping and rotation.
              * 
-             * Polylines have a `polyline` property, which is an array of objects corresponding to points, where each point has an `x` property and a `y` property. Polygons have an identically structured array in their `polygon` property. Text objects have a `text` property with the text's properties.
+             * Polylines have a `polyline` property, which is an array of objects corresponding to points,
+             * where each point has an `x` property and a `y` property. Polygons have an identically structured
+             * array in their `polygon` property. Text objects have a `text` property with the text's properties.
              * 
              * Rectangles and ellipses have a `rectangle` or `ellipse` property set to `true`.
              */
-            objects: Phaser.GameObjects.GameObject[];
+            objects: Phaser.Types.Tilemaps.TiledObject[];
 
         }
 
@@ -76262,17 +77565,10 @@ declare namespace Phaser {
                 function ParseTileLayers(json: object, insertNull: boolean): any[];
 
                 /**
-                 * Tilesets & Image Collections
+                 * Tilesets and Image Collections
                  * @param json [description]
                  */
                 function ParseTilesets(json: object): object;
-
-                /**
-                 * Returns a new object that only contains the `keys` that were found on the object provided. If no `keys` are found, an empty object is returned.
-                 * @param object The object to pick the provided keys from.
-                 * @param keys An array of properties to retrieve from the provided object.
-                 */
-                function Pick(object: object, keys: any[]): object;
 
             }
 
@@ -76996,20 +78292,28 @@ declare namespace Phaser {
 
             /**
              * The horizontally flipped state of the Game Object.
+             * 
              * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
              * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             flipX: boolean;
 
             /**
              * The vertically flipped state of the Game Object.
+             * 
              * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
              * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             flipY: boolean;
 
             /**
              * Toggles the horizontal flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             toggleFlipX(): this;
 
@@ -77020,6 +78324,10 @@ declare namespace Phaser {
 
             /**
              * Sets the horizontal flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              * @param value The flipped state. `false` for no flip, or `true` to be flipped.
              */
             setFlipX(value: boolean): this;
@@ -77032,6 +78340,10 @@ declare namespace Phaser {
 
             /**
              * Sets the horizontal and vertical flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped will render inversed on the flipped axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              * @param x The horizontal flipped state. `false` for no flip, or `true` to be flipped.
              * @param y The horizontal flipped state. `false` for no flip, or `true` to be flipped.
              */
@@ -77233,6 +78545,15 @@ declare namespace Phaser {
             w: number;
 
             /**
+             * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+             * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+             * 
+             * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+             * isn't the case, use the `scaleX` or `scaleY` properties instead.
+             */
+            scale: number;
+
+            /**
              * The horizontal scale of this Game Object.
              */
             scaleX: number;
@@ -77337,6 +78658,13 @@ declare namespace Phaser {
              * @param parentMatrix A temporary matrix to hold parent values during the calculations.
              */
             getWorldTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix, parentMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
+
+            /**
+             * Gets the sum total rotation of all of this Game Objects parent Containers.
+             * 
+             * The returned value is in radians and will be zero if this Game Object has no parent container.
+             */
+            getParentRotation(): number;
 
             /**
              * The visible state of the Game Object.
@@ -77799,20 +79127,28 @@ declare namespace Phaser {
 
             /**
              * The horizontally flipped state of the Game Object.
+             * 
              * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
              * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             flipX: boolean;
 
             /**
              * The vertically flipped state of the Game Object.
+             * 
              * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
              * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             flipY: boolean;
 
             /**
              * Toggles the horizontal flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              */
             toggleFlipX(): this;
 
@@ -77823,6 +79159,10 @@ declare namespace Phaser {
 
             /**
              * Sets the horizontal flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              * @param value The flipped state. `false` for no flip, or `true` to be flipped.
              */
             setFlipX(value: boolean): this;
@@ -77835,6 +79175,10 @@ declare namespace Phaser {
 
             /**
              * Sets the horizontal and vertical flipped state of this Game Object.
+             * 
+             * A Game Object that is flipped will render inversed on the flipped axis.
+             * Flipping always takes place from the middle of the texture and does not impact the scale value.
+             * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
              * @param x The horizontal flipped state. `false` for no flip, or `true` to be flipped.
              * @param y The horizontal flipped state. `false` for no flip, or `true` to be flipped.
              */
@@ -78443,7 +79787,7 @@ declare namespace Phaser {
 
             /**
              * Randomizes the indexes of a rectangular region of tiles (in tile coordinates) within the
-             * specified layer. Each tile will recieve a new index. If an array of indexes is passed in, then
+             * specified layer. Each tile will receive a new index. If an array of indexes is passed in, then
              * those will be used for randomly assigning new tile indexes. If an array is not provided, the
              * indexes found within the region (excluding -1) will be used for randomly assigning new tile
              * indexes. This method only modifies tile indexes and does not change collision information.
@@ -79437,7 +80781,8 @@ declare namespace Phaser {
         /**
          * A Timeline combines multiple Tweens into one. Its overall behavior is otherwise similar to a single Tween.
          * 
-         * The Timeline updates all of its Tweens simultaneously. Its methods allow you to easily build a sequence of Tweens (each one starting after the previous one) or run multiple Tweens at once during given parts of the Timeline.
+         * The Timeline updates all of its Tweens simultaneously. Its methods allow you to easily build a sequence
+         * of Tweens (each one starting after the previous one) or run multiple Tweens at once during given parts of the Timeline.
          */
         class Timeline extends Phaser.Events.EventEmitter {
             /**
@@ -79462,29 +80807,29 @@ declare namespace Phaser {
             data: any[];
 
             /**
-             * data array doesn't usually change, so we can cache the length
+             * The cached size of the data array.
              */
             totalData: number;
 
             /**
-             * If true then duration, delay, etc values are all frame totals.
+             * If true then duration, delay, etc values are all frame totals, rather than ms.
              */
             useFrames: boolean;
 
             /**
-             * Scales the time applied to this Tween. A value of 1 runs in real-time. A value of 0.5 runs 50% slower, and so on.
-             * Value isn't used when calculating total duration of the tween, it's a run-time delta adjustment only.
+             * Scales the time applied to this Timeline. A value of 1 runs in real-time. A value of 0.5 runs 50% slower, and so on.
+             * Value isn't used when calculating total duration of the Timeline, it's a run-time delta adjustment only.
              */
             timeScale: number;
 
             /**
-             * Loop this tween? Can be -1 for an infinite loop, or an integer.
-             * When enabled it will play through ALL TweenDatas again (use TweenData.repeat to loop a single TD)
+             * Loop this Timeline? Can be -1 for an infinite loop, or an integer.
+             * When enabled it will play through ALL Tweens again (use Tween.repeat to loop a single tween)
              */
             loop: number;
 
             /**
-             * Time in ms/frames before the tween loops.
+             * Time in ms/frames before this Timeline loops.
              */
             loopDelay: number;
 
@@ -79499,59 +80844,62 @@ declare namespace Phaser {
             completeDelay: number;
 
             /**
-             * Countdown timer (used by loopDelay and completeDelay)
+             * Countdown timer value, as used by `loopDelay` and `completeDelay`.
              */
             countdown: number;
 
             /**
-             * The current state of the tween
+             * The current state of the Timeline.
              */
             state: integer;
 
             /**
-             * Does the Tween start off paused? (if so it needs to be started with Tween.play)
+             * Does the Timeline start off paused? (if so it needs to be started with Timeline.play)
              */
             paused: boolean;
 
             /**
-             * Elapsed time in ms/frames of this run through the Tween.
+             * Elapsed time in ms/frames of this run through of the Timeline.
              */
             elapsed: number;
 
             /**
-             * Total elapsed time in ms/frames of the entire Tween, including looping.
+             * Total elapsed time in ms/frames of the entire Timeline, including looping.
              */
             totalElapsed: number;
 
             /**
-             * Time in ms/frames for the whole Tween to play through once, excluding loop amounts and loop delays.
+             * Time in ms/frames for the whole Timeline to play through once, excluding loop amounts and loop delays.
              */
             duration: number;
 
             /**
-             * Value between 0 and 1. The amount through the Tween, excluding loops.
+             * Value between 0 and 1. The amount of progress through the Timeline, _excluding loops_.
              */
             progress: number;
 
             /**
-             * Time in ms/frames for all Tweens to complete (including looping)
+             * Time in ms/frames for all Tweens in this Timeline to complete (including looping)
              */
             totalDuration: number;
 
             /**
-             * Value between 0 and 1. The amount through the entire Tween, including looping.
+             * Value between 0 and 1. The amount through the entire Timeline, including looping.
              */
             totalProgress: number;
 
             /**
-             * Sets the value of the time scale applied to this Timeline. A value of 1 runs in real-time. A value of 0.5 runs 50% slower, and so on.
-             * Value isn't used when calculating total duration of the tween, it's a run-time delta adjustment only.
+             * Sets the value of the time scale applied to this Timeline. A value of 1 runs in real-time.
+             * A value of 0.5 runs 50% slower, and so on.
+             * 
+             * The value isn't used when calculating total duration of the tween, it's a run-time delta adjustment only.
              * @param value The time scale value to set.
              */
-            setTimeScale(value: number): Phaser.Tweens.Timeline;
+            setTimeScale(value: number): this;
 
             /**
-             * Gets the value of the time scale applied to this Timeline. A value of 1 runs in real-time. A value of 0.5 runs 50% slower, and so on.
+             * Gets the value of the time scale applied to this Timeline. A value of 1 runs in real-time.
+             * A value of 0.5 runs 50% slower, and so on.
              */
             getTimeScale(): number;
 
@@ -79561,32 +80909,33 @@ declare namespace Phaser {
             isPlaying(): boolean;
 
             /**
-             * Creates a new Tween and adds it to this Timeline.
+             * Creates a new Tween, based on the given Tween Config, and adds it to this Timeline.
              * @param config The configuration object for the Tween.
              */
-            add(config: Phaser.Types.Tweens.TweenBuilderConfig | object): Phaser.Tweens.Timeline;
+            add(config: Phaser.Types.Tweens.TweenBuilderConfig | object): this;
 
             /**
-             * Adds a Tween to this Timeline.
-             * @param tween The tween
+             * Adds an existing Tween to this Timeline.
+             * @param tween The Tween to be added to this Timeline.
              */
-            queue(tween: Phaser.Tweens.Tween): Phaser.Tweens.Timeline;
+            queue(tween: Phaser.Tweens.Tween): this;
 
             /**
-             * Checks whether a tween has an offset value.
-             * @param tween The tween
+             * Checks whether a Tween has an offset value.
+             * @param tween The Tween to check.
              */
             hasOffset(tween: Phaser.Tweens.Tween): boolean;
 
             /**
              * Checks whether the offset value is a number or a directive that is relative to previous tweens.
-             * @param value The offset value to be evaluated
+             * @param value The offset value to be evaluated.
              */
             isOffsetAbsolute(value: number): boolean;
 
             /**
-             * Checks if the offset is a relative value rather than an absolute one. If the value is just a number, this returns false.
-             * @param value The offset value to be evaluated
+             * Checks if the offset is a relative value rather than an absolute one.
+             * If the value is just a number, this returns false.
+             * @param value The offset value to be evaluated.
              */
             isOffsetRelative(value: string): boolean;
 
@@ -79598,18 +80947,24 @@ declare namespace Phaser {
             getRelativeOffset(value: string, base: number): number;
 
             /**
-             * Calculates the total duration of the timeline.  Computes all tween's durations and returns the full duration of the timeline. The resulting number is stored in the timeline, not as a return value.
+             * Calculates the total duration of the timeline.
+             * 
+             * Computes all tween durations and returns the full duration of the timeline.
+             * 
+             * The resulting number is stored in the timeline, not as a return value.
              */
             calcDuration(): void;
 
             /**
-             * Initializes the timeline, which means all Tweens get their init() called, and the total duration will be computed. Returns a boolean indicating whether the timeline is auto-started or not.
+             * Initializes the timeline, which means all Tweens get their init() called, and the total duration will be computed.
+             * Returns a boolean indicating whether the timeline is auto-started or not.
              */
             init(): boolean;
 
             /**
-             * Resets all of the timeline's tweens back to their initial states.  The boolean parameter indicates whether tweens that are looping should reset as well, or not.
-             * @param resetFromLoop If true, resets all looping tweens to their initial values.
+             * Resets all of the timeline's tweens back to their initial states.
+             * The boolean parameter indicates whether tweens that are looping should reset as well, or not.
+             * @param resetFromLoop If `true`, resets all looping tweens to their initial values.
              */
             resetTweens(resetFromLoop: boolean): void;
 
@@ -79620,16 +80975,16 @@ declare namespace Phaser {
              * @param params The parameters to pass to the callback.
              * @param scope The context scope of the callback.
              */
-            setCallback(type: string, callback: Function, params?: any[], scope?: object): Phaser.Tweens.Timeline;
+            setCallback(type: string, callback: Function, params?: any[], scope?: object): this;
 
             /**
-             * Delegates #makeActive to the Tween manager.
+             * Passed a Tween to the Tween Manager and requests it be made active.
              * @param tween The tween object to make active.
              */
             makeActive(tween: Phaser.Tweens.Tween): Phaser.Tweens.TweenManager;
 
             /**
-             * Starts playing the timeline.
+             * Starts playing the Timeline.
              */
             play(): void;
 
@@ -79647,28 +81002,35 @@ declare namespace Phaser {
             update(timestamp: number, delta: number): boolean;
 
             /**
-             * Stops the Tween immediately, whatever stage of progress it is at and flags it for removal by the TweenManager.
+             * Stops the Timeline immediately, whatever stage of progress it is at and flags it for removal by the TweenManager.
              */
             stop(): void;
 
             /**
-             * Pauses the timeline, retaining its internal state.
+             * Pauses the Timeline, retaining its internal state.
+             * 
+             * Calling this on a Timeline that is already paused has no effect and fires no event.
              */
-            pause(): Phaser.Tweens.Timeline;
+            pause(): this;
 
             /**
-             * Resumes the timeline from where it was when it was paused.
+             * Resumes a paused Timeline from where it was when it was paused.
+             * 
+             * Calling this on a Timeline that isn't paused has no effect and fires no event.
              */
-            resume(): Phaser.Tweens.Timeline;
+            resume(): this;
 
             /**
-             * Checks if any of the tweens has the target as the object they are operating on. Retuns false if no tweens operate on the target object.
-             * @param target The target to check all tweens against.
+             * Checks if any of the Tweens in this Timeline as operating on the target object.
+             * 
+             * Returns `false` if no Tweens operate on the target object.
+             * @param target The target to check all Tweens against.
              */
             hasTarget(target: object): boolean;
 
             /**
-             * Stops all the Tweens in the Timeline immediately, whatever stage of progress they are at and flags them for removal by the TweenManager.
+             * Stops all the Tweens in the Timeline immediately, whatever stage of progress they are at and flags
+             * them for removal by the TweenManager.
              */
             destroy(): void;
 
@@ -80726,6 +82088,26 @@ declare namespace Phaser {
 
         }
 
+        namespace Base64 {
+            /**
+             * Converts an ArrayBuffer into a base64 string.
+             * 
+             * The resulting string can optionally be a data uri if the `mediaType` argument is provided.
+             * 
+             * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs for more details.
+             * @param arrayBuffer The Array Buffer to encode.
+             * @param mediaType An optional media type, i.e. `audio/ogg` or `image/jpeg`. If included the resulting string will be a data URI.
+             */
+            function ArrayBufferToBase64(arrayBuffer: ArrayBuffer, mediaType?: string): string;
+
+            /**
+             * Converts a base64 string, either with or without a data uri, into an Array Buffer.
+             * @param base64 The base64 string to be decoded. Can optionally contain a data URI header, which will be stripped out prior to decoding.
+             */
+            function Base64ToArrayBuffer(base64: string): ArrayBuffer;
+
+        }
+
         /**
          * A NOOP (No Operation) callback function.
          * 
@@ -80851,6 +82233,14 @@ declare namespace Phaser {
              * @param obj2 The second object to merge. Keys from this object which also exist in `obj1` will be copied to `obj1`.
              */
             function MergeRight(obj1: object, obj2: object): object;
+
+            /**
+             * Returns a new object that only contains the `keys` that were found on the object provided.
+             * If no `keys` are found, an empty object is returned.
+             * @param object The object to pick the provided keys from.
+             * @param keys An array of properties to retrieve from the provided object.
+             */
+            function Pick(object: object, keys: any[]): object;
 
             /**
              * Sets a value in an object, allowing for dot notation to control the depth of the property.
