@@ -110,6 +110,7 @@ The following changes took place in the Pointer class:
 * `Phaser.Sound.Events#DECODED_ALL` is a new event emitted by the Web Audio Sound Manager when it has finished decoding all of the audio data files passed to the `decodeAudio` method.
 * `Phaser.Utils.Objects.Pick` is a new function that will take an object and an array of keys and return a new object containing just the keys provided in the array.
 * `Text.align` and `Text.setAlign` can now accept `justify` as a type. It will apply basic justification to multi-line text, adding in extra spaces in order to justify the content. Fix #4291 (thanks @andrewbaranov @Donerkebap13 @dude78GH)
+* `Arcade.Events.WORLD_STEP` is a new event you can listen to. It is emitted by the Arcade Physics World every time the world steps once. It is emitted _after_ the bodies and colliders have been updated. Fix #4289 (thanks @fant0m)
 
 ### Updates
 
