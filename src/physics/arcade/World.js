@@ -913,39 +913,63 @@ var World = new Class({
             return;
         }
 
+        var i;
+        var fixedDelta = this._frameTime;
+        var msPerFrame = this._frameTimeMS * this.timeScale;
+
+        this._elapsed += delta;
+
         //  Update all active bodies
         var body;
         var bodies = this.bodies.entries;
 
-        for (var i = 0; i < bodies.length; i++)
+        //  Will a step happen this frame?
+        var willStep = (this._elapsed >= msPerFrame);
+
+        for (i = 0; i < bodies.length; i++)
         {
             body = bodies[i];
 
             if (body.enable)
             {
-                body.preUpdate();
+                body.preUpdate(willStep, fixedDelta);
             }
         }
 
-        var stepsThisFrame = 1;
-        var fixedDelta = this._frameTime;
-        var msPerFrame = this._frameTimeMS * this.timeScale;
+        //  We know that a step will happen this frame, so let's bundle it all together to save branching and iteration costs
+        if (willStep)
+        {
+            this._elapsed -= msPerFrame;
+            this.stepsLastFrame = 1;
 
-        this._elapsed += delta - msPerFrame;
+            //  Optionally populate our dynamic collision tree
+            if (this.useTree)
+            {
+                this.tree.clear();
+                this.tree.load(bodies);
+            }
 
-        //  Always step once, no matter what
-        this.step(fixedDelta);
+            //  Process any colliders
+            var colliders = this.colliders.update();
 
+            for (i = 0; i < colliders.length; i++)
+            {
+                var collider = colliders[i];
+
+                if (collider.active)
+                {
+                    collider.update();
+                }
+            }
+        }
+
+        //  Process any additional steps this frame
         while (this._elapsed >= msPerFrame)
         {
             this._elapsed -= msPerFrame;
 
-            stepsThisFrame++;
-
             this.step(fixedDelta);
         }
-
-        this.stepsLastFrame = stepsThisFrame;
     },
 
     /**
@@ -993,6 +1017,8 @@ var World = new Class({
                 collider.update();
             }
         }
+
+        this.stepsLastFrame++;
     },
 
     /**
@@ -1011,13 +1037,17 @@ var World = new Class({
         var dynamic = this.bodies;
         var staticBodies = this.staticBodies;
 
-        for (i = 0; i < len; i++)
+        //  We don't need to postUpdate if there wasn't a step this frame
+        if (this.stepsLastFrame)
         {
-            body = bodies[i];
-
-            if (body.enable)
+            for (i = 0; i < len; i++)
             {
-                body.postUpdate();
+                body = bodies[i];
+    
+                if (body.enable)
+                {
+                    body.postUpdate();
+                }
             }
         }
 
