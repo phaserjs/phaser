@@ -14,7 +14,8 @@ var TWEEN_CONST = require('./tween/const');
  * @classdesc
  * A Timeline combines multiple Tweens into one. Its overall behavior is otherwise similar to a single Tween.
  *
- * The Timeline updates all of its Tweens simultaneously. Its methods allow you to easily build a sequence of Tweens (each one starting after the previous one) or run multiple Tweens at once during given parts of the Timeline.
+ * The Timeline updates all of its Tweens simultaneously. Its methods allow you to easily build a sequence
+ * of Tweens (each one starting after the previous one) or run multiple Tweens at once during given parts of the Timeline.
  *
  * @class Timeline
  * @memberof Phaser.Tweens
@@ -695,8 +696,6 @@ var Timeline = new Class({
             return;
         }
 
-        var rawDelta = delta;
-
         if (this.useFrames)
         {
             delta = 1 * this.manager.timeScale;
@@ -720,7 +719,7 @@ var Timeline = new Class({
                 {
                     var tween = this.data[i];
 
-                    if (tween.update(timestamp, rawDelta))
+                    if (tween.update(timestamp, delta))
                     {
                         stillRunning--;
                     }
