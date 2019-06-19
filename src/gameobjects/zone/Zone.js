@@ -165,6 +165,8 @@ var Zone = new Class({
         this.width = width;
         this.height = height;
 
+        this.updateDisplayOrigin();
+
         var input = this.input;
 
         if (resizeInput && input && !input.customHitArea)
