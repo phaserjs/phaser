@@ -491,6 +491,32 @@ var Transform = {
         }
 
         return tempMatrix;
+    },
+
+    /**
+     * Gets the sum total rotation of all of this Game Objects parent Containers.
+     * 
+     * The returned value is in radians and will be zero if this Game Object has no parent container.
+     *
+     * @method Phaser.GameObjects.Components.Transform#getParentRotation
+     * @since 3.18.0
+     *
+     * @return {number} The sum total rotation, in radians, of all parent containers of this Game Object.
+     */
+    getParentRotation: function ()
+    {
+        var rotation = 0;
+
+        var parent = this.parentContainer;
+
+        while (parent)
+        {
+            rotation += parent.rotation;
+
+            parent = parent.parentContainer;
+        }
+
+        return rotation;
     }
 
 };
