@@ -15,8 +15,10 @@
  * @property {number} localX - The x coordinate that the Pointer interacted with this object on, relative to the Game Object's top-left position.
  * @property {number} localY - The y coordinate that the Pointer interacted with this object on, relative to the Game Object's top-left position.
  * @property {(0|1|2)} dragState - The current drag state of this Interactive Object. 0 = Not being dragged, 1 = being checked for drag, or 2 = being actively dragged.
- * @property {number} dragStartX - The x coordinate that the Pointer started dragging this Interactive Object from.
- * @property {number} dragStartY - The y coordinate that the Pointer started dragging this Interactive Object from.
+ * @property {number} dragStartX - The x coordinate of the Game Object that owns this Interactive Object when the drag started.
+ * @property {number} dragStartY - The y coordinate of the Game Object that owns this Interactive Object when the drag started.
+ * @property {number} dragStartXGlobal - The x coordinate that the Pointer started dragging this Interactive Object from.
+ * @property {number} dragStartYGlobal - The y coordinate that the Pointer started dragging this Interactive Object from.
  * @property {number} dragX - The x coordinate that this Interactive Object is currently being dragged to.
  * @property {number} dragY - The y coordinate that this Interactive Object is currently being dragged to.
  */

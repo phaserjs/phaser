@@ -51,6 +51,8 @@ var CreateInteractiveObject = function (gameObject, hitArea, hitAreaCallback)
 
         dragStartX: 0,
         dragStartY: 0,
+        dragStartXGlobal: 0,
+        dragStartYGlobal: 0,
 
         dragX: 0,
         dragY: 0
