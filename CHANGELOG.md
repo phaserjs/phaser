@@ -198,9 +198,6 @@ My thanks to the following for helping with the Phaser 3 Examples, Docs and Type
 
 @PhaserEditor2D @samme @Nallebeorn @Punkiebe @rootasjey @Sun0fABeach
 
-
-
-
 ## Version 3.17.0 - Motoko - 10th May 2019
 
 ### Shaders
