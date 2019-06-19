@@ -471,7 +471,7 @@ var Pointer = new Class({
         /**
          * The z-axis scroll amount that occurred due to the user moving a mouse wheel or similar input device.
          *
-         * @name Phaser.Input.Pointer#deltaX
+         * @name Phaser.Input.Pointer#deltaZ
          * @type {number}
          * @default 0
          * @since 3.18.0
