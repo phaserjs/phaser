@@ -160,6 +160,11 @@ The following changes took place in the Pointer class:
 * When enabling Arcade Physics Body debug it will now draw only the faces marked for collision, allowing you to easily see if a face is disabled or not (thanks @BdR76)
 * `Transform.getParentRotation` is a new method available to all GameObjects that will return the sum total rotation of all of the Game Objects parent Containers, if it has any.
 * `Tween.restart` now sets the Tween properties `elapsed`, `progress`, `totalElapsed` and `totalProgress` to zero when called, rather than adding to existing values should the tween already be running.
+* `ArcadePhysics.Body.resetFlags` is a new method that prepares the Body for a physics step by resetting the `wasTouching`, `touching` and `blocked` states.
+* `ArcadePhysics.Body.preUpdate` has two new arguments `willStep` and `delta`. If `willStep` is true then the body will call resetFlags, sync with the parent Game Object and then run one iteration of `Body.update`, using the provided delta. If false, only the Game Object sync takes place.
+* `ArcadePhysics.World.update` will now determine if a physics step is going to happen this frame or not. If not, it no longer calls `World.step` (fix #4529, thanks @ampled). If a step _is_ going to happen, then it now handles this with one iteration of the bodies array, instead of two. It has also inlined a single world step, avoiding branching out. If extra world steps are required this frame (such as in high Hz environments) then `World.step` is called accordingly.
+* `ArcadePhysics.World.postUpdate` will no longer call `Body.postUpdate` on all of the bodies if no World step has taken place this frame.
+* `ArcadePhysics.World.step` will now increment the `stepsLastFrame` counter, allowing `postUpdate` to determine if bodies should be processed should World.step have been invoked manually.
 
 ### Bug Fixes
 
