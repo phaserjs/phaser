@@ -419,23 +419,31 @@ var Tween = new Class({
      */
     restart: function ()
     {
-        if (this.state === TWEEN_CONST.PENDING_ADD)
-        {
-            return this;
-        }
+        //  Reset these so they're ready for the next update
+        this.elapsed = 0;
+        this.progress = 0;
+        this.totalElapsed = 0;
+        this.totalProgress = 0;
 
-        if (this.state === TWEEN_CONST.REMOVED)
+        if (this.state === TWEEN_CONST.ACTIVE)
+        {
+            return this.seek(0);
+        }
+        else if (this.state === TWEEN_CONST.REMOVED)
         {
             this.seek(0);
             this.parent.makeActive(this);
+
+            return this;
+        }
+        else if (this.state === TWEEN_CONST.PENDING_ADD)
+        {
+            return this;
         }
         else
         {
-            this.stop();
-            this.play();
+            return this.play();
         }
-
-        return this;
     },
 
     /**
