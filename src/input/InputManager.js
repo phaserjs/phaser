@@ -366,17 +366,16 @@ var InputManager = new Class({
      * @method Phaser.Input.InputManager#preRender
      * @private
      * @since 3.18.0
-     *
-     * @param {number} time - The time stamp value of this game step.
      */
-    preRender: function (time)
+    preRender: function ()
     {
+        var time = this.game.loop.now;
+        var delta = this.game.loop.delta;
+        var scenes = this.game.scene.getScenes(true, true);
+
         this.time = time;
 
         this.events.emit(Events.MANAGER_UPDATE);
-
-        var scenes = this.game.scene.getScenes(true, true);
-        var delta = this.game.loop.delta;
 
         for (var i = 0; i < scenes.length; i++)
         {
