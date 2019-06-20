@@ -40140,8 +40140,10 @@ declare namespace Phaser {
             /**
              * This is called automatically by the Input Manager.
              * It emits events for plugins to listen to and also handles polling updates, if enabled.
+             * @param time The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+             * @param delta The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
              */
-            updatePoll(): boolean;
+            updatePoll(time: number, delta: number): boolean;
 
             /**
              * Clears a Game Object so it no longer has an Interactive Object associated with it.
