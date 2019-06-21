@@ -3,7 +3,9 @@
 ## Version 3.19.0 - Naofumi - in development
 
 
+### Bug Fixes
 
+* The Scale Manager would throw the error 'TypeError: this.removeFullscreenTarget is not a function' when entering full-screen mode. It would still enter fullscreen, but the error would appear in the console. Fix #4605 (thanks @darklightcode)
 
 ## Version 3.18.1 - Raphtalia - 20th June 2019
 
