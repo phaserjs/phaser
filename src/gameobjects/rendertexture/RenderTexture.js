@@ -333,7 +333,8 @@ var RenderTexture = new Class({
         {
             if (this.frame.name === '__BASE')
             {
-                //  Tesize the texture
+                //  Resize the texture
+
                 this.canvas.width = width;
                 this.canvas.height = height;
 
