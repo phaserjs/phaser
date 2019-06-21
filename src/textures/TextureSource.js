@@ -22,7 +22,7 @@ var ScaleModes = require('../renderer/ScaleModes');
  * @since 3.0.0
  *
  * @param {Phaser.Textures.Texture} texture - The Texture this TextureSource belongs to.
- * @param {(HTMLImageElement|HTMLCanvasElement)} source - The source image data.
+ * @param {(HTMLImageElement|HTMLCanvasElement|Phaser.GameObjects.RenderTexture|WebGLTexture)} source - The source image data.
  * @param {integer} [width] - Optional width of the source image. If not given it's derived from the source itself.
  * @param {integer} [height] - Optional height of the source image. If not given it's derived from the source itself.
  */
@@ -54,10 +54,10 @@ var TextureSource = new Class({
 
         /**
          * The source of the image data.
-         * This is either an Image Element, a Canvas Element or a RenderTexture.
+         * This is either an Image Element, a Canvas Element, a RenderTexture or a WebGLTexture.
          *
          * @name Phaser.Textures.TextureSource#source
-         * @type {(HTMLImageElement|HTMLCanvasElement|Phaser.GameObjects.RenderTexture)}
+         * @type {(HTMLImageElement|HTMLCanvasElement|Phaser.GameObjects.RenderTexture|WebGLTexture)}
          * @since 3.12.0
          */
         this.source = source;
@@ -150,7 +150,8 @@ var TextureSource = new Class({
         this.isPowerOf2 = IsSizePowerOfTwo(this.width, this.height);
 
         /**
-         * The WebGL Texture of the source image.
+         * The WebGL Texture of the source image. If this TextureSource is driven from a WebGLTexture
+         * already, then this is a reference to that WebGLTexture.
          *
          * @name Phaser.Textures.TextureSource#glTexture
          * @type {?WebGLTexture}
@@ -186,9 +187,13 @@ var TextureSource = new Class({
                  
                     this.glTexture = this.renderer.createTextureFromSource(null, this.width, this.height, this.scaleMode);
                 }
-                else
+                else if (!(this.source instanceof WebGLTexture))
                 {
                     this.glTexture = this.renderer.createTextureFromSource(this.image, this.width, this.height, this.scaleMode);
+                }
+                else
+                {
+                    this.glTexture = this.source;
                 }
             }
             else if (this.isRenderTexture)
@@ -235,19 +240,6 @@ var TextureSource = new Class({
         if (this.renderer.gl && this.isCanvas)
         {
             this.glTexture = this.renderer.canvasToTexture(this.image, this.glTexture);
-
-            //  Update all the Frames using this TextureSource
-
-            /*
-            var index = this.texture.getTextureSourceIndex(this);
-            
-            var frames = this.texture.getFramesFromTextureSource(index, true);
-
-            for (var i = 0; i < frames.length; i++)
-            {
-                frames[i].glTexture = this.glTexture;
-            }
-            */
         }
     },
 
