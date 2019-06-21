@@ -1226,14 +1226,14 @@ var ScaleManager = new Class({
                 if (fullscreen.keyboard)
                 {
                     fsTarget[fullscreen.request](Element.ALLOW_KEYBOARD_INPUT)
-                        .then(this.fullscreenSuccessHandler)
-                        .catch(this.fullscreenErrorHandler);
+                        .then(this.fullscreenSuccessHandler.bind(this))
+                        .catch(this.fullscreenErrorHandler.bind(this));
                 }
                 else
                 {
                     fsTarget[fullscreen.request](fullscreenOptions)
-                        .then(this.fullscreenSuccessHandler)
-                        .catch(this.fullscreenErrorHandler);
+                        .then(this.fullscreenSuccessHandler.bind(this))
+                        .catch(this.fullscreenErrorHandler.bind(this));
                 }
             }
             else
