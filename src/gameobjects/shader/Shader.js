@@ -640,10 +640,22 @@ var Shader = new Class({
         {
             var frame = textureManager.getFrame(textureKey);
             var uniform = this.uniforms[uniformKey];
+            var source = frame.source;
 
             uniform.textureKey = textureKey;
-            uniform.source = frame.source.image;
+            uniform.source = source.image;
             uniform.value = frame.glTexture;
+
+            if (source.isGLTexture)
+            {
+                if (!textureData)
+                {
+                    textureData = {};
+                }
+
+                textureData.width = source.width;
+                textureData.height = source.height;
+            }
 
             if (textureData)
             {
