@@ -141,6 +141,15 @@ var TextureSource = new Class({
         this.isRenderTexture = (source.type === 'RenderTexture');
 
         /**
+         * Is the source image a WebGLTexture?
+         *
+         * @name Phaser.Textures.TextureSource#isGLTexture
+         * @type {boolean}
+         * @since 3.19.0
+         */
+        this.isGLTexture = (source instanceof WebGLTexture);
+
+        /**
          * Are the source image dimensions a power of two?
          *
          * @name Phaser.Textures.TextureSource#isPowerOf2
@@ -187,13 +196,13 @@ var TextureSource = new Class({
                  
                     this.glTexture = this.renderer.createTextureFromSource(null, this.width, this.height, this.scaleMode);
                 }
-                else if (!(this.source instanceof WebGLTexture))
+                else if (this.isGLTexture)
                 {
-                    this.glTexture = this.renderer.createTextureFromSource(this.image, this.width, this.height, this.scaleMode);
+                    this.glTexture = this.source;
                 }
                 else
                 {
-                    this.glTexture = this.source;
+                    this.glTexture = this.renderer.createTextureFromSource(this.image, this.width, this.height, this.scaleMode);
                 }
             }
             else if (this.isRenderTexture)
