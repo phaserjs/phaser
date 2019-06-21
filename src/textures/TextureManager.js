@@ -371,6 +371,38 @@ var TextureManager = new Class({
     },
 
     /**
+     * Takes a WebGL Texture and creates a Phaser Texture from it, which is added to the Texture Manager using the given key.
+     * 
+     * This allows you to then use the Texture as a normal texture for texture based Game Objects like Sprites.
+     * 
+     * This is a WebGL only feature.
+     *
+     * @method Phaser.Textures.TextureManager#addGLTexture
+     * @fires Phaser.Textures.Events#ADD
+     * @since 3.19.0
+     *
+     * @param {string} key - The unique string-based key of the Texture.
+     * @param {WebGLTexture} glTexture - The source Render Texture.
+     *
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
+     */
+    addGLTexture: function (key, glTexture, width, height)
+    {
+        var texture = null;
+
+        if (this.checkKey(key))
+        {
+            texture = this.create(key, glTexture, width, height);
+
+            texture.add('__BASE', 0, 0, 0, width, height);
+
+            this.emit(Events.ADD, key, texture);
+        }
+        
+        return texture;
+    },
+
+    /**
      * Adds a Render Texture to the Texture Manager using the given key.
      * This allows you to then use the Render Texture as a normal texture for texture based Game Objects like Sprites.
      *
