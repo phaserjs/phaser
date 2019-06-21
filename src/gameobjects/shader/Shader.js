@@ -409,6 +409,9 @@ var Shader = new Class({
 
             this.glTexture = renderer.createTextureFromSource(null, width, height, 0);
 
+            //  So shaders don't flip when rendered to Sprites
+            this.glTexture.isRenderTexture = true;
+
             this.framebuffer = renderer.createFramebuffer(width, height, this.glTexture, false);
 
             this._rendererWidth = width;
@@ -1027,6 +1030,10 @@ var Shader = new Class({
         if (this.renderToTexture)
         {
             renderer.setFramebuffer(this.framebuffer);
+
+            gl.clearColor(0, 0, 0, 0);
+
+            gl.clear(gl.COLOR_BUFFER_BIT);
         }
 
         renderer.setProgram(program);
