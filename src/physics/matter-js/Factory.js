@@ -400,10 +400,10 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#joint
      * @since 3.0.0
      *
-     * @param {MatterJS.Body} bodyA - [description]
-     * @param {MatterJS.Body} bodyB - [description]
-     * @param {number} length - [description]
-     * @param {number} [stiffness=1] - [description]
+     * @param {MatterJS.Body} bodyA - The first possible `Body` that this constraint is attached to.
+     * @param {MatterJS.Body} bodyB - The second possible `Body` that this constraint is attached to.
+     * @param {number} [length] - A Number that specifies the target resting length of the constraint. If not given it is calculated automatically in `Constraint.create` from initial positions of the `constraint.bodyA` and `constraint.bodyB`.
+     * @param {number} [stiffness=1] - A Number that specifies the stiffness of the constraint, i.e. the rate at which it returns to its resting `constraint.length`. A value of `1` means the constraint should be very stiff. A value of `0.2` means the constraint acts as a soft spring.
      * @param {object} [options={}] - [description]
      *
      * @return {MatterJS.Constraint} A Matter JS Constraint.
@@ -421,7 +421,7 @@ var Factory = new Class({
      *
      * @param {MatterJS.Body} bodyA - The first possible `Body` that this constraint is attached to.
      * @param {MatterJS.Body} bodyB - The second possible `Body` that this constraint is attached to.
-     * @param {number} length - A Number that specifies the target resting length of the constraint. It is calculated automatically in `Constraint.create` from initial positions of the `constraint.bodyA` and `constraint.bodyB`
+     * @param {number} [length] - A Number that specifies the target resting length of the constraint. If not given it is calculated automatically in `Constraint.create` from initial positions of the `constraint.bodyA` and `constraint.bodyB`.
      * @param {number} [stiffness=1] - A Number that specifies the stiffness of the constraint, i.e. the rate at which it returns to its resting `constraint.length`. A value of `1` means the constraint should be very stiff. A value of `0.2` means the constraint acts as a soft spring.
      * @param {object} [options={}] - [description]
      *
@@ -438,10 +438,10 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#constraint
      * @since 3.0.0
      *
-     * @param {MatterJS.Body} bodyA - [description]
-     * @param {MatterJS.Body} bodyB - [description]
-     * @param {number} [length] - [description]
-     * @param {number} [stiffness=1] - [description]
+     * @param {MatterJS.Body} bodyA - The first possible `Body` that this constraint is attached to.
+     * @param {MatterJS.Body} bodyB - The second possible `Body` that this constraint is attached to.
+     * @param {number} [length] - A Number that specifies the target resting length of the constraint. If not given it is calculated automatically in `Constraint.create` from initial positions of the `constraint.bodyA` and `constraint.bodyB`.
+     * @param {number} [stiffness=1] - A Number that specifies the stiffness of the constraint, i.e. the rate at which it returns to its resting `constraint.length`. A value of `1` means the constraint should be very stiff. A value of `0.2` means the constraint acts as a soft spring.
      * @param {object} [options={}] - [description]
      *
      * @return {MatterJS.Constraint} A Matter JS Constraint.
@@ -454,7 +454,7 @@ var Factory = new Class({
         options.bodyA = (bodyA.type === 'body') ? bodyA : bodyA.body;
         options.bodyB = (bodyB.type === 'body') ? bodyB : bodyB.body;
 
-        if (length)
+        if (!isNaN(length))
         {
             options.length = length;
         }
@@ -474,9 +474,9 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#worldConstraint
      * @since 3.0.0
      *
-     * @param {MatterJS.Body} bodyB - [description]
-     * @param {number} length - [description]
-     * @param {number} [stiffness=1] - [description]
+     * @param {MatterJS.Body} bodyB - The second possible `Body` that this constraint is attached to.
+     * @param {number} [length] - A Number that specifies the target resting length of the constraint. If not given it is calculated automatically in `Constraint.create` from initial positions of the `constraint.bodyA` and `constraint.bodyB`.
+     * @param {number} [stiffness=1] - A Number that specifies the stiffness of the constraint, i.e. the rate at which it returns to its resting `constraint.length`. A value of `1` means the constraint should be very stiff. A value of `0.2` means the constraint acts as a soft spring.
      * @param {object} [options={}] - [description]
      *
      * @return {MatterJS.Constraint} A Matter JS Constraint.
@@ -487,7 +487,12 @@ var Factory = new Class({
         if (options === undefined) { options = {}; }
 
         options.bodyB = (bodyB.type === 'body') ? bodyB : bodyB.body;
-        options.length = length;
+
+        if (!isNaN(length))
+        {
+            options.length = length;
+        }
+
         options.stiffness = stiffness;
 
         var constraint = Constraint.create(options);

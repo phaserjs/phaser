@@ -16,7 +16,8 @@
 ### Bug Fixes
 
 * The Scale Manager would throw the error 'TypeError: this.removeFullscreenTarget is not a function' when entering full-screen mode. It would still enter fullscreen, but the error would appear in the console. Fix #4605 (thanks @darklightcode)
-
+* `Tilemap.renderDebug` was calling out-dated Graphics API methods, which would cause the debug to fail (thanks @Fabadiculous)
+* The `Matter.Factory.constraint`, `joint` and `worldConstraint` methods wouldn't allow a zero length constraint to be created due to a falsey check of the length argument. You can now set length to be any value, including zero, or leave it undefined to have it automatically calculated (thanks @olilanz)
 
 
 
