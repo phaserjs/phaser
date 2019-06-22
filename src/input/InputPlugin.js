@@ -2101,6 +2101,7 @@ var InputPlugin = new Class({
         var cursor = false;
         var useHandCursor = false;
         var pixelPerfect = false;
+        var customHitArea = true;
 
         //  Config object?
         if (IsPlainObject(shape))
@@ -2127,6 +2128,7 @@ var InputPlugin = new Class({
             if (!shape || !callback)
             {
                 this.setHitAreaFromTexture(gameObjects);
+                customHitArea = false;
             }
         }
         else if (typeof shape === 'function' && !callback)
@@ -2147,7 +2149,7 @@ var InputPlugin = new Class({
 
             var io = (!gameObject.input) ? CreateInteractiveObject(gameObject, shape, callback) : gameObject.input;
 
-            io.customHitArea = true;
+            io.customHitArea = customHitArea;
             io.dropZone = dropZone;
             io.cursor = (useHandCursor) ? 'pointer' : cursor;
 
