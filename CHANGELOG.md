@@ -13,6 +13,10 @@
 * `TextureManager.addGLTexture` is a new method that allows you to add a WebGLTexture directly into the Texture Manager, saved under the given key.
 * `TextureSource.isGLTexture` is a new boolean property that reflects if the data backing the underlying Texture Source is a WebGLTexture or not.
 
+### Updates
+
+* When calling `setHitArea` and not providing a shape (i.e. a texture based hit area), it will now set `customHitArea` to `false` by default (thanks @rexrainbow)
+
 ### Bug Fixes
 
 * The Scale Manager would throw the error 'TypeError: this.removeFullscreenTarget is not a function' when entering full-screen mode. It would still enter fullscreen, but the error would appear in the console. Fix #4605 (thanks @darklightcode)
