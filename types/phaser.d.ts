@@ -64601,7 +64601,7 @@ declare namespace Phaser {
                  * @param stiffness [description] Default 1.
                  * @param options [description] Default {}.
                  */
-                constraint(bodyA: MatterJS.Body, bodyB: MatterJS.Body, length?: number, stiffness?: number, options?: object): MatterJS.Constraint;
+                constraint(bodyA: MatterJS.Body, bodyB: MatterJS.Body, length: number, stiffness?: number, options?: object): MatterJS.Constraint;
 
                 /**
                  * [description]

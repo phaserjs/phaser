@@ -454,11 +454,7 @@ var Factory = new Class({
         options.bodyA = (bodyA.type === 'body') ? bodyA : bodyA.body;
         options.bodyB = (bodyB.type === 'body') ? bodyB : bodyB.body;
 
-        if (length)
-        {
-            options.length = length;
-        }
-
+        options.length = length;
         options.stiffness = stiffness;
 
         var constraint = Constraint.create(options);
@@ -487,6 +483,7 @@ var Factory = new Class({
         if (options === undefined) { options = {}; }
 
         options.bodyB = (bodyB.type === 'body') ? bodyB : bodyB.body;
+        
         options.length = length;
         options.stiffness = stiffness;
 
