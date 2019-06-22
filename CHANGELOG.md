@@ -23,6 +23,11 @@
 * `Tilemap.renderDebug` was calling out-dated Graphics API methods, which would cause the debug to fail (thanks @Fabadiculous)
 * The `Matter.Factory.constraint`, `joint` and `worldConstraint` methods wouldn't allow a zero length constraint to be created due to a falsey check of the length argument. You can now set length to be any value, including zero, or leave it undefined to have it automatically calculated (thanks @olilanz)
 
+### Examples, Documentation and TypeScript
+
+My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
+
+@vacarsu 
 
 
 
