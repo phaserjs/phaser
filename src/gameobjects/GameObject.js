@@ -313,8 +313,8 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#setData
      * @since 3.0.0
      *
-     * @param {(string|object)} key - The key to set the value for. Or an object or key value pairs. If an object the `data` argument is ignored.
-     * @param {*} data - The value to set for the given key. If an object is provided as the key this argument is ignored.
+     * @param {(string|object)} key - The key to set the value for. Or an object of key value pairs. If an object the `data` argument is ignored.
+     * @param {*} [data] - The value to set for the given key. If an object is provided as the key this argument is ignored.
      *
      * @return {this} This GameObject.
      */
