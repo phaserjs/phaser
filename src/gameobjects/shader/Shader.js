@@ -362,6 +362,22 @@ var Shader = new Class({
     },
 
     /**
+     * Compares the renderMask with the renderFlags to see if this Game Object will render or not.
+     * Also checks the Game Object against the given Cameras exclusion list.
+     *
+     * @method Phaser.GameObjects.Shader#willRender
+     * @since 3.0.0
+     *
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to check against this Game Object.
+     *
+     * @return {boolean} True if the Game Object should be rendered, otherwise false.
+     */
+    willRender: function (camera)
+    {
+        return !(!this.renderToTexture || GameObject.RENDER_MASK !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)));
+    },
+
+    /**
      * Changes this Shader so instead of rendering to the display list it renders to a
      * WebGL Framebuffer and WebGL Texture instead. This allows you to use the output
      * of this shader as an input for another shader, by mapping a sampler2D uniform
@@ -618,10 +634,64 @@ var Shader = new Class({
     },
 
     /**
+     * Sets a sampler2D uniform on this shader where the source texture is a WebGLTexture.
+     * 
+     * This allows you to feed the output from one Shader into another:
+     * 
+     * ```javascript
+     * let shader1 = this.add.shader(baseShader1, 0, 0, 512, 512).setRenderToTexture();
+     * let shader2 = this.add.shader(baseShader2, 0, 0, 512, 512).setRenderToTexture('output');
+     * 
+     * shader1.setSampler2DBuffer('iChannel0', shader2.glTexture, 512, 512);
+     * shader2.setSampler2DBuffer('iChannel0', shader1.glTexture, 512, 512);
+     * ```
+     * 
+     * In the above code, the result of baseShader1 is fed into Shader2 as the `iChannel0` sampler2D uniform.
+     * The result of baseShader2 is then fed back into shader1 again, creating a feedback loop.
+     * 
+     * If you wish to use an image from the Texture Manager as a sampler2D input for this shader,
+     * see the `Shader.setSampler2D` method.
+     * 
+     * @method Phaser.GameObjects.Shader#setSampler2DBuffer
+     * @since 3.19.0
+     * 
+     * @param {string} uniformKey - The key of the sampler2D uniform to be updated, i.e. `iChannel0`.
+     * @param {WebGLTexture} texture - A WebGLTexture reference.
+     * @param {integer} width - The width of the texture.
+     * @param {integer} height - The height of the texture.
+     * @param {integer} [textureIndex=0] - The texture index.
+     * @param {any} [textureData] - Additional texture data.
+     * 
+     * @return {this} This Shader instance.
+     */
+    setSampler2DBuffer: function (uniformKey, texture, width, height, textureIndex, textureData)
+    {
+        if (textureIndex === undefined) { textureIndex = 0; }
+        if (textureData === undefined) { textureData = {}; }
+
+        var uniform = this.uniforms[uniformKey];
+
+        uniform.value = texture;
+
+        textureData.width = width;
+        textureData.height = height;
+
+        uniform.textureData = textureData;
+
+        this._textureCount = textureIndex;
+
+        this.initSampler2D(uniform);
+
+        return this;
+    },
+
+    /**
      * Sets a sampler2D uniform on this shader.
      * 
      * The textureKey given is the key from the Texture Manager cache. You cannot use a single frame
      * from a texture, only the full image. Also, lots of shaders expect textures to be power-of-two sized.
+     * 
+     * If you wish to use another Shader as a sampler2D input for this shader, see the `Shader.setSampler2DBuffer` method.
      * 
      * @method Phaser.GameObjects.Shader#setSampler2D
      * @since 3.17.0
