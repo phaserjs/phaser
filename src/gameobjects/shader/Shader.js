@@ -374,7 +374,7 @@ var Shader = new Class({
      */
     willRender: function (camera)
     {
-        return !(!this.renderToTexture || GameObject.RENDER_MASK !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)));
+        return !(this.renderToTexture || GameObject.RENDER_MASK !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)));
     },
 
     /**
