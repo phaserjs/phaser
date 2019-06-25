@@ -978,6 +978,11 @@ var Shader = new Class({
             location = uniform.uniformLocation;
             value = uniform.value;
 
+            if (value === null)
+            {
+                continue;
+            }
+
             if (length === 1)
             {
                 if (uniform.glMatrix)

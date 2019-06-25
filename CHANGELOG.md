@@ -19,6 +19,7 @@
 ### Updates
 
 * When calling `setHitArea` and not providing a shape (i.e. a texture based hit area), it will now set `customHitArea` to `false` by default (thanks @rexrainbow)
+* The Shader will no longer set uniforms if the values are `null`, saving on GL ops.
 
 ### Bug Fixes
 
