@@ -15,6 +15,7 @@
 * `TextureSource.isGLTexture` is a new boolean property that reflects if the data backing the underlying Texture Source is a WebGLTexture or not.
 * `TextureTintPipeline.batchSprite` will now flip the UV if the TextureSource comes from a GLTexture.
 * `Math.ToXY` is a new mini function that will take a given index and return a Vector2 containing the x and y coordinates of that index within a grid.
+* `RenderTexture.glTexture` is a new property that holds a reference to the WebGL Texture being used by the Render Texture. Useful for passing to a shader as a sampler2D.
 
 ### Updates
 
