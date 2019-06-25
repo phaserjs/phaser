@@ -260,6 +260,17 @@ var RenderTexture = new Class({
          */
         this.gl = null;
 
+        /**
+         * A reference to the WebGLTexture that is being rendered to in a WebGL Context.
+         *
+         * @name Phaser.GameObjects.RenderTexture#glTexture
+         * @type {WebGLTexture}
+         * @default null
+         * @readonly
+         * @since 3.19.0
+         */
+        this.glTexture = null;
+
         var renderer = this.renderer;
 
         if (renderer.type === CONST.WEBGL)
@@ -267,8 +278,9 @@ var RenderTexture = new Class({
             var gl = renderer.gl;
 
             this.gl = gl;
+            this.glTexture = this.frame.source.glTexture;
             this.drawGameObject = this.batchGameObjectWebGL;
-            this.framebuffer = renderer.createFramebuffer(width, height, this.frame.source.glTexture, false);
+            this.framebuffer = renderer.createFramebuffer(width, height, this.glTexture, false);
         }
         else if (renderer.type === CONST.CANVAS)
         {
@@ -345,10 +357,14 @@ var RenderTexture = new Class({
                     this.renderer.deleteTexture(this.frame.source.glTexture);
                     this.renderer.deleteFramebuffer(this.framebuffer);
 
-                    this.frame.source.glTexture = this.renderer.createTexture2D(0, gl.NEAREST, gl.NEAREST, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, null, width, height, false);
-                    this.framebuffer = this.renderer.createFramebuffer(width, height, this.frame.source.glTexture, false);
+                    var glTexture = this.renderer.createTexture2D(0, gl.NEAREST, gl.NEAREST, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, null, width, height, false);
 
-                    this.frame.glTexture = this.frame.source.glTexture;
+                    this.framebuffer = this.renderer.createFramebuffer(width, height, glTexture, false);
+
+                    this.frame.source.isRenderTexture = true;
+
+                    this.frame.glTexture = glTexture;
+                    this.glTexture = glTexture;
                 }
 
                 this.frame.source.width = width;
@@ -1079,6 +1095,7 @@ var RenderTexture = new Class({
             this.context = null;
             this.framebuffer = null;
             this.texture = null;
+            this.glTexture = null;
         }
     }
 
