@@ -963,6 +963,8 @@ var WebGLRenderer = new Class({
      */
     setScissor: function (x, y, width, height, drawingBufferHeight)
     {
+        if (drawingBufferHeight === undefined) { drawingBufferHeight = this.drawingBufferHeight; }
+
         var gl = this.gl;
 
         var current = this.currentScissor;
