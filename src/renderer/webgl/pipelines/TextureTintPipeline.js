@@ -567,8 +567,8 @@ var TextureTintPipeline = new Class({
             frameWidth *= -1;
         }
 
-        //  Invert the flipY if this is a GLTexture
-        var flipY = sprite.flipY ^ (frame.source.isGLTexture ? 1 : 0);
+        //  Invert the flipY if this is coming from a GLTexture
+        var flipY = sprite.flipY ^ ((frame.source.isGLTexture && !texture.flipY) ? 1 : 0);
 
         if (flipY)
         {
