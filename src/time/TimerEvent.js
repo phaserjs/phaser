@@ -274,7 +274,7 @@ var TimerEvent = new Class({
      * @method Phaser.Time.TimerEvent#remove
      * @since 3.0.0
      *
-     * @param {boolean} [dispatchCallback] - If `true` (by default `false`), the function of the Timer Event will be called before its removal from its Clock.
+     * @param {boolean} [dispatchCallback=false] - If `true`, the function of the Timer Event will be called before its removal.
      */
     remove: function (dispatchCallback)
     {
