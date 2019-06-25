@@ -14,6 +14,7 @@
 * `TextureManager.addGLTexture` is a new method that allows you to add a WebGLTexture directly into the Texture Manager, saved under the given key.
 * `TextureSource.isGLTexture` is a new boolean property that reflects if the data backing the underlying Texture Source is a WebGLTexture or not.
 * `TextureTintPipeline.batchSprite` will now flip the UV if the TextureSource comes from a GLTexture.
+* `Math.ToXY` is a new mini function that will take a given index and return a Vector2 containing the x and y coordinates of that index within a grid.
 
 ### Updates
 

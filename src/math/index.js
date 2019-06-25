@@ -57,6 +57,7 @@ var PhaserMath = {
     SinCosTableGenerator: require('./SinCosTableGenerator'),
     SmootherStep: require('./SmootherStep'),
     SmoothStep: require('./SmoothStep'),
+    ToXY: require('./ToXY'),
     TransformXY: require('./TransformXY'),
     Within: require('./Within'),
     Wrap: require('./Wrap'),
