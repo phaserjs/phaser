@@ -1426,7 +1426,7 @@ Tween.TYPES = [
 /**
  * Creates a new Tween object.
  *
- * Note: This method will only be available Tweens have been built into Phaser.
+ * Note: This method will only be available if Tweens have been built into Phaser.
  *
  * @method Phaser.GameObjects.GameObjectFactory#tween
  * @since 3.0.0
