@@ -573,8 +573,6 @@ var Tween = new Class({
             this.state = TWEEN_CONST.PENDING_ADD;
             this._pausedState = TWEEN_CONST.INIT;
 
-            console.log('Tween.init - pending_add - skipping set-up');
-
             return false;
         }
 
@@ -603,15 +601,18 @@ var Tween = new Class({
 
         this.state = TWEEN_CONST.INIT;
 
-        console.log('Tween.init - active');
-
         return true;
     },
 
+    /**
+     * Internal method that makes this Tween active within the TweenManager
+     * and emits the onActive event and callback.
+     *
+     * @method Phaser.Tweens.Tween#makeActive
+     * @since 3.19.0
+     */
     makeActive: function ()
     {
-        console.log('Tween.makeActive');
-
         this.parent.makeActive(this);
 
         //  When the Tween is moved from the pending to the active list in the manager, even if playback delayed
@@ -728,14 +729,10 @@ var Tween = new Class({
     {
         if (resetFromTimeline === undefined) { resetFromTimeline = false; }
 
-        console.log('Tween.play');
-
         var state = this.state;
 
         if (state === TWEEN_CONST.INIT && !this.parentIsTimeline)
         {
-            console.log('PLAY_READY');
-
             this.resetTweenData(false);
 
             this.state = TWEEN_CONST.ACTIVE;
@@ -856,20 +853,31 @@ var Tween = new Class({
     },
 
     /**
-     * Attempts to seek to a specific position in a Tween.
+     * Seeks to a specific point in the Tween.
+     * 
+     * **Note:** You cannot seek a Tween that repeats or loops forever, or that has an unusually long total duration.
+     * 
+     * The given position is a value between 0 and 1 which represents how far through the Tween to seek to.
+     * A value of 0.5 would seek to half-way through the Tween, where-as a value of zero would seek to the start.
+     * 
+     * Note that the seek takes the entire duration of the Tween into account, including delays, loops and repeats.
+     * For example, a Tween that lasts for 2 seconds, but that loops 3 times, would have a total duration of 6 seconds,
+     * so seeking to 0.5 would seek to 3 seconds into the Tween, as that's half-way through its _entire_ duration.
+     * 
+     * Seeking works by resetting the Tween to its initial values and then iterating through the Tween at `delta`
+     * jumps per step. The longer the Tween, the longer this can take.
      *
      * @method Phaser.Tweens.Tween#seek
      * @since 3.0.0
      *
      * @param {number} toPosition - A value between 0 and 1 which represents the progress point to seek to.
+     * @param {number} [delta=16.6] - The size of each step when seeking through the Tween. A higher value completes faster but at a cost of less precision.
      *
      * @return {this} This Tween instance.
      */
     seek: function (toPosition, delta)
     {
         if (delta === undefined) { delta = 16.6; }
-
-        console.log(toPosition);
 
         if (this.totalDuration >= 3600000)
         {
@@ -887,10 +895,6 @@ var Tween = new Class({
         this.progress = 0;
         this.totalElapsed = 0;
         this.totalProgress = 0;
-
-        // this.loopCounter = 0;
-        // this.countdown = 0;
-        // this.resetTweenData(true);
 
         var data = this.data;
         var totalTargets = this.totalTargets;
@@ -912,8 +916,6 @@ var Tween = new Class({
             tweenData.repeat = gen.repeat(i, totalTargets, target);
             tweenData.repeatDelay = gen.repeatDelay(i, totalTargets, target);
 
-            // tweenData.start = tweenData.getStartValue(tweenData.target, tweenData.key, tweenData.start);
-            // tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.end);
             tweenData.current = tweenData.start;
             tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
 
@@ -926,7 +928,7 @@ var Tween = new Class({
             }
         }
 
-        // this.calcDuration();
+        this.calcDuration();
 
         var wasPaused = false;
 
@@ -1146,7 +1148,6 @@ var Tween = new Class({
                 //  Anything still running? If not, we're done
                 if (!stillRunning)
                 {
-                    console.log('!stillRunning');
                     this.nextState();
                 }
 

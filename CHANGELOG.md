@@ -30,6 +30,7 @@
 * `Pointer.getDuration` would return a negative / static value on desktop, or NaN on mobile, because the base time wasn't being pulled in from the Input Manager properly. Fix #4612 (thanks @BobtheUltimateProgrammer)
 * `Pointer.downTime`, `Pointer.upTime` and `Pointer.moveTime` would be set to NaN on mobile browsers where Touch.timeStamp didn't exist. Fix #4612 (thanks @BobtheUltimateProgrammer)
 * `WebGLRenderer.setScissor` will default the `drawingBufferHeight` if no argument is provided, stopping NaN scissor heights.
+* `Tween.seek` has been rewritten so you can now seek to any point in the Tween, regardless of repeats, loops, delays and hold settings. Fix #4409 (thanks @cristib84)
 
 ### Examples, Documentation and TypeScript
 
