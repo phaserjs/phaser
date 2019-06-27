@@ -606,11 +606,11 @@ var Tween = new Class({
             var target = tweenData.target;
             var gen = tweenData.gen;
 
-            tweenData.delay = gen.delay(i, totalTargets, target);
-            tweenData.duration = Math.max(gen.duration(i, totalTargets, target), 0.001);
-            tweenData.hold = gen.hold(i, totalTargets, target);
-            tweenData.repeat = gen.repeat(i, totalTargets, target);
-            tweenData.repeatDelay = gen.repeatDelay(i, totalTargets, target);
+            tweenData.delay = gen.delay(i, totalTargets, target, this);
+            tweenData.duration = Math.max(gen.duration(i, totalTargets, target, this), 0.001);
+            tweenData.hold = gen.hold(i, totalTargets, target, this);
+            tweenData.repeat = gen.repeat(i, totalTargets, target, this);
+            tweenData.repeatDelay = gen.repeatDelay(i, totalTargets, target, this);
         }
 
         this.calcDuration();
