@@ -3,6 +3,7 @@
  * @since 3.18.0
  *
  * @property {(number|string|Phaser.Types.Tweens.GetEndCallback|Phaser.Types.Tweens.TweenPropConfig)} [value] - What the property will be at the END of the Tween.
+ * @property {Phaser.Types.Tweens.GetActiveCallback} [getActive] - What the property will be set to immediately when this tween becomes active.
  * @property {Phaser.Types.Tweens.GetEndCallback} [getEnd] - What the property will be at the END of the Tween.
  * @property {Phaser.Types.Tweens.GetStartCallback} [getStart] - What the property will be at the START of the Tween.
  * @property {(string|function)} [ease] - The ease function this tween uses.

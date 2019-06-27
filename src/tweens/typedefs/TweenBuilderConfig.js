@@ -30,7 +30,7 @@
  * @property {Phaser.Types.Tweens.TweenOnRepeatCallback} [onRepeat] - A function to call each time the tween repeats. Called once per property per target.
  * @property {array} [onRepeatParams] - Additional parameters to pass to `onRepeat`.
  * @property {any} [onRepeatScope] - Scope (this) for `onRepeat`.
- * @property {Phaser.Types.Tweens.TweenOnStartCallback} [onStart] - A function to call when the tween starts.
+ * @property {Phaser.Types.Tweens.TweenOnStartCallback} [onStart] - A function to call when the tween starts playback, after any delays have expired.
  * @property {array} [onStartParams] - Additional parameters to pass to `onStart`.
  * @property {any} [onStartScope] - Scope (this) for `onStart`.
  * @property {Phaser.Types.Tweens.TweenOnUpdateCallback} [onUpdate] - A function to call each time the tween steps. Called once per property per target.
@@ -39,6 +39,9 @@
  * @property {Phaser.Types.Tweens.TweenOnYoyoCallback} [onYoyo] - A function to call each time the tween yoyos. Called once per property per target.
  * @property {array} [onYoyoParams] - Additional parameters to pass to `onYoyo`.
  * @property {any} [onYoyoScope] - Scope (this) for `onYoyo`.
+ * @property {Phaser.Types.Tweens.TweenOnActiveCallback} [onActive] - A function to call when the tween becomes active within the Tween Manager.
+ * @property {array} [onActiveParams] - Additional parameters to pass to `onActive`.
+ * @property {any} [onActiveScope] - Scope (this) for `onActive`.
  *
  * @example
  * {
