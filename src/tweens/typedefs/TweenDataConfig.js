@@ -4,6 +4,7 @@
  *
  * @property {any} target - The target to tween.
  * @property {string} key - The property of the target being tweened.
+ * @property {?function} getActiveValue - If set, is invoked _immediately_ as soon as the TweenData is running, and is set on the target property.
  * @property {function} getEndValue - The returned value sets what the property will be at the END of the Tween.
  * @property {function} getStartValue - The returned value sets what the property will be at the START of the Tween.
  * @property {function} ease - The ease function this tween uses.

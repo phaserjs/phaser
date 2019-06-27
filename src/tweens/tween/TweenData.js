@@ -5,9 +5,11 @@
  */
 
 /**
- * Returns a TweenDataConfig object that describes the tween data for a unique property of a unique target. A single Tween consists of multiple TweenDatas, depending on how many properties are being changed by the Tween.
+ * Returns a TweenDataConfig object that describes the tween data for a unique property of a unique target.
+ * A single Tween consists of multiple TweenDatas, depending on how many properties are being changed by the Tween.
  *
- * This is an internal function used by the TweenBuilder and should not be accessed directly, instead, Tweens should be created using the GameObjectFactory or GameObjectCreator.
+ * This is an internal function used by the TweenBuilder and should not be accessed directly, instead,
+ * Tweens should be created using the GameObjectFactory or GameObjectCreator.
  *
  * @function Phaser.Tweens.TweenData
  * @since 3.0.0
@@ -25,10 +27,11 @@
  * @param {number} repeatDelay - Time in ms/frames before the repeat will start.
  * @param {boolean} flipX - Should toggleFlipX be called when yoyo or repeat happens?
  * @param {boolean} flipY - Should toggleFlipY be called when yoyo or repeat happens?
+ * @param {?function} [getActive] - If given, is invoked _immediately_ as soon as the TweenData is running, and is set on the target property.
  *
  * @return {Phaser.Types.Tweens.TweenDataConfig} The config object describing this TweenData.
  */
-var TweenData = function (target, key, getEnd, getStart, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY)
+var TweenData = function (target, key, getEnd, getStart, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY, getActive)
 {
     return {
 
@@ -37,6 +40,9 @@ var TweenData = function (target, key, getEnd, getStart, ease, delay, duration, 
 
         //  The property of the target to tween
         key: key,
+
+        //  What to set the property to the moment the TweenData is invoked.
+        getActiveValue: getActive,
 
         //  The returned value sets what the property will be at the END of the Tween.
         getEndValue: getEnd,

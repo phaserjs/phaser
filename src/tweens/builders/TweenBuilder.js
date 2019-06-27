@@ -79,7 +79,8 @@ var TweenBuilder = function (parent, config, defaults)
                 GetNewValue(value, 'repeat', repeat),
                 GetNewValue(value, 'repeatDelay', repeatDelay),
                 GetBoolean(value, 'flipX', flipX),
-                GetBoolean(value, 'flipY', flipY)
+                GetBoolean(value, 'flipY', flipY),
+                ops.getActive
             );
 
             data.push(tweenData);
