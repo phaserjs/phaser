@@ -801,6 +801,9 @@ var Tween = new Class({
         {
             var tweenData = data[i];
 
+            var key = tweenData.key;
+            var target = tweenData.target;
+
             tweenData.progress = 0;
             tweenData.elapsed = 0;
 
@@ -808,9 +811,9 @@ var Tween = new Class({
 
             if (resetFromLoop)
             {
-                tweenData.start = tweenData.getStartValue(tweenData.target, tweenData.key, tweenData.start);
+                tweenData.start = tweenData.getStartValue(target, key, tweenData.start);
 
-                tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.end);
+                tweenData.end = tweenData.getEndValue(target, key, tweenData.end);
 
                 tweenData.current = tweenData.start;
 
@@ -824,7 +827,13 @@ var Tween = new Class({
             if (tweenData.delay > 0)
             {
                 tweenData.elapsed = tweenData.delay;
+
                 tweenData.state = TWEEN_CONST.DELAY;
+            }
+
+            if (tweenData.getActiveValue)
+            {
+                target[key] = tweenData.getActiveValue(tweenData.target, tweenData.key, tweenData.start);
             }
         }
     },
@@ -1409,12 +1418,14 @@ var Tween = new Class({
      */
     updateTweenData: function (tween, tweenData, delta)
     {
+        var target = tweenData.target;
+
         switch (tweenData.state)
         {
             case TWEEN_CONST.PLAYING_FORWARD:
             case TWEEN_CONST.PLAYING_BACKWARD:
 
-                if (!tweenData.target)
+                if (!target)
                 {
                     tweenData.state = TWEEN_CONST.COMPLETE;
                     break;
@@ -1435,21 +1446,6 @@ var Tween = new Class({
                 var forward = (tweenData.state === TWEEN_CONST.PLAYING_FORWARD);
                 var progress = elapsed / duration;
 
-                var v;
-
-                if (forward)
-                {
-                    v = tweenData.ease(progress);
-                }
-                else
-                {
-                    v = tweenData.ease(1 - progress);
-                }
-
-                tweenData.current = tweenData.start + ((tweenData.end - tweenData.start) * v);
-
-                tweenData.target[tweenData.key] = tweenData.current;
-
                 tweenData.elapsed = elapsed;
                 tweenData.progress = progress;
 
@@ -1457,6 +1453,9 @@ var Tween = new Class({
                 {
                     if (forward)
                     {
+                        tweenData.current = tweenData.end;
+                        target[tweenData.key] = tweenData.end;
+
                         if (tweenData.hold > 0)
                         {
                             tweenData.elapsed = tweenData.hold - diff;
@@ -1470,8 +1469,28 @@ var Tween = new Class({
                     }
                     else
                     {
+                        tweenData.current = tweenData.start;
+                        target[tweenData.key] = tweenData.start;
+
                         tweenData.state = this.setStateFromStart(tween, tweenData, diff);
                     }
+                }
+                else
+                {
+                    var v = (forward) ? tweenData.ease(progress) : tweenData.ease(1 - progress);
+
+                    // if (forward)
+                    // {
+                    //     v = tweenData.ease(progress);
+                    // }
+                    // else
+                    // {
+                    //     v = tweenData.ease(1 - progress);
+                    // }
+
+                    tweenData.current = tweenData.start + ((tweenData.end - tweenData.start) * v);
+
+                    target[tweenData.key] = tweenData.current;
                 }
 
                 this.dispatchTweenDataEvent(Events.TWEEN_UPDATE, tween.callbacks.onUpdate, tweenData);
@@ -1519,15 +1538,15 @@ var Tween = new Class({
 
             case TWEEN_CONST.PENDING_RENDER:
 
-                if (tweenData.target)
+                if (target)
                 {
-                    tweenData.start = tweenData.getStartValue(tweenData.target, tweenData.key, tweenData.target[tweenData.key]);
+                    tweenData.start = tweenData.getStartValue(target, tweenData.key, target[tweenData.key]);
 
-                    tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.start);
+                    tweenData.end = tweenData.getEndValue(target, tweenData.key, tweenData.start);
 
                     tweenData.current = tweenData.start;
 
-                    tweenData.target[tweenData.key] = tweenData.start;
+                    target[tweenData.key] = tweenData.start;
 
                     tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
                 }
