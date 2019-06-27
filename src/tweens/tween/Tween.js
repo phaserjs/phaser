@@ -654,6 +654,8 @@ var Tween = new Class({
             }
             else
             {
+                this.state = TWEEN_CONST.ACTIVE;
+
                 this.emit(Events.TWEEN_LOOP, this, this.targets);
 
                 var onLoop = this.callbacks.onLoop;
@@ -664,8 +666,6 @@ var Tween = new Class({
     
                     onLoop.func.apply(onLoop.scope, onLoop.params);
                 }
-
-                this.state = TWEEN_CONST.ACTIVE;
             }
         }
         else if (this.completeDelay > 0)
@@ -675,6 +675,8 @@ var Tween = new Class({
         }
         else
         {
+            this.state = TWEEN_CONST.PENDING_REMOVE;
+
             this.emit(Events.TWEEN_COMPLETE, this, this.targets);
 
             var onComplete = this.callbacks.onComplete;
@@ -685,8 +687,6 @@ var Tween = new Class({
 
                 onComplete.func.apply(onComplete.scope, onComplete.params);
             }
-
-            this.state = TWEEN_CONST.PENDING_REMOVE;
         }
     },
 
@@ -1013,6 +1013,8 @@ var Tween = new Class({
         }
         else
         {
+            this.state = TWEEN_CONST.PENDING_REMOVE;
+
             this.emit(Events.TWEEN_COMPLETE, this, this.targets);
 
             var onComplete = this.callbacks.onComplete;
@@ -1023,8 +1025,6 @@ var Tween = new Class({
 
                 onComplete.func.apply(onComplete.scope, onComplete.params);
             }
-
-            this.state = TWEEN_CONST.PENDING_REMOVE;
         }
 
         return this;
@@ -1178,6 +1178,8 @@ var Tween = new Class({
 
                 if (this.countdown <= 0)
                 {
+                    this.state = TWEEN_CONST.ACTIVE;
+
                     this.emit(Events.TWEEN_LOOP, this, this.targets);
 
                     var onLoop = this.callbacks.onLoop;
@@ -1188,8 +1190,6 @@ var Tween = new Class({
         
                         onLoop.func.apply(onLoop.scope, onLoop.params);
                     }
-
-                    this.state = TWEEN_CONST.ACTIVE;
                 }
 
                 break;
@@ -1211,6 +1211,8 @@ var Tween = new Class({
 
                 if (this.countdown <= 0)
                 {
+                    this.state = TWEEN_CONST.PENDING_REMOVE;
+
                     this.emit(Events.TWEEN_COMPLETE, this, this.targets);
 
                     var onComplete = this.callbacks.onComplete;
@@ -1219,8 +1221,6 @@ var Tween = new Class({
                     {
                         onComplete.func.apply(onComplete.scope, onComplete.params);
                     }
-
-                    this.state = TWEEN_CONST.PENDING_REMOVE;
                 }
 
                 break;

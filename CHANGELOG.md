@@ -23,6 +23,7 @@
 * `Tween.onRepeat` will now be invoked _after_ the `repeatDelay` has expired, if any was set.
 * `easeParams` would be ignored for tweens that _didn't_ use a string for the ease function name. Fix #3826 (thanks @SBCGames)
 * You can now specify `easeParams` for any custom easing function you wish to use. Fix #3826 (thanks @SBCGames)
+* All changes to `Tween.state` are now set _before_ any events or callbacks, allowing you to modify the state of the Tween in those handlers (thanks @Cudabear)
 
 ### New Features
 
