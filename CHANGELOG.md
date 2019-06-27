@@ -27,6 +27,10 @@
 * `Tween.dispatchTweenEvent` is a new internal method that handles dispatching the new Tween Events and callbacks. This consolidates a lot of duplicate code into a single method.
 * `Tween.dispatchTweenDataEvent` is a new internal method that handles dispatching the new TweenData Events and callbacks. This consolidates a lot of duplicate code into a single method.
 * `Tween.isSeeking` is a new internal boolean flag that is used to keep track of the seek progress of a Tween.
+* `Timeline.onLoop` will now be invoked _after_ the `loopDelay` has expired, if any was set.
+* `Timeline.onComplete` will now be invoked _after_ the `completeDelay` has expired, if any was set.
+* All changes to `Timeline.state` are now set _before_ any events or callbacks, allowing you to modify the state of the Timeline in those handlers.
+* The `TIMELINE_LOOP_EVENT` has had the `loopCounter` argument removed from it. It didn't actually send the number of times the Timeline had looped (it actually sent the total remaining).
 
 ### New Features
 
