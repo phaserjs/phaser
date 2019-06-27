@@ -15,7 +15,7 @@
 * `Tween.YOYO_EVENT` is a new event that is dispatched when a tween property yoyos, after any hold delay expires. Listen to it with `tween.on('yoyo')`.
 * `Tween.onActive` is a new callback that is invoked the moment the Tween Manager brings the tween to life, even though it may not have yet started actively tweening anything due to delay settings.
 * `Tween.onStart` is now only invoked when the Tween actually starts tweening a value. Previously, it was invoked as soon as the Tween Manager activated the Tween. This has been recoded and this action is now handled by the `onActive` callback. Fix #3330 (thanks @wtravO)
-* `Tween.seek` has been rewritten so you can now seek to any point in the Tween, regardless of repeats, loops, delays and hold settings. Fix #4409 (thanks @cristib84)
+* `Tween.seek` has been rewritten so you can now seek to any point in the Tween, regardless of repeats, loops, delays and hold settings. Seeking will not invoke any callbacks or events during the seek. Fix #4409 (thanks @cristib84)
 * `Tween.hasStarted` is a new property that holds a flag signifying if the Tween has started or not. A Tween that has started is one that is actively tweening a property and not just in a delayed state.
 * `Tween.startDelay` is a new property that is set during the Tween init to hold the shortest possible time before the Tween will start tweening a value. It is decreased each update until it hits zero, after which the `onStart` callback is invoked.
 * `Tween.init` and `Tween.play` have been rewritten so they are not run multiple times when a Tween is paused before playback, or is part of a Timeline. This didn't cause any problems previously, but it was a redundant duplication of calls.
@@ -24,6 +24,9 @@
 * `easeParams` would be ignored for tweens that _didn't_ use a string for the ease function name. Fix #3826 (thanks @SBCGames)
 * You can now specify `easeParams` for any custom easing function you wish to use. Fix #3826 (thanks @SBCGames)
 * All changes to `Tween.state` are now set _before_ any events or callbacks, allowing you to modify the state of the Tween in those handlers (thanks @Cudabear)
+* `Tween.dispatchTweenEvent` is a new internal method that handles dispatching the new Tween Events and callbacks. This consolidates a lot of duplicate code into a single method.
+* `Tween.dispatchTweenDataEvent` is a new internal method that handles dispatching the new TweenData Events and callbacks. This consolidates a lot of duplicate code into a single method.
+* `Tween.isSeeking` is a new internal boolean flag that is used to keep track of the seek progress of a Tween.
 
 ### New Features
 
