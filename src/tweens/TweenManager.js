@@ -9,6 +9,7 @@ var Class = require('../utils/Class');
 var NumberTweenBuilder = require('./builders/NumberTweenBuilder');
 var PluginCache = require('../plugins/PluginCache');
 var SceneEvents = require('../scene/events');
+var StaggerBuilder = require('./builders/StaggerBuilder');
 var TimelineBuilder = require('./builders/TimelineBuilder');
 var TWEEN_CONST = require('./tween/const');
 var TweenBuilder = require('./builders/TweenBuilder');
@@ -261,6 +262,21 @@ var TweenManager = new Class({
         this._toProcess++;
 
         return tween;
+    },
+
+    /**
+     * Creates a stagger function and returns it.
+     *
+     * @method Phaser.Tweens.TweenManager#stagger
+     * @since 3.19.0
+     *
+     * @param {Phaser.Types.Tweens.StaggerBuilderConfig} config - The configuration object for the Stagger function.
+     *
+     * @return {function} The stagger function.
+     */
+    stagger: function (config)
+    {
+        return StaggerBuilder(config);
     },
 
     /**
