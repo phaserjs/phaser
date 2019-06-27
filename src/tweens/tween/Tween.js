@@ -322,7 +322,6 @@ var Tween = new Class({
          *
          * @name Phaser.Tweens.Tween#callbacks
          * @type {object}
-         * @default 0
          * @since 3.0.0
          */
         this.callbacks = {
@@ -340,7 +339,6 @@ var Tween = new Class({
          *
          * @name Phaser.Tweens.Tween#callbackScope
          * @type {any}
-         * @default 0
          * @since 3.0.0
          */
         this.callbackScope;
