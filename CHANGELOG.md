@@ -4,6 +4,7 @@
 
 ### Tween Updates
 
+* All Tween classes and functions have 100% complete JSDocs :)
 * `Tween` now extends the Event Emitter class, allowing it to emit its own events and be listened to.
 * `Tween.ACTIVE_EVENT` is a new event that is dispatched when a tween becomes active. Listen to it with `tween.on('active')`.
 * `Tween.COMPLETE_EVENT` is a new event that is dispatched when a tween completes or is stopped. Listen to it with `tween.on('complete')`.

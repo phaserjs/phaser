@@ -7,14 +7,16 @@
 var GetValue = require('../../utils/object/GetValue');
 
 /**
- * Returns an array of all tweens in the given config
+ * Internal function used by the Timeline Builder.
+ * 
+ * It returns an array of all tweens in the given timeline config.
  *
  * @function Phaser.Tweens.Builders.GetTweens
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {Phaser.Types.Tweens.TimelineBuilderConfig} config - The configuration object for the Timeline.
  *
- * @return {array} [description]
+ * @return {Phaser.Tweens.Tween[]} An array of Tween instances that the Timeline will manage.
  */
 var GetTweens = function (config)
 {
