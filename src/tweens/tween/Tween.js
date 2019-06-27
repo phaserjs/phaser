@@ -633,6 +633,7 @@ var Tween = new Class({
      * Internal method that advances to the next state of the Tween during playback.
      *
      * @method Phaser.Tweens.Tween#nextState
+     * @fires Phaser.Tweens.Events#TWEEN_LOOP
      * @fires Phaser.Tweens.Events#TWEEN_COMPLETE
      * @since 3.0.0
      */
@@ -653,6 +654,17 @@ var Tween = new Class({
             }
             else
             {
+                this.emit(Events.TWEEN_LOOP, this, this.targets);
+
+                var onLoop = this.callbacks.onLoop;
+    
+                if (onLoop)
+                {
+                    onLoop.params[1] = this.targets;
+    
+                    onLoop.func.apply(onLoop.scope, onLoop.params);
+                }
+
                 this.state = TWEEN_CONST.ACTIVE;
             }
         }
