@@ -146,7 +146,7 @@ var Tween = new Class({
 
         /**
          * Time in ms/frames before the 'onStart' event fires.
-         * This is the largest `delay` value across all of the TweenDatas of this Tween.
+         * This is the shortest `delay` value across all of the TweenDatas of this Tween.
          *
          * @name Phaser.Tweens.Tween#startDelay
          * @type {number}
@@ -609,6 +609,7 @@ var Tween = new Class({
      * and emits the onActive event and callback.
      *
      * @method Phaser.Tweens.Tween#makeActive
+     * @fires Phaser.Tweens.Events#TWEEN_ACTIVE
      * @since 3.19.0
      */
     makeActive: function ()
@@ -632,6 +633,7 @@ var Tween = new Class({
      * Internal method that advances to the next state of the Tween during playback.
      *
      * @method Phaser.Tweens.Tween#nextState
+     * @fires Phaser.Tweens.Events#TWEEN_COMPLETE
      * @since 3.0.0
      */
     nextState: function ()
@@ -641,15 +643,6 @@ var Tween = new Class({
             this.elapsed = 0;
             this.progress = 0;
             this.loopCounter--;
-
-            var onLoop = this.callbacks.onLoop;
-
-            if (onLoop)
-            {
-                onLoop.params[1] = this.targets;
-
-                onLoop.func.apply(onLoop.scope, onLoop.params);
-            }
 
             this.resetTweenData(true);
 
@@ -670,6 +663,8 @@ var Tween = new Class({
         }
         else
         {
+            this.emit(Events.TWEEN_COMPLETE, this, this.targets);
+
             var onComplete = this.callbacks.onComplete;
 
             if (onComplete)
@@ -955,6 +950,12 @@ var Tween = new Class({
 
     /**
      * Sets an event based callback to be invoked during playback.
+     * 
+     * The `type` can be: 'onActive', 'onComplete', 'onLoop', 'onRepeat', 'onStart',
+     * 'onUpdate' or 'onYoyo'.
+     * 
+     * Calling this method will replace a previously set callback for the
+     * given type, if any exists.
      *
      * @method Phaser.Tweens.Tween#setCallback
      * @since 3.0.0
@@ -962,7 +963,7 @@ var Tween = new Class({
      * @param {string} type - Type of the callback.
      * @param {function} callback - Callback function.
      * @param {array} [params] - An array of parameters for specified callbacks types.
-     * @param {object} [scope] - The context the callback will be invoked in.
+     * @param {any} [scope] - The context the callback will be invoked in.
      *
      * @return {this} This Tween instance.
      */
@@ -982,6 +983,7 @@ var Tween = new Class({
      * If you don't need a delay, or have an onComplete callback, then call `Tween.stop` instead.
      *
      * @method Phaser.Tweens.Tween#complete
+     * @fires Phaser.Tweens.Events#TWEEN_COMPLETE
      * @since 3.2.0
      *
      * @param {number} [delay=0] - The time to wait before invoking the complete callback. If zero it will fire immediately.
@@ -999,6 +1001,8 @@ var Tween = new Class({
         }
         else
         {
+            this.emit(Events.TWEEN_COMPLETE, this, this.targets);
+
             var onComplete = this.callbacks.onComplete;
 
             if (onComplete)
@@ -1081,6 +1085,9 @@ var Tween = new Class({
      * Internal method that advances the Tween based on the time values.
      *
      * @method Phaser.Tweens.Tween#update
+     * @fires Phaser.Tweens.Events#TWEEN_COMPLETE
+     * @fires Phaser.Tweens.Events#TWEEN_START
+     * @fires Phaser.Tweens.Events#TWEEN_LOOP
      * @since 3.0.0
      *
      * @param {number} timestamp - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
@@ -1120,7 +1127,7 @@ var Tween = new Class({
                     {
                         this.hasStarted = true;
 
-                        this.emit(Events.TWEEN_START, this);
+                        this.emit(Events.TWEEN_START, this, this.targets);
 
                         var onStart = this.callbacks.onStart;
 
@@ -1159,6 +1166,17 @@ var Tween = new Class({
 
                 if (this.countdown <= 0)
                 {
+                    this.emit(Events.TWEEN_LOOP, this, this.targets);
+
+                    var onLoop = this.callbacks.onLoop;
+        
+                    if (onLoop)
+                    {
+                        onLoop.params[1] = this.targets;
+        
+                        onLoop.func.apply(onLoop.scope, onLoop.params);
+                    }
+
                     this.state = TWEEN_CONST.ACTIVE;
                 }
 
@@ -1181,6 +1199,8 @@ var Tween = new Class({
 
                 if (this.countdown <= 0)
                 {
+                    this.emit(Events.TWEEN_COMPLETE, this, this.targets);
+
                     var onComplete = this.callbacks.onComplete;
 
                     if (onComplete)
@@ -1201,6 +1221,8 @@ var Tween = new Class({
      * Internal method used as part of the playback process that sets a tween to play in reverse.
      *
      * @method Phaser.Tweens.Tween#setStateFromEnd
+     * @fires Phaser.Tweens.Events#TWEEN_REPEAT
+     * @fires Phaser.Tweens.Events#TWEEN_YOYO
      * @since 3.0.0
      *
      * @param {Phaser.Tweens.Tween} tween - The Tween to update.
@@ -1224,13 +1246,12 @@ var Tween = new Class({
                 tweenData.target.toggleFlipX();
             }
 
-            //  Problem: The flip and callback and so on gets called for every TweenData that triggers it at the same time.
-            //  If you're tweening several properties it can fire for all of them, at once.
-
             if (tweenData.flipY)
             {
                 tweenData.target.toggleFlipY();
             }
+
+            this.emit(Events.TWEEN_YOYO, this, tweenData.key, tweenData.target);
 
             var onYoyo = tween.callbacks.onYoyo;
 
@@ -1267,16 +1288,6 @@ var Tween = new Class({
                 tweenData.target.toggleFlipY();
             }
 
-            var onRepeat = tween.callbacks.onRepeat;
-
-            if (onRepeat)
-            {
-                //  Element 1 is reserved for the target of the repeat (and needs setting here)
-                onRepeat.params[1] = tweenData.target;
-
-                onRepeat.func.apply(onRepeat.scope, onRepeat.params);
-            }
-
             tweenData.start = tweenData.getStartValue(tweenData.target, tweenData.key, tweenData.start);
 
             tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.start);
@@ -1294,6 +1305,18 @@ var Tween = new Class({
             }
             else
             {
+                this.emit(Events.TWEEN_REPEAT, this, tweenData.key, tweenData.target);
+
+                var onRepeat = tween.callbacks.onRepeat;
+    
+                if (onRepeat)
+                {
+                    //  Element 1 is reserved for the target of the repeat (and needs setting here)
+                    onRepeat.params[1] = tweenData.target;
+    
+                    onRepeat.func.apply(onRepeat.scope, onRepeat.params);
+                }
+
                 return TWEEN_CONST.PLAYING_FORWARD;
             }
         }
@@ -1305,6 +1328,7 @@ var Tween = new Class({
      * Internal method used as part of the playback process that sets a tween to play from the start.
      *
      * @method Phaser.Tweens.Tween#setStateFromStart
+     * @fires Phaser.Tweens.Events#TWEEN_REPEAT
      * @since 3.0.0
      *
      * @param {Phaser.Tweens.Tween} tween - The Tween to update.
@@ -1333,16 +1357,6 @@ var Tween = new Class({
                 tweenData.target.toggleFlipY();
             }
 
-            var onRepeat = tween.callbacks.onRepeat;
-
-            if (onRepeat)
-            {
-                //  Element 1 is reserved for the target of the repeat (and needs setting here)
-                onRepeat.params[1] = tweenData.target;
-
-                onRepeat.func.apply(onRepeat.scope, onRepeat.params);
-            }
-
             tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.start);
 
             //  Delay?
@@ -1358,6 +1372,18 @@ var Tween = new Class({
             }
             else
             {
+                this.emit(Events.TWEEN_REPEAT, this, tweenData.key, tweenData.target);
+
+                var onRepeat = tween.callbacks.onRepeat;
+    
+                if (onRepeat)
+                {
+                    //  Element 1 is reserved for the target of the repeat (and needs setting here)
+                    onRepeat.params[1] = tweenData.target;
+    
+                    onRepeat.func.apply(onRepeat.scope, onRepeat.params);
+                }
+
                 return TWEEN_CONST.PLAYING_FORWARD;
             }
         }
@@ -1369,6 +1395,8 @@ var Tween = new Class({
      * Internal method that advances the TweenData based on the time value given.
      *
      * @method Phaser.Tweens.Tween#updateTweenData
+     * @fires Phaser.Tweens.Events#TWEEN_UPDATE
+     * @fires Phaser.Tweens.Events#TWEEN_REPEAT
      * @since 3.0.0
      *
      * @param {Phaser.Tweens.Tween} tween - The Tween to update.
@@ -1423,6 +1451,8 @@ var Tween = new Class({
                 tweenData.elapsed = elapsed;
                 tweenData.progress = progress;
 
+                this.emit(Events.TWEEN_UPDATE, this, tweenData.key, tweenData.target);
+
                 var onUpdate = tween.callbacks.onUpdate;
 
                 if (onUpdate)
@@ -1474,6 +1504,18 @@ var Tween = new Class({
 
                 if (tweenData.elapsed <= 0)
                 {
+                    this.emit(Events.TWEEN_REPEAT, this, tweenData.key, tweenData.target);
+
+                    var onRepeat = tween.callbacks.onRepeat;
+        
+                    if (onRepeat)
+                    {
+                        //  Element 1 is reserved for the target of the repeat (and needs setting here)
+                        onRepeat.params[1] = tweenData.target;
+        
+                        onRepeat.func.apply(onRepeat.scope, onRepeat.params);
+                    }
+
                     tweenData.elapsed = Math.abs(tweenData.elapsed);
 
                     tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
