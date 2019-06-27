@@ -161,9 +161,22 @@ var Tween = new Class({
          *
          * @name Phaser.Tweens.Tween#hasStarted
          * @type {boolean}
+         * @readonly
          * @since 3.19.0
          */
         this.hasStarted = false;
+
+        /**
+         * Is this Tween currently seeking?
+         * This boolean is toggled in the `Tween.seek` method.
+         * When a tween is seeking it will not dispatch any events or callbacks.
+         *
+         * @name Phaser.Tweens.Tween#isSeeking
+         * @type {boolean}
+         * @readonly
+         * @since 3.19.0
+         */
+        this.isSeeking = false;
 
         /**
          * Time in ms/frames before the 'onComplete' event fires. This never fires if loop = -1 (as it never completes)
@@ -295,7 +308,17 @@ var Tween = new Class({
         this.totalProgress = 0;
 
         /**
-         * An object containing the various Tween callback references.
+         * An object containing the different Tween callback functions.
+         * 
+         * You can either set these in the Tween config, or by calling the `Tween.setCallback` method.
+         * 
+         * `onActive` When the Tween is moved from the pending to the active list in the Tween Manager, even if playback paused.
+         * `onStart` When the Tween starts playing after a delayed state. Will happen at the same time as `onActive` if it has no delay.
+         * `onYoyo` When a TweenData starts a yoyo. This happens _after_ the `hold` delay expires, if set.
+         * `onRepeat` When a TweenData repeats playback. This happens _after_ the `repeatDelay` expires, if set.
+         * `onComplete` When the Tween finishes playback fully or `Tween.stop` is called. Never invoked if tween is set to repeat infinitely.
+         * `onUpdate` When a TweenData updates a property on a source target during playback.
+         * `onLoop` When a Tween loops. This happens _after_ the `loopDelay` expires, if set.
          *
          * @name Phaser.Tweens.Tween#callbacks
          * @type {object}
@@ -616,25 +639,15 @@ var Tween = new Class({
     {
         this.parent.makeActive(this);
 
-        //  When the Tween is moved from the pending to the active list in the manager, even if playback delayed
-        this.emit(Events.TWEEN_ACTIVE, this);
-
-        var onActive = this.callbacks.onActive;
-
-        if (onActive)
-        {
-            onActive.params[1] = this.targets;
-
-            onActive.func.apply(onActive.scope, onActive.params);
-        }
+        this.dispatchTweenEvent(Events.TWEEN_ACTIVE, this.callbacks.onActive);
     },
 
     /**
      * Internal method that advances to the next state of the Tween during playback.
      *
      * @method Phaser.Tweens.Tween#nextState
-     * @fires Phaser.Tweens.Events#TWEEN_LOOP
      * @fires Phaser.Tweens.Events#TWEEN_COMPLETE
+     * @fires Phaser.Tweens.Events#TWEEN_LOOP
      * @since 3.0.0
      */
     nextState: function ()
@@ -656,37 +669,20 @@ var Tween = new Class({
             {
                 this.state = TWEEN_CONST.ACTIVE;
 
-                this.emit(Events.TWEEN_LOOP, this, this.targets);
-
-                var onLoop = this.callbacks.onLoop;
-    
-                if (onLoop)
-                {
-                    onLoop.params[1] = this.targets;
-    
-                    onLoop.func.apply(onLoop.scope, onLoop.params);
-                }
+                this.dispatchTweenEvent(Events.TWEEN_LOOP, this.callbacks.onLoop);
             }
         }
         else if (this.completeDelay > 0)
         {
-            this.countdown = this.completeDelay;
             this.state = TWEEN_CONST.COMPLETE_DELAY;
+
+            this.countdown = this.completeDelay;
         }
         else
         {
             this.state = TWEEN_CONST.PENDING_REMOVE;
 
-            this.emit(Events.TWEEN_COMPLETE, this, this.targets);
-
-            var onComplete = this.callbacks.onComplete;
-
-            if (onComplete)
-            {
-                onComplete.params[1] = this.targets;
-
-                onComplete.func.apply(onComplete.scope, onComplete.params);
-            }
+            this.dispatchTweenEvent(Events.TWEEN_COMPLETE, this.callbacks.onComplete);
         }
     },
 
@@ -888,7 +884,7 @@ var Tween = new Class({
 
         if (this.totalDuration >= 3600000)
         {
-            console.warn('Cannot Tween.seek - duration too long or infinite repeat');
+            console.warn('Tween.seek duration too long');
 
             return this;
         }
@@ -946,11 +942,15 @@ var Tween = new Class({
             this.state = TWEEN_CONST.ACTIVE;
         }
 
+        this.isSeeking = true;
+
         do
         {
             this.update(0, delta);
 
         } while (this.totalProgress < toPosition);
+
+        this.isSeeking = false;
 
         if (wasPaused)
         {
@@ -963,17 +963,23 @@ var Tween = new Class({
     /**
      * Sets an event based callback to be invoked during playback.
      * 
-     * The `type` can be: 'onActive', 'onComplete', 'onLoop', 'onRepeat', 'onStart',
-     * 'onUpdate' or 'onYoyo'.
+     * Calling this method will replace a previously set callback for the given type, if any exists.
      * 
-     * Calling this method will replace a previously set callback for the
-     * given type, if any exists.
+     * The types available are:
+     * 
+     * `onActive` When the Tween is moved from the pending to the active list in the Tween Manager, even if playback paused.
+     * `onStart` When the Tween starts playing after a delayed state. Will happen at the same time as `onActive` if it has no delay.
+     * `onYoyo` When a TweenData starts a yoyo. This happens _after_ the `hold` delay expires, if set.
+     * `onRepeat` When a TweenData repeats playback. This happens _after_ the `repeatDelay` expires, if set.
+     * `onComplete` When the Tween finishes playback fully or `Tween.stop` is called. Never invoked if tween is set to repeat infinitely.
+     * `onUpdate` When a TweenData updates a property on a source target during playback.
+     * `onLoop` When a Tween loops. This happens _after_ the `loopDelay` expires, if set.
      *
      * @method Phaser.Tweens.Tween#setCallback
      * @since 3.0.0
      *
-     * @param {string} type - Type of the callback.
-     * @param {function} callback - Callback function.
+     * @param {string} type - Type of the callback to set.
+     * @param {function} callback - The function to invoke when this callback happens.
      * @param {array} [params] - An array of parameters for specified callbacks types.
      * @param {any} [scope] - The context the callback will be invoked in.
      *
@@ -1008,23 +1014,15 @@ var Tween = new Class({
 
         if (delay)
         {
-            this.countdown = delay;
             this.state = TWEEN_CONST.COMPLETE_DELAY;
+
+            this.countdown = delay;
         }
         else
         {
             this.state = TWEEN_CONST.PENDING_REMOVE;
 
-            this.emit(Events.TWEEN_COMPLETE, this, this.targets);
-
-            var onComplete = this.callbacks.onComplete;
-
-            if (onComplete)
-            {
-                onComplete.params[1] = this.targets;
-
-                onComplete.func.apply(onComplete.scope, onComplete.params);
-            }
+            this.dispatchTweenEvent(Events.TWEEN_COMPLETE, this.callbacks.onComplete);
         }
 
         return this;
@@ -1098,8 +1096,8 @@ var Tween = new Class({
      *
      * @method Phaser.Tweens.Tween#update
      * @fires Phaser.Tweens.Events#TWEEN_COMPLETE
-     * @fires Phaser.Tweens.Events#TWEEN_START
      * @fires Phaser.Tweens.Events#TWEEN_LOOP
+     * @fires Phaser.Tweens.Events#TWEEN_START
      * @since 3.0.0
      *
      * @param {number} timestamp - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
@@ -1131,7 +1129,7 @@ var Tween = new Class({
         {
             case TWEEN_CONST.ACTIVE:
 
-                if (!this.hasStarted)
+                if (!this.hasStarted && !this.isSeeking)
                 {
                     this.startDelay -= delta;
         
@@ -1139,16 +1137,7 @@ var Tween = new Class({
                     {
                         this.hasStarted = true;
 
-                        this.emit(Events.TWEEN_START, this, this.targets);
-
-                        var onStart = this.callbacks.onStart;
-
-                        if (onStart)
-                        {
-                            onStart.params[1] = this.targets;
-
-                            onStart.func.apply(onStart.scope, onStart.params);
-                        }
+                        this.dispatchTweenEvent(Events.TWEEN_START, this.callbacks.onStart);
                     }
                 }
 
@@ -1180,16 +1169,7 @@ var Tween = new Class({
                 {
                     this.state = TWEEN_CONST.ACTIVE;
 
-                    this.emit(Events.TWEEN_LOOP, this, this.targets);
-
-                    var onLoop = this.callbacks.onLoop;
-        
-                    if (onLoop)
-                    {
-                        onLoop.params[1] = this.targets;
-        
-                        onLoop.func.apply(onLoop.scope, onLoop.params);
-                    }
+                    this.dispatchTweenEvent(Events.TWEEN_LOOP, this.callbacks.onLoop);
                 }
 
                 break;
@@ -1213,20 +1193,62 @@ var Tween = new Class({
                 {
                     this.state = TWEEN_CONST.PENDING_REMOVE;
 
-                    this.emit(Events.TWEEN_COMPLETE, this, this.targets);
-
-                    var onComplete = this.callbacks.onComplete;
-
-                    if (onComplete)
-                    {
-                        onComplete.func.apply(onComplete.scope, onComplete.params);
-                    }
+                    this.dispatchTweenEvent(Events.TWEEN_COMPLETE, this.callbacks.onComplete);
                 }
 
                 break;
         }
 
         return (this.state === TWEEN_CONST.PENDING_REMOVE);
+    },
+
+    /**
+     * Internal method that will emit a TweenData based Event and invoke the given callback.
+     *
+     * @method Phaser.Tweens.Tween#dispatchTweenDataEvent
+     * @since 3.19.0
+     *
+     * @param {Phaser.Tweens.Events} event - The Event to be dispatched.
+     * @param {function} callback - The callback to be invoked. Can be `null` or `undefined` to skip invocation.
+     * @param {Phaser.Types.Tweens.TweenDataConfig} tweenData - The TweenData object that caused this event.
+     */
+    dispatchTweenDataEvent: function (event, callback, tweenData)
+    {
+        if (!this.isSeeking)
+        {
+            this.emit(event, this, tweenData.key, tweenData.target);
+
+            if (callback)
+            {
+                callback.params[1] = tweenData.target;
+
+                callback.func.apply(callback.scope, callback.params);
+            }
+        }
+    },
+
+    /**
+     * Internal method that will emit a Tween based Event and invoke the given callback.
+     *
+     * @method Phaser.Tweens.Tween#dispatchTweenEvent
+     * @since 3.19.0
+     *
+     * @param {Phaser.Tweens.Events} event - The Event to be dispatched.
+     * @param {function} callback - The callback to be invoked. Can be `null` or `undefined` to skip invocation.
+     */
+    dispatchTweenEvent: function (event, callback)
+    {
+        if (!this.isSeeking)
+        {
+            this.emit(event, this, this.targets);
+
+            if (callback)
+            {
+                callback.params[1] = this.targets;
+    
+                callback.func.apply(callback.scope, callback.params);
+            }
+        }
     },
 
     /**
@@ -1263,17 +1285,7 @@ var Tween = new Class({
                 tweenData.target.toggleFlipY();
             }
 
-            this.emit(Events.TWEEN_YOYO, this, tweenData.key, tweenData.target);
-
-            var onYoyo = tween.callbacks.onYoyo;
-
-            if (onYoyo)
-            {
-                //  Element 1 is reserved for the target of the yoyo (and needs setting here)
-                onYoyo.params[1] = tweenData.target;
-
-                onYoyo.func.apply(onYoyo.scope, onYoyo.params);
-            }
+            this.dispatchTweenDataEvent(Events.TWEEN_YOYO, tween.callbacks.onYoyo, tweenData);
 
             tweenData.start = tweenData.getStartValue(tweenData.target, tweenData.key, tweenData.start);
 
@@ -1317,17 +1329,7 @@ var Tween = new Class({
             }
             else
             {
-                this.emit(Events.TWEEN_REPEAT, this, tweenData.key, tweenData.target);
-
-                var onRepeat = tween.callbacks.onRepeat;
-    
-                if (onRepeat)
-                {
-                    //  Element 1 is reserved for the target of the repeat (and needs setting here)
-                    onRepeat.params[1] = tweenData.target;
-    
-                    onRepeat.func.apply(onRepeat.scope, onRepeat.params);
-                }
+                this.dispatchTweenDataEvent(Events.TWEEN_REPEAT, tween.callbacks.onRepeat, tweenData);
 
                 return TWEEN_CONST.PLAYING_FORWARD;
             }
@@ -1384,17 +1386,7 @@ var Tween = new Class({
             }
             else
             {
-                this.emit(Events.TWEEN_REPEAT, this, tweenData.key, tweenData.target);
-
-                var onRepeat = tween.callbacks.onRepeat;
-    
-                if (onRepeat)
-                {
-                    //  Element 1 is reserved for the target of the repeat (and needs setting here)
-                    onRepeat.params[1] = tweenData.target;
-    
-                    onRepeat.func.apply(onRepeat.scope, onRepeat.params);
-                }
+                this.dispatchTweenDataEvent(Events.TWEEN_REPEAT, tween.callbacks.onRepeat, tweenData);
 
                 return TWEEN_CONST.PLAYING_FORWARD;
             }
@@ -1463,17 +1455,6 @@ var Tween = new Class({
                 tweenData.elapsed = elapsed;
                 tweenData.progress = progress;
 
-                this.emit(Events.TWEEN_UPDATE, this, tweenData.key, tweenData.target);
-
-                var onUpdate = tween.callbacks.onUpdate;
-
-                if (onUpdate)
-                {
-                    onUpdate.params[1] = tweenData.target;
-
-                    onUpdate.func.apply(onUpdate.scope, onUpdate.params);
-                }
-
                 if (progress === 1)
                 {
                     if (forward)
@@ -1494,6 +1475,8 @@ var Tween = new Class({
                         tweenData.state = this.setStateFromStart(tween, tweenData, diff);
                     }
                 }
+
+                this.dispatchTweenDataEvent(Events.TWEEN_UPDATE, tween.callbacks.onUpdate, tweenData);
 
                 break;
 
@@ -1516,21 +1499,11 @@ var Tween = new Class({
 
                 if (tweenData.elapsed <= 0)
                 {
-                    this.emit(Events.TWEEN_REPEAT, this, tweenData.key, tweenData.target);
-
-                    var onRepeat = tween.callbacks.onRepeat;
-        
-                    if (onRepeat)
-                    {
-                        //  Element 1 is reserved for the target of the repeat (and needs setting here)
-                        onRepeat.params[1] = tweenData.target;
-        
-                        onRepeat.func.apply(onRepeat.scope, onRepeat.params);
-                    }
-
                     tweenData.elapsed = Math.abs(tweenData.elapsed);
 
                     tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
+
+                    this.dispatchTweenDataEvent(Events.TWEEN_REPEAT, tween.callbacks.onRepeat, tweenData);
                 }
 
                 break;
