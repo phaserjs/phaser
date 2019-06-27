@@ -969,7 +969,7 @@ var InputPlugin = new Class({
         }
 
         //  If they released outside the canvas, but pressed down inside it, we'll still dispatch the event.
-        if (!aborted)
+        if (!aborted && this.manager)
         {
             if (pointer.downElement === this.manager.game.canvas)
             {
@@ -1921,7 +1921,7 @@ var InputPlugin = new Class({
         }
 
         //  If they released outside the canvas, but pressed down inside it, we'll still dispatch the event.
-        if (!aborted)
+        if (!aborted && this.manager)
         {
             if (pointer.upElement === this.manager.game.canvas)
             {
