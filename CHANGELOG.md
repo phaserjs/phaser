@@ -2,6 +2,24 @@
 
 ## Version 3.19.0 - Naofumi - in development
 
+### Tween Updates
+
+* `Tween` now extends the Event Emitter class, allowing it to emit its own events and be listened to.
+* `Tween.ACTIVE_EVENT` is a new event that is dispatched when a tween becomes active. Listen to it with `tween.on('active')`.
+* `Tween.COMPLETE_EVENT` is a new event that is dispatched when a tween completes or is stopped. Listen to it with `tween.on('complete')`.
+* `Tween.LOOP_EVENT` is a new event that is dispatched when a tween loops, after any loop delay expires. Listen to it with `tween.on('loop')`.
+* `Tween.REPEAT_EVENT` is a new event that is dispatched when a tween property repeats, after any repeat delay expires. Listen to it with `tween.on('repeat')`.
+* `Tween.START_EVENT` is a new event that is dispatched when a tween starts. Listen to it with `tween.on('start')`.
+* `Tween.UPDATE_EVENT` is a new event that is dispatched when a tween property updates. Listen to it with `tween.on('update')`.
+* `Tween.YOYO_EVENT` is a new event that is dispatched when a tween property yoyos, after any hold delay expires. Listen to it with `tween.on('yoyo')`.
+* `Tween.onActive` is a new callback that is invoked the moment the Tween Manager brings the tween to life, even though it may not have yet started actively tweening anything due to delay settings.
+* `Tween.onStart` is now only invoked when the Tween actually starts tweening a value. Previously, it was invoked as soon as the Tween Manager activated the Tween. This has been recoded and this action is now handled by the `onActive` callback. Fix #3330 (thanks @wtravO)
+* `Tween.seek` has been rewritten so you can now seek to any point in the Tween, regardless of repeats, loops, delays and hold settings. Fix #4409 (thanks @cristib84)
+* `Tween.hasStarted` is a new property that holds a flag signifying if the Tween has started or not. A Tween that has started is one that is actively tweening a property and not just in a delayed state.
+* `Tween.startDelay` is a new property that is set during the Tween init to hold the shortest possible time before the Tween will start tweening a value. It is decreased each update until it hits zero, after which the `onStart` callback is invoked.
+* `Tween.init` and `Tween.play` have been rewritten so they are not run multiple times when a Tween is paused before playback, or is part of a Timeline. This didn't cause any problems previously, but it was a redundant duplication of calls.
+* `Tween.onLoop` will now be invoked _after_ the `loopDelay` has expired, if any was set.
+* `Tween.onRepeat` will now be invoked _after_ the `repeatDelay` has expired, if any was set.
 
 ### New Features
 
@@ -30,7 +48,6 @@
 * `Pointer.getDuration` would return a negative / static value on desktop, or NaN on mobile, because the base time wasn't being pulled in from the Input Manager properly. Fix #4612 (thanks @BobtheUltimateProgrammer)
 * `Pointer.downTime`, `Pointer.upTime` and `Pointer.moveTime` would be set to NaN on mobile browsers where Touch.timeStamp didn't exist. Fix #4612 (thanks @BobtheUltimateProgrammer)
 * `WebGLRenderer.setScissor` will default the `drawingBufferHeight` if no argument is provided, stopping NaN scissor heights.
-* `Tween.seek` has been rewritten so you can now seek to any point in the Tween, regardless of repeats, loops, delays and hold settings. Fix #4409 (thanks @cristib84)
 
 ### Examples, Documentation and TypeScript
 
