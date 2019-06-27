@@ -235,6 +235,21 @@ var Timeline = new Class({
          */
         this.totalProgress = 0;
 
+        /**
+         * An object containing the different Tween callback functions.
+         * 
+         * You can either set these in the Tween config, or by calling the `Tween.setCallback` method.
+         * 
+         * `onComplete` When the Timeline finishes playback fully or `Timeline.stop` is called. Never invoked if timeline is set to repeat infinitely.
+         * `onLoop` When a Timeline loops.
+         * `onStart` When the Timeline starts playing.
+         * `onUpdate` When a Timeline updates a child Tween.
+         * `onYoyo` When a Timeline starts a yoyo.
+         *
+         * @name Phaser.Tweens.Timeline#callbacks
+         * @type {object}
+         * @since 3.0.0
+         */
         this.callbacks = {
             onComplete: null,
             onLoop: null,
@@ -243,7 +258,35 @@ var Timeline = new Class({
             onYoyo: null
         };
 
+        /**
+         * The context in which all callbacks are invoked.
+         *
+         * @name Phaser.Tweens.Timeline#callbackScope
+         * @type {any}
+         * @since 3.0.0
+         */
         this.callbackScope;
+    },
+
+    /**
+     * Internal method that will emit a Timeline based Event and invoke the given callback.
+     *
+     * @method Phaser.Tweens.Timeline#dispatchTimelineEvent
+     * @since 3.19.0
+     *
+     * @param {Phaser.Tweens.Events} event - The Event to be dispatched.
+     * @param {function} callback - The callback to be invoked. Can be `null` or `undefined` to skip invocation.
+     */
+    dispatchTimelineEvent: function (event, callback)
+    {
+        this.emit(event, this, this.targets);
+
+        if (callback)
+        {
+            callback.params[1] = this.targets;
+
+            callback.func.apply(callback.scope, callback.params);
+        }
     },
 
     /**
@@ -604,14 +647,7 @@ var Timeline = new Class({
             this.state = TWEEN_CONST.ACTIVE;
         }
 
-        var onStart = this.callbacks.onStart;
-
-        if (onStart)
-        {
-            onStart.func.apply(onStart.scope, onStart.params);
-        }
-
-        this.emit(Events.TIMELINE_START, this);
+        this.dispatchTimelineEvent(Events.TIMELINE_START, this.callbacks.onStart);
     },
 
     /**
@@ -634,44 +670,32 @@ var Timeline = new Class({
 
             this.loopCounter--;
 
-            var onLoop = this.callbacks.onLoop;
-
-            if (onLoop)
-            {
-                onLoop.func.apply(onLoop.scope, onLoop.params);
-            }
-
-            this.emit(Events.TIMELINE_LOOP, this, this.loopCounter);
-
             this.resetTweens(true);
 
             if (this.loopDelay > 0)
             {
                 this.countdown = this.loopDelay;
+
                 this.state = TWEEN_CONST.LOOP_DELAY;
             }
             else
             {
                 this.state = TWEEN_CONST.ACTIVE;
+
+                this.dispatchTimelineEvent(Events.TIMELINE_LOOP, this.callbacks.onLoop);
             }
         }
         else if (this.completeDelay > 0)
         {
-            this.countdown = this.completeDelay;
             this.state = TWEEN_CONST.COMPLETE_DELAY;
+
+            this.countdown = this.completeDelay;
         }
         else
         {
             this.state = TWEEN_CONST.PENDING_REMOVE;
 
-            var onComplete = this.callbacks.onComplete;
-
-            if (onComplete)
-            {
-                onComplete.func.apply(onComplete.scope, onComplete.params);
-            }
-
-            this.emit(Events.TIMELINE_COMPLETE, this);
+            this.dispatchTimelineEvent(Events.TIMELINE_COMPLETE, this.callbacks.onComplete);
         }
     },
 
@@ -725,14 +749,7 @@ var Timeline = new Class({
                     }
                 }
 
-                var onUpdate = this.callbacks.onUpdate;
-
-                if (onUpdate)
-                {
-                    onUpdate.func.apply(onUpdate.scope, onUpdate.params);
-                }
-
-                this.emit(Events.TIMELINE_UPDATE, this);
+                this.dispatchTimelineEvent(Events.TIMELINE_UPDATE, this.callbacks.onUpdate);
 
                 //  Anything still running? If not, we're done
                 if (stillRunning === 0)
@@ -749,6 +766,8 @@ var Timeline = new Class({
                 if (this.countdown <= 0)
                 {
                     this.state = TWEEN_CONST.ACTIVE;
+
+                    this.dispatchTimelineEvent(Events.TIMELINE_LOOP, this.callbacks.onLoop);
                 }
 
                 break;
@@ -761,14 +780,7 @@ var Timeline = new Class({
                 {
                     this.state = TWEEN_CONST.PENDING_REMOVE;
 
-                    var onComplete = this.callbacks.onComplete;
-
-                    if (onComplete)
-                    {
-                        onComplete.func.apply(onComplete.scope, onComplete.params);
-                    }
-
-                    this.emit(Events.TIMELINE_COMPLETE, this);
+                    this.dispatchTimelineEvent(Events.TIMELINE_COMPLETE, this.callbacks.onComplete);
                 }
 
                 break;
