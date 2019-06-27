@@ -20,6 +20,8 @@
 * `Tween.init` and `Tween.play` have been rewritten so they are not run multiple times when a Tween is paused before playback, or is part of a Timeline. This didn't cause any problems previously, but it was a redundant duplication of calls.
 * `Tween.onLoop` will now be invoked _after_ the `loopDelay` has expired, if any was set.
 * `Tween.onRepeat` will now be invoked _after_ the `repeatDelay` has expired, if any was set.
+* `easeParams` would be ignored for tweens that _didn't_ use a string for the ease function name. Fix #3826 (thanks @SBCGames)
+* You can now specify `easeParams` for any custom easing function you wish to use. Fix #3826 (thanks @SBCGames)
 
 ### New Features
 
