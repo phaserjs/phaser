@@ -129,7 +129,18 @@ The documentation for Phaser 3 is an on-going project. Please help us by searchi
 
 ### TypeScript Definitions
 
-You can find the [TypeScript definitions](https://github.com/photonstorm/phaser/tree/master/types) inside the `types` folder. They are also referenced in the types entry in `package.json`.
+The [TypeScript definitions](https://github.com/photonstorm/phaser/tree/master/types) can be found inside the `types` folder. They are also referenced in the types entry in `package.json`.
+
+Depending on your project, you may need to add the following to your `tsconfig.json` file:
+
+```json
+"typeRoots": [
+    "./node_modules/phaser/types"
+],
+"types": [
+    "Phaser"
+]
+```
 
 The defs are automatically generated from the JSDoc comments found in the Phaser source code. If you wish to help refine them then you must edit the Phaser JSDoc blocks directly, not the defs file. You can find more details about the parser we built in the `scripts/tsgen` folder.
 
