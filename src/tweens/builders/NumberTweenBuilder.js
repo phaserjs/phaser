@@ -63,9 +63,11 @@ var NumberTweenBuilder = function (parent, config, defaults)
 
     var tweenData = TweenData(
         targets[0],
+        0,
         'value',
         ops.getEnd,
         ops.getStart,
+        ops.getActive,
         ease,
         delay,
         duration,

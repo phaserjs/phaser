@@ -3,8 +3,9 @@
  * @since 3.0.0
  *
  * @property {any} target - The target to tween.
+ * @property {integer} index - The target index within the Tween targets array.
  * @property {string} key - The property of the target being tweened.
- * @property {?Phaser.Types.Tweens.GetActiveCallback} getActiveValue - If set, is invoked _immediately_ as soon as the TweenData is running, and is set on the target property.
+ * @property {?Phaser.Types.Tweens.GetActiveCallback} getActiveValue - If not null, is invoked _immediately_ as soon as the TweenData is running, and is set on the target property.
  * @property {Phaser.Types.Tweens.GetEndCallback} getEndValue - The returned value sets what the property will be at the END of the Tween.
  * @property {Phaser.Types.Tweens.GetStartCallback} getStartValue - The returned value sets what the property will be at the START of the Tween.
  * @property {function} ease - The ease function this tween uses.

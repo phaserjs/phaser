@@ -14,10 +14,12 @@
  * @function Phaser.Tweens.TweenData
  * @since 3.0.0
  *
- * @param {object} target - The target to tween.
+ * @param {any} target - The target to tween.
+ * @param {integer} index - The target index within the Tween targets array.
  * @param {string} key - The property of the target to tween.
  * @param {function} getEnd - What the property will be at the END of the Tween.
  * @param {function} getStart - What the property will be at the START of the Tween.
+ * @param {?function} getActive - If not null, is invoked _immediately_ as soon as the TweenData is running, and is set on the target property.
  * @param {function} ease - The ease function this tween uses.
  * @param {number} delay - Time in ms/frames before tween will start.
  * @param {number} duration - Duration of the tween in ms/frames.
@@ -27,16 +29,18 @@
  * @param {number} repeatDelay - Time in ms/frames before the repeat will start.
  * @param {boolean} flipX - Should toggleFlipX be called when yoyo or repeat happens?
  * @param {boolean} flipY - Should toggleFlipY be called when yoyo or repeat happens?
- * @param {?function} [getActive] - If given, is invoked _immediately_ as soon as the TweenData is running, and is set on the target property.
  *
  * @return {Phaser.Types.Tweens.TweenDataConfig} The config object describing this TweenData.
  */
-var TweenData = function (target, key, getEnd, getStart, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY, getActive)
+var TweenData = function (target, index, key, getEnd, getStart, getActive, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY)
 {
     return {
 
         //  The target to tween
         target: target,
+
+        //  The index of the target within the tween targets array
+        index: index,
 
         //  The property of the target to tween
         key: key,

@@ -68,9 +68,11 @@ var TweenBuilder = function (parent, config, defaults)
 
             var tweenData = TweenData(
                 targets[t],
+                t,
                 key,
                 ops.getEnd,
                 ops.getStart,
+                ops.getActive,
                 GetEaseFunction(GetValue(value, 'ease', ease), easeParams),
                 GetNewValue(value, 'delay', delay),
                 GetNewValue(value, 'duration', duration),
@@ -79,8 +81,7 @@ var TweenBuilder = function (parent, config, defaults)
                 GetNewValue(value, 'repeat', repeat),
                 GetNewValue(value, 'repeatDelay', repeatDelay),
                 GetBoolean(value, 'flipX', flipX),
-                GetBoolean(value, 'flipY', flipY),
-                ops.getActive
+                GetBoolean(value, 'flipY', flipY)
             );
 
             data.push(tweenData);
