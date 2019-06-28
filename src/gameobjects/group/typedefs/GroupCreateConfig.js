@@ -13,14 +13,15 @@
  * @property {?Function} [classType] - The class of each new Game Object.
  * @property {(string|string[])} [key] - The texture key of each new Game Object.
  * @property {?(string|string[]|integer|integer[])} [frame=null] - The texture frame of each new Game Object.
+ * @property {?integer} [quantity=false] - The number of Game Objects to create. If set, this overrides the `frameQuantity` value. Use `frameQuantity` for more advanced control.
  * @property {?boolean} [visible=true] - The visible state of each new Game Object.
  * @property {?boolean} [active=true] - The active state of each new Game Object.
- * @property {?number} [repeat=0] - The number of times each `key` × `frame` combination will be *repeated* (after the first combination).
+ * @property {?integer} [repeat=0] - The number of times each `key` × `frame` combination will be *repeated* (after the first combination).
  * @property {?boolean} [randomKey=false] - Select a `key` at random.
  * @property {?boolean} [randomFrame=false] - Select a `frame` at random.
  * @property {?boolean} [yoyo=false] - Select keys and frames by moving forward then backward through `key` and `frame`.
- * @property {?number} [frameQuantity=1] - The number of times each `frame` should be combined with one `key`.
- * @property {?number} [max=0] - The maximum number of new Game Objects to create. 0 is no maximum.
+ * @property {?integer} [frameQuantity=1] - The number of times each `frame` should be combined with one `key`.
+ * @property {?integer} [max=0] - The maximum number of new Game Objects to create. 0 is no maximum.
  * @property {?object} [setXY]
  * @property {?number} [setXY.x=0] - The horizontal position of each new Game Object.
  * @property {?number} [setXY.y=0] - The vertical position of each new Game Object.
