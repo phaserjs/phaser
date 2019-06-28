@@ -166,7 +166,8 @@ var Arc = new Class({
         {
             this.geom.radius = value;
 
-            this.setSize(value, value);
+            var diameter = value * 2;
+            this.setSize(diameter, diameter);
             this.updateDisplayOrigin();
             this.updateData();
         }
@@ -347,8 +348,8 @@ var Arc = new Class({
         var endAngle = DegToRad(this._endAngle);
         var anticlockwise = this._anticlockwise;
 
-        var x = radius / 2;
-        var y = radius / 2;
+        var x = radius;
+        var y = radius;
 
         endAngle -= startAngle;
 
