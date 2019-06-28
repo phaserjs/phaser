@@ -48,6 +48,12 @@ var StaggerBuilder = function (value, options)
 
     if (!grid)
     {
+        //  target = The target object being tweened
+        //  key = The key of the property being tweened
+        //  value = The current value of that property
+        //  index = The index of the target within the Tween targets array
+        //  total = The total number of targets being tweened
+        //  tween = A reference to the Tween performing this update
         result = function (target, key, value, index, total, tween)
         {
             //  zero offset
