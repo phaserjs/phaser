@@ -274,9 +274,9 @@ var TweenManager = new Class({
      *
      * @return {function} The stagger function.
      */
-    stagger: function (config)
+    stagger: function (value, options)
     {
-        return StaggerBuilder(config);
+        return StaggerBuilder(value, options);
     },
 
     /**
