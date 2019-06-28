@@ -5,6 +5,7 @@
  */
 
 var EaseMap = require('../../math/easing/EaseMap');
+var UppercaseFirst = require('../../utils/string/UppercaseFirst');
 
 /**
  * This internal function is used to return the correct ease function for a Tween.
@@ -25,10 +26,49 @@ var GetEaseFunction = function (ease, easeParams)
     var easeFunction = EaseMap.Power0;
 
     //  Prepare ease function
-    if (typeof ease === 'string' && EaseMap.hasOwnProperty(ease))
+    if (typeof ease === 'string')
     {
         //  String based look-up
-        easeFunction = EaseMap[ease];
+
+        //  1) They specified it correctly
+        if (EaseMap.hasOwnProperty(ease))
+        {
+            easeFunction = EaseMap[ease];
+        }
+        else
+        {
+            //  Do some string manipulation to try and find it
+            var direction = '';
+
+            if (ease.indexOf('.'))
+            {
+                //  quad.in = Quad.easeIn
+                //  quad.out = Quad.easeOut
+                //  quad.inout =Quad.easeInOut
+
+                direction = ease.substr(ease.indexOf('.') + 1);
+
+                if (direction.toLowerCase() === 'in')
+                {
+                    direction = 'easeIn';
+                }
+                else if (direction.toLowerCase() === 'out')
+                {
+                    direction = 'easeOut';
+                }
+                else if (direction.toLowerCase() === 'inout')
+                {
+                    direction = 'easeInOut';
+                }
+            }
+
+            ease = UppercaseFirst(ease.substr(0, ease.indexOf('.') + 1) + direction);
+
+            if (EaseMap.hasOwnProperty(ease))
+            {
+                easeFunction = EaseMap[ease];
+            }
+        }
     }
     else if (typeof ease === 'function')
     {
