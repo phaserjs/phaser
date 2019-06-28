@@ -4,9 +4,9 @@
  *
  * @property {any} target - The target to tween.
  * @property {string} key - The property of the target being tweened.
- * @property {?function} getActiveValue - If set, is invoked _immediately_ as soon as the TweenData is running, and is set on the target property.
- * @property {function} getEndValue - The returned value sets what the property will be at the END of the Tween.
- * @property {function} getStartValue - The returned value sets what the property will be at the START of the Tween.
+ * @property {?Phaser.Types.Tweens.GetActiveCallback} getActiveValue - If set, is invoked _immediately_ as soon as the TweenData is running, and is set on the target property.
+ * @property {Phaser.Types.Tweens.GetEndCallback} getEndValue - The returned value sets what the property will be at the END of the Tween.
+ * @property {Phaser.Types.Tweens.GetStartCallback} getStartValue - The returned value sets what the property will be at the START of the Tween.
  * @property {function} ease - The ease function this tween uses.
  * @property {number} [duration=0] - Duration of the tween in ms/frames, excludes time for yoyo or repeats.
  * @property {number} [totalDuration=0] - The total calculated duration of this TweenData (based on duration, repeat, delay and yoyo)
