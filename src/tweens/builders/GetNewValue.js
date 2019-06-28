@@ -27,9 +27,9 @@ var GetNewValue = function (source, key, defaultValue)
 
         if (t === 'function')
         {
-            valueCallback = function (index, totalTargets, target)
+            valueCallback = function (target, targetKey, value, targetIndex, totalTargets, tween)
             {
-                return source[key](index, totalTargets, target);
+                return source[key](target, targetKey, value, targetIndex, totalTargets, tween);
             };
         }
         else

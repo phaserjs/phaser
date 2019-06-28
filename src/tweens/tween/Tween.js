@@ -605,12 +605,17 @@ var Tween = new Class({
             var tweenData = data[i];
             var target = tweenData.target;
             var gen = tweenData.gen;
+            var key = tweenData.key;
+            var targetIndex = Math.floor(totalTargets / i);
 
-            tweenData.delay = gen.delay(i, totalTargets, target, this);
-            tweenData.duration = Math.max(gen.duration(i, totalTargets, target, this), 0.001);
-            tweenData.hold = gen.hold(i, totalTargets, target, this);
-            tweenData.repeat = gen.repeat(i, totalTargets, target, this);
-            tweenData.repeatDelay = gen.repeatDelay(i, totalTargets, target, this);
+            //  Old function signature: i, totalTargets, target
+            //  New function signature: target, key, value, index, total, tween
+
+            tweenData.delay = gen.delay(target, key, 0, targetIndex, totalTargets, this);
+            tweenData.duration = Math.max(gen.duration(target, key, 0, targetIndex, totalTargets, this), 0.001);
+            tweenData.hold = gen.hold(target, key, 0, targetIndex, totalTargets, this);
+            tweenData.repeat = gen.repeat(target, key, 0, targetIndex, totalTargets, this);
+            tweenData.repeatDelay = gen.repeatDelay(target, key, 0, targetIndex, totalTargets, this);
         }
 
         this.calcDuration();
@@ -796,13 +801,16 @@ var Tween = new Class({
     resetTweenData: function (resetFromLoop)
     {
         var data = this.data;
+        var total = this.totalData;
+        var totalTargets = this.totalTargets;
 
-        for (var i = 0; i < this.totalData; i++)
+        for (var i = 0; i < total; i++)
         {
             var tweenData = data[i];
 
-            var key = tweenData.key;
             var target = tweenData.target;
+            var key = tweenData.key;
+            var targetIndex = Math.floor(totalTargets / i);
 
             tweenData.progress = 0;
             tweenData.elapsed = 0;
@@ -811,9 +819,9 @@ var Tween = new Class({
 
             if (resetFromLoop)
             {
-                tweenData.start = tweenData.getStartValue(target, key, tweenData.start);
+                tweenData.start = tweenData.getStartValue(target, key, tweenData.start, targetIndex, totalTargets, this);
 
-                tweenData.end = tweenData.getEndValue(target, key, tweenData.end);
+                tweenData.end = tweenData.getEndValue(target, key, tweenData.end, targetIndex, totalTargets, this);
 
                 tweenData.current = tweenData.start;
 
@@ -914,22 +922,27 @@ var Tween = new Class({
             var tweenData = data[i];
             var target = tweenData.target;
             var gen = tweenData.gen;
+            var key = tweenData.key;
+            var targetIndex = Math.floor(totalTargets / i);
 
             tweenData.progress = 0;
             tweenData.elapsed = 0;
 
             tweenData.repeatCounter = (tweenData.repeat === -1) ? 999999999999 : tweenData.repeat;
 
-            tweenData.delay = gen.delay(i, totalTargets, target);
-            tweenData.duration = Math.max(gen.duration(i, totalTargets, target), 0.001);
-            tweenData.hold = gen.hold(i, totalTargets, target);
-            tweenData.repeat = gen.repeat(i, totalTargets, target);
-            tweenData.repeatDelay = gen.repeatDelay(i, totalTargets, target);
+            //  Old function signature: i, totalTargets, target
+            //  New function signature: target, key, value, index, total, tween
+
+            tweenData.delay = gen.delay(target, key, 0, targetIndex, totalTargets, this);
+            tweenData.duration = Math.max(gen.duration(target, key, 0, targetIndex, totalTargets, this), 0.001);
+            tweenData.hold = gen.hold(target, key, 0, targetIndex, totalTargets, this);
+            tweenData.repeat = gen.repeat(target, key, 0, targetIndex, totalTargets, this);
+            tweenData.repeatDelay = gen.repeatDelay(target, key, 0, targetIndex, totalTargets, this);
 
             tweenData.current = tweenData.start;
             tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
 
-            this.updateTweenData(this, tweenData, 0);
+            this.updateTweenData(this, tweenData, 0, targetIndex, totalTargets);
 
             if (tweenData.delay > 0)
             {
@@ -1149,12 +1162,14 @@ var Tween = new Class({
                 }
 
                 var stillRunning = false;
+                var totalTargets = this.totalTargets;
 
                 for (var i = 0; i < this.totalData; i++)
                 {
                     var tweenData = this.data[i];
+                    var targetIndex = Math.floor(totalTargets / i);
 
-                    if (this.updateTweenData(this, tweenData, delta))
+                    if (this.updateTweenData(this, tweenData, delta, targetIndex, totalTargets))
                     {
                         stillRunning = true;
                     }
@@ -1269,10 +1284,12 @@ var Tween = new Class({
      * @param {Phaser.Tweens.Tween} tween - The Tween to update.
      * @param {Phaser.Types.Tweens.TweenDataConfig} tweenData - The TweenData property to update.
      * @param {number} diff - Any extra time that needs to be accounted for in the elapsed and progress values.
+     * @param {integer} targetIndex - The index of the target within the Tween.
+     * @param {integer} totalTargets - The total number of targets in this Tween.
      *
      * @return {integer} The state of this Tween.
      */
-    setStateFromEnd: function (tween, tweenData, diff)
+    setStateFromEnd: function (tween, tweenData, diff, targetIndex, totalTargets)
     {
         if (tweenData.yoyo)
         {
@@ -1294,7 +1311,7 @@ var Tween = new Class({
 
             this.dispatchTweenDataEvent(Events.TWEEN_YOYO, tween.callbacks.onYoyo, tweenData);
 
-            tweenData.start = tweenData.getStartValue(tweenData.target, tweenData.key, tweenData.start);
+            tweenData.start = tweenData.getStartValue(tweenData.target, tweenData.key, tweenData.start, targetIndex, totalTargets, tween);
 
             return TWEEN_CONST.PLAYING_BACKWARD;
         }
@@ -1319,9 +1336,9 @@ var Tween = new Class({
                 tweenData.target.toggleFlipY();
             }
 
-            tweenData.start = tweenData.getStartValue(tweenData.target, tweenData.key, tweenData.start);
+            tweenData.start = tweenData.getStartValue(tweenData.target, tweenData.key, tweenData.start, targetIndex, totalTargets, tween);
 
-            tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.start);
+            tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.start, targetIndex, totalTargets, tween);
 
             //  Delay?
             if (tweenData.repeatDelay > 0)
@@ -1355,10 +1372,12 @@ var Tween = new Class({
      * @param {Phaser.Tweens.Tween} tween - The Tween to update.
      * @param {Phaser.Types.Tweens.TweenDataConfig} tweenData - The TweenData property to update.
      * @param {number} diff - Any extra time that needs to be accounted for in the elapsed and progress values.
+     * @param {integer} targetIndex - The index of the target within the Tween.
+     * @param {integer} totalTargets - The total number of targets in this Tween.
      *
      * @return {integer} The state of this Tween.
      */
-    setStateFromStart: function (tween, tweenData, diff)
+    setStateFromStart: function (tween, tweenData, diff, targetIndex, totalTargets)
     {
         if (tweenData.repeatCounter > 0)
         {
@@ -1378,7 +1397,7 @@ var Tween = new Class({
                 tweenData.target.toggleFlipY();
             }
 
-            tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.start);
+            tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.start, targetIndex, totalTargets, tween);
 
             //  Delay?
             if (tweenData.repeatDelay > 0)
@@ -1412,11 +1431,13 @@ var Tween = new Class({
      *
      * @param {Phaser.Tweens.Tween} tween - The Tween to update.
      * @param {Phaser.Types.Tweens.TweenDataConfig} tweenData - The TweenData property to update.
-     * @param {number} delta - Either a value in ms, or 1 if Tween.useFrames is true
+     * @param {number} delta - Either a value in ms, or 1 if Tween.useFrames is true.
+     * @param {integer} targetIndex - The index of the target within the Tween.
+     * @param {integer} totalTargets - The total number of targets in this Tween.
      *
      * @return {boolean} True if the tween is not complete (e.g., playing), or false if the tween is complete.
      */
-    updateTweenData: function (tween, tweenData, delta)
+    updateTweenData: function (tween, tweenData, delta, targetIndex, totalTargets)
     {
         var target = tweenData.target;
 
@@ -1464,7 +1485,7 @@ var Tween = new Class({
                         }
                         else
                         {
-                            tweenData.state = this.setStateFromEnd(tween, tweenData, diff);
+                            tweenData.state = this.setStateFromEnd(tween, tweenData, diff, targetIndex, totalTargets);
                         }
                     }
                     else
@@ -1472,7 +1493,7 @@ var Tween = new Class({
                         tweenData.current = tweenData.start;
                         target[tweenData.key] = tweenData.start;
 
-                        tweenData.state = this.setStateFromStart(tween, tweenData, diff);
+                        tweenData.state = this.setStateFromStart(tween, tweenData, diff, targetIndex, totalTargets);
                     }
                 }
                 else
@@ -1522,7 +1543,7 @@ var Tween = new Class({
 
                 if (tweenData.elapsed <= 0)
                 {
-                    tweenData.state = this.setStateFromEnd(tween, tweenData, Math.abs(tweenData.elapsed));
+                    tweenData.state = this.setStateFromEnd(tween, tweenData, Math.abs(tweenData.elapsed), targetIndex, totalTargets);
                 }
 
                 break;
@@ -1531,9 +1552,9 @@ var Tween = new Class({
 
                 if (target)
                 {
-                    tweenData.start = tweenData.getStartValue(target, tweenData.key, target[tweenData.key]);
+                    tweenData.start = tweenData.getStartValue(target, tweenData.key, target[tweenData.key], targetIndex, totalTargets, tween);
 
-                    tweenData.end = tweenData.getEndValue(target, tweenData.key, tweenData.start);
+                    tweenData.end = tweenData.getEndValue(target, tweenData.key, tweenData.start, targetIndex, totalTargets, tween);
 
                     tweenData.current = tweenData.start;
 

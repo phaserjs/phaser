@@ -145,7 +145,7 @@ var GetValueOp = function (key, propertyValue)
         //  The same as setting just the getEnd function and no getStart
 
         // props: {
-        //     x: function (target, key, value, index, totalTargets, tween) { return value + 50); },
+        //     x: function (target, key, value, targetIndex, totalTargets, tween) { return value + 50); },
         // }
 
         getEnd = propertyValue;
@@ -157,19 +157,19 @@ var GetValueOp = function (key, propertyValue)
             /*
             x: {
                 //  Called the moment Tween is active. The returned value sets the property on the target immediately.
-                getActive: function (target, key, value, index, totalTargets, tween)
+                getActive: function (target, key, value, targetIndex, totalTargets, tween)
                 {
                     return value;
                 },
 
                 //  Called at the start of the Tween. The returned value sets what the property will be at the END of the Tween.
-                getEnd: function (target, key, value, index, totalTargets, tween)
+                getEnd: function (target, key, value, targetIndex, totalTargets, tween)
                 {
                     return value;
                 },
 
                 //  Called at the end of the Tween. The returned value sets what the property will be at the START of the Tween.
-                getStart: function (target, key, value, index, totalTargets, tween)
+                getStart: function (target, key, value, targetIndex, totalTargets, tween)
                 {
                     return value;
                 }
