@@ -38,6 +38,7 @@
 * When a TweenData completes it will set the exact `start` or `end` value into the target property.
 * `TweenData` has a new optional argument `getActive` which, if given, sets the property value immediately on activation.
 * `TweenData.getActiveValue` is a new property function that, if not null, returns a value to immediately sets the property value to on activation.
+* `GetEaseFunction`, and by extension anything that uses it, such as setting the ease for a Tween, will now accept a variety of input strings as valid. You can now use lower-case, such as `back`, and omit the 'ease' part of the direction, such as `back.in` or `back.inout`.
 
 ### New Features
 
@@ -52,6 +53,7 @@
 * `TextureTintPipeline.batchSprite` will now flip the UV if the TextureSource comes from a GLTexture.
 * `Math.ToXY` is a new mini function that will take a given index and return a Vector2 containing the x and y coordinates of that index within a grid.
 * `RenderTexture.glTexture` is a new property that holds a reference to the WebGL Texture being used by the Render Texture. Useful for passing to a shader as a sampler2D.
+* `GroupCreateConfig.quantity` - when creating a Group using a config object you can now use the optional property `quantity` to set the number of objects to be created. Use this for quickly creating groups of single frame objects that don't need the advanced capabilities of `frameQuantity` and `repeat`.
 
 ### Updates
 
