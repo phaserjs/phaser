@@ -26,13 +26,9 @@ var StaggerBuilder = function (value, options)
     var start = GetValue(options, 'start', 0);
     var ease = GetValue(options, 'ease', null);
     var grid = GetValue(options, 'grid', null);
+    var axis = GetValue(options, 'axis', null);
 
     var from = GetValue(options, 'from', 0);
-
-    //  delay: this.tweens.stagger(100) // increase delay by 100ms for each elements.
-    //  delay: this.tweens.stagger(100, {start: 500}) // delay starts at 500ms then increase by 100ms for each elements.
-    //  delay: this.tweens.stagger(100, {from: 'center'}) (first, default, last, center, index)
-    //  delay: this.tweens.stagger([ 500, 1000 ]) // distributes evenly values between two numbers.
 
     var fromFirst = (from === 'first');
     var fromCenter = (from === 'center');
@@ -44,66 +40,103 @@ var StaggerBuilder = function (value, options)
     var value2 = (isRange) ? parseFloat(value[1]) : 0;
     var maxValue = Math.max(value1, value2);
 
+    if (isRange)
+    {
+        start += value1;
+    }
+
     var easeFunction = (ease) ? GetEaseFunction(ease) : null;
 
-    if (!grid)
+    //  target = The target object being tweened
+    //  key = The key of the property being tweened
+    //  value = The current value of that property
+    //  index = The index of the target within the Tween targets array
+    //  total = The total number of targets being tweened
+    //  tween = A reference to the Tween performing this update
+
+    result = function (target, key, value, index, total)
     {
-        //  target = The target object being tweened
-        //  key = The key of the property being tweened
-        //  value = The current value of that property
-        //  index = The index of the target within the Tween targets array
-        //  total = The total number of targets being tweened
-        //  tween = A reference to the Tween performing this update
-        result = function (target, key, value, index, total, tween)
+        //  zero offset
+        total--;
+
+        var fromIndex;
+
+        if (fromFirst)
         {
-            //  zero offset
-            total--;
+            fromIndex = (grid) ? 0 : index;
+        }
+        else if (fromCenter)
+        {
+            fromIndex = Math.abs((total / 2) - index);
+        }
+        else if (fromLast)
+        {
+            fromIndex = (grid) ? total : total - index;
+        }
+        else if (fromValue)
+        {
+            fromIndex = Math.abs(from - index);
+        }
 
-            var fromIndex;
+        var spacing = 0;
+        var output = start;
+        var max = total * maxValue;
 
-            if (fromFirst)
-            {
-                fromIndex = index;
-            }
-            else if (fromCenter)
-            {
-                fromIndex = Math.abs((total / 2) - index);
-            }
-            else if (fromLast)
-            {
-                fromIndex = total - index;
-            }
-            else if (fromValue)
-            {
-                fromIndex = Math.abs(from - index);
-            }
+        if (grid)
+        {
+            var fromX = (!fromCenter) ? fromIndex % grid[0] : (grid[0] - 1) / 2;
+            var fromY = (!fromCenter) ? Math.floor(fromIndex / grid[0]) : (grid[1] - 1) / 2;
+    
+            var toX = index % grid[0];
+            var toY = Math.floor(index / grid[0]);
+    
+            var distanceX = fromX - toX;
+            var distanceY = fromY - toY;
+    
+            var gridSpace = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
 
-            var output = start;
-            var max = total * maxValue;
-            var spacing = value1;
+            if (axis === 'x')
+            {
+                gridSpace = -distanceX;
+            }
+            else if (axis === 'y')
+            {
+                gridSpace = -distanceY;
+            }
+        }
 
-            if (isRange)
+        if (isRange)
+        {
+            if (fromCenter)
+            {
+                spacing += ((value2 - value1) / total) * (fromIndex * 2);
+            }
+            else
             {
                 spacing += ((value2 - value1) / total) * fromIndex;
             }
 
-            if (easeFunction)
-            {
-                output += (max * easeFunction(fromIndex / total));
-            }
-            else
-            {
-                output += (isRange) ? spacing : (fromIndex * value1);
-            }
+            output += spacing;
 
-            console.log('i', index, 'of', total, 'fromIndex:', fromIndex, 'spacing:', spacing, 'result: ', output);
+            if (grid)
+            {
+                output += spacing + (gridSpace * value1);
+            }
+        }
+        else
+        {
+            output += (grid) ? (gridSpace * value1) : fromIndex * value1;
+        }
 
-            return output;
-        };
-    }
-    else
-    {
-    }
+        // if (easeFunction)
+        // {
+        //     output += (max * easeFunction(fromIndex / total));
+        // }
+
+        console.log('>', index, '/', total, 'fromIndex:', fromIndex, 'spacing:', spacing, 'RESULT:', output, 'from', fromX, fromY, 'to', toX, toY, 'dist', distanceX, distanceY);
+
+        return output;
+    };
 
     return result;
 };
