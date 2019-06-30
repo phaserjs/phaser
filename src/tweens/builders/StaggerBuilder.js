@@ -80,9 +80,7 @@ var StaggerBuilder = function (value, options)
                 fromIndex = Math.abs(from - index);
             }
     
-            var spacing = 0;
-            var output = start;
-            var max = total * maxValue;
+            var output;
     
             var fromX = (!fromCenter) ? fromIndex % grid[0] : (grid[0] - 1) / 2;
             var fromY = (!fromCenter) ? Math.floor(fromIndex / grid[0]) : (grid[1] - 1) / 2;
@@ -106,32 +104,44 @@ var StaggerBuilder = function (value, options)
     
             if (isRange)
             {
+                var spacing;
+
                 if (fromCenter)
                 {
-                    spacing += ((value2 - value1) / total) * (fromIndex * 2);
+                    spacing = ((value2 - value1) / total) * (fromIndex * 2);
                 }
                 else
                 {
-                    spacing += ((value2 - value1) / total) * fromIndex;
+                    spacing = ((value2 - value1) / total) * fromIndex;
                 }
     
-                output += spacing;
-    
-                output += spacing + (gridSpace * value1);
+                // output += spacing;
+                // output += spacing + (gridSpace * value1);
+
+                if (easeFunction)
+                {
+                    // output = start + (spacing * easeFunction(fromIndex / total));
+                }
+                else
+                {
+                    // output = start + spacing;
+                }
+            }
+            else if (easeFunction)
+            {
+                output = (gridSpace * value1) * easeFunction(index / total);
+
+                // output = easeFunction((gridSpace * value1) / (total * maxValue));
             }
             else
             {
-                output += gridSpace * value1;
+                output = gridSpace * value1;
             }
+        
+            console.log('>', index, '/', total, 'gridSpace:', gridSpace);
+            console.log('>', 'RESULT:', output);
     
-            // if (easeFunction)
-            // {
-            //     output += (max * easeFunction(fromIndex / total));
-            // }
-    
-            console.log('>', index, '/', total, 'fromIndex:', fromIndex, 'spacing:', spacing, 'RESULT:', output, 'from', fromX, fromY, 'to', toX, toY, 'dist', distanceX, distanceY);
-    
-            return output;
+            return output + start;
         };
     }
     else
@@ -177,26 +187,26 @@ var StaggerBuilder = function (value, options)
                     
                 if (easeFunction)
                 {
-                    output = start + (spacing * easeFunction(fromIndex / total));
+                    output = spacing * easeFunction(fromIndex / total);
                 }
                 else
                 {
-                    output = start + spacing;
+                    output = spacing;
                 }
             }
             else if (easeFunction)
             {
-                output = start + ((total * maxValue) * easeFunction(fromIndex / total));
+                output = (total * maxValue) * easeFunction(fromIndex / total);
             }
             else
             {
-                output = start + (fromIndex * value1);
+                output = fromIndex * value1;
             }
     
             console.log('>', index, '/', total, 'fromIndex:', fromIndex, 'spacing:', spacing);
             console.log('>', 'RESULT:', output);
     
-            return output;
+            return output + start;
         };
     }
 
