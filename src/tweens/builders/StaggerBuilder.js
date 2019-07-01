@@ -8,14 +8,15 @@ var GetEaseFunction = require('./GetEaseFunction');
 var GetValue = require('../../utils/object/GetValue');
 
 /**
- * Creates a Stagger function.
+ * Creates a Stagger function for a Tween.
  *
  * @function Phaser.Tweens.Builders.StaggerBuilder
  * @since 3.19.0
  *
- * @param {Phaser.Types.Tweens.StaggerBuilderConfig} config - Configuration for the new Tween.
+ * @param {(number|number[])} value - The amount to stagger by, or an array containing two elements representing the min and max values to stagger between.
+ * @param {Phaser.Types.Tweens.StaggerConfig} [config] - A Stagger Configuration object.
  *
- * @return {function} The new tween.
+ * @return {function} The stagger function.
  */
 var StaggerBuilder = function (value, options)
 {
