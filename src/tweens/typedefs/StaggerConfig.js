@@ -2,7 +2,6 @@
  * @typedef {object} Phaser.Types.Tweens.StaggerConfig
  * @since 3.19.0
  *
- * @property {any} targets - The object, or an array of objects, to run the tween on.
  * @property {number} [delay=0] - The number of milliseconds to delay before the tween will start.
  * @property {number} [duration=1000] - The duration of the tween in milliseconds.
  * @property {(string|function)} [ease='Power0'] - The easing equation to use for the tween.
