@@ -95,9 +95,6 @@ var StaggerBuilder = function (value, options)
                 gridValues[toY][toX] = dist;
             }
         }
-
-        console.table(gridValues);
-        console.log('gridMax', gridMax);
     }
 
     var easeFunction = (ease) ? GetEaseFunction(ease) : null;
@@ -111,10 +108,11 @@ var StaggerBuilder = function (value, options)
 
     if (grid)
     {
-        result = function (target, key, value, index, total)
+        // result = function (target, key, value, index, total)
+        result = function (target, key, value, index)
         {
             //  zero offset
-            total--;
+            // total--;
   
             var gridSpace = 0;
             var toX = index % gridWidth;
@@ -129,23 +127,15 @@ var StaggerBuilder = function (value, options)
    
             if (isRange)
             {
-                var spacing;
-
-                if (fromCenter)
-                {
-                    spacing = ((value2 - value1) / total) * (index * 2);
-                }
-                else
-                {
-                    spacing = ((value2 - value1) / total) * index;
-                }
+                var diff = (value2 - value1);
     
                 if (easeFunction)
                 {
+                    output = ((gridSpace / gridMax) * diff) * easeFunction(gridSpace / gridMax);
                 }
                 else
                 {
-                    output = gridSpace * value1;
+                    output = (gridSpace / gridMax) * diff;
                 }
             }
             else if (easeFunction)
@@ -157,7 +147,7 @@ var StaggerBuilder = function (value, options)
                 output = gridSpace * value1;
             }
         
-            console.log('>', index, '/', total, 'from', fromX, fromY, 'to', toX, toY, 'gridSpace:', gridSpace, 'RESULT:', (output + start));
+            // console.log('>', index, '/', total, 'from', fromX, fromY, 'to', toX, toY, 'gridSpace:', gridSpace, 'start', start, 'RESULT:', (output + start));
 
             return output + start;
         };
@@ -221,7 +211,7 @@ var StaggerBuilder = function (value, options)
                 output = fromIndex * value1;
             }
     
-            console.log('>', index, '/', total, 'fromIndex:', fromIndex, 'spacing:', spacing, 'RESULT:', output);
+            // console.log('>', index, '/', total, 'fromIndex:', fromIndex, 'spacing:', spacing, 'RESULT:', output);
     
             return output + start;
         };
