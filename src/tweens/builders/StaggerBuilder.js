@@ -26,7 +26,6 @@ var StaggerBuilder = function (value, options)
     var start = GetValue(options, 'start', 0);
     var ease = GetValue(options, 'ease', null);
     var grid = GetValue(options, 'grid', null);
-    var axis = GetValue(options, 'axis', null);
 
     var from = GetValue(options, 'from', 0);
 
@@ -45,6 +44,62 @@ var StaggerBuilder = function (value, options)
         start += value1;
     }
 
+    if (grid)
+    {
+        //  Pre-calc the grid to save doing it for ever tweendata update
+        var gridWidth = grid[0];
+        var gridHeight = grid[1];
+
+        var fromX = 0;
+        var fromY = 0;
+
+        var distanceX = 0;
+        var distanceY = 0;
+
+        var gridValues = [];
+
+        if (fromLast)
+        {
+            fromX = gridWidth - 1;
+            fromY = gridHeight - 1;
+        }
+        else if (fromValue)
+        {
+            fromX = from % gridWidth;
+            fromY = Math.floor(from / gridWidth);
+        }
+        else if (fromCenter)
+        {
+            fromX = (gridWidth - 1) / 2;
+            fromY = (gridHeight - 1) / 2;
+        }
+
+        var gridMax = Number.MIN_SAFE_INTEGER;
+
+        for (var toY = 0; toY < gridHeight; toY++)
+        {
+            gridValues[toY] = [];
+
+            for (var toX = 0; toX < gridWidth; toX++)
+            {
+                distanceX = fromX - toX;
+                distanceY = fromY - toY;
+
+                var dist = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+
+                if (dist > gridMax)
+                {
+                    gridMax = dist;
+                }
+
+                gridValues[toY][toX] = dist;
+            }
+        }
+
+        console.table(gridValues);
+        console.log('gridMax', gridMax);
+    }
+
     var easeFunction = (ease) ? GetEaseFunction(ease) : null;
 
     //  target = The target object being tweened
@@ -60,87 +115,50 @@ var StaggerBuilder = function (value, options)
         {
             //  zero offset
             total--;
+  
+            var gridSpace = 0;
+            var toX = index % gridWidth;
+            var toY = Math.floor(index / gridWidth);
     
-            var fromIndex;
-    
-            if (fromFirst)
+            if (toX >= 0 && toX < gridWidth && toY >= 0 && toY < gridHeight)
             {
-                fromIndex = 0;
+                gridSpace = gridValues[toY][toX];
             }
-            else if (fromCenter)
-            {
-                fromIndex = Math.abs((total / 2) - index);
-            }
-            else if (fromLast)
-            {
-                fromIndex = total;
-            }
-            else if (fromValue)
-            {
-                fromIndex = Math.abs(from - index);
-            }
-    
-            var output;
-    
-            var fromX = (!fromCenter) ? fromIndex % grid[0] : (grid[0] - 1) / 2;
-            var fromY = (!fromCenter) ? Math.floor(fromIndex / grid[0]) : (grid[1] - 1) / 2;
-    
-            var toX = index % grid[0];
-            var toY = Math.floor(index / grid[0]);
-    
-            var distanceX = fromX - toX;
-            var distanceY = fromY - toY;
-    
-            var gridSpace = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
 
-            if (axis === 'x')
-            {
-                gridSpace = -distanceX;
-            }
-            else if (axis === 'y')
-            {
-                gridSpace = -distanceY;
-            }
-    
+            var output;
+   
             if (isRange)
             {
                 var spacing;
 
                 if (fromCenter)
                 {
-                    spacing = ((value2 - value1) / total) * (fromIndex * 2);
+                    spacing = ((value2 - value1) / total) * (index * 2);
                 }
                 else
                 {
-                    spacing = ((value2 - value1) / total) * fromIndex;
+                    spacing = ((value2 - value1) / total) * index;
                 }
     
-                // output += spacing;
-                // output += spacing + (gridSpace * value1);
-
                 if (easeFunction)
                 {
-                    // output = start + (spacing * easeFunction(fromIndex / total));
                 }
                 else
                 {
-                    // output = start + spacing;
+                    output = gridSpace * value1;
                 }
             }
             else if (easeFunction)
             {
-                output = (gridSpace * value1) * easeFunction(index / total);
-
-                // output = easeFunction((gridSpace * value1) / (total * maxValue));
+                output = (gridSpace * value1) * easeFunction(gridSpace / gridMax);
             }
             else
             {
                 output = gridSpace * value1;
             }
         
-            console.log('>', index, '/', total, 'gridSpace:', gridSpace);
-            console.log('>', 'RESULT:', output);
-    
+            console.log('>', index, '/', total, 'from', fromX, fromY, 'to', toX, toY, 'gridSpace:', gridSpace, 'RESULT:', (output + start));
+
             return output + start;
         };
     }
@@ -203,8 +221,7 @@ var StaggerBuilder = function (value, options)
                 output = fromIndex * value1;
             }
     
-            console.log('>', index, '/', total, 'fromIndex:', fromIndex, 'spacing:', spacing);
-            console.log('>', 'RESULT:', output);
+            console.log('>', index, '/', total, 'fromIndex:', fromIndex, 'spacing:', spacing, 'RESULT:', output);
     
             return output + start;
         };
