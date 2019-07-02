@@ -74,12 +74,14 @@
 * `WebGLRenderer.setScissor` will default the `drawingBufferHeight` if no argument is provided, stopping NaN scissor heights.
 * If you called `Scene.destroy` within a Game Object `pointerdown` or `pointerup` handler, it would cause the error "Cannot read property 'game' of null" if the event wasn't cancelled in your handler. It now checks if the manager is still there before accessing its property. Fix #4436 (thanks @jcyuan)
 * The `Arc / Circle` Game Object wasn't rendering centered correctly in WebGL due to an issue in a previous size related commit, it would be half a radius off. Fix #4620 (thanks @CipSoft-Components @rexrainbow)
+* Destroying a Scene in HEADLESS mode would throw an error as it tried to access the gl renderer in the Camera class. Fix #4467 (thanks @AndreaBoeAbrahamsen @samme)
+* `Tilemap.createFromObjects` would ignore the `scene` argument passed in to the method. It's now used (thanks @samme)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@vacarsu @KennethGomez
+@vacarsu @KennethGomez @samme @ldd @Jazcash
 
 
 
