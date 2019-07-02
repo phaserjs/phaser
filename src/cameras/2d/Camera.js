@@ -42,7 +42,7 @@ var Vector2 = require('../../math/Vector2');
  * @memberof Phaser.Cameras.Scene2D
  * @constructor
  * @since 3.0.0
- * 
+ *
  * @extends Phaser.Cameras.Scene2D.BaseCamera
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.Tint
@@ -194,11 +194,11 @@ var Camera = new Class({
 
         /**
          * Is this Camera rendering directly to the canvas or to a texture?
-         * 
+         *
          * Enable rendering to texture with the method `setRenderToTexture` (just enabling this boolean won't be enough)
-         * 
+         *
          * Once enabled you can toggle it by switching this property.
-         * 
+         *
          * To properly remove a render texture you should call the `clearRenderToTexture()` method.
          *
          * @name Phaser.Cameras.Scene2D.Camera#renderToTexture
@@ -211,9 +211,9 @@ var Camera = new Class({
         /**
          * If this Camera has been set to render to a texture then this holds a reference
          * to the HTML Canvas Element that the Camera is drawing to.
-         * 
+         *
          * Enable texture rendering using the method `setRenderToTexture`.
-         * 
+         *
          * This is only populated if Phaser is running with the Canvas Renderer.
          *
          * @name Phaser.Cameras.Scene2D.Camera#canvas
@@ -225,9 +225,9 @@ var Camera = new Class({
         /**
          * If this Camera has been set to render to a texture then this holds a reference
          * to the Rendering Context belonging to the Canvas element the Camera is drawing to.
-         * 
+         *
          * Enable texture rendering using the method `setRenderToTexture`.
-         * 
+         *
          * This is only populated if Phaser is running with the Canvas Renderer.
          *
          * @name Phaser.Cameras.Scene2D.Camera#context
@@ -239,9 +239,9 @@ var Camera = new Class({
         /**
          * If this Camera has been set to render to a texture then this holds a reference
          * to the GL Texture belonging the Camera is drawing to.
-         * 
+         *
          * Enable texture rendering using the method `setRenderToTexture`.
-         * 
+         *
          * This is only set if Phaser is running with the WebGL Renderer.
          *
          * @name Phaser.Cameras.Scene2D.Camera#glTexture
@@ -253,9 +253,9 @@ var Camera = new Class({
         /**
          * If this Camera has been set to render to a texture then this holds a reference
          * to the GL Frame Buffer belonging the Camera is drawing to.
-         * 
+         *
          * Enable texture rendering using the method `setRenderToTexture`.
-         * 
+         *
          * This is only set if Phaser is running with the WebGL Renderer.
          *
          * @name Phaser.Cameras.Scene2D.Camera#framebuffer
@@ -267,9 +267,9 @@ var Camera = new Class({
         /**
          * If this Camera has been set to render to a texture and to use a custom pipeline,
          * then this holds a reference to the pipeline the Camera is drawing with.
-         * 
+         *
          * Enable texture rendering using the method `setRenderToTexture`.
-         * 
+         *
          * This is only set if Phaser is running with the WebGL Renderer.
          *
          * @name Phaser.Cameras.Scene2D.Camera#pipeline
@@ -281,32 +281,32 @@ var Camera = new Class({
 
     /**
      * Sets the Camera to render to a texture instead of to the main canvas.
-     * 
+     *
      * The Camera will redirect all Game Objects it's asked to render to this texture.
-     * 
+     *
      * During the render sequence, the texture itself will then be rendered to the main canvas.
-     * 
+     *
      * Doing this gives you the ability to modify the texture before this happens,
      * allowing for special effects such as Camera specific shaders, or post-processing
      * on the texture.
-     * 
+     *
      * If running under Canvas the Camera will render to its `canvas` property.
-     * 
+     *
      * If running under WebGL the Camera will create a frame buffer, which is stored in its `framebuffer` and `glTexture` properties.
-     * 
+     *
      * If you set a camera to render to a texture then it will emit 2 events during the render loop:
-     * 
+     *
      * First, it will emit the event `prerender`. This happens right before any Game Object's are drawn to the Camera texture.
-     * 
+     *
      * Then, it will emit the event `postrender`. This happens after all Game Object's have been drawn, but right before the
      * Camera texture is rendered to the main game canvas. It's the final point at which you can manipulate the texture before
      * it appears in-game.
-     * 
+     *
      * You should not enable this unless you plan on actually using the texture it creates
      * somehow, otherwise you're just doubling the work required to render your game.
-     * 
+     *
      * To temporarily disable rendering to a texture, toggle the `renderToTexture` boolean.
-     * 
+     *
      * If you no longer require the Camera to render to a texture, call the `clearRenderToTexture` method,
      * which will delete the respective textures and free-up resources.
      *
@@ -344,9 +344,9 @@ var Camera = new Class({
 
     /**
      * Sets the WebGL pipeline this Camera is using when rendering to a texture.
-     * 
+     *
      * You can pass either the string-based name of the pipeline, or a reference to the pipeline itself.
-     * 
+     *
      * Call this method with no arguments to clear any previously set pipeline.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setPipeline
@@ -378,7 +378,7 @@ var Camera = new Class({
     /**
      * If this Camera was set to render to a texture, this will clear the resources it was using and
      * redirect it to render back to the primary Canvas again.
-     * 
+     *
      * If you only wish to temporarily disable rendering to a texture then you can toggle the
      * property `renderToTexture` instead.
      *
@@ -395,6 +395,11 @@ var Camera = new Class({
         }
 
         var renderer = this.scene.sys.game.renderer;
+
+        if (!renderer)
+        {
+            return;
+        }
 
         if (renderer.gl)
         {
@@ -888,7 +893,7 @@ var Camera = new Class({
 
         this.scrollX = fx - originX;
         this.scrollY = fy - originY;
-        
+
         if (this.useBounds)
         {
             this.scrollX = this.clampX(this.scrollX);
