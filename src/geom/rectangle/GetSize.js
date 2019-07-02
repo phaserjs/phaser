@@ -6,11 +6,10 @@
 
 var Point = require('../point/Point');
 
-//  The size of the Rectangle object, expressed as a Point object
-//  with the values of the width and height properties.
 
 /**
- * [description]
+ *  The size of the Rectangle object, expressed as a Point object
+ *  with the values of the width and height properties.
  *
  * @function Phaser.Geom.Rectangle.GetSize
  * @since 3.0.0

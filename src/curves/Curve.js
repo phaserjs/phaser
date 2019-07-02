@@ -203,10 +203,8 @@ var Curve = new Class({
         return this.getPointAt(1, out);
     },
 
-    // Get total curve arc length
-
     /**
-     * [description]
+     * Get total curve arc length
      *
      * @method Phaser.Curves.Curve#getLength
      * @since 3.0.0
@@ -220,10 +218,9 @@ var Curve = new Class({
         return lengths[lengths.length - 1];
     },
 
-    // Get list of cumulative segment lengths
 
     /**
-     * [description]
+     * Get list of cumulative segment lengths
      *
      * @method Phaser.Curves.Curve#getLengths
      * @since 3.0.0
@@ -382,13 +379,11 @@ var Curve = new Class({
         return this.getPointAt(0, out);
     },
 
-    // Returns a unit vector tangent at t
-    // In case any sub curve does not implement its tangent derivation,
-    // 2 points a small delta apart will be used to find its gradient
-    // which seems to give a reasonable approximation
-
     /**
-     * [description]
+     * Returns a unit vector tangent at t
+     * In case any sub curve does not implement its tangent derivation,
+     * 2 points a small delta apart will be used to find its gradient
+     * which seems to give a reasonable approximation
      *
      * @method Phaser.Curves.Curve#getTangent
      * @since 3.0.0

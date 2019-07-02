@@ -690,10 +690,8 @@ var Path = new Class({
         return out.copy(this.startPoint);
     },
 
-    //  Creates a line curve from the previous end point to x/y
-
     /**
-     * [description]
+     * Creates a line curve from the previous end point to x/y
      *
      * @method Phaser.Curves.Path#lineTo
      * @since 3.0.0
@@ -780,10 +778,8 @@ var Path = new Class({
         };
     },
 
-    // cacheLengths must be recalculated.
-
     /**
-     * [description]
+     * cacheLengths must be recalculated.
      *
      * @method Phaser.Curves.Path#updateArcLengths
      * @since 3.0.0
