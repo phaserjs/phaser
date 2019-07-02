@@ -638,7 +638,7 @@ var Tilemap = new Class({
                 config.x = obj.x;
                 config.y = obj.y;
 
-                var sprite = this.scene.make.sprite(config);
+                var sprite = scene.make.sprite(config);
 
                 sprite.name = obj.name;
 
@@ -1175,7 +1175,7 @@ var Tilemap = new Class({
         layer = this.getLayer(layer);
 
         if (layer === null) { return null; }
-        
+
         return TilemapComponents.GetTileAtWorldXY(worldX, worldY, nonNull, camera, layer);
     },
 
@@ -1547,7 +1547,7 @@ var Tilemap = new Class({
 
     /**
      * Removes the given TilemapLayer from this Tilemap without destroying it.
-     * 
+     *
      * If no layer specified, the map's current layer is used.
      *
      * @method Phaser.Tilemaps.Tilemap#removeLayer
@@ -1580,7 +1580,7 @@ var Tilemap = new Class({
 
     /**
      * Destroys the given TilemapLayer and removes it from this Tilemap.
-     * 
+     *
      * If no layer specified, the map's current layer is used.
      *
      * @method Phaser.Tilemaps.Tilemap#destroyLayer
@@ -1647,7 +1647,7 @@ var Tilemap = new Class({
     /**
      * Removes the given Tile, or an array of Tiles, from the layer to which they belong,
      * and optionally recalculates the collision information.
-     * 
+     *
      * This cannot be applied to Tiles that belong to Static Tilemap Layers.
      *
      * @method Phaser.Tilemaps.Tilemap#removeTile
@@ -1775,7 +1775,7 @@ var Tilemap = new Class({
 
     /**
      * Draws a debug representation of all layers within this Tilemap to the given Graphics object.
-     * 
+     *
      * This is helpful when you want to get a quick idea of which of your tiles are colliding and which
      * have interesting faces. The tiles are drawn starting at (0, 0) in the Graphics, allowing you to
      * place the debug representation wherever you want on the screen.
