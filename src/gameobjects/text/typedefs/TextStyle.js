@@ -1,7 +1,7 @@
 /**
  * A Text Style configuration object as used by the Text Game Object.
  *
- * @typedef {object} Phaser.Types.GameObjects.Text.TextSyle
+ * @typedef {object} Phaser.Types.GameObjects.Text.TextStyle
  * @since 3.0.0
  *
  * @property {string} [fontFamily='Courier'] - The font the Text object will render with. This is a Canvas style font string.
