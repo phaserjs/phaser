@@ -193,9 +193,12 @@ var UpdateList = new Class({
      */
     update: function (time, delta)
     {
-        for (var i = 0; i < this._list.length; i++)
+        var list = this._list;
+        var length = list.length;
+
+        for (var i = 0; i < length; i++)
         {
-            var gameObject = this._list[i];
+            var gameObject = list[i];
 
             if (gameObject.active)
             {
@@ -216,9 +219,7 @@ var UpdateList = new Class({
      */
     remove: function (child)
     {
-        var index = this._pendingRemoval.indexOf(child);
-
-        if (index !== -1)
+        if (this._list.indexOf(child) !== -1 && this._pendingRemoval.indexOf(child) === -1)
         {
             this._pendingRemoval.push(child);
         }
