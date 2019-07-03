@@ -442,6 +442,10 @@ var AnimationManager = new Class({
         {
             anim.load(child, startFrame);
         }
+        else
+        {
+            console.warn('Missing animation: ' + key);
+        }
 
         return child;
     },
