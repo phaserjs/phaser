@@ -534,8 +534,11 @@ var TextureTintPipeline = new Class({
         var frameWidth = frame.cutWidth;
         var frameHeight = frame.cutHeight;
 
-        var x = -sprite.displayOriginX + frameX;
-        var y = -sprite.displayOriginY + frameY;
+        var displayOriginX = sprite.displayOriginX;
+        var displayOriginY = sprite.displayOriginY;
+
+        var x = -displayOriginX + frameX;
+        var y = -displayOriginY + frameY;
 
         if (sprite.isCropped)
         {
@@ -557,29 +560,29 @@ var TextureTintPipeline = new Class({
             frameX = crop.x;
             frameY = crop.y;
 
-            x = -sprite.displayOriginX + frameX;
-            y = -sprite.displayOriginY + frameY;
+            x = -displayOriginX + frameX;
+            y = -displayOriginY + frameY;
         }
+
+        var flipX = 1;
+        var flipY = 1;
 
         if (sprite.flipX)
         {
-            x += frameWidth;
-            frameWidth *= -1;
+            x += (-frame.realWidth + (displayOriginX * 2));
+
+            flipX = -1;
         }
 
-        //  Invert the flipY if this is coming from a GLTexture
-        var flipY = sprite.flipY ^ ((frame.source.isGLTexture && !texture.flipY) ? 1 : 0);
-
-        if (flipY)
+        //  Auto-invert the flipY if this is coming from a GLTexture
+        if (sprite.flipY || (frame.source.isGLTexture && !texture.flipY))
         {
-            y += frameHeight;
-            frameHeight *= -1;
+            y += (-frame.realHeight + (displayOriginY * 2));
+
+            flipY = -1;
         }
 
-        var xw = x + frameWidth;
-        var yh = y + frameHeight;
-
-        spriteMatrix.applyITRS(sprite.x, sprite.y, sprite.rotation, sprite.scaleX, sprite.scaleY);
+        spriteMatrix.applyITRS(sprite.x, sprite.y, sprite.rotation, sprite.scaleX * flipX, sprite.scaleY * flipY);
 
         camMatrix.copyFrom(camera.matrix);
 
@@ -603,6 +606,9 @@ var TextureTintPipeline = new Class({
             //  Multiply by the Sprite matrix, store result in calcMatrix
             camMatrix.multiply(spriteMatrix, calcMatrix);
         }
+
+        var xw = x + frameWidth;
+        var yh = y + frameHeight;
 
         var tx0 = calcMatrix.getX(x, y);
         var ty0 = calcMatrix.getY(x, y);
