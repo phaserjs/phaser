@@ -657,6 +657,8 @@ var CanvasRenderer = new Class({
         var frameY = cd.y;
         var frameWidth = frame.cutWidth;
         var frameHeight = frame.cutHeight;
+        var customPivot = frame.customPivot;
+
         var res = frame.source.resolution;
 
         var displayOriginX = sprite.displayOriginX;
@@ -713,7 +715,10 @@ var CanvasRenderer = new Class({
 
         if (sprite.flipX)
         {
-            x += (-frame.realWidth + (displayOriginX * 2));
+            if (!customPivot)
+            {
+                x += (-frame.realWidth + (displayOriginX * 2));
+            }
 
             flipX = -1;
         }
@@ -721,7 +726,10 @@ var CanvasRenderer = new Class({
         //  Auto-invert the flipY if this is coming from a GLTexture
         if (sprite.flipY)
         {
-            y += (-frame.realHeight + (displayOriginY * 2));
+            if (!customPivot)
+            {
+                y += (-frame.realHeight + (displayOriginY * 2));
+            }
 
             flipY = -1;
         }

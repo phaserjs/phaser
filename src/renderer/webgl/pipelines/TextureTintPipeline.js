@@ -533,6 +533,7 @@ var TextureTintPipeline = new Class({
         var frameY = frame.y;
         var frameWidth = frame.cutWidth;
         var frameHeight = frame.cutHeight;
+        var customPivot = frame.customPivot;
 
         var displayOriginX = sprite.displayOriginX;
         var displayOriginY = sprite.displayOriginY;
@@ -569,7 +570,10 @@ var TextureTintPipeline = new Class({
 
         if (sprite.flipX)
         {
-            x += (-frame.realWidth + (displayOriginX * 2));
+            if (!customPivot)
+            {
+                x += (-frame.realWidth + (displayOriginX * 2));
+            }
 
             flipX = -1;
         }
@@ -577,7 +581,10 @@ var TextureTintPipeline = new Class({
         //  Auto-invert the flipY if this is coming from a GLTexture
         if (sprite.flipY || (frame.source.isGLTexture && !texture.flipY))
         {
-            y += (-frame.realHeight + (displayOriginY * 2));
+            if (!customPivot)
+            {
+                y += (-frame.realHeight + (displayOriginY * 2));
+            }
 
             flipY = -1;
         }

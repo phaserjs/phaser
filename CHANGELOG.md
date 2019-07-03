@@ -79,6 +79,7 @@
 * Destroying a Scene in HEADLESS mode would throw an error as it tried to access the gl renderer in the Camera class. Fix #4467 (thanks @AndreaBoeAbrahamsen @samme)
 * `Tilemap.createFromObjects` would ignore the `scene` argument passed in to the method. It's now used (thanks @samme)
 * Fixed a bug in the WebGL and Canvas Renderers where a Sprite with a `flipX` or `flipY` value set would render the offset frames slightly out of place, causing the animation to appear jittery. Also, the sprite would be out of place by its origin. Fix #4636 #3813  (thanks @jronn @B3L7)
+* Animations with custom pivots, like those created in Texture Packer with the pivot option enabled, would be mis-aligned if flipped. They now render in the correct position, regardless of scale or flip on either axis. Fix #4155 (thanks @Zax37)
 
 ### Examples, Documentation and TypeScript
 
