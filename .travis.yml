@@ -6,12 +6,12 @@ git:
 language: node_js
 
 node_js:
-  - '9'
+  - '10'
 
 env:
   - TERM=dumb
 
 script:
-  - npm install
-  - npm run lint
-  - npm run build
+  - yarn install
+  - yarn run lint
+  - yarn run build
