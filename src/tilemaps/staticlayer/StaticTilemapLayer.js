@@ -1446,7 +1446,13 @@ var StaticTilemapLayer = new Class({
     {
         if (removeFromTilemap === undefined) { removeFromTilemap = true; }
 
-        // Uninstall this layer only if it is still installed on the LayerData object
+        if (!this.tilemap)
+        {
+            //  Abort, we've already been destroyed
+            return;
+        }
+
+        //  Uninstall this layer only if it is still installed on the LayerData object
         if (this.layer.tilemapLayer === this)
         {
             this.layer.tilemapLayer = undefined;
