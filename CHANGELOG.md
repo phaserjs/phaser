@@ -82,6 +82,7 @@
 * Animations with custom pivots, like those created in Texture Packer with the pivot option enabled, would be mis-aligned if flipped. They now render in the correct position, regardless of scale or flip on either axis. Fix #4155 (thanks @Zax37)
 * Removing a frame from a 2 frame animation would cause an error when a Sprite using that animation next tried to render. Fix #4621 (thanks @orlicgms)
 * Calling `Animation.setRepeat()` wouldn't reset the `repeatCounter` properly, causing Sprite bound animation instances to fail to change their repeat rate. Fix #4553 (thanks @SavedByZero)
+* The `UpdateList.remove` method wouldn't flag the Game Object for removal properly if it was active. It now checks that the Game Object is in the current update list and hasn't already been inserted into the 'pending removal' list before flagging it. Fix #4544 (thanks @jcyuan)
 
 ### Examples, Documentation and TypeScript
 
