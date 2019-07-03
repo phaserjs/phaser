@@ -843,9 +843,11 @@ var Animation = new Class({
         var len = this.frames.length;
         var slice = 1 / (len - 1);
 
+        var frame;
+
         for (var i = 0; i < len; i++)
         {
-            var frame = this.frames[i];
+            frame = this.frames[i];
 
             frame.index = i + 1;
             frame.isFirst = false;
@@ -855,11 +857,21 @@ var Animation = new Class({
             if (i === 0)
             {
                 frame.isFirst = true;
-                frame.isLast = (len === 1);
-                frame.prevFrame = this.frames[len - 1];
-                frame.nextFrame = this.frames[i + 1];
+
+                if (len === 1)
+                {
+                    frame.isLast = true;
+                    frame.nextFrame = frame;
+                    frame.prevFrame = frame;
+                }
+                else
+                {
+                    frame.isLast = false;
+                    frame.prevFrame = this.frames[len - 1];
+                    frame.nextFrame = this.frames[i + 1];
+                }
             }
-            else if (i === len - 1)
+            else if (i === len - 1 && len > 1)
             {
                 frame.isLast = true;
                 frame.prevFrame = this.frames[len - 2];
