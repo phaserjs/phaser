@@ -63,6 +63,8 @@
 
 * When calling `setHitArea` and not providing a shape (i.e. a texture based hit area), it will now set `customHitArea` to `false` by default (thanks @rexrainbow)
 * The Shader will no longer set uniforms if the values are `null`, saving on GL ops.
+* The Animation Manager will now emit a console warning if you try and play an animation on a Sprite that doesn't exist.
+* The Animation component will no longer start an animation on a Sprite if the animation doesn't exist. Previously it would throw an error saying "Unable to read the property getFirstTick of null".
 
 ### Bug Fixes
 
