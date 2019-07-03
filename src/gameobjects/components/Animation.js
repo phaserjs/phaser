@@ -733,7 +733,7 @@ var Animation = new Class({
     {
         this._repeat = value;
 
-        this.repeatCounter = 0;
+        this.repeatCounter = (value === -1) ? Number.MAX_VALUE : value;
 
         return this.parent;
     },

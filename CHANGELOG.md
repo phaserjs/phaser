@@ -81,6 +81,7 @@
 * Fixed a bug in the WebGL and Canvas Renderers where a Sprite with a `flipX` or `flipY` value set would render the offset frames slightly out of place, causing the animation to appear jittery. Also, the sprite would be out of place by its origin. Fix #4636 #3813  (thanks @jronn @B3L7)
 * Animations with custom pivots, like those created in Texture Packer with the pivot option enabled, would be mis-aligned if flipped. They now render in the correct position, regardless of scale or flip on either axis. Fix #4155 (thanks @Zax37)
 * Removing a frame from a 2 frame animation would cause an error when a Sprite using that animation next tried to render. Fix #4621 (thanks @orlicgms)
+* Calling `Animation.setRepeat()` wouldn't reset the `repeatCounter` properly, causing Sprite bound animation instances to fail to change their repeat rate. Fix #4553 (thanks @SavedByZero)
 
 ### Examples, Documentation and TypeScript
 
