@@ -8,7 +8,7 @@ var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
 var GetFastValue = require('../../utils/object/GetFastValue');
-var Merge = require('../../utils/object/Merge');
+var Extend = require('../../utils/object/Extend');
 var SetValue = require('../../utils/object/SetValue');
 var ShaderRender = require('./ShaderRender');
 var TransformMatrix = require('../components/TransformMatrix');
@@ -512,7 +512,7 @@ var Shader = new Class({
 
         //  The default uniforms available within the fragment shader
         var defaultUniforms = {
-            resolution: { type: '2f', value: { x: this.width, y: this.height }},
+            resolution: { type: '2f', value: { x: this.width, y: this.height } },
             time: { type: '1f', value: 0 },
             mouse: { type: '2f', value: { x: this.width / 2, y: this.height / 2 } },
             date: { type: '4fv', value: [ d.getFullYear(), d.getMonth(), d.getDate(), d.getHours() * 60 * 60 + d.getMinutes() * 60 + d.getSeconds() ] },
@@ -522,10 +522,10 @@ var Shader = new Class({
             iChannel2: { type: 'sampler2D', value: null, textureData: { repeat: true } },
             iChannel3: { type: 'sampler2D', value: null, textureData: { repeat: true } }
         };
-
+ 
         if (this.shader.uniforms)
         {
-            this.uniforms = Merge(this.shader.uniforms, defaultUniforms);
+            this.uniforms = Extend(true, {}, this.shader.uniforms, defaultUniforms);
         }
         else
         {
@@ -1037,17 +1037,17 @@ var Shader = new Class({
     {
         //  ITRS
 
+        var gl = this.gl;
         var width = this.width;
         var height = this.height;
         var renderer = this.renderer;
         var program = this.program;
+        var vm = this.viewMatrix;
 
         if (!this.renderToTexture)
         {
             var x = -this._displayOriginX;
             var y = -this._displayOriginY;
-    
-            var vm = this.viewMatrix;
     
             vm[0] = matrix2D[0];
             vm[1] = matrix2D[1];
@@ -1061,8 +1061,10 @@ var Shader = new Class({
 
         //  Update vertex shader uniforms
 
-        this.renderer.setMatrix4(program, 'uViewMatrix', false, this.viewMatrix);
-        this.renderer.setFloat2(program, 'uResolution', this.width, this.height);
+        gl.useProgram(program);
+
+        gl.uniformMatrix4fv(gl.getUniformLocation(program, 'uViewMatrix'), false, vm);
+        gl.uniform2f(gl.getUniformLocation(program, 'uResolution'), this.width, this.height);
 
         //  Update fragment shader uniforms
 
@@ -1120,8 +1122,7 @@ var Shader = new Class({
             gl.clear(gl.COLOR_BUFFER_BIT);
         }
 
-        renderer.setProgram(program);
-        renderer.setVertexBuffer(vertexBuffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 
         var location = gl.getAttribLocation(program, 'inPosition');
 
