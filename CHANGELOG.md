@@ -58,6 +58,7 @@
 * `Math.ToXY` is a new mini function that will take a given index and return a Vector2 containing the x and y coordinates of that index within a grid.
 * `RenderTexture.glTexture` is a new property that holds a reference to the WebGL Texture being used by the Render Texture. Useful for passing to a shader as a sampler2D.
 * `GroupCreateConfig.quantity` - when creating a Group using a config object you can now use the optional property `quantity` to set the number of objects to be created. Use this for quickly creating groups of single frame objects that don't need the advanced capabilities of `frameQuantity` and `repeat`.
+* `Pointer.locked` is a new read-only property that indicates if the pointer has been Pointer Locked, or not, via the Pointer Lock API.
 
 ### Updates
 
@@ -65,6 +66,7 @@
 * The Shader will no longer set uniforms if the values are `null`, saving on GL ops.
 * The Animation Manager will now emit a console warning if you try and play an animation on a Sprite that doesn't exist.
 * The Animation component will no longer start an animation on a Sprite if the animation doesn't exist. Previously it would throw an error saying "Unable to read the property getFirstTick of null".
+* `InputManager.onPointerLockChange` is a new method that handles pointer lock change events and dispatches the lock event.
 
 ### Bug Fixes
 
@@ -86,6 +88,8 @@
 * `DynamicTilemapLayer.destroy` will now no longer run its destroy sequence again if it has already been run once. Fix #4634 (thanks @CipSoft-Components)
 * `StaticTilemapLayer.destroy` will now no longer run its destroy sequence again if it has already been run once.
 * `Shader.uniforms` now uses Extend instead of Clone to perform a deep object copy, instead of a shallow one, avoiding multiple instances of the same shader sharing uniforms. Fix #4641 (thanks @davidmball)
+* Calling `input.mouse.requestPointerLock()` will no longer throw an error about being unable to push to the Input Manager events queue.
+* The `POINTERLOCK_CHANGE` event is now dispatched by the Input Manager again.
 
 ### Examples, Documentation and TypeScript
 
