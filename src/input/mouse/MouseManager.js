@@ -413,8 +413,8 @@ var MouseManager = new Class({
                 var element = _this.target;
 
                 _this.locked = (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) ? true : false;
-        
-                _this.manager.queue.push(event);
+
+                _this.manager.onPointerLockChange(event);
             };
 
             document.addEventListener('pointerlockchange', this.pointerLockChange, true);
