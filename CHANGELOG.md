@@ -85,6 +85,7 @@
 * The `UpdateList.remove` method wouldn't flag the Game Object for removal properly if it was active. It now checks that the Game Object is in the current update list and hasn't already been inserted into the 'pending removal' list before flagging it. Fix #4544 (thanks @jcyuan)
 * `DynamicTilemapLayer.destroy` will now no longer run its destroy sequence again if it has already been run once. Fix #4634 (thanks @CipSoft-Components)
 * `StaticTilemapLayer.destroy` will now no longer run its destroy sequence again if it has already been run once.
+* `Shader.uniforms` now uses Extend instead of Clone to perform a deep object copy, instead of a shallow one, avoiding multiple instances of the same shader sharing uniforms. Fix #4641 (thanks @davidmball)
 
 ### Examples, Documentation and TypeScript
 
