@@ -90,6 +90,8 @@
 * `Shader.uniforms` now uses Extend instead of Clone to perform a deep object copy, instead of a shallow one, avoiding multiple instances of the same shader sharing uniforms. Fix #4641 (thanks @davidmball)
 * Calling `input.mouse.requestPointerLock()` will no longer throw an error about being unable to push to the Input Manager events queue.
 * The `POINTERLOCK_CHANGE` event is now dispatched by the Input Manager again.
+* The `Pointer.movementX` and `Pointer.movementY` properties are now taken directly from the DOM pointer event values, if the pointer is locked, and no longer incremental. Fix #4611 (thanks @davidmball)
+* The `Pointer.velocity` and `Pointer.midPoint` values are now updated every frame. Based on the `motionFactor` setting they are smoothed towards zero, for velocity, and the pointer position for the mid point. This now happens regardless if the Pointer moves or not, which is how it was originally intended to behave.
 
 ### Examples, Documentation and TypeScript
 
