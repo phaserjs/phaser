@@ -772,6 +772,25 @@ var InputManager = new Class({
     },
 
     /**
+     * Processes a pointer lock change event, as passed in by the MouseManager.
+     *
+     * @method Phaser.Input.InputManager#onPointerLockChange
+     * @fires Phaser.Input.Events#POINTERLOCK_CHANGE
+     * @private
+     * @since 3.19.0
+     *
+     * @param {MouseEvent} event - The native DOM Mouse event.
+     */
+    onPointerLockChange: function (event)
+    {
+        var isLocked = this.mouse.locked;
+
+        this.mousePointer.locked = isLocked;
+
+        this.events.emit(Events.POINTERLOCK_CHANGE, event, isLocked);
+    },
+
+    /**
      * Checks if the given Game Object should be considered as a candidate for input or not.
      *
      * Checks if the Game Object has an input component that is enabled, that it will render,
