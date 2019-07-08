@@ -439,6 +439,22 @@ var Pointer = new Class({
         this.active = (id === 0) ? true : false;
 
         /**
+         * Is this pointer Pointer Locked?
+         * 
+         * Only a mouse pointer can be locked and it only becomes locked when requested via
+         * the browsers Pointer Lock API.
+         * 
+         * You can request this by calling the `this.input.mouse.requestPointerLock()` method from
+         * a `pointerdown` or `pointerup` event handler.
+         *
+         * @name Phaser.Input.Pointer#locked
+         * @readonly
+         * @type {boolean}
+         * @since 3.19.0
+         */
+        this.locked = false;
+
+        /**
          * The horizontal scroll amount that occurred due to the user moving a mouse wheel or similar input device.
          *
          * @name Phaser.Input.Pointer#deltaX
