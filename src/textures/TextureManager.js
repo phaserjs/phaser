@@ -289,6 +289,10 @@ var TextureManager = new Class({
      * Gets an existing texture frame and converts it into a base64 encoded image and returns the base64 data.
      * 
      * You can also provide the image type and encoder options.
+     * 
+     * This will only work with bitmap based texture frames, such as those created from Texture Atlases.
+     * It will not work with GL Texture objects, such as Shaders, or Render Textures. For those please
+     * see the WebGL Snapshot function instead.
      *
      * @method Phaser.Textures.TextureManager#getBase64
      * @since 3.12.0
@@ -309,7 +313,7 @@ var TextureManager = new Class({
 
         var textureFrame = this.getFrame(key, frame);
 
-        if (textureFrame)
+        if (textureFrame && !textureFrame.source.isRenderTexture && !textureFrame.source.isGLTexture)
         {
             var cd = textureFrame.canvasData;
 
