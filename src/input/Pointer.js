@@ -650,11 +650,11 @@ var Pointer = new Class({
         //  Sets the local x/y properties
         this.manager.transformPointer(this, event.pageX, event.pageY, true);
 
-        if (this.manager.mouse.locked)
+        if (this.locked)
         {
             //  Multiple DOM events may occur within one frame, but only one Phaser event will fire
-            this.movementX += event.movementX || event.mozMovementX || event.webkitMovementX || 0;
-            this.movementY += event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+            this.movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+            this.movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
         }
 
         this.moveTime = event.timeStamp;
