@@ -302,12 +302,12 @@ var Path = new Class({
      * @method Phaser.Curves.Path#ellipseTo
      * @since 3.0.0
      *
-     * @param {number} xRadius - The horizontal radius of the ellipse.
-     * @param {number} yRadius - The vertical radius of the ellipse.
-     * @param {number} startAngle - The start angle of the ellipse, in degrees.
-     * @param {number} endAngle - The end angle of the ellipse, in degrees.
-     * @param {boolean} clockwise - Whether the ellipse should be rotated clockwise (`true`) or counter-clockwise (`false`).
-     * @param {number} rotation - The rotation of the ellipse, in degrees.
+     * @param {number} [xRadius=0] - The horizontal radius of ellipse.
+     * @param {number} [yRadius=0] - The vertical radius of ellipse.
+     * @param {integer} [startAngle=0] - The start angle of the ellipse, in degrees.
+     * @param {integer} [endAngle=360] - The end angle of the ellipse, in degrees.
+     * @param {boolean} [clockwise=false] - Whether the ellipse should be drawn clockwise (`true`) or counter-clockwise (`false`).
+     * @param {number} [rotation=0] - The rotation of the ellipse, in degrees.
      *
      * @return {Phaser.Curves.Path} This Path object.
      */
