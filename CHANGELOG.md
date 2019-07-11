@@ -92,6 +92,7 @@
 * The `POINTERLOCK_CHANGE` event is now dispatched by the Input Manager again.
 * The `Pointer.movementX` and `Pointer.movementY` properties are now taken directly from the DOM pointer event values, if the pointer is locked, and no longer incremental. Fix #4611 (thanks @davidmball)
 * The `Pointer.velocity` and `Pointer.midPoint` values are now updated every frame. Based on the `motionFactor` setting they are smoothed towards zero, for velocity, and the pointer position for the mid point. This now happens regardless if the Pointer moves or not, which is how it was originally intended to behave.
+* The `DESTROY` event hook wasn't removed from Group children when destroying the Group and `destroyChildren` was set to false. Now, the hook is removed regardless (thanks @rexrainbow)
 
 ### Examples, Documentation and TypeScript
 
