@@ -36,7 +36,7 @@ var Texture = require('./Texture');
  * @constructor
  * @since 3.7.0
  *
- * @param {Phaser.Textures.CanvasTexture} manager - A reference to the Texture Manager this Texture belongs to.
+ * @param {Phaser.Textures.TextureManager} manager - A reference to the Texture Manager this Texture belongs to.
  * @param {string} key - The unique string-based key of this Texture.
  * @param {HTMLCanvasElement} source - The canvas element that is used as the base of this texture.
  * @param {integer} width - The width of the canvas.
