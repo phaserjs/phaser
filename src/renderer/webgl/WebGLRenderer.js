@@ -211,7 +211,10 @@ var WebGLRenderer = new Class({
             getPixel: false,
             callback: null,
             type: 'image/png',
-            encoder: 0.92
+            encoder: 0.92,
+            isFramebuffer: false,
+            bufferWidth: 0,
+            bufferHeight: 0
         };
 
         // Internal Renderer State (Textures, Framebuffers, Pipelines, Buffers, etc)
@@ -2195,6 +2198,61 @@ var WebGLRenderer = new Class({
         this.snapshotArea(x, y, 1, 1, callback);
 
         this.snapshotState.getPixel = true;
+
+        return this;
+    },
+
+    /**
+     * Takes a snapshot of the given area of the given frame buffer.
+     * 
+     * Unlike the other snapshot methods, this one is processed immediately and doesn't wait for the next render.
+     * 
+     * Snapshots work by using the WebGL `readPixels` feature to grab every pixel from the frame buffer into an ArrayBufferView.
+     * It then parses this, copying the contents to a temporary Canvas and finally creating an Image object from it,
+     * which is the image returned to the callback provided. All in all, this is a computationally expensive and blocking process,
+     * which gets more expensive the larger the canvas size gets, so please be careful how you employ this in your game.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#snapshotFramebuffer
+     * @since 3.19.0
+     *
+     * @param {WebGLFramebuffer} framebuffer - The framebuffer to grab from.
+     * @param {integer} bufferWidth - The width of the framebuffer.
+     * @param {integer} bufferHeight - The height of the framebuffer.
+     * @param {Phaser.Types.Renderer.Snapshot.SnapshotCallback} callback - The Function to invoke after the snapshot image is created.
+     * @param {integer} [x=0] - The x coordinate to grab from.
+     * @param {integer} [y=0] - The y coordinate to grab from.
+     * @param {integer} [width=bufferWidth] - The width of the area to grab.
+     * @param {integer} [height=bufferHeight] - The height of the area to grab.
+     * @param {string} [type='image/png'] - The format of the image to create, usually `image/png` or `image/jpeg`.
+     * @param {number} [encoderOptions=0.92] - The image quality, between 0 and 1. Used for image formats with lossy compression, such as `image/jpeg`.
+     *
+     * @return {this} This WebGL Renderer.
+     */
+    snapshotFramebuffer: function (framebuffer, bufferWidth, bufferHeight, callback, x, y, width, height, type, encoderOptions)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = bufferWidth; }
+        if (height === undefined) { height = bufferHeight; }
+
+        var currentFramebuffer = this.currentFramebuffer;
+
+        this.snapshotArea(x, y, width, height, callback, type, encoderOptions);
+
+        var state = this.snapshotState;
+
+        state.isFramebuffer = true;
+        state.bufferWidth = bufferWidth;
+        state.bufferHeight = bufferHeight;
+
+        this.setFramebuffer(framebuffer);
+
+        WebGLSnapshot(this.canvas, state);
+
+        this.setFramebuffer(currentFramebuffer);
+
+        state.callback = null;
+        state.isFramebuffer = false;
 
         return this;
     },
