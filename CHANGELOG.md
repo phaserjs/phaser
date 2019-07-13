@@ -67,6 +67,7 @@
 * The Animation Manager will now emit a console warning if you try and play an animation on a Sprite that doesn't exist.
 * The Animation component will no longer start an animation on a Sprite if the animation doesn't exist. Previously it would throw an error saying "Unable to read the property getFirstTick of null".
 * `InputManager.onPointerLockChange` is a new method that handles pointer lock change events and dispatches the lock event.
+* `CanvasTexture` has been added to the `Textures` namespace so it can be created without needing to import it. The correct way to create a `CanvasTexture` is via the Texture Manager, but you can now do it directly if required. Fix #4651 (thanks @Jugacu)
 
 ### Bug Fixes
 
