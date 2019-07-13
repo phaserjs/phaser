@@ -10,4 +10,7 @@
  * @property {integer} [width] - The width of the snapshot.
  * @property {integer} [height] - The height of the snapshot.
  * @property {boolean} [getPixel=false] - Is this a snapshot to get a single pixel, or an area?
+ * @property {boolean} [isFramebuffer=false] - Is this snapshot grabbing from a frame buffer or a canvas?
+ * @property {integer} [bufferWidth] - The width of the frame buffer, if a frame buffer grab.
+ * @property {integer} [bufferHeight] - The height of the frame buffer, if a frame buffer grab.
  */
