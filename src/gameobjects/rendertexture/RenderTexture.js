@@ -1073,7 +1073,7 @@ var RenderTexture = new Class({
      * 
      * The snapshot is taken immediately.
      * 
-     * To capture the whole Render Textue see the `snapshot` method. To capture a specific pixel, see `snapshotPixel`.
+     * To capture the whole Render Texture see the `snapshot` method. To capture a specific pixel, see `snapshotPixel`.
      * 
      * Snapshots work by using the WebGL `readPixels` feature to grab every pixel from the frame buffer into an ArrayBufferView.
      * It then parses this, copying the contents to a temporary Canvas and finally creating an Image object from it,
@@ -1095,7 +1095,7 @@ var RenderTexture = new Class({
      */
     snapshotArea: function (x, y, width, height, callback, type, encoderOptions)
     {
-        this.renderer.snapshotFramebuffer(this.framebuffer, this.width, this.height, callback, x, y, width, height, type, encoderOptions);
+        this.renderer.snapshotFramebuffer(this.framebuffer, this.width, this.height, callback, false, x, y, width, height, type, encoderOptions);
 
         return this;
     },
@@ -1105,7 +1105,7 @@ var RenderTexture = new Class({
      * 
      * The snapshot is taken immediately.
      * 
-     * To capture just a portion of the Render Textue see the `snapshotArea` method. To capture a specific pixel, see `snapshotPixel`.
+     * To capture just a portion of the Render Texture see the `snapshotArea` method. To capture a specific pixel, see `snapshotPixel`.
      * 
      * Snapshots work by using the WebGL `readPixels` feature to grab every pixel from the frame buffer into an ArrayBufferView.
      * It then parses this, copying the contents to a temporary Canvas and finally creating an Image object from it,
@@ -1123,7 +1123,7 @@ var RenderTexture = new Class({
      */
     snapshot: function (callback, type, encoderOptions)
     {
-        this.renderer.snapshotFramebuffer(this.framebuffer, this.width, this.height, callback, 0, 0, this.width, this.height, type, encoderOptions);
+        this.renderer.snapshotFramebuffer(this.framebuffer, this.width, this.height, callback, false, 0, 0, this.width, this.height, type, encoderOptions);
 
         return this;
     },
@@ -1133,11 +1133,11 @@ var RenderTexture = new Class({
      * 
      * The snapshot is taken immediately.
      * 
-     * To capture the whole Render Textue see the `snapshot` method. To capture a specific portion, see `snapshotArea`.
+     * To capture the whole Render Texture see the `snapshot` method. To capture a specific portion, see `snapshotArea`.
      * 
-     * Unlike the other two snapshot methods, this one will return a `Color` object containing the color data for
+     * Unlike the other two snapshot methods, this one will send your callback a `Color` object containing the color data for
      * the requested pixel. It doesn't need to create an internal Canvas or Image object, so is a lot faster to execute,
-     * using less memory.
+     * using less memory, than the other snapshot methods.
      *
      * @method Phaser.GameObjects.RenderTexture#snapshotPixel
      * @since 3.19.0
@@ -1150,7 +1150,7 @@ var RenderTexture = new Class({
      */
     snapshotPixel: function (x, y, callback)
     {
-        this.renderer.snapshotFramebuffer(this.framebuffer, this.width, this.height, callback, x, y, 1, 1);
+        this.renderer.snapshotFramebuffer(this.framebuffer, this.width, this.height, callback, true, x, y);
 
         return this;
     },

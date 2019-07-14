@@ -2219,6 +2219,7 @@ var WebGLRenderer = new Class({
      * @param {integer} bufferWidth - The width of the framebuffer.
      * @param {integer} bufferHeight - The height of the framebuffer.
      * @param {Phaser.Types.Renderer.Snapshot.SnapshotCallback} callback - The Function to invoke after the snapshot image is created.
+     * @param {boolean} [getPixel=false] - Grab a single pixel as a Color object, or an area as an Image object?
      * @param {integer} [x=0] - The x coordinate to grab from.
      * @param {integer} [y=0] - The y coordinate to grab from.
      * @param {integer} [width=bufferWidth] - The width of the area to grab.
@@ -2228,8 +2229,9 @@ var WebGLRenderer = new Class({
      *
      * @return {this} This WebGL Renderer.
      */
-    snapshotFramebuffer: function (framebuffer, bufferWidth, bufferHeight, callback, x, y, width, height, type, encoderOptions)
+    snapshotFramebuffer: function (framebuffer, bufferWidth, bufferHeight, callback, getPixel, x, y, width, height, type, encoderOptions)
     {
+        if (getPixel === undefined) { getPixel = false; }
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
         if (width === undefined) { width = bufferWidth; }
@@ -2240,6 +2242,8 @@ var WebGLRenderer = new Class({
         this.snapshotArea(x, y, width, height, callback, type, encoderOptions);
 
         var state = this.snapshotState;
+
+        state.getPixel = getPixel;
 
         state.isFramebuffer = true;
         state.bufferWidth = bufferWidth;
