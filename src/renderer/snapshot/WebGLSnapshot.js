@@ -41,7 +41,9 @@ var WebGLSnapshot = function (sourceCanvas, config)
     {
         var pixel = new Uint8Array(4);
 
-        gl.readPixels(x, bufferHeight - y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+        var destY = (isFramebuffer) ? y : bufferHeight - y;
+
+        gl.readPixels(x, destY, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
 
         callback.call(null, new Color(pixel[0], pixel[1], pixel[2], pixel[3] / 255));
     }
