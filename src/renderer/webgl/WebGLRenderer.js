@@ -9,7 +9,9 @@ var BaseCamera = require('../../cameras/2d/BaseCamera');
 var CameraEvents = require('../../cameras/2d/events');
 var Class = require('../../utils/Class');
 var CONST = require('../../const');
+var GameEvents = require('../../core/events');
 var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
+var NOOP = require('../../utils/NOOP');
 var ScaleEvents = require('../../scale/events');
 var SpliceOne = require('../../utils/array/SpliceOne');
 var TextureEvents = require('../../textures/events');
@@ -51,9 +53,6 @@ var WebGLRenderer = new Class({
 
     function WebGLRenderer (game)
     {
-        // eslint-disable-next-line consistent-this
-        var renderer = this;
-
         var gameConfig = game.config;
 
         var contextCreationConfig = {
@@ -135,24 +134,6 @@ var WebGLRenderer = new Class({
         this.canvas = game.canvas;
 
         /**
-         * An array of functions to invoke if the WebGL context is lost.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#lostContextCallbacks
-         * @type {WebGLContextCallback[]}
-         * @since 3.0.0
-         */
-        this.lostContextCallbacks = [];
-
-        /**
-         * An array of functions to invoke if the WebGL context is restored.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#restoredContextCallbacks
-         * @type {WebGLContextCallback[]}
-         * @since 3.0.0
-         */
-        this.restoredContextCallbacks = [];
-
-        /**
          * An array of blend modes supported by the WebGL Renderer.
          * 
          * This array includes the default blend modes as well as any custom blend modes added through {@link #addBlendMode}.
@@ -175,7 +156,7 @@ var WebGLRenderer = new Class({
         this.nativeTextures = [];
 
         /**
-         * Set to `true` if the WebGL context of the renderer is lost.
+         * This property is set to `true` if the WebGL context of the renderer is lost.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#contextLost
          * @type {boolean}
@@ -313,7 +294,6 @@ var WebGLRenderer = new Class({
          * @type {Uint32Array}
          * @since 3.0.0
          */
-        // this.currentScissor = new Uint32Array([ 0, 0, this.width, this.height ]);
         this.currentScissor = null;
 
         /**
@@ -325,30 +305,8 @@ var WebGLRenderer = new Class({
          */
         this.scissorStack = [];
 
-        // Setup context lost and restore event listeners
-
-        this.canvas.addEventListener('webglcontextlost', function (event)
-        {
-            renderer.contextLost = true;
-            event.preventDefault();
-
-            for (var index = 0; index < renderer.lostContextCallbacks.length; ++index)
-            {
-                var callback = renderer.lostContextCallbacks[index];
-                callback[0].call(callback[1], renderer);
-            }
-        }, false);
-
-        this.canvas.addEventListener('webglcontextrestored', function ()
-        {
-            renderer.contextLost = false;
-            renderer.init(renderer.config);
-            for (var index = 0; index < renderer.restoredContextCallbacks.length; ++index)
-            {
-                var callback = renderer.restoredContextCallbacks[index];
-                callback[0].call(callback[1], renderer);
-            }
-        }, false);
+        this.contextLostHandler = NOOP;
+        this.contextRestoredHandler = NOOP;
 
         // These are initialized post context creation
 
@@ -559,6 +517,31 @@ var WebGLRenderer = new Class({
         }
 
         this.gl = gl;
+
+        var _this = this;
+
+        this.contextLostHandler = function (event)
+        {
+            console.log('ctx lost handler');
+
+            _this.contextLost = true;
+
+            _this.game.events.emit(GameEvents.CONTEXT_LOST, _this);
+
+            event.preventDefault();
+        };
+
+        this.contextRestoredHandler = function ()
+        {
+            _this.contextLost = false;
+
+            _this.init(_this.config);
+
+            _this.game.events.emit(GameEvents.CONTEXT_RESTORED, _this);
+        };
+
+        canvas.addEventListener('webglcontextlost', this.contextLostHandler, false);
+        canvas.addEventListener('webglcontextrestored', this.contextRestoredHandler, false);
 
         //  Set it back into the Game, so developers can access it from there too
         game.context = gl;
@@ -2701,6 +2684,14 @@ var WebGLRenderer = new Class({
     destroy: function ()
     {
         //  Clear-up anything that should be cleared :)
+
+        for (var i = 0; i < this.nativeTextures.length; i++)
+        {
+            this.gl.deleteTexture(this.nativeTextures[i]);
+        }
+
+        this.nativeTextures = [];
+
         for (var key in this.pipelines)
         {
             this.pipelines[key].destroy();
@@ -2708,21 +2699,23 @@ var WebGLRenderer = new Class({
             delete this.pipelines[key];
         }
 
-        for (var index = 0; index < this.nativeTextures.length; index++)
-        {
-            this.deleteTexture(this.nativeTextures[index]);
+        this.defaultCamera.destroy();
 
-            delete this.nativeTextures[index];
-        }
+        this.currentMask = null;
+        this.currentCameraMask = null;
 
-        delete this.gl;
-        delete this.game;
+        this.canvas.removeEventListener('webglcontextlost', this.contextLostHandler, false);
+        this.canvas.removeEventListener('webglcontextrestored', this.contextRestoredHandler, false);
 
-        this.maskStack.length = 0;
+        this.game = null;
+        this.gl = null;
+        this.canvas = null;
+
+        this.maskStack = [];
 
         this.contextLost = true;
+
         this.extensions = {};
-        this.nativeTextures.length = 0;
     }
 
 });
