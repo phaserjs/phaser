@@ -1577,11 +1577,12 @@ var ScaleManager = new Class({
         this.canvas = null;
         this.canvasBounds = null;
         this.parent = null;
+        this.fullscreenTarget = null;
+
         this.parentSize.destroy();
         this.gameSize.destroy();
         this.baseSize.destroy();
         this.displaySize.destroy();
-        this.fullscreenTarget = null;
     },
 
     /**
