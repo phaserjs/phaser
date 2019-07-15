@@ -446,9 +446,9 @@ var SmoothedKeyControl = new Class({
         {
             cam.zoom += this._zoom;
 
-            if (cam.zoom < 0.1)
+            if (cam.zoom < 0.001)
             {
-                cam.zoom = 0.1;
+                cam.zoom = 0.001;
             }
         }
     },
