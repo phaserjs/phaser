@@ -78,6 +78,7 @@
 * The `SmoothedKeyControl` minimum zoom a Camera can go to is now 0.001. Previously it was 0.1. This is to make it match the minimum zoom a Base Camera can go to. Fix #4649 (thanks @giviz)
 * `WebGLRenderer.lostContextCallbacks` has been removed. Please use the new `CONTEXT_LOST` event instead.
 * `WebGLRenderer.restoredContextCallbacks` has been removed. Please use the new `CONTEXT_RESTORED` event instead.
+* `TextureManager.getBase64` will now emit a console warning if you try to get a base64 from a non-image based texture, such as a WebGL Texture.
 
 ### Bug Fixes
 

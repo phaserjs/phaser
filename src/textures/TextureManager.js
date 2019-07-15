@@ -313,7 +313,11 @@ var TextureManager = new Class({
 
         var textureFrame = this.getFrame(key, frame);
 
-        if (textureFrame && !textureFrame.source.isRenderTexture && !textureFrame.source.isGLTexture)
+        if (textureFrame && (textureFrame.source.isRenderTexture || textureFrame.source.isGLTexture))
+        {
+            console.warn('Cannot getBase64 from WebGL Texture');
+        }
+        else if (textureFrame)
         {
             var cd = textureFrame.canvasData;
 
