@@ -1095,7 +1095,14 @@ var RenderTexture = new Class({
      */
     snapshotArea: function (x, y, width, height, callback, type, encoderOptions)
     {
-        this.renderer.snapshotFramebuffer(this.framebuffer, this.width, this.height, callback, false, x, y, width, height, type, encoderOptions);
+        if (this.gl)
+        {
+            this.renderer.snapshotFramebuffer(this.framebuffer, this.width, this.height, callback, false, x, y, width, height, type, encoderOptions);
+        }
+        else
+        {
+            this.renderer.snapshotCanvas(this.canvas, callback, false, x, y, width, height, type, encoderOptions);
+        }
 
         return this;
     },
@@ -1123,7 +1130,14 @@ var RenderTexture = new Class({
      */
     snapshot: function (callback, type, encoderOptions)
     {
-        this.renderer.snapshotFramebuffer(this.framebuffer, this.width, this.height, callback, false, 0, 0, this.width, this.height, type, encoderOptions);
+        if (this.gl)
+        {
+            this.renderer.snapshotFramebuffer(this.framebuffer, this.width, this.height, callback, false, 0, 0, this.width, this.height, type, encoderOptions);
+        }
+        else
+        {
+            this.renderer.snapshotCanvas(this.canvas, callback, false, 0, 0, this.width, this.height, type, encoderOptions);
+        }
 
         return this;
     },
@@ -1150,7 +1164,14 @@ var RenderTexture = new Class({
      */
     snapshotPixel: function (x, y, callback)
     {
-        this.renderer.snapshotFramebuffer(this.framebuffer, this.width, this.height, callback, true, x, y);
+        if (this.gl)
+        {
+            this.renderer.snapshotFramebuffer(this.framebuffer, this.width, this.height, callback, true, x, y);
+        }
+        else
+        {
+            this.renderer.snapshotCanvas(this.canvas, callback, true, x, y);
+        }
 
         return this;
     },
