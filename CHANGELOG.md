@@ -64,6 +64,8 @@
 * `RenderTexture.snapshotArea` is a new method that will take a snapshot of an area of a Render Texture and return it as an Image object, which could then be saved to the Texture Manager if needed.
 * `RenderTexture.snapshotPixel` is a new method that will take extract a single pixel color value from a Render Texture and return it as a Color object.
 * The `SnapshotState` object has three new properties: `isFramebuffer` boolean and `bufferWidth` and `bufferHeight` integers.
+* `Game.CONTEXT_LOST_EVENT` is a new event that is dispatched by the Game instance when the WebGL Renderer webgl context is lost. Use this instead of the old 'lostContextCallbacks' for cleaner context handling.
+* `Game.CONTEXT_RESTORED_EVENT` is a new event that is dispatched by the Game instance when the WebGL Renderer webgl context is restored. Use this instead of the old 'restoredContextCallbacks' for cleaner context handling.
 
 ### Updates
 
@@ -74,6 +76,8 @@
 * `InputManager.onPointerLockChange` is a new method that handles pointer lock change events and dispatches the lock event.
 * `CanvasTexture` has been added to the `Textures` namespace so it can be created without needing to import it. The correct way to create a `CanvasTexture` is via the Texture Manager, but you can now do it directly if required. Fix #4651 (thanks @Jugacu)
 * The `SmoothedKeyControl` minimum zoom a Camera can go to is now 0.001. Previously it was 0.1. This is to make it match the minimum zoom a Base Camera can go to. Fix #4649 (thanks @giviz)
+* `WebGLRenderer.lostContextCallbacks` has been removed. Please use the new `CONTEXT_LOST` event instead.
+* `WebGLRenderer.restoredContextCallbacks` has been removed. Please use the new `CONTEXT_RESTORED` event instead.
 
 ### Bug Fixes
 
@@ -100,6 +104,7 @@
 * The `Pointer.movementX` and `Pointer.movementY` properties are now taken directly from the DOM pointer event values, if the pointer is locked, and no longer incremental. Fix #4611 (thanks @davidmball)
 * The `Pointer.velocity` and `Pointer.midPoint` values are now updated every frame. Based on the `motionFactor` setting they are smoothed towards zero, for velocity, and the pointer position for the mid point. This now happens regardless if the Pointer moves or not, which is how it was originally intended to behave.
 * The `DESTROY` event hook wasn't removed from Group children when destroying the Group and `destroyChildren` was set to false. Now, the hook is removed regardless (thanks @rexrainbow)
+* The WebGL Lost and Restored Context callbacks were never removed, which could cause them to hold onto stale references. Fix #3610 (thanks @Twilrom)
 
 ### Examples, Documentation and TypeScript
 
