@@ -479,6 +479,36 @@ var WebGLRenderer = new Class({
          */
         this.glFuncMap = null;
 
+        /**
+         * The `type` of the Game Object being currently rendered.
+         * This can be used by advanced render functions for batching look-ahead.
+         * 
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentType
+         * @type {string}
+         * @since 3.19.0
+         */
+        this.currentType = '';
+
+        /**
+         * Is the `type` of the Game Object being currently rendered different than the
+         * type of the object before it in the display list? I.e. it's a 'new' type.
+         * 
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#newType
+         * @type {boolean}
+         * @since 3.19.0
+         */
+        this.newType = false;
+
+        /**
+         * Does the `type` of the next Game Object in the display list match that
+         * of the object being currently rendered?
+         * 
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#nextTypeMatch
+         * @type {boolean}
+         * @since 3.19.0
+         */
+        this.nextTypeMatch = false;
+
         this.init(this.config);
     },
 
@@ -2007,6 +2037,20 @@ var WebGLRenderer = new Class({
         //   Apply scissor for cam region + render background color, if not transparent
         this.preRenderCamera(camera);
 
+        //  Nothing to render, so bail out
+        if (childCount === 0)
+        {
+            this.setBlendMode(CONST.BlendModes.NORMAL);
+
+            //  Applies camera effects and pops the scissor, if set
+            this.postRenderCamera(camera);
+
+            return;
+        }
+
+        //  Reset the current type
+        this.currentType = '';
+            
         var current = this.currentMask;
 
         for (var i = 0; i < childCount; i++)
@@ -2038,7 +2082,19 @@ var WebGLRenderer = new Class({
                 mask.preRenderWebGL(this, child, camera);
             }
 
+            var type = child.type;
+
+            if (type !== this.currentType)
+            {
+                this.newType = true;
+                this.currentType = type;
+            }
+
+            this.nextTypeMatch = (i < childCount - 1) ? (list[i + 1].type === this.currentType) : false;
+
             child.renderWebGL(this, child, interpolationPercentage, camera);
+
+            this.newType = false;
         }
 
         current = this.currentMask;
