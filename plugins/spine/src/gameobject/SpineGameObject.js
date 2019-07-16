@@ -49,8 +49,7 @@ var SpineGameObject = new Class({
 
         this.plugin = plugin;
 
-        this.runtime = plugin.getRuntime();
-
+        this.root = null;
         this.skeleton = null;
         this.skeletonData = null;
 
@@ -134,6 +133,8 @@ var SpineGameObject = new Class({
         {
             this.setAnimation(0, animationName, loop);
         }
+
+        this.root = this.getRootBone();
 
         return this;
     },
@@ -227,6 +228,11 @@ var SpineGameObject = new Class({
         return this;
     },
 
+    getRootBone: function ()
+    {
+        return this.skeleton.getRootBone();
+    },
+
     findBone: function (boneName)
     {
         return this.skeleton.findBone(boneName);
@@ -284,7 +290,6 @@ var SpineGameObject = new Class({
         }
 
         this.plugin = null;
-        this.runtime = null;
 
         this.skeleton = null;
         this.skeletonData = null;
