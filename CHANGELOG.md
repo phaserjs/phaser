@@ -67,6 +67,9 @@
 * The `SnapshotState` object has three new properties: `isFramebuffer` boolean and `bufferWidth` and `bufferHeight` integers.
 * `Game.CONTEXT_LOST_EVENT` is a new event that is dispatched by the Game instance when the WebGL Renderer webgl context is lost. Use this instead of the old 'lostContextCallbacks' for cleaner context handling.
 * `Game.CONTEXT_RESTORED_EVENT` is a new event that is dispatched by the Game instance when the WebGL Renderer webgl context is restored. Use this instead of the old 'restoredContextCallbacks' for cleaner context handling.
+* `WebGLRenderer.currentType` contains the type of the Game Object currently being rendered.
+* `WebGLRenderer.newType` is a boolean that indicates if the current Game Object has a new type, i.e. different to the previous one in the display list.
+* `WebGLRenderer.nextTypeMatch` is a boolean that indicates if the _next_ Game Object in the display list has the same type as the one being currently rendered. This allows you to build batching into separated Game Objects.
 
 ### Updates
 
