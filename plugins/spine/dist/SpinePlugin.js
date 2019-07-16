@@ -2,11 +2,11 @@
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define("SpineWebGLPlugin", [], factory);
+		define("SpinePlugin", [], factory);
 	else if(typeof exports === 'object')
-		exports["SpineWebGLPlugin"] = factory();
+		exports["SpinePlugin"] = factory();
 	else
-		root["SpineWebGLPlugin"] = factory();
+		root["SpinePlugin"] = factory();
 })(window, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -91,15 +91,15 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./SpineWebGLPlugin.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./SpinePlugin.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
 /***/ "../../../node_modules/eventemitter3/index.js":
-/*!*******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/node_modules/eventemitter3/index.js ***!
-  \*******************************************************************************/
+/*!**************************************************************!*\
+  !*** D:/wamp/www/phaser/node_modules/eventemitter3/index.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -445,19 +445,20 @@ if (true) {
 /***/ }),
 
 /***/ "../../../src/data/DataManager.js":
-/*!*******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/data/DataManager.js ***!
-  \*******************************************************************/
+/*!**************************************************!*\
+  !*** D:/wamp/www/phaser/src/data/DataManager.js ***!
+  \**************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
+var Events = __webpack_require__(/*! ./events */ "../../../src/data/events/index.js");
 
 /**
  * @callback DataEachCallback
@@ -470,7 +471,7 @@ var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.
 
 /**
  * @classdesc
- * The Data Component features a means to store pieces of data specific to a Game Object, System or Plugin.
+ * The Data Manager Component features a means to store pieces of data specific to a Game Object, System or Plugin.
  * You can then search, query it, and retrieve the data. The parent must either extend EventEmitter,
  * or have a property called `events` that is an instance of it.
  *
@@ -692,13 +693,16 @@ var DataManager = new Class({
      * When the value is first set, a `setdata` event is emitted.
      *
      * If the key already exists, a `changedata` event is emitted instead, along an event named after the key.
-     * For example, if you updated an existing key called `PlayerLives` then it would emit the event `changedata_PlayerLives`.
+     * For example, if you updated an existing key called `PlayerLives` then it would emit the event `changedata-PlayerLives`.
      * These events will be emitted regardless if you use this method to set the value, or the direct `values` setter.
      *
      * Please note that the data keys are case-sensitive and must be valid JavaScript Object property strings.
      * This means the keys `gold` and `Gold` are treated as two unique values within the Data Manager.
      *
      * @method Phaser.Data.DataManager#set
+     * @fires Phaser.Data.Events#SET_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA_KEY
      * @since 3.0.0
      *
      * @param {(string|object)} key - The key to set the value for. Or an object or key value pairs. If an object the `data` argument is ignored.
@@ -732,6 +736,9 @@ var DataManager = new Class({
      * Internal value setter, called automatically by the `set` method.
      *
      * @method Phaser.Data.DataManager#setValue
+     * @fires Phaser.Data.Events#SET_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA_KEY
      * @private
      * @since 3.10.0
      *
@@ -777,8 +784,8 @@ var DataManager = new Class({
                         var previousValue = list[key];
                         list[key] = value;
 
-                        events.emit('changedata', parent, key, value, previousValue);
-                        events.emit('changedata_' + key, parent, value, previousValue);
+                        events.emit(Events.CHANGE_DATA, parent, key, value, previousValue);
+                        events.emit(Events.CHANGE_DATA_KEY + key, parent, value, previousValue);
                     }
                 }
 
@@ -786,7 +793,7 @@ var DataManager = new Class({
 
             list[key] = data;
 
-            events.emit('setdata', parent, key, data);
+            events.emit(Events.SET_DATA, parent, key, data);
         }
 
         return this;
@@ -831,6 +838,9 @@ var DataManager = new Class({
      * will emit a `changedata` event.
      *
      * @method Phaser.Data.DataManager#merge
+     * @fires Phaser.Data.Events#SET_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA_KEY
      * @since 3.0.0
      *
      * @param {Object.<string, *>} data - The data to merge.
@@ -867,6 +877,7 @@ var DataManager = new Class({
      * ```
      *
      * @method Phaser.Data.DataManager#remove
+     * @fires Phaser.Data.Events#REMOVE_DATA
      * @since 3.0.0
      *
      * @param {(string|string[])} key - The key to remove, or an array of keys to remove.
@@ -900,6 +911,7 @@ var DataManager = new Class({
      *
      * @method Phaser.Data.DataManager#removeValue
      * @private
+     * @fires Phaser.Data.Events#REMOVE_DATA
      * @since 3.10.0
      *
      * @param {string} key - The key to set the value for.
@@ -915,7 +927,7 @@ var DataManager = new Class({
             delete this.list[key];
             delete this.values[key];
 
-            this.events.emit('removedata', this.parent, key, data);
+            this.events.emit(Events.REMOVE_DATA, this.parent, key, data);
         }
 
         return this;
@@ -925,6 +937,7 @@ var DataManager = new Class({
      * Retrieves the data associated with the given 'key', deletes it from this Data Manager, then returns it.
      *
      * @method Phaser.Data.DataManager#pop
+     * @fires Phaser.Data.Events#REMOVE_DATA
      * @since 3.0.0
      *
      * @param {string} key - The key of the value to retrieve and delete.
@@ -942,7 +955,7 @@ var DataManager = new Class({
             delete this.list[key];
             delete this.values[key];
 
-            this.events.emit('removedata', this, key, data);
+            this.events.emit(Events.REMOVE_DATA, this.parent, key, data);
         }
 
         return data;
@@ -1015,9 +1028,9 @@ var DataManager = new Class({
     {
         this.reset();
 
-        this.events.off('changedata');
-        this.events.off('setdata');
-        this.events.off('removedata');
+        this.events.off(Events.CHANGE_DATA);
+        this.events.off(Events.SET_DATA);
+        this.events.off(Events.REMOVE_DATA);
 
         this.parent = null;
     },
@@ -1077,23 +1090,192 @@ module.exports = DataManager;
 
 /***/ }),
 
-/***/ "../../../src/gameobjects/GameObject.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/GameObject.js ***!
-  \*************************************************************************/
+/***/ "../../../src/data/events/CHANGE_DATA_EVENT.js":
+/*!***************************************************************!*\
+  !*** D:/wamp/www/phaser/src/data/events/CHANGE_DATA_EVENT.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Change Data Event.
+ * 
+ * This event is dispatched by a Data Manager when an item in the data store is changed.
+ * 
+ * Game Objects with data enabled have an instance of a Data Manager under the `data` property. So, to listen for
+ * a change data event from a Game Object you would use: `sprite.data.on('changedata', listener)`.
+ * 
+ * This event is dispatched for all items that change in the Data Manager.
+ * To listen for the change of a specific item, use the `CHANGE_DATA_KEY_EVENT` event.
+ *
+ * @event Phaser.Data.Events#CHANGE_DATA
+ * @since 3.0.0
+ * 
+ * @param {any} parent - A reference to the object that the Data Manager responsible for this event belongs to.
+ * @param {string} key - The unique key of the data item within the Data Manager.
+ * @param {any} value - The new value of the item in the Data Manager.
+ * @param {any} previousValue - The previous value of the item in the Data Manager.
+ */
+module.exports = 'changedata';
+
+
+/***/ }),
+
+/***/ "../../../src/data/events/CHANGE_DATA_KEY_EVENT.js":
+/*!*******************************************************************!*\
+  !*** D:/wamp/www/phaser/src/data/events/CHANGE_DATA_KEY_EVENT.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Change Data Key Event.
+ * 
+ * This event is dispatched by a Data Manager when an item in the data store is changed.
+ * 
+ * Game Objects with data enabled have an instance of a Data Manager under the `data` property. So, to listen for
+ * the change of a specific data item from a Game Object you would use: `sprite.data.on('changedata-key', listener)`,
+ * where `key` is the unique string key of the data item. For example, if you have a data item stored called `gold`
+ * then you can listen for `sprite.data.on('changedata-gold')`.
+ *
+ * @event Phaser.Data.Events#CHANGE_DATA_KEY
+ * @since 3.16.1
+ * 
+ * @param {any} parent - A reference to the object that owns the instance of the Data Manager responsible for this event.
+ * @param {string} key - The unique key of the data item within the Data Manager.
+ * @param {any} value - The item that was updated in the Data Manager. This can be of any data type, i.e. a string, boolean, number, object or instance.
+ * @param {any} previousValue - The previous item that was updated in the Data Manager. This can be of any data type, i.e. a string, boolean, number, object or instance.
+ */
+module.exports = 'changedata-';
+
+
+/***/ }),
+
+/***/ "../../../src/data/events/REMOVE_DATA_EVENT.js":
+/*!***************************************************************!*\
+  !*** D:/wamp/www/phaser/src/data/events/REMOVE_DATA_EVENT.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Remove Data Event.
+ * 
+ * This event is dispatched by a Data Manager when an item is removed from it.
+ * 
+ * Game Objects with data enabled have an instance of a Data Manager under the `data` property. So, to listen for
+ * the removal of a data item on a Game Object you would use: `sprite.data.on('removedata', listener)`.
+ *
+ * @event Phaser.Data.Events#REMOVE_DATA
+ * @since 3.0.0
+ * 
+ * @param {any} parent - A reference to the object that owns the instance of the Data Manager responsible for this event.
+ * @param {string} key - The unique key of the data item within the Data Manager.
+ * @param {any} data - The item that was removed from the Data Manager. This can be of any data type, i.e. a string, boolean, number, object or instance.
+ */
+module.exports = 'removedata';
+
+
+/***/ }),
+
+/***/ "../../../src/data/events/SET_DATA_EVENT.js":
+/*!************************************************************!*\
+  !*** D:/wamp/www/phaser/src/data/events/SET_DATA_EVENT.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Set Data Event.
+ * 
+ * This event is dispatched by a Data Manager when a new item is added to the data store.
+ * 
+ * Game Objects with data enabled have an instance of a Data Manager under the `data` property. So, to listen for
+ * the addition of a new data item on a Game Object you would use: `sprite.data.on('setdata', listener)`.
+ *
+ * @event Phaser.Data.Events#SET_DATA
+ * @since 3.0.0
+ * 
+ * @param {any} parent - A reference to the object that owns the instance of the Data Manager responsible for this event.
+ * @param {string} key - The unique key of the data item within the Data Manager.
+ * @param {any} data - The item that was added to the Data Manager. This can be of any data type, i.e. a string, boolean, number, object or instance.
+ */
+module.exports = 'setdata';
+
+
+/***/ }),
+
+/***/ "../../../src/data/events/index.js":
+/*!***************************************************!*\
+  !*** D:/wamp/www/phaser/src/data/events/index.js ***!
+  \***************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Data.Events
+ */
+
+module.exports = {
+
+    CHANGE_DATA: __webpack_require__(/*! ./CHANGE_DATA_EVENT */ "../../../src/data/events/CHANGE_DATA_EVENT.js"),
+    CHANGE_DATA_KEY: __webpack_require__(/*! ./CHANGE_DATA_KEY_EVENT */ "../../../src/data/events/CHANGE_DATA_KEY_EVENT.js"),
+    REMOVE_DATA: __webpack_require__(/*! ./REMOVE_DATA_EVENT */ "../../../src/data/events/REMOVE_DATA_EVENT.js"),
+    SET_DATA: __webpack_require__(/*! ./SET_DATA_EVENT */ "../../../src/data/events/SET_DATA_EVENT.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/GameObject.js":
+/*!********************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/GameObject.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
 var ComponentsToJSON = __webpack_require__(/*! ./components/ToJSON */ "../../../src/gameobjects/components/ToJSON.js");
 var DataManager = __webpack_require__(/*! ../data/DataManager */ "../../../src/data/DataManager.js");
 var EventEmitter = __webpack_require__(/*! eventemitter3 */ "../../../node_modules/eventemitter3/index.js");
+var Events = __webpack_require__(/*! ./events */ "../../../src/gameobjects/events/index.js");
 
 /**
  * @classdesc
@@ -1140,6 +1322,22 @@ var GameObject = new Class({
          * @since 3.0.0
          */
         this.type = type;
+
+        /**
+         * The current state of this Game Object.
+         * 
+         * Phaser itself will never modify this value, although plugins may do so.
+         * 
+         * Use this property to track the state of a Game Object during its lifetime. For example, it could move from
+         * a state of 'moving', to 'attacking', to 'dead'. The state value should be an integer (ideally mapped to a constant
+         * in your game code), or a string. These are recommended to keep it light and simple, with fast comparisons.
+         * If you need to store complex data about your Game Object, look at using the Data Component instead.
+         *
+         * @name Phaser.GameObjects.GameObject#state
+         * @type {(integer|string)}
+         * @since 3.16.0
+         */
+        this.state = 0;
 
         /**
          * The parent Container of this Game Object, if it has one.
@@ -1228,7 +1426,7 @@ var GameObject = new Class({
          * Not usually set directly. Instead call `GameObject.setInteractive()`.
          *
          * @name Phaser.GameObjects.GameObject#input
-         * @type {?Phaser.Input.InteractiveObject}
+         * @type {?Phaser.Types.Input.InteractiveObject}
          * @default null
          * @since 3.0.0
          */
@@ -1298,6 +1496,30 @@ var GameObject = new Class({
     },
 
     /**
+     * Sets the current state of this Game Object.
+     * 
+     * Phaser itself will never modify the State of a Game Object, although plugins may do so.
+     * 
+     * For example, a Game Object could change from a state of 'moving', to 'attacking', to 'dead'.
+     * The state value should typically be an integer (ideally mapped to a constant
+     * in your game code), but could also be a string. It is recommended to keep it light and simple.
+     * If you need to store complex data about your Game Object, look at using the Data Component instead.
+     *
+     * @method Phaser.GameObjects.GameObject#setState
+     * @since 3.16.0
+     *
+     * @param {(integer|string)} value - The state of the Game Object.
+     *
+     * @return {this} This GameObject.
+     */
+    setState: function (value)
+    {
+        this.state = value;
+
+        return this;
+    },
+
+    /**
      * Adds a Data Manager component to this Game Object.
      *
      * @method Phaser.GameObjects.GameObject#setDataEnabled
@@ -1349,7 +1571,7 @@ var GameObject = new Class({
      * When the value is first set, a `setdata` event is emitted from this Game Object.
      *
      * If the key already exists, a `changedata` event is emitted instead, along an event named after the key.
-     * For example, if you updated an existing key called `PlayerLives` then it would emit the event `changedata_PlayerLives`.
+     * For example, if you updated an existing key called `PlayerLives` then it would emit the event `changedata-PlayerLives`.
      * These events will be emitted regardless if you use this method to set the value, or the direct `values` setter.
      *
      * Please note that the data keys are case-sensitive and must be valid JavaScript Object property strings.
@@ -1358,8 +1580,8 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#setData
      * @since 3.0.0
      *
-     * @param {(string|object)} key - The key to set the value for. Or an object or key value pairs. If an object the `data` argument is ignored.
-     * @param {*} data - The value to set for the given key. If an object is provided as the key this argument is ignored.
+     * @param {(string|object)} key - The key to set the value for. Or an object of key value pairs. If an object the `data` argument is ignored.
+     * @param {*} [data] - The value to set for the given key. If an object is provided as the key this argument is ignored.
      *
      * @return {this} This GameObject.
      */
@@ -1431,8 +1653,8 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#setInteractive
      * @since 3.0.0
      *
-     * @param {(Phaser.Input.InputConfiguration|any)} [shape] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
-     * @param {HitAreaCallback} [callback] - A callback to be invoked when the Game Object is interacted with. If you provide a shape you must also provide a callback.
+     * @param {(Phaser.Types.Input.InputConfiguration|any)} [shape] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
+     * @param {Phaser.Types.Input.HitAreaCallback} [callback] - A callback to be invoked when the Game Object is interacted with. If you provide a shape you must also provide a callback.
      * @param {boolean} [dropZone=false] - Should this Game Object be treated as a drop zone target?
      *
      * @return {this} This GameObject.
@@ -1520,7 +1742,7 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#toJSON
      * @since 3.0.0
      *
-     * @return {JSONGameObject} A JSON representation of the Game Object.
+     * @return {Phaser.Types.GameObjects.JSONGameObject} A JSON representation of the Game Object.
      */
     toJSON: function ()
     {
@@ -1540,7 +1762,7 @@ var GameObject = new Class({
      */
     willRender: function (camera)
     {
-        return !(GameObject.RENDER_MASK !== this.renderFlags || (this.cameraFilter > 0 && (this.cameraFilter & camera.id)));
+        return !(GameObject.RENDER_MASK !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)));
     },
 
     /**
@@ -1601,8 +1823,9 @@ var GameObject = new Class({
      * Game Object Pool instead of destroying it, as destroyed objects cannot be resurrected.
      *
      * @method Phaser.GameObjects.GameObject#destroy
+     * @fires Phaser.GameObjects.Events#DESTROY
      * @since 3.0.0
-     * 
+     *
      * @param {boolean} [fromScene=false] - Is this Game Object being destroyed as the result of a Scene shutdown?
      */
     destroy: function (fromScene)
@@ -1620,7 +1843,7 @@ var GameObject = new Class({
             this.preDestroy.call(this);
         }
 
-        this.emit('destroy', this);
+        this.emit(Events.DESTROY, this);
 
         var sys = this.scene.sys;
 
@@ -1682,16 +1905,16 @@ module.exports = GameObject;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Alpha.js":
-/*!*******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Alpha.js ***!
-  \*******************************************************************************/
+/*!**************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/components/Alpha.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Clamp = __webpack_require__(/*! ../../math/Clamp */ "../../../src/math/Clamp.js");
@@ -1703,7 +1926,7 @@ var _FLAG = 2; // 0010
  * Provides methods used for setting the alpha properties of a Game Object.
  * Should be applied as a mixin and not used directly.
  *
- * @name Phaser.GameObjects.Components.Alpha
+ * @namespace Phaser.GameObjects.Components.Alpha
  * @since 3.0.0
  */
 
@@ -1982,16 +2205,16 @@ module.exports = Alpha;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/BlendMode.js":
-/*!***********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/BlendMode.js ***!
-  \***********************************************************************************/
+/*!******************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/components/BlendMode.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var BlendModes = __webpack_require__(/*! ../../renderer/BlendModes */ "../../../src/renderer/BlendModes.js");
@@ -2000,7 +2223,7 @@ var BlendModes = __webpack_require__(/*! ../../renderer/BlendModes */ "../../../
  * Provides methods used for setting the blend mode of a Game Object.
  * Should be applied as a mixin and not used directly.
  *
- * @name Phaser.GameObjects.Components.BlendMode
+ * @namespace Phaser.GameObjects.Components.BlendMode
  * @since 3.0.0
  */
 
@@ -2027,6 +2250,7 @@ var BlendMode = {
      * * ADD
      * * MULTIPLY
      * * SCREEN
+     * * ERASE
      *
      * Canvas has more available depending on browser support.
      *
@@ -2075,6 +2299,7 @@ var BlendMode = {
      * * ADD
      * * MULTIPLY
      * * SCREEN
+     * * ERASE (only works when rendering to a framebuffer, like a Render Texture)
      *
      * Canvas has more available depending on browser support.
      *
@@ -2082,7 +2307,7 @@ var BlendMode = {
      *
      * Blend modes have different effects under Canvas and WebGL, and from browser to browser, depending
      * on support. Blend Modes also cause a WebGL batch flush should it encounter a new blend mode. For these
-     * reasons try to be careful about the construction of your Scene and the frequency of which blend modes
+     * reasons try to be careful about the construction of your Scene and the frequency in which blend modes
      * are used.
      *
      * @method Phaser.GameObjects.Components.BlendMode#setBlendMode
@@ -2107,23 +2332,23 @@ module.exports = BlendMode;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Depth.js":
-/*!*******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Depth.js ***!
-  \*******************************************************************************/
+/*!**************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/components/Depth.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Provides methods used for setting the depth of a Game Object.
  * Should be applied as a mixin and not used directly.
  * 
- * @name Phaser.GameObjects.Components.Depth
+ * @namespace Phaser.GameObjects.Components.Depth
  * @since 3.0.0
  */
 
@@ -2205,23 +2430,23 @@ module.exports = Depth;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Flip.js":
-/*!******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Flip.js ***!
-  \******************************************************************************/
+/*!*************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/components/Flip.js ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Provides methods used for visually flipping a Game Object.
  * Should be applied as a mixin and not used directly.
  * 
- * @name Phaser.GameObjects.Components.Flip
+ * @namespace Phaser.GameObjects.Components.Flip
  * @since 3.0.0
  */
 
@@ -2229,8 +2454,10 @@ var Flip = {
 
     /**
      * The horizontally flipped state of the Game Object.
+     * 
      * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
      * Flipping always takes place from the middle of the texture and does not impact the scale value.
+     * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
      * 
      * @name Phaser.GameObjects.Components.Flip#flipX
      * @type {boolean}
@@ -2241,8 +2468,10 @@ var Flip = {
 
     /**
      * The vertically flipped state of the Game Object.
+     * 
      * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
      * Flipping always takes place from the middle of the texture and does not impact the scale value.
+     * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
      * 
      * @name Phaser.GameObjects.Components.Flip#flipY
      * @type {boolean}
@@ -2253,6 +2482,10 @@ var Flip = {
 
     /**
      * Toggles the horizontal flipped state of this Game Object.
+     * 
+     * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+     * Flipping always takes place from the middle of the texture and does not impact the scale value.
+     * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
      * 
      * @method Phaser.GameObjects.Components.Flip#toggleFlipX
      * @since 3.0.0
@@ -2283,6 +2516,10 @@ var Flip = {
 
     /**
      * Sets the horizontal flipped state of this Game Object.
+     * 
+     * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+     * Flipping always takes place from the middle of the texture and does not impact the scale value.
+     * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
      * 
      * @method Phaser.GameObjects.Components.Flip#setFlipX
      * @since 3.0.0
@@ -2317,6 +2554,10 @@ var Flip = {
 
     /**
      * Sets the horizontal and vertical flipped state of this Game Object.
+     * 
+     * A Game Object that is flipped will render inversed on the flipped axis.
+     * Flipping always takes place from the middle of the texture and does not impact the scale value.
+     * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
      * 
      * @method Phaser.GameObjects.Components.Flip#setFlip
      * @since 3.0.0
@@ -2358,22 +2599,22 @@ module.exports = Flip;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/ScrollFactor.js":
-/*!**************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/ScrollFactor.js ***!
-  \**************************************************************************************/
+/*!*********************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/components/ScrollFactor.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Provides methods used for getting and setting the Scroll Factor of a Game Object.
  *
- * @name Phaser.GameObjects.Components.ScrollFactor
+ * @namespace Phaser.GameObjects.Components.ScrollFactor
  * @since 3.0.0
  */
 
@@ -2470,41 +2711,16 @@ module.exports = ScrollFactor;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/ToJSON.js":
-/*!********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/ToJSON.js ***!
-  \********************************************************************************/
+/*!***************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/components/ToJSON.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * @typedef {object} JSONGameObject
- *
- * @property {string} name - The name of this Game Object.
- * @property {string} type - A textual representation of this Game Object, i.e. `sprite`.
- * @property {number} x - The x position of this Game Object.
- * @property {number} y - The y position of this Game Object.
- * @property {object} scale - The scale of this Game Object
- * @property {number} scale.x - The horizontal scale of this Game Object.
- * @property {number} scale.y - The vertical scale of this Game Object.
- * @property {object} origin - The origin of this Game Object.
- * @property {number} origin.x - The horizontal origin of this Game Object.
- * @property {number} origin.y - The vertical origin of this Game Object.
- * @property {boolean} flipX - The horizontally flipped state of the Game Object.
- * @property {boolean} flipY - The vertically flipped state of the Game Object.
- * @property {number} rotation - The angle of this Game Object in radians.
- * @property {number} alpha - The alpha value of the Game Object.
- * @property {boolean} visible - The visible state of the Game Object.
- * @property {integer} scaleMode - The Scale Mode being used by this Game Object.
- * @property {(integer|string)} blendMode - Sets the Blend Mode being used by this Game Object.
- * @property {string} textureKey - The texture key of this Game Object.
- * @property {string} frameKey - The frame key of this Game Object.
- * @property {object} data - The data of this Game Object.
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -2517,7 +2733,7 @@ module.exports = ScrollFactor;
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to export as JSON.
  *
- * @return {JSONGameObject} A JSON representation of the Game Object.
+ * @return {Phaser.Types.GameObjects.JSONGameObject} A JSON representation of the Game Object.
  */
 var ToJSON = function (gameObject)
 {
@@ -2562,16 +2778,16 @@ module.exports = ToJSON;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Transform.js":
-/*!***********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Transform.js ***!
-  \***********************************************************************************/
+/*!******************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/components/Transform.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var MATH_CONST = __webpack_require__(/*! ../../math/const */ "../../../src/math/const.js");
@@ -2585,7 +2801,7 @@ var _FLAG = 4; // 0100
 /**
  * Provides methods used for getting and setting the position, scale and rotation of a Game Object.
  *
- * @name Phaser.GameObjects.Components.Transform
+ * @namespace Phaser.GameObjects.Components.Transform
  * @since 3.0.0
  */
 
@@ -2666,6 +2882,42 @@ var Transform = {
     w: 0,
 
     /**
+     * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+     * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+     * 
+     * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+     * isn't the case, use the `scaleX` or `scaleY` properties instead.
+     *
+     * @name Phaser.GameObjects.Components.Transform#scale
+     * @type {number}
+     * @default 1
+     * @since 3.18.0
+     */
+    scale: {
+
+        get: function ()
+        {
+            return (this._scaleX + this._scaleY) / 2;
+        },
+
+        set: function (value)
+        {
+            this._scaleX = value;
+            this._scaleY = value;
+
+            if (value === 0)
+            {
+                this.renderFlags &= ~_FLAG;
+            }
+            else
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    },
+
+    /**
      * The horizontal scale of this Game Object.
      *
      * @name Phaser.GameObjects.Components.Transform#scaleX
@@ -2684,7 +2936,7 @@ var Transform = {
         {
             this._scaleX = value;
 
-            if (this._scaleX === 0)
+            if (value === 0)
             {
                 this.renderFlags &= ~_FLAG;
             }
@@ -2715,7 +2967,7 @@ var Transform = {
         {
             this._scaleY = value;
 
-            if (this._scaleY === 0)
+            if (value === 0)
             {
                 this.renderFlags &= ~_FLAG;
             }
@@ -2828,8 +3080,8 @@ var Transform = {
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
-        if (width === undefined) { width = this.scene.sys.game.config.width; }
-        if (height === undefined) { height = this.scene.sys.game.config.height; }
+        if (width === undefined) { width = this.scene.sys.scale.width; }
+        if (height === undefined) { height = this.scene.sys.scale.height; }
 
         this.x = x + (Math.random() * width);
         this.y = y + (Math.random() * height);
@@ -3025,6 +3277,32 @@ var Transform = {
         }
 
         return tempMatrix;
+    },
+
+    /**
+     * Gets the sum total rotation of all of this Game Objects parent Containers.
+     * 
+     * The returned value is in radians and will be zero if this Game Object has no parent container.
+     *
+     * @method Phaser.GameObjects.Components.Transform#getParentRotation
+     * @since 3.18.0
+     *
+     * @return {number} The sum total rotation, in radians, of all parent containers of this Game Object.
+     */
+    getParentRotation: function ()
+    {
+        var rotation = 0;
+
+        var parent = this.parentContainer;
+
+        while (parent)
+        {
+            rotation += parent.rotation;
+
+            parent = parent.parentContainer;
+        }
+
+        return rotation;
     }
 
 };
@@ -3035,16 +3313,16 @@ module.exports = Transform;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/TransformMatrix.js":
-/*!*****************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/TransformMatrix.js ***!
-  \*****************************************************************************************/
+/*!************************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/components/TransformMatrix.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = __webpack_require__(/*! ../../utils/Class */ "../../../src/utils/Class.js");
@@ -3967,16 +4245,16 @@ module.exports = TransformMatrix;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Visible.js":
-/*!*********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Visible.js ***!
-  \*********************************************************************************/
+/*!****************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/components/Visible.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 //  bitmask flag for GameObject.renderMask
@@ -3986,7 +4264,7 @@ var _FLAG = 1; // 0001
  * Provides methods used for setting the visibility of a Game Object.
  * Should be applied as a mixin and not used directly.
  * 
- * @name Phaser.GameObjects.Components.Visible
+ * @namespace Phaser.GameObjects.Components.Visible
  * @since 3.0.0
  */
 
@@ -4060,39 +4338,79 @@ module.exports = Visible;
 
 /***/ }),
 
-/***/ "../../../src/loader/File.js":
-/*!**************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/File.js ***!
-  \**************************************************************/
+/***/ "../../../src/gameobjects/events/DESTROY_EVENT.js":
+/*!******************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/events/DESTROY_EVENT.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Object Destroy Event.
+ * 
+ * This event is dispatched when a Game Object instance is being destroyed.
+ * 
+ * Listen for it on a Game Object instance using `GameObject.on('destroy', listener)`.
+ *
+ * @event Phaser.GameObjects.Events#DESTROY
+ * @since 3.0.0
+ * 
+ * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object which is being destroyed.
+ */
+module.exports = 'destroy';
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/events/index.js":
+/*!**********************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/events/index.js ***!
+  \**********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.GameObjects.Events
+ */
+
+module.exports = { DESTROY: __webpack_require__(/*! ./DESTROY_EVENT */ "../../../src/gameobjects/events/DESTROY_EVENT.js") };
+
+
+/***/ }),
+
+/***/ "../../../src/loader/File.js":
+/*!*********************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/File.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
 var CONST = __webpack_require__(/*! ./const */ "../../../src/loader/const.js");
+var Events = __webpack_require__(/*! ./events */ "../../../src/loader/events/index.js");
 var GetFastValue = __webpack_require__(/*! ../utils/object/GetFastValue */ "../../../src/utils/object/GetFastValue.js");
 var GetURL = __webpack_require__(/*! ./GetURL */ "../../../src/loader/GetURL.js");
 var MergeXHRSettings = __webpack_require__(/*! ./MergeXHRSettings */ "../../../src/loader/MergeXHRSettings.js");
 var XHRLoader = __webpack_require__(/*! ./XHRLoader */ "../../../src/loader/XHRLoader.js");
 var XHRSettings = __webpack_require__(/*! ./XHRSettings */ "../../../src/loader/XHRSettings.js");
-
-/**
- * @typedef {object} FileConfig
- *
- * @property {string} type - The file type string (image, json, etc) for sorting within the Loader.
- * @property {string} key - Unique cache key (unique within its file type)
- * @property {string} [url] - The URL of the file, not including baseURL.
- * @property {string} [path] - The path of the file, not including the baseURL.
- * @property {string} [extension] - The default extension this file uses.
- * @property {XMLHttpRequestResponseType} [responseType] - The responseType to be used by the XHR request.
- * @property {(XHRSettingsObject|false)} [xhrSettings=false] - Custom XHR Settings specific to this file and merged with the Loader defaults.
- * @property {any} [config] - A config object that can be used by file types to store transitional data.
- */
 
 /**
  * @classdesc
@@ -4105,7 +4423,7 @@ var XHRSettings = __webpack_require__(/*! ./XHRSettings */ "../../../src/loader/
  * @since 3.0.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - The Loader that is going to load this File.
- * @param {FileConfig} fileConfig - The file configuration object, as created by the file type.
+ * @param {Phaser.Types.Loader.FileConfig} fileConfig - The file configuration object, as created by the file type.
  */
 var File = new Class({
 
@@ -4194,7 +4512,7 @@ var File = new Class({
          * The merged XHRSettings for this file.
          *
          * @name Phaser.Loader.File#xhrSettings
-         * @type {XHRSettingsObject}
+         * @type {Phaser.Types.Loader.XHRSettingsObject}
          * @since 3.0.0
          */
         this.xhrSettings = XHRSettings(GetFastValue(fileConfig, 'responseType', undefined));
@@ -4384,7 +4702,9 @@ var File = new Class({
      */
     onLoad: function (xhr, event)
     {
-        var success = !(event.target && event.target.status !== 200);
+        var localFileOk = ((xhr.responseURL && xhr.responseURL.indexOf('file://') === 0 && event.target.status === 0));
+
+        var success = !(event.target && event.target.status !== 200) || localFileOk;
 
         //  Handle HTTP status codes of 4xx and 5xx as errors, even if xhr.onerror was not called.
         if (xhr.readyState === 4 && xhr.status >= 400 && xhr.status <= 599)
@@ -4403,6 +4723,7 @@ var File = new Class({
      * @method Phaser.Loader.File#onError
      * @since 3.0.0
      *
+     * @param {XMLHttpRequest} xhr - The XMLHttpRequest that caused this onload event.
      * @param {ProgressEvent} event - The DOM ProgressEvent that resulted from this error.
      */
     onError: function ()
@@ -4416,6 +4737,7 @@ var File = new Class({
      * Called during the file load progress. Is sent a DOM ProgressEvent.
      *
      * @method Phaser.Loader.File#onProgress
+     * @fires Phaser.Loader.Events#FILE_PROGRESS
      * @since 3.0.0
      *
      * @param {ProgressEvent} event - The DOM ProgressEvent.
@@ -4429,7 +4751,7 @@ var File = new Class({
 
             this.percentComplete = Math.min((this.bytesLoaded / this.bytesTotal), 1);
 
-            this.loader.emit('fileprogress', this, this.percentComplete);
+            this.loader.emit(Events.FILE_PROGRESS, this, this.percentComplete);
         }
     },
 
@@ -4518,64 +4840,12 @@ var File = new Class({
     },
 
     /**
-     * You can listen for this event from the LoaderPlugin. It is dispatched _every time_
-     * a file loads and is sent 3 arguments, which allow you to identify the file:
-     *
-     * ```javascript
-     * this.load.on('filecomplete', function (key, type, data) {
-     *     // Your handler code
-     * });
-     * ```
-     * 
-     * @event Phaser.Loader.File#fileCompleteEvent
-     * @param {string} key - The key of the file that just loaded and finished processing.
-     * @param {string} type - The type of the file that just loaded and finished processing.
-     * @param {any} data - The data of the file.
-     */
-
-    /**
-     * You can listen for this event from the LoaderPlugin. It is dispatched only once per
-     * file and you have to use a special listener handle to pick it up.
-     * 
-     * The string of the event is based on the file type and the key you gave it, split up
-     * using hyphens.
-     * 
-     * For example, if you have loaded an image with a key of `monster`, you can listen for it
-     * using the following:
-     *
-     * ```javascript
-     * this.load.on('filecomplete-image-monster', function (key, type, data) {
-     *     // Your handler code
-     * });
-     * ```
-     *
-     * Or, if you have loaded a texture atlas with a key of `Level1`:
-     * 
-     * ```javascript
-     * this.load.on('filecomplete-atlas-Level1', function (key, type, data) {
-     *     // Your handler code
-     * });
-     * ```
-     * 
-     * Or, if you have loaded a sprite sheet with a key of `Explosion` and a prefix of `GAMEOVER`:
-     * 
-     * ```javascript
-     * this.load.on('filecomplete-spritesheet-GAMEOVERExplosion', function (key, type, data) {
-     *     // Your handler code
-     * });
-     * ```
-     * 
-     * @event Phaser.Loader.File#singleFileCompleteEvent
-     * @param {any} data - The data of the file.
-     */
-
-    /**
      * Called once the file has been added to its cache and is now ready for deletion from the Loader.
      * It will emit a `filecomplete` event from the LoaderPlugin.
      *
      * @method Phaser.Loader.File#pendingDestroy
-     * @fires Phaser.Loader.File#fileCompleteEvent
-     * @fires Phaser.Loader.File#singleFileCompleteEvent
+     * @fires Phaser.Loader.Events#FILE_COMPLETE
+     * @fires Phaser.Loader.Events#FILE_KEY_COMPLETE
      * @since 3.7.0
      */
     pendingDestroy: function (data)
@@ -4585,8 +4855,8 @@ var File = new Class({
         var key = this.key;
         var type = this.type;
 
-        this.loader.emit('filecomplete', key, type, data);
-        this.loader.emit('filecomplete-' + type + '-' + key, key, type, data);
+        this.loader.emit(Events.FILE_COMPLETE, key, type, data);
+        this.loader.emit(Events.FILE_KEY_COMPLETE + type + '-' + key, key, type, data);
 
         this.loader.flagForRemoval(this);
     },
@@ -4615,6 +4885,8 @@ var File = new Class({
  *
  * @method Phaser.Loader.File.createObjectURL
  * @static
+ * @since 3.7.0
+ * 
  * @param {HTMLImageElement} image - Image object which 'src' attribute should be set to object URL.
  * @param {Blob} blob - A Blob object to create an object URL for.
  * @param {string} defaultType - Default mime type used if blob type is not available.
@@ -4647,6 +4919,8 @@ File.createObjectURL = function (image, blob, defaultType)
  *
  * @method Phaser.Loader.File.revokeObjectURL
  * @static
+ * @since 3.7.0
+ * 
  * @param {HTMLImageElement} image - Image object which 'src' attribute should be revoked.
  */
 File.revokeObjectURL = function (image)
@@ -4663,19 +4937,23 @@ module.exports = File;
 /***/ }),
 
 /***/ "../../../src/loader/FileTypesManager.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/FileTypesManager.js ***!
-  \**************************************************************************/
+/*!*********************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/FileTypesManager.js ***!
+  \*********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var types = {};
+
+/**
+ * @namespace Phaser.Loader.FileTypesManager
+ */
 
 var FileTypesManager = {
 
@@ -4685,7 +4963,7 @@ var FileTypesManager = {
      * Loops through the local types object and injects all of them as
      * properties into the LoaderPlugin instance.
      *
-     * @method Phaser.Loader.FileTypesManager.register
+     * @method Phaser.Loader.FileTypesManager.install
      * @since 3.0.0
      * 
      * @param {Phaser.Loader.LoaderPlugin} loader - The LoaderPlugin to install the types into.
@@ -4733,16 +5011,16 @@ module.exports = FileTypesManager;
 /***/ }),
 
 /***/ "../../../src/loader/GetURL.js":
-/*!****************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/GetURL.js ***!
-  \****************************************************************/
+/*!***********************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/GetURL.js ***!
+  \***********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -4779,16 +5057,16 @@ module.exports = GetURL;
 /***/ }),
 
 /***/ "../../../src/loader/MergeXHRSettings.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/MergeXHRSettings.js ***!
-  \**************************************************************************/
+/*!*********************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/MergeXHRSettings.js ***!
+  \*********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Extend = __webpack_require__(/*! ../utils/object/Extend */ "../../../src/utils/object/Extend.js");
@@ -4803,10 +5081,10 @@ var XHRSettings = __webpack_require__(/*! ./XHRSettings */ "../../../src/loader/
  * @function Phaser.Loader.MergeXHRSettings
  * @since 3.0.0
  *
- * @param {XHRSettingsObject} global - The global XHRSettings object.
- * @param {XHRSettingsObject} local - The local XHRSettings object.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} global - The global XHRSettings object.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} local - The local XHRSettings object.
  *
- * @return {XHRSettingsObject} A newly formed XHRSettings object.
+ * @return {Phaser.Types.Loader.XHRSettingsObject} A newly formed XHRSettings object.
  */
 var MergeXHRSettings = function (global, local)
 {
@@ -4832,16 +5110,16 @@ module.exports = MergeXHRSettings;
 /***/ }),
 
 /***/ "../../../src/loader/MultiFile.js":
-/*!*******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/MultiFile.js ***!
-  \*******************************************************************/
+/*!**************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/MultiFile.js ***!
+  \**************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
@@ -5031,16 +5309,16 @@ module.exports = MultiFile;
 /***/ }),
 
 /***/ "../../../src/loader/XHRLoader.js":
-/*!*******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/XHRLoader.js ***!
-  \*******************************************************************/
+/*!**************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/XHRLoader.js ***!
+  \**************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var MergeXHRSettings = __webpack_require__(/*! ./MergeXHRSettings */ "../../../src/loader/MergeXHRSettings.js");
@@ -5054,7 +5332,7 @@ var MergeXHRSettings = __webpack_require__(/*! ./MergeXHRSettings */ "../../../s
  * @since 3.0.0
  *
  * @param {Phaser.Loader.File} file - The File to download.
- * @param {XHRSettingsObject} globalXHRSettings - The global XHRSettings object.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} globalXHRSettings - The global XHRSettings object.
  *
  * @return {XMLHttpRequest} The XHR object.
  */
@@ -5087,7 +5365,7 @@ var XHRLoader = function (file, globalXHRSettings)
     // After a successful request, the xhr.response property will contain the requested data as a DOMString, ArrayBuffer, Blob, or Document (depending on what was set for responseType.)
 
     xhr.onload = file.onLoad.bind(file, xhr);
-    xhr.onerror = file.onError.bind(file);
+    xhr.onerror = file.onError.bind(file, xhr);
     xhr.onprogress = file.onProgress.bind(file);
 
     //  This is the only standard method, the ones above are browser additions (maybe not universal?)
@@ -5104,30 +5382,16 @@ module.exports = XHRLoader;
 /***/ }),
 
 /***/ "../../../src/loader/XHRSettings.js":
-/*!*********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/XHRSettings.js ***!
-  \*********************************************************************/
+/*!****************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/XHRSettings.js ***!
+  \****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * @typedef {object} XHRSettingsObject
- *
- * @property {XMLHttpRequestResponseType} responseType - The response type of the XHR request, i.e. `blob`, `text`, etc.
- * @property {boolean} [async=true] - Should the XHR request use async or not?
- * @property {string} [user=''] - Optional username for the XHR request.
- * @property {string} [password=''] - Optional password for the XHR request.
- * @property {integer} [timeout=0] - Optional XHR timeout value.
- * @property {(string|undefined)} [header] - This value is used to populate the XHR `setRequestHeader` and is undefined by default.
- * @property {(string|undefined)} [headerValue] - This value is used to populate the XHR `setRequestHeader` and is undefined by default.
- * @property {(string|undefined)} [requestedWith] - This value is used to populate the XHR `setRequestHeader` and is undefined by default.
- * @property {(string|undefined)} [overrideMimeType] - Provide a custom mime-type to use instead of the default.
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -5142,7 +5406,7 @@ module.exports = XHRLoader;
  * @param {string} [password=''] - Optional password for the XHR request.
  * @param {integer} [timeout=0] - Optional XHR timeout value.
  *
- * @return {XHRSettingsObject} The XHRSettings object as used by the Loader.
+ * @return {Phaser.Types.Loader.XHRSettingsObject} The XHRSettings object as used by the Loader.
  */
 var XHRSettings = function (responseType, async, user, password, timeout)
 {
@@ -5187,16 +5451,16 @@ module.exports = XHRSettings;
 /***/ }),
 
 /***/ "../../../src/loader/const.js":
-/*!***************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/const.js ***!
-  \***************************************************************/
+/*!**********************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/const.js ***!
+  \**********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var FILE_CONST = {
@@ -5343,17 +5607,402 @@ module.exports = FILE_CONST;
 
 /***/ }),
 
-/***/ "../../../src/loader/filetypes/ImageFile.js":
-/*!*****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/filetypes/ImageFile.js ***!
-  \*****************************************************************************/
+/***/ "../../../src/loader/events/ADD_EVENT.js":
+/*!*********************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/events/ADD_EVENT.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Loader Plugin Add File Event.
+ * 
+ * This event is dispatched when a new file is successfully added to the Loader and placed into the load queue.
+ * 
+ * Listen to it from a Scene using: `this.load.on('addfile', listener)`.
+ * 
+ * If you add lots of files to a Loader from a `preload` method, it will dispatch this event for each one of them.
+ *
+ * @event Phaser.Loader.Events#ADD
+ * @since 3.0.0
+ * 
+ * @param {string} key - The unique key of the file that was added to the Loader.
+ * @param {string} type - The [file type]{@link Phaser.Loader.File#type} string of the file that was added to the Loader, i.e. `image`.
+ * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader Plugin that dispatched this event.
+ * @param {Phaser.Loader.File} file - A reference to the File which was added to the Loader.
+ */
+module.exports = 'addfile';
+
+
+/***/ }),
+
+/***/ "../../../src/loader/events/COMPLETE_EVENT.js":
+/*!**************************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/events/COMPLETE_EVENT.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Loader Plugin Complete Event.
+ * 
+ * This event is dispatched when the Loader has fully processed everything in the load queue.
+ * By this point every loaded file will now be in its associated cache and ready for use.
+ * 
+ * Listen to it from a Scene using: `this.load.on('complete', listener)`.
+ *
+ * @event Phaser.Loader.Events#COMPLETE
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader Plugin that dispatched this event.
+ * @param {integer} totalComplete - The total number of files that successfully loaded.
+ * @param {integer} totalFailed - The total number of files that failed to load.
+ */
+module.exports = 'complete';
+
+
+/***/ }),
+
+/***/ "../../../src/loader/events/FILE_COMPLETE_EVENT.js":
+/*!*******************************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/events/FILE_COMPLETE_EVENT.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The File Load Complete Event.
+ * 
+ * This event is dispatched by the Loader Plugin when any file in the queue finishes loading.
+ * 
+ * Listen to it from a Scene using: `this.load.on('filecomplete', listener)`.
+ * 
+ * You can also listen for the completion of a specific file. See the [FILE_KEY_COMPLETE]{@linkcode Phaser.Loader.Events#event:FILE_KEY_COMPLETE} event.
+ *
+ * @event Phaser.Loader.Events#FILE_COMPLETE
+ * @since 3.0.0
+ * 
+ * @param {string} key - The key of the file that just loaded and finished processing.
+ * @param {string} type - The [file type]{@link Phaser.Loader.File#type} of the file that just loaded, i.e. `image`.
+ * @param {any} data - The raw data the file contained.
+ */
+module.exports = 'filecomplete';
+
+
+/***/ }),
+
+/***/ "../../../src/loader/events/FILE_KEY_COMPLETE_EVENT.js":
+/*!***********************************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/events/FILE_KEY_COMPLETE_EVENT.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The File Load Complete Event.
+ * 
+ * This event is dispatched by the Loader Plugin when any file in the queue finishes loading.
+ * 
+ * It uses a special dynamic event name constructed from the key and type of the file.
+ * 
+ * For example, if you have loaded an `image` with a key of `monster`, you can listen for it
+ * using the following:
+ *
+ * ```javascript
+ * this.load.on('filecomplete-image-monster', function (key, type, data) {
+ *     // Your handler code
+ * });
+ * ```
+ *
+ * Or, if you have loaded a texture `atlas` with a key of `Level1`:
+ * 
+ * ```javascript
+ * this.load.on('filecomplete-atlas-Level1', function (key, type, data) {
+ *     // Your handler code
+ * });
+ * ```
+ * 
+ * Or, if you have loaded a sprite sheet with a key of `Explosion` and a prefix of `GAMEOVER`:
+ * 
+ * ```javascript
+ * this.load.on('filecomplete-spritesheet-GAMEOVERExplosion', function (key, type, data) {
+ *     // Your handler code
+ * });
+ * ```
+ * 
+ * You can also listen for the generic completion of files. See the [FILE_COMPLETE]{@linkcode Phaser.Loader.Events#event:FILE_COMPLETE} event.
+ *
+ * @event Phaser.Loader.Events#FILE_KEY_COMPLETE
+ * @since 3.0.0
+ * 
+ * @param {string} key - The key of the file that just loaded and finished processing.
+ * @param {string} type - The [file type]{@link Phaser.Loader.File#type} of the file that just loaded, i.e. `image`.
+ * @param {any} data - The raw data the file contained.
+ */
+module.exports = 'filecomplete-';
+
+
+/***/ }),
+
+/***/ "../../../src/loader/events/FILE_LOAD_ERROR_EVENT.js":
+/*!*********************************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/events/FILE_LOAD_ERROR_EVENT.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The File Load Error Event.
+ * 
+ * This event is dispatched by the Loader Plugin when a file fails to load.
+ * 
+ * Listen to it from a Scene using: `this.load.on('loaderror', listener)`.
+ *
+ * @event Phaser.Loader.Events#FILE_LOAD_ERROR
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Loader.File} file - A reference to the File which errored during load.
+ */
+module.exports = 'loaderror';
+
+
+/***/ }),
+
+/***/ "../../../src/loader/events/FILE_LOAD_EVENT.js":
+/*!***************************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/events/FILE_LOAD_EVENT.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The File Load Event.
+ * 
+ * This event is dispatched by the Loader Plugin when a file finishes loading,
+ * but _before_ it is processed and added to the internal Phaser caches.
+ * 
+ * Listen to it from a Scene using: `this.load.on('load', listener)`.
+ *
+ * @event Phaser.Loader.Events#FILE_LOAD
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Loader.File} file - A reference to the File which just finished loading.
+ */
+module.exports = 'load';
+
+
+/***/ }),
+
+/***/ "../../../src/loader/events/FILE_PROGRESS_EVENT.js":
+/*!*******************************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/events/FILE_PROGRESS_EVENT.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The File Load Progress Event.
+ * 
+ * This event is dispatched by the Loader Plugin during the load of a file, if the browser receives a DOM ProgressEvent and
+ * the `lengthComputable` event property is true. Depending on the size of the file and browser in use, this may, or may not happen.
+ * 
+ * Listen to it from a Scene using: `this.load.on('fileprogress', listener)`.
+ *
+ * @event Phaser.Loader.Events#FILE_PROGRESS
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Loader.File} file - A reference to the File which errored during load.
+ * @param {number} percentComplete - A value between 0 and 1 indicating how 'complete' this file is.
+ */
+module.exports = 'fileprogress';
+
+
+/***/ }),
+
+/***/ "../../../src/loader/events/POST_PROCESS_EVENT.js":
+/*!******************************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/events/POST_PROCESS_EVENT.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Loader Plugin Post Process Event.
+ * 
+ * This event is dispatched by the Loader Plugin when the Loader has finished loading everything in the load queue.
+ * It is dispatched before the internal lists are cleared and each File is destroyed.
+ * 
+ * Use this hook to perform any last minute processing of files that can only happen once the
+ * Loader has completed, but prior to it emitting the `complete` event.
+ * 
+ * Listen to it from a Scene using: `this.load.on('postprocess', listener)`.
+ *
+ * @event Phaser.Loader.Events#POST_PROCESS
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader Plugin that dispatched this event.
+ */
+module.exports = 'postprocess';
+
+
+/***/ }),
+
+/***/ "../../../src/loader/events/PROGRESS_EVENT.js":
+/*!**************************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/events/PROGRESS_EVENT.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Loader Plugin Progress Event.
+ * 
+ * This event is dispatched when the Loader updates its load progress, typically as a result of a file having completed loading.
+ * 
+ * Listen to it from a Scene using: `this.load.on('progress', listener)`.
+ *
+ * @event Phaser.Loader.Events#PROGRESS
+ * @since 3.0.0
+ * 
+ * @param {number} progress - The current progress of the load. A value between 0 and 1.
+ */
+module.exports = 'progress';
+
+
+/***/ }),
+
+/***/ "../../../src/loader/events/START_EVENT.js":
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/events/START_EVENT.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Loader Plugin Start Event.
+ * 
+ * This event is dispatched when the Loader starts running. At this point load progress is zero.
+ * 
+ * This event is dispatched even if there aren't any files in the load queue.
+ * 
+ * Listen to it from a Scene using: `this.load.on('start', listener)`.
+ *
+ * @event Phaser.Loader.Events#START
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader Plugin that dispatched this event.
+ */
+module.exports = 'start';
+
+
+/***/ }),
+
+/***/ "../../../src/loader/events/index.js":
+/*!*****************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/events/index.js ***!
+  \*****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Loader.Events
+ */
+
+module.exports = {
+
+    ADD: __webpack_require__(/*! ./ADD_EVENT */ "../../../src/loader/events/ADD_EVENT.js"),
+    COMPLETE: __webpack_require__(/*! ./COMPLETE_EVENT */ "../../../src/loader/events/COMPLETE_EVENT.js"),
+    FILE_COMPLETE: __webpack_require__(/*! ./FILE_COMPLETE_EVENT */ "../../../src/loader/events/FILE_COMPLETE_EVENT.js"),
+    FILE_KEY_COMPLETE: __webpack_require__(/*! ./FILE_KEY_COMPLETE_EVENT */ "../../../src/loader/events/FILE_KEY_COMPLETE_EVENT.js"),
+    FILE_LOAD_ERROR: __webpack_require__(/*! ./FILE_LOAD_ERROR_EVENT */ "../../../src/loader/events/FILE_LOAD_ERROR_EVENT.js"),
+    FILE_LOAD: __webpack_require__(/*! ./FILE_LOAD_EVENT */ "../../../src/loader/events/FILE_LOAD_EVENT.js"),
+    FILE_PROGRESS: __webpack_require__(/*! ./FILE_PROGRESS_EVENT */ "../../../src/loader/events/FILE_PROGRESS_EVENT.js"),
+    POST_PROCESS: __webpack_require__(/*! ./POST_PROCESS_EVENT */ "../../../src/loader/events/POST_PROCESS_EVENT.js"),
+    PROGRESS: __webpack_require__(/*! ./PROGRESS_EVENT */ "../../../src/loader/events/PROGRESS_EVENT.js"),
+    START: __webpack_require__(/*! ./START_EVENT */ "../../../src/loader/events/START_EVENT.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/loader/filetypes/ImageFile.js":
+/*!************************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/filetypes/ImageFile.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = __webpack_require__(/*! ../../utils/Class */ "../../../src/utils/Class.js");
@@ -5362,28 +6011,6 @@ var File = __webpack_require__(/*! ../File */ "../../../src/loader/File.js");
 var FileTypesManager = __webpack_require__(/*! ../FileTypesManager */ "../../../src/loader/FileTypesManager.js");
 var GetFastValue = __webpack_require__(/*! ../../utils/object/GetFastValue */ "../../../src/utils/object/GetFastValue.js");
 var IsPlainObject = __webpack_require__(/*! ../../utils/object/IsPlainObject */ "../../../src/utils/object/IsPlainObject.js");
-
-/**
- * @typedef {object} Phaser.Loader.FileTypes.ImageFrameConfig
- *
- * @property {integer} frameWidth - The width of the frame in pixels.
- * @property {integer} [frameHeight] - The height of the frame in pixels. Uses the `frameWidth` value if not provided.
- * @property {integer} [startFrame=0] - The first frame to start parsing from.
- * @property {integer} [endFrame] - The frame to stop parsing at. If not provided it will calculate the value based on the image and frame dimensions.
- * @property {integer} [margin=0] - The margin in the image. This is the space around the edge of the frames.
- * @property {integer} [spacing=0] - The spacing between each frame in the image.
- */
-
-/**
- * @typedef {object} Phaser.Loader.FileTypes.ImageFileConfig
- *
- * @property {string} key - The key of the file. Must be unique within both the Loader and the Texture Manager.
- * @property {string} [url] - The absolute or relative URL to load the file from.
- * @property {string} [extension='png'] - The default file extension to use if no url is provided.
- * @property {string} [normalMap] - The filename of an associated normal map. It uses the same path and url to load as the image.
- * @property {Phaser.Loader.FileTypes.ImageFrameConfig} [frameConfig] - The frame configuration object. Only provided for, and used by, Sprite Sheets.
- * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
- */
 
 /**
  * @classdesc
@@ -5400,10 +6027,10 @@ var IsPlainObject = __webpack_require__(/*! ../../utils/object/IsPlainObject */ 
  * @since 3.0.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {(string|Phaser.Loader.FileTypes.ImageFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|Phaser.Types.Loader.FileTypes.ImageFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string|string[]} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
- * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
- * @param {Phaser.Loader.FileTypes.ImageFrameConfig} [frameConfig] - The frame configuration object. Only provided for, and used by, Sprite Sheets.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {Phaser.Types.Loader.FileTypes.ImageFrameConfig} [frameConfig] - The frame configuration object. Only provided for, and used by, Sprite Sheets.
  */
 var ImageFile = new Class({
 
@@ -5568,7 +6195,7 @@ var ImageFile = new Class({
  * });
  * ```
  *
- * See the documentation for `Phaser.Loader.FileTypes.ImageFileConfig` for more details.
+ * See the documentation for `Phaser.Types.Loader.FileTypes.ImageFileConfig` for more details.
  *
  * Once the file has finished loading you can use it as a texture for a Game Object by referencing its key:
  * 
@@ -5615,9 +6242,9 @@ var ImageFile = new Class({
  * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.0.0
  *
- * @param {(string|Phaser.Loader.FileTypes.ImageFileConfig|Phaser.Loader.FileTypes.ImageFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {(string|Phaser.Types.Loader.FileTypes.ImageFileConfig|Phaser.Types.Loader.FileTypes.ImageFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string|string[]} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
- * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */
@@ -5645,16 +6272,16 @@ module.exports = ImageFile;
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/JSONFile.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/filetypes/JSONFile.js ***!
-  \****************************************************************************/
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/filetypes/JSONFile.js ***!
+  \***********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = __webpack_require__(/*! ../../utils/Class */ "../../../src/utils/Class.js");
@@ -5664,16 +6291,6 @@ var FileTypesManager = __webpack_require__(/*! ../FileTypesManager */ "../../../
 var GetFastValue = __webpack_require__(/*! ../../utils/object/GetFastValue */ "../../../src/utils/object/GetFastValue.js");
 var GetValue = __webpack_require__(/*! ../../utils/object/GetValue */ "../../../src/utils/object/GetValue.js");
 var IsPlainObject = __webpack_require__(/*! ../../utils/object/IsPlainObject */ "../../../src/utils/object/IsPlainObject.js");
-
-/**
- * @typedef {object} Phaser.Loader.FileTypes.JSONFileConfig
- *
- * @property {string} key - The key of the file. Must be unique within both the Loader and the JSON Cache.
- * @property {string|any} [url] - The absolute or relative URL to load the file from. Or can be a ready formed JSON object, in which case it will be directly added to the Cache.
- * @property {string} [extension='json'] - The default file extension to use if no url is provided.
- * @property {string} [dataKey] - If specified instead of the whole JSON file being parsed and added to the Cache, only the section corresponding to this property key will be added. If the property you want to extract is nested, use periods to divide it.
- * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
- */
 
 /**
  * @classdesc
@@ -5690,9 +6307,9 @@ var IsPlainObject = __webpack_require__(/*! ../../utils/object/IsPlainObject */ 
  * @since 3.0.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {(string|Phaser.Loader.FileTypes.JSONFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|Phaser.Types.Loader.FileTypes.JSONFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
- * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  * @param {string} [dataKey] - When the JSON file loads only this property will be stored in the Cache.
  */
 var JSONFile = new Class({
@@ -5814,7 +6431,7 @@ var JSONFile = new Class({
  * });
  * ```
  *
- * See the documentation for `Phaser.Loader.FileTypes.JSONFileConfig` for more details.
+ * See the documentation for `Phaser.Types.Loader.FileTypes.JSONFileConfig` for more details.
  *
  * Once the file has finished loading you can access it from its Cache using its key:
  * 
@@ -5859,10 +6476,10 @@ var JSONFile = new Class({
  * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.0.0
  *
- * @param {(string|Phaser.Loader.FileTypes.JSONFileConfig|Phaser.Loader.FileTypes.JSONFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {(string|Phaser.Types.Loader.FileTypes.JSONFileConfig|Phaser.Types.Loader.FileTypes.JSONFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
  * @param {string} [dataKey] - When the JSON file loads only this property will be stored in the Cache.
- * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */
@@ -5890,16 +6507,16 @@ module.exports = JSONFile;
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/TextFile.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/filetypes/TextFile.js ***!
-  \****************************************************************************/
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/filetypes/TextFile.js ***!
+  \***********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = __webpack_require__(/*! ../../utils/Class */ "../../../src/utils/Class.js");
@@ -5908,15 +6525,6 @@ var File = __webpack_require__(/*! ../File */ "../../../src/loader/File.js");
 var FileTypesManager = __webpack_require__(/*! ../FileTypesManager */ "../../../src/loader/FileTypesManager.js");
 var GetFastValue = __webpack_require__(/*! ../../utils/object/GetFastValue */ "../../../src/utils/object/GetFastValue.js");
 var IsPlainObject = __webpack_require__(/*! ../../utils/object/IsPlainObject */ "../../../src/utils/object/IsPlainObject.js");
-
-/**
- * @typedef {object} Phaser.Loader.FileTypes.TextFileConfig
- *
- * @property {string} key - The key of the file. Must be unique within both the Loader and the Text Cache.
- * @property {string} [url] - The absolute or relative URL to load the file from.
- * @property {string} [extension='txt'] - The default file extension to use if no url is provided.
- * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
- */
 
 /**
  * @classdesc
@@ -5933,9 +6541,9 @@ var IsPlainObject = __webpack_require__(/*! ../../utils/object/IsPlainObject */ 
  * @since 3.0.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {(string|Phaser.Loader.FileTypes.TextFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|Phaser.Types.Loader.FileTypes.TextFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
- * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var TextFile = new Class({
 
@@ -6022,7 +6630,7 @@ var TextFile = new Class({
  * });
  * ```
  *
- * See the documentation for `Phaser.Loader.FileTypes.TextFileConfig` for more details.
+ * See the documentation for `Phaser.Types.Loader.FileTypes.TextFileConfig` for more details.
  *
  * Once the file has finished loading you can access it from its Cache using its key:
  *
@@ -6049,9 +6657,9 @@ var TextFile = new Class({
  * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.0.0
  *
- * @param {(string|Phaser.Loader.FileTypes.TextFileConfig|Phaser.Loader.FileTypes.TextFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {(string|Phaser.Types.Loader.FileTypes.TextFileConfig|Phaser.Types.Loader.FileTypes.TextFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
- * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */
@@ -6079,16 +6687,16 @@ module.exports = TextFile;
 /***/ }),
 
 /***/ "../../../src/math/Clamp.js":
-/*!*************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Clamp.js ***!
-  \*************************************************************/
+/*!********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Clamp.js ***!
+  \********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -6114,16 +6722,16 @@ module.exports = Clamp;
 /***/ }),
 
 /***/ "../../../src/math/Matrix4.js":
-/*!***************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Matrix4.js ***!
-  \***************************************************************/
+/*!**********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Matrix4.js ***!
+  \**********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 //  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji
@@ -7580,30 +8188,58 @@ module.exports = Matrix4;
 
 /***/ }),
 
-/***/ "../../../src/math/Vector2.js":
-/*!***************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Vector2.js ***!
-  \***************************************************************/
+/***/ "../../../src/math/RadToDeg.js":
+/*!***********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/RadToDeg.js ***!
+  \***********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var CONST = __webpack_require__(/*! ./const */ "../../../src/math/const.js");
+
+/**
+ * Convert the given angle in radians, to the equivalent angle in degrees.
+ *
+ * @function Phaser.Math.RadToDeg
+ * @since 3.0.0
+ *
+ * @param {number} radians - The angle in radians to convert ot degrees.
+ *
+ * @return {integer} The given angle converted to degrees.
+ */
+var RadToDeg = function (radians)
+{
+    return radians * CONST.RAD_TO_DEG;
+};
+
+module.exports = RadToDeg;
+
+
+/***/ }),
+
+/***/ "../../../src/math/Vector2.js":
+/*!**********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Vector2.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 //  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji
 //  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
 
 var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
-
-/**
- * @typedef {object} Vector2Like
- *
- * @property {number} x - The x component.
- * @property {number} y - The y component.
- */
 
 /**
  * @classdesc
@@ -7616,7 +8252,7 @@ var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.
  * @constructor
  * @since 3.0.0
  *
- * @param {number|Vector2Like} [x] - The x component, or an object with `x` and `y` properties.
+ * @param {number|Phaser.Types.Math.Vector2Like} [x] - The x component, or an object with `x` and `y` properties.
  * @param {number} [y] - The y component.
  */
 var Vector2 = new Class({
@@ -7696,7 +8332,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#setFromObject
      * @since 3.0.0
      *
-     * @param {Vector2Like} obj - The object containing the component values to set for this Vector.
+     * @param {Phaser.Types.Math.Vector2Like} obj - The object containing the component values to set for this Vector.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -8156,13 +8792,75 @@ var Vector2 = new Class({
 
 /**
  * A static zero Vector2 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
  * @name Phaser.Math.Vector2.ZERO
- * @type {Vector2}
+ * @type {Phaser.Math.Vector2}
  * @since 3.1.0
  */
 Vector2.ZERO = new Vector2();
+
+/**
+ * A static right Vector2 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector2.RIGHT
+ * @type {Phaser.Math.Vector2}
+ * @since 3.16.0
+ */
+Vector2.RIGHT = new Vector2(1, 0);
+
+/**
+ * A static left Vector2 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector2.LEFT
+ * @type {Phaser.Math.Vector2}
+ * @since 3.16.0
+ */
+Vector2.LEFT = new Vector2(-1, 0);
+
+/**
+ * A static up Vector2 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector2.UP
+ * @type {Phaser.Math.Vector2}
+ * @since 3.16.0
+ */
+Vector2.UP = new Vector2(0, -1);
+
+/**
+ * A static down Vector2 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector2.DOWN
+ * @type {Phaser.Math.Vector2}
+ * @since 3.16.0
+ */
+Vector2.DOWN = new Vector2(0, 1);
+
+/**
+ * A static one Vector2 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector2.ONE
+ * @type {Phaser.Math.Vector2}
+ * @since 3.16.0
+ */
+Vector2.ONE = new Vector2(1, 1);
 
 module.exports = Vector2;
 
@@ -8170,16 +8868,16 @@ module.exports = Vector2;
 /***/ }),
 
 /***/ "../../../src/math/Wrap.js":
-/*!************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Wrap.js ***!
-  \************************************************************/
+/*!*******************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Wrap.js ***!
+  \*******************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -8207,16 +8905,16 @@ module.exports = Wrap;
 /***/ }),
 
 /***/ "../../../src/math/angle/CounterClockwise.js":
-/*!******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/CounterClockwise.js ***!
-  \******************************************************************************/
+/*!*************************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/angle/CounterClockwise.js ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var CONST = __webpack_require__(/*! ../const */ "../../../src/math/const.js");
@@ -8252,16 +8950,16 @@ module.exports = CounterClockwise;
 /***/ }),
 
 /***/ "../../../src/math/angle/Wrap.js":
-/*!******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/Wrap.js ***!
-  \******************************************************************/
+/*!*************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/angle/Wrap.js ***!
+  \*************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var MathWrap = __webpack_require__(/*! ../Wrap */ "../../../src/math/Wrap.js");
@@ -8289,16 +8987,16 @@ module.exports = Wrap;
 /***/ }),
 
 /***/ "../../../src/math/angle/WrapDegrees.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/WrapDegrees.js ***!
-  \*************************************************************************/
+/*!********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/angle/WrapDegrees.js ***!
+  \********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Wrap = __webpack_require__(/*! ../Wrap */ "../../../src/math/Wrap.js");
@@ -8326,16 +9024,16 @@ module.exports = WrapDegrees;
 /***/ }),
 
 /***/ "../../../src/math/const.js":
-/*!*************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/const.js ***!
-  \*************************************************************/
+/*!********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/const.js ***!
+  \********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var MATH_CONST = {
@@ -8387,6 +9085,7 @@ var MATH_CONST = {
 
     /**
      * An instance of the Random Number Generator.
+     * This is not set until the Game boots.
      * 
      * @name Phaser.Math.RND
      * @type {Phaser.Math.RandomDataGenerator}
@@ -8402,15 +9101,15 @@ module.exports = MATH_CONST;
 /***/ }),
 
 /***/ "../../../src/plugins/BasePlugin.js":
-/*!*********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/plugins/BasePlugin.js ***!
-  \*********************************************************************/
+/*!****************************************************!*\
+  !*** D:/wamp/www/phaser/src/plugins/BasePlugin.js ***!
+  \****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2018 Photon Storm Ltd.
+* @copyright    2019 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser3-plugin-template/blob/master/LICENSE|MIT License}
 */
 
@@ -8588,20 +9287,21 @@ module.exports = BasePlugin;
 /***/ }),
 
 /***/ "../../../src/plugins/ScenePlugin.js":
-/*!**********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/plugins/ScenePlugin.js ***!
-  \**********************************************************************/
+/*!*****************************************************!*\
+  !*** D:/wamp/www/phaser/src/plugins/ScenePlugin.js ***!
+  \*****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2018 Photon Storm Ltd.
+* @copyright    2019 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser3-plugin-template/blob/master/LICENSE|MIT License}
 */
 
 var BasePlugin = __webpack_require__(/*! ./BasePlugin */ "../../../src/plugins/BasePlugin.js");
 var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
+var SceneEvents = __webpack_require__(/*! ../scene/events */ "../../../src/scene/events/index.js");
 
 /**
  * @classdesc
@@ -8631,7 +9331,7 @@ var ScenePlugin = new Class({
         this.scene = scene;
         this.systems = scene.sys;
 
-        scene.sys.events.once('boot', this.boot, this);
+        scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
     },
 
     /**
@@ -8681,25 +9381,22 @@ module.exports = ScenePlugin;
 /***/ }),
 
 /***/ "../../../src/renderer/BlendModes.js":
-/*!**********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/renderer/BlendModes.js ***!
-  \**********************************************************************/
+/*!*****************************************************!*\
+  !*** D:/wamp/www/phaser/src/renderer/BlendModes.js ***!
+  \*****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Phaser Blend Modes.
  * 
- * @name Phaser.BlendModes
- * @enum {integer}
- * @memberof Phaser
- * @readonly
+ * @namespace Phaser.BlendModes
  * @since 3.0.0
  */
 
@@ -8709,127 +9406,1148 @@ module.exports = {
      * Skips the Blend Mode check in the renderer.
      * 
      * @name Phaser.BlendModes.SKIP_CHECK
+     * @type {integer}
+     * @const
+     * @since 3.0.0
      */
     SKIP_CHECK: -1,
 
     /**
-     * Normal blend mode.
+     * Normal blend mode. For Canvas and WebGL.
+     * This is the default setting and draws new shapes on top of the existing canvas content.
      * 
      * @name Phaser.BlendModes.NORMAL
+     * @type {integer}
+     * @const
+     * @since 3.0.0
      */
     NORMAL: 0,
 
     /**
-     * Add blend mode.
+     * Add blend mode. For Canvas and WebGL.
+     * Where both shapes overlap the color is determined by adding color values.
      * 
      * @name Phaser.BlendModes.ADD
+     * @type {integer}
+     * @const
+     * @since 3.0.0
      */
     ADD: 1,
 
     /**
-     * Multiply blend mode.
+     * Multiply blend mode. For Canvas and WebGL.
+     * The pixels are of the top layer are multiplied with the corresponding pixel of the bottom layer. A darker picture is the result.
      * 
      * @name Phaser.BlendModes.MULTIPLY
+     * @type {integer}
+     * @const
+     * @since 3.0.0
      */
     MULTIPLY: 2,
 
     /**
-     * Screen blend mode.
+     * Screen blend mode. For Canvas and WebGL.
+     * The pixels are inverted, multiplied, and inverted again. A lighter picture is the result (opposite of multiply)
      * 
      * @name Phaser.BlendModes.SCREEN
+     * @type {integer}
+     * @const
+     * @since 3.0.0
      */
     SCREEN: 3,
 
     /**
-     * Overlay blend mode.
+     * Overlay blend mode. For Canvas only.
+     * A combination of multiply and screen. Dark parts on the base layer become darker, and light parts become lighter.
      * 
      * @name Phaser.BlendModes.OVERLAY
+     * @type {integer}
+     * @const
+     * @since 3.0.0
      */
     OVERLAY: 4,
 
     /**
-     * Darken blend mode.
+     * Darken blend mode. For Canvas only.
+     * Retains the darkest pixels of both layers.
      * 
      * @name Phaser.BlendModes.DARKEN
+     * @type {integer}
+     * @const
+     * @since 3.0.0
      */
     DARKEN: 5,
 
     /**
-     * Lighten blend mode.
+     * Lighten blend mode. For Canvas only.
+     * Retains the lightest pixels of both layers.
      * 
      * @name Phaser.BlendModes.LIGHTEN
+     * @type {integer}
+     * @const
+     * @since 3.0.0
      */
     LIGHTEN: 6,
 
     /**
-     * Color Dodge blend mode.
+     * Color Dodge blend mode. For Canvas only.
+     * Divides the bottom layer by the inverted top layer.
      * 
      * @name Phaser.BlendModes.COLOR_DODGE
+     * @type {integer}
+     * @const
+     * @since 3.0.0
      */
     COLOR_DODGE: 7,
 
     /**
-     * Color Burn blend mode.
+     * Color Burn blend mode. For Canvas only.
+     * Divides the inverted bottom layer by the top layer, and then inverts the result.
      * 
      * @name Phaser.BlendModes.COLOR_BURN
+     * @type {integer}
+     * @const
+     * @since 3.0.0
      */
     COLOR_BURN: 8,
 
     /**
-     * Hard Light blend mode.
+     * Hard Light blend mode. For Canvas only.
+     * A combination of multiply and screen like overlay, but with top and bottom layer swapped.
      * 
      * @name Phaser.BlendModes.HARD_LIGHT
+     * @type {integer}
+     * @const
+     * @since 3.0.0
      */
     HARD_LIGHT: 9,
 
     /**
-     * Soft Light blend mode.
+     * Soft Light blend mode. For Canvas only.
+     * A softer version of hard-light. Pure black or white does not result in pure black or white.
      * 
      * @name Phaser.BlendModes.SOFT_LIGHT
+     * @type {integer}
+     * @const
+     * @since 3.0.0
      */
     SOFT_LIGHT: 10,
 
     /**
-     * Difference blend mode.
+     * Difference blend mode. For Canvas only.
+     * Subtracts the bottom layer from the top layer or the other way round to always get a positive value.
      * 
      * @name Phaser.BlendModes.DIFFERENCE
+     * @type {integer}
+     * @const
+     * @since 3.0.0
      */
     DIFFERENCE: 11,
 
     /**
-     * Exclusion blend mode.
+     * Exclusion blend mode. For Canvas only.
+     * Like difference, but with lower contrast.
      * 
      * @name Phaser.BlendModes.EXCLUSION
+     * @type {integer}
+     * @const
+     * @since 3.0.0
      */
     EXCLUSION: 12,
 
     /**
-     * Hue blend mode.
+     * Hue blend mode. For Canvas only.
+     * Preserves the luma and chroma of the bottom layer, while adopting the hue of the top layer.
      * 
      * @name Phaser.BlendModes.HUE
+     * @type {integer}
+     * @const
+     * @since 3.0.0
      */
     HUE: 13,
 
     /**
-     * Saturation blend mode.
+     * Saturation blend mode. For Canvas only.
+     * Preserves the luma and hue of the bottom layer, while adopting the chroma of the top layer.
      * 
      * @name Phaser.BlendModes.SATURATION
+     * @type {integer}
+     * @const
+     * @since 3.0.0
      */
     SATURATION: 14,
 
     /**
-     * Color blend mode.
+     * Color blend mode. For Canvas only.
+     * Preserves the luma of the bottom layer, while adopting the hue and chroma of the top layer.
      * 
      * @name Phaser.BlendModes.COLOR
+     * @type {integer}
+     * @const
+     * @since 3.0.0
      */
     COLOR: 15,
 
     /**
-     * Luminosity blend mode.
+     * Luminosity blend mode. For Canvas only.
+     * Preserves the hue and chroma of the bottom layer, while adopting the luma of the top layer.
      * 
      * @name Phaser.BlendModes.LUMINOSITY
+     * @type {integer}
+     * @const
+     * @since 3.0.0
      */
-    LUMINOSITY: 16
+    LUMINOSITY: 16,
+
+    /**
+     * Alpha erase blend mode. For Canvas and WebGL.
+     * 
+     * @name Phaser.BlendModes.ERASE
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    ERASE: 17,
+
+    /**
+     * Source-in blend mode. For Canvas only.
+     * The new shape is drawn only where both the new shape and the destination canvas overlap. Everything else is made transparent.
+     * 
+     * @name Phaser.BlendModes.SOURCE_IN
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    SOURCE_IN: 18,
+
+    /**
+     * Source-out blend mode. For Canvas only.
+     * The new shape is drawn where it doesn't overlap the existing canvas content.
+     * 
+     * @name Phaser.BlendModes.SOURCE_OUT
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    SOURCE_OUT: 19,
+
+    /**
+     * Source-out blend mode. For Canvas only.
+     * The new shape is only drawn where it overlaps the existing canvas content.
+     * 
+     * @name Phaser.BlendModes.SOURCE_ATOP
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    SOURCE_ATOP: 20,
+
+    /**
+     * Destination-over blend mode. For Canvas only.
+     * New shapes are drawn behind the existing canvas content.
+     * 
+     * @name Phaser.BlendModes.DESTINATION_OVER
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    DESTINATION_OVER: 21,
+
+    /**
+     * Destination-in blend mode. For Canvas only.
+     * The existing canvas content is kept where both the new shape and existing canvas content overlap. Everything else is made transparent.
+     * 
+     * @name Phaser.BlendModes.DESTINATION_IN
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    DESTINATION_IN: 22,
+
+    /**
+     * Destination-out blend mode. For Canvas only.
+     * The existing content is kept where it doesn't overlap the new shape.
+     * 
+     * @name Phaser.BlendModes.DESTINATION_OUT
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    DESTINATION_OUT: 23,
+
+    /**
+     * Destination-out blend mode. For Canvas only.
+     * The existing canvas is only kept where it overlaps the new shape. The new shape is drawn behind the canvas content.
+     * 
+     * @name Phaser.BlendModes.DESTINATION_ATOP
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    DESTINATION_ATOP: 24,
+
+    /**
+     * Lighten blend mode. For Canvas only.
+     * Where both shapes overlap the color is determined by adding color values.
+     * 
+     * @name Phaser.BlendModes.LIGHTER
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    LIGHTER: 25,
+
+    /**
+     * Copy blend mode. For Canvas only.
+     * Only the new shape is shown.
+     * 
+     * @name Phaser.BlendModes.COPY
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    COPY: 26,
+
+    /**
+     * Xor blend mode. For Canvas only.
+     * Shapes are made transparent where both overlap and drawn normal everywhere else.
+     * 
+     * @name Phaser.BlendModes.XOR
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    XOR: 27
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/renderer/canvas/utils/SetTransform.js":
+/*!********************************************************************!*\
+  !*** D:/wamp/www/phaser/src/renderer/canvas/utils/SetTransform.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Takes a reference to the Canvas Renderer, a Canvas Rendering Context, a Game Object, a Camera and a parent matrix
+ * and then performs the following steps:
+ * 
+ * 1. Checks the alpha of the source combined with the Camera alpha. If 0 or less it aborts.
+ * 2. Takes the Camera and Game Object matrix and multiplies them, combined with the parent matrix if given.
+ * 3. Sets the blend mode of the context to be that used by the Game Object.
+ * 4. Sets the alpha value of the context to be that used by the Game Object combined with the Camera.
+ * 5. Saves the context state.
+ * 6. Sets the final matrix values into the context via setTransform.
+ * 
+ * This function is only meant to be used internally. Most of the Canvas Renderer classes use it.
+ *
+ * @function Phaser.Renderer.Canvas.SetTransform
+ * @since 3.12.0
+ *
+ * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
+ * @param {CanvasRenderingContext2D} ctx - The canvas context to set the transform on.
+ * @param {Phaser.GameObjects.GameObject} src - The Game Object being rendered. Can be any type that extends the base class.
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - A parent transform matrix to apply to the Game Object before rendering.
+ * 
+ * @return {boolean} `true` if the Game Object context was set, otherwise `false`.
+ */
+var SetTransform = function (renderer, ctx, src, camera, parentMatrix)
+{
+    var alpha = camera.alpha * src.alpha;
+
+    if (alpha <= 0)
+    {
+        //  Nothing to see, so don't waste time calculating stuff
+        return false;
+    }
+
+    var camMatrix = renderer._tempMatrix1.copyFromArray(camera.matrix.matrix);
+    var gameObjectMatrix = renderer._tempMatrix2.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
+    var calcMatrix = renderer._tempMatrix3;
+
+    if (parentMatrix)
+    {
+        //  Multiply the camera by the parent matrix
+        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
+
+        //  Undo the camera scroll
+        gameObjectMatrix.e = src.x;
+        gameObjectMatrix.f = src.y;
+
+        //  Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(gameObjectMatrix, calcMatrix);
+    }
+    else
+    {
+        gameObjectMatrix.e -= camera.scrollX * src.scrollFactorX;
+        gameObjectMatrix.f -= camera.scrollY * src.scrollFactorY;
+
+        //  Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(gameObjectMatrix, calcMatrix);
+    }
+
+    //  Blend Mode
+    ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
+
+    //  Alpha
+    ctx.globalAlpha = alpha;
+
+    ctx.save();
+
+    calcMatrix.setToContext(ctx);
+
+    return true;
+};
+
+module.exports = SetTransform;
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/BOOT_EVENT.js":
+/*!*********************************************************!*\
+  !*** D:/wamp/www/phaser/src/scene/events/BOOT_EVENT.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Scene Systems Boot Event.
+ * 
+ * This event is dispatched by a Scene during the Scene Systems boot process. Primarily used by Scene Plugins.
+ * 
+ * Listen to it from a Scene using `this.scene.events.on('boot', listener)`.
+ * 
+ * @event Phaser.Scenes.Events#BOOT
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
+ */
+module.exports = 'boot';
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/CREATE_EVENT.js":
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/scene/events/CREATE_EVENT.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Scene Create Event.
+ * 
+ * This event is dispatched by a Scene after it has been created by the Scene Manager.
+ * 
+ * If a Scene has a `create` method then this event is emitted _after_ that has run.
+ * 
+ * If there is a transition, this event will be fired after the `TRANSITION_START` event.
+ * 
+ * Listen to it from a Scene using `this.scene.events.on('create', listener)`.
+ * 
+ * @event Phaser.Scenes.Events#CREATE
+ * @since 3.17.0
+ * 
+ * @param {Phaser.Scene} scene - A reference to the Scene that emitted this event.
+ */
+module.exports = 'create';
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/DESTROY_EVENT.js":
+/*!************************************************************!*\
+  !*** D:/wamp/www/phaser/src/scene/events/DESTROY_EVENT.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Scene Systems Destroy Event.
+ * 
+ * This event is dispatched by a Scene during the Scene Systems destroy process.
+ * 
+ * Listen to it from a Scene using `this.scene.events.on('destroy', listener)`.
+ * 
+ * You should destroy any resources that may be in use by your Scene in this event handler.
+ * 
+ * @event Phaser.Scenes.Events#DESTROY
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
+ */
+module.exports = 'destroy';
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/PAUSE_EVENT.js":
+/*!**********************************************************!*\
+  !*** D:/wamp/www/phaser/src/scene/events/PAUSE_EVENT.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Scene Systems Pause Event.
+ * 
+ * This event is dispatched by a Scene when it is paused, either directly via the `pause` method, or as an
+ * action from another Scene.
+ * 
+ * Listen to it from a Scene using `this.scene.events.on('pause', listener)`.
+ * 
+ * @event Phaser.Scenes.Events#PAUSE
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
+ * @param {any} [data] - An optional data object that was passed to this Scene when it was paused.
+ */
+module.exports = 'pause';
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/POST_UPDATE_EVENT.js":
+/*!****************************************************************!*\
+  !*** D:/wamp/www/phaser/src/scene/events/POST_UPDATE_EVENT.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Scene Systems Post Update Event.
+ * 
+ * This event is dispatched by a Scene during the main game loop step.
+ * 
+ * The event flow for a single step of a Scene is as follows:
+ * 
+ * 1. [PRE_UPDATE]{@linkcode Phaser.Scenes.Events#event:PRE_UPDATE}
+ * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
+ * 3. The `Scene.update` method is called, if it exists
+ * 4. [POST_UPDATE]{@linkcode Phaser.Scenes.Events#event:POST_UPDATE}
+ * 5. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
+ * 
+ * Listen to it from a Scene using `this.scene.events.on('postupdate', listener)`.
+ * 
+ * A Scene will only run its step if it is active.
+ * 
+ * @event Phaser.Scenes.Events#POST_UPDATE
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
+ * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+ * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
+ */
+module.exports = 'postupdate';
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/PRE_UPDATE_EVENT.js":
+/*!***************************************************************!*\
+  !*** D:/wamp/www/phaser/src/scene/events/PRE_UPDATE_EVENT.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Scene Systems Pre Update Event.
+ * 
+ * This event is dispatched by a Scene during the main game loop step.
+ * 
+ * The event flow for a single step of a Scene is as follows:
+ * 
+ * 1. [PRE_UPDATE]{@linkcode Phaser.Scenes.Events#event:PRE_UPDATE}
+ * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
+ * 3. The `Scene.update` method is called, if it exists
+ * 4. [POST_UPDATE]{@linkcode Phaser.Scenes.Events#event:POST_UPDATE}
+ * 5. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
+ * 
+ * Listen to it from a Scene using `this.scene.events.on('preupdate', listener)`.
+ * 
+ * A Scene will only run its step if it is active.
+ * 
+ * @event Phaser.Scenes.Events#PRE_UPDATE
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
+ * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+ * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
+ */
+module.exports = 'preupdate';
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/READY_EVENT.js":
+/*!**********************************************************!*\
+  !*** D:/wamp/www/phaser/src/scene/events/READY_EVENT.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Scene Systems Ready Event.
+ * 
+ * This event is dispatched by a Scene during the Scene Systems start process.
+ * By this point in the process the Scene is now fully active and rendering.
+ * This event is meant for your game code to use, as all plugins have responded to the earlier 'start' event.
+ * 
+ * Listen to it from a Scene using `this.scene.events.on('ready', listener)`.
+ * 
+ * @event Phaser.Scenes.Events#READY
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
+ * @param {any} [data] - An optional data object that was passed to this Scene when it was started.
+ */
+module.exports = 'ready';
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/RENDER_EVENT.js":
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/scene/events/RENDER_EVENT.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Scene Systems Render Event.
+ * 
+ * This event is dispatched by a Scene during the main game loop step.
+ * 
+ * The event flow for a single step of a Scene is as follows:
+ * 
+ * 1. [PRE_UPDATE]{@linkcode Phaser.Scenes.Events#event:PRE_UPDATE}
+ * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
+ * 3. The `Scene.update` method is called, if it exists
+ * 4. [POST_UPDATE]{@linkcode Phaser.Scenes.Events#event:POST_UPDATE}
+ * 5. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
+ * 
+ * Listen to it from a Scene using `this.scene.events.on('render', listener)`.
+ * 
+ * A Scene will only render if it is visible and active.
+ * By the time this event is dispatched, the Scene will have already been rendered.
+ * 
+ * @event Phaser.Scenes.Events#RENDER
+ * @since 3.0.0
+ * 
+ * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The renderer that rendered the Scene.
+ */
+module.exports = 'render';
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/RESUME_EVENT.js":
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/scene/events/RESUME_EVENT.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Scene Systems Resume Event.
+ * 
+ * This event is dispatched by a Scene when it is resumed from a paused state, either directly via the `resume` method,
+ * or as an action from another Scene.
+ * 
+ * Listen to it from a Scene using `this.scene.events.on('resume', listener)`.
+ * 
+ * @event Phaser.Scenes.Events#RESUME
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
+ * @param {any} [data] - An optional data object that was passed to this Scene when it was resumed.
+ */
+module.exports = 'resume';
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/SHUTDOWN_EVENT.js":
+/*!*************************************************************!*\
+  !*** D:/wamp/www/phaser/src/scene/events/SHUTDOWN_EVENT.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Scene Systems Shutdown Event.
+ * 
+ * This event is dispatched by a Scene during the Scene Systems shutdown process.
+ * 
+ * Listen to it from a Scene using `this.scene.events.on('shutdown', listener)`.
+ * 
+ * You should free-up any resources that may be in use by your Scene in this event handler, on the understanding
+ * that the Scene may, at any time, become active again. A shutdown Scene is not 'destroyed', it's simply not
+ * currently active. Use the [DESTROY]{@linkcode Phaser.Scenes.Events#event:DESTROY} event to completely clear resources.
+ * 
+ * @event Phaser.Scenes.Events#SHUTDOWN
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
+ * @param {any} [data] - An optional data object that was passed to this Scene when it was shutdown.
+ */
+module.exports = 'shutdown';
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/SLEEP_EVENT.js":
+/*!**********************************************************!*\
+  !*** D:/wamp/www/phaser/src/scene/events/SLEEP_EVENT.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Scene Systems Sleep Event.
+ * 
+ * This event is dispatched by a Scene when it is sent to sleep, either directly via the `sleep` method,
+ * or as an action from another Scene.
+ * 
+ * Listen to it from a Scene using `this.scene.events.on('sleep', listener)`.
+ * 
+ * @event Phaser.Scenes.Events#SLEEP
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
+ * @param {any} [data] - An optional data object that was passed to this Scene when it was sent to sleep.
+ */
+module.exports = 'sleep';
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/START_EVENT.js":
+/*!**********************************************************!*\
+  !*** D:/wamp/www/phaser/src/scene/events/START_EVENT.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Scene Systems Start Event.
+ * 
+ * This event is dispatched by a Scene during the Scene Systems start process. Primarily used by Scene Plugins.
+ * 
+ * Listen to it from a Scene using `this.scene.events.on('start', listener)`.
+ * 
+ * @event Phaser.Scenes.Events#START
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
+ */
+module.exports = 'start';
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/TRANSITION_COMPLETE_EVENT.js":
+/*!************************************************************************!*\
+  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_COMPLETE_EVENT.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Scene Transition Complete Event.
+ * 
+ * This event is dispatched by the Target Scene of a transition.
+ * 
+ * It happens when the transition process has completed. This occurs when the duration timer equals or exceeds the duration
+ * of the transition.
+ * 
+ * Listen to it from a Scene using `this.scene.events.on('transitioncomplete', listener)`.
+ * 
+ * The Scene Transition event flow is as follows:
+ * 
+ * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.
+ * 2. [TRANSITION_INIT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_INIT} - the Target Scene will emit this event if it has an `init` method.
+ * 3. [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} - the Target Scene will emit this event after its `create` method is called, OR ...
+ * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
+ * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
+ * 
+ * @event Phaser.Scenes.Events#TRANSITION_COMPLETE
+ * @since 3.5.0
+ * 
+ * @param {Phaser.Scene} scene -The Scene on which the transitioned completed.
+ */
+module.exports = 'transitioncomplete';
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/TRANSITION_INIT_EVENT.js":
+/*!********************************************************************!*\
+  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_INIT_EVENT.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Scene Transition Init Event.
+ * 
+ * This event is dispatched by the Target Scene of a transition.
+ * 
+ * It happens immediately after the `Scene.init` method is called. If the Scene does not have an `init` method,
+ * this event is not dispatched.
+ * 
+ * Listen to it from a Scene using `this.scene.events.on('transitioninit', listener)`.
+ * 
+ * The Scene Transition event flow is as follows:
+ * 
+ * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.
+ * 2. [TRANSITION_INIT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_INIT} - the Target Scene will emit this event if it has an `init` method.
+ * 3. [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} - the Target Scene will emit this event after its `create` method is called, OR ...
+ * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
+ * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
+ * 
+ * @event Phaser.Scenes.Events#TRANSITION_INIT
+ * @since 3.5.0
+ * 
+ * @param {Phaser.Scene} from - A reference to the Scene that is being transitioned from.
+ * @param {number} duration - The duration of the transition in ms.
+ */
+module.exports = 'transitioninit';
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/TRANSITION_OUT_EVENT.js":
+/*!*******************************************************************!*\
+  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_OUT_EVENT.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Scene Transition Out Event.
+ * 
+ * This event is dispatched by a Scene when it initiates a transition to another Scene.
+ * 
+ * Listen to it from a Scene using `this.scene.events.on('transitionout', listener)`.
+ * 
+ * The Scene Transition event flow is as follows:
+ * 
+ * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.
+ * 2. [TRANSITION_INIT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_INIT} - the Target Scene will emit this event if it has an `init` method.
+ * 3. [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} - the Target Scene will emit this event after its `create` method is called, OR ...
+ * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
+ * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
+ * 
+ * @event Phaser.Scenes.Events#TRANSITION_OUT
+ * @since 3.5.0
+ * 
+ * @param {Phaser.Scene} target - A reference to the Scene that is being transitioned to.
+ * @param {number} duration - The duration of the transition in ms.
+ */
+module.exports = 'transitionout';
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/TRANSITION_START_EVENT.js":
+/*!*********************************************************************!*\
+  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_START_EVENT.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Scene Transition Start Event.
+ * 
+ * This event is dispatched by the Target Scene of a transition, only if that Scene was not asleep.
+ * 
+ * It happens immediately after the `Scene.create` method is called. If the Scene does not have a `create` method,
+ * this event is dispatched anyway.
+ * 
+ * If the Target Scene was sleeping then the [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} event is
+ * dispatched instead of this event.
+ * 
+ * Listen to it from a Scene using `this.scene.events.on('transitionstart', listener)`.
+ * 
+ * The Scene Transition event flow is as follows:
+ * 
+ * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.
+ * 2. [TRANSITION_INIT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_INIT} - the Target Scene will emit this event if it has an `init` method.
+ * 3. [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} - the Target Scene will emit this event after its `create` method is called, OR ...
+ * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
+ * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
+ * 
+ * @event Phaser.Scenes.Events#TRANSITION_START
+ * @since 3.5.0
+ * 
+ * @param {Phaser.Scene} from - A reference to the Scene that is being transitioned from.
+ * @param {number} duration - The duration of the transition in ms.
+ */
+module.exports = 'transitionstart';
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/TRANSITION_WAKE_EVENT.js":
+/*!********************************************************************!*\
+  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_WAKE_EVENT.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Scene Transition Wake Event.
+ * 
+ * This event is dispatched by the Target Scene of a transition, only if that Scene was asleep before
+ * the transition began. If the Scene was not asleep the [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} event is dispatched instead.
+ * 
+ * Listen to it from a Scene using `this.scene.events.on('transitionwake', listener)`.
+ * 
+ * The Scene Transition event flow is as follows:
+ * 
+ * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.
+ * 2. [TRANSITION_INIT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_INIT} - the Target Scene will emit this event if it has an `init` method.
+ * 3. [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} - the Target Scene will emit this event after its `create` method is called, OR ...
+ * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
+ * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
+ * 
+ * @event Phaser.Scenes.Events#TRANSITION_WAKE
+ * @since 3.5.0
+ * 
+ * @param {Phaser.Scene} from - A reference to the Scene that is being transitioned from.
+ * @param {number} duration - The duration of the transition in ms.
+ */
+module.exports = 'transitionwake';
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/UPDATE_EVENT.js":
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/scene/events/UPDATE_EVENT.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Scene Systems Update Event.
+ * 
+ * This event is dispatched by a Scene during the main game loop step.
+ * 
+ * The event flow for a single step of a Scene is as follows:
+ * 
+ * 1. [PRE_UPDATE]{@linkcode Phaser.Scenes.Events#event:PRE_UPDATE}
+ * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
+ * 3. The `Scene.update` method is called, if it exists
+ * 4. [POST_UPDATE]{@linkcode Phaser.Scenes.Events#event:POST_UPDATE}
+ * 5. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
+ * 
+ * Listen to it from a Scene using `this.scene.events.on('update', listener)`.
+ * 
+ * A Scene will only run its step if it is active.
+ * 
+ * @event Phaser.Scenes.Events#UPDATE
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
+ * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+ * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
+ */
+module.exports = 'update';
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/WAKE_EVENT.js":
+/*!*********************************************************!*\
+  !*** D:/wamp/www/phaser/src/scene/events/WAKE_EVENT.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Scene Systems Wake Event.
+ * 
+ * This event is dispatched by a Scene when it is woken from sleep, either directly via the `wake` method,
+ * or as an action from another Scene.
+ * 
+ * Listen to it from a Scene using `this.scene.events.on('wake', listener)`.
+ * 
+ * @event Phaser.Scenes.Events#WAKE
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
+ * @param {any} [data] - An optional data object that was passed to this Scene when it was woken up.
+ */
+module.exports = 'wake';
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/index.js":
+/*!****************************************************!*\
+  !*** D:/wamp/www/phaser/src/scene/events/index.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Scenes.Events
+ */
+
+module.exports = {
+
+    BOOT: __webpack_require__(/*! ./BOOT_EVENT */ "../../../src/scene/events/BOOT_EVENT.js"),
+    CREATE: __webpack_require__(/*! ./CREATE_EVENT */ "../../../src/scene/events/CREATE_EVENT.js"),
+    DESTROY: __webpack_require__(/*! ./DESTROY_EVENT */ "../../../src/scene/events/DESTROY_EVENT.js"),
+    PAUSE: __webpack_require__(/*! ./PAUSE_EVENT */ "../../../src/scene/events/PAUSE_EVENT.js"),
+    POST_UPDATE: __webpack_require__(/*! ./POST_UPDATE_EVENT */ "../../../src/scene/events/POST_UPDATE_EVENT.js"),
+    PRE_UPDATE: __webpack_require__(/*! ./PRE_UPDATE_EVENT */ "../../../src/scene/events/PRE_UPDATE_EVENT.js"),
+    READY: __webpack_require__(/*! ./READY_EVENT */ "../../../src/scene/events/READY_EVENT.js"),
+    RENDER: __webpack_require__(/*! ./RENDER_EVENT */ "../../../src/scene/events/RENDER_EVENT.js"),
+    RESUME: __webpack_require__(/*! ./RESUME_EVENT */ "../../../src/scene/events/RESUME_EVENT.js"),
+    SHUTDOWN: __webpack_require__(/*! ./SHUTDOWN_EVENT */ "../../../src/scene/events/SHUTDOWN_EVENT.js"),
+    SLEEP: __webpack_require__(/*! ./SLEEP_EVENT */ "../../../src/scene/events/SLEEP_EVENT.js"),
+    START: __webpack_require__(/*! ./START_EVENT */ "../../../src/scene/events/START_EVENT.js"),
+    TRANSITION_COMPLETE: __webpack_require__(/*! ./TRANSITION_COMPLETE_EVENT */ "../../../src/scene/events/TRANSITION_COMPLETE_EVENT.js"),
+    TRANSITION_INIT: __webpack_require__(/*! ./TRANSITION_INIT_EVENT */ "../../../src/scene/events/TRANSITION_INIT_EVENT.js"),
+    TRANSITION_OUT: __webpack_require__(/*! ./TRANSITION_OUT_EVENT */ "../../../src/scene/events/TRANSITION_OUT_EVENT.js"),
+    TRANSITION_START: __webpack_require__(/*! ./TRANSITION_START_EVENT */ "../../../src/scene/events/TRANSITION_START_EVENT.js"),
+    TRANSITION_WAKE: __webpack_require__(/*! ./TRANSITION_WAKE_EVENT */ "../../../src/scene/events/TRANSITION_WAKE_EVENT.js"),
+    UPDATE: __webpack_require__(/*! ./UPDATE_EVENT */ "../../../src/scene/events/UPDATE_EVENT.js"),
+    WAKE: __webpack_require__(/*! ./WAKE_EVENT */ "../../../src/scene/events/WAKE_EVENT.js")
 
 };
 
@@ -8837,16 +10555,16 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/utils/Class.js":
-/*!**************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/Class.js ***!
-  \**************************************************************/
+/*!*********************************************!*\
+  !*** D:/wamp/www/phaser/src/utils/Class.js ***!
+  \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 //  Taken from klasse by mattdesl https://github.com/mattdesl/klasse
@@ -8911,6 +10629,15 @@ function hasNonConfigurable (obj, k)
     return false;
 }
 
+/**
+ * Extends the given `myClass` object's prototype with the properties of `definition`.
+ *
+ * @function extend
+ * @param {Object} ctor The constructor object to mix into.
+ * @param {Object} definition A dictionary of functions for the class.
+ * @param {boolean} isClassDescriptor Is the definition a class descriptor?
+ * @param {Object} [extend] The parent constructor object.
+ */
 function extend (ctor, definition, isClassDescriptor, extend)
 {
     for (var k in definition)
@@ -8953,6 +10680,13 @@ function extend (ctor, definition, isClassDescriptor, extend)
     }
 }
 
+/**
+ * Applies the given `mixins` to the prototype of `myClass`.
+ *
+ * @function mixin
+ * @param {Object} myClass The constructor object to mix into.
+ * @param {Object|Array<Object>} mixins The mixins to apply to the constructor.
+ */
 function mixin (myClass, mixins)
 {
     if (!mixins)
@@ -8981,7 +10715,7 @@ function mixin (myClass, mixins)
  * You can also use `Extends` and `Mixins` to provide subclassing
  * and inheritance.
  *
- * @class  Class
+ * @class Phaser.Class
  * @constructor
  * @param {Object} definition a dictionary of functions for the class
  * @example
@@ -9080,16 +10814,16 @@ module.exports = Class;
 /***/ }),
 
 /***/ "../../../src/utils/NOOP.js":
-/*!*************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/NOOP.js ***!
-  \*************************************************************/
+/*!********************************************!*\
+  !*** D:/wamp/www/phaser/src/utils/NOOP.js ***!
+  \********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -9112,16 +10846,16 @@ module.exports = NOOP;
 /***/ }),
 
 /***/ "../../../src/utils/object/Extend.js":
-/*!**********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/Extend.js ***!
-  \**********************************************************************/
+/*!*****************************************************!*\
+  !*** D:/wamp/www/phaser/src/utils/object/Extend.js ***!
+  \*****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var IsPlainObject = __webpack_require__(/*! ./IsPlainObject */ "../../../src/utils/object/IsPlainObject.js");
@@ -9216,16 +10950,16 @@ module.exports = Extend;
 /***/ }),
 
 /***/ "../../../src/utils/object/GetFastValue.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/GetFastValue.js ***!
-  \****************************************************************************/
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/utils/object/GetFastValue.js ***!
+  \***********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -9264,16 +10998,16 @@ module.exports = GetFastValue;
 /***/ }),
 
 /***/ "../../../src/utils/object/GetValue.js":
-/*!************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/GetValue.js ***!
-  \************************************************************************/
+/*!*******************************************************!*\
+  !*** D:/wamp/www/phaser/src/utils/object/GetValue.js ***!
+  \*******************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 //  Source object
@@ -9302,7 +11036,7 @@ var GetValue = function (source, key, defaultValue)
     {
         return source[key];
     }
-    else if (key.indexOf('.'))
+    else if (key.indexOf('.') !== -1)
     {
         var keys = key.split('.');
         var parent = source;
@@ -9340,16 +11074,16 @@ module.exports = GetValue;
 /***/ }),
 
 /***/ "../../../src/utils/object/IsPlainObject.js":
-/*!*****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/IsPlainObject.js ***!
-  \*****************************************************************************/
+/*!************************************************************!*\
+  !*** D:/wamp/www/phaser/src/utils/object/IsPlainObject.js ***!
+  \************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -9396,207 +11130,6 @@ var IsPlainObject = function (obj)
 };
 
 module.exports = IsPlainObject;
-
-
-/***/ }),
-
-/***/ "./BaseSpinePlugin.js":
-/*!****************************!*\
-  !*** ./BaseSpinePlugin.js ***!
-  \****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Class = __webpack_require__(/*! ../../../src/utils/Class */ "../../../src/utils/Class.js");
-var ScenePlugin = __webpack_require__(/*! ../../../src/plugins/ScenePlugin */ "../../../src/plugins/ScenePlugin.js");
-var SpineFile = __webpack_require__(/*! ./SpineFile */ "./SpineFile.js");
-var SpineGameObject = __webpack_require__(/*! ./gameobject/SpineGameObject */ "./gameobject/SpineGameObject.js");
-
-var runtime;
-
-/**
- * @classdesc
- * TODO
- *
- * @class SpinePlugin
- * @extends Phaser.Plugins.ScenePlugin
- * @constructor
- * @since 3.16.0
- *
- * @param {Phaser.Scene} scene - A reference to the Scene that has installed this plugin.
- * @param {Phaser.Plugins.PluginManager} pluginManager - A reference to the Phaser Plugin Manager.
- */
-var SpinePlugin = new Class({
-
-    Extends: ScenePlugin,
-
-    initialize:
-
-    function SpinePlugin (scene, pluginManager, SpineRuntime)
-    {
-        console.log('BaseSpinePlugin created');
-
-        ScenePlugin.call(this, scene, pluginManager);
-
-        var game = pluginManager.game;
-
-        //  Create a custom cache to store the spine data (.atlas files)
-        this.cache = game.cache.addCustom('spine');
-
-        this.json = game.cache.json;
-
-        this.textures = game.textures;
-
-        this.skeletonRenderer;
-
-        this.drawDebug = false;
-
-        //  Register our file type
-        pluginManager.registerFileType('spine', this.spineFileCallback, scene);
-
-        //  Register our game object
-        pluginManager.registerGameObject('spine', this.createSpineFactory(this));
-
-        runtime = SpineRuntime;
-    },
-
-    spineFileCallback: function (key, jsonURL, atlasURL, jsonXhrSettings, atlasXhrSettings)
-    {
-        var multifile;
-   
-        if (Array.isArray(key))
-        {
-            for (var i = 0; i < key.length; i++)
-            {
-                multifile = new SpineFile(this, key[i]);
-    
-                this.addFile(multifile.files);
-            }
-        }
-        else
-        {
-            multifile = new SpineFile(this, key, jsonURL, atlasURL, jsonXhrSettings, atlasXhrSettings);
-
-            this.addFile(multifile.files);
-        }
-        
-        return this;
-    },
-
-    /**
-     * Creates a new Spine Game Object and adds it to the Scene.
-     *
-     * @method Phaser.GameObjects.GameObjectFactory#spineFactory
-     * @since 3.16.0
-     * 
-     * @param {number} x - The horizontal position of this Game Object.
-     * @param {number} y - The vertical position of this Game Object.
-     * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
-     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
-     *
-     * @return {Phaser.GameObjects.Spine} The Game Object that was created.
-     */
-    createSpineFactory: function (plugin)
-    {
-        var callback = function (x, y, key, animationName, loop)
-        {
-            var spineGO = new SpineGameObject(this.scene, plugin, x, y, key, animationName, loop);
-
-            this.displayList.add(spineGO);
-            this.updateList.add(spineGO);
-        
-            return spineGO;
-        };
-
-        return callback;
-    },
-
-    getRuntime: function ()
-    {
-        return runtime;
-    },
-
-    createSkeleton: function (key, skeletonJSON)
-    {
-        var atlas = this.getAtlas(key);
-
-        var atlasLoader = new runtime.AtlasAttachmentLoader(atlas);
-        
-        var skeletonJson = new runtime.SkeletonJson(atlasLoader);
-
-        var data = (skeletonJSON) ? skeletonJSON : this.json.get(key);
-
-        var skeletonData = skeletonJson.readSkeletonData(data);
-
-        var skeleton = new runtime.Skeleton(skeletonData);
-    
-        return { skeletonData: skeletonData, skeleton: skeleton };
-    },
-
-    getBounds: function (skeleton)
-    {
-        var offset = new runtime.Vector2();
-        var size = new runtime.Vector2();
-
-        skeleton.getBounds(offset, size, []);
-
-        return { offset: offset, size: size };
-    },
-
-    createAnimationState: function (skeleton)
-    {
-        var stateData = new runtime.AnimationStateData(skeleton.data);
-
-        var state = new runtime.AnimationState(stateData);
-
-        return { stateData: stateData, state: state };
-    },
-
-    /**
-     * The Scene that owns this plugin is shutting down.
-     * We need to kill and reset all internal properties as well as stop listening to Scene events.
-     *
-     * @method Camera3DPlugin#shutdown
-     * @private
-     * @since 3.0.0
-     */
-    shutdown: function ()
-    {
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.off('update', this.update, this);
-        eventEmitter.off('shutdown', this.shutdown, this);
-
-        this.removeAll();
-    },
-
-    /**
-     * The Scene that owns this plugin is being destroyed.
-     * We need to shutdown and then kill off all external references.
-     *
-     * @method Camera3DPlugin#destroy
-     * @private
-     * @since 3.0.0
-     */
-    destroy: function ()
-    {
-        this.shutdown();
-
-        this.pluginManager = null;
-        this.game = null;
-        this.scene = null;
-        this.systems = null;
-    }
-
-});
-
-module.exports = SpinePlugin;
 
 
 /***/ }),
@@ -9937,10 +11470,10 @@ module.exports = SpineFile;
 
 /***/ }),
 
-/***/ "./SpineWebGLPlugin.js":
-/*!*****************************!*\
-  !*** ./SpineWebGLPlugin.js ***!
-  \*****************************/
+/***/ "./SpinePlugin.js":
+/*!************************!*\
+  !*** ./SpinePlugin.js ***!
+  \************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9951,33 +11484,50 @@ module.exports = SpineFile;
  */
 
 var Class = __webpack_require__(/*! ../../../src/utils/Class */ "../../../src/utils/Class.js");
-var BaseSpinePlugin = __webpack_require__(/*! ./BaseSpinePlugin */ "./BaseSpinePlugin.js");
-var SpineWebGL = __webpack_require__(/*! SpineWebGL */ "./runtimes/spine-webgl.js");
+var ScenePlugin = __webpack_require__(/*! ../../../src/plugins/ScenePlugin */ "../../../src/plugins/ScenePlugin.js");
+var SpineFile = __webpack_require__(/*! ./SpineFile */ "./SpineFile.js");
+var Spine = __webpack_require__(/*! Spine */ "./runtimes/spine-both.js");
+var SpineGameObject = __webpack_require__(/*! ./gameobject/SpineGameObject */ "./gameobject/SpineGameObject.js");
 var Matrix4 = __webpack_require__(/*! ../../../src/math/Matrix4 */ "../../../src/math/Matrix4.js");
 
 /**
  * @classdesc
- * Just the WebGL Runtime.
+ * TODO
  *
  * @class SpinePlugin
  * @extends Phaser.Plugins.ScenePlugin
  * @constructor
- * @since 3.16.0
+ * @since 3.19.0
  *
  * @param {Phaser.Scene} scene - A reference to the Scene that has installed this plugin.
  * @param {Phaser.Plugins.PluginManager} pluginManager - A reference to the Phaser Plugin Manager.
  */
-var SpineWebGLPlugin = new Class({
+var SpinePlugin = new Class({
 
-    Extends: BaseSpinePlugin,
+    Extends: ScenePlugin,
 
     initialize:
 
-    function SpineWebGLPlugin (scene, pluginManager)
+    function SpinePlugin (scene, pluginManager)
     {
-        console.log('SpineWebGLPlugin created');
+        ScenePlugin.call(this, scene, pluginManager);
 
-        BaseSpinePlugin.call(this, scene, pluginManager, SpineWebGL);
+        var game = pluginManager.game;
+
+        this.isWebGL = (game.config.renderType === 2);
+
+        //  Create a custom cache to store the spine data (.atlas files)
+        this.cache = game.cache.addCustom('spine');
+
+        this.spineTextures = game.cache.addCustom('spineTextures');
+
+        this.json = game.cache.json;
+
+        this.textures = game.textures;
+
+        this.skeletonRenderer;
+
+        this.drawDebug = false;
 
         this.gl;
         this.mvp;
@@ -9985,31 +11535,49 @@ var SpineWebGLPlugin = new Class({
         this.batcher;
         this.debugRenderer;
         this.debugShader;
+
+        console.log('SpinePlugin created. WebGL:', this.isWebGL);
+
+        if (this.isWebGL)
+        {
+            this.runtime = Spine.webgl;
+
+            this.gl = game.renderer.gl;
+
+            this.getAtlas = this.getAtlasWebGL;
+        }
+        else
+        {
+            this.runtime = Spine.canvas;
+
+            this.getAtlas = this.getAtlasCanvas;
+        }
+
+        //  Register our file type
+        pluginManager.registerFileType('spine', this.spineFileCallback, scene);
+
+        //  Register our game object
+        pluginManager.registerGameObject('spine', this.createSpineFactory(this));
     },
 
     boot: function ()
     {
-        var gl = this.game.renderer.gl;
-
-        this.gl = gl;
-
-        this.mvp = new Matrix4();
-
-        //  Create a simple shader, mesh, model-view-projection matrix and SkeletonRenderer.
-        this.shader = SpineWebGL.webgl.Shader.newTwoColoredTextured(gl);
-        this.batcher = new SpineWebGL.webgl.PolygonBatcher(gl);
-
-        this.skeletonRenderer = new SpineWebGL.webgl.SkeletonRenderer(gl);
-        this.skeletonRenderer.premultipliedAlpha = true;
-
-        this.shapes = new SpineWebGL.webgl.ShapeRenderer(gl);
-
-        this.debugRenderer = new SpineWebGL.webgl.SkeletonDebugRenderer(gl);
-
-        this.debugShader = SpineWebGL.webgl.Shader.newColored(gl);
+        if (this.isWebGL)
+        {
+            this.bootWebGL();
+        }
+        else
+        {
+            this.bootCanvas();
+        }
     },
 
-    getAtlas: function (key)
+    bootCanvas: function ()
+    {
+        this.skeletonRenderer = new this.runtime.SkeletonRenderer(this.scene.sys.context);
+    },
+
+    getAtlasCanvas: function (key)
     {
         var atlasData = this.cache.get(key);
 
@@ -10019,21 +11587,223 @@ var SpineWebGLPlugin = new Class({
             return;
         }
 
-        var textures = this.textures;
+        var atlas;
+        var spineTextures = this.spineTextures;
 
-        var gl = this.game.renderer.gl;
-
-        var atlas = new SpineWebGL.TextureAtlas(atlasData, function (path)
+        if (spineTextures.has(key))
         {
-            return new SpineWebGL.webgl.GLTexture(gl, textures.get(path).getSourceImage());
-        });
+            atlas = new Spine.TextureAtlas(atlasData, function ()
+            {
+                return spineTextures.get(key);
+            });
+        }
+        else
+        {
+            var textures = this.textures;
+
+            atlas = new Spine.TextureAtlas(atlasData, function (path)
+            {
+                var canvasTexture = new Spine.canvas.CanvasTexture(textures.get(path).getSourceImage());
+
+                spineTextures.add(key, canvasTexture);
+
+                return canvasTexture;
+            });
+        }
 
         return atlas;
+    },
+
+    bootWebGL: function ()
+    {
+        var gl = this.gl;
+        var runtime = this.runtime;
+
+        this.mvp = new Matrix4();
+
+        //  Create a simple shader, mesh, model-view-projection matrix and SkeletonRenderer.
+        this.shader = runtime.Shader.newTwoColoredTextured(gl);
+        this.batcher = new runtime.PolygonBatcher(gl);
+
+        this.skeletonRenderer = new runtime.SkeletonRenderer(gl);
+
+        this.shapes = new runtime.ShapeRenderer(gl);
+
+        this.debugRenderer = new runtime.SkeletonDebugRenderer(gl);
+
+        this.debugShader = runtime.Shader.newColored(gl);
+    },
+
+    getAtlasWebGL: function (key)
+    {
+        var atlasData = this.cache.get(key);
+
+        if (!atlasData)
+        {
+            console.warn('No atlas data for: ' + key);
+            return;
+        }
+
+        var atlas;
+        var spineTextures = this.spineTextures;
+
+        if (spineTextures.has(key))
+        {
+            atlas = new Spine.TextureAtlas(atlasData, function ()
+            {
+                return spineTextures.get(key);
+            });
+        }
+        else
+        {
+            var textures = this.textures;
+
+            var gl = this.gl;
+
+            atlas = new Spine.TextureAtlas(atlasData, function (path)
+            {
+                var glTexture = new Spine.webgl.GLTexture(gl, textures.get(path).getSourceImage());
+
+                spineTextures.add(key, glTexture);
+
+                return glTexture;
+            });
+        }
+
+        return atlas;
+    },
+
+    spineFileCallback: function (key, jsonURL, atlasURL, jsonXhrSettings, atlasXhrSettings)
+    {
+        var multifile;
+   
+        if (Array.isArray(key))
+        {
+            for (var i = 0; i < key.length; i++)
+            {
+                multifile = new SpineFile(this, key[i]);
+    
+                this.addFile(multifile.files);
+            }
+        }
+        else
+        {
+            multifile = new SpineFile(this, key, jsonURL, atlasURL, jsonXhrSettings, atlasXhrSettings);
+
+            this.addFile(multifile.files);
+        }
+        
+        return this;
+    },
+
+    /**
+     * Creates a new Spine Game Object and adds it to the Scene.
+     *
+     * @method Phaser.GameObjects.GameObjectFactory#spineFactory
+     * @since 3.16.0
+     * 
+     * @param {number} x - The horizontal position of this Game Object.
+     * @param {number} y - The vertical position of this Game Object.
+     * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
+     *
+     * @return {Phaser.GameObjects.Spine} The Game Object that was created.
+     */
+    createSpineFactory: function (plugin)
+    {
+        var callback = function (x, y, key, animationName, loop)
+        {
+            var spineGO = new SpineGameObject(this.scene, plugin, x, y, key, animationName, loop);
+
+            this.displayList.add(spineGO);
+            this.updateList.add(spineGO);
+        
+            return spineGO;
+        };
+
+        return callback;
+    },
+
+    getRuntime: function ()
+    {
+        return this.runtime;
+    },
+
+    createSkeleton: function (key, skeletonJSON)
+    {
+        var atlas = this.getAtlas(key);
+
+        var atlasLoader = new Spine.AtlasAttachmentLoader(atlas);
+        
+        var skeletonJson = new Spine.SkeletonJson(atlasLoader);
+
+        var data = (skeletonJSON) ? skeletonJSON : this.json.get(key);
+
+        var skeletonData = skeletonJson.readSkeletonData(data);
+
+        var skeleton = new Spine.Skeleton(skeletonData);
+    
+        return { skeletonData: skeletonData, skeleton: skeleton };
+    },
+
+    getBounds: function (skeleton)
+    {
+        var offset = new Spine.Vector2();
+        var size = new Spine.Vector2();
+
+        skeleton.getBounds(offset, size, []);
+
+        return { offset: offset, size: size };
+    },
+
+    createAnimationState: function (skeleton)
+    {
+        var stateData = new Spine.AnimationStateData(skeleton.data);
+
+        var state = new Spine.AnimationState(stateData);
+
+        return { stateData: stateData, state: state };
+    },
+
+    /**
+     * The Scene that owns this plugin is shutting down.
+     * We need to kill and reset all internal properties as well as stop listening to Scene events.
+     *
+     * @method Camera3DPlugin#shutdown
+     * @private
+     * @since 3.0.0
+     */
+    shutdown: function ()
+    {
+        var eventEmitter = this.systems.events;
+
+        eventEmitter.off('update', this.update, this);
+        eventEmitter.off('shutdown', this.shutdown, this);
+
+        this.removeAll();
+    },
+
+    /**
+     * The Scene that owns this plugin is being destroyed.
+     * We need to shutdown and then kill off all external references.
+     *
+     * @method Camera3DPlugin#destroy
+     * @private
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.shutdown();
+
+        this.pluginManager = null;
+        this.game = null;
+        this.scene = null;
+        this.systems = null;
     }
 
 });
 
-module.exports = SpineWebGLPlugin;
+module.exports = SpinePlugin;
 
 
 /***/ }),
@@ -10096,8 +11866,7 @@ var SpineGameObject = new Class({
 
         this.plugin = plugin;
 
-        this.runtime = plugin.getRuntime();
-
+        this.root = null;
         this.skeleton = null;
         this.skeletonData = null;
 
@@ -10181,6 +11950,8 @@ var SpineGameObject = new Class({
         {
             this.setAnimation(0, animationName, loop);
         }
+
+        this.root = this.getRootBone();
 
         return this;
     },
@@ -10274,6 +12045,11 @@ var SpineGameObject = new Class({
         return this;
     },
 
+    getRootBone: function ()
+    {
+        return this.skeleton.getRootBone();
+    },
+
     findBone: function (boneName)
     {
         return this.skeleton.findBone(boneName);
@@ -10331,7 +12107,6 @@ var SpineGameObject = new Class({
         }
 
         this.plugin = null;
-        this.runtime = null;
 
         this.skeleton = null;
         this.skeletonData = null;
@@ -10343,6 +12118,74 @@ var SpineGameObject = new Class({
 });
 
 module.exports = SpineGameObject;
+
+
+/***/ }),
+
+/***/ "./gameobject/SpineGameObjectCanvasRenderer.js":
+/*!*****************************************************!*\
+  !*** ./gameobject/SpineGameObjectCanvasRenderer.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var SetTransform = __webpack_require__(/*! ../../../../src/renderer/canvas/utils/SetTransform */ "../../../src/renderer/canvas/utils/SetTransform.js");
+
+/**
+ * Renders this Game Object with the Canvas Renderer to the given Camera.
+ * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
+ * This method should not be called directly. It is a utility function of the Render module.
+ *
+ * @method Phaser.GameObjects.SpineGameObject#renderCanvas
+ * @since 3.16.0
+ * @private
+ *
+ * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
+ * @param {Phaser.GameObjects.SpineGameObject} src - The Game Object being rendered in this call.
+ * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
+ */
+var SpineGameObjectCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
+{
+    var context = renderer.currentContext;
+
+    var plugin = src.plugin;
+    var skeleton = src.skeleton;
+    var skeletonRenderer = plugin.skeletonRenderer;
+
+    if (!skeleton || !SetTransform(renderer, context, src, camera, parentMatrix))
+    {
+        return;
+    }
+
+    skeletonRenderer.ctx = context;
+
+    context.save();
+
+    skeletonRenderer.draw(skeleton);
+
+    if (plugin.drawDebug || src.drawDebug)
+    {
+        context.strokeStyle = '#00ff00';
+        context.beginPath();
+        context.moveTo(-1000, 0);
+        context.lineTo(1000, 0);
+        context.moveTo(0, -1000);
+        context.lineTo(0, 1000);
+        context.stroke();
+    }
+
+    context.restore();
+};
+
+module.exports = SpineGameObjectCanvasRenderer;
 
 
 /***/ }),
@@ -10368,8 +12211,10 @@ if (true)
     renderWebGL = __webpack_require__(/*! ./SpineGameObjectWebGLRenderer */ "./gameobject/SpineGameObjectWebGLRenderer.js");
 }
 
-if (false)
-{}
+if (true)
+{
+    renderCanvas = __webpack_require__(/*! ./SpineGameObjectCanvasRenderer */ "./gameobject/SpineGameObjectCanvasRenderer.js");
+}
 
 module.exports = {
 
@@ -10395,6 +12240,7 @@ module.exports = {
  */
 
 var CounterClockwise = __webpack_require__(/*! ../../../../src/math/angle/CounterClockwise */ "../../../src/math/angle/CounterClockwise.js");
+var RadToDeg = __webpack_require__(/*! ../../../../src/math/RadToDeg */ "../../../src/math/RadToDeg.js");
 
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
@@ -10413,13 +12259,12 @@ var CounterClockwise = __webpack_require__(/*! ../../../../src/math/angle/Counte
  */
 var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    var pipeline = renderer.currentPipeline;
     var plugin = src.plugin;
     var mvp = plugin.mvp;
 
     var shader = plugin.shader;
     var batcher = plugin.batcher;
-    var runtime = src.runtime;
+    var runtime = plugin.runtime;
     var skeleton = src.skeleton;
     var skeletonRenderer = plugin.skeletonRenderer;
 
@@ -10428,7 +12273,10 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
         return;
     }
 
-    renderer.clearPipeline();
+    if (renderer.newType)
+    {
+        renderer.clearPipeline();
+    }
 
     var camMatrix = renderer._tempMatrix1;
     var spriteMatrix = renderer._tempMatrix2;
@@ -10463,38 +12311,60 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     var width = renderer.width;
     var height = renderer.height;
 
-    var data = calcMatrix.decomposeMatrix();
+    skeleton.x = calcMatrix.tx;
+    skeleton.y = height - calcMatrix.ty;
+    skeleton.scaleX = calcMatrix.scaleX;
+    skeleton.scaleY = calcMatrix.scaleY;
 
-    mvp.ortho(0, width, 0, height, 0, 1);
-    mvp.translateXYZ(data.translateX, height - data.translateY, 0);
-    mvp.rotateZ(CounterClockwise(data.rotation));
-    mvp.scaleXYZ(data.scaleX, data.scaleY, 1);
+    src.root.rotation = RadToDeg(CounterClockwise(calcMatrix.rotation));
 
-    //  For a Stage 1 release we'll handle it like this:
-    shader.bind();
-    shader.setUniformi(runtime.webgl.Shader.SAMPLER, 0);
-    shader.setUniform4x4f(runtime.webgl.Shader.MVP_MATRIX, mvp.val);
+    //  Add autoUpdate option
+    skeleton.updateWorldTransform();
 
-    //  For Stage 2, we'll move to using a custom pipeline, so Spine objects are batched
+    if (renderer.newType)
+    {
+        mvp.ortho(0, width, 0, height, 0, 1);
 
-    batcher.begin(shader);
+        shader.bind();
+        shader.setUniformi(runtime.Shader.SAMPLER, 0);
+        shader.setUniform4x4f(runtime.Shader.MVP_MATRIX, mvp.val);
 
-    skeletonRenderer.premultipliedAlpha = true;
+        batcher.begin(shader);
 
+        skeletonRenderer.premultipliedAlpha = true;
+    }
+
+    if (renderer.nextTypeMatch)
+    {
+        batcher.isDrawing = false;
+    }
+
+    //  Draw the current skeleton
     skeletonRenderer.draw(batcher, skeleton);
 
-    batcher.end();
+    if (!renderer.nextTypeMatch)
+    {
+        //  The next object in the display list is not a Spine object, so we end the batch
+        batcher.isDrawing = true;
 
-    shader.unbind();
+        batcher.end();
 
-    if (plugin.drawDebug || src.drawDebug)
+        shader.unbind();
+
+        renderer.rebindPipeline(renderer.pipelines.TextureTintPipeline);
+    }
+
+    /*
+    var drawDebug = (plugin.drawDebug || src.drawDebug);
+
+    if (drawDebug)
     {
         var debugShader = plugin.debugShader;
         var debugRenderer = plugin.debugRenderer;
         var shapes = plugin.shapes;
 
         debugShader.bind();
-        debugShader.setUniform4x4f(runtime.webgl.Shader.MVP_MATRIX, mvp.val);
+        debugShader.setUniform4x4f(runtime.Shader.MVP_MATRIX, mvp.val);
 
         shapes.begin(debugShader);
 
@@ -10504,8 +12374,7 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
 
         debugShader.unbind();
     }
-
-    renderer.rebindPipeline(pipeline);
+    */
 };
 
 module.exports = SpineGameObjectWebGLRenderer;
@@ -10513,10 +12382,10 @@ module.exports = SpineGameObjectWebGLRenderer;
 
 /***/ }),
 
-/***/ "./runtimes/spine-webgl.js":
-/*!*********************************!*\
-  !*** ./runtimes/spine-webgl.js ***!
-  \*********************************/
+/***/ "./runtimes/spine-both.js":
+/*!********************************!*\
+  !*** ./runtimes/spine-both.js ***!
+  \********************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10545,7 +12414,7 @@ var spine;
 			this.timelines = timelines;
 			this.duration = duration;
 		}
-		Animation.prototype.apply = function (skeleton, lastTime, time, loop, events, alpha, pose, direction) {
+		Animation.prototype.apply = function (skeleton, lastTime, time, loop, events, alpha, blend, direction) {
 			if (skeleton == null)
 				throw new Error("skeleton cannot be null.");
 			if (loop && this.duration != 0) {
@@ -10555,7 +12424,7 @@ var spine;
 			}
 			var timelines = this.timelines;
 			for (var i = 0, n = timelines.length; i < n; i++)
-				timelines[i].apply(skeleton, lastTime, time, events, alpha, pose, direction);
+				timelines[i].apply(skeleton, lastTime, time, events, alpha, blend, direction);
 		};
 		Animation.binarySearch = function (values, target, step) {
 			if (step === void 0) { step = 1; }
@@ -10583,12 +12452,13 @@ var spine;
 		return Animation;
 	}());
 	spine.Animation = Animation;
-	var MixPose;
-	(function (MixPose) {
-		MixPose[MixPose["setup"] = 0] = "setup";
-		MixPose[MixPose["current"] = 1] = "current";
-		MixPose[MixPose["currentLayered"] = 2] = "currentLayered";
-	})(MixPose = spine.MixPose || (spine.MixPose = {}));
+	var MixBlend;
+	(function (MixBlend) {
+		MixBlend[MixBlend["setup"] = 0] = "setup";
+		MixBlend[MixBlend["first"] = 1] = "first";
+		MixBlend[MixBlend["replace"] = 2] = "replace";
+		MixBlend[MixBlend["add"] = 3] = "add";
+	})(MixBlend = spine.MixBlend || (spine.MixBlend = {}));
 	var MixDirection;
 	(function (MixDirection) {
 		MixDirection[MixDirection["in"] = 0] = "in";
@@ -10709,28 +12579,32 @@ var spine;
 			this.frames[frameIndex] = time;
 			this.frames[frameIndex + RotateTimeline.ROTATION] = degrees;
 		};
-		RotateTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, pose, direction) {
+		RotateTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, blend, direction) {
 			var frames = this.frames;
 			var bone = skeleton.bones[this.boneIndex];
 			if (time < frames[0]) {
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						bone.rotation = bone.data.rotation;
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						var r_1 = bone.data.rotation - bone.rotation;
-						r_1 -= (16384 - ((16384.499999999996 - r_1 / 360) | 0)) * 360;
-						bone.rotation += r_1 * alpha;
+						bone.rotation += (r_1 - (16384 - ((16384.499999999996 - r_1 / 360) | 0)) * 360) * alpha;
 				}
 				return;
 			}
 			if (time >= frames[frames.length - RotateTimeline.ENTRIES]) {
-				if (pose == MixPose.setup)
-					bone.rotation = bone.data.rotation + frames[frames.length + RotateTimeline.PREV_ROTATION] * alpha;
-				else {
-					var r_2 = bone.data.rotation + frames[frames.length + RotateTimeline.PREV_ROTATION] - bone.rotation;
-					r_2 -= (16384 - ((16384.499999999996 - r_2 / 360) | 0)) * 360;
-					bone.rotation += r_2 * alpha;
+				var r_2 = frames[frames.length + RotateTimeline.PREV_ROTATION];
+				switch (blend) {
+					case MixBlend.setup:
+						bone.rotation = bone.data.rotation + r_2 * alpha;
+						break;
+					case MixBlend.first:
+					case MixBlend.replace:
+						r_2 += bone.data.rotation - bone.rotation;
+						r_2 -= (16384 - ((16384.499999999996 - r_2 / 360) | 0)) * 360;
+					case MixBlend.add:
+						bone.rotation += r_2 * alpha;
 				}
 				return;
 			}
@@ -10739,16 +12613,16 @@ var spine;
 			var frameTime = frames[frame];
 			var percent = this.getCurvePercent((frame >> 1) - 1, 1 - (time - frameTime) / (frames[frame + RotateTimeline.PREV_TIME] - frameTime));
 			var r = frames[frame + RotateTimeline.ROTATION] - prevRotation;
-			r -= (16384 - ((16384.499999999996 - r / 360) | 0)) * 360;
-			r = prevRotation + r * percent;
-			if (pose == MixPose.setup) {
-				r -= (16384 - ((16384.499999999996 - r / 360) | 0)) * 360;
-				bone.rotation = bone.data.rotation + r * alpha;
-			}
-			else {
-				r = bone.data.rotation + r - bone.rotation;
-				r -= (16384 - ((16384.499999999996 - r / 360) | 0)) * 360;
-				bone.rotation += r * alpha;
+			r = prevRotation + (r - (16384 - ((16384.499999999996 - r / 360) | 0)) * 360) * percent;
+			switch (blend) {
+				case MixBlend.setup:
+					bone.rotation = bone.data.rotation + (r - (16384 - ((16384.499999999996 - r / 360) | 0)) * 360) * alpha;
+					break;
+				case MixBlend.first:
+				case MixBlend.replace:
+					r += bone.data.rotation - bone.rotation;
+				case MixBlend.add:
+					bone.rotation += (r - (16384 - ((16384.499999999996 - r / 360) | 0)) * 360) * alpha;
 			}
 		};
 		RotateTimeline.ENTRIES = 2;
@@ -10774,16 +12648,16 @@ var spine;
 			this.frames[frameIndex + TranslateTimeline.X] = x;
 			this.frames[frameIndex + TranslateTimeline.Y] = y;
 		};
-		TranslateTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, pose, direction) {
+		TranslateTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, blend, direction) {
 			var frames = this.frames;
 			var bone = skeleton.bones[this.boneIndex];
 			if (time < frames[0]) {
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						bone.x = bone.data.x;
 						bone.y = bone.data.y;
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						bone.x += (bone.data.x - bone.x) * alpha;
 						bone.y += (bone.data.y - bone.y) * alpha;
 				}
@@ -10803,13 +12677,19 @@ var spine;
 				x += (frames[frame + TranslateTimeline.X] - x) * percent;
 				y += (frames[frame + TranslateTimeline.Y] - y) * percent;
 			}
-			if (pose == MixPose.setup) {
-				bone.x = bone.data.x + x * alpha;
-				bone.y = bone.data.y + y * alpha;
-			}
-			else {
-				bone.x += (bone.data.x + x - bone.x) * alpha;
-				bone.y += (bone.data.y + y - bone.y) * alpha;
+			switch (blend) {
+				case MixBlend.setup:
+					bone.x = bone.data.x + x * alpha;
+					bone.y = bone.data.y + y * alpha;
+					break;
+				case MixBlend.first:
+				case MixBlend.replace:
+					bone.x += (bone.data.x + x - bone.x) * alpha;
+					bone.y += (bone.data.y + y - bone.y) * alpha;
+					break;
+				case MixBlend.add:
+					bone.x += x * alpha;
+					bone.y += y * alpha;
 			}
 		};
 		TranslateTimeline.ENTRIES = 3;
@@ -10829,16 +12709,16 @@ var spine;
 		ScaleTimeline.prototype.getPropertyId = function () {
 			return (TimelineType.scale << 24) + this.boneIndex;
 		};
-		ScaleTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, pose, direction) {
+		ScaleTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, blend, direction) {
 			var frames = this.frames;
 			var bone = skeleton.bones[this.boneIndex];
 			if (time < frames[0]) {
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						bone.scaleX = bone.data.scaleX;
 						bone.scaleY = bone.data.scaleY;
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						bone.scaleX += (bone.data.scaleX - bone.scaleX) * alpha;
 						bone.scaleY += (bone.data.scaleY - bone.scaleY) * alpha;
 				}
@@ -10859,29 +12739,61 @@ var spine;
 				y = (y + (frames[frame + ScaleTimeline.Y] - y) * percent) * bone.data.scaleY;
 			}
 			if (alpha == 1) {
-				bone.scaleX = x;
-				bone.scaleY = y;
+				if (blend == MixBlend.add) {
+					bone.scaleX += x - bone.data.scaleX;
+					bone.scaleY += y - bone.data.scaleY;
+				}
+				else {
+					bone.scaleX = x;
+					bone.scaleY = y;
+				}
 			}
 			else {
 				var bx = 0, by = 0;
-				if (pose == MixPose.setup) {
-					bx = bone.data.scaleX;
-					by = bone.data.scaleY;
-				}
-				else {
-					bx = bone.scaleX;
-					by = bone.scaleY;
-				}
 				if (direction == MixDirection.out) {
-					x = Math.abs(x) * spine.MathUtils.signum(bx);
-					y = Math.abs(y) * spine.MathUtils.signum(by);
+					switch (blend) {
+						case MixBlend.setup:
+							bx = bone.data.scaleX;
+							by = bone.data.scaleY;
+							bone.scaleX = bx + (Math.abs(x) * spine.MathUtils.signum(bx) - bx) * alpha;
+							bone.scaleY = by + (Math.abs(y) * spine.MathUtils.signum(by) - by) * alpha;
+							break;
+						case MixBlend.first:
+						case MixBlend.replace:
+							bx = bone.scaleX;
+							by = bone.scaleY;
+							bone.scaleX = bx + (Math.abs(x) * spine.MathUtils.signum(bx) - bx) * alpha;
+							bone.scaleY = by + (Math.abs(y) * spine.MathUtils.signum(by) - by) * alpha;
+							break;
+						case MixBlend.add:
+							bx = bone.scaleX;
+							by = bone.scaleY;
+							bone.scaleX = bx + (Math.abs(x) * spine.MathUtils.signum(bx) - bone.data.scaleX) * alpha;
+							bone.scaleY = by + (Math.abs(y) * spine.MathUtils.signum(by) - bone.data.scaleY) * alpha;
+					}
 				}
 				else {
-					bx = Math.abs(bx) * spine.MathUtils.signum(x);
-					by = Math.abs(by) * spine.MathUtils.signum(y);
+					switch (blend) {
+						case MixBlend.setup:
+							bx = Math.abs(bone.data.scaleX) * spine.MathUtils.signum(x);
+							by = Math.abs(bone.data.scaleY) * spine.MathUtils.signum(y);
+							bone.scaleX = bx + (x - bx) * alpha;
+							bone.scaleY = by + (y - by) * alpha;
+							break;
+						case MixBlend.first:
+						case MixBlend.replace:
+							bx = Math.abs(bone.scaleX) * spine.MathUtils.signum(x);
+							by = Math.abs(bone.scaleY) * spine.MathUtils.signum(y);
+							bone.scaleX = bx + (x - bx) * alpha;
+							bone.scaleY = by + (y - by) * alpha;
+							break;
+						case MixBlend.add:
+							bx = spine.MathUtils.signum(x);
+							by = spine.MathUtils.signum(y);
+							bone.scaleX = Math.abs(bone.scaleX) * bx + (x - Math.abs(bone.data.scaleX) * bx) * alpha;
+							bone.scaleY = Math.abs(bone.scaleY) * by + (y - Math.abs(bone.data.scaleY) * by) * alpha;
+					}
 				}
-				bone.scaleX = bx + (x - bx) * alpha;
-				bone.scaleY = by + (y - by) * alpha;
 			}
 		};
 		return ScaleTimeline;
@@ -10895,16 +12807,16 @@ var spine;
 		ShearTimeline.prototype.getPropertyId = function () {
 			return (TimelineType.shear << 24) + this.boneIndex;
 		};
-		ShearTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, pose, direction) {
+		ShearTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, blend, direction) {
 			var frames = this.frames;
 			var bone = skeleton.bones[this.boneIndex];
 			if (time < frames[0]) {
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						bone.shearX = bone.data.shearX;
 						bone.shearY = bone.data.shearY;
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						bone.shearX += (bone.data.shearX - bone.shearX) * alpha;
 						bone.shearY += (bone.data.shearY - bone.shearY) * alpha;
 				}
@@ -10924,13 +12836,19 @@ var spine;
 				x = x + (frames[frame + ShearTimeline.X] - x) * percent;
 				y = y + (frames[frame + ShearTimeline.Y] - y) * percent;
 			}
-			if (pose == MixPose.setup) {
-				bone.shearX = bone.data.shearX + x * alpha;
-				bone.shearY = bone.data.shearY + y * alpha;
-			}
-			else {
-				bone.shearX += (bone.data.shearX + x - bone.shearX) * alpha;
-				bone.shearY += (bone.data.shearY + y - bone.shearY) * alpha;
+			switch (blend) {
+				case MixBlend.setup:
+					bone.shearX = bone.data.shearX + x * alpha;
+					bone.shearY = bone.data.shearY + y * alpha;
+					break;
+				case MixBlend.first:
+				case MixBlend.replace:
+					bone.shearX += (bone.data.shearX + x - bone.shearX) * alpha;
+					bone.shearY += (bone.data.shearY + y - bone.shearY) * alpha;
+					break;
+				case MixBlend.add:
+					bone.shearX += x * alpha;
+					bone.shearY += y * alpha;
 			}
 		};
 		return ShearTimeline;
@@ -10954,15 +12872,15 @@ var spine;
 			this.frames[frameIndex + ColorTimeline.B] = b;
 			this.frames[frameIndex + ColorTimeline.A] = a;
 		};
-		ColorTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, pose, direction) {
+		ColorTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, blend, direction) {
 			var slot = skeleton.slots[this.slotIndex];
 			var frames = this.frames;
 			if (time < frames[0]) {
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						slot.color.setFromColor(slot.data.color);
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						var color = slot.color, setup = slot.data.color;
 						color.add((setup.r - color.r) * alpha, (setup.g - color.g) * alpha, (setup.b - color.b) * alpha, (setup.a - color.a) * alpha);
 				}
@@ -10993,7 +12911,7 @@ var spine;
 				slot.color.set(r, g, b, a);
 			else {
 				var color = slot.color;
-				if (pose == MixPose.setup)
+				if (blend == MixBlend.setup)
 					color.setFromColor(slot.data.color);
 				color.add((r - color.r) * alpha, (g - color.g) * alpha, (b - color.b) * alpha, (a - color.a) * alpha);
 			}
@@ -11032,16 +12950,16 @@ var spine;
 			this.frames[frameIndex + TwoColorTimeline.G2] = g2;
 			this.frames[frameIndex + TwoColorTimeline.B2] = b2;
 		};
-		TwoColorTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, pose, direction) {
+		TwoColorTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, blend, direction) {
 			var slot = skeleton.slots[this.slotIndex];
 			var frames = this.frames;
 			if (time < frames[0]) {
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						slot.color.setFromColor(slot.data.color);
 						slot.darkColor.setFromColor(slot.data.darkColor);
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						var light = slot.color, dark = slot.darkColor, setupLight = slot.data.color, setupDark = slot.data.darkColor;
 						light.add((setupLight.r - light.r) * alpha, (setupLight.g - light.g) * alpha, (setupLight.b - light.b) * alpha, (setupLight.a - light.a) * alpha);
 						dark.add((setupDark.r - dark.r) * alpha, (setupDark.g - dark.g) * alpha, (setupDark.b - dark.b) * alpha, 0);
@@ -11084,7 +13002,7 @@ var spine;
 			}
 			else {
 				var light = slot.color, dark = slot.darkColor;
-				if (pose == MixPose.setup) {
+				if (blend == MixBlend.setup) {
 					light.setFromColor(slot.data.color);
 					dark.setFromColor(slot.data.darkColor);
 				}
@@ -11126,16 +13044,16 @@ var spine;
 			this.frames[frameIndex] = time;
 			this.attachmentNames[frameIndex] = attachmentName;
 		};
-		AttachmentTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, pose, direction) {
+		AttachmentTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, blend, direction) {
 			var slot = skeleton.slots[this.slotIndex];
-			if (direction == MixDirection.out && pose == MixPose.setup) {
+			if (direction == MixDirection.out && blend == MixBlend.setup) {
 				var attachmentName_1 = slot.data.attachmentName;
 				slot.setAttachment(attachmentName_1 == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName_1));
 				return;
 			}
 			var frames = this.frames;
 			if (time < frames[0]) {
-				if (pose == MixPose.setup) {
+				if (blend == MixBlend.setup || blend == MixBlend.first) {
 					var attachmentName_2 = slot.data.attachmentName;
 					slot.setAttachment(attachmentName_2 == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName_2));
 				}
@@ -11171,24 +13089,24 @@ var spine;
 			this.frames[frameIndex] = time;
 			this.frameVertices[frameIndex] = vertices;
 		};
-		DeformTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, pose, direction) {
+		DeformTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, blend, direction) {
 			var slot = skeleton.slots[this.slotIndex];
 			var slotAttachment = slot.getAttachment();
 			if (!(slotAttachment instanceof spine.VertexAttachment) || !slotAttachment.applyDeform(this.attachment))
 				return;
 			var verticesArray = slot.attachmentVertices;
 			if (verticesArray.length == 0)
-				alpha = 1;
+				blend = MixBlend.setup;
 			var frameVertices = this.frameVertices;
 			var vertexCount = frameVertices[0].length;
 			var frames = this.frames;
 			if (time < frames[0]) {
 				var vertexAttachment = slotAttachment;
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						verticesArray.length = 0;
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						if (alpha == 1) {
 							verticesArray.length = 0;
 							break;
@@ -11211,25 +13129,57 @@ var spine;
 			if (time >= frames[frames.length - 1]) {
 				var lastVertices = frameVertices[frames.length - 1];
 				if (alpha == 1) {
-					spine.Utils.arrayCopy(lastVertices, 0, vertices, 0, vertexCount);
-				}
-				else if (pose == MixPose.setup) {
-					var vertexAttachment = slotAttachment;
-					if (vertexAttachment.bones == null) {
-						var setupVertices_1 = vertexAttachment.vertices;
-						for (var i_1 = 0; i_1 < vertexCount; i_1++) {
-							var setup = setupVertices_1[i_1];
-							vertices[i_1] = setup + (lastVertices[i_1] - setup) * alpha;
+					if (blend == MixBlend.add) {
+						var vertexAttachment = slotAttachment;
+						if (vertexAttachment.bones == null) {
+							var setupVertices = vertexAttachment.vertices;
+							for (var i_1 = 0; i_1 < vertexCount; i_1++) {
+								vertices[i_1] += lastVertices[i_1] - setupVertices[i_1];
+							}
+						}
+						else {
+							for (var i_2 = 0; i_2 < vertexCount; i_2++)
+								vertices[i_2] += lastVertices[i_2];
 						}
 					}
 					else {
-						for (var i_2 = 0; i_2 < vertexCount; i_2++)
-							vertices[i_2] = lastVertices[i_2] * alpha;
+						spine.Utils.arrayCopy(lastVertices, 0, vertices, 0, vertexCount);
 					}
 				}
 				else {
-					for (var i_3 = 0; i_3 < vertexCount; i_3++)
-						vertices[i_3] += (lastVertices[i_3] - vertices[i_3]) * alpha;
+					switch (blend) {
+						case MixBlend.setup: {
+							var vertexAttachment_1 = slotAttachment;
+							if (vertexAttachment_1.bones == null) {
+								var setupVertices = vertexAttachment_1.vertices;
+								for (var i_3 = 0; i_3 < vertexCount; i_3++) {
+									var setup = setupVertices[i_3];
+									vertices[i_3] = setup + (lastVertices[i_3] - setup) * alpha;
+								}
+							}
+							else {
+								for (var i_4 = 0; i_4 < vertexCount; i_4++)
+									vertices[i_4] = lastVertices[i_4] * alpha;
+							}
+							break;
+						}
+						case MixBlend.first:
+						case MixBlend.replace:
+							for (var i_5 = 0; i_5 < vertexCount; i_5++)
+								vertices[i_5] += (lastVertices[i_5] - vertices[i_5]) * alpha;
+						case MixBlend.add:
+							var vertexAttachment = slotAttachment;
+							if (vertexAttachment.bones == null) {
+								var setupVertices = vertexAttachment.vertices;
+								for (var i_6 = 0; i_6 < vertexCount; i_6++) {
+									vertices[i_6] += (lastVertices[i_6] - setupVertices[i_6]) * alpha;
+								}
+							}
+							else {
+								for (var i_7 = 0; i_7 < vertexCount; i_7++)
+									vertices[i_7] += lastVertices[i_7] * alpha;
+							}
+					}
 				}
 				return;
 			}
@@ -11239,31 +13189,70 @@ var spine;
 			var frameTime = frames[frame];
 			var percent = this.getCurvePercent(frame - 1, 1 - (time - frameTime) / (frames[frame - 1] - frameTime));
 			if (alpha == 1) {
-				for (var i_4 = 0; i_4 < vertexCount; i_4++) {
-					var prev = prevVertices[i_4];
-					vertices[i_4] = prev + (nextVertices[i_4] - prev) * percent;
-				}
-			}
-			else if (pose == MixPose.setup) {
-				var vertexAttachment = slotAttachment;
-				if (vertexAttachment.bones == null) {
-					var setupVertices_2 = vertexAttachment.vertices;
-					for (var i_5 = 0; i_5 < vertexCount; i_5++) {
-						var prev = prevVertices[i_5], setup = setupVertices_2[i_5];
-						vertices[i_5] = setup + (prev + (nextVertices[i_5] - prev) * percent - setup) * alpha;
+				if (blend == MixBlend.add) {
+					var vertexAttachment = slotAttachment;
+					if (vertexAttachment.bones == null) {
+						var setupVertices = vertexAttachment.vertices;
+						for (var i_8 = 0; i_8 < vertexCount; i_8++) {
+							var prev = prevVertices[i_8];
+							vertices[i_8] += prev + (nextVertices[i_8] - prev) * percent - setupVertices[i_8];
+						}
+					}
+					else {
+						for (var i_9 = 0; i_9 < vertexCount; i_9++) {
+							var prev = prevVertices[i_9];
+							vertices[i_9] += prev + (nextVertices[i_9] - prev) * percent;
+						}
 					}
 				}
 				else {
-					for (var i_6 = 0; i_6 < vertexCount; i_6++) {
-						var prev = prevVertices[i_6];
-						vertices[i_6] = (prev + (nextVertices[i_6] - prev) * percent) * alpha;
+					for (var i_10 = 0; i_10 < vertexCount; i_10++) {
+						var prev = prevVertices[i_10];
+						vertices[i_10] = prev + (nextVertices[i_10] - prev) * percent;
 					}
 				}
 			}
 			else {
-				for (var i_7 = 0; i_7 < vertexCount; i_7++) {
-					var prev = prevVertices[i_7];
-					vertices[i_7] += (prev + (nextVertices[i_7] - prev) * percent - vertices[i_7]) * alpha;
+				switch (blend) {
+					case MixBlend.setup: {
+						var vertexAttachment_2 = slotAttachment;
+						if (vertexAttachment_2.bones == null) {
+							var setupVertices = vertexAttachment_2.vertices;
+							for (var i_11 = 0; i_11 < vertexCount; i_11++) {
+								var prev = prevVertices[i_11], setup = setupVertices[i_11];
+								vertices[i_11] = setup + (prev + (nextVertices[i_11] - prev) * percent - setup) * alpha;
+							}
+						}
+						else {
+							for (var i_12 = 0; i_12 < vertexCount; i_12++) {
+								var prev = prevVertices[i_12];
+								vertices[i_12] = (prev + (nextVertices[i_12] - prev) * percent) * alpha;
+							}
+						}
+						break;
+					}
+					case MixBlend.first:
+					case MixBlend.replace:
+						for (var i_13 = 0; i_13 < vertexCount; i_13++) {
+							var prev = prevVertices[i_13];
+							vertices[i_13] += (prev + (nextVertices[i_13] - prev) * percent - vertices[i_13]) * alpha;
+						}
+						break;
+					case MixBlend.add:
+						var vertexAttachment = slotAttachment;
+						if (vertexAttachment.bones == null) {
+							var setupVertices = vertexAttachment.vertices;
+							for (var i_14 = 0; i_14 < vertexCount; i_14++) {
+								var prev = prevVertices[i_14];
+								vertices[i_14] += (prev + (nextVertices[i_14] - prev) * percent - setupVertices[i_14]) * alpha;
+							}
+						}
+						else {
+							for (var i_15 = 0; i_15 < vertexCount; i_15++) {
+								var prev = prevVertices[i_15];
+								vertices[i_15] += (prev + (nextVertices[i_15] - prev) * percent) * alpha;
+							}
+						}
 				}
 			}
 		};
@@ -11285,13 +13274,13 @@ var spine;
 			this.frames[frameIndex] = event.time;
 			this.events[frameIndex] = event;
 		};
-		EventTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, pose, direction) {
+		EventTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, blend, direction) {
 			if (firedEvents == null)
 				return;
 			var frames = this.frames;
 			var frameCount = this.frames.length;
 			if (lastTime > time) {
-				this.apply(skeleton, lastTime, Number.MAX_VALUE, firedEvents, alpha, pose, direction);
+				this.apply(skeleton, lastTime, Number.MAX_VALUE, firedEvents, alpha, blend, direction);
 				lastTime = -1;
 			}
 			else if (lastTime >= frames[frameCount - 1])
@@ -11331,16 +13320,16 @@ var spine;
 			this.frames[frameIndex] = time;
 			this.drawOrders[frameIndex] = drawOrder;
 		};
-		DrawOrderTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, pose, direction) {
+		DrawOrderTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, blend, direction) {
 			var drawOrder = skeleton.drawOrder;
 			var slots = skeleton.slots;
-			if (direction == MixDirection.out && pose == MixPose.setup) {
+			if (direction == MixDirection.out && blend == MixBlend.setup) {
 				spine.Utils.arrayCopy(skeleton.slots, 0, skeleton.drawOrder, 0, skeleton.slots.length);
 				return;
 			}
 			var frames = this.frames;
 			if (time < frames[0]) {
-				if (pose == MixPose.setup)
+				if (blend == MixBlend.setup || blend == MixBlend.first)
 					spine.Utils.arrayCopy(skeleton.slots, 0, skeleton.drawOrder, 0, skeleton.slots.length);
 				return;
 			}
@@ -11370,37 +13359,54 @@ var spine;
 		IkConstraintTimeline.prototype.getPropertyId = function () {
 			return (TimelineType.ikConstraint << 24) + this.ikConstraintIndex;
 		};
-		IkConstraintTimeline.prototype.setFrame = function (frameIndex, time, mix, bendDirection) {
+		IkConstraintTimeline.prototype.setFrame = function (frameIndex, time, mix, bendDirection, compress, stretch) {
 			frameIndex *= IkConstraintTimeline.ENTRIES;
 			this.frames[frameIndex] = time;
 			this.frames[frameIndex + IkConstraintTimeline.MIX] = mix;
 			this.frames[frameIndex + IkConstraintTimeline.BEND_DIRECTION] = bendDirection;
+			this.frames[frameIndex + IkConstraintTimeline.COMPRESS] = compress ? 1 : 0;
+			this.frames[frameIndex + IkConstraintTimeline.STRETCH] = stretch ? 1 : 0;
 		};
-		IkConstraintTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, pose, direction) {
+		IkConstraintTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, blend, direction) {
 			var frames = this.frames;
 			var constraint = skeleton.ikConstraints[this.ikConstraintIndex];
 			if (time < frames[0]) {
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						constraint.mix = constraint.data.mix;
 						constraint.bendDirection = constraint.data.bendDirection;
+						constraint.compress = constraint.data.compress;
+						constraint.stretch = constraint.data.stretch;
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						constraint.mix += (constraint.data.mix - constraint.mix) * alpha;
 						constraint.bendDirection = constraint.data.bendDirection;
+						constraint.compress = constraint.data.compress;
+						constraint.stretch = constraint.data.stretch;
 				}
 				return;
 			}
 			if (time >= frames[frames.length - IkConstraintTimeline.ENTRIES]) {
-				if (pose == MixPose.setup) {
+				if (blend == MixBlend.setup) {
 					constraint.mix = constraint.data.mix + (frames[frames.length + IkConstraintTimeline.PREV_MIX] - constraint.data.mix) * alpha;
-					constraint.bendDirection = direction == MixDirection.out ? constraint.data.bendDirection
-						: frames[frames.length + IkConstraintTimeline.PREV_BEND_DIRECTION];
+					if (direction == MixDirection.out) {
+						constraint.bendDirection = constraint.data.bendDirection;
+						constraint.compress = constraint.data.compress;
+						constraint.stretch = constraint.data.stretch;
+					}
+					else {
+						constraint.bendDirection = frames[frames.length + IkConstraintTimeline.PREV_BEND_DIRECTION];
+						constraint.compress = frames[frames.length + IkConstraintTimeline.PREV_COMPRESS] != 0;
+						constraint.stretch = frames[frames.length + IkConstraintTimeline.PREV_STRETCH] != 0;
+					}
 				}
 				else {
 					constraint.mix += (frames[frames.length + IkConstraintTimeline.PREV_MIX] - constraint.mix) * alpha;
-					if (direction == MixDirection["in"])
+					if (direction == MixDirection["in"]) {
 						constraint.bendDirection = frames[frames.length + IkConstraintTimeline.PREV_BEND_DIRECTION];
+						constraint.compress = frames[frames.length + IkConstraintTimeline.PREV_COMPRESS] != 0;
+						constraint.stretch = frames[frames.length + IkConstraintTimeline.PREV_STRETCH] != 0;
+					}
 				}
 				return;
 			}
@@ -11408,22 +13414,38 @@ var spine;
 			var mix = frames[frame + IkConstraintTimeline.PREV_MIX];
 			var frameTime = frames[frame];
 			var percent = this.getCurvePercent(frame / IkConstraintTimeline.ENTRIES - 1, 1 - (time - frameTime) / (frames[frame + IkConstraintTimeline.PREV_TIME] - frameTime));
-			if (pose == MixPose.setup) {
+			if (blend == MixBlend.setup) {
 				constraint.mix = constraint.data.mix + (mix + (frames[frame + IkConstraintTimeline.MIX] - mix) * percent - constraint.data.mix) * alpha;
-				constraint.bendDirection = direction == MixDirection.out ? constraint.data.bendDirection : frames[frame + IkConstraintTimeline.PREV_BEND_DIRECTION];
+				if (direction == MixDirection.out) {
+					constraint.bendDirection = constraint.data.bendDirection;
+					constraint.compress = constraint.data.compress;
+					constraint.stretch = constraint.data.stretch;
+				}
+				else {
+					constraint.bendDirection = frames[frame + IkConstraintTimeline.PREV_BEND_DIRECTION];
+					constraint.compress = frames[frame + IkConstraintTimeline.PREV_COMPRESS] != 0;
+					constraint.stretch = frames[frame + IkConstraintTimeline.PREV_STRETCH] != 0;
+				}
 			}
 			else {
 				constraint.mix += (mix + (frames[frame + IkConstraintTimeline.MIX] - mix) * percent - constraint.mix) * alpha;
-				if (direction == MixDirection["in"])
+				if (direction == MixDirection["in"]) {
 					constraint.bendDirection = frames[frame + IkConstraintTimeline.PREV_BEND_DIRECTION];
+					constraint.compress = frames[frame + IkConstraintTimeline.PREV_COMPRESS] != 0;
+					constraint.stretch = frames[frame + IkConstraintTimeline.PREV_STRETCH] != 0;
+				}
 			}
 		};
-		IkConstraintTimeline.ENTRIES = 3;
-		IkConstraintTimeline.PREV_TIME = -3;
-		IkConstraintTimeline.PREV_MIX = -2;
-		IkConstraintTimeline.PREV_BEND_DIRECTION = -1;
+		IkConstraintTimeline.ENTRIES = 5;
+		IkConstraintTimeline.PREV_TIME = -5;
+		IkConstraintTimeline.PREV_MIX = -4;
+		IkConstraintTimeline.PREV_BEND_DIRECTION = -3;
+		IkConstraintTimeline.PREV_COMPRESS = -2;
+		IkConstraintTimeline.PREV_STRETCH = -1;
 		IkConstraintTimeline.MIX = 1;
 		IkConstraintTimeline.BEND_DIRECTION = 2;
+		IkConstraintTimeline.COMPRESS = 3;
+		IkConstraintTimeline.STRETCH = 4;
 		return IkConstraintTimeline;
 	}(CurveTimeline));
 	spine.IkConstraintTimeline = IkConstraintTimeline;
@@ -11445,19 +13467,19 @@ var spine;
 			this.frames[frameIndex + TransformConstraintTimeline.SCALE] = scaleMix;
 			this.frames[frameIndex + TransformConstraintTimeline.SHEAR] = shearMix;
 		};
-		TransformConstraintTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, pose, direction) {
+		TransformConstraintTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, blend, direction) {
 			var frames = this.frames;
 			var constraint = skeleton.transformConstraints[this.transformConstraintIndex];
 			if (time < frames[0]) {
 				var data = constraint.data;
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						constraint.rotateMix = data.rotateMix;
 						constraint.translateMix = data.translateMix;
 						constraint.scaleMix = data.scaleMix;
 						constraint.shearMix = data.shearMix;
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						constraint.rotateMix += (data.rotateMix - constraint.rotateMix) * alpha;
 						constraint.translateMix += (data.translateMix - constraint.translateMix) * alpha;
 						constraint.scaleMix += (data.scaleMix - constraint.scaleMix) * alpha;
@@ -11486,7 +13508,7 @@ var spine;
 				scale += (frames[frame + TransformConstraintTimeline.SCALE] - scale) * percent;
 				shear += (frames[frame + TransformConstraintTimeline.SHEAR] - shear) * percent;
 			}
-			if (pose == MixPose.setup) {
+			if (blend == MixBlend.setup) {
 				var data = constraint.data;
 				constraint.rotateMix = data.rotateMix + (rotate - data.rotateMix) * alpha;
 				constraint.translateMix = data.translateMix + (translate - data.translateMix) * alpha;
@@ -11528,15 +13550,15 @@ var spine;
 			this.frames[frameIndex] = time;
 			this.frames[frameIndex + PathConstraintPositionTimeline.VALUE] = value;
 		};
-		PathConstraintPositionTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, pose, direction) {
+		PathConstraintPositionTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, blend, direction) {
 			var frames = this.frames;
 			var constraint = skeleton.pathConstraints[this.pathConstraintIndex];
 			if (time < frames[0]) {
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						constraint.position = constraint.data.position;
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						constraint.position += (constraint.data.position - constraint.position) * alpha;
 				}
 				return;
@@ -11551,7 +13573,7 @@ var spine;
 				var percent = this.getCurvePercent(frame / PathConstraintPositionTimeline.ENTRIES - 1, 1 - (time - frameTime) / (frames[frame + PathConstraintPositionTimeline.PREV_TIME] - frameTime));
 				position += (frames[frame + PathConstraintPositionTimeline.VALUE] - position) * percent;
 			}
-			if (pose == MixPose.setup)
+			if (blend == MixBlend.setup)
 				constraint.position = constraint.data.position + (position - constraint.data.position) * alpha;
 			else
 				constraint.position += (position - constraint.position) * alpha;
@@ -11571,15 +13593,15 @@ var spine;
 		PathConstraintSpacingTimeline.prototype.getPropertyId = function () {
 			return (TimelineType.pathConstraintSpacing << 24) + this.pathConstraintIndex;
 		};
-		PathConstraintSpacingTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, pose, direction) {
+		PathConstraintSpacingTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, blend, direction) {
 			var frames = this.frames;
 			var constraint = skeleton.pathConstraints[this.pathConstraintIndex];
 			if (time < frames[0]) {
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						constraint.spacing = constraint.data.spacing;
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						constraint.spacing += (constraint.data.spacing - constraint.spacing) * alpha;
 				}
 				return;
@@ -11594,7 +13616,7 @@ var spine;
 				var percent = this.getCurvePercent(frame / PathConstraintSpacingTimeline.ENTRIES - 1, 1 - (time - frameTime) / (frames[frame + PathConstraintSpacingTimeline.PREV_TIME] - frameTime));
 				spacing += (frames[frame + PathConstraintSpacingTimeline.VALUE] - spacing) * percent;
 			}
-			if (pose == MixPose.setup)
+			if (blend == MixBlend.setup)
 				constraint.spacing = constraint.data.spacing + (spacing - constraint.data.spacing) * alpha;
 			else
 				constraint.spacing += (spacing - constraint.spacing) * alpha;
@@ -11618,16 +13640,16 @@ var spine;
 			this.frames[frameIndex + PathConstraintMixTimeline.ROTATE] = rotateMix;
 			this.frames[frameIndex + PathConstraintMixTimeline.TRANSLATE] = translateMix;
 		};
-		PathConstraintMixTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, pose, direction) {
+		PathConstraintMixTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, blend, direction) {
 			var frames = this.frames;
 			var constraint = skeleton.pathConstraints[this.pathConstraintIndex];
 			if (time < frames[0]) {
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						constraint.rotateMix = constraint.data.rotateMix;
 						constraint.translateMix = constraint.data.translateMix;
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						constraint.rotateMix += (constraint.data.rotateMix - constraint.rotateMix) * alpha;
 						constraint.translateMix += (constraint.data.translateMix - constraint.translateMix) * alpha;
 				}
@@ -11647,7 +13669,7 @@ var spine;
 				rotate += (frames[frame + PathConstraintMixTimeline.ROTATE] - rotate) * percent;
 				translate += (frames[frame + PathConstraintMixTimeline.TRANSLATE] - translate) * percent;
 			}
-			if (pose == MixPose.setup) {
+			if (blend == MixBlend.setup) {
 				constraint.rotateMix = constraint.data.rotateMix + (rotate - constraint.data.rotateMix) * alpha;
 				constraint.translateMix = constraint.data.translateMix + (translate - constraint.data.translateMix) * alpha;
 			}
@@ -11675,7 +13697,6 @@ var spine;
 			this.listeners = new Array();
 			this.queue = new EventQueue(this);
 			this.propertyIDs = new spine.IntSet();
-			this.mixingTo = new Array();
 			this.animationsChanged = false;
 			this.timeScale = 1;
 			this.trackEntryPool = new spine.Pool(function () { return new TrackEntry(); });
@@ -11703,11 +13724,11 @@ var spine;
 					var nextTime = current.trackLast - next.delay;
 					if (nextTime >= 0) {
 						next.delay = 0;
-						next.trackTime = nextTime + delta * next.timeScale;
+						next.trackTime = current.timeScale == 0 ? 0 : (nextTime / current.timeScale + delta) * next.timeScale;
 						current.trackTime += currentDelta;
 						this.setCurrent(i, next, true);
 						while (next.mixingFrom != null) {
-							next.mixTime += currentDelta;
+							next.mixTime += delta;
 							next = next.mixingFrom;
 						}
 						continue;
@@ -11722,6 +13743,8 @@ var spine;
 				if (current.mixingFrom != null && this.updateMixingFrom(current, delta)) {
 					var from = current.mixingFrom;
 					current.mixingFrom = null;
+					if (from != null)
+						from.mixingTo = null;
 					while (from != null) {
 						this.queue.end(from);
 						from = from.mixingFrom;
@@ -11738,16 +13761,18 @@ var spine;
 			var finished = this.updateMixingFrom(from, delta);
 			from.animationLast = from.nextAnimationLast;
 			from.trackLast = from.nextTrackLast;
-			if (to.mixTime > 0 && (to.mixTime >= to.mixDuration || to.timeScale == 0)) {
+			if (to.mixTime > 0 && to.mixTime >= to.mixDuration) {
 				if (from.totalAlpha == 0 || to.mixDuration == 0) {
 					to.mixingFrom = from.mixingFrom;
+					if (from.mixingFrom != null)
+						from.mixingFrom.mixingTo = to;
 					to.interruptAlpha = from.interruptAlpha;
 					this.queue.end(from);
 				}
 				return finished;
 			}
 			from.trackTime += delta * from.timeScale;
-			to.mixTime += delta * to.timeScale;
+			to.mixTime += delta;
 			return false;
 		};
 		AnimationState.prototype.apply = function (skeleton) {
@@ -11763,34 +13788,34 @@ var spine;
 				if (current == null || current.delay > 0)
 					continue;
 				applied = true;
-				var currentPose = i == 0 ? spine.MixPose.current : spine.MixPose.currentLayered;
+				var blend = i == 0 ? spine.MixBlend.first : current.mixBlend;
 				var mix = current.alpha;
 				if (current.mixingFrom != null)
-					mix *= this.applyMixingFrom(current, skeleton, currentPose);
+					mix *= this.applyMixingFrom(current, skeleton, blend);
 				else if (current.trackTime >= current.trackEnd && current.next == null)
 					mix = 0;
 				var animationLast = current.animationLast, animationTime = current.getAnimationTime();
 				var timelineCount = current.animation.timelines.length;
 				var timelines = current.animation.timelines;
-				if (mix == 1) {
+				if ((i == 0 && mix == 1) || blend == spine.MixBlend.add) {
 					for (var ii = 0; ii < timelineCount; ii++)
-						timelines[ii].apply(skeleton, animationLast, animationTime, events, 1, spine.MixPose.setup, spine.MixDirection["in"]);
+						timelines[ii].apply(skeleton, animationLast, animationTime, events, mix, blend, spine.MixDirection["in"]);
 				}
 				else {
-					var timelineData = current.timelineData;
+					var timelineMode = current.timelineMode;
 					var firstFrame = current.timelinesRotation.length == 0;
 					if (firstFrame)
 						spine.Utils.setArraySize(current.timelinesRotation, timelineCount << 1, null);
 					var timelinesRotation = current.timelinesRotation;
 					for (var ii = 0; ii < timelineCount; ii++) {
 						var timeline = timelines[ii];
-						var pose = timelineData[ii] >= AnimationState.FIRST ? spine.MixPose.setup : currentPose;
+						var timelineBlend = timelineMode[ii] == AnimationState.SUBSEQUENT ? blend : spine.MixBlend.setup;
 						if (timeline instanceof spine.RotateTimeline) {
-							this.applyRotateTimeline(timeline, skeleton, animationTime, mix, pose, timelinesRotation, ii << 1, firstFrame);
+							this.applyRotateTimeline(timeline, skeleton, animationTime, mix, timelineBlend, timelinesRotation, ii << 1, firstFrame);
 						}
 						else {
-							spine.Utils.webkit602BugfixHelper(mix, pose);
-							timeline.apply(skeleton, animationLast, animationTime, events, mix, pose, spine.MixDirection["in"]);
+							spine.Utils.webkit602BugfixHelper(mix, blend);
+							timeline.apply(skeleton, animationLast, animationTime, events, mix, timelineBlend, spine.MixDirection["in"]);
 						}
 					}
 				}
@@ -11802,66 +13827,86 @@ var spine;
 			this.queue.drain();
 			return applied;
 		};
-		AnimationState.prototype.applyMixingFrom = function (to, skeleton, currentPose) {
+		AnimationState.prototype.applyMixingFrom = function (to, skeleton, blend) {
 			var from = to.mixingFrom;
 			if (from.mixingFrom != null)
-				this.applyMixingFrom(from, skeleton, currentPose);
+				this.applyMixingFrom(from, skeleton, blend);
 			var mix = 0;
 			if (to.mixDuration == 0) {
 				mix = 1;
-				currentPose = spine.MixPose.setup;
+				if (blend == spine.MixBlend.first)
+					blend = spine.MixBlend.setup;
 			}
 			else {
 				mix = to.mixTime / to.mixDuration;
 				if (mix > 1)
 					mix = 1;
+				if (blend != spine.MixBlend.first)
+					blend = from.mixBlend;
 			}
 			var events = mix < from.eventThreshold ? this.events : null;
 			var attachments = mix < from.attachmentThreshold, drawOrder = mix < from.drawOrderThreshold;
 			var animationLast = from.animationLast, animationTime = from.getAnimationTime();
 			var timelineCount = from.animation.timelines.length;
 			var timelines = from.animation.timelines;
-			var timelineData = from.timelineData;
-			var timelineDipMix = from.timelineDipMix;
-			var firstFrame = from.timelinesRotation.length == 0;
-			if (firstFrame)
-				spine.Utils.setArraySize(from.timelinesRotation, timelineCount << 1, null);
-			var timelinesRotation = from.timelinesRotation;
-			var pose;
-			var alphaDip = from.alpha * to.interruptAlpha, alphaMix = alphaDip * (1 - mix), alpha = 0;
-			from.totalAlpha = 0;
-			for (var i = 0; i < timelineCount; i++) {
-				var timeline = timelines[i];
-				switch (timelineData[i]) {
-					case AnimationState.SUBSEQUENT:
-						if (!attachments && timeline instanceof spine.AttachmentTimeline)
-							continue;
-						if (!drawOrder && timeline instanceof spine.DrawOrderTimeline)
-							continue;
-						pose = currentPose;
-						alpha = alphaMix;
-						break;
-					case AnimationState.FIRST:
-						pose = spine.MixPose.setup;
-						alpha = alphaMix;
-						break;
-					case AnimationState.DIP:
-						pose = spine.MixPose.setup;
-						alpha = alphaDip;
-						break;
-					default:
-						pose = spine.MixPose.setup;
-						alpha = alphaDip;
-						var dipMix = timelineDipMix[i];
-						alpha *= Math.max(0, 1 - dipMix.mixTime / dipMix.mixDuration);
-						break;
-				}
-				from.totalAlpha += alpha;
-				if (timeline instanceof spine.RotateTimeline)
-					this.applyRotateTimeline(timeline, skeleton, animationTime, alpha, pose, timelinesRotation, i << 1, firstFrame);
-				else {
-					spine.Utils.webkit602BugfixHelper(alpha, pose);
-					timeline.apply(skeleton, animationLast, animationTime, events, alpha, pose, spine.MixDirection.out);
+			var alphaHold = from.alpha * to.interruptAlpha, alphaMix = alphaHold * (1 - mix);
+			if (blend == spine.MixBlend.add) {
+				for (var i = 0; i < timelineCount; i++)
+					timelines[i].apply(skeleton, animationLast, animationTime, events, alphaMix, blend, spine.MixDirection.out);
+			}
+			else {
+				var timelineMode = from.timelineMode;
+				var timelineHoldMix = from.timelineHoldMix;
+				var firstFrame = from.timelinesRotation.length == 0;
+				if (firstFrame)
+					spine.Utils.setArraySize(from.timelinesRotation, timelineCount << 1, null);
+				var timelinesRotation = from.timelinesRotation;
+				from.totalAlpha = 0;
+				for (var i = 0; i < timelineCount; i++) {
+					var timeline = timelines[i];
+					var direction = spine.MixDirection.out;
+					var timelineBlend = void 0;
+					var alpha = 0;
+					switch (timelineMode[i]) {
+						case AnimationState.SUBSEQUENT:
+							if (!attachments && timeline instanceof spine.AttachmentTimeline)
+								continue;
+							if (!drawOrder && timeline instanceof spine.DrawOrderTimeline)
+								continue;
+							timelineBlend = blend;
+							alpha = alphaMix;
+							break;
+						case AnimationState.FIRST:
+							timelineBlend = spine.MixBlend.setup;
+							alpha = alphaMix;
+							break;
+						case AnimationState.HOLD:
+							timelineBlend = spine.MixBlend.setup;
+							alpha = alphaHold;
+							break;
+						default:
+							timelineBlend = spine.MixBlend.setup;
+							var holdMix = timelineHoldMix[i];
+							alpha = alphaHold * Math.max(0, 1 - holdMix.mixTime / holdMix.mixDuration);
+							break;
+					}
+					from.totalAlpha += alpha;
+					if (timeline instanceof spine.RotateTimeline)
+						this.applyRotateTimeline(timeline, skeleton, animationTime, alpha, timelineBlend, timelinesRotation, i << 1, firstFrame);
+					else {
+						spine.Utils.webkit602BugfixHelper(alpha, blend);
+						if (timelineBlend == spine.MixBlend.setup) {
+							if (timeline instanceof spine.AttachmentTimeline) {
+								if (attachments)
+									direction = spine.MixDirection.out;
+							}
+							else if (timeline instanceof spine.DrawOrderTimeline) {
+								if (drawOrder)
+									direction = spine.MixDirection.out;
+							}
+						}
+						timeline.apply(skeleton, animationLast, animationTime, events, alpha, timelineBlend, direction);
+					}
 				}
 			}
 			if (to.mixDuration > 0)
@@ -11871,41 +13916,49 @@ var spine;
 			from.nextTrackLast = from.trackTime;
 			return mix;
 		};
-		AnimationState.prototype.applyRotateTimeline = function (timeline, skeleton, time, alpha, pose, timelinesRotation, i, firstFrame) {
+		AnimationState.prototype.applyRotateTimeline = function (timeline, skeleton, time, alpha, blend, timelinesRotation, i, firstFrame) {
 			if (firstFrame)
 				timelinesRotation[i] = 0;
 			if (alpha == 1) {
-				timeline.apply(skeleton, 0, time, null, 1, pose, spine.MixDirection["in"]);
+				timeline.apply(skeleton, 0, time, null, 1, blend, spine.MixDirection["in"]);
 				return;
 			}
 			var rotateTimeline = timeline;
 			var frames = rotateTimeline.frames;
 			var bone = skeleton.bones[rotateTimeline.boneIndex];
+			var r1 = 0, r2 = 0;
 			if (time < frames[0]) {
-				if (pose == spine.MixPose.setup)
-					bone.rotation = bone.data.rotation;
-				return;
+				switch (blend) {
+					case spine.MixBlend.setup:
+						bone.rotation = bone.data.rotation;
+					default:
+						return;
+					case spine.MixBlend.first:
+						r1 = bone.rotation;
+						r2 = bone.data.rotation;
+				}
 			}
-			var r2 = 0;
-			if (time >= frames[frames.length - spine.RotateTimeline.ENTRIES])
-				r2 = bone.data.rotation + frames[frames.length + spine.RotateTimeline.PREV_ROTATION];
 			else {
-				var frame = spine.Animation.binarySearch(frames, time, spine.RotateTimeline.ENTRIES);
-				var prevRotation = frames[frame + spine.RotateTimeline.PREV_ROTATION];
-				var frameTime = frames[frame];
-				var percent = rotateTimeline.getCurvePercent((frame >> 1) - 1, 1 - (time - frameTime) / (frames[frame + spine.RotateTimeline.PREV_TIME] - frameTime));
-				r2 = frames[frame + spine.RotateTimeline.ROTATION] - prevRotation;
-				r2 -= (16384 - ((16384.499999999996 - r2 / 360) | 0)) * 360;
-				r2 = prevRotation + r2 * percent + bone.data.rotation;
-				r2 -= (16384 - ((16384.499999999996 - r2 / 360) | 0)) * 360;
+				r1 = blend == spine.MixBlend.setup ? bone.data.rotation : bone.rotation;
+				if (time >= frames[frames.length - spine.RotateTimeline.ENTRIES])
+					r2 = bone.data.rotation + frames[frames.length + spine.RotateTimeline.PREV_ROTATION];
+				else {
+					var frame = spine.Animation.binarySearch(frames, time, spine.RotateTimeline.ENTRIES);
+					var prevRotation = frames[frame + spine.RotateTimeline.PREV_ROTATION];
+					var frameTime = frames[frame];
+					var percent = rotateTimeline.getCurvePercent((frame >> 1) - 1, 1 - (time - frameTime) / (frames[frame + spine.RotateTimeline.PREV_TIME] - frameTime));
+					r2 = frames[frame + spine.RotateTimeline.ROTATION] - prevRotation;
+					r2 -= (16384 - ((16384.499999999996 - r2 / 360) | 0)) * 360;
+					r2 = prevRotation + r2 * percent + bone.data.rotation;
+					r2 -= (16384 - ((16384.499999999996 - r2 / 360) | 0)) * 360;
+				}
 			}
-			var r1 = pose == spine.MixPose.setup ? bone.data.rotation : bone.rotation;
 			var total = 0, diff = r2 - r1;
+			diff -= (16384 - ((16384.499999999996 - diff / 360) | 0)) * 360;
 			if (diff == 0) {
 				total = timelinesRotation[i];
 			}
 			else {
-				diff -= (16384 - ((16384.499999999996 - diff / 360) | 0)) * 360;
 				var lastTotal = 0, lastDiff = 0;
 				if (firstFrame) {
 					lastTotal = 0;
@@ -11982,6 +14035,7 @@ var spine;
 					break;
 				this.queue.end(from);
 				entry.mixingFrom = null;
+				entry.mixingTo = null;
 				entry = from;
 			}
 			this.tracks[current.trackIndex] = null;
@@ -11994,6 +14048,7 @@ var spine;
 				if (interrupt)
 					this.queue.interrupt(from);
 				current.mixingFrom = from;
+				from.mixingTo = current;
 				current.mixTime = 0;
 				if (from.mixingFrom != null && from.mixDuration > 0)
 					current.interruptAlpha *= Math.min(1, from.mixTime / from.mixDuration);
@@ -12056,11 +14111,11 @@ var spine;
 						if (last.loop)
 							delay += duration * (1 + ((last.trackTime / duration) | 0));
 						else
-							delay += duration;
+							delay += Math.max(duration, last.trackTime);
 						delay -= this.data.getMix(last.animation, animation);
 					}
 					else
-						delay = 0;
+						delay = last.trackTime;
 				}
 			}
 			entry.delay = delay;
@@ -12094,7 +14149,7 @@ var spine;
 		AnimationState.prototype.expandToIndex = function (index) {
 			if (index < this.tracks.length)
 				return this.tracks[index];
-			spine.Utils.ensureArrayCapacity(this.tracks, index - this.tracks.length + 1, null);
+			spine.Utils.ensureArrayCapacity(this.tracks, index + 1, null);
 			this.tracks.length = index + 1;
 			return null;
 		};
@@ -12103,6 +14158,7 @@ var spine;
 			entry.trackIndex = trackIndex;
 			entry.animation = animation;
 			entry.loop = loop;
+			entry.holdPrevious = false;
 			entry.eventThreshold = 0;
 			entry.attachmentThreshold = 0;
 			entry.drawOrderThreshold = 0;
@@ -12132,14 +14188,62 @@ var spine;
 		};
 		AnimationState.prototype._animationsChanged = function () {
 			this.animationsChanged = false;
-			var propertyIDs = this.propertyIDs;
-			propertyIDs.clear();
-			var mixingTo = this.mixingTo;
+			this.propertyIDs.clear();
 			for (var i = 0, n = this.tracks.length; i < n; i++) {
 				var entry = this.tracks[i];
-				if (entry != null)
-					entry.setTimelineData(null, mixingTo, propertyIDs);
+				if (entry == null)
+					continue;
+				while (entry.mixingFrom != null)
+					entry = entry.mixingFrom;
+				do {
+					if (entry.mixingFrom == null || entry.mixBlend != spine.MixBlend.add)
+						this.setTimelineModes(entry);
+					entry = entry.mixingTo;
+				} while (entry != null);
 			}
+		};
+		AnimationState.prototype.setTimelineModes = function (entry) {
+			var to = entry.mixingTo;
+			var timelines = entry.animation.timelines;
+			var timelinesCount = entry.animation.timelines.length;
+			var timelineMode = spine.Utils.setArraySize(entry.timelineMode, timelinesCount);
+			entry.timelineHoldMix.length = 0;
+			var timelineDipMix = spine.Utils.setArraySize(entry.timelineHoldMix, timelinesCount);
+			var propertyIDs = this.propertyIDs;
+			if (to != null && to.holdPrevious) {
+				for (var i = 0; i < timelinesCount; i++) {
+					propertyIDs.add(timelines[i].getPropertyId());
+					timelineMode[i] = AnimationState.HOLD;
+				}
+				return;
+			}
+			outer: for (var i = 0; i < timelinesCount; i++) {
+				var id = timelines[i].getPropertyId();
+				if (!propertyIDs.add(id))
+					timelineMode[i] = AnimationState.SUBSEQUENT;
+				else if (to == null || !this.hasTimeline(to, id))
+					timelineMode[i] = AnimationState.FIRST;
+				else {
+					for (var next = to.mixingTo; next != null; next = next.mixingTo) {
+						if (this.hasTimeline(next, id))
+							continue;
+						if (entry.mixDuration > 0) {
+							timelineMode[i] = AnimationState.HOLD_MIX;
+							timelineDipMix[i] = next;
+							continue outer;
+						}
+						break;
+					}
+					timelineMode[i] = AnimationState.HOLD;
+				}
+			}
+		};
+		AnimationState.prototype.hasTimeline = function (entry, id) {
+			var timelines = entry.animation.timelines;
+			for (var i = 0, n = timelines.length; i < n; i++)
+				if (timelines[i].getPropertyId() == id)
+					return true;
+			return false;
 		};
 		AnimationState.prototype.getCurrent = function (trackIndex) {
 			if (trackIndex >= this.tracks.length)
@@ -12165,67 +14269,27 @@ var spine;
 		AnimationState.emptyAnimation = new spine.Animation("<empty>", [], 0);
 		AnimationState.SUBSEQUENT = 0;
 		AnimationState.FIRST = 1;
-		AnimationState.DIP = 2;
-		AnimationState.DIP_MIX = 3;
+		AnimationState.HOLD = 2;
+		AnimationState.HOLD_MIX = 3;
 		return AnimationState;
 	}());
 	spine.AnimationState = AnimationState;
 	var TrackEntry = (function () {
 		function TrackEntry() {
-			this.timelineData = new Array();
-			this.timelineDipMix = new Array();
+			this.mixBlend = spine.MixBlend.replace;
+			this.timelineMode = new Array();
+			this.timelineHoldMix = new Array();
 			this.timelinesRotation = new Array();
 		}
 		TrackEntry.prototype.reset = function () {
 			this.next = null;
 			this.mixingFrom = null;
+			this.mixingTo = null;
 			this.animation = null;
 			this.listener = null;
-			this.timelineData.length = 0;
-			this.timelineDipMix.length = 0;
+			this.timelineMode.length = 0;
+			this.timelineHoldMix.length = 0;
 			this.timelinesRotation.length = 0;
-		};
-		TrackEntry.prototype.setTimelineData = function (to, mixingToArray, propertyIDs) {
-			if (to != null)
-				mixingToArray.push(to);
-			var lastEntry = this.mixingFrom != null ? this.mixingFrom.setTimelineData(this, mixingToArray, propertyIDs) : this;
-			if (to != null)
-				mixingToArray.pop();
-			var mixingTo = mixingToArray;
-			var mixingToLast = mixingToArray.length - 1;
-			var timelines = this.animation.timelines;
-			var timelinesCount = this.animation.timelines.length;
-			var timelineData = spine.Utils.setArraySize(this.timelineData, timelinesCount);
-			this.timelineDipMix.length = 0;
-			var timelineDipMix = spine.Utils.setArraySize(this.timelineDipMix, timelinesCount);
-			outer: for (var i = 0; i < timelinesCount; i++) {
-				var id = timelines[i].getPropertyId();
-				if (!propertyIDs.add(id))
-					timelineData[i] = AnimationState.SUBSEQUENT;
-				else if (to == null || !to.hasTimeline(id))
-					timelineData[i] = AnimationState.FIRST;
-				else {
-					for (var ii = mixingToLast; ii >= 0; ii--) {
-						var entry = mixingTo[ii];
-						if (!entry.hasTimeline(id)) {
-							if (entry.mixDuration > 0) {
-								timelineData[i] = AnimationState.DIP_MIX;
-								timelineDipMix[i] = entry;
-								continue outer;
-							}
-						}
-					}
-					timelineData[i] = AnimationState.DIP;
-				}
-			}
-			return lastEntry;
-		};
-		TrackEntry.prototype.hasTimeline = function (id) {
-			var timelines = this.animation.timelines;
-			for (var i = 0, n = timelines.length; i < n; i++)
-				if (timelines[i].getPropertyId() == id)
-					return true;
-			return false;
 		};
 		TrackEntry.prototype.getAnimationTime = function () {
 			if (this.loop) {
@@ -12753,28 +14817,16 @@ var spine;
 			this.appliedValid = true;
 			var parent = this.parent;
 			if (parent == null) {
-				var rotationY = rotation + 90 + shearY;
-				var la = spine.MathUtils.cosDeg(rotation + shearX) * scaleX;
-				var lb = spine.MathUtils.cosDeg(rotationY) * scaleY;
-				var lc = spine.MathUtils.sinDeg(rotation + shearX) * scaleX;
-				var ld = spine.MathUtils.sinDeg(rotationY) * scaleY;
 				var skeleton = this.skeleton;
-				if (skeleton.flipX) {
-					x = -x;
-					la = -la;
-					lb = -lb;
-				}
-				if (skeleton.flipY) {
-					y = -y;
-					lc = -lc;
-					ld = -ld;
-				}
-				this.a = la;
-				this.b = lb;
-				this.c = lc;
-				this.d = ld;
-				this.worldX = x + skeleton.x;
-				this.worldY = y + skeleton.y;
+				var rotationY = rotation + 90 + shearY;
+				var sx = skeleton.scaleX;
+				var sy = skeleton.scaleY;
+				this.a = spine.MathUtils.cosDeg(rotation + shearX) * scaleX * sx;
+				this.b = spine.MathUtils.cosDeg(rotationY) * scaleY * sx;
+				this.c = spine.MathUtils.sinDeg(rotation + shearX) * scaleX * sy;
+				this.d = spine.MathUtils.sinDeg(rotationY) * scaleY * sy;
+				this.worldX = x * sx + skeleton.x;
+				this.worldY = y * sy + skeleton.y;
 				return;
 			}
 			var pa = parent.a, pb = parent.b, pc = parent.c, pd = parent.d;
@@ -12831,14 +14883,17 @@ var spine;
 				case spine.TransformMode.NoScaleOrReflection: {
 					var cos = spine.MathUtils.cosDeg(rotation);
 					var sin = spine.MathUtils.sinDeg(rotation);
-					var za = pa * cos + pb * sin;
-					var zc = pc * cos + pd * sin;
+					var za = (pa * cos + pb * sin) / this.skeleton.scaleX;
+					var zc = (pc * cos + pd * sin) / this.skeleton.scaleY;
 					var s = Math.sqrt(za * za + zc * zc);
 					if (s > 0.00001)
 						s = 1 / s;
 					za *= s;
 					zc *= s;
 					s = Math.sqrt(za * za + zc * zc);
+					if (this.data.transformMode == spine.TransformMode.NoScale
+						&& (pa * pd - pb * pc < 0) != (this.skeleton.scaleX < 0 != this.skeleton.scaleY < 0))
+						s = -s;
 					var r = Math.PI / 2 + Math.atan2(zc, za);
 					var zb = Math.cos(r) * s;
 					var zd = Math.sin(r) * s;
@@ -12846,25 +14901,17 @@ var spine;
 					var lb = spine.MathUtils.cosDeg(90 + shearY) * scaleY;
 					var lc = spine.MathUtils.sinDeg(shearX) * scaleX;
 					var ld = spine.MathUtils.sinDeg(90 + shearY) * scaleY;
-					if (this.data.transformMode != spine.TransformMode.NoScaleOrReflection ? pa * pd - pb * pc < 0 : this.skeleton.flipX != this.skeleton.flipY) {
-						zb = -zb;
-						zd = -zd;
-					}
 					this.a = za * la + zb * lc;
 					this.b = za * lb + zb * ld;
 					this.c = zc * la + zd * lc;
 					this.d = zc * lb + zd * ld;
-					return;
+					break;
 				}
 			}
-			if (this.skeleton.flipX) {
-				this.a = -this.a;
-				this.b = -this.b;
-			}
-			if (this.skeleton.flipY) {
-				this.c = -this.c;
-				this.d = -this.d;
-			}
+			this.a *= this.skeleton.scaleX;
+			this.b *= this.skeleton.scaleX;
+			this.c *= this.skeleton.scaleY;
+			this.d *= this.skeleton.scaleY;
 		};
 		Bone.prototype.setToSetupPose = function () {
 			var data = this.data;
@@ -12945,9 +14992,10 @@ var spine;
 		};
 		Bone.prototype.worldToLocalRotation = function (worldRotation) {
 			var sin = spine.MathUtils.sinDeg(worldRotation), cos = spine.MathUtils.cosDeg(worldRotation);
-			return Math.atan2(this.a * sin - this.c * cos, this.d * cos - this.b * sin) * spine.MathUtils.radDeg;
+			return Math.atan2(this.a * sin - this.c * cos, this.d * cos - this.b * sin) * spine.MathUtils.radDeg + this.rotation - this.shearX;
 		};
 		Bone.prototype.localToWorldRotation = function (localRotation) {
+			localRotation -= this.rotation - this.shearX;
 			var sin = spine.MathUtils.sinDeg(localRotation), cos = spine.MathUtils.cosDeg(localRotation);
 			return Math.atan2(cos * this.c + sin * this.d, cos * this.a + sin * this.b) * spine.MathUtils.radDeg;
 		};
@@ -13023,8 +15071,10 @@ var spine;
 (function (spine) {
 	var IkConstraint = (function () {
 		function IkConstraint(data, skeleton) {
-			this.mix = 1;
 			this.bendDirection = 0;
+			this.compress = false;
+			this.stretch = false;
+			this.mix = 1;
 			if (data == null)
 				throw new Error("data cannot be null.");
 			if (skeleton == null)
@@ -13032,6 +15082,8 @@ var spine;
 			this.data = data;
 			this.mix = data.mix;
 			this.bendDirection = data.bendDirection;
+			this.compress = data.compress;
+			this.stretch = data.stretch;
 			this.bones = new Array();
 			for (var i = 0; i < data.bones.length; i++)
 				this.bones.push(skeleton.findBone(data.bones[i].name));
@@ -13048,14 +15100,14 @@ var spine;
 			var bones = this.bones;
 			switch (bones.length) {
 				case 1:
-					this.apply1(bones[0], target.worldX, target.worldY, this.mix);
+					this.apply1(bones[0], target.worldX, target.worldY, this.compress, this.stretch, this.data.uniform, this.mix);
 					break;
 				case 2:
-					this.apply2(bones[0], bones[1], target.worldX, target.worldY, this.bendDirection, this.mix);
+					this.apply2(bones[0], bones[1], target.worldX, target.worldY, this.bendDirection, this.stretch, this.mix);
 					break;
 			}
 		};
-		IkConstraint.prototype.apply1 = function (bone, targetX, targetY, alpha) {
+		IkConstraint.prototype.apply1 = function (bone, targetX, targetY, compress, stretch, uniform, alpha) {
 			if (!bone.appliedValid)
 				bone.updateAppliedTransform();
 			var p = bone.parent;
@@ -13069,9 +15121,19 @@ var spine;
 				rotationIK -= 360;
 			else if (rotationIK < -180)
 				rotationIK += 360;
-			bone.updateWorldTransformWith(bone.ax, bone.ay, bone.arotation + rotationIK * alpha, bone.ascaleX, bone.ascaleY, bone.ashearX, bone.ashearY);
+			var sx = bone.ascaleX, sy = bone.ascaleY;
+			if (compress || stretch) {
+				var b = bone.data.length * sx, dd = Math.sqrt(tx * tx + ty * ty);
+				if ((compress && dd < b) || (stretch && dd > b) && b > 0.0001) {
+					var s = (dd / b - 1) * alpha + 1;
+					sx *= s;
+					if (uniform)
+						sy *= s;
+				}
+			}
+			bone.updateWorldTransformWith(bone.ax, bone.ay, bone.arotation + rotationIK * alpha, sx, sy, bone.ashearX, bone.ashearY);
 		};
-		IkConstraint.prototype.apply2 = function (parent, child, targetX, targetY, bendDir, alpha) {
+		IkConstraint.prototype.apply2 = function (parent, child, targetX, targetY, bendDir, stretch, alpha) {
 			if (alpha == 0) {
 				child.updateWorldTransform();
 				return;
@@ -13080,7 +15142,7 @@ var spine;
 				parent.updateAppliedTransform();
 			if (!child.appliedValid)
 				child.updateAppliedTransform();
-			var px = parent.ax, py = parent.ay, psx = parent.ascaleX, psy = parent.ascaleY, csx = child.ascaleX;
+			var px = parent.ax, py = parent.ay, psx = parent.ascaleX, sx = psx, psy = parent.ascaleY, csx = child.ascaleX;
 			var os1 = 0, os2 = 0, s2 = 0;
 			if (psx < 0) {
 				psx = -psx;
@@ -13119,18 +15181,21 @@ var spine;
 			c = pp.c;
 			d = pp.d;
 			var id = 1 / (a * d - b * c), x = targetX - pp.worldX, y = targetY - pp.worldY;
-			var tx = (x * d - y * b) * id - px, ty = (y * a - x * c) * id - py;
+			var tx = (x * d - y * b) * id - px, ty = (y * a - x * c) * id - py, dd = tx * tx + ty * ty;
 			x = cwx - pp.worldX;
 			y = cwy - pp.worldY;
 			var dx = (x * d - y * b) * id - px, dy = (y * a - x * c) * id - py;
 			var l1 = Math.sqrt(dx * dx + dy * dy), l2 = child.data.length * csx, a1 = 0, a2 = 0;
 			outer: if (u) {
 				l2 *= psx;
-				var cos = (tx * tx + ty * ty - l1 * l1 - l2 * l2) / (2 * l1 * l2);
+				var cos = (dd - l1 * l1 - l2 * l2) / (2 * l1 * l2);
 				if (cos < -1)
 					cos = -1;
-				else if (cos > 1)
+				else if (cos > 1) {
 					cos = 1;
+					if (stretch && l1 + l2 > 0.0001)
+						sx *= (Math.sqrt(dd) / (l1 + l2) - 1) * alpha + 1;
+				}
 				a2 = Math.acos(cos) * bendDir;
 				a = l1 + l2 * cos;
 				b = l2 * Math.sin(a2);
@@ -13139,7 +15204,7 @@ var spine;
 			else {
 				a = psx * l2;
 				b = psy * l2;
-				var aa = a * a, bb = b * b, dd = tx * tx + ty * ty, ta = Math.atan2(ty, tx);
+				var aa = a * a, bb = b * b, ta = Math.atan2(ty, tx);
 				c = bb * l1 * l1 + aa * dd - aa * bb;
 				var c1 = -2 * bb * l1, c2 = bb - aa;
 				d = c1 * c1 - 4 * c2 * c;
@@ -13194,7 +15259,7 @@ var spine;
 				a1 -= 360;
 			else if (a1 < -180)
 				a1 += 360;
-			parent.updateWorldTransformWith(px, py, rotation + a1 * alpha, parent.ascaleX, parent.ascaleY, 0, 0);
+			parent.updateWorldTransformWith(px, py, rotation + a1 * alpha, sx, parent.ascaleY, 0, 0);
 			rotation = child.arotation;
 			a2 = ((a2 + os) * spine.MathUtils.radDeg - child.ashearX) * s2 + os2 - rotation;
 			if (a2 > 180)
@@ -13214,6 +15279,9 @@ var spine;
 			this.order = 0;
 			this.bones = new Array();
 			this.bendDirection = 1;
+			this.compress = false;
+			this.stretch = false;
+			this.uniform = false;
 			this.mix = 1;
 			this.name = name;
 		}
@@ -13261,17 +15329,17 @@ var spine;
 			if (!translate && !rotate)
 				return;
 			var data = this.data;
-			var spacingMode = data.spacingMode;
-			var lengthSpacing = spacingMode == spine.SpacingMode.Length;
+			var percentSpacing = data.spacingMode == spine.SpacingMode.Percent;
 			var rotateMode = data.rotateMode;
 			var tangents = rotateMode == spine.RotateMode.Tangent, scale = rotateMode == spine.RotateMode.ChainScale;
 			var boneCount = this.bones.length, spacesCount = tangents ? boneCount : boneCount + 1;
 			var bones = this.bones;
 			var spaces = spine.Utils.setArraySize(this.spaces, spacesCount), lengths = null;
 			var spacing = this.spacing;
-			if (scale || lengthSpacing) {
+			if (scale || !percentSpacing) {
 				if (scale)
 					lengths = spine.Utils.setArraySize(this.lengths, boneCount);
+				var lengthSpacing = data.spacingMode == spine.SpacingMode.Length;
 				for (var i = 0, n = spacesCount - 1; i < n;) {
 					var bone = bones[i];
 					var setupLength = bone.data.length;
@@ -13280,12 +15348,20 @@ var spine;
 							lengths[i] = 0;
 						spaces[++i] = 0;
 					}
+					else if (percentSpacing) {
+						if (scale) {
+							var x = setupLength * bone.a, y = setupLength * bone.c;
+							var length_1 = Math.sqrt(x * x + y * y);
+							lengths[i] = length_1;
+						}
+						spaces[++i] = spacing;
+					}
 					else {
 						var x = setupLength * bone.a, y = setupLength * bone.c;
-						var length_1 = Math.sqrt(x * x + y * y);
+						var length_2 = Math.sqrt(x * x + y * y);
 						if (scale)
-							lengths[i] = length_1;
-						spaces[++i] = (lengthSpacing ? setupLength + spacing : spacing) * length_1 / setupLength;
+							lengths[i] = length_2;
+						spaces[++i] = (lengthSpacing ? setupLength + spacing : spacing) * length_2 / setupLength;
 					}
 				}
 			}
@@ -13293,7 +15369,7 @@ var spine;
 				for (var i = 1; i < spacesCount; i++)
 					spaces[i] = spacing;
 			}
-			var positions = this.computeWorldPositions(attachment, spacesCount, tangents, data.positionMode == spine.PositionMode.Percent, spacingMode == spine.SpacingMode.Percent);
+			var positions = this.computeWorldPositions(attachment, spacesCount, tangents, data.positionMode == spine.PositionMode.Percent, percentSpacing);
 			var boneX = positions[0], boneY = positions[1], offsetRotation = data.offsetRotation;
 			var tip = false;
 			if (offsetRotation == 0)
@@ -13309,9 +15385,9 @@ var spine;
 				bone.worldY += (boneY - bone.worldY) * translateMix;
 				var x = positions[p], y = positions[p + 1], dx = x - boneX, dy = y - boneY;
 				if (scale) {
-					var length_2 = lengths[i];
-					if (length_2 != 0) {
-						var s = (Math.sqrt(dx * dx + dy * dy) / length_2 - 1) * rotateMix + 1;
+					var length_3 = lengths[i];
+					if (length_3 != 0) {
+						var s = (Math.sqrt(dx * dx + dy * dy) / length_3 - 1) * rotateMix + 1;
 						bone.a *= s;
 						bone.c *= s;
 					}
@@ -13330,9 +15406,9 @@ var spine;
 					if (tip) {
 						cos = Math.cos(r);
 						sin = Math.sin(r);
-						var length_3 = bone.data.length;
-						boneX += (length_3 * (cos * a - sin * c) - dx) * rotateMix;
-						boneY += (length_3 * (sin * a + cos * c) - dy) * rotateMix;
+						var length_4 = bone.data.length;
+						boneX += (length_4 * (cos * a - sin * c) - dx) * rotateMix;
+						boneY += (length_4 * (sin * a + cos * c) - dy) * rotateMix;
 					}
 					else {
 						r += offsetRotation;
@@ -13365,7 +15441,7 @@ var spine;
 				if (percentPosition)
 					position *= pathLength_1;
 				if (percentSpacing) {
-					for (var i = 0; i < spacesCount; i++)
+					for (var i = 1; i < spacesCount; i++)
 						spaces[i] *= pathLength_1;
 				}
 				world = spine.Utils.setArraySize(this.world, 8);
@@ -13396,14 +15472,14 @@ var spine;
 						continue;
 					}
 					for (;; curve++) {
-						var length_4 = lengths[curve];
-						if (p > length_4)
+						var length_5 = lengths[curve];
+						if (p > length_5)
 							continue;
 						if (curve == 0)
-							p /= length_4;
+							p /= length_5;
 						else {
 							var prev = lengths[curve - 1];
-							p = (p - prev) / (length_4 - prev);
+							p = (p - prev) / (length_5 - prev);
 						}
 						break;
 					}
@@ -13471,8 +15547,10 @@ var spine;
 			}
 			if (percentPosition)
 				position *= pathLength;
+			else
+				position *= pathLength / path.lengths[curveCount - 1];
 			if (percentSpacing) {
-				for (var i = 0; i < spacesCount; i++)
+				for (var i = 1; i < spacesCount; i++)
 					spaces[i] *= pathLength;
 			}
 			var segments = this.segments;
@@ -13496,14 +15574,14 @@ var spine;
 					continue;
 				}
 				for (;; curve++) {
-					var length_5 = curves[curve];
-					if (p > length_5)
+					var length_6 = curves[curve];
+					if (p > length_6)
 						continue;
 					if (curve == 0)
-						p /= length_5;
+						p /= length_6;
 					else {
 						var prev = curves[curve - 1];
-						p = (p - prev) / (length_5 - prev);
+						p = (p - prev) / (length_6 - prev);
 					}
 					break;
 				}
@@ -13548,14 +15626,14 @@ var spine;
 				}
 				p *= curveLength;
 				for (;; segment++) {
-					var length_6 = segments[segment];
-					if (p > length_6)
+					var length_7 = segments[segment];
+					if (p > length_7)
 						continue;
 					if (segment == 0)
-						p /= length_6;
+						p /= length_7;
 					else {
 						var prev = segments[segment - 1];
-						p = segment + (p - prev) / (length_6 - prev);
+						p = segment + (p - prev) / (length_7 - prev);
 					}
 					break;
 				}
@@ -13576,15 +15654,23 @@ var spine;
 			out[o + 2] = r;
 		};
 		PathConstraint.prototype.addCurvePosition = function (p, x1, y1, cx1, cy1, cx2, cy2, x2, y2, out, o, tangents) {
-			if (p == 0 || isNaN(p))
-				p = 0.0001;
+			if (p == 0 || isNaN(p)) {
+				out[o] = x1;
+				out[o + 1] = y1;
+				out[o + 2] = Math.atan2(cy1 - y1, cx1 - x1);
+				return;
+			}
 			var tt = p * p, ttt = tt * p, u = 1 - p, uu = u * u, uuu = uu * u;
 			var ut = u * p, ut3 = ut * 3, uut3 = u * ut3, utt3 = ut3 * p;
 			var x = x1 * uuu + cx1 * uut3 + cx2 * utt3 + x2 * ttt, y = y1 * uuu + cy1 * uut3 + cy2 * utt3 + y2 * ttt;
 			out[o] = x;
 			out[o + 1] = y;
-			if (tangents)
-				out[o + 2] = Math.atan2(y - (y1 * uu + cy1 * ut * 2 + cy2 * tt), x - (x1 * uu + cx1 * ut * 2 + cx2 * tt));
+			if (tangents) {
+				if (p < 0.001)
+					out[o + 2] = Math.atan2(cy1 - y1, cx1 - x1);
+				else
+					out[o + 2] = Math.atan2(y - (y1 * uu + cy1 * ut * 2 + cy2 * tt), x - (x1 * uu + cx1 * ut * 2 + cx2 * tt));
+			}
 		};
 		PathConstraint.prototype.getOrder = function () {
 			return this.data.order;
@@ -13771,8 +15857,8 @@ var spine;
 			this._updateCache = new Array();
 			this.updateCacheReset = new Array();
 			this.time = 0;
-			this.flipX = false;
-			this.flipY = false;
+			this.scaleX = 1;
+			this.scaleY = 1;
 			this.x = 0;
 			this.y = 0;
 			if (data == null)
@@ -13988,8 +16074,10 @@ var spine;
 			var ikConstraints = this.ikConstraints;
 			for (var i = 0, n = ikConstraints.length; i < n; i++) {
 				var constraint = ikConstraints[i];
-				constraint.bendDirection = constraint.data.bendDirection;
 				constraint.mix = constraint.data.mix;
+				constraint.bendDirection = constraint.data.bendDirection;
+				constraint.compress = constraint.data.compress;
+				constraint.stretch = constraint.data.stretch;
 			}
 			var transformConstraints = this.transformConstraints;
 			for (var i = 0, n = transformConstraints.length; i < n; i++) {
@@ -14154,6 +16242,7 @@ var spine;
 			return null;
 		};
 		Skeleton.prototype.getBounds = function (offset, size, temp) {
+			if (temp === void 0) { temp = new Array(2); }
 			if (offset == null)
 				throw new Error("offset cannot be null.");
 			if (size == null)
@@ -14580,15 +16669,29 @@ var spine;
 							continue;
 						}
 						var c0 = inputY2 - inputY, c2 = inputX2 - inputX;
-						var ua = (c2 * (edgeY - inputY) - c0 * (edgeX - inputX)) / (c0 * (edgeX2 - edgeX) - c2 * (edgeY2 - edgeY));
-						output.push(edgeX + (edgeX2 - edgeX) * ua);
-						output.push(edgeY + (edgeY2 - edgeY) * ua);
+						var s = c0 * (edgeX2 - edgeX) - c2 * (edgeY2 - edgeY);
+						if (Math.abs(s) > 0.000001) {
+							var ua = (c2 * (edgeY - inputY) - c0 * (edgeX - inputX)) / s;
+							output.push(edgeX + (edgeX2 - edgeX) * ua);
+							output.push(edgeY + (edgeY2 - edgeY) * ua);
+						}
+						else {
+							output.push(edgeX);
+							output.push(edgeY);
+						}
 					}
 					else if (side2) {
 						var c0 = inputY2 - inputY, c2 = inputX2 - inputX;
-						var ua = (c2 * (edgeY - inputY) - c0 * (edgeX - inputX)) / (c0 * (edgeX2 - edgeX) - c2 * (edgeY2 - edgeY));
-						output.push(edgeX + (edgeX2 - edgeX) * ua);
-						output.push(edgeY + (edgeY2 - edgeY) * ua);
+						var s = c0 * (edgeX2 - edgeX) - c2 * (edgeY2 - edgeY);
+						if (Math.abs(s) > 0.000001) {
+							var ua = (c2 * (edgeY - inputY) - c0 * (edgeX - inputX)) / s;
+							output.push(edgeX + (edgeX2 - edgeX) * ua);
+							output.push(edgeY + (edgeY2 - edgeY) * ua);
+						}
+						else {
+							output.push(edgeX);
+							output.push(edgeY);
+						}
 						output.push(inputX2);
 						output.push(inputY2);
 					}
@@ -14857,8 +16960,11 @@ var spine;
 					data.target = skeletonData.findBone(targetName);
 					if (data.target == null)
 						throw new Error("IK target bone not found: " + targetName);
-					data.bendDirection = this.getValue(constraintMap, "bendPositive", true) ? 1 : -1;
 					data.mix = this.getValue(constraintMap, "mix", 1);
+					data.bendDirection = this.getValue(constraintMap, "bendPositive", true) ? 1 : -1;
+					data.compress = this.getValue(constraintMap, "compress", false);
+					data.stretch = this.getValue(constraintMap, "stretch", false);
+					data.uniform = this.getValue(constraintMap, "uniform", false);
 					skeletonData.ikConstraints.push(data);
 				}
 			}
@@ -14963,6 +17069,11 @@ var spine;
 					data.intValue = this.getValue(eventMap, "int", 0);
 					data.floatValue = this.getValue(eventMap, "float", 0);
 					data.stringValue = this.getValue(eventMap, "string", "");
+					data.audioPath = this.getValue(eventMap, "audio", null);
+					if (data.audioPath != null) {
+						data.volume = this.getValue(eventMap, "volume", 1);
+						data.balance = this.getValue(eventMap, "balance", 0);
+					}
 					skeletonData.events.push(data);
 				}
 			}
@@ -15228,7 +17339,7 @@ var spine;
 					var frameIndex = 0;
 					for (var i = 0; i < constraintMap.length; i++) {
 						var valueMap = constraintMap[i];
-						timeline.setFrame(frameIndex, valueMap.time, this.getValue(valueMap, "mix", 1), this.getValue(valueMap, "bendPositive", true) ? 1 : -1);
+						timeline.setFrame(frameIndex, valueMap.time, this.getValue(valueMap, "mix", 1), this.getValue(valueMap, "bendPositive", true) ? 1 : -1, this.getValue(valueMap, "compress", false), this.getValue(valueMap, "stretch", false));
 						this.readCurve(valueMap, timeline, frameIndex);
 						frameIndex++;
 					}
@@ -15401,6 +17512,10 @@ var spine;
 					event_5.intValue = this.getValue(eventMap, "int", eventData.intValue);
 					event_5.floatValue = this.getValue(eventMap, "float", eventData.floatValue);
 					event_5.stringValue = this.getValue(eventMap, "string", eventData.stringValue);
+					if (event_5.data.audioPath != null) {
+						event_5.volume = this.getValue(eventMap, "volume", 1);
+						event_5.balance = this.getValue(eventMap, "balance", 0);
+					}
 					timeline.setFrame(frameIndex++, event_5);
 				}
 				timelines.push(timeline);
@@ -15677,7 +17792,7 @@ var spine;
 		FakeTexture.prototype.setWraps = function (uWrap, vWrap) { };
 		FakeTexture.prototype.dispose = function () { };
 		return FakeTexture;
-	}(spine.Texture));
+	}(Texture));
 	spine.FakeTexture = FakeTexture;
 })(spine || (spine = {}));
 var spine;
@@ -16021,14 +18136,14 @@ var spine;
 					y += (target.ay - y + this.data.offsetY) * translateMix;
 				}
 				var scaleX = bone.ascaleX, scaleY = bone.ascaleY;
-				if (scaleMix > 0) {
+				if (scaleMix != 0) {
 					if (scaleX > 0.00001)
 						scaleX = (scaleX + (target.ascaleX - scaleX + this.data.offsetScaleX) * scaleMix) / scaleX;
 					if (scaleY > 0.00001)
 						scaleY = (scaleY + (target.ascaleY - scaleY + this.data.offsetScaleY) * scaleMix) / scaleY;
 				}
 				var shearY = bone.ashearY;
-				if (shearMix > 0) {
+				if (shearMix != 0) {
 					var r = target.ashearY - shearY + this.data.offsetShearY;
 					r -= (16384 - ((16384.499999999996 - r / 360) | 0)) * 360;
 					bone.shearY += r * shearMix;
@@ -16055,14 +18170,14 @@ var spine;
 					y += (target.ay + this.data.offsetY) * translateMix;
 				}
 				var scaleX = bone.ascaleX, scaleY = bone.ascaleY;
-				if (scaleMix > 0) {
+				if (scaleMix != 0) {
 					if (scaleX > 0.00001)
 						scaleX *= ((target.ascaleX - 1 + this.data.offsetScaleX) * scaleMix) + 1;
 					if (scaleY > 0.00001)
 						scaleY *= ((target.ascaleY - 1 + this.data.offsetScaleY) * scaleMix) + 1;
 				}
 				var shearY = bone.ashearY;
-				if (shearMix > 0)
+				if (shearMix != 0)
 					shearY += (target.ashearY + this.data.offsetShearY) * shearMix;
 				bone.updateWorldTransformWith(x, y, rotation, scaleX, scaleY, bone.ashearX, shearY);
 			}
@@ -16545,7 +18660,7 @@ var spine;
 		Utils.toSinglePrecision = function (value) {
 			return Utils.SUPPORTS_TYPED_ARRAYS ? Math.fround(value) : value;
 		};
-		Utils.webkit602BugfixHelper = function (alpha, pose) {
+		Utils.webkit602BugfixHelper = function (alpha, blend) {
 		};
 		Utils.SUPPORTS_TYPED_ARRAYS = typeof (Float32Array) !== "undefined";
 		return Utils;
@@ -16830,8 +18945,31 @@ var spine;
 			return _this;
 		}
 		MeshAttachment.prototype.updateUVs = function () {
+			var regionUVs = this.regionUVs;
+			if (this.uvs == null || this.uvs.length != regionUVs.length)
+				this.uvs = spine.Utils.newFloatArray(regionUVs.length);
+			var uvs = this.uvs;
 			var u = 0, v = 0, width = 0, height = 0;
-			if (this.region == null) {
+			if (this.region instanceof spine.TextureAtlasRegion) {
+				var region = this.region;
+				var textureWidth = region.texture.getImage().width, textureHeight = region.texture.getImage().height;
+				if (region.rotate) {
+					u = region.u - (region.originalHeight - region.offsetY - region.height) / textureWidth;
+					v = region.v - (region.originalWidth - region.offsetX - region.width) / textureHeight;
+					width = region.originalHeight / textureWidth;
+					height = region.originalWidth / textureHeight;
+					for (var i = 0, n = uvs.length; i < n; i += 2) {
+						uvs[i] = u + regionUVs[i + 1] * width;
+						uvs[i + 1] = v + height - regionUVs[i] * height;
+					}
+					return;
+				}
+				u = region.u - region.offsetX / textureWidth;
+				v = region.v - (region.originalHeight - region.offsetY - region.height) / textureHeight;
+				width = region.originalWidth / textureWidth;
+				height = region.originalHeight / textureHeight;
+			}
+			else if (this.region == null) {
 				u = v = 0;
 				width = height = 1;
 			}
@@ -16841,21 +18979,9 @@ var spine;
 				width = this.region.u2 - u;
 				height = this.region.v2 - v;
 			}
-			var regionUVs = this.regionUVs;
-			if (this.uvs == null || this.uvs.length != regionUVs.length)
-				this.uvs = spine.Utils.newFloatArray(regionUVs.length);
-			var uvs = this.uvs;
-			if (this.region.rotate) {
-				for (var i = 0, n = uvs.length; i < n; i += 2) {
-					uvs[i] = u + regionUVs[i + 1] * width;
-					uvs[i + 1] = v + height - regionUVs[i] * height;
-				}
-			}
-			else {
-				for (var i = 0, n = uvs.length; i < n; i += 2) {
-					uvs[i] = u + regionUVs[i] * width;
-					uvs[i + 1] = v + regionUVs[i + 1] * height;
-				}
+			for (var i = 0, n = uvs.length; i < n; i += 2) {
+				uvs[i] = u + regionUVs[i] * width;
+				uvs[i + 1] = v + regionUVs[i + 1] * height;
 			}
 		};
 		MeshAttachment.prototype.applyDeform = function (sourceAttachment) {
@@ -17118,6 +19244,272 @@ var spine;
 })(spine || (spine = {}));
 var spine;
 (function (spine) {
+	var canvas;
+	(function (canvas) {
+		var AssetManager = (function (_super) {
+			__extends(AssetManager, _super);
+			function AssetManager(pathPrefix) {
+				if (pathPrefix === void 0) { pathPrefix = ""; }
+				return _super.call(this, function (image) { return new spine.canvas.CanvasTexture(image); }, pathPrefix) || this;
+			}
+			return AssetManager;
+		}(spine.AssetManager));
+		canvas.AssetManager = AssetManager;
+	})(canvas = spine.canvas || (spine.canvas = {}));
+})(spine || (spine = {}));
+var spine;
+(function (spine) {
+	var canvas;
+	(function (canvas) {
+		var CanvasTexture = (function (_super) {
+			__extends(CanvasTexture, _super);
+			function CanvasTexture(image) {
+				return _super.call(this, image) || this;
+			}
+			CanvasTexture.prototype.setFilters = function (minFilter, magFilter) { };
+			CanvasTexture.prototype.setWraps = function (uWrap, vWrap) { };
+			CanvasTexture.prototype.dispose = function () { };
+			return CanvasTexture;
+		}(spine.Texture));
+		canvas.CanvasTexture = CanvasTexture;
+	})(canvas = spine.canvas || (spine.canvas = {}));
+})(spine || (spine = {}));
+var spine;
+(function (spine) {
+	var canvas;
+	(function (canvas) {
+		var SkeletonRenderer = (function () {
+			function SkeletonRenderer(context) {
+				this.triangleRendering = false;
+				this.debugRendering = false;
+				this.vertices = spine.Utils.newFloatArray(8 * 1024);
+				this.tempColor = new spine.Color();
+				this.ctx = context;
+			}
+			SkeletonRenderer.prototype.draw = function (skeleton) {
+				if (this.triangleRendering)
+					this.drawTriangles(skeleton);
+				else
+					this.drawImages(skeleton);
+			};
+			SkeletonRenderer.prototype.drawImages = function (skeleton) {
+				var ctx = this.ctx;
+				var drawOrder = skeleton.drawOrder;
+				if (this.debugRendering)
+					ctx.strokeStyle = "green";
+				ctx.save();
+				for (var i = 0, n = drawOrder.length; i < n; i++) {
+					var slot = drawOrder[i];
+					var attachment = slot.getAttachment();
+					var regionAttachment = null;
+					var region = null;
+					var image = null;
+					if (attachment instanceof spine.RegionAttachment) {
+						regionAttachment = attachment;
+						region = regionAttachment.region;
+						image = region.texture.getImage();
+					}
+					else
+						continue;
+					var skeleton_1 = slot.bone.skeleton;
+					var skeletonColor = skeleton_1.color;
+					var slotColor = slot.color;
+					var regionColor = regionAttachment.color;
+					var alpha = skeletonColor.a * slotColor.a * regionColor.a;
+					var color = this.tempColor;
+					color.set(skeletonColor.r * slotColor.r * regionColor.r, skeletonColor.g * slotColor.g * regionColor.g, skeletonColor.b * slotColor.b * regionColor.b, alpha);
+					var att = attachment;
+					var bone = slot.bone;
+					var w = region.width;
+					var h = region.height;
+					ctx.save();
+					ctx.transform(bone.a, bone.c, bone.b, bone.d, bone.worldX, bone.worldY);
+					ctx.translate(attachment.offset[0], attachment.offset[1]);
+					ctx.rotate(attachment.rotation * Math.PI / 180);
+					var atlasScale = att.width / w;
+					ctx.scale(atlasScale * attachment.scaleX, atlasScale * attachment.scaleY);
+					ctx.translate(w / 2, h / 2);
+					if (attachment.region.rotate) {
+						var t = w;
+						w = h;
+						h = t;
+						ctx.rotate(-Math.PI / 2);
+					}
+					ctx.scale(1, -1);
+					ctx.translate(-w / 2, -h / 2);
+					if (color.r != 1 || color.g != 1 || color.b != 1 || color.a != 1) {
+						ctx.globalAlpha = color.a;
+					}
+					ctx.drawImage(image, region.x, region.y, w, h, 0, 0, w, h);
+					if (this.debugRendering)
+						ctx.strokeRect(0, 0, w, h);
+					ctx.restore();
+				}
+				ctx.restore();
+			};
+			SkeletonRenderer.prototype.drawTriangles = function (skeleton) {
+				var blendMode = null;
+				var vertices = this.vertices;
+				var triangles = null;
+				var drawOrder = skeleton.drawOrder;
+				for (var i = 0, n = drawOrder.length; i < n; i++) {
+					var slot = drawOrder[i];
+					var attachment = slot.getAttachment();
+					var texture = null;
+					var region = null;
+					if (attachment instanceof spine.RegionAttachment) {
+						var regionAttachment = attachment;
+						vertices = this.computeRegionVertices(slot, regionAttachment, false);
+						triangles = SkeletonRenderer.QUAD_TRIANGLES;
+						region = regionAttachment.region;
+						texture = region.texture.getImage();
+					}
+					else if (attachment instanceof spine.MeshAttachment) {
+						var mesh = attachment;
+						vertices = this.computeMeshVertices(slot, mesh, false);
+						triangles = mesh.triangles;
+						texture = mesh.region.renderObject.texture.getImage();
+					}
+					else
+						continue;
+					if (texture != null) {
+						var slotBlendMode = slot.data.blendMode;
+						if (slotBlendMode != blendMode) {
+							blendMode = slotBlendMode;
+						}
+						var skeleton_2 = slot.bone.skeleton;
+						var skeletonColor = skeleton_2.color;
+						var slotColor = slot.color;
+						var attachmentColor = attachment.color;
+						var alpha = skeletonColor.a * slotColor.a * attachmentColor.a;
+						var color = this.tempColor;
+						color.set(skeletonColor.r * slotColor.r * attachmentColor.r, skeletonColor.g * slotColor.g * attachmentColor.g, skeletonColor.b * slotColor.b * attachmentColor.b, alpha);
+						var ctx = this.ctx;
+						if (color.r != 1 || color.g != 1 || color.b != 1 || color.a != 1) {
+							ctx.globalAlpha = color.a;
+						}
+						for (var j = 0; j < triangles.length; j += 3) {
+							var t1 = triangles[j] * 8, t2 = triangles[j + 1] * 8, t3 = triangles[j + 2] * 8;
+							var x0 = vertices[t1], y0 = vertices[t1 + 1], u0 = vertices[t1 + 6], v0 = vertices[t1 + 7];
+							var x1 = vertices[t2], y1 = vertices[t2 + 1], u1 = vertices[t2 + 6], v1 = vertices[t2 + 7];
+							var x2 = vertices[t3], y2 = vertices[t3 + 1], u2 = vertices[t3 + 6], v2 = vertices[t3 + 7];
+							this.drawTriangle(texture, x0, y0, u0, v0, x1, y1, u1, v1, x2, y2, u2, v2);
+							if (this.debugRendering) {
+								ctx.strokeStyle = "green";
+								ctx.beginPath();
+								ctx.moveTo(x0, y0);
+								ctx.lineTo(x1, y1);
+								ctx.lineTo(x2, y2);
+								ctx.lineTo(x0, y0);
+								ctx.stroke();
+							}
+						}
+					}
+				}
+				this.ctx.globalAlpha = 1;
+			};
+			SkeletonRenderer.prototype.drawTriangle = function (img, x0, y0, u0, v0, x1, y1, u1, v1, x2, y2, u2, v2) {
+				var ctx = this.ctx;
+				u0 *= img.width;
+				v0 *= img.height;
+				u1 *= img.width;
+				v1 *= img.height;
+				u2 *= img.width;
+				v2 *= img.height;
+				ctx.beginPath();
+				ctx.moveTo(x0, y0);
+				ctx.lineTo(x1, y1);
+				ctx.lineTo(x2, y2);
+				ctx.closePath();
+				x1 -= x0;
+				y1 -= y0;
+				x2 -= x0;
+				y2 -= y0;
+				u1 -= u0;
+				v1 -= v0;
+				u2 -= u0;
+				v2 -= v0;
+				var det = 1 / (u1 * v2 - u2 * v1), a = (v2 * x1 - v1 * x2) * det, b = (v2 * y1 - v1 * y2) * det, c = (u1 * x2 - u2 * x1) * det, d = (u1 * y2 - u2 * y1) * det, e = x0 - a * u0 - c * v0, f = y0 - b * u0 - d * v0;
+				ctx.save();
+				ctx.transform(a, b, c, d, e, f);
+				ctx.clip();
+				ctx.drawImage(img, 0, 0);
+				ctx.restore();
+			};
+			SkeletonRenderer.prototype.computeRegionVertices = function (slot, region, pma) {
+				var skeleton = slot.bone.skeleton;
+				var skeletonColor = skeleton.color;
+				var slotColor = slot.color;
+				var regionColor = region.color;
+				var alpha = skeletonColor.a * slotColor.a * regionColor.a;
+				var multiplier = pma ? alpha : 1;
+				var color = this.tempColor;
+				color.set(skeletonColor.r * slotColor.r * regionColor.r * multiplier, skeletonColor.g * slotColor.g * regionColor.g * multiplier, skeletonColor.b * slotColor.b * regionColor.b * multiplier, alpha);
+				region.computeWorldVertices(slot.bone, this.vertices, 0, SkeletonRenderer.VERTEX_SIZE);
+				var vertices = this.vertices;
+				var uvs = region.uvs;
+				vertices[spine.RegionAttachment.C1R] = color.r;
+				vertices[spine.RegionAttachment.C1G] = color.g;
+				vertices[spine.RegionAttachment.C1B] = color.b;
+				vertices[spine.RegionAttachment.C1A] = color.a;
+				vertices[spine.RegionAttachment.U1] = uvs[0];
+				vertices[spine.RegionAttachment.V1] = uvs[1];
+				vertices[spine.RegionAttachment.C2R] = color.r;
+				vertices[spine.RegionAttachment.C2G] = color.g;
+				vertices[spine.RegionAttachment.C2B] = color.b;
+				vertices[spine.RegionAttachment.C2A] = color.a;
+				vertices[spine.RegionAttachment.U2] = uvs[2];
+				vertices[spine.RegionAttachment.V2] = uvs[3];
+				vertices[spine.RegionAttachment.C3R] = color.r;
+				vertices[spine.RegionAttachment.C3G] = color.g;
+				vertices[spine.RegionAttachment.C3B] = color.b;
+				vertices[spine.RegionAttachment.C3A] = color.a;
+				vertices[spine.RegionAttachment.U3] = uvs[4];
+				vertices[spine.RegionAttachment.V3] = uvs[5];
+				vertices[spine.RegionAttachment.C4R] = color.r;
+				vertices[spine.RegionAttachment.C4G] = color.g;
+				vertices[spine.RegionAttachment.C4B] = color.b;
+				vertices[spine.RegionAttachment.C4A] = color.a;
+				vertices[spine.RegionAttachment.U4] = uvs[6];
+				vertices[spine.RegionAttachment.V4] = uvs[7];
+				return vertices;
+			};
+			SkeletonRenderer.prototype.computeMeshVertices = function (slot, mesh, pma) {
+				var skeleton = slot.bone.skeleton;
+				var skeletonColor = skeleton.color;
+				var slotColor = slot.color;
+				var regionColor = mesh.color;
+				var alpha = skeletonColor.a * slotColor.a * regionColor.a;
+				var multiplier = pma ? alpha : 1;
+				var color = this.tempColor;
+				color.set(skeletonColor.r * slotColor.r * regionColor.r * multiplier, skeletonColor.g * slotColor.g * regionColor.g * multiplier, skeletonColor.b * slotColor.b * regionColor.b * multiplier, alpha);
+				var numVertices = mesh.worldVerticesLength / 2;
+				if (this.vertices.length < mesh.worldVerticesLength) {
+					this.vertices = spine.Utils.newFloatArray(mesh.worldVerticesLength);
+				}
+				var vertices = this.vertices;
+				mesh.computeWorldVertices(slot, 0, mesh.worldVerticesLength, vertices, 0, SkeletonRenderer.VERTEX_SIZE);
+				var uvs = mesh.uvs;
+				for (var i = 0, n = numVertices, u = 0, v = 2; i < n; i++) {
+					vertices[v++] = color.r;
+					vertices[v++] = color.g;
+					vertices[v++] = color.b;
+					vertices[v++] = color.a;
+					vertices[v++] = uvs[u++];
+					vertices[v++] = uvs[u++];
+					v += 2;
+				}
+				return vertices;
+			};
+			SkeletonRenderer.QUAD_TRIANGLES = [0, 1, 2, 2, 3, 0];
+			SkeletonRenderer.VERTEX_SIZE = 2 + 2 + 4;
+			return SkeletonRenderer;
+		}());
+		canvas.SkeletonRenderer = SkeletonRenderer;
+	})(canvas = spine.canvas || (spine.canvas = {}));
+})(spine || (spine = {}));
+var spine;
+(function (spine) {
 	var webgl;
 	(function (webgl) {
 		var AssetManager = (function (_super) {
@@ -17276,7 +19668,7 @@ var spine;
 			}
 			Input.prototype.setupCallbacks = function (element) {
 				var _this = this;
-				element.addEventListener("mousedown", function (ev) {
+				var mouseDown = function (ev) {
 					if (ev instanceof MouseEvent) {
 						var rect = element.getBoundingClientRect();
 						var x = ev.clientX - rect.left;
@@ -17288,9 +19680,11 @@ var spine;
 						_this.lastX = x;
 						_this.lastY = y;
 						_this.buttonDown = true;
+						document.addEventListener("mousemove", mouseMove);
+						document.addEventListener("mouseup", mouseUp);
 					}
-				}, true);
-				element.addEventListener("mousemove", function (ev) {
+				};
+				var mouseMove = function (ev) {
 					if (ev instanceof MouseEvent) {
 						var rect = element.getBoundingClientRect();
 						var x = ev.clientX - rect.left;
@@ -17307,8 +19701,8 @@ var spine;
 						_this.lastX = x;
 						_this.lastY = y;
 					}
-				}, true);
-				element.addEventListener("mouseup", function (ev) {
+				};
+				var mouseUp = function (ev) {
 					if (ev instanceof MouseEvent) {
 						var rect = element.getBoundingClientRect();
 						var x = ev.clientX - rect.left;
@@ -17320,8 +19714,13 @@ var spine;
 						_this.lastX = x;
 						_this.lastY = y;
 						_this.buttonDown = false;
+						document.removeEventListener("mousemove", mouseMove);
+						document.removeEventListener("mouseup", mouseUp);
 					}
-				}, true);
+				};
+				element.addEventListener("mousedown", mouseDown, true);
+				element.addEventListener("mousemove", mouseMove, true);
+				element.addEventListener("mouseup", mouseUp, true);
 				element.addEventListener("touchstart", function (ev) {
 					if (_this.currTouch != null)
 						return;
@@ -17338,8 +19737,8 @@ var spine;
 						break;
 					}
 					var listeners = _this.listeners;
-					for (var i_8 = 0; i_8 < listeners.length; i_8++) {
-						listeners[i_8].down(_this.currTouch.x, _this.currTouch.y);
+					for (var i_16 = 0; i_16 < listeners.length; i_16++) {
+						listeners[i_16].down(_this.currTouch.x, _this.currTouch.y);
 					}
 					console.log("Start " + _this.currTouch.x + ", " + _this.currTouch.y);
 					_this.lastX = _this.currTouch.x;
@@ -17357,8 +19756,8 @@ var spine;
 							var y = _this.currTouch.y = touch.clientY - rect.top;
 							_this.touchesPool.free(_this.currTouch);
 							var listeners = _this.listeners;
-							for (var i_9 = 0; i_9 < listeners.length; i_9++) {
-								listeners[i_9].up(x, y);
+							for (var i_17 = 0; i_17 < listeners.length; i_17++) {
+								listeners[i_17].up(x, y);
 							}
 							console.log("End " + x + ", " + y);
 							_this.lastX = x;
@@ -17380,8 +19779,8 @@ var spine;
 							var y = _this.currTouch.y = touch.clientY - rect.top;
 							_this.touchesPool.free(_this.currTouch);
 							var listeners = _this.listeners;
-							for (var i_10 = 0; i_10 < listeners.length; i_10++) {
-								listeners[i_10].up(x, y);
+							for (var i_18 = 0; i_18 < listeners.length; i_18++) {
+								listeners[i_18].up(x, y);
 							}
 							console.log("End " + x + ", " + y);
 							_this.lastX = x;
@@ -17404,8 +19803,8 @@ var spine;
 							var x = touch.clientX - rect.left;
 							var y = touch.clientY - rect.top;
 							var listeners = _this.listeners;
-							for (var i_11 = 0; i_11 < listeners.length; i_11++) {
-								listeners[i_11].dragged(x, y);
+							for (var i_19 = 0; i_19 < listeners.length; i_19++) {
+								listeners[i_19].dragged(x, y);
 							}
 							console.log("Drag " + x + ", " + y);
 							_this.lastX = _this.currTouch.x = x;
@@ -17479,15 +19878,15 @@ var spine;
 					return;
 				this.timeKeeper.update();
 				var a = Math.abs(Math.sin(this.timeKeeper.totalTime + 0.75));
-				this.angle -= this.timeKeeper.delta * 360 * (1 + 1.5 * Math.pow(a, 5));
+				this.angle -= this.timeKeeper.delta / 1.4 * 360 * (1 + 1.5 * Math.pow(a, 5));
 				var renderer = this.renderer;
 				var canvas = renderer.canvas;
 				var gl = renderer.context.gl;
+				renderer.resize(webgl.ResizeMode.Stretch);
 				var oldX = renderer.camera.position.x, oldY = renderer.camera.position.y;
 				renderer.camera.position.set(canvas.width / 2, canvas.height / 2, 0);
 				renderer.camera.viewportWidth = canvas.width;
 				renderer.camera.viewportHeight = canvas.height;
-				renderer.resize(webgl.ResizeMode.Stretch);
 				if (!complete) {
 					gl.clearColor(this.backgroundColor.r, this.backgroundColor.g, this.backgroundColor.b, this.backgroundColor.a);
 					gl.clear(gl.COLOR_BUFFER_BIT);
@@ -17530,8 +19929,8 @@ var spine;
 			LoadingScreen.loaded = 0;
 			LoadingScreen.spinnerImg = null;
 			LoadingScreen.logoImg = null;
-			LoadingScreen.SPINNER_DATA = "data:image/png;base64,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";
-			LoadingScreen.SPINE_LOGO_DATA = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFIAAAAZCAYAAACis3k0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAtNJREFUaN7tmT2I1EAUxwN+oWgRT0HFKo0WCkJ6ObmAWFwZbCxsXGysLNJaiCyIoDaSwk4ETzvhmnBaCRbBWoQ01ho4PwotjP8cE337mMy8TLK757mBH3fLTWbe/PbN53neNniqZW8FvAVvQAqugwvgDDgO9niLRyTyJagM/ACPF6bsIl9ZRDac/Cc6tLn5xQdRQ496QlKPLxD5QCDxO9jtGM8QfYoIgUlgCipGCRJL5VvlyOdCU09iEXkCfLSIfCrs7Fab6nOsiafu06iDwES9w/uU1QnDC+ekkVS9vEaDsgVeB0d+z1VDtOGxRaYPboP3Gokb4GgXkZp4chZPJKgvZ3U0XkriK/TIt9YUDllFgTAjGwoaoHqfBhMI58yD4BQ4V6/aHYdfxToftvw9F2SiVroawU2/Cv5C4Thv0KB9S5nxlOd4STxjwUjzSdYlgrYijw2BsEfgsaFcM09lhiys94xXQQwugcvgJrgFLjrEE7WUiTuWCQzt/ZXN7FfqGwuGClyVy2xZAFmfDQvNtwFFSspMDGsD+UTWqu1KoVmVooFEJgKRXw0if85RpISEzwsjzeqWzkjkC4PIJ3MUmQgITAHlQwTFhnZhELkEntfZRwR+AvfAgXmJHOqU02XligWT8ppg67NXbdCXeq7afUQ6L8C2DalEZNt2YyQ94Qy8/ekjMpBMbfyl5iTjG7YAI8cNecROAb4kJmTjaXAF3AGvwQewOiuRxEtlSaT4j2h2lMsUueQEoMlIKpTvAmKhxPMtC876jEX6rE8l8TNx/KVbn6xlWU9NWcSDUsO4NGWpQOTZFpHPOooMXcswmW2XFk3ixb2v0Nq+XVKP00QNaffBLyWwBI/AkTlfMYZDXMf12kc6yjwEjoFdO/5me5oi/6tnyhlZX6OtgmX1c2Uh0k3khmbB2b9TRfpd/jfTUeRDJvHdYg5wE7kPXAN3wQ1weDvH+xufEgpi5qIl3QAAAABJRU5ErkJggg==";
+			LoadingScreen.SPINNER_DATA = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKMAAACjCAYAAADmbK6AAAAACXBIWXMAAAsTAAALEwEAmpwYAAALB2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDIgNzkuMTYwOTI0LCAyMDE3LzA3LzEzLTAxOjA2OjM5ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczpwaG90b3Nob3A9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGhvdG9zaG9wLzEuMC8iIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIiB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxNS41IChXaW5kb3dzKSIgeG1wOkNyZWF0ZURhdGU9IjIwMTYtMDktMDhUMTQ6MjU6MTIrMDI6MDAiIHhtcDpNZXRhZGF0YURhdGU9IjIwMTgtMTEtMTVUMTY6NDA6NTkrMDE6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDE4LTExLTE1VDE2OjQwOjU5KzAxOjAwIiBkYzpmb3JtYXQ9ImltYWdlL3BuZyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpmZDhlNTljMC02NGJjLTIxNGQtODAyZi1jZDlhODJjM2ZjMGMiIHhtcE1NOkRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDpmYmNmZWJlYS03MjY2LWE0NGQtOTI4NS0wOTJmNGNhYzk4ZWEiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowODMzNWIyYy04NzYyLWQzNGMtOTBhOS02ODJjYjJmYTQ2M2UiIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiIHRpZmY6T3JpZW50YXRpb249IjEiIHRpZmY6WFJlc29sdXRpb249IjcyMDAwMC8xMDAwMCIgdGlmZjpZUmVzb2x1dGlvbj0iNzIwMDAwLzEwMDAwIiB0aWZmOlJlc29sdXRpb25Vbml0PSIyIiBleGlmOkNvbG9yU3BhY2U9IjY1NTM1IiBleGlmOlBpeGVsWERpbWVuc2lvbj0iMjk3IiBleGlmOlBpeGVsWURpbWVuc2lvbj0iMjQyIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY3JlYXRlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDowODMzNWIyYy04NzYyLWQzNGMtOTBhOS02ODJjYjJmYTQ2M2UiIHN0RXZ0OndoZW49IjIwMTYtMDktMDhUMTQ6MjU6MTIrMDI6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE1LjUgKFdpbmRvd3MpIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJzYXZlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDpiNThlMTlkNi0xYTRjLTQyNDEtODU0ZC01MDVlZjYxMjRhODQiIHN0RXZ0OndoZW49IjIwMTgtMTEtMTVUMTY6NDA6MjMrMDE6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAoV2luZG93cykiIHN0RXZ0OmNoYW5nZWQ9Ii8iLz4gPHJkZjpsaSBzdEV2dDphY3Rpb249InNhdmVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjQ3YzYzYzIwLWJkYjgtYzM0YS1hYzMyLWQ5MDdjOWEyOTA0MCIgc3RFdnQ6d2hlbj0iMjAxOC0xMS0xNVQxNjo0MDo1OSswMTowMCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY29udmVydGVkIiBzdEV2dDpwYXJhbWV0ZXJzPSJmcm9tIGFwcGxpY2F0aW9uL3ZuZC5hZG9iZS5waG90b3Nob3AgdG8gaW1hZ2UvcG5nIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJkZXJpdmVkIiBzdEV2dDpwYXJhbWV0ZXJzPSJjb252ZXJ0ZWQgZnJvbSBhcHBsaWNhdGlvbi92bmQuYWRvYmUucGhvdG9zaG9wIHRvIGltYWdlL3BuZyIvPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6ZmQ4ZTU5YzAtNjRiYy0yMTRkLTgwMmYtY2Q5YTgyYzNmYzBjIiBzdEV2dDp3aGVuPSIyMDE4LTExLTE1VDE2OjQwOjU5KzAxOjAwIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgQ0MgKFdpbmRvd3MpIiBzdEV2dDpjaGFuZ2VkPSIvIi8+IDwvcmRmOlNlcT4gPC94bXBNTTpIaXN0b3J5PiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0N2M2M2MyMC1iZGI4LWMzNGEtYWMzMi1kOTA3YzlhMjkwNDAiIHN0UmVmOmRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDo2OWRmZjljYy01YzFiLWE5NDctOTc3OS03ODgxZjM0ODk3MDMiIHN0UmVmOm9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowODMzNWIyYy04NzYyLWQzNGMtOTBhOS02ODJjYjJmYTQ2M2UiLz4gPHBob3Rvc2hvcDpEb2N1bWVudEFu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";
+			LoadingScreen.SPINE_LOGO_DATA = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKUAAABsCAYAAAALzHKmAAAACXBIWXMAAAsTAAALEwEAmpwYAAALB2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDIgNzkuMTYwOTI0LCAyMDE3LzA3LzEzLTAxOjA2OjM5ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczpwaG90b3Nob3A9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGhvdG9zaG9wLzEuMC8iIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIiB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxNS41IChXaW5kb3dzKSIgeG1wOkNyZWF0ZURhdGU9IjIwMTYtMDktMDhUMTQ6MjU6MTIrMDI6MDAiIHhtcDpNZXRhZGF0YURhdGU9IjIwMTgtMTEtMTVUMTY6NDA6NTkrMDE6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDE4LTExLTE1VDE2OjQwOjU5KzAxOjAwIiBkYzpmb3JtYXQ9ImltYWdlL3BuZyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDowMTdhZGQ3Ni04OTZlLThlNGUtYmM5MS00ZjEyNjI1YjA3MjgiIHhtcE1NOkRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDplMTViNGE2ZS1hMDg3LWEzNDktODdhOS1mNDYzYjE2MzQ0Y2MiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowODMzNWIyYy04NzYyLWQzNGMtOTBhOS02ODJjYjJmYTQ2M2UiIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiIHRpZmY6T3JpZW50YXRpb249IjEiIHRpZmY6WFJlc29sdXRpb249IjcyMDAwMC8xMDAwMCIgdGlmZjpZUmVzb2x1dGlvbj0iNzIwMDAwLzEwMDAwIiB0aWZmOlJlc29sdXRpb25Vbml0PSIyIiBleGlmOkNvbG9yU3BhY2U9IjY1NTM1IiBleGlmOlBpeGVsWERpbWVuc2lvbj0iMjk3IiBleGlmOlBpeGVsWURpbWVuc2lvbj0iMjQyIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY3JlYXRlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDowODMzNWIyYy04NzYyLWQzNGMtOTBhOS02ODJjYjJmYTQ2M2UiIHN0RXZ0OndoZW49IjIwMTYtMDktMDhUMTQ6MjU6MTIrMDI6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE1LjUgKFdpbmRvd3MpIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJzYXZlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDpiNThlMTlkNi0xYTRjLTQyNDEtODU0ZC01MDVlZjYxMjRhODQiIHN0RXZ0OndoZW49IjIwMTgtMTEtMTVUMTY6NDA6MjMrMDE6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAoV2luZG93cykiIHN0RXZ0OmNoYW5nZWQ9Ii8iLz4gPHJkZjpsaSBzdEV2dDphY3Rpb249InNhdmVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjJlNjJiMWM2LWIxYzQtNDk0MC04MDMxLWU4ZDkyNTBmODJjNSIgc3RFdnQ6d2hlbj0iMjAxOC0xMS0xNVQxNjo0MDo1OSswMTowMCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY29udmVydGVkIiBzdEV2dDpwYXJhbWV0ZXJzPSJmcm9tIGFwcGxpY2F0aW9uL3ZuZC5hZG9iZS5waG90b3Nob3AgdG8gaW1hZ2UvcG5nIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJkZXJpdmVkIiBzdEV2dDpwYXJhbWV0ZXJzPSJjb252ZXJ0ZWQgZnJvbSBhcHBsaWNhdGlvbi92bmQuYWRvYmUucGhvdG9zaG9wIHRvIGltYWdlL3BuZyIvPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6MDE3YWRkNzYtODk2ZS04ZTRlLWJjOTEtNGYxMjYyNWIwNzI4IiBzdEV2dDp3aGVuPSIyMDE4LTExLTE1VDE2OjQwOjU5KzAxOjAwIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgQ0MgKFdpbmRvd3MpIiBzdEV2dDpjaGFuZ2VkPSIvIi8+IDwvcmRmOlNlcT4gPC94bXBNTTpIaXN0b3J5PiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDoyZTYyYjFjNi1iMWM0LTQ5NDAtODAzMS1lOGQ5MjUwZjgyYzUiIHN0UmVmOmRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDo2OWRmZjljYy01YzFiLWE5NDctOTc3OS03ODgxZjM0ODk3MDMiIHN0UmVmOm9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowODMzNWIyYy04NzYyLWQzNGMtOTBhOS02ODJjYjJmYTQ2M2UiLz4gPHBob3Rvc2hvcDpEb2N1bWVudEFu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";
 			return LoadingScreen;
 		}());
 		webgl.LoadingScreen = LoadingScreen;
@@ -19255,11 +21654,11 @@ var spine;
 						var nn = clip.worldVerticesLength;
 						var world = this.temp = spine.Utils.setArraySize(this.temp, nn, 0);
 						clip.computeWorldVertices(slot, 0, nn, world, 0, 2);
-						for (var i_12 = 0, n_2 = world.length; i_12 < n_2; i_12 += 2) {
-							var x = world[i_12];
-							var y = world[i_12 + 1];
-							var x2 = world[(i_12 + 2) % world.length];
-							var y2 = world[(i_12 + 3) % world.length];
+						for (var i_20 = 0, n_2 = world.length; i_20 < n_2; i_20 += 2) {
+							var x = world[i_20];
+							var y = world[i_20 + 1];
+							var x2 = world[(i_20 + 2) % world.length];
+							var y2 = world[(i_20 + 3) % world.length];
 							shapes.line(x, y, x2, y2);
 						}
 					}
@@ -19373,8 +21772,10 @@ var spine;
 						clipper.clipStart(slot, clip);
 						continue;
 					}
-					else
+					else {
+						clipper.clipEndWithSlot(slot);
 						continue;
+					}
 					if (texture != null) {
 						var slotColor = slot.color;
 						var finalColor = this.tempColor;
@@ -19640,16 +22041,16 @@ var spine;
 				var _this = this;
 				this.restorables = new Array();
 				if (canvasOrContext instanceof HTMLCanvasElement) {
-					var canvas = canvasOrContext;
-					this.gl = (canvas.getContext("webgl", contextConfig) || canvas.getContext("experimental-webgl", contextConfig));
-					this.canvas = canvas;
-					canvas.addEventListener("webglcontextlost", function (e) {
+					var canvas_1 = canvasOrContext;
+					this.gl = (canvas_1.getContext("webgl", contextConfig) || canvas_1.getContext("experimental-webgl", contextConfig));
+					this.canvas = canvas_1;
+					canvas_1.addEventListener("webglcontextlost", function (e) {
 						var event = e;
 						if (e) {
 							e.preventDefault();
 						}
 					});
-					canvas.addEventListener("webglcontextrestored", function (e) {
+					canvas_1.addEventListener("webglcontextrestored", function (e) {
 						for (var i = 0, n = _this.restorables.length; i < n; i++) {
 							_this.restorables[i].restore();
 						}
@@ -19707,7 +22108,7 @@ var spine;
 		webgl.WebGLBlendModeConverter = WebGLBlendModeConverter;
 	})(webgl = spine.webgl || (spine.webgl = {}));
 })(spine || (spine = {}));
-//# sourceMappingURL=spine-webgl.js.map
+
 
 /*** EXPORTS FROM exports-loader ***/
 module.exports = spine;
@@ -19717,4 +22118,4 @@ module.exports = spine;
 
 /******/ });
 });
-//# sourceMappingURL=SpineWebGLPlugin.js.map
+//# sourceMappingURL=SpinePlugin.js.map
