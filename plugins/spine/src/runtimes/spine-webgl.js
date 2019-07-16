@@ -20,7 +20,7 @@ var spine;
 			this.timelines = timelines;
 			this.duration = duration;
 		}
-		Animation.prototype.apply = function (skeleton, lastTime, time, loop, events, alpha, pose, direction) {
+		Animation.prototype.apply = function (skeleton, lastTime, time, loop, events, alpha, blend, direction) {
 			if (skeleton == null)
 				throw new Error("skeleton cannot be null.");
 			if (loop && this.duration != 0) {
@@ -30,7 +30,7 @@ var spine;
 			}
 			var timelines = this.timelines;
 			for (var i = 0, n = timelines.length; i < n; i++)
-				timelines[i].apply(skeleton, lastTime, time, events, alpha, pose, direction);
+				timelines[i].apply(skeleton, lastTime, time, events, alpha, blend, direction);
 		};
 		Animation.binarySearch = function (values, target, step) {
 			if (step === void 0) { step = 1; }
@@ -58,12 +58,13 @@ var spine;
 		return Animation;
 	}());
 	spine.Animation = Animation;
-	var MixPose;
-	(function (MixPose) {
-		MixPose[MixPose["setup"] = 0] = "setup";
-		MixPose[MixPose["current"] = 1] = "current";
-		MixPose[MixPose["currentLayered"] = 2] = "currentLayered";
-	})(MixPose = spine.MixPose || (spine.MixPose = {}));
+	var MixBlend;
+	(function (MixBlend) {
+		MixBlend[MixBlend["setup"] = 0] = "setup";
+		MixBlend[MixBlend["first"] = 1] = "first";
+		MixBlend[MixBlend["replace"] = 2] = "replace";
+		MixBlend[MixBlend["add"] = 3] = "add";
+	})(MixBlend = spine.MixBlend || (spine.MixBlend = {}));
 	var MixDirection;
 	(function (MixDirection) {
 		MixDirection[MixDirection["in"] = 0] = "in";
@@ -184,28 +185,32 @@ var spine;
 			this.frames[frameIndex] = time;
 			this.frames[frameIndex + RotateTimeline.ROTATION] = degrees;
 		};
-		RotateTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, pose, direction) {
+		RotateTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, blend, direction) {
 			var frames = this.frames;
 			var bone = skeleton.bones[this.boneIndex];
 			if (time < frames[0]) {
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						bone.rotation = bone.data.rotation;
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						var r_1 = bone.data.rotation - bone.rotation;
-						r_1 -= (16384 - ((16384.499999999996 - r_1 / 360) | 0)) * 360;
-						bone.rotation += r_1 * alpha;
+						bone.rotation += (r_1 - (16384 - ((16384.499999999996 - r_1 / 360) | 0)) * 360) * alpha;
 				}
 				return;
 			}
 			if (time >= frames[frames.length - RotateTimeline.ENTRIES]) {
-				if (pose == MixPose.setup)
-					bone.rotation = bone.data.rotation + frames[frames.length + RotateTimeline.PREV_ROTATION] * alpha;
-				else {
-					var r_2 = bone.data.rotation + frames[frames.length + RotateTimeline.PREV_ROTATION] - bone.rotation;
-					r_2 -= (16384 - ((16384.499999999996 - r_2 / 360) | 0)) * 360;
-					bone.rotation += r_2 * alpha;
+				var r_2 = frames[frames.length + RotateTimeline.PREV_ROTATION];
+				switch (blend) {
+					case MixBlend.setup:
+						bone.rotation = bone.data.rotation + r_2 * alpha;
+						break;
+					case MixBlend.first:
+					case MixBlend.replace:
+						r_2 += bone.data.rotation - bone.rotation;
+						r_2 -= (16384 - ((16384.499999999996 - r_2 / 360) | 0)) * 360;
+					case MixBlend.add:
+						bone.rotation += r_2 * alpha;
 				}
 				return;
 			}
@@ -214,16 +219,16 @@ var spine;
 			var frameTime = frames[frame];
 			var percent = this.getCurvePercent((frame >> 1) - 1, 1 - (time - frameTime) / (frames[frame + RotateTimeline.PREV_TIME] - frameTime));
 			var r = frames[frame + RotateTimeline.ROTATION] - prevRotation;
-			r -= (16384 - ((16384.499999999996 - r / 360) | 0)) * 360;
-			r = prevRotation + r * percent;
-			if (pose == MixPose.setup) {
-				r -= (16384 - ((16384.499999999996 - r / 360) | 0)) * 360;
-				bone.rotation = bone.data.rotation + r * alpha;
-			}
-			else {
-				r = bone.data.rotation + r - bone.rotation;
-				r -= (16384 - ((16384.499999999996 - r / 360) | 0)) * 360;
-				bone.rotation += r * alpha;
+			r = prevRotation + (r - (16384 - ((16384.499999999996 - r / 360) | 0)) * 360) * percent;
+			switch (blend) {
+				case MixBlend.setup:
+					bone.rotation = bone.data.rotation + (r - (16384 - ((16384.499999999996 - r / 360) | 0)) * 360) * alpha;
+					break;
+				case MixBlend.first:
+				case MixBlend.replace:
+					r += bone.data.rotation - bone.rotation;
+				case MixBlend.add:
+					bone.rotation += (r - (16384 - ((16384.499999999996 - r / 360) | 0)) * 360) * alpha;
 			}
 		};
 		RotateTimeline.ENTRIES = 2;
@@ -249,16 +254,16 @@ var spine;
 			this.frames[frameIndex + TranslateTimeline.X] = x;
 			this.frames[frameIndex + TranslateTimeline.Y] = y;
 		};
-		TranslateTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, pose, direction) {
+		TranslateTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, blend, direction) {
 			var frames = this.frames;
 			var bone = skeleton.bones[this.boneIndex];
 			if (time < frames[0]) {
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						bone.x = bone.data.x;
 						bone.y = bone.data.y;
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						bone.x += (bone.data.x - bone.x) * alpha;
 						bone.y += (bone.data.y - bone.y) * alpha;
 				}
@@ -278,13 +283,19 @@ var spine;
 				x += (frames[frame + TranslateTimeline.X] - x) * percent;
 				y += (frames[frame + TranslateTimeline.Y] - y) * percent;
 			}
-			if (pose == MixPose.setup) {
-				bone.x = bone.data.x + x * alpha;
-				bone.y = bone.data.y + y * alpha;
-			}
-			else {
-				bone.x += (bone.data.x + x - bone.x) * alpha;
-				bone.y += (bone.data.y + y - bone.y) * alpha;
+			switch (blend) {
+				case MixBlend.setup:
+					bone.x = bone.data.x + x * alpha;
+					bone.y = bone.data.y + y * alpha;
+					break;
+				case MixBlend.first:
+				case MixBlend.replace:
+					bone.x += (bone.data.x + x - bone.x) * alpha;
+					bone.y += (bone.data.y + y - bone.y) * alpha;
+					break;
+				case MixBlend.add:
+					bone.x += x * alpha;
+					bone.y += y * alpha;
 			}
 		};
 		TranslateTimeline.ENTRIES = 3;
@@ -304,16 +315,16 @@ var spine;
 		ScaleTimeline.prototype.getPropertyId = function () {
 			return (TimelineType.scale << 24) + this.boneIndex;
 		};
-		ScaleTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, pose, direction) {
+		ScaleTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, blend, direction) {
 			var frames = this.frames;
 			var bone = skeleton.bones[this.boneIndex];
 			if (time < frames[0]) {
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						bone.scaleX = bone.data.scaleX;
 						bone.scaleY = bone.data.scaleY;
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						bone.scaleX += (bone.data.scaleX - bone.scaleX) * alpha;
 						bone.scaleY += (bone.data.scaleY - bone.scaleY) * alpha;
 				}
@@ -334,29 +345,61 @@ var spine;
 				y = (y + (frames[frame + ScaleTimeline.Y] - y) * percent) * bone.data.scaleY;
 			}
 			if (alpha == 1) {
-				bone.scaleX = x;
-				bone.scaleY = y;
+				if (blend == MixBlend.add) {
+					bone.scaleX += x - bone.data.scaleX;
+					bone.scaleY += y - bone.data.scaleY;
+				}
+				else {
+					bone.scaleX = x;
+					bone.scaleY = y;
+				}
 			}
 			else {
 				var bx = 0, by = 0;
-				if (pose == MixPose.setup) {
-					bx = bone.data.scaleX;
-					by = bone.data.scaleY;
-				}
-				else {
-					bx = bone.scaleX;
-					by = bone.scaleY;
-				}
 				if (direction == MixDirection.out) {
-					x = Math.abs(x) * spine.MathUtils.signum(bx);
-					y = Math.abs(y) * spine.MathUtils.signum(by);
+					switch (blend) {
+						case MixBlend.setup:
+							bx = bone.data.scaleX;
+							by = bone.data.scaleY;
+							bone.scaleX = bx + (Math.abs(x) * spine.MathUtils.signum(bx) - bx) * alpha;
+							bone.scaleY = by + (Math.abs(y) * spine.MathUtils.signum(by) - by) * alpha;
+							break;
+						case MixBlend.first:
+						case MixBlend.replace:
+							bx = bone.scaleX;
+							by = bone.scaleY;
+							bone.scaleX = bx + (Math.abs(x) * spine.MathUtils.signum(bx) - bx) * alpha;
+							bone.scaleY = by + (Math.abs(y) * spine.MathUtils.signum(by) - by) * alpha;
+							break;
+						case MixBlend.add:
+							bx = bone.scaleX;
+							by = bone.scaleY;
+							bone.scaleX = bx + (Math.abs(x) * spine.MathUtils.signum(bx) - bone.data.scaleX) * alpha;
+							bone.scaleY = by + (Math.abs(y) * spine.MathUtils.signum(by) - bone.data.scaleY) * alpha;
+					}
 				}
 				else {
-					bx = Math.abs(bx) * spine.MathUtils.signum(x);
-					by = Math.abs(by) * spine.MathUtils.signum(y);
+					switch (blend) {
+						case MixBlend.setup:
+							bx = Math.abs(bone.data.scaleX) * spine.MathUtils.signum(x);
+							by = Math.abs(bone.data.scaleY) * spine.MathUtils.signum(y);
+							bone.scaleX = bx + (x - bx) * alpha;
+							bone.scaleY = by + (y - by) * alpha;
+							break;
+						case MixBlend.first:
+						case MixBlend.replace:
+							bx = Math.abs(bone.scaleX) * spine.MathUtils.signum(x);
+							by = Math.abs(bone.scaleY) * spine.MathUtils.signum(y);
+							bone.scaleX = bx + (x - bx) * alpha;
+							bone.scaleY = by + (y - by) * alpha;
+							break;
+						case MixBlend.add:
+							bx = spine.MathUtils.signum(x);
+							by = spine.MathUtils.signum(y);
+							bone.scaleX = Math.abs(bone.scaleX) * bx + (x - Math.abs(bone.data.scaleX) * bx) * alpha;
+							bone.scaleY = Math.abs(bone.scaleY) * by + (y - Math.abs(bone.data.scaleY) * by) * alpha;
+					}
 				}
-				bone.scaleX = bx + (x - bx) * alpha;
-				bone.scaleY = by + (y - by) * alpha;
 			}
 		};
 		return ScaleTimeline;
@@ -370,16 +413,16 @@ var spine;
 		ShearTimeline.prototype.getPropertyId = function () {
 			return (TimelineType.shear << 24) + this.boneIndex;
 		};
-		ShearTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, pose, direction) {
+		ShearTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, blend, direction) {
 			var frames = this.frames;
 			var bone = skeleton.bones[this.boneIndex];
 			if (time < frames[0]) {
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						bone.shearX = bone.data.shearX;
 						bone.shearY = bone.data.shearY;
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						bone.shearX += (bone.data.shearX - bone.shearX) * alpha;
 						bone.shearY += (bone.data.shearY - bone.shearY) * alpha;
 				}
@@ -399,13 +442,19 @@ var spine;
 				x = x + (frames[frame + ShearTimeline.X] - x) * percent;
 				y = y + (frames[frame + ShearTimeline.Y] - y) * percent;
 			}
-			if (pose == MixPose.setup) {
-				bone.shearX = bone.data.shearX + x * alpha;
-				bone.shearY = bone.data.shearY + y * alpha;
-			}
-			else {
-				bone.shearX += (bone.data.shearX + x - bone.shearX) * alpha;
-				bone.shearY += (bone.data.shearY + y - bone.shearY) * alpha;
+			switch (blend) {
+				case MixBlend.setup:
+					bone.shearX = bone.data.shearX + x * alpha;
+					bone.shearY = bone.data.shearY + y * alpha;
+					break;
+				case MixBlend.first:
+				case MixBlend.replace:
+					bone.shearX += (bone.data.shearX + x - bone.shearX) * alpha;
+					bone.shearY += (bone.data.shearY + y - bone.shearY) * alpha;
+					break;
+				case MixBlend.add:
+					bone.shearX += x * alpha;
+					bone.shearY += y * alpha;
 			}
 		};
 		return ShearTimeline;
@@ -429,15 +478,15 @@ var spine;
 			this.frames[frameIndex + ColorTimeline.B] = b;
 			this.frames[frameIndex + ColorTimeline.A] = a;
 		};
-		ColorTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, pose, direction) {
+		ColorTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, blend, direction) {
 			var slot = skeleton.slots[this.slotIndex];
 			var frames = this.frames;
 			if (time < frames[0]) {
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						slot.color.setFromColor(slot.data.color);
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						var color = slot.color, setup = slot.data.color;
 						color.add((setup.r - color.r) * alpha, (setup.g - color.g) * alpha, (setup.b - color.b) * alpha, (setup.a - color.a) * alpha);
 				}
@@ -468,7 +517,7 @@ var spine;
 				slot.color.set(r, g, b, a);
 			else {
 				var color = slot.color;
-				if (pose == MixPose.setup)
+				if (blend == MixBlend.setup)
 					color.setFromColor(slot.data.color);
 				color.add((r - color.r) * alpha, (g - color.g) * alpha, (b - color.b) * alpha, (a - color.a) * alpha);
 			}
@@ -507,16 +556,16 @@ var spine;
 			this.frames[frameIndex + TwoColorTimeline.G2] = g2;
 			this.frames[frameIndex + TwoColorTimeline.B2] = b2;
 		};
-		TwoColorTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, pose, direction) {
+		TwoColorTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, blend, direction) {
 			var slot = skeleton.slots[this.slotIndex];
 			var frames = this.frames;
 			if (time < frames[0]) {
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						slot.color.setFromColor(slot.data.color);
 						slot.darkColor.setFromColor(slot.data.darkColor);
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						var light = slot.color, dark = slot.darkColor, setupLight = slot.data.color, setupDark = slot.data.darkColor;
 						light.add((setupLight.r - light.r) * alpha, (setupLight.g - light.g) * alpha, (setupLight.b - light.b) * alpha, (setupLight.a - light.a) * alpha);
 						dark.add((setupDark.r - dark.r) * alpha, (setupDark.g - dark.g) * alpha, (setupDark.b - dark.b) * alpha, 0);
@@ -559,7 +608,7 @@ var spine;
 			}
 			else {
 				var light = slot.color, dark = slot.darkColor;
-				if (pose == MixPose.setup) {
+				if (blend == MixBlend.setup) {
 					light.setFromColor(slot.data.color);
 					dark.setFromColor(slot.data.darkColor);
 				}
@@ -601,16 +650,16 @@ var spine;
 			this.frames[frameIndex] = time;
 			this.attachmentNames[frameIndex] = attachmentName;
 		};
-		AttachmentTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, pose, direction) {
+		AttachmentTimeline.prototype.apply = function (skeleton, lastTime, time, events, alpha, blend, direction) {
 			var slot = skeleton.slots[this.slotIndex];
-			if (direction == MixDirection.out && pose == MixPose.setup) {
+			if (direction == MixDirection.out && blend == MixBlend.setup) {
 				var attachmentName_1 = slot.data.attachmentName;
 				slot.setAttachment(attachmentName_1 == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName_1));
 				return;
 			}
 			var frames = this.frames;
 			if (time < frames[0]) {
-				if (pose == MixPose.setup) {
+				if (blend == MixBlend.setup || blend == MixBlend.first) {
 					var attachmentName_2 = slot.data.attachmentName;
 					slot.setAttachment(attachmentName_2 == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName_2));
 				}
@@ -646,24 +695,24 @@ var spine;
 			this.frames[frameIndex] = time;
 			this.frameVertices[frameIndex] = vertices;
 		};
-		DeformTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, pose, direction) {
+		DeformTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, blend, direction) {
 			var slot = skeleton.slots[this.slotIndex];
 			var slotAttachment = slot.getAttachment();
 			if (!(slotAttachment instanceof spine.VertexAttachment) || !slotAttachment.applyDeform(this.attachment))
 				return;
 			var verticesArray = slot.attachmentVertices;
 			if (verticesArray.length == 0)
-				alpha = 1;
+				blend = MixBlend.setup;
 			var frameVertices = this.frameVertices;
 			var vertexCount = frameVertices[0].length;
 			var frames = this.frames;
 			if (time < frames[0]) {
 				var vertexAttachment = slotAttachment;
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						verticesArray.length = 0;
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						if (alpha == 1) {
 							verticesArray.length = 0;
 							break;
@@ -686,25 +735,57 @@ var spine;
 			if (time >= frames[frames.length - 1]) {
 				var lastVertices = frameVertices[frames.length - 1];
 				if (alpha == 1) {
-					spine.Utils.arrayCopy(lastVertices, 0, vertices, 0, vertexCount);
-				}
-				else if (pose == MixPose.setup) {
-					var vertexAttachment = slotAttachment;
-					if (vertexAttachment.bones == null) {
-						var setupVertices_1 = vertexAttachment.vertices;
-						for (var i_1 = 0; i_1 < vertexCount; i_1++) {
-							var setup = setupVertices_1[i_1];
-							vertices[i_1] = setup + (lastVertices[i_1] - setup) * alpha;
+					if (blend == MixBlend.add) {
+						var vertexAttachment = slotAttachment;
+						if (vertexAttachment.bones == null) {
+							var setupVertices = vertexAttachment.vertices;
+							for (var i_1 = 0; i_1 < vertexCount; i_1++) {
+								vertices[i_1] += lastVertices[i_1] - setupVertices[i_1];
+							}
+						}
+						else {
+							for (var i_2 = 0; i_2 < vertexCount; i_2++)
+								vertices[i_2] += lastVertices[i_2];
 						}
 					}
 					else {
-						for (var i_2 = 0; i_2 < vertexCount; i_2++)
-							vertices[i_2] = lastVertices[i_2] * alpha;
+						spine.Utils.arrayCopy(lastVertices, 0, vertices, 0, vertexCount);
 					}
 				}
 				else {
-					for (var i_3 = 0; i_3 < vertexCount; i_3++)
-						vertices[i_3] += (lastVertices[i_3] - vertices[i_3]) * alpha;
+					switch (blend) {
+						case MixBlend.setup: {
+							var vertexAttachment_1 = slotAttachment;
+							if (vertexAttachment_1.bones == null) {
+								var setupVertices = vertexAttachment_1.vertices;
+								for (var i_3 = 0; i_3 < vertexCount; i_3++) {
+									var setup = setupVertices[i_3];
+									vertices[i_3] = setup + (lastVertices[i_3] - setup) * alpha;
+								}
+							}
+							else {
+								for (var i_4 = 0; i_4 < vertexCount; i_4++)
+									vertices[i_4] = lastVertices[i_4] * alpha;
+							}
+							break;
+						}
+						case MixBlend.first:
+						case MixBlend.replace:
+							for (var i_5 = 0; i_5 < vertexCount; i_5++)
+								vertices[i_5] += (lastVertices[i_5] - vertices[i_5]) * alpha;
+						case MixBlend.add:
+							var vertexAttachment = slotAttachment;
+							if (vertexAttachment.bones == null) {
+								var setupVertices = vertexAttachment.vertices;
+								for (var i_6 = 0; i_6 < vertexCount; i_6++) {
+									vertices[i_6] += (lastVertices[i_6] - setupVertices[i_6]) * alpha;
+								}
+							}
+							else {
+								for (var i_7 = 0; i_7 < vertexCount; i_7++)
+									vertices[i_7] += lastVertices[i_7] * alpha;
+							}
+					}
 				}
 				return;
 			}
@@ -714,31 +795,70 @@ var spine;
 			var frameTime = frames[frame];
 			var percent = this.getCurvePercent(frame - 1, 1 - (time - frameTime) / (frames[frame - 1] - frameTime));
 			if (alpha == 1) {
-				for (var i_4 = 0; i_4 < vertexCount; i_4++) {
-					var prev = prevVertices[i_4];
-					vertices[i_4] = prev + (nextVertices[i_4] - prev) * percent;
-				}
-			}
-			else if (pose == MixPose.setup) {
-				var vertexAttachment = slotAttachment;
-				if (vertexAttachment.bones == null) {
-					var setupVertices_2 = vertexAttachment.vertices;
-					for (var i_5 = 0; i_5 < vertexCount; i_5++) {
-						var prev = prevVertices[i_5], setup = setupVertices_2[i_5];
-						vertices[i_5] = setup + (prev + (nextVertices[i_5] - prev) * percent - setup) * alpha;
+				if (blend == MixBlend.add) {
+					var vertexAttachment = slotAttachment;
+					if (vertexAttachment.bones == null) {
+						var setupVertices = vertexAttachment.vertices;
+						for (var i_8 = 0; i_8 < vertexCount; i_8++) {
+							var prev = prevVertices[i_8];
+							vertices[i_8] += prev + (nextVertices[i_8] - prev) * percent - setupVertices[i_8];
+						}
+					}
+					else {
+						for (var i_9 = 0; i_9 < vertexCount; i_9++) {
+							var prev = prevVertices[i_9];
+							vertices[i_9] += prev + (nextVertices[i_9] - prev) * percent;
+						}
 					}
 				}
 				else {
-					for (var i_6 = 0; i_6 < vertexCount; i_6++) {
-						var prev = prevVertices[i_6];
-						vertices[i_6] = (prev + (nextVertices[i_6] - prev) * percent) * alpha;
+					for (var i_10 = 0; i_10 < vertexCount; i_10++) {
+						var prev = prevVertices[i_10];
+						vertices[i_10] = prev + (nextVertices[i_10] - prev) * percent;
 					}
 				}
 			}
 			else {
-				for (var i_7 = 0; i_7 < vertexCount; i_7++) {
-					var prev = prevVertices[i_7];
-					vertices[i_7] += (prev + (nextVertices[i_7] - prev) * percent - vertices[i_7]) * alpha;
+				switch (blend) {
+					case MixBlend.setup: {
+						var vertexAttachment_2 = slotAttachment;
+						if (vertexAttachment_2.bones == null) {
+							var setupVertices = vertexAttachment_2.vertices;
+							for (var i_11 = 0; i_11 < vertexCount; i_11++) {
+								var prev = prevVertices[i_11], setup = setupVertices[i_11];
+								vertices[i_11] = setup + (prev + (nextVertices[i_11] - prev) * percent - setup) * alpha;
+							}
+						}
+						else {
+							for (var i_12 = 0; i_12 < vertexCount; i_12++) {
+								var prev = prevVertices[i_12];
+								vertices[i_12] = (prev + (nextVertices[i_12] - prev) * percent) * alpha;
+							}
+						}
+						break;
+					}
+					case MixBlend.first:
+					case MixBlend.replace:
+						for (var i_13 = 0; i_13 < vertexCount; i_13++) {
+							var prev = prevVertices[i_13];
+							vertices[i_13] += (prev + (nextVertices[i_13] - prev) * percent - vertices[i_13]) * alpha;
+						}
+						break;
+					case MixBlend.add:
+						var vertexAttachment = slotAttachment;
+						if (vertexAttachment.bones == null) {
+							var setupVertices = vertexAttachment.vertices;
+							for (var i_14 = 0; i_14 < vertexCount; i_14++) {
+								var prev = prevVertices[i_14];
+								vertices[i_14] += (prev + (nextVertices[i_14] - prev) * percent - setupVertices[i_14]) * alpha;
+							}
+						}
+						else {
+							for (var i_15 = 0; i_15 < vertexCount; i_15++) {
+								var prev = prevVertices[i_15];
+								vertices[i_15] += (prev + (nextVertices[i_15] - prev) * percent) * alpha;
+							}
+						}
 				}
 			}
 		};
@@ -760,13 +880,13 @@ var spine;
 			this.frames[frameIndex] = event.time;
 			this.events[frameIndex] = event;
 		};
-		EventTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, pose, direction) {
+		EventTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, blend, direction) {
 			if (firedEvents == null)
 				return;
 			var frames = this.frames;
 			var frameCount = this.frames.length;
 			if (lastTime > time) {
-				this.apply(skeleton, lastTime, Number.MAX_VALUE, firedEvents, alpha, pose, direction);
+				this.apply(skeleton, lastTime, Number.MAX_VALUE, firedEvents, alpha, blend, direction);
 				lastTime = -1;
 			}
 			else if (lastTime >= frames[frameCount - 1])
@@ -806,16 +926,16 @@ var spine;
 			this.frames[frameIndex] = time;
 			this.drawOrders[frameIndex] = drawOrder;
 		};
-		DrawOrderTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, pose, direction) {
+		DrawOrderTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, blend, direction) {
 			var drawOrder = skeleton.drawOrder;
 			var slots = skeleton.slots;
-			if (direction == MixDirection.out && pose == MixPose.setup) {
+			if (direction == MixDirection.out && blend == MixBlend.setup) {
 				spine.Utils.arrayCopy(skeleton.slots, 0, skeleton.drawOrder, 0, skeleton.slots.length);
 				return;
 			}
 			var frames = this.frames;
 			if (time < frames[0]) {
-				if (pose == MixPose.setup)
+				if (blend == MixBlend.setup || blend == MixBlend.first)
 					spine.Utils.arrayCopy(skeleton.slots, 0, skeleton.drawOrder, 0, skeleton.slots.length);
 				return;
 			}
@@ -845,37 +965,54 @@ var spine;
 		IkConstraintTimeline.prototype.getPropertyId = function () {
 			return (TimelineType.ikConstraint << 24) + this.ikConstraintIndex;
 		};
-		IkConstraintTimeline.prototype.setFrame = function (frameIndex, time, mix, bendDirection) {
+		IkConstraintTimeline.prototype.setFrame = function (frameIndex, time, mix, bendDirection, compress, stretch) {
 			frameIndex *= IkConstraintTimeline.ENTRIES;
 			this.frames[frameIndex] = time;
 			this.frames[frameIndex + IkConstraintTimeline.MIX] = mix;
 			this.frames[frameIndex + IkConstraintTimeline.BEND_DIRECTION] = bendDirection;
+			this.frames[frameIndex + IkConstraintTimeline.COMPRESS] = compress ? 1 : 0;
+			this.frames[frameIndex + IkConstraintTimeline.STRETCH] = stretch ? 1 : 0;
 		};
-		IkConstraintTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, pose, direction) {
+		IkConstraintTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, blend, direction) {
 			var frames = this.frames;
 			var constraint = skeleton.ikConstraints[this.ikConstraintIndex];
 			if (time < frames[0]) {
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						constraint.mix = constraint.data.mix;
 						constraint.bendDirection = constraint.data.bendDirection;
+						constraint.compress = constraint.data.compress;
+						constraint.stretch = constraint.data.stretch;
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						constraint.mix += (constraint.data.mix - constraint.mix) * alpha;
 						constraint.bendDirection = constraint.data.bendDirection;
+						constraint.compress = constraint.data.compress;
+						constraint.stretch = constraint.data.stretch;
 				}
 				return;
 			}
 			if (time >= frames[frames.length - IkConstraintTimeline.ENTRIES]) {
-				if (pose == MixPose.setup) {
+				if (blend == MixBlend.setup) {
 					constraint.mix = constraint.data.mix + (frames[frames.length + IkConstraintTimeline.PREV_MIX] - constraint.data.mix) * alpha;
-					constraint.bendDirection = direction == MixDirection.out ? constraint.data.bendDirection
-						: frames[frames.length + IkConstraintTimeline.PREV_BEND_DIRECTION];
+					if (direction == MixDirection.out) {
+						constraint.bendDirection = constraint.data.bendDirection;
+						constraint.compress = constraint.data.compress;
+						constraint.stretch = constraint.data.stretch;
+					}
+					else {
+						constraint.bendDirection = frames[frames.length + IkConstraintTimeline.PREV_BEND_DIRECTION];
+						constraint.compress = frames[frames.length + IkConstraintTimeline.PREV_COMPRESS] != 0;
+						constraint.stretch = frames[frames.length + IkConstraintTimeline.PREV_STRETCH] != 0;
+					}
 				}
 				else {
 					constraint.mix += (frames[frames.length + IkConstraintTimeline.PREV_MIX] - constraint.mix) * alpha;
-					if (direction == MixDirection["in"])
+					if (direction == MixDirection["in"]) {
 						constraint.bendDirection = frames[frames.length + IkConstraintTimeline.PREV_BEND_DIRECTION];
+						constraint.compress = frames[frames.length + IkConstraintTimeline.PREV_COMPRESS] != 0;
+						constraint.stretch = frames[frames.length + IkConstraintTimeline.PREV_STRETCH] != 0;
+					}
 				}
 				return;
 			}
@@ -883,22 +1020,38 @@ var spine;
 			var mix = frames[frame + IkConstraintTimeline.PREV_MIX];
 			var frameTime = frames[frame];
 			var percent = this.getCurvePercent(frame / IkConstraintTimeline.ENTRIES - 1, 1 - (time - frameTime) / (frames[frame + IkConstraintTimeline.PREV_TIME] - frameTime));
-			if (pose == MixPose.setup) {
+			if (blend == MixBlend.setup) {
 				constraint.mix = constraint.data.mix + (mix + (frames[frame + IkConstraintTimeline.MIX] - mix) * percent - constraint.data.mix) * alpha;
-				constraint.bendDirection = direction == MixDirection.out ? constraint.data.bendDirection : frames[frame + IkConstraintTimeline.PREV_BEND_DIRECTION];
+				if (direction == MixDirection.out) {
+					constraint.bendDirection = constraint.data.bendDirection;
+					constraint.compress = constraint.data.compress;
+					constraint.stretch = constraint.data.stretch;
+				}
+				else {
+					constraint.bendDirection = frames[frame + IkConstraintTimeline.PREV_BEND_DIRECTION];
+					constraint.compress = frames[frame + IkConstraintTimeline.PREV_COMPRESS] != 0;
+					constraint.stretch = frames[frame + IkConstraintTimeline.PREV_STRETCH] != 0;
+				}
 			}
 			else {
 				constraint.mix += (mix + (frames[frame + IkConstraintTimeline.MIX] - mix) * percent - constraint.mix) * alpha;
-				if (direction == MixDirection["in"])
+				if (direction == MixDirection["in"]) {
 					constraint.bendDirection = frames[frame + IkConstraintTimeline.PREV_BEND_DIRECTION];
+					constraint.compress = frames[frame + IkConstraintTimeline.PREV_COMPRESS] != 0;
+					constraint.stretch = frames[frame + IkConstraintTimeline.PREV_STRETCH] != 0;
+				}
 			}
 		};
-		IkConstraintTimeline.ENTRIES = 3;
-		IkConstraintTimeline.PREV_TIME = -3;
-		IkConstraintTimeline.PREV_MIX = -2;
-		IkConstraintTimeline.PREV_BEND_DIRECTION = -1;
+		IkConstraintTimeline.ENTRIES = 5;
+		IkConstraintTimeline.PREV_TIME = -5;
+		IkConstraintTimeline.PREV_MIX = -4;
+		IkConstraintTimeline.PREV_BEND_DIRECTION = -3;
+		IkConstraintTimeline.PREV_COMPRESS = -2;
+		IkConstraintTimeline.PREV_STRETCH = -1;
 		IkConstraintTimeline.MIX = 1;
 		IkConstraintTimeline.BEND_DIRECTION = 2;
+		IkConstraintTimeline.COMPRESS = 3;
+		IkConstraintTimeline.STRETCH = 4;
 		return IkConstraintTimeline;
 	}(CurveTimeline));
 	spine.IkConstraintTimeline = IkConstraintTimeline;
@@ -920,19 +1073,19 @@ var spine;
 			this.frames[frameIndex + TransformConstraintTimeline.SCALE] = scaleMix;
 			this.frames[frameIndex + TransformConstraintTimeline.SHEAR] = shearMix;
 		};
-		TransformConstraintTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, pose, direction) {
+		TransformConstraintTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, blend, direction) {
 			var frames = this.frames;
 			var constraint = skeleton.transformConstraints[this.transformConstraintIndex];
 			if (time < frames[0]) {
 				var data = constraint.data;
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						constraint.rotateMix = data.rotateMix;
 						constraint.translateMix = data.translateMix;
 						constraint.scaleMix = data.scaleMix;
 						constraint.shearMix = data.shearMix;
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						constraint.rotateMix += (data.rotateMix - constraint.rotateMix) * alpha;
 						constraint.translateMix += (data.translateMix - constraint.translateMix) * alpha;
 						constraint.scaleMix += (data.scaleMix - constraint.scaleMix) * alpha;
@@ -961,7 +1114,7 @@ var spine;
 				scale += (frames[frame + TransformConstraintTimeline.SCALE] - scale) * percent;
 				shear += (frames[frame + TransformConstraintTimeline.SHEAR] - shear) * percent;
 			}
-			if (pose == MixPose.setup) {
+			if (blend == MixBlend.setup) {
 				var data = constraint.data;
 				constraint.rotateMix = data.rotateMix + (rotate - data.rotateMix) * alpha;
 				constraint.translateMix = data.translateMix + (translate - data.translateMix) * alpha;
@@ -1003,15 +1156,15 @@ var spine;
 			this.frames[frameIndex] = time;
 			this.frames[frameIndex + PathConstraintPositionTimeline.VALUE] = value;
 		};
-		PathConstraintPositionTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, pose, direction) {
+		PathConstraintPositionTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, blend, direction) {
 			var frames = this.frames;
 			var constraint = skeleton.pathConstraints[this.pathConstraintIndex];
 			if (time < frames[0]) {
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						constraint.position = constraint.data.position;
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						constraint.position += (constraint.data.position - constraint.position) * alpha;
 				}
 				return;
@@ -1026,7 +1179,7 @@ var spine;
 				var percent = this.getCurvePercent(frame / PathConstraintPositionTimeline.ENTRIES - 1, 1 - (time - frameTime) / (frames[frame + PathConstraintPositionTimeline.PREV_TIME] - frameTime));
 				position += (frames[frame + PathConstraintPositionTimeline.VALUE] - position) * percent;
 			}
-			if (pose == MixPose.setup)
+			if (blend == MixBlend.setup)
 				constraint.position = constraint.data.position + (position - constraint.data.position) * alpha;
 			else
 				constraint.position += (position - constraint.position) * alpha;
@@ -1046,15 +1199,15 @@ var spine;
 		PathConstraintSpacingTimeline.prototype.getPropertyId = function () {
 			return (TimelineType.pathConstraintSpacing << 24) + this.pathConstraintIndex;
 		};
-		PathConstraintSpacingTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, pose, direction) {
+		PathConstraintSpacingTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, blend, direction) {
 			var frames = this.frames;
 			var constraint = skeleton.pathConstraints[this.pathConstraintIndex];
 			if (time < frames[0]) {
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						constraint.spacing = constraint.data.spacing;
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						constraint.spacing += (constraint.data.spacing - constraint.spacing) * alpha;
 				}
 				return;
@@ -1069,7 +1222,7 @@ var spine;
 				var percent = this.getCurvePercent(frame / PathConstraintSpacingTimeline.ENTRIES - 1, 1 - (time - frameTime) / (frames[frame + PathConstraintSpacingTimeline.PREV_TIME] - frameTime));
 				spacing += (frames[frame + PathConstraintSpacingTimeline.VALUE] - spacing) * percent;
 			}
-			if (pose == MixPose.setup)
+			if (blend == MixBlend.setup)
 				constraint.spacing = constraint.data.spacing + (spacing - constraint.data.spacing) * alpha;
 			else
 				constraint.spacing += (spacing - constraint.spacing) * alpha;
@@ -1093,16 +1246,16 @@ var spine;
 			this.frames[frameIndex + PathConstraintMixTimeline.ROTATE] = rotateMix;
 			this.frames[frameIndex + PathConstraintMixTimeline.TRANSLATE] = translateMix;
 		};
-		PathConstraintMixTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, pose, direction) {
+		PathConstraintMixTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, blend, direction) {
 			var frames = this.frames;
 			var constraint = skeleton.pathConstraints[this.pathConstraintIndex];
 			if (time < frames[0]) {
-				switch (pose) {
-					case MixPose.setup:
+				switch (blend) {
+					case MixBlend.setup:
 						constraint.rotateMix = constraint.data.rotateMix;
 						constraint.translateMix = constraint.data.translateMix;
 						return;
-					case MixPose.current:
+					case MixBlend.first:
 						constraint.rotateMix += (constraint.data.rotateMix - constraint.rotateMix) * alpha;
 						constraint.translateMix += (constraint.data.translateMix - constraint.translateMix) * alpha;
 				}
@@ -1122,7 +1275,7 @@ var spine;
 				rotate += (frames[frame + PathConstraintMixTimeline.ROTATE] - rotate) * percent;
 				translate += (frames[frame + PathConstraintMixTimeline.TRANSLATE] - translate) * percent;
 			}
-			if (pose == MixPose.setup) {
+			if (blend == MixBlend.setup) {
 				constraint.rotateMix = constraint.data.rotateMix + (rotate - constraint.data.rotateMix) * alpha;
 				constraint.translateMix = constraint.data.translateMix + (translate - constraint.data.translateMix) * alpha;
 			}
@@ -1150,7 +1303,6 @@ var spine;
 			this.listeners = new Array();
 			this.queue = new EventQueue(this);
 			this.propertyIDs = new spine.IntSet();
-			this.mixingTo = new Array();
 			this.animationsChanged = false;
 			this.timeScale = 1;
 			this.trackEntryPool = new spine.Pool(function () { return new TrackEntry(); });
@@ -1178,11 +1330,11 @@ var spine;
 					var nextTime = current.trackLast - next.delay;
 					if (nextTime >= 0) {
 						next.delay = 0;
-						next.trackTime = nextTime + delta * next.timeScale;
+						next.trackTime = current.timeScale == 0 ? 0 : (nextTime / current.timeScale + delta) * next.timeScale;
 						current.trackTime += currentDelta;
 						this.setCurrent(i, next, true);
 						while (next.mixingFrom != null) {
-							next.mixTime += currentDelta;
+							next.mixTime += delta;
 							next = next.mixingFrom;
 						}
 						continue;
@@ -1197,6 +1349,8 @@ var spine;
 				if (current.mixingFrom != null && this.updateMixingFrom(current, delta)) {
 					var from = current.mixingFrom;
 					current.mixingFrom = null;
+					if (from != null)
+						from.mixingTo = null;
 					while (from != null) {
 						this.queue.end(from);
 						from = from.mixingFrom;
@@ -1213,16 +1367,18 @@ var spine;
 			var finished = this.updateMixingFrom(from, delta);
 			from.animationLast = from.nextAnimationLast;
 			from.trackLast = from.nextTrackLast;
-			if (to.mixTime > 0 && (to.mixTime >= to.mixDuration || to.timeScale == 0)) {
+			if (to.mixTime > 0 && to.mixTime >= to.mixDuration) {
 				if (from.totalAlpha == 0 || to.mixDuration == 0) {
 					to.mixingFrom = from.mixingFrom;
+					if (from.mixingFrom != null)
+						from.mixingFrom.mixingTo = to;
 					to.interruptAlpha = from.interruptAlpha;
 					this.queue.end(from);
 				}
 				return finished;
 			}
 			from.trackTime += delta * from.timeScale;
-			to.mixTime += delta * to.timeScale;
+			to.mixTime += delta;
 			return false;
 		};
 		AnimationState.prototype.apply = function (skeleton) {
@@ -1238,34 +1394,34 @@ var spine;
 				if (current == null || current.delay > 0)
 					continue;
 				applied = true;
-				var currentPose = i == 0 ? spine.MixPose.current : spine.MixPose.currentLayered;
+				var blend = i == 0 ? spine.MixBlend.first : current.mixBlend;
 				var mix = current.alpha;
 				if (current.mixingFrom != null)
-					mix *= this.applyMixingFrom(current, skeleton, currentPose);
+					mix *= this.applyMixingFrom(current, skeleton, blend);
 				else if (current.trackTime >= current.trackEnd && current.next == null)
 					mix = 0;
 				var animationLast = current.animationLast, animationTime = current.getAnimationTime();
 				var timelineCount = current.animation.timelines.length;
 				var timelines = current.animation.timelines;
-				if (mix == 1) {
+				if ((i == 0 && mix == 1) || blend == spine.MixBlend.add) {
 					for (var ii = 0; ii < timelineCount; ii++)
-						timelines[ii].apply(skeleton, animationLast, animationTime, events, 1, spine.MixPose.setup, spine.MixDirection["in"]);
+						timelines[ii].apply(skeleton, animationLast, animationTime, events, mix, blend, spine.MixDirection["in"]);
 				}
 				else {
-					var timelineData = current.timelineData;
+					var timelineMode = current.timelineMode;
 					var firstFrame = current.timelinesRotation.length == 0;
 					if (firstFrame)
 						spine.Utils.setArraySize(current.timelinesRotation, timelineCount << 1, null);
 					var timelinesRotation = current.timelinesRotation;
 					for (var ii = 0; ii < timelineCount; ii++) {
 						var timeline = timelines[ii];
-						var pose = timelineData[ii] >= AnimationState.FIRST ? spine.MixPose.setup : currentPose;
+						var timelineBlend = timelineMode[ii] == AnimationState.SUBSEQUENT ? blend : spine.MixBlend.setup;
 						if (timeline instanceof spine.RotateTimeline) {
-							this.applyRotateTimeline(timeline, skeleton, animationTime, mix, pose, timelinesRotation, ii << 1, firstFrame);
+							this.applyRotateTimeline(timeline, skeleton, animationTime, mix, timelineBlend, timelinesRotation, ii << 1, firstFrame);
 						}
 						else {
-							spine.Utils.webkit602BugfixHelper(mix, pose);
-							timeline.apply(skeleton, animationLast, animationTime, events, mix, pose, spine.MixDirection["in"]);
+							spine.Utils.webkit602BugfixHelper(mix, blend);
+							timeline.apply(skeleton, animationLast, animationTime, events, mix, timelineBlend, spine.MixDirection["in"]);
 						}
 					}
 				}
@@ -1277,66 +1433,86 @@ var spine;
 			this.queue.drain();
 			return applied;
 		};
-		AnimationState.prototype.applyMixingFrom = function (to, skeleton, currentPose) {
+		AnimationState.prototype.applyMixingFrom = function (to, skeleton, blend) {
 			var from = to.mixingFrom;
 			if (from.mixingFrom != null)
-				this.applyMixingFrom(from, skeleton, currentPose);
+				this.applyMixingFrom(from, skeleton, blend);
 			var mix = 0;
 			if (to.mixDuration == 0) {
 				mix = 1;
-				currentPose = spine.MixPose.setup;
+				if (blend == spine.MixBlend.first)
+					blend = spine.MixBlend.setup;
 			}
 			else {
 				mix = to.mixTime / to.mixDuration;
 				if (mix > 1)
 					mix = 1;
+				if (blend != spine.MixBlend.first)
+					blend = from.mixBlend;
 			}
 			var events = mix < from.eventThreshold ? this.events : null;
 			var attachments = mix < from.attachmentThreshold, drawOrder = mix < from.drawOrderThreshold;
 			var animationLast = from.animationLast, animationTime = from.getAnimationTime();
 			var timelineCount = from.animation.timelines.length;
 			var timelines = from.animation.timelines;
-			var timelineData = from.timelineData;
-			var timelineDipMix = from.timelineDipMix;
-			var firstFrame = from.timelinesRotation.length == 0;
-			if (firstFrame)
-				spine.Utils.setArraySize(from.timelinesRotation, timelineCount << 1, null);
-			var timelinesRotation = from.timelinesRotation;
-			var pose;
-			var alphaDip = from.alpha * to.interruptAlpha, alphaMix = alphaDip * (1 - mix), alpha = 0;
-			from.totalAlpha = 0;
-			for (var i = 0; i < timelineCount; i++) {
-				var timeline = timelines[i];
-				switch (timelineData[i]) {
-					case AnimationState.SUBSEQUENT:
-						if (!attachments && timeline instanceof spine.AttachmentTimeline)
-							continue;
-						if (!drawOrder && timeline instanceof spine.DrawOrderTimeline)
-							continue;
-						pose = currentPose;
-						alpha = alphaMix;
-						break;
-					case AnimationState.FIRST:
-						pose = spine.MixPose.setup;
-						alpha = alphaMix;
-						break;
-					case AnimationState.DIP:
-						pose = spine.MixPose.setup;
-						alpha = alphaDip;
-						break;
-					default:
-						pose = spine.MixPose.setup;
-						alpha = alphaDip;
-						var dipMix = timelineDipMix[i];
-						alpha *= Math.max(0, 1 - dipMix.mixTime / dipMix.mixDuration);
-						break;
-				}
-				from.totalAlpha += alpha;
-				if (timeline instanceof spine.RotateTimeline)
-					this.applyRotateTimeline(timeline, skeleton, animationTime, alpha, pose, timelinesRotation, i << 1, firstFrame);
-				else {
-					spine.Utils.webkit602BugfixHelper(alpha, pose);
-					timeline.apply(skeleton, animationLast, animationTime, events, alpha, pose, spine.MixDirection.out);
+			var alphaHold = from.alpha * to.interruptAlpha, alphaMix = alphaHold * (1 - mix);
+			if (blend == spine.MixBlend.add) {
+				for (var i = 0; i < timelineCount; i++)
+					timelines[i].apply(skeleton, animationLast, animationTime, events, alphaMix, blend, spine.MixDirection.out);
+			}
+			else {
+				var timelineMode = from.timelineMode;
+				var timelineHoldMix = from.timelineHoldMix;
+				var firstFrame = from.timelinesRotation.length == 0;
+				if (firstFrame)
+					spine.Utils.setArraySize(from.timelinesRotation, timelineCount << 1, null);
+				var timelinesRotation = from.timelinesRotation;
+				from.totalAlpha = 0;
+				for (var i = 0; i < timelineCount; i++) {
+					var timeline = timelines[i];
+					var direction = spine.MixDirection.out;
+					var timelineBlend = void 0;
+					var alpha = 0;
+					switch (timelineMode[i]) {
+						case AnimationState.SUBSEQUENT:
+							if (!attachments && timeline instanceof spine.AttachmentTimeline)
+								continue;
+							if (!drawOrder && timeline instanceof spine.DrawOrderTimeline)
+								continue;
+							timelineBlend = blend;
+							alpha = alphaMix;
+							break;
+						case AnimationState.FIRST:
+							timelineBlend = spine.MixBlend.setup;
+							alpha = alphaMix;
+							break;
+						case AnimationState.HOLD:
+							timelineBlend = spine.MixBlend.setup;
+							alpha = alphaHold;
+							break;
+						default:
+							timelineBlend = spine.MixBlend.setup;
+							var holdMix = timelineHoldMix[i];
+							alpha = alphaHold * Math.max(0, 1 - holdMix.mixTime / holdMix.mixDuration);
+							break;
+					}
+					from.totalAlpha += alpha;
+					if (timeline instanceof spine.RotateTimeline)
+						this.applyRotateTimeline(timeline, skeleton, animationTime, alpha, timelineBlend, timelinesRotation, i << 1, firstFrame);
+					else {
+						spine.Utils.webkit602BugfixHelper(alpha, blend);
+						if (timelineBlend == spine.MixBlend.setup) {
+							if (timeline instanceof spine.AttachmentTimeline) {
+								if (attachments)
+									direction = spine.MixDirection.out;
+							}
+							else if (timeline instanceof spine.DrawOrderTimeline) {
+								if (drawOrder)
+									direction = spine.MixDirection.out;
+							}
+						}
+						timeline.apply(skeleton, animationLast, animationTime, events, alpha, timelineBlend, direction);
+					}
 				}
 			}
 			if (to.mixDuration > 0)
@@ -1346,41 +1522,49 @@ var spine;
 			from.nextTrackLast = from.trackTime;
 			return mix;
 		};
-		AnimationState.prototype.applyRotateTimeline = function (timeline, skeleton, time, alpha, pose, timelinesRotation, i, firstFrame) {
+		AnimationState.prototype.applyRotateTimeline = function (timeline, skeleton, time, alpha, blend, timelinesRotation, i, firstFrame) {
 			if (firstFrame)
 				timelinesRotation[i] = 0;
 			if (alpha == 1) {
-				timeline.apply(skeleton, 0, time, null, 1, pose, spine.MixDirection["in"]);
+				timeline.apply(skeleton, 0, time, null, 1, blend, spine.MixDirection["in"]);
 				return;
 			}
 			var rotateTimeline = timeline;
 			var frames = rotateTimeline.frames;
 			var bone = skeleton.bones[rotateTimeline.boneIndex];
+			var r1 = 0, r2 = 0;
 			if (time < frames[0]) {
-				if (pose == spine.MixPose.setup)
-					bone.rotation = bone.data.rotation;
-				return;
+				switch (blend) {
+					case spine.MixBlend.setup:
+						bone.rotation = bone.data.rotation;
+					default:
+						return;
+					case spine.MixBlend.first:
+						r1 = bone.rotation;
+						r2 = bone.data.rotation;
+				}
 			}
-			var r2 = 0;
-			if (time >= frames[frames.length - spine.RotateTimeline.ENTRIES])
-				r2 = bone.data.rotation + frames[frames.length + spine.RotateTimeline.PREV_ROTATION];
 			else {
-				var frame = spine.Animation.binarySearch(frames, time, spine.RotateTimeline.ENTRIES);
-				var prevRotation = frames[frame + spine.RotateTimeline.PREV_ROTATION];
-				var frameTime = frames[frame];
-				var percent = rotateTimeline.getCurvePercent((frame >> 1) - 1, 1 - (time - frameTime) / (frames[frame + spine.RotateTimeline.PREV_TIME] - frameTime));
-				r2 = frames[frame + spine.RotateTimeline.ROTATION] - prevRotation;
-				r2 -= (16384 - ((16384.499999999996 - r2 / 360) | 0)) * 360;
-				r2 = prevRotation + r2 * percent + bone.data.rotation;
-				r2 -= (16384 - ((16384.499999999996 - r2 / 360) | 0)) * 360;
+				r1 = blend == spine.MixBlend.setup ? bone.data.rotation : bone.rotation;
+				if (time >= frames[frames.length - spine.RotateTimeline.ENTRIES])
+					r2 = bone.data.rotation + frames[frames.length + spine.RotateTimeline.PREV_ROTATION];
+				else {
+					var frame = spine.Animation.binarySearch(frames, time, spine.RotateTimeline.ENTRIES);
+					var prevRotation = frames[frame + spine.RotateTimeline.PREV_ROTATION];
+					var frameTime = frames[frame];
+					var percent = rotateTimeline.getCurvePercent((frame >> 1) - 1, 1 - (time - frameTime) / (frames[frame + spine.RotateTimeline.PREV_TIME] - frameTime));
+					r2 = frames[frame + spine.RotateTimeline.ROTATION] - prevRotation;
+					r2 -= (16384 - ((16384.499999999996 - r2 / 360) | 0)) * 360;
+					r2 = prevRotation + r2 * percent + bone.data.rotation;
+					r2 -= (16384 - ((16384.499999999996 - r2 / 360) | 0)) * 360;
+				}
 			}
-			var r1 = pose == spine.MixPose.setup ? bone.data.rotation : bone.rotation;
 			var total = 0, diff = r2 - r1;
+			diff -= (16384 - ((16384.499999999996 - diff / 360) | 0)) * 360;
 			if (diff == 0) {
 				total = timelinesRotation[i];
 			}
 			else {
-				diff -= (16384 - ((16384.499999999996 - diff / 360) | 0)) * 360;
 				var lastTotal = 0, lastDiff = 0;
 				if (firstFrame) {
 					lastTotal = 0;
@@ -1457,6 +1641,7 @@ var spine;
 					break;
 				this.queue.end(from);
 				entry.mixingFrom = null;
+				entry.mixingTo = null;
 				entry = from;
 			}
 			this.tracks[current.trackIndex] = null;
@@ -1469,6 +1654,7 @@ var spine;
 				if (interrupt)
 					this.queue.interrupt(from);
 				current.mixingFrom = from;
+				from.mixingTo = current;
 				current.mixTime = 0;
 				if (from.mixingFrom != null && from.mixDuration > 0)
 					current.interruptAlpha *= Math.min(1, from.mixTime / from.mixDuration);
@@ -1531,11 +1717,11 @@ var spine;
 						if (last.loop)
 							delay += duration * (1 + ((last.trackTime / duration) | 0));
 						else
-							delay += duration;
+							delay += Math.max(duration, last.trackTime);
 						delay -= this.data.getMix(last.animation, animation);
 					}
 					else
-						delay = 0;
+						delay = last.trackTime;
 				}
 			}
 			entry.delay = delay;
@@ -1569,7 +1755,7 @@ var spine;
 		AnimationState.prototype.expandToIndex = function (index) {
 			if (index < this.tracks.length)
 				return this.tracks[index];
-			spine.Utils.ensureArrayCapacity(this.tracks, index - this.tracks.length + 1, null);
+			spine.Utils.ensureArrayCapacity(this.tracks, index + 1, null);
 			this.tracks.length = index + 1;
 			return null;
 		};
@@ -1578,6 +1764,7 @@ var spine;
 			entry.trackIndex = trackIndex;
 			entry.animation = animation;
 			entry.loop = loop;
+			entry.holdPrevious = false;
 			entry.eventThreshold = 0;
 			entry.attachmentThreshold = 0;
 			entry.drawOrderThreshold = 0;
@@ -1607,14 +1794,62 @@ var spine;
 		};
 		AnimationState.prototype._animationsChanged = function () {
 			this.animationsChanged = false;
-			var propertyIDs = this.propertyIDs;
-			propertyIDs.clear();
-			var mixingTo = this.mixingTo;
+			this.propertyIDs.clear();
 			for (var i = 0, n = this.tracks.length; i < n; i++) {
 				var entry = this.tracks[i];
-				if (entry != null)
-					entry.setTimelineData(null, mixingTo, propertyIDs);
+				if (entry == null)
+					continue;
+				while (entry.mixingFrom != null)
+					entry = entry.mixingFrom;
+				do {
+					if (entry.mixingFrom == null || entry.mixBlend != spine.MixBlend.add)
+						this.setTimelineModes(entry);
+					entry = entry.mixingTo;
+				} while (entry != null);
 			}
+		};
+		AnimationState.prototype.setTimelineModes = function (entry) {
+			var to = entry.mixingTo;
+			var timelines = entry.animation.timelines;
+			var timelinesCount = entry.animation.timelines.length;
+			var timelineMode = spine.Utils.setArraySize(entry.timelineMode, timelinesCount);
+			entry.timelineHoldMix.length = 0;
+			var timelineDipMix = spine.Utils.setArraySize(entry.timelineHoldMix, timelinesCount);
+			var propertyIDs = this.propertyIDs;
+			if (to != null && to.holdPrevious) {
+				for (var i = 0; i < timelinesCount; i++) {
+					propertyIDs.add(timelines[i].getPropertyId());
+					timelineMode[i] = AnimationState.HOLD;
+				}
+				return;
+			}
+			outer: for (var i = 0; i < timelinesCount; i++) {
+				var id = timelines[i].getPropertyId();
+				if (!propertyIDs.add(id))
+					timelineMode[i] = AnimationState.SUBSEQUENT;
+				else if (to == null || !this.hasTimeline(to, id))
+					timelineMode[i] = AnimationState.FIRST;
+				else {
+					for (var next = to.mixingTo; next != null; next = next.mixingTo) {
+						if (this.hasTimeline(next, id))
+							continue;
+						if (entry.mixDuration > 0) {
+							timelineMode[i] = AnimationState.HOLD_MIX;
+							timelineDipMix[i] = next;
+							continue outer;
+						}
+						break;
+					}
+					timelineMode[i] = AnimationState.HOLD;
+				}
+			}
+		};
+		AnimationState.prototype.hasTimeline = function (entry, id) {
+			var timelines = entry.animation.timelines;
+			for (var i = 0, n = timelines.length; i < n; i++)
+				if (timelines[i].getPropertyId() == id)
+					return true;
+			return false;
 		};
 		AnimationState.prototype.getCurrent = function (trackIndex) {
 			if (trackIndex >= this.tracks.length)
@@ -1640,67 +1875,27 @@ var spine;
 		AnimationState.emptyAnimation = new spine.Animation("<empty>", [], 0);
 		AnimationState.SUBSEQUENT = 0;
 		AnimationState.FIRST = 1;
-		AnimationState.DIP = 2;
-		AnimationState.DIP_MIX = 3;
+		AnimationState.HOLD = 2;
+		AnimationState.HOLD_MIX = 3;
 		return AnimationState;
 	}());
 	spine.AnimationState = AnimationState;
 	var TrackEntry = (function () {
 		function TrackEntry() {
-			this.timelineData = new Array();
-			this.timelineDipMix = new Array();
+			this.mixBlend = spine.MixBlend.replace;
+			this.timelineMode = new Array();
+			this.timelineHoldMix = new Array();
 			this.timelinesRotation = new Array();
 		}
 		TrackEntry.prototype.reset = function () {
 			this.next = null;
 			this.mixingFrom = null;
+			this.mixingTo = null;
 			this.animation = null;
 			this.listener = null;
-			this.timelineData.length = 0;
-			this.timelineDipMix.length = 0;
+			this.timelineMode.length = 0;
+			this.timelineHoldMix.length = 0;
 			this.timelinesRotation.length = 0;
-		};
-		TrackEntry.prototype.setTimelineData = function (to, mixingToArray, propertyIDs) {
-			if (to != null)
-				mixingToArray.push(to);
-			var lastEntry = this.mixingFrom != null ? this.mixingFrom.setTimelineData(this, mixingToArray, propertyIDs) : this;
-			if (to != null)
-				mixingToArray.pop();
-			var mixingTo = mixingToArray;
-			var mixingToLast = mixingToArray.length - 1;
-			var timelines = this.animation.timelines;
-			var timelinesCount = this.animation.timelines.length;
-			var timelineData = spine.Utils.setArraySize(this.timelineData, timelinesCount);
-			this.timelineDipMix.length = 0;
-			var timelineDipMix = spine.Utils.setArraySize(this.timelineDipMix, timelinesCount);
-			outer: for (var i = 0; i < timelinesCount; i++) {
-				var id = timelines[i].getPropertyId();
-				if (!propertyIDs.add(id))
-					timelineData[i] = AnimationState.SUBSEQUENT;
-				else if (to == null || !to.hasTimeline(id))
-					timelineData[i] = AnimationState.FIRST;
-				else {
-					for (var ii = mixingToLast; ii >= 0; ii--) {
-						var entry = mixingTo[ii];
-						if (!entry.hasTimeline(id)) {
-							if (entry.mixDuration > 0) {
-								timelineData[i] = AnimationState.DIP_MIX;
-								timelineDipMix[i] = entry;
-								continue outer;
-							}
-						}
-					}
-					timelineData[i] = AnimationState.DIP;
-				}
-			}
-			return lastEntry;
-		};
-		TrackEntry.prototype.hasTimeline = function (id) {
-			var timelines = this.animation.timelines;
-			for (var i = 0, n = timelines.length; i < n; i++)
-				if (timelines[i].getPropertyId() == id)
-					return true;
-			return false;
 		};
 		TrackEntry.prototype.getAnimationTime = function () {
 			if (this.loop) {
@@ -2228,28 +2423,16 @@ var spine;
 			this.appliedValid = true;
 			var parent = this.parent;
 			if (parent == null) {
-				var rotationY = rotation + 90 + shearY;
-				var la = spine.MathUtils.cosDeg(rotation + shearX) * scaleX;
-				var lb = spine.MathUtils.cosDeg(rotationY) * scaleY;
-				var lc = spine.MathUtils.sinDeg(rotation + shearX) * scaleX;
-				var ld = spine.MathUtils.sinDeg(rotationY) * scaleY;
 				var skeleton = this.skeleton;
-				if (skeleton.flipX) {
-					x = -x;
-					la = -la;
-					lb = -lb;
-				}
-				if (skeleton.flipY) {
-					y = -y;
-					lc = -lc;
-					ld = -ld;
-				}
-				this.a = la;
-				this.b = lb;
-				this.c = lc;
-				this.d = ld;
-				this.worldX = x + skeleton.x;
-				this.worldY = y + skeleton.y;
+				var rotationY = rotation + 90 + shearY;
+				var sx = skeleton.scaleX;
+				var sy = skeleton.scaleY;
+				this.a = spine.MathUtils.cosDeg(rotation + shearX) * scaleX * sx;
+				this.b = spine.MathUtils.cosDeg(rotationY) * scaleY * sx;
+				this.c = spine.MathUtils.sinDeg(rotation + shearX) * scaleX * sy;
+				this.d = spine.MathUtils.sinDeg(rotationY) * scaleY * sy;
+				this.worldX = x * sx + skeleton.x;
+				this.worldY = y * sy + skeleton.y;
 				return;
 			}
 			var pa = parent.a, pb = parent.b, pc = parent.c, pd = parent.d;
@@ -2306,14 +2489,17 @@ var spine;
 				case spine.TransformMode.NoScaleOrReflection: {
 					var cos = spine.MathUtils.cosDeg(rotation);
 					var sin = spine.MathUtils.sinDeg(rotation);
-					var za = pa * cos + pb * sin;
-					var zc = pc * cos + pd * sin;
+					var za = (pa * cos + pb * sin) / this.skeleton.scaleX;
+					var zc = (pc * cos + pd * sin) / this.skeleton.scaleY;
 					var s = Math.sqrt(za * za + zc * zc);
 					if (s > 0.00001)
 						s = 1 / s;
 					za *= s;
 					zc *= s;
 					s = Math.sqrt(za * za + zc * zc);
+					if (this.data.transformMode == spine.TransformMode.NoScale
+						&& (pa * pd - pb * pc < 0) != (this.skeleton.scaleX < 0 != this.skeleton.scaleY < 0))
+						s = -s;
 					var r = Math.PI / 2 + Math.atan2(zc, za);
 					var zb = Math.cos(r) * s;
 					var zd = Math.sin(r) * s;
@@ -2321,25 +2507,17 @@ var spine;
 					var lb = spine.MathUtils.cosDeg(90 + shearY) * scaleY;
 					var lc = spine.MathUtils.sinDeg(shearX) * scaleX;
 					var ld = spine.MathUtils.sinDeg(90 + shearY) * scaleY;
-					if (this.data.transformMode != spine.TransformMode.NoScaleOrReflection ? pa * pd - pb * pc < 0 : this.skeleton.flipX != this.skeleton.flipY) {
-						zb = -zb;
-						zd = -zd;
-					}
 					this.a = za * la + zb * lc;
 					this.b = za * lb + zb * ld;
 					this.c = zc * la + zd * lc;
 					this.d = zc * lb + zd * ld;
-					return;
+					break;
 				}
 			}
-			if (this.skeleton.flipX) {
-				this.a = -this.a;
-				this.b = -this.b;
-			}
-			if (this.skeleton.flipY) {
-				this.c = -this.c;
-				this.d = -this.d;
-			}
+			this.a *= this.skeleton.scaleX;
+			this.b *= this.skeleton.scaleX;
+			this.c *= this.skeleton.scaleY;
+			this.d *= this.skeleton.scaleY;
 		};
 		Bone.prototype.setToSetupPose = function () {
 			var data = this.data;
@@ -2420,9 +2598,10 @@ var spine;
 		};
 		Bone.prototype.worldToLocalRotation = function (worldRotation) {
 			var sin = spine.MathUtils.sinDeg(worldRotation), cos = spine.MathUtils.cosDeg(worldRotation);
-			return Math.atan2(this.a * sin - this.c * cos, this.d * cos - this.b * sin) * spine.MathUtils.radDeg;
+			return Math.atan2(this.a * sin - this.c * cos, this.d * cos - this.b * sin) * spine.MathUtils.radDeg + this.rotation - this.shearX;
 		};
 		Bone.prototype.localToWorldRotation = function (localRotation) {
+			localRotation -= this.rotation - this.shearX;
 			var sin = spine.MathUtils.sinDeg(localRotation), cos = spine.MathUtils.cosDeg(localRotation);
 			return Math.atan2(cos * this.c + sin * this.d, cos * this.a + sin * this.b) * spine.MathUtils.radDeg;
 		};
@@ -2498,8 +2677,10 @@ var spine;
 (function (spine) {
 	var IkConstraint = (function () {
 		function IkConstraint(data, skeleton) {
-			this.mix = 1;
 			this.bendDirection = 0;
+			this.compress = false;
+			this.stretch = false;
+			this.mix = 1;
 			if (data == null)
 				throw new Error("data cannot be null.");
 			if (skeleton == null)
@@ -2507,6 +2688,8 @@ var spine;
 			this.data = data;
 			this.mix = data.mix;
 			this.bendDirection = data.bendDirection;
+			this.compress = data.compress;
+			this.stretch = data.stretch;
 			this.bones = new Array();
 			for (var i = 0; i < data.bones.length; i++)
 				this.bones.push(skeleton.findBone(data.bones[i].name));
@@ -2523,14 +2706,14 @@ var spine;
 			var bones = this.bones;
 			switch (bones.length) {
 				case 1:
-					this.apply1(bones[0], target.worldX, target.worldY, this.mix);
+					this.apply1(bones[0], target.worldX, target.worldY, this.compress, this.stretch, this.data.uniform, this.mix);
 					break;
 				case 2:
-					this.apply2(bones[0], bones[1], target.worldX, target.worldY, this.bendDirection, this.mix);
+					this.apply2(bones[0], bones[1], target.worldX, target.worldY, this.bendDirection, this.stretch, this.mix);
 					break;
 			}
 		};
-		IkConstraint.prototype.apply1 = function (bone, targetX, targetY, alpha) {
+		IkConstraint.prototype.apply1 = function (bone, targetX, targetY, compress, stretch, uniform, alpha) {
 			if (!bone.appliedValid)
 				bone.updateAppliedTransform();
 			var p = bone.parent;
@@ -2544,9 +2727,19 @@ var spine;
 				rotationIK -= 360;
 			else if (rotationIK < -180)
 				rotationIK += 360;
-			bone.updateWorldTransformWith(bone.ax, bone.ay, bone.arotation + rotationIK * alpha, bone.ascaleX, bone.ascaleY, bone.ashearX, bone.ashearY);
+			var sx = bone.ascaleX, sy = bone.ascaleY;
+			if (compress || stretch) {
+				var b = bone.data.length * sx, dd = Math.sqrt(tx * tx + ty * ty);
+				if ((compress && dd < b) || (stretch && dd > b) && b > 0.0001) {
+					var s = (dd / b - 1) * alpha + 1;
+					sx *= s;
+					if (uniform)
+						sy *= s;
+				}
+			}
+			bone.updateWorldTransformWith(bone.ax, bone.ay, bone.arotation + rotationIK * alpha, sx, sy, bone.ashearX, bone.ashearY);
 		};
-		IkConstraint.prototype.apply2 = function (parent, child, targetX, targetY, bendDir, alpha) {
+		IkConstraint.prototype.apply2 = function (parent, child, targetX, targetY, bendDir, stretch, alpha) {
 			if (alpha == 0) {
 				child.updateWorldTransform();
 				return;
@@ -2555,7 +2748,7 @@ var spine;
 				parent.updateAppliedTransform();
 			if (!child.appliedValid)
 				child.updateAppliedTransform();
-			var px = parent.ax, py = parent.ay, psx = parent.ascaleX, psy = parent.ascaleY, csx = child.ascaleX;
+			var px = parent.ax, py = parent.ay, psx = parent.ascaleX, sx = psx, psy = parent.ascaleY, csx = child.ascaleX;
 			var os1 = 0, os2 = 0, s2 = 0;
 			if (psx < 0) {
 				psx = -psx;
@@ -2594,18 +2787,21 @@ var spine;
 			c = pp.c;
 			d = pp.d;
 			var id = 1 / (a * d - b * c), x = targetX - pp.worldX, y = targetY - pp.worldY;
-			var tx = (x * d - y * b) * id - px, ty = (y * a - x * c) * id - py;
+			var tx = (x * d - y * b) * id - px, ty = (y * a - x * c) * id - py, dd = tx * tx + ty * ty;
 			x = cwx - pp.worldX;
 			y = cwy - pp.worldY;
 			var dx = (x * d - y * b) * id - px, dy = (y * a - x * c) * id - py;
 			var l1 = Math.sqrt(dx * dx + dy * dy), l2 = child.data.length * csx, a1 = 0, a2 = 0;
 			outer: if (u) {
 				l2 *= psx;
-				var cos = (tx * tx + ty * ty - l1 * l1 - l2 * l2) / (2 * l1 * l2);
+				var cos = (dd - l1 * l1 - l2 * l2) / (2 * l1 * l2);
 				if (cos < -1)
 					cos = -1;
-				else if (cos > 1)
+				else if (cos > 1) {
 					cos = 1;
+					if (stretch && l1 + l2 > 0.0001)
+						sx *= (Math.sqrt(dd) / (l1 + l2) - 1) * alpha + 1;
+				}
 				a2 = Math.acos(cos) * bendDir;
 				a = l1 + l2 * cos;
 				b = l2 * Math.sin(a2);
@@ -2614,7 +2810,7 @@ var spine;
 			else {
 				a = psx * l2;
 				b = psy * l2;
-				var aa = a * a, bb = b * b, dd = tx * tx + ty * ty, ta = Math.atan2(ty, tx);
+				var aa = a * a, bb = b * b, ta = Math.atan2(ty, tx);
 				c = bb * l1 * l1 + aa * dd - aa * bb;
 				var c1 = -2 * bb * l1, c2 = bb - aa;
 				d = c1 * c1 - 4 * c2 * c;
@@ -2669,7 +2865,7 @@ var spine;
 				a1 -= 360;
 			else if (a1 < -180)
 				a1 += 360;
-			parent.updateWorldTransformWith(px, py, rotation + a1 * alpha, parent.ascaleX, parent.ascaleY, 0, 0);
+			parent.updateWorldTransformWith(px, py, rotation + a1 * alpha, sx, parent.ascaleY, 0, 0);
 			rotation = child.arotation;
 			a2 = ((a2 + os) * spine.MathUtils.radDeg - child.ashearX) * s2 + os2 - rotation;
 			if (a2 > 180)
@@ -2689,6 +2885,9 @@ var spine;
 			this.order = 0;
 			this.bones = new Array();
 			this.bendDirection = 1;
+			this.compress = false;
+			this.stretch = false;
+			this.uniform = false;
 			this.mix = 1;
 			this.name = name;
 		}
@@ -2736,17 +2935,17 @@ var spine;
 			if (!translate && !rotate)
 				return;
 			var data = this.data;
-			var spacingMode = data.spacingMode;
-			var lengthSpacing = spacingMode == spine.SpacingMode.Length;
+			var percentSpacing = data.spacingMode == spine.SpacingMode.Percent;
 			var rotateMode = data.rotateMode;
 			var tangents = rotateMode == spine.RotateMode.Tangent, scale = rotateMode == spine.RotateMode.ChainScale;
 			var boneCount = this.bones.length, spacesCount = tangents ? boneCount : boneCount + 1;
 			var bones = this.bones;
 			var spaces = spine.Utils.setArraySize(this.spaces, spacesCount), lengths = null;
 			var spacing = this.spacing;
-			if (scale || lengthSpacing) {
+			if (scale || !percentSpacing) {
 				if (scale)
 					lengths = spine.Utils.setArraySize(this.lengths, boneCount);
+				var lengthSpacing = data.spacingMode == spine.SpacingMode.Length;
 				for (var i = 0, n = spacesCount - 1; i < n;) {
 					var bone = bones[i];
 					var setupLength = bone.data.length;
@@ -2755,12 +2954,20 @@ var spine;
 							lengths[i] = 0;
 						spaces[++i] = 0;
 					}
+					else if (percentSpacing) {
+						if (scale) {
+							var x = setupLength * bone.a, y = setupLength * bone.c;
+							var length_1 = Math.sqrt(x * x + y * y);
+							lengths[i] = length_1;
+						}
+						spaces[++i] = spacing;
+					}
 					else {
 						var x = setupLength * bone.a, y = setupLength * bone.c;
-						var length_1 = Math.sqrt(x * x + y * y);
+						var length_2 = Math.sqrt(x * x + y * y);
 						if (scale)
-							lengths[i] = length_1;
-						spaces[++i] = (lengthSpacing ? setupLength + spacing : spacing) * length_1 / setupLength;
+							lengths[i] = length_2;
+						spaces[++i] = (lengthSpacing ? setupLength + spacing : spacing) * length_2 / setupLength;
 					}
 				}
 			}
@@ -2768,7 +2975,7 @@ var spine;
 				for (var i = 1; i < spacesCount; i++)
 					spaces[i] = spacing;
 			}
-			var positions = this.computeWorldPositions(attachment, spacesCount, tangents, data.positionMode == spine.PositionMode.Percent, spacingMode == spine.SpacingMode.Percent);
+			var positions = this.computeWorldPositions(attachment, spacesCount, tangents, data.positionMode == spine.PositionMode.Percent, percentSpacing);
 			var boneX = positions[0], boneY = positions[1], offsetRotation = data.offsetRotation;
 			var tip = false;
 			if (offsetRotation == 0)
@@ -2784,9 +2991,9 @@ var spine;
 				bone.worldY += (boneY - bone.worldY) * translateMix;
 				var x = positions[p], y = positions[p + 1], dx = x - boneX, dy = y - boneY;
 				if (scale) {
-					var length_2 = lengths[i];
-					if (length_2 != 0) {
-						var s = (Math.sqrt(dx * dx + dy * dy) / length_2 - 1) * rotateMix + 1;
+					var length_3 = lengths[i];
+					if (length_3 != 0) {
+						var s = (Math.sqrt(dx * dx + dy * dy) / length_3 - 1) * rotateMix + 1;
 						bone.a *= s;
 						bone.c *= s;
 					}
@@ -2805,9 +3012,9 @@ var spine;
 					if (tip) {
 						cos = Math.cos(r);
 						sin = Math.sin(r);
-						var length_3 = bone.data.length;
-						boneX += (length_3 * (cos * a - sin * c) - dx) * rotateMix;
-						boneY += (length_3 * (sin * a + cos * c) - dy) * rotateMix;
+						var length_4 = bone.data.length;
+						boneX += (length_4 * (cos * a - sin * c) - dx) * rotateMix;
+						boneY += (length_4 * (sin * a + cos * c) - dy) * rotateMix;
 					}
 					else {
 						r += offsetRotation;
@@ -2840,7 +3047,7 @@ var spine;
 				if (percentPosition)
 					position *= pathLength_1;
 				if (percentSpacing) {
-					for (var i = 0; i < spacesCount; i++)
+					for (var i = 1; i < spacesCount; i++)
 						spaces[i] *= pathLength_1;
 				}
 				world = spine.Utils.setArraySize(this.world, 8);
@@ -2871,14 +3078,14 @@ var spine;
 						continue;
 					}
 					for (;; curve++) {
-						var length_4 = lengths[curve];
-						if (p > length_4)
+						var length_5 = lengths[curve];
+						if (p > length_5)
 							continue;
 						if (curve == 0)
-							p /= length_4;
+							p /= length_5;
 						else {
 							var prev = lengths[curve - 1];
-							p = (p - prev) / (length_4 - prev);
+							p = (p - prev) / (length_5 - prev);
 						}
 						break;
 					}
@@ -2946,8 +3153,10 @@ var spine;
 			}
 			if (percentPosition)
 				position *= pathLength;
+			else
+				position *= pathLength / path.lengths[curveCount - 1];
 			if (percentSpacing) {
-				for (var i = 0; i < spacesCount; i++)
+				for (var i = 1; i < spacesCount; i++)
 					spaces[i] *= pathLength;
 			}
 			var segments = this.segments;
@@ -2971,14 +3180,14 @@ var spine;
 					continue;
 				}
 				for (;; curve++) {
-					var length_5 = curves[curve];
-					if (p > length_5)
+					var length_6 = curves[curve];
+					if (p > length_6)
 						continue;
 					if (curve == 0)
-						p /= length_5;
+						p /= length_6;
 					else {
 						var prev = curves[curve - 1];
-						p = (p - prev) / (length_5 - prev);
+						p = (p - prev) / (length_6 - prev);
 					}
 					break;
 				}
@@ -3023,14 +3232,14 @@ var spine;
 				}
 				p *= curveLength;
 				for (;; segment++) {
-					var length_6 = segments[segment];
-					if (p > length_6)
+					var length_7 = segments[segment];
+					if (p > length_7)
 						continue;
 					if (segment == 0)
-						p /= length_6;
+						p /= length_7;
 					else {
 						var prev = segments[segment - 1];
-						p = segment + (p - prev) / (length_6 - prev);
+						p = segment + (p - prev) / (length_7 - prev);
 					}
 					break;
 				}
@@ -3051,15 +3260,23 @@ var spine;
 			out[o + 2] = r;
 		};
 		PathConstraint.prototype.addCurvePosition = function (p, x1, y1, cx1, cy1, cx2, cy2, x2, y2, out, o, tangents) {
-			if (p == 0 || isNaN(p))
-				p = 0.0001;
+			if (p == 0 || isNaN(p)) {
+				out[o] = x1;
+				out[o + 1] = y1;
+				out[o + 2] = Math.atan2(cy1 - y1, cx1 - x1);
+				return;
+			}
 			var tt = p * p, ttt = tt * p, u = 1 - p, uu = u * u, uuu = uu * u;
 			var ut = u * p, ut3 = ut * 3, uut3 = u * ut3, utt3 = ut3 * p;
 			var x = x1 * uuu + cx1 * uut3 + cx2 * utt3 + x2 * ttt, y = y1 * uuu + cy1 * uut3 + cy2 * utt3 + y2 * ttt;
 			out[o] = x;
 			out[o + 1] = y;
-			if (tangents)
-				out[o + 2] = Math.atan2(y - (y1 * uu + cy1 * ut * 2 + cy2 * tt), x - (x1 * uu + cx1 * ut * 2 + cx2 * tt));
+			if (tangents) {
+				if (p < 0.001)
+					out[o + 2] = Math.atan2(cy1 - y1, cx1 - x1);
+				else
+					out[o + 2] = Math.atan2(y - (y1 * uu + cy1 * ut * 2 + cy2 * tt), x - (x1 * uu + cx1 * ut * 2 + cx2 * tt));
+			}
 		};
 		PathConstraint.prototype.getOrder = function () {
 			return this.data.order;
@@ -3246,8 +3463,8 @@ var spine;
 			this._updateCache = new Array();
 			this.updateCacheReset = new Array();
 			this.time = 0;
-			this.flipX = false;
-			this.flipY = false;
+			this.scaleX = 1;
+			this.scaleY = 1;
 			this.x = 0;
 			this.y = 0;
 			if (data == null)
@@ -3463,8 +3680,10 @@ var spine;
 			var ikConstraints = this.ikConstraints;
 			for (var i = 0, n = ikConstraints.length; i < n; i++) {
 				var constraint = ikConstraints[i];
-				constraint.bendDirection = constraint.data.bendDirection;
 				constraint.mix = constraint.data.mix;
+				constraint.bendDirection = constraint.data.bendDirection;
+				constraint.compress = constraint.data.compress;
+				constraint.stretch = constraint.data.stretch;
 			}
 			var transformConstraints = this.transformConstraints;
 			for (var i = 0, n = transformConstraints.length; i < n; i++) {
@@ -3629,6 +3848,7 @@ var spine;
 			return null;
 		};
 		Skeleton.prototype.getBounds = function (offset, size, temp) {
+			if (temp === void 0) { temp = new Array(2); }
 			if (offset == null)
 				throw new Error("offset cannot be null.");
 			if (size == null)
@@ -4055,15 +4275,29 @@ var spine;
 							continue;
 						}
 						var c0 = inputY2 - inputY, c2 = inputX2 - inputX;
-						var ua = (c2 * (edgeY - inputY) - c0 * (edgeX - inputX)) / (c0 * (edgeX2 - edgeX) - c2 * (edgeY2 - edgeY));
-						output.push(edgeX + (edgeX2 - edgeX) * ua);
-						output.push(edgeY + (edgeY2 - edgeY) * ua);
+						var s = c0 * (edgeX2 - edgeX) - c2 * (edgeY2 - edgeY);
+						if (Math.abs(s) > 0.000001) {
+							var ua = (c2 * (edgeY - inputY) - c0 * (edgeX - inputX)) / s;
+							output.push(edgeX + (edgeX2 - edgeX) * ua);
+							output.push(edgeY + (edgeY2 - edgeY) * ua);
+						}
+						else {
+							output.push(edgeX);
+							output.push(edgeY);
+						}
 					}
 					else if (side2) {
 						var c0 = inputY2 - inputY, c2 = inputX2 - inputX;
-						var ua = (c2 * (edgeY - inputY) - c0 * (edgeX - inputX)) / (c0 * (edgeX2 - edgeX) - c2 * (edgeY2 - edgeY));
-						output.push(edgeX + (edgeX2 - edgeX) * ua);
-						output.push(edgeY + (edgeY2 - edgeY) * ua);
+						var s = c0 * (edgeX2 - edgeX) - c2 * (edgeY2 - edgeY);
+						if (Math.abs(s) > 0.000001) {
+							var ua = (c2 * (edgeY - inputY) - c0 * (edgeX - inputX)) / s;
+							output.push(edgeX + (edgeX2 - edgeX) * ua);
+							output.push(edgeY + (edgeY2 - edgeY) * ua);
+						}
+						else {
+							output.push(edgeX);
+							output.push(edgeY);
+						}
 						output.push(inputX2);
 						output.push(inputY2);
 					}
@@ -4332,8 +4566,11 @@ var spine;
 					data.target = skeletonData.findBone(targetName);
 					if (data.target == null)
 						throw new Error("IK target bone not found: " + targetName);
-					data.bendDirection = this.getValue(constraintMap, "bendPositive", true) ? 1 : -1;
 					data.mix = this.getValue(constraintMap, "mix", 1);
+					data.bendDirection = this.getValue(constraintMap, "bendPositive", true) ? 1 : -1;
+					data.compress = this.getValue(constraintMap, "compress", false);
+					data.stretch = this.getValue(constraintMap, "stretch", false);
+					data.uniform = this.getValue(constraintMap, "uniform", false);
 					skeletonData.ikConstraints.push(data);
 				}
 			}
@@ -4438,6 +4675,11 @@ var spine;
 					data.intValue = this.getValue(eventMap, "int", 0);
 					data.floatValue = this.getValue(eventMap, "float", 0);
 					data.stringValue = this.getValue(eventMap, "string", "");
+					data.audioPath = this.getValue(eventMap, "audio", null);
+					if (data.audioPath != null) {
+						data.volume = this.getValue(eventMap, "volume", 1);
+						data.balance = this.getValue(eventMap, "balance", 0);
+					}
 					skeletonData.events.push(data);
 				}
 			}
@@ -4703,7 +4945,7 @@ var spine;
 					var frameIndex = 0;
 					for (var i = 0; i < constraintMap.length; i++) {
 						var valueMap = constraintMap[i];
-						timeline.setFrame(frameIndex, valueMap.time, this.getValue(valueMap, "mix", 1), this.getValue(valueMap, "bendPositive", true) ? 1 : -1);
+						timeline.setFrame(frameIndex, valueMap.time, this.getValue(valueMap, "mix", 1), this.getValue(valueMap, "bendPositive", true) ? 1 : -1, this.getValue(valueMap, "compress", false), this.getValue(valueMap, "stretch", false));
 						this.readCurve(valueMap, timeline, frameIndex);
 						frameIndex++;
 					}
@@ -4876,6 +5118,10 @@ var spine;
 					event_5.intValue = this.getValue(eventMap, "int", eventData.intValue);
 					event_5.floatValue = this.getValue(eventMap, "float", eventData.floatValue);
 					event_5.stringValue = this.getValue(eventMap, "string", eventData.stringValue);
+					if (event_5.data.audioPath != null) {
+						event_5.volume = this.getValue(eventMap, "volume", 1);
+						event_5.balance = this.getValue(eventMap, "balance", 0);
+					}
 					timeline.setFrame(frameIndex++, event_5);
 				}
 				timelines.push(timeline);
@@ -5152,7 +5398,7 @@ var spine;
 		FakeTexture.prototype.setWraps = function (uWrap, vWrap) { };
 		FakeTexture.prototype.dispose = function () { };
 		return FakeTexture;
-	}(spine.Texture));
+	}(Texture));
 	spine.FakeTexture = FakeTexture;
 })(spine || (spine = {}));
 var spine;
@@ -5496,14 +5742,14 @@ var spine;
 					y += (target.ay - y + this.data.offsetY) * translateMix;
 				}
 				var scaleX = bone.ascaleX, scaleY = bone.ascaleY;
-				if (scaleMix > 0) {
+				if (scaleMix != 0) {
 					if (scaleX > 0.00001)
 						scaleX = (scaleX + (target.ascaleX - scaleX + this.data.offsetScaleX) * scaleMix) / scaleX;
 					if (scaleY > 0.00001)
 						scaleY = (scaleY + (target.ascaleY - scaleY + this.data.offsetScaleY) * scaleMix) / scaleY;
 				}
 				var shearY = bone.ashearY;
-				if (shearMix > 0) {
+				if (shearMix != 0) {
 					var r = target.ashearY - shearY + this.data.offsetShearY;
 					r -= (16384 - ((16384.499999999996 - r / 360) | 0)) * 360;
 					bone.shearY += r * shearMix;
@@ -5530,14 +5776,14 @@ var spine;
 					y += (target.ay + this.data.offsetY) * translateMix;
 				}
 				var scaleX = bone.ascaleX, scaleY = bone.ascaleY;
-				if (scaleMix > 0) {
+				if (scaleMix != 0) {
 					if (scaleX > 0.00001)
 						scaleX *= ((target.ascaleX - 1 + this.data.offsetScaleX) * scaleMix) + 1;
 					if (scaleY > 0.00001)
 						scaleY *= ((target.ascaleY - 1 + this.data.offsetScaleY) * scaleMix) + 1;
 				}
 				var shearY = bone.ashearY;
-				if (shearMix > 0)
+				if (shearMix != 0)
 					shearY += (target.ashearY + this.data.offsetShearY) * shearMix;
 				bone.updateWorldTransformWith(x, y, rotation, scaleX, scaleY, bone.ashearX, shearY);
 			}
@@ -6020,7 +6266,7 @@ var spine;
 		Utils.toSinglePrecision = function (value) {
 			return Utils.SUPPORTS_TYPED_ARRAYS ? Math.fround(value) : value;
 		};
-		Utils.webkit602BugfixHelper = function (alpha, pose) {
+		Utils.webkit602BugfixHelper = function (alpha, blend) {
 		};
 		Utils.SUPPORTS_TYPED_ARRAYS = typeof (Float32Array) !== "undefined";
 		return Utils;
@@ -6305,8 +6551,31 @@ var spine;
 			return _this;
 		}
 		MeshAttachment.prototype.updateUVs = function () {
+			var regionUVs = this.regionUVs;
+			if (this.uvs == null || this.uvs.length != regionUVs.length)
+				this.uvs = spine.Utils.newFloatArray(regionUVs.length);
+			var uvs = this.uvs;
 			var u = 0, v = 0, width = 0, height = 0;
-			if (this.region == null) {
+			if (this.region instanceof spine.TextureAtlasRegion) {
+				var region = this.region;
+				var textureWidth = region.texture.getImage().width, textureHeight = region.texture.getImage().height;
+				if (region.rotate) {
+					u = region.u - (region.originalHeight - region.offsetY - region.height) / textureWidth;
+					v = region.v - (region.originalWidth - region.offsetX - region.width) / textureHeight;
+					width = region.originalHeight / textureWidth;
+					height = region.originalWidth / textureHeight;
+					for (var i = 0, n = uvs.length; i < n; i += 2) {
+						uvs[i] = u + regionUVs[i + 1] * width;
+						uvs[i + 1] = v + height - regionUVs[i] * height;
+					}
+					return;
+				}
+				u = region.u - region.offsetX / textureWidth;
+				v = region.v - (region.originalHeight - region.offsetY - region.height) / textureHeight;
+				width = region.originalWidth / textureWidth;
+				height = region.originalHeight / textureHeight;
+			}
+			else if (this.region == null) {
 				u = v = 0;
 				width = height = 1;
 			}
@@ -6316,21 +6585,9 @@ var spine;
 				width = this.region.u2 - u;
 				height = this.region.v2 - v;
 			}
-			var regionUVs = this.regionUVs;
-			if (this.uvs == null || this.uvs.length != regionUVs.length)
-				this.uvs = spine.Utils.newFloatArray(regionUVs.length);
-			var uvs = this.uvs;
-			if (this.region.rotate) {
-				for (var i = 0, n = uvs.length; i < n; i += 2) {
-					uvs[i] = u + regionUVs[i + 1] * width;
-					uvs[i + 1] = v + height - regionUVs[i] * height;
-				}
-			}
-			else {
-				for (var i = 0, n = uvs.length; i < n; i += 2) {
-					uvs[i] = u + regionUVs[i] * width;
-					uvs[i + 1] = v + regionUVs[i + 1] * height;
-				}
+			for (var i = 0, n = uvs.length; i < n; i += 2) {
+				uvs[i] = u + regionUVs[i] * width;
+				uvs[i + 1] = v + regionUVs[i + 1] * height;
 			}
 		};
 		MeshAttachment.prototype.applyDeform = function (sourceAttachment) {
@@ -6751,7 +7008,7 @@ var spine;
 			}
 			Input.prototype.setupCallbacks = function (element) {
 				var _this = this;
-				element.addEventListener("mousedown", function (ev) {
+				var mouseDown = function (ev) {
 					if (ev instanceof MouseEvent) {
 						var rect = element.getBoundingClientRect();
 						var x = ev.clientX - rect.left;
@@ -6763,9 +7020,11 @@ var spine;
 						_this.lastX = x;
 						_this.lastY = y;
 						_this.buttonDown = true;
+						document.addEventListener("mousemove", mouseMove);
+						document.addEventListener("mouseup", mouseUp);
 					}
-				}, true);
-				element.addEventListener("mousemove", function (ev) {
+				};
+				var mouseMove = function (ev) {
 					if (ev instanceof MouseEvent) {
 						var rect = element.getBoundingClientRect();
 						var x = ev.clientX - rect.left;
@@ -6782,8 +7041,8 @@ var spine;
 						_this.lastX = x;
 						_this.lastY = y;
 					}
-				}, true);
-				element.addEventListener("mouseup", function (ev) {
+				};
+				var mouseUp = function (ev) {
 					if (ev instanceof MouseEvent) {
 						var rect = element.getBoundingClientRect();
 						var x = ev.clientX - rect.left;
@@ -6795,8 +7054,13 @@ var spine;
 						_this.lastX = x;
 						_this.lastY = y;
 						_this.buttonDown = false;
+						document.removeEventListener("mousemove", mouseMove);
+						document.removeEventListener("mouseup", mouseUp);
 					}
-				}, true);
+				};
+				element.addEventListener("mousedown", mouseDown, true);
+				element.addEventListener("mousemove", mouseMove, true);
+				element.addEventListener("mouseup", mouseUp, true);
 				element.addEventListener("touchstart", function (ev) {
 					if (_this.currTouch != null)
 						return;
@@ -6813,8 +7077,8 @@ var spine;
 						break;
 					}
 					var listeners = _this.listeners;
-					for (var i_8 = 0; i_8 < listeners.length; i_8++) {
-						listeners[i_8].down(_this.currTouch.x, _this.currTouch.y);
+					for (var i_16 = 0; i_16 < listeners.length; i_16++) {
+						listeners[i_16].down(_this.currTouch.x, _this.currTouch.y);
 					}
 					console.log("Start " + _this.currTouch.x + ", " + _this.currTouch.y);
 					_this.lastX = _this.currTouch.x;
@@ -6832,8 +7096,8 @@ var spine;
 							var y = _this.currTouch.y = touch.clientY - rect.top;
 							_this.touchesPool.free(_this.currTouch);
 							var listeners = _this.listeners;
-							for (var i_9 = 0; i_9 < listeners.length; i_9++) {
-								listeners[i_9].up(x, y);
+							for (var i_17 = 0; i_17 < listeners.length; i_17++) {
+								listeners[i_17].up(x, y);
 							}
 							console.log("End " + x + ", " + y);
 							_this.lastX = x;
@@ -6855,8 +7119,8 @@ var spine;
 							var y = _this.currTouch.y = touch.clientY - rect.top;
 							_this.touchesPool.free(_this.currTouch);
 							var listeners = _this.listeners;
-							for (var i_10 = 0; i_10 < listeners.length; i_10++) {
-								listeners[i_10].up(x, y);
+							for (var i_18 = 0; i_18 < listeners.length; i_18++) {
+								listeners[i_18].up(x, y);
 							}
 							console.log("End " + x + ", " + y);
 							_this.lastX = x;
@@ -6879,8 +7143,8 @@ var spine;
 							var x = touch.clientX - rect.left;
 							var y = touch.clientY - rect.top;
 							var listeners = _this.listeners;
-							for (var i_11 = 0; i_11 < listeners.length; i_11++) {
-								listeners[i_11].dragged(x, y);
+							for (var i_19 = 0; i_19 < listeners.length; i_19++) {
+								listeners[i_19].dragged(x, y);
 							}
 							console.log("Drag " + x + ", " + y);
 							_this.lastX = _this.currTouch.x = x;
@@ -6954,15 +7218,15 @@ var spine;
 					return;
 				this.timeKeeper.update();
 				var a = Math.abs(Math.sin(this.timeKeeper.totalTime + 0.75));
-				this.angle -= this.timeKeeper.delta * 360 * (1 + 1.5 * Math.pow(a, 5));
+				this.angle -= this.timeKeeper.delta / 1.4 * 360 * (1 + 1.5 * Math.pow(a, 5));
 				var renderer = this.renderer;
 				var canvas = renderer.canvas;
 				var gl = renderer.context.gl;
+				renderer.resize(webgl.ResizeMode.Stretch);
 				var oldX = renderer.camera.position.x, oldY = renderer.camera.position.y;
 				renderer.camera.position.set(canvas.width / 2, canvas.height / 2, 0);
 				renderer.camera.viewportWidth = canvas.width;
 				renderer.camera.viewportHeight = canvas.height;
-				renderer.resize(webgl.ResizeMode.Stretch);
 				if (!complete) {
 					gl.clearColor(this.backgroundColor.r, this.backgroundColor.g, this.backgroundColor.b, this.backgroundColor.a);
 					gl.clear(gl.COLOR_BUFFER_BIT);
@@ -7005,8 +7269,8 @@ var spine;
 			LoadingScreen.loaded = 0;
 			LoadingScreen.spinnerImg = null;
 			LoadingScreen.logoImg = null;
-			LoadingScreen.SPINNER_DATA = "data:image/png;base64,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";
-			LoadingScreen.SPINE_LOGO_DATA = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFIAAAAZCAYAAACis3k0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAtNJREFUaN7tmT2I1EAUxwN+oWgRT0HFKo0WCkJ6ObmAWFwZbCxsXGysLNJaiCyIoDaSwk4ETzvhmnBaCRbBWoQ01ho4PwotjP8cE337mMy8TLK757mBH3fLTWbe/PbN53neNniqZW8FvAVvQAqugwvgDDgO9niLRyTyJagM/ACPF6bsIl9ZRDac/Cc6tLn5xQdRQ496QlKPLxD5QCDxO9jtGM8QfYoIgUlgCipGCRJL5VvlyOdCU09iEXkCfLSIfCrs7Fab6nOsiafu06iDwES9w/uU1QnDC+ekkVS9vEaDsgVeB0d+z1VDtOGxRaYPboP3Gokb4GgXkZp4chZPJKgvZ3U0XkriK/TIt9YUDllFgTAjGwoaoHqfBhMI58yD4BQ4V6/aHYdfxToftvw9F2SiVroawU2/Cv5C4Thv0KB9S5nxlOd4STxjwUjzSdYlgrYijw2BsEfgsaFcM09lhiys94xXQQwugcvgJrgFLjrEE7WUiTuWCQzt/ZXN7FfqGwuGClyVy2xZAFmfDQvNtwFFSspMDGsD+UTWqu1KoVmVooFEJgKRXw0if85RpISEzwsjzeqWzkjkC4PIJ3MUmQgITAHlQwTFhnZhELkEntfZRwR+AvfAgXmJHOqU02XligWT8ppg67NXbdCXeq7afUQ6L8C2DalEZNt2YyQ94Qy8/ekjMpBMbfyl5iTjG7YAI8cNecROAb4kJmTjaXAF3AGvwQewOiuRxEtlSaT4j2h2lMsUueQEoMlIKpTvAmKhxPMtC876jEX6rE8l8TNx/KVbn6xlWU9NWcSDUsO4NGWpQOTZFpHPOooMXcswmW2XFk3ixb2v0Nq+XVKP00QNaffBLyWwBI/AkTlfMYZDXMf12kc6yjwEjoFdO/5me5oi/6tnyhlZX6OtgmX1c2Uh0k3khmbB2b9TRfpd/jfTUeRDJvHdYg5wE7kPXAN3wQ1weDvH+xufEgpi5qIl3QAAAABJRU5ErkJggg==";
+			LoadingScreen.SPINNER_DATA = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKMAAACjCAYAAADmbK6AAAAACXBIWXMAAAsTAAALEwEAmpwYAAALB2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDIgNzkuMTYwOTI0LCAyMDE3LzA3LzEzLTAxOjA2OjM5ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczpwaG90b3Nob3A9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGhvdG9zaG9wLzEuMC8iIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIiB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxNS41IChXaW5kb3dzKSIgeG1wOkNyZWF0ZURhdGU9IjIwMTYtMDktMDhUMTQ6MjU6MTIrMDI6MDAiIHhtcDpNZXRhZGF0YURhdGU9IjIwMTgtMTEtMTVUMTY6NDA6NTkrMDE6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDE4LTExLTE1VDE2OjQwOjU5KzAxOjAwIiBkYzpmb3JtYXQ9ImltYWdlL3BuZyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpmZDhlNTljMC02NGJjLTIxNGQtODAyZi1jZDlhODJjM2ZjMGMiIHhtcE1NOkRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDpmYmNmZWJlYS03MjY2LWE0NGQtOTI4NS0wOTJmNGNhYzk4ZWEiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowODMzNWIyYy04NzYyLWQzNGMtOTBhOS02ODJjYjJmYTQ2M2UiIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiIHRpZmY6T3JpZW50YXRpb249IjEiIHRpZmY6WFJlc29sdXRpb249IjcyMDAwMC8xMDAwMCIgdGlmZjpZUmVzb2x1dGlvbj0iNzIwMDAwLzEwMDAwIiB0aWZmOlJlc29sdXRpb25Vbml0PSIyIiBleGlmOkNvbG9yU3BhY2U9IjY1NTM1IiBleGlmOlBpeGVsWERpbWVuc2lvbj0iMjk3IiBleGlmOlBpeGVsWURpbWVuc2lvbj0iMjQyIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY3JlYXRlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDowODMzNWIyYy04NzYyLWQzNGMtOTBhOS02ODJjYjJmYTQ2M2UiIHN0RXZ0OndoZW49IjIwMTYtMDktMDhUMTQ6MjU6MTIrMDI6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE1LjUgKFdpbmRvd3MpIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJzYXZlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDpiNThlMTlkNi0xYTRjLTQyNDEtODU0ZC01MDVlZjYxMjRhODQiIHN0RXZ0OndoZW49IjIwMTgtMTEtMTVUMTY6NDA6MjMrMDE6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAoV2luZG93cykiIHN0RXZ0OmNoYW5nZWQ9Ii8iLz4gPHJkZjpsaSBzdEV2dDphY3Rpb249InNhdmVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjQ3YzYzYzIwLWJkYjgtYzM0YS1hYzMyLWQ5MDdjOWEyOTA0MCIgc3RFdnQ6d2hlbj0iMjAxOC0xMS0xNVQxNjo0MDo1OSswMTowMCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY29udmVydGVkIiBzdEV2dDpwYXJhbWV0ZXJzPSJmcm9tIGFwcGxpY2F0aW9uL3ZuZC5hZG9iZS5waG90b3Nob3AgdG8gaW1hZ2UvcG5nIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJkZXJpdmVkIiBzdEV2dDpwYXJhbWV0ZXJzPSJjb252ZXJ0ZWQgZnJvbSBhcHBsaWNhdGlvbi92bmQuYWRvYmUucGhvdG9zaG9wIHRvIGltYWdlL3BuZyIvPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6ZmQ4ZTU5YzAtNjRiYy0yMTRkLTgwMmYtY2Q5YTgyYzNmYzBjIiBzdEV2dDp3aGVuPSIyMDE4LTExLTE1VDE2OjQwOjU5KzAxOjAwIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgQ0MgKFdpbmRvd3MpIiBzdEV2dDpjaGFuZ2VkPSIvIi8+IDwvcmRmOlNlcT4gPC94bXBNTTpIaXN0b3J5PiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0N2M2M2MyMC1iZGI4LWMzNGEtYWMzMi1kOTA3YzlhMjkwNDAiIHN0UmVmOmRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDo2OWRmZjljYy01YzFiLWE5NDctOTc3OS03ODgxZjM0ODk3MDMiIHN0UmVmOm9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowODMzNWIyYy04NzYyLWQzNGMtOTBhOS02ODJjYjJmYTQ2M2UiLz4gPHBob3Rvc2hvcDpEb2N1bWVudEFu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";
+			LoadingScreen.SPINE_LOGO_DATA = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKUAAABsCAYAAAALzHKmAAAACXBIWXMAAAsTAAALEwEAmpwYAAALB2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDIgNzkuMTYwOTI0LCAyMDE3LzA3LzEzLTAxOjA2OjM5ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczpwaG90b3Nob3A9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGhvdG9zaG9wLzEuMC8iIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIiB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxNS41IChXaW5kb3dzKSIgeG1wOkNyZWF0ZURhdGU9IjIwMTYtMDktMDhUMTQ6MjU6MTIrMDI6MDAiIHhtcDpNZXRhZGF0YURhdGU9IjIwMTgtMTEtMTVUMTY6NDA6NTkrMDE6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDE4LTExLTE1VDE2OjQwOjU5KzAxOjAwIiBkYzpmb3JtYXQ9ImltYWdlL3BuZyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDowMTdhZGQ3Ni04OTZlLThlNGUtYmM5MS00ZjEyNjI1YjA3MjgiIHhtcE1NOkRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDplMTViNGE2ZS1hMDg3LWEzNDktODdhOS1mNDYzYjE2MzQ0Y2MiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowODMzNWIyYy04NzYyLWQzNGMtOTBhOS02ODJjYjJmYTQ2M2UiIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiIHRpZmY6T3JpZW50YXRpb249IjEiIHRpZmY6WFJlc29sdXRpb249IjcyMDAwMC8xMDAwMCIgdGlmZjpZUmVzb2x1dGlvbj0iNzIwMDAwLzEwMDAwIiB0aWZmOlJlc29sdXRpb25Vbml0PSIyIiBleGlmOkNvbG9yU3BhY2U9IjY1NTM1IiBleGlmOlBpeGVsWERpbWVuc2lvbj0iMjk3IiBleGlmOlBpeGVsWURpbWVuc2lvbj0iMjQyIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY3JlYXRlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDowODMzNWIyYy04NzYyLWQzNGMtOTBhOS02ODJjYjJmYTQ2M2UiIHN0RXZ0OndoZW49IjIwMTYtMDktMDhUMTQ6MjU6MTIrMDI6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE1LjUgKFdpbmRvd3MpIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJzYXZlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDpiNThlMTlkNi0xYTRjLTQyNDEtODU0ZC01MDVlZjYxMjRhODQiIHN0RXZ0OndoZW49IjIwMTgtMTEtMTVUMTY6NDA6MjMrMDE6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAoV2luZG93cykiIHN0RXZ0OmNoYW5nZWQ9Ii8iLz4gPHJkZjpsaSBzdEV2dDphY3Rpb249InNhdmVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjJlNjJiMWM2LWIxYzQtNDk0MC04MDMxLWU4ZDkyNTBmODJjNSIgc3RFdnQ6d2hlbj0iMjAxOC0xMS0xNVQxNjo0MDo1OSswMTowMCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY29udmVydGVkIiBzdEV2dDpwYXJhbWV0ZXJzPSJmcm9tIGFwcGxpY2F0aW9uL3ZuZC5hZG9iZS5waG90b3Nob3AgdG8gaW1hZ2UvcG5nIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJkZXJpdmVkIiBzdEV2dDpwYXJhbWV0ZXJzPSJjb252ZXJ0ZWQgZnJvbSBhcHBsaWNhdGlvbi92bmQuYWRvYmUucGhvdG9zaG9wIHRvIGltYWdlL3BuZyIvPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6MDE3YWRkNzYtODk2ZS04ZTRlLWJjOTEtNGYxMjYyNWIwNzI4IiBzdEV2dDp3aGVuPSIyMDE4LTExLTE1VDE2OjQwOjU5KzAxOjAwIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgQ0MgKFdpbmRvd3MpIiBzdEV2dDpjaGFuZ2VkPSIvIi8+IDwvcmRmOlNlcT4gPC94bXBNTTpIaXN0b3J5PiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDoyZTYyYjFjNi1iMWM0LTQ5NDAtODAzMS1lOGQ5MjUwZjgyYzUiIHN0UmVmOmRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDo2OWRmZjljYy01YzFiLWE5NDctOTc3OS03ODgxZjM0ODk3MDMiIHN0UmVmOm9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowODMzNWIyYy04NzYyLWQzNGMtOTBhOS02ODJjYjJmYTQ2M2UiLz4gPHBob3Rvc2hvcDpEb2N1bWVudEFu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";
 			return LoadingScreen;
 		}());
 		webgl.LoadingScreen = LoadingScreen;
@@ -8730,11 +8994,11 @@ var spine;
 						var nn = clip.worldVerticesLength;
 						var world = this.temp = spine.Utils.setArraySize(this.temp, nn, 0);
 						clip.computeWorldVertices(slot, 0, nn, world, 0, 2);
-						for (var i_12 = 0, n_2 = world.length; i_12 < n_2; i_12 += 2) {
-							var x = world[i_12];
-							var y = world[i_12 + 1];
-							var x2 = world[(i_12 + 2) % world.length];
-							var y2 = world[(i_12 + 3) % world.length];
+						for (var i_20 = 0, n_2 = world.length; i_20 < n_2; i_20 += 2) {
+							var x = world[i_20];
+							var y = world[i_20 + 1];
+							var x2 = world[(i_20 + 2) % world.length];
+							var y2 = world[(i_20 + 3) % world.length];
 							shapes.line(x, y, x2, y2);
 						}
 					}
@@ -8848,8 +9112,10 @@ var spine;
 						clipper.clipStart(slot, clip);
 						continue;
 					}
-					else
+					else {
+						clipper.clipEndWithSlot(slot);
 						continue;
+					}
 					if (texture != null) {
 						var slotColor = slot.color;
 						var finalColor = this.tempColor;
