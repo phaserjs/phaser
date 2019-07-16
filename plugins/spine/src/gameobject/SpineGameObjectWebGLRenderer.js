@@ -5,6 +5,7 @@
  */
 
 var CounterClockwise = require('../../../../src/math/angle/CounterClockwise');
+var RadToDeg = require('../../../../src/math/RadToDeg');
 
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
@@ -23,13 +24,12 @@ var CounterClockwise = require('../../../../src/math/angle/CounterClockwise');
  */
 var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    var pipeline = renderer.currentPipeline;
     var plugin = src.plugin;
     var mvp = plugin.mvp;
 
     var shader = plugin.shader;
     var batcher = plugin.batcher;
-    var runtime = src.runtime;
+    var runtime = plugin.runtime;
     var skeleton = src.skeleton;
     var skeletonRenderer = plugin.skeletonRenderer;
 
@@ -38,7 +38,10 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
         return;
     }
 
-    renderer.clearPipeline();
+    if (renderer.newType)
+    {
+        renderer.clearPipeline();
+    }
 
     var camMatrix = renderer._tempMatrix1;
     var spriteMatrix = renderer._tempMatrix2;
@@ -73,38 +76,60 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     var width = renderer.width;
     var height = renderer.height;
 
-    var data = calcMatrix.decomposeMatrix();
+    skeleton.x = calcMatrix.tx;
+    skeleton.y = height - calcMatrix.ty;
+    skeleton.scaleX = calcMatrix.scaleX;
+    skeleton.scaleY = calcMatrix.scaleY;
 
-    mvp.ortho(0, width, 0, height, 0, 1);
-    mvp.translateXYZ(data.translateX, height - data.translateY, 0);
-    mvp.rotateZ(CounterClockwise(data.rotation));
-    mvp.scaleXYZ(data.scaleX, data.scaleY, 1);
+    src.root.rotation = RadToDeg(CounterClockwise(calcMatrix.rotation));
 
-    //  For a Stage 1 release we'll handle it like this:
-    shader.bind();
-    shader.setUniformi(runtime.webgl.Shader.SAMPLER, 0);
-    shader.setUniform4x4f(runtime.webgl.Shader.MVP_MATRIX, mvp.val);
+    //  Add autoUpdate option
+    skeleton.updateWorldTransform();
 
-    //  For Stage 2, we'll move to using a custom pipeline, so Spine objects are batched
+    if (renderer.newType)
+    {
+        mvp.ortho(0, width, 0, height, 0, 1);
 
-    batcher.begin(shader);
+        shader.bind();
+        shader.setUniformi(runtime.Shader.SAMPLER, 0);
+        shader.setUniform4x4f(runtime.Shader.MVP_MATRIX, mvp.val);
 
-    skeletonRenderer.premultipliedAlpha = true;
+        batcher.begin(shader);
 
+        skeletonRenderer.premultipliedAlpha = true;
+    }
+
+    if (renderer.nextTypeMatch)
+    {
+        batcher.isDrawing = false;
+    }
+
+    //  Draw the current skeleton
     skeletonRenderer.draw(batcher, skeleton);
 
-    batcher.end();
+    if (!renderer.nextTypeMatch)
+    {
+        //  The next object in the display list is not a Spine object, so we end the batch
+        batcher.isDrawing = true;
 
-    shader.unbind();
+        batcher.end();
 
-    if (plugin.drawDebug || src.drawDebug)
+        shader.unbind();
+
+        renderer.rebindPipeline(renderer.pipelines.TextureTintPipeline);
+    }
+
+    /*
+    var drawDebug = (plugin.drawDebug || src.drawDebug);
+
+    if (drawDebug)
     {
         var debugShader = plugin.debugShader;
         var debugRenderer = plugin.debugRenderer;
         var shapes = plugin.shapes;
 
         debugShader.bind();
-        debugShader.setUniform4x4f(runtime.webgl.Shader.MVP_MATRIX, mvp.val);
+        debugShader.setUniform4x4f(runtime.Shader.MVP_MATRIX, mvp.val);
 
         shapes.begin(debugShader);
 
@@ -114,8 +139,7 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
 
         debugShader.unbind();
     }
-
-    renderer.rebindPipeline(pipeline);
+    */
 };
 
 module.exports = SpineGameObjectWebGLRenderer;
