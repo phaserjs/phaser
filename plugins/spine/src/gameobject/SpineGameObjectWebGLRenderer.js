@@ -77,9 +77,18 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     var height = renderer.height;
 
     skeleton.x = calcMatrix.tx;
-    skeleton.y = height - calcMatrix.ty;
     skeleton.scaleX = calcMatrix.scaleX;
-    skeleton.scaleY = calcMatrix.scaleY;
+
+    if (camera.renderToTexture)
+    {
+        skeleton.y = calcMatrix.ty;
+        skeleton.scaleY = calcMatrix.scaleY * -1;
+    }
+    else
+    {
+        skeleton.y = height - calcMatrix.ty;
+        skeleton.scaleY = calcMatrix.scaleY;
+    }
 
     src.root.rotation = RadToDeg(CounterClockwise(calcMatrix.rotation));
 

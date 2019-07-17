@@ -86,8 +86,6 @@ var SpineGameObject = new Class({
 
         var skeleton = data.skeleton;
 
-        skeleton.flipY = (this.scene.sys.game.config.renderType === 1);
-
         skeleton.setToSetupPose();
 
         skeleton.updateWorldTransform();
@@ -275,9 +273,6 @@ var SpineGameObject = new Class({
     preUpdate: function (time, delta)
     {
         var skeleton = this.skeleton;
-
-        skeleton.flipX = this.flipX;
-        skeleton.flipY = this.flipY;
 
         this.state.update((delta / 1000) * this.timeScale);
 
