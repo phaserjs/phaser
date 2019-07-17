@@ -278,30 +278,6 @@ var CanvasRenderer = new Class({
     },
 
     /**
-     * A NOOP method for handling lost context. Intentionally empty.
-     *
-     * @method Phaser.Renderer.Canvas.CanvasRenderer#onContextLost
-     * @since 3.0.0
-     *
-     * @param {function} callback - Ignored parameter.
-     */
-    onContextLost: function ()
-    {
-    },
-
-    /**
-     * A NOOP method for handling restored context. Intentionally empty.
-     *
-     * @method Phaser.Renderer.Canvas.CanvasRenderer#onContextRestored
-     * @since 3.0.0
-     *
-     * @param {function} callback - Ignored parameter.
-     */
-    onContextRestored: function ()
-    {
-    },
-
-    /**
      * Resets the transformation matrix of the current context to the identity matrix, thus resetting any transformation.
      *
      * @method Phaser.Renderer.Canvas.CanvasRenderer#resetTransform

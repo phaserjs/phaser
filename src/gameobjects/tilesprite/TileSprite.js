@@ -7,7 +7,7 @@
 var CanvasPool = require('../../display/canvas/CanvasPool');
 var Class = require('../../utils/Class');
 var Components = require('../components');
-var CONST = require('../../const');
+var GameEvents = require('../../core/events');
 var GameObject = require('../GameObject');
 var GetPowerOfTwo = require('../../math/pow2/GetPowerOfTwo');
 var Smoothing = require('../../display/canvas/Smoothing');
@@ -275,17 +275,15 @@ var TileSprite = new Class({
         this.setOriginFromFrame();
         this.initPipeline();
 
-        if (scene.sys.game.config.renderType === CONST.WEBGL)
+        scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, function (renderer)
         {
-            scene.sys.game.renderer.onContextRestored(function (renderer)
-            {
-                var gl = renderer.gl;
+            var gl = renderer.gl;
 
-                this.dirty = true;
-                this.fillPattern = null;
-                this.fillPattern = renderer.createTexture2D(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, this.fillCanvas, this.potWidth, this.potHeight);
-            }, this);
-        }
+            this.dirty = true;
+            this.fillPattern = null;
+            this.fillPattern = renderer.createTexture2D(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, this.fillCanvas, this.potWidth, this.potHeight);
+
+        }, this);
     },
 
     /**

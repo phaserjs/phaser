@@ -8,7 +8,7 @@ var AddToDOM = require('../../../dom/AddToDOM');
 var CanvasPool = require('../../../display/canvas/CanvasPool');
 var Class = require('../../../utils/Class');
 var Components = require('../../components');
-var CONST = require('../../../const');
+var GameEvents = require('../../../core/events');
 var GameObject = require('../../GameObject');
 var GetTextSize = require('../GetTextSize');
 var GetValue = require('../../../utils/object/GetValue');
@@ -288,13 +288,10 @@ var Text = new Class({
             this.lineSpacing = style.lineSpacing;
         }
 
-        if (scene.sys.game.config.renderType === CONST.WEBGL)
+        scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, function ()
         {
-            scene.sys.game.renderer.onContextRestored(function ()
-            {
-                this.dirty = true;
-            }, this);
-        }
+            this.dirty = true;
+        }, this);
     },
 
     /**

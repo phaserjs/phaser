@@ -6,7 +6,7 @@
 
 var Class = require('../../utils/Class');
 var Components = require('../../gameobjects/components');
-var CONST = require('../../const');
+var GameEvents = require('../../core/events');
 var GameObject = require('../../gameobjects/GameObject');
 var StaticTilemapLayerRender = require('./StaticTilemapLayerRender');
 var TilemapComponents = require('../components');
@@ -359,13 +359,10 @@ var StaticTilemapLayer = new Class({
 
         this.initPipeline('TextureTintPipeline');
 
-        if (scene.sys.game.config.renderType === CONST.WEBGL)
+        scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, function ()
         {
-            scene.sys.game.renderer.onContextRestored(function ()
-            {
-                this.updateVBOData();
-            }, this);
-        }
+            this.updateVBOData();
+        }, this);
     },
 
     /**

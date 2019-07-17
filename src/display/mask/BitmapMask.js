@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
+var GameEvents = require('../../core/events');
 
 /**
  * @classdesc
@@ -159,7 +160,7 @@ var BitmapMask = new Class({
             this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, true);
             this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, true);
 
-            renderer.onContextRestored(function (renderer)
+            scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, function (renderer)
             {
                 var width = renderer.width;
                 var height = renderer.height;

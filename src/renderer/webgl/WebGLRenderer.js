@@ -305,10 +305,25 @@ var WebGLRenderer = new Class({
          */
         this.scissorStack = [];
 
+        /**
+         * The handler to invoke when the context is lost.
+         * This should not be changed and is set in the boot method.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#contextLostHandler
+         * @type {function}
+         * @since 3.19.0
+         */
         this.contextLostHandler = NOOP;
-        this.contextRestoredHandler = NOOP;
 
-        // These are initialized post context creation
+        /**
+         * The handler to invoke when the context is restored.
+         * This should not be changed and is set in the boot method.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#contextRestoredHandler
+         * @type {function}
+         * @since 3.19.0
+         */
+        this.contextRestoredHandler = NOOP;
 
         /**
          * The underlying WebGL context of the renderer.
@@ -552,8 +567,6 @@ var WebGLRenderer = new Class({
 
         this.contextLostHandler = function (event)
         {
-            console.log('ctx lost handler');
-
             _this.contextLost = true;
 
             _this.game.events.emit(GameEvents.CONTEXT_LOST, _this);
@@ -767,42 +780,6 @@ var WebGLRenderer = new Class({
         gl.scissor(0, (gl.drawingBufferHeight - height), width, height);
 
         this.defaultCamera.setSize(width, height);
-
-        return this;
-    },
-
-    /**
-     * Adds a callback to be invoked when the WebGL context has been restored by the browser.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#onContextRestored
-     * @since 3.0.0
-     *
-     * @param {WebGLContextCallback} callback - The callback to be invoked on context restoration.
-     * @param {object} target - The context of the callback.
-     *
-     * @return {this} This WebGLRenderer instance.
-     */
-    onContextRestored: function (callback, target)
-    {
-        this.restoredContextCallbacks.push([ callback, target ]);
-
-        return this;
-    },
-
-    /**
-     * Adds a callback to be invoked when the WebGL context has been lost by the browser.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#onContextLost
-     * @since 3.0.0
-     *
-     * @param {WebGLContextCallback} callback - The callback to be invoked on context loss.
-     * @param {object} target - The context of the callback.
-     *
-     * @return {this} This WebGLRenderer instance.
-     */
-    onContextLost: function (callback, target)
-    {
-        this.lostContextCallbacks.push([ callback, target ]);
 
         return this;
     },
