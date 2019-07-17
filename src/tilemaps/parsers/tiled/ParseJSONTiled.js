@@ -62,7 +62,7 @@ var ParseJSONTiled = function (name, json, insertNull)
 
     mapData.objects = ParseObjectLayers(json);
 
-    mapData.tiles = BuildTilesetIndex(mapData);
+    mapData.tiles = BuildTileIndex(mapData);
 
     AssignTileProperties(mapData);
 
