@@ -2331,6 +2331,160 @@ module.exports = BlendMode;
 
 /***/ }),
 
+/***/ "../../../src/gameobjects/components/ComputedSize.js":
+/*!*********************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/components/ComputedSize.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Provides methods used for calculating and setting the size of a non-Frame based Game Object.
+ * Should be applied as a mixin and not used directly.
+ * 
+ * @namespace Phaser.GameObjects.Components.ComputedSize
+ * @since 3.0.0
+ */
+
+var ComputedSize = {
+
+    /**
+     * The native (un-scaled) width of this Game Object.
+     * 
+     * Changing this value will not change the size that the Game Object is rendered in-game.
+     * For that you need to either set the scale of the Game Object (`setScale`) or use
+     * the `displayWidth` property.
+     * 
+     * @name Phaser.GameObjects.Components.ComputedSize#width
+     * @type {number}
+     * @since 3.0.0
+     */
+    width: 0,
+
+    /**
+     * The native (un-scaled) height of this Game Object.
+     * 
+     * Changing this value will not change the size that the Game Object is rendered in-game.
+     * For that you need to either set the scale of the Game Object (`setScale`) or use
+     * the `displayHeight` property.
+     * 
+     * @name Phaser.GameObjects.Components.ComputedSize#height
+     * @type {number}
+     * @since 3.0.0
+     */
+    height: 0,
+
+    /**
+     * The displayed width of this Game Object.
+     * 
+     * This value takes into account the scale factor.
+     * 
+     * Setting this value will adjust the Game Object's scale property.
+     * 
+     * @name Phaser.GameObjects.Components.ComputedSize#displayWidth
+     * @type {number}
+     * @since 3.0.0
+     */
+    displayWidth: {
+
+        get: function ()
+        {
+            return this.scaleX * this.width;
+        },
+
+        set: function (value)
+        {
+            this.scaleX = value / this.width;
+        }
+
+    },
+
+    /**
+     * The displayed height of this Game Object.
+     * 
+     * This value takes into account the scale factor.
+     * 
+     * Setting this value will adjust the Game Object's scale property.
+     * 
+     * @name Phaser.GameObjects.Components.ComputedSize#displayHeight
+     * @type {number}
+     * @since 3.0.0
+     */
+    displayHeight: {
+
+        get: function ()
+        {
+            return this.scaleY * this.height;
+        },
+
+        set: function (value)
+        {
+            this.scaleY = value / this.height;
+        }
+
+    },
+
+    /**
+     * Sets the internal size of this Game Object, as used for frame or physics body creation.
+     * 
+     * This will not change the size that the Game Object is rendered in-game.
+     * For that you need to either set the scale of the Game Object (`setScale`) or call the
+     * `setDisplaySize` method, which is the same thing as changing the scale but allows you
+     * to do so by giving pixel values.
+     * 
+     * If you have enabled this Game Object for input, changing the size will _not_ change the
+     * size of the hit area. To do this you should adjust the `input.hitArea` object directly.
+     * 
+     * @method Phaser.GameObjects.Components.ComputedSize#setSize
+     * @since 3.4.0
+     *
+     * @param {number} width - The width of this Game Object.
+     * @param {number} height - The height of this Game Object.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setSize: function (width, height)
+    {
+        this.width = width;
+        this.height = height;
+
+        return this;
+    },
+
+    /**
+     * Sets the display size of this Game Object.
+     * 
+     * Calling this will adjust the scale.
+     * 
+     * @method Phaser.GameObjects.Components.ComputedSize#setDisplaySize
+     * @since 3.4.0
+     *
+     * @param {number} width - The width of this Game Object.
+     * @param {number} height - The height of this Game Object.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setDisplaySize: function (width, height)
+    {
+        this.displayWidth = width;
+        this.displayHeight = height;
+
+        return this;
+    }
+
+};
+
+module.exports = ComputedSize;
+
+
+/***/ }),
+
 /***/ "../../../src/gameobjects/components/Depth.js":
 /*!**************************************************************!*\
   !*** D:/wamp/www/phaser/src/gameobjects/components/Depth.js ***!
@@ -11536,7 +11690,7 @@ var SpinePlugin = new Class({
         this.debugRenderer;
         this.debugShader;
 
-        console.log('SpinePlugin created. WebGL:', this.isWebGL);
+        console.log('SpinePlugin created', '- WebGL:', this.isWebGL, this.cache, this.spineTextures);
 
         if (this.isWebGL)
         {
@@ -11570,6 +11724,11 @@ var SpinePlugin = new Class({
         {
             this.bootCanvas();
         }
+
+        var eventEmitter = this.systems.events;
+
+        eventEmitter.once('shutdown', this.shutdown, this);
+        eventEmitter.once('destroy', this.destroy, this);
     },
 
     bootCanvas: function ()
@@ -11777,10 +11936,7 @@ var SpinePlugin = new Class({
     {
         var eventEmitter = this.systems.events;
 
-        eventEmitter.off('update', this.update, this);
         eventEmitter.off('shutdown', this.shutdown, this);
-
-        this.removeAll();
     },
 
     /**
@@ -11795,10 +11951,25 @@ var SpinePlugin = new Class({
     {
         this.shutdown();
 
+        this.pluginManager.removeGameObject('spine', true, true);
+
         this.pluginManager = null;
         this.game = null;
         this.scene = null;
         this.systems = null;
+
+        //  Create a custom cache to store the spine data (.atlas files)
+        this.cache = null;
+        this.spineTextures = null;
+        this.json = null;
+        this.textures = null;
+        this.skeletonRenderer = null;
+        this.gl = null;
+        this.mvp = null;
+        this.shader = null;
+        this.batcher = null;
+        this.debugRenderer = null;
+        this.debugShader = null;
     }
 
 });
@@ -11824,6 +11995,7 @@ module.exports = SpinePlugin;
 var Class = __webpack_require__(/*! ../../../../src/utils/Class */ "../../../src/utils/Class.js");
 var ComponentsAlpha = __webpack_require__(/*! ../../../../src/gameobjects/components/Alpha */ "../../../src/gameobjects/components/Alpha.js");
 var ComponentsBlendMode = __webpack_require__(/*! ../../../../src/gameobjects/components/BlendMode */ "../../../src/gameobjects/components/BlendMode.js");
+var ComponentsComputedSize = __webpack_require__(/*! ../../../../src/gameobjects/components/ComputedSize */ "../../../src/gameobjects/components/ComputedSize.js");
 var ComponentsDepth = __webpack_require__(/*! ../../../../src/gameobjects/components/Depth */ "../../../src/gameobjects/components/Depth.js");
 var ComponentsFlip = __webpack_require__(/*! ../../../../src/gameobjects/components/Flip */ "../../../src/gameobjects/components/Flip.js");
 var ComponentsScrollFactor = __webpack_require__(/*! ../../../../src/gameobjects/components/ScrollFactor */ "../../../src/gameobjects/components/ScrollFactor.js");
@@ -11850,6 +12022,7 @@ var SpineGameObject = new Class({
     Mixins: [
         ComponentsAlpha,
         ComponentsBlendMode,
+        ComponentsComputedSize,
         ComponentsDepth,
         ComponentsFlip,
         ComponentsScrollFactor,
@@ -11876,6 +12049,9 @@ var SpineGameObject = new Class({
         this.drawDebug = false;
 
         this.timeScale = 1;
+
+        this.displayOriginX = 0;
+        this.displayOriginY = 0;
 
         this.setPosition(x, y);
 
@@ -11952,6 +12128,15 @@ var SpineGameObject = new Class({
         }
 
         this.root = this.getRootBone();
+
+        var w = this.skeletonData.width;
+        var h = this.skeletonData.height;
+
+        this.width = w;
+        this.height = h;
+
+        this.displayOriginX = w / 2;
+        this.displayOriginY = h / 2;
 
         return this;
     },
