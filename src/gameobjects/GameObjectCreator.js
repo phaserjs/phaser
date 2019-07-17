@@ -149,6 +149,14 @@ GameObjectCreator.register = function (factoryType, factoryFunction)
     }
 };
 
+GameObjectCreator.remove = function (factoryType)
+{
+    if (GameObjectCreator.prototype.hasOwnProperty(factoryType))
+    {
+        delete GameObjectCreator.prototype[factoryType];
+    }
+};
+
 PluginCache.register('GameObjectCreator', GameObjectCreator, 'make');
 
 module.exports = GameObjectCreator;
