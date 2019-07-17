@@ -57,7 +57,7 @@ var SpinePlugin = new Class({
         this.debugRenderer;
         this.debugShader;
 
-        console.log('SpinePlugin created. WebGL:', this.isWebGL);
+        console.log('SpinePlugin created', '- WebGL:', this.isWebGL, this.cache, this.spineTextures);
 
         if (this.isWebGL)
         {
@@ -91,6 +91,11 @@ var SpinePlugin = new Class({
         {
             this.bootCanvas();
         }
+
+        var eventEmitter = this.systems.events;
+
+        eventEmitter.once('shutdown', this.shutdown, this);
+        eventEmitter.once('destroy', this.destroy, this);
     },
 
     bootCanvas: function ()
@@ -298,10 +303,7 @@ var SpinePlugin = new Class({
     {
         var eventEmitter = this.systems.events;
 
-        eventEmitter.off('update', this.update, this);
         eventEmitter.off('shutdown', this.shutdown, this);
-
-        this.removeAll();
     },
 
     /**
@@ -316,10 +318,25 @@ var SpinePlugin = new Class({
     {
         this.shutdown();
 
+        this.pluginManager.removeGameObject('spine', true, true);
+
         this.pluginManager = null;
         this.game = null;
         this.scene = null;
         this.systems = null;
+
+        //  Create a custom cache to store the spine data (.atlas files)
+        this.cache = null;
+        this.spineTextures = null;
+        this.json = null;
+        this.textures = null;
+        this.skeletonRenderer = null;
+        this.gl = null;
+        this.mvp = null;
+        this.shader = null;
+        this.batcher = null;
+        this.debugRenderer = null;
+        this.debugShader = null;
     }
 
 });
