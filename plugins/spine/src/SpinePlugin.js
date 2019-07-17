@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../../src/utils/Class');
+var GetValue = require('../../../src/utils/object/GetValue');
 var ScenePlugin = require('../../../src/plugins/ScenePlugin');
 var SpineFile = require('./SpineFile');
 var Spine = require('Spine');
@@ -57,7 +58,7 @@ var SpinePlugin = new Class({
         this.debugRenderer;
         this.debugShader;
 
-        console.log('SpinePlugin created', '- WebGL:', this.isWebGL, this.cache, this.spineTextures);
+        console.log('SpinePlugin created', '- WebGL:', this.isWebGL);
 
         if (this.isWebGL)
         {
@@ -257,13 +258,35 @@ var SpinePlugin = new Class({
 
     createSkeleton: function (key, skeletonJSON)
     {
-        var atlas = this.getAtlas(key);
+        var atlasKey = key;
+        var jsonKey = key;
+
+        if (key.indexOf('.'))
+        {
+            var parts = key.split('.');
+
+            atlasKey = parts.shift();
+            jsonKey = parts.join('.');
+        }
+
+        var atlas = this.getAtlas(atlasKey);
 
         var atlasLoader = new Spine.AtlasAttachmentLoader(atlas);
         
         var skeletonJson = new Spine.SkeletonJson(atlasLoader);
 
-        var data = (skeletonJSON) ? skeletonJSON : this.json.get(key);
+        var data;
+
+        if (skeletonJSON)
+        {
+            data = skeletonJSON;
+        }
+        else
+        {
+            var json = this.json.get(atlasKey);
+
+            data = GetValue(json, jsonKey);
+        }
 
         var skeletonData = skeletonJson.readSkeletonData(data);
 
