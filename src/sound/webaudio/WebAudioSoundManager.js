@@ -238,6 +238,11 @@ var WebAudioSoundManager = new Class({
                     document.body.removeEventListener('click', unlockHandler);
     
                     _this.unlocked = true;
+                }, function ()
+                {
+                    document.body.removeEventListener('touchstart', unlockHandler);
+                    document.body.removeEventListener('touchend', unlockHandler);
+                    document.body.removeEventListener('click', unlockHandler);
                 });
             }
         };
