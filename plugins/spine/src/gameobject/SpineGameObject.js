@@ -139,6 +139,11 @@ var SpineGameObject = new Class({
 
         this.root = this.getRootBone();
 
+        this.skeleton.scaleX = this.scaleX;
+        this.skeleton.scaleY = this.scaleY;
+
+        this.skeleton.updateWorldTransform();
+
         var w = this.skeletonData.width;
         var h = this.skeletonData.height;
 
