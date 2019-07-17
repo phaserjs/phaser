@@ -48,6 +48,7 @@
 
 * Adding Spine to physics causes position to become NaN. Fix #4501 (thanks @hizzd)
 * Destroying a Phaser Game instance and then re-creating it would cause an error trying to re-create Spine Game Objects ("Cannot read property get of null"). Fix #4532 (thanks @Alex-Badea)
+* Rendering a Spine object when a Camer has `renderToTexture` enabled on it would cause the object to be vertically flipped. It now renders correctly in both cases. Fix #4647 (thanks @probt)
 
 ### New Features
 
