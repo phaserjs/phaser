@@ -11638,6 +11638,7 @@ module.exports = SpineFile;
  */
 
 var Class = __webpack_require__(/*! ../../../src/utils/Class */ "../../../src/utils/Class.js");
+var GetValue = __webpack_require__(/*! ../../../src/utils/object/GetValue */ "../../../src/utils/object/GetValue.js");
 var ScenePlugin = __webpack_require__(/*! ../../../src/plugins/ScenePlugin */ "../../../src/plugins/ScenePlugin.js");
 var SpineFile = __webpack_require__(/*! ./SpineFile */ "./SpineFile.js");
 var Spine = __webpack_require__(/*! Spine */ "./runtimes/spine-both.js");
@@ -11690,7 +11691,7 @@ var SpinePlugin = new Class({
         this.debugRenderer;
         this.debugShader;
 
-        console.log('SpinePlugin created', '- WebGL:', this.isWebGL, this.cache, this.spineTextures);
+        console.log('SpinePlugin created', '- WebGL:', this.isWebGL);
 
         if (this.isWebGL)
         {
@@ -11890,13 +11891,35 @@ var SpinePlugin = new Class({
 
     createSkeleton: function (key, skeletonJSON)
     {
-        var atlas = this.getAtlas(key);
+        var atlasKey = key;
+        var jsonKey = key;
+
+        if (key.indexOf('.'))
+        {
+            var parts = key.split('.');
+
+            atlasKey = parts.shift();
+            jsonKey = parts.join('.');
+        }
+
+        var atlas = this.getAtlas(atlasKey);
 
         var atlasLoader = new Spine.AtlasAttachmentLoader(atlas);
         
         var skeletonJson = new Spine.SkeletonJson(atlasLoader);
 
-        var data = (skeletonJSON) ? skeletonJSON : this.json.get(key);
+        var data;
+
+        if (skeletonJSON)
+        {
+            data = skeletonJSON;
+        }
+        else
+        {
+            var json = this.json.get(atlasKey);
+
+            data = GetValue(json, jsonKey);
+        }
 
         var skeletonData = skeletonJson.readSkeletonData(data);
 
@@ -12074,8 +12097,6 @@ var SpineGameObject = new Class({
 
         var skeleton = data.skeleton;
 
-        skeleton.flipY = (this.scene.sys.game.config.renderType === 1);
-
         skeleton.setToSetupPose();
 
         skeleton.updateWorldTransform();
@@ -12128,6 +12149,11 @@ var SpineGameObject = new Class({
         }
 
         this.root = this.getRootBone();
+
+        this.skeleton.scaleX = this.scaleX;
+        this.skeleton.scaleY = this.scaleY;
+
+        this.skeleton.updateWorldTransform();
 
         var w = this.skeletonData.width;
         var h = this.skeletonData.height;
@@ -12263,9 +12289,6 @@ var SpineGameObject = new Class({
     preUpdate: function (time, delta)
     {
         var skeleton = this.skeleton;
-
-        skeleton.flipX = this.flipX;
-        skeleton.flipY = this.flipY;
 
         this.state.update((delta / 1000) * this.timeScale);
 
@@ -12497,9 +12520,18 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     var height = renderer.height;
 
     skeleton.x = calcMatrix.tx;
-    skeleton.y = height - calcMatrix.ty;
     skeleton.scaleX = calcMatrix.scaleX;
-    skeleton.scaleY = calcMatrix.scaleY;
+
+    if (camera.renderToTexture)
+    {
+        skeleton.y = calcMatrix.ty;
+        skeleton.scaleY = calcMatrix.scaleY * -1;
+    }
+    else
+    {
+        skeleton.y = height - calcMatrix.ty;
+        skeleton.scaleY = calcMatrix.scaleY;
+    }
 
     src.root.rotation = RadToDeg(CounterClockwise(calcMatrix.rotation));
 
