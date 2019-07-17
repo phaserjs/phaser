@@ -47,6 +47,7 @@
 ### Spine Updates
 
 * Adding Spine to physics causes position to become NaN. Fix #4501 (thanks @hizzd)
+* Destroying a Phaser Game instance and then re-creating it would cause an error trying to re-create Spine Game Objects ("Cannot read property get of null"). Fix #4532 (thanks @Alex-Badea)
 
 ### New Features
 
