@@ -7,6 +7,7 @@
 var Class = require('../../../../src/utils/Class');
 var ComponentsAlpha = require('../../../../src/gameobjects/components/Alpha');
 var ComponentsBlendMode = require('../../../../src/gameobjects/components/BlendMode');
+var ComponentsComputedSize = require('../../../../src/gameobjects/components/ComputedSize');
 var ComponentsDepth = require('../../../../src/gameobjects/components/Depth');
 var ComponentsFlip = require('../../../../src/gameobjects/components/Flip');
 var ComponentsScrollFactor = require('../../../../src/gameobjects/components/ScrollFactor');
@@ -33,6 +34,7 @@ var SpineGameObject = new Class({
     Mixins: [
         ComponentsAlpha,
         ComponentsBlendMode,
+        ComponentsComputedSize,
         ComponentsDepth,
         ComponentsFlip,
         ComponentsScrollFactor,
@@ -59,6 +61,9 @@ var SpineGameObject = new Class({
         this.drawDebug = false;
 
         this.timeScale = 1;
+
+        this.displayOriginX = 0;
+        this.displayOriginY = 0;
 
         this.setPosition(x, y);
 
@@ -135,6 +140,15 @@ var SpineGameObject = new Class({
         }
 
         this.root = this.getRootBone();
+
+        var w = this.skeletonData.width;
+        var h = this.skeletonData.height;
+
+        this.width = w;
+        this.height = h;
+
+        this.displayOriginX = w / 2;
+        this.displayOriginY = h / 2;
 
         return this;
     },
