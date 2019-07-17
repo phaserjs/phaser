@@ -785,6 +785,35 @@ var PluginManager = new Class({
     },
 
     /**
+     * Removes a previously registered Game Object from the global Game Object Factory and / or Creator.
+     * This is usually called from within your Plugin destruction code to help clean-up after your plugin has been removed.
+     *
+     * @method Phaser.Plugins.PluginManager#removeGameObject
+     * @since 3.19.0
+     *
+     * @param {string} key - The key of the Game Object to be removed from the factories.
+     * @param {boolean} [removeFromFactory=true] - Should the Game Object be removed from the Game Object Factory?
+     * @param {boolean} [removeFromCreator=true] - Should the Game Object be removed from the Game Object Creator?
+     */
+    removeGameObject: function (key, removeFromFactory, removeFromCreator)
+    {
+        if (removeFromFactory === undefined) { removeFromFactory = true; }
+        if (removeFromCreator === undefined) { removeFromCreator = true; }
+
+        if (removeFromFactory)
+        {
+            GameObjectFactory.remove(key);
+        }
+
+        if (removeFromCreator)
+        {
+            GameObjectCreator.remove(key);
+        }
+
+        return this;
+    },
+
+    /**
      * Registers a new file type with the global File Types Manager, making it available to all Loader
      * Plugins created after this.
      * 
