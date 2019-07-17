@@ -87,8 +87,8 @@
 * `InputManager.onPointerLockChange` is a new method that handles pointer lock change events and dispatches the lock event.
 * `CanvasTexture` has been added to the `Textures` namespace so it can be created without needing to import it. The correct way to create a `CanvasTexture` is via the Texture Manager, but you can now do it directly if required. Fix #4651 (thanks @Jugacu)
 * The `SmoothedKeyControl` minimum zoom a Camera can go to is now 0.001. Previously it was 0.1. This is to make it match the minimum zoom a Base Camera can go to. Fix #4649 (thanks @giviz)
-* `WebGLRenderer.lostContextCallbacks` has been removed. Please use the new `CONTEXT_LOST` event instead.
-* `WebGLRenderer.restoredContextCallbacks` has been removed. Please use the new `CONTEXT_RESTORED` event instead.
+* `WebGLRenderer.lostContextCallbacks` and the `onContextLost` method have been removed. Please use the new `CONTEXT_LOST` event instead.
+* `WebGLRenderer.restoredContextCallbacks` and the `onContextRestored` method have been removed. Please use the new `CONTEXT_RESTORED` event instead.
 * `TextureManager.getBase64` will now emit a console warning if you try to get a base64 from a non-image based texture, such as a WebGL Texture.
 * The `WebAudioSoundManager` will now remove the document touch handlers even if the Promise fails, preventing it from throwing a rejection handler error.
 * `GameObjectFactory.remove` is a new static function that will remove a custom Game Object factory type.
