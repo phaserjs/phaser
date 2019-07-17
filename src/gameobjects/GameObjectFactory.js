@@ -177,6 +177,14 @@ GameObjectFactory.register = function (factoryType, factoryFunction)
     }
 };
 
+GameObjectFactory.remove = function (factoryType)
+{
+    if (GameObjectFactory.prototype.hasOwnProperty(factoryType))
+    {
+        delete GameObjectFactory.prototype[factoryType];
+    }
+};
+
 PluginCache.register('GameObjectFactory', GameObjectFactory, 'add');
 
 module.exports = GameObjectFactory;
