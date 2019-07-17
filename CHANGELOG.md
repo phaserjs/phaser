@@ -44,6 +44,10 @@
 * The signature of the LoadValue generator functions (such as `delay` and `repeat`) has changed to `(target, key, value, targetIndex, totalTargets, tween)` to match those of the custom property functions. If you used a custom generator function for your Tween configs you'll need to modify the signature to the new one.
 * Tweens created via `TweenManager.create` wouldn't start when `Tween.play` was called without first making them active manually. They now start automatically. Fix #4632 (thanks @mikewesthad)
 
+### Spine Updates
+
+* Adding Spine to physics causes position to become NaN. Fix #4501 (thanks @hizzd)
+
 ### New Features
 
 * `Shader.setRenderToTexture` is a new method that will redirect the Shader to render to its own framebuffer / WebGLTexture instead of to the display list. This allows you to use the output of the shader as an input for another shader, by mapping a sampler2D uniform to it. It also allows you to save the Shader to the Texture Manager, allowing you to use it as a texture for any other texture based Game Object such as a Sprite.
@@ -70,6 +74,7 @@
 * `WebGLRenderer.currentType` contains the type of the Game Object currently being rendered.
 * `WebGLRenderer.newType` is a boolean that indicates if the current Game Object has a new type, i.e. different to the previous one in the display list.
 * `WebGLRenderer.nextTypeMatch` is a boolean that indicates if the _next_ Game Object in the display list has the same type as the one being currently rendered. This allows you to build batching into separated Game Objects.
+* `PluginManager.removeGameObject` is a new method that allows you to de-register custom Game Object types from the global Game Object Factory and/or Creator. Useful for when custom plugins are destroyed and need to clean-up after themselves.
 
 ### Updates
 
@@ -83,6 +88,9 @@
 * `WebGLRenderer.lostContextCallbacks` has been removed. Please use the new `CONTEXT_LOST` event instead.
 * `WebGLRenderer.restoredContextCallbacks` has been removed. Please use the new `CONTEXT_RESTORED` event instead.
 * `TextureManager.getBase64` will now emit a console warning if you try to get a base64 from a non-image based texture, such as a WebGL Texture.
+* The `WebAudioSoundManager` will now remove the document touch handlers even if the Promise fails, preventing it from throwing a rejection handler error.
+* `GameObjectFactory.remove` is a new static function that will remove a custom Game Object factory type.
+* `GameObjectCreator.remove` is a new static function that will remove a custom Game Object creator type.
 
 ### Bug Fixes
 
