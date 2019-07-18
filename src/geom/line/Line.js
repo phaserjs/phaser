@@ -7,6 +7,7 @@
 var Class = require('../../utils/Class');
 var GetPoint = require('./GetPoint');
 var GetPoints = require('./GetPoints');
+var GEOM_CONST = require('../const');
 var Random = require('./Random');
 var Vector2 = require('../../math/Vector2');
 
@@ -34,6 +35,17 @@ var Line = new Class({
         if (y1 === undefined) { y1 = 0; }
         if (x2 === undefined) { x2 = 0; }
         if (y2 === undefined) { y2 = 0; }
+
+        /**
+         * The geometry constant type of this object: `GEOM_CONST.LINE`.
+         * Used for fast type comparisons.
+         *
+         * @name Phaser.Geom.Line#type
+         * @type {integer}
+         * @readonly
+         * @since 3.19.0
+         */
+        this.type = GEOM_CONST.LINE;
 
         /**
          * The x coordinate of the lines starting point.
