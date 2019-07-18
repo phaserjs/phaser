@@ -77,6 +77,14 @@
 * `WebGLRenderer.newType` is a boolean that indicates if the current Game Object has a new type, i.e. different to the previous one in the display list.
 * `WebGLRenderer.nextTypeMatch` is a boolean that indicates if the _next_ Game Object in the display list has the same type as the one being currently rendered. This allows you to build batching into separated Game Objects.
 * `PluginManager.removeGameObject` is a new method that allows you to de-register custom Game Object types from the global Game Object Factory and/or Creator. Useful for when custom plugins are destroyed and need to clean-up after themselves.
+* `GEOM_CONST` is a new constants object that contains the different types of Geometry Objects, such as `RECTANGLE` and `CIRCLE`.
+* `Circle.type` is a new property containing the shapes geometry type, which can be used for quick type comparisons.
+* `Ellipse.type` is a new property containing the shapes geometry type, which can be used for quick type comparisons.
+* `Line.type` is a new property containing the shapes geometry type, which can be used for quick type comparisons.
+* `Point.type` is a new property containing the shapes geometry type, which can be used for quick type comparisons.
+* `Polygon.type` is a new property containing the shapes geometry type, which can be used for quick type comparisons.
+* `Rectangle.type` is a new property containing the shapes geometry type, which can be used for quick type comparisons.
+* `Triangle.type` is a new property containing the shapes geometry type, which can be used for quick type comparisons.
 
 ### Updates
 
