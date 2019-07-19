@@ -85,6 +85,8 @@
 * `Polygon.type` is a new property containing the shapes geometry type, which can be used for quick type comparisons.
 * `Rectangle.type` is a new property containing the shapes geometry type, which can be used for quick type comparisons.
 * `Triangle.type` is a new property containing the shapes geometry type, which can be used for quick type comparisons.
+* `InputPlugin.enableDebug` is a new method that will create a debug shape for the given Game Objects hit area. This allows you to quickly check the size and placement of an input hit area. You can customzie the shape outline color. The debug shape will automatically track the Game Object to which it is bound.
+* `InputPlugion.removeDebug` will remove a Debug Input Shape from the given Game Object and destroy it.
 
 ### Updates
 
@@ -129,6 +131,7 @@
 * The `DESTROY` event hook wasn't removed from Group children when destroying the Group and `destroyChildren` was set to false. Now, the hook is removed regardless (thanks @rexrainbow)
 * The WebGL Lost and Restored Context callbacks were never removed, which could cause them to hold onto stale references. Fix #3610 (thanks @Twilrom)
 * `Origin.updateDisplayOrigin` no longer applies a Math.floor to the display origins, allowing you to have a 0.x origin for a Game Object that only has a width or height of 1. This fixes issues with things like 1x1 rectangles displaying incorrectly during rendering. Fix #4126 (thanks @rexrainbow)
+* `InputManager.resetCursor` will now check if the canvas element still exists before resetting the cursor on it. Fix #4662 (thanks @fromnowhereuser)
 
 ### Examples, Documentation and TypeScript
 
