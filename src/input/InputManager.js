@@ -458,7 +458,7 @@ var InputManager = new Class({
      */
     resetCursor: function (interactiveObject)
     {
-        if (interactiveObject.cursor)
+        if (interactiveObject.cursor && this.canvas)
         {
             this.canvas.style.cursor = this.defaultCursor;
         }
