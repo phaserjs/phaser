@@ -16,6 +16,7 @@ var EllipseContains = require('../geom/ellipse/Contains');
 var Events = require('./events');
 var EventEmitter = require('eventemitter3');
 var GetFastValue = require('../utils/object/GetFastValue');
+var GEOM_CONST = require('../geom/const');
 var InputPluginCache = require('./InputPluginCache');
 var IsPlainObject = require('../utils/object/IsPlainObject');
 var PluginCache = require('../plugins/PluginCache');
@@ -2338,6 +2339,145 @@ var InputPlugin = new Class({
         var shape = new Triangle(x1, y1, x2, y2, x3, y3);
 
         return this.setHitArea(gameObjects, shape, callback);
+    },
+
+    /**
+     * Creates an Input Debug Shape for the given Game Object.
+     * 
+     * The Game Object must have _already_ been enabled for input prior to calling this method.
+     * 
+     * This is intended to assist you during development and debugging.
+     * 
+     * Debug Shapes can only be created for Game Objects that are using standard Phaser Geometry for input,
+     * including: Circle, Ellipse, Line, Polygon, Rectangle and Triangle.
+     * 
+     * Game Objects that are using their automatic hit areas are using Rectangles by default, so will also work.
+     * 
+     * The Debug Shape is created and added to the display list and is then kept in sync with the Game Object
+     * it is connected with. Should you need to modify it yourself, such as to hide it, you can access it via
+     * the Game Object property: `GameObject.input.hitAreaDebug`.
+     * 
+     * Calling this method on a Game Object that already has a Debug Shape will first destroy the old shape,
+     * before creating a new one. If you wish to remove the Debug Shape entirely, you should call the
+     * method `InputPlugin.removeDebug`.
+     * 
+     * Note that the debug shape will only show the outline of the input area. If the input test is using a
+     * pixel perfect check, for example, then this is not displayed. If you are using a custom shape, that
+     * doesn't extend one of the base Phaser Geometry objects, as your hit area, then this method will not
+     * work.
+     *
+     * @method Phaser.Input.InputPlugin#enableDebug
+     * @since 3.19.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to create the input debug shape for.
+     * @param {number} [color=0x00ff00] - The outline color of the debug shape.
+     *
+     * @return {Phaser.Input.InputPlugin} This Input Plugin.
+     */
+    enableDebug: function (gameObject, color)
+    {
+        if (color === undefined) { color = 0x00ff00; }
+
+        var input = gameObject.input;
+
+        if (!input || !input.hitArea)
+        {
+            return this;
+        }
+
+        var shape = input.hitArea;
+        var shapeType = shape.type;
+        var debug = input.hitAreaDebug;
+        var factory = this.systems.add;
+        var updateList = this.systems.updateList;
+
+        if (debug)
+        {
+            updateList.remove(debug);
+
+            debug.destroy();
+
+            debug = null;
+        }
+
+        switch (shapeType)
+        {
+            case GEOM_CONST.CIRCLE:
+                debug = factory.arc(0, 0, shape.radius);
+                break;
+
+            case GEOM_CONST.ELLIPSE:
+                debug = factory.ellipse(0, 0, shape.width, shape.height);
+                break;
+
+            case GEOM_CONST.LINE:
+                debug = factory.line(0, 0, shape.x1, shape.y1, shape.x2, shape.y2);
+                break;
+
+            case GEOM_CONST.POLYGON:
+                debug = factory.polygon(0, 0, shape.points);
+                break;
+
+            case GEOM_CONST.RECTANGLE:
+                debug = factory.rectangle(0, 0, shape.width, shape.height);
+                break;
+
+            case GEOM_CONST.TRIANGLE:
+                debug = factory.triangle(0, 0, shape.x1, shape.y1, shape.x2, shape.y2, shape.x3, shape.y3);
+                break;
+        }
+
+        if (debug)
+        {
+            debug.isFilled = false;
+
+            debug.preUpdate = function ()
+            {
+                debug.setStrokeStyle(1 / gameObject.scale, color);
+    
+                debug.setDisplayOrigin(gameObject.displayOriginX, gameObject.displayOriginY);
+                debug.setRotation(gameObject.rotation);
+                debug.setScale(gameObject.scaleX, gameObject.scaleY);
+                debug.setPosition(gameObject.x, gameObject.y);
+                debug.setScrollFactor(gameObject.scrollFactorX, gameObject.scrollFactorY);
+            };
+    
+            updateList.add(debug);
+    
+            input.hitAreaDebug = debug;
+        }
+
+        return this;
+    },
+
+    /**
+     * Removes an Input Debug Shape from the given Game Object.
+     * 
+     * The shape is destroyed immediately and the `hitAreaDebug` property is set to `null`.
+     *
+     * @method Phaser.Input.InputPlugin#removeDebug
+     * @since 3.19.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to remove the input debug shape from.
+     *
+     * @return {Phaser.Input.InputPlugin} This Input Plugin.
+     */
+    removeDebug: function (gameObject)
+    {
+        var input = gameObject.input;
+
+        if (input && input.hitAreaDebug)
+        {
+            var debug = input.hitAreaDebug;
+
+            this.systems.updateList.remove(debug);
+    
+            debug.destroy();
+
+            input.hitAreaDebug = null;
+        }
+
+        return this;
     },
 
     /**
