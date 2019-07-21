@@ -53446,7 +53446,7 @@ declare namespace Phaser {
                  */
                 init?: (this: Scene) => void;
                 /**
-                 * See See {@link Phaser.Scene#preload}.
+                 * See {@link Phaser.Scene#preload}.
                  */
                 preload?: (this: Scene) => void;
                 /**
