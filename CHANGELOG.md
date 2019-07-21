@@ -103,6 +103,7 @@
 * The `WebAudioSoundManager` will now remove the document touch handlers even if the Promise fails, preventing it from throwing a rejection handler error.
 * `GameObjectFactory.remove` is a new static function that will remove a custom Game Object factory type.
 * `GameObjectCreator.remove` is a new static function that will remove a custom Game Object creator type.
+* `CanvasTexture.getPixels` now defaults to 0x0 by width x height as the default area, allowing you to call the method with no arguments to get all the pixels for the canvas.
 
 ### Bug Fixes
 

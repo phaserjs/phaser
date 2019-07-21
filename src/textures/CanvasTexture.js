@@ -417,15 +417,18 @@ var CanvasTexture = new Class({
      * @method Phaser.Textures.CanvasTexture#getPixels
      * @since 3.16.0
      * 
-     * @param {integer} x - The x coordinate of the top-left of the region. Must lay within the dimensions of this CanvasTexture and be an integer.
-     * @param {integer} y - The y coordinate of the top-left of the region. Must lay within the dimensions of this CanvasTexture and be an integer.
-     * @param {integer} width - The width of the region to get. Must be an integer.
+     * @param {integer} [x=0] - The x coordinate of the top-left of the region. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} [y=0] - The y coordinate of the top-left of the region. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} [width] - The width of the region to get. Must be an integer. Defaults to the canvas width if not given.
      * @param {integer} [height] - The height of the region to get. Must be an integer. If not given will be set to the `width`.
      * 
      * @return {Phaser.Types.Textures.PixelConfig[]} An array of Pixel objects.
      */
     getPixels: function (x, y, width, height)
     {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = this.width; }
         if (height === undefined) { height = width; }
 
         x = Math.abs(Math.round(x));
