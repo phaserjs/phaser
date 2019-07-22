@@ -149,18 +149,18 @@ var SpinePlugin = new Class({
         this.mvp = new Matrix4();
 
         //  Create a simple shader, mesh, model-view-projection matrix and SkeletonRenderer.
-        this.shader = runtime.Shader.newTwoColoredTextured(gl);
-        this.batcher = new runtime.PolygonBatcher(gl);
 
-        this.skeletonRenderer = new runtime.SkeletonRenderer(gl);
+        this.shader = runtime.Shader.newTwoColoredTextured(gl);
+
+        this.batcher = new runtime.PolygonBatcher(gl, true);
+
+        this.skeletonRenderer = new runtime.SkeletonRenderer(gl, true);
 
         this.skeletonRenderer.premultipliedAlpha = true;
 
-        this.shapes = new runtime.ShapeRenderer(gl);
-
-        this.debugRenderer = new runtime.SkeletonDebugRenderer(gl);
-
-        this.debugShader = runtime.Shader.newColored(gl);
+        // this.shapes = new runtime.ShapeRenderer(gl);
+        // this.debugRenderer = new runtime.SkeletonDebugRenderer(gl);
+        // this.debugShader = runtime.Shader.newColored(gl);
     },
 
     getAtlasWebGL: function (key)
@@ -262,8 +262,9 @@ var SpinePlugin = new Class({
     {
         var atlasKey = key;
         var jsonKey = key;
+        var split = (key.indexOf('.') !== -1);
 
-        if (key.indexOf('.'))
+        if (split)
         {
             var parts = key.split('.');
 
@@ -287,14 +288,21 @@ var SpinePlugin = new Class({
         {
             var json = this.json.get(atlasKey);
 
-            data = GetValue(json, jsonKey);
+            data = (split) ? GetValue(json, jsonKey) : json;
         }
 
-        var skeletonData = skeletonJson.readSkeletonData(data);
+        if (data)
+        {
+            var skeletonData = skeletonJson.readSkeletonData(data);
 
-        var skeleton = new Spine.Skeleton(skeletonData);
-    
-        return { skeletonData: skeletonData, skeleton: skeleton };
+            var skeleton = new Spine.Skeleton(skeletonData);
+        
+            return { skeletonData: skeletonData, skeleton: skeleton };
+        }
+        else
+        {
+            return null;
+        }
     },
 
     getBounds: function (skeleton)

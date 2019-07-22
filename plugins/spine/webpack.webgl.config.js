@@ -10,13 +10,13 @@ module.exports = {
     context: `${__dirname}/src/`,
 
     entry: {
-        'SpineWebGLPlugin': './SpineWebGLPlugin.js'
+        'SpinePlugin': './SpinePlugin.js'
     },
 
     output: {
         path: `${__dirname}/dist/`,
         filename: '[name].js',
-        library: 'SpineWebGLPlugin',
+        library: 'SpinePlugin',
         libraryTarget: 'umd',
         sourceMapFilename: '[file].map',
         devtoolModuleFilenameTemplate: 'webpack:///[resource-path]', // string
@@ -28,14 +28,6 @@ module.exports = {
 
     module: {
         rules: [
-            {
-                test: require.resolve('./src/runtimes/spine-canvas.js'),
-                use: 'imports-loader?this=>window'
-            },
-            {
-                test: require.resolve('./src/runtimes/spine-canvas.js'),
-                use: 'exports-loader?spine'
-            },
             {
                 test: require.resolve('./src/runtimes/spine-webgl.js'),
                 use: 'imports-loader?this=>window'
@@ -49,8 +41,7 @@ module.exports = {
 
     resolve: {
         alias: {
-            'SpineCanvas': './runtimes/spine-canvas.js',
-            'SpineWebGL': './runtimes/spine-webgl.js'
+            'Spine': './runtimes/spine-webgl.js'
         },
     },
 
