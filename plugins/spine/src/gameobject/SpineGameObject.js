@@ -86,13 +86,8 @@ var SpineGameObject = new Class({
 
         var skeleton = data.skeleton;
 
-        skeleton.setToSetupPose();
-
-        skeleton.updateWorldTransform();
-
         skeleton.setSkinByName('default');
-
-        this.skeleton = skeleton;
+        skeleton.setToSetupPose();
 
         //  AnimationState
         data = this.plugin.createAnimationState(skeleton);
@@ -137,21 +132,34 @@ var SpineGameObject = new Class({
             this.setAnimation(0, animationName, loop);
         }
 
+        skeleton.x = this.x;
+        skeleton.y = 600 - this.y;
+        skeleton.scaleX = this.scaleX;
+        skeleton.scaleY = this.scaleY;
+
+        skeleton.updateWorldTransform();
+
+        this.skeleton = skeleton;
+
         this.root = this.getRootBone();
 
-        this.skeleton.scaleX = this.scaleX;
-        this.skeleton.scaleY = this.scaleY;
+        var b = this.getBounds();
 
-        this.skeleton.updateWorldTransform();
+        // var w = this.skeletonData.width;
+        // var h = this.skeletonData.height;
 
-        var w = this.skeletonData.width;
-        var h = this.skeletonData.height;
+        // this.width = w;
+        // this.height = h;
 
-        this.width = w;
-        this.height = h;
+        // this.displayOriginX = w / 2;
+        // this.displayOriginY = h;
 
-        this.displayOriginX = w / 2;
-        this.displayOriginY = h / 2;
+        this.width = b.size.x;
+        this.height = b.size.y;
+        this.displayOriginX = this.width / 2;
+        this.displayOriginY = this.height / 2;
+
+        console.log(b.offset, b.size);
 
         return this;
     },
@@ -269,6 +277,11 @@ var SpineGameObject = new Class({
     {
         return this.skeleton.findSlotIndex(slotName);
     },
+
+    // getBounds (	2-tuple offset, 2-tuple size, float[] temp): void
+    // Returns the axis aligned bounding box (AABB) of the region and mesh attachments for the current pose.
+    // offset An output value, the distance from the skeleton origin to the bottom left corner of the AABB.
+    // size An output value, the width and height of the AABB.
 
     getBounds: function ()
     {
