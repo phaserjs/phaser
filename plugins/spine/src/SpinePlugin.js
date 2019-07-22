@@ -154,6 +154,8 @@ var SpinePlugin = new Class({
 
         this.skeletonRenderer = new runtime.SkeletonRenderer(gl);
 
+        this.skeletonRenderer.premultipliedAlpha = true;
+
         this.shapes = new runtime.ShapeRenderer(gl);
 
         this.debugRenderer = new runtime.SkeletonDebugRenderer(gl);
@@ -189,7 +191,7 @@ var SpinePlugin = new Class({
 
             atlas = new Spine.TextureAtlas(atlasData, function (path)
             {
-                var glTexture = new Spine.webgl.GLTexture(gl, textures.get(path).getSourceImage());
+                var glTexture = new Spine.webgl.GLTexture(gl, textures.get(path).getSourceImage(), false);
 
                 spineTextures.add(key, glTexture);
 
