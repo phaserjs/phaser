@@ -138,10 +138,13 @@ var SpineGameObject = new Class({
         
         var height = renderer.height;
 
+        var oldScaleX = this.scaleX;
+        var oldScaleY = this.scaleY;
+
         skeleton.x = this.x;
         skeleton.y = height - this.y;
-        skeleton.scaleX = this.scaleX;
-        skeleton.scaleY = this.scaleY;
+        skeleton.scaleX = 1;
+        skeleton.scaleY = 1;
 
         this.skeleton = skeleton;
 
@@ -157,14 +160,16 @@ var SpineGameObject = new Class({
 
         var b = this.getBounds();
 
-        var sx = 1 / this.scaleX;
-        var sy = 1 / this.scaleY;
+        this.width = b.size.x;
+        this.height = b.size.y;
 
-        this.width = b.size.x * sx;
-        this.height = b.size.y * sy;
-
-        this.displayOriginX = (this.x - b.offset.x) * sx;
+        this.displayOriginX = this.x - b.offset.x;
         this.displayOriginY = this.y - (height - (this.height + b.offset.y));
+
+        skeleton.scaleX = oldScaleX;
+        skeleton.scaleY = oldScaleY;
+
+        skeleton.updateWorldTransform();
 
         return this;
     },
