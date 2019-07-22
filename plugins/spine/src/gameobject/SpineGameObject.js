@@ -13,7 +13,9 @@ var ComponentsFlip = require('../../../../src/gameobjects/components/Flip');
 var ComponentsScrollFactor = require('../../../../src/gameobjects/components/ScrollFactor');
 var ComponentsTransform = require('../../../../src/gameobjects/components/Transform');
 var ComponentsVisible = require('../../../../src/gameobjects/components/Visible');
+var CounterClockwise = require('../../../../src/math/angle/CounterClockwise');
 var GameObject = require('../../../../src/gameobjects/GameObject');
+var RadToDeg = require('../../../../src/math/RadToDeg');
 var SpineGameObjectRender = require('./SpineGameObjectRender');
 
 /**
@@ -132,34 +134,37 @@ var SpineGameObject = new Class({
             this.setAnimation(0, animationName, loop);
         }
 
+        var renderer = this.scene.sys.renderer;
+        
+        var height = renderer.height;
+
         skeleton.x = this.x;
-        skeleton.y = 600 - this.y;
+        skeleton.y = height - this.y;
         skeleton.scaleX = this.scaleX;
         skeleton.scaleY = this.scaleY;
-
-        skeleton.updateWorldTransform();
 
         this.skeleton = skeleton;
 
         this.root = this.getRootBone();
+    
+        if (this.root)
+        {
+            //  - 90 degrees to account for the difference in Spine vs. Phaser rotation
+            this.root.rotation = RadToDeg(CounterClockwise(this.rotation - 1.5707963267948966));
+        }
+
+        skeleton.updateWorldTransform();
 
         var b = this.getBounds();
 
-        // var w = this.skeletonData.width;
-        // var h = this.skeletonData.height;
+        var sx = 1 / this.scaleX;
+        var sy = 1 / this.scaleY;
 
-        // this.width = w;
-        // this.height = h;
+        this.width = b.size.x * sx;
+        this.height = b.size.y * sy;
 
-        // this.displayOriginX = w / 2;
-        // this.displayOriginY = h;
-
-        this.width = b.size.x;
-        this.height = b.size.y;
-        this.displayOriginX = this.width / 2;
-        this.displayOriginY = this.height / 2;
-
-        console.log(b.offset, b.size);
+        this.displayOriginX = (this.x - b.offset.x) * sx;
+        this.displayOriginY = this.y - (height - (this.height + b.offset.y));
 
         return this;
     },
