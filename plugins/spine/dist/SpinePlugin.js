@@ -11350,8 +11350,13 @@ var SpineFile = new Class({
 
     function SpineFile (loader, key, jsonURL, atlasURL, jsonXhrSettings, atlasXhrSettings)
     {
+        var i;
         var json;
         var atlas;
+        var files = [];
+        var cache = loader.cacheManager.custom.spine;
+
+        //  atlas can be an array of atlas files, not just a single one
 
         if (IsPlainObject(key))
         {
@@ -11366,22 +11371,60 @@ var SpineFile = new Class({
                 xhrSettings: GetFastValue(config, 'jsonXhrSettings')
             });
 
-            atlas = new TextFile(loader, {
-                key: key,
-                url: GetFastValue(config, 'atlasURL'),
-                extension: GetFastValue(config, 'atlasExtension', 'atlas'),
-                xhrSettings: GetFastValue(config, 'atlasXhrSettings')
-            });
+            atlasURL = GetFastValue(config, 'atlasURL');
+
+            if (Array.isArray(atlasURL))
+            {
+                for (i = 0; i < atlasURL.length; i++)
+                {
+                    atlas = new TextFile(loader, {
+                        key: key,
+                        url: atlasURL[i],
+                        extension: GetFastValue(config, 'atlasExtension', 'atlas'),
+                        xhrSettings: GetFastValue(config, 'atlasXhrSettings')
+                    });
+
+                    files.push(atlas);
+                }
+            }
+            else
+            {
+                atlas = new TextFile(loader, {
+                    key: key,
+                    url: atlasURL,
+                    extension: GetFastValue(config, 'atlasExtension', 'atlas'),
+                    xhrSettings: GetFastValue(config, 'atlasXhrSettings')
+                });
+
+                files.push(atlas);
+            }
         }
         else
         {
             json = new JSONFile(loader, key, jsonURL, jsonXhrSettings);
-            atlas = new TextFile(loader, key, atlasURL, atlasXhrSettings);
-        }
-        
-        atlas.cache = loader.cacheManager.custom.spine;
 
-        MultiFile.call(this, loader, 'spine', key, [ json, atlas ]);
+            if (Array.isArray(atlasURL))
+            {
+                for (i = 0; i < atlasURL.length; i++)
+                {
+                    atlas = new TextFile(loader, key + '_' + i, atlasURL[i], atlasXhrSettings);
+                    atlas.cache = cache;
+
+                    files.push(atlas);
+                }
+            }
+            else
+            {
+                atlas = new TextFile(loader, key + '_0', atlasURL, atlasXhrSettings);
+                atlas.cache = cache;
+
+                files.push(atlas);
+            }
+        }
+
+        files.unshift(json);
+
+        MultiFile.call(this, loader, 'spine', key, files);
     },
 
     /**
@@ -11471,153 +11514,39 @@ var SpineFile = new Class({
 
             fileJSON.addToCache();
 
-            var fileText = this.files[1];
+            var atlasCache;
+            var atlasKey = '';
+            var combinedAtlastData = '';
 
-            fileText.addToCache();
-
-            for (var i = 2; i < this.files.length; i++)
+            for (var i = 1; i < this.files.length; i++)
             {
                 var file = this.files[i];
 
-                var key = file.key.substr(4).trim();
+                if (file.type === 'text')
+                {
+                    atlasKey = file.key.substr(0, file.key.length - 2);
 
-                this.loader.textureManager.addImage(key, file.data);
+                    atlasCache = file.cache;
+
+                    combinedAtlastData = combinedAtlastData.concat(file.data);
+                }
+                else
+                {
+                    var key = file.key.substr(4).trim();
+   
+                    this.loader.textureManager.addImage(key, file.data);
+                }
 
                 file.pendingDestroy();
             }
+
+            atlasCache.add(atlasKey, combinedAtlastData);
 
             this.complete = true;
         }
     }
 
 });
-
-/**
- * Adds a Unity YAML based Texture Atlas, or array of atlases, to the current load queue.
- *
- * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
- * 
- * ```javascript
- * function preload ()
- * {
- *     this.load.unityAtlas('mainmenu', 'images/MainMenu.png', 'images/MainMenu.txt');
- * }
- * ```
- *
- * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
- * or if it's already running, when the next free load slot becomes available. This happens automatically if you
- * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
- * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
- * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
- * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
- * loaded.
- * 
- * If you call this from outside of `preload` then you are responsible for starting the Loader afterwards and monitoring
- * its events to know when it's safe to use the asset. Please see the Phaser.Loader.LoaderPlugin class for more details.
- *
- * Phaser expects the atlas data to be provided in a YAML formatted text file as exported from Unity.
- * 
- * Phaser can load all common image types: png, jpg, gif and any other format the browser can natively handle.
- *
- * The key must be a unique String. It is used to add the file to the global Texture Manager upon a successful load.
- * The key should be unique both in terms of files being loaded and files already present in the Texture Manager.
- * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
- * then remove it from the Texture Manager first, before loading a new one.
- *
- * Instead of passing arguments you can pass a configuration object, such as:
- * 
- * ```javascript
- * this.load.unityAtlas({
- *     key: 'mainmenu',
- *     textureURL: 'images/MainMenu.png',
- *     atlasURL: 'images/MainMenu.txt'
- * });
- * ```
- *
- * See the documentation for `Phaser.Loader.FileTypes.SpineFileConfig` for more details.
- *
- * Once the atlas has finished loading you can use frames from it as textures for a Game Object by referencing its key:
- * 
- * ```javascript
- * this.load.unityAtlas('mainmenu', 'images/MainMenu.png', 'images/MainMenu.json');
- * // and later in your game ...
- * this.add.image(x, y, 'mainmenu', 'background');
- * ```
- *
- * To get a list of all available frames within an atlas please consult your Texture Atlas software.
- *
- * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
- * key. For example, if the prefix was `MENU.` and the key was `Background` the final key will be `MENU.Background` and
- * this is what you would use to retrieve the image from the Texture Manager.
- *
- * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
- *
- * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
- * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension, although
- * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
- *
- * Phaser also supports the automatic loading of associated normal maps. If you have a normal map to go with this image,
- * then you can specify it by providing an array as the `url` where the second element is the normal map:
- * 
- * ```javascript
- * this.load.unityAtlas('mainmenu', [ 'images/MainMenu.png', 'images/MainMenu-n.png' ], 'images/MainMenu.txt');
- * ```
- *
- * Or, if you are using a config object use the `normalMap` property:
- * 
- * ```javascript
- * this.load.unityAtlas({
- *     key: 'mainmenu',
- *     textureURL: 'images/MainMenu.png',
- *     normalMap: 'images/MainMenu-n.png',
- *     atlasURL: 'images/MainMenu.txt'
- * });
- * ```
- *
- * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORs and XHR Settings.
- * Normal maps are a WebGL only feature.
- *
- * Note: The ability to load this type of file will only be available if the Unity Atlas File type has been built into Phaser.
- * It is available in the default build but can be excluded from custom builds.
- *
- * @method Phaser.Loader.LoaderPlugin#spine
- * @fires Phaser.Loader.LoaderPlugin#addFileEvent
- * @since 3.16.0
- *
- * @param {(string|Phaser.Loader.FileTypes.SpineFileConfig|Phaser.Loader.FileTypes.SpineFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
- * @param {string|string[]} [textureURL] - The absolute or relative URL to load the texture image file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
- * @param {string} [atlasURL] - The absolute or relative URL to load the texture atlas data file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
- * @param {XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
- * @param {XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the atlas data file. Used in replacement of the Loaders default XHR Settings.
- *
- * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
-FileTypesManager.register('spine', function (key, jsonURL, atlasURL, jsonXhrSettings, atlasXhrSettings)
-{
-    var multifile;
-
-    //  Supports an Object file definition in the key argument
-    //  Or an array of objects in the key argument
-    //  Or a single entry where all arguments have been defined
-
-    if (Array.isArray(key))
-    {
-        for (var i = 0; i < key.length; i++)
-        {
-            multifile = new SpineFile(this, key[i]);
-
-            this.addFile(multifile.files);
-        }
-    }
-    else
-    {
-        multifile = new SpineFile(this, key, jsonURL, atlasURL, jsonXhrSettings, atlasXhrSettings);
-
-        this.addFile(multifile.files);
-    }
-
-    return this;
-});
- */
 
 module.exports = SpineFile;
 
@@ -11787,6 +11716,8 @@ var SpinePlugin = new Class({
 
         this.skeletonRenderer = new runtime.SkeletonRenderer(gl);
 
+        this.skeletonRenderer.premultipliedAlpha = true;
+
         this.shapes = new runtime.ShapeRenderer(gl);
 
         this.debugRenderer = new runtime.SkeletonDebugRenderer(gl);
@@ -11822,7 +11753,7 @@ var SpinePlugin = new Class({
 
             atlas = new Spine.TextureAtlas(atlasData, function (path)
             {
-                var glTexture = new Spine.webgl.GLTexture(gl, textures.get(path).getSourceImage());
+                var glTexture = new Spine.webgl.GLTexture(gl, textures.get(path).getSourceImage(), false);
 
                 spineTextures.add(key, glTexture);
 
@@ -12024,7 +11955,9 @@ var ComponentsFlip = __webpack_require__(/*! ../../../../src/gameobjects/compone
 var ComponentsScrollFactor = __webpack_require__(/*! ../../../../src/gameobjects/components/ScrollFactor */ "../../../src/gameobjects/components/ScrollFactor.js");
 var ComponentsTransform = __webpack_require__(/*! ../../../../src/gameobjects/components/Transform */ "../../../src/gameobjects/components/Transform.js");
 var ComponentsVisible = __webpack_require__(/*! ../../../../src/gameobjects/components/Visible */ "../../../src/gameobjects/components/Visible.js");
+var CounterClockwise = __webpack_require__(/*! ../../../../src/math/angle/CounterClockwise */ "../../../src/math/angle/CounterClockwise.js");
 var GameObject = __webpack_require__(/*! ../../../../src/gameobjects/GameObject */ "../../../src/gameobjects/GameObject.js");
+var RadToDeg = __webpack_require__(/*! ../../../../src/math/RadToDeg */ "../../../src/math/RadToDeg.js");
 var SpineGameObjectRender = __webpack_require__(/*! ./SpineGameObjectRender */ "./gameobject/SpineGameObjectRender.js");
 
 /**
@@ -12097,13 +12030,8 @@ var SpineGameObject = new Class({
 
         var skeleton = data.skeleton;
 
-        skeleton.setToSetupPose();
-
-        skeleton.updateWorldTransform();
-
         skeleton.setSkinByName('default');
-
-        this.skeleton = skeleton;
+        skeleton.setToSetupPose();
 
         //  AnimationState
         data = this.plugin.createAnimationState(skeleton);
@@ -12148,21 +12076,42 @@ var SpineGameObject = new Class({
             this.setAnimation(0, animationName, loop);
         }
 
+        var renderer = this.scene.sys.renderer;
+        
+        var height = renderer.height;
+
+        var oldScaleX = this.scaleX;
+        var oldScaleY = this.scaleY;
+
+        skeleton.x = this.x;
+        skeleton.y = height - this.y;
+        skeleton.scaleX = 1;
+        skeleton.scaleY = 1;
+
+        this.skeleton = skeleton;
+
         this.root = this.getRootBone();
+    
+        if (this.root)
+        {
+            //  - 90 degrees to account for the difference in Spine vs. Phaser rotation
+            this.root.rotation = RadToDeg(CounterClockwise(this.rotation - 1.5707963267948966));
+        }
 
-        this.skeleton.scaleX = this.scaleX;
-        this.skeleton.scaleY = this.scaleY;
+        skeleton.updateWorldTransform();
 
-        this.skeleton.updateWorldTransform();
+        var b = this.getBounds();
 
-        var w = this.skeletonData.width;
-        var h = this.skeletonData.height;
+        this.width = b.size.x;
+        this.height = b.size.y;
 
-        this.width = w;
-        this.height = h;
+        this.displayOriginX = this.x - b.offset.x;
+        this.displayOriginY = this.y - (height - (this.height + b.offset.y));
 
-        this.displayOriginX = w / 2;
-        this.displayOriginY = h / 2;
+        skeleton.scaleX = oldScaleX;
+        skeleton.scaleY = oldScaleY;
+
+        skeleton.updateWorldTransform();
 
         return this;
     },
@@ -12280,6 +12229,11 @@ var SpineGameObject = new Class({
     {
         return this.skeleton.findSlotIndex(slotName);
     },
+
+    // getBounds (	2-tuple offset, 2-tuple size, float[] temp): void
+    // Returns the axis aligned bounding box (AABB) of the region and mesh attachments for the current pose.
+    // offset An output value, the distance from the skeleton origin to the bottom left corner of the AABB.
+    // size An output value, the width and height of the AABB.
 
     getBounds: function ()
     {
@@ -12547,8 +12501,6 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
         shader.setUniform4x4f(runtime.Shader.MVP_MATRIX, mvp.val);
 
         batcher.begin(shader);
-
-        skeletonRenderer.premultipliedAlpha = true;
     }
 
     if (renderer.nextTypeMatch)
@@ -12557,6 +12509,7 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     }
 
     //  Draw the current skeleton
+    skeletonRenderer.premultipliedAlpha = true;
     skeletonRenderer.draw(batcher, skeleton);
 
     if (!renderer.nextTypeMatch)
