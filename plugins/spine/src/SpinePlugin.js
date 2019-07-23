@@ -52,6 +52,10 @@ var SpinePlugin = new Class({
         this.drawDebug = false;
 
         this.gl;
+        this.renderer;
+
+        this.sceneRenderer;
+
         this.mvp;
         this.shader;
         this.batcher;
@@ -64,6 +68,7 @@ var SpinePlugin = new Class({
         {
             this.runtime = Spine.webgl;
 
+            this.renderer = game.renderer;
             this.gl = game.renderer.gl;
 
             this.getAtlas = this.getAtlasWebGL;
@@ -71,6 +76,8 @@ var SpinePlugin = new Class({
         else
         {
             this.runtime = Spine.canvas;
+
+            this.renderer = game.renderer;
 
             this.getAtlas = this.getAtlasCanvas;
         }
@@ -143,20 +150,24 @@ var SpinePlugin = new Class({
 
     bootWebGL: function ()
     {
-        var gl = this.gl;
-        var runtime = this.runtime;
+        // var gl = this.gl;
+        // var runtime = this.runtime;
 
-        this.mvp = new Matrix4();
+        // console.log(this.renderer.canvas, (this.renderer.canvas instanceof HTMLCanvasElement));
+
+        this.sceneRenderer = new Spine.webgl.SceneRenderer(this.renderer.canvas, this.gl, true);
+
+        // this.mvp = new Matrix4();
 
         //  Create a simple shader, mesh, model-view-projection matrix and SkeletonRenderer.
 
-        this.shader = runtime.Shader.newTwoColoredTextured(gl);
+        // this.shader = runtime.Shader.newTwoColoredTextured(gl);
 
-        this.batcher = new runtime.PolygonBatcher(gl, true);
+        // this.batcher = new runtime.PolygonBatcher(gl, true);
 
-        this.skeletonRenderer = new runtime.SkeletonRenderer(gl, true);
+        // this.skeletonRenderer = new runtime.SkeletonRenderer(gl, true);
 
-        this.skeletonRenderer.premultipliedAlpha = true;
+        // this.skeletonRenderer.premultipliedAlpha = true;
 
         // this.shapes = new runtime.ShapeRenderer(gl);
         // this.debugRenderer = new runtime.SkeletonDebugRenderer(gl);
@@ -187,7 +198,9 @@ var SpinePlugin = new Class({
         {
             var textures = this.textures;
 
-            var gl = this.gl;
+            var gl = this.sceneRenderer.context.gl;
+
+            gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
 
             atlas = new Spine.TextureAtlas(atlasData, function (path)
             {
