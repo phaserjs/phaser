@@ -18,7 +18,7 @@ var CreateDOMContainer = function (game)
     //  DOM Element Container
     var div = document.createElement('div');
 
-    div.style = [
+    div.style.cssText = [
         'display: block;',
         'width: ' + game.scale.width + 'px;',
         'height: ' + game.scale.height + 'px;',
