@@ -139,6 +139,28 @@ var SpinePlugin = new Class({
     bootWebGL: function ()
     {
         this.sceneRenderer = new Spine.webgl.SceneRenderer(this.renderer.canvas, this.gl, true);
+
+        //  Monkeypatch the Spine setBlendMode functions, or batching is destroyed
+
+        var setBlendMode = function (srcBlend, dstBlend)
+        {
+            if (srcBlend !== this.srcBlend || dstBlend !== this.dstBlend)
+            {
+                var gl = this.context.gl;
+
+                this.srcBlend = srcBlend;
+                this.dstBlend = dstBlend;
+
+                if (this.isDrawing)
+                {
+                    this.flush();
+                    gl.blendFunc(this.srcBlend, this.dstBlend);
+                }
+            }
+        };
+
+        this.sceneRenderer.batcher.setBlendMode = setBlendMode;
+        this.sceneRenderer.shapes.setBlendMode = setBlendMode;
     },
 
     getAtlasWebGL: function (key)
