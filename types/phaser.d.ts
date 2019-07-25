@@ -14717,7 +14717,7 @@ declare namespace Phaser {
             /**
              * A reference to the Scene Update List.
              */
-            protected "updateList;": Phaser.GameObjects.UpdateList;
+            protected updateList: Phaser.GameObjects.UpdateList;
 
             /**
              * Creates a new Graphics Game Object and returns it.
@@ -15044,7 +15044,7 @@ declare namespace Phaser {
             /**
              * A reference to the Scene Update List.
              */
-            protected "updateList;": Phaser.GameObjects.UpdateList;
+            protected updateList: Phaser.GameObjects.UpdateList;
 
             /**
              * Adds an existing Game Object to this Scene.
