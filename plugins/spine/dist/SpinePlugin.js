@@ -10141,6 +10141,7 @@ var SpinePlugin = new Class({
         this.gl;
         this.renderer;
         this.sceneRenderer;
+        this.skeletonDebugRenderer;
 
         if (this.isWebGL)
         {
@@ -10251,6 +10252,8 @@ var SpinePlugin = new Class({
 
         this.sceneRenderer.batcher.setBlendMode = setBlendMode;
         this.sceneRenderer.shapes.setBlendMode = setBlendMode;
+
+        this.skeletonDebugRenderer = this.sceneRenderer.skeletonDebugRenderer;
     },
 
     getAtlasWebGL: function (key)
@@ -10292,6 +10295,78 @@ var SpinePlugin = new Class({
         }
 
         return atlas;
+    },
+
+    setDebugBones: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.skeletonDebugRenderer.drawBones = value;
+
+        return this;
+    },
+
+    setDebugRegionAttachments: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.skeletonDebugRenderer.drawRegionAttachments = value;
+
+        return this;
+    },
+
+    setDebugBoundingBoxes: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.skeletonDebugRenderer.drawBoundingBoxes = value;
+
+        return this;
+    },
+
+    setDebugMeshHull: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.skeletonDebugRenderer.drawMeshHull = value;
+
+        return this;
+    },
+
+    setDebugMeshTriangles: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.skeletonDebugRenderer.drawMeshTriangles = value;
+
+        return this;
+    },
+
+    setDebugPaths: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.skeletonDebugRenderer.drawPaths = value;
+
+        return this;
+    },
+
+    setDebugSkeletonXY: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.skeletonDebugRenderer.drawSkeletonXY = value;
+
+        return this;
+    },
+
+    setDebugClipping: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.skeletonDebugRenderer.drawClipping = value;
+
+        return this;
     },
 
     spineFileCallback: function (key, jsonURL, atlasURL, preMultipliedAlpha, jsonXhrSettings, atlasXhrSettings)
@@ -11030,16 +11105,19 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
 
     src.root.rotation = RadToDeg(CounterClockwise(calcMatrix.rotation));
 
+    sceneRenderer.camera.position.x = viewportWidth / 2;
+    sceneRenderer.camera.position.y = viewportHeight / 2;
+
+    sceneRenderer.camera.viewportWidth = viewportWidth;
+    sceneRenderer.camera.viewportHeight = viewportHeight;
+
+    sceneRenderer.camera.update();
+
     //  Add autoUpdate option
     skeleton.updateWorldTransform();
 
     if (renderer.newType)
     {
-        sceneRenderer.camera.position.x = viewportWidth / 2;
-        sceneRenderer.camera.position.y = viewportHeight / 2;
-        sceneRenderer.camera.viewportWidth = viewportWidth;
-        sceneRenderer.camera.viewportHeight = viewportHeight;
-
         sceneRenderer.begin();
     }
 
@@ -11048,7 +11126,17 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
 
     if (plugin.drawDebug || src.drawDebug)
     {
+        //  Because if we don't, the bones render positions are completely wrong (*sigh*)
+        var oldX = skeleton.x;
+        var oldY = skeleton.y;
+
+        skeleton.x = 0;
+        skeleton.y = 0;
+
         sceneRenderer.drawSkeletonDebug(skeleton, src.preMultipliedAlpha);
+
+        skeleton.x = oldX;
+        skeleton.y = oldY;
     }
 
     if (!renderer.nextTypeMatch)
