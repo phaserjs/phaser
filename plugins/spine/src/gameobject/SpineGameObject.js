@@ -67,6 +67,8 @@ var SpineGameObject = new Class({
         this.displayOriginX = 0;
         this.displayOriginY = 0;
 
+        this.preMultipliedAlpha = false;
+
         this.setPosition(x, y);
 
         if (key)
@@ -85,6 +87,8 @@ var SpineGameObject = new Class({
         var data = this.plugin.createSkeleton(atlasDataKey, skeletonJSON);
 
         this.skeletonData = data.skeletonData;
+
+        this.preMultipliedAlpha = data.preMultipliedAlpha;
 
         var skeleton = data.skeleton;
 
@@ -308,7 +312,7 @@ var SpineGameObject = new Class({
 
         this.emit('spine.update', skeleton);
 
-        skeleton.updateWorldTransform();
+        // skeleton.updateWorldTransform();
     },
 
     /**
