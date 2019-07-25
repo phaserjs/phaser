@@ -10,7 +10,6 @@ var ScenePlugin = require('../../../src/plugins/ScenePlugin');
 var SpineFile = require('./SpineFile');
 var Spine = require('Spine');
 var SpineGameObject = require('./gameobject/SpineGameObject');
-var Matrix4 = require('../../../src/math/Matrix4');
 
 /**
  * @classdesc
@@ -47,22 +46,11 @@ var SpinePlugin = new Class({
 
         this.textures = game.textures;
 
-        this.skeletonRenderer;
-
         this.drawDebug = false;
 
         this.gl;
         this.renderer;
-
         this.sceneRenderer;
-
-        this.mvp;
-        this.shader;
-        this.batcher;
-        this.debugRenderer;
-        this.debugShader;
-
-        console.log('SpinePlugin created', '- WebGL:', this.isWebGL);
 
         if (this.isWebGL)
         {
@@ -150,35 +138,14 @@ var SpinePlugin = new Class({
 
     bootWebGL: function ()
     {
-        // var gl = this.gl;
-        // var runtime = this.runtime;
-
-        // console.log(this.renderer.canvas, (this.renderer.canvas instanceof HTMLCanvasElement));
-
         this.sceneRenderer = new Spine.webgl.SceneRenderer(this.renderer.canvas, this.gl, true);
-
-        // this.mvp = new Matrix4();
-
-        //  Create a simple shader, mesh, model-view-projection matrix and SkeletonRenderer.
-
-        // this.shader = runtime.Shader.newTwoColoredTextured(gl);
-
-        // this.batcher = new runtime.PolygonBatcher(gl, true);
-
-        // this.skeletonRenderer = new runtime.SkeletonRenderer(gl, true);
-
-        // this.skeletonRenderer.premultipliedAlpha = true;
-
-        // this.shapes = new runtime.ShapeRenderer(gl);
-        // this.debugRenderer = new runtime.SkeletonDebugRenderer(gl);
-        // this.debugShader = runtime.Shader.newColored(gl);
     },
 
     getAtlasWebGL: function (key)
     {
-        var atlasData = this.cache.get(key);
+        var atlasEntry = this.cache.get(key);
 
-        if (!atlasData)
+        if (!atlasEntry)
         {
             console.warn('No atlas data for: ' + key);
             return;
@@ -189,7 +156,7 @@ var SpinePlugin = new Class({
 
         if (spineTextures.has(key))
         {
-            atlas = new Spine.TextureAtlas(atlasData, function ()
+            atlas = new Spine.TextureAtlas(atlasEntry.data, function ()
             {
                 return spineTextures.get(key);
             });
@@ -202,7 +169,7 @@ var SpinePlugin = new Class({
 
             gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
 
-            atlas = new Spine.TextureAtlas(atlasData, function (path)
+            atlas = new Spine.TextureAtlas(atlasEntry.data, function (path)
             {
                 var glTexture = new Spine.webgl.GLTexture(gl, textures.get(path).getSourceImage(), false);
 
@@ -215,7 +182,7 @@ var SpinePlugin = new Class({
         return atlas;
     },
 
-    spineFileCallback: function (key, jsonURL, atlasURL, jsonXhrSettings, atlasXhrSettings)
+    spineFileCallback: function (key, jsonURL, atlasURL, preMultipliedAlpha, jsonXhrSettings, atlasXhrSettings)
     {
         var multifile;
    
@@ -230,7 +197,7 @@ var SpinePlugin = new Class({
         }
         else
         {
-            multifile = new SpineFile(this, key, jsonURL, atlasURL, jsonXhrSettings, atlasXhrSettings);
+            multifile = new SpineFile(this, key, jsonURL, atlasURL, preMultipliedAlpha, jsonXhrSettings, atlasXhrSettings);
 
             this.addFile(multifile.files);
         }
@@ -285,7 +252,15 @@ var SpinePlugin = new Class({
             jsonKey = parts.join('.');
         }
 
+        var atlasData = this.cache.get(atlasKey);
         var atlas = this.getAtlas(atlasKey);
+
+        if (!atlas)
+        {
+            return null;
+        }
+
+        var preMultipliedAlpha = atlasData.preMultipliedAlpha;
 
         var atlasLoader = new Spine.AtlasAttachmentLoader(atlas);
         
@@ -310,7 +285,7 @@ var SpinePlugin = new Class({
 
             var skeleton = new Spine.Skeleton(skeletonData);
         
-            return { skeletonData: skeletonData, skeleton: skeleton };
+            return { skeletonData: skeletonData, skeleton: skeleton, preMultipliedAlpha: preMultipliedAlpha };
         }
         else
         {
@@ -350,6 +325,8 @@ var SpinePlugin = new Class({
         var eventEmitter = this.systems.events;
 
         eventEmitter.off('shutdown', this.shutdown, this);
+
+        this.sceneRenderer.dispose();
     },
 
     /**
@@ -371,18 +348,12 @@ var SpinePlugin = new Class({
         this.scene = null;
         this.systems = null;
 
-        //  Create a custom cache to store the spine data (.atlas files)
         this.cache = null;
         this.spineTextures = null;
         this.json = null;
         this.textures = null;
-        this.skeletonRenderer = null;
+        this.sceneRenderer = null;
         this.gl = null;
-        this.mvp = null;
-        this.shader = null;
-        this.batcher = null;
-        this.debugRenderer = null;
-        this.debugShader = null;
     }
 
 });
