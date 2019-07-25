@@ -51,6 +51,7 @@ var SpinePlugin = new Class({
         this.gl;
         this.renderer;
         this.sceneRenderer;
+        this.skeletonDebugRenderer;
 
         if (this.isWebGL)
         {
@@ -161,6 +162,8 @@ var SpinePlugin = new Class({
 
         this.sceneRenderer.batcher.setBlendMode = setBlendMode;
         this.sceneRenderer.shapes.setBlendMode = setBlendMode;
+
+        this.skeletonDebugRenderer = this.sceneRenderer.skeletonDebugRenderer;
     },
 
     getAtlasWebGL: function (key)
@@ -202,6 +205,78 @@ var SpinePlugin = new Class({
         }
 
         return atlas;
+    },
+
+    setDebugBones: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.skeletonDebugRenderer.drawBones = value;
+
+        return this;
+    },
+
+    setDebugRegionAttachments: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.skeletonDebugRenderer.drawRegionAttachments = value;
+
+        return this;
+    },
+
+    setDebugBoundingBoxes: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.skeletonDebugRenderer.drawBoundingBoxes = value;
+
+        return this;
+    },
+
+    setDebugMeshHull: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.skeletonDebugRenderer.drawMeshHull = value;
+
+        return this;
+    },
+
+    setDebugMeshTriangles: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.skeletonDebugRenderer.drawMeshTriangles = value;
+
+        return this;
+    },
+
+    setDebugPaths: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.skeletonDebugRenderer.drawPaths = value;
+
+        return this;
+    },
+
+    setDebugSkeletonXY: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.skeletonDebugRenderer.drawSkeletonXY = value;
+
+        return this;
+    },
+
+    setDebugClipping: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.skeletonDebugRenderer.drawClipping = value;
+
+        return this;
     },
 
     spineFileCallback: function (key, jsonURL, atlasURL, preMultipliedAlpha, jsonXhrSettings, atlasXhrSettings)
