@@ -87,16 +87,19 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
 
     src.root.rotation = RadToDeg(CounterClockwise(calcMatrix.rotation));
 
+    sceneRenderer.camera.position.x = viewportWidth / 2;
+    sceneRenderer.camera.position.y = viewportHeight / 2;
+
+    sceneRenderer.camera.viewportWidth = viewportWidth;
+    sceneRenderer.camera.viewportHeight = viewportHeight;
+
+    sceneRenderer.camera.update();
+
     //  Add autoUpdate option
     skeleton.updateWorldTransform();
 
     if (renderer.newType)
     {
-        sceneRenderer.camera.position.x = viewportWidth / 2;
-        sceneRenderer.camera.position.y = viewportHeight / 2;
-        sceneRenderer.camera.viewportWidth = viewportWidth;
-        sceneRenderer.camera.viewportHeight = viewportHeight;
-
         sceneRenderer.begin();
     }
 
@@ -105,7 +108,17 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
 
     if (plugin.drawDebug || src.drawDebug)
     {
+        //  Because if we don't, the bones render positions are completely wrong (*sigh*)
+        var oldX = skeleton.x;
+        var oldY = skeleton.y;
+
+        skeleton.x = 0;
+        skeleton.y = 0;
+
         sceneRenderer.drawSkeletonDebug(skeleton, src.preMultipliedAlpha);
+
+        skeleton.x = oldX;
+        skeleton.y = oldY;
     }
 
     if (!renderer.nextTypeMatch)
