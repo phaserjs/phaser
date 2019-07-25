@@ -25,18 +25,8 @@ var RadToDeg = require('../../../../src/math/RadToDeg');
 var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
     var plugin = src.plugin;
-
-    // var mvp = plugin.mvp;
-
-    // var shader = plugin.shader;
-    // var batcher = plugin.batcher;
-    // var runtime = plugin.runtime;
-
     var skeleton = src.skeleton;
-
     var sceneRenderer = plugin.sceneRenderer;
-
-    // var skeletonRenderer = plugin.skeletonRenderer;
 
     if (!skeleton)
     {
@@ -97,80 +87,34 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
 
     src.root.rotation = RadToDeg(CounterClockwise(calcMatrix.rotation));
 
-    sceneRenderer.camera.position.x = viewportWidth / 2;
-    sceneRenderer.camera.position.y = viewportHeight / 2;
-    sceneRenderer.camera.viewportWidth = viewportWidth;
-    sceneRenderer.camera.viewportHeight = viewportHeight;
-
     //  Add autoUpdate option
     skeleton.updateWorldTransform();
 
     if (renderer.newType)
     {
+        sceneRenderer.camera.position.x = viewportWidth / 2;
+        sceneRenderer.camera.position.y = viewportHeight / 2;
+        sceneRenderer.camera.viewportWidth = viewportWidth;
+        sceneRenderer.camera.viewportHeight = viewportHeight;
+
         sceneRenderer.begin();
-
-        // mvp.ortho(0, width, 0, height, 0, 1);
-
-        // shader.bind();
-        // shader.setUniformi(runtime.Shader.SAMPLER, 0);
-        // shader.setUniform4x4f(runtime.Shader.MVP_MATRIX, mvp.val);
-
-        // skeletonRenderer.premultipliedAlpha = true;
-
-        // batcher.setBlendMode(renderer.gl.ONE, renderer.gl.ONE_MINUS_SRC_ALPHA);
-        // batcher.begin(shader);
-    }
-
-    if (renderer.nextTypeMatch)
-    {
-        // sceneRenderer.batcher.isDrawing = false;
     }
 
     //  Draw the current skeleton
+    sceneRenderer.drawSkeleton(skeleton, src.preMultipliedAlpha);
 
-    sceneRenderer.drawSkeleton(skeleton, true);
-
-    // sceneRenderer.drawSkeletonDebug(skeleton, true);
-
-    // skeletonRenderer.premultipliedAlpha = true;
-    // skeletonRenderer.draw(batcher, skeleton);
+    if (plugin.drawDebug || src.drawDebug)
+    {
+        sceneRenderer.drawSkeletonDebug(skeleton, src.preMultipliedAlpha);
+    }
 
     if (!renderer.nextTypeMatch)
     {
         //  The next object in the display list is not a Spine object, so we end the batch
-        // batcher.isDrawing = true;
-        // sceneRenderer.batcher.isDrawing = true;
-
-        // batcher.end();
-
-        // shader.unbind();
-
         sceneRenderer.end();
 
         renderer.rebindPipeline(renderer.pipelines.TextureTintPipeline);
     }
-
-    /*
-    var drawDebug = (plugin.drawDebug || src.drawDebug);
-
-    if (drawDebug)
-    {
-        var debugShader = plugin.debugShader;
-        var debugRenderer = plugin.debugRenderer;
-        var shapes = plugin.shapes;
-
-        debugShader.bind();
-        debugShader.setUniform4x4f(runtime.Shader.MVP_MATRIX, mvp.val);
-
-        shapes.begin(debugShader);
-
-        debugRenderer.draw(shapes, skeleton);
-
-        shapes.end();
-
-        debugShader.unbind();
-    }
-    */
 };
 
 module.exports = SpineGameObjectWebGLRenderer;
