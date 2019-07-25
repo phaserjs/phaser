@@ -43,7 +43,8 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     var calcMatrix = renderer._tempMatrix3;
 
     //  - 90 degrees to account for the difference in Spine vs. Phaser rotation
-    spriteMatrix.applyITRS(src.x, src.y, src.rotation - 1.5707963267948966, src.scaleX, src.scaleY);
+    // spriteMatrix.applyITRS(src.x, src.y, src.rotation - 1.5707963267948966, src.scaleX, src.scaleY);
+    spriteMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
 
     camMatrix.copyFrom(camera.matrix);
 
@@ -85,7 +86,15 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
         skeleton.scaleY = calcMatrix.scaleY;
     }
 
-    src.root.rotation = RadToDeg(CounterClockwise(calcMatrix.rotation));
+    // src.root.rotation = RadToDeg(calcMatrix.rotation);
+
+    //  - 90 degrees to account for the difference in Spine vs. Phaser rotation
+
+    //  Correct method via angle:
+    // spineBoy.root.rotation = RadToDeg(CounterClockwise(DegToRad(arrow.angle))) + 90;
+
+    // src.root.rotation = RadToDeg(CounterClockwise(calcMatrix.rotation)) + 90;
+    // src.root.rotation = RadToDeg(calcMatrix.rotation);
 
     sceneRenderer.camera.position.x = viewportWidth / 2;
     sceneRenderer.camera.position.y = viewportHeight / 2;
@@ -93,7 +102,7 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     sceneRenderer.camera.viewportWidth = viewportWidth;
     sceneRenderer.camera.viewportHeight = viewportHeight;
 
-    sceneRenderer.camera.update();
+    // sceneRenderer.camera.update();
 
     //  Add autoUpdate option
     skeleton.updateWorldTransform();
