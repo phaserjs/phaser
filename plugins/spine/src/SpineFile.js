@@ -42,6 +42,7 @@ var TextFile = require('../../../src/loader/filetypes/TextFile.js');
  * @param {(string|Phaser.Loader.FileTypes.UnityAtlasFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string|string[]} [textureURL] - The absolute or relative URL to load the texture image file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
  * @param {string} [atlasURL] - The absolute or relative URL to load the texture atlas data file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
+ * @param {boolean} [preMultipliedAlpha=false] - 
  * @param {XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
  * @param {XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the atlas data file. Used in replacement of the Loaders default XHR Settings.
  */
@@ -51,7 +52,7 @@ var SpineFile = new Class({
 
     initialize:
 
-    function SpineFile (loader, key, jsonURL, atlasURL, jsonXhrSettings, atlasXhrSettings)
+    function SpineFile (loader, key, jsonURL, atlasURL, preMultipliedAlpha, jsonXhrSettings, atlasXhrSettings)
     {
         var i;
         var json;
@@ -75,29 +76,24 @@ var SpineFile = new Class({
             });
 
             atlasURL = GetFastValue(config, 'atlasURL');
+            preMultipliedAlpha = GetFastValue(config, 'preMultipliedAlpha');
 
-            if (Array.isArray(atlasURL))
+            if (!Array.isArray(atlasURL))
             {
-                for (i = 0; i < atlasURL.length; i++)
-                {
-                    atlas = new TextFile(loader, {
-                        key: key,
-                        url: atlasURL[i],
-                        extension: GetFastValue(config, 'atlasExtension', 'atlas'),
-                        xhrSettings: GetFastValue(config, 'atlasXhrSettings')
-                    });
-
-                    files.push(atlas);
-                }
+                atlasURL = [ atlasURL ];
             }
-            else
+
+            for (i = 0; i < atlasURL.length; i++)
             {
                 atlas = new TextFile(loader, {
                     key: key,
-                    url: atlasURL,
+                    url: atlasURL[i],
                     extension: GetFastValue(config, 'atlasExtension', 'atlas'),
-                    xhrSettings: GetFastValue(config, 'atlasXhrSettings')
+                    xhrSettings: GetFastValue(config, 'atlasXhrSettings'),
                 });
+
+                atlas.cache = cache;
+                // atlas.config.preMultipliedAlpha = preMultipliedAlpha;
 
                 files.push(atlas);
             }
@@ -106,20 +102,16 @@ var SpineFile = new Class({
         {
             json = new JSONFile(loader, key, jsonURL, jsonXhrSettings);
 
-            if (Array.isArray(atlasURL))
+            if (!Array.isArray(atlasURL))
             {
-                for (i = 0; i < atlasURL.length; i++)
-                {
-                    atlas = new TextFile(loader, key + '_' + i, atlasURL[i], atlasXhrSettings);
-                    atlas.cache = cache;
-
-                    files.push(atlas);
-                }
+                atlasURL = [ atlasURL ];
             }
-            else
+
+            for (i = 0; i < atlasURL.length; i++)
             {
-                atlas = new TextFile(loader, key + '_0', atlasURL, atlasXhrSettings);
+                atlas = new TextFile(loader, key + '_' + i, atlasURL[i], atlasXhrSettings);
                 atlas.cache = cache;
+                // atlas.config.preMultipliedAlpha = preMultipliedAlpha;
 
                 files.push(atlas);
             }
@@ -128,6 +120,8 @@ var SpineFile = new Class({
         files.unshift(json);
 
         MultiFile.call(this, loader, 'spine', key, files);
+
+        this.config.preMultipliedAlpha = preMultipliedAlpha;
     },
 
     /**
@@ -220,6 +214,7 @@ var SpineFile = new Class({
             var atlasCache;
             var atlasKey = '';
             var combinedAtlastData = '';
+            var preMultipliedAlpha = (this.config.preMultipliedAlpha) ? true : false;
 
             for (var i = 1; i < this.files.length; i++)
             {
@@ -243,7 +238,7 @@ var SpineFile = new Class({
                 file.pendingDestroy();
             }
 
-            atlasCache.add(atlasKey, combinedAtlastData);
+            atlasCache.add(atlasKey, { preMultipliedAlpha: preMultipliedAlpha, data: combinedAtlastData });
 
             this.complete = true;
         }
