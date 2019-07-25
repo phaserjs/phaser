@@ -6875,1473 +6875,6 @@ module.exports = Clamp;
 
 /***/ }),
 
-/***/ "../../../src/math/Matrix4.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Matrix4.js ***!
-  \**********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-//  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji
-//  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
-
-var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
-
-var EPSILON = 0.000001;
-
-/**
- * @classdesc
- * A four-dimensional matrix.
- *
- * @class Matrix4
- * @memberof Phaser.Math
- * @constructor
- * @since 3.0.0
- *
- * @param {Phaser.Math.Matrix4} [m] - Optional Matrix4 to copy values from.
- */
-var Matrix4 = new Class({
-
-    initialize:
-
-    function Matrix4 (m)
-    {
-        /**
-         * The matrix values.
-         *
-         * @name Phaser.Math.Matrix4#val
-         * @type {Float32Array}
-         * @since 3.0.0
-         */
-        this.val = new Float32Array(16);
-
-        if (m)
-        {
-            //  Assume Matrix4 with val:
-            this.copy(m);
-        }
-        else
-        {
-            //  Default to identity
-            this.identity();
-        }
-    },
-
-    /**
-     * Make a clone of this Matrix4.
-     *
-     * @method Phaser.Math.Matrix4#clone
-     * @since 3.0.0
-     *
-     * @return {Phaser.Math.Matrix4} A clone of this Matrix4.
-     */
-    clone: function ()
-    {
-        return new Matrix4(this);
-    },
-
-    //  TODO - Should work with basic values
-
-    /**
-     * This method is an alias for `Matrix4.copy`.
-     *
-     * @method Phaser.Math.Matrix4#set
-     * @since 3.0.0
-     *
-     * @param {Phaser.Math.Matrix4} src - The Matrix to set the values of this Matrix's from.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    set: function (src)
-    {
-        return this.copy(src);
-    },
-
-    /**
-     * Copy the values of a given Matrix into this Matrix.
-     *
-     * @method Phaser.Math.Matrix4#copy
-     * @since 3.0.0
-     *
-     * @param {Phaser.Math.Matrix4} src - The Matrix to copy the values from.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    copy: function (src)
-    {
-        var out = this.val;
-        var a = src.val;
-
-        out[0] = a[0];
-        out[1] = a[1];
-        out[2] = a[2];
-        out[3] = a[3];
-        out[4] = a[4];
-        out[5] = a[5];
-        out[6] = a[6];
-        out[7] = a[7];
-        out[8] = a[8];
-        out[9] = a[9];
-        out[10] = a[10];
-        out[11] = a[11];
-        out[12] = a[12];
-        out[13] = a[13];
-        out[14] = a[14];
-        out[15] = a[15];
-
-        return this;
-    },
-
-    /**
-     * Set the values of this Matrix from the given array.
-     *
-     * @method Phaser.Math.Matrix4#fromArray
-     * @since 3.0.0
-     *
-     * @param {array} a - The array to copy the values from.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    fromArray: function (a)
-    {
-        var out = this.val;
-
-        out[0] = a[0];
-        out[1] = a[1];
-        out[2] = a[2];
-        out[3] = a[3];
-        out[4] = a[4];
-        out[5] = a[5];
-        out[6] = a[6];
-        out[7] = a[7];
-        out[8] = a[8];
-        out[9] = a[9];
-        out[10] = a[10];
-        out[11] = a[11];
-        out[12] = a[12];
-        out[13] = a[13];
-        out[14] = a[14];
-        out[15] = a[15];
-
-        return this;
-    },
-
-    /**
-     * Reset this Matrix.
-     *
-     * Sets all values to `0`.
-     *
-     * @method Phaser.Math.Matrix4#zero
-     * @since 3.0.0
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    zero: function ()
-    {
-        var out = this.val;
-
-        out[0] = 0;
-        out[1] = 0;
-        out[2] = 0;
-        out[3] = 0;
-        out[4] = 0;
-        out[5] = 0;
-        out[6] = 0;
-        out[7] = 0;
-        out[8] = 0;
-        out[9] = 0;
-        out[10] = 0;
-        out[11] = 0;
-        out[12] = 0;
-        out[13] = 0;
-        out[14] = 0;
-        out[15] = 0;
-
-        return this;
-    },
-
-    /**
-     * Set the `x`, `y` and `z` values of this Matrix.
-     *
-     * @method Phaser.Math.Matrix4#xyz
-     * @since 3.0.0
-     *
-     * @param {number} x - The x value.
-     * @param {number} y - The y value.
-     * @param {number} z - The z value.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    xyz: function (x, y, z)
-    {
-        this.identity();
-
-        var out = this.val;
-
-        out[12] = x;
-        out[13] = y;
-        out[14] = z;
-
-        return this;
-    },
-
-    /**
-     * Set the scaling values of this Matrix.
-     *
-     * @method Phaser.Math.Matrix4#scaling
-     * @since 3.0.0
-     *
-     * @param {number} x - The x scaling value.
-     * @param {number} y - The y scaling value.
-     * @param {number} z - The z scaling value.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    scaling: function (x, y, z)
-    {
-        this.zero();
-
-        var out = this.val;
-
-        out[0] = x;
-        out[5] = y;
-        out[10] = z;
-        out[15] = 1;
-
-        return this;
-    },
-
-    /**
-     * Reset this Matrix to an identity (default) matrix.
-     *
-     * @method Phaser.Math.Matrix4#identity
-     * @since 3.0.0
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    identity: function ()
-    {
-        var out = this.val;
-
-        out[0] = 1;
-        out[1] = 0;
-        out[2] = 0;
-        out[3] = 0;
-        out[4] = 0;
-        out[5] = 1;
-        out[6] = 0;
-        out[7] = 0;
-        out[8] = 0;
-        out[9] = 0;
-        out[10] = 1;
-        out[11] = 0;
-        out[12] = 0;
-        out[13] = 0;
-        out[14] = 0;
-        out[15] = 1;
-
-        return this;
-    },
-
-    /**
-     * Transpose this Matrix.
-     *
-     * @method Phaser.Math.Matrix4#transpose
-     * @since 3.0.0
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    transpose: function ()
-    {
-        var a = this.val;
-
-        var a01 = a[1];
-        var a02 = a[2];
-        var a03 = a[3];
-        var a12 = a[6];
-        var a13 = a[7];
-        var a23 = a[11];
-
-        a[1] = a[4];
-        a[2] = a[8];
-        a[3] = a[12];
-        a[4] = a01;
-        a[6] = a[9];
-        a[7] = a[13];
-        a[8] = a02;
-        a[9] = a12;
-        a[11] = a[14];
-        a[12] = a03;
-        a[13] = a13;
-        a[14] = a23;
-
-        return this;
-    },
-
-    /**
-     * Invert this Matrix.
-     *
-     * @method Phaser.Math.Matrix4#invert
-     * @since 3.0.0
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    invert: function ()
-    {
-        var a = this.val;
-
-        var a00 = a[0];
-        var a01 = a[1];
-        var a02 = a[2];
-        var a03 = a[3];
-
-        var a10 = a[4];
-        var a11 = a[5];
-        var a12 = a[6];
-        var a13 = a[7];
-
-        var a20 = a[8];
-        var a21 = a[9];
-        var a22 = a[10];
-        var a23 = a[11];
-
-        var a30 = a[12];
-        var a31 = a[13];
-        var a32 = a[14];
-        var a33 = a[15];
-
-        var b00 = a00 * a11 - a01 * a10;
-        var b01 = a00 * a12 - a02 * a10;
-        var b02 = a00 * a13 - a03 * a10;
-        var b03 = a01 * a12 - a02 * a11;
-
-        var b04 = a01 * a13 - a03 * a11;
-        var b05 = a02 * a13 - a03 * a12;
-        var b06 = a20 * a31 - a21 * a30;
-        var b07 = a20 * a32 - a22 * a30;
-
-        var b08 = a20 * a33 - a23 * a30;
-        var b09 = a21 * a32 - a22 * a31;
-        var b10 = a21 * a33 - a23 * a31;
-        var b11 = a22 * a33 - a23 * a32;
-
-        // Calculate the determinant
-        var det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
-
-        if (!det)
-        {
-            return null;
-        }
-
-        det = 1 / det;
-
-        a[0] = (a11 * b11 - a12 * b10 + a13 * b09) * det;
-        a[1] = (a02 * b10 - a01 * b11 - a03 * b09) * det;
-        a[2] = (a31 * b05 - a32 * b04 + a33 * b03) * det;
-        a[3] = (a22 * b04 - a21 * b05 - a23 * b03) * det;
-        a[4] = (a12 * b08 - a10 * b11 - a13 * b07) * det;
-        a[5] = (a00 * b11 - a02 * b08 + a03 * b07) * det;
-        a[6] = (a32 * b02 - a30 * b05 - a33 * b01) * det;
-        a[7] = (a20 * b05 - a22 * b02 + a23 * b01) * det;
-        a[8] = (a10 * b10 - a11 * b08 + a13 * b06) * det;
-        a[9] = (a01 * b08 - a00 * b10 - a03 * b06) * det;
-        a[10] = (a30 * b04 - a31 * b02 + a33 * b00) * det;
-        a[11] = (a21 * b02 - a20 * b04 - a23 * b00) * det;
-        a[12] = (a11 * b07 - a10 * b09 - a12 * b06) * det;
-        a[13] = (a00 * b09 - a01 * b07 + a02 * b06) * det;
-        a[14] = (a31 * b01 - a30 * b03 - a32 * b00) * det;
-        a[15] = (a20 * b03 - a21 * b01 + a22 * b00) * det;
-
-        return this;
-    },
-
-    /**
-     * Calculate the adjoint, or adjugate, of this Matrix.
-     *
-     * @method Phaser.Math.Matrix4#adjoint
-     * @since 3.0.0
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    adjoint: function ()
-    {
-        var a = this.val;
-
-        var a00 = a[0];
-        var a01 = a[1];
-        var a02 = a[2];
-        var a03 = a[3];
-
-        var a10 = a[4];
-        var a11 = a[5];
-        var a12 = a[6];
-        var a13 = a[7];
-
-        var a20 = a[8];
-        var a21 = a[9];
-        var a22 = a[10];
-        var a23 = a[11];
-
-        var a30 = a[12];
-        var a31 = a[13];
-        var a32 = a[14];
-        var a33 = a[15];
-
-        a[0] = (a11 * (a22 * a33 - a23 * a32) - a21 * (a12 * a33 - a13 * a32) + a31 * (a12 * a23 - a13 * a22));
-        a[1] = -(a01 * (a22 * a33 - a23 * a32) - a21 * (a02 * a33 - a03 * a32) + a31 * (a02 * a23 - a03 * a22));
-        a[2] = (a01 * (a12 * a33 - a13 * a32) - a11 * (a02 * a33 - a03 * a32) + a31 * (a02 * a13 - a03 * a12));
-        a[3] = -(a01 * (a12 * a23 - a13 * a22) - a11 * (a02 * a23 - a03 * a22) + a21 * (a02 * a13 - a03 * a12));
-        a[4] = -(a10 * (a22 * a33 - a23 * a32) - a20 * (a12 * a33 - a13 * a32) + a30 * (a12 * a23 - a13 * a22));
-        a[5] = (a00 * (a22 * a33 - a23 * a32) - a20 * (a02 * a33 - a03 * a32) + a30 * (a02 * a23 - a03 * a22));
-        a[6] = -(a00 * (a12 * a33 - a13 * a32) - a10 * (a02 * a33 - a03 * a32) + a30 * (a02 * a13 - a03 * a12));
-        a[7] = (a00 * (a12 * a23 - a13 * a22) - a10 * (a02 * a23 - a03 * a22) + a20 * (a02 * a13 - a03 * a12));
-        a[8] = (a10 * (a21 * a33 - a23 * a31) - a20 * (a11 * a33 - a13 * a31) + a30 * (a11 * a23 - a13 * a21));
-        a[9] = -(a00 * (a21 * a33 - a23 * a31) - a20 * (a01 * a33 - a03 * a31) + a30 * (a01 * a23 - a03 * a21));
-        a[10] = (a00 * (a11 * a33 - a13 * a31) - a10 * (a01 * a33 - a03 * a31) + a30 * (a01 * a13 - a03 * a11));
-        a[11] = -(a00 * (a11 * a23 - a13 * a21) - a10 * (a01 * a23 - a03 * a21) + a20 * (a01 * a13 - a03 * a11));
-        a[12] = -(a10 * (a21 * a32 - a22 * a31) - a20 * (a11 * a32 - a12 * a31) + a30 * (a11 * a22 - a12 * a21));
-        a[13] = (a00 * (a21 * a32 - a22 * a31) - a20 * (a01 * a32 - a02 * a31) + a30 * (a01 * a22 - a02 * a21));
-        a[14] = -(a00 * (a11 * a32 - a12 * a31) - a10 * (a01 * a32 - a02 * a31) + a30 * (a01 * a12 - a02 * a11));
-        a[15] = (a00 * (a11 * a22 - a12 * a21) - a10 * (a01 * a22 - a02 * a21) + a20 * (a01 * a12 - a02 * a11));
-
-        return this;
-    },
-
-    /**
-     * Calculate the determinant of this Matrix.
-     *
-     * @method Phaser.Math.Matrix4#determinant
-     * @since 3.0.0
-     *
-     * @return {number} The determinant of this Matrix.
-     */
-    determinant: function ()
-    {
-        var a = this.val;
-
-        var a00 = a[0];
-        var a01 = a[1];
-        var a02 = a[2];
-        var a03 = a[3];
-
-        var a10 = a[4];
-        var a11 = a[5];
-        var a12 = a[6];
-        var a13 = a[7];
-
-        var a20 = a[8];
-        var a21 = a[9];
-        var a22 = a[10];
-        var a23 = a[11];
-
-        var a30 = a[12];
-        var a31 = a[13];
-        var a32 = a[14];
-        var a33 = a[15];
-
-        var b00 = a00 * a11 - a01 * a10;
-        var b01 = a00 * a12 - a02 * a10;
-        var b02 = a00 * a13 - a03 * a10;
-        var b03 = a01 * a12 - a02 * a11;
-        var b04 = a01 * a13 - a03 * a11;
-        var b05 = a02 * a13 - a03 * a12;
-        var b06 = a20 * a31 - a21 * a30;
-        var b07 = a20 * a32 - a22 * a30;
-        var b08 = a20 * a33 - a23 * a30;
-        var b09 = a21 * a32 - a22 * a31;
-        var b10 = a21 * a33 - a23 * a31;
-        var b11 = a22 * a33 - a23 * a32;
-
-        // Calculate the determinant
-        return b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
-    },
-
-    /**
-     * Multiply this Matrix by the given Matrix.
-     *
-     * @method Phaser.Math.Matrix4#multiply
-     * @since 3.0.0
-     *
-     * @param {Phaser.Math.Matrix4} src - The Matrix to multiply this Matrix by.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    multiply: function (src)
-    {
-        var a = this.val;
-
-        var a00 = a[0];
-        var a01 = a[1];
-        var a02 = a[2];
-        var a03 = a[3];
-
-        var a10 = a[4];
-        var a11 = a[5];
-        var a12 = a[6];
-        var a13 = a[7];
-
-        var a20 = a[8];
-        var a21 = a[9];
-        var a22 = a[10];
-        var a23 = a[11];
-
-        var a30 = a[12];
-        var a31 = a[13];
-        var a32 = a[14];
-        var a33 = a[15];
-
-        var b = src.val;
-
-        // Cache only the current line of the second matrix
-        var b0 = b[0];
-        var b1 = b[1];
-        var b2 = b[2];
-        var b3 = b[3];
-
-        a[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
-        a[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
-        a[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
-        a[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
-
-        b0 = b[4];
-        b1 = b[5];
-        b2 = b[6];
-        b3 = b[7];
-
-        a[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
-        a[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
-        a[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
-        a[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
-
-        b0 = b[8];
-        b1 = b[9];
-        b2 = b[10];
-        b3 = b[11];
-
-        a[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
-        a[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
-        a[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
-        a[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
-
-        b0 = b[12];
-        b1 = b[13];
-        b2 = b[14];
-        b3 = b[15];
-
-        a[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
-        a[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
-        a[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
-        a[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
-
-        return this;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Math.Matrix4#multiplyLocal
-     * @since 3.0.0
-     *
-     * @param {Phaser.Math.Matrix4} src - [description]
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    multiplyLocal: function (src)
-    {
-        var a = [];
-        var m1 = this.val;
-        var m2 = src.val;
-
-        a[0] = m1[0] * m2[0] + m1[1] * m2[4] + m1[2] * m2[8] + m1[3] * m2[12];
-        a[1] = m1[0] * m2[1] + m1[1] * m2[5] + m1[2] * m2[9] + m1[3] * m2[13];
-        a[2] = m1[0] * m2[2] + m1[1] * m2[6] + m1[2] * m2[10] + m1[3] * m2[14];
-        a[3] = m1[0] * m2[3] + m1[1] * m2[7] + m1[2] * m2[11] + m1[3] * m2[15];
-
-        a[4] = m1[4] * m2[0] + m1[5] * m2[4] + m1[6] * m2[8] + m1[7] * m2[12];
-        a[5] = m1[4] * m2[1] + m1[5] * m2[5] + m1[6] * m2[9] + m1[7] * m2[13];
-        a[6] = m1[4] * m2[2] + m1[5] * m2[6] + m1[6] * m2[10] + m1[7] * m2[14];
-        a[7] = m1[4] * m2[3] + m1[5] * m2[7] + m1[6] * m2[11] + m1[7] * m2[15];
-
-        a[8] = m1[8] * m2[0] + m1[9] * m2[4] + m1[10] * m2[8] + m1[11] * m2[12];
-        a[9] = m1[8] * m2[1] + m1[9] * m2[5] + m1[10] * m2[9] + m1[11] * m2[13];
-        a[10] = m1[8] * m2[2] + m1[9] * m2[6] + m1[10] * m2[10] + m1[11] * m2[14];
-        a[11] = m1[8] * m2[3] + m1[9] * m2[7] + m1[10] * m2[11] + m1[11] * m2[15];
-
-        a[12] = m1[12] * m2[0] + m1[13] * m2[4] + m1[14] * m2[8] + m1[15] * m2[12];
-        a[13] = m1[12] * m2[1] + m1[13] * m2[5] + m1[14] * m2[9] + m1[15] * m2[13];
-        a[14] = m1[12] * m2[2] + m1[13] * m2[6] + m1[14] * m2[10] + m1[15] * m2[14];
-        a[15] = m1[12] * m2[3] + m1[13] * m2[7] + m1[14] * m2[11] + m1[15] * m2[15];
-
-        return this.fromArray(a);
-    },
-
-    /**
-     * Translate this Matrix using the given Vector.
-     *
-     * @method Phaser.Math.Matrix4#translate
-     * @since 3.0.0
-     *
-     * @param {(Phaser.Math.Vector3|Phaser.Math.Vector4)} v - The Vector to translate this Matrix with.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    translate: function (v)
-    {
-        var x = v.x;
-        var y = v.y;
-        var z = v.z;
-        var a = this.val;
-
-        a[12] = a[0] * x + a[4] * y + a[8] * z + a[12];
-        a[13] = a[1] * x + a[5] * y + a[9] * z + a[13];
-        a[14] = a[2] * x + a[6] * y + a[10] * z + a[14];
-        a[15] = a[3] * x + a[7] * y + a[11] * z + a[15];
-
-        return this;
-    },
-
-    /**
-     * Translate this Matrix using the given values.
-     *
-     * @method Phaser.Math.Matrix4#translateXYZ
-     * @since 3.16.0
-     *
-     * @param {number} x - The x component.
-     * @param {number} y - The y component.
-     * @param {number} z - The z component.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    translateXYZ: function (x, y, z)
-    {
-        var a = this.val;
-
-        a[12] = a[0] * x + a[4] * y + a[8] * z + a[12];
-        a[13] = a[1] * x + a[5] * y + a[9] * z + a[13];
-        a[14] = a[2] * x + a[6] * y + a[10] * z + a[14];
-        a[15] = a[3] * x + a[7] * y + a[11] * z + a[15];
-
-        return this;
-    },
-
-    /**
-     * Apply a scale transformation to this Matrix.
-     *
-     * Uses the `x`, `y` and `z` components of the given Vector to scale the Matrix.
-     *
-     * @method Phaser.Math.Matrix4#scale
-     * @since 3.0.0
-     *
-     * @param {(Phaser.Math.Vector3|Phaser.Math.Vector4)} v - The Vector to scale this Matrix with.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    scale: function (v)
-    {
-        var x = v.x;
-        var y = v.y;
-        var z = v.z;
-        var a = this.val;
-
-        a[0] = a[0] * x;
-        a[1] = a[1] * x;
-        a[2] = a[2] * x;
-        a[3] = a[3] * x;
-
-        a[4] = a[4] * y;
-        a[5] = a[5] * y;
-        a[6] = a[6] * y;
-        a[7] = a[7] * y;
-
-        a[8] = a[8] * z;
-        a[9] = a[9] * z;
-        a[10] = a[10] * z;
-        a[11] = a[11] * z;
-
-        return this;
-    },
-
-    /**
-     * Apply a scale transformation to this Matrix.
-     *
-     * @method Phaser.Math.Matrix4#scaleXYZ
-     * @since 3.16.0
-     *
-     * @param {number} x - The x component.
-     * @param {number} y - The y component.
-     * @param {number} z - The z component.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    scaleXYZ: function (x, y, z)
-    {
-        var a = this.val;
-
-        a[0] = a[0] * x;
-        a[1] = a[1] * x;
-        a[2] = a[2] * x;
-        a[3] = a[3] * x;
-
-        a[4] = a[4] * y;
-        a[5] = a[5] * y;
-        a[6] = a[6] * y;
-        a[7] = a[7] * y;
-
-        a[8] = a[8] * z;
-        a[9] = a[9] * z;
-        a[10] = a[10] * z;
-        a[11] = a[11] * z;
-
-        return this;
-    },
-
-    /**
-     * Derive a rotation matrix around the given axis.
-     *
-     * @method Phaser.Math.Matrix4#makeRotationAxis
-     * @since 3.0.0
-     *
-     * @param {(Phaser.Math.Vector3|Phaser.Math.Vector4)} axis - The rotation axis.
-     * @param {number} angle - The rotation angle in radians.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    makeRotationAxis: function (axis, angle)
-    {
-        // Based on http://www.gamedev.net/reference/articles/article1199.asp
-
-        var c = Math.cos(angle);
-        var s = Math.sin(angle);
-        var t = 1 - c;
-        var x = axis.x;
-        var y = axis.y;
-        var z = axis.z;
-        var tx = t * x;
-        var ty = t * y;
-
-        this.fromArray([
-            tx * x + c, tx * y - s * z, tx * z + s * y, 0,
-            tx * y + s * z, ty * y + c, ty * z - s * x, 0,
-            tx * z - s * y, ty * z + s * x, t * z * z + c, 0,
-            0, 0, 0, 1
-        ]);
-
-        return this;
-    },
-
-    /**
-     * Apply a rotation transformation to this Matrix.
-     *
-     * @method Phaser.Math.Matrix4#rotate
-     * @since 3.0.0
-     *
-     * @param {number} rad - The angle in radians to rotate by.
-     * @param {Phaser.Math.Vector3} axis - The axis to rotate upon.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    rotate: function (rad, axis)
-    {
-        var a = this.val;
-        var x = axis.x;
-        var y = axis.y;
-        var z = axis.z;
-        var len = Math.sqrt(x * x + y * y + z * z);
-
-        if (Math.abs(len) < EPSILON)
-        {
-            return null;
-        }
-
-        len = 1 / len;
-        x *= len;
-        y *= len;
-        z *= len;
-
-        var s = Math.sin(rad);
-        var c = Math.cos(rad);
-        var t = 1 - c;
-
-        var a00 = a[0];
-        var a01 = a[1];
-        var a02 = a[2];
-        var a03 = a[3];
-
-        var a10 = a[4];
-        var a11 = a[5];
-        var a12 = a[6];
-        var a13 = a[7];
-
-        var a20 = a[8];
-        var a21 = a[9];
-        var a22 = a[10];
-        var a23 = a[11];
-
-        // Construct the elements of the rotation matrix
-        var b00 = x * x * t + c;
-        var b01 = y * x * t + z * s;
-        var b02 = z * x * t - y * s;
-
-        var b10 = x * y * t - z * s;
-        var b11 = y * y * t + c;
-        var b12 = z * y * t + x * s;
-
-        var b20 = x * z * t + y * s;
-        var b21 = y * z * t - x * s;
-        var b22 = z * z * t + c;
-
-        // Perform rotation-specific matrix multiplication
-        a[0] = a00 * b00 + a10 * b01 + a20 * b02;
-        a[1] = a01 * b00 + a11 * b01 + a21 * b02;
-        a[2] = a02 * b00 + a12 * b01 + a22 * b02;
-        a[3] = a03 * b00 + a13 * b01 + a23 * b02;
-        a[4] = a00 * b10 + a10 * b11 + a20 * b12;
-        a[5] = a01 * b10 + a11 * b11 + a21 * b12;
-        a[6] = a02 * b10 + a12 * b11 + a22 * b12;
-        a[7] = a03 * b10 + a13 * b11 + a23 * b12;
-        a[8] = a00 * b20 + a10 * b21 + a20 * b22;
-        a[9] = a01 * b20 + a11 * b21 + a21 * b22;
-        a[10] = a02 * b20 + a12 * b21 + a22 * b22;
-        a[11] = a03 * b20 + a13 * b21 + a23 * b22;
-
-        return this;
-    },
-
-    /**
-     * Rotate this matrix on its X axis.
-     *
-     * @method Phaser.Math.Matrix4#rotateX
-     * @since 3.0.0
-     *
-     * @param {number} rad - The angle in radians to rotate by.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    rotateX: function (rad)
-    {
-        var a = this.val;
-        var s = Math.sin(rad);
-        var c = Math.cos(rad);
-
-        var a10 = a[4];
-        var a11 = a[5];
-        var a12 = a[6];
-        var a13 = a[7];
-
-        var a20 = a[8];
-        var a21 = a[9];
-        var a22 = a[10];
-        var a23 = a[11];
-
-        // Perform axis-specific matrix multiplication
-        a[4] = a10 * c + a20 * s;
-        a[5] = a11 * c + a21 * s;
-        a[6] = a12 * c + a22 * s;
-        a[7] = a13 * c + a23 * s;
-        a[8] = a20 * c - a10 * s;
-        a[9] = a21 * c - a11 * s;
-        a[10] = a22 * c - a12 * s;
-        a[11] = a23 * c - a13 * s;
-
-        return this;
-    },
-
-    /**
-     * Rotate this matrix on its Y axis.
-     *
-     * @method Phaser.Math.Matrix4#rotateY
-     * @since 3.0.0
-     *
-     * @param {number} rad - The angle to rotate by, in radians.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    rotateY: function (rad)
-    {
-        var a = this.val;
-        var s = Math.sin(rad);
-        var c = Math.cos(rad);
-
-        var a00 = a[0];
-        var a01 = a[1];
-        var a02 = a[2];
-        var a03 = a[3];
-
-        var a20 = a[8];
-        var a21 = a[9];
-        var a22 = a[10];
-        var a23 = a[11];
-
-        // Perform axis-specific matrix multiplication
-        a[0] = a00 * c - a20 * s;
-        a[1] = a01 * c - a21 * s;
-        a[2] = a02 * c - a22 * s;
-        a[3] = a03 * c - a23 * s;
-        a[8] = a00 * s + a20 * c;
-        a[9] = a01 * s + a21 * c;
-        a[10] = a02 * s + a22 * c;
-        a[11] = a03 * s + a23 * c;
-
-        return this;
-    },
-
-    /**
-     * Rotate this matrix on its Z axis.
-     *
-     * @method Phaser.Math.Matrix4#rotateZ
-     * @since 3.0.0
-     *
-     * @param {number} rad - The angle to rotate by, in radians.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    rotateZ: function (rad)
-    {
-        var a = this.val;
-        var s = Math.sin(rad);
-        var c = Math.cos(rad);
-
-        var a00 = a[0];
-        var a01 = a[1];
-        var a02 = a[2];
-        var a03 = a[3];
-
-        var a10 = a[4];
-        var a11 = a[5];
-        var a12 = a[6];
-        var a13 = a[7];
-
-        // Perform axis-specific matrix multiplication
-        a[0] = a00 * c + a10 * s;
-        a[1] = a01 * c + a11 * s;
-        a[2] = a02 * c + a12 * s;
-        a[3] = a03 * c + a13 * s;
-        a[4] = a10 * c - a00 * s;
-        a[5] = a11 * c - a01 * s;
-        a[6] = a12 * c - a02 * s;
-        a[7] = a13 * c - a03 * s;
-
-        return this;
-    },
-
-    /**
-     * Set the values of this Matrix from the given rotation Quaternion and translation Vector.
-     *
-     * @method Phaser.Math.Matrix4#fromRotationTranslation
-     * @since 3.0.0
-     *
-     * @param {Phaser.Math.Quaternion} q - The Quaternion to set rotation from.
-     * @param {Phaser.Math.Vector3} v - The Vector to set translation from.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    fromRotationTranslation: function (q, v)
-    {
-        // Quaternion math
-        var out = this.val;
-
-        var x = q.x;
-        var y = q.y;
-        var z = q.z;
-        var w = q.w;
-
-        var x2 = x + x;
-        var y2 = y + y;
-        var z2 = z + z;
-
-        var xx = x * x2;
-        var xy = x * y2;
-        var xz = x * z2;
-
-        var yy = y * y2;
-        var yz = y * z2;
-        var zz = z * z2;
-
-        var wx = w * x2;
-        var wy = w * y2;
-        var wz = w * z2;
-
-        out[0] = 1 - (yy + zz);
-        out[1] = xy + wz;
-        out[2] = xz - wy;
-        out[3] = 0;
-
-        out[4] = xy - wz;
-        out[5] = 1 - (xx + zz);
-        out[6] = yz + wx;
-        out[7] = 0;
-
-        out[8] = xz + wy;
-        out[9] = yz - wx;
-        out[10] = 1 - (xx + yy);
-        out[11] = 0;
-
-        out[12] = v.x;
-        out[13] = v.y;
-        out[14] = v.z;
-        out[15] = 1;
-
-        return this;
-    },
-
-    /**
-     * Set the values of this Matrix from the given Quaternion.
-     *
-     * @method Phaser.Math.Matrix4#fromQuat
-     * @since 3.0.0
-     *
-     * @param {Phaser.Math.Quaternion} q - The Quaternion to set the values of this Matrix from.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    fromQuat: function (q)
-    {
-        var out = this.val;
-
-        var x = q.x;
-        var y = q.y;
-        var z = q.z;
-        var w = q.w;
-
-        var x2 = x + x;
-        var y2 = y + y;
-        var z2 = z + z;
-
-        var xx = x * x2;
-        var xy = x * y2;
-        var xz = x * z2;
-
-        var yy = y * y2;
-        var yz = y * z2;
-        var zz = z * z2;
-
-        var wx = w * x2;
-        var wy = w * y2;
-        var wz = w * z2;
-
-        out[0] = 1 - (yy + zz);
-        out[1] = xy + wz;
-        out[2] = xz - wy;
-        out[3] = 0;
-
-        out[4] = xy - wz;
-        out[5] = 1 - (xx + zz);
-        out[6] = yz + wx;
-        out[7] = 0;
-
-        out[8] = xz + wy;
-        out[9] = yz - wx;
-        out[10] = 1 - (xx + yy);
-        out[11] = 0;
-
-        out[12] = 0;
-        out[13] = 0;
-        out[14] = 0;
-        out[15] = 1;
-
-        return this;
-    },
-
-    /**
-     * Generate a frustum matrix with the given bounds.
-     *
-     * @method Phaser.Math.Matrix4#frustum
-     * @since 3.0.0
-     *
-     * @param {number} left - The left bound of the frustum.
-     * @param {number} right - The right bound of the frustum.
-     * @param {number} bottom - The bottom bound of the frustum.
-     * @param {number} top - The top bound of the frustum.
-     * @param {number} near - The near bound of the frustum.
-     * @param {number} far - The far bound of the frustum.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    frustum: function (left, right, bottom, top, near, far)
-    {
-        var out = this.val;
-
-        var rl = 1 / (right - left);
-        var tb = 1 / (top - bottom);
-        var nf = 1 / (near - far);
-
-        out[0] = (near * 2) * rl;
-        out[1] = 0;
-        out[2] = 0;
-        out[3] = 0;
-
-        out[4] = 0;
-        out[5] = (near * 2) * tb;
-        out[6] = 0;
-        out[7] = 0;
-
-        out[8] = (right + left) * rl;
-        out[9] = (top + bottom) * tb;
-        out[10] = (far + near) * nf;
-        out[11] = -1;
-
-        out[12] = 0;
-        out[13] = 0;
-        out[14] = (far * near * 2) * nf;
-        out[15] = 0;
-
-        return this;
-    },
-
-    /**
-     * Generate a perspective projection matrix with the given bounds.
-     *
-     * @method Phaser.Math.Matrix4#perspective
-     * @since 3.0.0
-     *
-     * @param {number} fovy - Vertical field of view in radians
-     * @param {number} aspect - Aspect ratio. Typically viewport width  /height.
-     * @param {number} near - Near bound of the frustum.
-     * @param {number} far - Far bound of the frustum.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    perspective: function (fovy, aspect, near, far)
-    {
-        var out = this.val;
-        var f = 1.0 / Math.tan(fovy / 2);
-        var nf = 1 / (near - far);
-
-        out[0] = f / aspect;
-        out[1] = 0;
-        out[2] = 0;
-        out[3] = 0;
-
-        out[4] = 0;
-        out[5] = f;
-        out[6] = 0;
-        out[7] = 0;
-
-        out[8] = 0;
-        out[9] = 0;
-        out[10] = (far + near) * nf;
-        out[11] = -1;
-
-        out[12] = 0;
-        out[13] = 0;
-        out[14] = (2 * far * near) * nf;
-        out[15] = 0;
-
-        return this;
-    },
-
-    /**
-     * Generate a perspective projection matrix with the given bounds.
-     *
-     * @method Phaser.Math.Matrix4#perspectiveLH
-     * @since 3.0.0
-     *
-     * @param {number} width - The width of the frustum.
-     * @param {number} height - The height of the frustum.
-     * @param {number} near - Near bound of the frustum.
-     * @param {number} far - Far bound of the frustum.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    perspectiveLH: function (width, height, near, far)
-    {
-        var out = this.val;
-
-        out[0] = (2 * near) / width;
-        out[1] = 0;
-        out[2] = 0;
-        out[3] = 0;
-
-        out[4] = 0;
-        out[5] = (2 * near) / height;
-        out[6] = 0;
-        out[7] = 0;
-
-        out[8] = 0;
-        out[9] = 0;
-        out[10] = -far / (near - far);
-        out[11] = 1;
-
-        out[12] = 0;
-        out[13] = 0;
-        out[14] = (near * far) / (near - far);
-        out[15] = 0;
-
-        return this;
-    },
-
-    /**
-     * Generate an orthogonal projection matrix with the given bounds.
-     *
-     * @method Phaser.Math.Matrix4#ortho
-     * @since 3.0.0
-     *
-     * @param {number} left - The left bound of the frustum.
-     * @param {number} right - The right bound of the frustum.
-     * @param {number} bottom - The bottom bound of the frustum.
-     * @param {number} top - The top bound of the frustum.
-     * @param {number} near - The near bound of the frustum.
-     * @param {number} far - The far bound of the frustum.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    ortho: function (left, right, bottom, top, near, far)
-    {
-        var out = this.val;
-        var lr = left - right;
-        var bt = bottom - top;
-        var nf = near - far;
-
-        //  Avoid division by zero
-        lr = (lr === 0) ? lr : 1 / lr;
-        bt = (bt === 0) ? bt : 1 / bt;
-        nf = (nf === 0) ? nf : 1 / nf;
-
-        out[0] = -2 * lr;
-        out[1] = 0;
-        out[2] = 0;
-        out[3] = 0;
-
-        out[4] = 0;
-        out[5] = -2 * bt;
-        out[6] = 0;
-        out[7] = 0;
-
-        out[8] = 0;
-        out[9] = 0;
-        out[10] = 2 * nf;
-        out[11] = 0;
-
-        out[12] = (left + right) * lr;
-        out[13] = (top + bottom) * bt;
-        out[14] = (far + near) * nf;
-        out[15] = 1;
-
-        return this;
-    },
-
-    /**
-     * Generate a look-at matrix with the given eye position, focal point, and up axis.
-     *
-     * @method Phaser.Math.Matrix4#lookAt
-     * @since 3.0.0
-     *
-     * @param {Phaser.Math.Vector3} eye - Position of the viewer
-     * @param {Phaser.Math.Vector3} center - Point the viewer is looking at
-     * @param {Phaser.Math.Vector3} up - vec3 pointing up.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    lookAt: function (eye, center, up)
-    {
-        var out = this.val;
-
-        var eyex = eye.x;
-        var eyey = eye.y;
-        var eyez = eye.z;
-
-        var upx = up.x;
-        var upy = up.y;
-        var upz = up.z;
-
-        var centerx = center.x;
-        var centery = center.y;
-        var centerz = center.z;
-
-        if (Math.abs(eyex - centerx) < EPSILON &&
-            Math.abs(eyey - centery) < EPSILON &&
-            Math.abs(eyez - centerz) < EPSILON)
-        {
-            return this.identity();
-        }
-
-        var z0 = eyex - centerx;
-        var z1 = eyey - centery;
-        var z2 = eyez - centerz;
-
-        var len = 1 / Math.sqrt(z0 * z0 + z1 * z1 + z2 * z2);
-
-        z0 *= len;
-        z1 *= len;
-        z2 *= len;
-
-        var x0 = upy * z2 - upz * z1;
-        var x1 = upz * z0 - upx * z2;
-        var x2 = upx * z1 - upy * z0;
-
-        len = Math.sqrt(x0 * x0 + x1 * x1 + x2 * x2);
-
-        if (!len)
-        {
-            x0 = 0;
-            x1 = 0;
-            x2 = 0;
-        }
-        else
-        {
-            len = 1 / len;
-            x0 *= len;
-            x1 *= len;
-            x2 *= len;
-        }
-
-        var y0 = z1 * x2 - z2 * x1;
-        var y1 = z2 * x0 - z0 * x2;
-        var y2 = z0 * x1 - z1 * x0;
-
-        len = Math.sqrt(y0 * y0 + y1 * y1 + y2 * y2);
-
-        if (!len)
-        {
-            y0 = 0;
-            y1 = 0;
-            y2 = 0;
-        }
-        else
-        {
-            len = 1 / len;
-            y0 *= len;
-            y1 *= len;
-            y2 *= len;
-        }
-
-        out[0] = x0;
-        out[1] = y0;
-        out[2] = z0;
-        out[3] = 0;
-
-        out[4] = x1;
-        out[5] = y1;
-        out[6] = z1;
-        out[7] = 0;
-
-        out[8] = x2;
-        out[9] = y2;
-        out[10] = z2;
-        out[11] = 0;
-
-        out[12] = -(x0 * eyex + x1 * eyey + x2 * eyez);
-        out[13] = -(y0 * eyex + y1 * eyey + y2 * eyez);
-        out[14] = -(z0 * eyex + z1 * eyey + z2 * eyez);
-        out[15] = 1;
-
-        return this;
-    },
-
-    /**
-     * Set the values of this matrix from the given `yaw`, `pitch` and `roll` values.
-     *
-     * @method Phaser.Math.Matrix4#yawPitchRoll
-     * @since 3.0.0
-     *
-     * @param {number} yaw - [description]
-     * @param {number} pitch - [description]
-     * @param {number} roll - [description]
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    yawPitchRoll: function (yaw, pitch, roll)
-    {
-        this.zero();
-        _tempMat1.zero();
-        _tempMat2.zero();
-
-        var m0 = this.val;
-        var m1 = _tempMat1.val;
-        var m2 = _tempMat2.val;
-
-        //  Rotate Z
-        var s = Math.sin(roll);
-        var c = Math.cos(roll);
-
-        m0[10] = 1;
-        m0[15] = 1;
-        m0[0] = c;
-        m0[1] = s;
-        m0[4] = -s;
-        m0[5] = c;
-
-        //  Rotate X
-        s = Math.sin(pitch);
-        c = Math.cos(pitch);
-
-        m1[0] = 1;
-        m1[15] = 1;
-        m1[5] = c;
-        m1[10] = c;
-        m1[9] = -s;
-        m1[6] = s;
-
-        //  Rotate Y
-        s = Math.sin(yaw);
-        c = Math.cos(yaw);
-
-        m2[5] = 1;
-        m2[15] = 1;
-        m2[0] = c;
-        m2[2] = -s;
-        m2[8] = s;
-        m2[10] = c;
-
-        this.multiplyLocal(_tempMat1);
-        this.multiplyLocal(_tempMat2);
-
-        return this;
-    },
-
-    /**
-     * Generate a world matrix from the given rotation, position, scale, view matrix and projection matrix.
-     *
-     * @method Phaser.Math.Matrix4#setWorldMatrix
-     * @since 3.0.0
-     *
-     * @param {Phaser.Math.Vector3} rotation - The rotation of the world matrix.
-     * @param {Phaser.Math.Vector3} position - The position of the world matrix.
-     * @param {Phaser.Math.Vector3} scale - The scale of the world matrix.
-     * @param {Phaser.Math.Matrix4} [viewMatrix] - The view matrix.
-     * @param {Phaser.Math.Matrix4} [projectionMatrix] - The projection matrix.
-     *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
-     */
-    setWorldMatrix: function (rotation, position, scale, viewMatrix, projectionMatrix)
-    {
-        this.yawPitchRoll(rotation.y, rotation.x, rotation.z);
-
-        _tempMat1.scaling(scale.x, scale.y, scale.z);
-        _tempMat2.xyz(position.x, position.y, position.z);
-
-        this.multiplyLocal(_tempMat1);
-        this.multiplyLocal(_tempMat2);
-
-        if (viewMatrix !== undefined)
-        {
-            this.multiplyLocal(viewMatrix);
-        }
-
-        if (projectionMatrix !== undefined)
-        {
-            this.multiplyLocal(projectionMatrix);
-        }
-
-        return this;
-    }
-
-});
-
-var _tempMat1 = new Matrix4();
-var _tempMat2 = new Matrix4();
-
-module.exports = Matrix4;
-
-
-/***/ }),
-
 /***/ "../../../src/math/RadToDeg.js":
 /*!***********************************************!*\
   !*** D:/wamp/www/phaser/src/math/RadToDeg.js ***!
@@ -11339,6 +9872,7 @@ var TextFile = __webpack_require__(/*! ../../../src/loader/filetypes/TextFile.js
  * @param {(string|Phaser.Loader.FileTypes.UnityAtlasFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string|string[]} [textureURL] - The absolute or relative URL to load the texture image file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
  * @param {string} [atlasURL] - The absolute or relative URL to load the texture atlas data file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
+ * @param {boolean} [preMultipliedAlpha=false] - 
  * @param {XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
  * @param {XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the atlas data file. Used in replacement of the Loaders default XHR Settings.
  */
@@ -11348,7 +9882,7 @@ var SpineFile = new Class({
 
     initialize:
 
-    function SpineFile (loader, key, jsonURL, atlasURL, jsonXhrSettings, atlasXhrSettings)
+    function SpineFile (loader, key, jsonURL, atlasURL, preMultipliedAlpha, jsonXhrSettings, atlasXhrSettings)
     {
         var i;
         var json;
@@ -11372,29 +9906,24 @@ var SpineFile = new Class({
             });
 
             atlasURL = GetFastValue(config, 'atlasURL');
+            preMultipliedAlpha = GetFastValue(config, 'preMultipliedAlpha');
 
-            if (Array.isArray(atlasURL))
+            if (!Array.isArray(atlasURL))
             {
-                for (i = 0; i < atlasURL.length; i++)
-                {
-                    atlas = new TextFile(loader, {
-                        key: key,
-                        url: atlasURL[i],
-                        extension: GetFastValue(config, 'atlasExtension', 'atlas'),
-                        xhrSettings: GetFastValue(config, 'atlasXhrSettings')
-                    });
-
-                    files.push(atlas);
-                }
+                atlasURL = [ atlasURL ];
             }
-            else
+
+            for (i = 0; i < atlasURL.length; i++)
             {
                 atlas = new TextFile(loader, {
                     key: key,
-                    url: atlasURL,
+                    url: atlasURL[i],
                     extension: GetFastValue(config, 'atlasExtension', 'atlas'),
-                    xhrSettings: GetFastValue(config, 'atlasXhrSettings')
+                    xhrSettings: GetFastValue(config, 'atlasXhrSettings'),
                 });
+
+                atlas.cache = cache;
+                // atlas.config.preMultipliedAlpha = preMultipliedAlpha;
 
                 files.push(atlas);
             }
@@ -11403,20 +9932,16 @@ var SpineFile = new Class({
         {
             json = new JSONFile(loader, key, jsonURL, jsonXhrSettings);
 
-            if (Array.isArray(atlasURL))
+            if (!Array.isArray(atlasURL))
             {
-                for (i = 0; i < atlasURL.length; i++)
-                {
-                    atlas = new TextFile(loader, key + '_' + i, atlasURL[i], atlasXhrSettings);
-                    atlas.cache = cache;
-
-                    files.push(atlas);
-                }
+                atlasURL = [ atlasURL ];
             }
-            else
+
+            for (i = 0; i < atlasURL.length; i++)
             {
-                atlas = new TextFile(loader, key + '_0', atlasURL, atlasXhrSettings);
+                atlas = new TextFile(loader, key + '_' + i, atlasURL[i], atlasXhrSettings);
                 atlas.cache = cache;
+                // atlas.config.preMultipliedAlpha = preMultipliedAlpha;
 
                 files.push(atlas);
             }
@@ -11425,6 +9950,8 @@ var SpineFile = new Class({
         files.unshift(json);
 
         MultiFile.call(this, loader, 'spine', key, files);
+
+        this.config.preMultipliedAlpha = preMultipliedAlpha;
     },
 
     /**
@@ -11517,6 +10044,7 @@ var SpineFile = new Class({
             var atlasCache;
             var atlasKey = '';
             var combinedAtlastData = '';
+            var preMultipliedAlpha = (this.config.preMultipliedAlpha) ? true : false;
 
             for (var i = 1; i < this.files.length; i++)
             {
@@ -11540,7 +10068,7 @@ var SpineFile = new Class({
                 file.pendingDestroy();
             }
 
-            atlasCache.add(atlasKey, combinedAtlastData);
+            atlasCache.add(atlasKey, { preMultipliedAlpha: preMultipliedAlpha, data: combinedAtlastData });
 
             this.complete = true;
         }
@@ -11572,7 +10100,6 @@ var ScenePlugin = __webpack_require__(/*! ../../../src/plugins/ScenePlugin */ ".
 var SpineFile = __webpack_require__(/*! ./SpineFile */ "./SpineFile.js");
 var Spine = __webpack_require__(/*! Spine */ "./runtimes/spine-both.js");
 var SpineGameObject = __webpack_require__(/*! ./gameobject/SpineGameObject */ "./gameobject/SpineGameObject.js");
-var Matrix4 = __webpack_require__(/*! ../../../src/math/Matrix4 */ "../../../src/math/Matrix4.js");
 
 /**
  * @classdesc
@@ -11609,22 +10136,11 @@ var SpinePlugin = new Class({
 
         this.textures = game.textures;
 
-        this.skeletonRenderer;
-
         this.drawDebug = false;
 
         this.gl;
         this.renderer;
-
         this.sceneRenderer;
-
-        this.mvp;
-        this.shader;
-        this.batcher;
-        this.debugRenderer;
-        this.debugShader;
-
-        console.log('SpinePlugin created', '- WebGL:', this.isWebGL);
 
         if (this.isWebGL)
         {
@@ -11712,35 +10228,36 @@ var SpinePlugin = new Class({
 
     bootWebGL: function ()
     {
-        // var gl = this.gl;
-        // var runtime = this.runtime;
-
-        // console.log(this.renderer.canvas, (this.renderer.canvas instanceof HTMLCanvasElement));
-
         this.sceneRenderer = new Spine.webgl.SceneRenderer(this.renderer.canvas, this.gl, true);
 
-        // this.mvp = new Matrix4();
+        //  Monkeypatch the Spine setBlendMode functions, or batching is destroyed
 
-        //  Create a simple shader, mesh, model-view-projection matrix and SkeletonRenderer.
+        var setBlendMode = function (srcBlend, dstBlend)
+        {
+            if (srcBlend !== this.srcBlend || dstBlend !== this.dstBlend)
+            {
+                var gl = this.context.gl;
 
-        // this.shader = runtime.Shader.newTwoColoredTextured(gl);
+                this.srcBlend = srcBlend;
+                this.dstBlend = dstBlend;
 
-        // this.batcher = new runtime.PolygonBatcher(gl, true);
+                if (this.isDrawing)
+                {
+                    this.flush();
+                    gl.blendFunc(this.srcBlend, this.dstBlend);
+                }
+            }
+        };
 
-        // this.skeletonRenderer = new runtime.SkeletonRenderer(gl, true);
-
-        // this.skeletonRenderer.premultipliedAlpha = true;
-
-        // this.shapes = new runtime.ShapeRenderer(gl);
-        // this.debugRenderer = new runtime.SkeletonDebugRenderer(gl);
-        // this.debugShader = runtime.Shader.newColored(gl);
+        this.sceneRenderer.batcher.setBlendMode = setBlendMode;
+        this.sceneRenderer.shapes.setBlendMode = setBlendMode;
     },
 
     getAtlasWebGL: function (key)
     {
-        var atlasData = this.cache.get(key);
+        var atlasEntry = this.cache.get(key);
 
-        if (!atlasData)
+        if (!atlasEntry)
         {
             console.warn('No atlas data for: ' + key);
             return;
@@ -11751,7 +10268,7 @@ var SpinePlugin = new Class({
 
         if (spineTextures.has(key))
         {
-            atlas = new Spine.TextureAtlas(atlasData, function ()
+            atlas = new Spine.TextureAtlas(atlasEntry.data, function ()
             {
                 return spineTextures.get(key);
             });
@@ -11764,7 +10281,7 @@ var SpinePlugin = new Class({
 
             gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
 
-            atlas = new Spine.TextureAtlas(atlasData, function (path)
+            atlas = new Spine.TextureAtlas(atlasEntry.data, function (path)
             {
                 var glTexture = new Spine.webgl.GLTexture(gl, textures.get(path).getSourceImage(), false);
 
@@ -11777,7 +10294,7 @@ var SpinePlugin = new Class({
         return atlas;
     },
 
-    spineFileCallback: function (key, jsonURL, atlasURL, jsonXhrSettings, atlasXhrSettings)
+    spineFileCallback: function (key, jsonURL, atlasURL, preMultipliedAlpha, jsonXhrSettings, atlasXhrSettings)
     {
         var multifile;
    
@@ -11792,7 +10309,7 @@ var SpinePlugin = new Class({
         }
         else
         {
-            multifile = new SpineFile(this, key, jsonURL, atlasURL, jsonXhrSettings, atlasXhrSettings);
+            multifile = new SpineFile(this, key, jsonURL, atlasURL, preMultipliedAlpha, jsonXhrSettings, atlasXhrSettings);
 
             this.addFile(multifile.files);
         }
@@ -11847,7 +10364,15 @@ var SpinePlugin = new Class({
             jsonKey = parts.join('.');
         }
 
+        var atlasData = this.cache.get(atlasKey);
         var atlas = this.getAtlas(atlasKey);
+
+        if (!atlas)
+        {
+            return null;
+        }
+
+        var preMultipliedAlpha = atlasData.preMultipliedAlpha;
 
         var atlasLoader = new Spine.AtlasAttachmentLoader(atlas);
         
@@ -11872,7 +10397,7 @@ var SpinePlugin = new Class({
 
             var skeleton = new Spine.Skeleton(skeletonData);
         
-            return { skeletonData: skeletonData, skeleton: skeleton };
+            return { skeletonData: skeletonData, skeleton: skeleton, preMultipliedAlpha: preMultipliedAlpha };
         }
         else
         {
@@ -11912,6 +10437,8 @@ var SpinePlugin = new Class({
         var eventEmitter = this.systems.events;
 
         eventEmitter.off('shutdown', this.shutdown, this);
+
+        this.sceneRenderer.dispose();
     },
 
     /**
@@ -11933,18 +10460,12 @@ var SpinePlugin = new Class({
         this.scene = null;
         this.systems = null;
 
-        //  Create a custom cache to store the spine data (.atlas files)
         this.cache = null;
         this.spineTextures = null;
         this.json = null;
         this.textures = null;
-        this.skeletonRenderer = null;
+        this.sceneRenderer = null;
         this.gl = null;
-        this.mvp = null;
-        this.shader = null;
-        this.batcher = null;
-        this.debugRenderer = null;
-        this.debugShader = null;
     }
 
 });
@@ -12030,6 +10551,8 @@ var SpineGameObject = new Class({
         this.displayOriginX = 0;
         this.displayOriginY = 0;
 
+        this.preMultipliedAlpha = false;
+
         this.setPosition(x, y);
 
         if (key)
@@ -12048,6 +10571,8 @@ var SpineGameObject = new Class({
         var data = this.plugin.createSkeleton(atlasDataKey, skeletonJSON);
 
         this.skeletonData = data.skeletonData;
+
+        this.preMultipliedAlpha = data.preMultipliedAlpha;
 
         var skeleton = data.skeleton;
 
@@ -12271,7 +10796,7 @@ var SpineGameObject = new Class({
 
         this.emit('spine.update', skeleton);
 
-        skeleton.updateWorldTransform();
+        // skeleton.updateWorldTransform();
     },
 
     /**
@@ -12443,18 +10968,8 @@ var RadToDeg = __webpack_require__(/*! ../../../../src/math/RadToDeg */ "../../.
 var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
     var plugin = src.plugin;
-
-    // var mvp = plugin.mvp;
-
-    // var shader = plugin.shader;
-    // var batcher = plugin.batcher;
-    // var runtime = plugin.runtime;
-
     var skeleton = src.skeleton;
-
     var sceneRenderer = plugin.sceneRenderer;
-
-    // var skeletonRenderer = plugin.skeletonRenderer;
 
     if (!skeleton)
     {
@@ -12515,80 +11030,34 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
 
     src.root.rotation = RadToDeg(CounterClockwise(calcMatrix.rotation));
 
-    sceneRenderer.camera.position.x = viewportWidth / 2;
-    sceneRenderer.camera.position.y = viewportHeight / 2;
-    sceneRenderer.camera.viewportWidth = viewportWidth;
-    sceneRenderer.camera.viewportHeight = viewportHeight;
-
     //  Add autoUpdate option
     skeleton.updateWorldTransform();
 
     if (renderer.newType)
     {
+        sceneRenderer.camera.position.x = viewportWidth / 2;
+        sceneRenderer.camera.position.y = viewportHeight / 2;
+        sceneRenderer.camera.viewportWidth = viewportWidth;
+        sceneRenderer.camera.viewportHeight = viewportHeight;
+
         sceneRenderer.begin();
-
-        // mvp.ortho(0, width, 0, height, 0, 1);
-
-        // shader.bind();
-        // shader.setUniformi(runtime.Shader.SAMPLER, 0);
-        // shader.setUniform4x4f(runtime.Shader.MVP_MATRIX, mvp.val);
-
-        // skeletonRenderer.premultipliedAlpha = true;
-
-        // batcher.setBlendMode(renderer.gl.ONE, renderer.gl.ONE_MINUS_SRC_ALPHA);
-        // batcher.begin(shader);
-    }
-
-    if (renderer.nextTypeMatch)
-    {
-        // sceneRenderer.batcher.isDrawing = false;
     }
 
     //  Draw the current skeleton
+    sceneRenderer.drawSkeleton(skeleton, src.preMultipliedAlpha);
 
-    sceneRenderer.drawSkeleton(skeleton, true);
-
-    // sceneRenderer.drawSkeletonDebug(skeleton, true);
-
-    // skeletonRenderer.premultipliedAlpha = true;
-    // skeletonRenderer.draw(batcher, skeleton);
+    if (plugin.drawDebug || src.drawDebug)
+    {
+        sceneRenderer.drawSkeletonDebug(skeleton, src.preMultipliedAlpha);
+    }
 
     if (!renderer.nextTypeMatch)
     {
         //  The next object in the display list is not a Spine object, so we end the batch
-        // batcher.isDrawing = true;
-        // sceneRenderer.batcher.isDrawing = true;
-
-        // batcher.end();
-
-        // shader.unbind();
-
         sceneRenderer.end();
 
         renderer.rebindPipeline(renderer.pipelines.TextureTintPipeline);
     }
-
-    /*
-    var drawDebug = (plugin.drawDebug || src.drawDebug);
-
-    if (drawDebug)
-    {
-        var debugShader = plugin.debugShader;
-        var debugRenderer = plugin.debugRenderer;
-        var shapes = plugin.shapes;
-
-        debugShader.bind();
-        debugShader.setUniform4x4f(runtime.Shader.MVP_MATRIX, mvp.val);
-
-        shapes.begin(debugShader);
-
-        debugRenderer.draw(shapes, skeleton);
-
-        shapes.end();
-
-        debugShader.unbind();
-    }
-    */
 };
 
 module.exports = SpineGameObjectWebGLRenderer;
@@ -20056,104 +18525,6 @@ var spine;
 (function (spine) {
 	var webgl;
 	(function (webgl) {
-		var LoadingScreen = (function () {
-			function LoadingScreen(renderer) {
-				this.logo = null;
-				this.spinner = null;
-				this.angle = 0;
-				this.fadeOut = 0;
-				this.timeKeeper = new spine.TimeKeeper();
-				this.backgroundColor = new spine.Color(0.135, 0.135, 0.135, 1);
-				this.tempColor = new spine.Color();
-				this.firstDraw = 0;
-				this.renderer = renderer;
-				this.timeKeeper.maxDelta = 9;
-				if (LoadingScreen.logoImg === null) {
-					var isSafari = navigator.userAgent.indexOf("Safari") > -1;
-					LoadingScreen.logoImg = new Image();
-					LoadingScreen.logoImg.src = LoadingScreen.SPINE_LOGO_DATA;
-					if (!isSafari)
-						LoadingScreen.logoImg.crossOrigin = "anonymous";
-					LoadingScreen.logoImg.onload = function (ev) {
-						LoadingScreen.loaded++;
-					};
-					LoadingScreen.spinnerImg = new Image();
-					LoadingScreen.spinnerImg.src = LoadingScreen.SPINNER_DATA;
-					if (!isSafari)
-						LoadingScreen.spinnerImg.crossOrigin = "anonymous";
-					LoadingScreen.spinnerImg.onload = function (ev) {
-						LoadingScreen.loaded++;
-					};
-				}
-			}
-			LoadingScreen.prototype.draw = function (complete) {
-				if (complete === void 0) { complete = false; }
-				if (complete && this.fadeOut > LoadingScreen.FADE_SECONDS)
-					return;
-				this.timeKeeper.update();
-				var a = Math.abs(Math.sin(this.timeKeeper.totalTime + 0.75));
-				this.angle -= this.timeKeeper.delta / 1.4 * 360 * (1 + 1.5 * Math.pow(a, 5));
-				var renderer = this.renderer;
-				var canvas = renderer.canvas;
-				var gl = renderer.context.gl;
-				renderer.resize(webgl.ResizeMode.Stretch);
-				var oldX = renderer.camera.position.x, oldY = renderer.camera.position.y;
-				renderer.camera.position.set(canvas.width / 2, canvas.height / 2, 0);
-				renderer.camera.viewportWidth = canvas.width;
-				renderer.camera.viewportHeight = canvas.height;
-				if (!complete) {
-					gl.clearColor(this.backgroundColor.r, this.backgroundColor.g, this.backgroundColor.b, this.backgroundColor.a);
-					gl.clear(gl.COLOR_BUFFER_BIT);
-					this.tempColor.a = 1;
-				}
-				else {
-					this.fadeOut += this.timeKeeper.delta * (this.timeKeeper.totalTime < 1 ? 2 : 1);
-					if (this.fadeOut > LoadingScreen.FADE_SECONDS) {
-						renderer.camera.position.set(oldX, oldY, 0);
-						return;
-					}
-					a = 1 - this.fadeOut / LoadingScreen.FADE_SECONDS;
-					this.tempColor.setFromColor(this.backgroundColor);
-					this.tempColor.a = 1 - (a - 1) * (a - 1);
-					renderer.begin();
-					renderer.quad(true, 0, 0, canvas.width, 0, canvas.width, canvas.height, 0, canvas.height, this.tempColor, this.tempColor, this.tempColor, this.tempColor);
-					renderer.end();
-				}
-				this.tempColor.set(1, 1, 1, this.tempColor.a);
-				if (LoadingScreen.loaded != 2)
-					return;
-				if (this.logo === null) {
-					this.logo = new webgl.GLTexture(renderer.context, LoadingScreen.logoImg);
-					this.spinner = new webgl.GLTexture(renderer.context, LoadingScreen.spinnerImg);
-				}
-				this.logo.update(false);
-				this.spinner.update(false);
-				var logoWidth = this.logo.getImage().width;
-				var logoHeight = this.logo.getImage().height;
-				var spinnerWidth = this.spinner.getImage().width;
-				var spinnerHeight = this.spinner.getImage().height;
-				renderer.batcher.setBlendMode(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-				renderer.begin();
-				renderer.drawTexture(this.logo, (canvas.width - logoWidth) / 2, (canvas.height - logoHeight) / 2, logoWidth, logoHeight, this.tempColor);
-				renderer.drawTextureRotated(this.spinner, (canvas.width - spinnerWidth) / 2, (canvas.height - spinnerHeight) / 2, spinnerWidth, spinnerHeight, spinnerWidth / 2, spinnerHeight / 2, this.angle, this.tempColor);
-				renderer.end();
-				renderer.camera.position.set(oldX, oldY, 0);
-			};
-			LoadingScreen.FADE_SECONDS = 1;
-			LoadingScreen.loaded = 0;
-			LoadingScreen.spinnerImg = null;
-			LoadingScreen.logoImg = null;
-			LoadingScreen.SPINNER_DATA = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKMAAACjCAYAAADmbK6AAAAACXBIWXMAAAsTAAALEwEAmpwYAAALB2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDIgNzkuMTYwOTI0LCAyMDE3LzA3LzEzLTAxOjA2OjM5ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczpwaG90b3Nob3A9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGhvdG9zaG9wLzEuMC8iIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIiB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxNS41IChXaW5kb3dzKSIgeG1wOkNyZWF0ZURhdGU9IjIwMTYtMDktMDhUMTQ6MjU6MTIrMDI6MDAiIHhtcDpNZXRhZGF0YURhdGU9IjIwMTgtMTEtMTVUMTY6NDA6NTkrMDE6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDE4LTExLTE1VDE2OjQwOjU5KzAxOjAwIiBkYzpmb3JtYXQ9ImltYWdlL3BuZyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpmZDhlNTljMC02NGJjLTIxNGQtODAyZi1jZDlhODJjM2ZjMGMiIHhtcE1NOkRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDpmYmNmZWJlYS03MjY2LWE0NGQtOTI4NS0wOTJmNGNhYzk4ZWEiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowODMzNWIyYy04NzYyLWQzNGMtOTBhOS02ODJjYjJmYTQ2M2UiIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiIHRpZmY6T3JpZW50YXRpb249IjEiIHRpZmY6WFJlc29sdXRpb249IjcyMDAwMC8xMDAwMCIgdGlmZjpZUmVzb2x1dGlvbj0iNzIwMDAwLzEwMDAwIiB0aWZmOlJlc29sdXRpb25Vbml0PSIyIiBleGlmOkNvbG9yU3BhY2U9IjY1NTM1IiBleGlmOlBpeGVsWERpbWVuc2lvbj0iMjk3IiBleGlmOlBpeGVsWURpbWVuc2lvbj0iMjQyIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY3JlYXRlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDowODMzNWIyYy04NzYyLWQzNGMtOTBhOS02ODJjYjJmYTQ2M2UiIHN0RXZ0OndoZW49IjIwMTYtMDktMDhUMTQ6MjU6MTIrMDI6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE1LjUgKFdpbmRvd3MpIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJzYXZlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDpiNThlMTlkNi0xYTRjLTQyNDEtODU0ZC01MDVlZjYxMjRhODQiIHN0RXZ0OndoZW49IjIwMTgtMTEtMTVUMTY6NDA6MjMrMDE6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAoV2luZG93cykiIHN0RXZ0OmNoYW5nZWQ9Ii8iLz4gPHJkZjpsaSBzdEV2dDphY3Rpb249InNhdmVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjQ3YzYzYzIwLWJkYjgtYzM0YS1hYzMyLWQ5MDdjOWEyOTA0MCIgc3RFdnQ6d2hlbj0iMjAxOC0xMS0xNVQxNjo0MDo1OSswMTowMCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY29udmVydGVkIiBzdEV2dDpwYXJhbWV0ZXJzPSJmcm9tIGFwcGxpY2F0aW9uL3ZuZC5hZG9iZS5waG90b3Nob3AgdG8gaW1hZ2UvcG5nIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJkZXJpdmVkIiBzdEV2dDpwYXJhbWV0ZXJzPSJjb252ZXJ0ZWQgZnJvbSBhcHBsaWNhdGlvbi92bmQuYWRvYmUucGhvdG9zaG9wIHRvIGltYWdlL3BuZyIvPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6ZmQ4ZTU5YzAtNjRiYy0yMTRkLTgwMmYtY2Q5YTgyYzNmYzBjIiBzdEV2dDp3aGVuPSIyMDE4LTExLTE1VDE2OjQwOjU5KzAxOjAwIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgQ0MgKFdpbmRvd3MpIiBzdEV2dDpjaGFuZ2VkPSIvIi8+IDwvcmRmOlNlcT4gPC94bXBNTTpIaXN0b3J5PiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0N2M2M2MyMC1iZGI4LWMzNGEtYWMzMi1kOTA3YzlhMjkwNDAiIHN0UmVmOmRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDo2OWRmZjljYy01YzFiLWE5NDctOTc3OS03ODgxZjM0ODk3MDMiIHN0UmVmOm9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowODMzNWIyYy04NzYyLWQzNGMtOTBhOS02ODJjYjJmYTQ2M2UiLz4gPHBob3Rvc2hvcDpEb2N1bWVudEFu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";
-			LoadingScreen.SPINE_LOGO_DATA = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKUAAABsCAYAAAALzHKmAAAACXBIWXMAAAsTAAALEwEAmpwYAAALB2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDIgNzkuMTYwOTI0LCAyMDE3LzA3LzEzLTAxOjA2OjM5ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczpwaG90b3Nob3A9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGhvdG9zaG9wLzEuMC8iIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIiB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxNS41IChXaW5kb3dzKSIgeG1wOkNyZWF0ZURhdGU9IjIwMTYtMDktMDhUMTQ6MjU6MTIrMDI6MDAiIHhtcDpNZXRhZGF0YURhdGU9IjIwMTgtMTEtMTVUMTY6NDA6NTkrMDE6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDE4LTExLTE1VDE2OjQwOjU5KzAxOjAwIiBkYzpmb3JtYXQ9ImltYWdlL3BuZyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDowMTdhZGQ3Ni04OTZlLThlNGUtYmM5MS00ZjEyNjI1YjA3MjgiIHhtcE1NOkRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDplMTViNGE2ZS1hMDg3LWEzNDktODdhOS1mNDYzYjE2MzQ0Y2MiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowODMzNWIyYy04NzYyLWQzNGMtOTBhOS02ODJjYjJmYTQ2M2UiIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiIHRpZmY6T3JpZW50YXRpb249IjEiIHRpZmY6WFJlc29sdXRpb249IjcyMDAwMC8xMDAwMCIgdGlmZjpZUmVzb2x1dGlvbj0iNzIwMDAwLzEwMDAwIiB0aWZmOlJlc29sdXRpb25Vbml0PSIyIiBleGlmOkNvbG9yU3BhY2U9IjY1NTM1IiBleGlmOlBpeGVsWERpbWVuc2lvbj0iMjk3IiBleGlmOlBpeGVsWURpbWVuc2lvbj0iMjQyIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY3JlYXRlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDowODMzNWIyYy04NzYyLWQzNGMtOTBhOS02ODJjYjJmYTQ2M2UiIHN0RXZ0OndoZW49IjIwMTYtMDktMDhUMTQ6MjU6MTIrMDI6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE1LjUgKFdpbmRvd3MpIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJzYXZlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDpiNThlMTlkNi0xYTRjLTQyNDEtODU0ZC01MDVlZjYxMjRhODQiIHN0RXZ0OndoZW49IjIwMTgtMTEtMTVUMTY6NDA6MjMrMDE6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAoV2luZG93cykiIHN0RXZ0OmNoYW5nZWQ9Ii8iLz4gPHJkZjpsaSBzdEV2dDphY3Rpb249InNhdmVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjJlNjJiMWM2LWIxYzQtNDk0MC04MDMxLWU4ZDkyNTBmODJjNSIgc3RFdnQ6d2hlbj0iMjAxOC0xMS0xNVQxNjo0MDo1OSswMTowMCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY29udmVydGVkIiBzdEV2dDpwYXJhbWV0ZXJzPSJmcm9tIGFwcGxpY2F0aW9uL3ZuZC5hZG9iZS5waG90b3Nob3AgdG8gaW1hZ2UvcG5nIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJkZXJpdmVkIiBzdEV2dDpwYXJhbWV0ZXJzPSJjb252ZXJ0ZWQgZnJvbSBhcHBsaWNhdGlvbi92bmQuYWRvYmUucGhvdG9zaG9wIHRvIGltYWdlL3BuZyIvPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6MDE3YWRkNzYtODk2ZS04ZTRlLWJjOTEtNGYxMjYyNWIwNzI4IiBzdEV2dDp3aGVuPSIyMDE4LTExLTE1VDE2OjQwOjU5KzAxOjAwIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgQ0MgKFdpbmRvd3MpIiBzdEV2dDpjaGFuZ2VkPSIvIi8+IDwvcmRmOlNlcT4gPC94bXBNTTpIaXN0b3J5PiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDoyZTYyYjFjNi1iMWM0LTQ5NDAtODAzMS1lOGQ5MjUwZjgyYzUiIHN0UmVmOmRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDo2OWRmZjljYy01YzFiLWE5NDctOTc3OS03ODgxZjM0ODk3MDMiIHN0UmVmOm9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowODMzNWIyYy04NzYyLWQzNGMtOTBhOS02ODJjYjJmYTQ2M2UiLz4gPHBob3Rvc2hvcDpEb2N1bWVudEFu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";
-			return LoadingScreen;
-		}());
-		webgl.LoadingScreen = LoadingScreen;
-	})(webgl = spine.webgl || (spine.webgl = {}));
-})(spine || (spine = {}));
-var spine;
-(function (spine) {
-	var webgl;
-	(function (webgl) {
 		webgl.M00 = 0;
 		webgl.M01 = 4;
 		webgl.M02 = 8;
@@ -20675,8 +19046,10 @@ var spine;
 			};
 			PolygonBatcher.prototype.setBlendMode = function (srcBlend, dstBlend) {
 				var gl = this.context.gl;
+
 				this.srcBlend = srcBlend;
 				this.dstBlend = dstBlend;
+
 				if (this.isDrawing) {
 					this.flush();
 					gl.blendFunc(this.srcBlend, this.dstBlend);
