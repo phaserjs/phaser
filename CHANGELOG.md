@@ -105,6 +105,7 @@
 * `GameObjectCreator.remove` is a new static function that will remove a custom Game Object creator type.
 * `CanvasTexture.getPixels` now defaults to 0x0 by width x height as the default area, allowing you to call the method with no arguments to get all the pixels for the canvas.
 * `CreateDOMContainer` will now use `div.style.cssText` to set the inline styles of the container, so it now works on IE11. Fix #4674 (thanks @DanLiamco)
+* `TransformMatrix.rotation` now returns the properly normalized rotation value.
 
 ### Bug Fixes
 
