@@ -238,9 +238,10 @@ var TransformMatrix = new Class({
     },
 
     /**
-     * The rotation of the Matrix.
+     * The rotation of the Matrix, normalized to be within the Phaser right-handed
+     * clockwise rotation space. Value is in radians.
      *
-     * @name Phaser.GameObjects.Components.TransformMatrix#rotation
+     * @name Phaser.GameObjects.Components.TransformMatrix#rotationNormalized
      * @type {number}
      * @readonly
      * @since 3.4.0
@@ -249,7 +250,33 @@ var TransformMatrix = new Class({
 
         get: function ()
         {
-            return Math.acos(this.a / this.scaleX) * (Math.atan(-this.c / this.a) < 0 ? -1 : 1);
+            //  Previous version:
+            // return Math.acos(this.a / this.scaleX) * (Math.atan(-this.c / this.a) < 0 ? -1 : 1);
+
+            //  Normalized version:
+            var matrix = this.matrix;
+
+            var a = matrix[0];
+            var b = matrix[1];
+            var c = matrix[2];
+            var d = matrix[3];
+    
+            if (a || b)
+            {
+                var r = Math.sqrt(a * a + b * b);
+    
+                return (b > 0) ? Math.acos(a / r) : -Math.acos(a / r);
+            }
+            else if (c || d)
+            {
+                var s = Math.sqrt(c * c + d * d);
+    
+                return Math.PI * 0.5 - (d > 0 ? Math.acos(-c / s) : -Math.acos(c / s));
+            }
+            else
+            {
+                return 0;
+            }
         }
 
     },
