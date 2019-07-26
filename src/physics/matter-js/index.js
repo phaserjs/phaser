@@ -17,6 +17,7 @@ module.exports = {
     PolyDecomp: require('./poly-decomp'),
     Sprite: require('./MatterSprite'),
     TileBody: require('./MatterTileBody'),
+    PhysicsEditorParser: require('./PhysicsEditorParser'),
     World: require('./World')
 
 };
