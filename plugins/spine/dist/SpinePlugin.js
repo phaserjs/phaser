@@ -3135,8 +3135,9 @@ var Transform = {
 
     /**
      * The angle of this Game Object as expressed in degrees.
-     *
-     * Where 0 is to the right, 90 is down, 180 is left.
+     * 
+     * Phaser uses a right-hand clockwise rotation system, where 0 is right, 90 is down, 180/-180 is left
+     * and -90 is up.
      *
      * If you prefer to work in radians, see the `rotation` property instead.
      *
@@ -3161,6 +3162,9 @@ var Transform = {
 
     /**
      * The angle of this Game Object in radians.
+     * 
+     * Phaser uses a right-hand clockwise rotation system, where 0 is right, 90 is down, 180/-180 is left
+     * and -90 is up.
      *
      * If you prefer to work in degrees, see the `angle` property instead.
      *
@@ -3713,9 +3717,10 @@ var TransformMatrix = new Class({
     },
 
     /**
-     * The rotation of the Matrix.
+     * The rotation of the Matrix, normalized to be within the Phaser right-handed
+     * clockwise rotation space. Value is in radians.
      *
-     * @name Phaser.GameObjects.Components.TransformMatrix#rotation
+     * @name Phaser.GameObjects.Components.TransformMatrix#rotationNormalized
      * @type {number}
      * @readonly
      * @since 3.4.0
@@ -3724,7 +3729,33 @@ var TransformMatrix = new Class({
 
         get: function ()
         {
-            return Math.acos(this.a / this.scaleX) * (Math.atan(-this.c / this.a) < 0 ? -1 : 1);
+            //  Previous version:
+            // return Math.acos(this.a / this.scaleX) * (Math.atan(-this.c / this.a) < 0 ? -1 : 1);
+
+            //  Normalized version:
+            var matrix = this.matrix;
+
+            var a = matrix[0];
+            var b = matrix[1];
+            var c = matrix[2];
+            var d = matrix[3];
+    
+            if (a || b)
+            {
+                var r = Math.sqrt(a * a + b * b);
+    
+                return (b > 0) ? Math.acos(a / r) : -Math.acos(a / r);
+            }
+            else if (c || d)
+            {
+                var s = Math.sqrt(c * c + d * d);
+    
+                return Math.PI * 0.5 - (d > 0 ? Math.acos(-c / s) : -Math.acos(c / s));
+            }
+            else
+            {
+                return 0;
+            }
         }
 
     },
@@ -11065,8 +11096,6 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     var spriteMatrix = renderer._tempMatrix2;
     var calcMatrix = renderer._tempMatrix3;
 
-    //  - 90 degrees to account for the difference in Spine vs. Phaser rotation
-    // spriteMatrix.applyITRS(src.x, src.y, src.rotation - 1.5707963267948966, src.scaleX, src.scaleY);
     spriteMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
 
     camMatrix.copyFrom(camera.matrix);
@@ -11109,23 +11138,14 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
         skeleton.scaleY = calcMatrix.scaleY;
     }
 
-    // src.root.rotation = RadToDeg(calcMatrix.rotation);
-
-    //  - 90 degrees to account for the difference in Spine vs. Phaser rotation
-
-    //  Correct method via angle:
-    // spineBoy.root.rotation = RadToDeg(CounterClockwise(DegToRad(arrow.angle))) + 90;
-
-    // src.root.rotation = RadToDeg(CounterClockwise(calcMatrix.rotation)) + 90;
-    // src.root.rotation = RadToDeg(calcMatrix.rotation);
+    //  +90 degrees to account for the difference in Spine vs. Phaser rotation
+    src.root.rotation = RadToDeg(CounterClockwise(calcMatrix.rotation)) + 90;
 
     sceneRenderer.camera.position.x = viewportWidth / 2;
     sceneRenderer.camera.position.y = viewportHeight / 2;
 
     sceneRenderer.camera.viewportWidth = viewportWidth;
     sceneRenderer.camera.viewportHeight = viewportHeight;
-
-    // sceneRenderer.camera.update();
 
     //  Add autoUpdate option
     skeleton.updateWorldTransform();
