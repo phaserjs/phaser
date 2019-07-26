@@ -10655,6 +10655,8 @@ var SpineGameObject = new Class({
         this.state = null;
         this.stateData = null;
 
+        this.bounds = null;
+        
         this.drawDebug = false;
 
         this.timeScale = 1;
@@ -10734,7 +10736,48 @@ var SpineGameObject = new Class({
         }
 
         var renderer = this.scene.sys.renderer;
-        
+
+        /*
+        var height = renderer.height;
+
+        var oldScaleX = this.scaleX;
+        var oldScaleY = this.scaleY;
+
+        skeleton.x = this.x;
+        skeleton.y = height - this.y;
+        skeleton.scaleX = 1;
+        skeleton.scaleY = 1;
+
+        skeleton.updateWorldTransform();
+
+        this.skeleton = skeleton;
+
+        this.root = this.getRootBone();
+
+        skeleton.updateWorldTransform();
+
+        var b = this.getBounds();
+
+        // this.width = b.size.x;
+        // this.height = b.size.y;
+
+        this.width = skeleton.data.width;
+        this.height = skeleton.data.height;
+
+        this.displayOriginX = this.x - b.offset.x;
+        this.displayOriginY = this.y - (height - (this.height + b.offset.y));
+
+        // console.log(this.width, this.height);
+        // console.log(b.size.x, b.size.y);
+        // console.log(b.offset.x, b.offset.y);
+        // console.log(this.displayOriginX, this.displayOriginY);
+
+        skeleton.scaleX = oldScaleX;
+        skeleton.scaleY = oldScaleY;
+
+        skeleton.updateWorldTransform();
+        */
+
         var height = renderer.height;
 
         var oldScaleX = this.scaleX;
@@ -10748,12 +10791,6 @@ var SpineGameObject = new Class({
         this.skeleton = skeleton;
 
         this.root = this.getRootBone();
-    
-        if (this.root)
-        {
-            //  - 90 degrees to account for the difference in Spine vs. Phaser rotation
-            this.root.rotation = RadToDeg(CounterClockwise(this.rotation - 1.5707963267948966));
-        }
 
         skeleton.updateWorldTransform();
 
