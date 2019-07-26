@@ -195,8 +195,9 @@ var Transform = {
 
     /**
      * The angle of this Game Object as expressed in degrees.
-     *
-     * Where 0 is to the right, 90 is down, 180 is left.
+     * 
+     * Phaser uses a right-hand clockwise rotation system, where 0 is right, 90 is down, 180/-180 is left
+     * and -90 is up.
      *
      * If you prefer to work in radians, see the `rotation` property instead.
      *
@@ -221,6 +222,9 @@ var Transform = {
 
     /**
      * The angle of this Game Object in radians.
+     * 
+     * Phaser uses a right-hand clockwise rotation system, where 0 is right, 90 is down, 180/-180 is left
+     * and -90 is up.
      *
      * If you prefer to work in degrees, see the `angle` property instead.
      *
