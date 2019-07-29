@@ -72,6 +72,9 @@ var SpinePlugin = new Class({
             this.getAtlas = this.getAtlasCanvas;
         }
 
+        this.temp1;
+        this.temp2;
+
         //  Register our file type
         pluginManager.registerFileType('spine', this.spineFileCallback, scene);
 
@@ -169,6 +172,38 @@ var SpinePlugin = new Class({
         this.sceneRenderer.shapes.setBlendMode = setBlendMode;
 
         this.skeletonDebugRenderer = this.sceneRenderer.skeletonDebugRenderer;
+
+        this.temp1 = new Spine.webgl.Vector3(0, 0, 0);
+        this.temp2 = new Spine.webgl.Vector3(0, 0, 0);
+    },
+
+    worldToLocal: function (x, y, skeleton, bone)
+    {
+        var temp1 = this.temp1;
+        var temp2 = this.temp2;
+        var camera = this.sceneRenderer.camera;
+
+        temp1.set(x + skeleton.x, y - skeleton.y, 0);
+
+        var width = camera.viewportWidth;
+        var height = camera.viewportHeight;
+
+        camera.screenToWorld(temp1, width, height);
+
+        if (bone && bone.parent !== null)
+        {
+            bone.parent.worldToLocal(temp2.set(temp1.x - skeleton.x, temp1.y - skeleton.y, 0));
+
+            return new Spine.Vector2(temp2.x, temp2.y);
+        }
+        else if (bone)
+        {
+            return new Spine.Vector2(temp1.x - skeleton.x, temp1.y - skeleton.y);
+        }
+        else
+        {
+            return new Spine.Vector2(temp1.x, temp1.y);
+        }
     },
 
     getAtlasWebGL: function (key)
