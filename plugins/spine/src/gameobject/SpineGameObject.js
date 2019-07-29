@@ -190,6 +190,23 @@ var SpineGameObject = new Class({
         return this;
     },
 
+    getBoneList: function ()
+    {
+        var output = [];
+
+        var skeletonData = this.skeletonData;
+
+        if (skeletonData)
+        {
+            for (var i = 0; i < skeletonData.bones.length; i++)
+            {
+                output.push(skeletonData.bones[i].name);
+            }
+        }
+
+        return output;
+    },
+
     getAnimationList: function ()
     {
         var output = [];
