@@ -270,7 +270,8 @@ var TweenManager = new Class({
      * @method Phaser.Tweens.TweenManager#stagger
      * @since 3.19.0
      *
-     * @param {Phaser.Types.Tweens.StaggerBuilderConfig} config - The configuration object for the Stagger function.
+     * @param {number} value 
+     * @param {Phaser.Types.Tweens.StaggerConfig} options - The configuration object for the Stagger function.
      *
      * @return {function} The stagger function.
      */

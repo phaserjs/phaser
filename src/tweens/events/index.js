@@ -8,7 +8,7 @@
  * @namespace Phaser.Tweens.Events
  */
 
-module.exports = {
+ module.exports = {
 
     TIMELINE_COMPLETE: require('./TIMELINE_COMPLETE_EVENT'),
     TIMELINE_LOOP: require('./TIMELINE_LOOP_EVENT'),
