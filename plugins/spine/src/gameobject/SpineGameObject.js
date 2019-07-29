@@ -13,9 +13,7 @@ var ComponentsFlip = require('../../../../src/gameobjects/components/Flip');
 var ComponentsScrollFactor = require('../../../../src/gameobjects/components/ScrollFactor');
 var ComponentsTransform = require('../../../../src/gameobjects/components/Transform');
 var ComponentsVisible = require('../../../../src/gameobjects/components/Visible');
-var CounterClockwise = require('../../../../src/math/angle/CounterClockwise');
 var GameObject = require('../../../../src/gameobjects/GameObject');
-var RadToDeg = require('../../../../src/math/RadToDeg');
 var SpineGameObjectRender = require('./SpineGameObjectRender');
 
 /**
@@ -86,6 +84,12 @@ var SpineGameObject = new Class({
 
     setSkeleton: function (atlasDataKey, animationName, loop, skeletonJSON)
     {
+        if (this.state)
+        {
+            this.state.clearListeners();
+            this.state.clearListenerNotifications();
+        }
+
         var data = this.plugin.createSkeleton(atlasDataKey, skeletonJSON);
 
         this.skeletonData = data.skeletonData;
@@ -96,6 +100,8 @@ var SpineGameObject = new Class({
 
         skeleton.setSkinByName('default');
         skeleton.setToSetupPose();
+
+        this.skeleton = skeleton;
 
         //  AnimationState
         data = this.plugin.createAnimationState(skeleton);
@@ -110,39 +116,52 @@ var SpineGameObject = new Class({
 
         this.stateData = data.stateData;
 
-        var _this = this;
-
-        this.state.addListener({
-            event: function (trackIndex, event)
-            {
-                //  Event on a Track
-                _this.emit('spine.event', _this, trackIndex, event);
-            },
-            complete: function (trackIndex, loopCount)
-            {
-                //  Animation on Track x completed, loop count
-                _this.emit('spine.complete', _this, trackIndex, loopCount);
-            },
-            start: function (trackIndex)
-            {
-                //  Animation on Track x started
-                _this.emit('spine.start', _this, trackIndex);
-            },
-            end: function (trackIndex)
-            {
-                //  Animation on Track x ended
-                _this.emit('spine.end', _this, trackIndex);
-            }
-        });
-
         if (animationName)
         {
             this.setAnimation(0, animationName, loop);
         }
 
+        this.root = this.getRootBone();
+
+        return this.updateSize();
+    },
+
+    setSize: function (width, height, offsetX, offsetY)
+    {
+        var skeleton = this.skeleton;
+
+        if (width === undefined) { width = skeleton.data.width; }
+        if (height === undefined) { height = skeleton.data.height; }
+        if (offsetX === undefined) { offsetX = 0; }
+        if (offsetY === undefined) { offsetY = 0; }
+
+        this.width = width;
+        this.height = height;
+
+        this.displayOriginX = skeleton.x - offsetX;
+        this.displayOriginY = skeleton.y - offsetY;
+
+        return this;
+    },
+
+    setOffset: function (offsetX, offsetY)
+    {
+        var skeleton = this.skeleton;
+
+        if (offsetX === undefined) { offsetX = 0; }
+        if (offsetY === undefined) { offsetY = 0; }
+
+        this.displayOriginX = skeleton.x - offsetX;
+        this.displayOriginY = skeleton.y - offsetY;
+
+        return this;
+    },
+
+    updateSize: function ()
+    {
+        var skeleton = this.skeleton;
         var renderer = this.scene.sys.renderer;
 
-        /*
         var height = renderer.height;
 
         var oldScaleX = this.scaleX;
@@ -155,57 +174,13 @@ var SpineGameObject = new Class({
 
         skeleton.updateWorldTransform();
 
-        this.skeleton = skeleton;
+        var bounds = this.getBounds();
 
-        this.root = this.getRootBone();
+        this.width = bounds.size.x;
+        this.height = bounds.size.y;
 
-        skeleton.updateWorldTransform();
-
-        var b = this.getBounds();
-
-        // this.width = b.size.x;
-        // this.height = b.size.y;
-
-        this.width = skeleton.data.width;
-        this.height = skeleton.data.height;
-
-        this.displayOriginX = this.x - b.offset.x;
-        this.displayOriginY = this.y - (height - (this.height + b.offset.y));
-
-        // console.log(this.width, this.height);
-        // console.log(b.size.x, b.size.y);
-        // console.log(b.offset.x, b.offset.y);
-        // console.log(this.displayOriginX, this.displayOriginY);
-
-        skeleton.scaleX = oldScaleX;
-        skeleton.scaleY = oldScaleY;
-
-        skeleton.updateWorldTransform();
-        */
-
-        var height = renderer.height;
-
-        var oldScaleX = this.scaleX;
-        var oldScaleY = this.scaleY;
-
-        skeleton.x = this.x;
-        skeleton.y = height - this.y;
-        skeleton.scaleX = 1;
-        skeleton.scaleY = 1;
-
-        this.skeleton = skeleton;
-
-        this.root = this.getRootBone();
-
-        skeleton.updateWorldTransform();
-
-        var b = this.getBounds();
-
-        this.width = b.size.x;
-        this.height = b.size.y;
-
-        this.displayOriginX = this.x - b.offset.x;
-        this.displayOriginY = this.y - (height - (this.height + b.offset.y));
+        this.displayOriginX = this.x - bounds.offset.x;
+        this.displayOriginY = this.y - (height - (this.height + bounds.offset.y));
 
         skeleton.scaleX = oldScaleX;
         skeleton.scaleY = oldScaleY;
@@ -214,8 +189,6 @@ var SpineGameObject = new Class({
 
         return this;
     },
-
-    // http://esotericsoftware.com/spine-runtimes-guide
 
     getAnimationList: function ()
     {
@@ -246,7 +219,10 @@ var SpineGameObject = new Class({
 
     setAnimation: function (trackIndex, animationName, loop)
     {
-        this.state.setAnimation(trackIndex, animationName, loop);
+        if (this.findAnimation(animationName))
+        {
+            this.state.setAnimation(trackIndex, animationName, loop);
+        }
 
         return this;
     },
@@ -329,6 +305,41 @@ var SpineGameObject = new Class({
         return this.skeleton.findSlotIndex(slotName);
     },
 
+    findSkin: function (skinName)
+    {
+        return this.skeletonData.findSkin(skinName);
+    },
+
+    findEvent: function (eventDataName)
+    {
+        return this.skeletonData.findEvent(eventDataName);
+    },
+
+    findAnimation: function (animationName)
+    {
+        return this.skeletonData.findAnimation(animationName);
+    },
+
+    findIkConstraint: function (constraintName)
+    {
+        return this.skeletonData.findIkConstraint(constraintName);
+    },
+
+    findTransformConstraint: function (constraintName)
+    {
+        return this.skeletonData.findTransformConstraint(constraintName);
+    },
+
+    findPathConstraint: function (constraintName)
+    {
+        return this.skeletonData.findPathConstraint(constraintName);
+    },
+
+    findPathConstraintIndex: function (pathConstraintName)
+    {
+        return this.skeletonData.findPathConstraintIndex(pathConstraintName);
+    },
+
     // getBounds (	2-tuple offset, 2-tuple size, float[] temp): void
     // Returns the axis aligned bounding box (AABB) of the region and mesh attachments for the current pose.
     // offset An output value, the distance from the skeleton origin to the bottom left corner of the AABB.
@@ -348,8 +359,6 @@ var SpineGameObject = new Class({
         this.state.apply(skeleton);
 
         this.emit('spine.update', skeleton);
-
-        // skeleton.updateWorldTransform();
     },
 
     /**
