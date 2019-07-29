@@ -8537,6 +8537,42 @@ module.exports = SetTransform;
 
 /***/ }),
 
+/***/ "../../../src/scale/events/RESIZE_EVENT.js":
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/scale/events/RESIZE_EVENT.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Scale Manager Resize Event.
+ * 
+ * This event is dispatched whenever the Scale Manager detects a resize event from the browser.
+ * It sends three parameters to the callback, each of them being Size components. You can read
+ * the `width`, `height`, `aspectRatio` and other properties of these components to help with
+ * scaling your own game content.
+ *
+ * @event Phaser.Scale.Events#RESIZE
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Structs.Size} gameSize - A reference to the Game Size component. This is the un-scaled size of your game canvas.
+ * @param {Phaser.Structs.Size} baseSize - A reference to the Base Size component. This is the game size multiplied by resolution.
+ * @param {Phaser.Structs.Size} displaySize - A reference to the Display Size component. This is the scaled canvas size, after applying zoom and scale mode.
+ * @param {number} resolution - The current resolution. Defaults to 1 at the moment.
+ * @param {number} previousWidth - If the `gameSize` has changed, this value contains its previous width, otherwise it contains the current width.
+ * @param {number} previousHeight - If the `gameSize` has changed, this value contains its previous height, otherwise it contains the current height.
+ */
+module.exports = 'resize';
+
+
+/***/ }),
+
 /***/ "../../../src/scene/events/BOOT_EVENT.js":
 /*!*********************************************************!*\
   !*** D:/wamp/www/phaser/src/scene/events/BOOT_EVENT.js ***!
@@ -10136,6 +10172,7 @@ var ScenePlugin = __webpack_require__(/*! ../../../src/plugins/ScenePlugin */ ".
 var SpineFile = __webpack_require__(/*! ./SpineFile */ "./SpineFile.js");
 var Spine = __webpack_require__(/*! Spine */ "./runtimes/spine-both.js");
 var SpineGameObject = __webpack_require__(/*! ./gameobject/SpineGameObject */ "./gameobject/SpineGameObject.js");
+var ResizeEvent = __webpack_require__(/*! ../../../src/scale/events/RESIZE_EVENT */ "../../../src/scale/events/RESIZE_EVENT.js");
 
 /**
  * @classdesc
@@ -10214,6 +10251,10 @@ var SpinePlugin = new Class({
         {
             this.bootCanvas();
         }
+
+        this.onResize();
+
+        this.game.scale.on(ResizeEvent, this.onResize, this);
 
         var eventEmitter = this.systems.events;
 
@@ -10535,6 +10576,21 @@ var SpinePlugin = new Class({
         return { stateData: stateData, state: state };
     },
 
+    onResize: function ()
+    {
+        var renderer = this.renderer;
+        var sceneRenderer = this.sceneRenderer;
+
+        var viewportWidth = renderer.width;
+        var viewportHeight = renderer.height;
+
+        sceneRenderer.camera.position.x = viewportWidth / 2;
+        sceneRenderer.camera.position.y = viewportHeight / 2;
+    
+        sceneRenderer.camera.viewportWidth = viewportWidth;
+        sceneRenderer.camera.viewportHeight = viewportHeight;
+    },
+
     /**
      * The Scene that owns this plugin is shutting down.
      * We need to kill and reset all internal properties as well as stop listening to Scene events.
@@ -10608,9 +10664,7 @@ var ComponentsFlip = __webpack_require__(/*! ../../../../src/gameobjects/compone
 var ComponentsScrollFactor = __webpack_require__(/*! ../../../../src/gameobjects/components/ScrollFactor */ "../../../src/gameobjects/components/ScrollFactor.js");
 var ComponentsTransform = __webpack_require__(/*! ../../../../src/gameobjects/components/Transform */ "../../../src/gameobjects/components/Transform.js");
 var ComponentsVisible = __webpack_require__(/*! ../../../../src/gameobjects/components/Visible */ "../../../src/gameobjects/components/Visible.js");
-var CounterClockwise = __webpack_require__(/*! ../../../../src/math/angle/CounterClockwise */ "../../../src/math/angle/CounterClockwise.js");
 var GameObject = __webpack_require__(/*! ../../../../src/gameobjects/GameObject */ "../../../src/gameobjects/GameObject.js");
-var RadToDeg = __webpack_require__(/*! ../../../../src/math/RadToDeg */ "../../../src/math/RadToDeg.js");
 var SpineGameObjectRender = __webpack_require__(/*! ./SpineGameObjectRender */ "./gameobject/SpineGameObjectRender.js");
 
 /**
@@ -10681,6 +10735,12 @@ var SpineGameObject = new Class({
 
     setSkeleton: function (atlasDataKey, animationName, loop, skeletonJSON)
     {
+        if (this.state)
+        {
+            this.state.clearListeners();
+            this.state.clearListenerNotifications();
+        }
+
         var data = this.plugin.createSkeleton(atlasDataKey, skeletonJSON);
 
         this.skeletonData = data.skeletonData;
@@ -10691,6 +10751,8 @@ var SpineGameObject = new Class({
 
         skeleton.setSkinByName('default');
         skeleton.setToSetupPose();
+
+        this.skeleton = skeleton;
 
         //  AnimationState
         data = this.plugin.createAnimationState(skeleton);
@@ -10705,39 +10767,52 @@ var SpineGameObject = new Class({
 
         this.stateData = data.stateData;
 
-        var _this = this;
-
-        this.state.addListener({
-            event: function (trackIndex, event)
-            {
-                //  Event on a Track
-                _this.emit('spine.event', _this, trackIndex, event);
-            },
-            complete: function (trackIndex, loopCount)
-            {
-                //  Animation on Track x completed, loop count
-                _this.emit('spine.complete', _this, trackIndex, loopCount);
-            },
-            start: function (trackIndex)
-            {
-                //  Animation on Track x started
-                _this.emit('spine.start', _this, trackIndex);
-            },
-            end: function (trackIndex)
-            {
-                //  Animation on Track x ended
-                _this.emit('spine.end', _this, trackIndex);
-            }
-        });
-
         if (animationName)
         {
             this.setAnimation(0, animationName, loop);
         }
 
+        this.root = this.getRootBone();
+
+        return this.updateSize();
+    },
+
+    setSize: function (width, height, offsetX, offsetY)
+    {
+        var skeleton = this.skeleton;
+
+        if (width === undefined) { width = skeleton.data.width; }
+        if (height === undefined) { height = skeleton.data.height; }
+        if (offsetX === undefined) { offsetX = 0; }
+        if (offsetY === undefined) { offsetY = 0; }
+
+        this.width = width;
+        this.height = height;
+
+        this.displayOriginX = skeleton.x - offsetX;
+        this.displayOriginY = skeleton.y - offsetY;
+
+        return this;
+    },
+
+    setOffset: function (offsetX, offsetY)
+    {
+        var skeleton = this.skeleton;
+
+        if (offsetX === undefined) { offsetX = 0; }
+        if (offsetY === undefined) { offsetY = 0; }
+
+        this.displayOriginX = skeleton.x - offsetX;
+        this.displayOriginY = skeleton.y - offsetY;
+
+        return this;
+    },
+
+    updateSize: function ()
+    {
+        var skeleton = this.skeleton;
         var renderer = this.scene.sys.renderer;
 
-        /*
         var height = renderer.height;
 
         var oldScaleX = this.scaleX;
@@ -10750,57 +10825,13 @@ var SpineGameObject = new Class({
 
         skeleton.updateWorldTransform();
 
-        this.skeleton = skeleton;
+        var bounds = this.getBounds();
 
-        this.root = this.getRootBone();
+        this.width = bounds.size.x;
+        this.height = bounds.size.y;
 
-        skeleton.updateWorldTransform();
-
-        var b = this.getBounds();
-
-        // this.width = b.size.x;
-        // this.height = b.size.y;
-
-        this.width = skeleton.data.width;
-        this.height = skeleton.data.height;
-
-        this.displayOriginX = this.x - b.offset.x;
-        this.displayOriginY = this.y - (height - (this.height + b.offset.y));
-
-        // console.log(this.width, this.height);
-        // console.log(b.size.x, b.size.y);
-        // console.log(b.offset.x, b.offset.y);
-        // console.log(this.displayOriginX, this.displayOriginY);
-
-        skeleton.scaleX = oldScaleX;
-        skeleton.scaleY = oldScaleY;
-
-        skeleton.updateWorldTransform();
-        */
-
-        var height = renderer.height;
-
-        var oldScaleX = this.scaleX;
-        var oldScaleY = this.scaleY;
-
-        skeleton.x = this.x;
-        skeleton.y = height - this.y;
-        skeleton.scaleX = 1;
-        skeleton.scaleY = 1;
-
-        this.skeleton = skeleton;
-
-        this.root = this.getRootBone();
-
-        skeleton.updateWorldTransform();
-
-        var b = this.getBounds();
-
-        this.width = b.size.x;
-        this.height = b.size.y;
-
-        this.displayOriginX = this.x - b.offset.x;
-        this.displayOriginY = this.y - (height - (this.height + b.offset.y));
+        this.displayOriginX = this.x - bounds.offset.x;
+        this.displayOriginY = this.y - (height - (this.height + bounds.offset.y));
 
         skeleton.scaleX = oldScaleX;
         skeleton.scaleY = oldScaleY;
@@ -10809,8 +10840,6 @@ var SpineGameObject = new Class({
 
         return this;
     },
-
-    // http://esotericsoftware.com/spine-runtimes-guide
 
     getAnimationList: function ()
     {
@@ -10841,7 +10870,10 @@ var SpineGameObject = new Class({
 
     setAnimation: function (trackIndex, animationName, loop)
     {
-        this.state.setAnimation(trackIndex, animationName, loop);
+        if (this.findAnimation(animationName))
+        {
+            this.state.setAnimation(trackIndex, animationName, loop);
+        }
 
         return this;
     },
@@ -10924,6 +10956,41 @@ var SpineGameObject = new Class({
         return this.skeleton.findSlotIndex(slotName);
     },
 
+    findSkin: function (skinName)
+    {
+        return this.skeletonData.findSkin(skinName);
+    },
+
+    findEvent: function (eventDataName)
+    {
+        return this.skeletonData.findEvent(eventDataName);
+    },
+
+    findAnimation: function (animationName)
+    {
+        return this.skeletonData.findAnimation(animationName);
+    },
+
+    findIkConstraint: function (constraintName)
+    {
+        return this.skeletonData.findIkConstraint(constraintName);
+    },
+
+    findTransformConstraint: function (constraintName)
+    {
+        return this.skeletonData.findTransformConstraint(constraintName);
+    },
+
+    findPathConstraint: function (constraintName)
+    {
+        return this.skeletonData.findPathConstraint(constraintName);
+    },
+
+    findPathConstraintIndex: function (pathConstraintName)
+    {
+        return this.skeletonData.findPathConstraintIndex(pathConstraintName);
+    },
+
     // getBounds (	2-tuple offset, 2-tuple size, float[] temp): void
     // Returns the axis aligned bounding box (AABB) of the region and mesh attachments for the current pose.
     // offset An output value, the distance from the skeleton origin to the bottom left corner of the AABB.
@@ -10943,8 +11010,6 @@ var SpineGameObject = new Class({
         this.state.apply(skeleton);
 
         this.emit('spine.update', skeleton);
-
-        // skeleton.updateWorldTransform();
     },
 
     /**
@@ -11099,16 +11164,16 @@ var CounterClockwise = __webpack_require__(/*! ../../../../src/math/angle/Counte
 var RadToDeg = __webpack_require__(/*! ../../../../src/math/RadToDeg */ "../../../src/math/RadToDeg.js");
 
 /**
- * Renders this Game Object with the Canvas Renderer to the given Camera.
+ * Renders this Game Object with the WebGL Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
  * This method should not be called directly. It is a utility function of the Render module.
  *
- * @method Phaser.GameObjects.SpineGameObject#renderCanvas
- * @since 3.16.0
+ * @method Phaser.GameObjects.SpineGameObject#renderWebGL
+ * @since 3.19.0
  * @private
  *
- * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
- * @param {Phaser.GameObjects.SpineGameObject} src - The Game Object being rendered in this call.
+ * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
+ * @param {SpineGameObject} src - The Game Object being rendered in this call.
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
@@ -11158,7 +11223,6 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
         camMatrix.multiply(spriteMatrix, calcMatrix);
     }
 
-    var viewportWidth = renderer.width;
     var viewportHeight = renderer.height;
 
     skeleton.x = calcMatrix.tx;
@@ -11177,12 +11241,6 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
 
     //  +90 degrees to account for the difference in Spine vs. Phaser rotation
     src.root.rotation = RadToDeg(CounterClockwise(calcMatrix.rotation)) + 90;
-
-    sceneRenderer.camera.position.x = viewportWidth / 2;
-    sceneRenderer.camera.position.y = viewportHeight / 2;
-
-    sceneRenderer.camera.viewportWidth = viewportWidth;
-    sceneRenderer.camera.viewportHeight = viewportHeight;
 
     //  Add autoUpdate option
     skeleton.updateWorldTransform();
