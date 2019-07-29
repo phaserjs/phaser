@@ -8,16 +8,16 @@ var CounterClockwise = require('../../../../src/math/angle/CounterClockwise');
 var RadToDeg = require('../../../../src/math/RadToDeg');
 
 /**
- * Renders this Game Object with the Canvas Renderer to the given Camera.
+ * Renders this Game Object with the WebGL Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
  * This method should not be called directly. It is a utility function of the Render module.
  *
- * @method Phaser.GameObjects.SpineGameObject#renderCanvas
- * @since 3.16.0
+ * @method Phaser.GameObjects.SpineGameObject#renderWebGL
+ * @since 3.19.0
  * @private
  *
- * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
- * @param {Phaser.GameObjects.SpineGameObject} src - The Game Object being rendered in this call.
+ * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
+ * @param {SpineGameObject} src - The Game Object being rendered in this call.
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
@@ -67,7 +67,6 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
         camMatrix.multiply(spriteMatrix, calcMatrix);
     }
 
-    var viewportWidth = renderer.width;
     var viewportHeight = renderer.height;
 
     skeleton.x = calcMatrix.tx;
@@ -86,12 +85,6 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
 
     //  +90 degrees to account for the difference in Spine vs. Phaser rotation
     src.root.rotation = RadToDeg(CounterClockwise(calcMatrix.rotation)) + 90;
-
-    sceneRenderer.camera.position.x = viewportWidth / 2;
-    sceneRenderer.camera.position.y = viewportHeight / 2;
-
-    sceneRenderer.camera.viewportWidth = viewportWidth;
-    sceneRenderer.camera.viewportHeight = viewportHeight;
 
     //  Add autoUpdate option
     skeleton.updateWorldTransform();
