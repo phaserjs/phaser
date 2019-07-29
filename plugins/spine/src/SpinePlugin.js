@@ -212,6 +212,16 @@ var SpinePlugin = new Class({
         return atlas;
     },
 
+    getVector2: function (x, y)
+    {
+        return new Spine.Vector2(x, y);
+    },
+
+    getVector3: function (x, y, z)
+    {
+        return new Spine.webgl.Vector3(x, y, z);
+    },
+
     setDebugBones: function (value)
     {
         if (value === undefined) { value = true; }
