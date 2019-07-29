@@ -10,6 +10,7 @@ var ScenePlugin = require('../../../src/plugins/ScenePlugin');
 var SpineFile = require('./SpineFile');
 var Spine = require('Spine');
 var SpineGameObject = require('./gameobject/SpineGameObject');
+var ResizeEvent = require('../../../src/scale/events/RESIZE_EVENT');
 
 /**
  * @classdesc
@@ -88,6 +89,10 @@ var SpinePlugin = new Class({
         {
             this.bootCanvas();
         }
+
+        this.onResize();
+
+        this.game.scale.on(ResizeEvent, this.onResize, this);
 
         var eventEmitter = this.systems.events;
 
@@ -407,6 +412,21 @@ var SpinePlugin = new Class({
         var state = new Spine.AnimationState(stateData);
 
         return { stateData: stateData, state: state };
+    },
+
+    onResize: function ()
+    {
+        var renderer = this.renderer;
+        var sceneRenderer = this.sceneRenderer;
+
+        var viewportWidth = renderer.width;
+        var viewportHeight = renderer.height;
+
+        sceneRenderer.camera.position.x = viewportWidth / 2;
+        sceneRenderer.camera.position.y = viewportHeight / 2;
+    
+        sceneRenderer.camera.viewportWidth = viewportWidth;
+        sceneRenderer.camera.viewportHeight = viewportHeight;
     },
 
     /**
