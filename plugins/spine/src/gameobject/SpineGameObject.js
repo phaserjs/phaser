@@ -15,6 +15,8 @@ var ComponentsTransform = require('../../../../src/gameobjects/components/Transf
 var ComponentsVisible = require('../../../../src/gameobjects/components/Visible');
 var GameObject = require('../../../../src/gameobjects/GameObject');
 var SpineGameObjectRender = require('./SpineGameObjectRender');
+var CounterClockwise = require('../../../../src/math/angle/CounterClockwise');
+var RadToDeg = require('../../../../src/math/RadToDeg');
 
 /**
  * @classdesc
@@ -123,7 +125,32 @@ var SpineGameObject = new Class({
 
         this.root = this.getRootBone();
 
+        if (this.root)
+        {
+            //  +90 degrees to account for the difference in Spine vs. Phaser rotation
+            this.root.rotation = RadToDeg(CounterClockwise(this.rotation)) + 90;
+        }
+
+        this.state.apply(skeleton);
+
+        skeleton.updateCache();
+
         return this.updateSize();
+    },
+
+    refresh: function ()
+    {
+        if (this.root)
+        {
+            //  +90 degrees to account for the difference in Spine vs. Phaser rotation
+            this.root.rotation = RadToDeg(CounterClockwise(this.rotation)) + 90;
+        }
+
+        this.updateSize();
+
+        this.skeleton.updateCache();
+
+        return this;
     },
 
     setSize: function (width, height, offsetX, offsetY)
