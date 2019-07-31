@@ -17,7 +17,7 @@ module.exports = {
         path: `${__dirname}/dist/`,
         filename: '[name].js',
         library: 'SpinePlugin',
-        libraryTarget: 'umd',
+        libraryTarget: 'window',
         sourceMapFilename: '[file].map',
         devtoolModuleFilenameTemplate: 'webpack:///[resource-path]', // string
         devtoolFallbackModuleFilenameTemplate: 'webpack:///[resource-path]?[hash]', // string
@@ -44,16 +44,6 @@ module.exports = {
             'Spine': './runtimes/spine-both.js'
         }
     },
-
-    /*
-    resolve: {
-        alias: {
-            'SpineWebGL': './runtimes/spine-all.js',
-            'SpineCanvas': './runtimes/spine-all.js',
-            'SpineAuto': './runtimes/spine-all.js'
-        }
-    },
-    */
 
     plugins: [
         new webpack.DefinePlugin({
