@@ -10921,6 +10921,37 @@ var SpineGameObject = new Class({
         return output;
     },
 
+    getSkinList: function ()
+    {
+        var output = [];
+
+        var skeletonData = this.skeletonData;
+
+        if (skeletonData)
+        {
+            for (var i = 0; i < skeletonData.skins.length; i++)
+            {
+                output.push(skeletonData.skins[i].name);
+            }
+        }
+
+        return output;
+    },
+
+    getSlotList: function ()
+    {
+        var output = [];
+
+        var skeleton = this.skeleton;
+
+        for (var i = 0; i < skeleton.slots.length; i++)
+        {
+            output.push(skeleton.slots[i].data.name);
+        }
+
+        return output;
+    },
+
     getAnimationList: function ()
     {
         var output = [];
@@ -10986,7 +11017,13 @@ var SpineGameObject = new Class({
 
     setSkinByName: function (skinName)
     {
-        this.skeleton.setSkinByName(skinName);
+        var skeleton = this.skeleton;
+
+        skeleton.setSkinByName(skinName);
+
+        skeleton.setSlotsToSetupPose();
+
+        this.state.apply(skeleton);
 
         return this;
     },
@@ -11007,6 +11044,42 @@ var SpineGameObject = new Class({
     setMix: function (fromName, toName, duration)
     {
         this.stateData.setMix(fromName, toName, duration);
+
+        return this;
+    },
+
+    getAttachment: function (slotIndex, attachmentName)
+    {
+        return this.skeleton.getAttachment(slotIndex, attachmentName);
+    },
+
+    getAttachmentByName: function (slotName, attachmentName)
+    {
+        return this.skeleton.getAttachmentByName(slotName, attachmentName);
+    },
+
+    setAttachment: function (slotName, attachmentName)
+    {
+        return this.skeleton.setAttachment(slotName, attachmentName);
+    },
+
+    setToSetupPose: function ()
+    {
+        this.skeleton.setToSetupPose();
+
+        return this;
+    },
+
+    setSlotsToSetupPose: function ()
+    {
+        this.skeleton.setSlotsToSetupPose();
+
+        return this;
+    },
+
+    setBonesToSetupPose: function ()
+    {
+        this.skeleton.setBonesToSetupPose();
 
         return this;
     },
