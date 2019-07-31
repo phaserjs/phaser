@@ -8,6 +8,7 @@ src/geom/polygon/Earcut.js
 src/utils/array/StableSort.js
 src/utils/object/Extend.js
 src/structs/RTree.js
+plugins/spine/dist/
 plugins/spine/src/runtimes/
 webpack.*
 webpack.config.js
