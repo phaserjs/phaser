@@ -149,7 +149,7 @@ var Shake = new Class({
      * @since 3.5.0
      *
      * @param {integer} [duration=100] - The duration of the effect in milliseconds.
-     * @param {number} [intensity=0.05] - The intensity of the shake.
+     * @param {(number|Phaser.Math.Vector2)} [intensity=0.05] - The intensity of the shake.
      * @param {boolean} [force=false] - Force the shake effect to start immediately, even if already running.
      * @param {Phaser.Types.Cameras.Scene2D.CameraShakeCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
