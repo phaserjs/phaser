@@ -300,6 +300,7 @@ var Tint = {
      * @name Phaser.GameObjects.Components.Tint#tint
      * @type {integer}
      * @webglOnly
+     * @readonly
      * @since 3.0.0
      */
     tint: {
