@@ -5,8 +5,7 @@
  */
 
 var Class = require('../../../../src/utils/Class');
-var ComponentsAlpha = require('../../../../src/gameobjects/components/Alpha');
-var ComponentsBlendMode = require('../../../../src/gameobjects/components/BlendMode');
+var Clamp = require('../../../../src/math/Clamp');
 var ComponentsComputedSize = require('../../../../src/gameobjects/components/ComputedSize');
 var ComponentsDepth = require('../../../../src/gameobjects/components/Depth');
 var ComponentsFlip = require('../../../../src/gameobjects/components/Flip');
@@ -15,7 +14,9 @@ var ComponentsTransform = require('../../../../src/gameobjects/components/Transf
 var ComponentsVisible = require('../../../../src/gameobjects/components/Visible');
 var GameObject = require('../../../../src/gameobjects/GameObject');
 var SpineGameObjectRender = require('./SpineGameObjectRender');
+var AngleBetween = require('../../../../src/math/angle/Between');
 var CounterClockwise = require('../../../../src/math/angle/CounterClockwise');
+var DegToRad = require('../../../../src/math/DegToRad');
 var RadToDeg = require('../../../../src/math/RadToDeg');
 
 /**
@@ -34,8 +35,6 @@ var SpineGameObject = new Class({
     Extends: GameObject,
 
     Mixins: [
-        ComponentsAlpha,
-        ComponentsBlendMode,
         ComponentsComputedSize,
         ComponentsDepth,
         ComponentsFlip,
@@ -71,12 +70,228 @@ var SpineGameObject = new Class({
 
         this.preMultipliedAlpha = false;
 
+        //  BlendMode Normal
+        this.blendMode = 0;
+
         this.setPosition(x, y);
 
         if (key)
         {
             this.setSkeleton(key, animationName, loop);
         }
+    },
+
+    willRender: function ()
+    {
+        return true;
+    },
+
+    /**
+     * Set the Alpha level of this Game Object. The alpha controls the opacity of the Game Object as it renders.
+     * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
+     *
+     * If your game is running under WebGL you can optionally specify four different alpha values, each of which
+     * correspond to the four corners of the Game Object. Under Canvas only the `topLeft` value given is used.
+     *
+     * @method SpineGameObject#setAlpha
+     * @since 3.19.0
+     *
+     * @param {number} [value=1] - The alpha value used for the whole Skeleton.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setAlpha: function (value, slotName)
+    {
+        if (value === undefined) { value = 1; }
+
+        if (slotName)
+        {
+            var slot = this.findSlot(slotName);
+
+            if (slot)
+            {
+                slot.color.a = Clamp(value, 0, 1);
+            }
+        }
+        else
+        {
+            this.alpha = value;
+        }
+
+        return this;
+    },
+
+    /**
+     * The alpha value of the Skeleton.
+     * 
+     * A value between 0 and 1.
+     *
+     * This is a global value, impacting the entire Skeleton, not just a region of it.
+     *
+     * @name SpineGameObject#alpha
+     * @type {number}
+     * @since 3.0.0
+     */
+    alpha: {
+
+        get: function ()
+        {
+            return this.skeleton.color.a;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            if (this.skeleton)
+            {
+                this.skeleton.color.a = v;
+            }
+
+            if (v === 0)
+            {
+                this.renderFlags &= ~2;
+            }
+            else
+            {
+                this.renderFlags |= 2;
+            }
+        }
+
+    },
+
+    /**
+     * The amount of red used when rendering the Skeletons.
+     * 
+     * A value between 0 and 1.
+     *
+     * This is a global value, impacting the entire Skeleton, not just a region of it.
+     *
+     * @name SpineGameObject#red
+     * @type {number}
+     * @since 3.0.0
+     */
+    red: {
+
+        get: function ()
+        {
+            return this.skeleton.color.r;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            if (this.skeleton)
+            {
+                this.skeleton.color.r = v;
+            }
+        }
+
+    },
+
+    /**
+     * The amount of green used when rendering the Skeletons.
+     * 
+     * A value between 0 and 1.
+     *
+     * This is a global value, impacting the entire Skeleton, not just a region of it.
+     *
+     * @name SpineGameObject#green
+     * @type {number}
+     * @since 3.0.0
+     */
+    green: {
+
+        get: function ()
+        {
+            return this.skeleton.color.g;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            if (this.skeleton)
+            {
+                this.skeleton.color.g = v;
+            }
+        }
+
+    },
+
+    /**
+     * The amount of blue used when rendering the Skeletons.
+     * 
+     * A value between 0 and 1.
+     *
+     * This is a global value, impacting the entire Skeleton, not just a region of it.
+     *
+     * @name SpineGameObject#blue
+     * @type {number}
+     * @since 3.0.0
+     */
+    blue: {
+
+        get: function ()
+        {
+            return this.skeleton.color.b;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            if (this.skeleton)
+            {
+                this.skeleton.color.b = v;
+            }
+        }
+
+    },
+
+    /**
+     * Sets an additive tint on this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Tint#setColor
+     * @webglOnly
+     * @since 3.19.0
+     *
+     * @param {integer} [color=0xffffff] - The tint being applied to the top-left of the Game Object. If no other values are given this value is applied evenly, tinting the whole Game Object.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setColor: function (color, slotName)
+    {
+        if (color === undefined) { color = 0xffffff; }
+
+        var red = (color >> 16 & 0xFF) / 255;
+        var green = (color >> 8 & 0xFF) / 255;
+        var blue = (color & 0xFF) / 255;
+        var alpha = (color > 16777215) ? (color >>> 24) / 255 : null;
+
+        var target = this.skeleton;
+
+        if (slotName)
+        {
+            var slot = this.findSlot(slotName);
+
+            if (slot)
+            {
+                target = slot;
+            }
+        }
+
+        target.color.r = red;
+        target.color.g = green;
+        target.color.b = blue;
+
+        if (alpha !== null)
+        {
+            target.color.a = alpha;
+        }
+
+        return this;
     },
 
     setSkeletonFromJSON: function (atlasDataKey, skeletonJSON, animationName, loop)
@@ -282,13 +497,22 @@ var SpineGameObject = new Class({
         return output;
     },
 
+    getCurrentAnimation: function (trackIndex)
+    {
+        if (trackIndex === undefined) { trackIndex = 0; }
+
+        var current = this.state.getCurrent(trackIndex);
+
+        if (current)
+        {
+            return current.animation;
+        }
+    },
+
     play: function (animationName, loop)
     {
-        if (loop === undefined)
-        {
-            loop = false;
-        }
-
+        if (loop === undefined) { loop = false; }
+0
         return this.setAnimation(0, animationName, loop);
     },
 
@@ -373,7 +597,19 @@ var SpineGameObject = new Class({
 
     setAttachment: function (slotName, attachmentName)
     {
-        return this.skeleton.setAttachment(slotName, attachmentName);
+        if (Array.isArray(slotName) && Array.isArray(attachmentName) && slotName.length === attachmentName.length)
+        {
+            for (var i = 0; i < slotName.length; i++)
+            {
+                this.skeleton.setAttachment(slotName[i], attachmentName[i]);
+            }
+        }
+        else
+        {
+            this.skeleton.setAttachment(slotName, attachmentName);
+        }
+
+        return this;
     },
 
     setToSetupPose: function ()
@@ -400,6 +636,22 @@ var SpineGameObject = new Class({
     getRootBone: function ()
     {
         return this.skeleton.getRootBone();
+    },
+
+    angleBoneToXY: function (bone, worldX, worldY, offset, minAngle, maxAngle)
+    {
+        if (offset === undefined) { offset = 0; }
+        if (minAngle === undefined) { minAngle = 0; }
+        if (maxAngle === undefined) { maxAngle = 360; }
+
+        var renderer = this.scene.sys.renderer;
+        var height = renderer.height;
+
+        var angle = CounterClockwise(AngleBetween(bone.worldX, height - bone.worldY, worldX, worldY) + DegToRad(offset));
+
+        bone.rotation = Clamp(RadToDeg(angle), minAngle, maxAngle);
+
+        return this;
     },
 
     findBone: function (boneName)
