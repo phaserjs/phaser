@@ -28,8 +28,24 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     var skeleton = src.skeleton;
     var sceneRenderer = plugin.sceneRenderer;
 
-    if (!skeleton)
+    var GameObjectRenderMask = 15;
+
+    var willRender = !(GameObjectRenderMask !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)));
+
+    if (!skeleton || !willRender)
     {
+        //  Reset the current type
+        renderer.currentType = '';
+
+        //  If there is already a batch running, we need to close it
+        if (!renderer.nextTypeMatch)
+        {
+            //  The next object in the display list is not a Spine object, so we end the batch
+            sceneRenderer.end();
+    
+            renderer.rebindPipeline(renderer.pipelines.TextureTintPipeline);
+        }
+    
         return;
     }
 
