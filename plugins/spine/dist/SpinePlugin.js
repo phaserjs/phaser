@@ -1249,6 +1249,144 @@ module.exports = {
 
 /***/ }),
 
+/***/ "../../../src/gameobjects/BuildGameObject.js":
+/*!*************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/BuildGameObject.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var BlendModes = __webpack_require__(/*! ../renderer/BlendModes */ "../../../src/renderer/BlendModes.js");
+var GetAdvancedValue = __webpack_require__(/*! ../utils/object/GetAdvancedValue */ "../../../src/utils/object/GetAdvancedValue.js");
+var ScaleModes = __webpack_require__(/*! ../renderer/ScaleModes */ "../../../src/renderer/ScaleModes.js");
+
+/**
+ * Builds a Game Object using the provided configuration object.
+ *
+ * @function Phaser.GameObjects.BuildGameObject
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - A reference to the Scene.
+ * @param {Phaser.GameObjects.GameObject} gameObject - The initial GameObject.
+ * @param {Phaser.Types.GameObjects.GameObjectConfig} config - The config to build the GameObject with.
+ *
+ * @return {Phaser.GameObjects.GameObject} The built Game Object.
+ */
+var BuildGameObject = function (scene, gameObject, config)
+{
+    //  Position
+
+    gameObject.x = GetAdvancedValue(config, 'x', 0);
+    gameObject.y = GetAdvancedValue(config, 'y', 0);
+    gameObject.depth = GetAdvancedValue(config, 'depth', 0);
+
+    //  Flip
+
+    gameObject.flipX = GetAdvancedValue(config, 'flipX', false);
+    gameObject.flipY = GetAdvancedValue(config, 'flipY', false);
+
+    //  Scale
+    //  Either: { scale: 2 } or { scale: { x: 2, y: 2 }}
+
+    var scale = GetAdvancedValue(config, 'scale', null);
+
+    if (typeof scale === 'number')
+    {
+        gameObject.setScale(scale);
+    }
+    else if (scale !== null)
+    {
+        gameObject.scaleX = GetAdvancedValue(scale, 'x', 1);
+        gameObject.scaleY = GetAdvancedValue(scale, 'y', 1);
+    }
+
+    //  ScrollFactor
+    //  Either: { scrollFactor: 2 } or { scrollFactor: { x: 2, y: 2 }}
+
+    var scrollFactor = GetAdvancedValue(config, 'scrollFactor', null);
+
+    if (typeof scrollFactor === 'number')
+    {
+        gameObject.setScrollFactor(scrollFactor);
+    }
+    else if (scrollFactor !== null)
+    {
+        gameObject.scrollFactorX = GetAdvancedValue(scrollFactor, 'x', 1);
+        gameObject.scrollFactorY = GetAdvancedValue(scrollFactor, 'y', 1);
+    }
+
+    //  Rotation
+
+    gameObject.rotation = GetAdvancedValue(config, 'rotation', 0);
+
+    var angle = GetAdvancedValue(config, 'angle', null);
+
+    if (angle !== null)
+    {
+        gameObject.angle = angle;
+    }
+
+    //  Alpha
+
+    gameObject.alpha = GetAdvancedValue(config, 'alpha', 1);
+
+    //  Origin
+    //  Either: { origin: 0.5 } or { origin: { x: 0.5, y: 0.5 }}
+
+    var origin = GetAdvancedValue(config, 'origin', null);
+
+    if (typeof origin === 'number')
+    {
+        gameObject.setOrigin(origin);
+    }
+    else if (origin !== null)
+    {
+        var ox = GetAdvancedValue(origin, 'x', 0.5);
+        var oy = GetAdvancedValue(origin, 'y', 0.5);
+
+        gameObject.setOrigin(ox, oy);
+    }
+
+    //  ScaleMode
+
+    gameObject.scaleMode = GetAdvancedValue(config, 'scaleMode', ScaleModes.DEFAULT);
+
+    //  BlendMode
+
+    gameObject.blendMode = GetAdvancedValue(config, 'blendMode', BlendModes.NORMAL);
+
+    //  Visible
+
+    gameObject.visible = GetAdvancedValue(config, 'visible', true);
+
+    //  Add to Scene
+
+    var add = GetAdvancedValue(config, 'add', true);
+
+    if (add)
+    {
+        scene.sys.displayList.add(gameObject);
+    }
+
+    if (gameObject.preUpdate)
+    {
+        scene.sys.updateList.add(gameObject);
+    }
+
+    return gameObject;
+};
+
+module.exports = BuildGameObject;
+
+
+/***/ }),
+
 /***/ "../../../src/gameobjects/GameObject.js":
 /*!********************************************************!*\
   !*** D:/wamp/www/phaser/src/gameobjects/GameObject.js ***!
@@ -1891,433 +2029,6 @@ var GameObject = new Class({
 GameObject.RENDER_MASK = 15;
 
 module.exports = GameObject;
-
-
-/***/ }),
-
-/***/ "../../../src/gameobjects/components/Alpha.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Alpha.js ***!
-  \**************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-var Clamp = __webpack_require__(/*! ../../math/Clamp */ "../../../src/math/Clamp.js");
-
-//  bitmask flag for GameObject.renderMask
-var _FLAG = 2; // 0010
-
-/**
- * Provides methods used for setting the alpha properties of a Game Object.
- * Should be applied as a mixin and not used directly.
- *
- * @namespace Phaser.GameObjects.Components.Alpha
- * @since 3.0.0
- */
-
-var Alpha = {
-
-    /**
-     * Private internal value. Holds the global alpha value.
-     *
-     * @name Phaser.GameObjects.Components.Alpha#_alpha
-     * @type {number}
-     * @private
-     * @default 1
-     * @since 3.0.0
-     */
-    _alpha: 1,
-
-    /**
-     * Private internal value. Holds the top-left alpha value.
-     *
-     * @name Phaser.GameObjects.Components.Alpha#_alphaTL
-     * @type {number}
-     * @private
-     * @default 1
-     * @since 3.0.0
-     */
-    _alphaTL: 1,
-
-    /**
-     * Private internal value. Holds the top-right alpha value.
-     *
-     * @name Phaser.GameObjects.Components.Alpha#_alphaTR
-     * @type {number}
-     * @private
-     * @default 1
-     * @since 3.0.0
-     */
-    _alphaTR: 1,
-
-    /**
-     * Private internal value. Holds the bottom-left alpha value.
-     *
-     * @name Phaser.GameObjects.Components.Alpha#_alphaBL
-     * @type {number}
-     * @private
-     * @default 1
-     * @since 3.0.0
-     */
-    _alphaBL: 1,
-
-    /**
-     * Private internal value. Holds the bottom-right alpha value.
-     *
-     * @name Phaser.GameObjects.Components.Alpha#_alphaBR
-     * @type {number}
-     * @private
-     * @default 1
-     * @since 3.0.0
-     */
-    _alphaBR: 1,
-
-    /**
-     * Clears all alpha values associated with this Game Object.
-     *
-     * Immediately sets the alpha levels back to 1 (fully opaque).
-     *
-     * @method Phaser.GameObjects.Components.Alpha#clearAlpha
-     * @since 3.0.0
-     *
-     * @return {this} This Game Object instance.
-     */
-    clearAlpha: function ()
-    {
-        return this.setAlpha(1);
-    },
-
-    /**
-     * Set the Alpha level of this Game Object. The alpha controls the opacity of the Game Object as it renders.
-     * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
-     *
-     * If your game is running under WebGL you can optionally specify four different alpha values, each of which
-     * correspond to the four corners of the Game Object. Under Canvas only the `topLeft` value given is used.
-     *
-     * @method Phaser.GameObjects.Components.Alpha#setAlpha
-     * @since 3.0.0
-     *
-     * @param {number} [topLeft=1] - The alpha value used for the top-left of the Game Object. If this is the only value given it's applied across the whole Game Object.
-     * @param {number} [topRight] - The alpha value used for the top-right of the Game Object. WebGL only.
-     * @param {number} [bottomLeft] - The alpha value used for the bottom-left of the Game Object. WebGL only.
-     * @param {number} [bottomRight] - The alpha value used for the bottom-right of the Game Object. WebGL only.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setAlpha: function (topLeft, topRight, bottomLeft, bottomRight)
-    {
-        if (topLeft === undefined) { topLeft = 1; }
-
-        //  Treat as if there is only one alpha value for the whole Game Object
-        if (topRight === undefined)
-        {
-            this.alpha = topLeft;
-        }
-        else
-        {
-            this._alphaTL = Clamp(topLeft, 0, 1);
-            this._alphaTR = Clamp(topRight, 0, 1);
-            this._alphaBL = Clamp(bottomLeft, 0, 1);
-            this._alphaBR = Clamp(bottomRight, 0, 1);
-        }
-
-        return this;
-    },
-
-    /**
-     * The alpha value of the Game Object.
-     *
-     * This is a global value, impacting the entire Game Object, not just a region of it.
-     *
-     * @name Phaser.GameObjects.Components.Alpha#alpha
-     * @type {number}
-     * @since 3.0.0
-     */
-    alpha: {
-
-        get: function ()
-        {
-            return this._alpha;
-        },
-
-        set: function (value)
-        {
-            var v = Clamp(value, 0, 1);
-
-            this._alpha = v;
-            this._alphaTL = v;
-            this._alphaTR = v;
-            this._alphaBL = v;
-            this._alphaBR = v;
-
-            if (v === 0)
-            {
-                this.renderFlags &= ~_FLAG;
-            }
-            else
-            {
-                this.renderFlags |= _FLAG;
-            }
-        }
-
-    },
-
-    /**
-     * The alpha value starting from the top-left of the Game Object.
-     * This value is interpolated from the corner to the center of the Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Alpha#alphaTopLeft
-     * @type {number}
-     * @webglOnly
-     * @since 3.0.0
-     */
-    alphaTopLeft: {
-
-        get: function ()
-        {
-            return this._alphaTL;
-        },
-
-        set: function (value)
-        {
-            var v = Clamp(value, 0, 1);
-
-            this._alphaTL = v;
-
-            if (v !== 0)
-            {
-                this.renderFlags |= _FLAG;
-            }
-        }
-
-    },
-
-    /**
-     * The alpha value starting from the top-right of the Game Object.
-     * This value is interpolated from the corner to the center of the Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Alpha#alphaTopRight
-     * @type {number}
-     * @webglOnly
-     * @since 3.0.0
-     */
-    alphaTopRight: {
-
-        get: function ()
-        {
-            return this._alphaTR;
-        },
-
-        set: function (value)
-        {
-            var v = Clamp(value, 0, 1);
-
-            this._alphaTR = v;
-
-            if (v !== 0)
-            {
-                this.renderFlags |= _FLAG;
-            }
-        }
-
-    },
-
-    /**
-     * The alpha value starting from the bottom-left of the Game Object.
-     * This value is interpolated from the corner to the center of the Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Alpha#alphaBottomLeft
-     * @type {number}
-     * @webglOnly
-     * @since 3.0.0
-     */
-    alphaBottomLeft: {
-
-        get: function ()
-        {
-            return this._alphaBL;
-        },
-
-        set: function (value)
-        {
-            var v = Clamp(value, 0, 1);
-
-            this._alphaBL = v;
-
-            if (v !== 0)
-            {
-                this.renderFlags |= _FLAG;
-            }
-        }
-
-    },
-
-    /**
-     * The alpha value starting from the bottom-right of the Game Object.
-     * This value is interpolated from the corner to the center of the Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Alpha#alphaBottomRight
-     * @type {number}
-     * @webglOnly
-     * @since 3.0.0
-     */
-    alphaBottomRight: {
-
-        get: function ()
-        {
-            return this._alphaBR;
-        },
-
-        set: function (value)
-        {
-            var v = Clamp(value, 0, 1);
-
-            this._alphaBR = v;
-
-            if (v !== 0)
-            {
-                this.renderFlags |= _FLAG;
-            }
-        }
-
-    }
-
-};
-
-module.exports = Alpha;
-
-
-/***/ }),
-
-/***/ "../../../src/gameobjects/components/BlendMode.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/BlendMode.js ***!
-  \******************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-var BlendModes = __webpack_require__(/*! ../../renderer/BlendModes */ "../../../src/renderer/BlendModes.js");
-
-/**
- * Provides methods used for setting the blend mode of a Game Object.
- * Should be applied as a mixin and not used directly.
- *
- * @namespace Phaser.GameObjects.Components.BlendMode
- * @since 3.0.0
- */
-
-var BlendMode = {
-
-    /**
-     * Private internal value. Holds the current blend mode.
-     * 
-     * @name Phaser.GameObjects.Components.BlendMode#_blendMode
-     * @type {integer}
-     * @private
-     * @default 0
-     * @since 3.0.0
-     */
-    _blendMode: BlendModes.NORMAL,
-
-    /**
-     * Sets the Blend Mode being used by this Game Object.
-     *
-     * This can be a const, such as `Phaser.BlendModes.SCREEN`, or an integer, such as 4 (for Overlay)
-     *
-     * Under WebGL only the following Blend Modes are available:
-     *
-     * * ADD
-     * * MULTIPLY
-     * * SCREEN
-     * * ERASE
-     *
-     * Canvas has more available depending on browser support.
-     *
-     * You can also create your own custom Blend Modes in WebGL.
-     *
-     * Blend modes have different effects under Canvas and WebGL, and from browser to browser, depending
-     * on support. Blend Modes also cause a WebGL batch flush should it encounter a new blend mode. For these
-     * reasons try to be careful about the construction of your Scene and the frequency of which blend modes
-     * are used.
-     *
-     * @name Phaser.GameObjects.Components.BlendMode#blendMode
-     * @type {(Phaser.BlendModes|string)}
-     * @since 3.0.0
-     */
-    blendMode: {
-
-        get: function ()
-        {
-            return this._blendMode;
-        },
-
-        set: function (value)
-        {
-            if (typeof value === 'string')
-            {
-                value = BlendModes[value];
-            }
-
-            value |= 0;
-
-            if (value >= -1)
-            {
-                this._blendMode = value;
-            }
-        }
-
-    },
-
-    /**
-     * Sets the Blend Mode being used by this Game Object.
-     *
-     * This can be a const, such as `Phaser.BlendModes.SCREEN`, or an integer, such as 4 (for Overlay)
-     *
-     * Under WebGL only the following Blend Modes are available:
-     *
-     * * ADD
-     * * MULTIPLY
-     * * SCREEN
-     * * ERASE (only works when rendering to a framebuffer, like a Render Texture)
-     *
-     * Canvas has more available depending on browser support.
-     *
-     * You can also create your own custom Blend Modes in WebGL.
-     *
-     * Blend modes have different effects under Canvas and WebGL, and from browser to browser, depending
-     * on support. Blend Modes also cause a WebGL batch flush should it encounter a new blend mode. For these
-     * reasons try to be careful about the construction of your Scene and the frequency in which blend modes
-     * are used.
-     *
-     * @method Phaser.GameObjects.Components.BlendMode#setBlendMode
-     * @since 3.0.0
-     *
-     * @param {(string|Phaser.BlendModes)} value - The BlendMode value. Either a string or a CONST.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setBlendMode: function (value)
-    {
-        this.blendMode = value;
-
-        return this;
-    }
-
-};
-
-module.exports = BlendMode;
 
 
 /***/ }),
@@ -6862,6 +6573,200 @@ module.exports = TextFile;
 
 /***/ }),
 
+/***/ "../../../src/math/Average.js":
+/*!**********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Average.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculate the mean average of the given values.
+ *
+ * @function Phaser.Math.Average
+ * @since 3.0.0
+ *
+ * @param {number[]} values - The values to average.
+ *
+ * @return {number} The average value.
+ */
+var Average = function (values)
+{
+    var sum = 0;
+
+    for (var i = 0; i < values.length; i++)
+    {
+        sum += (+values[i]);
+    }
+
+    return sum / values.length;
+};
+
+module.exports = Average;
+
+
+/***/ }),
+
+/***/ "../../../src/math/Bernstein.js":
+/*!************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Bernstein.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Factorial = __webpack_require__(/*! ./Factorial */ "../../../src/math/Factorial.js");
+
+/**
+ * [description]
+ *
+ * @function Phaser.Math.Bernstein
+ * @since 3.0.0
+ *
+ * @param {number} n - [description]
+ * @param {number} i - [description]
+ *
+ * @return {number} [description]
+ */
+var Bernstein = function (n, i)
+{
+    return Factorial(n) / Factorial(i) / Factorial(n - i);
+};
+
+module.exports = Bernstein;
+
+
+/***/ }),
+
+/***/ "../../../src/math/Between.js":
+/*!**********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Between.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Compute a random integer between the `min` and `max` values, inclusive.
+ *
+ * @function Phaser.Math.Between
+ * @since 3.0.0
+ *
+ * @param {integer} min - The minimum value.
+ * @param {integer} max - The maximum value.
+ *
+ * @return {integer} The random integer.
+ */
+var Between = function (min, max)
+{
+    return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
+module.exports = Between;
+
+
+/***/ }),
+
+/***/ "../../../src/math/CatmullRom.js":
+/*!*************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/CatmullRom.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculates a Catmull-Rom value.
+ *
+ * @function Phaser.Math.CatmullRom
+ * @since 3.0.0
+ *
+ * @param {number} t - [description]
+ * @param {number} p0 - [description]
+ * @param {number} p1 - [description]
+ * @param {number} p2 - [description]
+ * @param {number} p3 - [description]
+ *
+ * @return {number} The Catmull-Rom value.
+ */
+var CatmullRom = function (t, p0, p1, p2, p3)
+{
+    var v0 = (p2 - p0) * 0.5;
+    var v1 = (p3 - p1) * 0.5;
+    var t2 = t * t;
+    var t3 = t * t2;
+
+    return (2 * p1 - 2 * p2 + v0 + v1) * t3 + (-3 * p1 + 3 * p2 - 2 * v0 - v1) * t2 + v0 * t + p1;
+};
+
+module.exports = CatmullRom;
+
+
+/***/ }),
+
+/***/ "../../../src/math/CeilTo.js":
+/*!*********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/CeilTo.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Ceils to some place comparative to a `base`, default is 10 for decimal place.
+ *
+ * The `place` is represented by the power applied to `base` to get that place.
+ *
+ * @function Phaser.Math.CeilTo
+ * @since 3.0.0
+ *
+ * @param {number} value - The value to round.
+ * @param {number} [place=0] - The place to round to.
+ * @param {integer} [base=10] - The base to round in. Default is 10 for decimal.
+ *
+ * @return {number} The rounded value.
+ */
+var CeilTo = function (value, place, base)
+{
+    if (place === undefined) { place = 0; }
+    if (base === undefined) { base = 10; }
+
+    var p = Math.pow(base, -place);
+
+    return Math.ceil(value * p) / p;
+};
+
+module.exports = CeilTo;
+
+
+/***/ }),
+
 /***/ "../../../src/math/Clamp.js":
 /*!********************************************!*\
   !*** D:/wamp/www/phaser/src/math/Clamp.js ***!
@@ -6897,6 +6802,3350 @@ module.exports = Clamp;
 
 /***/ }),
 
+/***/ "../../../src/math/DegToRad.js":
+/*!***********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/DegToRad.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var CONST = __webpack_require__(/*! ./const */ "../../../src/math/const.js");
+
+/**
+ * Convert the given angle from degrees, to the equivalent angle in radians.
+ *
+ * @function Phaser.Math.DegToRad
+ * @since 3.0.0
+ *
+ * @param {integer} degrees - The angle (in degrees) to convert to radians.
+ *
+ * @return {number} The given angle converted to radians.
+ */
+var DegToRad = function (degrees)
+{
+    return degrees * CONST.DEG_TO_RAD;
+};
+
+module.exports = DegToRad;
+
+
+/***/ }),
+
+/***/ "../../../src/math/Difference.js":
+/*!*************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Difference.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculates the positive difference of two given numbers.
+ *
+ * @function Phaser.Math.Difference
+ * @since 3.0.0
+ *
+ * @param {number} a - The first number in the calculation.
+ * @param {number} b - The second number in the calculation.
+ *
+ * @return {number} The positive difference of the two given numbers.
+ */
+var Difference = function (a, b)
+{
+    return Math.abs(a - b);
+};
+
+module.exports = Difference;
+
+
+/***/ }),
+
+/***/ "../../../src/math/Factorial.js":
+/*!************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Factorial.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculates the factorial of a given number for integer values greater than 0.
+ *
+ * @function Phaser.Math.Factorial
+ * @since 3.0.0
+ *
+ * @param {number} value - A positive integer to calculate the factorial of.
+ *
+ * @return {number} The factorial of the given number.
+ */
+var Factorial = function (value)
+{
+    if (value === 0)
+    {
+        return 1;
+    }
+
+    var res = value;
+
+    while (--value)
+    {
+        res *= value;
+    }
+
+    return res;
+};
+
+module.exports = Factorial;
+
+
+/***/ }),
+
+/***/ "../../../src/math/FloatBetween.js":
+/*!***************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/FloatBetween.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Generate a random floating point number between the two given bounds, minimum inclusive, maximum exclusive.
+ *
+ * @function Phaser.Math.FloatBetween
+ * @since 3.0.0
+ *
+ * @param {number} min - The lower bound for the float, inclusive.
+ * @param {number} max - The upper bound for the float exclusive.
+ *
+ * @return {number} A random float within the given range.
+ */
+var FloatBetween = function (min, max)
+{
+    return Math.random() * (max - min) + min;
+};
+
+module.exports = FloatBetween;
+
+
+/***/ }),
+
+/***/ "../../../src/math/FloorTo.js":
+/*!**********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/FloorTo.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Floors to some place comparative to a `base`, default is 10 for decimal place.
+ *
+ * The `place` is represented by the power applied to `base` to get that place.
+ *
+ * @function Phaser.Math.FloorTo
+ * @since 3.0.0
+ *
+ * @param {number} value - The value to round.
+ * @param {integer} [place=0] - The place to round to.
+ * @param {integer} [base=10] - The base to round in. Default is 10 for decimal.
+ *
+ * @return {number} The rounded value.
+ */
+var FloorTo = function (value, place, base)
+{
+    if (place === undefined) { place = 0; }
+    if (base === undefined) { base = 10; }
+
+    var p = Math.pow(base, -place);
+
+    return Math.floor(value * p) / p;
+};
+
+module.exports = FloorTo;
+
+
+/***/ }),
+
+/***/ "../../../src/math/FromPercent.js":
+/*!**************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/FromPercent.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Clamp = __webpack_require__(/*! ./Clamp */ "../../../src/math/Clamp.js");
+
+/**
+ * Return a value based on the range between `min` and `max` and the percentage given.
+ *
+ * @function Phaser.Math.FromPercent
+ * @since 3.0.0
+ *
+ * @param {number} percent - A value between 0 and 1 representing the percentage.
+ * @param {number} min - The minimum value.
+ * @param {number} [max] - The maximum value.
+ *
+ * @return {number} The value that is `percent` percent between `min` and `max`.
+ */
+var FromPercent = function (percent, min, max)
+{
+    percent = Clamp(percent, 0, 1);
+
+    return (max - min) * percent;
+};
+
+module.exports = FromPercent;
+
+
+/***/ }),
+
+/***/ "../../../src/math/GetSpeed.js":
+/*!***********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/GetSpeed.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculate the speed required to cover a distance in the time given.
+ *
+ * @function Phaser.Math.GetSpeed
+ * @since 3.0.0
+ *
+ * @param {number} distance - The distance to travel in pixels.
+ * @param {integer} time - The time, in ms, to cover the distance in.
+ *
+ * @return {number} The amount you will need to increment the position by each step in order to cover the distance in the time given.
+ */
+var GetSpeed = function (distance, time)
+{
+    return (distance / time) / 1000;
+};
+
+module.exports = GetSpeed;
+
+
+/***/ }),
+
+/***/ "../../../src/math/IsEven.js":
+/*!*********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/IsEven.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Check if a given value is an even number.
+ *
+ * @function Phaser.Math.IsEven
+ * @since 3.0.0
+ *
+ * @param {number} value - The number to perform the check with.
+ *
+ * @return {boolean} Whether the number is even or not.
+ */
+var IsEven = function (value)
+{
+    // Use abstract equality == for "is number" test
+
+    // eslint-disable-next-line eqeqeq
+    return (value == parseFloat(value)) ? !(value % 2) : void 0;
+};
+
+module.exports = IsEven;
+
+
+/***/ }),
+
+/***/ "../../../src/math/IsEvenStrict.js":
+/*!***************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/IsEvenStrict.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Check if a given value is an even number using a strict type check.
+ *
+ * @function Phaser.Math.IsEvenStrict
+ * @since 3.0.0
+ *
+ * @param {number} value - The number to perform the check with.
+ *
+ * @return {boolean} Whether the number is even or not.
+ */
+var IsEvenStrict = function (value)
+{
+    // Use strict equality === for "is number" test
+    return (value === parseFloat(value)) ? !(value % 2) : void 0;
+};
+
+module.exports = IsEvenStrict;
+
+
+/***/ }),
+
+/***/ "../../../src/math/Linear.js":
+/*!*********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Linear.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculates a linear (interpolation) value over t.
+ *
+ * @function Phaser.Math.Linear
+ * @since 3.0.0
+ *
+ * @param {number} p0 - The first point.
+ * @param {number} p1 - The second point.
+ * @param {number} t - The percentage between p0 and p1 to return, represented as a number between 0 and 1.
+ *
+ * @return {number} The step t% of the way between p0 and p1.
+ */
+var Linear = function (p0, p1, t)
+{
+    return (p1 - p0) * t + p0;
+};
+
+module.exports = Linear;
+
+
+/***/ }),
+
+/***/ "../../../src/math/Matrix3.js":
+/*!**********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Matrix3.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+//  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji
+//  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
+
+var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
+
+/**
+ * @classdesc
+ * A three-dimensional matrix.
+ *
+ * Defaults to the identity matrix when instantiated.
+ *
+ * @class Matrix3
+ * @memberof Phaser.Math
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Math.Matrix3} [m] - Optional Matrix3 to copy values from.
+ */
+var Matrix3 = new Class({
+
+    initialize:
+
+    function Matrix3 (m)
+    {
+        /**
+         * The matrix values.
+         *
+         * @name Phaser.Math.Matrix3#val
+         * @type {Float32Array}
+         * @since 3.0.0
+         */
+        this.val = new Float32Array(9);
+
+        if (m)
+        {
+            //  Assume Matrix3 with val:
+            this.copy(m);
+        }
+        else
+        {
+            //  Default to identity
+            this.identity();
+        }
+    },
+
+    /**
+     * Make a clone of this Matrix3.
+     *
+     * @method Phaser.Math.Matrix3#clone
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Matrix3} A clone of this Matrix3.
+     */
+    clone: function ()
+    {
+        return new Matrix3(this);
+    },
+
+    /**
+     * This method is an alias for `Matrix3.copy`.
+     *
+     * @method Phaser.Math.Matrix3#set
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Matrix3} src - The Matrix to set the values of this Matrix's from.
+     *
+     * @return {Phaser.Math.Matrix3} This Matrix3.
+     */
+    set: function (src)
+    {
+        return this.copy(src);
+    },
+
+    /**
+     * Copy the values of a given Matrix into this Matrix.
+     *
+     * @method Phaser.Math.Matrix3#copy
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Matrix3} src - The Matrix to copy the values from.
+     *
+     * @return {Phaser.Math.Matrix3} This Matrix3.
+     */
+    copy: function (src)
+    {
+        var out = this.val;
+        var a = src.val;
+
+        out[0] = a[0];
+        out[1] = a[1];
+        out[2] = a[2];
+        out[3] = a[3];
+        out[4] = a[4];
+        out[5] = a[5];
+        out[6] = a[6];
+        out[7] = a[7];
+        out[8] = a[8];
+
+        return this;
+    },
+
+    /**
+     * Copy the values of a given Matrix4 into this Matrix3.
+     *
+     * @method Phaser.Math.Matrix3#fromMat4
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Matrix4} m - The Matrix4 to copy the values from.
+     *
+     * @return {Phaser.Math.Matrix3} This Matrix3.
+     */
+    fromMat4: function (m)
+    {
+        var a = m.val;
+        var out = this.val;
+
+        out[0] = a[0];
+        out[1] = a[1];
+        out[2] = a[2];
+        out[3] = a[4];
+        out[4] = a[5];
+        out[5] = a[6];
+        out[6] = a[8];
+        out[7] = a[9];
+        out[8] = a[10];
+
+        return this;
+    },
+
+    /**
+     * Set the values of this Matrix from the given array.
+     *
+     * @method Phaser.Math.Matrix3#fromArray
+     * @since 3.0.0
+     *
+     * @param {array} a - The array to copy the values from.
+     *
+     * @return {Phaser.Math.Matrix3} This Matrix3.
+     */
+    fromArray: function (a)
+    {
+        var out = this.val;
+
+        out[0] = a[0];
+        out[1] = a[1];
+        out[2] = a[2];
+        out[3] = a[3];
+        out[4] = a[4];
+        out[5] = a[5];
+        out[6] = a[6];
+        out[7] = a[7];
+        out[8] = a[8];
+
+        return this;
+    },
+
+    /**
+     * Reset this Matrix to an identity (default) matrix.
+     *
+     * @method Phaser.Math.Matrix3#identity
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Matrix3} This Matrix3.
+     */
+    identity: function ()
+    {
+        var out = this.val;
+
+        out[0] = 1;
+        out[1] = 0;
+        out[2] = 0;
+        out[3] = 0;
+        out[4] = 1;
+        out[5] = 0;
+        out[6] = 0;
+        out[7] = 0;
+        out[8] = 1;
+
+        return this;
+    },
+
+    /**
+     * Transpose this Matrix.
+     *
+     * @method Phaser.Math.Matrix3#transpose
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Matrix3} This Matrix3.
+     */
+    transpose: function ()
+    {
+        var a = this.val;
+        var a01 = a[1];
+        var a02 = a[2];
+        var a12 = a[5];
+
+        a[1] = a[3];
+        a[2] = a[6];
+        a[3] = a01;
+        a[5] = a[7];
+        a[6] = a02;
+        a[7] = a12;
+
+        return this;
+    },
+
+    /**
+     * Invert this Matrix.
+     *
+     * @method Phaser.Math.Matrix3#invert
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Matrix3} This Matrix3.
+     */
+    invert: function ()
+    {
+        var a = this.val;
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a10 = a[3];
+        var a11 = a[4];
+        var a12 = a[5];
+        var a20 = a[6];
+        var a21 = a[7];
+        var a22 = a[8];
+
+        var b01 = a22 * a11 - a12 * a21;
+        var b11 = -a22 * a10 + a12 * a20;
+        var b21 = a21 * a10 - a11 * a20;
+
+        // Calculate the determinant
+        var det = a00 * b01 + a01 * b11 + a02 * b21;
+
+        if (!det)
+        {
+            return null;
+        }
+
+        det = 1 / det;
+
+        a[0] = b01 * det;
+        a[1] = (-a22 * a01 + a02 * a21) * det;
+        a[2] = (a12 * a01 - a02 * a11) * det;
+        a[3] = b11 * det;
+        a[4] = (a22 * a00 - a02 * a20) * det;
+        a[5] = (-a12 * a00 + a02 * a10) * det;
+        a[6] = b21 * det;
+        a[7] = (-a21 * a00 + a01 * a20) * det;
+        a[8] = (a11 * a00 - a01 * a10) * det;
+
+        return this;
+    },
+
+    /**
+     * Calculate the adjoint, or adjugate, of this Matrix.
+     *
+     * @method Phaser.Math.Matrix3#adjoint
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Matrix3} This Matrix3.
+     */
+    adjoint: function ()
+    {
+        var a = this.val;
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a10 = a[3];
+        var a11 = a[4];
+        var a12 = a[5];
+        var a20 = a[6];
+        var a21 = a[7];
+        var a22 = a[8];
+
+        a[0] = (a11 * a22 - a12 * a21);
+        a[1] = (a02 * a21 - a01 * a22);
+        a[2] = (a01 * a12 - a02 * a11);
+        a[3] = (a12 * a20 - a10 * a22);
+        a[4] = (a00 * a22 - a02 * a20);
+        a[5] = (a02 * a10 - a00 * a12);
+        a[6] = (a10 * a21 - a11 * a20);
+        a[7] = (a01 * a20 - a00 * a21);
+        a[8] = (a00 * a11 - a01 * a10);
+
+        return this;
+    },
+
+    /**
+     * Calculate the determinant of this Matrix.
+     *
+     * @method Phaser.Math.Matrix3#determinant
+     * @since 3.0.0
+     *
+     * @return {number} The determinant of this Matrix.
+     */
+    determinant: function ()
+    {
+        var a = this.val;
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a10 = a[3];
+        var a11 = a[4];
+        var a12 = a[5];
+        var a20 = a[6];
+        var a21 = a[7];
+        var a22 = a[8];
+
+        return a00 * (a22 * a11 - a12 * a21) + a01 * (-a22 * a10 + a12 * a20) + a02 * (a21 * a10 - a11 * a20);
+    },
+
+    /**
+     * Multiply this Matrix by the given Matrix.
+     *
+     * @method Phaser.Math.Matrix3#multiply
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Matrix3} src - The Matrix to multiply this Matrix by.
+     *
+     * @return {Phaser.Math.Matrix3} This Matrix3.
+     */
+    multiply: function (src)
+    {
+        var a = this.val;
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a10 = a[3];
+        var a11 = a[4];
+        var a12 = a[5];
+        var a20 = a[6];
+        var a21 = a[7];
+        var a22 = a[8];
+
+        var b = src.val;
+
+        var b00 = b[0];
+        var b01 = b[1];
+        var b02 = b[2];
+        var b10 = b[3];
+        var b11 = b[4];
+        var b12 = b[5];
+        var b20 = b[6];
+        var b21 = b[7];
+        var b22 = b[8];
+
+        a[0] = b00 * a00 + b01 * a10 + b02 * a20;
+        a[1] = b00 * a01 + b01 * a11 + b02 * a21;
+        a[2] = b00 * a02 + b01 * a12 + b02 * a22;
+
+        a[3] = b10 * a00 + b11 * a10 + b12 * a20;
+        a[4] = b10 * a01 + b11 * a11 + b12 * a21;
+        a[5] = b10 * a02 + b11 * a12 + b12 * a22;
+
+        a[6] = b20 * a00 + b21 * a10 + b22 * a20;
+        a[7] = b20 * a01 + b21 * a11 + b22 * a21;
+        a[8] = b20 * a02 + b21 * a12 + b22 * a22;
+
+        return this;
+    },
+
+    /**
+     * Translate this Matrix using the given Vector.
+     *
+     * @method Phaser.Math.Matrix3#translate
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4)} v - The Vector to translate this Matrix with.
+     *
+     * @return {Phaser.Math.Matrix3} This Matrix3.
+     */
+    translate: function (v)
+    {
+        var a = this.val;
+        var x = v.x;
+        var y = v.y;
+
+        a[6] = x * a[0] + y * a[3] + a[6];
+        a[7] = x * a[1] + y * a[4] + a[7];
+        a[8] = x * a[2] + y * a[5] + a[8];
+
+        return this;
+    },
+
+    /**
+     * Apply a rotation transformation to this Matrix.
+     *
+     * @method Phaser.Math.Matrix3#rotate
+     * @since 3.0.0
+     *
+     * @param {number} rad - The angle in radians to rotate by.
+     *
+     * @return {Phaser.Math.Matrix3} This Matrix3.
+     */
+    rotate: function (rad)
+    {
+        var a = this.val;
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a10 = a[3];
+        var a11 = a[4];
+        var a12 = a[5];
+
+        var s = Math.sin(rad);
+        var c = Math.cos(rad);
+
+        a[0] = c * a00 + s * a10;
+        a[1] = c * a01 + s * a11;
+        a[2] = c * a02 + s * a12;
+
+        a[3] = c * a10 - s * a00;
+        a[4] = c * a11 - s * a01;
+        a[5] = c * a12 - s * a02;
+
+        return this;
+    },
+
+    /**
+     * Apply a scale transformation to this Matrix.
+     *
+     * Uses the `x` and `y` components of the given Vector to scale the Matrix.
+     *
+     * @method Phaser.Math.Matrix3#scale
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4)} v - The Vector to scale this Matrix with.
+     *
+     * @return {Phaser.Math.Matrix3} This Matrix3.
+     */
+    scale: function (v)
+    {
+        var a = this.val;
+        var x = v.x;
+        var y = v.y;
+
+        a[0] = x * a[0];
+        a[1] = x * a[1];
+        a[2] = x * a[2];
+
+        a[3] = y * a[3];
+        a[4] = y * a[4];
+        a[5] = y * a[5];
+
+        return this;
+    },
+
+    /**
+     * Set the values of this Matrix from the given Quaternion.
+     *
+     * @method Phaser.Math.Matrix3#fromQuat
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Quaternion} q - The Quaternion to set the values of this Matrix from.
+     *
+     * @return {Phaser.Math.Matrix3} This Matrix3.
+     */
+    fromQuat: function (q)
+    {
+        var x = q.x;
+        var y = q.y;
+        var z = q.z;
+        var w = q.w;
+
+        var x2 = x + x;
+        var y2 = y + y;
+        var z2 = z + z;
+
+        var xx = x * x2;
+        var xy = x * y2;
+        var xz = x * z2;
+
+        var yy = y * y2;
+        var yz = y * z2;
+        var zz = z * z2;
+
+        var wx = w * x2;
+        var wy = w * y2;
+        var wz = w * z2;
+
+        var out = this.val;
+
+        out[0] = 1 - (yy + zz);
+        out[3] = xy + wz;
+        out[6] = xz - wy;
+
+        out[1] = xy - wz;
+        out[4] = 1 - (xx + zz);
+        out[7] = yz + wx;
+
+        out[2] = xz + wy;
+        out[5] = yz - wx;
+        out[8] = 1 - (xx + yy);
+
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Matrix3#normalFromMat4
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Matrix4} m - [description]
+     *
+     * @return {Phaser.Math.Matrix3} This Matrix3.
+     */
+    normalFromMat4: function (m)
+    {
+        var a = m.val;
+        var out = this.val;
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a03 = a[3];
+
+        var a10 = a[4];
+        var a11 = a[5];
+        var a12 = a[6];
+        var a13 = a[7];
+
+        var a20 = a[8];
+        var a21 = a[9];
+        var a22 = a[10];
+        var a23 = a[11];
+
+        var a30 = a[12];
+        var a31 = a[13];
+        var a32 = a[14];
+        var a33 = a[15];
+
+        var b00 = a00 * a11 - a01 * a10;
+        var b01 = a00 * a12 - a02 * a10;
+        var b02 = a00 * a13 - a03 * a10;
+        var b03 = a01 * a12 - a02 * a11;
+
+        var b04 = a01 * a13 - a03 * a11;
+        var b05 = a02 * a13 - a03 * a12;
+        var b06 = a20 * a31 - a21 * a30;
+        var b07 = a20 * a32 - a22 * a30;
+
+        var b08 = a20 * a33 - a23 * a30;
+        var b09 = a21 * a32 - a22 * a31;
+        var b10 = a21 * a33 - a23 * a31;
+        var b11 = a22 * a33 - a23 * a32;
+
+        // Calculate the determinant
+        var det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+
+        if (!det)
+        {
+            return null;
+        }
+
+        det = 1 / det;
+
+        out[0] = (a11 * b11 - a12 * b10 + a13 * b09) * det;
+        out[1] = (a12 * b08 - a10 * b11 - a13 * b07) * det;
+        out[2] = (a10 * b10 - a11 * b08 + a13 * b06) * det;
+
+        out[3] = (a02 * b10 - a01 * b11 - a03 * b09) * det;
+        out[4] = (a00 * b11 - a02 * b08 + a03 * b07) * det;
+        out[5] = (a01 * b08 - a00 * b10 - a03 * b06) * det;
+
+        out[6] = (a31 * b05 - a32 * b04 + a33 * b03) * det;
+        out[7] = (a32 * b02 - a30 * b05 - a33 * b01) * det;
+        out[8] = (a30 * b04 - a31 * b02 + a33 * b00) * det;
+
+        return this;
+    }
+
+});
+
+module.exports = Matrix3;
+
+
+/***/ }),
+
+/***/ "../../../src/math/Matrix4.js":
+/*!**********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Matrix4.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+//  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji
+//  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
+
+var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
+
+var EPSILON = 0.000001;
+
+/**
+ * @classdesc
+ * A four-dimensional matrix.
+ *
+ * @class Matrix4
+ * @memberof Phaser.Math
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Math.Matrix4} [m] - Optional Matrix4 to copy values from.
+ */
+var Matrix4 = new Class({
+
+    initialize:
+
+    function Matrix4 (m)
+    {
+        /**
+         * The matrix values.
+         *
+         * @name Phaser.Math.Matrix4#val
+         * @type {Float32Array}
+         * @since 3.0.0
+         */
+        this.val = new Float32Array(16);
+
+        if (m)
+        {
+            //  Assume Matrix4 with val:
+            this.copy(m);
+        }
+        else
+        {
+            //  Default to identity
+            this.identity();
+        }
+    },
+
+    /**
+     * Make a clone of this Matrix4.
+     *
+     * @method Phaser.Math.Matrix4#clone
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Matrix4} A clone of this Matrix4.
+     */
+    clone: function ()
+    {
+        return new Matrix4(this);
+    },
+
+    //  TODO - Should work with basic values
+
+    /**
+     * This method is an alias for `Matrix4.copy`.
+     *
+     * @method Phaser.Math.Matrix4#set
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Matrix4} src - The Matrix to set the values of this Matrix's from.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    set: function (src)
+    {
+        return this.copy(src);
+    },
+
+    /**
+     * Copy the values of a given Matrix into this Matrix.
+     *
+     * @method Phaser.Math.Matrix4#copy
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Matrix4} src - The Matrix to copy the values from.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    copy: function (src)
+    {
+        var out = this.val;
+        var a = src.val;
+
+        out[0] = a[0];
+        out[1] = a[1];
+        out[2] = a[2];
+        out[3] = a[3];
+        out[4] = a[4];
+        out[5] = a[5];
+        out[6] = a[6];
+        out[7] = a[7];
+        out[8] = a[8];
+        out[9] = a[9];
+        out[10] = a[10];
+        out[11] = a[11];
+        out[12] = a[12];
+        out[13] = a[13];
+        out[14] = a[14];
+        out[15] = a[15];
+
+        return this;
+    },
+
+    /**
+     * Set the values of this Matrix from the given array.
+     *
+     * @method Phaser.Math.Matrix4#fromArray
+     * @since 3.0.0
+     *
+     * @param {array} a - The array to copy the values from.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    fromArray: function (a)
+    {
+        var out = this.val;
+
+        out[0] = a[0];
+        out[1] = a[1];
+        out[2] = a[2];
+        out[3] = a[3];
+        out[4] = a[4];
+        out[5] = a[5];
+        out[6] = a[6];
+        out[7] = a[7];
+        out[8] = a[8];
+        out[9] = a[9];
+        out[10] = a[10];
+        out[11] = a[11];
+        out[12] = a[12];
+        out[13] = a[13];
+        out[14] = a[14];
+        out[15] = a[15];
+
+        return this;
+    },
+
+    /**
+     * Reset this Matrix.
+     *
+     * Sets all values to `0`.
+     *
+     * @method Phaser.Math.Matrix4#zero
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    zero: function ()
+    {
+        var out = this.val;
+
+        out[0] = 0;
+        out[1] = 0;
+        out[2] = 0;
+        out[3] = 0;
+        out[4] = 0;
+        out[5] = 0;
+        out[6] = 0;
+        out[7] = 0;
+        out[8] = 0;
+        out[9] = 0;
+        out[10] = 0;
+        out[11] = 0;
+        out[12] = 0;
+        out[13] = 0;
+        out[14] = 0;
+        out[15] = 0;
+
+        return this;
+    },
+
+    /**
+     * Set the `x`, `y` and `z` values of this Matrix.
+     *
+     * @method Phaser.Math.Matrix4#xyz
+     * @since 3.0.0
+     *
+     * @param {number} x - The x value.
+     * @param {number} y - The y value.
+     * @param {number} z - The z value.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    xyz: function (x, y, z)
+    {
+        this.identity();
+
+        var out = this.val;
+
+        out[12] = x;
+        out[13] = y;
+        out[14] = z;
+
+        return this;
+    },
+
+    /**
+     * Set the scaling values of this Matrix.
+     *
+     * @method Phaser.Math.Matrix4#scaling
+     * @since 3.0.0
+     *
+     * @param {number} x - The x scaling value.
+     * @param {number} y - The y scaling value.
+     * @param {number} z - The z scaling value.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    scaling: function (x, y, z)
+    {
+        this.zero();
+
+        var out = this.val;
+
+        out[0] = x;
+        out[5] = y;
+        out[10] = z;
+        out[15] = 1;
+
+        return this;
+    },
+
+    /**
+     * Reset this Matrix to an identity (default) matrix.
+     *
+     * @method Phaser.Math.Matrix4#identity
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    identity: function ()
+    {
+        var out = this.val;
+
+        out[0] = 1;
+        out[1] = 0;
+        out[2] = 0;
+        out[3] = 0;
+        out[4] = 0;
+        out[5] = 1;
+        out[6] = 0;
+        out[7] = 0;
+        out[8] = 0;
+        out[9] = 0;
+        out[10] = 1;
+        out[11] = 0;
+        out[12] = 0;
+        out[13] = 0;
+        out[14] = 0;
+        out[15] = 1;
+
+        return this;
+    },
+
+    /**
+     * Transpose this Matrix.
+     *
+     * @method Phaser.Math.Matrix4#transpose
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    transpose: function ()
+    {
+        var a = this.val;
+
+        var a01 = a[1];
+        var a02 = a[2];
+        var a03 = a[3];
+        var a12 = a[6];
+        var a13 = a[7];
+        var a23 = a[11];
+
+        a[1] = a[4];
+        a[2] = a[8];
+        a[3] = a[12];
+        a[4] = a01;
+        a[6] = a[9];
+        a[7] = a[13];
+        a[8] = a02;
+        a[9] = a12;
+        a[11] = a[14];
+        a[12] = a03;
+        a[13] = a13;
+        a[14] = a23;
+
+        return this;
+    },
+
+    /**
+     * Invert this Matrix.
+     *
+     * @method Phaser.Math.Matrix4#invert
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    invert: function ()
+    {
+        var a = this.val;
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a03 = a[3];
+
+        var a10 = a[4];
+        var a11 = a[5];
+        var a12 = a[6];
+        var a13 = a[7];
+
+        var a20 = a[8];
+        var a21 = a[9];
+        var a22 = a[10];
+        var a23 = a[11];
+
+        var a30 = a[12];
+        var a31 = a[13];
+        var a32 = a[14];
+        var a33 = a[15];
+
+        var b00 = a00 * a11 - a01 * a10;
+        var b01 = a00 * a12 - a02 * a10;
+        var b02 = a00 * a13 - a03 * a10;
+        var b03 = a01 * a12 - a02 * a11;
+
+        var b04 = a01 * a13 - a03 * a11;
+        var b05 = a02 * a13 - a03 * a12;
+        var b06 = a20 * a31 - a21 * a30;
+        var b07 = a20 * a32 - a22 * a30;
+
+        var b08 = a20 * a33 - a23 * a30;
+        var b09 = a21 * a32 - a22 * a31;
+        var b10 = a21 * a33 - a23 * a31;
+        var b11 = a22 * a33 - a23 * a32;
+
+        // Calculate the determinant
+        var det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+
+        if (!det)
+        {
+            return null;
+        }
+
+        det = 1 / det;
+
+        a[0] = (a11 * b11 - a12 * b10 + a13 * b09) * det;
+        a[1] = (a02 * b10 - a01 * b11 - a03 * b09) * det;
+        a[2] = (a31 * b05 - a32 * b04 + a33 * b03) * det;
+        a[3] = (a22 * b04 - a21 * b05 - a23 * b03) * det;
+        a[4] = (a12 * b08 - a10 * b11 - a13 * b07) * det;
+        a[5] = (a00 * b11 - a02 * b08 + a03 * b07) * det;
+        a[6] = (a32 * b02 - a30 * b05 - a33 * b01) * det;
+        a[7] = (a20 * b05 - a22 * b02 + a23 * b01) * det;
+        a[8] = (a10 * b10 - a11 * b08 + a13 * b06) * det;
+        a[9] = (a01 * b08 - a00 * b10 - a03 * b06) * det;
+        a[10] = (a30 * b04 - a31 * b02 + a33 * b00) * det;
+        a[11] = (a21 * b02 - a20 * b04 - a23 * b00) * det;
+        a[12] = (a11 * b07 - a10 * b09 - a12 * b06) * det;
+        a[13] = (a00 * b09 - a01 * b07 + a02 * b06) * det;
+        a[14] = (a31 * b01 - a30 * b03 - a32 * b00) * det;
+        a[15] = (a20 * b03 - a21 * b01 + a22 * b00) * det;
+
+        return this;
+    },
+
+    /**
+     * Calculate the adjoint, or adjugate, of this Matrix.
+     *
+     * @method Phaser.Math.Matrix4#adjoint
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    adjoint: function ()
+    {
+        var a = this.val;
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a03 = a[3];
+
+        var a10 = a[4];
+        var a11 = a[5];
+        var a12 = a[6];
+        var a13 = a[7];
+
+        var a20 = a[8];
+        var a21 = a[9];
+        var a22 = a[10];
+        var a23 = a[11];
+
+        var a30 = a[12];
+        var a31 = a[13];
+        var a32 = a[14];
+        var a33 = a[15];
+
+        a[0] = (a11 * (a22 * a33 - a23 * a32) - a21 * (a12 * a33 - a13 * a32) + a31 * (a12 * a23 - a13 * a22));
+        a[1] = -(a01 * (a22 * a33 - a23 * a32) - a21 * (a02 * a33 - a03 * a32) + a31 * (a02 * a23 - a03 * a22));
+        a[2] = (a01 * (a12 * a33 - a13 * a32) - a11 * (a02 * a33 - a03 * a32) + a31 * (a02 * a13 - a03 * a12));
+        a[3] = -(a01 * (a12 * a23 - a13 * a22) - a11 * (a02 * a23 - a03 * a22) + a21 * (a02 * a13 - a03 * a12));
+        a[4] = -(a10 * (a22 * a33 - a23 * a32) - a20 * (a12 * a33 - a13 * a32) + a30 * (a12 * a23 - a13 * a22));
+        a[5] = (a00 * (a22 * a33 - a23 * a32) - a20 * (a02 * a33 - a03 * a32) + a30 * (a02 * a23 - a03 * a22));
+        a[6] = -(a00 * (a12 * a33 - a13 * a32) - a10 * (a02 * a33 - a03 * a32) + a30 * (a02 * a13 - a03 * a12));
+        a[7] = (a00 * (a12 * a23 - a13 * a22) - a10 * (a02 * a23 - a03 * a22) + a20 * (a02 * a13 - a03 * a12));
+        a[8] = (a10 * (a21 * a33 - a23 * a31) - a20 * (a11 * a33 - a13 * a31) + a30 * (a11 * a23 - a13 * a21));
+        a[9] = -(a00 * (a21 * a33 - a23 * a31) - a20 * (a01 * a33 - a03 * a31) + a30 * (a01 * a23 - a03 * a21));
+        a[10] = (a00 * (a11 * a33 - a13 * a31) - a10 * (a01 * a33 - a03 * a31) + a30 * (a01 * a13 - a03 * a11));
+        a[11] = -(a00 * (a11 * a23 - a13 * a21) - a10 * (a01 * a23 - a03 * a21) + a20 * (a01 * a13 - a03 * a11));
+        a[12] = -(a10 * (a21 * a32 - a22 * a31) - a20 * (a11 * a32 - a12 * a31) + a30 * (a11 * a22 - a12 * a21));
+        a[13] = (a00 * (a21 * a32 - a22 * a31) - a20 * (a01 * a32 - a02 * a31) + a30 * (a01 * a22 - a02 * a21));
+        a[14] = -(a00 * (a11 * a32 - a12 * a31) - a10 * (a01 * a32 - a02 * a31) + a30 * (a01 * a12 - a02 * a11));
+        a[15] = (a00 * (a11 * a22 - a12 * a21) - a10 * (a01 * a22 - a02 * a21) + a20 * (a01 * a12 - a02 * a11));
+
+        return this;
+    },
+
+    /**
+     * Calculate the determinant of this Matrix.
+     *
+     * @method Phaser.Math.Matrix4#determinant
+     * @since 3.0.0
+     *
+     * @return {number} The determinant of this Matrix.
+     */
+    determinant: function ()
+    {
+        var a = this.val;
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a03 = a[3];
+
+        var a10 = a[4];
+        var a11 = a[5];
+        var a12 = a[6];
+        var a13 = a[7];
+
+        var a20 = a[8];
+        var a21 = a[9];
+        var a22 = a[10];
+        var a23 = a[11];
+
+        var a30 = a[12];
+        var a31 = a[13];
+        var a32 = a[14];
+        var a33 = a[15];
+
+        var b00 = a00 * a11 - a01 * a10;
+        var b01 = a00 * a12 - a02 * a10;
+        var b02 = a00 * a13 - a03 * a10;
+        var b03 = a01 * a12 - a02 * a11;
+        var b04 = a01 * a13 - a03 * a11;
+        var b05 = a02 * a13 - a03 * a12;
+        var b06 = a20 * a31 - a21 * a30;
+        var b07 = a20 * a32 - a22 * a30;
+        var b08 = a20 * a33 - a23 * a30;
+        var b09 = a21 * a32 - a22 * a31;
+        var b10 = a21 * a33 - a23 * a31;
+        var b11 = a22 * a33 - a23 * a32;
+
+        // Calculate the determinant
+        return b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+    },
+
+    /**
+     * Multiply this Matrix by the given Matrix.
+     *
+     * @method Phaser.Math.Matrix4#multiply
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Matrix4} src - The Matrix to multiply this Matrix by.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    multiply: function (src)
+    {
+        var a = this.val;
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a03 = a[3];
+
+        var a10 = a[4];
+        var a11 = a[5];
+        var a12 = a[6];
+        var a13 = a[7];
+
+        var a20 = a[8];
+        var a21 = a[9];
+        var a22 = a[10];
+        var a23 = a[11];
+
+        var a30 = a[12];
+        var a31 = a[13];
+        var a32 = a[14];
+        var a33 = a[15];
+
+        var b = src.val;
+
+        // Cache only the current line of the second matrix
+        var b0 = b[0];
+        var b1 = b[1];
+        var b2 = b[2];
+        var b3 = b[3];
+
+        a[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
+        a[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
+        a[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
+        a[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+
+        b0 = b[4];
+        b1 = b[5];
+        b2 = b[6];
+        b3 = b[7];
+
+        a[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
+        a[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
+        a[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
+        a[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+
+        b0 = b[8];
+        b1 = b[9];
+        b2 = b[10];
+        b3 = b[11];
+
+        a[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
+        a[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
+        a[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
+        a[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+
+        b0 = b[12];
+        b1 = b[13];
+        b2 = b[14];
+        b3 = b[15];
+
+        a[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
+        a[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
+        a[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
+        a[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Matrix4#multiplyLocal
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Matrix4} src - [description]
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    multiplyLocal: function (src)
+    {
+        var a = [];
+        var m1 = this.val;
+        var m2 = src.val;
+
+        a[0] = m1[0] * m2[0] + m1[1] * m2[4] + m1[2] * m2[8] + m1[3] * m2[12];
+        a[1] = m1[0] * m2[1] + m1[1] * m2[5] + m1[2] * m2[9] + m1[3] * m2[13];
+        a[2] = m1[0] * m2[2] + m1[1] * m2[6] + m1[2] * m2[10] + m1[3] * m2[14];
+        a[3] = m1[0] * m2[3] + m1[1] * m2[7] + m1[2] * m2[11] + m1[3] * m2[15];
+
+        a[4] = m1[4] * m2[0] + m1[5] * m2[4] + m1[6] * m2[8] + m1[7] * m2[12];
+        a[5] = m1[4] * m2[1] + m1[5] * m2[5] + m1[6] * m2[9] + m1[7] * m2[13];
+        a[6] = m1[4] * m2[2] + m1[5] * m2[6] + m1[6] * m2[10] + m1[7] * m2[14];
+        a[7] = m1[4] * m2[3] + m1[5] * m2[7] + m1[6] * m2[11] + m1[7] * m2[15];
+
+        a[8] = m1[8] * m2[0] + m1[9] * m2[4] + m1[10] * m2[8] + m1[11] * m2[12];
+        a[9] = m1[8] * m2[1] + m1[9] * m2[5] + m1[10] * m2[9] + m1[11] * m2[13];
+        a[10] = m1[8] * m2[2] + m1[9] * m2[6] + m1[10] * m2[10] + m1[11] * m2[14];
+        a[11] = m1[8] * m2[3] + m1[9] * m2[7] + m1[10] * m2[11] + m1[11] * m2[15];
+
+        a[12] = m1[12] * m2[0] + m1[13] * m2[4] + m1[14] * m2[8] + m1[15] * m2[12];
+        a[13] = m1[12] * m2[1] + m1[13] * m2[5] + m1[14] * m2[9] + m1[15] * m2[13];
+        a[14] = m1[12] * m2[2] + m1[13] * m2[6] + m1[14] * m2[10] + m1[15] * m2[14];
+        a[15] = m1[12] * m2[3] + m1[13] * m2[7] + m1[14] * m2[11] + m1[15] * m2[15];
+
+        return this.fromArray(a);
+    },
+
+    /**
+     * Translate this Matrix using the given Vector.
+     *
+     * @method Phaser.Math.Matrix4#translate
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Vector3|Phaser.Math.Vector4)} v - The Vector to translate this Matrix with.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    translate: function (v)
+    {
+        var x = v.x;
+        var y = v.y;
+        var z = v.z;
+        var a = this.val;
+
+        a[12] = a[0] * x + a[4] * y + a[8] * z + a[12];
+        a[13] = a[1] * x + a[5] * y + a[9] * z + a[13];
+        a[14] = a[2] * x + a[6] * y + a[10] * z + a[14];
+        a[15] = a[3] * x + a[7] * y + a[11] * z + a[15];
+
+        return this;
+    },
+
+    /**
+     * Translate this Matrix using the given values.
+     *
+     * @method Phaser.Math.Matrix4#translateXYZ
+     * @since 3.16.0
+     *
+     * @param {number} x - The x component.
+     * @param {number} y - The y component.
+     * @param {number} z - The z component.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    translateXYZ: function (x, y, z)
+    {
+        var a = this.val;
+
+        a[12] = a[0] * x + a[4] * y + a[8] * z + a[12];
+        a[13] = a[1] * x + a[5] * y + a[9] * z + a[13];
+        a[14] = a[2] * x + a[6] * y + a[10] * z + a[14];
+        a[15] = a[3] * x + a[7] * y + a[11] * z + a[15];
+
+        return this;
+    },
+
+    /**
+     * Apply a scale transformation to this Matrix.
+     *
+     * Uses the `x`, `y` and `z` components of the given Vector to scale the Matrix.
+     *
+     * @method Phaser.Math.Matrix4#scale
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Vector3|Phaser.Math.Vector4)} v - The Vector to scale this Matrix with.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    scale: function (v)
+    {
+        var x = v.x;
+        var y = v.y;
+        var z = v.z;
+        var a = this.val;
+
+        a[0] = a[0] * x;
+        a[1] = a[1] * x;
+        a[2] = a[2] * x;
+        a[3] = a[3] * x;
+
+        a[4] = a[4] * y;
+        a[5] = a[5] * y;
+        a[6] = a[6] * y;
+        a[7] = a[7] * y;
+
+        a[8] = a[8] * z;
+        a[9] = a[9] * z;
+        a[10] = a[10] * z;
+        a[11] = a[11] * z;
+
+        return this;
+    },
+
+    /**
+     * Apply a scale transformation to this Matrix.
+     *
+     * @method Phaser.Math.Matrix4#scaleXYZ
+     * @since 3.16.0
+     *
+     * @param {number} x - The x component.
+     * @param {number} y - The y component.
+     * @param {number} z - The z component.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    scaleXYZ: function (x, y, z)
+    {
+        var a = this.val;
+
+        a[0] = a[0] * x;
+        a[1] = a[1] * x;
+        a[2] = a[2] * x;
+        a[3] = a[3] * x;
+
+        a[4] = a[4] * y;
+        a[5] = a[5] * y;
+        a[6] = a[6] * y;
+        a[7] = a[7] * y;
+
+        a[8] = a[8] * z;
+        a[9] = a[9] * z;
+        a[10] = a[10] * z;
+        a[11] = a[11] * z;
+
+        return this;
+    },
+
+    /**
+     * Derive a rotation matrix around the given axis.
+     *
+     * @method Phaser.Math.Matrix4#makeRotationAxis
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Vector3|Phaser.Math.Vector4)} axis - The rotation axis.
+     * @param {number} angle - The rotation angle in radians.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    makeRotationAxis: function (axis, angle)
+    {
+        // Based on http://www.gamedev.net/reference/articles/article1199.asp
+
+        var c = Math.cos(angle);
+        var s = Math.sin(angle);
+        var t = 1 - c;
+        var x = axis.x;
+        var y = axis.y;
+        var z = axis.z;
+        var tx = t * x;
+        var ty = t * y;
+
+        this.fromArray([
+            tx * x + c, tx * y - s * z, tx * z + s * y, 0,
+            tx * y + s * z, ty * y + c, ty * z - s * x, 0,
+            tx * z - s * y, ty * z + s * x, t * z * z + c, 0,
+            0, 0, 0, 1
+        ]);
+
+        return this;
+    },
+
+    /**
+     * Apply a rotation transformation to this Matrix.
+     *
+     * @method Phaser.Math.Matrix4#rotate
+     * @since 3.0.0
+     *
+     * @param {number} rad - The angle in radians to rotate by.
+     * @param {Phaser.Math.Vector3} axis - The axis to rotate upon.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    rotate: function (rad, axis)
+    {
+        var a = this.val;
+        var x = axis.x;
+        var y = axis.y;
+        var z = axis.z;
+        var len = Math.sqrt(x * x + y * y + z * z);
+
+        if (Math.abs(len) < EPSILON)
+        {
+            return null;
+        }
+
+        len = 1 / len;
+        x *= len;
+        y *= len;
+        z *= len;
+
+        var s = Math.sin(rad);
+        var c = Math.cos(rad);
+        var t = 1 - c;
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a03 = a[3];
+
+        var a10 = a[4];
+        var a11 = a[5];
+        var a12 = a[6];
+        var a13 = a[7];
+
+        var a20 = a[8];
+        var a21 = a[9];
+        var a22 = a[10];
+        var a23 = a[11];
+
+        // Construct the elements of the rotation matrix
+        var b00 = x * x * t + c;
+        var b01 = y * x * t + z * s;
+        var b02 = z * x * t - y * s;
+
+        var b10 = x * y * t - z * s;
+        var b11 = y * y * t + c;
+        var b12 = z * y * t + x * s;
+
+        var b20 = x * z * t + y * s;
+        var b21 = y * z * t - x * s;
+        var b22 = z * z * t + c;
+
+        // Perform rotation-specific matrix multiplication
+        a[0] = a00 * b00 + a10 * b01 + a20 * b02;
+        a[1] = a01 * b00 + a11 * b01 + a21 * b02;
+        a[2] = a02 * b00 + a12 * b01 + a22 * b02;
+        a[3] = a03 * b00 + a13 * b01 + a23 * b02;
+        a[4] = a00 * b10 + a10 * b11 + a20 * b12;
+        a[5] = a01 * b10 + a11 * b11 + a21 * b12;
+        a[6] = a02 * b10 + a12 * b11 + a22 * b12;
+        a[7] = a03 * b10 + a13 * b11 + a23 * b12;
+        a[8] = a00 * b20 + a10 * b21 + a20 * b22;
+        a[9] = a01 * b20 + a11 * b21 + a21 * b22;
+        a[10] = a02 * b20 + a12 * b21 + a22 * b22;
+        a[11] = a03 * b20 + a13 * b21 + a23 * b22;
+
+        return this;
+    },
+
+    /**
+     * Rotate this matrix on its X axis.
+     *
+     * @method Phaser.Math.Matrix4#rotateX
+     * @since 3.0.0
+     *
+     * @param {number} rad - The angle in radians to rotate by.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    rotateX: function (rad)
+    {
+        var a = this.val;
+        var s = Math.sin(rad);
+        var c = Math.cos(rad);
+
+        var a10 = a[4];
+        var a11 = a[5];
+        var a12 = a[6];
+        var a13 = a[7];
+
+        var a20 = a[8];
+        var a21 = a[9];
+        var a22 = a[10];
+        var a23 = a[11];
+
+        // Perform axis-specific matrix multiplication
+        a[4] = a10 * c + a20 * s;
+        a[5] = a11 * c + a21 * s;
+        a[6] = a12 * c + a22 * s;
+        a[7] = a13 * c + a23 * s;
+        a[8] = a20 * c - a10 * s;
+        a[9] = a21 * c - a11 * s;
+        a[10] = a22 * c - a12 * s;
+        a[11] = a23 * c - a13 * s;
+
+        return this;
+    },
+
+    /**
+     * Rotate this matrix on its Y axis.
+     *
+     * @method Phaser.Math.Matrix4#rotateY
+     * @since 3.0.0
+     *
+     * @param {number} rad - The angle to rotate by, in radians.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    rotateY: function (rad)
+    {
+        var a = this.val;
+        var s = Math.sin(rad);
+        var c = Math.cos(rad);
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a03 = a[3];
+
+        var a20 = a[8];
+        var a21 = a[9];
+        var a22 = a[10];
+        var a23 = a[11];
+
+        // Perform axis-specific matrix multiplication
+        a[0] = a00 * c - a20 * s;
+        a[1] = a01 * c - a21 * s;
+        a[2] = a02 * c - a22 * s;
+        a[3] = a03 * c - a23 * s;
+        a[8] = a00 * s + a20 * c;
+        a[9] = a01 * s + a21 * c;
+        a[10] = a02 * s + a22 * c;
+        a[11] = a03 * s + a23 * c;
+
+        return this;
+    },
+
+    /**
+     * Rotate this matrix on its Z axis.
+     *
+     * @method Phaser.Math.Matrix4#rotateZ
+     * @since 3.0.0
+     *
+     * @param {number} rad - The angle to rotate by, in radians.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    rotateZ: function (rad)
+    {
+        var a = this.val;
+        var s = Math.sin(rad);
+        var c = Math.cos(rad);
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a03 = a[3];
+
+        var a10 = a[4];
+        var a11 = a[5];
+        var a12 = a[6];
+        var a13 = a[7];
+
+        // Perform axis-specific matrix multiplication
+        a[0] = a00 * c + a10 * s;
+        a[1] = a01 * c + a11 * s;
+        a[2] = a02 * c + a12 * s;
+        a[3] = a03 * c + a13 * s;
+        a[4] = a10 * c - a00 * s;
+        a[5] = a11 * c - a01 * s;
+        a[6] = a12 * c - a02 * s;
+        a[7] = a13 * c - a03 * s;
+
+        return this;
+    },
+
+    /**
+     * Set the values of this Matrix from the given rotation Quaternion and translation Vector.
+     *
+     * @method Phaser.Math.Matrix4#fromRotationTranslation
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Quaternion} q - The Quaternion to set rotation from.
+     * @param {Phaser.Math.Vector3} v - The Vector to set translation from.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    fromRotationTranslation: function (q, v)
+    {
+        // Quaternion math
+        var out = this.val;
+
+        var x = q.x;
+        var y = q.y;
+        var z = q.z;
+        var w = q.w;
+
+        var x2 = x + x;
+        var y2 = y + y;
+        var z2 = z + z;
+
+        var xx = x * x2;
+        var xy = x * y2;
+        var xz = x * z2;
+
+        var yy = y * y2;
+        var yz = y * z2;
+        var zz = z * z2;
+
+        var wx = w * x2;
+        var wy = w * y2;
+        var wz = w * z2;
+
+        out[0] = 1 - (yy + zz);
+        out[1] = xy + wz;
+        out[2] = xz - wy;
+        out[3] = 0;
+
+        out[4] = xy - wz;
+        out[5] = 1 - (xx + zz);
+        out[6] = yz + wx;
+        out[7] = 0;
+
+        out[8] = xz + wy;
+        out[9] = yz - wx;
+        out[10] = 1 - (xx + yy);
+        out[11] = 0;
+
+        out[12] = v.x;
+        out[13] = v.y;
+        out[14] = v.z;
+        out[15] = 1;
+
+        return this;
+    },
+
+    /**
+     * Set the values of this Matrix from the given Quaternion.
+     *
+     * @method Phaser.Math.Matrix4#fromQuat
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Quaternion} q - The Quaternion to set the values of this Matrix from.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    fromQuat: function (q)
+    {
+        var out = this.val;
+
+        var x = q.x;
+        var y = q.y;
+        var z = q.z;
+        var w = q.w;
+
+        var x2 = x + x;
+        var y2 = y + y;
+        var z2 = z + z;
+
+        var xx = x * x2;
+        var xy = x * y2;
+        var xz = x * z2;
+
+        var yy = y * y2;
+        var yz = y * z2;
+        var zz = z * z2;
+
+        var wx = w * x2;
+        var wy = w * y2;
+        var wz = w * z2;
+
+        out[0] = 1 - (yy + zz);
+        out[1] = xy + wz;
+        out[2] = xz - wy;
+        out[3] = 0;
+
+        out[4] = xy - wz;
+        out[5] = 1 - (xx + zz);
+        out[6] = yz + wx;
+        out[7] = 0;
+
+        out[8] = xz + wy;
+        out[9] = yz - wx;
+        out[10] = 1 - (xx + yy);
+        out[11] = 0;
+
+        out[12] = 0;
+        out[13] = 0;
+        out[14] = 0;
+        out[15] = 1;
+
+        return this;
+    },
+
+    /**
+     * Generate a frustum matrix with the given bounds.
+     *
+     * @method Phaser.Math.Matrix4#frustum
+     * @since 3.0.0
+     *
+     * @param {number} left - The left bound of the frustum.
+     * @param {number} right - The right bound of the frustum.
+     * @param {number} bottom - The bottom bound of the frustum.
+     * @param {number} top - The top bound of the frustum.
+     * @param {number} near - The near bound of the frustum.
+     * @param {number} far - The far bound of the frustum.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    frustum: function (left, right, bottom, top, near, far)
+    {
+        var out = this.val;
+
+        var rl = 1 / (right - left);
+        var tb = 1 / (top - bottom);
+        var nf = 1 / (near - far);
+
+        out[0] = (near * 2) * rl;
+        out[1] = 0;
+        out[2] = 0;
+        out[3] = 0;
+
+        out[4] = 0;
+        out[5] = (near * 2) * tb;
+        out[6] = 0;
+        out[7] = 0;
+
+        out[8] = (right + left) * rl;
+        out[9] = (top + bottom) * tb;
+        out[10] = (far + near) * nf;
+        out[11] = -1;
+
+        out[12] = 0;
+        out[13] = 0;
+        out[14] = (far * near * 2) * nf;
+        out[15] = 0;
+
+        return this;
+    },
+
+    /**
+     * Generate a perspective projection matrix with the given bounds.
+     *
+     * @method Phaser.Math.Matrix4#perspective
+     * @since 3.0.0
+     *
+     * @param {number} fovy - Vertical field of view in radians
+     * @param {number} aspect - Aspect ratio. Typically viewport width  /height.
+     * @param {number} near - Near bound of the frustum.
+     * @param {number} far - Far bound of the frustum.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    perspective: function (fovy, aspect, near, far)
+    {
+        var out = this.val;
+        var f = 1.0 / Math.tan(fovy / 2);
+        var nf = 1 / (near - far);
+
+        out[0] = f / aspect;
+        out[1] = 0;
+        out[2] = 0;
+        out[3] = 0;
+
+        out[4] = 0;
+        out[5] = f;
+        out[6] = 0;
+        out[7] = 0;
+
+        out[8] = 0;
+        out[9] = 0;
+        out[10] = (far + near) * nf;
+        out[11] = -1;
+
+        out[12] = 0;
+        out[13] = 0;
+        out[14] = (2 * far * near) * nf;
+        out[15] = 0;
+
+        return this;
+    },
+
+    /**
+     * Generate a perspective projection matrix with the given bounds.
+     *
+     * @method Phaser.Math.Matrix4#perspectiveLH
+     * @since 3.0.0
+     *
+     * @param {number} width - The width of the frustum.
+     * @param {number} height - The height of the frustum.
+     * @param {number} near - Near bound of the frustum.
+     * @param {number} far - Far bound of the frustum.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    perspectiveLH: function (width, height, near, far)
+    {
+        var out = this.val;
+
+        out[0] = (2 * near) / width;
+        out[1] = 0;
+        out[2] = 0;
+        out[3] = 0;
+
+        out[4] = 0;
+        out[5] = (2 * near) / height;
+        out[6] = 0;
+        out[7] = 0;
+
+        out[8] = 0;
+        out[9] = 0;
+        out[10] = -far / (near - far);
+        out[11] = 1;
+
+        out[12] = 0;
+        out[13] = 0;
+        out[14] = (near * far) / (near - far);
+        out[15] = 0;
+
+        return this;
+    },
+
+    /**
+     * Generate an orthogonal projection matrix with the given bounds.
+     *
+     * @method Phaser.Math.Matrix4#ortho
+     * @since 3.0.0
+     *
+     * @param {number} left - The left bound of the frustum.
+     * @param {number} right - The right bound of the frustum.
+     * @param {number} bottom - The bottom bound of the frustum.
+     * @param {number} top - The top bound of the frustum.
+     * @param {number} near - The near bound of the frustum.
+     * @param {number} far - The far bound of the frustum.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    ortho: function (left, right, bottom, top, near, far)
+    {
+        var out = this.val;
+        var lr = left - right;
+        var bt = bottom - top;
+        var nf = near - far;
+
+        //  Avoid division by zero
+        lr = (lr === 0) ? lr : 1 / lr;
+        bt = (bt === 0) ? bt : 1 / bt;
+        nf = (nf === 0) ? nf : 1 / nf;
+
+        out[0] = -2 * lr;
+        out[1] = 0;
+        out[2] = 0;
+        out[3] = 0;
+
+        out[4] = 0;
+        out[5] = -2 * bt;
+        out[6] = 0;
+        out[7] = 0;
+
+        out[8] = 0;
+        out[9] = 0;
+        out[10] = 2 * nf;
+        out[11] = 0;
+
+        out[12] = (left + right) * lr;
+        out[13] = (top + bottom) * bt;
+        out[14] = (far + near) * nf;
+        out[15] = 1;
+
+        return this;
+    },
+
+    /**
+     * Generate a look-at matrix with the given eye position, focal point, and up axis.
+     *
+     * @method Phaser.Math.Matrix4#lookAt
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Vector3} eye - Position of the viewer
+     * @param {Phaser.Math.Vector3} center - Point the viewer is looking at
+     * @param {Phaser.Math.Vector3} up - vec3 pointing up.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    lookAt: function (eye, center, up)
+    {
+        var out = this.val;
+
+        var eyex = eye.x;
+        var eyey = eye.y;
+        var eyez = eye.z;
+
+        var upx = up.x;
+        var upy = up.y;
+        var upz = up.z;
+
+        var centerx = center.x;
+        var centery = center.y;
+        var centerz = center.z;
+
+        if (Math.abs(eyex - centerx) < EPSILON &&
+            Math.abs(eyey - centery) < EPSILON &&
+            Math.abs(eyez - centerz) < EPSILON)
+        {
+            return this.identity();
+        }
+
+        var z0 = eyex - centerx;
+        var z1 = eyey - centery;
+        var z2 = eyez - centerz;
+
+        var len = 1 / Math.sqrt(z0 * z0 + z1 * z1 + z2 * z2);
+
+        z0 *= len;
+        z1 *= len;
+        z2 *= len;
+
+        var x0 = upy * z2 - upz * z1;
+        var x1 = upz * z0 - upx * z2;
+        var x2 = upx * z1 - upy * z0;
+
+        len = Math.sqrt(x0 * x0 + x1 * x1 + x2 * x2);
+
+        if (!len)
+        {
+            x0 = 0;
+            x1 = 0;
+            x2 = 0;
+        }
+        else
+        {
+            len = 1 / len;
+            x0 *= len;
+            x1 *= len;
+            x2 *= len;
+        }
+
+        var y0 = z1 * x2 - z2 * x1;
+        var y1 = z2 * x0 - z0 * x2;
+        var y2 = z0 * x1 - z1 * x0;
+
+        len = Math.sqrt(y0 * y0 + y1 * y1 + y2 * y2);
+
+        if (!len)
+        {
+            y0 = 0;
+            y1 = 0;
+            y2 = 0;
+        }
+        else
+        {
+            len = 1 / len;
+            y0 *= len;
+            y1 *= len;
+            y2 *= len;
+        }
+
+        out[0] = x0;
+        out[1] = y0;
+        out[2] = z0;
+        out[3] = 0;
+
+        out[4] = x1;
+        out[5] = y1;
+        out[6] = z1;
+        out[7] = 0;
+
+        out[8] = x2;
+        out[9] = y2;
+        out[10] = z2;
+        out[11] = 0;
+
+        out[12] = -(x0 * eyex + x1 * eyey + x2 * eyez);
+        out[13] = -(y0 * eyex + y1 * eyey + y2 * eyez);
+        out[14] = -(z0 * eyex + z1 * eyey + z2 * eyez);
+        out[15] = 1;
+
+        return this;
+    },
+
+    /**
+     * Set the values of this matrix from the given `yaw`, `pitch` and `roll` values.
+     *
+     * @method Phaser.Math.Matrix4#yawPitchRoll
+     * @since 3.0.0
+     *
+     * @param {number} yaw - [description]
+     * @param {number} pitch - [description]
+     * @param {number} roll - [description]
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    yawPitchRoll: function (yaw, pitch, roll)
+    {
+        this.zero();
+        _tempMat1.zero();
+        _tempMat2.zero();
+
+        var m0 = this.val;
+        var m1 = _tempMat1.val;
+        var m2 = _tempMat2.val;
+
+        //  Rotate Z
+        var s = Math.sin(roll);
+        var c = Math.cos(roll);
+
+        m0[10] = 1;
+        m0[15] = 1;
+        m0[0] = c;
+        m0[1] = s;
+        m0[4] = -s;
+        m0[5] = c;
+
+        //  Rotate X
+        s = Math.sin(pitch);
+        c = Math.cos(pitch);
+
+        m1[0] = 1;
+        m1[15] = 1;
+        m1[5] = c;
+        m1[10] = c;
+        m1[9] = -s;
+        m1[6] = s;
+
+        //  Rotate Y
+        s = Math.sin(yaw);
+        c = Math.cos(yaw);
+
+        m2[5] = 1;
+        m2[15] = 1;
+        m2[0] = c;
+        m2[2] = -s;
+        m2[8] = s;
+        m2[10] = c;
+
+        this.multiplyLocal(_tempMat1);
+        this.multiplyLocal(_tempMat2);
+
+        return this;
+    },
+
+    /**
+     * Generate a world matrix from the given rotation, position, scale, view matrix and projection matrix.
+     *
+     * @method Phaser.Math.Matrix4#setWorldMatrix
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Vector3} rotation - The rotation of the world matrix.
+     * @param {Phaser.Math.Vector3} position - The position of the world matrix.
+     * @param {Phaser.Math.Vector3} scale - The scale of the world matrix.
+     * @param {Phaser.Math.Matrix4} [viewMatrix] - The view matrix.
+     * @param {Phaser.Math.Matrix4} [projectionMatrix] - The projection matrix.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    setWorldMatrix: function (rotation, position, scale, viewMatrix, projectionMatrix)
+    {
+        this.yawPitchRoll(rotation.y, rotation.x, rotation.z);
+
+        _tempMat1.scaling(scale.x, scale.y, scale.z);
+        _tempMat2.xyz(position.x, position.y, position.z);
+
+        this.multiplyLocal(_tempMat1);
+        this.multiplyLocal(_tempMat2);
+
+        if (viewMatrix !== undefined)
+        {
+            this.multiplyLocal(viewMatrix);
+        }
+
+        if (projectionMatrix !== undefined)
+        {
+            this.multiplyLocal(projectionMatrix);
+        }
+
+        return this;
+    }
+
+});
+
+var _tempMat1 = new Matrix4();
+var _tempMat2 = new Matrix4();
+
+module.exports = Matrix4;
+
+
+/***/ }),
+
+/***/ "../../../src/math/MaxAdd.js":
+/*!*********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/MaxAdd.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Add an `amount` to a `value`, limiting the maximum result to `max`.
+ *
+ * @function Phaser.Math.MaxAdd
+ * @since 3.0.0
+ *
+ * @param {number} value - The value to add to.
+ * @param {number} amount - The amount to add.
+ * @param {number} max - The maximum value to return.
+ *
+ * @return {number} The resulting value.
+ */
+var MaxAdd = function (value, amount, max)
+{
+    return Math.min(value + amount, max);
+};
+
+module.exports = MaxAdd;
+
+
+/***/ }),
+
+/***/ "../../../src/math/MinSub.js":
+/*!*********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/MinSub.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Subtract an `amount` from `value`, limiting the minimum result to `min`.
+ *
+ * @function Phaser.Math.MinSub
+ * @since 3.0.0
+ *
+ * @param {number} value - The value to subtract from.
+ * @param {number} amount - The amount to subtract.
+ * @param {number} min - The minimum value to return.
+ *
+ * @return {number} The resulting value.
+ */
+var MinSub = function (value, amount, min)
+{
+    return Math.max(value - amount, min);
+};
+
+module.exports = MinSub;
+
+
+/***/ }),
+
+/***/ "../../../src/math/Percent.js":
+/*!**********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Percent.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Work out what percentage `value` is of the range between `min` and `max`.
+ * If `max` isn't given then it will return the percentage of `value` to `min`.
+ *
+ * You can optionally specify an `upperMax` value, which is a mid-way point in the range that represents 100%, after which the % starts to go down to zero again.
+ *
+ * @function Phaser.Math.Percent
+ * @since 3.0.0
+ *
+ * @param {number} value - The value to determine the percentage of.
+ * @param {number} min - The minimum value.
+ * @param {number} [max] - The maximum value.
+ * @param {number} [upperMax] - The mid-way point in the range that represents 100%.
+ *
+ * @return {number} A value between 0 and 1 representing the percentage.
+ */
+var Percent = function (value, min, max, upperMax)
+{
+    if (max === undefined) { max = min + 1; }
+
+    var percentage = (value - min) / (max - min);
+
+    if (percentage > 1)
+    {
+        if (upperMax !== undefined)
+        {
+            percentage = ((upperMax - value)) / (upperMax - max);
+
+            if (percentage < 0)
+            {
+                percentage = 0;
+            }
+        }
+        else
+        {
+            percentage = 1;
+        }
+    }
+    else if (percentage < 0)
+    {
+        percentage = 0;
+    }
+
+    return percentage;
+};
+
+module.exports = Percent;
+
+
+/***/ }),
+
+/***/ "../../../src/math/Quaternion.js":
+/*!*************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Quaternion.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+//  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji
+//  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
+
+var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
+var Vector3 = __webpack_require__(/*! ./Vector3 */ "../../../src/math/Vector3.js");
+var Matrix3 = __webpack_require__(/*! ./Matrix3 */ "../../../src/math/Matrix3.js");
+
+var EPSILON = 0.000001;
+
+//  Some shared 'private' arrays
+var siNext = new Int8Array([ 1, 2, 0 ]);
+var tmp = new Float32Array([ 0, 0, 0 ]);
+
+var xUnitVec3 = new Vector3(1, 0, 0);
+var yUnitVec3 = new Vector3(0, 1, 0);
+
+var tmpvec = new Vector3();
+var tmpMat3 = new Matrix3();
+
+/**
+ * @classdesc
+ * A quaternion.
+ *
+ * @class Quaternion
+ * @memberof Phaser.Math
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [x] - The x component.
+ * @param {number} [y] - The y component.
+ * @param {number} [z] - The z component.
+ * @param {number} [w] - The w component.
+ */
+var Quaternion = new Class({
+
+    initialize:
+
+    function Quaternion (x, y, z, w)
+    {
+        /**
+         * The x component of this Quaternion.
+         *
+         * @name Phaser.Math.Quaternion#x
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+
+        /**
+         * The y component of this Quaternion.
+         *
+         * @name Phaser.Math.Quaternion#y
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+
+        /**
+         * The z component of this Quaternion.
+         *
+         * @name Phaser.Math.Quaternion#z
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+
+        /**
+         * The w component of this Quaternion.
+         *
+         * @name Phaser.Math.Quaternion#w
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+
+        if (typeof x === 'object')
+        {
+            this.x = x.x || 0;
+            this.y = x.y || 0;
+            this.z = x.z || 0;
+            this.w = x.w || 0;
+        }
+        else
+        {
+            this.x = x || 0;
+            this.y = y || 0;
+            this.z = z || 0;
+            this.w = w || 0;
+        }
+    },
+
+    /**
+     * Copy the components of a given Quaternion or Vector into this Quaternion.
+     *
+     * @method Phaser.Math.Quaternion#copy
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Quaternion|Phaser.Math.Vector4)} src - The Quaternion or Vector to copy the components from.
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    copy: function (src)
+    {
+        this.x = src.x;
+        this.y = src.y;
+        this.z = src.z;
+        this.w = src.w;
+
+        return this;
+    },
+
+    /**
+     * Set the components of this Quaternion.
+     *
+     * @method Phaser.Math.Quaternion#set
+     * @since 3.0.0
+     *
+     * @param {(number|object)} [x=0] - The x component, or an object containing x, y, z, and w components.
+     * @param {number} [y=0] - The y component.
+     * @param {number} [z=0] - The z component.
+     * @param {number} [w=0] - The w component.
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    set: function (x, y, z, w)
+    {
+        if (typeof x === 'object')
+        {
+            this.x = x.x || 0;
+            this.y = x.y || 0;
+            this.z = x.z || 0;
+            this.w = x.w || 0;
+        }
+        else
+        {
+            this.x = x || 0;
+            this.y = y || 0;
+            this.z = z || 0;
+            this.w = w || 0;
+        }
+
+        return this;
+    },
+
+    /**
+     * Add a given Quaternion or Vector to this Quaternion. Addition is component-wise.
+     *
+     * @method Phaser.Math.Quaternion#add
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Quaternion|Phaser.Math.Vector4)} v - The Quaternion or Vector to add to this Quaternion.
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    add: function (v)
+    {
+        this.x += v.x;
+        this.y += v.y;
+        this.z += v.z;
+        this.w += v.w;
+
+        return this;
+    },
+
+    /**
+     * Subtract a given Quaternion or Vector from this Quaternion. Subtraction is component-wise.
+     *
+     * @method Phaser.Math.Quaternion#subtract
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Quaternion|Phaser.Math.Vector4)} v - The Quaternion or Vector to subtract from this Quaternion.
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    subtract: function (v)
+    {
+        this.x -= v.x;
+        this.y -= v.y;
+        this.z -= v.z;
+        this.w -= v.w;
+
+        return this;
+    },
+
+    /**
+     * Scale this Quaternion by the given value.
+     *
+     * @method Phaser.Math.Quaternion#scale
+     * @since 3.0.0
+     *
+     * @param {number} scale - The value to scale this Quaternion by.
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    scale: function (scale)
+    {
+        this.x *= scale;
+        this.y *= scale;
+        this.z *= scale;
+        this.w *= scale;
+
+        return this;
+    },
+
+    /**
+     * Calculate the length of this Quaternion.
+     *
+     * @method Phaser.Math.Quaternion#length
+     * @since 3.0.0
+     *
+     * @return {number} The length of this Quaternion.
+     */
+    length: function ()
+    {
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+        var w = this.w;
+
+        return Math.sqrt(x * x + y * y + z * z + w * w);
+    },
+
+    /**
+     * Calculate the length of this Quaternion squared.
+     *
+     * @method Phaser.Math.Quaternion#lengthSq
+     * @since 3.0.0
+     *
+     * @return {number} The length of this Quaternion, squared.
+     */
+    lengthSq: function ()
+    {
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+        var w = this.w;
+
+        return x * x + y * y + z * z + w * w;
+    },
+
+    /**
+     * Normalize this Quaternion.
+     *
+     * @method Phaser.Math.Quaternion#normalize
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    normalize: function ()
+    {
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+        var w = this.w;
+        var len = x * x + y * y + z * z + w * w;
+
+        if (len > 0)
+        {
+            len = 1 / Math.sqrt(len);
+
+            this.x = x * len;
+            this.y = y * len;
+            this.z = z * len;
+            this.w = w * len;
+        }
+
+        return this;
+    },
+
+    /**
+     * Calculate the dot product of this Quaternion and the given Quaternion or Vector.
+     *
+     * @method Phaser.Math.Quaternion#dot
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Quaternion|Phaser.Math.Vector4)} v - The Quaternion or Vector to dot product with this Quaternion.
+     *
+     * @return {number} The dot product of this Quaternion and the given Quaternion or Vector.
+     */
+    dot: function (v)
+    {
+        return this.x * v.x + this.y * v.y + this.z * v.z + this.w * v.w;
+    },
+
+    /**
+     * Linearly interpolate this Quaternion towards the given Quaternion or Vector.
+     *
+     * @method Phaser.Math.Quaternion#lerp
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Quaternion|Phaser.Math.Vector4)} v - The Quaternion or Vector to interpolate towards.
+     * @param {number} [t=0] - The percentage of interpolation.
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    lerp: function (v, t)
+    {
+        if (t === undefined) { t = 0; }
+
+        var ax = this.x;
+        var ay = this.y;
+        var az = this.z;
+        var aw = this.w;
+
+        this.x = ax + t * (v.x - ax);
+        this.y = ay + t * (v.y - ay);
+        this.z = az + t * (v.z - az);
+        this.w = aw + t * (v.w - aw);
+
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Quaternion#rotationTo
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Vector3} a - [description]
+     * @param {Phaser.Math.Vector3} b - [description]
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    rotationTo: function (a, b)
+    {
+        var dot = a.x * b.x + a.y * b.y + a.z * b.z;
+
+        if (dot < -0.999999)
+        {
+            if (tmpvec.copy(xUnitVec3).cross(a).length() < EPSILON)
+            {
+                tmpvec.copy(yUnitVec3).cross(a);
+            }
+
+            tmpvec.normalize();
+
+            return this.setAxisAngle(tmpvec, Math.PI);
+
+        }
+        else if (dot > 0.999999)
+        {
+            this.x = 0;
+            this.y = 0;
+            this.z = 0;
+            this.w = 1;
+
+            return this;
+        }
+        else
+        {
+            tmpvec.copy(a).cross(b);
+
+            this.x = tmpvec.x;
+            this.y = tmpvec.y;
+            this.z = tmpvec.z;
+            this.w = 1 + dot;
+
+            return this.normalize();
+        }
+    },
+
+    /**
+     * Set the axes of this Quaternion.
+     *
+     * @method Phaser.Math.Quaternion#setAxes
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Vector3} view - The view axis.
+     * @param {Phaser.Math.Vector3} right - The right axis.
+     * @param {Phaser.Math.Vector3} up - The upwards axis.
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    setAxes: function (view, right, up)
+    {
+        var m = tmpMat3.val;
+
+        m[0] = right.x;
+        m[3] = right.y;
+        m[6] = right.z;
+
+        m[1] = up.x;
+        m[4] = up.y;
+        m[7] = up.z;
+
+        m[2] = -view.x;
+        m[5] = -view.y;
+        m[8] = -view.z;
+
+        return this.fromMat3(tmpMat3).normalize();
+    },
+
+    /**
+     * Reset this Matrix to an identity (default) Quaternion.
+     *
+     * @method Phaser.Math.Quaternion#identity
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    identity: function ()
+    {
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+        this.w = 1;
+
+        return this;
+    },
+
+    /**
+     * Set the axis angle of this Quaternion.
+     *
+     * @method Phaser.Math.Quaternion#setAxisAngle
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Vector3} axis - The axis.
+     * @param {number} rad - The angle in radians.
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    setAxisAngle: function (axis, rad)
+    {
+        rad = rad * 0.5;
+
+        var s = Math.sin(rad);
+
+        this.x = s * axis.x;
+        this.y = s * axis.y;
+        this.z = s * axis.z;
+        this.w = Math.cos(rad);
+
+        return this;
+    },
+
+    /**
+     * Multiply this Quaternion by the given Quaternion or Vector.
+     *
+     * @method Phaser.Math.Quaternion#multiply
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Quaternion|Phaser.Math.Vector4)} b - The Quaternion or Vector to multiply this Quaternion by.
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    multiply: function (b)
+    {
+        var ax = this.x;
+        var ay = this.y;
+        var az = this.z;
+        var aw = this.w;
+
+        var bx = b.x;
+        var by = b.y;
+        var bz = b.z;
+        var bw = b.w;
+
+        this.x = ax * bw + aw * bx + ay * bz - az * by;
+        this.y = ay * bw + aw * by + az * bx - ax * bz;
+        this.z = az * bw + aw * bz + ax * by - ay * bx;
+        this.w = aw * bw - ax * bx - ay * by - az * bz;
+
+        return this;
+    },
+
+    /**
+     * Smoothly linearly interpolate this Quaternion towards the given Quaternion or Vector.
+     *
+     * @method Phaser.Math.Quaternion#slerp
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Quaternion|Phaser.Math.Vector4)} b - The Quaternion or Vector to interpolate towards.
+     * @param {number} t - The percentage of interpolation.
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    slerp: function (b, t)
+    {
+        // benchmarks: http://jsperf.com/quaternion-slerp-implementations
+
+        var ax = this.x;
+        var ay = this.y;
+        var az = this.z;
+        var aw = this.w;
+
+        var bx = b.x;
+        var by = b.y;
+        var bz = b.z;
+        var bw = b.w;
+
+        // calc cosine
+        var cosom = ax * bx + ay * by + az * bz + aw * bw;
+
+        // adjust signs (if necessary)
+        if (cosom < 0)
+        {
+            cosom = -cosom;
+            bx = - bx;
+            by = - by;
+            bz = - bz;
+            bw = - bw;
+        }
+
+        // "from" and "to" quaternions are very close
+        //  ... so we can do a linear interpolation
+        var scale0 = 1 - t;
+        var scale1 = t;
+
+        // calculate coefficients
+        if ((1 - cosom) > EPSILON)
+        {
+            // standard case (slerp)
+            var omega = Math.acos(cosom);
+            var sinom = Math.sin(omega);
+
+            scale0 = Math.sin((1.0 - t) * omega) / sinom;
+            scale1 = Math.sin(t * omega) / sinom;
+        }
+
+        // calculate final values
+        this.x = scale0 * ax + scale1 * bx;
+        this.y = scale0 * ay + scale1 * by;
+        this.z = scale0 * az + scale1 * bz;
+        this.w = scale0 * aw + scale1 * bw;
+
+        return this;
+    },
+
+    /**
+     * Invert this Quaternion.
+     *
+     * @method Phaser.Math.Quaternion#invert
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    invert: function ()
+    {
+        var a0 = this.x;
+        var a1 = this.y;
+        var a2 = this.z;
+        var a3 = this.w;
+
+        var dot = a0 * a0 + a1 * a1 + a2 * a2 + a3 * a3;
+        var invDot = (dot) ? 1 / dot : 0;
+
+        // TODO: Would be faster to return [0,0,0,0] immediately if dot == 0
+
+        this.x = -a0 * invDot;
+        this.y = -a1 * invDot;
+        this.z = -a2 * invDot;
+        this.w = a3 * invDot;
+
+        return this;
+    },
+
+    /**
+     * Convert this Quaternion into its conjugate.
+     *
+     * Sets the x, y and z components.
+     *
+     * @method Phaser.Math.Quaternion#conjugate
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    conjugate: function ()
+    {
+        this.x = -this.x;
+        this.y = -this.y;
+        this.z = -this.z;
+
+        return this;
+    },
+
+    /**
+     * Rotate this Quaternion on the X axis.
+     *
+     * @method Phaser.Math.Quaternion#rotateX
+     * @since 3.0.0
+     *
+     * @param {number} rad - The rotation angle in radians.
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    rotateX: function (rad)
+    {
+        rad *= 0.5;
+
+        var ax = this.x;
+        var ay = this.y;
+        var az = this.z;
+        var aw = this.w;
+
+        var bx = Math.sin(rad);
+        var bw = Math.cos(rad);
+
+        this.x = ax * bw + aw * bx;
+        this.y = ay * bw + az * bx;
+        this.z = az * bw - ay * bx;
+        this.w = aw * bw - ax * bx;
+
+        return this;
+    },
+
+    /**
+     * Rotate this Quaternion on the Y axis.
+     *
+     * @method Phaser.Math.Quaternion#rotateY
+     * @since 3.0.0
+     *
+     * @param {number} rad - The rotation angle in radians.
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    rotateY: function (rad)
+    {
+        rad *= 0.5;
+
+        var ax = this.x;
+        var ay = this.y;
+        var az = this.z;
+        var aw = this.w;
+
+        var by = Math.sin(rad);
+        var bw = Math.cos(rad);
+
+        this.x = ax * bw - az * by;
+        this.y = ay * bw + aw * by;
+        this.z = az * bw + ax * by;
+        this.w = aw * bw - ay * by;
+
+        return this;
+    },
+
+    /**
+     * Rotate this Quaternion on the Z axis.
+     *
+     * @method Phaser.Math.Quaternion#rotateZ
+     * @since 3.0.0
+     *
+     * @param {number} rad - The rotation angle in radians.
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    rotateZ: function (rad)
+    {
+        rad *= 0.5;
+
+        var ax = this.x;
+        var ay = this.y;
+        var az = this.z;
+        var aw = this.w;
+
+        var bz = Math.sin(rad);
+        var bw = Math.cos(rad);
+
+        this.x = ax * bw + ay * bz;
+        this.y = ay * bw - ax * bz;
+        this.z = az * bw + aw * bz;
+        this.w = aw * bw - az * bz;
+
+        return this;
+    },
+
+    /**
+     * Create a unit (or rotation) Quaternion from its x, y, and z components.
+     *
+     * Sets the w component.
+     *
+     * @method Phaser.Math.Quaternion#calculateW
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    calculateW: function ()
+    {
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+
+        this.w = -Math.sqrt(1.0 - x * x - y * y - z * z);
+
+        return this;
+    },
+
+    /**
+     * Convert the given Matrix into this Quaternion.
+     *
+     * @method Phaser.Math.Quaternion#fromMat3
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Matrix3} mat - The Matrix to convert from.
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    fromMat3: function (mat)
+    {
+        // benchmarks:
+        //    http://jsperf.com/typed-array-access-speed
+        //    http://jsperf.com/conversion-of-3x3-matrix-to-quaternion
+
+        // Algorithm in Ken Shoemake's article in 1987 SIGGRAPH course notes
+        // article "Quaternion Calculus and Fast Animation".
+        var m = mat.val;
+        var fTrace = m[0] + m[4] + m[8];
+        var fRoot;
+
+        if (fTrace > 0)
+        {
+            // |w| > 1/2, may as well choose w > 1/2
+            fRoot = Math.sqrt(fTrace + 1.0); // 2w
+
+            this.w = 0.5 * fRoot;
+
+            fRoot = 0.5 / fRoot; // 1/(4w)
+
+            this.x = (m[7] - m[5]) * fRoot;
+            this.y = (m[2] - m[6]) * fRoot;
+            this.z = (m[3] - m[1]) * fRoot;
+        }
+        else
+        {
+            // |w| <= 1/2
+            var i = 0;
+
+            if (m[4] > m[0])
+            {
+                i = 1;
+            }
+
+            if (m[8] > m[i * 3 + i])
+            {
+                i = 2;
+            }
+
+            var j = siNext[i];
+            var k = siNext[j];
+
+            //  This isn't quite as clean without array access
+            fRoot = Math.sqrt(m[i * 3 + i] - m[j * 3 + j] - m[k * 3 + k] + 1);
+            tmp[i] = 0.5 * fRoot;
+
+            fRoot = 0.5 / fRoot;
+
+            tmp[j] = (m[j * 3 + i] + m[i * 3 + j]) * fRoot;
+            tmp[k] = (m[k * 3 + i] + m[i * 3 + k]) * fRoot;
+
+            this.x = tmp[0];
+            this.y = tmp[1];
+            this.z = tmp[2];
+            this.w = (m[k * 3 + j] - m[j * 3 + k]) * fRoot;
+        }
+
+        return this;
+    }
+
+});
+
+module.exports = Quaternion;
+
+
+/***/ }),
+
 /***/ "../../../src/math/RadToDeg.js":
 /*!***********************************************!*\
   !*** D:/wamp/www/phaser/src/math/RadToDeg.js ***!
@@ -6928,6 +10177,685 @@ var RadToDeg = function (radians)
 };
 
 module.exports = RadToDeg;
+
+
+/***/ }),
+
+/***/ "../../../src/math/RandomXY.js":
+/*!***********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/RandomXY.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Compute a random unit vector.
+ *
+ * Computes random values for the given vector between -1 and 1 that can be used to represent a direction.
+ *
+ * Optionally accepts a scale value to scale the resulting vector by.
+ *
+ * @function Phaser.Math.RandomXY
+ * @since 3.0.0
+ *
+ * @param {Phaser.Math.Vector2} vector - The Vector to compute random values for.
+ * @param {number} [scale=1] - The scale of the random values.
+ *
+ * @return {Phaser.Math.Vector2} The given Vector.
+ */
+var RandomXY = function (vector, scale)
+{
+    if (scale === undefined) { scale = 1; }
+
+    var r = Math.random() * 2 * Math.PI;
+
+    vector.x = Math.cos(r) * scale;
+    vector.y = Math.sin(r) * scale;
+
+    return vector;
+};
+
+module.exports = RandomXY;
+
+
+/***/ }),
+
+/***/ "../../../src/math/RandomXYZ.js":
+/*!************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/RandomXYZ.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Compute a random position vector in a spherical area, optionally defined by the given radius.
+ *
+ * @function Phaser.Math.RandomXYZ
+ * @since 3.0.0
+ *
+ * @param {Phaser.Math.Vector3} vec3 - The Vector to compute random values for.
+ * @param {number} [radius=1] - The radius.
+ *
+ * @return {Phaser.Math.Vector3} The given Vector.
+ */
+var RandomXYZ = function (vec3, radius)
+{
+    if (radius === undefined) { radius = 1; }
+
+    var r = Math.random() * 2 * Math.PI;
+    var z = (Math.random() * 2) - 1;
+    var zScale = Math.sqrt(1 - z * z) * radius;
+
+    vec3.x = Math.cos(r) * zScale;
+    vec3.y = Math.sin(r) * zScale;
+    vec3.z = z * radius;
+
+    return vec3;
+};
+
+module.exports = RandomXYZ;
+
+
+/***/ }),
+
+/***/ "../../../src/math/RandomXYZW.js":
+/*!*************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/RandomXYZW.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Compute a random four-dimensional vector.
+ *
+ * @function Phaser.Math.RandomXYZW
+ * @since 3.0.0
+ *
+ * @param {Phaser.Math.Vector4} vec4 - The Vector to compute random values for.
+ * @param {number} [scale=1] - The scale of the random values.
+ *
+ * @return {Phaser.Math.Vector4} The given Vector.
+ */
+var RandomXYZW = function (vec4, scale)
+{
+    if (scale === undefined) { scale = 1; }
+
+    // TODO: Not spherical; should fix this for more uniform distribution
+    vec4.x = (Math.random() * 2 - 1) * scale;
+    vec4.y = (Math.random() * 2 - 1) * scale;
+    vec4.z = (Math.random() * 2 - 1) * scale;
+    vec4.w = (Math.random() * 2 - 1) * scale;
+
+    return vec4;
+};
+
+module.exports = RandomXYZW;
+
+
+/***/ }),
+
+/***/ "../../../src/math/Rotate.js":
+/*!*********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Rotate.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Rotate a given point by a given angle around the origin (0, 0), in an anti-clockwise direction.
+ *
+ * @function Phaser.Math.Rotate
+ * @since 3.0.0
+ *
+ * @param {(Phaser.Geom.Point|object)} point - The point to be rotated.
+ * @param {number} angle - The angle to be rotated by in an anticlockwise direction.
+ *
+ * @return {Phaser.Geom.Point} The given point, rotated by the given angle in an anticlockwise direction.
+ */
+var Rotate = function (point, angle)
+{
+    var x = point.x;
+    var y = point.y;
+
+    point.x = (x * Math.cos(angle)) - (y * Math.sin(angle));
+    point.y = (x * Math.sin(angle)) + (y * Math.cos(angle));
+
+    return point;
+};
+
+module.exports = Rotate;
+
+
+/***/ }),
+
+/***/ "../../../src/math/RotateAround.js":
+/*!***************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/RotateAround.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Rotate a `point` around `x` and `y` by the given `angle`.
+ *
+ * @function Phaser.Math.RotateAround
+ * @since 3.0.0
+ *
+ * @param {(Phaser.Geom.Point|object)} point - The point to be rotated.
+ * @param {number} x - The horizontal coordinate to rotate around.
+ * @param {number} y - The vertical coordinate to rotate around.
+ * @param {number} angle - The angle of rotation in radians.
+ *
+ * @return {Phaser.Geom.Point} The given point, rotated by the given angle around the given coordinates.
+ */
+var RotateAround = function (point, x, y, angle)
+{
+    var c = Math.cos(angle);
+    var s = Math.sin(angle);
+
+    var tx = point.x - x;
+    var ty = point.y - y;
+
+    point.x = tx * c - ty * s + x;
+    point.y = tx * s + ty * c + y;
+
+    return point;
+};
+
+module.exports = RotateAround;
+
+
+/***/ }),
+
+/***/ "../../../src/math/RotateAroundDistance.js":
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/RotateAroundDistance.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Rotate a `point` around `x` and `y` by the given `angle` and `distance`.
+ *
+ * @function Phaser.Math.RotateAroundDistance
+ * @since 3.0.0
+ *
+ * @param {(Phaser.Geom.Point|object)} point - The point to be rotated.
+ * @param {number} x - The horizontal coordinate to rotate around.
+ * @param {number} y - The vertical coordinate to rotate around.
+ * @param {number} angle - The angle of rotation in radians.
+ * @param {number} distance - The distance from (x, y) to place the point at.
+ *
+ * @return {Phaser.Geom.Point} The given point.
+ */
+var RotateAroundDistance = function (point, x, y, angle, distance)
+{
+    var t = angle + Math.atan2(point.y - y, point.x - x);
+
+    point.x = x + (distance * Math.cos(t));
+    point.y = y + (distance * Math.sin(t));
+
+    return point;
+};
+
+module.exports = RotateAroundDistance;
+
+
+/***/ }),
+
+/***/ "../../../src/math/RotateVec3.js":
+/*!*************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/RotateVec3.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Vector3 = __webpack_require__(/*! ../math/Vector3 */ "../../../src/math/Vector3.js");
+var Matrix4 = __webpack_require__(/*! ../math/Matrix4 */ "../../../src/math/Matrix4.js");
+var Quaternion = __webpack_require__(/*! ../math/Quaternion */ "../../../src/math/Quaternion.js");
+
+var tmpMat4 = new Matrix4();
+var tmpQuat = new Quaternion();
+var tmpVec3 = new Vector3();
+
+/**
+ * Rotates a vector in place by axis angle.
+ *
+ * This is the same as transforming a point by an
+ * axis-angle quaternion, but it has higher precision.
+ *
+ * @function Phaser.Math.RotateVec3
+ * @since 3.0.0
+ *
+ * @param {Phaser.Math.Vector3} vec - The vector to be rotated.
+ * @param {Phaser.Math.Vector3} axis - The axis to rotate around.
+ * @param {number} radians - The angle of rotation in radians.
+ *
+ * @return {Phaser.Math.Vector3} The given vector.
+ */
+var RotateVec3 = function (vec, axis, radians)
+{
+    //  Set the quaternion to our axis angle
+    tmpQuat.setAxisAngle(axis, radians);
+
+    //  Create a rotation matrix from the axis angle
+    tmpMat4.fromRotationTranslation(tmpQuat, tmpVec3.set(0, 0, 0));
+
+    //  Multiply our vector by the rotation matrix
+    return vec.transformMat4(tmpMat4);
+};
+
+module.exports = RotateVec3;
+
+
+/***/ }),
+
+/***/ "../../../src/math/RoundAwayFromZero.js":
+/*!********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/RoundAwayFromZero.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Round a given number so it is further away from zero. That is, positive numbers are rounded up, and negative numbers are rounded down.
+ *
+ * @function Phaser.Math.RoundAwayFromZero
+ * @since 3.0.0
+ *
+ * @param {number} value - The number to round.
+ *
+ * @return {number} The rounded number, rounded away from zero.
+ */
+var RoundAwayFromZero = function (value)
+{
+    // "Opposite" of truncate.
+    return (value > 0) ? Math.ceil(value) : Math.floor(value);
+};
+
+module.exports = RoundAwayFromZero;
+
+
+/***/ }),
+
+/***/ "../../../src/math/RoundTo.js":
+/*!**********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/RoundTo.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Round a value to the given precision.
+ * 
+ * For example:
+ * 
+ * ```javascript
+ * RoundTo(123.456, 0) = 123
+ * RoundTo(123.456, 1) = 120
+ * RoundTo(123.456, 2) = 100
+ * ```
+ * 
+ * To round the decimal, i.e. to round to precision, pass in a negative `place`:
+ * 
+ * ```javascript
+ * RoundTo(123.456789, 0) = 123
+ * RoundTo(123.456789, -1) = 123.5
+ * RoundTo(123.456789, -2) = 123.46
+ * RoundTo(123.456789, -3) = 123.457
+ * ```
+ *
+ * @function Phaser.Math.RoundTo
+ * @since 3.0.0
+ *
+ * @param {number} value - The value to round.
+ * @param {integer} [place=0] - The place to round to. Positive to round the units, negative to round the decimal.
+ * @param {integer} [base=10] - The base to round in. Default is 10 for decimal.
+ *
+ * @return {number} The rounded value.
+ */
+var RoundTo = function (value, place, base)
+{
+    if (place === undefined) { place = 0; }
+    if (base === undefined) { base = 10; }
+
+    var p = Math.pow(base, -place);
+
+    return Math.round(value * p) / p;
+};
+
+module.exports = RoundTo;
+
+
+/***/ }),
+
+/***/ "../../../src/math/SinCosTableGenerator.js":
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/SinCosTableGenerator.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Generate a series of sine and cosine values.
+ *
+ * @function Phaser.Math.SinCosTableGenerator
+ * @since 3.0.0
+ *
+ * @param {number} length - The number of values to generate.
+ * @param {number} [sinAmp=1] - The sine value amplitude.
+ * @param {number} [cosAmp=1] - The cosine value amplitude.
+ * @param {number} [frequency=1] - The frequency of the values.
+ *
+ * @return {Phaser.Types.Math.SinCosTable} The generated values.
+ */
+var SinCosTableGenerator = function (length, sinAmp, cosAmp, frequency)
+{
+    if (sinAmp === undefined) { sinAmp = 1; }
+    if (cosAmp === undefined) { cosAmp = 1; }
+    if (frequency === undefined) { frequency = 1; }
+
+    frequency *= Math.PI / length;
+
+    var cos = [];
+    var sin = [];
+
+    for (var c = 0; c < length; c++)
+    {
+        cosAmp -= sinAmp * frequency;
+        sinAmp += cosAmp * frequency;
+
+        cos[c] = cosAmp;
+        sin[c] = sinAmp;
+    }
+
+    return {
+        sin: sin,
+        cos: cos,
+        length: length
+    };
+};
+
+module.exports = SinCosTableGenerator;
+
+
+/***/ }),
+
+/***/ "../../../src/math/SmoothStep.js":
+/*!*************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/SmoothStep.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculate a smooth interpolation percentage of `x` between `min` and `max`.
+ *
+ * The function receives the number `x` as an argument and returns 0 if `x` is less than or equal to the left edge,
+ * 1 if `x` is greater than or equal to the right edge, and smoothly interpolates, using a Hermite polynomial,
+ * between 0 and 1 otherwise.
+ *
+ * @function Phaser.Math.SmoothStep
+ * @since 3.0.0
+ * @see {@link https://en.wikipedia.org/wiki/Smoothstep}
+ *
+ * @param {number} x - The input value.
+ * @param {number} min - The minimum value, also known as the 'left edge', assumed smaller than the 'right edge'.
+ * @param {number} max - The maximum value, also known as the 'right edge', assumed greater than the 'left edge'.
+ *
+ * @return {number} The percentage of interpolation, between 0 and 1.
+ */
+var SmoothStep = function (x, min, max)
+{
+    if (x <= min)
+    {
+        return 0;
+    }
+
+    if (x >= max)
+    {
+        return 1;
+    }
+
+    x = (x - min) / (max - min);
+
+    return x * x * (3 - 2 * x);
+};
+
+module.exports = SmoothStep;
+
+
+/***/ }),
+
+/***/ "../../../src/math/SmootherStep.js":
+/*!***************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/SmootherStep.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculate a smoother interpolation percentage of `x` between `min` and `max`.
+ *
+ * The function receives the number `x` as an argument and returns 0 if `x` is less than or equal to the left edge,
+ * 1 if `x` is greater than or equal to the right edge, and smoothly interpolates, using a Hermite polynomial,
+ * between 0 and 1 otherwise.
+ *
+ * Produces an even smoother interpolation than {@link Phaser.Math.SmoothStep}.
+ *
+ * @function Phaser.Math.SmootherStep
+ * @since 3.0.0
+ * @see {@link https://en.wikipedia.org/wiki/Smoothstep#Variations}
+ *
+ * @param {number} x - The input value.
+ * @param {number} min - The minimum value, also known as the 'left edge', assumed smaller than the 'right edge'.
+ * @param {number} max - The maximum value, also known as the 'right edge', assumed greater than the 'left edge'.
+ *
+ * @return {number} The percentage of interpolation, between 0 and 1.
+ */
+var SmootherStep = function (x, min, max)
+{
+    x = Math.max(0, Math.min(1, (x - min) / (max - min)));
+
+    return x * x * x * (x * (x * 6 - 15) + 10);
+};
+
+module.exports = SmootherStep;
+
+
+/***/ }),
+
+/***/ "../../../src/math/ToXY.js":
+/*!*******************************************!*\
+  !*** D:/wamp/www/phaser/src/math/ToXY.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Vector2 = __webpack_require__(/*! ./Vector2 */ "../../../src/math/Vector2.js");
+
+/**
+ * Returns a Vec2 containing the x and y position of the given index in a `width` x `height` sized grid.
+ * 
+ * For example, in a 6 x 4 grid, index 16 would equal x: 4 y: 2.
+ * 
+ * If the given index is out of range an empty Vec2 is returned.
+ *
+ * @function Phaser.Math.ToXY
+ * @since 3.19.0
+ *
+ * @param {integer} index - The position within the grid to get the x/y value for.
+ * @param {integer} width - The width of the grid.
+ * @param {integer} height - The height of the grid.
+ * @param {Phaser.Math.Vector2} [out] - An optional Vector2 to store the result in. If not given, a new Vector2 instance will be created.
+ *
+ * @return {Phaser.Math.Vector2} A Vector2 where the x and y properties contain the given grid index.
+ */
+var ToXY = function (index, width, height, out)
+{
+    if (out === undefined) { out = new Vector2(); }
+
+    var x = 0;
+    var y = 0;
+    var total = width * height;
+
+    if (index > 0 && index <= total)
+    {
+        if (index > width - 1)
+        {
+            y = Math.floor(index / width);
+            x = index - (y * width);
+        }
+        else
+        {
+            x = index;
+        }
+
+        out.set(x, y);
+    }
+
+    return out;
+};
+
+module.exports = ToXY;
+
+
+/***/ }),
+
+/***/ "../../../src/math/TransformXY.js":
+/*!**************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/TransformXY.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Vector2 = __webpack_require__(/*! ./Vector2 */ "../../../src/math/Vector2.js");
+
+/**
+ * Takes the `x` and `y` coordinates and transforms them into the same space as
+ * defined by the position, rotation and scale values.
+ *
+ * @function Phaser.Math.TransformXY
+ * @since 3.0.0
+ *
+ * @param {number} x - The x coordinate to be transformed.
+ * @param {number} y - The y coordinate to be transformed.
+ * @param {number} positionX - Horizontal position of the transform point.
+ * @param {number} positionY - Vertical position of the transform point.
+ * @param {number} rotation - Rotation of the transform point, in radians.
+ * @param {number} scaleX - Horizontal scale of the transform point.
+ * @param {number} scaleY - Vertical scale of the transform point.
+ * @param {(Phaser.Math.Vector2|Phaser.Geom.Point|object)} [output] - The output vector, point or object for the translated coordinates.
+ *
+ * @return {(Phaser.Math.Vector2|Phaser.Geom.Point|object)} The translated point.
+ */
+var TransformXY = function (x, y, positionX, positionY, rotation, scaleX, scaleY, output)
+{
+    if (output === undefined) { output = new Vector2(); }
+
+    var radianSin = Math.sin(rotation);
+    var radianCos = Math.cos(rotation);
+
+    // Rotate and Scale
+    var a = radianCos * scaleX;
+    var b = radianSin * scaleX;
+    var c = -radianSin * scaleY;
+    var d = radianCos * scaleY;
+
+    //  Invert
+    var id = 1 / ((a * d) + (c * -b));
+
+    output.x = (d * id * x) + (-c * id * y) + (((positionY * c) - (positionX * d)) * id);
+    output.y = (a * id * y) + (-b * id * x) + (((-positionY * a) + (positionX * b)) * id);
+
+    return output;
+};
+
+module.exports = TransformXY;
 
 
 /***/ }),
@@ -7576,6 +11504,1406 @@ module.exports = Vector2;
 
 /***/ }),
 
+/***/ "../../../src/math/Vector3.js":
+/*!**********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Vector3.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+//  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji
+//  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
+
+var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
+
+/**
+ * @classdesc
+ * A representation of a vector in 3D space.
+ *
+ * A three-component vector.
+ *
+ * @class Vector3
+ * @memberof Phaser.Math
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [x] - The x component.
+ * @param {number} [y] - The y component.
+ * @param {number} [z] - The z component.
+ */
+var Vector3 = new Class({
+
+    initialize:
+
+    function Vector3 (x, y, z)
+    {
+        /**
+         * The x component of this Vector.
+         *
+         * @name Phaser.Math.Vector3#x
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.x = 0;
+
+        /**
+         * The y component of this Vector.
+         *
+         * @name Phaser.Math.Vector3#y
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.y = 0;
+
+        /**
+         * The z component of this Vector.
+         *
+         * @name Phaser.Math.Vector3#z
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.z = 0;
+
+        if (typeof x === 'object')
+        {
+            this.x = x.x || 0;
+            this.y = x.y || 0;
+            this.z = x.z || 0;
+        }
+        else
+        {
+            this.x = x || 0;
+            this.y = y || 0;
+            this.z = z || 0;
+        }
+    },
+
+    /**
+     * Set this Vector to point up.
+     *
+     * Sets the y component of the vector to 1, and the others to 0.
+     *
+     * @method Phaser.Math.Vector3#up
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    up: function ()
+    {
+        this.x = 0;
+        this.y = 1;
+        this.z = 0;
+
+        return this;
+    },
+
+    /**
+     * Make a clone of this Vector3.
+     *
+     * @method Phaser.Math.Vector3#clone
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Vector3} A new Vector3 object containing this Vectors values.
+     */
+    clone: function ()
+    {
+        return new Vector3(this.x, this.y, this.z);
+    },
+
+    /**
+     * Calculate the cross (vector) product of two given Vectors.
+     *
+     * @method Phaser.Math.Vector3#crossVectors
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Vector3} a - The first Vector to multiply.
+     * @param {Phaser.Math.Vector3} b - The second Vector to multiply.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    crossVectors: function (a, b)
+    {
+        var ax = a.x;
+        var ay = a.y;
+        var az = a.z;
+        var bx = b.x;
+        var by = b.y;
+        var bz = b.z;
+
+        this.x = ay * bz - az * by;
+        this.y = az * bx - ax * bz;
+        this.z = ax * by - ay * bx;
+
+        return this;
+    },
+
+    /**
+     * Check whether this Vector is equal to a given Vector.
+     *
+     * Performs a strict equality check against each Vector's components.
+     *
+     * @method Phaser.Math.Vector3#equals
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Vector3} v - The Vector3 to compare against.
+     *
+     * @return {boolean} True if the two vectors strictly match, otherwise false.
+     */
+    equals: function (v)
+    {
+        return ((this.x === v.x) && (this.y === v.y) && (this.z === v.z));
+    },
+
+    /**
+     * Copy the components of a given Vector into this Vector.
+     *
+     * @method Phaser.Math.Vector3#copy
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3)} src - The Vector to copy the components from.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    copy: function (src)
+    {
+        this.x = src.x;
+        this.y = src.y;
+        this.z = src.z || 0;
+
+        return this;
+    },
+
+    /**
+     * Set the `x`, `y`, and `z` components of this Vector to the given `x`, `y`, and `z` values.
+     *
+     * @method Phaser.Math.Vector3#set
+     * @since 3.0.0
+     *
+     * @param {(number|object)} x - The x value to set for this Vector, or an object containing x, y and z components.
+     * @param {number} [y] - The y value to set for this Vector.
+     * @param {number} [z] - The z value to set for this Vector.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    set: function (x, y, z)
+    {
+        if (typeof x === 'object')
+        {
+            this.x = x.x || 0;
+            this.y = x.y || 0;
+            this.z = x.z || 0;
+        }
+        else
+        {
+            this.x = x || 0;
+            this.y = y || 0;
+            this.z = z || 0;
+        }
+
+        return this;
+    },
+
+    /**
+     * Add a given Vector to this Vector. Addition is component-wise.
+     *
+     * @method Phaser.Math.Vector3#add
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3)} v - The Vector to add to this Vector.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    add: function (v)
+    {
+        this.x += v.x;
+        this.y += v.y;
+        this.z += v.z || 0;
+
+        return this;
+    },
+
+    /**
+     * Subtract the given Vector from this Vector. Subtraction is component-wise.
+     *
+     * @method Phaser.Math.Vector3#subtract
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3)} v - The Vector to subtract from this Vector.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    subtract: function (v)
+    {
+        this.x -= v.x;
+        this.y -= v.y;
+        this.z -= v.z || 0;
+
+        return this;
+    },
+
+    /**
+     * Perform a component-wise multiplication between this Vector and the given Vector.
+     *
+     * Multiplies this Vector by the given Vector.
+     *
+     * @method Phaser.Math.Vector3#multiply
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3)} v - The Vector to multiply this Vector by.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    multiply: function (v)
+    {
+        this.x *= v.x;
+        this.y *= v.y;
+        this.z *= v.z || 1;
+
+        return this;
+    },
+
+    /**
+     * Scale this Vector by the given value.
+     *
+     * @method Phaser.Math.Vector3#scale
+     * @since 3.0.0
+     *
+     * @param {number} scale - The value to scale this Vector by.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    scale: function (scale)
+    {
+        if (isFinite(scale))
+        {
+            this.x *= scale;
+            this.y *= scale;
+            this.z *= scale;
+        }
+        else
+        {
+            this.x = 0;
+            this.y = 0;
+            this.z = 0;
+        }
+
+        return this;
+    },
+
+    /**
+     * Perform a component-wise division between this Vector and the given Vector.
+     *
+     * Divides this Vector by the given Vector.
+     *
+     * @method Phaser.Math.Vector3#divide
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3)} v - The Vector to divide this Vector by.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    divide: function (v)
+    {
+        this.x /= v.x;
+        this.y /= v.y;
+        this.z /= v.z || 1;
+
+        return this;
+    },
+
+    /**
+     * Negate the `x`, `y` and `z` components of this Vector.
+     *
+     * @method Phaser.Math.Vector3#negate
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    negate: function ()
+    {
+        this.x = -this.x;
+        this.y = -this.y;
+        this.z = -this.z;
+
+        return this;
+    },
+
+    /**
+     * Calculate the distance between this Vector and the given Vector.
+     *
+     * @method Phaser.Math.Vector3#distance
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3)} v - The Vector to calculate the distance to.
+     *
+     * @return {number} The distance from this Vector to the given Vector.
+     */
+    distance: function (v)
+    {
+        var dx = v.x - this.x;
+        var dy = v.y - this.y;
+        var dz = v.z - this.z || 0;
+
+        return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    },
+
+    /**
+     * Calculate the distance between this Vector and the given Vector, squared.
+     *
+     * @method Phaser.Math.Vector3#distanceSq
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3)} v - The Vector to calculate the distance to.
+     *
+     * @return {number} The distance from this Vector to the given Vector, squared.
+     */
+    distanceSq: function (v)
+    {
+        var dx = v.x - this.x;
+        var dy = v.y - this.y;
+        var dz = v.z - this.z || 0;
+
+        return dx * dx + dy * dy + dz * dz;
+    },
+
+    /**
+     * Calculate the length (or magnitude) of this Vector.
+     *
+     * @method Phaser.Math.Vector3#length
+     * @since 3.0.0
+     *
+     * @return {number} The length of this Vector.
+     */
+    length: function ()
+    {
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+
+        return Math.sqrt(x * x + y * y + z * z);
+    },
+
+    /**
+     * Calculate the length of this Vector squared.
+     *
+     * @method Phaser.Math.Vector3#lengthSq
+     * @since 3.0.0
+     *
+     * @return {number} The length of this Vector, squared.
+     */
+    lengthSq: function ()
+    {
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+
+        return x * x + y * y + z * z;
+    },
+
+    /**
+     * Normalize this Vector.
+     *
+     * Makes the vector a unit length vector (magnitude of 1) in the same direction.
+     *
+     * @method Phaser.Math.Vector3#normalize
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    normalize: function ()
+    {
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+        var len = x * x + y * y + z * z;
+
+        if (len > 0)
+        {
+            len = 1 / Math.sqrt(len);
+
+            this.x = x * len;
+            this.y = y * len;
+            this.z = z * len;
+        }
+
+        return this;
+    },
+
+    /**
+     * Calculate the dot product of this Vector and the given Vector.
+     *
+     * @method Phaser.Math.Vector3#dot
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Vector3} v - The Vector3 to dot product with this Vector3.
+     *
+     * @return {number} The dot product of this Vector and `v`.
+     */
+    dot: function (v)
+    {
+        return this.x * v.x + this.y * v.y + this.z * v.z;
+    },
+
+    /**
+     * Calculate the cross (vector) product of this Vector (which will be modified) and the given Vector.
+     *
+     * @method Phaser.Math.Vector3#cross
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Vector3} v - The Vector to cross product with.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    cross: function (v)
+    {
+        var ax = this.x;
+        var ay = this.y;
+        var az = this.z;
+        var bx = v.x;
+        var by = v.y;
+        var bz = v.z;
+
+        this.x = ay * bz - az * by;
+        this.y = az * bx - ax * bz;
+        this.z = ax * by - ay * bx;
+
+        return this;
+    },
+
+    /**
+     * Linearly interpolate between this Vector and the given Vector.
+     *
+     * Interpolates this Vector towards the given Vector.
+     *
+     * @method Phaser.Math.Vector3#lerp
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Vector3} v - The Vector3 to interpolate towards.
+     * @param {number} [t=0] - The interpolation percentage, between 0 and 1.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    lerp: function (v, t)
+    {
+        if (t === undefined) { t = 0; }
+
+        var ax = this.x;
+        var ay = this.y;
+        var az = this.z;
+
+        this.x = ax + t * (v.x - ax);
+        this.y = ay + t * (v.y - ay);
+        this.z = az + t * (v.z - az);
+
+        return this;
+    },
+
+    /**
+     * Transform this Vector with the given Matrix.
+     *
+     * @method Phaser.Math.Vector3#transformMat3
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Matrix3} mat - The Matrix3 to transform this Vector3 with.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    transformMat3: function (mat)
+    {
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+        var m = mat.val;
+
+        this.x = x * m[0] + y * m[3] + z * m[6];
+        this.y = x * m[1] + y * m[4] + z * m[7];
+        this.z = x * m[2] + y * m[5] + z * m[8];
+
+        return this;
+    },
+
+    /**
+     * Transform this Vector with the given Matrix.
+     *
+     * @method Phaser.Math.Vector3#transformMat4
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Matrix4} mat - The Matrix4 to transform this Vector3 with.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    transformMat4: function (mat)
+    {
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+        var m = mat.val;
+
+        this.x = m[0] * x + m[4] * y + m[8] * z + m[12];
+        this.y = m[1] * x + m[5] * y + m[9] * z + m[13];
+        this.z = m[2] * x + m[6] * y + m[10] * z + m[14];
+
+        return this;
+    },
+
+    /**
+     * Transforms the coordinates of this Vector3 with the given Matrix4.
+     *
+     * @method Phaser.Math.Vector3#transformCoordinates
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Matrix4} mat - The Matrix4 to transform this Vector3 with.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    transformCoordinates: function (mat)
+    {
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+        var m = mat.val;
+
+        var tx = (x * m[0]) + (y * m[4]) + (z * m[8]) + m[12];
+        var ty = (x * m[1]) + (y * m[5]) + (z * m[9]) + m[13];
+        var tz = (x * m[2]) + (y * m[6]) + (z * m[10]) + m[14];
+        var tw = (x * m[3]) + (y * m[7]) + (z * m[11]) + m[15];
+
+        this.x = tx / tw;
+        this.y = ty / tw;
+        this.z = tz / tw;
+
+        return this;
+    },
+
+    /**
+     * Transform this Vector with the given Quaternion.
+     *
+     * @method Phaser.Math.Vector3#transformQuat
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Quaternion} q - The Quaternion to transform this Vector with.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    transformQuat: function (q)
+    {
+        // benchmarks: http://jsperf.com/quaternion-transform-vec3-implementations
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+        var qx = q.x;
+        var qy = q.y;
+        var qz = q.z;
+        var qw = q.w;
+
+        // calculate quat * vec
+        var ix = qw * x + qy * z - qz * y;
+        var iy = qw * y + qz * x - qx * z;
+        var iz = qw * z + qx * y - qy * x;
+        var iw = -qx * x - qy * y - qz * z;
+
+        // calculate result * inverse quat
+        this.x = ix * qw + iw * -qx + iy * -qz - iz * -qy;
+        this.y = iy * qw + iw * -qy + iz * -qx - ix * -qz;
+        this.z = iz * qw + iw * -qz + ix * -qy - iy * -qx;
+
+        return this;
+    },
+
+    /**
+     * Multiplies this Vector3 by the specified matrix, applying a W divide. This is useful for projection,
+     * e.g. unprojecting a 2D point into 3D space.
+     *
+     * @method Phaser.Math.Vector3#project
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Matrix4} mat - The Matrix4 to multiply this Vector3 with.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    project: function (mat)
+    {
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+        var m = mat.val;
+
+        var a00 = m[0];
+        var a01 = m[1];
+        var a02 = m[2];
+        var a03 = m[3];
+        var a10 = m[4];
+        var a11 = m[5];
+        var a12 = m[6];
+        var a13 = m[7];
+        var a20 = m[8];
+        var a21 = m[9];
+        var a22 = m[10];
+        var a23 = m[11];
+        var a30 = m[12];
+        var a31 = m[13];
+        var a32 = m[14];
+        var a33 = m[15];
+
+        var lw = 1 / (x * a03 + y * a13 + z * a23 + a33);
+
+        this.x = (x * a00 + y * a10 + z * a20 + a30) * lw;
+        this.y = (x * a01 + y * a11 + z * a21 + a31) * lw;
+        this.z = (x * a02 + y * a12 + z * a22 + a32) * lw;
+
+        return this;
+    },
+
+    /**
+     * Unproject this point from 2D space to 3D space.
+     * The point should have its x and y properties set to
+     * 2D screen space, and the z either at 0 (near plane)
+     * or 1 (far plane). The provided matrix is assumed to already
+     * be combined, i.e. projection * view * model.
+     *
+     * After this operation, this vector's (x, y, z) components will
+     * represent the unprojected 3D coordinate.
+     *
+     * @method Phaser.Math.Vector3#unproject
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Vector4} viewport - Screen x, y, width and height in pixels.
+     * @param {Phaser.Math.Matrix4} invProjectionView - Combined projection and view matrix.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    unproject: function (viewport, invProjectionView)
+    {
+        var viewX = viewport.x;
+        var viewY = viewport.y;
+        var viewWidth = viewport.z;
+        var viewHeight = viewport.w;
+
+        var x = this.x - viewX;
+        var y = (viewHeight - this.y - 1) - viewY;
+        var z = this.z;
+
+        this.x = (2 * x) / viewWidth - 1;
+        this.y = (2 * y) / viewHeight - 1;
+        this.z = 2 * z - 1;
+
+        return this.project(invProjectionView);
+    },
+
+    /**
+     * Make this Vector the zero vector (0, 0, 0).
+     *
+     * @method Phaser.Math.Vector3#reset
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    reset: function ()
+    {
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+
+        return this;
+    }
+
+});
+
+/**
+ * A static zero Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.ZERO
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.ZERO = new Vector3();
+
+/**
+ * A static right Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.RIGHT
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.RIGHT = new Vector3(1, 0, 0);
+
+/**
+ * A static left Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.LEFT
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.LEFT = new Vector3(-1, 0, 0);
+
+/**
+ * A static up Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.UP
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.UP = new Vector3(0, -1, 0);
+
+/**
+ * A static down Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.DOWN
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.DOWN = new Vector3(0, 1, 0);
+
+/**
+ * A static forward Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.FORWARD
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.FORWARD = new Vector3(0, 0, 1);
+
+/**
+ * A static back Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.BACK
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.BACK = new Vector3(0, 0, -1);
+
+/**
+ * A static one Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.ONE
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.ONE = new Vector3(1, 1, 1);
+
+module.exports = Vector3;
+
+
+/***/ }),
+
+/***/ "../../../src/math/Vector4.js":
+/*!**********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Vector4.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+//  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji
+//  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
+
+var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
+
+/**
+ * @classdesc
+ * A representation of a vector in 4D space.
+ *
+ * A four-component vector.
+ *
+ * @class Vector4
+ * @memberof Phaser.Math
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [x] - The x component.
+ * @param {number} [y] - The y component.
+ * @param {number} [z] - The z component.
+ * @param {number} [w] - The w component.
+ */
+var Vector4 = new Class({
+
+    initialize:
+
+    function Vector4 (x, y, z, w)
+    {
+        /**
+         * The x component of this Vector.
+         *
+         * @name Phaser.Math.Vector4#x
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.x = 0;
+
+        /**
+         * The y component of this Vector.
+         *
+         * @name Phaser.Math.Vector4#y
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.y = 0;
+
+        /**
+         * The z component of this Vector.
+         *
+         * @name Phaser.Math.Vector4#z
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.z = 0;
+
+        /**
+         * The w component of this Vector.
+         *
+         * @name Phaser.Math.Vector4#w
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.w = 0;
+
+        if (typeof x === 'object')
+        {
+            this.x = x.x || 0;
+            this.y = x.y || 0;
+            this.z = x.z || 0;
+            this.w = x.w || 0;
+        }
+        else
+        {
+            this.x = x || 0;
+            this.y = y || 0;
+            this.z = z || 0;
+            this.w = w || 0;
+        }
+    },
+
+    /**
+     * Make a clone of this Vector4.
+     *
+     * @method Phaser.Math.Vector4#clone
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Vector4} A clone of this Vector4.
+     */
+    clone: function ()
+    {
+        return new Vector4(this.x, this.y, this.z, this.w);
+    },
+
+    /**
+     * Copy the components of a given Vector into this Vector.
+     *
+     * @method Phaser.Math.Vector4#copy
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Vector4} src - The Vector to copy the components from.
+     *
+     * @return {Phaser.Math.Vector4} This Vector4.
+     */
+    copy: function (src)
+    {
+        this.x = src.x;
+        this.y = src.y;
+        this.z = src.z || 0;
+        this.w = src.w || 0;
+
+        return this;
+    },
+
+    /**
+     * Check whether this Vector is equal to a given Vector.
+     *
+     * Performs a strict quality check against each Vector's components.
+     *
+     * @method Phaser.Math.Vector4#equals
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Vector4} v - The vector to check equality with.
+     *
+     * @return {boolean} A boolean indicating whether the two Vectors are equal or not.
+     */
+    equals: function (v)
+    {
+        return ((this.x === v.x) && (this.y === v.y) && (this.z === v.z) && (this.w === v.w));
+    },
+
+    /**
+     * Set the `x`, `y`, `z` and `w` components of the this Vector to the given `x`, `y`, `z` and `w` values.
+     *
+     * @method Phaser.Math.Vector4#set
+     * @since 3.0.0
+     *
+     * @param {(number|object)} x - The x value to set for this Vector, or an object containing x, y, z and w components.
+     * @param {number} y - The y value to set for this Vector.
+     * @param {number} z - The z value to set for this Vector.
+     * @param {number} w - The z value to set for this Vector.
+     *
+     * @return {Phaser.Math.Vector4} This Vector4.
+     */
+    set: function (x, y, z, w)
+    {
+        if (typeof x === 'object')
+        {
+            this.x = x.x || 0;
+            this.y = x.y || 0;
+            this.z = x.z || 0;
+            this.w = x.w || 0;
+        }
+        else
+        {
+            this.x = x || 0;
+            this.y = y || 0;
+            this.z = z || 0;
+            this.w = w || 0;
+        }
+
+        return this;
+    },
+
+    /**
+     * Add a given Vector to this Vector. Addition is component-wise.
+     *
+     * @method Phaser.Math.Vector4#add
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4)} v - The Vector to add to this Vector.
+     *
+     * @return {Phaser.Math.Vector4} This Vector4.
+     */
+    add: function (v)
+    {
+        this.x += v.x;
+        this.y += v.y;
+        this.z += v.z || 0;
+        this.w += v.w || 0;
+
+        return this;
+    },
+
+    /**
+     * Subtract the given Vector from this Vector. Subtraction is component-wise.
+     *
+     * @method Phaser.Math.Vector4#subtract
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4)} v - The Vector to subtract from this Vector.
+     *
+     * @return {Phaser.Math.Vector4} This Vector4.
+     */
+    subtract: function (v)
+    {
+        this.x -= v.x;
+        this.y -= v.y;
+        this.z -= v.z || 0;
+        this.w -= v.w || 0;
+
+        return this;
+    },
+
+    /**
+     * Scale this Vector by the given value.
+     *
+     * @method Phaser.Math.Vector4#scale
+     * @since 3.0.0
+     *
+     * @param {number} scale - The value to scale this Vector by.
+     *
+     * @return {Phaser.Math.Vector4} This Vector4.
+     */
+    scale: function (scale)
+    {
+        this.x *= scale;
+        this.y *= scale;
+        this.z *= scale;
+        this.w *= scale;
+
+        return this;
+    },
+
+    /**
+     * Calculate the length (or magnitude) of this Vector.
+     *
+     * @method Phaser.Math.Vector4#length
+     * @since 3.0.0
+     *
+     * @return {number} The length of this Vector.
+     */
+    length: function ()
+    {
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+        var w = this.w;
+
+        return Math.sqrt(x * x + y * y + z * z + w * w);
+    },
+
+    /**
+     * Calculate the length of this Vector squared.
+     *
+     * @method Phaser.Math.Vector4#lengthSq
+     * @since 3.0.0
+     *
+     * @return {number} The length of this Vector, squared.
+     */
+    lengthSq: function ()
+    {
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+        var w = this.w;
+
+        return x * x + y * y + z * z + w * w;
+    },
+
+    /**
+     * Normalize this Vector.
+     *
+     * Makes the vector a unit length vector (magnitude of 1) in the same direction.
+     *
+     * @method Phaser.Math.Vector4#normalize
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Vector4} This Vector4.
+     */
+    normalize: function ()
+    {
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+        var w = this.w;
+        var len = x * x + y * y + z * z + w * w;
+
+        if (len > 0)
+        {
+            len = 1 / Math.sqrt(len);
+
+            this.x = x * len;
+            this.y = y * len;
+            this.z = z * len;
+            this.w = w * len;
+        }
+
+        return this;
+    },
+
+    /**
+     * Calculate the dot product of this Vector and the given Vector.
+     *
+     * @method Phaser.Math.Vector4#dot
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Vector4} v - The Vector4 to dot product with this Vector4.
+     *
+     * @return {number} The dot product of this Vector and the given Vector.
+     */
+    dot: function (v)
+    {
+        return this.x * v.x + this.y * v.y + this.z * v.z + this.w * v.w;
+    },
+
+    /**
+     * Linearly interpolate between this Vector and the given Vector.
+     *
+     * Interpolates this Vector towards the given Vector.
+     *
+     * @method Phaser.Math.Vector4#lerp
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Vector4} v - The Vector4 to interpolate towards.
+     * @param {number} [t=0] - The interpolation percentage, between 0 and 1.
+     *
+     * @return {Phaser.Math.Vector4} This Vector4.
+     */
+    lerp: function (v, t)
+    {
+        if (t === undefined) { t = 0; }
+
+        var ax = this.x;
+        var ay = this.y;
+        var az = this.z;
+        var aw = this.w;
+
+        this.x = ax + t * (v.x - ax);
+        this.y = ay + t * (v.y - ay);
+        this.z = az + t * (v.z - az);
+        this.w = aw + t * (v.w - aw);
+
+        return this;
+    },
+
+    /**
+     * Perform a component-wise multiplication between this Vector and the given Vector.
+     *
+     * Multiplies this Vector by the given Vector.
+     *
+     * @method Phaser.Math.Vector4#multiply
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4)} v - The Vector to multiply this Vector by.
+     *
+     * @return {Phaser.Math.Vector4} This Vector4.
+     */
+    multiply: function (v)
+    {
+        this.x *= v.x;
+        this.y *= v.y;
+        this.z *= v.z || 1;
+        this.w *= v.w || 1;
+
+        return this;
+    },
+
+    /**
+     * Perform a component-wise division between this Vector and the given Vector.
+     *
+     * Divides this Vector by the given Vector.
+     *
+     * @method Phaser.Math.Vector4#divide
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4)} v - The Vector to divide this Vector by.
+     *
+     * @return {Phaser.Math.Vector4} This Vector4.
+     */
+    divide: function (v)
+    {
+        this.x /= v.x;
+        this.y /= v.y;
+        this.z /= v.z || 1;
+        this.w /= v.w || 1;
+
+        return this;
+    },
+
+    /**
+     * Calculate the distance between this Vector and the given Vector.
+     *
+     * @method Phaser.Math.Vector4#distance
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4)} v - The Vector to calculate the distance to.
+     *
+     * @return {number} The distance from this Vector to the given Vector.
+     */
+    distance: function (v)
+    {
+        var dx = v.x - this.x;
+        var dy = v.y - this.y;
+        var dz = v.z - this.z || 0;
+        var dw = v.w - this.w || 0;
+
+        return Math.sqrt(dx * dx + dy * dy + dz * dz + dw * dw);
+    },
+
+    /**
+     * Calculate the distance between this Vector and the given Vector, squared.
+     *
+     * @method Phaser.Math.Vector4#distanceSq
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4)} v - The Vector to calculate the distance to.
+     *
+     * @return {number} The distance from this Vector to the given Vector, squared.
+     */
+    distanceSq: function (v)
+    {
+        var dx = v.x - this.x;
+        var dy = v.y - this.y;
+        var dz = v.z - this.z || 0;
+        var dw = v.w - this.w || 0;
+
+        return dx * dx + dy * dy + dz * dz + dw * dw;
+    },
+
+    /**
+     * Negate the `x`, `y`, `z` and `w` components of this Vector.
+     *
+     * @method Phaser.Math.Vector4#negate
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Vector4} This Vector4.
+     */
+    negate: function ()
+    {
+        this.x = -this.x;
+        this.y = -this.y;
+        this.z = -this.z;
+        this.w = -this.w;
+
+        return this;
+    },
+
+    /**
+     * Transform this Vector with the given Matrix.
+     *
+     * @method Phaser.Math.Vector4#transformMat4
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Matrix4} mat - The Matrix4 to transform this Vector4 with.
+     *
+     * @return {Phaser.Math.Vector4} This Vector4.
+     */
+    transformMat4: function (mat)
+    {
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+        var w = this.w;
+        var m = mat.val;
+
+        this.x = m[0] * x + m[4] * y + m[8] * z + m[12] * w;
+        this.y = m[1] * x + m[5] * y + m[9] * z + m[13] * w;
+        this.z = m[2] * x + m[6] * y + m[10] * z + m[14] * w;
+        this.w = m[3] * x + m[7] * y + m[11] * z + m[15] * w;
+
+        return this;
+    },
+
+    /**
+     * Transform this Vector with the given Quaternion.
+     *
+     * @method Phaser.Math.Vector4#transformQuat
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Quaternion} q - The Quaternion to transform this Vector with.
+     *
+     * @return {Phaser.Math.Vector4} This Vector4.
+     */
+    transformQuat: function (q)
+    {
+        // TODO: is this really the same as Vector3?
+        // Also, what about this: http://molecularmusings.wordpress.com/2013/05/24/a-faster-quaternion-vector-multiplication/
+        // benchmarks: http://jsperf.com/quaternion-transform-vec3-implementations
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+        var qx = q.x;
+        var qy = q.y;
+        var qz = q.z;
+        var qw = q.w;
+
+        // calculate quat * vec
+        var ix = qw * x + qy * z - qz * y;
+        var iy = qw * y + qz * x - qx * z;
+        var iz = qw * z + qx * y - qy * x;
+        var iw = -qx * x - qy * y - qz * z;
+
+        // calculate result * inverse quat
+        this.x = ix * qw + iw * -qx + iy * -qz - iz * -qy;
+        this.y = iy * qw + iw * -qy + iz * -qx - ix * -qz;
+        this.z = iz * qw + iw * -qz + ix * -qy - iy * -qx;
+
+        return this;
+    },
+
+    /**
+     * Make this Vector the zero vector (0, 0, 0, 0).
+     *
+     * @method Phaser.Math.Vector4#reset
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Vector4} This Vector4.
+     */
+    reset: function ()
+    {
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+        this.w = 0;
+
+        return this;
+    }
+
+});
+
+//  TODO: Check if these are required internally, if not, remove.
+Vector4.prototype.sub = Vector4.prototype.subtract;
+Vector4.prototype.mul = Vector4.prototype.multiply;
+Vector4.prototype.div = Vector4.prototype.divide;
+Vector4.prototype.dist = Vector4.prototype.distance;
+Vector4.prototype.distSq = Vector4.prototype.distanceSq;
+Vector4.prototype.len = Vector4.prototype.length;
+Vector4.prototype.lenSq = Vector4.prototype.lengthSq;
+
+module.exports = Vector4;
+
+
+/***/ }),
+
+/***/ "../../../src/math/Within.js":
+/*!*********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Within.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Checks if the two values are within the given `tolerance` of each other.
+ *
+ * @function Phaser.Math.Within
+ * @since 3.0.0
+ *
+ * @param {number} a - The first value to use in the calculation.
+ * @param {number} b - The second value to use in the calculation.
+ * @param {number} tolerance - The tolerance. Anything equal to or less than this value is considered as being within range.
+ *
+ * @return {boolean} Returns `true` if `a` is less than or equal to the tolerance of `b`.
+ */
+var Within = function (a, b, tolerance)
+{
+    return (Math.abs(a - b) <= tolerance);
+};
+
+module.exports = Within;
+
+
+/***/ }),
+
 /***/ "../../../src/math/Wrap.js":
 /*!*******************************************!*\
   !*** D:/wamp/www/phaser/src/math/Wrap.js ***!
@@ -7609,6 +12937,154 @@ var Wrap = function (value, min, max)
 };
 
 module.exports = Wrap;
+
+
+/***/ }),
+
+/***/ "../../../src/math/angle/Between.js":
+/*!****************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/angle/Between.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Find the angle of a segment from (x1, y1) -> (x2, y2).
+ *
+ * @function Phaser.Math.Angle.Between
+ * @since 3.0.0
+ *
+ * @param {number} x1 - The x coordinate of the first point.
+ * @param {number} y1 - The y coordinate of the first point.
+ * @param {number} x2 - The x coordinate of the second point.
+ * @param {number} y2 - The y coordinate of the second point.
+ *
+ * @return {number} The angle in radians.
+ */
+var Between = function (x1, y1, x2, y2)
+{
+    return Math.atan2(y2 - y1, x2 - x1);
+};
+
+module.exports = Between;
+
+
+/***/ }),
+
+/***/ "../../../src/math/angle/BetweenPoints.js":
+/*!**********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/angle/BetweenPoints.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Find the angle of a segment from (point1.x, point1.y) -> (point2.x, point2.y).
+ *
+ * Calculates the angle of the vector from the first point to the second point.
+ *
+ * @function Phaser.Math.Angle.BetweenPoints
+ * @since 3.0.0
+ *
+ * @param {(Phaser.Geom.Point|object)} point1 - The first point.
+ * @param {(Phaser.Geom.Point|object)} point2 - The second point.
+ *
+ * @return {number} The angle in radians.
+ */
+var BetweenPoints = function (point1, point2)
+{
+    return Math.atan2(point2.y - point1.y, point2.x - point1.x);
+};
+
+module.exports = BetweenPoints;
+
+
+/***/ }),
+
+/***/ "../../../src/math/angle/BetweenPointsY.js":
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/angle/BetweenPointsY.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Find the angle of a segment from (point1.x, point1.y) -> (point2.x, point2.y).
+ *
+ * The difference between this method and {@link Phaser.Math.Angle.BetweenPoints} is that this assumes the y coordinate
+ * travels down the screen.
+ *
+ * @function Phaser.Math.Angle.BetweenPointsY
+ * @since 3.0.0
+ *
+ * @param {(Phaser.Geom.Point|object)} point1 - The first point.
+ * @param {(Phaser.Geom.Point|object)} point2 - The second point.
+ *
+ * @return {number} The angle in radians.
+ */
+var BetweenPointsY = function (point1, point2)
+{
+    return Math.atan2(point2.x - point1.x, point2.y - point1.y);
+};
+
+module.exports = BetweenPointsY;
+
+
+/***/ }),
+
+/***/ "../../../src/math/angle/BetweenY.js":
+/*!*****************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/angle/BetweenY.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Find the angle of a segment from (x1, y1) -> (x2, y2).
+ *
+ * The difference between this method and {@link Phaser.Math.Angle.Between} is that this assumes the y coordinate
+ * travels down the screen.
+ *
+ * @function Phaser.Math.Angle.BetweenY
+ * @since 3.0.0
+ *
+ * @param {number} x1 - The x coordinate of the first point.
+ * @param {number} y1 - The y coordinate of the first point.
+ * @param {number} x2 - The x coordinate of the second point.
+ * @param {number} y2 - The y coordinate of the second point.
+ *
+ * @return {number} The angle in radians.
+ */
+var BetweenY = function (x1, y1, x2, y2)
+{
+    return Math.atan2(x2 - x1, y2 - y1);
+};
+
+module.exports = BetweenY;
 
 
 /***/ }),
@@ -7659,6 +13135,209 @@ var CounterClockwise = function (angle)
 };
 
 module.exports = CounterClockwise;
+
+
+/***/ }),
+
+/***/ "../../../src/math/angle/Normalize.js":
+/*!******************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/angle/Normalize.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Normalize an angle to the [0, 2pi] range.
+ *
+ * @function Phaser.Math.Angle.Normalize
+ * @since 3.0.0
+ *
+ * @param {number} angle - The angle to normalize, in radians.
+ *
+ * @return {number} The normalized angle, in radians.
+ */
+var Normalize = function (angle)
+{
+    angle = angle % (2 * Math.PI);
+
+    if (angle >= 0)
+    {
+        return angle;
+    }
+    else
+    {
+        return angle + 2 * Math.PI;
+    }
+};
+
+module.exports = Normalize;
+
+
+/***/ }),
+
+/***/ "../../../src/math/angle/Reverse.js":
+/*!****************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/angle/Reverse.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Normalize = __webpack_require__(/*! ./Normalize */ "../../../src/math/angle/Normalize.js");
+
+/**
+ * Reverse the given angle.
+ *
+ * @function Phaser.Math.Angle.Reverse
+ * @since 3.0.0
+ *
+ * @param {number} angle - The angle to reverse, in radians.
+ *
+ * @return {number} The reversed angle, in radians.
+ */
+var Reverse = function (angle)
+{
+    return Normalize(angle + Math.PI);
+};
+
+module.exports = Reverse;
+
+
+/***/ }),
+
+/***/ "../../../src/math/angle/RotateTo.js":
+/*!*****************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/angle/RotateTo.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var MATH_CONST = __webpack_require__(/*! ../const */ "../../../src/math/const.js");
+
+/**
+ * Rotates `currentAngle` towards `targetAngle`, taking the shortest rotation distance. The `lerp` argument is the amount to rotate by in this call.
+ *
+ * @function Phaser.Math.Angle.RotateTo
+ * @since 3.0.0
+ *
+ * @param {number} currentAngle - The current angle, in radians.
+ * @param {number} targetAngle - The target angle to rotate to, in radians.
+ * @param {number} [lerp=0.05] - The lerp value to add to the current angle.
+ *
+ * @return {number} The adjusted angle.
+ */
+var RotateTo = function (currentAngle, targetAngle, lerp)
+{
+    if (lerp === undefined) { lerp = 0.05; }
+
+    if (currentAngle === targetAngle)
+    {
+        return currentAngle;
+    }
+
+    if (Math.abs(targetAngle - currentAngle) <= lerp || Math.abs(targetAngle - currentAngle) >= (MATH_CONST.PI2 - lerp))
+    {
+        currentAngle = targetAngle;
+    }
+    else
+    {
+        if (Math.abs(targetAngle - currentAngle) > Math.PI)
+        {
+            if (targetAngle < currentAngle)
+            {
+                targetAngle += MATH_CONST.PI2;
+            }
+            else
+            {
+                targetAngle -= MATH_CONST.PI2;
+            }
+        }
+
+        if (targetAngle > currentAngle)
+        {
+            currentAngle += lerp;
+        }
+        else if (targetAngle < currentAngle)
+        {
+            currentAngle -= lerp;
+        }
+    }
+
+    return currentAngle;
+};
+
+module.exports = RotateTo;
+
+
+/***/ }),
+
+/***/ "../../../src/math/angle/ShortestBetween.js":
+/*!************************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/angle/ShortestBetween.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Gets the shortest angle between `angle1` and `angle2`.
+ *
+ * Both angles must be in the range -180 to 180, which is the same clamped
+ * range that `sprite.angle` uses, so you can pass in two sprite angles to
+ * this method and get the shortest angle back between the two of them.
+ *
+ * The angle returned will be in the same range. If the returned angle is
+ * greater than 0 then it's a counter-clockwise rotation, if < 0 then it's
+ * a clockwise rotation.
+ *
+ * TODO: Wrap the angles in this function?
+ *
+ * @function Phaser.Math.Angle.ShortestBetween
+ * @since 3.0.0
+ *
+ * @param {number} angle1 - The first angle in the range -180 to 180.
+ * @param {number} angle2 - The second angle in the range -180 to 180.
+ *
+ * @return {number} The shortest angle, in degrees. If greater than zero it's a counter-clockwise rotation.
+ */
+var ShortestBetween = function (angle1, angle2)
+{
+    var difference = angle2 - angle1;
+
+    if (difference === 0)
+    {
+        return 0;
+    }
+
+    var times = Math.floor((difference - (-180)) / 360);
+
+    return difference - (times * 360);
+
+};
+
+module.exports = ShortestBetween;
 
 
 /***/ }),
@@ -7737,6 +13416,42 @@ module.exports = WrapDegrees;
 
 /***/ }),
 
+/***/ "../../../src/math/angle/index.js":
+/*!**************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/angle/index.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Angle
+ */
+
+module.exports = {
+
+    Between: __webpack_require__(/*! ./Between */ "../../../src/math/angle/Between.js"),
+    BetweenPoints: __webpack_require__(/*! ./BetweenPoints */ "../../../src/math/angle/BetweenPoints.js"),
+    BetweenPointsY: __webpack_require__(/*! ./BetweenPointsY */ "../../../src/math/angle/BetweenPointsY.js"),
+    BetweenY: __webpack_require__(/*! ./BetweenY */ "../../../src/math/angle/BetweenY.js"),
+    CounterClockwise: __webpack_require__(/*! ./CounterClockwise */ "../../../src/math/angle/CounterClockwise.js"),
+    Normalize: __webpack_require__(/*! ./Normalize */ "../../../src/math/angle/Normalize.js"),
+    Reverse: __webpack_require__(/*! ./Reverse */ "../../../src/math/angle/Reverse.js"),
+    RotateTo: __webpack_require__(/*! ./RotateTo */ "../../../src/math/angle/RotateTo.js"),
+    ShortestBetween: __webpack_require__(/*! ./ShortestBetween */ "../../../src/math/angle/ShortestBetween.js"),
+    Wrap: __webpack_require__(/*! ./Wrap */ "../../../src/math/angle/Wrap.js"),
+    WrapDegrees: __webpack_require__(/*! ./WrapDegrees */ "../../../src/math/angle/WrapDegrees.js")
+
+};
+
+
+/***/ }),
+
 /***/ "../../../src/math/const.js":
 /*!********************************************!*\
   !*** D:/wamp/www/phaser/src/math/const.js ***!
@@ -7810,6 +13525,3357 @@ var MATH_CONST = {
 };
 
 module.exports = MATH_CONST;
+
+
+/***/ }),
+
+/***/ "../../../src/math/distance/DistanceBetween.js":
+/*!***************************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/distance/DistanceBetween.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculate the distance between two sets of coordinates (points).
+ *
+ * @function Phaser.Math.Distance.Between
+ * @since 3.0.0
+ *
+ * @param {number} x1 - The x coordinate of the first point.
+ * @param {number} y1 - The y coordinate of the first point.
+ * @param {number} x2 - The x coordinate of the second point.
+ * @param {number} y2 - The y coordinate of the second point.
+ *
+ * @return {number} The distance between each point.
+ */
+var DistanceBetween = function (x1, y1, x2, y2)
+{
+    var dx = x1 - x2;
+    var dy = y1 - y2;
+
+    return Math.sqrt(dx * dx + dy * dy);
+};
+
+module.exports = DistanceBetween;
+
+
+/***/ }),
+
+/***/ "../../../src/math/distance/DistancePower.js":
+/*!*************************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/distance/DistancePower.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculate the distance between two sets of coordinates (points) to the power of `pow`.
+ *
+ * @function Phaser.Math.Distance.Power
+ * @since 3.0.0
+ *
+ * @param {number} x1 - The x coordinate of the first point.
+ * @param {number} y1 - The y coordinate of the first point.
+ * @param {number} x2 - The x coordinate of the second point.
+ * @param {number} y2 - The y coordinate of the second point.
+ * @param {number} pow - The exponent.
+ *
+ * @return {number} The distance between each point.
+ */
+var DistancePower = function (x1, y1, x2, y2, pow)
+{
+    if (pow === undefined) { pow = 2; }
+
+    return Math.sqrt(Math.pow(x2 - x1, pow) + Math.pow(y2 - y1, pow));
+};
+
+module.exports = DistancePower;
+
+
+/***/ }),
+
+/***/ "../../../src/math/distance/DistanceSquared.js":
+/*!***************************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/distance/DistanceSquared.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculate the distance between two sets of coordinates (points), squared.
+ *
+ * @function Phaser.Math.Distance.Squared
+ * @since 3.0.0
+ *
+ * @param {number} x1 - The x coordinate of the first point.
+ * @param {number} y1 - The y coordinate of the first point.
+ * @param {number} x2 - The x coordinate of the second point.
+ * @param {number} y2 - The y coordinate of the second point.
+ *
+ * @return {number} The distance between each point, squared.
+ */
+var DistanceSquared = function (x1, y1, x2, y2)
+{
+    var dx = x1 - x2;
+    var dy = y1 - y2;
+
+    return dx * dx + dy * dy;
+};
+
+module.exports = DistanceSquared;
+
+
+/***/ }),
+
+/***/ "../../../src/math/distance/index.js":
+/*!*****************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/distance/index.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Distance
+ */
+
+module.exports = {
+
+    Between: __webpack_require__(/*! ./DistanceBetween */ "../../../src/math/distance/DistanceBetween.js"),
+    Power: __webpack_require__(/*! ./DistancePower */ "../../../src/math/distance/DistancePower.js"),
+    Squared: __webpack_require__(/*! ./DistanceSquared */ "../../../src/math/distance/DistanceSquared.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/back/In.js":
+/*!*****************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/back/In.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Back ease-in.
+ *
+ * @function Phaser.Math.Easing.Back.In
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ * @param {number} [overshoot=1.70158] - The overshoot amount.
+ *
+ * @return {number} The tweened value.
+ */
+var In = function (v, overshoot)
+{
+    if (overshoot === undefined) { overshoot = 1.70158; }
+
+    return v * v * ((overshoot + 1) * v - overshoot);
+};
+
+module.exports = In;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/back/InOut.js":
+/*!********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/back/InOut.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Back ease-in/out.
+ *
+ * @function Phaser.Math.Easing.Back.InOut
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ * @param {number} [overshoot=1.70158] - The overshoot amount.
+ *
+ * @return {number} The tweened value.
+ */
+var InOut = function (v, overshoot)
+{
+    if (overshoot === undefined) { overshoot = 1.70158; }
+
+    var s = overshoot * 1.525;
+
+    if ((v *= 2) < 1)
+    {
+        return 0.5 * (v * v * ((s + 1) * v - s));
+    }
+    else
+    {
+        return 0.5 * ((v -= 2) * v * ((s + 1) * v + s) + 2);
+    }
+};
+
+module.exports = InOut;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/back/Out.js":
+/*!******************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/back/Out.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Back ease-out.
+ *
+ * @function Phaser.Math.Easing.Back.Out
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ * @param {number} [overshoot=1.70158] - The overshoot amount.
+ *
+ * @return {number} The tweened value.
+ */
+var Out = function (v, overshoot)
+{
+    if (overshoot === undefined) { overshoot = 1.70158; }
+
+    return --v * v * ((overshoot + 1) * v + overshoot) + 1;
+};
+
+module.exports = Out;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/back/index.js":
+/*!********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/back/index.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Easing.Back
+ */
+
+module.exports = {
+
+    In: __webpack_require__(/*! ./In */ "../../../src/math/easing/back/In.js"),
+    Out: __webpack_require__(/*! ./Out */ "../../../src/math/easing/back/Out.js"),
+    InOut: __webpack_require__(/*! ./InOut */ "../../../src/math/easing/back/InOut.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/bounce/In.js":
+/*!*******************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/bounce/In.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Bounce ease-in.
+ *
+ * @function Phaser.Math.Easing.Bounce.In
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var In = function (v)
+{
+    v = 1 - v;
+
+    if (v < 1 / 2.75)
+    {
+        return 1 - (7.5625 * v * v);
+    }
+    else if (v < 2 / 2.75)
+    {
+        return 1 - (7.5625 * (v -= 1.5 / 2.75) * v + 0.75);
+    }
+    else if (v < 2.5 / 2.75)
+    {
+        return 1 - (7.5625 * (v -= 2.25 / 2.75) * v + 0.9375);
+    }
+    else
+    {
+        return 1 - (7.5625 * (v -= 2.625 / 2.75) * v + 0.984375);
+    }
+};
+
+module.exports = In;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/bounce/InOut.js":
+/*!**********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/bounce/InOut.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Bounce ease-in/out.
+ *
+ * @function Phaser.Math.Easing.Bounce.InOut
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var InOut = function (v)
+{
+    var reverse = false;
+
+    if (v < 0.5)
+    {
+        v = 1 - (v * 2);
+        reverse = true;
+    }
+    else
+    {
+        v = (v * 2) - 1;
+    }
+
+    if (v < 1 / 2.75)
+    {
+        v = 7.5625 * v * v;
+    }
+    else if (v < 2 / 2.75)
+    {
+        v = 7.5625 * (v -= 1.5 / 2.75) * v + 0.75;
+    }
+    else if (v < 2.5 / 2.75)
+    {
+        v = 7.5625 * (v -= 2.25 / 2.75) * v + 0.9375;
+    }
+    else
+    {
+        v = 7.5625 * (v -= 2.625 / 2.75) * v + 0.984375;
+    }
+
+    if (reverse)
+    {
+        return (1 - v) * 0.5;
+    }
+    else
+    {
+        return v * 0.5 + 0.5;
+    }
+};
+
+module.exports = InOut;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/bounce/Out.js":
+/*!********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/bounce/Out.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Bounce ease-out.
+ *
+ * @function Phaser.Math.Easing.Bounce.Out
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var Out = function (v)
+{
+    if (v < 1 / 2.75)
+    {
+        return 7.5625 * v * v;
+    }
+    else if (v < 2 / 2.75)
+    {
+        return 7.5625 * (v -= 1.5 / 2.75) * v + 0.75;
+    }
+    else if (v < 2.5 / 2.75)
+    {
+        return 7.5625 * (v -= 2.25 / 2.75) * v + 0.9375;
+    }
+    else
+    {
+        return 7.5625 * (v -= 2.625 / 2.75) * v + 0.984375;
+    }
+};
+
+module.exports = Out;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/bounce/index.js":
+/*!**********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/bounce/index.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Easing.Bounce
+ */
+
+module.exports = {
+
+    In: __webpack_require__(/*! ./In */ "../../../src/math/easing/bounce/In.js"),
+    Out: __webpack_require__(/*! ./Out */ "../../../src/math/easing/bounce/Out.js"),
+    InOut: __webpack_require__(/*! ./InOut */ "../../../src/math/easing/bounce/InOut.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/circular/In.js":
+/*!*********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/circular/In.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Circular ease-in.
+ *
+ * @function Phaser.Math.Easing.Circular.In
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var In = function (v)
+{
+    return 1 - Math.sqrt(1 - v * v);
+};
+
+module.exports = In;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/circular/InOut.js":
+/*!************************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/circular/InOut.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Circular ease-in/out.
+ *
+ * @function Phaser.Math.Easing.Circular.InOut
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var InOut = function (v)
+{
+    if ((v *= 2) < 1)
+    {
+        return -0.5 * (Math.sqrt(1 - v * v) - 1);
+    }
+    else
+    {
+        return 0.5 * (Math.sqrt(1 - (v -= 2) * v) + 1);
+    }
+};
+
+module.exports = InOut;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/circular/Out.js":
+/*!**********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/circular/Out.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Circular ease-out.
+ *
+ * @function Phaser.Math.Easing.Circular.Out
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var Out = function (v)
+{
+    return Math.sqrt(1 - (--v * v));
+};
+
+module.exports = Out;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/circular/index.js":
+/*!************************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/circular/index.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Easing.Circular
+ */
+
+module.exports = {
+
+    In: __webpack_require__(/*! ./In */ "../../../src/math/easing/circular/In.js"),
+    Out: __webpack_require__(/*! ./Out */ "../../../src/math/easing/circular/Out.js"),
+    InOut: __webpack_require__(/*! ./InOut */ "../../../src/math/easing/circular/InOut.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/cubic/In.js":
+/*!******************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/cubic/In.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Cubic ease-in.
+ *
+ * @function Phaser.Math.Easing.Cubic.In
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var In = function (v)
+{
+    return v * v * v;
+};
+
+module.exports = In;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/cubic/InOut.js":
+/*!*********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/cubic/InOut.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Cubic ease-in/out.
+ *
+ * @function Phaser.Math.Easing.Cubic.InOut
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var InOut = function (v)
+{
+    if ((v *= 2) < 1)
+    {
+        return 0.5 * v * v * v;
+    }
+    else
+    {
+        return 0.5 * ((v -= 2) * v * v + 2);
+    }
+};
+
+module.exports = InOut;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/cubic/Out.js":
+/*!*******************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/cubic/Out.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Cubic ease-out.
+ *
+ * @function Phaser.Math.Easing.Cubic.Out
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var Out = function (v)
+{
+    return --v * v * v + 1;
+};
+
+module.exports = Out;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/cubic/index.js":
+/*!*********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/cubic/index.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Easing.Cubic
+ */
+
+module.exports = {
+
+    In: __webpack_require__(/*! ./In */ "../../../src/math/easing/cubic/In.js"),
+    Out: __webpack_require__(/*! ./Out */ "../../../src/math/easing/cubic/Out.js"),
+    InOut: __webpack_require__(/*! ./InOut */ "../../../src/math/easing/cubic/InOut.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/elastic/In.js":
+/*!********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/elastic/In.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Elastic ease-in.
+ *
+ * @function Phaser.Math.Easing.Elastic.In
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ * @param {number} [amplitude=0.1] - The amplitude of the elastic ease.
+ * @param {number} [period=0.1] - Sets how tight the sine-wave is, where smaller values are tighter waves, which result in more cycles.
+ *
+ * @return {number} The tweened value.
+ */
+var In = function (v, amplitude, period)
+{
+    if (amplitude === undefined) { amplitude = 0.1; }
+    if (period === undefined) { period = 0.1; }
+
+    if (v === 0)
+    {
+        return 0;
+    }
+    else if (v === 1)
+    {
+        return 1;
+    }
+    else
+    {
+        var s = period / 4;
+
+        if (amplitude < 1)
+        {
+            amplitude = 1;
+        }
+        else
+        {
+            s = period * Math.asin(1 / amplitude) / (2 * Math.PI);
+        }
+
+        return -(amplitude * Math.pow(2, 10 * (v -= 1)) * Math.sin((v - s) * (2 * Math.PI) / period));
+    }
+};
+
+module.exports = In;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/elastic/InOut.js":
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/elastic/InOut.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Elastic ease-in/out.
+ *
+ * @function Phaser.Math.Easing.Elastic.InOut
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ * @param {number} [amplitude=0.1] - The amplitude of the elastic ease.
+ * @param {number} [period=0.1] - Sets how tight the sine-wave is, where smaller values are tighter waves, which result in more cycles.
+ *
+ * @return {number} The tweened value.
+ */
+var InOut = function (v, amplitude, period)
+{
+    if (amplitude === undefined) { amplitude = 0.1; }
+    if (period === undefined) { period = 0.1; }
+
+    if (v === 0)
+    {
+        return 0;
+    }
+    else if (v === 1)
+    {
+        return 1;
+    }
+    else
+    {
+        var s = period / 4;
+
+        if (amplitude < 1)
+        {
+            amplitude = 1;
+        }
+        else
+        {
+            s = period * Math.asin(1 / amplitude) / (2 * Math.PI);
+        }
+
+        if ((v *= 2) < 1)
+        {
+            return -0.5 * (amplitude * Math.pow(2, 10 * (v -= 1)) * Math.sin((v - s) * (2 * Math.PI) / period));
+        }
+        else
+        {
+            return amplitude * Math.pow(2, -10 * (v -= 1)) * Math.sin((v - s) * (2 * Math.PI) / period) * 0.5 + 1;
+        }
+    }
+};
+
+module.exports = InOut;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/elastic/Out.js":
+/*!*********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/elastic/Out.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Elastic ease-out.
+ *
+ * @function Phaser.Math.Easing.Elastic.Out
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ * @param {number} [amplitude=0.1] - The amplitude of the elastic ease.
+ * @param {number} [period=0.1] - Sets how tight the sine-wave is, where smaller values are tighter waves, which result in more cycles.
+ *
+ * @return {number} The tweened value.
+ */
+var Out = function (v, amplitude, period)
+{
+    if (amplitude === undefined) { amplitude = 0.1; }
+    if (period === undefined) { period = 0.1; }
+
+    if (v === 0)
+    {
+        return 0;
+    }
+    else if (v === 1)
+    {
+        return 1;
+    }
+    else
+    {
+        var s = period / 4;
+
+        if (amplitude < 1)
+        {
+            amplitude = 1;
+        }
+        else
+        {
+            s = period * Math.asin(1 / amplitude) / (2 * Math.PI);
+        }
+
+        return (amplitude * Math.pow(2, -10 * v) * Math.sin((v - s) * (2 * Math.PI) / period) + 1);
+    }
+};
+
+module.exports = Out;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/elastic/index.js":
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/elastic/index.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Easing.Elastic
+ */
+
+module.exports = {
+
+    In: __webpack_require__(/*! ./In */ "../../../src/math/easing/elastic/In.js"),
+    Out: __webpack_require__(/*! ./Out */ "../../../src/math/easing/elastic/Out.js"),
+    InOut: __webpack_require__(/*! ./InOut */ "../../../src/math/easing/elastic/InOut.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/expo/In.js":
+/*!*****************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/expo/In.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Exponential ease-in.
+ *
+ * @function Phaser.Math.Easing.Expo.In
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var In = function (v)
+{
+    return Math.pow(2, 10 * (v - 1)) - 0.001;
+};
+
+module.exports = In;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/expo/InOut.js":
+/*!********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/expo/InOut.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Exponential ease-in/out.
+ *
+ * @function Phaser.Math.Easing.Expo.InOut
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var InOut = function (v)
+{
+    if ((v *= 2) < 1)
+    {
+        return 0.5 * Math.pow(2, 10 * (v - 1));
+    }
+    else
+    {
+        return 0.5 * (2 - Math.pow(2, -10 * (v - 1)));
+    }
+};
+
+module.exports = InOut;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/expo/Out.js":
+/*!******************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/expo/Out.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Exponential ease-out.
+ *
+ * @function Phaser.Math.Easing.Expo.Out
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var Out = function (v)
+{
+    return 1 - Math.pow(2, -10 * v);
+};
+
+module.exports = Out;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/expo/index.js":
+/*!********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/expo/index.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Easing.Expo
+ */
+
+module.exports = {
+
+    In: __webpack_require__(/*! ./In */ "../../../src/math/easing/expo/In.js"),
+    Out: __webpack_require__(/*! ./Out */ "../../../src/math/easing/expo/Out.js"),
+    InOut: __webpack_require__(/*! ./InOut */ "../../../src/math/easing/expo/InOut.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/index.js":
+/*!***************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/index.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Easing
+ */
+
+module.exports = {
+
+    Back: __webpack_require__(/*! ./back */ "../../../src/math/easing/back/index.js"),
+    Bounce: __webpack_require__(/*! ./bounce */ "../../../src/math/easing/bounce/index.js"),
+    Circular: __webpack_require__(/*! ./circular */ "../../../src/math/easing/circular/index.js"),
+    Cubic: __webpack_require__(/*! ./cubic */ "../../../src/math/easing/cubic/index.js"),
+    Elastic: __webpack_require__(/*! ./elastic */ "../../../src/math/easing/elastic/index.js"),
+    Expo: __webpack_require__(/*! ./expo */ "../../../src/math/easing/expo/index.js"),
+    Linear: __webpack_require__(/*! ./linear */ "../../../src/math/easing/linear/index.js"),
+    Quadratic: __webpack_require__(/*! ./quadratic */ "../../../src/math/easing/quadratic/index.js"),
+    Quartic: __webpack_require__(/*! ./quartic */ "../../../src/math/easing/quartic/index.js"),
+    Quintic: __webpack_require__(/*! ./quintic */ "../../../src/math/easing/quintic/index.js"),
+    Sine: __webpack_require__(/*! ./sine */ "../../../src/math/easing/sine/index.js"),
+    Stepped: __webpack_require__(/*! ./stepped */ "../../../src/math/easing/stepped/index.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/linear/Linear.js":
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/linear/Linear.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Linear easing (no variation).
+ *
+ * @function Phaser.Math.Easing.Linear.Linear
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var Linear = function (v)
+{
+    return v;
+};
+
+module.exports = Linear;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/linear/index.js":
+/*!**********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/linear/index.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Easing.Linear
+ */
+
+module.exports = __webpack_require__(/*! ./Linear */ "../../../src/math/easing/linear/Linear.js");
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/quadratic/In.js":
+/*!**********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/quadratic/In.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Quadratic ease-in.
+ *
+ * @function Phaser.Math.Easing.Quadratic.In
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var In = function (v)
+{
+    return v * v;
+};
+
+module.exports = In;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/quadratic/InOut.js":
+/*!*************************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/quadratic/InOut.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Quadratic ease-in/out.
+ *
+ * @function Phaser.Math.Easing.Quadratic.InOut
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var InOut = function (v)
+{
+    if ((v *= 2) < 1)
+    {
+        return 0.5 * v * v;
+    }
+    else
+    {
+        return -0.5 * (--v * (v - 2) - 1);
+    }
+};
+
+module.exports = InOut;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/quadratic/Out.js":
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/quadratic/Out.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Quadratic ease-out.
+ *
+ * @function Phaser.Math.Easing.Quadratic.Out
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var Out = function (v)
+{
+    return v * (2 - v);
+};
+
+module.exports = Out;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/quadratic/index.js":
+/*!*************************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/quadratic/index.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Easing.Quadratic
+ */
+
+module.exports = {
+
+    In: __webpack_require__(/*! ./In */ "../../../src/math/easing/quadratic/In.js"),
+    Out: __webpack_require__(/*! ./Out */ "../../../src/math/easing/quadratic/Out.js"),
+    InOut: __webpack_require__(/*! ./InOut */ "../../../src/math/easing/quadratic/InOut.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/quartic/In.js":
+/*!********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/quartic/In.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Quartic ease-in.
+ *
+ * @function Phaser.Math.Easing.Quartic.In
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var In = function (v)
+{
+    return v * v * v * v;
+};
+
+module.exports = In;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/quartic/InOut.js":
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/quartic/InOut.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Quartic ease-in/out.
+ *
+ * @function Phaser.Math.Easing.Quartic.InOut
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var InOut = function (v)
+{
+    if ((v *= 2) < 1)
+    {
+        return 0.5 * v * v * v * v;
+    }
+    else
+    {
+        return -0.5 * ((v -= 2) * v * v * v - 2);
+    }
+};
+
+module.exports = InOut;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/quartic/Out.js":
+/*!*********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/quartic/Out.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Quartic ease-out.
+ *
+ * @function Phaser.Math.Easing.Quartic.Out
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var Out = function (v)
+{
+    return 1 - (--v * v * v * v);
+};
+
+module.exports = Out;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/quartic/index.js":
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/quartic/index.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Easing.Quartic
+ */
+
+module.exports = {
+
+    In: __webpack_require__(/*! ./In */ "../../../src/math/easing/quartic/In.js"),
+    Out: __webpack_require__(/*! ./Out */ "../../../src/math/easing/quartic/Out.js"),
+    InOut: __webpack_require__(/*! ./InOut */ "../../../src/math/easing/quartic/InOut.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/quintic/In.js":
+/*!********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/quintic/In.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Quintic ease-in.
+ *
+ * @function Phaser.Math.Easing.Quintic.In
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var In = function (v)
+{
+    return v * v * v * v * v;
+};
+
+module.exports = In;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/quintic/InOut.js":
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/quintic/InOut.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Quintic ease-in/out.
+ *
+ * @function Phaser.Math.Easing.Quintic.InOut
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var InOut = function (v)
+{
+    if ((v *= 2) < 1)
+    {
+        return 0.5 * v * v * v * v * v;
+    }
+    else
+    {
+        return 0.5 * ((v -= 2) * v * v * v * v + 2);
+    }
+};
+
+module.exports = InOut;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/quintic/Out.js":
+/*!*********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/quintic/Out.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Quintic ease-out.
+ *
+ * @function Phaser.Math.Easing.Quintic.Out
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var Out = function (v)
+{
+    return --v * v * v * v * v + 1;
+};
+
+module.exports = Out;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/quintic/index.js":
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/quintic/index.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Easing.Quintic
+ */
+
+module.exports = {
+
+    In: __webpack_require__(/*! ./In */ "../../../src/math/easing/quintic/In.js"),
+    Out: __webpack_require__(/*! ./Out */ "../../../src/math/easing/quintic/Out.js"),
+    InOut: __webpack_require__(/*! ./InOut */ "../../../src/math/easing/quintic/InOut.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/sine/In.js":
+/*!*****************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/sine/In.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Sinusoidal ease-in.
+ *
+ * @function Phaser.Math.Easing.Sine.In
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var In = function (v)
+{
+    if (v === 0)
+    {
+        return 0;
+    }
+    else if (v === 1)
+    {
+        return 1;
+    }
+    else
+    {
+        return 1 - Math.cos(v * Math.PI / 2);
+    }
+};
+
+module.exports = In;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/sine/InOut.js":
+/*!********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/sine/InOut.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Sinusoidal ease-in/out.
+ *
+ * @function Phaser.Math.Easing.Sine.InOut
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var InOut = function (v)
+{
+    if (v === 0)
+    {
+        return 0;
+    }
+    else if (v === 1)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0.5 * (1 - Math.cos(Math.PI * v));
+    }
+};
+
+module.exports = InOut;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/sine/Out.js":
+/*!******************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/sine/Out.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Sinusoidal ease-out.
+ *
+ * @function Phaser.Math.Easing.Sine.Out
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var Out = function (v)
+{
+    if (v === 0)
+    {
+        return 0;
+    }
+    else if (v === 1)
+    {
+        return 1;
+    }
+    else
+    {
+        return Math.sin(v * Math.PI / 2);
+    }
+};
+
+module.exports = Out;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/sine/index.js":
+/*!********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/sine/index.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Easing.Sine
+ */
+
+module.exports = {
+
+    In: __webpack_require__(/*! ./In */ "../../../src/math/easing/sine/In.js"),
+    Out: __webpack_require__(/*! ./Out */ "../../../src/math/easing/sine/Out.js"),
+    InOut: __webpack_require__(/*! ./InOut */ "../../../src/math/easing/sine/InOut.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/stepped/Stepped.js":
+/*!*************************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/stepped/Stepped.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Stepped easing.
+ *
+ * @function Phaser.Math.Easing.Stepped.Stepped
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ * @param {number} [steps=1] - The number of steps in the ease.
+ *
+ * @return {number} The tweened value.
+ */
+var Stepped = function (v, steps)
+{
+    if (steps === undefined) { steps = 1; }
+
+    if (v <= 0)
+    {
+        return 0;
+    }
+    else if (v >= 1)
+    {
+        return 1;
+    }
+    else
+    {
+        return (((steps * v) | 0) + 1) * (1 / steps);
+    }
+};
+
+module.exports = Stepped;
+
+
+/***/ }),
+
+/***/ "../../../src/math/easing/stepped/index.js":
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/easing/stepped/index.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Easing.Stepped
+ */
+
+module.exports = __webpack_require__(/*! ./Stepped */ "../../../src/math/easing/stepped/Stepped.js");
+
+
+/***/ }),
+
+/***/ "../../../src/math/fuzzy/Ceil.js":
+/*!*************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/fuzzy/Ceil.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculate the fuzzy ceiling of the given value.
+ *
+ * @function Phaser.Math.Fuzzy.Ceil
+ * @since 3.0.0
+ *
+ * @param {number} value - The value.
+ * @param {number} [epsilon=0.0001] - The epsilon.
+ *
+ * @return {number} The fuzzy ceiling of the value.
+ */
+var Ceil = function (value, epsilon)
+{
+    if (epsilon === undefined) { epsilon = 0.0001; }
+
+    return Math.ceil(value - epsilon);
+};
+
+module.exports = Ceil;
+
+
+/***/ }),
+
+/***/ "../../../src/math/fuzzy/Equal.js":
+/*!**************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/fuzzy/Equal.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Check whether the given values are fuzzily equal.
+ *
+ * Two numbers are fuzzily equal if their difference is less than `epsilon`.
+ *
+ * @function Phaser.Math.Fuzzy.Equal
+ * @since 3.0.0
+ *
+ * @param {number} a - The first value.
+ * @param {number} b - The second value.
+ * @param {number} [epsilon=0.0001] - The epsilon.
+ *
+ * @return {boolean} `true` if the values are fuzzily equal, otherwise `false`.
+ */
+var Equal = function (a, b, epsilon)
+{
+    if (epsilon === undefined) { epsilon = 0.0001; }
+
+    return Math.abs(a - b) < epsilon;
+};
+
+module.exports = Equal;
+
+
+/***/ }),
+
+/***/ "../../../src/math/fuzzy/Floor.js":
+/*!**************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/fuzzy/Floor.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculate the fuzzy floor of the given value.
+ *
+ * @function Phaser.Math.Fuzzy.Floor
+ * @since 3.0.0
+ *
+ * @param {number} value - The value.
+ * @param {number} [epsilon=0.0001] - The epsilon.
+ *
+ * @return {number} The floor of the value.
+ */
+var Floor = function (value, epsilon)
+{
+    if (epsilon === undefined) { epsilon = 0.0001; }
+
+    return Math.floor(value + epsilon);
+};
+
+module.exports = Floor;
+
+
+/***/ }),
+
+/***/ "../../../src/math/fuzzy/GreaterThan.js":
+/*!********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/fuzzy/GreaterThan.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Check whether `a` is fuzzily greater than `b`.
+ *
+ * `a` is fuzzily greater than `b` if it is more than `b - epsilon`.
+ *
+ * @function Phaser.Math.Fuzzy.GreaterThan
+ * @since 3.0.0
+ *
+ * @param {number} a - The first value.
+ * @param {number} b - The second value.
+ * @param {number} [epsilon=0.0001] - The epsilon.
+ *
+ * @return {boolean} `true` if `a` is fuzzily greater than than `b`, otherwise `false`.
+ */
+var GreaterThan = function (a, b, epsilon)
+{
+    if (epsilon === undefined) { epsilon = 0.0001; }
+
+    return a > b - epsilon;
+};
+
+module.exports = GreaterThan;
+
+
+/***/ }),
+
+/***/ "../../../src/math/fuzzy/LessThan.js":
+/*!*****************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/fuzzy/LessThan.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Check whether `a` is fuzzily less than `b`.
+ *
+ * `a` is fuzzily less than `b` if it is less than `b + epsilon`.
+ *
+ * @function Phaser.Math.Fuzzy.LessThan
+ * @since 3.0.0
+ *
+ * @param {number} a - The first value.
+ * @param {number} b - The second value.
+ * @param {number} [epsilon=0.0001] - The epsilon.
+ *
+ * @return {boolean} `true` if `a` is fuzzily less than `b`, otherwise `false`.
+ */
+var LessThan = function (a, b, epsilon)
+{
+    if (epsilon === undefined) { epsilon = 0.0001; }
+
+    return a < b + epsilon;
+};
+
+module.exports = LessThan;
+
+
+/***/ }),
+
+/***/ "../../../src/math/fuzzy/index.js":
+/*!**************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/fuzzy/index.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Fuzzy
+ */
+
+module.exports = {
+
+    Ceil: __webpack_require__(/*! ./Ceil */ "../../../src/math/fuzzy/Ceil.js"),
+    Equal: __webpack_require__(/*! ./Equal */ "../../../src/math/fuzzy/Equal.js"),
+    Floor: __webpack_require__(/*! ./Floor */ "../../../src/math/fuzzy/Floor.js"),
+    GreaterThan: __webpack_require__(/*! ./GreaterThan */ "../../../src/math/fuzzy/GreaterThan.js"),
+    LessThan: __webpack_require__(/*! ./LessThan */ "../../../src/math/fuzzy/LessThan.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/math/index.js":
+/*!********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/index.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var CONST = __webpack_require__(/*! ./const */ "../../../src/math/const.js");
+var Extend = __webpack_require__(/*! ../utils/object/Extend */ "../../../src/utils/object/Extend.js");
+
+/**
+ * @namespace Phaser.Math
+ */
+
+var PhaserMath = {
+
+    //  Collections of functions
+    Angle: __webpack_require__(/*! ./angle/ */ "../../../src/math/angle/index.js"),
+    Distance: __webpack_require__(/*! ./distance/ */ "../../../src/math/distance/index.js"),
+    Easing: __webpack_require__(/*! ./easing/ */ "../../../src/math/easing/index.js"),
+    Fuzzy: __webpack_require__(/*! ./fuzzy/ */ "../../../src/math/fuzzy/index.js"),
+    Interpolation: __webpack_require__(/*! ./interpolation/ */ "../../../src/math/interpolation/index.js"),
+    Pow2: __webpack_require__(/*! ./pow2/ */ "../../../src/math/pow2/index.js"),
+    Snap: __webpack_require__(/*! ./snap/ */ "../../../src/math/snap/index.js"),
+
+    //  Expose the RNG Class
+    RandomDataGenerator: __webpack_require__(/*! ./random-data-generator/RandomDataGenerator */ "../../../src/math/random-data-generator/RandomDataGenerator.js"),
+
+    //  Single functions
+    Average: __webpack_require__(/*! ./Average */ "../../../src/math/Average.js"),
+    Bernstein: __webpack_require__(/*! ./Bernstein */ "../../../src/math/Bernstein.js"),
+    Between: __webpack_require__(/*! ./Between */ "../../../src/math/Between.js"),
+    CatmullRom: __webpack_require__(/*! ./CatmullRom */ "../../../src/math/CatmullRom.js"),
+    CeilTo: __webpack_require__(/*! ./CeilTo */ "../../../src/math/CeilTo.js"),
+    Clamp: __webpack_require__(/*! ./Clamp */ "../../../src/math/Clamp.js"),
+    DegToRad: __webpack_require__(/*! ./DegToRad */ "../../../src/math/DegToRad.js"),
+    Difference: __webpack_require__(/*! ./Difference */ "../../../src/math/Difference.js"),
+    Factorial: __webpack_require__(/*! ./Factorial */ "../../../src/math/Factorial.js"),
+    FloatBetween: __webpack_require__(/*! ./FloatBetween */ "../../../src/math/FloatBetween.js"),
+    FloorTo: __webpack_require__(/*! ./FloorTo */ "../../../src/math/FloorTo.js"),
+    FromPercent: __webpack_require__(/*! ./FromPercent */ "../../../src/math/FromPercent.js"),
+    GetSpeed: __webpack_require__(/*! ./GetSpeed */ "../../../src/math/GetSpeed.js"),
+    IsEven: __webpack_require__(/*! ./IsEven */ "../../../src/math/IsEven.js"),
+    IsEvenStrict: __webpack_require__(/*! ./IsEvenStrict */ "../../../src/math/IsEvenStrict.js"),
+    Linear: __webpack_require__(/*! ./Linear */ "../../../src/math/Linear.js"),
+    MaxAdd: __webpack_require__(/*! ./MaxAdd */ "../../../src/math/MaxAdd.js"),
+    MinSub: __webpack_require__(/*! ./MinSub */ "../../../src/math/MinSub.js"),
+    Percent: __webpack_require__(/*! ./Percent */ "../../../src/math/Percent.js"),
+    RadToDeg: __webpack_require__(/*! ./RadToDeg */ "../../../src/math/RadToDeg.js"),
+    RandomXY: __webpack_require__(/*! ./RandomXY */ "../../../src/math/RandomXY.js"),
+    RandomXYZ: __webpack_require__(/*! ./RandomXYZ */ "../../../src/math/RandomXYZ.js"),
+    RandomXYZW: __webpack_require__(/*! ./RandomXYZW */ "../../../src/math/RandomXYZW.js"),
+    Rotate: __webpack_require__(/*! ./Rotate */ "../../../src/math/Rotate.js"),
+    RotateAround: __webpack_require__(/*! ./RotateAround */ "../../../src/math/RotateAround.js"),
+    RotateAroundDistance: __webpack_require__(/*! ./RotateAroundDistance */ "../../../src/math/RotateAroundDistance.js"),
+    RoundAwayFromZero: __webpack_require__(/*! ./RoundAwayFromZero */ "../../../src/math/RoundAwayFromZero.js"),
+    RoundTo: __webpack_require__(/*! ./RoundTo */ "../../../src/math/RoundTo.js"),
+    SinCosTableGenerator: __webpack_require__(/*! ./SinCosTableGenerator */ "../../../src/math/SinCosTableGenerator.js"),
+    SmootherStep: __webpack_require__(/*! ./SmootherStep */ "../../../src/math/SmootherStep.js"),
+    SmoothStep: __webpack_require__(/*! ./SmoothStep */ "../../../src/math/SmoothStep.js"),
+    ToXY: __webpack_require__(/*! ./ToXY */ "../../../src/math/ToXY.js"),
+    TransformXY: __webpack_require__(/*! ./TransformXY */ "../../../src/math/TransformXY.js"),
+    Within: __webpack_require__(/*! ./Within */ "../../../src/math/Within.js"),
+    Wrap: __webpack_require__(/*! ./Wrap */ "../../../src/math/Wrap.js"),
+
+    //  Vector classes
+    Vector2: __webpack_require__(/*! ./Vector2 */ "../../../src/math/Vector2.js"),
+    Vector3: __webpack_require__(/*! ./Vector3 */ "../../../src/math/Vector3.js"),
+    Vector4: __webpack_require__(/*! ./Vector4 */ "../../../src/math/Vector4.js"),
+    Matrix3: __webpack_require__(/*! ./Matrix3 */ "../../../src/math/Matrix3.js"),
+    Matrix4: __webpack_require__(/*! ./Matrix4 */ "../../../src/math/Matrix4.js"),
+    Quaternion: __webpack_require__(/*! ./Quaternion */ "../../../src/math/Quaternion.js"),
+    RotateVec3: __webpack_require__(/*! ./RotateVec3 */ "../../../src/math/RotateVec3.js")
+
+};
+
+//   Merge in the consts
+
+PhaserMath = Extend(false, PhaserMath, CONST);
+
+//  Export it
+
+module.exports = PhaserMath;
+
+
+/***/ }),
+
+/***/ "../../../src/math/interpolation/BezierInterpolation.js":
+/*!************************************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/interpolation/BezierInterpolation.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Bernstein = __webpack_require__(/*! ../Bernstein */ "../../../src/math/Bernstein.js");
+
+/**
+ * A bezier interpolation method.
+ *
+ * @function Phaser.Math.Interpolation.Bezier
+ * @since 3.0.0
+ *
+ * @param {number[]} v - The input array of values to interpolate between.
+ * @param {number} k - The percentage of interpolation, between 0 and 1.
+ *
+ * @return {number} The interpolated value.
+ */
+var BezierInterpolation = function (v, k)
+{
+    var b = 0;
+    var n = v.length - 1;
+
+    for (var i = 0; i <= n; i++)
+    {
+        b += Math.pow(1 - k, n - i) * Math.pow(k, i) * v[i] * Bernstein(n, i);
+    }
+
+    return b;
+};
+
+module.exports = BezierInterpolation;
+
+
+/***/ }),
+
+/***/ "../../../src/math/interpolation/CatmullRomInterpolation.js":
+/*!****************************************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/interpolation/CatmullRomInterpolation.js ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var CatmullRom = __webpack_require__(/*! ../CatmullRom */ "../../../src/math/CatmullRom.js");
+
+/**
+ * A Catmull-Rom interpolation method.
+ *
+ * @function Phaser.Math.Interpolation.CatmullRom
+ * @since 3.0.0
+ *
+ * @param {number[]} v - The input array of values to interpolate between.
+ * @param {number} k - The percentage of interpolation, between 0 and 1.
+ *
+ * @return {number} The interpolated value.
+ */
+var CatmullRomInterpolation = function (v, k)
+{
+    var m = v.length - 1;
+    var f = m * k;
+    var i = Math.floor(f);
+
+    if (v[0] === v[m])
+    {
+        if (k < 0)
+        {
+            i = Math.floor(f = m * (1 + k));
+        }
+
+        return CatmullRom(f - i, v[(i - 1 + m) % m], v[i], v[(i + 1) % m], v[(i + 2) % m]);
+    }
+    else
+    {
+        if (k < 0)
+        {
+            return v[0] - (CatmullRom(-f, v[0], v[0], v[1], v[1]) - v[0]);
+        }
+
+        if (k > 1)
+        {
+            return v[m] - (CatmullRom(f - m, v[m], v[m], v[m - 1], v[m - 1]) - v[m]);
+        }
+
+        return CatmullRom(f - i, v[i ? i - 1 : 0], v[i], v[m < i + 1 ? m : i + 1], v[m < i + 2 ? m : i + 2]);
+    }
+};
+
+module.exports = CatmullRomInterpolation;
+
+
+/***/ }),
+
+/***/ "../../../src/math/interpolation/CubicBezierInterpolation.js":
+/*!*****************************************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/interpolation/CubicBezierInterpolation.js ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @ignore
+ */
+function P0 (t, p)
+{
+    var k = 1 - t;
+
+    return k * k * k * p;
+}
+
+/**
+ * @ignore
+ */
+function P1 (t, p)
+{
+    var k = 1 - t;
+
+    return 3 * k * k * t * p;
+}
+
+/**
+ * @ignore
+ */
+function P2 (t, p)
+{
+    return 3 * (1 - t) * t * t * p;
+}
+
+/**
+ * @ignore
+ */
+function P3 (t, p)
+{
+    return t * t * t * p;
+}
+
+/**
+ * A cubic bezier interpolation method.
+ *
+ * https://medium.com/@adrian_cooney/bezier-interpolation-13b68563313a
+ *
+ * @function Phaser.Math.Interpolation.CubicBezier
+ * @since 3.0.0
+ *
+ * @param {number} t - The percentage of interpolation, between 0 and 1.
+ * @param {number} p0 - The start point.
+ * @param {number} p1 - The first control point.
+ * @param {number} p2 - The second control point.
+ * @param {number} p3 - The end point.
+ *
+ * @return {number} The interpolated value.
+ */
+var CubicBezierInterpolation = function (t, p0, p1, p2, p3)
+{
+    return P0(t, p0) + P1(t, p1) + P2(t, p2) + P3(t, p3);
+};
+
+module.exports = CubicBezierInterpolation;
+
+
+/***/ }),
+
+/***/ "../../../src/math/interpolation/LinearInterpolation.js":
+/*!************************************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/interpolation/LinearInterpolation.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Linear = __webpack_require__(/*! ../Linear */ "../../../src/math/Linear.js");
+
+/**
+ * A linear interpolation method.
+ *
+ * @function Phaser.Math.Interpolation.Linear
+ * @since 3.0.0
+ * @see {@link https://en.wikipedia.org/wiki/Linear_interpolation}
+ *
+ * @param {number[]} v - The input array of values to interpolate between.
+ * @param {!number} k - The percentage of interpolation, between 0 and 1.
+ *
+ * @return {!number} The interpolated value.
+ */
+var LinearInterpolation = function (v, k)
+{
+    var m = v.length - 1;
+    var f = m * k;
+    var i = Math.floor(f);
+
+    if (k < 0)
+    {
+        return Linear(v[0], v[1], f);
+    }
+    else if (k > 1)
+    {
+        return Linear(v[m], v[m - 1], m - f);
+    }
+    else
+    {
+        return Linear(v[i], v[(i + 1 > m) ? m : i + 1], f - i);
+    }
+};
+
+module.exports = LinearInterpolation;
+
+
+/***/ }),
+
+/***/ "../../../src/math/interpolation/QuadraticBezierInterpolation.js":
+/*!*********************************************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/interpolation/QuadraticBezierInterpolation.js ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @ignore
+ */
+function P0 (t, p)
+{
+    var k = 1 - t;
+
+    return k * k * p;
+}
+
+/**
+ * @ignore
+ */
+function P1 (t, p)
+{
+    return 2 * (1 - t) * t * p;
+}
+
+/**
+ * @ignore
+ */
+function P2 (t, p)
+{
+    return t * t * p;
+}
+
+// https://github.com/mrdoob/three.js/blob/master/src/extras/core/Interpolations.js
+
+/**
+ * A quadratic bezier interpolation method.
+ *
+ * @function Phaser.Math.Interpolation.QuadraticBezier
+ * @since 3.2.0
+ *
+ * @param {number} t - The percentage of interpolation, between 0 and 1.
+ * @param {number} p0 - The start point.
+ * @param {number} p1 - The control point.
+ * @param {number} p2 - The end point.
+ *
+ * @return {number} The interpolated value.
+ */
+var QuadraticBezierInterpolation = function (t, p0, p1, p2)
+{
+    return P0(t, p0) + P1(t, p1) + P2(t, p2);
+};
+
+module.exports = QuadraticBezierInterpolation;
+
+
+/***/ }),
+
+/***/ "../../../src/math/interpolation/SmoothStepInterpolation.js":
+/*!****************************************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/interpolation/SmoothStepInterpolation.js ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var SmoothStep = __webpack_require__(/*! ../SmoothStep */ "../../../src/math/SmoothStep.js");
+
+/**
+ * A Smooth Step interpolation method.
+ *
+ * @function Phaser.Math.Interpolation.SmoothStep
+ * @since 3.9.0
+ * @see {@link https://en.wikipedia.org/wiki/Smoothstep}
+ *
+ * @param {number} t - The percentage of interpolation, between 0 and 1.
+ * @param {number} min - The minimum value, also known as the 'left edge', assumed smaller than the 'right edge'.
+ * @param {number} max - The maximum value, also known as the 'right edge', assumed greater than the 'left edge'.
+ *
+ * @return {number} The interpolated value.
+ */
+var SmoothStepInterpolation = function (t, min, max)
+{
+    return min + (max - min) * SmoothStep(t, 0, 1);
+};
+
+module.exports = SmoothStepInterpolation;
+
+
+/***/ }),
+
+/***/ "../../../src/math/interpolation/SmootherStepInterpolation.js":
+/*!******************************************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/interpolation/SmootherStepInterpolation.js ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var SmootherStep = __webpack_require__(/*! ../SmootherStep */ "../../../src/math/SmootherStep.js");
+
+/**
+ * A Smoother Step interpolation method.
+ *
+ * @function Phaser.Math.Interpolation.SmootherStep
+ * @since 3.9.0
+ * @see {@link https://en.wikipedia.org/wiki/Smoothstep#Variations}
+ *
+ * @param {number} t - The percentage of interpolation, between 0 and 1.
+ * @param {number} min - The minimum value, also known as the 'left edge', assumed smaller than the 'right edge'.
+ * @param {number} max - The maximum value, also known as the 'right edge', assumed greater than the 'left edge'.
+ *
+ * @return {number} The interpolated value.
+ */
+var SmootherStepInterpolation = function (t, min, max)
+{
+    return min + (max - min) * SmootherStep(t, 0, 1);
+};
+
+module.exports = SmootherStepInterpolation;
+
+
+/***/ }),
+
+/***/ "../../../src/math/interpolation/index.js":
+/*!**********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/interpolation/index.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Interpolation
+ */
+
+module.exports = {
+
+    Bezier: __webpack_require__(/*! ./BezierInterpolation */ "../../../src/math/interpolation/BezierInterpolation.js"),
+    CatmullRom: __webpack_require__(/*! ./CatmullRomInterpolation */ "../../../src/math/interpolation/CatmullRomInterpolation.js"),
+    CubicBezier: __webpack_require__(/*! ./CubicBezierInterpolation */ "../../../src/math/interpolation/CubicBezierInterpolation.js"),
+    Linear: __webpack_require__(/*! ./LinearInterpolation */ "../../../src/math/interpolation/LinearInterpolation.js"),
+    QuadraticBezier: __webpack_require__(/*! ./QuadraticBezierInterpolation */ "../../../src/math/interpolation/QuadraticBezierInterpolation.js"),
+    SmoothStep: __webpack_require__(/*! ./SmoothStepInterpolation */ "../../../src/math/interpolation/SmoothStepInterpolation.js"),
+    SmootherStep: __webpack_require__(/*! ./SmootherStepInterpolation */ "../../../src/math/interpolation/SmootherStepInterpolation.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/math/pow2/GetPowerOfTwo.js":
+/*!*********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/pow2/GetPowerOfTwo.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Returns the nearest power of 2 to the given `value`.
+ *
+ * @function Phaser.Math.Pow2.GetPowerOfTwo
+ * @since 3.0.0
+ *
+ * @param {number} value - The value.
+ *
+ * @return {integer} The nearest power of 2 to `value`.
+ */
+var GetPowerOfTwo = function (value)
+{
+    var index = Math.log(value) / 0.6931471805599453;
+
+    return (1 << Math.ceil(index));
+};
+
+module.exports = GetPowerOfTwo;
+
+
+/***/ }),
+
+/***/ "../../../src/math/pow2/IsSizePowerOfTwo.js":
+/*!************************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/pow2/IsSizePowerOfTwo.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Checks if the given `width` and `height` are a power of two.
+ * Useful for checking texture dimensions.
+ *
+ * @function Phaser.Math.Pow2.IsSizePowerOfTwo
+ * @since 3.0.0
+ *
+ * @param {number} width - The width.
+ * @param {number} height - The height.
+ *
+ * @return {boolean} `true` if `width` and `height` are a power of two, otherwise `false`.
+ */
+var IsSizePowerOfTwo = function (width, height)
+{
+    return (width > 0 && (width & (width - 1)) === 0 && height > 0 && (height & (height - 1)) === 0);
+};
+
+module.exports = IsSizePowerOfTwo;
+
+
+/***/ }),
+
+/***/ "../../../src/math/pow2/IsValuePowerOfTwo.js":
+/*!*************************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/pow2/IsValuePowerOfTwo.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Tests the value and returns `true` if it is a power of two.
+ *
+ * @function Phaser.Math.Pow2.IsValuePowerOfTwo
+ * @since 3.0.0
+ *
+ * @param {number} value - The value to check if it's a power of two.
+ *
+ * @return {boolean} Returns `true` if `value` is a power of two, otherwise `false`.
+ */
+var IsValuePowerOfTwo = function (value)
+{
+    return (value > 0 && (value & (value - 1)) === 0);
+};
+
+module.exports = IsValuePowerOfTwo;
+
+
+/***/ }),
+
+/***/ "../../../src/math/pow2/index.js":
+/*!*************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/pow2/index.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Pow2
+ */
+
+module.exports = {
+
+    GetNext: __webpack_require__(/*! ./GetPowerOfTwo */ "../../../src/math/pow2/GetPowerOfTwo.js"),
+    IsSize: __webpack_require__(/*! ./IsSizePowerOfTwo */ "../../../src/math/pow2/IsSizePowerOfTwo.js"),
+    IsValue: __webpack_require__(/*! ./IsValuePowerOfTwo */ "../../../src/math/pow2/IsValuePowerOfTwo.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/math/random-data-generator/RandomDataGenerator.js":
+/*!********************************************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/random-data-generator/RandomDataGenerator.js ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(/*! ../../utils/Class */ "../../../src/utils/Class.js");
+
+/**
+ * @classdesc
+ * A seeded Random Data Generator.
+ * 
+ * Access via `Phaser.Math.RND` which is an instance of this class pre-defined
+ * by Phaser. Or, create your own instance to use as you require.
+ * 
+ * The `Math.RND` generator is seeded by the Game Config property value `seed`.
+ * If no such config property exists, a random number is used.
+ * 
+ * If you create your own instance of this class you should provide a seed for it.
+ * If no seed is given it will use a 'random' one based on Date.now.
+ *
+ * @class RandomDataGenerator
+ * @memberof Phaser.Math
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {(string|string[])} [seeds] - The seeds to use for the random number generator.
+ */
+var RandomDataGenerator = new Class({
+
+    initialize:
+
+    function RandomDataGenerator (seeds)
+    {
+        if (seeds === undefined) { seeds = [ (Date.now() * Math.random()).toString() ]; }
+
+        /**
+         * Internal var.
+         *
+         * @name Phaser.Math.RandomDataGenerator#c
+         * @type {number}
+         * @default 1
+         * @private
+         * @since 3.0.0
+         */
+        this.c = 1;
+
+        /**
+         * Internal var.
+         *
+         * @name Phaser.Math.RandomDataGenerator#s0
+         * @type {number}
+         * @default 0
+         * @private
+         * @since 3.0.0
+         */
+        this.s0 = 0;
+
+        /**
+         * Internal var.
+         *
+         * @name Phaser.Math.RandomDataGenerator#s1
+         * @type {number}
+         * @default 0
+         * @private
+         * @since 3.0.0
+         */
+        this.s1 = 0;
+
+        /**
+         * Internal var.
+         *
+         * @name Phaser.Math.RandomDataGenerator#s2
+         * @type {number}
+         * @default 0
+         * @private
+         * @since 3.0.0
+         */
+        this.s2 = 0;
+
+        /**
+         * Internal var.
+         *
+         * @name Phaser.Math.RandomDataGenerator#n
+         * @type {number}
+         * @default 0
+         * @private
+         * @since 3.2.0
+         */
+        this.n = 0;
+
+        /**
+         * Signs to choose from.
+         *
+         * @name Phaser.Math.RandomDataGenerator#signs
+         * @type {number[]}
+         * @since 3.0.0
+         */
+        this.signs = [ -1, 1 ];
+
+        if (seeds)
+        {
+            this.init(seeds);
+        }
+    },
+
+    /**
+     * Private random helper.
+     *
+     * @method Phaser.Math.RandomDataGenerator#rnd
+     * @since 3.0.0
+     * @private
+     *
+     * @return {number} A random number.
+     */
+    rnd: function ()
+    {
+        var t = 2091639 * this.s0 + this.c * 2.3283064365386963e-10; // 2^-32
+
+        this.c = t | 0;
+        this.s0 = this.s1;
+        this.s1 = this.s2;
+        this.s2 = t - this.c;
+
+        return this.s2;
+    },
+
+    /**
+     * Internal method that creates a seed hash.
+     *
+     * @method Phaser.Math.RandomDataGenerator#hash
+     * @since 3.0.0
+     * @private
+     *
+     * @param {string} data - The value to hash.
+     *
+     * @return {number} The hashed value.
+     */
+    hash: function (data)
+    {
+        var h;
+        var n = this.n;
+
+        data = data.toString();
+
+        for (var i = 0; i < data.length; i++)
+        {
+            n += data.charCodeAt(i);
+            h = 0.02519603282416938 * n;
+            n = h >>> 0;
+            h -= n;
+            h *= n;
+            n = h >>> 0;
+            h -= n;
+            n += h * 0x100000000;// 2^32
+        }
+
+        this.n = n;
+
+        return (n >>> 0) * 2.3283064365386963e-10;// 2^-32
+    },
+
+    /**
+     * Initialize the state of the random data generator.
+     *
+     * @method Phaser.Math.RandomDataGenerator#init
+     * @since 3.0.0
+     *
+     * @param {(string|string[])} seeds - The seeds to initialize the random data generator with.
+     */
+    init: function (seeds)
+    {
+        if (typeof seeds === 'string')
+        {
+            this.state(seeds);
+        }
+        else
+        {
+            this.sow(seeds);
+        }
+    },
+
+    /**
+     * Reset the seed of the random data generator.
+     *
+     * _Note_: the seed array is only processed up to the first `undefined` (or `null`) value, should such be present.
+     *
+     * @method Phaser.Math.RandomDataGenerator#sow
+     * @since 3.0.0
+     *
+     * @param {string[]} seeds - The array of seeds: the `toString()` of each value is used.
+     */
+    sow: function (seeds)
+    {
+        // Always reset to default seed
+        this.n = 0xefc8249d;
+        this.s0 = this.hash(' ');
+        this.s1 = this.hash(' ');
+        this.s2 = this.hash(' ');
+        this.c = 1;
+
+        if (!seeds)
+        {
+            return;
+        }
+
+        // Apply any seeds
+        for (var i = 0; i < seeds.length && (seeds[i] != null); i++)
+        {
+            var seed = seeds[i];
+
+            this.s0 -= this.hash(seed);
+            this.s0 += ~~(this.s0 < 0);
+            this.s1 -= this.hash(seed);
+            this.s1 += ~~(this.s1 < 0);
+            this.s2 -= this.hash(seed);
+            this.s2 += ~~(this.s2 < 0);
+        }
+    },
+
+    /**
+     * Returns a random integer between 0 and 2^32.
+     *
+     * @method Phaser.Math.RandomDataGenerator#integer
+     * @since 3.0.0
+     *
+     * @return {number} A random integer between 0 and 2^32.
+     */
+    integer: function ()
+    {
+        // 2^32
+        return this.rnd() * 0x100000000;
+    },
+
+    /**
+     * Returns a random real number between 0 and 1.
+     *
+     * @method Phaser.Math.RandomDataGenerator#frac
+     * @since 3.0.0
+     *
+     * @return {number} A random real number between 0 and 1.
+     */
+    frac: function ()
+    {
+        // 2^-53
+        return this.rnd() + (this.rnd() * 0x200000 | 0) * 1.1102230246251565e-16;
+    },
+
+    /**
+     * Returns a random real number between 0 and 2^32.
+     *
+     * @method Phaser.Math.RandomDataGenerator#real
+     * @since 3.0.0
+     *
+     * @return {number} A random real number between 0 and 2^32.
+     */
+    real: function ()
+    {
+        return this.integer() + this.frac();
+    },
+
+    /**
+     * Returns a random integer between and including min and max.
+     *
+     * @method Phaser.Math.RandomDataGenerator#integerInRange
+     * @since 3.0.0
+     *
+     * @param {number} min - The minimum value in the range.
+     * @param {number} max - The maximum value in the range.
+     *
+     * @return {number} A random number between min and max.
+     */
+    integerInRange: function (min, max)
+    {
+        return Math.floor(this.realInRange(0, max - min + 1) + min);
+    },
+
+    /**
+     * Returns a random integer between and including min and max.
+     * This method is an alias for RandomDataGenerator.integerInRange.
+     *
+     * @method Phaser.Math.RandomDataGenerator#between
+     * @since 3.0.0
+     *
+     * @param {number} min - The minimum value in the range.
+     * @param {number} max - The maximum value in the range.
+     *
+     * @return {number} A random number between min and max.
+     */
+    between: function (min, max)
+    {
+        return Math.floor(this.realInRange(0, max - min + 1) + min);
+    },
+
+    /**
+     * Returns a random real number between min and max.
+     *
+     * @method Phaser.Math.RandomDataGenerator#realInRange
+     * @since 3.0.0
+     *
+     * @param {number} min - The minimum value in the range.
+     * @param {number} max - The maximum value in the range.
+     *
+     * @return {number} A random number between min and max.
+     */
+    realInRange: function (min, max)
+    {
+        return this.frac() * (max - min) + min;
+    },
+
+    /**
+     * Returns a random real number between -1 and 1.
+     *
+     * @method Phaser.Math.RandomDataGenerator#normal
+     * @since 3.0.0
+     *
+     * @return {number} A random real number between -1 and 1.
+     */
+    normal: function ()
+    {
+        return 1 - (2 * this.frac());
+    },
+
+    /**
+     * Returns a valid RFC4122 version4 ID hex string from https://gist.github.com/1308368
+     *
+     * @method Phaser.Math.RandomDataGenerator#uuid
+     * @since 3.0.0
+     *
+     * @return {string} A valid RFC4122 version4 ID hex string
+     */
+    uuid: function ()
+    {
+        var a = '';
+        var b = '';
+
+        for (b = a = ''; a++ < 36; b += ~a % 5 | a * 3 & 4 ? (a ^ 15 ? 8 ^ this.frac() * (a ^ 20 ? 16 : 4) : 4).toString(16) : '-')
+        {
+            // eslint-disable-next-line no-empty
+        }
+
+        return b;
+    },
+
+    /**
+     * Returns a random element from within the given array.
+     *
+     * @method Phaser.Math.RandomDataGenerator#pick
+     * @since 3.0.0
+     *
+     * @param {array} array - The array to pick a random element from.
+     *
+     * @return {*} A random member of the array.
+     */
+    pick: function (array)
+    {
+        return array[this.integerInRange(0, array.length - 1)];
+    },
+
+    /**
+     * Returns a sign to be used with multiplication operator.
+     *
+     * @method Phaser.Math.RandomDataGenerator#sign
+     * @since 3.0.0
+     *
+     * @return {number} -1 or +1.
+     */
+    sign: function ()
+    {
+        return this.pick(this.signs);
+    },
+
+    /**
+     * Returns a random element from within the given array, favoring the earlier entries.
+     *
+     * @method Phaser.Math.RandomDataGenerator#weightedPick
+     * @since 3.0.0
+     *
+     * @param {array} array - The array to pick a random element from.
+     *
+     * @return {*} A random member of the array.
+     */
+    weightedPick: function (array)
+    {
+        return array[~~(Math.pow(this.frac(), 2) * (array.length - 1) + 0.5)];
+    },
+
+    /**
+     * Returns a random timestamp between min and max, or between the beginning of 2000 and the end of 2020 if min and max aren't specified.
+     *
+     * @method Phaser.Math.RandomDataGenerator#timestamp
+     * @since 3.0.0
+     *
+     * @param {number} min - The minimum value in the range.
+     * @param {number} max - The maximum value in the range.
+     *
+     * @return {number} A random timestamp between min and max.
+     */
+    timestamp: function (min, max)
+    {
+        return this.realInRange(min || 946684800000, max || 1577862000000);
+    },
+
+    /**
+     * Returns a random angle between -180 and 180.
+     *
+     * @method Phaser.Math.RandomDataGenerator#angle
+     * @since 3.0.0
+     *
+     * @return {number} A random number between -180 and 180.
+     */
+    angle: function ()
+    {
+        return this.integerInRange(-180, 180);
+    },
+
+    /**
+     * Returns a random rotation in radians, between -3.141 and 3.141
+     *
+     * @method Phaser.Math.RandomDataGenerator#rotation
+     * @since 3.0.0
+     *
+     * @return {number} A random number between -3.141 and 3.141
+     */
+    rotation: function ()
+    {
+        return this.realInRange(-3.1415926, 3.1415926);
+    },
+
+    /**
+     * Gets or Sets the state of the generator. This allows you to retain the values
+     * that the generator is using between games, i.e. in a game save file.
+     *
+     * To seed this generator with a previously saved state you can pass it as the
+     * `seed` value in your game config, or call this method directly after Phaser has booted.
+     *
+     * Call this method with no parameters to return the current state.
+     *
+     * If providing a state it should match the same format that this method
+     * returns, which is a string with a header `!rnd` followed by the `c`,
+     * `s0`, `s1` and `s2` values respectively, each comma-delimited.
+     *
+     * @method Phaser.Math.RandomDataGenerator#state
+     * @since 3.0.0
+     *
+     * @param {string} [state] - Generator state to be set.
+     *
+     * @return {string} The current state of the generator.
+     */
+    state: function (state)
+    {
+        if (typeof state === 'string' && state.match(/^!rnd/))
+        {
+            state = state.split(',');
+
+            this.c = parseFloat(state[1]);
+            this.s0 = parseFloat(state[2]);
+            this.s1 = parseFloat(state[3]);
+            this.s2 = parseFloat(state[4]);
+        }
+
+        return [ '!rnd', this.c, this.s0, this.s1, this.s2 ].join(',');
+    },
+
+    /**
+     * Shuffles the given array, using the current seed.
+     *
+     * @method Phaser.Math.RandomDataGenerator#shuffle
+     * @since 3.7.0
+     *
+     * @param {array} [array] - The array to be shuffled.
+     *
+     * @return {array} The shuffled array.
+     */
+    shuffle: function (array)
+    {
+        var len = array.length - 1;
+
+        for (var i = len; i > 0; i--)
+        {
+            var randomIndex = Math.floor(this.frac() * (i + 1));
+            var itemAtIndex = array[randomIndex];
+
+            array[randomIndex] = array[i];
+            array[i] = itemAtIndex;
+        }
+
+        return array;
+    }
+
+});
+
+module.exports = RandomDataGenerator;
+
+
+/***/ }),
+
+/***/ "../../../src/math/snap/SnapCeil.js":
+/*!****************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/snap/SnapCeil.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Snap a value to nearest grid slice, using ceil.
+ *
+ * Example: if you have an interval gap of `5` and a position of `12`... you will snap to `15`.
+ * As will `14` snap to `15`... but `16` will snap to `20`.
+ *
+ * @function Phaser.Math.Snap.Ceil
+ * @since 3.0.0
+ *
+ * @param {number} value - The value to snap.
+ * @param {number} gap - The interval gap of the grid.
+ * @param {number} [start=0] - Optional starting offset for gap.
+ * @param {boolean} [divide=false] - If `true` it will divide the snapped value by the gap before returning.
+ *
+ * @return {number} The snapped value.
+ */
+var SnapCeil = function (value, gap, start, divide)
+{
+    if (start === undefined) { start = 0; }
+
+    if (gap === 0)
+    {
+        return value;
+    }
+
+    value -= start;
+    value = gap * Math.ceil(value / gap);
+
+    return (divide) ? (start + value) / gap : start + value;
+};
+
+module.exports = SnapCeil;
+
+
+/***/ }),
+
+/***/ "../../../src/math/snap/SnapFloor.js":
+/*!*****************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/snap/SnapFloor.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Snap a value to nearest grid slice, using floor.
+ *
+ * Example: if you have an interval gap of `5` and a position of `12`... you will snap to `10`.
+ * As will `14` snap to `10`... but `16` will snap to `15`.
+ *
+ * @function Phaser.Math.Snap.Floor
+ * @since 3.0.0
+ *
+ * @param {number} value - The value to snap.
+ * @param {number} gap - The interval gap of the grid.
+ * @param {number} [start=0] - Optional starting offset for gap.
+ * @param {boolean} [divide=false] - If `true` it will divide the snapped value by the gap before returning.
+ *
+ * @return {number} The snapped value.
+ */
+var SnapFloor = function (value, gap, start, divide)
+{
+    if (start === undefined) { start = 0; }
+
+    if (gap === 0)
+    {
+        return value;
+    }
+
+    value -= start;
+    value = gap * Math.floor(value / gap);
+
+    return (divide) ? (start + value) / gap : start + value;
+};
+
+module.exports = SnapFloor;
+
+
+/***/ }),
+
+/***/ "../../../src/math/snap/SnapTo.js":
+/*!**************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/snap/SnapTo.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Snap a value to nearest grid slice, using rounding.
+ *
+ * Example: if you have an interval gap of `5` and a position of `12`... you will snap to `10` whereas `14` will snap to `15`.
+ *
+ * @function Phaser.Math.Snap.To
+ * @since 3.0.0
+ *
+ * @param {number} value - The value to snap.
+ * @param {number} gap - The interval gap of the grid.
+ * @param {number} [start=0] - Optional starting offset for gap.
+ * @param {boolean} [divide=false] - If `true` it will divide the snapped value by the gap before returning.
+ *
+ * @return {number} The snapped value.
+ */
+var SnapTo = function (value, gap, start, divide)
+{
+    if (start === undefined) { start = 0; }
+
+    if (gap === 0)
+    {
+        return value;
+    }
+
+    value -= start;
+    value = gap * Math.round(value / gap);
+
+    return (divide) ? (start + value) / gap : start + value;
+};
+
+module.exports = SnapTo;
+
+
+/***/ }),
+
+/***/ "../../../src/math/snap/index.js":
+/*!*************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/snap/index.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Snap
+ */
+
+module.exports = {
+
+    Ceil: __webpack_require__(/*! ./SnapCeil */ "../../../src/math/snap/SnapCeil.js"),
+    Floor: __webpack_require__(/*! ./SnapFloor */ "../../../src/math/snap/SnapFloor.js"),
+    To: __webpack_require__(/*! ./SnapTo */ "../../../src/math/snap/SnapTo.js")
+
+};
 
 
 /***/ }),
@@ -8434,6 +17500,65 @@ module.exports = {
     XOR: 27
 
 };
+
+
+/***/ }),
+
+/***/ "../../../src/renderer/ScaleModes.js":
+/*!*****************************************************!*\
+  !*** D:/wamp/www/phaser/src/renderer/ScaleModes.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Phaser Scale Modes.
+ * 
+ * @namespace Phaser.ScaleModes
+ * @since 3.0.0
+ */
+
+var ScaleModes = {
+
+    /**
+     * Default Scale Mode (Linear).
+     * 
+     * @name Phaser.ScaleModes.DEFAULT
+     * @type {integer}
+     * @readonly
+     * @since 3.0.0
+     */
+    DEFAULT: 0,
+
+    /**
+     * Linear Scale Mode.
+     * 
+     * @name Phaser.ScaleModes.LINEAR
+     * @type {integer}
+     * @readonly
+     * @since 3.0.0
+     */
+    LINEAR: 0,
+
+    /**
+     * Nearest Scale Mode.
+     * 
+     * @name Phaser.ScaleModes.NEAREST
+     * @type {integer}
+     * @readonly
+     * @since 3.0.0
+     */
+    NEAREST: 1
+
+};
+
+module.exports = ScaleModes;
 
 
 /***/ }),
@@ -9699,6 +18824,98 @@ module.exports = Extend;
 
 /***/ }),
 
+/***/ "../../../src/utils/object/GetAdvancedValue.js":
+/*!***************************************************************!*\
+  !*** D:/wamp/www/phaser/src/utils/object/GetAdvancedValue.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var MATH = __webpack_require__(/*! ../../math */ "../../../src/math/index.js");
+var GetValue = __webpack_require__(/*! ./GetValue */ "../../../src/utils/object/GetValue.js");
+
+/**
+ * Retrieves a value from an object. Allows for more advanced selection options, including:
+ *
+ * Allowed types:
+ * 
+ * Implicit
+ * {
+ *     x: 4
+ * }
+ *
+ * From function
+ * {
+ *     x: function ()
+ * }
+ *
+ * Randomly pick one element from the array
+ * {
+ *     x: [a, b, c, d, e, f]
+ * }
+ *
+ * Random integer between min and max:
+ * {
+ *     x: { randInt: [min, max] }
+ * }
+ *
+ * Random float between min and max:
+ * {
+ *     x: { randFloat: [min, max] }
+ * }
+ * 
+ *
+ * @function Phaser.Utils.Objects.GetAdvancedValue
+ * @since 3.0.0
+ *
+ * @param {object} source - The object to retrieve the value from.
+ * @param {string} key - The name of the property to retrieve from the object. If a property is nested, the names of its preceding properties should be separated by a dot (`.`) - `banner.hideBanner` would return the value of the `hideBanner` property from the object stored in the `banner` property of the `source` object.
+ * @param {*} defaultValue - The value to return if the `key` isn't found in the `source` object.
+ *
+ * @return {*} The value of the requested key.
+ */
+var GetAdvancedValue = function (source, key, defaultValue)
+{
+    var value = GetValue(source, key, null);
+
+    if (value === null)
+    {
+        return defaultValue;
+    }
+    else if (Array.isArray(value))
+    {
+        return MATH.RND.pick(value);
+    }
+    else if (typeof value === 'object')
+    {
+        if (value.hasOwnProperty('randInt'))
+        {
+            return MATH.RND.integerInRange(value.randInt[0], value.randInt[1]);
+        }
+        else if (value.hasOwnProperty('randFloat'))
+        {
+            return MATH.RND.realInRange(value.randFloat[0], value.randFloat[1]);
+        }
+    }
+    else if (typeof value === 'function')
+    {
+        return value(key);
+    }
+
+    return value;
+};
+
+module.exports = GetAdvancedValue;
+
+
+/***/ }),
+
 /***/ "../../../src/utils/object/GetFastValue.js":
 /*!***********************************************************!*\
   !*** D:/wamp/www/phaser/src/utils/object/GetFastValue.js ***!
@@ -10157,6 +19374,7 @@ module.exports = SpineFile;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var BuildGameObject = __webpack_require__(/*! ../../../src/gameobjects/BuildGameObject */ "../../../src/gameobjects/BuildGameObject.js");
 var Class = __webpack_require__(/*! ../../../src/utils/Class */ "../../../src/utils/Class.js");
 var GetValue = __webpack_require__(/*! ../../../src/utils/object/GetValue */ "../../../src/utils/object/GetValue.js");
 var ScenePlugin = __webpack_require__(/*! ../../../src/plugins/ScenePlugin */ "../../../src/plugins/ScenePlugin.js");
@@ -10207,6 +19425,8 @@ var SpinePlugin = new Class({
         this.sceneRenderer;
         this.skeletonDebugRenderer;
 
+        this.plugin = Spine;
+
         if (this.isWebGL)
         {
             this.runtime = Spine.webgl;
@@ -10228,11 +19448,9 @@ var SpinePlugin = new Class({
         this.temp1;
         this.temp2;
 
-        //  Register our file type
         pluginManager.registerFileType('spine', this.spineFileCallback, scene);
 
-        //  Register our game object
-        pluginManager.registerGameObject('spine', this.createSpineFactory(this));
+        pluginManager.registerGameObject('spine', this.add.bind(this), this.make.bind(this));
     },
 
     boot: function ()
@@ -10482,6 +19700,13 @@ var SpinePlugin = new Class({
         return this;
     },
 
+    setEffect: function (effect)
+    {
+        this.sceneRenderer.skeletonRenderer.vertexEffect = effect;
+
+        return this;
+    },
+
     spineFileCallback: function (key, jsonURL, atlasURL, preMultipliedAlpha, jsonXhrSettings, atlasXhrSettings)
     {
         var multifile;
@@ -10508,8 +19733,8 @@ var SpinePlugin = new Class({
     /**
      * Creates a new Spine Game Object and adds it to the Scene.
      *
-     * @method Phaser.GameObjects.GameObjectFactory#spineFactory
-     * @since 3.16.0
+     * @method Phaser.GameObjects.GameObjectFactory#add
+     * @since 3.19.0
      * 
      * @param {number} x - The horizontal position of this Game Object.
      * @param {number} y - The vertical position of this Game Object.
@@ -10518,19 +19743,63 @@ var SpinePlugin = new Class({
      *
      * @return {Phaser.GameObjects.Spine} The Game Object that was created.
      */
-    createSpineFactory: function (plugin)
+    add: function (x, y, key, animationName, loop)
     {
-        var callback = function (x, y, key, animationName, loop)
+        var spineGO = new SpineGameObject(this.scene, this.scene.sys.spine, x, y, key, animationName, loop);
+
+        this.scene.sys.displayList.add(spineGO);
+        this.scene.sys.updateList.add(spineGO);
+    
+        return spineGO;
+    },
+
+    /**
+     * Creates a new Image Game Object and returns it.
+     *
+     * Note: This method will only be available if the Image Game Object has been built into Phaser.
+     *
+     * @method Phaser.GameObjects.GameObjectCreator#image
+     * @since 3.0.0
+     *
+     * @param {object} config - The configuration object this Game Object will use to create itself.
+     * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
+     *
+     * @return {Phaser.GameObjects.Image} The Game Object that was created.
+     */
+    make: function (config, addToScene)
+    {
+        if (config === undefined) { config = {}; }
+
+        var key = GetValue(config, 'key', null);
+        var animationName = GetValue(config, 'animationName', null);
+        var loop = GetValue(config, 'loop', false);
+
+        var spineGO = new SpineGameObject(this.scene, this.scene.sys.spine, 0, 0, key, animationName, loop);
+
+        if (addToScene !== undefined)
         {
-            var spineGO = new SpineGameObject(this.scene, plugin, x, y, key, animationName, loop);
+            config.add = addToScene;
+        }
 
-            this.displayList.add(spineGO);
-            this.updateList.add(spineGO);
-        
-            return spineGO;
-        };
+        BuildGameObject(this.scene, spineGO, config);
 
-        return callback;
+        //  Spine specific
+        var skinName = GetValue(config, 'skinName', false);
+
+        if (skinName)
+        {
+            spineGO.setSkinByName(skinName);
+        }
+
+        var slotName = GetValue(config, 'slotName', false);
+        var attachmentName = GetValue(config, 'attachmentName', null);
+
+        if (slotName)
+        {
+            spineGO.setAttachment(slotName, attachmentName);
+        }
+
+        return spineGO.refresh();
     },
 
     getRuntime: function ()
@@ -10692,8 +19961,7 @@ module.exports = SpinePlugin;
  */
 
 var Class = __webpack_require__(/*! ../../../../src/utils/Class */ "../../../src/utils/Class.js");
-var ComponentsAlpha = __webpack_require__(/*! ../../../../src/gameobjects/components/Alpha */ "../../../src/gameobjects/components/Alpha.js");
-var ComponentsBlendMode = __webpack_require__(/*! ../../../../src/gameobjects/components/BlendMode */ "../../../src/gameobjects/components/BlendMode.js");
+var Clamp = __webpack_require__(/*! ../../../../src/math/Clamp */ "../../../src/math/Clamp.js");
 var ComponentsComputedSize = __webpack_require__(/*! ../../../../src/gameobjects/components/ComputedSize */ "../../../src/gameobjects/components/ComputedSize.js");
 var ComponentsDepth = __webpack_require__(/*! ../../../../src/gameobjects/components/Depth */ "../../../src/gameobjects/components/Depth.js");
 var ComponentsFlip = __webpack_require__(/*! ../../../../src/gameobjects/components/Flip */ "../../../src/gameobjects/components/Flip.js");
@@ -10702,7 +19970,9 @@ var ComponentsTransform = __webpack_require__(/*! ../../../../src/gameobjects/co
 var ComponentsVisible = __webpack_require__(/*! ../../../../src/gameobjects/components/Visible */ "../../../src/gameobjects/components/Visible.js");
 var GameObject = __webpack_require__(/*! ../../../../src/gameobjects/GameObject */ "../../../src/gameobjects/GameObject.js");
 var SpineGameObjectRender = __webpack_require__(/*! ./SpineGameObjectRender */ "./gameobject/SpineGameObjectRender.js");
+var AngleBetween = __webpack_require__(/*! ../../../../src/math/angle/Between */ "../../../src/math/angle/Between.js");
 var CounterClockwise = __webpack_require__(/*! ../../../../src/math/angle/CounterClockwise */ "../../../src/math/angle/CounterClockwise.js");
+var DegToRad = __webpack_require__(/*! ../../../../src/math/DegToRad */ "../../../src/math/DegToRad.js");
 var RadToDeg = __webpack_require__(/*! ../../../../src/math/RadToDeg */ "../../../src/math/RadToDeg.js");
 
 /**
@@ -10721,8 +19991,6 @@ var SpineGameObject = new Class({
     Extends: GameObject,
 
     Mixins: [
-        ComponentsAlpha,
-        ComponentsBlendMode,
         ComponentsComputedSize,
         ComponentsDepth,
         ComponentsFlip,
@@ -10758,12 +20026,228 @@ var SpineGameObject = new Class({
 
         this.preMultipliedAlpha = false;
 
+        //  BlendMode Normal
+        this.blendMode = 0;
+
         this.setPosition(x, y);
 
         if (key)
         {
             this.setSkeleton(key, animationName, loop);
         }
+    },
+
+    willRender: function ()
+    {
+        return true;
+    },
+
+    /**
+     * Set the Alpha level of this Game Object. The alpha controls the opacity of the Game Object as it renders.
+     * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
+     *
+     * If your game is running under WebGL you can optionally specify four different alpha values, each of which
+     * correspond to the four corners of the Game Object. Under Canvas only the `topLeft` value given is used.
+     *
+     * @method SpineGameObject#setAlpha
+     * @since 3.19.0
+     *
+     * @param {number} [value=1] - The alpha value used for the whole Skeleton.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setAlpha: function (value, slotName)
+    {
+        if (value === undefined) { value = 1; }
+
+        if (slotName)
+        {
+            var slot = this.findSlot(slotName);
+
+            if (slot)
+            {
+                slot.color.a = Clamp(value, 0, 1);
+            }
+        }
+        else
+        {
+            this.alpha = value;
+        }
+
+        return this;
+    },
+
+    /**
+     * The alpha value of the Skeleton.
+     * 
+     * A value between 0 and 1.
+     *
+     * This is a global value, impacting the entire Skeleton, not just a region of it.
+     *
+     * @name SpineGameObject#alpha
+     * @type {number}
+     * @since 3.0.0
+     */
+    alpha: {
+
+        get: function ()
+        {
+            return this.skeleton.color.a;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            if (this.skeleton)
+            {
+                this.skeleton.color.a = v;
+            }
+
+            if (v === 0)
+            {
+                this.renderFlags &= ~2;
+            }
+            else
+            {
+                this.renderFlags |= 2;
+            }
+        }
+
+    },
+
+    /**
+     * The amount of red used when rendering the Skeletons.
+     * 
+     * A value between 0 and 1.
+     *
+     * This is a global value, impacting the entire Skeleton, not just a region of it.
+     *
+     * @name SpineGameObject#red
+     * @type {number}
+     * @since 3.0.0
+     */
+    red: {
+
+        get: function ()
+        {
+            return this.skeleton.color.r;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            if (this.skeleton)
+            {
+                this.skeleton.color.r = v;
+            }
+        }
+
+    },
+
+    /**
+     * The amount of green used when rendering the Skeletons.
+     * 
+     * A value between 0 and 1.
+     *
+     * This is a global value, impacting the entire Skeleton, not just a region of it.
+     *
+     * @name SpineGameObject#green
+     * @type {number}
+     * @since 3.0.0
+     */
+    green: {
+
+        get: function ()
+        {
+            return this.skeleton.color.g;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            if (this.skeleton)
+            {
+                this.skeleton.color.g = v;
+            }
+        }
+
+    },
+
+    /**
+     * The amount of blue used when rendering the Skeletons.
+     * 
+     * A value between 0 and 1.
+     *
+     * This is a global value, impacting the entire Skeleton, not just a region of it.
+     *
+     * @name SpineGameObject#blue
+     * @type {number}
+     * @since 3.0.0
+     */
+    blue: {
+
+        get: function ()
+        {
+            return this.skeleton.color.b;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            if (this.skeleton)
+            {
+                this.skeleton.color.b = v;
+            }
+        }
+
+    },
+
+    /**
+     * Sets an additive tint on this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Tint#setColor
+     * @webglOnly
+     * @since 3.19.0
+     *
+     * @param {integer} [color=0xffffff] - The tint being applied to the top-left of the Game Object. If no other values are given this value is applied evenly, tinting the whole Game Object.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setColor: function (color, slotName)
+    {
+        if (color === undefined) { color = 0xffffff; }
+
+        var red = (color >> 16 & 0xFF) / 255;
+        var green = (color >> 8 & 0xFF) / 255;
+        var blue = (color & 0xFF) / 255;
+        var alpha = (color > 16777215) ? (color >>> 24) / 255 : null;
+
+        var target = this.skeleton;
+
+        if (slotName)
+        {
+            var slot = this.findSlot(slotName);
+
+            if (slot)
+            {
+                target = slot;
+            }
+        }
+
+        target.color.r = red;
+        target.color.g = green;
+        target.color.b = blue;
+
+        if (alpha !== null)
+        {
+            target.color.a = alpha;
+        }
+
+        return this;
     },
 
     setSkeletonFromJSON: function (atlasDataKey, skeletonJSON, animationName, loop)
@@ -10969,13 +20453,22 @@ var SpineGameObject = new Class({
         return output;
     },
 
+    getCurrentAnimation: function (trackIndex)
+    {
+        if (trackIndex === undefined) { trackIndex = 0; }
+
+        var current = this.state.getCurrent(trackIndex);
+
+        if (current)
+        {
+            return current.animation;
+        }
+    },
+
     play: function (animationName, loop)
     {
-        if (loop === undefined)
-        {
-            loop = false;
-        }
-
+        if (loop === undefined) { loop = false; }
+0
         return this.setAnimation(0, animationName, loop);
     },
 
@@ -11060,7 +20553,19 @@ var SpineGameObject = new Class({
 
     setAttachment: function (slotName, attachmentName)
     {
-        return this.skeleton.setAttachment(slotName, attachmentName);
+        if (Array.isArray(slotName) && Array.isArray(attachmentName) && slotName.length === attachmentName.length)
+        {
+            for (var i = 0; i < slotName.length; i++)
+            {
+                this.skeleton.setAttachment(slotName[i], attachmentName[i]);
+            }
+        }
+        else
+        {
+            this.skeleton.setAttachment(slotName, attachmentName);
+        }
+
+        return this;
     },
 
     setToSetupPose: function ()
@@ -11087,6 +20592,22 @@ var SpineGameObject = new Class({
     getRootBone: function ()
     {
         return this.skeleton.getRootBone();
+    },
+
+    angleBoneToXY: function (bone, worldX, worldY, offset, minAngle, maxAngle)
+    {
+        if (offset === undefined) { offset = 0; }
+        if (minAngle === undefined) { minAngle = 0; }
+        if (maxAngle === undefined) { maxAngle = 360; }
+
+        var renderer = this.scene.sys.renderer;
+        var height = renderer.height;
+
+        var angle = CounterClockwise(AngleBetween(bone.worldX, height - bone.worldY, worldX, worldY) + DegToRad(offset));
+
+        bone.rotation = Clamp(RadToDeg(angle), minAngle, maxAngle);
+
+        return this;
     },
 
     findBone: function (boneName)
@@ -11337,8 +20858,24 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     var skeleton = src.skeleton;
     var sceneRenderer = plugin.sceneRenderer;
 
-    if (!skeleton)
+    var GameObjectRenderMask = 15;
+
+    var willRender = !(GameObjectRenderMask !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)));
+
+    if (!skeleton || !willRender)
     {
+        //  Reset the current type
+        renderer.currentType = '';
+
+        //  If there is already a batch running, we need to close it
+        if (!renderer.nextTypeMatch)
+        {
+            //  The next object in the display list is not a Spine object, so we end the batch
+            sceneRenderer.end();
+    
+            renderer.rebindPipeline(renderer.pipelines.TextureTintPipeline);
+        }
+    
         return;
     }
 
