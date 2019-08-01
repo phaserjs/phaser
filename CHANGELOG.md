@@ -107,6 +107,7 @@
 * `CreateDOMContainer` will now use `div.style.cssText` to set the inline styles of the container, so it now works on IE11. Fix #4674 (thanks @DanLiamco)
 * `TransformMatrix.rotation` now returns the properly normalized rotation value.
 * `PhysicsEditorParser` has now been exposed under the `Phaser.Physics.Matter` namespace, so you can call methods on it directly.
+* Calling `CanvasTexture.update` will now automatically call `refresh` if running under WebGL. This happens for both `draw` and `drawFrame`, meaning you no longer need to remember to call `refresh` after drawing to a Canvas Texture in WebGL, keeping it consistent with the Canvas renderer.
 
 ### Bug Fixes
 
