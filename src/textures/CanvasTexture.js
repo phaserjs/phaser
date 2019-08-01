@@ -7,6 +7,7 @@
 var Class = require('../utils/Class');
 var Clamp = require('../math/Clamp');
 var Color = require('../display/color/Color');
+var CONST = require('../const');
 var IsSizePowerOfTwo = require('../math/pow2/IsSizePowerOfTwo');
 var Texture = require('./Texture');
 
@@ -199,6 +200,11 @@ var CanvasTexture = new Class({
         else
         {
             this.pixels = this.imageData.data;
+        }
+
+        if (this.manager.game.config.renderType === CONST.WEBGL)
+        {
+            this.refresh();
         }
 
         return this;
