@@ -4,6 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var BuildGameObject = require('../../../src/gameobjects/BuildGameObject');
 var Class = require('../../../src/utils/Class');
 var GetValue = require('../../../src/utils/object/GetValue');
 var ScenePlugin = require('../../../src/plugins/ScenePlugin');
@@ -54,6 +55,8 @@ var SpinePlugin = new Class({
         this.sceneRenderer;
         this.skeletonDebugRenderer;
 
+        this.plugin = Spine;
+
         if (this.isWebGL)
         {
             this.runtime = Spine.webgl;
@@ -75,11 +78,9 @@ var SpinePlugin = new Class({
         this.temp1;
         this.temp2;
 
-        //  Register our file type
         pluginManager.registerFileType('spine', this.spineFileCallback, scene);
 
-        //  Register our game object
-        pluginManager.registerGameObject('spine', this.createSpineFactory(this));
+        pluginManager.registerGameObject('spine', this.add.bind(this), this.make.bind(this));
     },
 
     boot: function ()
@@ -329,6 +330,13 @@ var SpinePlugin = new Class({
         return this;
     },
 
+    setEffect: function (effect)
+    {
+        this.sceneRenderer.skeletonRenderer.vertexEffect = effect;
+
+        return this;
+    },
+
     spineFileCallback: function (key, jsonURL, atlasURL, preMultipliedAlpha, jsonXhrSettings, atlasXhrSettings)
     {
         var multifile;
@@ -355,8 +363,8 @@ var SpinePlugin = new Class({
     /**
      * Creates a new Spine Game Object and adds it to the Scene.
      *
-     * @method Phaser.GameObjects.GameObjectFactory#spineFactory
-     * @since 3.16.0
+     * @method Phaser.GameObjects.GameObjectFactory#add
+     * @since 3.19.0
      * 
      * @param {number} x - The horizontal position of this Game Object.
      * @param {number} y - The vertical position of this Game Object.
@@ -365,19 +373,63 @@ var SpinePlugin = new Class({
      *
      * @return {Phaser.GameObjects.Spine} The Game Object that was created.
      */
-    createSpineFactory: function (plugin)
+    add: function (x, y, key, animationName, loop)
     {
-        var callback = function (x, y, key, animationName, loop)
+        var spineGO = new SpineGameObject(this.scene, this.scene.sys.spine, x, y, key, animationName, loop);
+
+        this.scene.sys.displayList.add(spineGO);
+        this.scene.sys.updateList.add(spineGO);
+    
+        return spineGO;
+    },
+
+    /**
+     * Creates a new Image Game Object and returns it.
+     *
+     * Note: This method will only be available if the Image Game Object has been built into Phaser.
+     *
+     * @method Phaser.GameObjects.GameObjectCreator#image
+     * @since 3.0.0
+     *
+     * @param {object} config - The configuration object this Game Object will use to create itself.
+     * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
+     *
+     * @return {Phaser.GameObjects.Image} The Game Object that was created.
+     */
+    make: function (config, addToScene)
+    {
+        if (config === undefined) { config = {}; }
+
+        var key = GetValue(config, 'key', null);
+        var animationName = GetValue(config, 'animationName', null);
+        var loop = GetValue(config, 'loop', false);
+
+        var spineGO = new SpineGameObject(this.scene, this.scene.sys.spine, 0, 0, key, animationName, loop);
+
+        if (addToScene !== undefined)
         {
-            var spineGO = new SpineGameObject(this.scene, plugin, x, y, key, animationName, loop);
+            config.add = addToScene;
+        }
 
-            this.displayList.add(spineGO);
-            this.updateList.add(spineGO);
-        
-            return spineGO;
-        };
+        BuildGameObject(this.scene, spineGO, config);
 
-        return callback;
+        //  Spine specific
+        var skinName = GetValue(config, 'skinName', false);
+
+        if (skinName)
+        {
+            spineGO.setSkinByName(skinName);
+        }
+
+        var slotName = GetValue(config, 'slotName', false);
+        var attachmentName = GetValue(config, 'attachmentName', null);
+
+        if (slotName)
+        {
+            spineGO.setAttachment(slotName, attachmentName);
+        }
+
+        return spineGO.refresh();
     },
 
     getRuntime: function ()
