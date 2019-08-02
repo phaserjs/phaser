@@ -86,21 +86,32 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     var viewportHeight = renderer.height;
 
     skeleton.x = calcMatrix.tx;
+    skeleton.y = viewportHeight - calcMatrix.ty;
+
     skeleton.scaleX = calcMatrix.scaleX;
+    skeleton.scaleY = calcMatrix.scaleY;
+
+    // window.m2 = [ calcMatrix.a, calcMatrix.b, calcMatrix.c, calcMatrix.d, calcMatrix.e, calcMatrix.f, calcMatrix.rotation, calcMatrix.rotationNormalized ];
+    // window.scaleX = calcMatrix.scaleX;
+    // window.scaleY = calcMatrix.scaleY;
+    // window.rotation = RadToDeg(CounterClockwise(calcMatrix.rotation)) + 90;
 
     if (camera.renderToTexture)
     {
         skeleton.y = calcMatrix.ty;
-        skeleton.scaleY = calcMatrix.scaleY * -1;
+        skeleton.scaleY *= -1;
+    }
+
+    if (skeleton.scaleX < 0)
+    {
+        //  +90 degrees to account for the difference in Spine vs. Phaser rotation
+        src.root.rotation = RadToDeg(CounterClockwise(calcMatrix.rotation)) + 90;
     }
     else
     {
-        skeleton.y = viewportHeight - calcMatrix.ty;
-        skeleton.scaleY = calcMatrix.scaleY;
+        //  +90 degrees to account for the difference in Spine vs. Phaser rotation
+        src.root.rotation = RadToDeg(CounterClockwise(calcMatrix.rotationNormalized)) + 90;
     }
-
-    //  +90 degrees to account for the difference in Spine vs. Phaser rotation
-    src.root.rotation = RadToDeg(CounterClockwise(calcMatrix.rotation)) + 90;
 
     //  Add autoUpdate option
     skeleton.updateWorldTransform();
