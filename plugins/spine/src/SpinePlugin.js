@@ -375,7 +375,7 @@ var SpinePlugin = new Class({
      */
     add: function (x, y, key, animationName, loop)
     {
-        var spineGO = new SpineGameObject(this.scene, this.scene.sys.spine, x, y, key, animationName, loop);
+        var spineGO = new SpineGameObject(this.scene, this, x, y, key, animationName, loop);
 
         this.scene.sys.displayList.add(spineGO);
         this.scene.sys.updateList.add(spineGO);
@@ -404,7 +404,7 @@ var SpinePlugin = new Class({
         var animationName = GetValue(config, 'animationName', null);
         var loop = GetValue(config, 'loop', false);
 
-        var spineGO = new SpineGameObject(this.scene, this.scene.sys.spine, 0, 0, key, animationName, loop);
+        var spineGO = new SpineGameObject(this.scene, this, 0, 0, key, animationName, loop);
 
         if (addToScene !== undefined)
         {
