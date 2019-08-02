@@ -512,7 +512,7 @@ var SpineGameObject = new Class({
     play: function (animationName, loop)
     {
         if (loop === undefined) { loop = false; }
-0
+
         return this.setAnimation(0, animationName, loop);
     },
 
@@ -528,7 +528,9 @@ var SpineGameObject = new Class({
 
     addAnimation: function (trackIndex, animationName, loop, delay)
     {
-        return this.state.addAnimation(trackIndex, animationName, loop, delay);
+        this.state.addAnimation(trackIndex, animationName, loop, delay);
+
+        return this;
     },
 
     setEmptyAnimation: function (trackIndex, mixDuration)
