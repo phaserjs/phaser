@@ -238,10 +238,9 @@ var TransformMatrix = new Class({
     },
 
     /**
-     * The rotation of the Matrix, normalized to be within the Phaser right-handed
-     * clockwise rotation space. Value is in radians.
+     * The rotation of the Matrix. Value is in radians.
      *
-     * @name Phaser.GameObjects.Components.TransformMatrix#rotationNormalized
+     * @name Phaser.GameObjects.Components.TransformMatrix#rotation
      * @type {number}
      * @readonly
      * @since 3.4.0
@@ -250,10 +249,24 @@ var TransformMatrix = new Class({
 
         get: function ()
         {
-            //  Previous version:
-            // return Math.acos(this.a / this.scaleX) * (Math.atan(-this.c / this.a) < 0 ? -1 : 1);
+            return Math.acos(this.a / this.scaleX) * (Math.atan(-this.c / this.a) < 0 ? -1 : 1);
+        }
 
-            //  Normalized version:
+    },
+
+    /**
+     * The rotation of the Matrix, normalized to be within the Phaser right-handed
+     * clockwise rotation space. Value is in radians.
+     *
+     * @name Phaser.GameObjects.Components.TransformMatrix#rotationNormalized
+     * @type {number}
+     * @readonly
+     * @since 3.19.0
+     */
+    rotationNormalized: {
+
+        get: function ()
+        {
             var matrix = this.matrix;
 
             var a = matrix[0];
@@ -293,7 +306,26 @@ var TransformMatrix = new Class({
 
         get: function ()
         {
-            return Math.sqrt((this.a * this.a) + (this.c * this.c));
+            var matrix = this.matrix;
+            var a = matrix[0];
+            var b = matrix[1];
+            var c = matrix[2];
+            var d = matrix[3];
+    
+            var determ = a * d - b * c;
+
+            if (a || b)
+            {
+                return determ / Math.sqrt(a * a + b * b);
+            }
+            else if (c || d)
+            {
+                return Math.sqrt(c * c + d * d);
+            }
+            else
+            {
+                return 0;
+            }
         }
 
     },
@@ -310,7 +342,26 @@ var TransformMatrix = new Class({
 
         get: function ()
         {
-            return Math.sqrt((this.b * this.b) + (this.d * this.d));
+            var matrix = this.matrix;
+            var a = matrix[0];
+            var b = matrix[1];
+            var c = matrix[2];
+            var d = matrix[3];
+    
+            var determ = a * d - b * c;
+
+            if (a || b)
+            {
+                return Math.sqrt(a * a + b * b);
+            }
+            else if (c || d)
+            {
+                return determ / Math.sqrt(c * c + d * d);
+            }
+            else
+            {
+                return 0;
+            }
         }
 
     },
