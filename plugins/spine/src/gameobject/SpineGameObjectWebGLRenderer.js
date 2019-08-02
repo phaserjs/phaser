@@ -6,6 +6,7 @@
 
 var CounterClockwise = require('../../../../src/math/angle/CounterClockwise');
 var RadToDeg = require('../../../../src/math/RadToDeg');
+var Wrap = require('../../../../src/math/Wrap');
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -91,26 +92,24 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     skeleton.scaleX = calcMatrix.scaleX;
     skeleton.scaleY = calcMatrix.scaleY;
 
-    // window.m2 = [ calcMatrix.a, calcMatrix.b, calcMatrix.c, calcMatrix.d, calcMatrix.e, calcMatrix.f, calcMatrix.rotation, calcMatrix.rotationNormalized ];
-    // window.scaleX = calcMatrix.scaleX;
-    // window.scaleY = calcMatrix.scaleY;
-    // window.rotation = RadToDeg(CounterClockwise(calcMatrix.rotation)) + 90;
+    //  +90 degrees to account for the difference in Spine vs. Phaser rotation
+    src.root.rotation = Wrap(RadToDeg(CounterClockwise(calcMatrix.rotationNormalized)) + 90, 0, 360);
+
+    if (src.scaleX < 0)
+    {
+        skeleton.scaleX *= -1;
+        // src.root.rotation = 360 - Wrap(src.root.rotation - (360 - RadToDeg(calcMatrix.rotationNormalized), 0, 360));
+    }
+
+    if (src.scaleY < 0)
+    {
+        skeleton.scaleY *= -1;
+    }
 
     if (camera.renderToTexture)
     {
         skeleton.y = calcMatrix.ty;
         skeleton.scaleY *= -1;
-    }
-
-    if (skeleton.scaleX < 0)
-    {
-        //  +90 degrees to account for the difference in Spine vs. Phaser rotation
-        src.root.rotation = RadToDeg(CounterClockwise(calcMatrix.rotation)) + 90;
-    }
-    else
-    {
-        //  +90 degrees to account for the difference in Spine vs. Phaser rotation
-        src.root.rotation = RadToDeg(CounterClockwise(calcMatrix.rotationNormalized)) + 90;
     }
 
     //  Add autoUpdate option
