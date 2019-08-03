@@ -851,10 +851,6 @@ var TransformMatrix = new Class({
         matrix[4] = x;
         matrix[5] = y;
 
-        //  Double-check against input, scaling, etc
-        scaleX = Math.abs(scaleX);
-        scaleY = Math.abs(scaleY);
-
         // Rotate and Scale
         matrix[0] = radianCos * scaleX;
         matrix[1] = radianSin * scaleX;
