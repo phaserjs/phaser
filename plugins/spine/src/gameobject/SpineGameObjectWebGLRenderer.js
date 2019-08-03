@@ -59,7 +59,7 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     var spriteMatrix = renderer._tempMatrix2;
     var calcMatrix = renderer._tempMatrix3;
 
-    spriteMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
+    spriteMatrix.applyITRS(src.x, src.y, src.rotation, Math.abs(src.scaleX), Math.abs(src.scaleY));
 
     camMatrix.copyFrom(camera.matrix);
 
@@ -92,18 +92,30 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     skeleton.scaleX = calcMatrix.scaleX;
     skeleton.scaleY = calcMatrix.scaleY;
 
-    //  +90 degrees to account for the difference in Spine vs. Phaser rotation
-    src.root.rotation = Wrap(RadToDeg(CounterClockwise(calcMatrix.rotationNormalized)) + 90, 0, 360);
-
     if (src.scaleX < 0)
     {
         skeleton.scaleX *= -1;
-        // src.root.rotation = 360 - Wrap(src.root.rotation - (360 - RadToDeg(calcMatrix.rotationNormalized), 0, 360));
+
+        src.root.rotation = RadToDeg(calcMatrix.rotationNormalized);
+    }
+    else
+    {
+        //  +90 degrees to account for the difference in Spine vs. Phaser rotation
+        src.root.rotation = Wrap(RadToDeg(CounterClockwise(calcMatrix.rotationNormalized)) + 90, 0, 360);
     }
 
     if (src.scaleY < 0)
     {
         skeleton.scaleY *= -1;
+
+        if (src.scaleX < 0)
+        {
+            src.root.rotation -= (RadToDeg(calcMatrix.rotationNormalized) * 2);
+        }
+        else
+        {
+            src.root.rotation += (RadToDeg(calcMatrix.rotationNormalized) * 2);
+        }
     }
 
     if (camera.renderToTexture)
