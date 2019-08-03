@@ -1,5 +1,14 @@
-window["SpinePlugin"] =
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define("SpinePlugin", [], factory);
+	else if(typeof exports === 'object')
+		exports["SpinePlugin"] = factory();
+	else
+		root["SpinePlugin"] = factory();
+})(window, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -88,9 +97,9 @@ window["SpinePlugin"] =
 /******/ ({
 
 /***/ "../../../node_modules/eventemitter3/index.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/node_modules/eventemitter3/index.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/node_modules/eventemitter3/index.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -436,9 +445,9 @@ if (true) {
 /***/ }),
 
 /***/ "../../../src/data/DataManager.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/DataManager.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/data/DataManager.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1082,9 +1091,9 @@ module.exports = DataManager;
 /***/ }),
 
 /***/ "../../../src/data/events/CHANGE_DATA_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/CHANGE_DATA_EVENT.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/data/events/CHANGE_DATA_EVENT.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -1119,9 +1128,9 @@ module.exports = 'changedata';
 /***/ }),
 
 /***/ "../../../src/data/events/CHANGE_DATA_KEY_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/CHANGE_DATA_KEY_EVENT.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/data/events/CHANGE_DATA_KEY_EVENT.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -1155,9 +1164,9 @@ module.exports = 'changedata-';
 /***/ }),
 
 /***/ "../../../src/data/events/REMOVE_DATA_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/REMOVE_DATA_EVENT.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/data/events/REMOVE_DATA_EVENT.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -1188,9 +1197,9 @@ module.exports = 'removedata';
 /***/ }),
 
 /***/ "../../../src/data/events/SET_DATA_EVENT.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/SET_DATA_EVENT.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/data/events/SET_DATA_EVENT.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -1221,9 +1230,9 @@ module.exports = 'setdata';
 /***/ }),
 
 /***/ "../../../src/data/events/index.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/index.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/data/events/index.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1250,9 +1259,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/gameobjects/BuildGameObject.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/BuildGameObject.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/BuildGameObject.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1388,9 +1397,9 @@ module.exports = BuildGameObject;
 /***/ }),
 
 /***/ "../../../src/gameobjects/GameObject.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/GameObject.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/GameObject.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2034,9 +2043,9 @@ module.exports = GameObject;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/ComputedSize.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/ComputedSize.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/ComputedSize.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -2188,9 +2197,9 @@ module.exports = ComputedSize;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Depth.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Depth.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Depth.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -2286,9 +2295,9 @@ module.exports = Depth;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Flip.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Flip.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Flip.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -2455,9 +2464,9 @@ module.exports = Flip;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/ScrollFactor.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/ScrollFactor.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/ScrollFactor.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -2567,9 +2576,9 @@ module.exports = ScrollFactor;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/ToJSON.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/ToJSON.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/ToJSON.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -2634,9 +2643,9 @@ module.exports = ToJSON;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Transform.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Transform.js ***!
-  \******************************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Transform.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3173,9 +3182,9 @@ module.exports = Transform;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/TransformMatrix.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/TransformMatrix.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/TransformMatrix.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4032,9 +4041,6 @@ var TransformMatrix = new Class({
         matrix[4] = x;
         matrix[5] = y;
 
-        scaleX = Math.abs(scaleX);
-        scaleY = Math.abs(scaleY);
-
         // Rotate and Scale
         matrix[0] = radianCos * scaleX;
         matrix[1] = radianSin * scaleX;
@@ -4149,9 +4155,9 @@ module.exports = TransformMatrix;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Visible.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Visible.js ***!
-  \****************************************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Visible.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -4243,9 +4249,9 @@ module.exports = Visible;
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/DESTROY_EVENT.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/DESTROY_EVENT.js ***!
-  \******************************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/DESTROY_EVENT.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -4273,9 +4279,9 @@ module.exports = 'destroy';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/index.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/index.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4295,9 +4301,9 @@ module.exports = { DESTROY: __webpack_require__(/*! ./DESTROY_EVENT */ "../../..
 /***/ }),
 
 /***/ "../../../src/loader/File.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/File.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/File.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4841,9 +4847,9 @@ module.exports = File;
 /***/ }),
 
 /***/ "../../../src/loader/FileTypesManager.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/FileTypesManager.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/FileTypesManager.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -4915,9 +4921,9 @@ module.exports = FileTypesManager;
 /***/ }),
 
 /***/ "../../../src/loader/GetURL.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/GetURL.js ***!
-  \***********************************************/
+/*!****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/GetURL.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -4961,9 +4967,9 @@ module.exports = GetURL;
 /***/ }),
 
 /***/ "../../../src/loader/MergeXHRSettings.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/MergeXHRSettings.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/MergeXHRSettings.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5014,9 +5020,9 @@ module.exports = MergeXHRSettings;
 /***/ }),
 
 /***/ "../../../src/loader/MultiFile.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/MultiFile.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/MultiFile.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5213,9 +5219,9 @@ module.exports = MultiFile;
 /***/ }),
 
 /***/ "../../../src/loader/XHRLoader.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/XHRLoader.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/XHRLoader.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5286,9 +5292,9 @@ module.exports = XHRLoader;
 /***/ }),
 
 /***/ "../../../src/loader/XHRSettings.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/XHRSettings.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/XHRSettings.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -5355,9 +5361,9 @@ module.exports = XHRSettings;
 /***/ }),
 
 /***/ "../../../src/loader/const.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/const.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/const.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -5512,9 +5518,9 @@ module.exports = FILE_CONST;
 /***/ }),
 
 /***/ "../../../src/loader/events/ADD_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/ADD_EVENT.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/ADD_EVENT.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -5547,9 +5553,9 @@ module.exports = 'addfile';
 /***/ }),
 
 /***/ "../../../src/loader/events/COMPLETE_EVENT.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/COMPLETE_EVENT.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/COMPLETE_EVENT.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -5580,9 +5586,9 @@ module.exports = 'complete';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_COMPLETE_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_COMPLETE_EVENT.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/FILE_COMPLETE_EVENT.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -5614,9 +5620,9 @@ module.exports = 'filecomplete';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_KEY_COMPLETE_EVENT.js":
-/*!***********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_KEY_COMPLETE_EVENT.js ***!
-  \***********************************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/FILE_KEY_COMPLETE_EVENT.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -5673,9 +5679,9 @@ module.exports = 'filecomplete-';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_LOAD_ERROR_EVENT.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_LOAD_ERROR_EVENT.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/FILE_LOAD_ERROR_EVENT.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -5703,9 +5709,9 @@ module.exports = 'loaderror';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_LOAD_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_LOAD_EVENT.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/FILE_LOAD_EVENT.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -5734,9 +5740,9 @@ module.exports = 'load';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_PROGRESS_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_PROGRESS_EVENT.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/FILE_PROGRESS_EVENT.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -5766,9 +5772,9 @@ module.exports = 'fileprogress';
 /***/ }),
 
 /***/ "../../../src/loader/events/POST_PROCESS_EVENT.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/POST_PROCESS_EVENT.js ***!
-  \******************************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/POST_PROCESS_EVENT.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -5800,9 +5806,9 @@ module.exports = 'postprocess';
 /***/ }),
 
 /***/ "../../../src/loader/events/PROGRESS_EVENT.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/PROGRESS_EVENT.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/PROGRESS_EVENT.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -5830,9 +5836,9 @@ module.exports = 'progress';
 /***/ }),
 
 /***/ "../../../src/loader/events/START_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/START_EVENT.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/START_EVENT.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -5862,9 +5868,9 @@ module.exports = 'start';
 /***/ }),
 
 /***/ "../../../src/loader/events/index.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/index.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/index.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5897,9 +5903,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/ImageFile.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/filetypes/ImageFile.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/filetypes/ImageFile.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6176,9 +6182,9 @@ module.exports = ImageFile;
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/JSONFile.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/filetypes/JSONFile.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/filetypes/JSONFile.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6411,9 +6417,9 @@ module.exports = JSONFile;
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/TextFile.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/filetypes/TextFile.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/filetypes/TextFile.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6591,9 +6597,9 @@ module.exports = TextFile;
 /***/ }),
 
 /***/ "../../../src/math/Average.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Average.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Average.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -6631,9 +6637,9 @@ module.exports = Average;
 /***/ }),
 
 /***/ "../../../src/math/Bernstein.js":
-/*!************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Bernstein.js ***!
-  \************************************************/
+/*!*****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Bernstein.js ***!
+  \*****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6667,9 +6673,9 @@ module.exports = Bernstein;
 /***/ }),
 
 /***/ "../../../src/math/Between.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Between.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Between.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -6701,9 +6707,9 @@ module.exports = Between;
 /***/ }),
 
 /***/ "../../../src/math/CatmullRom.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/CatmullRom.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/CatmullRom.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -6743,9 +6749,9 @@ module.exports = CatmullRom;
 /***/ }),
 
 /***/ "../../../src/math/CeilTo.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/CeilTo.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/CeilTo.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -6785,9 +6791,9 @@ module.exports = CeilTo;
 /***/ }),
 
 /***/ "../../../src/math/Clamp.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Clamp.js ***!
-  \********************************************/
+/*!*************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Clamp.js ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -6820,9 +6826,9 @@ module.exports = Clamp;
 /***/ }),
 
 /***/ "../../../src/math/DegToRad.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/DegToRad.js ***!
-  \***********************************************/
+/*!****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/DegToRad.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6855,9 +6861,9 @@ module.exports = DegToRad;
 /***/ }),
 
 /***/ "../../../src/math/Difference.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Difference.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Difference.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -6889,9 +6895,9 @@ module.exports = Difference;
 /***/ }),
 
 /***/ "../../../src/math/Factorial.js":
-/*!************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Factorial.js ***!
-  \************************************************/
+/*!*****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Factorial.js ***!
+  \*****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -6934,9 +6940,9 @@ module.exports = Factorial;
 /***/ }),
 
 /***/ "../../../src/math/FloatBetween.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/FloatBetween.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/FloatBetween.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -6968,9 +6974,9 @@ module.exports = FloatBetween;
 /***/ }),
 
 /***/ "../../../src/math/FloorTo.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/FloorTo.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/FloorTo.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -7010,9 +7016,9 @@ module.exports = FloorTo;
 /***/ }),
 
 /***/ "../../../src/math/FromPercent.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/FromPercent.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/FromPercent.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7049,9 +7055,9 @@ module.exports = FromPercent;
 /***/ }),
 
 /***/ "../../../src/math/GetSpeed.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/GetSpeed.js ***!
-  \***********************************************/
+/*!****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/GetSpeed.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -7083,9 +7089,9 @@ module.exports = GetSpeed;
 /***/ }),
 
 /***/ "../../../src/math/IsEven.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/IsEven.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/IsEven.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -7119,9 +7125,9 @@ module.exports = IsEven;
 /***/ }),
 
 /***/ "../../../src/math/IsEvenStrict.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/IsEvenStrict.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/IsEvenStrict.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -7153,9 +7159,9 @@ module.exports = IsEvenStrict;
 /***/ }),
 
 /***/ "../../../src/math/Linear.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Linear.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Linear.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -7188,9 +7194,9 @@ module.exports = Linear;
 /***/ }),
 
 /***/ "../../../src/math/Matrix3.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Matrix3.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Matrix3.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7786,9 +7792,9 @@ module.exports = Matrix3;
 /***/ }),
 
 /***/ "../../../src/math/Matrix4.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Matrix4.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Matrix4.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9253,9 +9259,9 @@ module.exports = Matrix4;
 /***/ }),
 
 /***/ "../../../src/math/MaxAdd.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/MaxAdd.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/MaxAdd.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -9288,9 +9294,9 @@ module.exports = MaxAdd;
 /***/ }),
 
 /***/ "../../../src/math/MinSub.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/MinSub.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/MinSub.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -9323,9 +9329,9 @@ module.exports = MinSub;
 /***/ }),
 
 /***/ "../../../src/math/Percent.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Percent.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Percent.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -9387,9 +9393,9 @@ module.exports = Percent;
 /***/ }),
 
 /***/ "../../../src/math/Quaternion.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Quaternion.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Quaternion.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10164,9 +10170,9 @@ module.exports = Quaternion;
 /***/ }),
 
 /***/ "../../../src/math/RadToDeg.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RadToDeg.js ***!
-  \***********************************************/
+/*!****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RadToDeg.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10199,9 +10205,9 @@ module.exports = RadToDeg;
 /***/ }),
 
 /***/ "../../../src/math/RandomXY.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RandomXY.js ***!
-  \***********************************************/
+/*!****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RandomXY.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10244,9 +10250,9 @@ module.exports = RandomXY;
 /***/ }),
 
 /***/ "../../../src/math/RandomXYZ.js":
-/*!************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RandomXYZ.js ***!
-  \************************************************/
+/*!*****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RandomXYZ.js ***!
+  \*****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10288,9 +10294,9 @@ module.exports = RandomXYZ;
 /***/ }),
 
 /***/ "../../../src/math/RandomXYZW.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RandomXYZW.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RandomXYZW.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10330,9 +10336,9 @@ module.exports = RandomXYZW;
 /***/ }),
 
 /***/ "../../../src/math/Rotate.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Rotate.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Rotate.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10370,9 +10376,9 @@ module.exports = Rotate;
 /***/ }),
 
 /***/ "../../../src/math/RotateAround.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RotateAround.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RotateAround.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10415,9 +10421,9 @@ module.exports = RotateAround;
 /***/ }),
 
 /***/ "../../../src/math/RotateAroundDistance.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RotateAroundDistance.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RotateAroundDistance.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10457,9 +10463,9 @@ module.exports = RotateAroundDistance;
 /***/ }),
 
 /***/ "../../../src/math/RotateVec3.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RotateVec3.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RotateVec3.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10510,9 +10516,9 @@ module.exports = RotateVec3;
 /***/ }),
 
 /***/ "../../../src/math/RoundAwayFromZero.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RoundAwayFromZero.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RoundAwayFromZero.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10544,9 +10550,9 @@ module.exports = RoundAwayFromZero;
 /***/ }),
 
 /***/ "../../../src/math/RoundTo.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RoundTo.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RoundTo.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10601,9 +10607,9 @@ module.exports = RoundTo;
 /***/ }),
 
 /***/ "../../../src/math/SinCosTableGenerator.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/SinCosTableGenerator.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/SinCosTableGenerator.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10659,9 +10665,9 @@ module.exports = SinCosTableGenerator;
 /***/ }),
 
 /***/ "../../../src/math/SmoothStep.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/SmoothStep.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/SmoothStep.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10711,9 +10717,9 @@ module.exports = SmoothStep;
 /***/ }),
 
 /***/ "../../../src/math/SmootherStep.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/SmootherStep.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/SmootherStep.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10755,9 +10761,9 @@ module.exports = SmootherStep;
 /***/ }),
 
 /***/ "../../../src/math/ToXY.js":
-/*!*******************************************!*\
-  !*** D:/wamp/www/phaser/src/math/ToXY.js ***!
-  \*******************************************/
+/*!************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/ToXY.js ***!
+  \************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10818,9 +10824,9 @@ module.exports = ToXY;
 /***/ }),
 
 /***/ "../../../src/math/TransformXY.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/TransformXY.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/TransformXY.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10878,9 +10884,9 @@ module.exports = TransformXY;
 /***/ }),
 
 /***/ "../../../src/math/Vector2.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Vector2.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Vector2.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11522,9 +11528,9 @@ module.exports = Vector2;
 /***/ }),
 
 /***/ "../../../src/math/Vector3.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Vector3.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Vector3.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12337,9 +12343,9 @@ module.exports = Vector3;
 /***/ }),
 
 /***/ "../../../src/math/Vector4.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Vector4.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Vector4.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12887,9 +12893,9 @@ module.exports = Vector4;
 /***/ }),
 
 /***/ "../../../src/math/Within.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Within.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Within.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -12922,9 +12928,9 @@ module.exports = Within;
 /***/ }),
 
 /***/ "../../../src/math/Wrap.js":
-/*!*******************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Wrap.js ***!
-  \*******************************************/
+/*!************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Wrap.js ***!
+  \************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -12959,9 +12965,9 @@ module.exports = Wrap;
 /***/ }),
 
 /***/ "../../../src/math/angle/Between.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Between.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/Between.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -12995,9 +13001,9 @@ module.exports = Between;
 /***/ }),
 
 /***/ "../../../src/math/angle/BetweenPoints.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/BetweenPoints.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/BetweenPoints.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13031,9 +13037,9 @@ module.exports = BetweenPoints;
 /***/ }),
 
 /***/ "../../../src/math/angle/BetweenPointsY.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/BetweenPointsY.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/BetweenPointsY.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13068,9 +13074,9 @@ module.exports = BetweenPointsY;
 /***/ }),
 
 /***/ "../../../src/math/angle/BetweenY.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/BetweenY.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/BetweenY.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13107,9 +13113,9 @@ module.exports = BetweenY;
 /***/ }),
 
 /***/ "../../../src/math/angle/CounterClockwise.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/CounterClockwise.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/CounterClockwise.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13157,9 +13163,9 @@ module.exports = CounterClockwise;
 /***/ }),
 
 /***/ "../../../src/math/angle/Normalize.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Normalize.js ***!
-  \******************************************************/
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/Normalize.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13199,9 +13205,9 @@ module.exports = Normalize;
 /***/ }),
 
 /***/ "../../../src/math/angle/Reverse.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Reverse.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/Reverse.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13234,9 +13240,9 @@ module.exports = Reverse;
 /***/ }),
 
 /***/ "../../../src/math/angle/RotateTo.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/RotateTo.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/RotateTo.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13306,9 +13312,9 @@ module.exports = RotateTo;
 /***/ }),
 
 /***/ "../../../src/math/angle/ShortestBetween.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/ShortestBetween.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/ShortestBetween.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13360,9 +13366,9 @@ module.exports = ShortestBetween;
 /***/ }),
 
 /***/ "../../../src/math/angle/Wrap.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Wrap.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/Wrap.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13397,9 +13403,9 @@ module.exports = Wrap;
 /***/ }),
 
 /***/ "../../../src/math/angle/WrapDegrees.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/WrapDegrees.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/WrapDegrees.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13434,9 +13440,9 @@ module.exports = WrapDegrees;
 /***/ }),
 
 /***/ "../../../src/math/angle/index.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/index.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/index.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13470,9 +13476,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/const.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/const.js ***!
-  \********************************************/
+/*!*************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/const.js ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13547,9 +13553,9 @@ module.exports = MATH_CONST;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceBetween.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistanceBetween.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistanceBetween.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13586,9 +13592,9 @@ module.exports = DistanceBetween;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistancePower.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistancePower.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistancePower.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13625,9 +13631,9 @@ module.exports = DistancePower;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceSquared.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistanceSquared.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistanceSquared.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13664,9 +13670,9 @@ module.exports = DistanceSquared;
 /***/ }),
 
 /***/ "../../../src/math/distance/index.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/index.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/index.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13692,9 +13698,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/back/In.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/back/In.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/back/In.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13728,9 +13734,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/back/InOut.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/back/InOut.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/back/InOut.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13773,9 +13779,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/back/Out.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/back/Out.js ***!
-  \******************************************************/
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/back/Out.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13809,9 +13815,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/back/index.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/back/index.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/back/index.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13837,9 +13843,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/In.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/bounce/In.js ***!
-  \*******************************************************/
+/*!************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/bounce/In.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13887,9 +13893,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/InOut.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/bounce/InOut.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/bounce/InOut.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13956,9 +13962,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/Out.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/bounce/Out.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/bounce/Out.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14004,9 +14010,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/bounce/index.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/bounce/index.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14032,9 +14038,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/In.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/circular/In.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/circular/In.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14065,9 +14071,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/InOut.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/circular/InOut.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/circular/InOut.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14105,9 +14111,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/Out.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/circular/Out.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/circular/Out.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14138,9 +14144,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/index.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/circular/index.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/circular/index.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14166,9 +14172,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/In.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/cubic/In.js ***!
-  \******************************************************/
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/cubic/In.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14199,9 +14205,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/InOut.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/cubic/InOut.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/cubic/InOut.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14239,9 +14245,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/Out.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/cubic/Out.js ***!
-  \*******************************************************/
+/*!************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/cubic/Out.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14272,9 +14278,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/index.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/cubic/index.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/cubic/index.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14300,9 +14306,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/In.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/elastic/In.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/elastic/In.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14360,9 +14366,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/InOut.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/elastic/InOut.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/elastic/InOut.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14427,9 +14433,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/Out.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/elastic/Out.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/elastic/Out.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14487,9 +14493,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/index.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/elastic/index.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/elastic/index.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14515,9 +14521,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/In.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/expo/In.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/expo/In.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14548,9 +14554,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/InOut.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/expo/InOut.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/expo/InOut.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14588,9 +14594,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/Out.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/expo/Out.js ***!
-  \******************************************************/
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/expo/Out.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14621,9 +14627,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/index.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/expo/index.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/expo/index.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14649,9 +14655,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/index.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/index.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/index.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14686,9 +14692,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/linear/Linear.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/linear/Linear.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/linear/Linear.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14719,9 +14725,9 @@ module.exports = Linear;
 /***/ }),
 
 /***/ "../../../src/math/easing/linear/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/linear/index.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/linear/index.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14741,9 +14747,9 @@ module.exports = __webpack_require__(/*! ./Linear */ "../../../src/math/easing/l
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/In.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quadratic/In.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quadratic/In.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14774,9 +14780,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/InOut.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quadratic/InOut.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quadratic/InOut.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14814,9 +14820,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/Out.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quadratic/Out.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quadratic/Out.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14847,9 +14853,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/index.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quadratic/index.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quadratic/index.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14875,9 +14881,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/In.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quartic/In.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quartic/In.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14908,9 +14914,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/InOut.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quartic/InOut.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quartic/InOut.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14948,9 +14954,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/Out.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quartic/Out.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quartic/Out.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14981,9 +14987,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/index.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quartic/index.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quartic/index.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15009,9 +15015,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/In.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quintic/In.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quintic/In.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15042,9 +15048,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/InOut.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quintic/InOut.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quintic/InOut.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15082,9 +15088,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/Out.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quintic/Out.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quintic/Out.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15115,9 +15121,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/index.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quintic/index.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quintic/index.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15143,9 +15149,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/In.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/sine/In.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/sine/In.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15187,9 +15193,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/InOut.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/sine/InOut.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/sine/InOut.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15231,9 +15237,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/Out.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/sine/Out.js ***!
-  \******************************************************/
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/sine/Out.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15275,9 +15281,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/index.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/sine/index.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/sine/index.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15303,9 +15309,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/stepped/Stepped.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/stepped/Stepped.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/stepped/Stepped.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15350,9 +15356,9 @@ module.exports = Stepped;
 /***/ }),
 
 /***/ "../../../src/math/easing/stepped/index.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/stepped/index.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/stepped/index.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15372,9 +15378,9 @@ module.exports = __webpack_require__(/*! ./Stepped */ "../../../src/math/easing/
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/Ceil.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/Ceil.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/Ceil.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15408,9 +15414,9 @@ module.exports = Ceil;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/Equal.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/Equal.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/Equal.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15447,9 +15453,9 @@ module.exports = Equal;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/Floor.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/Floor.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/Floor.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15483,9 +15489,9 @@ module.exports = Floor;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/GreaterThan.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/GreaterThan.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/GreaterThan.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15522,9 +15528,9 @@ module.exports = GreaterThan;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/LessThan.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/LessThan.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/LessThan.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15561,9 +15567,9 @@ module.exports = LessThan;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/index.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/index.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/index.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15591,9 +15597,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/index.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/index.js ***!
-  \********************************************/
+/*!*************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/index.js ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15684,9 +15690,9 @@ module.exports = PhaserMath;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/BezierInterpolation.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/BezierInterpolation.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/BezierInterpolation.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15728,9 +15734,9 @@ module.exports = BezierInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/CatmullRomInterpolation.js":
-/*!****************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/CatmullRomInterpolation.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/CatmullRomInterpolation.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15790,9 +15796,9 @@ module.exports = CatmullRomInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/CubicBezierInterpolation.js":
-/*!*****************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/CubicBezierInterpolation.js ***!
-  \*****************************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/CubicBezierInterpolation.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15865,9 +15871,9 @@ module.exports = CubicBezierInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/LinearInterpolation.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/LinearInterpolation.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/LinearInterpolation.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15917,9 +15923,9 @@ module.exports = LinearInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/QuadraticBezierInterpolation.js":
-/*!*********************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/QuadraticBezierInterpolation.js ***!
-  \*********************************************************************************/
+/*!**************************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/QuadraticBezierInterpolation.js ***!
+  \**************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15981,9 +15987,9 @@ module.exports = QuadraticBezierInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/SmoothStepInterpolation.js":
-/*!****************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/SmoothStepInterpolation.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/SmoothStepInterpolation.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -16019,9 +16025,9 @@ module.exports = SmoothStepInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/SmootherStepInterpolation.js":
-/*!******************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/SmootherStepInterpolation.js ***!
-  \******************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/SmootherStepInterpolation.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -16057,9 +16063,9 @@ module.exports = SmootherStepInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/index.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/index.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -16089,9 +16095,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/pow2/GetPowerOfTwo.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/pow2/GetPowerOfTwo.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/pow2/GetPowerOfTwo.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -16124,9 +16130,9 @@ module.exports = GetPowerOfTwo;
 /***/ }),
 
 /***/ "../../../src/math/pow2/IsSizePowerOfTwo.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/pow2/IsSizePowerOfTwo.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/pow2/IsSizePowerOfTwo.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -16159,9 +16165,9 @@ module.exports = IsSizePowerOfTwo;
 /***/ }),
 
 /***/ "../../../src/math/pow2/IsValuePowerOfTwo.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/pow2/IsValuePowerOfTwo.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/pow2/IsValuePowerOfTwo.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -16192,9 +16198,9 @@ module.exports = IsValuePowerOfTwo;
 /***/ }),
 
 /***/ "../../../src/math/pow2/index.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/pow2/index.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/pow2/index.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -16220,9 +16226,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/random-data-generator/RandomDataGenerator.js":
-/*!********************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/random-data-generator/RandomDataGenerator.js ***!
-  \********************************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/random-data-generator/RandomDataGenerator.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -16724,9 +16730,9 @@ module.exports = RandomDataGenerator;
 /***/ }),
 
 /***/ "../../../src/math/snap/SnapCeil.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/snap/SnapCeil.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/snap/SnapCeil.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -16773,9 +16779,9 @@ module.exports = SnapCeil;
 /***/ }),
 
 /***/ "../../../src/math/snap/SnapFloor.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/snap/SnapFloor.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/snap/SnapFloor.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -16822,9 +16828,9 @@ module.exports = SnapFloor;
 /***/ }),
 
 /***/ "../../../src/math/snap/SnapTo.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/snap/SnapTo.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/snap/SnapTo.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -16870,9 +16876,9 @@ module.exports = SnapTo;
 /***/ }),
 
 /***/ "../../../src/math/snap/index.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/snap/index.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/snap/index.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -16898,9 +16904,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/plugins/BasePlugin.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/plugins/BasePlugin.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/plugins/BasePlugin.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17084,9 +17090,9 @@ module.exports = BasePlugin;
 /***/ }),
 
 /***/ "../../../src/plugins/ScenePlugin.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/plugins/ScenePlugin.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/plugins/ScenePlugin.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17178,9 +17184,9 @@ module.exports = ScenePlugin;
 /***/ }),
 
 /***/ "../../../src/renderer/BlendModes.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/BlendModes.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/renderer/BlendModes.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -17522,9 +17528,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/renderer/ScaleModes.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/ScaleModes.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/renderer/ScaleModes.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -17581,9 +17587,9 @@ module.exports = ScaleModes;
 /***/ }),
 
 /***/ "../../../src/renderer/canvas/utils/SetTransform.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/canvas/utils/SetTransform.js ***!
-  \********************************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/renderer/canvas/utils/SetTransform.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -17671,9 +17677,9 @@ module.exports = SetTransform;
 /***/ }),
 
 /***/ "../../../src/scale/events/RESIZE_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scale/events/RESIZE_EVENT.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scale/events/RESIZE_EVENT.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -17707,9 +17713,9 @@ module.exports = 'resize';
 /***/ }),
 
 /***/ "../../../src/scene/events/BOOT_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/BOOT_EVENT.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/BOOT_EVENT.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -17737,9 +17743,9 @@ module.exports = 'boot';
 /***/ }),
 
 /***/ "../../../src/scene/events/CREATE_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/CREATE_EVENT.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/CREATE_EVENT.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -17771,9 +17777,9 @@ module.exports = 'create';
 /***/ }),
 
 /***/ "../../../src/scene/events/DESTROY_EVENT.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/DESTROY_EVENT.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/DESTROY_EVENT.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -17803,9 +17809,9 @@ module.exports = 'destroy';
 /***/ }),
 
 /***/ "../../../src/scene/events/PAUSE_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/PAUSE_EVENT.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/PAUSE_EVENT.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -17835,9 +17841,9 @@ module.exports = 'pause';
 /***/ }),
 
 /***/ "../../../src/scene/events/POST_UPDATE_EVENT.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/POST_UPDATE_EVENT.js ***!
-  \****************************************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/POST_UPDATE_EVENT.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -17877,9 +17883,9 @@ module.exports = 'postupdate';
 /***/ }),
 
 /***/ "../../../src/scene/events/PRE_UPDATE_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/PRE_UPDATE_EVENT.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/PRE_UPDATE_EVENT.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -17919,9 +17925,9 @@ module.exports = 'preupdate';
 /***/ }),
 
 /***/ "../../../src/scene/events/READY_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/READY_EVENT.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/READY_EVENT.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -17952,9 +17958,9 @@ module.exports = 'ready';
 /***/ }),
 
 /***/ "../../../src/scene/events/RENDER_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/RENDER_EVENT.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/RENDER_EVENT.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -17993,9 +17999,9 @@ module.exports = 'render';
 /***/ }),
 
 /***/ "../../../src/scene/events/RESUME_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/RESUME_EVENT.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/RESUME_EVENT.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18025,9 +18031,9 @@ module.exports = 'resume';
 /***/ }),
 
 /***/ "../../../src/scene/events/SHUTDOWN_EVENT.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/SHUTDOWN_EVENT.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/SHUTDOWN_EVENT.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18060,9 +18066,9 @@ module.exports = 'shutdown';
 /***/ }),
 
 /***/ "../../../src/scene/events/SLEEP_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/SLEEP_EVENT.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/SLEEP_EVENT.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18092,9 +18098,9 @@ module.exports = 'sleep';
 /***/ }),
 
 /***/ "../../../src/scene/events/START_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/START_EVENT.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/START_EVENT.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18122,9 +18128,9 @@ module.exports = 'start';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_COMPLETE_EVENT.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_COMPLETE_EVENT.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/TRANSITION_COMPLETE_EVENT.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18163,9 +18169,9 @@ module.exports = 'transitioncomplete';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_INIT_EVENT.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_INIT_EVENT.js ***!
-  \********************************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/TRANSITION_INIT_EVENT.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18205,9 +18211,9 @@ module.exports = 'transitioninit';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_OUT_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_OUT_EVENT.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/TRANSITION_OUT_EVENT.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18244,9 +18250,9 @@ module.exports = 'transitionout';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_START_EVENT.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_START_EVENT.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/TRANSITION_START_EVENT.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18289,9 +18295,9 @@ module.exports = 'transitionstart';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_WAKE_EVENT.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_WAKE_EVENT.js ***!
-  \********************************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/TRANSITION_WAKE_EVENT.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18329,9 +18335,9 @@ module.exports = 'transitionwake';
 /***/ }),
 
 /***/ "../../../src/scene/events/UPDATE_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/UPDATE_EVENT.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/UPDATE_EVENT.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18371,9 +18377,9 @@ module.exports = 'update';
 /***/ }),
 
 /***/ "../../../src/scene/events/WAKE_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/WAKE_EVENT.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/WAKE_EVENT.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18403,9 +18409,9 @@ module.exports = 'wake';
 /***/ }),
 
 /***/ "../../../src/scene/events/index.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/index.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/index.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18447,9 +18453,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/utils/Class.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/Class.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/Class.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18706,9 +18712,9 @@ module.exports = Class;
 /***/ }),
 
 /***/ "../../../src/utils/NOOP.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/NOOP.js ***!
-  \********************************************/
+/*!*************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/NOOP.js ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18738,9 +18744,9 @@ module.exports = NOOP;
 /***/ }),
 
 /***/ "../../../src/utils/object/Extend.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/Extend.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/Extend.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18842,9 +18848,9 @@ module.exports = Extend;
 /***/ }),
 
 /***/ "../../../src/utils/object/GetAdvancedValue.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/GetAdvancedValue.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/GetAdvancedValue.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18934,9 +18940,9 @@ module.exports = GetAdvancedValue;
 /***/ }),
 
 /***/ "../../../src/utils/object/GetFastValue.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/GetFastValue.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/GetFastValue.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18982,9 +18988,9 @@ module.exports = GetFastValue;
 /***/ }),
 
 /***/ "../../../src/utils/object/GetValue.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/GetValue.js ***!
-  \*******************************************************/
+/*!************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/GetValue.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19058,9 +19064,9 @@ module.exports = GetValue;
 /***/ }),
 
 /***/ "../../../src/utils/object/IsPlainObject.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/IsPlainObject.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/IsPlainObject.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -20908,7 +20914,7 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     var spriteMatrix = renderer._tempMatrix2;
     var calcMatrix = renderer._tempMatrix3;
 
-    spriteMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
+    spriteMatrix.applyITRS(src.x, src.y, src.rotation, Math.abs(src.scaleX), Math.abs(src.scaleY));
 
     camMatrix.copyFrom(camera.matrix);
 
@@ -20941,18 +20947,30 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     skeleton.scaleX = calcMatrix.scaleX;
     skeleton.scaleY = calcMatrix.scaleY;
 
-    //  +90 degrees to account for the difference in Spine vs. Phaser rotation
-    src.root.rotation = Wrap(RadToDeg(CounterClockwise(calcMatrix.rotationNormalized)) + 90, 0, 360);
-
     if (src.scaleX < 0)
     {
         skeleton.scaleX *= -1;
-        // src.root.rotation = Wrap(src.root.rotation - (360 - RadToDeg(calcMatrix.rotationNormalized), 0, 360));
+
+        src.root.rotation = RadToDeg(calcMatrix.rotationNormalized);
+    }
+    else
+    {
+        //  +90 degrees to account for the difference in Spine vs. Phaser rotation
+        src.root.rotation = Wrap(RadToDeg(CounterClockwise(calcMatrix.rotationNormalized)) + 90, 0, 360);
     }
 
     if (src.scaleY < 0)
     {
         skeleton.scaleY *= -1;
+
+        if (src.scaleX < 0)
+        {
+            src.root.rotation -= (RadToDeg(calcMatrix.rotationNormalized) * 2);
+        }
+        else
+        {
+            src.root.rotation += (RadToDeg(calcMatrix.rotationNormalized) * 2);
+        }
     }
 
     if (camera.renderToTexture)
@@ -30452,4 +30470,5 @@ module.exports = spine;
 /***/ })
 
 /******/ });
+});
 //# sourceMappingURL=SpinePlugin.js.map
