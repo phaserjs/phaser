@@ -20309,8 +20309,16 @@ var SpineGameObject = new Class({
         }
 
         this.state = data.state;
-
         this.stateData = data.stateData;
+
+        this.state.addListener({
+            event: function (entry, event) { console.log('event fired ' + event.data + ' at track' + entry.trackIndex); },
+            complete: function (entry) { console.log('track ' + entry.trackIndex + ' completed'); },
+            start: function (entry) { console.log('animation is set at ' + entry.trackIndex); },
+            end: function (entry) { console.log('animation was ended at ' + entry.trackIndex); },
+            dispose: function (entry) { console.log('animation was disposed at ' + entry.trackIndex); },
+            interrupted: function (entry) { console.log('animation was interrupted at ' + entry.trackIndex); }
+        });
 
         if (animationName)
         {
@@ -20411,6 +20419,55 @@ var SpineGameObject = new Class({
         return this;
     },
 
+    /**
+     * The horizontal scale of this Game Object.
+     * Override Transform component.
+     *
+     * @name Phaser.GameObjects.Components.Transform#scaleX
+     * @type {number}
+     * @default 1
+     * @since 3.0.0
+     */
+    scaleX: {
+
+        get: function ()
+        {
+            return this._scaleX;
+        },
+
+        set: function (value)
+        {
+            this._scaleX = value;
+
+            this.refresh();
+        }
+
+    },
+
+    /**
+     * The vertical scale of this Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Transform#scaleY
+     * @type {number}
+     * @default 1
+     * @since 3.0.0
+     */
+    scaleY: {
+
+        get: function ()
+        {
+            return this._scaleY;
+        },
+
+        set: function (value)
+        {
+            this._scaleY = value;
+
+            this.refresh();
+        }
+
+    },
+
     getBoneList: function ()
     {
         var output = [];
@@ -20488,15 +20545,41 @@ var SpineGameObject = new Class({
         }
     },
 
-    play: function (animationName, loop)
+    /**
+     * Plays an Animation on a Game Object that has the Animation component, such as a Sprite.
+     * 
+     * Animations are stored in the global Animation Manager and are referenced by a unique string-based key.
+     *
+     * @method Phaser.GameObjects.Components.Animation#play
+     * @fires Phaser.GameObjects.Components.Animation#onStartEvent
+     * @since 3.0.0
+     *
+     * @param {(string|Phaser.Animations.Animation)} key - The string-based key of the animation to play, as defined previously in the Animation Manager. Or an Animation instance.
+     * @param {boolean} [ignoreIfPlaying=false] - If this animation is already playing then ignore this call.
+     * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    play: function (animationName, loop, ignoreIfPlaying)
     {
-        if (loop === undefined) { loop = false; }
-
-        return this.setAnimation(0, animationName, loop);
+        return this.setAnimation(0, animationName, loop, ignoreIfPlaying);
     },
 
-    setAnimation: function (trackIndex, animationName, loop)
+    setAnimation: function (trackIndex, animationName, loop, ignoreIfPlaying)
     {
+        if (loop === undefined) { loop = false; }
+        if (ignoreIfPlaying === undefined) { ignoreIfPlaying = false; }
+
+        if (ignoreIfPlaying)
+        {
+            var current = this.getCurrentAnimation(trackIndex);
+ 
+            if (current && current.name === animationName)
+            {
+                return this;
+            }
+        }
+
         if (this.findAnimation(animationName))
         {
             this.state.setAnimation(trackIndex, animationName, loop);
