@@ -379,6 +379,35 @@ var DataManager = new Class({
     },
 
     /**
+     * @method Phaser.Data.DataManager#update
+     * @since 3.19.0
+     * @fires Phaser.Data.Events#CHANGE_DATA
+     * @param {string} key - the key of the object to be updated
+     * @param {*} object - object containing new fields for the key
+     * @param {boolean} forceCreate - if fields in object aren't present, create them
+     * 
+     * @return {Phaser.Data.DataManager} This DataManager object.
+     */
+    update: function(key, object, forceCreate)
+    {
+        var existing = this.get(key);
+
+        //If the object already exists
+        if(existing !== undefined){
+            for(var key in object){
+                //If the field exists inside the object, update, otherwise if forceCreate is true add field anyway
+                if(existing[key] !== null || forceCreate === true){
+                    existing[key] = object[key];
+                }
+            }
+
+            this.set(key, existing);
+        }
+
+        return this;
+    },
+
+    /**
      * Merge the given object of key value pairs into this DataManager.
      *
      * Any newly created values will emit a `setdata` event. Any updated values (see the `overwrite` argument)
