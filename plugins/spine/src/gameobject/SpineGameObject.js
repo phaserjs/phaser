@@ -12,6 +12,7 @@ var ComponentsFlip = require('../../../../src/gameobjects/components/Flip');
 var ComponentsScrollFactor = require('../../../../src/gameobjects/components/ScrollFactor');
 var ComponentsTransform = require('../../../../src/gameobjects/components/Transform');
 var ComponentsVisible = require('../../../../src/gameobjects/components/Visible');
+var SpineEvents = require('../events/');
 var GameObject = require('../../../../src/gameobjects/GameObject');
 var SpineGameObjectRender = require('./SpineGameObjectRender');
 var AngleBetween = require('../../../../src/math/angle/Between');
@@ -333,12 +334,12 @@ var SpineGameObject = new Class({
         this.stateData = data.stateData;
 
         this.state.addListener({
-            event: function (entry, event) { console.log('event fired ' + event.data + ' at track' + entry.trackIndex); },
-            complete: function (entry) { console.log('track ' + entry.trackIndex + ' completed'); },
-            start: function (entry) { console.log('animation is set at ' + entry.trackIndex); },
-            end: function (entry) { console.log('animation was ended at ' + entry.trackIndex); },
-            dispose: function (entry) { console.log('animation was disposed at ' + entry.trackIndex); },
-            interrupted: function (entry) { console.log('animation was interrupted at ' + entry.trackIndex); }
+            event: this.onEvent.bind(this),
+            complete: this.onComplete.bind(this),
+            start: this.onStart.bind(this),
+            end: this.onEnd.bind(this),
+            dispose: this.onDispose.bind(this),
+            interrupted: this.onInterrupted.bind(this)
         });
 
         if (animationName)
@@ -359,6 +360,36 @@ var SpineGameObject = new Class({
         skeleton.updateCache();
 
         return this.updateSize();
+    },
+
+    onComplete: function (entry)
+    {
+        this.emit(SpineEvents.COMPLETE, entry);
+    },
+
+    onDispose: function (entry)
+    {
+        this.emit(SpineEvents.DISPOSE, entry);
+    },
+
+    onEnd: function (entry)
+    {
+        this.emit(SpineEvents.END, entry);
+    },
+
+    onEvent: function (entry, event)
+    {
+        this.emit(SpineEvents.EVENT, entry, event);
+    },
+
+    onInterrupted: function (entry)
+    {
+        this.emit(SpineEvents.INTERRUPTED, entry);
+    },
+
+    onStart: function (entry)
+    {
+        this.emit(SpineEvents.START, entry);
     },
 
     refresh: function ()
@@ -591,11 +622,11 @@ var SpineGameObject = new Class({
         if (loop === undefined) { loop = false; }
         if (ignoreIfPlaying === undefined) { ignoreIfPlaying = false; }
 
-        if (ignoreIfPlaying)
+        if (ignoreIfPlaying && this.state)
         {
-            var current = this.getCurrentAnimation(trackIndex);
+            var currentTrack = this.state.getCurrent(0);
  
-            if (current && current.name === animationName)
+            if (currentTrack && currentTrack.animation.name === animationName && !currentTrack.isComplete())
             {
                 return this;
             }

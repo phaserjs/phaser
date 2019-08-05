@@ -19970,6 +19970,181 @@ module.exports = SpinePlugin;
 
 /***/ }),
 
+/***/ "./events/COMPLETE_EVENT.js":
+/*!**********************************!*\
+  !*** ./events/COMPLETE_EVENT.js ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Complete Event.
+ *
+ * @event SpinePluginEvents#COMPLETE
+ * @since 3.19.0
+ */
+module.exports = 'complete';
+
+
+/***/ }),
+
+/***/ "./events/DISPOSE_EVENT.js":
+/*!*********************************!*\
+  !*** ./events/DISPOSE_EVENT.js ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Complete Event.
+ *
+ * @event SpinePluginEvents#DISPOSE
+ * @since 3.19.0
+ */
+module.exports = 'dispose';
+
+
+/***/ }),
+
+/***/ "./events/END_EVENT.js":
+/*!*****************************!*\
+  !*** ./events/END_EVENT.js ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Complete Event.
+ *
+ * @event SpinePluginEvents#END
+ * @since 3.19.0
+ */
+module.exports = 'end';
+
+
+/***/ }),
+
+/***/ "./events/EVENT_EVENT.js":
+/*!*******************************!*\
+  !*** ./events/EVENT_EVENT.js ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Complete Event.
+ *
+ * @event SpinePluginEvents#EVENT
+ * @since 3.19.0
+ */
+module.exports = 'event';
+
+
+/***/ }),
+
+/***/ "./events/INTERRUPTED_EVENT.js":
+/*!*************************************!*\
+  !*** ./events/INTERRUPTED_EVENT.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Complete Event.
+ *
+ * @event SpinePluginEvents#INTERRUPTED
+ * @since 3.19.0
+ */
+module.exports = 'interrupted';
+
+
+/***/ }),
+
+/***/ "./events/START_EVENT.js":
+/*!*******************************!*\
+  !*** ./events/START_EVENT.js ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Complete Event.
+ *
+ * @event SpinePluginEvents#START
+ * @since 3.19.0
+ */
+module.exports = 'start';
+
+
+/***/ }),
+
+/***/ "./events/index.js":
+/*!*************************!*\
+  !*** ./events/index.js ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace SpinePluginEvents
+ */
+
+module.exports = {
+
+    COMPLETE: __webpack_require__(/*! ./COMPLETE_EVENT */ "./events/COMPLETE_EVENT.js"),
+    DISPOSE: __webpack_require__(/*! ./DISPOSE_EVENT */ "./events/DISPOSE_EVENT.js"),
+    END: __webpack_require__(/*! ./END_EVENT */ "./events/END_EVENT.js"),
+    EVENT: __webpack_require__(/*! ./EVENT_EVENT */ "./events/EVENT_EVENT.js"),
+    INTERRUPTED: __webpack_require__(/*! ./INTERRUPTED_EVENT */ "./events/INTERRUPTED_EVENT.js"),
+    START: __webpack_require__(/*! ./START_EVENT */ "./events/START_EVENT.js")
+
+};
+
+
+/***/ }),
+
 /***/ "./gameobject/SpineGameObject.js":
 /*!***************************************!*\
   !*** ./gameobject/SpineGameObject.js ***!
@@ -19991,6 +20166,7 @@ var ComponentsFlip = __webpack_require__(/*! ../../../../src/gameobjects/compone
 var ComponentsScrollFactor = __webpack_require__(/*! ../../../../src/gameobjects/components/ScrollFactor */ "../../../src/gameobjects/components/ScrollFactor.js");
 var ComponentsTransform = __webpack_require__(/*! ../../../../src/gameobjects/components/Transform */ "../../../src/gameobjects/components/Transform.js");
 var ComponentsVisible = __webpack_require__(/*! ../../../../src/gameobjects/components/Visible */ "../../../src/gameobjects/components/Visible.js");
+var SpineEvents = __webpack_require__(/*! ../events/ */ "./events/index.js");
 var GameObject = __webpack_require__(/*! ../../../../src/gameobjects/GameObject */ "../../../src/gameobjects/GameObject.js");
 var SpineGameObjectRender = __webpack_require__(/*! ./SpineGameObjectRender */ "./gameobject/SpineGameObjectRender.js");
 var AngleBetween = __webpack_require__(/*! ../../../../src/math/angle/Between */ "../../../src/math/angle/Between.js");
@@ -20312,12 +20488,12 @@ var SpineGameObject = new Class({
         this.stateData = data.stateData;
 
         this.state.addListener({
-            event: function (entry, event) { console.log('event fired ' + event.data + ' at track' + entry.trackIndex); },
-            complete: function (entry) { console.log('track ' + entry.trackIndex + ' completed'); },
-            start: function (entry) { console.log('animation is set at ' + entry.trackIndex); },
-            end: function (entry) { console.log('animation was ended at ' + entry.trackIndex); },
-            dispose: function (entry) { console.log('animation was disposed at ' + entry.trackIndex); },
-            interrupted: function (entry) { console.log('animation was interrupted at ' + entry.trackIndex); }
+            event: this.onEvent.bind(this),
+            complete: this.onComplete.bind(this),
+            start: this.onStart.bind(this),
+            end: this.onEnd.bind(this),
+            dispose: this.onDispose.bind(this),
+            interrupted: this.onInterrupted.bind(this)
         });
 
         if (animationName)
@@ -20338,6 +20514,36 @@ var SpineGameObject = new Class({
         skeleton.updateCache();
 
         return this.updateSize();
+    },
+
+    onComplete: function (entry)
+    {
+        this.emit(SpineEvents.COMPLETE, entry);
+    },
+
+    onDispose: function (entry)
+    {
+        this.emit(SpineEvents.DISPOSE, entry);
+    },
+
+    onEnd: function (entry)
+    {
+        this.emit(SpineEvents.END, entry);
+    },
+
+    onEvent: function (entry, event)
+    {
+        this.emit(SpineEvents.EVENT, entry, event);
+    },
+
+    onInterrupted: function (entry)
+    {
+        this.emit(SpineEvents.INTERRUPTED, entry);
+    },
+
+    onStart: function (entry)
+    {
+        this.emit(SpineEvents.START, entry);
     },
 
     refresh: function ()
@@ -20570,11 +20776,11 @@ var SpineGameObject = new Class({
         if (loop === undefined) { loop = false; }
         if (ignoreIfPlaying === undefined) { ignoreIfPlaying = false; }
 
-        if (ignoreIfPlaying)
+        if (ignoreIfPlaying && this.state)
         {
-            var current = this.getCurrentAnimation(trackIndex);
+            var currentTrack = this.state.getCurrent(0);
  
-            if (current && current.name === animationName)
+            if (currentTrack && currentTrack.animation.name === animationName && !currentTrack.isComplete())
             {
                 return this;
             }
