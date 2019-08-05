@@ -379,6 +379,9 @@ var DataManager = new Class({
     },
 
     /**
+     * Takes a partial or complete object and updates any corresponding fields for the object
+     * found using the key. Has an optional flag to ignore fields not already present in the 
+     * object
      * @method Phaser.Data.DataManager#update
      * @since 3.19.0
      * @fires Phaser.Data.Events#CHANGE_DATA
@@ -391,7 +394,7 @@ var DataManager = new Class({
     update: function(key, object, forceCreate)
     {
         var existing = this.get(key);
-
+        if(forceCreate === undefined){forceCreate = true}
         //If the object already exists
         if(existing !== undefined){
             for(var key in object){
