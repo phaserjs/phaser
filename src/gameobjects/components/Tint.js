@@ -296,11 +296,11 @@ var Tint = {
 
     /**
      * The tint value being applied to the whole of the Game Object.
+     * This property is a setter-only. Use the properties `tintTopLeft` etc to read the current tint value.
      * 
      * @name Phaser.GameObjects.Components.Tint#tint
      * @type {integer}
      * @webglOnly
-     * @readonly
      * @since 3.0.0
      */
     tint: {
