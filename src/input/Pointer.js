@@ -487,6 +487,40 @@ var Pointer = new Class({
     },
 
     /**
+     * Takes a Camera and updates this Pointer's `worldX` and `worldY` values so they are
+     * the result of a translation through the given Camera.
+     * 
+     * Note that the values will be automatically replaced the moment the Pointer is
+     * updated by an input event, such as a mouse move, so should be used immediately.
+     *
+     * @method Phaser.Input.Pointer#updateWorldPoint
+     * @since 3.19.0
+     *
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera which is being tested against.
+     *
+     * @return {this} This Pointer object.
+     */
+    updateWorldPoint: function (camera)
+    {
+        var x = this.x;
+        var y = this.y;
+
+        if (camera.resolution !== 1)
+        {
+            x += camera._x;
+            y += camera._y;
+        }
+
+        //  Stores the world point inside of tempPoint
+        var temp = camera.getWorldPoint(x, y);
+
+        this.worldX = temp.x;
+        this.worldY = temp.y;
+
+        return this;
+    },
+
+    /**
      * Takes a Camera and returns a Vector2 containing the translated position of this Pointer
      * within that Camera. This can be used to convert this Pointers position into camera space.
      *
