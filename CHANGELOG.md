@@ -109,6 +109,7 @@
 * `TransformMatrix.rotation` now returns the properly normalized rotation value.
 * `PhysicsEditorParser` has now been exposed under the `Phaser.Physics.Matter` namespace, so you can call methods on it directly.
 * Calling `CanvasTexture.update` will now automatically call `refresh` if running under WebGL. This happens for both `draw` and `drawFrame`, meaning you no longer need to remember to call `refresh` after drawing to a Canvas Texture in WebGL, keeping it consistent with the Canvas renderer.
+* `ScaleManager._resetZoom` is a new internal flag that is set when the game zoom factor changes.
 
 ### Bug Fixes
 
@@ -138,12 +139,13 @@
 * The WebGL Lost and Restored Context callbacks were never removed, which could cause them to hold onto stale references. Fix #3610 (thanks @Twilrom)
 * `Origin.updateDisplayOrigin` no longer applies a Math.floor to the display origins, allowing you to have a 0.x origin for a Game Object that only has a width or height of 1. This fixes issues with things like 1x1 rectangles displaying incorrectly during rendering. Fix #4126 (thanks @rexrainbow)
 * `InputManager.resetCursor` will now check if the canvas element still exists before resetting the cursor on it. Fix #4662 (thanks @fromnowhereuser)
+* It was not possible to set the zoom value of the Scale Manager back to 1 again, having changed it to a different value. Fix #4633 (thanks @lgibson02 @BinaryMoon)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@vacarsu @KennethGomez @samme @ldd @Jazcash @jcyuan
+@vacarsu @KennethGomez @samme @ldd @Jazcash @jcyuan @LearningCode2023
 
 
 
