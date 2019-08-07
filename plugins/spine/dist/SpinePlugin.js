@@ -17577,96 +17577,6 @@ module.exports = ScaleModes;
 
 /***/ }),
 
-/***/ "../../../src/renderer/canvas/utils/SetTransform.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/canvas/utils/SetTransform.js ***!
-  \********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * Takes a reference to the Canvas Renderer, a Canvas Rendering Context, a Game Object, a Camera and a parent matrix
- * and then performs the following steps:
- * 
- * 1. Checks the alpha of the source combined with the Camera alpha. If 0 or less it aborts.
- * 2. Takes the Camera and Game Object matrix and multiplies them, combined with the parent matrix if given.
- * 3. Sets the blend mode of the context to be that used by the Game Object.
- * 4. Sets the alpha value of the context to be that used by the Game Object combined with the Camera.
- * 5. Saves the context state.
- * 6. Sets the final matrix values into the context via setTransform.
- * 
- * This function is only meant to be used internally. Most of the Canvas Renderer classes use it.
- *
- * @function Phaser.Renderer.Canvas.SetTransform
- * @since 3.12.0
- *
- * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
- * @param {CanvasRenderingContext2D} ctx - The canvas context to set the transform on.
- * @param {Phaser.GameObjects.GameObject} src - The Game Object being rendered. Can be any type that extends the base class.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
- * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - A parent transform matrix to apply to the Game Object before rendering.
- * 
- * @return {boolean} `true` if the Game Object context was set, otherwise `false`.
- */
-var SetTransform = function (renderer, ctx, src, camera, parentMatrix)
-{
-    var alpha = camera.alpha * src.alpha;
-
-    if (alpha <= 0)
-    {
-        //  Nothing to see, so don't waste time calculating stuff
-        return false;
-    }
-
-    var camMatrix = renderer._tempMatrix1.copyFromArray(camera.matrix.matrix);
-    var gameObjectMatrix = renderer._tempMatrix2.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
-    var calcMatrix = renderer._tempMatrix3;
-
-    if (parentMatrix)
-    {
-        //  Multiply the camera by the parent matrix
-        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
-
-        //  Undo the camera scroll
-        gameObjectMatrix.e = src.x;
-        gameObjectMatrix.f = src.y;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(gameObjectMatrix, calcMatrix);
-    }
-    else
-    {
-        gameObjectMatrix.e -= camera.scrollX * src.scrollFactorX;
-        gameObjectMatrix.f -= camera.scrollY * src.scrollFactorY;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(gameObjectMatrix, calcMatrix);
-    }
-
-    //  Blend Mode
-    ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
-
-    //  Alpha
-    ctx.globalAlpha = alpha;
-
-    ctx.save();
-
-    calcMatrix.setToContext(ctx);
-
-    return true;
-};
-
-module.exports = SetTransform;
-
-
-/***/ }),
-
 /***/ "../../../src/scale/events/RESIZE_EVENT.js":
 /*!***********************************************************!*\
   !*** D:/wamp/www/phaser/src/scale/events/RESIZE_EVENT.js ***!
@@ -19437,6 +19347,7 @@ var SpinePlugin = new Class({
         this.gl;
         this.renderer;
         this.sceneRenderer;
+        this.skeletonRenderer;
         this.skeletonDebugRenderer;
 
         this.plugin = Spine;
@@ -19472,15 +19383,13 @@ var SpinePlugin = new Class({
         if (this.isWebGL)
         {
             this.bootWebGL();
+            this.onResize();
+            this.game.scale.on(ResizeEvent, this.onResize, this);
         }
         else
         {
             this.bootCanvas();
         }
-
-        this.onResize();
-
-        this.game.scale.on(ResizeEvent, this.onResize, this);
 
         var eventEmitter = this.systems.events;
 
@@ -19490,14 +19399,14 @@ var SpinePlugin = new Class({
 
     bootCanvas: function ()
     {
-        this.skeletonRenderer = new this.runtime.SkeletonRenderer(this.scene.sys.context);
+        this.skeletonRenderer = new Spine.canvas.SkeletonRenderer(this.scene.sys.context);
     },
 
     getAtlasCanvas: function (key)
     {
-        var atlasData = this.cache.get(key);
+        var atlasEntry = this.cache.get(key);
 
-        if (!atlasData)
+        if (!atlasEntry)
         {
             console.warn('No atlas data for: ' + key);
             return;
@@ -19508,7 +19417,7 @@ var SpinePlugin = new Class({
 
         if (spineTextures.has(key))
         {
-            atlas = new Spine.TextureAtlas(atlasData, function ()
+            atlas = new Spine.TextureAtlas(atlasEntry.data, function ()
             {
                 return spineTextures.get(key);
             });
@@ -19517,7 +19426,7 @@ var SpinePlugin = new Class({
         {
             var textures = this.textures;
 
-            atlas = new Spine.TextureAtlas(atlasData, function (path)
+            atlas = new Spine.TextureAtlas(atlasEntry.data, function (path)
             {
                 var canvasTexture = new Spine.canvas.CanvasTexture(textures.get(path).getSourceImage());
 
@@ -19556,6 +19465,7 @@ var SpinePlugin = new Class({
         this.sceneRenderer.batcher.setBlendMode = setBlendMode;
         this.sceneRenderer.shapes.setBlendMode = setBlendMode;
 
+        this.skeletonRenderer = this.sceneRenderer.skeletonRenderer;
         this.skeletonDebugRenderer = this.sceneRenderer.skeletonDebugRenderer;
 
         this.temp1 = new Spine.webgl.Vector3(0, 0, 0);
@@ -19951,6 +19861,7 @@ var SpinePlugin = new Class({
         this.json = null;
         this.textures = null;
         this.sceneRenderer = null;
+        this.skeletonRenderer = null;
         this.gl = null;
     }
 
@@ -21035,7 +20946,9 @@ module.exports = SpineGameObject;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var SetTransform = __webpack_require__(/*! ../../../../src/renderer/canvas/utils/SetTransform */ "../../../src/renderer/canvas/utils/SetTransform.js");
+var CounterClockwise = __webpack_require__(/*! ../../../../src/math/angle/CounterClockwise */ "../../../src/math/angle/CounterClockwise.js");
+var RadToDeg = __webpack_require__(/*! ../../../../src/math/RadToDeg */ "../../../src/math/RadToDeg.js");
+var Wrap = __webpack_require__(/*! ../../../../src/math/Wrap */ "../../../src/math/Wrap.js");
 
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
@@ -21060,27 +20973,93 @@ var SpineGameObjectCanvasRenderer = function (renderer, src, interpolationPercen
     var skeleton = src.skeleton;
     var skeletonRenderer = plugin.skeletonRenderer;
 
-    if (!skeleton || !SetTransform(renderer, context, src, camera, parentMatrix))
+    var GameObjectRenderMask = 15;
+
+    var willRender = !(GameObjectRenderMask !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)));
+
+    if (!skeleton || !willRender)
     {
         return;
     }
 
+    var camMatrix = renderer._tempMatrix1;
+    var spriteMatrix = renderer._tempMatrix2;
+    var calcMatrix = renderer._tempMatrix3;
+
+    spriteMatrix.applyITRS(src.x, src.y, src.rotation, Math.abs(src.scaleX), Math.abs(src.scaleY));
+
+    camMatrix.copyFrom(camera.matrix);
+
+    if (parentMatrix)
+    {
+        //  Multiply the camera by the parent matrix
+        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
+
+        //  Undo the camera scroll
+        spriteMatrix.e = src.x;
+        spriteMatrix.f = src.y;
+
+        //  Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(spriteMatrix, calcMatrix);
+    }
+    else
+    {
+        spriteMatrix.e -= camera.scrollX * src.scrollFactorX;
+        spriteMatrix.f -= camera.scrollY * src.scrollFactorY;
+
+        //  Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(spriteMatrix, calcMatrix);
+    }
+
+    skeleton.x = calcMatrix.tx;
+    skeleton.y = calcMatrix.ty;
+
+    skeleton.scaleX = calcMatrix.scaleX;
+
+    //  Inverse or we get upside-down skeletons
+    skeleton.scaleY = calcMatrix.scaleY * -1;
+
+    if (src.scaleX < 0)
+    {
+        skeleton.scaleX *= -1;
+
+        src.root.rotation = RadToDeg(calcMatrix.rotationNormalized);
+    }
+    else
+    {
+        //  +90 degrees to account for the difference in Spine vs. Phaser rotation
+        src.root.rotation = Wrap(RadToDeg(CounterClockwise(calcMatrix.rotationNormalized)) + 90, 0, 360);
+    }
+
+    if (src.scaleY < 0)
+    {
+        skeleton.scaleY *= -1;
+
+        if (src.scaleX < 0)
+        {
+            src.root.rotation -= (RadToDeg(calcMatrix.rotationNormalized) * 2);
+        }
+        else
+        {
+            src.root.rotation += (RadToDeg(calcMatrix.rotationNormalized) * 2);
+        }
+    }
+
+    if (camera.renderToTexture)
+    {
+        skeleton.y = calcMatrix.ty;
+        skeleton.scaleY *= -1;
+    }
+
+    //  Add autoUpdate option
+    skeleton.updateWorldTransform();
+
     skeletonRenderer.ctx = context;
+    skeletonRenderer.debugRendering = (plugin.drawDebug || src.drawDebug);
 
     context.save();
 
     skeletonRenderer.draw(skeleton);
-
-    if (plugin.drawDebug || src.drawDebug)
-    {
-        context.strokeStyle = '#00ff00';
-        context.beginPath();
-        context.moveTo(-1000, 0);
-        context.lineTo(1000, 0);
-        context.moveTo(0, -1000);
-        context.lineTo(0, 1000);
-        context.stroke();
-    }
 
     context.restore();
 };
