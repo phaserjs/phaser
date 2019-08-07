@@ -1,24 +1,24 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Class = require('../../../../src/utils/Class');
+var AngleBetween = require('../../../../src/math/angle/Between');
 var Clamp = require('../../../../src/math/Clamp');
+var Class = require('../../../../src/utils/Class');
 var ComponentsComputedSize = require('../../../../src/gameobjects/components/ComputedSize');
 var ComponentsDepth = require('../../../../src/gameobjects/components/Depth');
 var ComponentsFlip = require('../../../../src/gameobjects/components/Flip');
 var ComponentsScrollFactor = require('../../../../src/gameobjects/components/ScrollFactor');
 var ComponentsTransform = require('../../../../src/gameobjects/components/Transform');
 var ComponentsVisible = require('../../../../src/gameobjects/components/Visible');
-var SpineEvents = require('../events/');
-var GameObject = require('../../../../src/gameobjects/GameObject');
-var SpineGameObjectRender = require('./SpineGameObjectRender');
-var AngleBetween = require('../../../../src/math/angle/Between');
 var CounterClockwise = require('../../../../src/math/angle/CounterClockwise');
 var DegToRad = require('../../../../src/math/DegToRad');
+var GameObject = require('../../../../src/gameobjects/GameObject');
 var RadToDeg = require('../../../../src/math/RadToDeg');
+var SpineEvents = require('../events/');
+var SpineGameObjectRender = require('./SpineGameObjectRender');
 
 /**
  * @classdesc
@@ -26,10 +26,15 @@ var RadToDeg = require('../../../../src/math/RadToDeg');
  *
  * @class SpineGameObject
  * @constructor
- * @since 3.16.0
+ * @since 3.19.0
  *
- * @param {Phaser.Scene} scene - A reference to the Scene that has installed this plugin.
- * @param {Phaser.Plugins.PluginManager} pluginManager - A reference to the Phaser Plugin Manager.
+ * @param {Phaser.Scene} scene - A reference to the Scene that this Game Object belongs to.
+ * @param {SpinePlugin} pluginManager - A reference to the Phaser Spine Plugin.
+ * @param {number} x - The horizontal position of this Game Object in the world.
+ * @param {number} y - The vertical position of this Game Object in the world.
+ * @param {string} [key] - The key of the Spine Skeleton this Game Object will use, as stored in the Spine Plugin.
+ * @param {string} [animationName] - The name of the animation to set on this Skeleton.
+ * @param {boolean} [loop=false] - Should the animation playback be looped or not?
  */
 var SpineGameObject = new Class({
 
