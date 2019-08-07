@@ -248,7 +248,7 @@ var Game = new Class({
          * You can disable the inclusion of the Sound Manager in your build by toggling the webpack `FEATURE_SOUND` flag.
          *
          * @name Phaser.Game#sound
-         * @type {Phaser.Sound.BaseSoundManager}
+         * @type {(Phaser.Sound.NoAudioSoundManager|Phaser.Sound.HTML5AudioSoundManager|Phaser.Sound.WebAudioSoundManager)}
          * @since 3.0.0
          */
         this.sound = null;
