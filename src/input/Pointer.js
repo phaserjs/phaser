@@ -259,6 +259,9 @@ var Pointer = new Class({
 
         /**
          * The x position of this Pointer, translated into the coordinate space of the most recent Camera it interacted with.
+         * 
+         * If you wish to use this value _outside_ of an input event handler then you should update it first by calling
+         * the `Pointer.updateWorldPoint` method.
          *
          * @name Phaser.Input.Pointer#worldX
          * @type {number}
@@ -269,6 +272,9 @@ var Pointer = new Class({
 
         /**
          * The y position of this Pointer, translated into the coordinate space of the most recent Camera it interacted with.
+         * 
+         * If you wish to use this value _outside_ of an input event handler then you should update it first by calling
+         * the `Pointer.updateWorldPoint` method.
          *
          * @name Phaser.Input.Pointer#worldY
          * @type {number}
