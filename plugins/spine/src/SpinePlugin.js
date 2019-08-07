@@ -17,6 +17,9 @@ var SpineGameObject = require('./gameobject/SpineGameObject');
  * @classdesc
  * The Spine Plugin is a Scene based plugin that handles the creation and rendering of Spine Game objects.
  * 
+ * All rendering and object creation is handled via the official Spine Runtimes. This version of the plugin
+ * uses the Spine 3.7 runtimes. Files created in a more recent version of Spine may not work as a result.
+ * 
  * Assuming a default environment you access it from within a Scene by using the `this.spine` reference.
  * 
  * When this plugin is installed into a Scene it will add a Loader File Type, allowing you to load
@@ -35,6 +38,11 @@ var SpineGameObject = require('./gameobject/SpineGameObject');
  * The first argument is the key which you used when importing the Spine data. There are lots of
  * things you can specify, such as the animation name, skeleton, slot attachments and more. Please
  * see the respective documentation and examples for further details.
+ * 
+ * Phaser expects the Spine data to be exported from the Spine application in a JSON format, not binary.
+ * The associated atlas files are scanned for any texture files present in them, which are then loaded.
+ * If you have exported your Spine data with preMultipiedAlpha set, then you should enable this in the
+ * load arguments, or you may see black outlines around skeleton textures.
  * 
  * The Spine plugin is local to the Scene in which it is installed. This means a change to something,
  * such as the Skeleton Debug Renderer, in this Scene, will not impact the renderer in any other Scene.
@@ -408,14 +416,14 @@ var SpinePlugin = new Class({
     },
 
     /**
-     * Adds a JSON based Texture Atlas, or array of atlases, to the current load queue.
+     * Adds a Spine Skeleton and Atlas file, or array of files, to the current load queue.
      *
      * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
      * 
      * ```javascript
      * function preload ()
      * {
-     *     this.load.atlas('mainmenu', 'images/MainMenu.png', 'images/MainMenu.json');
+     *     this.load.spine('spineBoy', 'boy.json', 'boy.atlas', true);
      * }
      * ```
      *
@@ -429,86 +437,60 @@ var SpinePlugin = new Class({
      * 
      * If you call this from outside of `preload` then you are responsible for starting the Loader afterwards and monitoring
      * its events to know when it's safe to use the asset. Please see the Phaser.Loader.LoaderPlugin class for more details.
-     *
-     * Phaser expects the atlas data to be provided in a JSON file, using either the JSON Hash or JSON Array format.
-     * These files are created by software such as Texture Packer, Shoebox and Adobe Flash / Animate.
-     * If you are using Texture Packer and have enabled multi-atlas support, then please use the Phaser Multi Atlas loader
-     * instead of this one.
      * 
-     * Phaser can load all common image types: png, jpg, gif and any other format the browser can natively handle.
-     *
-     * The key must be a unique String. It is used to add the file to the global Texture Manager upon a successful load.
-     * The key should be unique both in terms of files being loaded and files already present in the Texture Manager.
-     * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
-     * then remove it from the Texture Manager first, before loading a new one.
+     * Phaser expects the Spine data to be exported from the Spine application in a JSON format, not binary. The associated
+     * atlas files are scanned for any texture files present in them, which are then loaded. If you have exported
+     * your Spine data with preMultipiedAlpha set, then you should enable this in the arguments, or you may see black
+     * outlines around skeleton textures.
+     * 
+     * The key must be a unique String. It is used to add the file to the global Spine cache upon a successful load.
+     * The key should be unique both in terms of files being loaded and files already present in the Spine cache.
+     * Loading a file using a key that is already taken will result in a warning.
      *
      * Instead of passing arguments you can pass a configuration object, such as:
      * 
      * ```javascript
-     * this.load.atlas({
+     * this.load.spine({
      *     key: 'mainmenu',
-     *     textureURL: 'images/MainMenu.png',
-     *     atlasURL: 'images/MainMenu.json'
+     *     jsonURL: 'boy.json',
+     *     atlasURL: 'boy.atlas',
+     *     preMultipliedAlpha: true
      * });
      * ```
-     *
-     * See the documentation for `Phaser.Types.Loader.FileTypes.AtlasJSONFileConfig` for more details.
-     *
-     * Instead of passing a URL for the atlas JSON data you can also pass in a well formed JSON object instead.
-     *
-     * Once the atlas has finished loading you can use frames from it as textures for a Game Object by referencing its key:
+     * 
+     * If you need to load multiple Spine atlas files, provide them as an array:
      * 
      * ```javascript
-     * this.load.atlas('mainmenu', 'images/MainMenu.png', 'images/MainMenu.json');
-     * // and later in your game ...
-     * this.add.image(x, y, 'mainmenu', 'background');
+     * function preload ()
+     * {
+     *     this.load.spine('demos', 'demos.json', [ 'atlas1.atlas', 'atlas2.atlas' ], true);
+     * }
      * ```
      *
-     * To get a list of all available frames within an atlas please consult your Texture Atlas software.
+     * See the documentation for `Phaser.Types.Loader.FileTypes.SpineFileConfig` for more details.
      *
      * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
      * key. For example, if the prefix was `MENU.` and the key was `Background` the final key will be `MENU.Background` and
-     * this is what you would use to retrieve the image from the Texture Manager.
+     * this is what you would use to retrieve the data from the Spine plugin.
      *
      * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
      *
      * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
-     * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension, although
+     * and no URL is given then the Loader will set the URL to be "alien.json". It will always add `.json` as the extension, although
      * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
      *
-     * Phaser also supports the automatic loading of associated normal maps. If you have a normal map to go with this image,
-     * then you can specify it by providing an array as the `url` where the second element is the normal map:
-     * 
-     * ```javascript
-     * this.load.atlas('mainmenu', [ 'images/MainMenu.png', 'images/MainMenu-n.png' ], 'images/MainMenu.json');
-     * ```
-     *
-     * Or, if you are using a config object use the `normalMap` property:
-     * 
-     * ```javascript
-     * this.load.atlas({
-     *     key: 'mainmenu',
-     *     textureURL: 'images/MainMenu.png',
-     *     normalMap: 'images/MainMenu-n.png',
-     *     atlasURL: 'images/MainMenu.json'
-     * });
-     * ```
-     *
-     * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORs and XHR Settings.
-     * Normal maps are a WebGL only feature.
-     *
-     * Note: The ability to load this type of file will only be available if the Atlas JSON File type has been built into Phaser.
-     * It is available in the default build but can be excluded from custom builds.
+     * Note: The ability to load this type of file will only be available if the Spine Plugin has been built or loaded into Phaser.
      *
      * @method Phaser.Loader.LoaderPlugin#spine
      * @fires Phaser.Loader.LoaderPlugin#addFileEvent
      * @since 3.19.0
      *
-     * @param {(string|Phaser.Types.Loader.FileTypes.AtlasJSONFileConfig|Phaser.Types.Loader.FileTypes.AtlasJSONFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
-     * @param {string|string[]} [textureURL] - The absolute or relative URL to load the texture image file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
-     * @param {string} [atlasURL] - The absolute or relative URL to load the texture atlas json data file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
-     * @param {Phaser.Types.Loader.XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
-     * @param {Phaser.Types.Loader.XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the atlas json file. Used in replacement of the Loaders default XHR Settings.
+     * @param {(string|Phaser.Types.Loader.FileTypes.JSONFileConfig|Phaser.Types.Loader.FileTypes.JSONFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+     * @param {string} jsonURL - The absolute or relative URL to load the Spine json file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+     * @param {string|string[]} atlasURL - The absolute or relative URL to load the Spine atlas file from. If undefined or `null` it will be set to `<key>.atlas`, i.e. if `key` was "alien" then the URL will be "alien.atlas".
+     * @param {boolean} [preMultipiedAlpha=false] - Do the texture files include pre-multiplied alpha or not?
+     * @param {Phaser.Types.Loader.XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the Spine json file. Used in replacement of the Loaders default XHR Settings.
+     * @param {Phaser.Types.Loader.XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the Spine atlas file. Used in replacement of the Loaders default XHR Settings.
      *
      * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
      */
@@ -541,6 +523,22 @@ var SpinePlugin = new Class({
      * The x and y coordinate given is used to set the placement of the root Spine bone, which can vary from
      * skeleton to skeleton. All rotation and scaling happens from the root bone placement. Spine Game Objects
      * do not have a Phaser origin.
+     * 
+     * If the Spine JSON file exported multiple Skeletons within it, then you can specify them by using a period
+     * character in the key. For example, if you loaded a Spine JSON using the key `monsters` and it contains
+     * multiple Skeletons, including one called `goblin` then you would use the key `monsters.goblin` to reference
+     * that.
+     * 
+     * ```javascript
+     * let jelly = this.add.spine(512, 550, 'jelly', 'jelly-think', true);
+     * ```
+     * 
+     * The key is optional. If not passed here, you need to call `SpineGameObject.setSkeleton()` to use it.
+     * 
+     * The animation name is also optional and can be set later via `SpineGameObject.setAnimation`.
+     * 
+     * Should you wish for more control over the object creation, such as setting a slot attachment or skin
+     * name, then use `SpinePlugin.make` instead.
      *
      * @method SpinePlugin#add
      * @since 3.19.0
@@ -569,6 +567,21 @@ var SpinePlugin = new Class({
      * The x and y coordinate given is used to set the placement of the root Spine bone, which can vary from
      * skeleton to skeleton. All rotation and scaling happens from the root bone placement. Spine Game Objects
      * do not have a Phaser origin.
+     * 
+     * If the Spine JSON file exported multiple Skeletons within it, then you can specify them by using a period
+     * character in the key. For example, if you loaded a Spine JSON using the key `monsters` and it contains
+     * multiple Skeletons, including one called `goblin` then you would use the key `monsters.goblin` to reference
+     * that.
+     * 
+     * ```javascript
+     * let jelly = this.make.spine({
+     *     x: 500, y: 500, key: 'jelly',
+     *     scale: 1.5,
+     *     skinName: 'square_Green',
+     *     animationName: 'jelly-idle', loop: true,
+     *     slotName: 'hat', attachmentName: 'images/La_14'
+     * });
+     * ```
      *
      * @method SpinePlugin#make
      * @since 3.19.0
