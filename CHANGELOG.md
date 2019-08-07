@@ -88,6 +88,8 @@
 * `InputPlugin.enableDebug` is a new method that will create a debug shape for the given Game Objects hit area. This allows you to quickly check the size and placement of an input hit area. You can customzie the shape outline color. The debug shape will automatically track the Game Object to which it is bound.
 * `InputPlugion.removeDebug` will remove a Debug Input Shape from the given Game Object and destroy it.
 * `Pointer.updateWorldPoint` is a new method that takes a Camera and then updates the Pointers `worldX` and `worldY` values based on the cameras transform (thanks @Nick-lab)
+* `ScaleManager._resetZoom` is a new internal flag that is set when the game zoom factor changes.
+* `Texture.remove` is a new method that allows you to remove a Frame from a Texture based on its name. Fix #4460 (thanks @BigZaphod)
 
 ### Updates
 
@@ -109,7 +111,7 @@
 * `TransformMatrix.rotation` now returns the properly normalized rotation value.
 * `PhysicsEditorParser` has now been exposed under the `Phaser.Physics.Matter` namespace, so you can call methods on it directly.
 * Calling `CanvasTexture.update` will now automatically call `refresh` if running under WebGL. This happens for both `draw` and `drawFrame`, meaning you no longer need to remember to call `refresh` after drawing to a Canvas Texture in WebGL, keeping it consistent with the Canvas renderer.
-* `ScaleManager._resetZoom` is a new internal flag that is set when the game zoom factor changes.
+* `Frame.destroy` will now null the Frames reference to its parent texture, glTexture and clear the data and customData objects.
 
 ### Bug Fixes
 
