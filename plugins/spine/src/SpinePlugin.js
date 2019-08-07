@@ -53,6 +53,7 @@ var SpinePlugin = new Class({
         this.gl;
         this.renderer;
         this.sceneRenderer;
+        this.skeletonRenderer;
         this.skeletonDebugRenderer;
 
         this.plugin = Spine;
@@ -88,15 +89,13 @@ var SpinePlugin = new Class({
         if (this.isWebGL)
         {
             this.bootWebGL();
+            this.onResize();
+            this.game.scale.on(ResizeEvent, this.onResize, this);
         }
         else
         {
             this.bootCanvas();
         }
-
-        this.onResize();
-
-        this.game.scale.on(ResizeEvent, this.onResize, this);
 
         var eventEmitter = this.systems.events;
 
@@ -106,14 +105,14 @@ var SpinePlugin = new Class({
 
     bootCanvas: function ()
     {
-        this.skeletonRenderer = new this.runtime.SkeletonRenderer(this.scene.sys.context);
+        this.skeletonRenderer = new Spine.canvas.SkeletonRenderer(this.scene.sys.context);
     },
 
     getAtlasCanvas: function (key)
     {
-        var atlasData = this.cache.get(key);
+        var atlasEntry = this.cache.get(key);
 
-        if (!atlasData)
+        if (!atlasEntry)
         {
             console.warn('No atlas data for: ' + key);
             return;
@@ -124,7 +123,7 @@ var SpinePlugin = new Class({
 
         if (spineTextures.has(key))
         {
-            atlas = new Spine.TextureAtlas(atlasData, function ()
+            atlas = new Spine.TextureAtlas(atlasEntry.data, function ()
             {
                 return spineTextures.get(key);
             });
@@ -133,7 +132,7 @@ var SpinePlugin = new Class({
         {
             var textures = this.textures;
 
-            atlas = new Spine.TextureAtlas(atlasData, function (path)
+            atlas = new Spine.TextureAtlas(atlasEntry.data, function (path)
             {
                 var canvasTexture = new Spine.canvas.CanvasTexture(textures.get(path).getSourceImage());
 
@@ -172,6 +171,7 @@ var SpinePlugin = new Class({
         this.sceneRenderer.batcher.setBlendMode = setBlendMode;
         this.sceneRenderer.shapes.setBlendMode = setBlendMode;
 
+        this.skeletonRenderer = this.sceneRenderer.skeletonRenderer;
         this.skeletonDebugRenderer = this.sceneRenderer.skeletonDebugRenderer;
 
         this.temp1 = new Spine.webgl.Vector3(0, 0, 0);
@@ -567,6 +567,7 @@ var SpinePlugin = new Class({
         this.json = null;
         this.textures = null;
         this.sceneRenderer = null;
+        this.skeletonRenderer = null;
         this.gl = null;
     }
 
