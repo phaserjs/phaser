@@ -1228,7 +1228,7 @@ var Tween = new Class({
      * @method Phaser.Tweens.Tween#dispatchTweenDataEvent
      * @since 3.19.0
      *
-     * @param {Phaser.Tweens.Events} event - The Event to be dispatched.
+     * @param {Phaser.Types.Tweens.Event} event - The Event to be dispatched.
      * @param {function} callback - The callback to be invoked. Can be `null` or `undefined` to skip invocation.
      * @param {Phaser.Types.Tweens.TweenDataConfig} tweenData - The TweenData object that caused this event.
      */
@@ -1253,7 +1253,7 @@ var Tween = new Class({
      * @method Phaser.Tweens.Tween#dispatchTweenEvent
      * @since 3.19.0
      *
-     * @param {Phaser.Tweens.Events} event - The Event to be dispatched.
+     * @param {Phaser.Types.Tweens.Event} event - The Event to be dispatched.
      * @param {function} callback - The callback to be invoked. Can be `null` or `undefined` to skip invocation.
      */
     dispatchTweenEvent: function (event, callback)
