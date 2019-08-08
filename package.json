@@ -1,6 +1,6 @@
 {
   "name": "phaser",
-  "version": "3.19.0-beta1",
+  "version": "3.19.0",
   "release": "Naofumi",
   "description": "A fast, free and fun HTML5 Game Framework for Desktop and Mobile web browsers.",
   "author": "Richard Davey <rich@photonstorm.com> (http://www.photonstorm.com)",
@@ -28,10 +28,15 @@
     "plugin.spine": "webpack --config plugins/spine/webpack.config.js",
     "plugin.spine.dist": "webpack --config plugins/spine/webpack.auto.dist.config.js",
     "plugin.spine.watch": "webpack --config plugins/spine/webpack.auto.config.js --watch --display-modules",
+    "plugin.spine.dev": "webpack --config plugins/spine/webpack.auto.config.js",
     "plugin.spine.canvas.dist": "webpack --config plugins/spine/webpack.canvas.dist.config.js",
     "plugin.spine.canvas.watch": "webpack --config plugins/spine/webpack.canvas.config.js --watch --display-modules",
+    "plugin.spine.canvas.dev": "webpack --config plugins/spine/webpack.canvas.config.js",
     "plugin.spine.webgl.dist": "webpack --config plugins/spine/webpack.webgl.dist.config.js",
-    "plugin.spine.webgl.watch": "webpack --config plugins/spine/webpack.webgl.config.js --watch",
+    "plugin.spine.webgl.watch": "webpack --config plugins/spine/webpack.webgl.config.js --watch --display-modules",
+    "plugin.spine.webgl.dev": "webpack --config plugins/spine/webpack.webgl.config.js",
+    "plugin.spine.full": "npm run plugin.spine.dev && npm run plugin.spine.canvas.dev && npm run plugin.spine.webgl.dev",
+    "plugin.spine.full.dist": "npm run plugin.spine.dist && npm run plugin.spine.canvas.dist && npm run plugin.spine.webgl.dist",
     "lint": "eslint --config .eslintrc.json \"src/**/*.js\"",
     "lintfix": "eslint --config .eslintrc.json \"src/**/*.js\" --fix",
     "sloc": "node-sloc \"./src\" --include-extensions \"js\"",
@@ -74,6 +79,7 @@
     "imports-loader": "^0.8.0",
     "jsdoc": "^3.6.1",
     "path": "^0.12.7",
+    "remove-files-webpack-plugin": "^1.1.3",
     "typescript": "^3.4.5"
   }
 }
