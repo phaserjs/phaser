@@ -26,9 +26,13 @@ Grab the source and join the fun!
 
 I'm pleased to announce that Phaser 3.19 is now available. This release includes our brand new Spine plugin. Spine allows you to bring animation to life in your games, offering a dedicated 2D skeletal animation system and workflow. Our plugin makes integration with Phaser seamless and is fully updated for the Spine 3.7 Runtimes with support for WebGL and Canvas renderers. This version will properly batch Spine skeletons where possible, potentially saving hundreds of draw calls. The plugin is fully documented and exports both debug and minified files, suitable for ES6 'importing' or ES5 plugin inclusion. The whole plugin is just 68KB in size (min+gz), or a paltry 57KB if you only need the Canvas renderer! That's a really tiny payload for such a massive feature-set. You can find out more about Spine from the [Esoteric Software website](http://esotericsoftware.com/).
 
-3.19 also introduces a huge overhaul to the Tween system.
+3.19 also introduces a huge overhaul to the Tween system. Tweens now have 100% documentation and we've extended their capabilities significantly. There are lots of new Tween Events to listen for, such as 'COMPLETE' or 'REPEAT' to allow you to trigger actions without needing to create callbacks. Tweens can now tween both 'from' and 'to' a value, with the ability to set a starting value for any tweened property. There are lots of new handy methods and properties, such as `Tween.hasStarted` and a rewrite of the Tween seeking function, so it now allows you to seek to any point in time across a tween. Finally, we've added in the great new 'StaggerBuilder'. This allows you to easily add staggered offsets to a bunch of tween targets, including all kinds of options such as staggering across a grid layout, stagger directions, starting values and a lot more. Please see the docs and examples for more details.
 
-As usual, it doesn't end there, though. You'll find hundreds of great new features, updates and fixes. So, as usual, please do spend some time digging through the [Change Log](#changelog). I assure you, it's worth while :)
+As usual, it doesn't end there, though :) Another very useful feature is `Shader.setRenderToTexture`. This allows you to redirect a shader to its own framebuffer / WebGL Texture instead of to the display list. This allows you to use the output of the shader as an input for another shader, by mapping a sampler2D uniform to it. It also allows you to save the Shader to the Texture Manager, allowing you to use it as a texture for any other texture based Game Object such as a Sprite. Combined with the new `setSampler2DBuffer` method you can now easily chain shaders together, using them as buffers for other shaders.
+
+One thing I've been seeing asked for a lot on the Phaser Discord is the ability to 'save' a Render Texture to an image. So, I added the new methods `RenderTexture.snapshot` and `snapshotArea`. This allows you to grab whatever is on the Render Texture at that point in time and turn it into an Image. You could then save this image to the Texture Manager, if needed, or just save it out to the filesystem, or transmit it to as web service. Great for things like avatar creators or art packages.
+
+You'll find loads more great new features, updates and fixes. So, as usual, please do spend some time digging through the [Change Log](#changelog). I assure you, it's worth while :)
 
 A massive thank-you to everyone who supports Phaser on Patreon and PayPal. Your continued backing has allowed me to work on Phaser all year, and this great new releases is the very real result of that. If you've ever considered becoming a backer, now is the perfect time!
 
@@ -71,8 +75,9 @@ Extra special thanks to the following companies who's support makes Phaser possi
 * [Texture Packer](https://www.codeandweb.com/texturepacker/tutorials/how-to-create-sprite-sheets-for-phaser3?utm_source=ad&utm_medium=banner&utm_campaign=phaser-2018-10-16)
 * [Twilio](https://www.twilio.com)
 * [Y8 Games](https://www.y8.com)
+* [Poki](https://developers.poki.com/)
 
-![Sponsors](https://phaser.io/images/github/sponsors-2019-05.png "Awesome  Sponsors")
+![Sponsors](https://phaser.io/images/github/sponsors-2019-08.png "Awesome  Sponsors")
 
 ![Phaser Newsletter](https://phaser.io/images/github/div-newsletter.png "Phaser Newsletter")
 
