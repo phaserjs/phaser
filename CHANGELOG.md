@@ -1,6 +1,6 @@
 # Change Log
 
-## Version 3.19.0 - Naofumi - in development
+## Version 3.19.0 - Naofumi - 8th August 2019
 
 ### Tween Updates
 
@@ -45,6 +45,8 @@
 * Tweens created via `TweenManager.create` wouldn't start when `Tween.play` was called without first making them active manually. They now start automatically. Fix #4632 (thanks @mikewesthad)
 
 ### Spine Updates
+
+The Spine Plugin is now 100% complete. It has been updated to use the Spine 3.7 Runtimes. Improvements have been made across the entire plugin, including proper batched rendering support in WebGL, cleaner skin and slot functions and lots and lots of updates. It's fully documented and there are lots of examples to be found. The following legacy bugs have also been fixed:
 
 * Adding Spine to physics causes position to become NaN. Fix #4501 (thanks @hizzd)
 * Destroying a Phaser Game instance and then re-creating it would cause an error trying to re-create Spine Game Objects ("Cannot read property get of null"). Fix #4532 (thanks @Alex-Badea)
@@ -148,8 +150,6 @@
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
 @vacarsu @KennethGomez @samme @ldd @Jazcash @jcyuan @LearningCode2023 @PhaserEditor2D
-
-
 
 ## Version 3.18.1 - Raphtalia - 20th June 2019
 
