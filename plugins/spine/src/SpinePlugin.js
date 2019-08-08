@@ -49,6 +49,8 @@ var SpineGameObject = require('./gameobject/SpineGameObject');
  * The only exception to this is with the caches this plugin creates. Spine atlas and texture data are
  * stored in their own caches, which are global, meaning they're accessible from any Scene in your
  * game, regardless if the Scene loaded the Spine data or not.
+ * 
+ * For details about the Spine Runtime API see http://esotericsoftware.com/spine-api-reference
  *
  * @class SpinePlugin
  * @memberOf Phaser
