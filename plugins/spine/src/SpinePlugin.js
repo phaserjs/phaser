@@ -20,6 +20,46 @@ var SpineGameObject = require('./gameobject/SpineGameObject');
  * All rendering and object creation is handled via the official Spine Runtimes. This version of the plugin
  * uses the Spine 3.7 runtimes. Files created in a more recent version of Spine may not work as a result.
  * 
+ * You can find more details about Spine at http://esotericsoftware.com/.
+ * 
+ * Please note that you require a Spine license in order to use Spine Runtimes in your games.
+ * 
+ * You can install this plugin into your Phaser game by either importing it, if you're using ES6:
+ * 
+ * ```javascript
+ * import * as SpinePlugin from './SpinePlugin.js';
+ * ```
+ * 
+ * and then adding it to your Phaser Game configuration:
+ * 
+ * ```javascript
+ * plugins: {
+ *     scene: [
+ *         { key: 'SpinePlugin', plugin: window.SpinePlugin, mapping: 'spine' }
+ *     ]
+ * }
+ * ```
+ * 
+ * If you're using ES5 then you can load the Spine Plugin in a Scene files payload, _within_ your
+ * Game Configuration object, like this:
+ * 
+ * ```javascript
+ * scene: {
+ *     preload: preload,
+ *     create: create,
+ *     pack: {
+ *         files: [
+ *             { type: 'scenePlugin', key: 'SpinePlugin', url: 'plugins/SpinePlugin.js', sceneKey: 'spine' }
+ *         ]
+ *     }
+ * }
+ * ```
+ * 
+ * Loading it like this allows you to then use commands such as `this.load.spine` from within the
+ * same Scene. Alternatively, you can use the method `this.load.plugin` to load the plugin via the normal
+ * Phaser Loader. However, doing so will not add it to the current Scene. It will be available from any
+ * subsequent Scenes.
+ * 
  * Assuming a default environment you access it from within a Scene by using the `this.spine` reference.
  * 
  * When this plugin is installed into a Scene it will add a Loader File Type, allowing you to load

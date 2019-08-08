@@ -22,7 +22,61 @@ var SpineGameObjectRender = require('./SpineGameObjectRender');
 
 /**
  * @classdesc
- * TODO
+ * A Spine Game Object is a Phaser level object that can be added to your Phaser Scenes. It encapsulates
+ * a Spine Skeleton with Spine Animation Data and Animation State, with helper methods to allow you to
+ * easily change the skin, slot attachment, bone positions and more.
+ * 
+ * Spine Game Objects can be created via the Game Object Factory, Game Object Creator, or directly.
+ * You can only create them if the Spine plugin has been loaded into Phaser.
+ * 
+ * The quickest way is the Game Object Factory:
+ * 
+ * ```javascript
+ * let jelly = this.add.spine(512, 550, 'jelly', 'jelly-think', true);
+ * ```
+ * 
+ * Here we are creating a new Spine Game Object positioned at 512 x 550. It's using the `jelly`
+ * Spine data, which has previously been loaded into your Scene. The `jelly-think` argument is
+ * an optional animation to start playing on the skeleton. The final argument `true` sets the
+ * animation to loop. Look at the documentation for further details on each of these options.
+ * 
+ * For more control, you can use the Game Object Creator, passing in a Spine Game Object
+ * Configuration object:
+ * 
+ * ```javascript
+ * let jelly = this.make.spine({
+ *     x: 512, y: 550, key: 'jelly',
+ *     scale: 1.5,
+ *     skinName: 'square_Green',
+ *     animationName: 'jelly-think', loop: true,
+ *     slotName: 'hat', attachmentName: 'images/La_14'
+ * });
+ * ```
+ * 
+ * Here, you've got the ability to specify extra details, such as the slot name, attachments or
+ * overall scale.
+ * 
+ * If you wish to instantiate a Spine Game Object directly you can do so, but in order for it to
+ * update and render, it must be added to the display and update lists of your Scene:
+ * 
+ * ```javascript
+ * let jelly = new SpineGameObject(this, this.spine, 512, 550, 'jelly', 'jelly-think', true);
+ * this.sys.displayList.add(jelly);
+ * this.sys.updateList.add(jelly);
+ * ```
+ * 
+ * It's possible to enable Spine Game Objects for input, but you should be aware that it will use
+ * the bounds of the skeletons current pose to create the hit area from. Sometimes this is ok, but
+ * often not. Make use of the `InputPlugin.enableDebug` method to view the input shape being created.
+ * If it's not suitable, provide your own shape to the `setInteractive` method.
+ * 
+ * Due to the way Spine handles scaling, it's not recommended to enable a Spine Game Object for
+ * physics directly. Instead, you should look at creating a proxy body and syncing the Spine Game
+ * Object position with it. See the examples for further details.
+ * 
+ * If your Spine Game Object has black outlines around the different parts of the texture when it
+ * renders then you have exported the files from Spine with pre-multiplied alpha enabled, but have
+ * forgotten to set that flag when loading the Spine data. Please see the loader docs for more details.
  *
  * @class SpineGameObject
  * @constructor
