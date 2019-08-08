@@ -93,7 +93,6 @@ var SpineGameObject = require('./gameobject/SpineGameObject');
  * For details about the Spine Runtime API see http://esotericsoftware.com/spine-api-reference
  *
  * @class SpinePlugin
- * @memberOf Phaser
  * @extends Phaser.Plugins.ScenePlugin
  * @constructor
  * @since 3.19.0
