@@ -5,7 +5,7 @@
  */
 
 /**
- * The Complete Event.
+ * The End Event.
  *
  * @event SpinePluginEvents#END
  * @since 3.19.0

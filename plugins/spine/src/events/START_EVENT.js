@@ -5,7 +5,7 @@
  */
 
 /**
- * The Complete Event.
+ * The Start Event.
  *
  * @event SpinePluginEvents#START
  * @since 3.19.0

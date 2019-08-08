@@ -5,7 +5,7 @@
  */
 
 /**
- * The Complete Event.
+ * The Dispose Event.
  *
  * @event SpinePluginEvents#DISPOSE
  * @since 3.19.0

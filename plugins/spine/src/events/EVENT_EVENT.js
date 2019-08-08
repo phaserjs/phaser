@@ -5,7 +5,7 @@
  */
 
 /**
- * The Complete Event.
+ * The Custom Event Event.
  *
  * @event SpinePluginEvents#EVENT
  * @since 3.19.0
