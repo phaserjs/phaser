@@ -114,6 +114,7 @@ The Spine Plugin is now 100% complete. It has been updated to use the Spine 3.7 
 * `PhysicsEditorParser` has now been exposed under the `Phaser.Physics.Matter` namespace, so you can call methods on it directly.
 * Calling `CanvasTexture.update` will now automatically call `refresh` if running under WebGL. This happens for both `draw` and `drawFrame`, meaning you no longer need to remember to call `refresh` after drawing to a Canvas Texture in WebGL, keeping it consistent with the Canvas renderer.
 * `Frame.destroy` will now null the Frames reference to its parent texture, glTexture and clear the data and customData objects.
+* The Container renderer functions will now read the childs `alpha` property, instead of `_alpha`, allowing it to work with more variety of custom children.
 
 ### Bug Fixes
 
