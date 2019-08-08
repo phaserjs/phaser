@@ -1,8 +1,8 @@
 'use strict';
 
 const webpack = require('webpack');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const exec = require('child_process').exec;
+const RemovePlugin = require('remove-files-webpack-plugin');
 
 module.exports = {
     mode: 'development',
@@ -10,7 +10,7 @@ module.exports = {
     context: `${__dirname}/src/`,
 
     entry: {
-        'SpinePlugin': './SpinePlugin.js'
+        'SpinePluginDebug': './SpinePlugin.js'
     },
 
     output: {
@@ -50,7 +50,12 @@ module.exports = {
             "typeof CANVAS_RENDERER": JSON.stringify(true),
             "typeof WEBGL_RENDERER": JSON.stringify(true)
         }),
-        new CleanWebpackPlugin([ 'dist' ]),
+        new RemovePlugin({
+            before: {
+                root: './plugins/spine/dist/',
+                include: [ 'SpinePluginDebug.js', 'SpinePluginDebug.js.map' ]
+            }
+        }),
         {
             apply: (compiler) => {
                 compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {

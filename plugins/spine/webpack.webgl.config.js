@@ -1,8 +1,8 @@
 'use strict';
 
 const webpack = require('webpack');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const exec = require('child_process').exec;
+const RemovePlugin = require('remove-files-webpack-plugin');
 
 module.exports = {
     mode: 'development',
@@ -10,14 +10,14 @@ module.exports = {
     context: `${__dirname}/src/`,
 
     entry: {
-        'SpinePlugin': './SpinePlugin.js'
+        'SpineWebGLPluginDebug': './SpinePlugin.js'
     },
 
     output: {
         path: `${__dirname}/dist/`,
         filename: '[name].js',
         library: 'SpinePlugin',
-        libraryTarget: 'umd',
+        libraryTarget: 'window',
         sourceMapFilename: '[file].map',
         devtoolModuleFilenameTemplate: 'webpack:///[resource-path]', // string
         devtoolFallbackModuleFilenameTemplate: 'webpack:///[resource-path]?[hash]', // string
@@ -50,7 +50,14 @@ module.exports = {
             "typeof CANVAS_RENDERER": JSON.stringify(false),
             "typeof WEBGL_RENDERER": JSON.stringify(true)
         }),
-        new CleanWebpackPlugin([ 'dist' ]),
+        new RemovePlugin({
+            before: {
+                before: {
+                    root: './plugins/spine/dist/',
+                    include: [ 'SpineWebGLPluginDebug.js', 'SpineWebGLPluginDebug.js.map' ]
+                }
+            }
+        }),
         {
             apply: (compiler) => {
                 compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
