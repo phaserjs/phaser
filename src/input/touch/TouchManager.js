@@ -219,7 +219,7 @@ var TouchManager = new Class({
             {
                 _this.manager.onTouchStart(event);
     
-                if (_this.capture && event.target === canvas)
+                if (_this.capture && event.cancelable && event.target === canvas)
                 {
                     event.preventDefault();
                 }
@@ -241,7 +241,7 @@ var TouchManager = new Class({
             {
                 _this.manager.onTouchMove(event);
     
-                if (_this.capture)
+                if (_this.capture && event.cancelable)
                 {
                     event.preventDefault();
                 }
@@ -254,7 +254,7 @@ var TouchManager = new Class({
             {
                 _this.manager.onTouchEnd(event);
     
-                if (_this.capture && event.target === canvas)
+                if (_this.capture && event.cancelable && event.target === canvas)
                 {
                     event.preventDefault();
                 }
