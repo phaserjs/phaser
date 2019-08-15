@@ -401,15 +401,15 @@ var SceneManager = new Class({
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
-    remove: function (key)
+    remove: function (scene)
     {
         if (this.isProcessing)
         {
-            this._queue.push({ op: 'remove', keyA: key, keyB: null });
+            this._queue.push({ op: 'remove', keyA: scene, keyB: null });
         }
         else
         {
-            var sceneToRemove = this.getScene(key);
+            var sceneToRemove = this.getScene(scene);
 
             if (!sceneToRemove || sceneToRemove.sys.isTransitioning())
             {
@@ -768,6 +768,8 @@ var SceneManager = new Class({
         {
             for (var propertyKey in sceneConfig.extend)
             {
+                if(!sceneConfig.extend.hasOwnProperty(propertyKey)) continue;
+                
                 var value = sceneConfig.extend[propertyKey];
 
                 if (propertyKey === 'data' && newScene.hasOwnProperty('data') && typeof value === 'object')
