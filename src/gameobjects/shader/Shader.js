@@ -792,7 +792,7 @@ var Shader = new Class({
      * 
      * @param {string} key - The key of the uniform to return the value for.
      * 
-     * @return {this} This Shader instance.
+     * @return {any} A reference to the uniform object. This is not a copy, so modifying it will update the original object also.
      */
     getUniform: function (key)
     {
