@@ -1,5 +1,11 @@
 # Change Log
 
+## Version 3.20.0 - Fitoria - in dev
+
+### New Features
+
+* `GameConfig.antialiasGL` is a new boolean that allows you to set the `antialias` property of the WebGL context during creation, without impacting any subsequent textures or the canvas CSS.
+
 ## Version 3.19.0 - Naofumi - 8th August 2019
 
 ### Tween Updates
