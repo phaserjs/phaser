@@ -65,7 +65,7 @@ var Size = {
 
         get: function ()
         {
-            return this.scaleX * this.frame.realWidth;
+            return Math.abs(this.scaleX * this.frame.realWidth);
         },
 
         set: function (value)
@@ -90,7 +90,7 @@ var Size = {
 
         get: function ()
         {
-            return this.scaleY * this.frame.realHeight;
+            return Math.abs(this.scaleY * this.frame.realHeight);
         },
 
         set: function (value)
