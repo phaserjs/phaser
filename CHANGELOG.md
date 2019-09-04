@@ -6,6 +6,10 @@
 
 * `GameConfig.antialiasGL` is a new boolean that allows you to set the `antialias` property of the WebGL context during creation, without impacting any subsequent textures or the canvas CSS.
 
+### Bug Fixes
+
+* `SpineCanvasPlugin.shutdown` would try to dispose of the `sceneRenderer`, but the property isn't set for Canvas.
+
 ## Version 3.19.0 - Naofumi - 8th August 2019
 
 ### Tween Updates

@@ -1086,7 +1086,10 @@ var SpinePlugin = new Class({
 
         eventEmitter.off('shutdown', this.shutdown, this);
 
-        this.sceneRenderer.dispose();
+        if (this.sceneRenderer)
+        {
+            this.sceneRenderer.dispose();
+        }
     },
 
     /**
