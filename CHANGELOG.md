@@ -9,6 +9,7 @@
 ### Bug Fixes
 
 * `SpineCanvasPlugin.shutdown` would try to dispose of the `sceneRenderer`, but the property isn't set for Canvas.
+* `ArcadePhysics.Body.checkWorldBounds` would incorrectly report as being on the World bounds if the `blocked.none` flag had been toggled elsewhere in the Body. It now only sets if it toggles a new internal flag (thanks Pablo)
 
 ## Version 3.19.0 - Naofumi - 8th August 2019
 
