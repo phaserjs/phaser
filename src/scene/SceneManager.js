@@ -34,129 +34,129 @@ var SceneManager = new Class({
 
     initialize:
 
-    function SceneManager (game, sceneConfig)
-    {
-        /**
-         * The Game that this SceneManager belongs to.
-         *
-         * @name Phaser.Scenes.SceneManager#game
-         * @type {Phaser.Game}
-         * @since 3.0.0
-         */
-        this.game = game;
-
-        /**
-         * An object that maps the keys to the scene so we can quickly get a scene from a key without iteration.
-         *
-         * @name Phaser.Scenes.SceneManager#keys
-         * @type {object}
-         * @since 3.0.0
-         */
-        this.keys = {};
-
-        /**
-         * The array in which all of the scenes are kept.
-         *
-         * @name Phaser.Scenes.SceneManager#scenes
-         * @type {array}
-         * @since 3.0.0
-         */
-        this.scenes = [];
-
-        /**
-         * Scenes pending to be added are stored in here until the manager has time to add it.
-         *
-         * @name Phaser.Scenes.SceneManager#_pending
-         * @type {array}
-         * @private
-         * @since 3.0.0
-         */
-        this._pending = [];
-
-        /**
-         * An array of scenes waiting to be started once the game has booted.
-         *
-         * @name Phaser.Scenes.SceneManager#_start
-         * @type {array}
-         * @private
-         * @since 3.0.0
-         */
-        this._start = [];
-
-        /**
-         * An operations queue, because we don't manipulate the scenes array during processing.
-         *
-         * @name Phaser.Scenes.SceneManager#_queue
-         * @type {array}
-         * @private
-         * @since 3.0.0
-         */
-        this._queue = [];
-
-        /**
-         * Boot time data to merge.
-         *
-         * @name Phaser.Scenes.SceneManager#_data
-         * @type {object}
-         * @private
-         * @since 3.4.0
-         */
-        this._data = {};
-
-        /**
-         * Is the Scene Manager actively processing the Scenes list?
-         *
-         * @name Phaser.Scenes.SceneManager#isProcessing
-         * @type {boolean}
-         * @default false
-         * @readonly
-         * @since 3.0.0
-         */
-        this.isProcessing = false;
-
-        /**
-         * Has the Scene Manager properly started?
-         *
-         * @name Phaser.Scenes.SceneManager#isBooted
-         * @type {boolean}
-         * @default false
-         * @readonly
-         * @since 3.4.0
-         */
-        this.isBooted = false;
-
-        /**
-         * Do any of the Cameras in any of the Scenes require a custom viewport?
-         * If not we can skip scissor tests.
-         *
-         * @name Phaser.Scenes.SceneManager#customViewports
-         * @type {number}
-         * @default 0
-         * @since 3.12.0
-         */
-        this.customViewports = 0;
-
-        if (sceneConfig)
+        function SceneManager (game, sceneConfig)
         {
-            if (!Array.isArray(sceneConfig))
+            /**
+             * The Game that this SceneManager belongs to.
+             *
+             * @name Phaser.Scenes.SceneManager#game
+             * @type {Phaser.Game}
+             * @since 3.0.0
+             */
+            this.game = game;
+
+            /**
+             * An object that maps the keys to the scene so we can quickly get a scene from a key without iteration.
+             *
+             * @name Phaser.Scenes.SceneManager#keys
+             * @type {object}
+             * @since 3.0.0
+             */
+            this.keys = {};
+
+            /**
+             * The array in which all of the scenes are kept.
+             *
+             * @name Phaser.Scenes.SceneManager#scenes
+             * @type {array}
+             * @since 3.0.0
+             */
+            this.scenes = [];
+
+            /**
+             * Scenes pending to be added are stored in here until the manager has time to add it.
+             *
+             * @name Phaser.Scenes.SceneManager#_pending
+             * @type {array}
+             * @private
+             * @since 3.0.0
+             */
+            this._pending = [];
+
+            /**
+             * An array of scenes waiting to be started once the game has booted.
+             *
+             * @name Phaser.Scenes.SceneManager#_start
+             * @type {array}
+             * @private
+             * @since 3.0.0
+             */
+            this._start = [];
+
+            /**
+             * An operations queue, because we don't manipulate the scenes array during processing.
+             *
+             * @name Phaser.Scenes.SceneManager#_queue
+             * @type {array}
+             * @private
+             * @since 3.0.0
+             */
+            this._queue = [];
+
+            /**
+             * Boot time data to merge.
+             *
+             * @name Phaser.Scenes.SceneManager#_data
+             * @type {object}
+             * @private
+             * @since 3.4.0
+             */
+            this._data = {};
+
+            /**
+             * Is the Scene Manager actively processing the Scenes list?
+             *
+             * @name Phaser.Scenes.SceneManager#isProcessing
+             * @type {boolean}
+             * @default false
+             * @readonly
+             * @since 3.0.0
+             */
+            this.isProcessing = false;
+
+            /**
+             * Has the Scene Manager properly started?
+             *
+             * @name Phaser.Scenes.SceneManager#isBooted
+             * @type {boolean}
+             * @default false
+             * @readonly
+             * @since 3.4.0
+             */
+            this.isBooted = false;
+
+            /**
+             * Do any of the Cameras in any of the Scenes require a custom viewport?
+             * If not we can skip scissor tests.
+             *
+             * @name Phaser.Scenes.SceneManager#customViewports
+             * @type {number}
+             * @default 0
+             * @since 3.12.0
+             */
+            this.customViewports = 0;
+
+            if (sceneConfig)
             {
-                sceneConfig = [ sceneConfig ];
+                if (!Array.isArray(sceneConfig))
+                {
+                    sceneConfig = [ sceneConfig ];
+                }
+
+                for (var i = 0; i < sceneConfig.length; i++)
+                {
+                    //  The i === 0 part just autostarts the first Scene given (unless it says otherwise in its config)
+                    this._pending.push({
+                        key: 'default',
+                        scene: sceneConfig[i],
+                        autoStart: (i === 0),
+                        data: {}
+                    });
+                }
             }
 
-            for (var i = 0; i < sceneConfig.length; i++)
-            {
-                //  The i === 0 part just autostarts the first Scene given (unless it says otherwise in its config)
-                this._pending.push({
-                    key: 'default',
-                    scene: sceneConfig[i],
-                    autoStart: (i === 0),
-                    data: {}
-                });
-            }
-        }
-
-        game.events.once(GameEvents.READY, this.bootQueue, this);
-    },
+            game.events.once(GameEvents.READY, this.bootQueue, this);
+        },
 
     /**
      * Internal first-time Scene boot handler.
@@ -753,23 +753,26 @@ var SceneManager = new Class({
         //  Now let's move across any other functions or properties that may exist in the extend object:
 
         /*
-        scene: {
-            preload: preload,
-            create: create,
-            extend: {
-                hello: 1,
-                test: 'atari',
-                addImage: addImage
-            }
-        }
-        */
+         scene: {
+         preload: preload,
+         create: create,
+         extend: {
+         hello: 1,
+         test: 'atari',
+         addImage: addImage
+         }
+         }
+         */
 
         if (sceneConfig.hasOwnProperty('extend'))
         {
             for (var propertyKey in sceneConfig.extend)
             {
-                if(!sceneConfig.extend.hasOwnProperty(propertyKey)) continue;
-                
+                if (!sceneConfig.extend.hasOwnProperty(propertyKey))
+                {
+                    continue;
+                }
+
                 var value = sceneConfig.extend[propertyKey];
 
                 if (propertyKey === 'data' && newScene.hasOwnProperty('data') && typeof value === 'object')
