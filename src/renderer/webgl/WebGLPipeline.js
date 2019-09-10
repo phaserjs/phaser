@@ -275,6 +275,10 @@ var WebGLPipeline = new Class({
             offset: offset
         });
 
+        this.vertexComponentCount = Utils.getComponentCount(
+            this.attributes,
+            this.gl
+        );
         return this;
     },
 
