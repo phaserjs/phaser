@@ -349,7 +349,10 @@ var RenderTexture = new Class({
 
                 this.canvas.width = width;
                 this.canvas.height = height;
-
+                
+                this.texture.width = width;
+                this.texture.height = height;
+                
                 if (this.gl)
                 {
                     var gl = this.gl;
