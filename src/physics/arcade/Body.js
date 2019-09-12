@@ -4,7 +4,6 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CircleContains = require('../../geom/circle/Contains');
 var Class = require('../../utils/Class');
 var CONST = require('./const');
 var Events = require('./events');
@@ -1307,7 +1306,10 @@ var Body = new Class({
      */
     hitTest: function (x, y)
     {
-        if (!this.isCircle) return Phaser.Geom.Rectangle.Contains(this, x, y);
+        if (!this.isCircle)
+        {
+            return RectangleContains(this, x, y);
+        }
 
         //  Check if x/y are within the bounds first
         if (this.radius > 0 && x >= this.left && x <= this.right && y >= this.top && y <= this.bottom)
@@ -1318,7 +1320,7 @@ var Body = new Class({
             return (dx + dy) <= (this.radius * this.radius);
         }
 
-	     return false;
+        return false;
     },
 
     /**
