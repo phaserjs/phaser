@@ -332,7 +332,9 @@ var MatterPhysics = new Class({
         }
         eventEmitter.off(SceneEvents.SHUTDOWN, this.shutdown, this);
 
-        this.add.destroy();
+        if(this.add !== null) {           
+          this.add.destroy();
+        }
         if(this.world !== null) {
           this.world.destroy();
         }
