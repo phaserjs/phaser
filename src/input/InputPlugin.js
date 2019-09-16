@@ -1328,6 +1328,9 @@ var InputPlugin = new Class({
                 var dxRotated = dx * Math.cos(rotation) + dy * Math.sin(rotation);
                 var dyRotated = dy * Math.cos(rotation) - dx * Math.sin(rotation);
 
+                dxRotated *= (1 / gameObject.parentContainer.scaleX);
+                dyRotated *= (1 / gameObject.parentContainer.scaleY);
+
                 dragX = dxRotated + input.dragStartX;
                 dragY = dyRotated + input.dragStartY;
             }

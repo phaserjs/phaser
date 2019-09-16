@@ -11,6 +11,7 @@
 * `SpineCanvasPlugin.shutdown` would try to dispose of the `sceneRenderer`, but the property isn't set for Canvas.
 * `ArcadePhysics.Body.checkWorldBounds` would incorrectly report as being on the World bounds if the `blocked.none` flag had been toggled elsewhere in the Body. It now only sets if it toggles a new internal flag (thanks Pablo)
 * `RenderTexture.resize` wouldn't update the CanvasTexture width and height, causing the cal to draw or drawFrame to potentially distort the texture (thanks @yhwh)
+* `InputPlugin.processDragMove` has been updated so that the resulting `dragX` and `dragY` values, sent to the event handler, now compensate for the scale of the Game Objects parent container, if inside of one. This means dragging a child of a scale Container will now still drag at 'full' speed.
 
 ## Version 3.19.0 - Naofumi - 8th August 2019
 
