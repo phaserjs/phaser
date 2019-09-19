@@ -1525,11 +1525,6 @@ var World = new Class({
 
         var delta = this._frameTime;
 
-        body1.velocity.x *= body1.bounce.x;
-        body1.velocity.y *= body1.bounce.y;
-        body2.velocity.x *= body2.bounce.x;
-        body2.velocity.y *= body2.bounce.y;
-
         if (!body1.immovable && !body2.immovable)
         {
             overlap /= 2;
@@ -1546,6 +1541,11 @@ var World = new Class({
             body2.x += (body2.velocity.x * delta) + overlap * Math.cos(angleCollision);
             body2.y += (body2.velocity.y * delta) + overlap * Math.sin(angleCollision);
         }
+
+        body1.velocity.x *= body1.bounce.x;
+        body1.velocity.y *= body1.bounce.y;
+        body2.velocity.x *= body2.bounce.x;
+        body2.velocity.y *= body2.bounce.y;
 
         if (body1.onCollide || body2.onCollide)
         {
