@@ -454,6 +454,20 @@ var Shader = new Class({
             }
         }
 
+        //  And now render at least once, so our texture isn't blank on the first update
+
+        if (this.shader)
+        {
+            var pipeline = renderer.currentPipeline;
+
+            renderer.clearPipeline();
+        
+            this.load();
+            this.flush();
+    
+            renderer.rebindPipeline(pipeline);
+        }
+    
         return this;
     },
 
