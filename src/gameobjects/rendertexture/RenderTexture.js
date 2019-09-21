@@ -402,6 +402,14 @@ var RenderTexture = new Class({
 
         this.updateDisplayOrigin();
 
+        var input = this.input;
+
+        if (input && !input.customHitArea)
+        {
+            input.hitArea.width = width;
+            input.hitArea.height = height;
+        }
+
         return this;
     },
 
