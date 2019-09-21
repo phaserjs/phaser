@@ -400,6 +400,8 @@ var RenderTexture = new Class({
             this.frame.setSize(width, height, this.frame.cutX, this.frame.cutY);
         }
 
+        this.updateDisplayOrigin();
+
         return this;
     },
 
