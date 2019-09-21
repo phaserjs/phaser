@@ -343,8 +343,8 @@ var Bob = new Class({
 
         set: function (value)
         {
+            this.parent.dirty |= (this._visible !== value);
             this._visible = value;
-            this.parent.dirty = true;
         }
 
     },
@@ -367,8 +367,8 @@ var Bob = new Class({
 
         set: function (value)
         {
+            this.parent.dirty |= ((this._alpha > 0) !== (value > 0));
             this._alpha = value;
-            this.parent.dirty = true;
         }
 
     }
