@@ -1,6 +1,24 @@
 # Change Log
 
-## Version 3.19.0 - Naofumi - in development
+## Version 3.20.0 - Fitoria - in dev
+
+### New Features
+
+* `GameConfig.antialiasGL` is a new boolean that allows you to set the `antialias` property of the WebGL context during creation, without impacting any subsequent textures or the canvas CSS.
+
+### Updates
+
+* When calling `Shader.setRenderToTexture()` it will now draw the shader just once, immediately to the texture, to avoid the texture being blank for a single frame (thanks Kyle)
+* The private `Shader._savedKey` property has been removed as it wasn't used anywhere internally.
+
+### Bug Fixes
+
+* `SpineCanvasPlugin.shutdown` would try to dispose of the `sceneRenderer`, but the property isn't set for Canvas.
+* `ArcadePhysics.Body.checkWorldBounds` would incorrectly report as being on the World bounds if the `blocked.none` flag had been toggled elsewhere in the Body. It now only sets if it toggles a new internal flag (thanks Pablo)
+* `RenderTexture.resize` wouldn't update the CanvasTexture width and height, causing the cal to draw or drawFrame to potentially distort the texture (thanks @yhwh)
+* `InputPlugin.processDragMove` has been updated so that the resulting `dragX` and `dragY` values, sent to the event handler, now compensate for the scale of the Game Objects parent container, if inside of one. This means dragging a child of a scale Container will now still drag at 'full' speed.
+
+## Version 3.19.0 - Naofumi - 8th August 2019
 
 ### Tween Updates
 
@@ -46,9 +64,11 @@
 
 ### Spine Updates
 
+The Spine Plugin is now 100% complete. It has been updated to use the Spine 3.7 Runtimes. Improvements have been made across the entire plugin, including proper batched rendering support in WebGL, cleaner skin and slot functions and lots and lots of updates. It's fully documented and there are lots of examples to be found. The following legacy bugs have also been fixed:
+
 * Adding Spine to physics causes position to become NaN. Fix #4501 (thanks @hizzd)
 * Destroying a Phaser Game instance and then re-creating it would cause an error trying to re-create Spine Game Objects ("Cannot read property get of null"). Fix #4532 (thanks @Alex-Badea)
-* Rendering a Spine object when a Camer has `renderToTexture` enabled on it would cause the object to be vertically flipped. It now renders correctly in both cases. Fix #4647 (thanks @probt)
+* Rendering a Spine object when a Camera has `renderToTexture` enabled on it would cause the object to be vertically flipped. It now renders correctly in both cases. Fix #4647 (thanks @probt)
 
 ### New Features
 
@@ -77,6 +97,19 @@
 * `WebGLRenderer.newType` is a boolean that indicates if the current Game Object has a new type, i.e. different to the previous one in the display list.
 * `WebGLRenderer.nextTypeMatch` is a boolean that indicates if the _next_ Game Object in the display list has the same type as the one being currently rendered. This allows you to build batching into separated Game Objects.
 * `PluginManager.removeGameObject` is a new method that allows you to de-register custom Game Object types from the global Game Object Factory and/or Creator. Useful for when custom plugins are destroyed and need to clean-up after themselves.
+* `GEOM_CONST` is a new constants object that contains the different types of Geometry Objects, such as `RECTANGLE` and `CIRCLE`.
+* `Circle.type` is a new property containing the shapes geometry type, which can be used for quick type comparisons.
+* `Ellipse.type` is a new property containing the shapes geometry type, which can be used for quick type comparisons.
+* `Line.type` is a new property containing the shapes geometry type, which can be used for quick type comparisons.
+* `Point.type` is a new property containing the shapes geometry type, which can be used for quick type comparisons.
+* `Polygon.type` is a new property containing the shapes geometry type, which can be used for quick type comparisons.
+* `Rectangle.type` is a new property containing the shapes geometry type, which can be used for quick type comparisons.
+* `Triangle.type` is a new property containing the shapes geometry type, which can be used for quick type comparisons.
+* `InputPlugin.enableDebug` is a new method that will create a debug shape for the given Game Objects hit area. This allows you to quickly check the size and placement of an input hit area. You can customzie the shape outline color. The debug shape will automatically track the Game Object to which it is bound.
+* `InputPlugion.removeDebug` will remove a Debug Input Shape from the given Game Object and destroy it.
+* `Pointer.updateWorldPoint` is a new method that takes a Camera and then updates the Pointers `worldX` and `worldY` values based on the cameras transform (thanks @Nick-lab)
+* `ScaleManager._resetZoom` is a new internal flag that is set when the game zoom factor changes.
+* `Texture.remove` is a new method that allows you to remove a Frame from a Texture based on its name. Fix #4460 (thanks @BigZaphod)
 
 ### Updates
 
@@ -93,6 +126,13 @@
 * The `WebAudioSoundManager` will now remove the document touch handlers even if the Promise fails, preventing it from throwing a rejection handler error.
 * `GameObjectFactory.remove` is a new static function that will remove a custom Game Object factory type.
 * `GameObjectCreator.remove` is a new static function that will remove a custom Game Object creator type.
+* `CanvasTexture.getPixels` now defaults to 0x0 by width x height as the default area, allowing you to call the method with no arguments to get all the pixels for the canvas.
+* `CreateDOMContainer` will now use `div.style.cssText` to set the inline styles of the container, so it now works on IE11. Fix #4674 (thanks @DanLiamco)
+* `TransformMatrix.rotation` now returns the properly normalized rotation value.
+* `PhysicsEditorParser` has now been exposed under the `Phaser.Physics.Matter` namespace, so you can call methods on it directly.
+* Calling `CanvasTexture.update` will now automatically call `refresh` if running under WebGL. This happens for both `draw` and `drawFrame`, meaning you no longer need to remember to call `refresh` after drawing to a Canvas Texture in WebGL, keeping it consistent with the Canvas renderer.
+* `Frame.destroy` will now null the Frames reference to its parent texture, glTexture and clear the data and customData objects.
+* The Container renderer functions will now read the childs `alpha` property, instead of `_alpha`, allowing it to work with more variety of custom children.
 
 ### Bug Fixes
 
@@ -121,14 +161,14 @@
 * The `DESTROY` event hook wasn't removed from Group children when destroying the Group and `destroyChildren` was set to false. Now, the hook is removed regardless (thanks @rexrainbow)
 * The WebGL Lost and Restored Context callbacks were never removed, which could cause them to hold onto stale references. Fix #3610 (thanks @Twilrom)
 * `Origin.updateDisplayOrigin` no longer applies a Math.floor to the display origins, allowing you to have a 0.x origin for a Game Object that only has a width or height of 1. This fixes issues with things like 1x1 rectangles displaying incorrectly during rendering. Fix #4126 (thanks @rexrainbow)
+* `InputManager.resetCursor` will now check if the canvas element still exists before resetting the cursor on it. Fix #4662 (thanks @fromnowhereuser)
+* It was not possible to set the zoom value of the Scale Manager back to 1 again, having changed it to a different value. Fix #4633 (thanks @lgibson02 @BinaryMoon)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@vacarsu @KennethGomez @samme @ldd @Jazcash
-
-
+@vacarsu @KennethGomez @samme @ldd @Jazcash @jcyuan @LearningCode2023 @PhaserEditor2D
 
 ## Version 3.18.1 - Raphtalia - 20th June 2019
 

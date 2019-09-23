@@ -2,8 +2,8 @@
 
 const webpack = require('webpack');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const exec = require('child_process').exec;
+const RemovePlugin = require('remove-files-webpack-plugin');
 
 module.exports = {
     mode: 'production',
@@ -11,19 +11,15 @@ module.exports = {
     context: `${__dirname}/src/`,
 
     entry: {
-        'SpineCanvasPlugin': './SpineCanvasPlugin.js',
-        'SpineCanvasPlugin.min': './SpineCanvasPlugin.js'
+        'SpineCanvasPlugin': './SpinePlugin.js',
+        'SpineCanvasPlugin.min': './SpinePlugin.js'
     },
 
     output: {
         path: `${__dirname}/dist/`,
         filename: '[name].js',
-        library: 'SpineCanvasPlugin',
-        libraryTarget: 'umd',
-        sourceMapFilename: '[file].map',
-        devtoolModuleFilenameTemplate: 'webpack:///[resource-path]', // string
-        devtoolFallbackModuleFilenameTemplate: 'webpack:///[resource-path]?[hash]', // string
-        umdNamedDefine: true
+        library: 'SpinePlugin',
+        libraryTarget: 'window'
     },
 
     performance: { hints: false },
@@ -37,23 +33,14 @@ module.exports = {
             {
                 test: require.resolve('./src/runtimes/spine-canvas.js'),
                 use: 'exports-loader?spine'
-            },
-            {
-                test: require.resolve('./src/runtimes/spine-webgl.js'),
-                use: 'imports-loader?this=>window'
-            },
-            {
-                test: require.resolve('./src/runtimes/spine-webgl.js'),
-                use: 'exports-loader?spine'
             }
         ]
     },
 
     resolve: {
         alias: {
-            'SpineCanvas': './runtimes/spine-canvas.js',
-            'SpineWebGL': './runtimes/spine-webgl.js'
-        },
+            'Spine': './runtimes/spine-canvas.js'
+        }
     },
 
     optimization: {
@@ -79,7 +66,14 @@ module.exports = {
             "typeof CANVAS_RENDERER": JSON.stringify(true),
             "typeof WEBGL_RENDERER": JSON.stringify(false)
         }),
-        new CleanWebpackPlugin([ 'dist' ]),
+        new RemovePlugin({
+            before: {
+                before: {
+                    root: './plugins/spine/dist/',
+                    include: [ 'SpineCanvasPlugin.js', 'SpineCanvasPlugin.min.js' ]
+                }
+            }
+        }),
         {
             apply: (compiler) => {
                 compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {

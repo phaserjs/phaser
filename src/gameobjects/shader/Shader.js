@@ -345,16 +345,6 @@ var Shader = new Class({
          */
         this.texture = null;
 
-        /**
-         * Internal saved texture key.
-         *
-         * @name Phaser.GameObjects.Shader#_savedKey
-         * @type {boolean}
-         * @private
-         * @since 3.19.0
-         */
-        this._savedKey = '';
-
         this.setPosition(x, y);
         this.setSize(width, height);
         this.setOrigin(0.5, 0.5);
@@ -448,12 +438,24 @@ var Shader = new Class({
 
             if (key)
             {
-                this._savedKey = key;
-
                 this.texture = this.scene.sys.textures.addGLTexture(key, this.glTexture, width, height);
             }
         }
 
+        //  And now render at least once, so our texture isn't blank on the first update
+
+        if (this.shader)
+        {
+            var pipeline = renderer.currentPipeline;
+
+            renderer.clearPipeline();
+        
+            this.load();
+            this.flush();
+    
+            renderer.rebindPipeline(pipeline);
+        }
+    
         return this;
     },
 
@@ -792,7 +794,7 @@ var Shader = new Class({
      * 
      * @param {string} key - The key of the uniform to return the value for.
      * 
-     * @return {this} This Shader instance.
+     * @return {any} A reference to the uniform object. This is not a copy, so modifying it will update the original object also.
      */
     getUniform: function (key)
     {

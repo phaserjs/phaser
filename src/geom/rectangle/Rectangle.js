@@ -8,6 +8,7 @@ var Class = require('../../utils/Class');
 var Contains = require('./Contains');
 var GetPoint = require('./GetPoint');
 var GetPoints = require('./GetPoints');
+var GEOM_CONST = require('../const');
 var Line = require('../line/Line');
 var Random = require('./Random');
 
@@ -35,6 +36,17 @@ var Rectangle = new Class({
         if (y === undefined) { y = 0; }
         if (width === undefined) { width = 0; }
         if (height === undefined) { height = 0; }
+
+        /**
+         * The geometry constant type of this object: `GEOM_CONST.RECTANGLE`.
+         * Used for fast type comparisons.
+         *
+         * @name Phaser.Geom.Rectangle#type
+         * @type {integer}
+         * @readonly
+         * @since 3.19.0
+         */
+        this.type = GEOM_CONST.RECTANGLE;
 
         /**
          * The X coordinate of the top left corner of the Rectangle.

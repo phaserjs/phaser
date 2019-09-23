@@ -1060,19 +1060,21 @@ var Body = new Class({
         var bx = (this.worldBounce) ? -this.worldBounce.x : -this.bounce.x;
         var by = (this.worldBounce) ? -this.worldBounce.y : -this.bounce.y;
 
+        var wasSet = false;
+
         if (pos.x < bounds.x && check.left)
         {
             pos.x = bounds.x;
             this.velocity.x *= bx;
             this.blocked.left = true;
-            this.blocked.none = false;
+            wasSet = true;
         }
         else if (this.right > bounds.right && check.right)
         {
             pos.x = bounds.right - this.width;
             this.velocity.x *= bx;
             this.blocked.right = true;
-            this.blocked.none = false;
+            wasSet = true;
         }
 
         if (pos.y < bounds.y && check.up)
@@ -1080,17 +1082,22 @@ var Body = new Class({
             pos.y = bounds.y;
             this.velocity.y *= by;
             this.blocked.up = true;
-            this.blocked.none = false;
+            wasSet = true;
         }
         else if (this.bottom > bounds.bottom && check.down)
         {
             pos.y = bounds.bottom - this.height;
             this.velocity.y *= by;
             this.blocked.down = true;
+            wasSet = true;
+        }
+
+        if (wasSet)
+        {
             this.blocked.none = false;
         }
 
-        return !this.blocked.none;
+        return wasSet;
     },
 
     /**

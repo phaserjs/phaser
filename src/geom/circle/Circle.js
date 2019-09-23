@@ -8,6 +8,7 @@ var Class = require('../../utils/Class');
 var Contains = require('./Contains');
 var GetPoint = require('./GetPoint');
 var GetPoints = require('./GetPoints');
+var GEOM_CONST = require('../const');
 var Random = require('./Random');
 
 /**
@@ -36,6 +37,17 @@ var Circle = new Class({
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
         if (radius === undefined) { radius = 0; }
+
+        /**
+         * The geometry constant type of this object: `GEOM_CONST.CIRCLE`.
+         * Used for fast type comparisons.
+         *
+         * @name Phaser.Geom.Circle#type
+         * @type {integer}
+         * @readonly
+         * @since 3.19.0
+         */
+        this.type = GEOM_CONST.CIRCLE;
 
         /**
          * The x position of the center of the circle.

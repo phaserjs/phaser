@@ -4,6 +4,10 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+/**
+ * @namespace Phaser.Physics.Matter.Matter
+ */
+
 var Matter = require('./lib/core/Matter');
 
 Matter.Body = require('./lib/body/Body');

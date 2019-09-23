@@ -338,6 +338,11 @@ var Config = new Class({
         this.antialias = GetValue(renderConfig, 'antialias', true);
 
         /**
+         * @const {boolean} Phaser.Core.Config#antialiasGL - Sets the `antialias` property when the WebGL context is created. Setting this value does not impact any subsequent textures that are created, or the canvas style attributes.
+         */
+        this.antialiasGL = GetValue(renderConfig, 'antialiasGL', true);
+
+        /**
          * @const {boolean} Phaser.Core.Config#desynchronized - When set to `true` it will create a desynchronized context for both 2D and WebGL. See https://developers.google.com/web/updates/2019/05/desynchronized for details.
          */
         this.desynchronized = GetValue(renderConfig, 'desynchronized', false);

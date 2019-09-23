@@ -65,7 +65,7 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
             continue;
         }
 
-        var childAlpha = child._alpha;
+        var childAlpha = child.alpha;
         var childScrollFactorX = child.scrollFactorX;
         var childScrollFactorY = child.scrollFactorY;
 

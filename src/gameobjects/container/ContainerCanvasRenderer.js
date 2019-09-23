@@ -65,7 +65,7 @@ var ContainerCanvasRenderer = function (renderer, container, interpolationPercen
             continue;
         }
 
-        var childAlpha = child._alpha;
+        var childAlpha = child.alpha;
         var childBlendMode = child._blendMode;
         var childScrollFactorX = child.scrollFactorX;
         var childScrollFactorY = child.scrollFactorY;

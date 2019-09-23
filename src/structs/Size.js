@@ -482,7 +482,6 @@ var Size = new Class({
         if ((fit && this.aspectRatio > newRatio) || (!fit && this.aspectRatio < newRatio))
         {
             //  We need to change the height to fit the width
-            // height = width / this.aspectRatio;
 
             width = SnapFloor(width, snap.x);
 
@@ -499,7 +498,6 @@ var Size = new Class({
         else if ((fit && this.aspectRatio < newRatio) || (!fit && this.aspectRatio > newRatio))
         {
             //  We need to change the width to fit the height
-            // width = height * this.aspectRatio;
 
             height = SnapFloor(height, snap.y);
 

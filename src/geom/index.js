@@ -4,11 +4,14 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var CONST = require('./const');
+var Extend = require('../utils/object/Extend');
+
 /**
  * @namespace Phaser.Geom
  */
 
-module.exports = {
+var Geom = {
     
     Circle: require('./circle'),
     Ellipse: require('./ellipse'),
@@ -20,3 +23,8 @@ module.exports = {
     Triangle: require('./triangle')
 
 };
+
+//   Merge in the consts
+Geom = Extend(false, Geom, CONST);
+
+module.exports = Geom;

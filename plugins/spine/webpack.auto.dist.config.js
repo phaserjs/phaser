@@ -2,8 +2,8 @@
 
 const webpack = require('webpack');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const exec = require('child_process').exec;
+const RemovePlugin = require('remove-files-webpack-plugin');
 
 module.exports = {
     mode: 'production',
@@ -11,19 +11,15 @@ module.exports = {
     context: `${__dirname}/src/`,
 
     entry: {
-        'SpinePlugin': './SpineWebGLPlugin.js',
-        'SpinePlugin.min': './SpineWebGLPlugin.js'
+        'SpinePlugin': './SpinePlugin.js',
+        'SpinePlugin.min': './SpinePlugin.js'
     },
 
     output: {
         path: `${__dirname}/dist/`,
         filename: '[name].js',
         library: 'SpinePlugin',
-        libraryTarget: 'umd',
-        sourceMapFilename: '[file].map',
-        devtoolModuleFilenameTemplate: 'webpack:///[resource-path]', // string
-        devtoolFallbackModuleFilenameTemplate: 'webpack:///[resource-path]?[hash]', // string
-        umdNamedDefine: true
+        libraryTarget: 'window'
     },
 
     performance: { hints: false },
@@ -31,19 +27,11 @@ module.exports = {
     module: {
         rules: [
             {
-                test: require.resolve('./src/runtimes/spine-canvas.js'),
+                test: require.resolve('./src/runtimes/spine-both.js'),
                 use: 'imports-loader?this=>window'
             },
             {
-                test: require.resolve('./src/runtimes/spine-canvas.js'),
-                use: 'exports-loader?spine'
-            },
-            {
-                test: require.resolve('./src/runtimes/spine-webgl.js'),
-                use: 'imports-loader?this=>window'
-            },
-            {
-                test: require.resolve('./src/runtimes/spine-webgl.js'),
+                test: require.resolve('./src/runtimes/spine-both.js'),
                 use: 'exports-loader?spine'
             }
         ]
@@ -51,8 +39,7 @@ module.exports = {
 
     resolve: {
         alias: {
-            'SpineCanvas': './runtimes/spine-canvas.js',
-            'SpineWebGL': './runtimes/spine-webgl.js'
+            'Spine': './runtimes/spine-both.js'
         },
     },
 
@@ -79,7 +66,12 @@ module.exports = {
             "typeof CANVAS_RENDERER": JSON.stringify(true),
             "typeof WEBGL_RENDERER": JSON.stringify(true)
         }),
-        new CleanWebpackPlugin([ 'dist' ]),
+        new RemovePlugin({
+            before: {
+                root: './plugins/spine/dist/',
+                include: [ 'SpinePlugin.js', 'SpinePlugin.min.js' ]
+            }
+        }),
         {
             apply: (compiler) => {
                 compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {

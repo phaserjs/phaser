@@ -175,7 +175,7 @@ var Systems = new Class({
          * In the default set-up you can access this from within a Scene via the `this.sound` property.
          *
          * @name Phaser.Scenes.Systems#sound
-         * @type {Phaser.Sound.BaseSoundManager}
+         * @type {(Phaser.Sound.NoAudioSoundManager|Phaser.Sound.HTML5AudioSoundManager|Phaser.Sound.WebAudioSoundManager)}
          * @since 3.0.0
          */
         this.sound;

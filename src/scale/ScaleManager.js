@@ -261,6 +261,16 @@ var ScaleManager = new Class({
         this.zoom = 1;
 
         /**
+         * Internal flag set when the game zoom factor is modified.
+         *
+         * @name Phaser.Scale.ScaleManager#_resetZoom
+         * @type {boolean}
+         * @readonly
+         * @since 3.19.0
+         */
+        this._resetZoom = false;
+
+        /**
          * The scale factor between the baseSize and the canvasBounds.
          *
          * @name Phaser.Scale.ScaleManager#displayScale
@@ -553,6 +563,11 @@ var ScaleManager = new Class({
         }
 
         this.zoom = zoom;
+
+        if (zoom !== 1)
+        {
+            this._resetZoom = true;
+        }
 
         //  The modified game size, which is the w/h * resolution
         this.baseSize.setSize(width * resolution, height * resolution);
@@ -868,6 +883,7 @@ var ScaleManager = new Class({
     setZoom: function (value)
     {
         this.zoom = value;
+        this._resetZoom = true;
 
         return this.refresh();
     },
@@ -884,6 +900,7 @@ var ScaleManager = new Class({
     setMaxZoom: function ()
     {
         this.zoom = this.getMaxZoom();
+        this._resetZoom = true;
 
         return this.refresh();
     },
@@ -996,10 +1013,12 @@ var ScaleManager = new Class({
                 styleHeight = Math.floor(styleHeight);
             }
 
-            if (zoom > 1)
+            if (this._resetZoom)
             {
                 style.width = styleWidth + 'px';
                 style.height = styleHeight + 'px';
+
+                this._resetZoom = false;
             }
         }
         else if (this.scaleMode === CONST.SCALE_MODE.RESIZE)

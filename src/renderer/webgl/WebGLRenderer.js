@@ -59,7 +59,7 @@ var WebGLRenderer = new Class({
             alpha: gameConfig.transparent,
             desynchronized: gameConfig.desynchronized,
             depth: false,
-            antialias: gameConfig.antialias,
+            antialias: gameConfig.antialiasGL,
             premultipliedAlpha: gameConfig.premultipliedAlpha,
             stencil: true,
             failIfMajorPerformanceCaveat: gameConfig.failIfMajorPerformanceCaveat,
