@@ -5,6 +5,7 @@
 ### New Features
 
 * `GameConfig.antialiasGL` is a new boolean that allows you to set the `antialias` property of the WebGL context during creation, without impacting any subsequent textures or the canvas CSS.
+* `InteractiveObject.alwaysEnabled` is a new boolean that allows an interactive Game Object to always receive input events, even if it's invisible or won't render.
 
 ### Updates
 

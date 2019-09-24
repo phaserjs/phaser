@@ -27,6 +27,7 @@ var CreateInteractiveObject = function (gameObject, hitArea, hitAreaCallback)
         gameObject: gameObject,
 
         enabled: true,
+        alwaysEnabled: false,
         draggable: false,
         dropZone: false,
         cursor: false,
