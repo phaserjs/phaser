@@ -345,16 +345,6 @@ var Shader = new Class({
          */
         this.texture = null;
 
-        /**
-         * Internal saved texture key.
-         *
-         * @name Phaser.GameObjects.Shader#_savedKey
-         * @type {boolean}
-         * @private
-         * @since 3.19.0
-         */
-        this._savedKey = '';
-
         this.setPosition(x, y);
         this.setSize(width, height);
         this.setOrigin(0.5, 0.5);
@@ -448,8 +438,6 @@ var Shader = new Class({
 
             if (key)
             {
-                this._savedKey = key;
-
                 this.texture = this.scene.sys.textures.addGLTexture(key, this.glTexture, width, height);
             }
         }

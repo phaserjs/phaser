@@ -10,6 +10,7 @@
 ### Updates
 
 * When calling `Shader.setRenderToTexture()` it will now draw the shader just once, immediately to the texture, to avoid the texture being blank for a single frame (thanks Kyle)
+* The private `Shader._savedKey` property has been removed as it wasn't used anywhere internally.
 
 ### Bug Fixes
 
