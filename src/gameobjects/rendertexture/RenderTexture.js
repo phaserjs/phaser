@@ -400,6 +400,16 @@ var RenderTexture = new Class({
             this.frame.setSize(width, height, this.frame.cutX, this.frame.cutY);
         }
 
+        this.updateDisplayOrigin();
+
+        var input = this.input;
+
+        if (input && !input.customHitArea)
+        {
+            input.hitArea.width = width;
+            input.hitArea.height = height;
+        }
+
         return this;
     },
 
