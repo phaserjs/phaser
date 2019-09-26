@@ -18,6 +18,7 @@ var LeaderboardScore = require('./LeaderboardScore');
  * @class FacebookInstantGamesLeaderboard
  * @memberOf Phaser
  * @constructor
+ * @extends Phaser.Events.EventEmitter
  * @since 3.13.0
  * 
  * @param {Phaser.FacebookInstantGamesPlugin} plugin - A reference to the Facebook Instant Games Plugin.
