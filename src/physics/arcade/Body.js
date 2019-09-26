@@ -4,7 +4,6 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CircleContains = require('../../geom/circle/Contains');
 var Class = require('../../utils/Class');
 var CONST = require('./const');
 var Events = require('./events');
@@ -421,14 +420,14 @@ var Body = new Class({
 
         /**
          * The maximum speed this Body is allowed to reach.
-         * 
+         *
          * If not negative it limits the scalar value of speed.
-         * 
+         *
          * Any negative value means no maximum is being applied.
-         * 
+         *
          * @name Phaser.Physics.Arcade.Body#maxSpeed
          * @type {number}
-         * @since 3.16.0 
+         * @since 3.16.0
          */
         this.maxSpeed = -1;
 
@@ -844,7 +843,7 @@ var Body = new Class({
 
     /**
      * Prepares the Body for a physics step by resetting the `wasTouching`, `touching` and `blocked` states.
-     * 
+     *
      * This method is only called if the physics world is going to run a step this frame.
      *
      * @method Phaser.Physics.Arcade.Body#resetFlags
@@ -880,12 +879,12 @@ var Body = new Class({
 
     /**
      * Syncs the position body position with the parent Game Object.
-     * 
+     *
      * This method is called every game frame, regardless if the world steps or not.
      *
      * @method Phaser.Physics.Arcade.Body#preUpdate
      * @since 3.17.0
-     * 
+     *
      * @param {boolean} willStep - Will this Body run an update as well?
      * @param {number} delta - The delta time, in seconds, elapsed since the last frame.
      */
@@ -923,9 +922,9 @@ var Body = new Class({
 
     /**
      * Performs a single physics step and updates the body velocity, angle, speed and other properties.
-     * 
+     *
      * This method can be called multiple times per game frame, depending on the physics step rate.
-     * 
+     *
      * The results are synced back to the Game Object in `postUpdate`.
      *
      * @method Phaser.Physics.Arcade.Body#update
@@ -967,7 +966,7 @@ var Body = new Class({
 
     /**
      * Feeds the Body results back into the parent Game Object.
-     * 
+     *
      * This method is called every game frame, regardless if the world steps or not.
      *
      * @method Phaser.Physics.Arcade.Body#postUpdate
@@ -1116,6 +1115,7 @@ var Body = new Class({
         if (y === undefined) { y = x; }
 
         this.offset.set(x, y);
+        this.updateCenter();
 
         return this;
     },
@@ -1306,7 +1306,21 @@ var Body = new Class({
      */
     hitTest: function (x, y)
     {
-        return (this.isCircle) ? CircleContains(this, x, y) : RectangleContains(this, x, y);
+        if (!this.isCircle)
+        {
+            return RectangleContains(this, x, y);
+        }
+
+        //  Check if x/y are within the bounds first
+        if (this.radius > 0 && x >= this.left && x <= this.right && y >= this.top && y <= this.bottom)
+        {
+            var dx = (this.center.x - x) * (this.center.x - x);
+            var dy = (this.center.y - y) * (this.center.y - y);
+
+            return (dx + dy) <= (this.radius * this.radius);
+        }
+
+        return false;
     },
 
     /**
@@ -1504,7 +1518,7 @@ var Body = new Class({
 
     /**
      * Sets whether this Body collides with the world boundary.
-     * 
+     *
      * Optionally also sets the World Bounce values. If the `Body.worldBounce` is null, it's set to a new Vec2 first.
      *
      * @method Phaser.Physics.Arcade.Body#setCollideWorldBounds
