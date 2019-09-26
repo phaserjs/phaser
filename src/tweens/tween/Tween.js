@@ -459,8 +459,6 @@ var Tween = new Class({
                 {
                     tweenData.start = tweenData.current;
                 }
-
-                break;
             }
         }
 
