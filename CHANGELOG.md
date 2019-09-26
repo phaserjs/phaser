@@ -12,6 +12,8 @@
 * When calling `Shader.setRenderToTexture()` it will now draw the shader just once, immediately to the texture, to avoid the texture being blank for a single frame (thanks Kyle)
 * The private `Shader._savedKey` property has been removed as it wasn't used anywhere internally.
 * A `hasOwnProperty` check has been applied to the `SceneManager.createSceneFromObject` method when parsing additional properties in the `extend` object (thanks @halilcakar)
+* The `Blitter.dirty` flag is no longer set if the render state of a Bob is changed to make it invisible (thanks @rexrainbow)
+* `WebGLPipeline.addAttribute` will now automatically update the vertextComponentCount for you, without you having to do it manually any more (thanks @yhwh)
 
 ### Bug Fixes
 
@@ -22,6 +24,8 @@
 * The RenderTextures `displayOrigin` values are now automatically updated if you call `setSize` on the Render Texture. Fix #4757 (thanks @rexrainbow)
 * `onTouchStart`, `onTouchEnd` and `onTouchMove` will now check for `event.cancelable` before calling preventDefault on the touch event, fixing issues with "Ignored attempt to cancel a touchstart event with cancelable=false, for example because scrolling is in progress and cannot be interrupted." errors in some situations. Fix #4706 (thanks @MatthewAlner)
 * `MatterPhysics.shutdown` could try to access properties that may have been previously removed during the Game.destroy process, causing a console error. It now checks properties before removing events from them (thanks @nagyv)
+* `ArcadePhysics.Body.hitTest` would use CircleContains to do a hit test, which assumex x/y was the Circle center, but for a Body it's the top-left, causing the hit test to be off. Fix #4748 (thanks @funnisimo)
+* `ArcadePhysics.World.separateCircle` has had the velocity scaling moved to after the angle is calculated, fixing a weird collision issue when `Body.bounce=0`. Also, if both bodies are movable, they now only offset by half the offset and use the center of the body for angle calculation, allowing for any offsets to be included. Fix #4751 (thanks @funnisimo)
 
 ## Version 3.19.0 - Naofumi - 8th August 2019
 
