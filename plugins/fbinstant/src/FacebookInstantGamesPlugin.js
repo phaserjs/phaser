@@ -387,7 +387,7 @@ var FacebookInstantGamesPlugin = new Class({
             {
                 this.hasLoaded = true;
 
-                FBInstant.startGameAsync().then(this.gameStarted.bind(this));
+                FBInstant.startGameAsync().then(this.gameStartedHandler.bind(this));
             }
             
         }, this);
@@ -408,6 +408,27 @@ var FacebookInstantGamesPlugin = new Class({
      * @since 3.13.0
      */
     gameStarted: function ()
+    {
+        if (!this.hasLoaded)
+        {
+            this.hasLoaded = true;
+
+            FBInstant.startGameAsync().then(this.gameStartedHandler.bind(this));
+        }
+        else
+        {
+            this.gameStartedHandler();
+        }
+    },
+
+    /**
+     * The internal gameStarted handler.
+     * 
+     * @method Phaser.FacebookInstantGamesPlugin#gameStartedHandler
+     * @private
+     * @since 3.20.0
+     */
+    gameStartedHandler: function ()
     {
         var APIs = FBInstant.getSupportedAPIs();
 

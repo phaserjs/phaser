@@ -5,6 +5,7 @@
 ### Facebook Instant Games Plugin
 
 * Calling `showAd` or `showVideoAd` will now check to see if the ad has already been displayed, and skip it when iterating the ads array, allowing you to display an ad with the same Placement ID without preloading it again. Fix #4728 (thanks @NokFrt)
+* Calling `gameStarted` in a game that doesn't load any assets would cause the error `{code: "INVALID_OPERATION", message: "Can not perform this operation before game start."}`. The plugin will now has a new internal method `gameStartedHandler` and will redirect the flow accordingly based on asset loading. Fix #4550 (thanks @bchee)
 
 ### New Features
 
