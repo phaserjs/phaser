@@ -397,7 +397,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#remove
      * @since 3.2.0
      *
-     * @param {(string|Phaser.Scene)} scene - The Scene to be removed.
+     * @param {string} key - A unique key used to reference the Scene, i.e. `MainMenu` or `Level1`.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
@@ -768,6 +768,11 @@ var SceneManager = new Class({
         {
             for (var propertyKey in sceneConfig.extend)
             {
+                if (!sceneConfig.extend.hasOwnProperty(propertyKey))
+                {
+                    continue;
+                }
+
                 var value = sceneConfig.extend[propertyKey];
 
                 if (propertyKey === 'data' && newScene.hasOwnProperty('data') && typeof value === 'object')
