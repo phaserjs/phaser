@@ -2087,7 +2087,7 @@ var FacebookInstantGamesPlugin = new Class({
         {
             var ad = this.ads[i];
 
-            if (ad.placementID === placementID)
+            if (ad.placementID === placementID && !ad.shown)
             {
                 ad.instance.showAsync().then(function ()
                 {
@@ -2136,7 +2136,7 @@ var FacebookInstantGamesPlugin = new Class({
         {
             var ad = this.ads[i];
 
-            if (ad.placementID === placementID && ad.video)
+            if (ad.placementID === placementID && ad.video && !ad.shown)
             {
                 ad.instance.showAsync().then(function ()
                 {

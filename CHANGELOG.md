@@ -2,6 +2,10 @@
 
 ## Version 3.20.0 - Fitoria - in dev
 
+### Facebook Instant Games Plugin
+
+* Calling `showAd` or `showVideoAd` will now check to see if the ad has already been displayed, and skip it when iterating the ads array, allowing you to display an ad with the same Placement ID without preloading it again. Fix #4728 (thanks @NokFrt)
+
 ### New Features
 
 * `GameConfig.antialiasGL` is a new boolean that allows you to set the `antialias` property of the WebGL context during creation, without impacting any subsequent textures or the canvas CSS.
