@@ -326,12 +326,23 @@ var MatterPhysics = new Class({
     {
         var eventEmitter = this.systems.events;
 
-        eventEmitter.off(SceneEvents.UPDATE, this.world.update, this.world);
-        eventEmitter.off(SceneEvents.POST_UPDATE, this.world.postUpdate, this.world);
+        if (this.world)
+        {
+            eventEmitter.off(SceneEvents.UPDATE, this.world.update, this.world);
+            eventEmitter.off(SceneEvents.POST_UPDATE, this.world.postUpdate, this.world);
+        }
+
         eventEmitter.off(SceneEvents.SHUTDOWN, this.shutdown, this);
 
-        this.add.destroy();
-        this.world.destroy();
+        if (this.add)
+        {
+            this.add.destroy();
+        }
+
+        if (this.world)
+        {
+            this.world.destroy();
+        }
 
         this.add = null;
         this.world = null;
