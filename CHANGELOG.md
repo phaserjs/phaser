@@ -7,6 +7,7 @@
 * Calling `showAd` or `showVideoAd` will now check to see if the ad has already been displayed, and skip it when iterating the ads array, allowing you to display an ad with the same Placement ID without preloading it again. Fix #4728 (thanks @NokFrt)
 * Calling `gameStarted` in a game that doesn't load any assets would cause the error `{code: "INVALID_OPERATION", message: "Can not perform this operation before game start."}`. The plugin will now has a new internal method `gameStartedHandler` and will redirect the flow accordingly based on asset loading. Fix #4550 (thanks @bchee)
 * The documentation for the `chooseContext` method has been fixed. Fix #4425 (thanks @krzysztof-grzybek)
+* `Leaderboard.getConnectedScores` incorrectly specified two parameters, neither of which were used. Fix #4702 (thanks @NokFrt)
 
 ### New Features
 
@@ -38,7 +39,7 @@
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@krzysztof-grzybek
+@krzysztof-grzybek @NokFrt
 
 
 

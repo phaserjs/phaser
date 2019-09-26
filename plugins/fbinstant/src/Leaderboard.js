@@ -277,16 +277,10 @@ var Leaderboard = new Class({
      * @method Phaser.FacebookInstantGamesLeaderboard#getConnectedScores
      * @since 3.16.0
      * 
-     * @param {integer} [count=10] - The number of entries to attempt to fetch from the leaderboard. Currently, up to a maximum of 100 entries may be fetched per query.
-     * @param {integer} [offset=0] - The offset from the top of the leaderboard that entries will be fetched from.
-     * 
      * @return {this} This Leaderboard instance.
      */
-    getConnectedScores: function (count, offset)
+    getConnectedScores: function ()
     {
-        if (count === undefined) { count = 10; }
-        if (offset === undefined) { offset = 0; }
-
         var _this = this;
 
         this.ref.getConnectedPlayerEntriesAsync().then(function (entries)
