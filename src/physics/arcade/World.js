@@ -323,7 +323,7 @@ var World = new Class({
          *
          * If you have a large number of dynamic bodies in your world then it may be best to
          * disable the use of the RTree by setting this property to `false` in the physics config.
-         * 
+         *
          * The number it can cope with depends on browser and device, but a conservative estimate
          * of around 5,000 bodies should be considered the max before disabling it.
          *
@@ -1049,7 +1049,7 @@ var World = new Class({
             for (i = 0; i < len; i++)
             {
                 body = bodies[i];
-    
+
                 if (body.enable)
                 {
                     body.postUpdate();
@@ -1500,23 +1500,23 @@ var World = new Class({
             return (overlap !== 0);
         }
 
-        var dx = body1.position.x - body2.position.x;
-        var dy = body1.position.y - body2.position.y;
+        var dx = body1.center.x - body2.center.x;
+        var dy = body1.center.y - body2.center.y;
         var d = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-        var nx = ((body2.position.x - body1.position.x) / d) || 0;
-        var ny = ((body2.position.y - body1.position.y) / d) || 0;
+        var nx = ((body2.center.x - body1.center.x) / d) || 0;
+        var ny = ((body2.center.y - body1.center.y) / d) || 0;
         var p = 2 * (body1.velocity.x * nx + body1.velocity.y * ny - body2.velocity.x * nx - body2.velocity.y * ny) / (body1.mass + body2.mass);
 
         if (!body1.immovable)
         {
-            body1.velocity.x = (body1.velocity.x - p * body1.mass * nx) * body1.bounce.x;
-            body1.velocity.y = (body1.velocity.y - p * body1.mass * ny) * body1.bounce.y;
+            body1.velocity.x = (body1.velocity.x - p * body1.mass * nx);
+            body1.velocity.y = (body1.velocity.y - p * body1.mass * ny);
         }
 
         if (!body2.immovable)
         {
-            body2.velocity.x = (body2.velocity.x + p * body2.mass * nx) * body2.bounce.x;
-            body2.velocity.y = (body2.velocity.y + p * body2.mass * ny) * body2.bounce.y;
+            body2.velocity.x = (body2.velocity.x + p * body2.mass * nx);
+            body2.velocity.y = (body2.velocity.y + p * body2.mass * ny);
         }
 
         var dvx = body2.velocity.x - body1.velocity.x;
@@ -1524,6 +1524,11 @@ var World = new Class({
         var angleCollision = Math.atan2(dvy, dvx);
 
         var delta = this._frameTime;
+
+        if (!body1.immovable && !body2.immovable)
+        {
+            overlap /= 2;
+        }
 
         if (!body1.immovable)
         {
@@ -1536,6 +1541,11 @@ var World = new Class({
             body2.x += (body2.velocity.x * delta) + overlap * Math.cos(angleCollision);
             body2.y += (body2.velocity.y * delta) + overlap * Math.sin(angleCollision);
         }
+
+        body1.velocity.x *= body1.bounce.x;
+        body1.velocity.y *= body1.bounce.y;
+        body2.velocity.x *= body2.bounce.x;
+        body2.velocity.y *= body2.bounce.y;
 
         if (body1.onCollide || body2.onCollide)
         {
@@ -1647,7 +1657,7 @@ var World = new Class({
      * If two Groups or arrays are passed, each member of one will be tested against each member of the other.
      *
      * If **only** one Group is passed (as `object1`), each member of the Group will be collided against the other members.
-     * 
+     *
      * If **only** one Array is passed, the array is iterated and every element in it is tested against the others.
      *
      * Two callbacks can be provided. The `collideCallback` is invoked if a collision occurs and the two colliding
@@ -2026,15 +2036,15 @@ var World = new Class({
 
     /**
      * This advanced method is specifically for testing for collision between a single Sprite and an array of Tile objects.
-     * 
+     *
      * You should generally use the `collide` method instead, with a Sprite vs. a Tilemap Layer, as that will perform
      * tile filtering and culling for you, as well as handle the interesting face collision automatically.
-     * 
+     *
      * This method is offered for those who would like to check for collision with specific Tiles in a layer, without
      * having to set any collision attributes on the tiles in question. This allows you to perform quick dynamic collisions
      * on small sets of Tiles. As such, no culling or checks are made to the array of Tiles given to this method,
      * you should filter them before passing them to this method.
-     * 
+     *
      * Important: Use of this method skips the `interesting faces` system that Tilemap Layers use. This means if you have
      * say a row or column of tiles, and you jump into, or walk over them, it's possible to get stuck on the edges of the
      * tiles as the interesting face calculations are skipped. However, for quick-fire small collision set tests on
@@ -2066,10 +2076,10 @@ var World = new Class({
 
     /**
      * This advanced method is specifically for testing for overlaps between a single Sprite and an array of Tile objects.
-     * 
+     *
      * You should generally use the `overlap` method instead, with a Sprite vs. a Tilemap Layer, as that will perform
      * tile filtering and culling for you, as well as handle the interesting face collision automatically.
-     * 
+     *
      * This method is offered for those who would like to check for overlaps with specific Tiles in a layer, without
      * having to set any collision attributes on the tiles in question. This allows you to perform quick dynamic overlap
      * tests on small sets of Tiles. As such, no culling or checks are made to the array of Tiles given to this method,
