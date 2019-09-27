@@ -10,6 +10,7 @@
 * The WebGL Scene Renderer is now only disposed if the Scene is destroyed, not just shut-down.
 * The Spine Game Object will no longer set the default skin name to be 'default', it will leave the name empty. Fix #4764 (thanks @Jonchun @badlogic)
 * Thanks to a fix inside the Container WebGLRenderer, a bug was crushed which involved multiple Containers in a Scene, with Spine objects, from causing run-time errors. Fix #4710 (thanks @nalgorry)
+* Using `Loader.setPath` to define the Spine assets locations could error if trying to load multiple files from different folders. It will now retain the path state at the time of invocation, rather than during the load.
 
 ### Facebook Instant Games Plugin
 
@@ -31,6 +32,7 @@
 * A `hasOwnProperty` check has been applied to the `SceneManager.createSceneFromObject` method when parsing additional properties in the `extend` object (thanks @halilcakar)
 * The `Blitter.dirty` flag is no longer set if the render state of a Bob is changed to make it invisible (thanks @rexrainbow)
 * `WebGLPipeline.addAttribute` will now automatically update the vertextComponentCount for you, without you having to do it manually any more (thanks @yhwh)
+* `MultiFile` has three new internal properties: `baseURL`, `path` and `prefix` which allow them to retain the state of the loader at the time of creation, to be passed on to all child-files. Fix #4679.
 
 ### Bug Fixes
 
@@ -46,6 +48,7 @@
 * `Tween.updateTo` would break out of the TweenData iteration as soon as it adjusted the first matching key, causing tweens acting on multiple targets to only update the first target. It now updates them all. Fix #4763 (thanks @RBrNx)
 * The Container WebGLRenderer will now handle child mask batching properly, based on the renderers current mask.
 * The Container WebGLRenderer will now handle child new type switching, allowing you to carry on with a batch of same-type Game Objects even if they're nested within Containers. Fix #4710 (thanks @nalgorry)
+* `MultiAtlasFiles` that loaded their own external images would obtain incorrect path and URL values if the path had been changed by another file in the queue. They now retain the loader state and apply it to all child files during load.
 
 ### Examples, Documentation and TypeScript
 
