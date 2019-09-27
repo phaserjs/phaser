@@ -5,9 +5,11 @@
 ### Spine Plugin
 
 * The Spine runtimes have been updated to 3.8. Please note that Spine runtimes are _not_ backwards compatible. Animations exported with Spine 3.7 (or earlier) will need re-exporting with 3.8 in order to work with the new runtimes.
-* Fixed a bug with the binding of the Spine Plugin causing the GameObjectFactory to remain bound to the first instance of the plugin, causing Scene changes to result in blank Spine Game Objects.
+* Fixed a bug with the binding of the Spine Plugin causing the GameObjectFactory to remain bound to the first instance of the plugin, causing Scene changes to result in blank Spine Game Objects. Fix #4716 (thanks @olilanz)
 * Fixed a bug with the caching of the Spine Texture Atlases, causing shader errors when returning from one Scene to another with a cached Texture Atlas.
 * The WebGL Scene Renderer is now only disposed if the Scene is destroyed, not just shut-down.
+* The Spine Game Object will no longer set the default skin name to be 'default', it will leave the name empty. Fix #4764 (thanks @Jonchun @badlogic)
+* Thanks to a fix inside the Container WebGLRenderer, a bug was crushed which involved multiple Containers in a Scene, with Spine objects, from causing run-time errors. Fix #4710 (thanks @nalgorry)
 
 ### Facebook Instant Games Plugin
 
@@ -42,6 +44,8 @@
 * `ArcadePhysics.Body.hitTest` would use CircleContains to do a hit test, which assumex x/y was the Circle center, but for a Body it's the top-left, causing the hit test to be off. Fix #4748 (thanks @funnisimo)
 * `ArcadePhysics.World.separateCircle` has had the velocity scaling moved to after the angle is calculated, fixing a weird collision issue when `Body.bounce=0`. Also, if both bodies are movable, they now only offset by half the offset and use the center of the body for angle calculation, allowing for any offsets to be included. Fix #4751 (thanks @funnisimo)
 * `Tween.updateTo` would break out of the TweenData iteration as soon as it adjusted the first matching key, causing tweens acting on multiple targets to only update the first target. It now updates them all. Fix #4763 (thanks @RBrNx)
+* The Container WebGLRenderer will now handle child mask batching properly, based on the renderers current mask.
+* The Container WebGLRenderer will now handle child new type switching, allowing you to carry on with a batch of same-type Game Objects even if they're nested within Containers. Fix #4710 (thanks @nalgorry)
 
 ### Examples, Documentation and TypeScript
 
