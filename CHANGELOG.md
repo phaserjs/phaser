@@ -2,6 +2,13 @@
 
 ## Version 3.20.0 - Fitoria - in dev
 
+### Spine Plugin
+
+* The Spine runtimes have been updated to 3.8. Please note that Spine runtimes are _not_ backwards compatible. Animations exported with Spine 3.7 (or earlier) will need re-exporting with 3.8 in order to work with the new runtimes.
+* Fixed a bug with the binding of the Spine Plugin causing the GameObjectFactory to remain bound to the first instance of the plugin, causing Scene changes to result in blank Spine Game Objects.
+* Fixed a bug with the caching of the Spine Texture Atlases, causing shader errors when returning from one Scene to another with a cached Texture Atlas.
+* The WebGL Scene Renderer is now only disposed if the Scene is destroyed, not just shut-down.
+
 ### Facebook Instant Games Plugin
 
 * Calling `showAd` or `showVideoAd` will now check to see if the ad has already been displayed, and skip it when iterating the ads array, allowing you to display an ad with the same Placement ID without preloading it again. Fix #4728 (thanks @NokFrt)
