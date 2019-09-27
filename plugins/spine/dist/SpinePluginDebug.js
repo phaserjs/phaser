@@ -5123,6 +5123,36 @@ var MultiFile = new Class({
          */
         this.config = {};
 
+        /**
+         * A reference to the Loaders baseURL at the time this MultiFile was created.
+         * Used to populate child-files.
+         *
+         * @name Phaser.Loader.MultiFile#baseURL
+         * @type {string}
+         * @since 3.20.0
+         */
+        this.baseURL = loader.baseURL;
+
+        /**
+         * A reference to the Loaders path at the time this MultiFile was created.
+         * Used to populate child-files.
+         *
+         * @name Phaser.Loader.MultiFile#path
+         * @type {string}
+         * @since 3.20.0
+         */
+        this.path = loader.path;
+
+        /**
+         * A reference to the Loaders prefix at the time this MultiFile was created.
+         * Used to populate child-files.
+         *
+         * @name Phaser.Loader.MultiFile#prefix
+         * @type {string}
+         * @since 3.20.0
+         */
+        this.prefix = loader.prefix;
+
         //  Link the files
         for (var i = 0; i < files.length; i++)
         {
@@ -19199,9 +19229,9 @@ var SpineFile = new Class({
                 var currentPath = loader.path;
                 var currentPrefix = loader.prefix;
 
-                var baseURL = GetFastValue(config, 'baseURL', currentBaseURL);
-                var path = GetFastValue(config, 'path', currentPath);
-                var prefix = GetFastValue(config, 'prefix', currentPrefix);
+                var baseURL = GetFastValue(config, 'baseURL', this.baseURL);
+                var path = GetFastValue(config, 'path', this.path);
+                var prefix = GetFastValue(config, 'prefix', this.prefix);
                 var textureXhrSettings = GetFastValue(config, 'textureXhrSettings');
 
                 loader.setBaseURL(baseURL);
@@ -19310,7 +19340,7 @@ var SpineGameObject = __webpack_require__(/*! ./gameobject/SpineGameObject */ ".
  * The Spine Plugin is a Scene based plugin that handles the creation and rendering of Spine Game Objects.
  * 
  * All rendering and object creation is handled via the official Spine Runtimes. This version of the plugin
- * uses the Spine 3.8 runtimes. Files created in a more recent version of Spine may not work as a result.
+ * uses the Spine 3.8 runtimes. Files created in a different version of Spine may not work as a result.
  * 
  * You can find more details about Spine at http://esotericsoftware.com/.
  * 
@@ -19565,9 +19595,56 @@ var SpinePlugin = new Class({
             this.getAtlas = this.getAtlasCanvas;
         }
 
-        pluginManager.registerFileType('spine', this.spineFileCallback, scene);
+        var _this = this;
 
-        pluginManager.registerGameObject('spine', this.add, this.make);
+        var add = function (x, y, key, animationName, loop)
+        {
+            var spineGO = new SpineGameObject(this.scene, _this, x, y, key, animationName, loop);
+    
+            this.displayList.add(spineGO);
+            this.updateList.add(spineGO);
+        
+            return spineGO;
+        };
+
+        var make = function (config, addToScene)
+        {
+            if (config === undefined) { config = {}; }
+    
+            var key = GetValue(config, 'key', null);
+            var animationName = GetValue(config, 'animationName', null);
+            var loop = GetValue(config, 'loop', false);
+    
+            var spineGO = new SpineGameObject(this.scene, _this, 0, 0, key, animationName, loop);
+    
+            if (addToScene !== undefined)
+            {
+                config.add = addToScene;
+            }
+    
+            BuildGameObject(this.scene, spineGO, config);
+    
+            //  Spine specific
+            var skinName = GetValue(config, 'skinName', false);
+    
+            if (skinName)
+            {
+                spineGO.setSkinByName(skinName);
+            }
+    
+            var slotName = GetValue(config, 'slotName', false);
+            var attachmentName = GetValue(config, 'attachmentName', null);
+    
+            if (slotName)
+            {
+                spineGO.setAttachment(slotName, attachmentName);
+            }
+    
+            return spineGO.refresh();
+        };
+
+        pluginManager.registerFileType('spine', this.spineFileCallback, scene);
+        pluginManager.registerGameObject('spine', add, make);
     },
 
     /**
@@ -19834,116 +19911,6 @@ var SpinePlugin = new Class({
         }
         
         return this;
-    },
-
-    /**
-     * Creates a new Spine Game Object and adds it to the Scene.
-     * 
-     * The x and y coordinate given is used to set the placement of the root Spine bone, which can vary from
-     * skeleton to skeleton. All rotation and scaling happens from the root bone placement. Spine Game Objects
-     * do not have a Phaser origin.
-     * 
-     * If the Spine JSON file exported multiple Skeletons within it, then you can specify them by using a period
-     * character in the key. For example, if you loaded a Spine JSON using the key `monsters` and it contains
-     * multiple Skeletons, including one called `goblin` then you would use the key `monsters.goblin` to reference
-     * that.
-     * 
-     * ```javascript
-     * let jelly = this.add.spine(512, 550, 'jelly', 'jelly-think', true);
-     * ```
-     * 
-     * The key is optional. If not passed here, you need to call `SpineGameObject.setSkeleton()` to use it.
-     * 
-     * The animation name is also optional and can be set later via `SpineGameObject.setAnimation`.
-     * 
-     * Should you wish for more control over the object creation, such as setting a slot attachment or skin
-     * name, then use `SpinePlugin.make` instead.
-     *
-     * @method SpinePlugin#add
-     * @since 3.19.0
-     * 
-     * @param {number} x - The horizontal position of this Game Object in the world.
-     * @param {number} y - The vertical position of this Game Object in the world.
-     * @param {string} [key] - The key of the Spine Skeleton this Game Object will use, as stored in the Spine Plugin.
-     * @param {string} [animationName] - The name of the animation to set on this Skeleton.
-     * @param {boolean} [loop=false] - Should the animation playback be looped or not?
-     *
-     * @return {SpineGameObject} The Game Object that was created.
-     */
-    add: function (x, y, key, animationName, loop)
-    {
-        var spineGO = new SpineGameObject(this.scene, this.scene.sys.spine, x, y, key, animationName, loop);
-
-        this.displayList.add(spineGO);
-        this.updateList.add(spineGO);
-    
-        return spineGO;
-    },
-
-    /**
-     * Creates a new Spine Game Object from the given configuration file and optionally adds it to the Scene.
-     * 
-     * The x and y coordinate given is used to set the placement of the root Spine bone, which can vary from
-     * skeleton to skeleton. All rotation and scaling happens from the root bone placement. Spine Game Objects
-     * do not have a Phaser origin.
-     * 
-     * If the Spine JSON file exported multiple Skeletons within it, then you can specify them by using a period
-     * character in the key. For example, if you loaded a Spine JSON using the key `monsters` and it contains
-     * multiple Skeletons, including one called `goblin` then you would use the key `monsters.goblin` to reference
-     * that.
-     * 
-     * ```javascript
-     * let jelly = this.make.spine({
-     *     x: 500, y: 500, key: 'jelly',
-     *     scale: 1.5,
-     *     skinName: 'square_Green',
-     *     animationName: 'jelly-idle', loop: true,
-     *     slotName: 'hat', attachmentName: 'images/La_14'
-     * });
-     * ```
-     *
-     * @method SpinePlugin#make
-     * @since 3.19.0
-     *
-     * @param {any} config - The configuration object this Game Object will use to create itself.
-     * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
-     *
-     * @return {SpineGameObject} The Game Object that was created.
-     */
-    make: function (config, addToScene)
-    {
-        if (config === undefined) { config = {}; }
-
-        var key = GetValue(config, 'key', null);
-        var animationName = GetValue(config, 'animationName', null);
-        var loop = GetValue(config, 'loop', false);
-
-        var spineGO = new SpineGameObject(this.scene, this.scene.sys.spine, 0, 0, key, animationName, loop);
-
-        if (addToScene !== undefined)
-        {
-            config.add = addToScene;
-        }
-
-        BuildGameObject(this.scene, spineGO, config);
-
-        //  Spine specific
-        var skinName = GetValue(config, 'skinName', false);
-
-        if (skinName)
-        {
-            spineGO.setSkinByName(skinName);
-        }
-
-        var slotName = GetValue(config, 'slotName', false);
-        var attachmentName = GetValue(config, 'attachmentName', null);
-
-        if (slotName)
-        {
-            spineGO.setAttachment(slotName, attachmentName);
-        }
-
-        return spineGO.refresh();
     },
 
     /**
@@ -20405,6 +20372,72 @@ var SpinePlugin = new Class({
     }
 
 });
+
+/**
+ * Creates a new Spine Game Object and adds it to the Scene.
+ * 
+ * The x and y coordinate given is used to set the placement of the root Spine bone, which can vary from
+ * skeleton to skeleton. All rotation and scaling happens from the root bone placement. Spine Game Objects
+ * do not have a Phaser origin.
+ * 
+ * If the Spine JSON file exported multiple Skeletons within it, then you can specify them by using a period
+ * character in the key. For example, if you loaded a Spine JSON using the key `monsters` and it contains
+ * multiple Skeletons, including one called `goblin` then you would use the key `monsters.goblin` to reference
+ * that.
+ * 
+ * ```javascript
+ * let jelly = this.add.spine(512, 550, 'jelly', 'jelly-think', true);
+ * ```
+ * 
+ * The key is optional. If not passed here, you need to call `SpineGameObject.setSkeleton()` to use it.
+ * 
+ * The animation name is also optional and can be set later via `SpineGameObject.setAnimation`.
+ * 
+ * Should you wish for more control over the object creation, such as setting a slot attachment or skin
+ * name, then use `SpinePlugin.make` instead.
+ *
+ * @method SpinePlugin#add
+ * @since 3.19.0
+ * 
+ * @param {number} x - The horizontal position of this Game Object in the world.
+ * @param {number} y - The vertical position of this Game Object in the world.
+ * @param {string} [key] - The key of the Spine Skeleton this Game Object will use, as stored in the Spine Plugin.
+ * @param {string} [animationName] - The name of the animation to set on this Skeleton.
+ * @param {boolean} [loop=false] - Should the animation playback be looped or not?
+ *
+ * @return {SpineGameObject} The Game Object that was created.
+ */
+
+/**
+ * Creates a new Spine Game Object from the given configuration file and optionally adds it to the Scene.
+ * 
+ * The x and y coordinate given is used to set the placement of the root Spine bone, which can vary from
+ * skeleton to skeleton. All rotation and scaling happens from the root bone placement. Spine Game Objects
+ * do not have a Phaser origin.
+ * 
+ * If the Spine JSON file exported multiple Skeletons within it, then you can specify them by using a period
+ * character in the key. For example, if you loaded a Spine JSON using the key `monsters` and it contains
+ * multiple Skeletons, including one called `goblin` then you would use the key `monsters.goblin` to reference
+ * that.
+ * 
+ * ```javascript
+ * let jelly = this.make.spine({
+ *     x: 500, y: 500, key: 'jelly',
+ *     scale: 1.5,
+ *     skinName: 'square_Green',
+ *     animationName: 'jelly-idle', loop: true,
+ *     slotName: 'hat', attachmentName: 'images/La_14'
+ * });
+ * ```
+ *
+ * @method SpinePlugin#make
+ * @since 3.19.0
+ *
+ * @param {any} config - The configuration object this Game Object will use to create itself.
+ * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
+ *
+ * @return {SpineGameObject} The Game Object that was created.
+ */
 
 module.exports = SpinePlugin;
 
@@ -21109,7 +21142,7 @@ var SpineGameObject = new Class({
 
         var skeleton = data.skeleton;
 
-        skeleton.setSkinByName('default');
+        skeleton.setSkin();
         skeleton.setToSetupPose();
 
         this.skeleton = skeleton;
