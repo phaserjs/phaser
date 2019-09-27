@@ -2,8 +2,10 @@ declare module spine {
     class Animation {
         name: string;
         timelines: Array<Timeline>;
+        timelineIds: Array<boolean>;
         duration: number;
         constructor(name: string, timelines: Array<Timeline>, duration: number);
+        hasTimeline(id: number): boolean;
         apply(skeleton: Skeleton, lastTime: number, time: number, loop: boolean, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection): void;
         static binarySearch(values: ArrayLike<number>, target: number, step?: number): number;
         static linearSearch(values: ArrayLike<number>, target: number, step: number): number;
@@ -19,8 +21,8 @@ declare module spine {
         add = 3
     }
     enum MixDirection {
-        in = 0,
-        out = 1
+        mixIn = 0,
+        mixOut = 1
     }
     enum TimelineType {
         rotate = 0,
@@ -175,10 +177,12 @@ declare module spine {
         static ENTRIES: number;
         static PREV_TIME: number;
         static PREV_MIX: number;
+        static PREV_SOFTNESS: number;
         static PREV_BEND_DIRECTION: number;
         static PREV_COMPRESS: number;
         static PREV_STRETCH: number;
         static MIX: number;
+        static SOFTNESS: number;
         static BEND_DIRECTION: number;
         static COMPRESS: number;
         static STRETCH: number;
@@ -186,7 +190,7 @@ declare module spine {
         frames: ArrayLike<number>;
         constructor(frameCount: number);
         getPropertyId(): number;
-        setFrame(frameIndex: number, time: number, mix: number, bendDirection: number, compress: boolean, stretch: boolean): void;
+        setFrame(frameIndex: number, time: number, mix: number, softness: number, bendDirection: number, compress: boolean, stretch: boolean): void;
         apply(skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection): void;
     }
     class TransformConstraintTimeline extends CurveTimeline {
@@ -246,6 +250,7 @@ declare module spine {
         static FIRST: number;
         static HOLD: number;
         static HOLD_MIX: number;
+        static NOT_LAST: number;
         data: AnimationStateData;
         tracks: TrackEntry[];
         events: Event[];
@@ -276,8 +281,8 @@ declare module spine {
         trackEntry(trackIndex: number, animation: Animation, loop: boolean, last: TrackEntry): TrackEntry;
         disposeNext(entry: TrackEntry): void;
         _animationsChanged(): void;
-        setTimelineModes(entry: TrackEntry): void;
-        hasTimeline(entry: TrackEntry, id: number): boolean;
+        computeHold(entry: TrackEntry): void;
+        computeNotLast(entry: TrackEntry): void;
         getCurrent(trackIndex: number): TrackEntry;
         addListener(listener: AnimationStateListener2): void;
         removeListener(listener: AnimationStateListener2): void;
@@ -382,6 +387,7 @@ declare module spine {
         constructor(textureLoader: (image: HTMLImageElement) => any, pathPrefix?: string);
         private static downloadText;
         private static downloadBinary;
+        loadBinary(path: string, success?: (path: string, binary: Uint8Array) => void, error?: (path: string, error: string) => void): void;
         loadText(path: string, success?: (path: string, text: string) => void, error?: (path: string, error: string) => void): void;
         loadTexture(path: string, success?: (path: string, image: HTMLImageElement) => void, error?: (path: string, error: string) => void): void;
         loadTextureData(path: string, data: string, success?: (path: string, image: HTMLImageElement) => void, error?: (path: string, error: string) => void): void;
@@ -445,7 +451,9 @@ declare module spine {
         d: number;
         worldY: number;
         sorted: boolean;
+        active: boolean;
         constructor(data: BoneData, skeleton: Skeleton, parent: Bone);
+        isActive(): boolean;
         update(): void;
         updateWorldTransform(): void;
         updateWorldTransformWith(x: number, y: number, rotation: number, scaleX: number, scaleY: number, shearX: number, shearY: number): void;
@@ -476,6 +484,8 @@ declare module spine {
         shearX: number;
         shearY: number;
         transformMode: TransformMode;
+        skinRequired: boolean;
+        color: Color;
         constructor(index: number, name: string, parent: BoneData);
     }
     enum TransformMode {
@@ -487,8 +497,11 @@ declare module spine {
     }
 }
 declare module spine {
-    interface Constraint extends Updatable {
-        getOrder(): number;
+    abstract class ConstraintData {
+        name: string;
+        order: number;
+        skinRequired: boolean;
+        constructor(name: string, order: number, skinRequired: boolean);
     }
 }
 declare module spine {
@@ -516,7 +529,7 @@ declare module spine {
     }
 }
 declare module spine {
-    class IkConstraint implements Constraint {
+    class IkConstraint implements Updatable {
         data: IkConstraintData;
         bones: Array<Bone>;
         target: Bone;
@@ -524,18 +537,18 @@ declare module spine {
         compress: boolean;
         stretch: boolean;
         mix: number;
+        softness: number;
+        active: boolean;
         constructor(data: IkConstraintData, skeleton: Skeleton);
-        getOrder(): number;
+        isActive(): boolean;
         apply(): void;
         update(): void;
         apply1(bone: Bone, targetX: number, targetY: number, compress: boolean, stretch: boolean, uniform: boolean, alpha: number): void;
-        apply2(parent: Bone, child: Bone, targetX: number, targetY: number, bendDir: number, stretch: boolean, alpha: number): void;
+        apply2(parent: Bone, child: Bone, targetX: number, targetY: number, bendDir: number, stretch: boolean, softness: number, alpha: number): void;
     }
 }
 declare module spine {
-    class IkConstraintData {
-        name: string;
-        order: number;
+    class IkConstraintData extends ConstraintData {
         bones: BoneData[];
         target: BoneData;
         bendDirection: number;
@@ -543,11 +556,12 @@ declare module spine {
         stretch: boolean;
         uniform: boolean;
         mix: number;
+        softness: number;
         constructor(name: string);
     }
 }
 declare module spine {
-    class PathConstraint implements Constraint {
+    class PathConstraint implements Updatable {
         static NONE: number;
         static BEFORE: number;
         static AFTER: number;
@@ -565,20 +579,19 @@ declare module spine {
         curves: number[];
         lengths: number[];
         segments: number[];
+        active: boolean;
         constructor(data: PathConstraintData, skeleton: Skeleton);
+        isActive(): boolean;
         apply(): void;
         update(): void;
         computeWorldPositions(path: PathAttachment, spacesCount: number, tangents: boolean, percentPosition: boolean, percentSpacing: boolean): number[];
         addBeforePosition(p: number, temp: Array<number>, i: number, out: Array<number>, o: number): void;
         addAfterPosition(p: number, temp: Array<number>, i: number, out: Array<number>, o: number): void;
         addCurvePosition(p: number, x1: number, y1: number, cx1: number, cy1: number, cx2: number, cy2: number, x2: number, y2: number, out: Array<number>, o: number, tangents: boolean): void;
-        getOrder(): number;
     }
 }
 declare module spine {
-    class PathConstraintData {
-        name: string;
-        order: number;
+    class PathConstraintData extends ConstraintData {
         bones: BoneData[];
         target: SlotData;
         positionMode: PositionMode;
@@ -675,6 +688,42 @@ declare module spine {
     }
 }
 declare module spine {
+    class SkeletonBinary {
+        static AttachmentTypeValues: number[];
+        static TransformModeValues: TransformMode[];
+        static PositionModeValues: PositionMode[];
+        static SpacingModeValues: SpacingMode[];
+        static RotateModeValues: RotateMode[];
+        static BlendModeValues: BlendMode[];
+        static BONE_ROTATE: number;
+        static BONE_TRANSLATE: number;
+        static BONE_SCALE: number;
+        static BONE_SHEAR: number;
+        static SLOT_ATTACHMENT: number;
+        static SLOT_COLOR: number;
+        static SLOT_TWO_COLOR: number;
+        static PATH_POSITION: number;
+        static PATH_SPACING: number;
+        static PATH_MIX: number;
+        static CURVE_LINEAR: number;
+        static CURVE_STEPPED: number;
+        static CURVE_BEZIER: number;
+        attachmentLoader: AttachmentLoader;
+        scale: number;
+        private linkedMeshes;
+        constructor(attachmentLoader: AttachmentLoader);
+        readSkeletonData(binary: Uint8Array): SkeletonData;
+        private readSkin;
+        private readAttachment;
+        private readVertices;
+        private readFloatArray;
+        private readShortArray;
+        private readAnimation;
+        private readCurve;
+        setCurve(timeline: CurveTimeline, frameIndex: number, cx1: number, cy1: number, cx2: number, cy2: number): void;
+    }
+}
+declare module spine {
     class SkeletonBounds {
         minX: number;
         minY: number;
@@ -728,12 +777,15 @@ declare module spine {
         ikConstraints: IkConstraintData[];
         transformConstraints: TransformConstraintData[];
         pathConstraints: PathConstraintData[];
+        x: number;
+        y: number;
         width: number;
         height: number;
         version: string;
         hash: string;
         fps: number;
         imagesPath: string;
+        audioPath: string;
         findBone(boneName: string): BoneData;
         findBoneIndex(boneName: string): number;
         findSlot(slotName: string): SlotData;
@@ -767,12 +819,26 @@ declare module spine {
     }
 }
 declare module spine {
+    class SkinEntry {
+        slotIndex: number;
+        name: string;
+        attachment: Attachment;
+        constructor(slotIndex: number, name: string, attachment: Attachment);
+    }
     class Skin {
         name: string;
         attachments: Map<Attachment>[];
+        bones: BoneData[];
+        constraints: ConstraintData[];
         constructor(name: string);
-        addAttachment(slotIndex: number, name: string, attachment: Attachment): void;
+        setAttachment(slotIndex: number, name: string, attachment: Attachment): void;
+        addSkin(skin: Skin): void;
+        copySkin(skin: Skin): void;
         getAttachment(slotIndex: number, name: string): Attachment;
+        removeAttachment(slotIndex: number, name: string): void;
+        getAttachments(): Array<SkinEntry>;
+        getAttachmentsForSlot(slotIndex: number, attachments: Array<SkinEntry>): void;
+        clear(): void;
         attachAll(skeleton: Skeleton, oldSkin: Skin): void;
     }
 }
@@ -784,7 +850,7 @@ declare module spine {
         darkColor: Color;
         private attachment;
         private attachmentTime;
-        attachmentVertices: number[];
+        deform: number[];
         constructor(data: SlotData, bone: Bone);
         getAttachment(): Attachment;
         setAttachment(attachment: Attachment): void;
@@ -876,11 +942,12 @@ declare module spine {
         y: number;
         index: number;
         rotate: boolean;
+        degrees: number;
         texture: Texture;
     }
 }
 declare module spine {
-    class TransformConstraint implements Constraint {
+    class TransformConstraint implements Updatable {
         data: TransformConstraintData;
         bones: Array<Bone>;
         target: Bone;
@@ -889,20 +956,19 @@ declare module spine {
         scaleMix: number;
         shearMix: number;
         temp: Vector2;
+        active: boolean;
         constructor(data: TransformConstraintData, skeleton: Skeleton);
+        isActive(): boolean;
         apply(): void;
         update(): void;
         applyAbsoluteWorld(): void;
         applyRelativeWorld(): void;
         applyAbsoluteLocal(): void;
         applyRelativeLocal(): void;
-        getOrder(): number;
     }
 }
 declare module spine {
-    class TransformConstraintData {
-        name: string;
-        order: number;
+    class TransformConstraintData extends ConstraintData {
         bones: BoneData[];
         target: BoneData;
         rotateMix: number;
@@ -939,6 +1005,7 @@ declare module spine {
 declare module spine {
     interface Updatable {
         update(): void;
+        isActive(): boolean;
     }
 }
 declare module spine {
@@ -974,6 +1041,8 @@ declare module spine {
         setFromString(hex: string): this;
         add(r: number, g: number, b: number, a: number): this;
         clamp(): this;
+        static rgba8888ToColor(color: Color, value: number): void;
+        static rgb888ToColor(color: Color, value: number): void;
     }
     class MathUtils {
         static PI: number;
@@ -1015,6 +1084,7 @@ declare module spine {
         static toFloatArray(array: Array<number>): number[] | Float32Array;
         static toSinglePrecision(value: number): number;
         static webkit602BugfixHelper(alpha: number, blend: MixBlend): void;
+        static contains<T>(array: Array<T>, element: T, identity?: boolean): boolean;
     }
     class DebugUtils {
         static logBones(skeleton: Skeleton): void;
@@ -1076,6 +1146,7 @@ declare module spine {
     abstract class Attachment {
         name: string;
         constructor(name: string);
+        abstract copy(): Attachment;
     }
     abstract class VertexAttachment extends Attachment {
         private static nextID;
@@ -1083,9 +1154,10 @@ declare module spine {
         bones: Array<number>;
         vertices: ArrayLike<number>;
         worldVerticesLength: number;
+        deformAttachment: VertexAttachment;
         constructor(name: string);
         computeWorldVertices(slot: Slot, start: number, count: number, worldVertices: ArrayLike<number>, offset: number, stride: number): void;
-        applyDeform(sourceAttachment: VertexAttachment): boolean;
+        copyTo(attachment: VertexAttachment): void;
     }
 }
 declare module spine {
@@ -1105,13 +1177,15 @@ declare module spine {
         Mesh = 2,
         LinkedMesh = 3,
         Path = 4,
-        Point = 5
+        Point = 5,
+        Clipping = 6
     }
 }
 declare module spine {
     class BoundingBoxAttachment extends VertexAttachment {
         color: Color;
         constructor(name: string);
+        copy(): Attachment;
     }
 }
 declare module spine {
@@ -1119,6 +1193,7 @@ declare module spine {
         endSlot: SlotData;
         color: Color;
         constructor(name: string);
+        copy(): Attachment;
     }
 }
 declare module spine {
@@ -1129,15 +1204,18 @@ declare module spine {
         uvs: ArrayLike<number>;
         triangles: Array<number>;
         color: Color;
+        width: number;
+        height: number;
         hullLength: number;
+        edges: Array<number>;
         private parentMesh;
-        inheritDeform: boolean;
         tempColor: Color;
         constructor(name: string);
         updateUVs(): void;
-        applyDeform(sourceAttachment: VertexAttachment): boolean;
         getParentMesh(): MeshAttachment;
         setParentMesh(parentMesh: MeshAttachment): void;
+        copy(): Attachment;
+        newLinkedMesh(): MeshAttachment;
     }
 }
 declare module spine {
@@ -1147,6 +1225,7 @@ declare module spine {
         constantSpeed: boolean;
         color: Color;
         constructor(name: string);
+        copy(): Attachment;
     }
 }
 declare module spine {
@@ -1158,6 +1237,7 @@ declare module spine {
         constructor(name: string);
         computeWorldPosition(bone: Bone, point: Vector2): Vector2;
         computeWorldRotation(bone: Bone): number;
+        copy(): Attachment;
     }
 }
 declare module spine {
@@ -1220,6 +1300,7 @@ declare module spine {
         updateOffset(): void;
         setRegion(region: TextureRegion): void;
         computeWorldVertices(bone: Bone, worldVertices: ArrayLike<number>, offset: number, stride: number): void;
+        copy(): Attachment;
     }
 }
 declare module spine {
@@ -1644,7 +1725,7 @@ declare module spine.webgl {
 }
 declare module spine.webgl {
     class ManagedWebGLRenderingContext {
-        canvas: HTMLCanvasElement;
+        canvas: HTMLCanvasElement | OffscreenCanvas;
         gl: WebGLRenderingContext;
         private restorables;
         constructor(canvasOrContext: HTMLCanvasElement | WebGLRenderingContext, contextConfig?: any);
