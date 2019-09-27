@@ -165,9 +165,9 @@ var SpineFile = new Class({
                 var currentPath = loader.path;
                 var currentPrefix = loader.prefix;
 
-                var baseURL = GetFastValue(config, 'baseURL', currentBaseURL);
-                var path = GetFastValue(config, 'path', currentPath);
-                var prefix = GetFastValue(config, 'prefix', currentPrefix);
+                var baseURL = GetFastValue(config, 'baseURL', this.baseURL);
+                var path = GetFastValue(config, 'path', this.path);
+                var prefix = GetFastValue(config, 'prefix', this.prefix);
                 var textureXhrSettings = GetFastValue(config, 'textureXhrSettings');
 
                 loader.setBaseURL(baseURL);
