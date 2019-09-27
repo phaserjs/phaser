@@ -514,7 +514,7 @@ var SpineGameObject = new Class({
 
         var skeleton = data.skeleton;
 
-        skeleton.setSkinByName();
+        skeleton.setSkin();
         skeleton.setToSetupPose();
 
         this.skeleton = skeleton;
