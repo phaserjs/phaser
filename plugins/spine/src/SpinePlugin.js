@@ -15,10 +15,10 @@ var SpineGameObject = require('./gameobject/SpineGameObject');
 
 /**
  * @classdesc
- * The Spine Plugin is a Scene based plugin that handles the creation and rendering of Spine Game objects.
+ * The Spine Plugin is a Scene based plugin that handles the creation and rendering of Spine Game Objects.
  * 
  * All rendering and object creation is handled via the official Spine Runtimes. This version of the plugin
- * uses the Spine 3.7 runtimes. Files created in a more recent version of Spine may not work as a result.
+ * uses the Spine 3.8 runtimes. Files created in a more recent version of Spine may not work as a result.
  * 
  * You can find more details about Spine at http://esotericsoftware.com/.
  * 
@@ -275,7 +275,7 @@ var SpinePlugin = new Class({
 
         pluginManager.registerFileType('spine', this.spineFileCallback, scene);
 
-        pluginManager.registerGameObject('spine', this.add.bind(this), this.make.bind(this));
+        pluginManager.registerGameObject('spine', this.add, this.make);
     },
 
     /**
@@ -382,10 +382,7 @@ var SpinePlugin = new Class({
 
         if (spineTextures.has(key))
         {
-            atlas = new Spine.TextureAtlas(atlasEntry.data, function ()
-            {
-                return spineTextures.get(key);
-            });
+            atlas = spineTextures.get(key);
         }
         else
         {
@@ -393,11 +390,7 @@ var SpinePlugin = new Class({
 
             atlas = new Spine.TextureAtlas(atlasEntry.data, function (path)
             {
-                var canvasTexture = new Spine.canvas.CanvasTexture(textures.get(path).getSourceImage());
-
-                spineTextures.add(key, canvasTexture);
-
-                return canvasTexture;
+                return new Spine.canvas.CanvasTexture(textures.get(path).getSourceImage());
             });
         }
 
@@ -430,10 +423,7 @@ var SpinePlugin = new Class({
 
         if (spineTextures.has(key))
         {
-            atlas = new Spine.TextureAtlas(atlasEntry.data, function ()
-            {
-                return spineTextures.get(key);
-            });
+            atlas = spineTextures.get(key);
         }
         else
         {
@@ -445,11 +435,7 @@ var SpinePlugin = new Class({
 
             atlas = new Spine.TextureAtlas(atlasEntry.data, function (path)
             {
-                var glTexture = new Spine.webgl.GLTexture(gl, textures.get(path).getSourceImage(), false);
-
-                spineTextures.add(key, glTexture);
-
-                return glTexture;
+                return new Spine.webgl.GLTexture(gl, textures.get(path).getSourceImage(), false);
             });
         }
 
@@ -594,10 +580,10 @@ var SpinePlugin = new Class({
      */
     add: function (x, y, key, animationName, loop)
     {
-        var spineGO = new SpineGameObject(this.scene, this, x, y, key, animationName, loop);
+        var spineGO = new SpineGameObject(this.scene, this.scene.sys.spine, x, y, key, animationName, loop);
 
-        this.scene.sys.displayList.add(spineGO);
-        this.scene.sys.updateList.add(spineGO);
+        this.displayList.add(spineGO);
+        this.updateList.add(spineGO);
     
         return spineGO;
     },
@@ -640,7 +626,7 @@ var SpinePlugin = new Class({
         var animationName = GetValue(config, 'animationName', null);
         var loop = GetValue(config, 'loop', false);
 
-        var spineGO = new SpineGameObject(this.scene, this, 0, 0, key, animationName, loop);
+        var spineGO = new SpineGameObject(this.scene, this.scene.sys.spine, 0, 0, key, animationName, loop);
 
         if (addToScene !== undefined)
         {
@@ -969,6 +955,11 @@ var SpinePlugin = new Class({
             return null;
         }
 
+        if (!this.spineTextures.has(atlasKey))
+        {
+            this.spineTextures.add(atlasKey, atlas);
+        }
+
         var preMultipliedAlpha = atlasData.preMultipliedAlpha;
 
         var atlasLoader = new Spine.AtlasAttachmentLoader(atlas);
@@ -1085,11 +1076,6 @@ var SpinePlugin = new Class({
         var eventEmitter = this.systems.events;
 
         eventEmitter.off('shutdown', this.shutdown, this);
-
-        if (this.sceneRenderer)
-        {
-            this.sceneRenderer.dispose();
-        }
     },
 
     /**
@@ -1104,6 +1090,11 @@ var SpinePlugin = new Class({
     destroy: function ()
     {
         this.shutdown();
+
+        if (this.sceneRenderer)
+        {
+            this.sceneRenderer.dispose();
+        }
 
         this.pluginManager.removeGameObject('spine', true, true);
 
