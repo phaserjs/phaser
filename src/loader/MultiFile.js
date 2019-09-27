@@ -104,6 +104,36 @@ var MultiFile = new Class({
          */
         this.config = {};
 
+        /**
+         * A reference to the Loaders baseURL at the time this MultiFile was created.
+         * Used to populate child-files.
+         *
+         * @name Phaser.Loader.MultiFile#baseURL
+         * @type {string}
+         * @since 3.20.0
+         */
+        this.baseURL = loader.baseURL;
+
+        /**
+         * A reference to the Loaders path at the time this MultiFile was created.
+         * Used to populate child-files.
+         *
+         * @name Phaser.Loader.MultiFile#path
+         * @type {string}
+         * @since 3.20.0
+         */
+        this.path = loader.path;
+
+        /**
+         * A reference to the Loaders prefix at the time this MultiFile was created.
+         * Used to populate child-files.
+         *
+         * @name Phaser.Loader.MultiFile#prefix
+         * @type {string}
+         * @since 3.20.0
+         */
+        this.prefix = loader.prefix;
+
         //  Link the files
         for (var i = 0; i < files.length; i++)
         {
