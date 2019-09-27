@@ -56,7 +56,11 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
     var scrollFactorX = container.scrollFactorX;
     var scrollFactorY = container.scrollFactorY;
 
-    for (var i = 0; i < children.length; i++)
+    var list = children;
+    var childCount = children.length;
+    var current = renderer.mask;
+
+    for (var i = 0; i < childCount; i++)
     {
         var child = children[i];
 
@@ -75,10 +79,30 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
             renderer.setBlendMode(child.blendMode);
         }
 
-        if (child.mask)
+        var mask = child.mask;
+
+        current = renderer.currentMask;
+
+        if (current.mask && current.mask !== mask)
         {
-            child.mask.preRenderWebGL(renderer, child, camera);
+            //  Render out the previously set mask
+            current.mask.postRenderWebGL(renderer, current.camera);
         }
+
+        if (mask && current.mask !== mask)
+        {
+            mask.preRenderWebGL(renderer, child, camera);
+        }
+
+        var type = child.type;
+
+        if (type !== renderer.currentType)
+        {
+            renderer.newType = true;
+            renderer.currentType = type;
+        }
+
+        renderer.nextTypeMatch = (i < childCount - 1) ? (list[i + 1].type === renderer.currentType) : false;
 
         //  Set parent values
         child.setScrollFactor(childScrollFactorX * scrollFactorX, childScrollFactorY * scrollFactorY);
@@ -91,10 +115,7 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
         child.setAlpha(childAlpha);
         child.setScrollFactor(childScrollFactorX, childScrollFactorY);
 
-        if (child.mask)
-        {
-            child.mask.postRenderWebGL(renderer, camera);
-        }
+        renderer.newType = false;
     }
 };
 
