@@ -211,7 +211,7 @@ var SpineFile = new Class({
 
             var atlasCache;
             var atlasKey = '';
-            var combinedAtlastData = '';
+            var combinedAtlasData = '';
             var preMultipliedAlpha = (this.config.preMultipliedAlpha) ? true : false;
 
             for (var i = 1; i < this.files.length; i++)
@@ -224,7 +224,7 @@ var SpineFile = new Class({
 
                     atlasCache = file.cache;
 
-                    combinedAtlastData = combinedAtlastData.concat(file.data);
+                    combinedAtlasData = combinedAtlasData.concat(file.data);
                 }
                 else
                 {
@@ -238,7 +238,7 @@ var SpineFile = new Class({
                 file.pendingDestroy();
             }
 
-            atlasCache.add(atlasKey, { preMultipliedAlpha: preMultipliedAlpha, data: combinedAtlastData });
+            atlasCache.add(atlasKey, { preMultipliedAlpha: preMultipliedAlpha, data: combinedAtlasData });
 
             this.complete = true;
         }
