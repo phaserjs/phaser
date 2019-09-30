@@ -148,8 +148,6 @@ var MultiAtlasFile = new Class({
         {
             var fileJSON = this.files[0];
 
-            fileJSON.addToCache();
-
             var data = [];
             var images = [];
             var normalMaps = [];
