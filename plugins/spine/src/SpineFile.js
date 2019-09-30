@@ -178,7 +178,7 @@ var SpineFile = new Class({
                 {
                     var textureURL = textures[i];
 
-                    var key = '_SP_' + textureURL;
+                    var key = 'SP' + this.multiKeyIndex + '_' + textureURL;
 
                     var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
 
@@ -228,8 +228,10 @@ var SpineFile = new Class({
                 }
                 else
                 {
-                    var key = file.key.substr(4).trim();
-   
+                    var src = file.key.trim();
+                    var pos = src.indexOf('_');
+                    var key = src.substr(pos + 1);
+       
                     this.loader.textureManager.addImage(key, file.data);
                 }
 
