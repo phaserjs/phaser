@@ -57,6 +57,16 @@ var MultiFile = new Class({
         this.key = key;
 
         /**
+         * The current index being used by multi-file loaders to avoid key clashes.
+         *
+         * @name Phaser.Loader.MultiFile#multiKeyIndex
+         * @type {integer}
+         * @private
+         * @since 3.20.0
+         */
+        this.multiKeyIndex = loader.multiKeyIndex++;
+
+        /**
          * Array of files that make up this MultiFile.
          *
          * @name Phaser.Loader.MultiFile#files

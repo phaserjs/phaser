@@ -105,7 +105,7 @@ var MultiAtlasFile = new Class({
                     //  "image": "texture-packer-multi-atlas-0.png",
                     var textureURL = textures[i].image;
 
-                    var key = '_MA_' + textureURL;
+                    var key = 'MA' + this.multiKeyIndex + '_' + textureURL;
 
                     var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
 
@@ -163,7 +163,9 @@ var MultiAtlasFile = new Class({
                     continue;
                 }
 
-                var key = file.key.substr(4);
+                var pos = file.key.indexOf('_');
+                var key = file.key.substr(pos + 1);
+
                 var image = file.data;
 
                 //  Now we need to find out which json entry this mapped to

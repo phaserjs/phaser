@@ -313,6 +313,16 @@ var LoaderPlugin = new Class({
          */
         this.state = CONST.LOADER_IDLE;
 
+        /**
+         * The current index being used by multi-file loaders to avoid key clashes.
+         *
+         * @name Phaser.Loader.LoaderPlugin#multiKeyIndex
+         * @type {integer}
+         * @private
+         * @since 3.20.0
+         */
+        this.multiKeyIndex = 0;
+
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
         scene.sys.events.on(SceneEvents.START, this.pluginStart, this);
     },
