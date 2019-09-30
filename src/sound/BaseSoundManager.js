@@ -192,7 +192,7 @@ var BaseSoundManager = new Class({
      * @param {string} key - Asset key for the sound.
      * @param {Phaser.Types.Sound.SoundConfig} [config] - An optional config object containing default sound settings.
      *
-     * @return {Phaser.Types.Sound.AudioSpriteSound} The new audio sprite sound instance.
+     * @return {(Phaser.Sound.HTML5AudioSound|Phaser.Sound.WebAudioSound)} The new audio sprite sound instance.
      */
     addAudioSprite: function (key, config)
     {
