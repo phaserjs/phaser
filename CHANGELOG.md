@@ -11,6 +11,7 @@
 * The Spine Game Object will no longer set the default skin name to be 'default', it will leave the name empty. Fix #4764 (thanks @Jonchun @badlogic)
 * Thanks to a fix inside the Container WebGLRenderer, a bug was crushed which involved multiple Containers in a Scene, with Spine objects, from causing run-time errors. Fix #4710 (thanks @nalgorry)
 * Using `Loader.setPath` to define the Spine assets locations could error if trying to load multiple files from different folders. It will now retain the path state at the time of invocation, rather than during the load.
+* When loading Spine files that used the same internal image file names, only the first file would successfully load. Now, all files load correctly.
 
 ### Facebook Instant Games Plugin
 
@@ -33,6 +34,7 @@
 * The `Blitter.dirty` flag is no longer set if the render state of a Bob is changed to make it invisible (thanks @rexrainbow)
 * `WebGLPipeline.addAttribute` will now automatically update the vertextComponentCount for you, without you having to do it manually any more (thanks @yhwh)
 * `MultiFile` has three new internal properties: `baseURL`, `path` and `prefix` which allow them to retain the state of the loader at the time of creation, to be passed on to all child-files. Fix #4679.
+* `LoaderPlugin` and `MultiFile` have a new private property `multiKeyIndex` which multi-files use and increment when batching sub-file loads.
 
 ### Bug Fixes
 
@@ -49,6 +51,7 @@
 * The Container WebGLRenderer will now handle child mask batching properly, based on the renderers current mask.
 * The Container WebGLRenderer will now handle child new type switching, allowing you to carry on with a batch of same-type Game Objects even if they're nested within Containers. Fix #4710 (thanks @nalgorry)
 * `MultiAtlasFiles` that loaded their own external images would obtain incorrect path and URL values if the path had been changed by another file in the queue. They now retain the loader state and apply it to all child files during load.
+* If more than one `MultiAtlasFile` used the same internal file name for its images, subsequent multi-atlases would fail to load. Fix #4330 (thanks @giviz)
 
 ### Examples, Documentation and TypeScript
 
