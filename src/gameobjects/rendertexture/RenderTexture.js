@@ -517,37 +517,46 @@ var RenderTexture = new Class({
         var gl = this.gl;
         var frame = this.frame;
 
+        this.camera.preRender(1, 1);
+
         if (gl)
         {
-            var renderer = this.renderer;
-   
-            var bounds = this.getBounds();
+            var cx = this.camera._cx;
+            var cy = this.camera._cy;
+            var cw = this.camera._cw;
+            var ch = this.camera._ch;
 
-            renderer.setFramebuffer(this.framebuffer, true);
+            this.renderer.setFramebuffer(this.framebuffer, false);
 
-            if (width !== frame.source.width || height !== frame.source.height)
-            {
-                gl.scissor(x + frame.cutX, y + frame.cutY, width, height);
-            }
+            this.renderer.pushScissor(cx, cy, cw, ch, ch);
 
-            this.pipeline.drawFillRect(
-                bounds.x, bounds.y, bounds.right, bounds.bottom,
+            var pipeline = this.pipeline;
+    
+            pipeline.projOrtho(0, this.texture.width, 0, this.texture.height, -1000.0, 1000.0);
+
+            pipeline.drawFillRect(
+                x, y, width, height,
                 Utils.getTintFromFloats(r / 255, g / 255, b / 255, 1),
                 alpha
             );
 
-            if (width !== frame.source.width || height !== frame.source.height)
-            {
-                gl.scissor(0, 0, frame.source.width, frame.source.height);
-            }
-    
-            this.renderer.setFramebuffer(null, true);
+            this.renderer.setFramebuffer(null, false);
+
+            this.renderer.popScissor();
+
+            pipeline.projOrtho(0, pipeline.width, pipeline.height, 0, -1000.0, 1000.0);
         }
         else
         {
+            this.renderer.setContext(this.context);
+
             this.context.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
             this.context.fillRect(x + frame.cutX, y + frame.cutY, width, height);
+
+            this.renderer.setContext();
         }
+
+        this.dirty = true;
 
         return this;
     },
