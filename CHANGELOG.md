@@ -52,6 +52,7 @@
 * The Container WebGLRenderer will now handle child new type switching, allowing you to carry on with a batch of same-type Game Objects even if they're nested within Containers. Fix #4710 (thanks @nalgorry)
 * `MultiAtlasFiles` that loaded their own external images would obtain incorrect path and URL values if the path had been changed by another file in the queue. They now retain the loader state and apply it to all child files during load.
 * If more than one `MultiAtlasFile` used the same internal file name for its images, subsequent multi-atlases would fail to load. Fix #4330 (thanks @giviz)
+* `MultiAtlasFiles` would incorrectly add the atlas JSON into the JSON cache, causing you to not be able to destroy and reload the texture using the same atlas key as before. Fix #4720 (thanks @giviz)
 
 ### Examples, Documentation and TypeScript
 
