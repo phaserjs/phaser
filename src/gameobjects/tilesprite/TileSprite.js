@@ -406,6 +406,15 @@ var TileSprite = new Class({
 
         var frame = this.displayFrame;
 
+        if (frame.source.isRenderTexture || frame.source.isGLTexture)
+        {
+            console.warn('TileSprites can only use Image or Canvas based textures');
+
+            this.dirty = false;
+
+            return;
+        }
+
         var ctx = this.fillContext;
         var canvas = this.fillCanvas;
 
