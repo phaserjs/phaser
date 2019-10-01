@@ -12,7 +12,6 @@ var CONST = require('../../const');
 var GetBlendModes = require('./utils/GetBlendModes');
 var ScaleEvents = require('../../scale/events');
 var ScaleModes = require('../ScaleModes');
-var Smoothing = require('../../display/canvas/Smoothing');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 
 /**
@@ -94,15 +93,6 @@ var CanvasRenderer = new Class({
         };
 
         /**
-         * The scale mode which should be used by the CanvasRenderer.
-         *
-         * @name Phaser.Renderer.Canvas.CanvasRenderer#scaleMode
-         * @type {integer}
-         * @since 3.0.0
-         */
-        this.scaleMode = (game.config.antialias) ? ScaleModes.LINEAR : ScaleModes.NEAREST;
-
-        /**
          * The canvas element which the Game uses.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#gameCanvas
@@ -135,6 +125,15 @@ var CanvasRenderer = new Class({
         this.currentContext = this.gameContext;
 
         /**
+         * Should the Canvas use Image Smoothing or not when drawing Sprites?
+         *
+         * @name Phaser.Renderer.Canvas.CanvasRenderer#antialias
+         * @type {boolean}
+         * @since 3.20.0
+         */
+        this.antialias = game.config.antialias;
+
+        /**
          * The blend modes supported by the Canvas Renderer.
          *
          * This object maps the {@link Phaser.BlendModes} to canvas compositing operations.
@@ -144,19 +143,6 @@ var CanvasRenderer = new Class({
          * @since 3.0.0
          */
         this.blendModes = GetBlendModes();
-
-        // image-rendering: optimizeSpeed;
-        // image-rendering: pixelated;
-
-        /**
-         * The scale mode currently in use by the Canvas Renderer.
-         *
-         * @name Phaser.Renderer.Canvas.CanvasRenderer#currentScaleMode
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.currentScaleMode = 0;
 
         /**
          * Details about the currently scheduled snapshot.
@@ -269,12 +255,6 @@ var CanvasRenderer = new Class({
     {
         this.width = width;
         this.height = height;
-
-        //  Resizing a canvas will reset imageSmoothingEnabled (and probably other properties)
-        if (this.scaleMode === ScaleModes.NEAREST)
-        {
-            Smoothing.disable(this.gameContext);
-        }
     },
 
     /**
@@ -782,6 +762,8 @@ var CanvasRenderer = new Class({
         ctx.globalCompositeOperation = this.blendModes[sprite.blendMode];
 
         ctx.globalAlpha = alpha;
+
+        ctx.imageSmoothingEnabled = !(!this.antialias || frame.source.scaleMode);
 
         ctx.drawImage(frame.source.image, frameX, frameY, frameWidth, frameHeight, x, y, frameWidth / res, frameHeight / res);
 
