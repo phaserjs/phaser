@@ -147,7 +147,7 @@ var TextureSource = new Class({
          * @type {boolean}
          * @since 3.19.0
          */
-        this.isGLTexture = (source instanceof WebGLTexture);
+        this.isGLTexture = (window.hasOwnProperty('WebGLTexture') && source instanceof WebGLTexture);
 
         /**
          * Are the source image dimensions a power of two?
