@@ -235,6 +235,8 @@ var TextureSource = new Class({
         {
             this.renderer.setTextureFilter(this.glTexture, filterMode);
         }
+
+        this.scaleMode = filterMode;
     },
 
     /**
