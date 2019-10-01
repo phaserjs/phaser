@@ -6,7 +6,6 @@
 
 var BlendModes = require('../renderer/BlendModes');
 var GetAdvancedValue = require('../utils/object/GetAdvancedValue');
-var ScaleModes = require('../renderer/ScaleModes');
 
 /**
  * Builds a Game Object using the provided configuration object.
@@ -94,10 +93,6 @@ var BuildGameObject = function (scene, gameObject, config)
 
         gameObject.setOrigin(ox, oy);
     }
-
-    //  ScaleMode
-
-    gameObject.scaleMode = GetAdvancedValue(config, 'scaleMode', ScaleModes.DEFAULT);
 
     //  BlendMode
 
