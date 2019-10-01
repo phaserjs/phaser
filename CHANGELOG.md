@@ -62,6 +62,12 @@ In combination these updates fix issues #4732 and #4672. My thanks to @BenjaminD
 * The `CanvasRenderer.currentScaleMode` property has been removed as it was never set or used internally.
 * The `BuildGameObject` function will no longer set `scaleMode` because it's not a valid Game Object property.
 * `CanvasRenderer.antialias` is a new property, populated by the game config property of the same name (or via the `pixelArt` property) that will tell the canvas renderer what to set image interpolation to during rendering of Sprites.
+* `SetTransform` will now set the imageSmoothingEnabled context value based on the renderer and texture source scale mode.
+* The Blitter Canvas Renderer will now respect the game config anti-alias / pixel art settings and render accordingly.
+* The Particle Emitter Canvas Renderer will now respect the game config anti-alias / pixel art settings and render accordingly.
+* The Static Tilemap Canvas Renderer will now respect the game config anti-alias / pixel art settings and render accordingly.
+* The Dynamic Tilemap Canvas Renderer will now respect the game config anti-alias / pixel art settings and render accordingly.
+* All Game Objects that use the Canvas Set Transform function (which is most of them) will aos now respect the game config anti-alias / pixel art settings and render accordingly. This means you can now have properly scaled Bitmap Text, Text, Sprites, Render Textures, etc when pixel art is enabled in your game. Fix #4701 (thanks @agar3s)
 
 ### Bug Fixes
 
