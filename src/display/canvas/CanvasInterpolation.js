@@ -22,7 +22,7 @@ var CanvasInterpolation = {
      */
     setCrisp: function (canvas)
     {
-        var types = [ 'optimizeSpeed', 'crisp-edges', '-moz-crisp-edges', '-webkit-optimize-contrast', 'optimize-contrast', 'pixelated' ];
+        var types = [ 'optimizeSpeed', '-moz-crisp-edges', '-o-crisp-edges', '-webkit-optimize-contrast', 'optimize-contrast', 'crisp-edges', 'pixelated' ];
 
         types.forEach(function (type)
         {
