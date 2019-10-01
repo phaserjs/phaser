@@ -1047,6 +1047,7 @@ var World = new Class({
         if (this.stepsLastFrame)
         {
             this.stepsLastFrame = 0;
+
             for (i = 0; i < len; i++)
             {
                 body = bodies[i];
