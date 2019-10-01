@@ -38,8 +38,10 @@ var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, ca
         return;
     }
 
-    //  Blend Mode
+    //  Blend Mode + Scale Mode
     ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
+
+    ctx.imageSmoothingEnabled = !(!renderer.antialias || src.frame.source.scaleMode);
 
     var cameraScrollX = src.x - camera.scrollX * src.scrollFactorX;
     var cameraScrollY = src.y - camera.scrollY * src.scrollFactorY;
