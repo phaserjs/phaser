@@ -23,7 +23,7 @@ var SetTransform = require('../../../renderer/canvas/utils/SetTransform');
  */
 var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    var text = src.text;
+    var text = src._text;
     var textLength = text.length;
 
     var ctx = renderer.currentContext;
@@ -38,16 +38,13 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
     var displayCallback = src.displayCallback;
     var callbackData = src.callbackData;
 
-    var cameraScrollX = camera.scrollX * src.scrollFactorX;
-    var cameraScrollY = camera.scrollY * src.scrollFactorY;
-
     var chars = src.fontData.chars;
     var lineHeight = src.fontData.lineHeight;
+    var letterSpacing = src._letterSpacing;
 
     var xAdvance = 0;
     var yAdvance = 0;
 
-    var indexCount = 0;
     var charCode = 0;
 
     var glyph = null;
@@ -68,7 +65,30 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
     var textureY = textureFrame.cutY;
 
     var rotation = 0;
-    var scale = (src.fontSize / src.fontData.size);
+    var scale = 0;
+    var baseScale = (src._fontSize / src.fontData.size);
+
+    var align = src._align;
+    var currentLine = 0;
+    var lineOffsetX = 0;
+
+    //  Update the bounds - skipped internally if not dirty
+    src.getTextBounds(false);
+
+    var lineData = src._bounds.lines;
+
+    if (align === 1)
+    {
+        lineOffsetX = (lineData.longest - lineData.lengths[0]) / 2;
+    }
+    else if (align === 2)
+    {
+        lineOffsetX = (lineData.longest - lineData.lengths[0]);
+    }
+
+    ctx.translate(-src.displayOriginX, -src.displayOriginY);
+
+    var roundPixels = camera.roundPixels;
 
     if (src.cropWidth > 0 && src.cropHeight > 0)
     {
@@ -77,20 +97,31 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
         ctx.clip();
     }
 
-    for (var index = 0; index < textLength; ++index)
+    for (var i = 0; i < textLength; i++)
     {
         //  Reset the scale (in case the callback changed it)
-        scale = (src.fontSize / src.fontData.size);
+        scale = baseScale;
         rotation = 0;
 
-        charCode = text.charCodeAt(index);
+        charCode = text.charCodeAt(i);
 
         if (charCode === 10)
         {
+            currentLine++;
+
+            if (align === 1)
+            {
+                lineOffsetX = (lineData.longest - lineData.lengths[currentLine]) / 2;
+            }
+            else if (align === 2)
+            {
+                lineOffsetX = (lineData.longest - lineData.lengths[currentLine]);
+            }
+
             xAdvance = 0;
-            indexCount = 0;
             yAdvance += lineHeight;
             lastGlyph = null;
+
             continue;
         }
 
@@ -107,10 +138,8 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
         glyphW = glyph.width;
         glyphH = glyph.height;
 
-        x = (indexCount + glyph.xOffset + xAdvance) - src.scrollX;
+        x = (glyph.xOffset + xAdvance) - src.scrollX;
         y = (glyph.yOffset + yAdvance) - src.scrollY;
-
-        //  This could be optimized so that it doesn't even bother drawing it if the x/y is out of range
 
         if (lastGlyph !== null)
         {
@@ -120,7 +149,7 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
 
         if (displayCallback)
         {
-            callbackData.index = index;
+            callbackData.index = i;
             callbackData.charCode = charCode;
             callbackData.x = x;
             callbackData.y = y;
@@ -139,10 +168,19 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
         x *= scale;
         y *= scale;
 
-        x -= cameraScrollX;
-        y -= cameraScrollY;
+        x += lineOffsetX;
 
-        if (camera.roundPixels)
+        xAdvance += glyph.xAdvance + letterSpacing;
+        lastGlyph = glyph;
+        lastCharCode = charCode;
+
+        //  Nothing to render or a space? Then skip to the next glyph
+        if (glyphW === 0 || glyphH === 0 || charCode === 32)
+        {
+            continue;
+        }
+
+        if (roundPixels)
         {
             x = Math.round(x);
             y = Math.round(y);
@@ -159,14 +197,8 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
         ctx.drawImage(image, glyphX, glyphY, glyphW, glyphH, 0, 0, glyphW, glyphH);
 
         ctx.restore();
-        
-        xAdvance += glyph.xAdvance;
-        indexCount += 1;
-        lastGlyph = glyph;
-        lastCharCode = charCode;
     }
 
-    //  Restore the context saved in SetTransform
     ctx.restore();
 };
 
