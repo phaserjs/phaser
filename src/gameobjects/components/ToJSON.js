@@ -37,7 +37,6 @@ var ToJSON = function (gameObject)
         rotation: gameObject.rotation,
         alpha: gameObject.alpha,
         visible: gameObject.visible,
-        scaleMode: gameObject.scaleMode,
         blendMode: gameObject.blendMode,
         textureKey: '',
         frameKey: '',
