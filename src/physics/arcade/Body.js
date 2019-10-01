@@ -159,6 +159,15 @@ var Body = new Class({
         this.prev = new Vector2(gameObject.x, gameObject.y);
 
         /**
+         * The position of this Body during the previous frame.
+         * 
+         * @name Phaser.Physics.Arcade.Body#prevFrame
+         * @type {Phaser.Math.Vector2}
+         * @author Benjamin D. Richards <benjamindrichards@gmail.com>
+         */
+        this.prevFrame = new Vector2(gameObject.x, gameObject.y);
+
+        /**
          * Whether this Body's `rotation` is affected by its angular acceleration and angular velocity.
          *
          * @name Phaser.Physics.Arcade.Body#allowRotation
@@ -696,17 +705,6 @@ var Body = new Class({
         this.physicsType = CONST.DYNAMIC_BODY;
 
         /**
-         * Whether the Body's position needs updating from its Game Object.
-         *
-         * @name Phaser.Physics.Arcade.Body#_reset
-         * @type {boolean}
-         * @private
-         * @default true
-         * @since 3.0.0
-         */
-        this._reset = true;
-
-        /**
          * Cached horizontal scale of the Body's Game Object.
          *
          * @name Phaser.Physics.Arcade.Body#_sx
@@ -908,10 +906,12 @@ var Body = new Class({
 
         this.preRotation = this.rotation;
 
-        if (this._reset)
+        if (this.moves)
         {
             this.prev.x = this.position.x;
             this.prev.y = this.position.y;
+            this.prevFrame.x = this.position.x;
+            this.prevFrame.y = this.position.y;
         }
 
         if (willStep)
@@ -935,6 +935,9 @@ var Body = new Class({
      */
     update: function (delta)
     {
+        this.prev.x = this.position.x;
+        this.prev.y = this.position.y;
+
         if (this.moves)
         {
             this.world.updateMotion(this, delta);
@@ -974,8 +977,8 @@ var Body = new Class({
      */
     postUpdate: function ()
     {
-        var dx = this.position.x - this.prev.x;
-        var dy = this.position.y - this.prev.y;
+        var dx = this.position.x - this.prevFrame.x;
+        var dy = this.position.y - this.prevFrame.y;
 
         if (this.moves)
         {
@@ -1008,8 +1011,6 @@ var Body = new Class({
 
             this.gameObject.x += dx;
             this.gameObject.y += dy;
-
-            this._reset = true;
         }
 
         if (dx < 0)
@@ -1030,16 +1031,10 @@ var Body = new Class({
             this.facing = CONST.FACING_DOWN;
         }
 
-        this._dx = dx;
-        this._dy = dy;
-
         if (this.allowRotation)
         {
             this.gameObject.angle += this.deltaZ();
         }
-
-        this.prev.x = this.position.x;
-        this.prev.y = this.position.y;
     },
 
     /**

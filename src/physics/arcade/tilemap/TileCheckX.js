@@ -39,7 +39,7 @@ var TileCheckX = function (body, tile, tileLeft, tileRight, tileBias, isLayer)
         collideRight = true;
     }
 
-    if (body.deltaX() < 0 && !body.blocked.left && collideRight && body.checkCollision.left)
+    if (body.deltaX() < 0 && collideRight && body.checkCollision.left)
     {
         //  Body is moving LEFT
         if (faceRight && body.x < tileRight)
@@ -52,7 +52,7 @@ var TileCheckX = function (body, tile, tileLeft, tileRight, tileBias, isLayer)
             }
         }
     }
-    else if (body.deltaX() > 0 && !body.blocked.right && collideLeft && body.checkCollision.right)
+    else if (body.deltaX() > 0 && collideLeft && body.checkCollision.right)
     {
         //  Body is moving RIGHT
         if (faceLeft && body.right > tileLeft)
