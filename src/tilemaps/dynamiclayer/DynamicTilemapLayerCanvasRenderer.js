@@ -68,6 +68,11 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
 
     var alpha = camera.alpha * src.alpha;
 
+    if (!renderer.antialias || src.scaleX > 1 || src.scaleY > 1)
+    {
+        ctx.imageSmoothingEnabled = false;
+    }
+
     for (var i = 0; i < tileCount; i++)
     {
         var tile = renderTiles[i];
