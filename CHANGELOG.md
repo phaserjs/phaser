@@ -55,6 +55,13 @@ In combination these updates fix issues #4732 and #4672. My thanks to @BenjaminD
 * `LoaderPlugin` and `MultiFile` have a new private property `multiKeyIndex` which multi-files use and increment when batching sub-file loads.
 * TileSprites will now throw a console warning if you try to use a RenderTexture or GLTexture as their frame source. Fix #4719 (thanks @pavel-shirobok)
 * `TextureSource.isGLTexture` now checks if the browser supports `WebGLTexture` before checking to see if source is an instance of one. This should fix issues with Phaser in HEADLESS mode running under node / jsdom, or where WebGLTexture isn't present. Fix #4711 (thanks @tsphillips)
+* `GameObject.ToJSON` will no longer output the `scaleMode` in the json because it's not a valid Game Object property.
+* `TextureSource.setFilter` will now set the `scaleMode` to the given filter.
+* `CanvasInterpolation` has updated the order of the CSS properties so that `crisp-edges` comes after the browser prefix versions.
+* The `CanvasRenderer.scaleMode` property has been removed as it was never set or used internally.
+* The `CanvasRenderer.currentScaleMode` property has been removed as it was never set or used internally.
+* The `BuildGameObject` function will no longer set `scaleMode` because it's not a valid Game Object property.
+* `CanvasRenderer.antialias` is a new property, populated by the game config property of the same name (or via the `pixelArt` property) that will tell the canvas renderer what to set image interpolation to during rendering of Sprites.
 
 ### Bug Fixes
 
