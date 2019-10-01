@@ -1,5 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Benjamin D. Richards <benjamindrichards@gmail.com>
  * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
@@ -163,7 +164,7 @@ var Body = new Class({
          * 
          * @name Phaser.Physics.Arcade.Body#prevFrame
          * @type {Phaser.Math.Vector2}
-         * @author Benjamin D. Richards <benjamindrichards@gmail.com>
+         * @since 3.20.0
          */
         this.prevFrame = new Vector2(gameObject.x, gameObject.y);
 
@@ -1241,6 +1242,7 @@ var Body = new Class({
         }
 
         this.prev.copy(this.position);
+        this.prevFrame.copy(this.position);
 
         this.rotation = gameObject.angle;
         this.preRotation = gameObject.angle;
