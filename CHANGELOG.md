@@ -21,6 +21,23 @@
 * `Leaderboard.getConnectedScores` incorrectly specified two parameters, neither of which were used. Fix #4702 (thanks @NokFrt)
 * `Leaderboard` extends Event Emitter, which was missing in the TypeScript defs. Fix #4703 (thanks @NokFrt)
 
+### Arcade Physics Updates
+
+@BenjaminDRichards and the GameFroot team contributed the following updates to Arcade Physics, which fixes 3 issues encountered when the framerate drops below 60 (technically, any time when multiple physics steps run per frame, so if physics FPS is above 60 this will also occur.)
+
+Issue 1: Friction starts to flip out. Objects on moving platforms get pushed ahead of the platform and "catch" on the leading edge.
+Issue 2: Physics objects start to dip into the floor. In the "Before" demo, the camera is locked to the player, so this appears as the entire world starting to shake up and down.
+Issue 3: When objects dip into the floor, their "rest velocity" is non-zero. This can affect debug and other logic.
+
+* `Body.prevFrame` is a new vector allowing a Body to distinguish between frame-length changes and step-length changes. Several steps may run for every frame, particularly when fps is low.
+* `Body._reset` flag was removed and replaced it with a check of `Body.moves`. The flag only turned on when `moves` was true, and never turned off.
+* Added a reset of `prev` in Arcade.Body#step. This fixes the friction issue.
+* Stopped the `Body.postUpdate` method from setting `_dx`, `_dy`, and `prev`. They remain in the state they were at the end of the last physics step. This will affect the delta methods, which are documented to provide step-based data (not frame-based data); they now do so. However, because several steps may run per frame, you can't interrogate every step unless you're running functions based on physics events like collisions. You'll just see the latest step. This should partially balance out the extra load of resetting prev.
+* Added a zero-out of stepsLastFrame in Arcade.World#postUpdate, which would otherwise never zero out and keep running at least one pass per frame. This should improve performance when frames can be skipped.
+* Removed `blocked` checks from `TileCheckX` and `TileCheckY`. Originally, this prevented multiple checks when an object had come to rest on a floor. However, when multiple steps run per frame, the object will accelerate again, the floor won't stop it on steps 2+, and it will end the frame a short distance into the floor. Removing the blocked checks will fix the floor dip issue and the rest velocity issue. Although this opens up multiple checks, this is probably very rare: how many times does an object hit two different floors in a single frame?
+
+In combination these updates fix issues #4732 and #4672. My thanks to @BenjaminDRichards and @falifm.
+
 ### New Features
 
 * `GameConfig.antialiasGL` is a new boolean that allows you to set the `antialias` property of the WebGL context during creation, without impacting any subsequent textures or the canvas CSS.
