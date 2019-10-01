@@ -14,6 +14,7 @@
  * 4. Sets the alpha value of the context to be that used by the Game Object combined with the Camera.
  * 5. Saves the context state.
  * 6. Sets the final matrix values into the context via setTransform.
+ * 7. If Renderer.antialias, or the frame.source.scaleMode is set, then imageSmoothingEnabled is set.
  * 
  * This function is only meant to be used internally. Most of the Canvas Renderer classes use it.
  *
@@ -72,6 +73,8 @@ var SetTransform = function (renderer, ctx, src, camera, parentMatrix)
     ctx.save();
 
     calcMatrix.setToContext(ctx);
+
+    ctx.imageSmoothingEnabled = !(!renderer.antialias || (src.frame && src.frame.source.scaleMode));
 
     return true;
 };
