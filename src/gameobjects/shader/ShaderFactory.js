@@ -22,13 +22,14 @@ var GameObjectFactory = require('../GameObjectFactory');
  * @param {number} [width=128] - The width of the Game Object.
  * @param {number} [height=128] - The height of the Game Object.
  * @param {string[]} [textures] - Optional array of texture keys to bind to the iChannel0...3 uniforms. The textures must already exist in the Texture Manager.
+ * @param {object} [textureData] - Optional additional texture data.
  *
  * @return {Phaser.GameObjects.Shader} The Game Object that was created.
  */
 if (typeof WEBGL_RENDERER)
 {
-    GameObjectFactory.register('shader', function (key, x, y, width, height, textures)
+    GameObjectFactory.register('shader', function (key, x, y, width, height, textures, textureData)
     {
-        return this.displayList.add(new Shader(this.scene, key, x, y, width, height, textures));
+        return this.displayList.add(new Shader(this.scene, key, x, y, width, height, textures, textureData));
     });
 }
