@@ -11,7 +11,6 @@ var Class = require('../../utils/Class');
 var CONST = require('../../const');
 var GetBlendModes = require('./utils/GetBlendModes');
 var ScaleEvents = require('../../scale/events');
-var ScaleModes = require('../ScaleModes');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 
 /**
