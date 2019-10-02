@@ -416,8 +416,9 @@ var Tween = new Class({
     },
 
     /**
-     * Updates the value of a property of this Tween to a new value, without adjusting the
-     * Tween duration or current progress.
+     * Updates the 'end' value of the given property across all matching targets.
+     * 
+     * Calling this does not adjust the duration of the tween, or the current progress.
      * 
      * You can optionally tell it to set the 'start' value to be the current value (before the change).
      *
