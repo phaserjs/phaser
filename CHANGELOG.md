@@ -68,6 +68,7 @@ In combination these updates fix issues #4732 and #4672. My thanks to @BenjaminD
 * The Static Tilemap Canvas Renderer will now respect the game config anti-alias / pixel art settings and render accordingly.
 * The Dynamic Tilemap Canvas Renderer will now respect the game config anti-alias / pixel art settings and render accordingly.
 * All Game Objects that use the Canvas Set Transform function (which is most of them) will aos now respect the game config anti-alias / pixel art settings and render accordingly. This means you can now have properly scaled Bitmap Text, Text, Sprites, Render Textures, etc when pixel art is enabled in your game. Fix #4701 (thanks @agar3s)
+* Containers are now able to set the alpha quadrant values (topLeft, topRight, bottomLeft and bottomRight) and have these passed onto children which are capable of supporting them, such as Sprites. Fix #4714 (thanks @MrcSnm)
 
 ### Bug Fixes
 

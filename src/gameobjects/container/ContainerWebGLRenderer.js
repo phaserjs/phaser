@@ -52,12 +52,12 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
         renderer.setBlendMode(0);
     }
 
-    var alpha = container._alpha;
+    // var alpha = container._alpha;
 
+    var alphaTopLeft = container.alphaTopLeft;
     var alphaTopRight = container.alphaTopRight;
     var alphaBottomLeft = container.alphaBottomLeft;
     var alphaBottomRight = container.alphaBottomRight;
-    var usingQuadAlpha = (alphaBottomLeft !== alpha || alphaBottomRight !== alpha || alphaTopRight !== alpha);
 
     var scrollFactorX = container.scrollFactorX;
     var scrollFactorY = container.scrollFactorY;
@@ -75,11 +75,27 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
             continue;
         }
 
-        var childAlpha = child.alpha;
-        var childAlphaTopRight = child.alphaTopRight;
-        var childAlphaBottomLeft = child.alphaBottomLeft;
-        var childAlphaBottomRight = child.alphaBottomRight;
-        var usingChildQuadAlpha = (childAlphaBottomLeft !== childAlpha || childAlphaBottomRight !== childAlpha || childAlphaTopRight !== childAlpha);
+        var childAlphaTopLeft;
+        var childAlphaTopRight;
+        var childAlphaBottomLeft;
+        var childAlphaBottomRight;
+
+        if (child.alphaTopLeft !== undefined)
+        {
+            childAlphaTopLeft = child.alphaTopLeft;
+            childAlphaTopRight = child.alphaTopRight;
+            childAlphaBottomLeft = child.alphaBottomLeft;
+            childAlphaBottomRight = child.alphaBottomRight;
+        }
+        else
+        {
+            var childAlpha = child.alpha;
+
+            childAlphaTopLeft = childAlpha;
+            childAlphaTopRight = childAlpha;
+            childAlphaBottomLeft = childAlpha;
+            childAlphaBottomRight = childAlpha;
+        }
 
         var childScrollFactorX = child.scrollFactorX;
         var childScrollFactorY = child.scrollFactorY;
@@ -118,38 +134,15 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
         //  Set parent values
         child.setScrollFactor(childScrollFactorX * scrollFactorX, childScrollFactorY * scrollFactorY);
 
-        if (usingQuadAlpha)
-        {
-            if (usingChildQuadAlpha)
-            {
-                child.setAlpha(childAlpha * alpha, childAlphaTopRight * alphaTopRight, childAlphaBottomLeft * alphaBottomLeft, childAlphaBottomRight * alphaBottomRight);
-            }
-            else
-            {
-                child.setAlpha(childAlpha * alpha, childAlpha * alphaTopRight, childAlpha * alphaBottomLeft, childAlpha * alphaBottomRight);
-            }
-        }
-        else if (usingChildQuadAlpha)
-        {
-            child.setAlpha(childAlpha * alpha, childAlphaTopRight * alpha, childAlphaBottomLeft * alpha, childAlphaBottomRight * alpha);
-        }
-        else
-        {
-            child.setAlpha(childAlpha * alpha);
-        }
+        child.setAlpha(childAlphaTopLeft * alphaTopLeft, childAlphaTopRight * alphaTopRight, childAlphaBottomLeft * alphaBottomLeft, childAlphaBottomRight * alphaBottomRight);
 
         //  Render
         child.renderWebGL(renderer, child, interpolationPercentage, camera, transformMatrix);
 
         //  Restore original values
-        if (usingChildQuadAlpha)
-        {
-            child.setAlpha(childAlpha, childAlphaTopRight, childAlphaBottomLeft, childAlphaBottomRight);
-        }
-        else
-        {
-            child.setAlpha(childAlpha);
-        }
+
+        child.setAlpha(childAlphaTopLeft, childAlphaTopRight, childAlphaBottomLeft, childAlphaBottomRight);
+
         child.setScrollFactor(childScrollFactorX, childScrollFactorY);
 
         renderer.newType = false;
