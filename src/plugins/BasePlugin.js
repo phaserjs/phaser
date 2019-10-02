@@ -44,32 +44,6 @@ var BasePlugin = new Class({
          * @since 3.8.0
          */
         this.game = pluginManager.game;
-
-        /**
-         * A reference to the Scene that has installed this plugin.
-         * Only set if it's a Scene Plugin, otherwise `null`.
-         * This property is only set when the plugin is instantiated and added to the Scene, not before.
-         * You can use it during the `boot` method.
-         *
-         * @name Phaser.Plugins.BasePlugin#scene
-         * @type {?Phaser.Scene}
-         * @protected
-         * @since 3.8.0
-         */
-        this.scene;
-
-        /**
-         * A reference to the Scene Systems of the Scene that has installed this plugin.
-         * Only set if it's a Scene Plugin, otherwise `null`.
-         * This property is only set when the plugin is instantiated and added to the Scene, not before.
-         * You can use it during the `boot` method.
-         *
-         * @name Phaser.Plugins.BasePlugin#systems
-         * @type {?Phaser.Scenes.Systems}
-         * @protected
-         * @since 3.8.0
-         */
-        this.systems;
     },
 
     /**
