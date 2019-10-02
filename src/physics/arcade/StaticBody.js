@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var CircleContains = require('../../geom/circle/Contains');
@@ -346,7 +346,7 @@ var StaticBody = new Class({
          * Whether this StaticBody is checked for collisions and for which directions. You can set `checkCollision.none = false` to disable collision checks.
          *
          * @name Phaser.Physics.Arcade.StaticBody#checkCollision
-         * @type {ArcadeBodyCollision}
+         * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.checkCollision = { none: false, up: true, down: true, left: true, right: true };
@@ -355,7 +355,7 @@ var StaticBody = new Class({
          * Whether this StaticBody has ever collided with another body and in which direction.
          *
          * @name Phaser.Physics.Arcade.StaticBody#touching
-         * @type {ArcadeBodyCollision}
+         * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.touching = { none: true, up: false, down: false, left: false, right: false };
@@ -364,7 +364,7 @@ var StaticBody = new Class({
          * Whether this StaticBody was colliding with another body during the last step or any previous step, and in which direction.
          *
          * @name Phaser.Physics.Arcade.StaticBody#wasTouching
-         * @type {ArcadeBodyCollision}
+         * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
@@ -373,7 +373,7 @@ var StaticBody = new Class({
          * Whether this StaticBody has ever collided with a tile or the world boundary.
          *
          * @name Phaser.Physics.Arcade.StaticBody#blocked
-         * @type {ArcadeBodyCollision}
+         * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.blocked = { none: true, up: false, down: false, left: false, right: false };
@@ -520,15 +520,13 @@ var StaticBody = new Class({
      *
      * @param {integer} [width] - The width of the Body in pixels. Cannot be zero. If not given, and the parent Game Object has a frame, it will use the frame width.
      * @param {integer} [height] - The height of the Body in pixels. Cannot be zero. If not given, and the parent Game Object has a frame, it will use the frame height.
-     * @param {number} [offsetX] - The horizontal offset of the Body from the Game Object's center.
-     * @param {number} [offsetY] - The vertical offset of the Body from the Game Object's center.
+     * @param {boolean} [center=true] - Modify the Body's `offset`, placing the Body's center on its Game Object's center. Only works if the Game Object has the `getCenter` method.
      *
      * @return {Phaser.Physics.Arcade.StaticBody} This Static Body object.
      */
-    setSize: function (width, height, offsetX, offsetY)
+    setSize: function (width, height, center)
     {
-        if (offsetX === undefined) { offsetX = this.offset.x; }
-        if (offsetY === undefined) { offsetY = this.offset.y; }
+        if (center === undefined) { center = true; }
 
         var gameObject = this.gameObject;
 
@@ -550,7 +548,19 @@ var StaticBody = new Class({
         this.halfWidth = Math.floor(width / 2);
         this.halfHeight = Math.floor(height / 2);
 
-        this.offset.set(offsetX, offsetY);
+        if (center && gameObject.getCenter)
+        {
+            var ox = gameObject.displayWidth / 2;
+            var oy = gameObject.displayHeight / 2;
+
+            this.position.x -= this.offset.x;
+            this.position.y -= this.offset.y;
+
+            this.offset.set(ox - this.halfWidth, oy - this.halfHeight);
+
+            this.position.x += this.offset.x;
+            this.position.y += this.offset.y;
+        }
 
         this.updateCenter();
 
@@ -638,7 +648,7 @@ var StaticBody = new Class({
         this.world.staticTree.remove(this);
 
         gameObject.setPosition(x, y);
-        
+
         gameObject.getTopLeft(this.position);
 
         this.updateCenter();
@@ -665,9 +675,9 @@ var StaticBody = new Class({
      * @method Phaser.Physics.Arcade.StaticBody#getBounds
      * @since 3.0.0
      *
-     * @param {ArcadeBodyBounds} obj - The object which will hold the coordinates of the bounds.
+     * @param {Phaser.Types.Physics.Arcade.ArcadeBodyBounds} obj - The object which will hold the coordinates of the bounds.
      *
-     * @return {ArcadeBodyBounds} The same object that was passed with `x`, `y`, `right` and `bottom` values matching the respective values of the StaticBody.
+     * @return {Phaser.Types.Physics.Arcade.ArcadeBodyBounds} The same object that was passed with `x`, `y`, `right` and `bottom` values matching the respective values of the StaticBody.
      */
     getBounds: function (obj)
     {
@@ -800,7 +810,7 @@ var StaticBody = new Class({
 
         if (this.debugShowBody)
         {
-            graphic.lineStyle(1, this.debugBodyColor, 1);
+            graphic.lineStyle(graphic.defaultStrokeWidth, this.debugBodyColor, 1);
 
             if (this.isCircle)
             {

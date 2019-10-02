@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -67,6 +67,11 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
     }
 
     var alpha = camera.alpha * src.alpha;
+
+    if (!renderer.antialias || src.scaleX > 1 || src.scaleY > 1)
+    {
+        ctx.imageSmoothingEnabled = false;
+    }
 
     for (var i = 0; i < tileCount; i++)
     {

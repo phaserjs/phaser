@@ -1,17 +1,16 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Perimeter = require('./Perimeter');
 var Point = require('../point/Point');
 
-//  Return an array of points from the perimeter of the rectangle
-//  each spaced out based on the quantity or step required
 
 /**
- * [description]
+ *  Return an array of points from the perimeter of the rectangle
+ *  each spaced out based on the quantity or step required
  *
  * @function Phaser.Geom.Rectangle.MarchingAnts
  * @since 3.0.0

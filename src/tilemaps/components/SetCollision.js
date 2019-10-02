@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var SetTileCollision = require('./SetTileCollision');
@@ -21,29 +21,35 @@ var SetLayerCollisionIndex = require('./SetLayerCollisionIndex');
  * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
  * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the update.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
+ * @param {boolean} updateLayer - If true, updates the current tiles on the layer. Set to
+ * false if no tiles have been placed for significant performance boost.
  */
-var SetCollision = function (indexes, collides, recalculateFaces, layer)
+var SetCollision = function (indexes, collides, recalculateFaces, layer, updateLayer)
 {
     if (collides === undefined) { collides = true; }
     if (recalculateFaces === undefined) { recalculateFaces = true; }
     if (!Array.isArray(indexes)) { indexes = [ indexes ]; }
+    if (updateLayer === undefined) { updateLayer = true; }
 
     // Update the array of colliding indexes
     for (var i = 0; i < indexes.length; i++)
     {
         SetLayerCollisionIndex(indexes[i], collides, layer);
     }
-
+    
     // Update the tiles
-    for (var ty = 0; ty < layer.height; ty++)
+    if (updateLayer)
     {
-        for (var tx = 0; tx < layer.width; tx++)
+        for (var ty = 0; ty < layer.height; ty++)
         {
-            var tile = layer.data[ty][tx];
-
-            if (tile && indexes.indexOf(tile.index) !== -1)
+            for (var tx = 0; tx < layer.width; tx++)
             {
-                SetTileCollision(tile, collides);
+                var tile = layer.data[ty][tx];
+
+                if (tile && indexes.indexOf(tile.index) !== -1)
+                {
+                    SetTileCollision(tile, collides);
+                }
             }
         }
     }

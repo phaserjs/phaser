@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var TileToWorldX = require('./TileToWorldX');
@@ -21,7 +21,7 @@ var ReplaceByIndex = require('./ReplaceByIndex');
  *
  * @param {(integer|array)} indexes - The tile index, or array of indexes, to create Sprites from.
  * @param {(integer|array)} replacements - The tile index, or array of indexes, to change a converted tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a one-to-one mapping with the indexes array.
- * @param {SpriteConfig} spriteConfig - The config object to pass into the Sprite creator (i.e. scene.make.sprite).
+ * @param {Phaser.Types.GameObjects.Sprite.SpriteConfig} spriteConfig - The config object to pass into the Sprite creator (i.e. scene.make.sprite).
  * @param {Phaser.Scene} [scene=scene the map is within] - The Scene to create the Sprites within.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when determining the world XY
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.

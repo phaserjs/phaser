@@ -1,35 +1,17 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @author       Benjamin D. Richards <benjamindrichards@gmail.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CircleContains = require('../../geom/circle/Contains');
 var Class = require('../../utils/Class');
 var CONST = require('./const');
+var Events = require('./events');
 var RadToDeg = require('../../math/RadToDeg');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var RectangleContains = require('../../geom/rectangle/Contains');
 var Vector2 = require('../../math/Vector2');
-
-/**
- * @typedef {object} ArcadeBodyBounds
- *
- * @property {number} x - The left edge.
- * @property {number} y - The upper edge.
- * @property {number} right - The right edge.
- * @property {number} bottom - The lower edge.
- */
-
-/**
- * @typedef {object} ArcadeBodyCollision
- *
- * @property {boolean} none - True if the Body is not colliding.
- * @property {boolean} up - True if the Body is colliding on its upper edge.
- * @property {boolean} down - True if the Body is colliding on its lower edge.
- * @property {boolean} left - True if the Body is colliding on its left edge.
- * @property {boolean} right - True if the Body is colliding on its right edge.
- */
 
 /**
  * @classdesc
@@ -176,6 +158,15 @@ var Body = new Class({
          * @since 3.0.0
          */
         this.prev = new Vector2(gameObject.x, gameObject.y);
+
+        /**
+         * The position of this Body during the previous frame.
+         * 
+         * @name Phaser.Physics.Arcade.Body#prevFrame
+         * @type {Phaser.Math.Vector2}
+         * @since 3.20.0
+         */
+        this.prevFrame = new Vector2(gameObject.x, gameObject.y);
 
         /**
          * Whether this Body's `rotation` is affected by its angular acceleration and angular velocity.
@@ -449,6 +440,19 @@ var Body = new Class({
         this.maxVelocity = new Vector2(10000, 10000);
 
         /**
+         * The maximum speed this Body is allowed to reach.
+         *
+         * If not negative it limits the scalar value of speed.
+         *
+         * Any negative value means no maximum is being applied.
+         *
+         * @name Phaser.Physics.Arcade.Body#maxSpeed
+         * @type {number}
+         * @since 3.16.0
+         */
+        this.maxSpeed = -1;
+
+        /**
          * If this Body is `immovable` and in motion, `friction` is the proportion of this Body's motion received by the riding Body on each axis, relative to 1.
          * The default value (1, 0) moves the riding Body horizontally in equal proportion to this Body and vertically not at all.
          * The horizontal component (x) is applied only when two colliding Bodies are separated vertically.
@@ -532,7 +536,7 @@ var Body = new Class({
         this.mass = 1;
 
         /**
-         * The calculated angle of this Body's velocity vector, in degrees, during the last step.
+         * The calculated angle of this Body's velocity vector, in radians, during the last step.
          *
          * @name Phaser.Physics.Arcade.Body#angle
          * @type {number}
@@ -658,7 +662,7 @@ var Body = new Class({
          * You can set `checkCollision.none = true` to disable collision checks.
          *
          * @name Phaser.Physics.Arcade.Body#checkCollision
-         * @type {ArcadeBodyCollision}
+         * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.checkCollision = { none: false, up: true, down: true, left: true, right: true };
@@ -667,7 +671,7 @@ var Body = new Class({
          * Whether this Body is colliding with another and in which direction.
          *
          * @name Phaser.Physics.Arcade.Body#touching
-         * @type {ArcadeBodyCollision}
+         * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.touching = { none: true, up: false, down: false, left: false, right: false };
@@ -676,7 +680,7 @@ var Body = new Class({
          * Whether this Body was colliding with another during the last step, and in which direction.
          *
          * @name Phaser.Physics.Arcade.Body#wasTouching
-         * @type {ArcadeBodyCollision}
+         * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
@@ -685,7 +689,7 @@ var Body = new Class({
          * Whether this Body is colliding with a tile or the world boundary.
          *
          * @name Phaser.Physics.Arcade.Body#blocked
-         * @type {ArcadeBodyCollision}
+         * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.blocked = { none: true, up: false, down: false, left: false, right: false };
@@ -702,28 +706,6 @@ var Body = new Class({
         this.syncBounds = false;
 
         /**
-         * Whether this Body is being moved by the `moveTo` or `moveFrom` methods.
-         *
-         * @name Phaser.Physics.Arcade.Body#isMoving
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.isMoving = false;
-
-        /**
-         * Whether this Body's movement by `moveTo` or `moveFrom` will be stopped by collisions with other bodies.
-         *
-         * @name Phaser.Physics.Arcade.Body#stopVelocityOnCollide
-         * @type {boolean}
-         * @default true
-         * @since 3.0.0
-         */
-        this.stopVelocityOnCollide = true;
-
-        //  read-only
-
-        /**
          * The Body's physics type (dynamic or static).
          *
          * @name Phaser.Physics.Arcade.Body#physicsType
@@ -733,17 +715,6 @@ var Body = new Class({
          * @since 3.0.0
          */
         this.physicsType = CONST.DYNAMIC_BODY;
-
-        /**
-         * Whether the Body's position needs updating from its Game Object.
-         *
-         * @name Phaser.Physics.Arcade.Body#_reset
-         * @type {boolean}
-         * @private
-         * @default true
-         * @since 3.0.0
-         */
-        this._reset = true;
 
         /**
          * Cached horizontal scale of the Body's Game Object.
@@ -881,15 +852,14 @@ var Body = new Class({
     },
 
     /**
-     * Updates the Body.
+     * Prepares the Body for a physics step by resetting the `wasTouching`, `touching` and `blocked` states.
      *
-     * @method Phaser.Physics.Arcade.Body#update
-     * @fires Phaser.Physics.Arcade.World#worldbounds
-     * @since 3.0.0
+     * This method is only called if the physics world is going to run a step this frame.
      *
-     * @param {number} delta - The delta time, in seconds, elapsed since the last frame.
+     * @method Phaser.Physics.Arcade.Body#resetFlags
+     * @since 3.18.0
      */
-    update: function (delta)
+    resetFlags: function ()
     {
         //  Store and reset collision flags
         this.wasTouching.none = this.touching.none;
@@ -915,8 +885,26 @@ var Body = new Class({
         this.overlapY = 0;
 
         this.embedded = false;
+    },
 
-        //  Updates the transform values
+    /**
+     * Syncs the position body position with the parent Game Object.
+     *
+     * This method is called every game frame, regardless if the world steps or not.
+     *
+     * @method Phaser.Physics.Arcade.Body#preUpdate
+     * @since 3.17.0
+     *
+     * @param {boolean} willStep - Will this Body run an update as well?
+     * @param {number} delta - The delta time, in seconds, elapsed since the last frame.
+     */
+    preUpdate: function (willStep, delta)
+    {
+        if (willStep)
+        {
+            this.resetFlags();
+        }
+
         this.updateBounds();
 
         var sprite = this.transform;
@@ -930,11 +918,37 @@ var Body = new Class({
 
         this.preRotation = this.rotation;
 
-        if (this._reset)
+        if (this.moves)
         {
             this.prev.x = this.position.x;
             this.prev.y = this.position.y;
+            this.prevFrame.x = this.position.x;
+            this.prevFrame.y = this.position.y;
         }
+
+        if (willStep)
+        {
+            this.update(delta);
+        }
+    },
+
+    /**
+     * Performs a single physics step and updates the body velocity, angle, speed and other properties.
+     *
+     * This method can be called multiple times per game frame, depending on the physics step rate.
+     *
+     * The results are synced back to the Game Object in `postUpdate`.
+     *
+     * @method Phaser.Physics.Arcade.Body#update
+     * @fires Phaser.Physics.Arcade.Events#WORLD_BOUNDS
+     * @since 3.0.0
+     *
+     * @param {number} delta - The delta time, in seconds, elapsed since the last frame.
+     */
+    update: function (delta)
+    {
+        this.prev.x = this.position.x;
+        this.prev.y = this.position.y;
 
         if (this.moves)
         {
@@ -952,12 +966,12 @@ var Body = new Class({
             this.angle = Math.atan2(vy, vx);
             this.speed = Math.sqrt(vx * vx + vy * vy);
 
-            //  Now the State update will throw collision checks at the Body
+            //  Now the update will throw collision checks at the Body
             //  And finally we'll integrate the new position back to the Sprite in postUpdate
 
             if (this.collideWorldBounds && this.checkWorldBounds() && this.onWorldBounds)
             {
-                this.world.emit('worldbounds', this, this.blocked.up, this.blocked.down, this.blocked.left, this.blocked.right);
+                this.world.emit(Events.WORLD_BOUNDS, this, this.blocked.up, this.blocked.down, this.blocked.left, this.blocked.right);
             }
         }
 
@@ -968,62 +982,63 @@ var Body = new Class({
     /**
      * Feeds the Body results back into the parent Game Object.
      *
+     * This method is called every game frame, regardless if the world steps or not.
+     *
      * @method Phaser.Physics.Arcade.Body#postUpdate
      * @since 3.0.0
-     *
-     * @param {boolean} resetDelta - Reset the delta properties?
      */
     postUpdate: function ()
     {
-        this._dx = this.position.x - this.prev.x;
-        this._dy = this.position.y - this.prev.y;
+        var dx = this.position.x - this.prevFrame.x;
+        var dy = this.position.y - this.prevFrame.y;
 
         if (this.moves)
         {
-            if (this.deltaMax.x !== 0 && this._dx !== 0)
+            var mx = this.deltaMax.x;
+            var my = this.deltaMax.y;
+
+            if (mx !== 0 && dx !== 0)
             {
-                if (this._dx < 0 && this._dx < -this.deltaMax.x)
+                if (dx < 0 && dx < -mx)
                 {
-                    this._dx = -this.deltaMax.x;
+                    dx = -mx;
                 }
-                else if (this._dx > 0 && this._dx > this.deltaMax.x)
+                else if (dx > 0 && dx > mx)
                 {
-                    this._dx = this.deltaMax.x;
+                    dx = mx;
                 }
             }
 
-            if (this.deltaMax.y !== 0 && this._dy !== 0)
+            if (my !== 0 && dy !== 0)
             {
-                if (this._dy < 0 && this._dy < -this.deltaMax.y)
+                if (dy < 0 && dy < -my)
                 {
-                    this._dy = -this.deltaMax.y;
+                    dy = -my;
                 }
-                else if (this._dy > 0 && this._dy > this.deltaMax.y)
+                else if (dy > 0 && dy > my)
                 {
-                    this._dy = this.deltaMax.y;
+                    dy = my;
                 }
             }
 
-            this.gameObject.x += this._dx;
-            this.gameObject.y += this._dy;
-
-            this._reset = true;
+            this.gameObject.x += dx;
+            this.gameObject.y += dy;
         }
 
-        if (this._dx < 0)
+        if (dx < 0)
         {
             this.facing = CONST.FACING_LEFT;
         }
-        else if (this._dx > 0)
+        else if (dx > 0)
         {
             this.facing = CONST.FACING_RIGHT;
         }
 
-        if (this._dy < 0)
+        if (dy < 0)
         {
             this.facing = CONST.FACING_UP;
         }
-        else if (this._dy > 0)
+        else if (dy > 0)
         {
             this.facing = CONST.FACING_DOWN;
         }
@@ -1032,9 +1047,6 @@ var Body = new Class({
         {
             this.gameObject.angle += this.deltaZ();
         }
-
-        this.prev.x = this.position.x;
-        this.prev.y = this.position.y;
     },
 
     /**
@@ -1084,19 +1096,21 @@ var Body = new Class({
         var bx = (this.worldBounce) ? -this.worldBounce.x : -this.bounce.x;
         var by = (this.worldBounce) ? -this.worldBounce.y : -this.bounce.y;
 
+        var wasSet = false;
+
         if (pos.x < bounds.x && check.left)
         {
             pos.x = bounds.x;
             this.velocity.x *= bx;
             this.blocked.left = true;
-            this.blocked.none = false;
+            wasSet = true;
         }
         else if (this.right > bounds.right && check.right)
         {
             pos.x = bounds.right - this.width;
             this.velocity.x *= bx;
             this.blocked.right = true;
-            this.blocked.none = false;
+            wasSet = true;
         }
 
         if (pos.y < bounds.y && check.up)
@@ -1104,17 +1118,22 @@ var Body = new Class({
             pos.y = bounds.y;
             this.velocity.y *= by;
             this.blocked.up = true;
-            this.blocked.none = false;
+            wasSet = true;
         }
         else if (this.bottom > bounds.bottom && check.down)
         {
             pos.y = bounds.bottom - this.height;
             this.velocity.y *= by;
             this.blocked.down = true;
+            wasSet = true;
+        }
+
+        if (wasSet)
+        {
             this.blocked.none = false;
         }
 
-        return !this.blocked.none;
+        return wasSet;
     },
 
     /**
@@ -1133,6 +1152,7 @@ var Body = new Class({
         if (y === undefined) { y = x; }
 
         this.offset.set(x, y);
+        this.updateCenter();
 
         return this;
     },
@@ -1253,9 +1273,17 @@ var Body = new Class({
 
         gameObject.setPosition(x, y);
 
-        gameObject.getTopLeft(this.position);
+        if (gameObject.getTopLeft)
+        {
+            gameObject.getTopLeft(this.position);
+        }
+        else
+        {
+            this.position.set(x, y);
+        }
 
         this.prev.copy(this.position);
+        this.prevFrame.copy(this.position);
 
         this.rotation = gameObject.angle;
         this.preRotation = gameObject.angle;
@@ -1289,9 +1317,9 @@ var Body = new Class({
      * @method Phaser.Physics.Arcade.Body#getBounds
      * @since 3.0.0
      *
-     * @param {ArcadeBodyBounds} obj - An object to copy the values into.
+     * @param {Phaser.Types.Physics.Arcade.ArcadeBodyBounds} obj - An object to copy the values into.
      *
-     * @return {ArcadeBodyBounds} - An object with {x, y, right, bottom}.
+     * @return {Phaser.Types.Physics.Arcade.ArcadeBodyBounds} - An object with {x, y, right, bottom}.
      */
     getBounds: function (obj)
     {
@@ -1316,7 +1344,21 @@ var Body = new Class({
      */
     hitTest: function (x, y)
     {
-        return (this.isCircle) ? CircleContains(this, x, y) : RectangleContains(this, x, y);
+        if (!this.isCircle)
+        {
+            return RectangleContains(this, x, y);
+        }
+
+        //  Check if x/y are within the bounds first
+        if (this.radius > 0 && x >= this.left && x <= this.right && y >= this.top && y <= this.bottom)
+        {
+            var dx = (this.center.x - x) * (this.center.x - x);
+            var dy = (this.center.y - y) * (this.center.y - y);
+
+            return (dx + dy) <= (this.radius * this.radius);
+        }
+
+        return false;
     },
 
     /**
@@ -1469,7 +1511,26 @@ var Body = new Class({
             }
             else
             {
-                graphic.strokeRect(pos.x, pos.y, this.width, this.height);
+                //  Only draw the sides where checkCollision is true, similar to debugger in layer
+                if (this.checkCollision.up)
+                {
+                    graphic.lineBetween(pos.x, pos.y, pos.x + this.width, pos.y);
+                }
+
+                if (this.checkCollision.right)
+                {
+                    graphic.lineBetween(pos.x + this.width, pos.y, pos.x + this.width, pos.y + this.height);
+                }
+
+                if (this.checkCollision.down)
+                {
+                    graphic.lineBetween(pos.x, pos.y + this.height, pos.x + this.width, pos.y + this.height);
+                }
+
+                if (this.checkCollision.left)
+                {
+                    graphic.lineBetween(pos.x, pos.y, pos.x, pos.y + this.height);
+                }
             }
         }
 
@@ -1496,18 +1557,43 @@ var Body = new Class({
     /**
      * Sets whether this Body collides with the world boundary.
      *
+     * Optionally also sets the World Bounce values. If the `Body.worldBounce` is null, it's set to a new Vec2 first.
+     *
      * @method Phaser.Physics.Arcade.Body#setCollideWorldBounds
      * @since 3.0.0
      *
-     * @param {boolean} [value=true] - True (collisions) or false (no collisions).
+     * @param {boolean} [value=true] - `true` if this body should collide with the world bounds, otherwise `false`.
+     * @param {number} [bounceX] - If given this will be replace the `worldBounce.x` value.
+     * @param {number} [bounceY] - If given this will be replace the `worldBounce.y` value.
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setCollideWorldBounds: function (value)
+    setCollideWorldBounds: function (value, bounceX, bounceY)
     {
         if (value === undefined) { value = true; }
 
         this.collideWorldBounds = value;
+
+        var setBounceX = (bounceX !== undefined);
+        var setBounceY = (bounceY !== undefined);
+
+        if (setBounceX || setBounceY)
+        {
+            if (!this.worldBounce)
+            {
+                this.worldBounce = new Vector2();
+            }
+
+            if (setBounceX)
+            {
+                this.worldBounce.x = bounceX;
+            }
+
+            if (setBounceY)
+            {
+                this.worldBounce.y = bounceY;
+            }
+        }
 
         return this;
     },
@@ -1526,6 +1612,9 @@ var Body = new Class({
     setVelocity: function (x, y)
     {
         this.velocity.set(x, y);
+
+        x = this.velocity.x;
+        y = this.velocity.y;
 
         this.speed = Math.sqrt(x * x + y * y);
 
@@ -1546,10 +1635,10 @@ var Body = new Class({
     {
         this.velocity.x = value;
 
-        var vx = value;
-        var vy = this.velocity.y;
+        var x = value;
+        var y = this.velocity.y;
 
-        this.speed = Math.sqrt(vx * vx + vy * vy);
+        this.speed = Math.sqrt(x * x + y * y);
 
         return this;
     },
@@ -1568,10 +1657,10 @@ var Body = new Class({
     {
         this.velocity.y = value;
 
-        var vx = this.velocity.x;
-        var vy = value;
+        var x = this.velocity.x;
+        var y = value;
 
-        this.speed = Math.sqrt(vx * vx + vy * vy);
+        this.speed = Math.sqrt(x * x + y * y);
 
         return this;
     },
@@ -1590,6 +1679,23 @@ var Body = new Class({
     setMaxVelocity: function (x, y)
     {
         this.maxVelocity.set(x, y);
+
+        return this;
+    },
+
+    /**
+     * Sets the maximum speed the Body can move.
+     *
+     * @method Phaser.Physics.Arcade.Body#setMaxSpeed
+     * @since 3.16.0
+     *
+     * @param {number} value - The maximum speed value, in pixels per second. Set to a negative value to disable.
+     *
+     * @return {Phaser.Physics.Arcade.Body} This Body object.
+     */
+    setMaxSpeed: function (value)
+    {
+        this.maxSpeed = value;
 
         return this;
     },

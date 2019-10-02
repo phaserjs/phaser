@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Clone = require('./Clone');
@@ -9,6 +9,9 @@ var Clone = require('./Clone');
 /**
  * Creates a new Object using all values from obj1 and obj2.
  * If a value exists in both obj1 and obj2, the value in obj1 is used.
+ * 
+ * This is only a shallow copy. Deeply nested objects are not cloned, so be sure to only use this
+ * function on shallow objects.
  *
  * @function Phaser.Utils.Objects.Merge
  * @since 3.0.0

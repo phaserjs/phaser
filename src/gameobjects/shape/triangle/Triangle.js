@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../../utils/Class');
@@ -112,18 +112,18 @@ var Triangle = new Class({
     updateData: function ()
     {
         var path = [];
-        var rect = this.geom;
+        var tri = this.geom;
         var line = this._tempLine;
 
-        rect.getLineA(line);
+        tri.getLineA(line);
 
         path.push(line.x1, line.y1, line.x2, line.y2);
 
-        rect.getLineB(line);
+        tri.getLineB(line);
 
         path.push(line.x2, line.y2);
 
-        rect.getLineC(line);
+        tri.getLineC(line);
 
         path.push(line.x2, line.y2);
 

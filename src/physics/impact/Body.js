@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
@@ -11,28 +11,10 @@ var TYPE = require('./TYPE');
 var UpdateMotion = require('./UpdateMotion');
 
 /**
- * @callback BodyUpdateCallback
+ * @callback Phaser.Types.Physics.Impact.BodyUpdateCallback
+ * @since 3.0.0
  *
  * @param {Phaser.Physics.Impact.Body} body - [description]
- */
-
-/**
- * @typedef {object} JSONImpactBody
- * @todo Replace object types
- *
- * @property {string} name - [description]
- * @property {object} size - [description]
- * @property {object} pos - The entity's position in the game world.
- * @property {object} vel - Current velocity in pixels per second.
- * @property {object} accel - Current acceleration to be added to the entity's velocity per second. E.g. an entity with a `vel.x` of 0 and `accel.x` of 10 will have a `vel.x` of 100 ten seconds later.
- * @property {object} friction - Deceleration to be subtracted from the entity's velocity per second. Only applies if `accel` is 0.
- * @property {object} maxVel - The maximum velocity a body can move.
- * @property {number} gravityFactor - [description]
- * @property {number} bounciness - [description]
- * @property {number} minBounceVelocity - [description]
- * @property {Phaser.Physics.Impact.TYPE} type - [description]
- * @property {Phaser.Physics.Impact.TYPE} checkAgainst - [description]
- * @property {Phaser.Physics.Impact.COLLIDES} collides - [description]
  */
 
 /**
@@ -121,7 +103,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.Body#size
-         * @type {{x: number, y: number}}
+         * @type {Phaser.Types.Math.Vector2Like}
          * @since 3.0.0
          */
         this.size = { x: sx, y: sy };
@@ -130,7 +112,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.Body#offset
-         * @type {{x: number, y: number}}
+         * @type {Phaser.Types.Math.Vector2Like}
          * @since 3.0.0
          */
         this.offset = { x: 0, y: 0 };
@@ -139,7 +121,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.Body#pos
-         * @type {{x: number, y: number}}
+         * @type {Phaser.Types.Math.Vector2Like}
          * @since 3.0.0
          */
         this.pos = { x: x, y: y };
@@ -148,7 +130,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.Body#last
-         * @type {{x: number, y: number}}
+         * @type {Phaser.Types.Math.Vector2Like}
          * @since 3.0.0
          */
         this.last = { x: x, y: y };
@@ -157,7 +139,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.Body#vel
-         * @type {{x: number, y: number}}
+         * @type {Phaser.Types.Math.Vector2Like}
          * @since 3.0.0
          */
         this.vel = { x: 0, y: 0 };
@@ -166,7 +148,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.Body#accel
-         * @type {{x: number, y: number}}
+         * @type {Phaser.Types.Math.Vector2Like}
          * @since 3.0.0
          */
         this.accel = { x: 0, y: 0 };
@@ -175,7 +157,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.Body#friction
-         * @type {{x: number, y: number}}
+         * @type {Phaser.Types.Math.Vector2Like}
          * @since 3.0.0
          */
         this.friction = { x: 0, y: 0 };
@@ -184,7 +166,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.Body#maxVel
-         * @type {{x: number, y: number}}
+         * @type {Phaser.Types.Math.Vector2Like}
          * @since 3.0.0
          */
         this.maxVel = { x: world.defaults.maxVelocityX, y: world.defaults.maxVelocityY };
@@ -314,7 +296,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.Body#updateCallback
-         * @type {?BodyUpdateCallback}
+         * @type {?Phaser.Types.Physics.Impact.BodyUpdateCallback}
          * @since 3.0.0
          */
         this.updateCallback;
@@ -509,7 +491,7 @@ var Body = new Class({
      * @method Phaser.Physics.Impact.Body#toJSON
      * @since 3.0.0
      *
-     * @return {JSONImpactBody} JSON representation of this body object.
+     * @return {Phaser.Types.Physics.Impact.JSONImpactBody} JSON representation of this body object.
      */
     toJSON: function ()
     {

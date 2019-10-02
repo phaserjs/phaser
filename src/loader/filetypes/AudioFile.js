@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
@@ -11,15 +11,6 @@ var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var HTML5AudioFile = require('./HTML5AudioFile');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
-
-/**
- * @typedef {object} Phaser.Loader.FileTypes.AudioFileConfig
- *
- * @property {string} key - The key of the file. Must be unique within the Loader and Audio Cache.
- * @property {string} [urlConfig] - The absolute or relative URL to load the file from.
- * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
- * @property {AudioContext} [audioContext] - The AudioContext this file will use to process itself.
- */
 
 /**
  * @classdesc
@@ -36,9 +27,9 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @since 3.0.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {(string|Phaser.Loader.FileTypes.AudioFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|Phaser.Types.Loader.FileTypes.AudioFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {any} [urlConfig] - The absolute or relative URL to load this file from in a config object.
- * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  * @param {AudioContext} [audioContext] - The AudioContext this file will use to process itself.
  */
 var AudioFile = new Class({
@@ -207,7 +198,7 @@ AudioFile.getAudioURL = function (game, urls)
  * });
  * ```
  *
- * See the documentation for `Phaser.Loader.FileTypes.AudioFileConfig` for more details.
+ * See the documentation for `Phaser.Types.Loader.FileTypes.AudioFileConfig` for more details.
  *
  * The URLs can be relative or absolute. If the URLs are relative the `Loader.baseURL` and `Loader.path` values will be prepended to them.
  *
@@ -224,10 +215,10 @@ AudioFile.getAudioURL = function (game, urls)
  * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.0.0
  *
- * @param {(string|Phaser.Loader.FileTypes.AudioFileConfig|Phaser.Loader.FileTypes.AudioFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {(string|Phaser.Types.Loader.FileTypes.AudioFileConfig|Phaser.Types.Loader.FileTypes.AudioFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {(string|string[])} [urls] - The absolute or relative URL to load the audio files from.
  * @param {any} [config] - An object containing an `instances` property for HTML5Audio. Defaults to 1.
- * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */

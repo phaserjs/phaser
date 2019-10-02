@@ -1,11 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * @namespace Phaser.GameObjects.Graphics.Commands
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 module.exports = {
@@ -22,8 +18,6 @@ module.exports = {
     STROKE_PATH: 9,
     FILL_TRIANGLE: 10,
     STROKE_TRIANGLE: 11,
-    LINE_FX_TO: 12,
-    MOVE_FX_TO: 13,
     SAVE: 14,
     RESTORE: 15,
     TRANSLATE: 16,

@@ -1,6 +1,6 @@
 /**
  * @author       Stefan Hedman <schteppe@gmail.com> (http://steffe.se)
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 //  v0.3.0

@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Utils = require('../../renderer/webgl/Utils');
@@ -77,6 +77,12 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
             pipeline.setTexture2D(texture, 0);
         }
 
+        if (emitter.mask)
+        {
+            emitter.mask.preRenderWebGL(renderer, emitter, camera);
+            pipeline.setTexture2D(texture, 0);
+        }
+    
         var tintEffect = 0;
 
         for (var i = 0; i < particleCount; i++)
@@ -134,6 +140,12 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
             var tint = getTint(particle.tint, alpha);
 
             pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect, texture, 0);
+        }
+
+        if (emitter.mask)
+        {
+            emitter.mask.postRenderWebGL(renderer, camera);
+            pipeline.setTexture2D(texture, 0);
         }
     }
 };

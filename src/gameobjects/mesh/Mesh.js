@@ -1,13 +1,14 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
 var MeshRender = require('./MeshRender');
+var NOOP = require('../../utils/NOOP');
 
 /**
  * @classdesc
@@ -20,15 +21,11 @@ var MeshRender = require('./MeshRender');
  * @webglOnly
  * @since 3.0.0
  *
- * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
- * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.ScaleMode
  * @extends Phaser.GameObjects.Components.Size
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Transform
@@ -50,15 +47,11 @@ var Mesh = new Class({
     Extends: GameObject,
 
     Mixins: [
-        Components.Alpha,
         Components.BlendMode,
         Components.Depth,
-        Components.Flip,
         Components.GetBounds,
         Components.Mask,
-        Components.Origin,
         Components.Pipeline,
-        Components.ScaleMode,
         Components.Size,
         Components.Texture,
         Components.Transform,
@@ -157,9 +150,17 @@ var Mesh = new Class({
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
-        this.setOrigin();
         this.initPipeline();
-    }
+    },
+
+    /**
+     * This method is left intentionally empty and does not do anything.
+     * It is retained to allow a Mesh or Quad to be added to a Container.
+     * 
+     * @method Phaser.GameObjects.Mesh#setAlpha
+     * @since 3.17.0
+     */
+    setAlpha: NOOP
 
 });
 

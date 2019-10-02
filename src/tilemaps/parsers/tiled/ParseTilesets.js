@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Tileset = require('../../Tileset');
@@ -9,7 +9,7 @@ var ImageCollection = require('../../ImageCollection');
 var ParseObject = require('./ParseObject');
 
 /**
- * Tilesets & Image Collections
+ * Tilesets and Image Collections
  *
  * @function Phaser.Tilemaps.Parsers.Tiled.ParseTilesets
  * @since 3.0.0

@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var COLLIDES = require('../COLLIDES');
@@ -18,7 +18,7 @@ var COLLIDES = require('../COLLIDES');
  * The Impact Collides component.
  * Should be applied as a mixin.
  *
- * @name Phaser.Physics.Impact.Components.Collides
+ * @namespace Phaser.Physics.Impact.Components.Collides
  * @since 3.0.0
  */
 var Collides = {

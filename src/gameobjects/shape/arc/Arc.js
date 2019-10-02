@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var ArcRender = require('./ArcRender');
@@ -109,7 +109,9 @@ var Arc = new Class({
         this._iterations = 0.01;
 
         this.setPosition(x, y);
-        this.setSize(this.geom.radius, this.geom.radius);
+
+        var diameter = this.geom.radius * 2;
+        this.setSize(diameter, diameter);
 
         if (fillColor !== undefined)
         {
@@ -164,6 +166,9 @@ var Arc = new Class({
         {
             this.geom.radius = value;
 
+            var diameter = value * 2;
+            this.setSize(diameter, diameter);
+            this.updateDisplayOrigin();
             this.updateData();
         }
 
@@ -343,8 +348,8 @@ var Arc = new Class({
         var endAngle = DegToRad(this._endAngle);
         var anticlockwise = this._anticlockwise;
 
-        var x = radius / 2;
-        var y = radius / 2;
+        var x = radius;
+        var y = radius;
 
         endAngle -= startAngle;
 

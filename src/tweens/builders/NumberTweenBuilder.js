@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Defaults = require('../tween/Defaults');
@@ -15,16 +15,16 @@ var Tween = require('../tween/Tween');
 var TweenData = require('../tween/TweenData');
 
 /**
- * [description]
+ * Creates a new Number Tween.
  *
  * @function Phaser.Tweens.Builders.NumberTweenBuilder
  * @since 3.0.0
  *
- * @param {(Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline)} parent - [description]
- * @param {object} config - [description]
- * @param {Phaser.Tweens.TweenConfigDefaults} defaults - [description]
+ * @param {(Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline)} parent - The owner of the new Tween.
+ * @param {Phaser.Types.Tweens.NumberTweenBuilderConfig} config - Configuration for the new Tween.
+ * @param {Phaser.Types.Tweens.TweenConfigDefaults} defaults - Tween configuration defaults.
  *
- * @return {Phaser.Tweens.Tween} [description]
+ * @return {Phaser.Tweens.Tween} The new tween.
  */
 var NumberTweenBuilder = function (parent, config, defaults)
 {
@@ -63,9 +63,11 @@ var NumberTweenBuilder = function (parent, config, defaults)
 
     var tweenData = TweenData(
         targets[0],
+        0,
         'value',
         ops.getEnd,
         ops.getStart,
+        ops.getActive,
         ease,
         delay,
         duration,

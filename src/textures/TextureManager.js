@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var CanvasPool = require('../display/canvas/CanvasPool');
@@ -10,6 +10,8 @@ var Class = require('../utils/Class');
 var Color = require('../display/color/Color');
 var CONST = require('../const');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
+var GameEvents = require('../core/events');
 var GenerateTexture = require('../create/GenerateTexture');
 var GetValue = require('../utils/object/GetValue');
 var Parser = require('./parsers');
@@ -109,7 +111,7 @@ var TextureManager = new Class({
          */
         this._pending = 0;
 
-        game.events.once('boot', this.boot, this);
+        game.events.once(GameEvents.BOOT, this.boot, this);
     },
 
     /**
@@ -123,13 +125,13 @@ var TextureManager = new Class({
     {
         this._pending = 2;
 
-        this.on('onload', this.updatePending, this);
-        this.on('onerror', this.updatePending, this);
+        this.on(Events.LOAD, this.updatePending, this);
+        this.on(Events.ERROR, this.updatePending, this);
 
         this.addBase64('__DEFAULT', this.game.config.defaultImage);
         this.addBase64('__MISSING', this.game.config.missingImage);
 
-        this.game.events.once('destroy', this.destroy, this);
+        this.game.events.once(GameEvents.DESTROY, this.destroy, this);
     },
 
     /**
@@ -145,10 +147,10 @@ var TextureManager = new Class({
 
         if (this._pending === 0)
         {
-            this.off('onload');
-            this.off('onerror');
+            this.off(Events.LOAD);
+            this.off(Events.ERROR);
 
-            this.game.events.emit('texturesready');
+            this.emit(Events.READY);
         }
     },
 
@@ -186,6 +188,7 @@ var TextureManager = new Class({
      * step when clearing down to avoid this.
      *
      * @method Phaser.Textures.TextureManager#remove
+     * @fires Phaser.Textures.Events#REMOVE
      * @since 3.7.0
      *
      * @param {(string|Phaser.Textures.Texture)} key - The key of the Texture to remove, or a reference to it.
@@ -210,11 +213,29 @@ var TextureManager = new Class({
         //  By this point key should be a Texture, if not, the following fails anyway
         if (this.list.hasOwnProperty(key.key))
         {
-            delete this.list[key.key];
-
             key.destroy();
 
-            this.emit('removetexture', key.key);
+            this.emit(Events.REMOVE, key.key);
+        }
+
+        return this;
+    },
+
+    /**
+     * Removes a key from the Texture Manager but does not destroy the Texture that was using the key.
+     *
+     * @method Phaser.Textures.TextureManager#removeKey
+     * @since 3.17.0
+     *
+     * @param {string} key - The key to remove from the texture list.
+     *
+     * @return {Phaser.Textures.TextureManager} The Texture Manager.
+     */
+    removeKey: function (key)
+    {
+        if (this.list.hasOwnProperty(key))
+        {
+            delete this.list[key];
         }
 
         return this;
@@ -224,6 +245,9 @@ var TextureManager = new Class({
      * Adds a new Texture to the Texture Manager created from the given Base64 encoded data.
      *
      * @method Phaser.Textures.TextureManager#addBase64
+     * @fires Phaser.Textures.Events#ADD
+     * @fires Phaser.Textures.Events#ERROR
+     * @fires Phaser.Textures.Events#LOAD
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
@@ -241,7 +265,7 @@ var TextureManager = new Class({
 
             image.onerror = function ()
             {
-                _this.emit('onerror', key);
+                _this.emit(Events.ERROR, key);
             };
 
             image.onload = function ()
@@ -250,9 +274,9 @@ var TextureManager = new Class({
 
                 Parser.Image(texture, 0);
 
-                _this.emit('addtexture', key, texture);
+                _this.emit(Events.ADD, key, texture);
 
-                _this.emit('onload', key, texture);
+                _this.emit(Events.LOAD, key, texture);
             };
 
             image.src = data;
@@ -265,6 +289,10 @@ var TextureManager = new Class({
      * Gets an existing texture frame and converts it into a base64 encoded image and returns the base64 data.
      * 
      * You can also provide the image type and encoder options.
+     * 
+     * This will only work with bitmap based texture frames, such as those created from Texture Atlases.
+     * It will not work with GL Texture objects, such as Shaders, or Render Textures. For those please
+     * see the WebGL Snapshot function instead.
      *
      * @method Phaser.Textures.TextureManager#getBase64
      * @since 3.12.0
@@ -285,7 +313,11 @@ var TextureManager = new Class({
 
         var textureFrame = this.getFrame(key, frame);
 
-        if (textureFrame)
+        if (textureFrame && (textureFrame.source.isRenderTexture || textureFrame.source.isGLTexture))
+        {
+            console.warn('Cannot getBase64 from WebGL Texture');
+        }
+        else if (textureFrame)
         {
             var cd = textureFrame.canvasData;
 
@@ -316,6 +348,7 @@ var TextureManager = new Class({
      * Adds a new Texture to the Texture Manager created from the given Image element.
      *
      * @method Phaser.Textures.TextureManager#addImage
+     * @fires Phaser.Textures.Events#ADD
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
@@ -339,7 +372,39 @@ var TextureManager = new Class({
                 texture.setDataSource(dataSource);
             }
 
-            this.emit('addtexture', key, texture);
+            this.emit(Events.ADD, key, texture);
+        }
+        
+        return texture;
+    },
+
+    /**
+     * Takes a WebGL Texture and creates a Phaser Texture from it, which is added to the Texture Manager using the given key.
+     * 
+     * This allows you to then use the Texture as a normal texture for texture based Game Objects like Sprites.
+     * 
+     * This is a WebGL only feature.
+     *
+     * @method Phaser.Textures.TextureManager#addGLTexture
+     * @fires Phaser.Textures.Events#ADD
+     * @since 3.19.0
+     *
+     * @param {string} key - The unique string-based key of the Texture.
+     * @param {WebGLTexture} glTexture - The source Render Texture.
+     *
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
+     */
+    addGLTexture: function (key, glTexture, width, height)
+    {
+        var texture = null;
+
+        if (this.checkKey(key))
+        {
+            texture = this.create(key, glTexture, width, height);
+
+            texture.add('__BASE', 0, 0, 0, width, height);
+
+            this.emit(Events.ADD, key, texture);
         }
         
         return texture;
@@ -350,6 +415,7 @@ var TextureManager = new Class({
      * This allows you to then use the Render Texture as a normal texture for texture based Game Objects like Sprites.
      *
      * @method Phaser.Textures.TextureManager#addRenderTexture
+     * @fires Phaser.Textures.Events#ADD
      * @since 3.12.0
      *
      * @param {string} key - The unique string-based key of the Texture.
@@ -367,7 +433,7 @@ var TextureManager = new Class({
 
             texture.add('__BASE', 0, 0, 0, renderTexture.width, renderTexture.height);
 
-            this.emit('addtexture', key, texture);
+            this.emit(Events.ADD, key, texture);
         }
         
         return texture;
@@ -414,7 +480,7 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {integer} [width=256]- The width of the Canvas element.
+     * @param {integer} [width=256] - The width of the Canvas element.
      * @param {integer} [height=256] - The height of the Canvas element.
      *
      * @return {?Phaser.Textures.CanvasTexture} The Canvas Texture that was created, or `null` if the key is already in use.
@@ -439,6 +505,7 @@ var TextureManager = new Class({
      * and adds it to this Texture Manager, unless `skipCache` is true.
      *
      * @method Phaser.Textures.TextureManager#addCanvas
+     * @fires Phaser.Textures.Events#ADD
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
@@ -463,7 +530,7 @@ var TextureManager = new Class({
 
             this.list[key] = texture;
 
-            this.emit('addtexture', key, texture);
+            this.emit(Events.ADD, key, texture);
         }
 
         return texture;
@@ -502,6 +569,7 @@ var TextureManager = new Class({
      * This is known as a JSON Array in software such as Texture Packer.
      *
      * @method Phaser.Textures.TextureManager#addAtlasJSONArray
+     * @fires Phaser.Textures.Events#ADD
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
@@ -542,7 +610,7 @@ var TextureManager = new Class({
                 texture.setDataSource(dataSource);
             }
 
-            this.emit('addtexture', key, texture);
+            this.emit(Events.ADD, key, texture);
         }
 
         return texture;
@@ -554,6 +622,7 @@ var TextureManager = new Class({
      * This is known as a JSON Hash in software such as Texture Packer.
      *
      * @method Phaser.Textures.TextureManager#addAtlasJSONHash
+     * @fires Phaser.Textures.Events#ADD
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
@@ -588,7 +657,7 @@ var TextureManager = new Class({
                 texture.setDataSource(dataSource);
             }
 
-            this.emit('addtexture', key, texture);
+            this.emit(Events.ADD, key, texture);
         }
 
         return texture;
@@ -599,6 +668,7 @@ var TextureManager = new Class({
      * in the XML format.
      *
      * @method Phaser.Textures.TextureManager#addAtlasXML
+     * @fires Phaser.Textures.Events#ADD
      * @since 3.7.0
      *
      * @param {string} key - The unique string-based key of the Texture.
@@ -623,7 +693,7 @@ var TextureManager = new Class({
                 texture.setDataSource(dataSource);
             }
 
-            this.emit('addtexture', key, texture);
+            this.emit(Events.ADD, key, texture);
         }
 
         return texture;
@@ -634,6 +704,7 @@ var TextureManager = new Class({
      * The data must be in the form of a Unity YAML file.
      *
      * @method Phaser.Textures.TextureManager#addUnityAtlas
+     * @fires Phaser.Textures.Events#ADD
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
@@ -658,22 +729,11 @@ var TextureManager = new Class({
                 texture.setDataSource(dataSource);
             }
 
-            this.emit('addtexture', key, texture);
+            this.emit(Events.ADD, key, texture);
         }
 
         return texture;
     },
-
-    /**
-     * @typedef {object} SpriteSheetConfig
-     * 
-     * @property {integer} frameWidth - The fixed width of each frame.
-     * @property {integer} [frameHeight] - The fixed height of each frame. If not set it will use the frameWidth as the height.
-     * @property {integer} [startFrame=0] - Skip a number of frames. Useful when there are multiple sprite sheets in one Texture.
-     * @property {integer} [endFrame=-1] - The total number of frames to extract from the Sprite Sheet. The default value of -1 means "extract all frames".
-     * @property {integer} [margin=0] - If the frames have been drawn with a margin, specify the amount here.
-     * @property {integer} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
-     */
 
     /**
      * Adds a Sprite Sheet to this Texture Manager.
@@ -682,11 +742,12 @@ var TextureManager = new Class({
      * same size and cannot be trimmed or rotated.
      *
      * @method Phaser.Textures.TextureManager#addSpriteSheet
+     * @fires Phaser.Textures.Events#ADD
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
      * @param {HTMLImageElement} source - The source Image element.
-     * @param {SpriteSheetConfig} config - The configuration object for this Sprite Sheet.
+     * @param {Phaser.Types.Textures.SpriteSheetConfig} config - The configuration object for this Sprite Sheet.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
@@ -703,24 +764,11 @@ var TextureManager = new Class({
 
             Parser.SpriteSheet(texture, 0, 0, 0, width, height, config);
 
-            this.emit('addtexture', key, texture);
+            this.emit(Events.ADD, key, texture);
         }
 
         return texture;
     },
-
-    /**
-     * @typedef {object} SpriteSheetFromAtlasConfig
-     * 
-     * @property {string} atlas - The key of the Texture Atlas in which this Sprite Sheet can be found.
-     * @property {string} frame - The key of the Texture Atlas Frame in which this Sprite Sheet can be found.
-     * @property {integer} frameWidth - The fixed width of each frame.
-     * @property {integer} [frameHeight] - The fixed height of each frame. If not set it will use the frameWidth as the height.
-     * @property {integer} [startFrame=0] - Skip a number of frames. Useful when there are multiple sprite sheets in one Texture.
-     * @property {integer} [endFrame=-1] - The total number of frames to extract from the Sprite Sheet. The default value of -1 means "extract all frames".
-     * @property {integer} [margin=0] - If the frames have been drawn with a margin, specify the amount here.
-     * @property {integer} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
-     */
 
     /**
      * Adds a Sprite Sheet to this Texture Manager, where the Sprite Sheet exists as a Frame within a Texture Atlas.
@@ -729,10 +777,11 @@ var TextureManager = new Class({
      * same size and cannot be trimmed or rotated.
      *
      * @method Phaser.Textures.TextureManager#addSpriteSheetFromAtlas
+     * @fires Phaser.Textures.Events#ADD
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {SpriteSheetFromAtlasConfig} config - The configuration object for this Sprite Sheet.
+     * @param {Phaser.Types.Textures.SpriteSheetFromAtlasConfig} config - The configuration object for this Sprite Sheet.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
@@ -768,7 +817,7 @@ var TextureManager = new Class({
                 Parser.SpriteSheet(texture, 0, sheet.cutX, sheet.cutY, sheet.cutWidth, sheet.cutHeight, config);
             }
 
-            this.emit('addtexture', key, texture);
+            this.emit(Events.ADD, key, texture);
 
             return texture;
         }
@@ -915,7 +964,7 @@ var TextureManager = new Class({
      * @param {integer} x - The x coordinate of the pixel within the Texture.
      * @param {integer} y - The y coordinate of the pixel within the Texture.
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(string|integer)} frame - The string or index of the Frame.
+     * @param {(string|integer)} [frame] - The string or index of the Frame.
      *
      * @return {?Phaser.Display.Color} A Color object populated with the color values of the requested pixel,
      * or `null` if the coordinates were out of bounds.
@@ -962,7 +1011,7 @@ var TextureManager = new Class({
      * @param {integer} x - The x coordinate of the pixel within the Texture.
      * @param {integer} y - The y coordinate of the pixel within the Texture.
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(string|integer)} frame - The string or index of the Frame.
+     * @param {(string|integer)} [frame] - The string or index of the Frame.
      *
      * @return {integer} A value between 0 and 255, or `null` if the coordinates were out of bounds.
      */
@@ -1006,7 +1055,7 @@ var TextureManager = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object the texture would be set on.
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(string|integer)} frame - The string or index of the Frame.
+     * @param {(string|integer)} [frame] - The string or index of the Frame.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object the texture was set on.
      */

@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -14,7 +14,7 @@ module.exports = {
     Parse2DArray: require('./Parse2DArray'),
     ParseCSV: require('./ParseCSV'),
 
-    Impact: require('./impact/ParseWeltmeister'),
-    Tiled: require('./tiled/ParseJSONTiled')
+    Impact: require('./impact/'),
+    Tiled: require('./tiled/')
 
 };

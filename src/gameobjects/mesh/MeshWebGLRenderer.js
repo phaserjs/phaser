@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Utils = require('../../renderer/webgl/Utils');
@@ -67,7 +67,7 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     var meshVerticesLength = vertices.length;
     var vertexCount = Math.floor(meshVerticesLength * 0.5);
 
-    if (pipeline.vertexCount + vertexCount >= pipeline.vertexCapacity)
+    if (pipeline.vertexCount + vertexCount > pipeline.vertexCapacity)
     {
         pipeline.flush();
     }

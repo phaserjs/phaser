@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var GetTilesWithin = require('./GetTilesWithin');
@@ -42,8 +42,8 @@ var RenderDebug = function (graphics, styleConfig, layer)
 
     var tiles = GetTilesWithin(0, 0, layer.width, layer.height, null, layer);
 
-    graphics.translate(layer.tilemapLayer.x, layer.tilemapLayer.y);
-    graphics.scale(layer.tilemapLayer.scaleX, layer.tilemapLayer.scaleY);
+    graphics.translateCanvas(layer.tilemapLayer.x, layer.tilemapLayer.y);
+    graphics.scaleCanvas(layer.tilemapLayer.scaleX, layer.tilemapLayer.scaleY);
 
     for (var i = 0; i < tiles.length; i++)
     {

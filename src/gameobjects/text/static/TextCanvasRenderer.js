@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -21,10 +21,12 @@
  */
 var TextCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    if (src.text !== '')
+    if ((src.width === 0) || (src.height === 0))
     {
-        renderer.batchSprite(src, src.frame, camera, parentMatrix);
+        return;
     }
+
+    renderer.batchSprite(src, src.frame, camera, parentMatrix);
 };
 
 module.exports = TextCanvasRenderer;

@@ -1,29 +1,17 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../utils/Class');
 var CONST = require('./const');
+var Events = require('./events');
 var GetFastValue = require('../utils/object/GetFastValue');
 var GetURL = require('./GetURL');
 var MergeXHRSettings = require('./MergeXHRSettings');
 var XHRLoader = require('./XHRLoader');
 var XHRSettings = require('./XHRSettings');
-
-/**
- * @typedef {object} FileConfig
- *
- * @property {string} type - The file type string (image, json, etc) for sorting within the Loader.
- * @property {string} key - Unique cache key (unique within its file type)
- * @property {string} [url] - The URL of the file, not including baseURL.
- * @property {string} [path] - The path of the file, not including the baseURL.
- * @property {string} [extension] - The default extension this file uses.
- * @property {XMLHttpRequestResponseType} [responseType] - The responseType to be used by the XHR request.
- * @property {(XHRSettingsObject|false)} [xhrSettings=false] - Custom XHR Settings specific to this file and merged with the Loader defaults.
- * @property {any} [config] - A config object that can be used by file types to store transitional data.
- */
 
 /**
  * @classdesc
@@ -36,7 +24,7 @@ var XHRSettings = require('./XHRSettings');
  * @since 3.0.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - The Loader that is going to load this File.
- * @param {FileConfig} fileConfig - The file configuration object, as created by the file type.
+ * @param {Phaser.Types.Loader.FileConfig} fileConfig - The file configuration object, as created by the file type.
  */
 var File = new Class({
 
@@ -125,7 +113,7 @@ var File = new Class({
          * The merged XHRSettings for this file.
          *
          * @name Phaser.Loader.File#xhrSettings
-         * @type {XHRSettingsObject}
+         * @type {Phaser.Types.Loader.XHRSettingsObject}
          * @since 3.0.0
          */
         this.xhrSettings = XHRSettings(GetFastValue(fileConfig, 'responseType', undefined));
@@ -315,7 +303,9 @@ var File = new Class({
      */
     onLoad: function (xhr, event)
     {
-        var success = !(event.target && event.target.status !== 200);
+        var localFileOk = ((xhr.responseURL && xhr.responseURL.indexOf('file://') === 0 && event.target.status === 0));
+
+        var success = !(event.target && event.target.status !== 200) || localFileOk;
 
         //  Handle HTTP status codes of 4xx and 5xx as errors, even if xhr.onerror was not called.
         if (xhr.readyState === 4 && xhr.status >= 400 && xhr.status <= 599)
@@ -334,6 +324,7 @@ var File = new Class({
      * @method Phaser.Loader.File#onError
      * @since 3.0.0
      *
+     * @param {XMLHttpRequest} xhr - The XMLHttpRequest that caused this onload event.
      * @param {ProgressEvent} event - The DOM ProgressEvent that resulted from this error.
      */
     onError: function ()
@@ -347,6 +338,7 @@ var File = new Class({
      * Called during the file load progress. Is sent a DOM ProgressEvent.
      *
      * @method Phaser.Loader.File#onProgress
+     * @fires Phaser.Loader.Events#FILE_PROGRESS
      * @since 3.0.0
      *
      * @param {ProgressEvent} event - The DOM ProgressEvent.
@@ -360,7 +352,7 @@ var File = new Class({
 
             this.percentComplete = Math.min((this.bytesLoaded / this.bytesTotal), 1);
 
-            this.loader.emit('fileprogress', this, this.percentComplete);
+            this.loader.emit(Events.FILE_PROGRESS, this, this.percentComplete);
         }
     },
 
@@ -449,64 +441,12 @@ var File = new Class({
     },
 
     /**
-     * You can listen for this event from the LoaderPlugin. It is dispatched _every time_
-     * a file loads and is sent 3 arguments, which allow you to identify the file:
-     *
-     * ```javascript
-     * this.load.on('filecomplete', function (key, type, data) {
-     *     // Your handler code
-     * });
-     * ```
-     * 
-     * @event Phaser.Loader.File#fileCompleteEvent
-     * @param {string} key - The key of the file that just loaded and finished processing.
-     * @param {string} type - The type of the file that just loaded and finished processing.
-     * @param {any} data - The data of the file.
-     */
-
-    /**
-     * You can listen for this event from the LoaderPlugin. It is dispatched only once per
-     * file and you have to use a special listener handle to pick it up.
-     * 
-     * The string of the event is based on the file type and the key you gave it, split up
-     * using hyphens.
-     * 
-     * For example, if you have loaded an image with a key of `monster`, you can listen for it
-     * using the following:
-     *
-     * ```javascript
-     * this.load.on('filecomplete-image-monster', function (key, type, data) {
-     *     // Your handler code
-     * });
-     * ```
-     *
-     * Or, if you have loaded a texture atlas with a key of `Level1`:
-     * 
-     * ```javascript
-     * this.load.on('filecomplete-atlas-Level1', function (key, type, data) {
-     *     // Your handler code
-     * });
-     * ```
-     * 
-     * Or, if you have loaded a sprite sheet with a key of `Explosion` and a prefix of `GAMEOVER`:
-     * 
-     * ```javascript
-     * this.load.on('filecomplete-spritesheet-GAMEOVERExplosion', function (key, type, data) {
-     *     // Your handler code
-     * });
-     * ```
-     * 
-     * @event Phaser.Loader.File#singleFileCompleteEvent
-     * @param {any} data - The data of the file.
-     */
-
-    /**
      * Called once the file has been added to its cache and is now ready for deletion from the Loader.
      * It will emit a `filecomplete` event from the LoaderPlugin.
      *
      * @method Phaser.Loader.File#pendingDestroy
-     * @fires Phaser.Loader.File#fileCompleteEvent
-     * @fires Phaser.Loader.File#singleFileCompleteEvent
+     * @fires Phaser.Loader.Events#FILE_COMPLETE
+     * @fires Phaser.Loader.Events#FILE_KEY_COMPLETE
      * @since 3.7.0
      */
     pendingDestroy: function (data)
@@ -516,8 +456,8 @@ var File = new Class({
         var key = this.key;
         var type = this.type;
 
-        this.loader.emit('filecomplete', key, type, data);
-        this.loader.emit('filecomplete-' + type + '-' + key, key, type, data);
+        this.loader.emit(Events.FILE_COMPLETE, key, type, data);
+        this.loader.emit(Events.FILE_KEY_COMPLETE + type + '-' + key, key, type, data);
 
         this.loader.flagForRemoval(this);
     },
@@ -546,6 +486,8 @@ var File = new Class({
  *
  * @method Phaser.Loader.File.createObjectURL
  * @static
+ * @since 3.7.0
+ * 
  * @param {HTMLImageElement} image - Image object which 'src' attribute should be set to object URL.
  * @param {Blob} blob - A Blob object to create an object URL for.
  * @param {string} defaultType - Default mime type used if blob type is not available.
@@ -578,6 +520,8 @@ File.createObjectURL = function (image, blob, defaultType)
  *
  * @method Phaser.Loader.File.revokeObjectURL
  * @static
+ * @since 3.7.0
+ * 
  * @param {HTMLImageElement} image - Image object which 'src' attribute should be revoked.
  */
 File.revokeObjectURL = function (image)

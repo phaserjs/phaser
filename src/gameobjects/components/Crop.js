@@ -1,13 +1,13 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Provides methods used for getting and setting the texture of a Game Object.
  *
- * @name Phaser.GameObjects.Components.Crop
+ * @namespace Phaser.GameObjects.Components.Crop
  * @since 3.12.0
  */
 

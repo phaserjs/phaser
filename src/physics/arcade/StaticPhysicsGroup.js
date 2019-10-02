@@ -1,12 +1,13 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var ArcadeSprite = require('./ArcadeSprite');
 var Class = require('../../utils/Class');
 var CONST = require('./const');
+var GetFastValue = require('../../utils/object/GetFastValue');
 var Group = require('../../gameobjects/group/Group');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
 
@@ -26,8 +27,8 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  *
  * @param {Phaser.Physics.Arcade.World} world - The physics simulation.
  * @param {Phaser.Scene} scene - The scene this group belongs to.
- * @param {(Phaser.GameObjects.GameObject[]|GroupConfig|GroupCreateConfig)} [children] - Game Objects to add to this group; or the `config` argument.
- * @param {GroupConfig|GroupCreateConfig} [config] - Settings for this group.
+ * @param {(Phaser.GameObjects.GameObject[]|Phaser.Types.GameObjects.Group.GroupConfig|Phaser.Types.GameObjects.Group.GroupCreateConfig)} [children] - Game Objects to add to this group; or the `config` argument.
+ * @param {Phaser.Types.GameObjects.Group.GroupConfig|Phaser.Types.GameObjects.Group.GroupCreateConfig} [config] - Settings for this group.
  */
 var StaticPhysicsGroup = new Class({
 
@@ -55,7 +56,7 @@ var StaticPhysicsGroup = new Class({
             config.createCallback = this.createCallbackHandler;
             config.removeCallback = this.removeCallbackHandler;
             config.createMultipleCallback = this.createMultipleCallbackHandler;
-            config.classType = ArcadeSprite;
+            config.classType = GetFastValue(config, 'classType', ArcadeSprite);
         }
         else if (Array.isArray(children) && IsPlainObject(children[0]))
         {
@@ -68,7 +69,7 @@ var StaticPhysicsGroup = new Class({
                 singleConfig.createCallback = this.createCallbackHandler;
                 singleConfig.removeCallback = this.removeCallbackHandler;
                 singleConfig.createMultipleCallback = this.createMultipleCallbackHandler;
-                singleConfig.classType = ArcadeSprite;
+                singleConfig.classType = GetFastValue(singleConfig, 'classType', ArcadeSprite);
             });
         }
 

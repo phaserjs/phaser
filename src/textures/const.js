@@ -1,16 +1,14 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Filter Types.
  *
- * @name Phaser.Textures.FilterMode
- * @enum {integer}
+ * @namespace Phaser.Textures.FilterMode
  * @memberof Phaser.Textures
- * @readonly
  * @since 3.0.0
  */
 var CONST = {
@@ -19,6 +17,9 @@ var CONST = {
      * Linear filter type.
      * 
      * @name Phaser.Textures.FilterMode.LINEAR
+     * @type {integer}
+     * @const
+     * @since 3.0.0
      */
     LINEAR: 0,
 
@@ -26,6 +27,9 @@ var CONST = {
      * Nearest neighbor filter type.
      * 
      * @name Phaser.Textures.FilterMode.NEAREST
+     * @type {integer}
+     * @const
+     * @since 3.0.0
      */
     NEAREST: 1
     

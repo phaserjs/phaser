@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var OS = require('../device/OS');
@@ -42,7 +42,7 @@ var DOMContentLoaded = function (callback)
     {
         window.setTimeout(check, 20);
     }
-    else if (OS.cordova && !OS.cocoonJS)
+    else if (OS.cordova)
     {
         //  Ref. http://docs.phonegap.com/en/3.5.0/cordova_events_events.md.html#deviceready
         document.addEventListener('deviceready', check, false);

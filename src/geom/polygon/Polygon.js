@@ -1,12 +1,13 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
 var Contains = require('./Contains');
 var GetPoints = require('./GetPoints');
+var GEOM_CONST = require('../const');
 
 /**
  * @classdesc
@@ -37,6 +38,17 @@ var Polygon = new Class({
 
     function Polygon (points)
     {
+        /**
+         * The geometry constant type of this object: `GEOM_CONST.POLYGON`.
+         * Used for fast type comparisons.
+         *
+         * @name Phaser.Geom.Polygon#type
+         * @type {integer}
+         * @readonly
+         * @since 3.19.0
+         */
+        this.type = GEOM_CONST.POLYGON;
+
         /**
          * The area of this Polygon.
          *

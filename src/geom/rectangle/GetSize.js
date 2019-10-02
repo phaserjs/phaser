@@ -1,16 +1,15 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Point = require('../point/Point');
 
-//  The size of the Rectangle object, expressed as a Point object
-//  with the values of the width and height properties.
 
 /**
- * [description]
+ *  The size of the Rectangle object, expressed as a Point object
+ *  with the values of the width and height properties.
  *
  * @function Phaser.Geom.Rectangle.GetSize
  * @since 3.0.0

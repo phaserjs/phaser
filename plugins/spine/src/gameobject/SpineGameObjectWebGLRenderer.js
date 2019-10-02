@@ -1,51 +1,65 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var CounterClockwise = require('../../../../src/math/angle/CounterClockwise');
+var RadToDeg = require('../../../../src/math/RadToDeg');
+var Wrap = require('../../../../src/math/Wrap');
 
 /**
- * Renders this Game Object with the Canvas Renderer to the given Camera.
+ * Renders this Game Object with the WebGL Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
  * This method should not be called directly. It is a utility function of the Render module.
  *
- * @method Phaser.GameObjects.SpineGameObject#renderCanvas
- * @since 3.16.0
+ * @method SpineGameObject#renderWebGL
+ * @since 3.19.0
  * @private
  *
- * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
- * @param {Phaser.GameObjects.SpineGameObject} src - The Game Object being rendered in this call.
+ * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
+ * @param {SpineGameObject} src - The Game Object being rendered in this call.
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
 var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    var pipeline = renderer.currentPipeline;
     var plugin = src.plugin;
-    var mvp = plugin.mvp;
-
-    var shader = plugin.shader;
-    var batcher = plugin.batcher;
-    var runtime = src.runtime;
     var skeleton = src.skeleton;
-    var skeletonRenderer = plugin.skeletonRenderer;
+    var sceneRenderer = plugin.sceneRenderer;
 
-    if (!skeleton)
+    var GameObjectRenderMask = 15;
+
+    var willRender = !(GameObjectRenderMask !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)));
+
+    if (!skeleton || !willRender)
     {
+        //  Reset the current type
+        renderer.currentType = '';
+
+        //  If there is already a batch running, we need to close it
+        if (!renderer.nextTypeMatch)
+        {
+            //  The next object in the display list is not a Spine object, so we end the batch
+            sceneRenderer.end();
+    
+            renderer.rebindPipeline(renderer.pipelines.TextureTintPipeline);
+        }
+    
         return;
     }
 
-    renderer.clearPipeline();
+    if (renderer.newType)
+    {
+        renderer.clearPipeline();
+    }
 
     var camMatrix = renderer._tempMatrix1;
     var spriteMatrix = renderer._tempMatrix2;
     var calcMatrix = renderer._tempMatrix3;
 
-    //  - 90 degrees to account for the difference in Spine vs. Phaser rotation
-    spriteMatrix.applyITRS(src.x, src.y, src.rotation - 1.5707963267948966, src.scaleX, src.scaleY);
+    spriteMatrix.applyITRS(src.x, src.y, src.rotation, Math.abs(src.scaleX), Math.abs(src.scaleY));
 
     camMatrix.copyFrom(camera.matrix);
 
@@ -70,52 +84,79 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
         camMatrix.multiply(spriteMatrix, calcMatrix);
     }
 
-    var width = renderer.width;
-    var height = renderer.height;
+    var viewportHeight = renderer.height;
 
-    var data = calcMatrix.decomposeMatrix();
+    skeleton.x = calcMatrix.tx;
+    skeleton.y = viewportHeight - calcMatrix.ty;
 
-    mvp.ortho(0, width, 0, height, 0, 1);
-    mvp.translateXYZ(data.translateX, height - data.translateY, 0);
-    mvp.rotateZ(CounterClockwise(data.rotation));
-    mvp.scaleXYZ(data.scaleX, data.scaleY, 1);
+    skeleton.scaleX = calcMatrix.scaleX;
+    skeleton.scaleY = calcMatrix.scaleY;
 
-    //  For a Stage 1 release we'll handle it like this:
-    shader.bind();
-    shader.setUniformi(runtime.webgl.Shader.SAMPLER, 0);
-    shader.setUniform4x4f(runtime.webgl.Shader.MVP_MATRIX, mvp.val);
+    if (src.scaleX < 0)
+    {
+        skeleton.scaleX *= -1;
 
-    //  For Stage 2, we'll move to using a custom pipeline, so Spine objects are batched
+        src.root.rotation = RadToDeg(calcMatrix.rotationNormalized);
+    }
+    else
+    {
+        //  +90 degrees to account for the difference in Spine vs. Phaser rotation
+        src.root.rotation = Wrap(RadToDeg(CounterClockwise(calcMatrix.rotationNormalized)) + 90, 0, 360);
+    }
 
-    batcher.begin(shader);
+    if (src.scaleY < 0)
+    {
+        skeleton.scaleY *= -1;
 
-    skeletonRenderer.premultipliedAlpha = true;
+        if (src.scaleX < 0)
+        {
+            src.root.rotation -= (RadToDeg(calcMatrix.rotationNormalized) * 2);
+        }
+        else
+        {
+            src.root.rotation += (RadToDeg(calcMatrix.rotationNormalized) * 2);
+        }
+    }
 
-    skeletonRenderer.draw(batcher, skeleton);
+    if (camera.renderToTexture)
+    {
+        skeleton.y = calcMatrix.ty;
+        skeleton.scaleY *= -1;
+    }
 
-    batcher.end();
+    //  Add autoUpdate option
+    skeleton.updateWorldTransform();
 
-    shader.unbind();
+    if (renderer.newType)
+    {
+        sceneRenderer.begin();
+    }
+
+    //  Draw the current skeleton
+    sceneRenderer.drawSkeleton(skeleton, src.preMultipliedAlpha);
 
     if (plugin.drawDebug || src.drawDebug)
     {
-        var debugShader = plugin.debugShader;
-        var debugRenderer = plugin.debugRenderer;
-        var shapes = plugin.shapes;
+        //  Because if we don't, the bones render positions are completely wrong (*sigh*)
+        var oldX = skeleton.x;
+        var oldY = skeleton.y;
 
-        debugShader.bind();
-        debugShader.setUniform4x4f(runtime.webgl.Shader.MVP_MATRIX, mvp.val);
+        skeleton.x = 0;
+        skeleton.y = 0;
 
-        shapes.begin(debugShader);
+        sceneRenderer.drawSkeletonDebug(skeleton, src.preMultipliedAlpha);
 
-        debugRenderer.draw(shapes, skeleton);
-
-        shapes.end();
-
-        debugShader.unbind();
+        skeleton.x = oldX;
+        skeleton.y = oldY;
     }
 
-    renderer.rebindPipeline(pipeline);
+    if (!renderer.nextTypeMatch)
+    {
+        //  The next object in the display list is not a Spine object, so we end the batch
+        sceneRenderer.end();
+
+        renderer.rebindPipeline(renderer.pipelines.TextureTintPipeline);
+    }
 };
 
 module.exports = SpineGameObjectWebGLRenderer;

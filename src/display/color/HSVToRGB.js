@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var GetColor = require('./GetColor');
@@ -18,9 +18,9 @@ var GetColor = require('./GetColor');
  * @param {number} h - The hue, in the range 0 - 1. This is the base color.
  * @param {number} s - The saturation, in the range 0 - 1. This controls how much of the hue will be in the final color, where 1 is fully saturated and 0 will give you white.
  * @param {number} v - The value, in the range 0 - 1. This controls how dark the color is. Where 1 is as bright as possible and 0 is black.
- * @param {(ColorObject|Phaser.Display.Color)} [out] - A Color object to store the results in. If not given a new ColorObject will be created.
+ * @param {(Phaser.Types.Display.ColorObject|Phaser.Display.Color)} [out] - A Color object to store the results in. If not given a new ColorObject will be created.
  *
- * @return {(ColorObject|Phaser.Display.Color)} An object with the red, green and blue values set in the r, g and b properties.
+ * @return {(Phaser.Types.Display.ColorObject|Phaser.Display.Color)} An object with the red, green and blue values set in the r, g and b properties.
  */
 var HSVToRGB = function (h, s, v, out)
 {

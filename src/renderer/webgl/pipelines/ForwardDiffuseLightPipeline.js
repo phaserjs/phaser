@@ -1,8 +1,8 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Felipe Alfonso <@bitnenfer>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../../utils/Class');
@@ -178,7 +178,7 @@ var ForwardDiffuseLightPipeline = new Class({
     /**
      * Generic function for batching a textured quad
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTexture
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchTexture
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - Source GameObject

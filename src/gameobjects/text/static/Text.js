@@ -1,14 +1,14 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var AddToDOM = require('../../../dom/AddToDOM');
 var CanvasPool = require('../../../display/canvas/CanvasPool');
 var Class = require('../../../utils/Class');
 var Components = require('../../components');
-var CONST = require('../../../const');
+var GameEvents = require('../../../core/events');
 var GameObject = require('../../GameObject');
 var GetTextSize = require('../GetTextSize');
 var GetValue = require('../../../utils/object/GetValue');
@@ -27,6 +27,21 @@ var TextStyle = require('../TextStyle');
  * Because it uses the Canvas API you can take advantage of all the features this offers, such as
  * applying gradient fills to the text, or strokes, shadows and more. You can also use custom fonts
  * loaded externally, such as Google or TypeKit Web fonts.
+ * 
+ * **Important:** If the font you wish to use has a space or digit in its name, such as
+ * 'Press Start 2P' or 'Roboto Condensed', then you _must_ put the font name in quotes, either
+ * when creating the Text object, or when setting the font via `setFont` or `setFontFamily`. I.e.:
+ * 
+ * ```javascript
+ * this.add.text(0, 0, 'Hello World', { fontFamily: '"Roboto Condensed"' });
+ * ```
+ * 
+ * Equally, if you wish to provide a list of fallback fonts, then you should ensure they are all
+ * quoted properly, too:
+ * 
+ * ```javascript
+ * this.add.text(0, 0, 'Hello World', { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif' });
+ * ```
  *
  * You can only display fonts that are currently loaded and available to the browser: therefore fonts must
  * be pre-loaded. Phaser does not do ths for you, so you will require the use of a 3rd party font loader,
@@ -57,7 +72,6 @@ var TextStyle = require('../TextStyle');
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.ScaleMode
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Tint
  * @extends Phaser.GameObjects.Components.Transform
@@ -67,7 +81,7 @@ var TextStyle = require('../TextStyle');
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
  * @param {(string|string[])} text - The text this Text object will display.
- * @param {object} style - The text style configuration object.
+ * @param {Phaser.Types.GameObjects.Text.TextStyle} style - The text style configuration object.
  */
 var Text = new Class({
 
@@ -84,7 +98,6 @@ var Text = new Class({
         Components.Mask,
         Components.Origin,
         Components.Pipeline,
-        Components.ScaleMode,
         Components.ScrollFactor,
         Components.Tint,
         Components.Transform,
@@ -138,7 +151,7 @@ var Text = new Class({
          * Manages the style of this Text object.
          *
          * @name Phaser.GameObjects.Text#style
-         * @type {Phaser.GameObjects.Text.TextStyle}
+         * @type {Phaser.GameObjects.TextStyle}
          * @since 3.0.0
          */
         this.style = new TextStyle(this, style);
@@ -172,7 +185,7 @@ var Text = new Class({
          * @private
          * @since 3.12.0
          */
-        this._text = '';
+        this._text = undefined;
 
         /**
          * Specify a padding value which is added to the line width and height when calculating the Text size.
@@ -263,6 +276,8 @@ var Text = new Class({
 
         this.initRTL();
 
+        this.setText(text);
+
         if (style && style.padding)
         {
             this.setPadding(style.padding);
@@ -273,15 +288,10 @@ var Text = new Class({
             this.lineSpacing = style.lineSpacing;
         }
 
-        this.setText(text);
-
-        if (scene.sys.game.config.renderType === CONST.WEBGL)
+        scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, function ()
         {
-            scene.sys.game.renderer.onContextRestored(function ()
-            {
-                this.dirty = true;
-            }, this);
-        }
+            this.dirty = true;
+        }, this);
     },
 
     /**
@@ -519,7 +529,7 @@ var Text = new Class({
                     }
 
                     result += words[j] + ' ';
-                    spaceLeft = wordWrapWidth - wordWidth;
+                    spaceLeft = wordWrapWidth - wordWidthWithSpace;
                 }
                 else
                 {
@@ -629,6 +639,20 @@ var Text = new Class({
      *
      * If an object is given, the `fontFamily`, `fontSize` and `fontStyle`
      * properties of that object are set.
+     * 
+     * **Important:** If the font you wish to use has a space or digit in its name, such as
+     * 'Press Start 2P' or 'Roboto Condensed', then you _must_ put the font name in quotes:
+     * 
+     * ```javascript
+     * Text.setFont('"Roboto Condensed"');
+     * ```
+     * 
+     * Equally, if you wish to provide a list of fallback fonts, then you should ensure they are all
+     * quoted properly, too:
+     * 
+     * ```javascript
+     * Text.setFont('Verdana, "Times New Roman", Tahoma, serif');
+     * ```
      *
      * @method Phaser.GameObjects.Text#setFont
      * @since 3.0.0
@@ -644,6 +668,20 @@ var Text = new Class({
 
     /**
      * Set the font family.
+     * 
+     * **Important:** If the font you wish to use has a space or digit in its name, such as
+     * 'Press Start 2P' or 'Roboto Condensed', then you _must_ put the font name in quotes:
+     * 
+     * ```javascript
+     * Text.setFont('"Roboto Condensed"');
+     * ```
+     * 
+     * Equally, if you wish to provide a list of fallback fonts, then you should ensure they are all
+     * quoted properly, too:
+     * 
+     * ```javascript
+     * Text.setFont('Verdana, "Times New Roman", Tahoma, serif');
+     * ```
      *
      * @method Phaser.GameObjects.Text#setFontFamily
      * @since 3.0.0
@@ -905,14 +943,16 @@ var Text = new Class({
     },
 
     /**
-     * Set the text alignment.
-     *
-     * Expects values like `'left'`, `'right'`, `'center'` or `'justified'`.
+     * Set the alignment of the text in this Text object.
+     * 
+     * The argument can be one of: `left`, `right`, `center` or `justify`.
+     * 
+     * Alignment only works if the Text object has more than one line of text.
      *
      * @method Phaser.GameObjects.Text#setAlign
      * @since 3.0.0
      *
-     * @param {string} align - The text alignment.
+     * @param {string} [align='left'] - The text alignment for multi-line text.
      *
      * @return {Phaser.GameObjects.Text} This Text object.
      */
@@ -974,7 +1014,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setPadding
      * @since 3.0.0
      *
-     * @param {(number|object)} left - The left padding value, or a padding config object.
+     * @param {(number|Phaser.Types.GameObjects.Text.TextPadding)} left - The left padding value, or a padding config object.
      * @param {number} top - The top padding value.
      * @param {number} right - The right padding value.
      * @param {number} bottom - The bottom padding value.
@@ -1077,18 +1117,37 @@ var Text = new Class({
 
         var padding = this.padding;
 
-        var w = textSize.width + padding.left + padding.right;
-        var h = textSize.height + padding.top + padding.bottom;
+        var textWidth;
 
         if (style.fixedWidth === 0)
         {
-            this.width = w;
+            this.width = textSize.width + padding.left + padding.right;
+
+            textWidth = textSize.width;
+        }
+        else
+        {
+            this.width = style.fixedWidth;
+
+            textWidth = this.width - padding.left - padding.right;
+
+            if (textWidth < textSize.width)
+            {
+                textWidth = textSize.width;
+            }
         }
 
         if (style.fixedHeight === 0)
         {
-            this.height = h;
+            this.height = textSize.height + padding.top + padding.bottom;
         }
+        else
+        {
+            this.height = style.fixedHeight;
+        }
+
+        var w = this.width;
+        var h = this.height;
 
         this.updateDisplayOrigin();
 
@@ -1105,7 +1164,8 @@ var Text = new Class({
 
             this.frame.setSize(w, h);
 
-            style.syncFont(canvas, context); // Resizing resets the context
+            //  Because resizing the canvas resets the context
+            style.syncFont(canvas, context);
         }
         else
         {
@@ -1149,11 +1209,38 @@ var Text = new Class({
             }
             else if (style.align === 'right')
             {
-                linePositionX += textSize.width - textSize.lineWidths[i];
+                linePositionX += textWidth - textSize.lineWidths[i];
             }
             else if (style.align === 'center')
             {
-                linePositionX += (textSize.width - textSize.lineWidths[i]) / 2;
+                linePositionX += (textWidth - textSize.lineWidths[i]) / 2;
+            }
+            else if (style.align === 'justify')
+            {
+                //  To justify text line its width must be no less than 85% of defined width
+                var minimumLengthToApplyJustification = 0.85;
+
+                if (textSize.lineWidths[i] / textSize.width >= minimumLengthToApplyJustification)
+                {
+                    var extraSpace = textSize.width - textSize.lineWidths[i];
+                    var spaceSize = context.measureText(' ').width;
+                    var trimmedLine = lines[i].trim();
+                    var array = trimmedLine.split(' ');
+            
+                    extraSpace += (lines[i].length - trimmedLine.length) * spaceSize;
+            
+                    var extraSpaceCharacters = Math.floor(extraSpace / spaceSize);
+                    var idx = 0;
+
+                    while (extraSpaceCharacters > 0)
+                    {
+                        array[idx] += ' ';
+                        idx = (idx + 1) % (array.length - 1 || 1);
+                        --extraSpaceCharacters;
+                    }
+            
+                    lines[i] = array.join(' ');
+                }
             }
 
             if (this.autoRound)
@@ -1187,6 +1274,14 @@ var Text = new Class({
         }
 
         this.dirty = true;
+
+        var input = this.input;
+
+        if (input && !input.customHitArea)
+        {
+            input.hitArea.width = this.width;
+            input.hitArea.height = this.height;
+        }
 
         return this;
     },
@@ -1231,7 +1326,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#toJSON
      * @since 3.0.0
      *
-     * @return {JSONGameObject} A JSON representation of the Text object.
+     * @return {Phaser.Types.GameObjects.JSONGameObject} A JSON representation of the Text object.
      */
     toJSON: function ()
     {
@@ -1274,6 +1369,30 @@ var Text = new Class({
 
         this.texture.destroy();
     }
+
+    /**
+     * The horizontal origin of this Game Object.
+     * The origin maps the relationship between the size and position of the Game Object.
+     * The default value is 0.5, meaning all Game Objects are positioned based on their center.
+     * Setting the value to 0 means the position now relates to the left of the Game Object.
+     *
+     * @name Phaser.GameObjects.Text#originX
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+
+    /**
+     * The vertical origin of this Game Object.
+     * The origin maps the relationship between the size and position of the Game Object.
+     * The default value is 0.5, meaning all Game Objects are positioned based on their center.
+     * Setting the value to 0 means the position now relates to the top of the Game Object.
+     *
+     * @name Phaser.GameObjects.Text#originY
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
 
 });
 

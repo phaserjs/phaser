@@ -1,28 +1,14 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../../utils/Class');
+var Events = require('../events');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var ProcessKeyCombo = require('./ProcessKeyCombo');
 var ResetKeyCombo = require('./ResetKeyCombo');
-
-/**
- * @callback KeyboardKeydownCallback
- *
- * @param {KeyboardEvent} event - The Keyboard Event.
- */
-
-/**
- * @typedef {object} KeyComboConfig
- *
- * @property {boolean} [resetOnWrongKey=true] - If they press the wrong key do we reset the combo?
- * @property {number} [maxKeyDelay=0] - The max delay in ms between each key press. Above this the combo is reset. 0 means disabled.
- * @property {boolean} [resetOnMatch=false] - If previously matched and they press the first key of the combo again, will it reset?
- * @property {boolean} [deleteOnMatch=false] - If the combo matches, will it delete itself?
- */
 
 /**
  * @classdesc
@@ -55,11 +41,12 @@ var ResetKeyCombo = require('./ResetKeyCombo');
  * @class KeyCombo
  * @memberof Phaser.Input.Keyboard
  * @constructor
+ * @listens Phaser.Input.Keyboard.Events#ANY_KEY_DOWN
  * @since 3.0.0
  *
  * @param {Phaser.Input.Keyboard.KeyboardPlugin} keyboardPlugin - A reference to the Keyboard Plugin.
  * @param {(string|integer[]|object[])} keys - The keys that comprise this combo.
- * @param {KeyComboConfig} [config] - A Key Combo configuration object.
+ * @param {Phaser.Types.Input.Keyboard.KeyComboConfig} [config] - A Key Combo configuration object.
  */
 var KeyCombo = new Class({
 
@@ -235,7 +222,7 @@ var KeyCombo = new Class({
 
             if (matched)
             {
-                _this.manager.emit('keycombomatch', _this, event);
+                _this.manager.emit(Events.COMBO_MATCH, _this, event);
 
                 if (_this.resetOnMatch)
                 {
@@ -254,11 +241,12 @@ var KeyCombo = new Class({
          * @name Phaser.Input.Keyboard.KeyCombo#onKeyDown
          * @private
          * @type {KeyboardKeydownCallback}
+         * @fires Phaser.Input.Keyboard.Events#COMBO_MATCH
          * @since 3.0.0
          */
         this.onKeyDown = onKeyDownHandler;
 
-        this.manager.on('keydown', onKeyDownHandler);
+        this.manager.on(Events.ANY_KEY_DOWN, this.onKeyDown);
     },
 
     /**
@@ -289,7 +277,7 @@ var KeyCombo = new Class({
         this.enabled = false;
         this.keyCodes = [];
 
-        this.manager.off('keydown', this.onKeyDown);
+        this.manager.off(Events.ANY_KEY_DOWN, this.onKeyDown);
 
         this.manager = null;
     }

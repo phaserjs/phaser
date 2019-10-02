@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
@@ -10,16 +10,6 @@ var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
-
-/**
- * @typedef {object} Phaser.Loader.FileTypes.BinaryFileConfig
- *
- * @property {string} key - The key of the file. Must be unique within both the Loader and the Binary Cache.
- * @property {string} [url] - The absolute or relative URL to load the file from.
- * @property {string} [extension='bin'] - The default file extension to use if no url is provided.
- * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
- * @property {any} [dataType] - Optional type to cast the binary file to once loaded. For example, `Uint8Array`.
- */
 
 /**
  * @classdesc
@@ -36,9 +26,9 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @since 3.0.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {(string|Phaser.Loader.FileTypes.BinaryFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|Phaser.Types.Loader.FileTypes.BinaryFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.bin`, i.e. if `key` was "alien" then the URL will be "alien.bin".
- * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  * @param {any} [dataType] - Optional type to cast the binary file to once loaded. For example, `Uint8Array`.
  */
 var BinaryFile = new Class({
@@ -131,7 +121,7 @@ var BinaryFile = new Class({
  * });
  * ```
  *
- * See the documentation for `Phaser.Loader.FileTypes.BinaryFileConfig` for more details.
+ * See the documentation for `Phaser.Types.Loader.FileTypes.BinaryFileConfig` for more details.
  *
  * Once the file has finished loading you can access it from its Cache using its key:
  * 
@@ -158,10 +148,10 @@ var BinaryFile = new Class({
  * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.0.0
  *
- * @param {(string|Phaser.Loader.FileTypes.BinaryFileConfig|Phaser.Loader.FileTypes.BinaryFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {(string|Phaser.Types.Loader.FileTypes.BinaryFileConfig|Phaser.Types.Loader.FileTypes.BinaryFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.bin`, i.e. if `key` was "alien" then the URL will be "alien.bin".
  * @param {any} [dataType] - Optional type to cast the binary file to once loaded. For example, `Uint8Array`.
- * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */

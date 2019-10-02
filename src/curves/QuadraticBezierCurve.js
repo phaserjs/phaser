@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../utils/Class');
@@ -168,7 +168,7 @@ var QuadraticBezier = new Class({
      * @method Phaser.Curves.QuadraticBezier#toJSON
      * @since 3.2.0
      *
-     * @return {JSONCurve} The JSON object containing this curve data.
+     * @return {Phaser.Types.Curves.JSONCurve} The JSON object containing this curve data.
      */
     toJSON: function ()
     {
@@ -190,7 +190,7 @@ var QuadraticBezier = new Class({
  * @function Phaser.Curves.QuadraticBezier.fromJSON
  * @since 3.2.0
  *
- * @param {JSONCurve} data - The JSON object containing this curve data.
+ * @param {Phaser.Types.Curves.JSONCurve} data - The JSON object containing this curve data.
  *
  * @return {Phaser.Curves.QuadraticBezier} The created curve instance.
  */

@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Rectangle = require('../../geom/rectangle/Rectangle');
@@ -12,11 +12,44 @@ var Vector2 = require('../../math/Vector2');
  * Provides methods used for obtaining the bounds of a Game Object.
  * Should be applied as a mixin and not used directly.
  *
- * @name Phaser.GameObjects.Components.GetBounds
+ * @namespace Phaser.GameObjects.Components.GetBounds
  * @since 3.0.0
  */
 
 var GetBounds = {
+
+    /**
+     * Processes the bounds output vector before returning it.
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#prepareBoundsOutput
+     * @private
+     * @since 3.18.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} output - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    prepareBoundsOutput: function (output, includeParent)
+    {
+        if (includeParent === undefined) { includeParent = false; }
+
+        if (this.rotation !== 0)
+        {
+            RotateAround(output, this.x, this.y, this.rotation);
+        }
+
+        if (includeParent && this.parentContainer)
+        {
+            var parentMatrix = this.parentContainer.getBoundsTransformMatrix();
+
+            parentMatrix.transformPoint(output.x, output.y, output);
+        }
+
+        return output;
+    },
 
     /**
      * Gets the center coordinate of this Game Object, regardless of origin.
@@ -58,24 +91,35 @@ var GetBounds = {
     getTopLeft: function (output, includeParent)
     {
         if (!output) { output = new Vector2(); }
-        if (includeParent === undefined) { includeParent = false; }
 
         output.x = this.x - (this.displayWidth * this.originX);
         output.y = this.y - (this.displayHeight * this.originY);
 
-        if (this.rotation !== 0)
-        {
-            RotateAround(output, this.x, this.y, this.rotation);
-        }
+        return this.prepareBoundsOutput(output, includeParent);
+    },
 
-        if (includeParent && this.parentContainer)
-        {
-            var parentMatrix = this.parentContainer.getBoundsTransformMatrix();
+    /**
+     * Gets the top-center coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getTopCenter
+     * @since 3.18.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    getTopCenter: function (output, includeParent)
+    {
+        if (!output) { output = new Vector2(); }
 
-            parentMatrix.transformPoint(output.x, output.y, output);
-        }
+        output.x = (this.x - (this.displayWidth * this.originX)) + (this.displayWidth / 2);
+        output.y = this.y - (this.displayHeight * this.originY);
 
-        return output;
+        return this.prepareBoundsOutput(output, includeParent);
     },
 
     /**
@@ -95,24 +139,59 @@ var GetBounds = {
     getTopRight: function (output, includeParent)
     {
         if (!output) { output = new Vector2(); }
-        if (includeParent === undefined) { includeParent = false; }
 
         output.x = (this.x - (this.displayWidth * this.originX)) + this.displayWidth;
         output.y = this.y - (this.displayHeight * this.originY);
 
-        if (this.rotation !== 0)
-        {
-            RotateAround(output, this.x, this.y, this.rotation);
-        }
+        return this.prepareBoundsOutput(output, includeParent);
+    },
 
-        if (includeParent && this.parentContainer)
-        {
-            var parentMatrix = this.parentContainer.getBoundsTransformMatrix();
+    /**
+     * Gets the left-center coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getLeftCenter
+     * @since 3.18.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    getLeftCenter: function (output, includeParent)
+    {
+        if (!output) { output = new Vector2(); }
 
-            parentMatrix.transformPoint(output.x, output.y, output);
-        }
+        output.x = this.x - (this.displayWidth * this.originX);
+        output.y = (this.y - (this.displayHeight * this.originY)) + (this.displayHeight / 2);
 
-        return output;
+        return this.prepareBoundsOutput(output, includeParent);
+    },
+
+    /**
+     * Gets the right-center coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getRightCenter
+     * @since 3.18.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    getRightCenter: function (output, includeParent)
+    {
+        if (!output) { output = new Vector2(); }
+
+        output.x = (this.x - (this.displayWidth * this.originX)) + this.displayWidth;
+        output.y = (this.y - (this.displayHeight * this.originY)) + (this.displayHeight / 2);
+
+        return this.prepareBoundsOutput(output, includeParent);
     },
 
     /**
@@ -132,24 +211,35 @@ var GetBounds = {
     getBottomLeft: function (output, includeParent)
     {
         if (!output) { output = new Vector2(); }
-        if (includeParent === undefined) { includeParent = false; }
 
         output.x = this.x - (this.displayWidth * this.originX);
         output.y = (this.y - (this.displayHeight * this.originY)) + this.displayHeight;
 
-        if (this.rotation !== 0)
-        {
-            RotateAround(output, this.x, this.y, this.rotation);
-        }
+        return this.prepareBoundsOutput(output, includeParent);
+    },
 
-        if (includeParent && this.parentContainer)
-        {
-            var parentMatrix = this.parentContainer.getBoundsTransformMatrix();
+    /**
+     * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getBottomCenter
+     * @since 3.18.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    getBottomCenter: function (output, includeParent)
+    {
+        if (!output) { output = new Vector2(); }
 
-            parentMatrix.transformPoint(output.x, output.y, output);
-        }
+        output.x = (this.x - (this.displayWidth * this.originX)) + (this.displayWidth / 2);
+        output.y = (this.y - (this.displayHeight * this.originY)) + this.displayHeight;
 
-        return output;
+        return this.prepareBoundsOutput(output, includeParent);
     },
 
     /**
@@ -169,24 +259,11 @@ var GetBounds = {
     getBottomRight: function (output, includeParent)
     {
         if (!output) { output = new Vector2(); }
-        if (includeParent === undefined) { includeParent = false; }
 
         output.x = (this.x - (this.displayWidth * this.originX)) + this.displayWidth;
         output.y = (this.y - (this.displayHeight * this.originY)) + this.displayHeight;
 
-        if (this.rotation !== 0)
-        {
-            RotateAround(output, this.x, this.y, this.rotation);
-        }
-
-        if (includeParent && this.parentContainer)
-        {
-            var parentMatrix = this.parentContainer.getBoundsTransformMatrix();
-
-            parentMatrix.transformPoint(output.x, output.y, output);
-        }
-
-        return output;
+        return this.prepareBoundsOutput(output, includeParent);
     },
 
     /**

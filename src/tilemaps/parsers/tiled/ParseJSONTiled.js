@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Formats = require('../../Formats');
@@ -12,10 +12,6 @@ var ParseTilesets = require('./ParseTilesets');
 var ParseObjectLayers = require('./ParseObjectLayers');
 var BuildTilesetIndex = require('./BuildTilesetIndex');
 var AssignTileProperties = require('./AssignTileProperties');
-
-/**
- * @namespace Phaser.Tilemaps.Parsers.Tiled
- */
 
 /**
  * Parses a Tiled JSON object into a new MapData object.
@@ -53,7 +49,8 @@ var ParseJSONTiled = function (name, json, insertNull)
         format: Formats.TILED_JSON,
         version: json.version,
         properties: json.properties,
-        renderOrder: json.renderorder
+        renderOrder: json.renderorder,
+        infinite: json.infinite
     });
 
     mapData.layers = ParseTileLayers(json, insertNull);

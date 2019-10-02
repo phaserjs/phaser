@@ -85,7 +85,7 @@
         "no-trailing-spaces": [ "error", { "skipBlankLines": true, "ignoreComments": true } ],
         "no-underscore-dangle": "off",
         "no-whitespace-before-property": "error",
-        "object-curly-newline": [ "error", { "multiline": true, "minProperties": 0 } ],
+        "object-curly-newline": [ "error", { "multiline": true, "minProperties": 0, "consistent": true } ],
         "one-var-declaration-per-line": [ "error", "initializations" ],
         "quote-props": [ "error", "as-needed" ],
         "quotes": [ "error", "single" ],

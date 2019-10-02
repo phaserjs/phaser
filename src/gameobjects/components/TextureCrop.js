@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 //  bitmask flag for GameObject.renderMask
@@ -10,7 +10,7 @@ var _FLAG = 8; // 1000
 /**
  * Provides methods used for getting and setting the texture of a Game Object.
  *
- * @name Phaser.GameObjects.Components.TextureCrop
+ * @namespace Phaser.GameObjects.Components.TextureCrop
  * @since 3.0.0
  */
 

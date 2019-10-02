@@ -1,10 +1,11 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
+var GEOM_CONST = require('../const');
 
 /**
  * @classdesc
@@ -26,6 +27,17 @@ var Point = new Class({
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = x; }
+
+        /**
+         * The geometry constant type of this object: `GEOM_CONST.POINT`.
+         * Used for fast type comparisons.
+         *
+         * @name Phaser.Geom.Point#type
+         * @type {integer}
+         * @readonly
+         * @since 3.19.0
+         */
+        this.type = GEOM_CONST.POINT;
 
         /**
          * The x coordinate of this Point.

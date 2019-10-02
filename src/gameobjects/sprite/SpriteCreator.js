@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var BuildGameObject = require('../BuildGameObject');
@@ -11,14 +11,6 @@ var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var Sprite = require('./Sprite');
 
 /**
- * @typedef {object} SpriteConfig
- * @extends GameObjectConfig
- *
- * @property {string} [key] - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
- * @property {(number|string)} [frame] - An optional frame from the Texture this Game Object is rendering with.
- */
-
-/**
  * Creates a new Sprite Game Object and returns it.
  *
  * Note: This method will only be available if the Sprite Game Object has been built into Phaser.
@@ -26,7 +18,7 @@ var Sprite = require('./Sprite');
  * @method Phaser.GameObjects.GameObjectCreator#sprite
  * @since 3.0.0
  *
- * @param {SpriteConfig} config - The configuration object this Game Object will use to create itself.
+ * @param {Phaser.Types.GameObjects.Sprite.SpriteConfig} config - The configuration object this Game Object will use to create itself.
  * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.Sprite} The Game Object that was created.

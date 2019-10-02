@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 require('./polyfills');
@@ -16,9 +16,11 @@ var Extend = require('./utils/object/Extend');
 var Phaser = {
 
     Actions: require('./actions'),
-    Animation: require('./animations'),
+    Animations: require('./animations'),
+    BlendModes: require('./renderer/BlendModes'),
     Cache: require('./cache'),
     Cameras: require('./cameras'),
+    Core: require('./core'),
     Class: require('./utils/Class'),
     Create: require('./create'),
     Curves: require('./curves'),
@@ -26,7 +28,7 @@ var Phaser = {
     Display: require('./display'),
     DOM: require('./dom'),
     Events: require('./events'),
-    Game: require('./boot/Game'),
+    Game: require('./core/Game'),
     GameObjects: require('./gameobjects'),
     Geom: require('./geom'),
     Input: require('./input'),
@@ -35,9 +37,10 @@ var Phaser = {
     Physics: require('./physics'),
     Plugins: require('./plugins'),
     Renderer: require('./renderer'),
+    Scale: require('./scale'),
+    ScaleModes: require('./renderer/ScaleModes'),
     Scene: require('./scene/Scene'),
     Scenes: require('./scene'),
-    Sound: require('./sound'),
     Structs: require('./structs'),
     Textures: require('./textures'),
     Tilemaps: require('./tilemaps'),
@@ -48,6 +51,11 @@ var Phaser = {
 };
 
 //  Merge in the optional plugins
+
+if (typeof FEATURE_SOUND)
+{
+    Phaser.Sound = require('./sound');
+}
 
 if (typeof PLUGIN_CAMERA3D)
 {
@@ -65,6 +73,13 @@ if (typeof PLUGIN_FBINSTANT)
 //   Merge in the consts
 
 Phaser = Extend(false, Phaser, CONST);
+
+/**
+ * The root types namespace.
+ * 
+ * @namespace Phaser.Types
+ * @since 3.17.0
+ */
 
 //  Export it
 

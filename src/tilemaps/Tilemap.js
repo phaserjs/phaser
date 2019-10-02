@@ -1,17 +1,18 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../utils/Class');
 var DegToRad = require('../math/DegToRad');
-var DynamicTilemapLayer = require('./dynamiclayer/DynamicTilemapLayer.js');
+var DynamicTilemapLayer = require('./dynamiclayer/DynamicTilemapLayer');
 var Extend = require('../utils/object/Extend');
 var Formats = require('./Formats');
 var LayerData = require('./mapdata/LayerData');
 var Rotate = require('../math/Rotate');
-var StaticTilemapLayer = require('./staticlayer/StaticTilemapLayer.js');
+var SpliceOne = require('../utils/array/SpliceOne');
+var StaticTilemapLayer = require('./staticlayer/StaticTilemapLayer');
 var Tile = require('./Tile');
 var TilemapComponents = require('./components');
 var Tileset = require('./Tileset');
@@ -360,7 +361,7 @@ var Tilemap = new Class({
     },
 
     /**
-     * Turns the StaticTilemapLayer associated with the given layer into a DynamicTilemapLayer. If
+     * Turns the DynamicTilemapLayer associated with the given layer into a StaticTilemapLayer. If
      * no layer specified, the map's current layer is used. This is useful if you want to manipulate
      * a map at the start of a scene, but then make it non-manipulable and optimize it for speed.
      * Note: the DynamicTilemapLayer passed in is destroyed, so make sure to store the value
@@ -439,9 +440,13 @@ var Tilemap = new Class({
                 destTileX, destTileY,
                 recalculateFaces, layer
             );
-        }
 
-        return this;
+            return this;
+        }
+        else
+        {
+            return null;
+        }
     },
 
     /**
@@ -459,16 +464,16 @@ var Tilemap = new Class({
      * @param {integer} [tileWidth] - The width of the tiles the layer uses for calculations. If not specified, it will default to the map's tileWidth.
      * @param {integer} [tileHeight] - The height of the tiles the layer uses for calculations. If not specified, it will default to the map's tileHeight.
      *
-     * @return {?Phaser.Tilemaps.DynamicTilemapLayer} Returns the new layer was created, or null if it failed.
+     * @return {?Phaser.Tilemaps.DynamicTilemapLayer} Returns the new layer that was created, or `null` if it failed.
      */
     createBlankDynamicLayer: function (name, tileset, x, y, width, height, tileWidth, tileHeight)
     {
-        if (tileWidth === undefined) { tileWidth = tileset.tileWidth; }
-        if (tileHeight === undefined) { tileHeight = tileset.tileHeight; }
-        if (width === undefined) { width = this.width; }
-        if (height === undefined) { height = this.height; }
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
+        if (width === undefined) { width = this.width; }
+        if (height === undefined) { height = this.height; }
+        if (tileWidth === undefined) { tileWidth = this.tileWidth; }
+        if (tileHeight === undefined) { tileHeight = this.tileHeight; }
 
         var index = this.getLayerIndex(name);
 
@@ -529,8 +534,8 @@ var Tilemap = new Class({
      *
      * @param {(integer|string)} layerID - The layer array index value, or if a string is given, the layer name from Tiled.
      * @param {(string|string[]|Phaser.Tilemaps.Tileset|Phaser.Tilemaps.Tileset[])} tileset - The tileset, or an array of tilesets, used to render this layer. Can be a string or a Tileset object.
-     * @param {number} x - The x position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
-     * @param {number} y - The y position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
+     * @param {number} [x=0] - The x position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
+     * @param {number} [y=0] - The y position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
      *
      * @return {?Phaser.Tilemaps.DynamicTilemapLayer} Returns the new layer was created, or null if it failed.
      */
@@ -556,8 +561,16 @@ var Tilemap = new Class({
         this.currentLayerIndex = index;
 
         //  Default the x/y position to match Tiled layer offset, if it exists.
-        if (x === undefined && this.layers[index].x) { x = this.layers[index].x; }
-        if (y === undefined && this.layers[index].y) { y = this.layers[index].y; }
+
+        if (x === undefined)
+        {
+            x = layerData.x;
+        }
+
+        if (y === undefined)
+        {
+            y = layerData.y;
+        }
 
         var layer = new DynamicTilemapLayer(this.scene, this, index, tileset, x, y);
 
@@ -584,7 +597,7 @@ var Tilemap = new Class({
      * @param {(integer|string)} id - Either the id (object), gid (tile object) or name (object or
      * tile object) from Tiled. Ids are unique in Tiled, but a gid is shared by all tile objects
      * with the same graphic. The same name can be used on multiple objects.
-     * @param {SpriteConfig} spriteConfig - The config object to pass into the Sprite creator (i.e.
+     * @param {Phaser.Types.GameObjects.Sprite.SpriteConfig} spriteConfig - The config object to pass into the Sprite creator (i.e.
      * scene.make.sprite).
      * @param {Phaser.Scene} [scene=the scene the map is within] - The Scene to create the Sprites within.
      *
@@ -596,6 +609,7 @@ var Tilemap = new Class({
         if (scene === undefined) { scene = this.scene; }
 
         var objectLayer = this.getObjectLayer(name);
+
         if (!objectLayer)
         {
             console.warn('Cannot create from object. Invalid objectgroup name given: ' + name);
@@ -624,7 +638,7 @@ var Tilemap = new Class({
                 config.x = obj.x;
                 config.y = obj.y;
 
-                var sprite = this.scene.make.sprite(config);
+                var sprite = scene.make.sprite(config);
 
                 sprite.name = obj.name;
 
@@ -685,7 +699,7 @@ var Tilemap = new Class({
      * @param {(integer|array)} replacements - The tile index, or array of indexes, to change a converted
      * tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a
      * one-to-one mapping with the indexes array.
-     * @param {SpriteConfig} spriteConfig - The config object to pass into the Sprite creator (i.e. scene.make.sprite).
+     * @param {Phaser.Types.GameObjects.Sprite.SpriteConfig} spriteConfig - The config object to pass into the Sprite creator (i.e. scene.make.sprite).
      * @param {Phaser.Scene} [scene=scene the map is within] - The Scene to create the Sprites within.
      * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
      * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
@@ -717,8 +731,8 @@ var Tilemap = new Class({
      *
      * @param {(integer|string)} layerID - The layer array index value, or if a string is given, the layer name from Tiled.
      * @param {(string|string[]|Phaser.Tilemaps.Tileset|Phaser.Tilemaps.Tileset[])} tileset - The tileset, or an array of tilesets, used to render this layer. Can be a string or a Tileset object.
-     * @param {number} x - The x position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
-     * @param {number} y - The y position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
+     * @param {number} [x=0] - The x position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
+     * @param {number} [y=0] - The y position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
      *
      * @return {?Phaser.Tilemaps.StaticTilemapLayer} Returns the new layer was created, or null if it failed.
      */
@@ -796,12 +810,11 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
+        if (layer === null) { return null; }
+
         if (this._isStaticCall(layer, 'fill')) { return this; }
 
-        if (layer !== null)
-        {
-            TilemapComponents.Fill(index, tileX, tileY, width, height, recalculateFaces, layer);
-        }
+        TilemapComponents.Fill(index, tileX, tileY, width, height, recalculateFaces, layer);
 
         return this;
     },
@@ -855,10 +868,7 @@ var Tilemap = new Class({
      * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area to filter.
      * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
      * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
-     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
-     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have -1 for an index.
-     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on at least one side.
-     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that have at least one interesting face.
+     * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tile[]} Returns an array of Tiles, or null if the layer given was invalid.
@@ -946,10 +956,7 @@ var Tilemap = new Class({
      * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area to search.
      * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
      * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
-     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
-     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have -1 for an index.
-     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on at least one side.
-     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that have at least one interesting face.
+     * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The Tile layer to run the search on. If not provided will use the current layer.
      *
      * @return {?Phaser.Tilemaps.Tile} Returns a Tiles, or null if the layer given was invalid.
@@ -978,10 +985,7 @@ var Tilemap = new Class({
      * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area to search.
      * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
      * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
-     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
-     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have -1 for an index.
-     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on at least one side.
-     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that have at least one interesting face.
+     * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The Tile layer to run the search on. If not provided will use the current layer.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Returns this, or null if the layer given was invalid.
@@ -990,10 +994,9 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer !== null)
-        {
-            TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, filteringOptions, layer);
-        }
+        if (layer === null) { return null; }
+
+        TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, filteringOptions, layer);
 
         return this;
     },
@@ -1055,7 +1058,7 @@ var Tilemap = new Class({
     {
         var index = this.getLayerIndex(layer);
 
-        return index !== null ? this.layers[index] : null;
+        return (index !== null) ? this.layers[index] : null;
     },
 
     /**
@@ -1073,7 +1076,7 @@ var Tilemap = new Class({
     {
         var index = this.getIndex(this.objects, name);
 
-        return index !== null ? this.objects[index] : null;
+        return (index !== null) ? this.objects[index] : null;
     },
 
     /**
@@ -1171,14 +1174,9 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer === null)
-        {
-            return null;
-        }
-        else
-        {
-            return TilemapComponents.GetTileAtWorldXY(worldX, worldY, nonNull, camera, layer);
-        }
+        if (layer === null) { return null; }
+
+        return TilemapComponents.GetTileAtWorldXY(worldX, worldY, nonNull, camera, layer);
     },
 
     /**
@@ -1192,10 +1190,7 @@ var Tilemap = new Class({
      * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
      * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
      * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
-     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
-     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have -1 for an index.
-     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on at least one side.
-     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that have at least one interesting face.
+     * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tile[]} Returns an array of Tiles, or null if the layer given was invalid.
@@ -1218,10 +1213,7 @@ var Tilemap = new Class({
      * @since 3.0.0
      *
      * @param {(Phaser.Geom.Circle|Phaser.Geom.Line|Phaser.Geom.Rectangle|Phaser.Geom.Triangle)} shape - A shape in world (pixel) coordinates
-     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
-     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have -1 for an index.
-     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on at least one side.
-     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that have at least one interesting face.
+     * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when factoring in which tiles to return.
      * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
@@ -1247,10 +1239,7 @@ var Tilemap = new Class({
      * @param {number} worldY - The world y coordinate for the top-left of the area.
      * @param {number} width - The width of the area.
      * @param {number} height - The height of the area.
-     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
-     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have -1 for an index.
-     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on at least one side.
-     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that have at least one interesting face.
+     * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when factoring in which tiles to return.
      * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
@@ -1458,17 +1447,16 @@ var Tilemap = new Class({
 
         if (this._isStaticCall(layer, 'putTilesAt')) { return this; }
 
-        if (layer !== null)
-        {
-            TilemapComponents.PutTilesAt(tilesArray, tileX, tileY, recalculateFaces, layer);
-        }
+        if (layer === null) { return null; }
+
+        TilemapComponents.PutTilesAt(tilesArray, tileX, tileY, recalculateFaces, layer);
 
         return this;
     },
 
     /**
      * Randomizes the indexes of a rectangular region of tiles (in tile coordinates) within the
-     * specified layer. Each tile will recieve a new index. If an array of indexes is passed in, then
+     * specified layer. Each tile will receive a new index. If an array of indexes is passed in, then
      * those will be used for randomly assigning new tile indexes. If an array is not provided, the
      * indexes found within the region (excluding -1) will be used for randomly assigning new tile
      * indexes. This method only modifies tile indexes and does not change collision information.
@@ -1494,10 +1482,9 @@ var Tilemap = new Class({
 
         if (this._isStaticCall(layer, 'randomize')) { return this; }
 
-        if (layer !== null)
-        {
-            TilemapComponents.Randomize(tileX, tileY, width, height, indexes, layer);
-        }
+        if (layer === null) { return null; }
+
+        TilemapComponents.Randomize(tileX, tileY, width, height, indexes, layer);
 
         return this;
     },
@@ -1522,7 +1509,7 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer === null) { return this; }
+        if (layer === null) { return null; }
 
         TilemapComponents.CalculateFacesAt(tileX, tileY, layer);
 
@@ -1551,11 +1538,81 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer === null) { return this; }
+        if (layer === null) { return null; }
 
         TilemapComponents.CalculateFacesWithin(tileX, tileY, width, height, layer);
 
         return this;
+    },
+
+    /**
+     * Removes the given TilemapLayer from this Tilemap without destroying it.
+     *
+     * If no layer specified, the map's current layer is used.
+     *
+     * @method Phaser.Tilemaps.Tilemap#removeLayer
+     * @since 3.17.0
+     *
+     * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to be removed.
+     *
+     * @return {?Phaser.Tilemaps.Tilemap} Returns this, or null if the layer given was invalid.
+     */
+    removeLayer: function (layer)
+    {
+        var index = this.getLayerIndex(layer);
+
+        if (index !== null)
+        {
+            SpliceOne(this.layers, index);
+
+            if (this.currentLayerIndex === index)
+            {
+                this.currentLayerIndex = 0;
+            }
+
+            return this;
+        }
+        else
+        {
+            return null;
+        }
+    },
+
+    /**
+     * Destroys the given TilemapLayer and removes it from this Tilemap.
+     *
+     * If no layer specified, the map's current layer is used.
+     *
+     * @method Phaser.Tilemaps.Tilemap#destroyLayer
+     * @since 3.17.0
+     *
+     * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to be destroyed.
+     *
+     * @return {?Phaser.Tilemaps.Tilemap} Returns this, or null if the layer given was invalid.
+     */
+    destroyLayer: function (layer)
+    {
+        var index = this.getLayerIndex(layer);
+
+        if (index !== null)
+        {
+            layer = this.layers[index];
+
+            layer.destroy();
+
+            SpliceOne(this.layers, index);
+
+            if (this.currentLayerIndex === index)
+            {
+                this.currentLayerIndex = 0;
+            }
+
+            return this;
+        }
+        else
+        {
+            return null;
+        }
     },
 
     /**
@@ -1569,19 +1626,64 @@ var Tilemap = new Class({
      */
     removeAllLayers: function ()
     {
+        var layers = this.layers;
+
         // Destroy any StaticTilemapLayers or DynamicTilemapLayers that are stored in LayerData
-        for (var i = 0; i < this.layers.length; i++)
+        for (var i = 0; i < layers.length; i++)
         {
-            if (this.layers[i].tilemapLayer)
+            if (layers[i].tilemapLayer)
             {
-                this.layers[i].tilemapLayer.destroy();
+                layers[i].tilemapLayer.destroy(false);
             }
         }
 
-        this.layers.length = 0;
+        layers.length = 0;
+
         this.currentLayerIndex = 0;
 
         return this;
+    },
+
+    /**
+     * Removes the given Tile, or an array of Tiles, from the layer to which they belong,
+     * and optionally recalculates the collision information.
+     *
+     * This cannot be applied to Tiles that belong to Static Tilemap Layers.
+     *
+     * @method Phaser.Tilemaps.Tilemap#removeTile
+     * @since 3.17.0
+     *
+     * @param {(Phaser.Tilemaps.Tile|Phaser.Tilemaps.Tile[])} tiles - The Tile to remove, or an array of Tiles.
+     * @param {integer} [replaceIndex=-1] - After removing the Tile, insert a brand new Tile into its location with the given index. Leave as -1 to just remove the tile.
+     * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
+     *
+     * @return {Phaser.Tilemaps.Tile[]} Returns an array of Tiles that were removed.
+     */
+    removeTile: function (tiles, replaceIndex, recalculateFaces)
+    {
+        if (replaceIndex === undefined) { replaceIndex = -1; }
+        if (recalculateFaces === undefined) { recalculateFaces = true; }
+
+        var removed = [];
+
+        if (!Array.isArray(tiles))
+        {
+            tiles = [ tiles ];
+        }
+
+        for (var i = 0; i < tiles.length; i++)
+        {
+            var tile = tiles[i];
+
+            removed.push(this.removeTileAt(tile.x, tile.y, true, recalculateFaces, tile.tilemapLayer));
+
+            if (replaceIndex > -1)
+            {
+                this.putTileAt(replaceIndex, tile.x, tile.y, recalculateFaces, tile.tilemapLayer);
+            }
+        }
+
+        return removed;
     },
 
     /**
@@ -1600,7 +1702,7 @@ var Tilemap = new Class({
      * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
      * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
-     * @return {?Phaser.Tilemaps.Tile} Returns a Tile, or null if the layer given was invalid.
+     * @return {?Phaser.Tilemaps.Tile} Returns the Tile that was removed, or null if the layer given was invalid.
      */
     removeTileAt: function (tileX, tileY, replaceWithNull, recalculateFaces, layer)
     {
@@ -1655,10 +1757,7 @@ var Tilemap = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Graphics} graphics - The target Graphics object to draw upon.
-     * @param {object} styleConfig - An object specifying the colors to use for the debug drawing.
-     * @param {?Color} [styleConfig.tileColor=blue] - Color to use for drawing a filled rectangle at non-colliding tile locations. If set to null, non-colliding tiles will not be drawn.
-     * @param {?Color} [styleConfig.collidingTileColor=orange] - Color to use for drawing a filled rectangle at colliding tile locations. If set to null, colliding tiles will not be drawn.
-     * @param {?Color} [styleConfig.faceColor=grey] - Color to use for drawing a line at interesting tile faces. If set to null, interesting tile faces will not be drawn.
+     * @param {Phaser.Types.Tilemaps.StyleConfig} styleConfig - An object specifying the colors to use for the debug drawing.
      * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Return this Tilemap object, or null if the layer given was invalid.
@@ -1667,9 +1766,38 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer === null) { return this; }
+        if (layer === null) { return null; }
 
         TilemapComponents.RenderDebug(graphics, styleConfig, layer);
+
+        return this;
+    },
+
+    /**
+     * Draws a debug representation of all layers within this Tilemap to the given Graphics object.
+     *
+     * This is helpful when you want to get a quick idea of which of your tiles are colliding and which
+     * have interesting faces. The tiles are drawn starting at (0, 0) in the Graphics, allowing you to
+     * place the debug representation wherever you want on the screen.
+     *
+     * @method Phaser.Tilemaps.Tilemap#renderDebugFull
+     * @since 3.17.0
+     *
+     * @param {Phaser.GameObjects.Graphics} graphics - The target Graphics object to draw upon.
+     * @param {Phaser.Types.Tilemaps.StyleConfig} styleConfig - An object specifying the colors to use for the debug drawing.
+     * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
+     *
+     * @return {?Phaser.Tilemaps.Tilemap} Return this Tilemap object, or null if the layer given was invalid.
+     */
+    renderDebugFull: function (graphics, styleConfig)
+    {
+        var layers = this.layers;
+
+        // Destroy any StaticTilemapLayers or DynamicTilemapLayers that are stored in LayerData
+        for (var i = 0; i < layers.length; i++)
+        {
+            TilemapComponents.RenderDebug(graphics, styleConfig, layers[i]);
+        }
 
         return this;
     },
@@ -1701,10 +1829,9 @@ var Tilemap = new Class({
 
         if (this._isStaticCall(layer, 'replaceByIndex')) { return this; }
 
-        if (layer !== null)
-        {
-            TilemapComponents.ReplaceByIndex(findIndex, newIndex, tileX, tileY, width, height, layer);
-        }
+        if (layer === null) { return null; }
+
+        TilemapComponents.ReplaceByIndex(findIndex, newIndex, tileX, tileY, width, height, layer);
 
         return this;
     },
@@ -1723,16 +1850,17 @@ var Tilemap = new Class({
      * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
      * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the update.
      * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
+     * @param {boolean} [updateLayer=true] - If true, updates the current tiles on the layer. Set to false if no tiles have been placed for significant performance boost.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Return this Tilemap object, or null if the layer given was invalid.
      */
-    setCollision: function (indexes, collides, recalculateFaces, layer)
+    setCollision: function (indexes, collides, recalculateFaces, layer, updateLayer)
     {
         layer = this.getLayer(layer);
 
-        if (layer === null) { return this; }
+        if (layer === null) { return null; }
 
-        TilemapComponents.SetCollision(indexes, collides, recalculateFaces, layer);
+        TilemapComponents.SetCollision(indexes, collides, recalculateFaces, layer, updateLayer);
 
         return this;
     },
@@ -1760,7 +1888,7 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer === null) { return this; }
+        if (layer === null) { return null; }
 
         TilemapComponents.SetCollisionBetween(start, stop, collides, recalculateFaces, layer);
 
@@ -1792,7 +1920,7 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer === null) { return this; }
+        if (layer === null) { return null; }
 
         TilemapComponents.SetCollisionByProperty(properties, collides, recalculateFaces, layer);
 
@@ -1820,7 +1948,7 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer === null) { return this; }
+        if (layer === null) { return null; }
 
         TilemapComponents.SetCollisionByExclusion(indexes, collides, recalculateFaces, layer);
 
@@ -1848,7 +1976,7 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer === null) { return this; }
+        if (layer === null) { return null; }
 
         TilemapComponents.SetCollisionFromCollisionGroup(collides, recalculateFaces, layer);
 
@@ -1877,7 +2005,7 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer === null) { return this; }
+        if (layer === null) { return null; }
 
         TilemapComponents.SetTileIndexCallback(indexes, callback, callbackContext, layer);
 
@@ -1908,7 +2036,7 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer === null) { return this; }
+        if (layer === null) { return null; }
 
         TilemapComponents.SetTileLocationCallback(tileX, tileY, width, height, callback, callbackContext, layer);
 
@@ -2056,10 +2184,9 @@ var Tilemap = new Class({
 
         if (this._isStaticCall(layer, 'shuffle')) { return this; }
 
-        if (layer !== null)
-        {
-            TilemapComponents.Shuffle(tileX, tileY, width, height, layer);
-        }
+        if (layer === null) { return null; }
+
+        TilemapComponents.Shuffle(tileX, tileY, width, height, layer);
 
         return this;
     },
@@ -2091,10 +2218,9 @@ var Tilemap = new Class({
 
         if (this._isStaticCall(layer, 'swapByIndex')) { return this; }
 
-        if (layer !== null)
-        {
-            TilemapComponents.SwapByIndex(indexA, indexB, tileX, tileY, width, height, layer);
-        }
+        if (layer === null) { return null; }
+
+        TilemapComponents.SwapByIndex(indexA, indexB, tileX, tileY, width, height, layer);
 
         return this;
     },
@@ -2213,10 +2339,9 @@ var Tilemap = new Class({
 
         if (this._isStaticCall(layer, 'weightedRandomize')) { return this; }
 
-        if (layer !== null)
-        {
-            TilemapComponents.WeightedRandomize(tileX, tileY, width, height, weightedIndexes, layer);
-        }
+        if (layer === null) { return null; }
+
+        TilemapComponents.WeightedRandomize(tileX, tileY, width, height, weightedIndexes, layer);
 
         return this;
     },

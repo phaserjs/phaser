@@ -1,14 +1,15 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Felipe Alfonso <@bitnenfer>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var ArrayUtils = require('../../utils/array');
 var BlendModes = require('../../renderer/BlendModes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
+var Events = require('../events');
 var GameObject = require('../GameObject');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var Render = require('./ContainerRender');
@@ -62,7 +63,6 @@ var Vector2 = require('../../math/Vector2');
  * @extends Phaser.GameObjects.Components.ComputedSize
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  *
@@ -81,7 +81,6 @@ var Container = new Class({
         Components.ComputedSize,
         Components.Depth,
         Components.Mask,
-        Components.ScrollFactor,
         Components.Transform,
         Components.Visible,
         Render
@@ -191,6 +190,60 @@ var Container = new Class({
          * @since 3.9.0
          */
         this._sysEvents = scene.sys.events;
+
+        /**
+         * The horizontal scroll factor of this Container.
+         *
+         * The scroll factor controls the influence of the movement of a Camera upon this Container.
+         *
+         * When a camera scrolls it will change the location at which this Container is rendered on-screen.
+         * It does not change the Containers actual position values.
+         * 
+         * For a Container, setting this value will only update the Container itself, not its children.
+         * If you wish to change the scrollFactor of the children as well, use the `setScrollFactor` method.
+         *
+         * A value of 1 means it will move exactly in sync with a camera.
+         * A value of 0 means it will not move at all, even if the camera moves.
+         * Other values control the degree to which the camera movement is mapped to this Container.
+         * 
+         * Please be aware that scroll factor values other than 1 are not taken in to consideration when
+         * calculating physics collisions. Bodies always collide based on their world position, but changing
+         * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
+         * them from physics bodies if not accounted for in your code.
+         *
+         * @name Phaser.GameObjects.Container#scrollFactorX
+         * @type {number}
+         * @default 1
+         * @since 3.0.0
+         */
+        this.scrollFactorX = 1;
+
+        /**
+         * The vertical scroll factor of this Container.
+         *
+         * The scroll factor controls the influence of the movement of a Camera upon this Container.
+         *
+         * When a camera scrolls it will change the location at which this Container is rendered on-screen.
+         * It does not change the Containers actual position values.
+         * 
+         * For a Container, setting this value will only update the Container itself, not its children.
+         * If you wish to change the scrollFactor of the children as well, use the `setScrollFactor` method.
+         *
+         * A value of 1 means it will move exactly in sync with a camera.
+         * A value of 0 means it will not move at all, even if the camera moves.
+         * Other values control the degree to which the camera movement is mapped to this Container.
+         * 
+         * Please be aware that scroll factor values other than 1 are not taken in to consideration when
+         * calculating physics collisions. Bodies always collide based on their world position, but changing
+         * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
+         * them from physics bodies if not accounted for in your code.
+         *
+         * @name Phaser.GameObjects.Container#scrollFactorY
+         * @type {number}
+         * @default 1
+         * @since 3.0.0
+         */
+        this.scrollFactorY = 1;
 
         this.setPosition(x, y);
 
@@ -363,7 +416,7 @@ var Container = new Class({
      */
     addHandler: function (gameObject)
     {
-        gameObject.once('destroy', this.remove, this);
+        gameObject.once(Events.DESTROY, this.remove, this);
 
         if (this.exclusive)
         {
@@ -389,7 +442,7 @@ var Container = new Class({
      */
     removeHandler: function (gameObject)
     {
-        gameObject.off('destroy', this.remove);
+        gameObject.off(Events.DESTROY, this.remove);
 
         if (this.exclusive)
         {
@@ -524,36 +577,28 @@ var Container = new Class({
      * @since 3.4.0
      *
      * @param {string} property - The property to lexically sort by.
+     * @param {function} [handler] - Provide your own custom handler function. Will receive 2 children which it should compare and return a boolean.
      *
      * @return {Phaser.GameObjects.Container} This Container instance.
      */
-    sort: function (property)
+    sort: function (property, handler)
     {
-        if (property)
+        if (!property)
         {
-            this._sortKey = property;
-
-            ArrayUtils.StableSort.inplace(this.list, this.sortHandler);
+            return this;
         }
 
-        return this;
-    },
+        if (handler === undefined)
+        {
+            handler = function (childA, childB)
+            {
+                return childA[property] - childB[property];
+            };
+        }
 
-    /**
-     * Internal sort handler method.
-     *
-     * @method Phaser.GameObjects.Container#sortHandler
-     * @private
-     * @since 3.4.0
-     *
-     * @param {Phaser.GameObjects.GameObject} childA - The first child to sort.
-     * @param {Phaser.GameObjects.GameObject} childB - The second child to sort.
-     *
-     * @return {integer} The sort results.
-     */
-    sortHandler: function (childA, childB)
-    {
-        return childA[this._sortKey] - childB[this._sortKey];
+        ArrayUtils.StableSort.inplace(this.list, handler);
+
+        return this;
     },
 
     /**
@@ -601,8 +646,8 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#getFirst
      * @since 3.4.0
      *
-     * @param {string} [property] - The property to test on each Game Object in the Container.
-     * @param {*} [value] - The value to test the property against. Must pass a strict (`===`) comparison check.
+     * @param {string} property - The property to test on each Game Object in the Container.
+     * @param {*} value - The value to test the property against. Must pass a strict (`===`) comparison check.
      * @param {integer} [startIndex=0] - An optional start index to search from.
      * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
      *
@@ -610,7 +655,7 @@ var Container = new Class({
      */
     getFirst: function (property, value, startIndex, endIndex)
     {
-        return ArrayUtils.GetFirstElement(this.list, property, value, startIndex, endIndex);
+        return ArrayUtils.GetFirst(this.list, property, value, startIndex, endIndex);
     },
 
     /**
@@ -1074,6 +1119,49 @@ var Container = new Class({
             args[0] = this.list[i];
 
             callback.apply(context, args);
+        }
+
+        return this;
+    },
+
+    /**
+     * Sets the scroll factor of this Container and optionally all of its children.
+     *
+     * The scroll factor controls the influence of the movement of a Camera upon this Game Object.
+     *
+     * When a camera scrolls it will change the location at which this Game Object is rendered on-screen.
+     * It does not change the Game Objects actual position values.
+     *
+     * A value of 1 means it will move exactly in sync with a camera.
+     * A value of 0 means it will not move at all, even if the camera moves.
+     * Other values control the degree to which the camera movement is mapped to this Game Object.
+     * 
+     * Please be aware that scroll factor values other than 1 are not taken in to consideration when
+     * calculating physics collisions. Bodies always collide based on their world position, but changing
+     * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
+     * them from physics bodies if not accounted for in your code.
+     *
+     * @method Phaser.GameObjects.Container#setScrollFactor
+     * @since 3.0.0
+     *
+     * @param {number} x - The horizontal scroll factor of this Game Object.
+     * @param {number} [y=x] - The vertical scroll factor of this Game Object. If not set it will use the `x` value.
+     * @param {boolean} [updateChildren=false] - Apply this scrollFactor to all Container children as well?
+     *
+     * @return {this} This Game Object instance.
+     */
+    setScrollFactor: function (x, y, updateChildren)
+    {
+        if (y === undefined) { y = x; }
+        if (updateChildren === undefined) { updateChildren = false; }
+
+        this.scrollFactorX = x;
+        this.scrollFactorY = y;
+
+        if (updateChildren)
+        {
+            ArrayUtils.SetAll(this.list, 'scrollFactorX', x);
+            ArrayUtils.SetAll(this.list, 'scrollFactorY', y);
         }
 
         return this;

@@ -1,8 +1,8 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Felipe Alfonso <@bitnenfer>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -65,19 +65,19 @@ var ContainerCanvasRenderer = function (renderer, container, interpolationPercen
             continue;
         }
 
-        var childAlpha = child._alpha;
-        var childBlendMode = child._blendMode;
+        var childAlpha = child.alpha;
         var childScrollFactorX = child.scrollFactorX;
         var childScrollFactorY = child.scrollFactorY;
+
+        if (!containerHasBlendMode && child.blendMode !== renderer.currentBlendMode)
+        {
+            //  If Container doesn't have its own blend mode, then a child can have one
+            renderer.setBlendMode(child.blendMode);
+        }
 
         //  Set parent values
         child.setScrollFactor(childScrollFactorX * scrollFactorX, childScrollFactorY * scrollFactorY);
         child.setAlpha(childAlpha * alpha);
-
-        if (containerHasBlendMode)
-        {
-            child.setBlendMode(container._blendMode);
-        }
 
         //  Render
         child.renderCanvas(renderer, child, interpolationPercentage, camera, transformMatrix);
@@ -85,7 +85,6 @@ var ContainerCanvasRenderer = function (renderer, container, interpolationPercen
         //  Restore original values
         child.setAlpha(childAlpha);
         child.setScrollFactor(childScrollFactorX, childScrollFactorY);
-        child.setBlendMode(childBlendMode);
     }
 };
 

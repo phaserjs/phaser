@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Body = require('../lib/body/Body');
@@ -9,7 +9,7 @@ var Body = require('../lib/body/Body');
 /**
  * A component to apply force to Matter.js bodies.
  *
- * @name Phaser.Physics.Matter.Components.Force
+ * @namespace Phaser.Physics.Matter.Components.Force
  * @since 3.0.0
  */
 var Force = {

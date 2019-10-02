@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../utils/Class');
@@ -57,6 +57,16 @@ var MultiFile = new Class({
         this.key = key;
 
         /**
+         * The current index being used by multi-file loaders to avoid key clashes.
+         *
+         * @name Phaser.Loader.MultiFile#multiKeyIndex
+         * @type {integer}
+         * @private
+         * @since 3.20.0
+         */
+        this.multiKeyIndex = loader.multiKeyIndex++;
+
+        /**
          * Array of files that make up this MultiFile.
          *
          * @name Phaser.Loader.MultiFile#files
@@ -103,6 +113,36 @@ var MultiFile = new Class({
          * @since 3.7.0
          */
         this.config = {};
+
+        /**
+         * A reference to the Loaders baseURL at the time this MultiFile was created.
+         * Used to populate child-files.
+         *
+         * @name Phaser.Loader.MultiFile#baseURL
+         * @type {string}
+         * @since 3.20.0
+         */
+        this.baseURL = loader.baseURL;
+
+        /**
+         * A reference to the Loaders path at the time this MultiFile was created.
+         * Used to populate child-files.
+         *
+         * @name Phaser.Loader.MultiFile#path
+         * @type {string}
+         * @since 3.20.0
+         */
+        this.path = loader.path;
+
+        /**
+         * A reference to the Loaders prefix at the time this MultiFile was created.
+         * Used to populate child-files.
+         *
+         * @name Phaser.Loader.MultiFile#prefix
+         * @type {string}
+         * @since 3.20.0
+         */
+        this.prefix = loader.prefix;
 
         //  Link the files
         for (var i = 0; i < files.length; i++)

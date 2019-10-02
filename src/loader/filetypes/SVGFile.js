@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
@@ -10,24 +10,6 @@ var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
-
-/**
- * @typedef {object} Phaser.Loader.FileTypes.SVGSizeConfig
- *
- * @property {integer} [width] - An optional width. The SVG will be resized to this size before being rendered to a texture.
- * @property {integer} [height] - An optional height. The SVG will be resized to this size before being rendered to a texture.
- * @property {number} [scale] - An optional scale. If given it overrides the width / height properties. The SVG is scaled by the scale factor before being rendered to a texture.
- */
-
-/**
- * @typedef {object} Phaser.Loader.FileTypes.SVGFileConfig
- *
- * @property {string} key - The key of the file. Must be unique within both the Loader and the Texture Manager.
- * @property {string} [url] - The absolute or relative URL to load the file from.
- * @property {string} [extension='svg'] - The default file extension to use if no url is provided.
- * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
- * @property {Phaser.Loader.FileTypes.SVGSizeConfig} [svgConfig] - The svg size configuration object.
- */
 
 /**
  * @classdesc
@@ -44,10 +26,10 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @since 3.0.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {(string|Phaser.Loader.FileTypes.SVGFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|Phaser.Types.Loader.FileTypes.SVGFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.svg`, i.e. if `key` was "alien" then the URL will be "alien.svg".
- * @param {Phaser.Loader.FileTypes.SVGSizeConfig} [svgConfig] - The svg size configuration object.
- * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {Phaser.Types.Loader.FileTypes.SVGSizeConfig} [svgConfig] - The svg size configuration object.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var SVGFile = new Class({
 
@@ -247,7 +229,7 @@ var SVGFile = new Class({
  * });
  * ```
  *
- * See the documentation for `Phaser.Loader.FileTypes.SVGFileConfig` for more details.
+ * See the documentation for `Phaser.Types.Loader.FileTypes.SVGFileConfig` for more details.
  *
  * Once the file has finished loading you can use it as a texture for a Game Object by referencing its key:
  *
@@ -322,10 +304,10 @@ var SVGFile = new Class({
  * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.0.0
  *
- * @param {(string|Phaser.Loader.FileTypes.SVGFileConfig|Phaser.Loader.FileTypes.SVGFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {(string|Phaser.Types.Loader.FileTypes.SVGFileConfig|Phaser.Types.Loader.FileTypes.SVGFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.svg`, i.e. if `key` was "alien" then the URL will be "alien.svg".
- * @param {Phaser.Loader.FileTypes.SVGSizeConfig} [svgConfig] - The svg size configuration object.
- * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Types.Loader.FileTypes.SVGSizeConfig} [svgConfig] - The svg size configuration object.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */

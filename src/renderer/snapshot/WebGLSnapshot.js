@@ -1,63 +1,104 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var CanvasPool = require('../../display/canvas/CanvasPool');
+var Color = require('../../display/color/Color');
+var GetFastValue = require('../../utils/object/GetFastValue');
+
 /**
- * Takes a snapshot of the current frame displayed by a WebGL canvas.
+ * Takes a snapshot of an area from the current frame displayed by a WebGL canvas.
+ * 
+ * This is then copied to an Image object. When this loads, the results are sent
+ * to the callback provided in the Snapshot Configuration object.
  *
  * @function Phaser.Renderer.Snapshot.WebGL
  * @since 3.0.0
  *
  * @param {HTMLCanvasElement} sourceCanvas - The canvas to take a snapshot of.
- * @param {string} [type='image/png'] - The format of the returned image.
- * @param {number} [encoderOptions=0.92] - The image quality, between 0 and 1, for image formats which use lossy compression (such as `image/jpeg`).
- *
- * @return {HTMLImageElement} A new image which contains a snapshot of the canvas's contents.
+ * @param {Phaser.Types.Renderer.Snapshot.SnapshotState} config - The snapshot configuration object.
  */
-var WebGLSnapshot = function (sourceCanvas, type, encoderOptions)
+var WebGLSnapshot = function (sourceCanvas, config)
 {
-    if (!type) { type = 'image/png'; }
-    if (!encoderOptions) { encoderOptions = 0.92; }
-
     var gl = sourceCanvas.getContext('experimental-webgl');
-    var pixels = new Uint8Array(gl.drawingBufferWidth * gl.drawingBufferHeight * 4);
-    gl.readPixels(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
 
-    //  CanvasPool?
-    var canvas = document.createElement('canvas');
-    var ctx = canvas.getContext('2d');
-    var imageData;
+    var callback = GetFastValue(config, 'callback');
+    var type = GetFastValue(config, 'type', 'image/png');
+    var encoderOptions = GetFastValue(config, 'encoder', 0.92);
+    var x = GetFastValue(config, 'x', 0);
+    var y = GetFastValue(config, 'y', 0);
 
-    canvas.width = gl.drawingBufferWidth;
-    canvas.height = gl.drawingBufferHeight;
+    var getPixel = GetFastValue(config, 'getPixel', false);
 
-    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    var isFramebuffer = GetFastValue(config, 'isFramebuffer', false);
 
-    var data = imageData.data;
+    var bufferWidth = (isFramebuffer) ? GetFastValue(config, 'bufferWidth', 1) : gl.drawingBufferWidth;
+    var bufferHeight = (isFramebuffer) ? GetFastValue(config, 'bufferHeight', 1) : gl.drawingBufferHeight;
 
-    for (var y = 0; y < canvas.height; y += 1)
+    if (getPixel)
     {
-        for (var x = 0; x < canvas.width; x += 1)
-        {
-            var si = ((canvas.height - y) * canvas.width + x) * 4;
-            var di = (y * canvas.width + x) * 4;
-            data[di + 0] = pixels[si + 0];
-            data[di + 1] = pixels[si + 1];
-            data[di + 2] = pixels[si + 2];
-            data[di + 3] = pixels[si + 3];
-        }
+        var pixel = new Uint8Array(4);
+
+        var destY = (isFramebuffer) ? y : bufferHeight - y;
+
+        gl.readPixels(x, destY, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+
+        callback.call(null, new Color(pixel[0], pixel[1], pixel[2], pixel[3] / 255));
     }
+    else
+    {
+        var width = GetFastValue(config, 'width', bufferWidth);
+        var height = GetFastValue(config, 'height', bufferHeight);
 
-    ctx.putImageData(imageData, 0, 0);
+        var total = width * height * 4;
 
-    var src = canvas.toDataURL(type, encoderOptions);
-    var image = new Image();
+        var pixels = new Uint8Array(total);
 
-    image.src = src;
+        gl.readPixels(x, bufferHeight - y - height, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+    
+        var canvas = CanvasPool.createWebGL(this, width, height);
+        var ctx = canvas.getContext('2d');
 
-    return image;
+        var imageData = ctx.getImageData(0, 0, width, height);
+    
+        var data = imageData.data;
+
+        for (var py = 0; py < height; py++)
+        {
+            for (var px = 0; px < width; px++)
+            {
+                var sourceIndex = ((height - py) * width + px) * 4;
+                var destIndex = (isFramebuffer) ? total - ((py * width + (width - px)) * 4) : (py * width + px) * 4;
+
+                data[destIndex + 0] = pixels[sourceIndex + 0];
+                data[destIndex + 1] = pixels[sourceIndex + 1];
+                data[destIndex + 2] = pixels[sourceIndex + 2];
+                data[destIndex + 3] = pixels[sourceIndex + 3];
+            }
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+    
+        var image = new Image();
+
+        image.onerror = function ()
+        {
+            callback.call(null);
+
+            CanvasPool.remove(canvas);
+        };
+
+        image.onload = function ()
+        {
+            callback.call(null, image);
+
+            CanvasPool.remove(canvas);
+        };
+
+        image.src = canvas.toDataURL(type, encoderOptions);
+    }
 };
 
 module.exports = WebGLSnapshot;

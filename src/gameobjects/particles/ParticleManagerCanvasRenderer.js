@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -102,6 +102,8 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
                 x = Math.round(x);
                 y = Math.round(y);
             }
+
+            ctx.imageSmoothingEnabled = !(!renderer.antialias || frame.source.scaleMode);
 
             ctx.drawImage(frame.source.image, cd.x, cd.y, cd.width, cd.height, x, y, cd.width, cd.height);
 

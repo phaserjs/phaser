@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var TYPE = require('../TYPE');
@@ -10,7 +10,7 @@ var TYPE = require('../TYPE');
  * The Impact Check Against component.
  * Should be applied as a mixin.
  *
- * @name Phaser.Physics.Impact.Components.CheckAgainst
+ * @namespace Phaser.Physics.Impact.Components.CheckAgainst
  * @since 3.0.0
  */
 var CheckAgainst = {

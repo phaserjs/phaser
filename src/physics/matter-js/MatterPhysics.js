@@ -1,9 +1,11 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Body = require('./lib/body/Body');
+var Bodies = require('./lib/factory/Bodies');
 var Class = require('../../utils/Class');
 var Factory = require('./Factory');
 var GetFastValue = require('../../utils/object/GetFastValue');
@@ -14,6 +16,7 @@ var MatterWrap = require('./lib/plugins/MatterWrap');
 var Merge = require('../../utils/object/Merge');
 var Plugin = require('./lib/core/Plugin');
 var PluginCache = require('../../plugins/PluginCache');
+var SceneEvents = require('../../scene/events');
 var World = require('./World');
 var Vertices = require('./lib/geometry/Vertices');
 
@@ -90,6 +93,24 @@ var MatterPhysics = new Class({
          */
         this.verts = Vertices;
 
+        /**
+         * A reference to the `Matter.Body` module which contains methods for creating and manipulating body models.
+         *
+         * @name Phaser.Physics.Matter.MatterPhysics#body
+         * @type {MatterJS.Body}
+         * @since 3.18.0
+         */
+        this.body = Body;
+
+        /**
+         * A reference to the `Matter.Bodies` module which contains methods for creating bodies.
+         *
+         * @name Phaser.Physics.Matter.MatterPhysics#bodies
+         * @type {MatterJS.Bodies}
+         * @since 3.18.0
+         */
+        this.bodies = Bodies;
+
         //  Matter plugins
 
         if (GetValue(this.config, 'plugins.attractors', false))
@@ -104,8 +125,8 @@ var MatterPhysics = new Class({
             Plugin.use(MatterLib, MatterWrap);
         }
 
-        scene.sys.events.once('boot', this.boot, this);
-        scene.sys.events.on('start', this.start, this);
+        scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
+        scene.sys.events.on(SceneEvents.START, this.start, this);
     },
 
     /**
@@ -121,7 +142,7 @@ var MatterPhysics = new Class({
         this.world = new World(this.scene, this.config);
         this.add = new Factory(this.world);
 
-        this.systems.events.once('destroy', this.destroy, this);
+        this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
     },
 
     /**
@@ -143,9 +164,9 @@ var MatterPhysics = new Class({
 
         var eventEmitter = this.systems.events;
 
-        eventEmitter.on('update', this.world.update, this.world);
-        eventEmitter.on('postupdate', this.world.postUpdate, this.world);
-        eventEmitter.once('shutdown', this.shutdown, this);
+        eventEmitter.on(SceneEvents.UPDATE, this.world.update, this.world);
+        eventEmitter.on(SceneEvents.POST_UPDATE, this.world.postUpdate, this.world);
+        eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -305,12 +326,23 @@ var MatterPhysics = new Class({
     {
         var eventEmitter = this.systems.events;
 
-        eventEmitter.off('update', this.world.update, this.world);
-        eventEmitter.off('postupdate', this.world.postUpdate, this.world);
-        eventEmitter.off('shutdown', this.shutdown, this);
+        if (this.world)
+        {
+            eventEmitter.off(SceneEvents.UPDATE, this.world.update, this.world);
+            eventEmitter.off(SceneEvents.POST_UPDATE, this.world.postUpdate, this.world);
+        }
 
-        this.add.destroy();
-        this.world.destroy();
+        eventEmitter.off(SceneEvents.SHUTDOWN, this.shutdown, this);
+
+        if (this.add)
+        {
+            this.add.destroy();
+        }
+
+        if (this.world)
+        {
+            this.world.destroy();
+        }
 
         this.add = null;
         this.world = null;
@@ -328,7 +360,7 @@ var MatterPhysics = new Class({
     {
         this.shutdown();
 
-        this.scene.sys.events.off('start', this.start, this);
+        this.scene.sys.events.off(SceneEvents.START, this.start, this);
 
         this.scene = null;
         this.systems = null;

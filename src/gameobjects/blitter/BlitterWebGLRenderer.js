@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Utils = require('../../renderer/webgl/Utils');
@@ -94,7 +94,7 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage, cam
         var tx1 = calcMatrix.getX(xw, yh);
         var ty1 = calcMatrix.getY(xw, yh);
 
-        var tint = Utils.getTintAppendFloatAlpha(0xffffff, bobAlpha);
+        var tint = Utils.getTintAppendFloatAlpha(bob.tint, bobAlpha);
 
         //  Bind texture only if the Texture Source is different from before
         if (frame.sourceIndex !== prevTextureSourceIndex)

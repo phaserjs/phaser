@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -13,11 +13,13 @@
  *
  * @param {CanvasRenderingContext2D} ctx - The context to set the stroke style on.
  * @param {Phaser.GameObjects.Shape} src - The Game Object to set the stroke style from.
+ * @param {number} [altColor] - An alternative color to render with.
+ * @param {number} [altAlpha] - An alternative alpha to render with.
  */
-var LineStyleCanvas = function (ctx, src)
+var LineStyleCanvas = function (ctx, src, altColor, altAlpha)
 {
-    var strokeColor = src.strokeColor;
-    var strokeAlpha = src.strokeAlpha;
+    var strokeColor = (altColor) ? altColor : src.strokeColor;
+    var strokeAlpha = (altAlpha) ? altAlpha : src.strokeAlpha;
 
     var red = ((strokeColor & 0xFF0000) >>> 16);
     var green = ((strokeColor & 0xFF00) >>> 8);

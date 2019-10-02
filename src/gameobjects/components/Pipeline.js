@@ -1,13 +1,13 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Provides methods used for setting the WebGL rendering pipeline of a Game Object.
  *
- * @name Phaser.GameObjects.Components.Pipeline
+ * @namespace Phaser.GameObjects.Components.Pipeline
  * @webglOnly
  * @since 3.0.0
  */

@@ -1,11 +1,12 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * @typedef {object} Phaser.Tweens.TweenConfigDefaults
+ * @typedef {object} Phaser.Types.Tweens.TweenConfigDefaults
+ * @since 3.0.0
  * 
  * @property {(object|object[])} targets - The object, or an array of objects, to run the tween on.
  * @property {number} [delay=0] - The number of milliseconds to delay before the tween will start.

@@ -1,16 +1,26 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var BaseSoundManager = require('../BaseSoundManager');
 var Class = require('../../utils/Class');
+var Events = require('../events');
 var HTML5AudioSound = require('./HTML5AudioSound');
 
 /**
  * HTML5 Audio implementation of the Sound Manager.
+ * 
+ * Note: To play multiple instances of the same HTML5 Audio sound, you need to provide an `instances` value when
+ * loading the sound with the Loader:
+ * 
+ * ```javascript
+ * this.load.audio('explosion', 'explosion.mp3', {
+ *     instances: 2
+ * });
+ * ```
  *
  * @class HTML5AudioSoundManager
  * @extends Phaser.Sound.BaseSoundManager
@@ -132,7 +142,7 @@ var HTML5AudioSoundManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - Asset key for the sound.
-     * @param {SoundConfig} [config] - An optional config object containing default sound settings.
+     * @param {Phaser.Types.Sound.SoundConfig} [config] - An optional config object containing default sound settings.
      *
      * @return {Phaser.Sound.HTML5AudioSound} The new sound instance.
      */
@@ -238,7 +248,7 @@ var HTML5AudioSoundManager = new Class({
             });
         };
 
-        this.once('unlocked', function ()
+        this.once(Events.UNLOCKED, function ()
         {
             this.forEachActiveSound(function (sound)
             {
@@ -355,16 +365,10 @@ var HTML5AudioSoundManager = new Class({
     },
 
     /**
-     * @event Phaser.Sound.HTML5AudioSoundManager#muteEvent
-     * @param {Phaser.Sound.HTML5AudioSoundManager} soundManager - Reference to the sound manager that emitted event.
-     * @param {boolean} value - An updated value of Phaser.Sound.HTML5AudioSoundManager#mute property.
-     */
-
-    /**
      * Sets the muted state of all this Sound Manager.
      *
      * @method Phaser.Sound.HTML5AudioSoundManager#setMute
-     * @fires Phaser.Sound.HTML5AudioSoundManager#muteEvent
+     * @fires Phaser.Sound.Events#GLOBAL_MUTE
      * @since 3.3.0
      *
      * @param {boolean} value - `true` to mute all sounds, `false` to unmute them.
@@ -381,7 +385,7 @@ var HTML5AudioSoundManager = new Class({
     /**
      * @name Phaser.Sound.HTML5AudioSoundManager#mute
      * @type {boolean}
-     * @fires Phaser.Sound.HTML5AudioSoundManager#muteEvent
+     * @fires Phaser.Sound.Events#GLOBAL_MUTE
      * @since 3.0.0
      */
     mute: {
@@ -400,22 +404,16 @@ var HTML5AudioSoundManager = new Class({
                 sound.updateMute();
             });
 
-            this.emit('mute', this, value);
+            this.emit(Events.GLOBAL_MUTE, this, value);
         }
 
     },
 
     /**
-     * @event Phaser.Sound.HTML5AudioSoundManager#volumeEvent
-     * @param {Phaser.Sound.HTML5AudioSoundManager} soundManager - Reference to the sound manager that emitted event.
-     * @param {number} value - An updated value of Phaser.Sound.HTML5AudioSoundManager#volume property.
-     */
-
-    /**
      * Sets the volume of this Sound Manager.
      *
      * @method Phaser.Sound.HTML5AudioSoundManager#setVolume
-     * @fires Phaser.Sound.HTML5AudioSoundManager#volumeEvent
+     * @fires Phaser.Sound.Events#GLOBAL_VOLUME
      * @since 3.3.0
      *
      * @param {number} value - The global volume of this Sound Manager.
@@ -432,7 +430,7 @@ var HTML5AudioSoundManager = new Class({
     /**
      * @name Phaser.Sound.HTML5AudioSoundManager#volume
      * @type {number}
-     * @fires Phaser.Sound.HTML5AudioSoundManager#volumeEvent
+     * @fires Phaser.Sound.Events#GLOBAL_VOLUME
      * @since 3.0.0
      */
     volume: {
@@ -451,7 +449,7 @@ var HTML5AudioSoundManager = new Class({
                 sound.updateVolume();
             });
 
-            this.emit('volume', this, value);
+            this.emit(Events.GLOBAL_VOLUME, this, value);
         }
 
     }

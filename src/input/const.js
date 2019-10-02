@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var INPUT_CONST = {
@@ -61,6 +61,15 @@ var INPUT_CONST = {
     TOUCH_END: 5,
 
     /**
+     * The pointer lock has changed.
+     * 
+     * @name Phaser.Input.POINTER_LOCK_CHANGE
+     * @type {integer}
+     * @since 3.10.0
+     */
+    POINTER_LOCK_CHANGE: 6,
+
+    /**
      * A touch pointer has been been cancelled by the browser.
      * 
      * @name Phaser.Input.TOUCH_CANCEL
@@ -70,13 +79,13 @@ var INPUT_CONST = {
     TOUCH_CANCEL: 7,
 
     /**
-     * The pointer lock has changed.
+     * The mouse wheel changes.
      * 
-     * @name Phaser.Input.POINTER_LOCK_CHANGE
+     * @name Phaser.Input.MOUSE_WHEEL
      * @type {integer}
-     * @since 3.10.0
+     * @since 3.18.0
      */
-    POINTER_LOCK_CHANGE: 6
+    MOUSE_WHEEL: 8
 
 };
 

@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
@@ -10,15 +10,7 @@ var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
-
-/**
- * @typedef {object} Phaser.Loader.FileTypes.GLSLFileConfig
- *
- * @property {string} key - The key of the file. Must be unique within both the Loader and the Text Cache.
- * @property {string} [url] - The absolute or relative URL to load the file from.
- * @property {string} [extension='glsl'] - The default file extension to use if no url is provided.
- * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
- */
+var Shader = require('../../display/shader/BaseShader');
 
 /**
  * @classdesc
@@ -35,9 +27,10 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @since 3.0.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {(string|Phaser.Loader.FileTypes.TextFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|Phaser.Types.Loader.FileTypes.GLSLFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
- * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {string} [shaderType='fragment'] - The type of shader. Either `fragment` for a fragment shader, or `vertex` for a vertex shader. This is ignored if you load a shader bundle.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var GLSLFile = new Class({
 
@@ -45,7 +38,7 @@ var GLSLFile = new Class({
 
     initialize:
 
-    function GLSLFile (loader, key, url, xhrSettings)
+    function GLSLFile (loader, key, url, shaderType, xhrSettings)
     {
         var extension = 'glsl';
 
@@ -55,8 +48,13 @@ var GLSLFile = new Class({
 
             key = GetFastValue(config, 'key');
             url = GetFastValue(config, 'url');
+            shaderType = GetFastValue(config, 'shaderType', 'fragment');
             xhrSettings = GetFastValue(config, 'xhrSettings');
             extension = GetFastValue(config, 'extension', extension);
+        }
+        else if (shaderType === undefined)
+        {
+            shaderType = 'fragment';
         }
 
         var fileConfig = {
@@ -66,6 +64,9 @@ var GLSLFile = new Class({
             responseType: 'text',
             key: key,
             url: url,
+            config: {
+                shaderType: shaderType
+            },
             xhrSettings: xhrSettings
         };
 
@@ -86,6 +87,229 @@ var GLSLFile = new Class({
         this.data = this.xhrLoader.responseText;
 
         this.onProcessComplete();
+    },
+
+    /**
+     * Adds this file to its target cache upon successful loading and processing.
+     *
+     * @method Phaser.Loader.FileTypes.GLSLFile#addToCache
+     * @since 3.17.0
+     */
+    addToCache: function ()
+    {
+        var data = this.data.split('\n');
+
+        //  Check to see if this is a shader bundle, or raw glsl file.
+        var block = this.extractBlock(data, 0);
+
+        if (block)
+        {
+            while (block)
+            {
+                var key = this.getShaderName(block.header);
+                var shaderType = this.getShaderType(block.header);
+                var uniforms = this.getShaderUniforms(block.header);
+                var shaderSrc = block.shader;
+
+                if (this.cache.has(key))
+                {
+                    var shader = this.cache.get(key);
+
+                    if (shaderType === 'fragment')
+                    {
+                        shader.fragmentSrc = shaderSrc;
+                    }
+                    else
+                    {
+                        shader.vertexSrc = shaderSrc;
+                    }
+
+                    if (!shader.uniforms)
+                    {
+                        shader.uniforms = uniforms;
+                    }
+                }
+                else if (shaderType === 'fragment')
+                {
+                    this.cache.add(key, new Shader(key, shaderSrc, '', uniforms));
+                }
+                else
+                {
+                    this.cache.add(key, new Shader(key, '', shaderSrc, uniforms));
+                }
+
+                block = this.extractBlock(data, block.offset);
+            }
+        }
+        else if (this.config.shaderType === 'fragment')
+        {
+            //  Single shader
+            this.cache.add(this.key, new Shader(this.key, this.data));
+        }
+        else
+        {
+            this.cache.add(this.key, new Shader(this.key, '', this.data));
+        }
+
+        this.pendingDestroy();
+    },
+
+    /**
+     * Returns the name of the shader from the header block.
+     *
+     * @method Phaser.Loader.FileTypes.GLSLFile#getShaderName
+     * @since 3.17.0
+     * 
+     * @param {string[]} headerSource - The header data.
+     * 
+     * @return {string} The shader name.
+     */
+    getShaderName: function (headerSource)
+    {
+        for (var i = 0; i < headerSource.length; i++)
+        {
+            var line = headerSource[i].trim();
+
+            if (line.substring(0, 5) === 'name:')
+            {
+                return line.substring(5).trim();
+            }
+        }
+
+        return this.key;
+    },
+
+    /**
+     * Returns the type of the shader from the header block.
+     *
+     * @method Phaser.Loader.FileTypes.GLSLFile#getShaderType
+     * @since 3.17.0
+     * 
+     * @param {string[]} headerSource - The header data.
+     * 
+     * @return {string} The shader type. Either 'fragment' or 'vertex'.
+     */
+    getShaderType: function (headerSource)
+    {
+        for (var i = 0; i < headerSource.length; i++)
+        {
+            var line = headerSource[i].trim();
+
+            if (line.substring(0, 5) === 'type:')
+            {
+                return line.substring(5).trim();
+            }
+        }
+
+        return this.config.shaderType;
+    },
+
+    /**
+     * Returns the shader uniforms from the header block.
+     *
+     * @method Phaser.Loader.FileTypes.GLSLFile#getShaderUniforms
+     * @since 3.17.0
+     * 
+     * @param {string[]} headerSource - The header data.
+     * 
+     * @return {any} The shader uniforms object.
+     */
+    getShaderUniforms: function (headerSource)
+    {
+        var uniforms = {};
+
+        for (var i = 0; i < headerSource.length; i++)
+        {
+            var line = headerSource[i].trim();
+
+            if (line.substring(0, 8) === 'uniform.')
+            {
+                var pos = line.indexOf(':');
+
+                if (pos)
+                {
+                    var key = line.substring(8, pos);
+
+                    try
+                    {
+                        uniforms[key] = JSON.parse(line.substring(pos + 1));
+                    }
+                    catch (e)
+                    {
+                        console.warn('Invalid uniform JSON: ' + key);
+                    }
+                }
+            }
+        }
+
+        return uniforms;
+    },
+
+    /**
+     * Processes the shader file and extracts the relevant data.
+     *
+     * @method Phaser.Loader.FileTypes.GLSLFile#extractBlock
+     * @private
+     * @since 3.17.0
+     * 
+     * @param {string[]} data - The array of shader data to process.
+     * @param {integer} offset - The offset to start processing from.
+     * 
+     * @return {any} The processed shader block, or null.
+     */
+    extractBlock: function (data, offset)
+    {
+        var headerStart = -1;
+        var headerEnd = -1;
+        var blockEnd = -1;
+        var headerOpen = false;
+        var captureSource = false;
+        var headerSource = [];
+        var shaderSource = [];
+
+        for (var i = offset; i < data.length; i++)
+        {
+            var line = data[i].trim();
+
+            if (line === '---')
+            {
+                if (headerStart === -1)
+                {
+                    headerStart = i;
+                    headerOpen = true;
+                }
+                else if (headerOpen)
+                {
+                    headerEnd = i;
+                    headerOpen = false;
+                    captureSource = true;
+                }
+                else
+                {
+                    //  We've hit another --- delimeter, break out
+                    captureSource = false;
+                    break;
+                }
+            }
+            else if (headerOpen)
+            {
+                headerSource.push(line);
+            }
+            else if (captureSource)
+            {
+                shaderSource.push(line);
+                blockEnd = i;
+            }
+        }
+
+        if (!headerOpen && headerEnd !== -1)
+        {
+            return { header: headerSource, shader: shaderSource.join('\n'), offset: blockEnd };
+        }
+        else
+        {
+            return null;
+        }
     }
 
 });
@@ -121,11 +345,12 @@ var GLSLFile = new Class({
  * ```javascript
  * this.load.glsl({
  *     key: 'plasma',
+ *     shaderType: 'fragment',
  *     url: 'shaders/Plasma.glsl'
  * });
  * ```
  *
- * See the documentation for `Phaser.Loader.FileTypes.GLSLFileConfig` for more details.
+ * See the documentation for `Phaser.Types.Loader.FileTypes.GLSLFileConfig` for more details.
  *
  * Once the file has finished loading you can access it from its Cache using its key:
  * 
@@ -152,13 +377,14 @@ var GLSLFile = new Class({
  * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.0.0
  *
- * @param {(string|Phaser.Loader.FileTypes.GLSLFileConfig|Phaser.Loader.FileTypes.GLSLFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {(string|Phaser.Types.Loader.FileTypes.GLSLFileConfig|Phaser.Types.Loader.FileTypes.GLSLFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.glsl`, i.e. if `key` was "alien" then the URL will be "alien.glsl".
- * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
+ * @param {string} [shaderType='fragment'] - The type of shader. Either `fragment` for a fragment shader, or `vertex` for a vertex shader. This is ignored if you load a shader bundle.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */
-FileTypesManager.register('glsl', function (key, url, xhrSettings)
+FileTypesManager.register('glsl', function (key, url, shaderType, xhrSettings)
 {
     if (Array.isArray(key))
     {
@@ -170,7 +396,7 @@ FileTypesManager.register('glsl', function (key, url, xhrSettings)
     }
     else
     {
-        this.addFile(new GLSLFile(this, key, url, xhrSettings));
+        this.addFile(new GLSLFile(this, key, url, shaderType, xhrSettings));
     }
 
     return this;

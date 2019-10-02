@@ -1,11 +1,12 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Clamp = require('../../../math/Clamp');
 var Class = require('../../../utils/Class');
+var Events = require('../events');
 
 /**
  * @classdesc
@@ -128,17 +129,10 @@ var Flash = new Class({
         this._elapsed = 0;
 
         /**
-         * @callback CameraFlashCallback
-         *
-         * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera on which the effect is running.
-         * @param {number} progress - The progress of the effect. A value between 0 and 1.
-         */
-
-        /**
          * This callback is invoked every frame for the duration of the effect.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Flash#_onUpdate
-         * @type {?CameraFlashCallback}
+         * @type {?Phaser.Types.Cameras.Scene2D.CameraFlashCallback}
          * @private
          * @default null
          * @since 3.5.0
@@ -157,31 +151,11 @@ var Flash = new Class({
     },
 
     /**
-     * This event is fired when the flash effect begins to run on a camera.
-     *
-     * @event CameraFlashStartEvent
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.Flash} effect - A reference to the effect instance.
-     * @param {integer} duration - The duration of the effect.
-     * @param {integer} red - The red color channel value.
-     * @param {integer} green - The green color channel value.
-     * @param {integer} blue - The blue color channel value.
-     */
-
-    /**
-     * This event is fired when the flash effect completes.
-     *
-     * @event CameraFlashCompleteEvent
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.Flash} effect - A reference to the effect instance.
-     */
-
-    /**
      * Flashes the Camera to or from the given color over the duration specified.
      *
      * @method Phaser.Cameras.Scene2D.Effects.Flash#start
-     * @fires CameraFlashStartEvent
-     * @fires CameraFlashCompleteEvent
+     * @fires Phaser.Cameras.Scene2D.Events#FLASH_START
+     * @fires Phaser.Cameras.Scene2D.Events#FLASH_COMPLETE
      * @since 3.5.0
      *
      * @param {integer} [duration=250] - The duration of the effect in milliseconds.
@@ -189,7 +163,7 @@ var Flash = new Class({
      * @param {integer} [green=255] - The amount to fade the green channel towards. A value between 0 and 255.
      * @param {integer} [blue=255] - The amount to fade the blue channel towards. A value between 0 and 255.
      * @param {boolean} [force=false] - Force the effect to start immediately, even if already running.
-     * @param {CameraFlashCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
+     * @param {Phaser.Types.Cameras.Scene2D.CameraFlashCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
@@ -224,7 +198,7 @@ var Flash = new Class({
         this._onUpdate = callback;
         this._onUpdateScope = context;
 
-        this.camera.emit('cameraflashstart', this.camera, this, duration, red, green, blue);
+        this.camera.emit(Events.FLASH_START, this.camera, this, duration, red, green, blue);
 
         return this.camera;
     },
@@ -325,6 +299,7 @@ var Flash = new Class({
      * Called internally when the effect completes.
      *
      * @method Phaser.Cameras.Scene2D.Effects.Flash#effectComplete
+     * @fires Phaser.Cameras.Scene2D.Events#FLASH_COMPLETE
      * @since 3.5.0
      */
     effectComplete: function ()
@@ -334,7 +309,7 @@ var Flash = new Class({
 
         this.isRunning = false;
 
-        this.camera.emit('cameraflashcomplete', this.camera, this);
+        this.camera.emit(Events.FLASH_COMPLETE, this.camera, this);
     },
 
     /**

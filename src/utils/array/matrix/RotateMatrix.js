@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var CheckMatrix = require('./CheckMatrix');
@@ -18,10 +18,13 @@ var TransposeMatrix = require('./TransposeMatrix');
  * @function Phaser.Utils.Array.Matrix.RotateMatrix
  * @since 3.0.0
  *
- * @param {array} matrix - The array to rotate.
+ * @generic T
+ * @genericUse {T[][]} - [matrix,$return]
+ *
+ * @param {T[][]} [matrix] - The array to rotate.
  * @param {(number|string)} [direction=90] - The amount to rotate the matrix by.
  *
- * @return {array} The rotated matrix array. The source matrix should be discard for the returned matrix.
+ * @return {T[][]} The rotated matrix array. The source matrix should be discard for the returned matrix.
  */
 var RotateMatrix = function (matrix, direction)
 {

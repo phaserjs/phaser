@@ -1,34 +1,10 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../../utils/Class');
-
-/**
- * @callback EdgeZoneSourceCallback
- *
- * @param {integer} quantity - The number of particles to place on the source edge. If 0, `stepRate` should be used instead.
- * @param {number} [stepRate] - The distance between each particle. When set, `quantity` is implied and should be set to `0`.
- *
- * @return {Phaser.Geom.Point[]} - The points placed on the source edge.
- */
-
-/**
- * @typedef {object} EdgeZoneSource
- *
- * @property {EdgeZoneSourceCallback} getPoints - A function placing points on the source's edge or edges.
- *
- * @see Phaser.Curves.Curve
- * @see Phaser.Curves.Path
- * @see Phaser.Geom.Circle
- * @see Phaser.Geom.Ellipse
- * @see Phaser.Geom.Line
- * @see Phaser.Geom.Polygon
- * @see Phaser.Geom.Rectangle
- * @see Phaser.Geom.Triangle
- */
 
 /**
  * @classdesc
@@ -39,7 +15,7 @@ var Class = require('../../../utils/Class');
  * @constructor
  * @since 3.0.0
  *
- * @param {EdgeZoneSource} source - An object instance with a `getPoints(quantity, stepRate)` method returning an array of points.
+ * @param {Phaser.Types.GameObjects.Particles.EdgeZoneSource} source - An object instance with a `getPoints(quantity, stepRate)` method returning an array of points.
  * @param {integer} quantity - The number of particles to place on the source edge. Set to 0 to use `stepRate` instead.
  * @param {number} stepRate - The distance between each particle. When set, `quantity` is implied and should be set to 0.
  * @param {boolean} [yoyo=false] - Whether particles are placed from start to end and then end to start.
@@ -58,7 +34,7 @@ var EdgeZone = new Class({
          * An object instance with a `getPoints(quantity, stepRate)` method returning an array of points.
          *
          * @name Phaser.GameObjects.Particles.Zones.EdgeZone#source
-         * @type {EdgeZoneSource|RandomZoneSource}
+         * @type {Phaser.Types.GameObjects.Particles.EdgeZoneSource|Phaser.Types.GameObjects.Particles.RandomZoneSource}
          * @since 3.0.0
          */
         this.source = source;
@@ -187,12 +163,12 @@ var EdgeZone = new Class({
     },
 
     /**
-     * Change the EdgeZone's source.
+     * Change the source of the EdgeZone.
      *
      * @method Phaser.GameObjects.Particles.Zones.EdgeZone#changeSource
      * @since 3.0.0
      *
-     * @param {EdgeZoneSource} source - An object instance with a `getPoints(quantity, stepRate)` method returning an array of points.
+     * @param {Phaser.Types.GameObjects.Particles.EdgeZoneSource} source - An object instance with a `getPoints(quantity, stepRate)` method returning an array of points.
      *
      * @return {Phaser.GameObjects.Particles.Zones.EdgeZone} This Edge Zone.
      */

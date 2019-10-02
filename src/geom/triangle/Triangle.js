@@ -1,13 +1,14 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
 var Contains = require('./Contains');
 var GetPoint = require('./GetPoint');
 var GetPoints = require('./GetPoints');
+var GEOM_CONST = require('../const');
 var Line = require('../line/Line');
 var Random = require('./Random');
 
@@ -41,6 +42,17 @@ var Triangle = new Class({
         if (y2 === undefined) { y2 = 0; }
         if (x3 === undefined) { x3 = 0; }
         if (y3 === undefined) { y3 = 0; }
+
+        /**
+         * The geometry constant type of this object: `GEOM_CONST.TRIANGLE`.
+         * Used for fast type comparisons.
+         *
+         * @name Phaser.Geom.Triangle#type
+         * @type {integer}
+         * @readonly
+         * @since 3.19.0
+         */
+        this.type = GEOM_CONST.TRIANGLE;
 
         /**
          * `x` coordinate of the first point.

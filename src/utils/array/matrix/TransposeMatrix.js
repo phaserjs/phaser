@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -11,10 +11,13 @@
  *
  * @function Phaser.Utils.Array.Matrix.TransposeMatrix
  * @since 3.0.0
+ * 
+ * @generic T
+ * @genericUse {T[][]} - [array,$return]
+ * 
+ * @param {T[][]} [array] - The array matrix to transpose.
  *
- * @param {array} array - The array matrix to transpose.
- *
- * @return {array} A new array matrix which is a transposed version of the given array.
+ * @return {T[][]} A new array matrix which is a transposed version of the given array.
  */
 var TransposeMatrix = function (array)
 {

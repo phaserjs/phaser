@@ -1,14 +1,14 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Provides methods for setting the size of an Arcade Physics Game Object.
  * Should be applied as a mixin and not used directly.
  *
- * @name Phaser.Physics.Arcade.Components.Size
+ * @namespace Phaser.Physics.Arcade.Components.Size
  * @since 3.0.0
  */
 var Size = {

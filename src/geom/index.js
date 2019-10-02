@@ -1,14 +1,17 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
+
+var CONST = require('./const');
+var Extend = require('../utils/object/Extend');
 
 /**
  * @namespace Phaser.Geom
  */
 
-module.exports = {
+var Geom = {
     
     Circle: require('./circle'),
     Ellipse: require('./ellipse'),
@@ -20,3 +23,8 @@ module.exports = {
     Triangle: require('./triangle')
 
 };
+
+//   Merge in the consts
+Geom = Extend(false, Geom, CONST);
+
+module.exports = Geom;

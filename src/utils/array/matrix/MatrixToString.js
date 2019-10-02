@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Pad = require('../../string/Pad');
@@ -13,7 +13,10 @@ var CheckMatrix = require('./CheckMatrix');
  * @function Phaser.Utils.Array.Matrix.MatrixToString
  * @since 3.0.0
  *
- * @param {array} matrix - A 2-dimensional array.
+ * @generic T
+ * @genericUse {T[][]} - [matrix]
+ *
+ * @param {T[][]} [matrix] - A 2-dimensional array.
  *
  * @return {string} A string representing the matrix.
  */

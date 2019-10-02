@@ -1,15 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * @typedef {object} HSVColorObject
- *
- * @property {number} h - The hue color value. A number between 0 and 1
- * @property {number} s - The saturation color value. A number between 0 and 1
- * @property {number} v - The lightness color value. A number between 0 and 1
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -24,9 +16,9 @@
  * @param {integer} r - The red color value. A number between 0 and 255.
  * @param {integer} g - The green color value. A number between 0 and 255.
  * @param {integer} b - The blue color value. A number between 0 and 255.
- * @param {(HSVColorObject|Phaser.Display.Color)} [out] - An object to store the color values in. If not given an HSV Color Object will be created.
+ * @param {(Phaser.Types.Display.HSVColorObject|Phaser.Display.Color)} [out] - An object to store the color values in. If not given an HSV Color Object will be created.
  *
- * @return {(HSVColorObject|Phaser.Display.Color)} An object with the properties `h`, `s` and `v` set.
+ * @return {(Phaser.Types.Display.HSVColorObject|Phaser.Display.Color)} An object with the properties `h`, `s` and `v` set.
  */
 var RGBToHSV = function (r, g, b, out)
 {

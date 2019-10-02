@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../../utils/Class');
@@ -23,6 +23,9 @@ var LineRender = require('./LineRender');
  * thickness for the start and end of the line, allowing you to render lines that taper-off.
  * 
  * If you need to draw multiple lines in a sequence you may wish to use the Polygon Shape instead.
+ *
+ * Be aware that as with all Game Objects the default origin is 0.5. If you need to draw a Line
+ * between two points and want the x1/y1 values to match the x/y values, then set the origin to 0.
  *
  * @class Line
  * @extends Phaser.GameObjects.Shape

@@ -1,10 +1,11 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
+var Events = require('../events');
 var File = require('../File');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetURL = require('../GetURL');
@@ -25,9 +26,9 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @since 3.0.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {(string|Phaser.Loader.FileTypes.AudioFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|Phaser.Types.Loader.FileTypes.AudioFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [urlConfig] - The absolute or relative URL to load this file from.
- * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var HTML5AudioFile = new Class({
 
@@ -104,6 +105,7 @@ var HTML5AudioFile = new Class({
      * Called during the file load progress. Is sent a DOM ProgressEvent.
      *
      * @method Phaser.Loader.FileTypes.HTML5AudioFile#onProgress
+     * @fires Phaser.Loader.Events#FILE_PROGRESS
      * @since 3.0.0
      */
     onProgress: function (event)
@@ -117,7 +119,7 @@ var HTML5AudioFile = new Class({
 
         this.percentComplete = Math.min((this.filesLoaded / this.filesTotal), 1);
 
-        this.loader.emit('fileprogress', this, this.percentComplete);
+        this.loader.emit(Events.FILE_PROGRESS, this, this.percentComplete);
 
         if (this.filesLoaded === this.filesTotal)
         {
@@ -146,7 +148,7 @@ var HTML5AudioFile = new Class({
         for (var i = 0; i < instances; i++)
         {
             var audio = new Audio();
-
+            audio.dataset = {};
             audio.dataset.name = this.key + ('0' + i).slice(-2);
             audio.dataset.used = 'false';
 

@@ -1,12 +1,14 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Base64ToArrayBuffer = require('../../utils/base64/Base64ToArrayBuffer');
 var BaseSoundManager = require('../BaseSoundManager');
 var Class = require('../../utils/Class');
+var Events = require('../events');
 var WebAudioSound = require('./WebAudioSound');
 
 /**
@@ -119,7 +121,7 @@ var WebAudioSoundManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - Asset key for the sound.
-     * @param {SoundConfig} [config] - An optional config object containing default sound settings.
+     * @param {Phaser.Types.Sound.SoundConfig} [config] - An optional config object containing default sound settings.
      *
      * @return {Phaser.Sound.WebAudioSound} The new sound instance.
      */
@@ -130,6 +132,87 @@ var WebAudioSoundManager = new Class({
         this.sounds.push(sound);
 
         return sound;
+    },
+
+    /**
+     * Decode audio data into a format ready for playback via Web Audio.
+     * 
+     * The audio data can be a base64 encoded string, an audio media-type data uri, or an ArrayBuffer instance.
+     * 
+     * The `audioKey` is the key that will be used to save the decoded audio to the audio cache.
+     * 
+     * Instead of passing a single entry you can instead pass an array of `Phaser.Types.Sound.DecodeAudioConfig`
+     * objects as the first and only argument.
+     * 
+     * Decoding is an async process, so be sure to listen for the events to know when decoding has completed.
+     * 
+     * Once the audio has decoded it can be added to the Sound Manager or played via its key.
+     *
+     * @method Phaser.Sound.WebAudioSoundManager#decodeAudio
+     * @fires Phaser.Sound.Events#DECODED
+     * @fires Phaser.Sound.Events#DECODED_ALL
+     * @since 3.18.0
+     *
+     * @param {(Phaser.Types.Sound.DecodeAudioConfig[]|string)} [audioKey] - The string-based key to be used to reference the decoded audio in the audio cache, or an array of audio config objects.
+     * @param {(ArrayBuffer|string)} [audioData] - The audio data, either a base64 encoded string, an audio media-type data uri, or an ArrayBuffer instance.
+     */
+    decodeAudio: function (audioKey, audioData)
+    {
+        var audioFiles;
+
+        if (!Array.isArray(audioKey))
+        {
+            audioFiles = [ { key: audioKey, data: audioData } ];
+        }
+        else
+        {
+            audioFiles = audioKey;
+        }
+
+        var cache = this.game.cache.audio;
+        var remaining = audioFiles.length;
+
+        for (var i = 0; i < audioFiles.length; i++)
+        {
+            var entry = audioFiles[i];
+
+            var key = entry.key;
+            var data = entry.data;
+
+            if (typeof data === 'string')
+            {
+                data = Base64ToArrayBuffer(data);
+            }
+
+            var success = function (key, audioBuffer)
+            {
+                cache.add(key, audioBuffer);
+    
+                this.emit(Events.DECODED, key);
+
+                remaining--;
+
+                if (remaining === 0)
+                {
+                    this.emit(Events.DECODED_ALL);
+                }
+            }.bind(this, key);
+    
+            var failure = function (key, error)
+            {
+                //  eslint-disable-next-line no-console
+                console.error('Error decoding audio: ' + key + ' - ', error ? error.message : '');
+
+                remaining--;
+
+                if (remaining === 0)
+                {
+                    this.emit(Events.DECODED_ALL);
+                }
+            }.bind(this, key);
+
+            this.context.decodeAudioData(data, success, failure);
+        }
     },
 
     /**
@@ -146,14 +229,22 @@ var WebAudioSoundManager = new Class({
 
         var unlockHandler = function unlockHandler ()
         {
-            _this.context.resume().then(function ()
+            if (_this.context)
             {
-                document.body.removeEventListener('touchstart', unlockHandler);
-                document.body.removeEventListener('touchend', unlockHandler);
-                document.body.removeEventListener('click', unlockHandler);
-
-                _this.unlocked = true;
-            });
+                _this.context.resume().then(function ()
+                {
+                    document.body.removeEventListener('touchstart', unlockHandler);
+                    document.body.removeEventListener('touchend', unlockHandler);
+                    document.body.removeEventListener('click', unlockHandler);
+    
+                    _this.unlocked = true;
+                }, function ()
+                {
+                    document.body.removeEventListener('touchstart', unlockHandler);
+                    document.body.removeEventListener('touchend', unlockHandler);
+                    document.body.removeEventListener('click', unlockHandler);
+                });
+            }
         };
 
         if (document.body)
@@ -231,16 +322,10 @@ var WebAudioSoundManager = new Class({
     },
 
     /**
-     * @event Phaser.Sound.WebAudioSoundManager#muteEvent
-     * @param {Phaser.Sound.WebAudioSoundManager} soundManager - Reference to the sound manager that emitted event.
-     * @param {boolean} value - An updated value of Phaser.Sound.WebAudioSoundManager#mute property.
-     */
-
-    /**
      * Sets the muted state of all this Sound Manager.
      *
      * @method Phaser.Sound.WebAudioSoundManager#setMute
-     * @fires Phaser.Sound.WebAudioSoundManager#muteEvent
+     * @fires Phaser.Sound.Events#GLOBAL_MUTE
      * @since 3.3.0
      *
      * @param {boolean} value - `true` to mute all sounds, `false` to unmute them.
@@ -257,7 +342,7 @@ var WebAudioSoundManager = new Class({
     /**
      * @name Phaser.Sound.WebAudioSoundManager#mute
      * @type {boolean}
-     * @fires Phaser.Sound.WebAudioSoundManager#MuteEvent
+     * @fires Phaser.Sound.Events#GLOBAL_MUTE
      * @since 3.0.0
      */
     mute: {
@@ -271,22 +356,16 @@ var WebAudioSoundManager = new Class({
         {
             this.masterMuteNode.gain.setValueAtTime(value ? 0 : 1, 0);
 
-            this.emit('mute', this, value);
+            this.emit(Events.GLOBAL_MUTE, this, value);
         }
 
     },
 
     /**
-     * @event Phaser.Sound.WebAudioSoundManager#VolumeEvent
-     * @param {Phaser.Sound.WebAudioSoundManager} soundManager - Reference to the sound manager that emitted event.
-     * @param {number} value - An updated value of Phaser.Sound.WebAudioSoundManager#volume property.
-     */
-
-    /**
      * Sets the volume of this Sound Manager.
      *
      * @method Phaser.Sound.WebAudioSoundManager#setVolume
-     * @fires Phaser.Sound.WebAudioSoundManager#VolumeEvent
+     * @fires Phaser.Sound.Events#GLOBAL_VOLUME
      * @since 3.3.0
      *
      * @param {number} value - The global volume of this Sound Manager.
@@ -303,7 +382,7 @@ var WebAudioSoundManager = new Class({
     /**
      * @name Phaser.Sound.WebAudioSoundManager#volume
      * @type {number}
-     * @fires Phaser.Sound.WebAudioSoundManager#VolumeEvent
+     * @fires Phaser.Sound.Events#GLOBAL_VOLUME
      * @since 3.0.0
      */
     volume: {
@@ -317,7 +396,7 @@ var WebAudioSoundManager = new Class({
         {
             this.masterVolumeNode.gain.setValueAtTime(value, 0);
 
-            this.emit('volume', this, value);
+            this.emit(Events.GLOBAL_VOLUME, this, value);
         }
 
     }

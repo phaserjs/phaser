@@ -1,8 +1,8 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Felipe Alfonso <@bitnenfer>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
@@ -87,7 +87,7 @@ var WebGLPipeline = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.resolution = config.game.config.resolution;
+        this.resolution = 1;
 
         /**
          * Width of the current viewport
@@ -96,7 +96,7 @@ var WebGLPipeline = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.width = config.game.config.width * this.resolution;
+        this.width = 0;
 
         /**
          * Height of the current viewport
@@ -105,7 +105,7 @@ var WebGLPipeline = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.height = config.game.config.height * this.resolution;
+        this.height = 0;
 
         /**
          * The WebGL context this WebGL Pipeline uses.
@@ -275,6 +275,10 @@ var WebGLPipeline = new Class({
             offset: offset
         });
 
+        this.vertexComponentCount = Utils.getComponentCount(
+            this.attributes,
+            this.gl
+        );
         return this;
     },
 
@@ -307,6 +311,7 @@ var WebGLPipeline = new Class({
     {
         this.width = width * resolution;
         this.height = height * resolution;
+        this.resolution = resolution;
 
         return this;
     },
@@ -341,7 +346,7 @@ var WebGLPipeline = new Class({
                 gl.enableVertexAttribArray(location);
                 gl.vertexAttribPointer(location, element.size, element.type, element.normalized, vertexSize, element.offset);
             }
-            else
+            else if (location !== -1)
             {
                 gl.disableVertexAttribArray(location);
             }

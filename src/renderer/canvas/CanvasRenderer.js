@@ -1,16 +1,16 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Felipe Alfonso <@bitnenfer>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var CanvasSnapshot = require('../snapshot/CanvasSnapshot');
+var CameraEvents = require('../../cameras/2d/events');
 var Class = require('../../utils/Class');
 var CONST = require('../../const');
 var GetBlendModes = require('./utils/GetBlendModes');
-var ScaleModes = require('../ScaleModes');
-var Smoothing = require('../../display/canvas/Smoothing');
+var ScaleEvents = require('../../scale/events');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 
 /**
@@ -62,44 +62,34 @@ var CanvasRenderer = new Class({
          * The width of the canvas being rendered to.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#width
-         * @type {number}
+         * @type {integer}
          * @since 3.0.0
          */
-        this.width = game.config.width;
+        this.width = 0;
 
         /**
          * The height of the canvas being rendered to.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#height
-         * @type {number}
+         * @type {integer}
          * @since 3.0.0
          */
-        this.height = game.config.height;
+        this.height = 0;
 
         /**
          * The local configuration settings of the CanvasRenderer.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#config
-         * @type {RendererConfig}
+         * @type {object}
          * @since 3.0.0
          */
         this.config = {
             clearBeforeRender: game.config.clearBeforeRender,
             backgroundColor: game.config.backgroundColor,
             resolution: game.config.resolution,
-            autoResize: game.config.autoResize,
             antialias: game.config.antialias,
             roundPixels: game.config.roundPixels
         };
-
-        /**
-         * The scale mode which should be used by the CanvasRenderer.
-         *
-         * @name Phaser.Renderer.Canvas.CanvasRenderer#scaleMode
-         * @type {integer}
-         * @since 3.0.0
-         */
-        this.scaleMode = (game.config.antialias) ? ScaleModes.LINEAR : ScaleModes.NEAREST;
 
         /**
          * The canvas element which the Game uses.
@@ -110,6 +100,11 @@ var CanvasRenderer = new Class({
          */
         this.gameCanvas = game.canvas;
 
+        var contextOptions = {
+            alpha: game.config.transparent,
+            desynchronized: game.config.desynchronized
+        };
+
         /**
          * The canvas context used to render all Cameras in all Scenes during the game loop.
          *
@@ -117,7 +112,7 @@ var CanvasRenderer = new Class({
          * @type {CanvasRenderingContext2D}
          * @since 3.0.0
          */
-        this.gameContext = (this.game.config.context) ? this.game.config.context : this.gameCanvas.getContext('2d');
+        this.gameContext = (this.game.config.context) ? this.game.config.context : this.gameCanvas.getContext('2d', contextOptions);
 
         /**
          * The canvas context currently used by the CanvasRenderer for all rendering operations.
@@ -127,6 +122,15 @@ var CanvasRenderer = new Class({
          * @since 3.0.0
          */
         this.currentContext = this.gameContext;
+
+        /**
+         * Should the Canvas use Image Smoothing or not when drawing Sprites?
+         *
+         * @name Phaser.Renderer.Canvas.CanvasRenderer#antialias
+         * @type {boolean}
+         * @since 3.20.0
+         */
+        this.antialias = game.config.antialias;
 
         /**
          * The blend modes supported by the Canvas Renderer.
@@ -139,48 +143,25 @@ var CanvasRenderer = new Class({
          */
         this.blendModes = GetBlendModes();
 
-        // image-rendering: optimizeSpeed;
-        // image-rendering: pixelated;
-
         /**
-         * The scale mode currently in use by the Canvas Renderer.
+         * Details about the currently scheduled snapshot.
+         * 
+         * If a non-null `callback` is set in this object, a snapshot of the canvas will be taken after the current frame is fully rendered.
          *
-         * @name Phaser.Renderer.Canvas.CanvasRenderer#currentScaleMode
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
+         * @name Phaser.Renderer.Canvas.CanvasRenderer#snapshotState
+         * @type {Phaser.Types.Renderer.Snapshot.SnapshotState}
+         * @since 3.16.0
          */
-        this.currentScaleMode = 0;
-
-        /**
-         * If a snapshot is scheduled, the function to call after it is taken.
-         *
-         * @name Phaser.Renderer.Canvas.CanvasRenderer#snapshotCallback
-         * @type {?SnapshotCallback}
-         * @default null
-         * @since 3.0.0
-         */
-        this.snapshotCallback = null;
-
-        /**
-         * The type of the image to create when taking the snapshot, usually `image/png`.
-         *
-         * @name Phaser.Renderer.Canvas.CanvasRenderer#snapshotType
-         * @type {?string}
-         * @default null
-         * @since 3.0.0
-         */
-        this.snapshotType = null;
-
-        /**
-         * The image quality of the snapshot which will be taken, between 0 and 1, for image formats which use lossy compression (such as `image/jpeg`).
-         *
-         * @name Phaser.Renderer.Canvas.CanvasRenderer#snapshotEncoder
-         * @type {?number}
-         * @default null
-         * @since 3.0.0
-         */
-        this.snapshotEncoder = null;
+        this.snapshotState = {
+            x: 0,
+            y: 0,
+            width: 1,
+            height: 1,
+            getPixel: false,
+            callback: null,
+            type: 'image/png',
+            encoder: 0.92
+        };
 
         /**
          * A temporary Transform Matrix, re-used internally during batching.
@@ -233,7 +214,31 @@ var CanvasRenderer = new Class({
      */
     init: function ()
     {
-        this.resize(this.width, this.height);
+        this.game.scale.on(ScaleEvents.RESIZE, this.onResize, this);
+
+        var baseSize = this.game.scale.baseSize;
+
+        this.resize(baseSize.width, baseSize.height);
+    },
+
+    /**
+     * The event handler that manages the `resize` event dispatched by the Scale Manager.
+     *
+     * @method Phaser.Renderer.Canvas.CanvasRenderer#onResize
+     * @since 3.16.0
+     *
+     * @param {Phaser.Structs.Size} gameSize - The default Game Size object. This is the un-modified game dimensions.
+     * @param {Phaser.Structs.Size} baseSize - The base Size object. The game dimensions multiplied by the resolution. The canvas width / height values match this.
+     * @param {Phaser.Structs.Size} displaySize - The display Size object. The size of the canvas style width / height attributes.
+     * @param {number} [resolution] - The Scale Manager resolution setting.
+     */
+    onResize: function (gameSize, baseSize)
+    {
+        //  Has the underlying canvas size changed?
+        if (baseSize.width !== this.width || baseSize.height !== this.height)
+        {
+            this.resize(baseSize.width, baseSize.height);
+        }
     },
 
     /**
@@ -242,59 +247,13 @@ var CanvasRenderer = new Class({
      * @method Phaser.Renderer.Canvas.CanvasRenderer#resize
      * @since 3.0.0
      *
-     * @param {integer} width - The new width of the canvas.
-     * @param {integer} height - The new height of the canvas.
+     * @param {number} [width] - The new width of the renderer.
+     * @param {number} [height] - The new height of the renderer.
      */
     resize: function (width, height)
     {
         this.width = width;
         this.height = height;
-
-        /*
-        var resolution = this.config.resolution;
-
-        this.width = width * resolution;
-        this.height = height * resolution;
-
-        this.gameCanvas.width = this.width;
-        this.gameCanvas.height = this.height;
-
-        if (this.config.autoResize)
-        {
-            this.gameCanvas.style.width = (this.width / resolution) + 'px';
-            this.gameCanvas.style.height = (this.height / resolution) + 'px';
-        }
-        */
-
-        //  Resizing a canvas will reset imageSmoothingEnabled (and probably other properties)
-        if (this.scaleMode === ScaleModes.NEAREST)
-        {
-            Smoothing.disable(this.gameContext);
-        }
-    },
-
-    /**
-     * A NOOP method for handling lost context. Intentionally empty.
-     *
-     * @method Phaser.Renderer.Canvas.CanvasRenderer#onContextLost
-     * @since 3.0.0
-     *
-     * @param {function} callback - Ignored parameter.
-     */
-    onContextLost: function ()
-    {
-    },
-
-    /**
-     * A NOOP method for handling restored context. Intentionally empty.
-     *
-     * @method Phaser.Renderer.Canvas.CanvasRenderer#onContextRestored
-     * @since 3.0.0
-     *
-     * @param {function} callback - Ignored parameter.
-     */
-    onContextRestored: function ()
-    {
     },
 
     /**
@@ -428,6 +387,13 @@ var CanvasRenderer = new Class({
 
         this.currentContext = ctx;
 
+        var mask = camera.mask;
+
+        if (mask)
+        {
+            mask.preRenderCanvas(this, null, camera._maskCamera);
+        }
+
         if (!camera.transparent)
         {
             ctx.fillStyle = camera.backgroundColor.rgba;
@@ -442,7 +408,7 @@ var CanvasRenderer = new Class({
 
         if (camera.renderToTexture)
         {
-            camera.emit('prerender', camera);
+            camera.emit(CameraEvents.PRE_RENDER, camera);
         }
 
         camera.matrix.copyToContext(ctx);
@@ -478,12 +444,17 @@ var CanvasRenderer = new Class({
 
         camera.dirty = false;
 
+        if (mask)
+        {
+            mask.postRenderCanvas(this);
+        }
+
         //  Restore pre-clip context
         ctx.restore();
 
         if (camera.renderToTexture)
         {
-            camera.emit('postrender', camera);
+            camera.emit(CameraEvents.POST_RENDER, camera);
 
             scene.sys.context.drawImage(camera.canvas, cx, cy);
         }
@@ -503,28 +474,149 @@ var CanvasRenderer = new Class({
 
         ctx.restore();
 
-        if (this.snapshotCallback)
+        var state = this.snapshotState;
+
+        if (state.callback)
         {
-            this.snapshotCallback(CanvasSnapshot(this.gameCanvas, this.snapshotType, this.snapshotEncoder));
-            this.snapshotCallback = null;
+            CanvasSnapshot(this.gameCanvas, state);
+
+            state.callback = null;
         }
     },
 
     /**
-     * Schedules a snapshot to be taken after the current frame is rendered.
+     * Takes a snapshot of the given area of the given canvas.
+     * 
+     * Unlike the other snapshot methods, this one is processed immediately and doesn't wait for the next render.
+     * 
+     * Snapshots work by creating an Image object from the canvas data, this is a blocking process, which gets
+     * more expensive the larger the canvas size gets, so please be careful how you employ this in your game.
+     *
+     * @method Phaser.Renderer.Canvas.CanvasRenderer#snapshotCanvas
+     * @since 3.19.0
+     *
+     * @param {HTMLCanvasElement} canvas - The canvas to grab from.
+     * @param {Phaser.Types.Renderer.Snapshot.SnapshotCallback} callback - The Function to invoke after the snapshot image is created.
+     * @param {boolean} [getPixel=false] - Grab a single pixel as a Color object, or an area as an Image object?
+     * @param {integer} [x=0] - The x coordinate to grab from.
+     * @param {integer} [y=0] - The y coordinate to grab from.
+     * @param {integer} [width=canvas.width] - The width of the area to grab.
+     * @param {integer} [height=canvas.height] - The height of the area to grab.
+     * @param {string} [type='image/png'] - The format of the image to create, usually `image/png` or `image/jpeg`.
+     * @param {number} [encoderOptions=0.92] - The image quality, between 0 and 1. Used for image formats with lossy compression, such as `image/jpeg`.
+     *
+     * @return {this} This Canvas Renderer.
+     */
+    snapshotCanvas: function (canvas, callback, getPixel, x, y, width, height, type, encoderOptions)
+    {
+        if (getPixel === undefined) { getPixel = false; }
+
+        this.snapshotArea(x, y, width, height, callback, type, encoderOptions);
+
+        var state = this.snapshotState;
+
+        state.getPixel = getPixel;
+
+        CanvasSnapshot(this.canvas, state);
+
+        state.callback = null;
+
+        return this;
+    },
+
+    /**
+     * Schedules a snapshot of the entire game viewport to be taken after the current frame is rendered.
+     * 
+     * To capture a specific area see the `snapshotArea` method. To capture a specific pixel, see `snapshotPixel`.
+     * 
+     * Only one snapshot can be active _per frame_. If you have already called `snapshotPixel`, for example, then
+     * calling this method will override it.
+     * 
+     * Snapshots work by creating an Image object from the canvas data, this is a blocking process, which gets
+     * more expensive the larger the canvas size gets, so please be careful how you employ this in your game.
      *
      * @method Phaser.Renderer.Canvas.CanvasRenderer#snapshot
      * @since 3.0.0
      *
-     * @param {SnapshotCallback} callback - Function to invoke after the snapshot is created.
-     * @param {string} type - The format of the image to create, usually `image/png`.
-     * @param {number} encoderOptions - The image quality, between 0 and 1, to use for image formats with lossy compression (such as `image/jpeg`).
+     * @param {Phaser.Types.Renderer.Snapshot.SnapshotCallback} callback - The Function to invoke after the snapshot image is created.
+     * @param {string} [type='image/png'] - The format of the image to create, usually `image/png` or `image/jpeg`.
+     * @param {number} [encoderOptions=0.92] - The image quality, between 0 and 1. Used for image formats with lossy compression, such as `image/jpeg`.
+     *
+     * @return {this} This WebGL Renderer.
      */
     snapshot: function (callback, type, encoderOptions)
     {
-        this.snapshotCallback = callback;
-        this.snapshotType = type;
-        this.snapshotEncoder = encoderOptions;
+        return this.snapshotArea(0, 0, this.gameCanvas.width, this.gameCanvas.height, callback, type, encoderOptions);
+    },
+
+    /**
+     * Schedules a snapshot of the given area of the game viewport to be taken after the current frame is rendered.
+     * 
+     * To capture the whole game viewport see the `snapshot` method. To capture a specific pixel, see `snapshotPixel`.
+     * 
+     * Only one snapshot can be active _per frame_. If you have already called `snapshotPixel`, for example, then
+     * calling this method will override it.
+     * 
+     * Snapshots work by creating an Image object from the canvas data, this is a blocking process, which gets
+     * more expensive the larger the canvas size gets, so please be careful how you employ this in your game.
+     *
+     * @method Phaser.Renderer.Canvas.CanvasRenderer#snapshotArea
+     * @since 3.16.0
+     *
+     * @param {integer} x - The x coordinate to grab from.
+     * @param {integer} y - The y coordinate to grab from.
+     * @param {integer} width - The width of the area to grab.
+     * @param {integer} height - The height of the area to grab.
+     * @param {Phaser.Types.Renderer.Snapshot.SnapshotCallback} callback - The Function to invoke after the snapshot image is created.
+     * @param {string} [type='image/png'] - The format of the image to create, usually `image/png` or `image/jpeg`.
+     * @param {number} [encoderOptions=0.92] - The image quality, between 0 and 1. Used for image formats with lossy compression, such as `image/jpeg`.
+     *
+     * @return {this} This WebGL Renderer.
+     */
+    snapshotArea: function (x, y, width, height, callback, type, encoderOptions)
+    {
+        var state = this.snapshotState;
+
+        state.callback = callback;
+        state.type = type;
+        state.encoder = encoderOptions;
+        state.getPixel = false;
+        state.x = x;
+        state.y = y;
+        state.width = Math.min(width, this.gameCanvas.width);
+        state.height = Math.min(height, this.gameCanvas.height);
+
+        return this;
+    },
+
+    /**
+     * Schedules a snapshot of the given pixel from the game viewport to be taken after the current frame is rendered.
+     * 
+     * To capture the whole game viewport see the `snapshot` method. To capture a specific area, see `snapshotArea`.
+     * 
+     * Only one snapshot can be active _per frame_. If you have already called `snapshotArea`, for example, then
+     * calling this method will override it.
+     * 
+     * Unlike the other two snapshot methods, this one will return a `Color` object containing the color data for
+     * the requested pixel. It doesn't need to create an internal Canvas or Image object, so is a lot faster to execute,
+     * using less memory.
+     *
+     * @method Phaser.Renderer.Canvas.CanvasRenderer#snapshotPixel
+     * @since 3.16.0
+     *
+     * @param {integer} x - The x coordinate of the pixel to get.
+     * @param {integer} y - The y coordinate of the pixel to get.
+     * @param {Phaser.Types.Renderer.Snapshot.SnapshotCallback} callback - The Function to invoke after the snapshot pixel data is extracted.
+     *
+     * @return {this} This WebGL Renderer.
+     */
+    snapshotPixel: function (x, y, callback)
+    {
+        this.snapshotArea(x, y, 1, 1, callback);
+
+        this.snapshotState.getPixel = true;
+
+        return this;
     },
 
     /**
@@ -560,14 +652,16 @@ var CanvasRenderer = new Class({
         var frameY = cd.y;
         var frameWidth = frame.cutWidth;
         var frameHeight = frame.cutHeight;
+        var customPivot = frame.customPivot;
+
         var res = frame.source.resolution;
 
-        var x = -sprite.displayOriginX + frame.x;
-        var y = -sprite.displayOriginY + frame.y;
+        var displayOriginX = sprite.displayOriginX;
+        var displayOriginY = sprite.displayOriginY;
 
-        var fx = (sprite.flipX) ? -1 : 1;
-        var fy = (sprite.flipY) ? -1 : 1;
-    
+        var x = -displayOriginX + frame.x;
+        var y = -displayOriginY + frame.y;
+
         if (sprite.isCropped)
         {
             var crop = sprite._crop;
@@ -583,10 +677,10 @@ var CanvasRenderer = new Class({
             frameX = crop.cx;
             frameY = crop.cy;
 
-            x = -sprite.displayOriginX + crop.x;
-            y = -sprite.displayOriginY + crop.y;
+            x = -displayOriginX + crop.x;
+            y = -displayOriginY + crop.y;
 
-            if (fx === -1)
+            if (sprite.flipX)
             {
                 if (x >= 0)
                 {
@@ -598,7 +692,7 @@ var CanvasRenderer = new Class({
                 }
             }
         
-            if (fy === -1)
+            if (sprite.flipY)
             {
                 if (y >= 0)
                 {
@@ -611,7 +705,31 @@ var CanvasRenderer = new Class({
             }
         }
 
-        spriteMatrix.applyITRS(sprite.x, sprite.y, sprite.rotation, sprite.scaleX, sprite.scaleY);
+        var flipX = 1;
+        var flipY = 1;
+
+        if (sprite.flipX)
+        {
+            if (!customPivot)
+            {
+                x += (-frame.realWidth + (displayOriginX * 2));
+            }
+
+            flipX = -1;
+        }
+
+        //  Auto-invert the flipY if this is coming from a GLTexture
+        if (sprite.flipY)
+        {
+            if (!customPivot)
+            {
+                y += (-frame.realHeight + (displayOriginY * 2));
+            }
+
+            flipY = -1;
+        }
+
+        spriteMatrix.applyITRS(sprite.x, sprite.y, sprite.rotation, sprite.scaleX * flipX, sprite.scaleY * flipY);
 
         camMatrix.copyFrom(camera.matrix);
 
@@ -640,11 +758,11 @@ var CanvasRenderer = new Class({
        
         calcMatrix.setToContext(ctx);
 
-        ctx.scale(fx, fy);
-
         ctx.globalCompositeOperation = this.blendModes[sprite.blendMode];
 
         ctx.globalAlpha = alpha;
+
+        ctx.imageSmoothingEnabled = !(!this.antialias || frame.source.scaleMode);
 
         ctx.drawImage(frame.source.image, frameX, frameY, frameWidth, frameHeight, x, y, frameWidth / res, frameHeight / res);
 

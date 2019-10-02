@@ -1,14 +1,14 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Impact Debug component.
  * Should be applied as a mixin.
  *
- * @name Phaser.Physics.Impact.Components.Debug
+ * @namespace Phaser.Physics.Impact.Components.Debug
  * @since 3.0.0
  */
 var Debug = {

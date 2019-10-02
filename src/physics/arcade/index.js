@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var CONST = require('./const');
@@ -23,6 +23,8 @@ var Arcade = {
     ArcadePhysics: require('./ArcadePhysics'),
     Body: require('./Body'),
     Collider: require('./Collider'),
+    Components: require('./components'),
+    Events: require('./events'),
     Factory: require('./Factory'),
     Group: require('./PhysicsGroup'),
     Image: require('./ArcadeImage'),

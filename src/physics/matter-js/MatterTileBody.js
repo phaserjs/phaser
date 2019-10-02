@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Bodies = require('./lib/factory/Bodies');
@@ -41,14 +41,7 @@ var Vertices = require('./lib/geometry/Vertices');
  *
  * @param {Phaser.Physics.Matter.World} world - [description]
  * @param {Phaser.Tilemaps.Tile} tile - The target tile that should have a Matter body.
- * @param {object} [options] - Options to be used when creating the Matter body. See
- * Phaser.Physics.Matter.Matter.Body for a list of what Matter accepts.
- * @param {Phaser.Physics.Matter.Matter.Body} [options.body=null] - An existing Matter body to
- * be used instead of creating a new one.
- * @param {boolean} [options.isStatic=true] - Whether or not the newly created body should be
- * made static. This defaults to true since typically tiles should not be moved.
- * @param {boolean} [options.addToWorld=true] - Whether or not to add the newly created body (or
- * existing body if options.body is used) to the Matter world.
+ * @param {Phaser.Types.Physics.Matter.MatterTileOptions} [options] - Options to be used when creating the Matter body.
  */
 var MatterTileBody = new Class({
 
@@ -126,11 +119,7 @@ var MatterTileBody = new Class({
      * @method Phaser.Physics.Matter.TileBody#setFromTileRectangle
      * @since 3.0.0
      *
-     * @param {object} [options] - Options to be used when creating the Matter body. See MatterJS.Body for a list of what Matter accepts.
-     * @param {boolean} [options.isStatic=true] - Whether or not the newly created body should be
-     * made static. This defaults to true since typically tiles should not be moved.
-     * @param {boolean} [options.addToWorld=true] - Whether or not to add the newly created body (or
-     * existing body if options.body is used) to the Matter world.
+     * @param {Phaser.Types.Physics.Matter.MatterBodyTileOptions} [options] - Options to be used when creating the Matter body. See MatterJS.Body for a list of what Matter accepts.
      * 
      * @return {Phaser.Physics.Matter.TileBody} This TileBody object.
      */
@@ -164,11 +153,7 @@ var MatterTileBody = new Class({
      * @method Phaser.Physics.Matter.TileBody#setFromTileCollision
      * @since 3.0.0
      *
-     * @param {object} [options] - Options to be used when creating the Matter body. See MatterJS.Body for a list of what Matter accepts.
-     * @param {boolean} [options.isStatic=true] - Whether or not the newly created body should be
-     * made static. This defaults to true since typically tiles should not be moved.
-     * @param {boolean} [options.addToWorld=true] - Whether or not to add the newly created body (or
-     * existing body if options.body is used) to the Matter world.
+     * @param {Phaser.Types.Physics.Matter.MatterBodyTileOptions} [options] - Options to be used when creating the Matter body. See MatterJS.Body for a list of what Matter accepts.
      * 
      * @return {Phaser.Physics.Matter.TileBody} This TileBody object.
      */
@@ -220,12 +205,14 @@ var MatterTileBody = new Class({
                 // matter expects points to be relative to the center of mass. This only applies to
                 // convex shapes. When a concave shape is decomposed, multiple parts are created and
                 // the individual parts are positioned relative to (ox, oy).
-                if (Vertices.isConvex(points))
-                {
-                    var center = Vertices.centre(vertices);
-                    ox += center.x;
-                    oy += center.y;
-                }
+                //
+                //  Update: 8th January 2019 - the latest version of Matter needs the Vertices adjusted,
+                //  regardless if convex or concave.
+
+                var center = Vertices.centre(vertices);
+
+                ox += center.x;
+                oy += center.y;
 
                 body = Bodies.fromVertices(ox, oy, vertices, options);
             }

@@ -1,11 +1,12 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Clamp = require('../../../math/Clamp');
 var Class = require('../../../utils/Class');
+var Events = require('../events');
 
 /**
  * @classdesc
@@ -55,7 +56,7 @@ var Fade = new Class({
 
         /**
          * Has this effect finished running?
-         * 
+         *
          * This is different from `isRunning` because it remains set to `true` when the effect is over,
          * until the effect is either reset or started again.
          *
@@ -153,17 +154,10 @@ var Fade = new Class({
         this._elapsed = 0;
 
         /**
-         * @callback CameraFadeCallback
-         *
-         * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera on which the effect is running.
-         * @param {number} progress - The progress of the effect. A value between 0 and 1.
-         */
-
-        /**
          * This callback is invoked every frame for the duration of the effect.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Fade#_onUpdate
-         * @type {?CameraFadeCallback}
+         * @type {?Phaser.Types.Cameras.Scene2D.CameraFadeCallback}
          * @private
          * @default null
          * @since 3.5.0
@@ -182,53 +176,11 @@ var Fade = new Class({
     },
 
     /**
-     * This event is fired when the fade in effect begins to run on a camera.
-     *
-     * @event CameraFadeInStartEvent
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.Fade} effect - A reference to the effect instance.
-     * @param {integer} duration - The duration of the effect.
-     * @param {integer} red - The red color channel value.
-     * @param {integer} green - The green color channel value.
-     * @param {integer} blue - The blue color channel value.
-     */
-
-    /**
-     * This event is fired when the fade out effect begins to run on a camera.
-     *
-     * @event CameraFadeOutStartEvent
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.Fade} effect - A reference to the effect instance.
-     * @param {integer} duration - The duration of the effect.
-     * @param {integer} red - The red color channel value.
-     * @param {integer} green - The green color channel value.
-     * @param {integer} blue - The blue color channel value.
-     */
-
-    /**
-     * This event is fired when the fade in effect completes.
-     *
-     * @event CameraFadeInCompleteEvent
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.Fade} effect - A reference to the effect instance.
-     */
-
-    /**
-     * This event is fired when the fade out effect completes.
-     *
-     * @event CameraFadeOutCompleteEvent
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.Fade} effect - A reference to the effect instance.
-     */
-
-    /**
      * Fades the Camera to or from the given color over the duration specified.
      *
      * @method Phaser.Cameras.Scene2D.Effects.Fade#start
-     * @fires CameraFadeInStartEvent
-     * @fires CameraFadeInCompleteEvent
-     * @fires CameraFadeOutStartEvent
-     * @fires CameraFadeOutCompleteEvent
+     * @fires Phaser.Cameras.Scene2D.Events#FADE_IN_START
+     * @fires Phaser.Cameras.Scene2D.Events#FADE_OUT_START
      * @since 3.5.0
      *
      * @param {boolean} [direction=true] - The direction of the fade. `true` = fade out (transparent to color), `false` = fade in (color to transparent)
@@ -237,7 +189,7 @@ var Fade = new Class({
      * @param {integer} [green=0] - The amount to fade the green channel towards. A value between 0 and 255.
      * @param {integer} [blue=0] - The amount to fade the blue channel towards. A value between 0 and 255.
      * @param {boolean} [force=false] - Force the effect to start immediately, even if already running.
-     * @param {CameraFadeCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
+     * @param {Phaser.Types.Cameras.Scene2D.CameraFadeCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
@@ -275,7 +227,7 @@ var Fade = new Class({
         this._onUpdate = callback;
         this._onUpdateScope = context;
 
-        var eventName = (direction) ? 'camerafadeoutstart' : 'camerafadeinstart';
+        var eventName = (direction) ? Events.FADE_OUT_START : Events.FADE_IN_START;
 
         this.camera.emit(eventName, this.camera, this, duration, red, green, blue);
 
@@ -313,6 +265,7 @@ var Fade = new Class({
         }
         else
         {
+            this.alpha = (this.direction) ? 1 : 0;
             this.effectComplete();
         }
     },
@@ -378,6 +331,8 @@ var Fade = new Class({
      * Called internally when the effect completes.
      *
      * @method Phaser.Cameras.Scene2D.Effects.Fade#effectComplete
+     * @fires Phaser.Cameras.Scene2D.Events#FADE_IN_COMPLETE
+     * @fires Phaser.Cameras.Scene2D.Events#FADE_OUT_COMPLETE
      * @since 3.5.0
      */
     effectComplete: function ()
@@ -388,7 +343,7 @@ var Fade = new Class({
         this.isRunning = false;
         this.isComplete = true;
 
-        var eventName = (this.direction) ? 'camerafadeoutcomplete' : 'camerafadeincomplete';
+        var eventName = (this.direction) ? Events.FADE_OUT_COMPLETE : Events.FADE_IN_COMPLETE;
 
         this.camera.emit(eventName, this.camera, this);
     },

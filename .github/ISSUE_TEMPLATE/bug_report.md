@@ -9,7 +9,7 @@ Thank you for taking the time to contribute towards Phaser. Before submitting yo
 
 1. This repo is for Phaser 3 only. Phaser 2.x issues should be raised in the [Phaser CE](https://github.com/photonstorm/phaser-ce) repo.
 
-2. This repo should not be used for technical support. If you're struggling to use Phaser then post your question to the [forum](http://www.html5gamedevs.com/forum/33-phaser-3/), [Slack](https://phaser.io/community/slack) or [Discord](https://phaser.io/community/discord) channels. GitHub Issues are for bugs and feature requests only.
+2. This repo should not be used for technical support. If you're struggling to use Phaser then post your question to the [forum](https://phaser.discourse.group/), [Slack](https://phaser.io/community/slack) or [Discord](https://phaser.io/community/discord) channels. GitHub Issues are for bugs and feature requests only.
 
 3. Make sure your issue isn't a duplicate, or has already been fixed.
 

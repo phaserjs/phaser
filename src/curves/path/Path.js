@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 //  Based on the three.js Curve classes created by [zz85](http://www.lab4games.net/zz85/blog)
@@ -18,27 +18,19 @@ var SplineCurve = require('../SplineCurve');
 var Vector2 = require('../../math/Vector2');
 
 /**
- * @typedef {object} JSONPath
- *
- * @property {string} type - The of the curve.
- * @property {number} x - The X coordinate of the curve's starting point.
- * @property {number} y - The Y coordinate of the path's starting point.
- * @property {boolean} autoClose - The path is auto closed.
- * @property {JSONCurve[]} curves - The list of the curves
- */
-
-/**
  * @classdesc
- * A Path combines multiple Curves into one continuous compound curve. It does not matter how many Curves are in the Path or what type they are.
+ * A Path combines multiple Curves into one continuous compound curve.
+ * It does not matter how many Curves are in the Path or what type they are.
  *
- * A Curve in a Path does not have to start where the previous Curve ends - that is to say, a Path does not have to be an uninterrupted curve. Only the order of the Curves influences the actual points on the Path.
+ * A Curve in a Path does not have to start where the previous Curve ends - that is to say, a Path does not
+ * have to be an uninterrupted curve. Only the order of the Curves influences the actual points on the Path.
  *
  * @class Path
  * @memberof Phaser.Curves
  * @constructor
  * @since 3.0.0
  *
- * @param {number} [x=0] - The X coordinate of the Path's starting point or a {@link JSONPath}.
+ * @param {number} [x=0] - The X coordinate of the Path's starting point or a {@link Phaser.Types.Curves.JSONPath}.
  * @param {number} [y=0] - The Y coordinate of the Path's starting point.
  */
 var Path = new Class({
@@ -310,12 +302,12 @@ var Path = new Class({
      * @method Phaser.Curves.Path#ellipseTo
      * @since 3.0.0
      *
-     * @param {number} xRadius - The horizontal radius of the ellipse.
-     * @param {number} yRadius - The vertical radius of the ellipse.
-     * @param {number} startAngle - The start angle of the ellipse, in degrees.
-     * @param {number} endAngle - The end angle of the ellipse, in degrees.
-     * @param {boolean} clockwise - Whether the ellipse should be rotated clockwise (`true`) or counter-clockwise (`false`).
-     * @param {number} rotation - The rotation of the ellipse, in degrees.
+     * @param {number} [xRadius=0] - The horizontal radius of ellipse.
+     * @param {number} [yRadius=0] - The vertical radius of ellipse.
+     * @param {integer} [startAngle=0] - The start angle of the ellipse, in degrees.
+     * @param {integer} [endAngle=360] - The end angle of the ellipse, in degrees.
+     * @param {boolean} [clockwise=false] - Whether the ellipse angles are given as clockwise (`true`) or counter-clockwise (`false`).
+     * @param {number} [rotation=0] - The rotation of the ellipse, in degrees.
      *
      * @return {Phaser.Curves.Path} This Path object.
      */
@@ -339,12 +331,12 @@ var Path = new Class({
     /**
      * Creates a Path from a Path Configuration object.
      *
-     * The provided object should be a {@link JSONPath}, as returned by {@link #toJSON}. Providing a malformed object may cause errors.
+     * The provided object should be a {@link Phaser.Types.Curves.JSONPath}, as returned by {@link #toJSON}. Providing a malformed object may cause errors.
      *
      * @method Phaser.Curves.Path#fromJSON
      * @since 3.0.0
      *
-     * @param {object} data - The JSON object containing the Path data.
+     * @param {Phaser.Types.Curves.JSONPath} data - The JSON object containing the Path data.
      *
      * @return {Phaser.Curves.Path} This Path object.
      */
@@ -698,10 +690,8 @@ var Path = new Class({
         return out.copy(this.startPoint);
     },
 
-    //  Creates a line curve from the previous end point to x/y
-
     /**
-     * [description]
+     * Creates a line curve from the previous end point to x/y
      *
      * @method Phaser.Curves.Path#lineTo
      * @since 3.0.0
@@ -768,7 +758,7 @@ var Path = new Class({
      * @method Phaser.Curves.Path#toJSON
      * @since 3.0.0
      *
-     * @return {JSONPath} [description]
+     * @return {Phaser.Types.Curves.JSONPath} [description]
      */
     toJSON: function ()
     {
@@ -788,10 +778,8 @@ var Path = new Class({
         };
     },
 
-    // cacheLengths must be recalculated.
-
     /**
-     * [description]
+     * cacheLengths must be recalculated.
      *
      * @method Phaser.Curves.Path#updateArcLengths
      * @since 3.0.0

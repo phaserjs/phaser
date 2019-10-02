@@ -14,3 +14,5 @@ node_modules/
 /npm-debug.log
 build/
 out/
+scripts/tsgen/test/bin/
+scripts/tsgen/test/output.txt

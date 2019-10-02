@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -17,6 +17,7 @@ module.exports = {
     PolyDecomp: require('./poly-decomp'),
     Sprite: require('./MatterSprite'),
     TileBody: require('./MatterTileBody'),
+    PhysicsEditorParser: require('./PhysicsEditorParser'),
     World: require('./World')
 
 };
@@ -32,6 +33,16 @@ module.exports = {
  * Factories for commonly used body configurations (such as rectangles, circles and other polygons) can be found in the module `Matter.Bodies`.
  *
  * @class MatterJS.Body
+ * @since 3.0.0
+ */
+
+/**
+ * @classdesc
+ * The `Matter.Bodies` module contains factory methods for creating rigid body models 
+ * with commonly used body configurations (such as rectangles, circles and other polygons).
+ *
+ * @class MatterJS.Bodies
+ * @since 3.18.0
  */
 
 /**
@@ -42,6 +53,7 @@ module.exports = {
  * Note that the `Matter.World` object is also a type of `Matter.Composite` and as such all composite methods here can also operate on a `Matter.World`.
  *
  * @class MatterJS.Composite
+ * @since 3.0.0
  */
 
 /**
@@ -54,6 +66,7 @@ module.exports = {
  *
  * @class MatterJS.World
  * @extends MatterJS.Composite
+ * @since 3.0.0
  */
 
 /**
@@ -63,6 +76,7 @@ module.exports = {
  * The stiffness of constraints can be modified to create springs or elastic.
  *
  * @class MatterJS.Constraint
+ * @since 3.0.0
  */
 
 /**
@@ -71,13 +85,15 @@ module.exports = {
  * An engine is a controller that manages updating the simulation of the world.
  *
  * @class MatterJS.Engine
+ * @since 3.0.0
  */
 
 /**
  * @classdesc
-* The `Matter.Vertices` module contains methods for creating and manipulating sets of vertices.
-* A set of vertices is an array of `Matter.Vector` with additional indexing properties inserted by `Vertices.create`.
-* A `Matter.Body` maintains a set of vertices to represent the shape of the object (its convex hull).
-*
-* @class MatterJS.Vertices
-*/
+ * The `Matter.Vertices` module contains methods for creating and manipulating sets of vertices.
+ * A set of vertices is an array of `Matter.Vector` with additional indexing properties inserted by `Vertices.create`.
+ * A `Matter.Body` maintains a set of vertices to represent the shape of the object (its convex hull).
+ *
+ * @class MatterJS.Vertices
+ * @since 3.0.0
+ */

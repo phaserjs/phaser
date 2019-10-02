@@ -1,13 +1,13 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Random = require('../geom/rectangle/Random');
 
 /**
- * Takes an array of Game Objects and positions them at random locations within the Ellipse.
+ * Takes an array of Game Objects and positions them at random locations within the Rectangle.
  *
  * @function Phaser.Actions.RandomRectangle
  * @since 3.0.0
