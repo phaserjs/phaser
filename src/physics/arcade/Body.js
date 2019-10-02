@@ -384,15 +384,18 @@ var Body = new Class({
         this.worldBounce = null;
 
         /**
-         * The custom boundary rectangle to use instead of the world boundary.
-         * If null, the world boundaries are used instead.
+         * The rectangle used for world boundary collisions.
+         * 
+         * By default it is set to the world boundary rectangle. Or, if this Body was
+         * created by a Physics Group, then whatever rectangle that Group defined.
+         * 
+         * You can also change it by using the `Body.setBoundsRectangle` method.
          *
          * @name Phaser.Physics.Arcade.Body#customBoundsRectangle
          * @type {?Phaser.Geom.Rectangle}
-         * @default null
-         * @since 3.16.1
+         * @since 3.20
          */
-        this.customBoundsRectangle = null;
+        this.customBoundsRectangle = world.bounds;
 
         //  If true this Body will dispatch events
 
@@ -1050,32 +1053,20 @@ var Body = new Class({
     },
 
     /**
-     * Returns the collision boundary rectangle. Either a custom one, which was
-     * set with setBoundsRectangle or the default world's bounds.
-     *
-     * @method Phaser.Physics.Arcade.Body#getBoundsRectangle
-     * @since 3.16.1
-     *
-     * @return {Phaser.Geom.Rectangle}
-     */
-    getBoundsRectangle: function ()
-    {
-        return (this.customBoundsRectangle || this.world.bounds);
-    },
-
-    /**
      * Sets a custom collision boundary rectangle. Use if you want to have a custom
      * boundary instead of the world boundaries.
      *
      * @method Phaser.Physics.Arcade.Body#setBoundsRectangle
-     * @since 3.16.1
+     * @since 3.20
      *
-     * @param {Phaser.Geom.Rectangle} rect - The new boundary rectangle. Pass null to use the default world bounds again.
-     * @return {Phaser.Physics.Arcade.Body} This Body object.
+     * @param {?Phaser.Geom.Rectangle} [bounds] - The new boundary rectangle. Pass `null` to use the World bounds.
+     * 
+     * @return {this} This Body object.
      */
-    setBoundsRectangle: function (rect)
+    setBoundsRectangle: function (bounds)
     {
-        this.customBoundsRectangle = rect;
+        this.customBoundsRectangle = (!bounds) ? this.world.bounds : bounds;
+
         return this;
     },
 
@@ -1090,7 +1081,7 @@ var Body = new Class({
     checkWorldBounds: function ()
     {
         var pos = this.position;
-        var bounds = this.getBoundsRectangle();
+        var bounds = this.customBoundsRectangle;
         var check = this.world.checkCollision;
 
         var bx = (this.worldBounce) ? -this.worldBounce.x : -this.bounce.x;
