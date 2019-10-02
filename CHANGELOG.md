@@ -81,6 +81,8 @@ In combination these updates fix issues #4732 and #4672. My thanks to @BenjaminD
 * `UpdateList` now extends the `ProcessQueue` struct and uses all of its methods for list management, instead of doing it directly. This means private properties such as `UpdateList._list` no longer exist. It also fixes an issue re: memory management where list items would remain until the end of a Scene. Fix #4721 (thanks @darkgod6)
 * `BaseSoundManager.forEachActiveSound` will now only invoke the callback if the sound actually exists and isn't pending removal. Fix #3383 (thanks @DouglasLapsley)
 * `MouseManager.target` can now be defined as either a string or by passing an HTMLElement directly. Fix #4353 (thanks @BigZaphod)
+* The `BasePlugin.boot` method has been removed and moved to `ScenePlugin.boot` as it's a Scene-level method only (thanks @samme)
+* The `BasePlugin.scene` and `BasePlugin.systems` properties have been removed and are defined in `ScenePlugin`, as they are Scene-level properties only (thanks @samme)
 
 ### Bug Fixes
 
