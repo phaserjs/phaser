@@ -383,6 +383,17 @@ var Body = new Class({
          */
         this.worldBounce = null;
 
+        /**
+         * The custom boundary rectangle to use instead of the world boundary.
+         * If null, the world boundaries are used instead.
+         *
+         * @name Phaser.Physics.Arcade.Body#customBoundsRectangle
+         * @type {?Phaser.Geom.Rectangle}
+         * @default null
+         * @since 3.16.1
+         */
+        this.customBoundsRectangle = null;
+
         //  If true this Body will dispatch events
 
         /**
@@ -1039,6 +1050,36 @@ var Body = new Class({
     },
 
     /**
+     * Returns the collision boundary rectangle. Either a custom one, which was
+     * set with setBoundsRectangle or the default world's bounds.
+     *
+     * @method Phaser.Physics.Arcade.Body#getBoundsRectangle
+     * @since 3.16.1
+     *
+     * @return {Phaser.Geom.Rectangle}
+     */
+    getBoundsRectangle: function ()
+    {
+        return (this.customBoundsRectangle || this.world.bounds);
+    },
+
+    /**
+     * Sets a custom collision boundary rectangle. Use if you want to have a custom
+     * boundary instead of the world boundaries.
+     *
+     * @method Phaser.Physics.Arcade.Body#setBoundsRectangle
+     * @since 3.16.1
+     *
+     * @param {Phaser.Geom.Rectangle} rect - The new boundary rectangle. Pass null to use the default world bounds again.
+     * @return {Phaser.Physics.Arcade.Body} This Body object.
+     */
+    setBoundsRectangle: function (rect)
+    {
+        this.customBoundsRectangle = rect;
+        return this;
+    },
+
+    /**
      * Checks for collisions between this Body and the world boundary and separates them.
      *
      * @method Phaser.Physics.Arcade.Body#checkWorldBounds
@@ -1049,7 +1090,7 @@ var Body = new Class({
     checkWorldBounds: function ()
     {
         var pos = this.position;
-        var bounds = this.world.bounds;
+        var bounds = this.getBoundsRectangle();
         var check = this.world.checkCollision;
 
         var bx = (this.worldBounce) ? -this.worldBounce.x : -this.bounce.x;

@@ -116,6 +116,7 @@ var PhysicsGroup = new Class({
          */
         this.defaults = {
             setCollideWorldBounds: GetFastValue(config, 'collideWorldBounds', false),
+            setBoundsRectangle: GetFastValue(config, 'customBoundsRectangle', null),
             setAccelerationX: GetFastValue(config, 'accelerationX', 0),
             setAccelerationY: GetFastValue(config, 'accelerationY', 0),
             setAllowDrag: GetFastValue(config, 'allowDrag', true),
