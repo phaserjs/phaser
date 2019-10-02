@@ -1161,12 +1161,14 @@ var StaticTilemapLayer = new Class({
      * collision.
      * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the
      * update.
+     * @param {boolean} [updateLayer=true] - If true, updates the current tiles on the layer. Set to
+     * false if no tiles have been placed for significant performance boost.
      *
      * @return {Phaser.Tilemaps.StaticTilemapLayer} This Tilemap Layer object.
      */
-    setCollision: function (indexes, collides, recalculateFaces)
+    setCollision: function (indexes, collides, recalculateFaces, updateLayer)
     {
-        TilemapComponents.SetCollision(indexes, collides, recalculateFaces, this.layer);
+        TilemapComponents.SetCollision(indexes, collides, recalculateFaces, this.layer, updateLayer);
 
         return this;
     },

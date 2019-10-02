@@ -1850,16 +1850,17 @@ var Tilemap = new Class({
      * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
      * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the update.
      * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
+     * @param {boolean} [updateLayer=true] - If true, updates the current tiles on the layer. Set to false if no tiles have been placed for significant performance boost.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Return this Tilemap object, or null if the layer given was invalid.
      */
-    setCollision: function (indexes, collides, recalculateFaces, layer)
+    setCollision: function (indexes, collides, recalculateFaces, layer, updateLayer)
     {
         layer = this.getLayer(layer);
 
         if (layer === null) { return null; }
 
-        TilemapComponents.SetCollision(indexes, collides, recalculateFaces, layer);
+        TilemapComponents.SetCollision(indexes, collides, recalculateFaces, layer, updateLayer);
 
         return this;
     },
