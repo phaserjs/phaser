@@ -505,7 +505,7 @@ var BaseSoundManager = new Class({
 
         this.sounds.forEach(function (sound, index)
         {
-            if (!sound.pendingRemove)
+            if (sound && !sound.pendingRemove)
             {
                 callback.call(scope || _this, sound, index, _this.sounds);
             }
