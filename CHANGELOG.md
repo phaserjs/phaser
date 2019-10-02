@@ -103,13 +103,13 @@ In combination these updates fix issues #4732 and #4672. My thanks to @BenjaminD
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@krzysztof-grzybek @NokFrt @r-onodera @colorcube
+@krzysztof-grzybek @NokFrt @r-onodera @colorcube @neon-dev
 
 ### Thanks
 
 Thank you to the following people for contributing ideas for new features to be added to Phaser 3. Because we've now started Phaser 4 development, I am closing off old feature requests that I personally will not work on for Phaser 3 itself. They may be considered for v4 and, of course, if someone from the community wishes to submit a PR to add them, I will be only too happy to look at that. So, if you want to get involved, filter the GitHub issues by the [Feature Request tag](https://github.com/photonstorm/phaser/issues?q=is%3Aissue+is%3Aopen+label%3A%22%F0%9F%92%96+Feature+Request%22) and dig in. In the meantime, thank you to the following people for suggesting features, even if they didn't make it this time around:
 
-@njt1982 @TheTrope @allanbreyes @alexandernst @Secretmapper @murteira @oktayacikalin @TadejZupancic @SBCGames @hadikcz @jcyuan @pinkkis 
+@njt1982 @TheTrope @allanbreyes @alexandernst @Secretmapper @murteira @oktayacikalin @TadejZupancic @SBCGames @hadikcz @jcyuan @pinkkis @Aedalus @jestarray @BigZaphod @Secretmapper 
 
 
 
