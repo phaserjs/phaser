@@ -195,7 +195,7 @@ var MatterPhysics = new Class({
      *
      * @method Phaser.Physics.Matter.MatterPhysics#enableAttractorPlugin
      * @since 3.0.0
-     * 
+     *
      * @return {Phaser.Physics.Matter.MatterPhysics} This Matter Physics instance.
      */
     enableAttractorPlugin: function ()
@@ -211,7 +211,7 @@ var MatterPhysics = new Class({
      *
      * @method Phaser.Physics.Matter.MatterPhysics#enableWrapPlugin
      * @since 3.0.0
-     * 
+     *
      * @return {Phaser.Physics.Matter.MatterPhysics} This Matter Physics instance.
      */
     enableWrapPlugin: function ()
@@ -284,12 +284,12 @@ var MatterPhysics = new Class({
 
     /**
      * Manually advances the physics simulation by one iteration.
-     * 
+     *
      * You can optionally pass in the `delta` and `correction` values to be used by Engine.update.
      * If undefined they use the Matter defaults of 60Hz and no correction.
-     * 
+     *
      * Calling `step` directly bypasses any checks of `enabled` or `autoUpdate`.
-     * 
+     *
      * It also ignores any custom `getDelta` functions, as you should be passing the delta
      * value in to this call.
      *
@@ -342,6 +342,7 @@ var MatterPhysics = new Class({
         if (this.world)
         {
             this.world.destroy();
+            this.world.resetCollisionIDs();
         }
 
         this.add = null;
