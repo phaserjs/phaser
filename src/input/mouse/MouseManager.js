@@ -64,7 +64,7 @@ var MouseManager = new Class({
         this.enabled = false;
 
         /**
-         * The Touch Event target, as defined in the Game Config.
+         * The Mouse target, as defined in the Game Config.
          * Typically the canvas to which the game is rendering, but can be any interactive DOM element.
          *
          * @name Phaser.Input.Mouse.MouseManager#target
@@ -203,6 +203,10 @@ var MouseManager = new Class({
         if (!this.target)
         {
             this.target = this.manager.game.canvas;
+        }
+        else if (typeof this.target === 'string')
+        {
+            this.target = document.getElementById(this.target);
         }
 
         if (config.disableContextMenu)
