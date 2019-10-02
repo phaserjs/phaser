@@ -45,6 +45,9 @@ In combination these updates fix issues #4732 and #4672. My thanks to @BenjaminD
 * `Bob.setTint` is  a new method that allows you to set the tint of a Bob object within a Blitter. This is then used by the Blitter WebGL Renderer (thanks @rexrainbow)
 * The `UpdateList` now emits two new events: 'add' and 'remove' when children are added and removed from it. Fix #3487 (thanks @hexus)
 * The `Tilemap.setCollision` method has a new optional boolean parameter `updateLayer`. If set to `true`, it will update all of the collision settings of all tiles on the layer. If `false` it will skip doing this, which can be a huge performance boost in situations where the layer tiles haven't been modified and you're just changing collision flags. This is especially suitable for maps using procedural generated tilemaps, infinite tilemaps, multiplayer tilemaps, particularly large tilemaps (especially those dyanmic in nature) or who otherwise intend to index collisions before the tiles are loaded. This update also added the new parameter to the `SetCollision`, `SetCollisionBetween` and `DynamicTilemapLayer.setCollision` methods (thanks @tarsupin)
+* `ArcadePhysics.Body.setBoundsRectangle` is a new method that allows you to set a custom bounds rectangle for any Body to use, rather than the World bounds, which is the default (thanks @francois-n-dream)
+* `ArcadePhysics.Body.customBoundsRectangle` is a new property used for custom bounds collision (thanks @francois-n-dream)
+* The Arcade Physics Group has a new config object property `customBoundsRectangle` which, if set, will set the custom world bounds for all Bodies that Group creates (thanks @francois-n-dream)
 
 ### Updates
 
