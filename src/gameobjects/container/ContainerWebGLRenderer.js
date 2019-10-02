@@ -53,6 +53,12 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
     }
 
     var alpha = container._alpha;
+
+    var alphaTopRight = container.alphaTopRight;
+    var alphaBottomLeft = container.alphaBottomLeft;
+    var alphaBottomRight = container.alphaBottomRight;
+    var usingQuadAlpha = (alphaBottomLeft !== alpha || alphaBottomRight !== alpha || alphaTopRight !== alpha);
+
     var scrollFactorX = container.scrollFactorX;
     var scrollFactorY = container.scrollFactorY;
 
@@ -70,6 +76,11 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
         }
 
         var childAlpha = child.alpha;
+        var childAlphaTopRight = child.alphaTopRight;
+        var childAlphaBottomLeft = child.alphaBottomLeft;
+        var childAlphaBottomRight = child.alphaBottomRight;
+        var usingChildQuadAlpha = (childAlphaBottomLeft !== childAlpha || childAlphaBottomRight !== childAlpha || childAlphaTopRight !== childAlpha);
+
         var childScrollFactorX = child.scrollFactorX;
         var childScrollFactorY = child.scrollFactorY;
 
@@ -106,13 +117,39 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
 
         //  Set parent values
         child.setScrollFactor(childScrollFactorX * scrollFactorX, childScrollFactorY * scrollFactorY);
-        child.setAlpha(childAlpha * alpha);
+
+        if (usingQuadAlpha)
+        {
+            if (usingChildQuadAlpha)
+            {
+                child.setAlpha(childAlpha * alpha, childAlphaTopRight * alphaTopRight, childAlphaBottomLeft * alphaBottomLeft, childAlphaBottomRight * alphaBottomRight);
+            }
+            else
+            {
+                child.setAlpha(childAlpha * alpha, childAlpha * alphaTopRight, childAlpha * alphaBottomLeft, childAlpha * alphaBottomRight);
+            }
+        }
+        else if (usingChildQuadAlpha)
+        {
+            child.setAlpha(childAlpha * alpha, childAlphaTopRight * alpha, childAlphaBottomLeft * alpha, childAlphaBottomRight * alpha);
+        }
+        else
+        {
+            child.setAlpha(childAlpha * alpha);
+        }
 
         //  Render
         child.renderWebGL(renderer, child, interpolationPercentage, camera, transformMatrix);
 
         //  Restore original values
-        child.setAlpha(childAlpha);
+        if (usingChildQuadAlpha)
+        {
+            child.setAlpha(childAlpha, childAlphaTopRight, childAlphaBottomLeft, childAlphaBottomRight);
+        }
+        else
+        {
+            child.setAlpha(childAlpha);
+        }
         child.setScrollFactor(childScrollFactorX, childScrollFactorY);
 
         renderer.newType = false;
