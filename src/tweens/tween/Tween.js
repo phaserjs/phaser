@@ -345,19 +345,6 @@ var Tween = new Class({
     },
 
     /**
-     * Returns the current value of the Tween.
-     *
-     * @method Phaser.Tweens.Tween#getValue
-     * @since 3.0.0
-     *
-     * @return {number} The value of the Tween.
-     */
-    getValue: function ()
-    {
-        return this.data[0].current;
-    },
-
-    /**
      * Set the scale the time applied to this Tween. A value of 1 runs in real-time. A value of 0.5 runs 50% slower, and so on.
      *
      * @method Phaser.Tweens.Tween#setTimeScale
