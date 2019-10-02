@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Clamp = require('../../math/Clamp');
@@ -12,7 +12,7 @@ var Clamp = require('../../math/Clamp');
  * @function Phaser.Physics.Impact.GetVelocity
  * @since 3.0.0
  *
- * @param {number} delta - [description]
+ * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
  * @param {number} vel - [description]
  * @param {number} accel - [description]
  * @param {number} friction - [description]

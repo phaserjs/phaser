@@ -1,19 +1,19 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * [description]
+ * Compares the `x`, `y`, `width` and `height` properties of two rectangles.
  *
  * @function Phaser.Geom.Rectangle.Equals
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Rectangle} rect - [description]
- * @param {Phaser.Geom.Rectangle} toCompare - [description]
+ * @param {Phaser.Geom.Rectangle} rect - Rectangle A
+ * @param {Phaser.Geom.Rectangle} toCompare - Rectangle B
  *
- * @return {boolean} [description]
+ * @return {boolean} `true` if the rectangles' properties are an exact match, otherwise `false`.
  */
 var Equals = function (rect, toCompare)
 {

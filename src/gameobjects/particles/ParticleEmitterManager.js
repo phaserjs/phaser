@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
@@ -18,18 +18,20 @@ var Render = require('./ParticleManagerRender');
  *
  * @class ParticleEmitterManager
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects.Particles
+ * @memberof Phaser.GameObjects.Particles
  * @constructor
  * @since 3.0.0
  *
- * @extends Phaser.GameObjects.Particles.Components.Depth
- * @extends Phaser.GameObjects.Particles.Components.Pipeline
- * @extends Phaser.GameObjects.Particles.Components.Visible
+ * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.Mask
+ * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.Transform
+ * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {Phaser.Scene} scene - The Scene to which this Emitter Manager belongs.
  * @param {string} texture - The key of the Texture this Emitter Manager will use to render particles, as stored in the Texture Manager.
  * @param {(string|integer)} [frame] - An optional frame from the Texture this Emitter Manager will use to render particles.
- * @param {ParticleEmitterConfig|ParticleEmitterConfig[]} [emitters] - Configuration settings for one or more emitters to create.
+ * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterConfig|Phaser.Types.GameObjects.Particles.ParticleEmitterConfig[]} [emitters] - Configuration settings for one or more emitters to create.
  */
 var ParticleEmitterManager = new Class({
 
@@ -37,7 +39,9 @@ var ParticleEmitterManager = new Class({
 
     Mixins: [
         Components.Depth,
+        Components.Mask,
         Components.Pipeline,
+        Components.Transform,
         Components.Visible,
         Render
     ],
@@ -110,7 +114,7 @@ var ParticleEmitterManager = new Class({
 
         this.setTexture(texture, frame);
 
-        this.initPipeline('TextureTintPipeline');
+        this.initPipeline();
 
         /**
          * A list of Emitters being managed by this Emitter Manager.
@@ -183,7 +187,16 @@ var ParticleEmitterManager = new Class({
     {
         this.frame = this.texture.get(frame);
 
-        this.frameNames = this.texture.getFramesFromTextureSource(this.frame.sourceIndex);
+        var frames = this.texture.getFramesFromTextureSource(this.frame.sourceIndex);
+
+        var names = [];
+
+        frames.forEach(function (sourceFrame)
+        {
+            names.push(sourceFrame.name);
+        });
+
+        this.frameNames = names;
 
         this.defaultFrame = this.frame;
 
@@ -255,7 +268,7 @@ var ParticleEmitterManager = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitterManager#createEmitter
      * @since 3.0.0
      *
-     * @param {ParticleEmitterConfig} config - Configuration settings for the Particle Emitter to create.
+     * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterConfig} config - Configuration settings for the Particle Emitter to create.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} The Particle Emitter that was created.
      */
@@ -285,7 +298,7 @@ var ParticleEmitterManager = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitterManager#createGravityWell
      * @since 3.0.0
      *
-     * @param {GravityWellConfig} config - Configuration settings for the Gravity Well to create.
+     * @param {Phaser.Types.GameObjects.Particles.GravityWellConfig} config - Configuration settings for the Gravity Well to create.
      *
      * @return {Phaser.GameObjects.Particles.GravityWell} The Gravity Well that was created.
      */
@@ -435,6 +448,18 @@ var ParticleEmitterManager = new Class({
      * @since 3.10.0
      */
     setScrollFactor: function ()
+    {
+    },
+
+    /**
+     * A NOOP method so you can pass an EmitterManager to a Container.
+     * Calling this method will do nothing. It is intentionally empty.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitterManager#setBlendMode
+     * @private
+     * @since 3.15.0
+     */
+    setBlendMode: function ()
     {
     }
 

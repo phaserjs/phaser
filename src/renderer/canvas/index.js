@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -10,9 +10,8 @@
 
 module.exports = {
 
-    BlitImage: require('./utils/BlitImage'),
     CanvasRenderer: require('./CanvasRenderer'),
-    DrawImage: require('./utils/DrawImage'),
-    GetBlendModes: require('./utils/GetBlendModes')
+    GetBlendModes: require('./utils/GetBlendModes'),
+    SetTransform: require('./utils/SetTransform')
 
 };

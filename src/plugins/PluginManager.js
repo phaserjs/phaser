@@ -1,10 +1,11 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../utils/Class');
+var GameEvents = require('../core/events');
 var EventEmitter = require('eventemitter3');
 var FileTypesManager = require('../loader/FileTypesManager');
 var GameObjectCreator = require('../gameobjects/GameObjectCreator');
@@ -12,15 +13,6 @@ var GameObjectFactory = require('../gameobjects/GameObjectFactory');
 var GetFastValue = require('../utils/object/GetFastValue');
 var PluginCache = require('./PluginCache');
 var Remove = require('../utils/array/Remove');
-
-/**
- * @typedef {object} GlobalPlugin
- *
- * @property {string} key - The unique name of this plugin within the plugin cache.
- * @property {function} plugin - An instance of the plugin.
- * @property {boolean} [active] - Is the plugin active or not?
- * @property {string} [mapping] - If this plugin is to be injected into the Scene Systems, this is the property key map used.
- */
 
 /**
  * @classdesc
@@ -33,8 +25,8 @@ var Remove = require('../utils/array/Remove');
  *
  * There are two types of plugin:
  *
- * 1) A Global Plugin
- * 2) A Scene Plugin
+ * 1. A Global Plugin
+ * 2. A Scene Plugin
  *
  * A Global Plugin is a plugin that lives within the Plugin Manager rather than a Scene. You can get
  * access to it by calling `PluginManager.get` and providing a key. Any Scene that requests a plugin in
@@ -48,16 +40,16 @@ var Remove = require('../utils/array/Remove');
  *
  * You can add a plugin to Phaser in three different ways:
  *
- * 1) Preload it
- * 2) Include it in your source code and install it via the Game Config
- * 3) Include it in your source code and install it within a Scene
+ * 1. Preload it
+ * 2. Include it in your source code and install it via the Game Config
+ * 3. Include it in your source code and install it within a Scene
  *
  * For examples of all of these approaches please see the Phaser 3 Examples Repo `plugins` folder.
  *
  * For information on creating your own plugin please see the Phaser 3 Plugin Template.
  *
  * @class PluginManager
- * @memberOf Phaser.Plugins
+ * @memberof Phaser.Plugins
  * @constructor
  * @since 3.0.0
  *
@@ -87,7 +79,7 @@ var PluginManager = new Class({
          * A plugin must have been started at least once in order to appear in this list.
          *
          * @name Phaser.Plugins.PluginManager#plugins
-         * @type {GlobalPlugin[]}
+         * @type {Phaser.Types.Plugins.GlobalPlugin[]}
          * @since 3.8.0
          */
         this.plugins = [];
@@ -127,7 +119,7 @@ var PluginManager = new Class({
         }
         else
         {
-            game.events.once('boot', this.boot, this);
+            game.events.once(GameEvents.BOOT, this.boot, this);
         }
     },
 
@@ -146,6 +138,7 @@ var PluginManager = new Class({
         var plugin;
         var start;
         var mapping;
+        var data;
         var config = this.game.config;
 
         //  Any plugins to install?
@@ -158,16 +151,25 @@ var PluginManager = new Class({
         {
             entry = list[i];
 
-            // { key: 'TestPlugin', plugin: TestPlugin, start: true, mapping: 'test' }
+            // { key: 'TestPlugin', plugin: TestPlugin, start: true, mapping: 'test', data: { msg: 'The plugin is alive' } }
 
             key = GetFastValue(entry, 'key', null);
             plugin = GetFastValue(entry, 'plugin', null);
             start = GetFastValue(entry, 'start', false);
             mapping = GetFastValue(entry, 'mapping', null);
+            data = GetFastValue(entry, 'data', null);
 
-            if (key && plugin)
+            if (key)
             {
-                this.install(key, plugin, start, mapping);
+                if (plugin)
+                {
+                    this.install(key, plugin, start, mapping, data);
+                }
+                else
+                {
+                    console.warn('Missing `plugin` for key: ' + key);
+                }
+                
             }
         }
 
@@ -187,16 +189,23 @@ var PluginManager = new Class({
             plugin = GetFastValue(entry, 'plugin', null);
             mapping = GetFastValue(entry, 'mapping', null);
 
-            if (key && plugin)
+            if (key)
             {
-                this.installScenePlugin(key, plugin, mapping);
+                if (plugin)
+                {
+                    this.installScenePlugin(key, plugin, mapping);
+                }
+                else
+                {
+                    console.warn('Missing `plugin` for key: ' + key);
+                }
             }
         }
 
         this._pendingGlobal = [];
         this._pendingScene = [];
 
-        this.game.events.once('destroy', this.destroy, this);
+        this.game.events.once(GameEvents.DESTROY, this.destroy, this);
     },
 
     /**
@@ -228,7 +237,7 @@ var PluginManager = new Class({
         for (i = 0; i < globalPlugins.length; i++)
         {
             pluginKey = globalPlugins[i];
-           
+
             if (game[pluginKey])
             {
                 sys[pluginKey] = game[pluginKey];
@@ -238,6 +247,10 @@ var PluginManager = new Class({
                 {
                     scene[map[pluginKey]] = sys[pluginKey];
                 }
+            }
+            else if (pluginKey === 'game' && map.hasOwnProperty(pluginKey))
+            {
+                scene[map[pluginKey]] = game;
             }
         }
 
@@ -284,7 +297,7 @@ var PluginManager = new Class({
         for (i = 0; i < pluginList.length; i++)
         {
             var entry = pluginList[i];
-           
+
             if (entry.mapping)
             {
                 scene[entry.mapping] = entry.plugin;
@@ -338,24 +351,31 @@ var PluginManager = new Class({
      * @param {function} plugin - The plugin code. This should be the non-instantiated version.
      * @param {string} [mapping] - If this plugin is injected into the Phaser.Scene class, this is the property key to use.
      * @param {Phaser.Scene} [addToScene] - Optionally automatically add this plugin to the given Scene.
+     * @param {boolean} [fromLoader=false] - Is this being called by the Loader?
      */
-    installScenePlugin: function (key, plugin, mapping, addToScene)
+    installScenePlugin: function (key, plugin, mapping, addToScene, fromLoader)
     {
+        if (fromLoader === undefined) { fromLoader = false; }
+
         if (typeof plugin !== 'function')
         {
             console.warn('Invalid Scene Plugin: ' + key);
             return;
         }
 
-        if (PluginCache.hasCore(key))
+        if (!PluginCache.hasCore(key))
         {
+            //  Plugin is freshly loaded
+            PluginCache.register(key, plugin, mapping, true);
+
+            this.scenePlugins.push(key);
+        }
+        else if (!fromLoader && PluginCache.hasCore(key))
+        {
+            //  Plugin wasn't from the loader but already exists
             console.warn('Scene Plugin key in use: ' + key);
             return;
         }
-
-        PluginCache.register(key, plugin, mapping, true);
-
-        this.scenePlugins.push(key);
 
         if (addToScene)
         {
@@ -399,22 +419,26 @@ var PluginManager = new Class({
      * @param {function} plugin - The plugin code. This should be the non-instantiated version.
      * @param {boolean} [start=false] - Automatically start the plugin running? This is always `true` if you provide a mapping value.
      * @param {string} [mapping] - If this plugin is injected into the Phaser.Scene class, this is the property key to use.
+     * @param {any} [data] - A value passed to the plugin's `init` method.
+     *
+     * @return {?Phaser.Plugins.BasePlugin} The plugin that was started, or `null` if `start` was false, or game isn't yet booted.
      */
-    install: function (key, plugin, start, mapping)
+    install: function (key, plugin, start, mapping, data)
     {
         if (start === undefined) { start = false; }
         if (mapping === undefined) { mapping = null; }
+        if (data === undefined) { data = null; }
 
         if (typeof plugin !== 'function')
         {
             console.warn('Invalid Plugin: ' + key);
-            return;
+            return null;
         }
 
         if (PluginCache.hasCustom(key))
         {
             console.warn('Plugin key in use: ' + key);
-            return;
+            return null;
         }
 
         if (mapping !== null)
@@ -424,18 +448,20 @@ var PluginManager = new Class({
 
         if (!this.game.isBooted)
         {
-            this._pendingGlobal.push({ key: key, plugin: plugin, start: start, mapping: mapping });
+            this._pendingGlobal.push({ key: key, plugin: plugin, start: start, mapping: mapping, data: data });
         }
         else
         {
             //  Add it to the plugin store
-            PluginCache.registerCustom(key, plugin, mapping);
+            PluginCache.registerCustom(key, plugin, mapping, data);
 
             if (start)
             {
                 return this.start(key);
             }
         }
+
+        return null;
     },
 
     /**
@@ -475,7 +501,7 @@ var PluginManager = new Class({
      *
      * @param {string} key - The unique plugin key.
      *
-     * @return {GlobalPlugin} The plugin entry.
+     * @return {Phaser.Types.Plugins.GlobalPlugin} The plugin entry.
      */
     getEntry: function (key)
     {
@@ -568,12 +594,13 @@ var PluginManager = new Class({
                 key: runAs,
                 plugin: instance,
                 active: true,
-                mapping: entry.mapping
+                mapping: entry.mapping,
+                data: entry.data
             };
 
             this.plugins.push(entry);
 
-            instance.init();
+            instance.init(entry.data);
             instance.start();
         }
 
@@ -758,6 +785,35 @@ var PluginManager = new Class({
     },
 
     /**
+     * Removes a previously registered Game Object from the global Game Object Factory and / or Creator.
+     * This is usually called from within your Plugin destruction code to help clean-up after your plugin has been removed.
+     *
+     * @method Phaser.Plugins.PluginManager#removeGameObject
+     * @since 3.19.0
+     *
+     * @param {string} key - The key of the Game Object to be removed from the factories.
+     * @param {boolean} [removeFromFactory=true] - Should the Game Object be removed from the Game Object Factory?
+     * @param {boolean} [removeFromCreator=true] - Should the Game Object be removed from the Game Object Creator?
+     */
+    removeGameObject: function (key, removeFromFactory, removeFromCreator)
+    {
+        if (removeFromFactory === undefined) { removeFromFactory = true; }
+        if (removeFromCreator === undefined) { removeFromCreator = true; }
+
+        if (removeFromFactory)
+        {
+            GameObjectFactory.remove(key);
+        }
+
+        if (removeFromCreator)
+        {
+            GameObjectCreator.remove(key);
+        }
+
+        return this;
+    },
+
+    /**
      * Registers a new file type with the global File Types Manager, making it available to all Loader
      * Plugins created after this.
      * 
@@ -804,7 +860,8 @@ var PluginManager = new Class({
     /**
      * Destroys this Plugin Manager and all associated plugins.
      * It will iterate all plugins found and call their `destroy` methods.
-     * Note that the PluginCache is NOT cleared by this as it doesn't hold any plugin instances.
+     * 
+     * The PluginCache will remove all custom plugins.
      *
      * @method Phaser.Plugins.PluginManager#destroy
      * @since 3.8.0
@@ -814,6 +871,13 @@ var PluginManager = new Class({
         for (var i = 0; i < this.plugins.length; i++)
         {
             this.plugins[i].plugin.destroy();
+        }
+
+        PluginCache.destroyCustomPlugins();
+
+        if (this.game.noReturn)
+        {
+            PluginCache.destroyCorePlugins();
         }
 
         this.game = null;

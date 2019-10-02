@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Utils = require('../../renderer/webgl/Utils');
@@ -23,14 +23,14 @@ var Utils = require('../../renderer/webgl/Utils');
  */
 var TileSpriteWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    src.updateTileTexture();
+    src.updateCanvas();
 
     var getTint = Utils.getTintAppendFloatAlpha;
 
     this.pipeline.batchTexture(
         src,
-        src.tileTexture,
-        src.frame.width * src.tileScaleX, src.frame.height * src.tileScaleY,
+        src.fillPattern,
+        src.displayFrame.width * src.tileScaleX, src.displayFrame.height * src.tileScaleY,
         src.x, src.y,
         src.width, src.height,
         src.scaleX, src.scaleY,
@@ -44,8 +44,8 @@ var TileSpriteWebGLRenderer = function (renderer, src, interpolationPercentage, 
         getTint(src._tintBL, camera.alpha * src._alphaBL),
         getTint(src._tintBR, camera.alpha * src._alphaBR),
         (src._isTinted && src.tintFill),
-        (src.tilePositionX % src.frame.width) / src.frame.width,
-        (src.tilePositionY % src.frame.height) / src.frame.height,
+        (src.tilePositionX % src.displayFrame.width) / src.displayFrame.width,
+        (src.tilePositionY % src.displayFrame.height) / src.displayFrame.height,
         camera,
         parentMatrix
     );

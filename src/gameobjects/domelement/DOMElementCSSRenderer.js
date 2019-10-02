@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var CSSBlendModes = require('./CSSBlendModes');
@@ -13,55 +13,103 @@ var GameObject = require('../GameObject');
  * This method should not be called directly. It is a utility function of the Render module.
  *
  * @method Phaser.GameObjects.DOMElement#renderWebGL
- * @since 3.12.0
+ * @since 3.17.0
  * @private
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active renderer.
  * @param {Phaser.GameObjects.DOMElement} src - The Game Object being rendered in this call.
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var DOMElementCSSRenderer = function (renderer, src, interpolationPercentage, camera)
+var DOMElementCSSRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
     var node = src.node;
+    var style = node.style;
 
-    if (!node || GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)))
+    if (!node || !style || GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)) || (src.parentContainer && !src.parentContainer.willRender()))
     {
         if (node)
         {
-            node.style.display = 'none';
+            style.display = 'none';
         }
         
         return;
     }
 
-    var camMatrix = renderer.pipelines.TextureTintPipeline._tempMatrix1;
-    var spriteMatrix = renderer.pipelines.TextureTintPipeline._tempMatrix2;
-    var calcMatrix = renderer.pipelines.TextureTintPipeline._tempMatrix3;
+    var parent = src.parentContainer;
+    var alpha = camera.alpha * src.alpha;
 
-    var x = src.originX * src.width;
-    var y = src.originY * src.height;
+    if (parent)
+    {
+        alpha *= parent.alpha;
+    }
 
-    spriteMatrix.applyITRS(src.x - x - (camera.scrollX * src.scrollFactorX), src.y - y - (camera.scrollY * src.scrollFactorY), src.rotation, src.scaleX, src.scaleY);
+    var camMatrix = renderer._tempMatrix1;
+    var srcMatrix = renderer._tempMatrix2;
+    var calcMatrix = renderer._tempMatrix3;
 
-    camMatrix.copyFrom(camera.matrix);
-    
-    camMatrix.multiply(spriteMatrix, calcMatrix);
+    var dx = 0;
+    var dy = 0;
 
-    node.style.display = 'block';
-    node.style.opacity = src.alpha;
-    node.style.zIndex = src._depth;
-    node.style.pointerEvents = 'auto';
-    node.style.mixBlendMode = CSSBlendModes[src._blendMode];
+    var tx = '0%';
+    var ty = '0%';
+
+    if (parentMatrix)
+    {
+        dx = (src.width * src.scaleX) * src.originX;
+        dy = (src.height * src.scaleY) * src.originY;
+
+        srcMatrix.applyITRS(src.x - dx, src.y - dy, src.rotation, src.scaleX, src.scaleY);
+
+        camMatrix.copyFrom(camera.matrix);
+
+        //  Multiply the camera by the parent matrix
+        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
+
+        //  Undo the camera scroll
+        srcMatrix.e = src.x - dx;
+        srcMatrix.f = src.y - dy;
+
+        //  Multiply by the src matrix, store result in calcMatrix
+        camMatrix.multiply(srcMatrix, calcMatrix);
+    }
+    else
+    {
+        dx = (src.width) * src.originX;
+        dy = (src.height) * src.originY;
+ 
+        srcMatrix.applyITRS(src.x - dx, src.y - dy, src.rotation, src.scaleX, src.scaleY);
+        
+        camMatrix.copyFrom(camera.matrix);
+
+        tx = (100 * src.originX) + '%';
+        ty = (100 * src.originY) + '%';
+
+        srcMatrix.e -= camera.scrollX * src.scrollFactorX;
+        srcMatrix.f -= camera.scrollY * src.scrollFactorY;
+
+        //  Multiply by the src matrix, store result in calcMatrix
+        camMatrix.multiply(srcMatrix, calcMatrix);
+    }
+
+    if (!src.transformOnly)
+    {
+        style.display = 'block';
+        style.opacity = alpha;
+        style.zIndex = src._depth;
+        style.pointerEvents = 'auto';
+        style.mixBlendMode = CSSBlendModes[src._blendMode];
+    }
 
     // https://developer.mozilla.org/en-US/docs/Web/CSS/transform
 
-    node.style.transform =
+    style.transform =
         calcMatrix.getCSSMatrix() +
         ' skew(' + src.skewX + 'rad, ' + src.skewY + 'rad)' +
         ' rotate3d(' + src.rotate3d.x + ',' + src.rotate3d.y + ',' + src.rotate3d.z + ',' + src.rotate3d.w + src.rotate3dAngle + ')';
 
-    node.style.transformOrigin = (100 * src.originX) + '% ' + (100 * src.originY) + '%';
+    style.transformOrigin = tx + ' ' + ty;
 };
 
 module.exports = DOMElementCSSRenderer;

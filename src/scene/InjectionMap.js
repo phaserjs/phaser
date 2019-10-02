@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 //  These properties get injected into the Scene and map to local systems
@@ -22,12 +22,12 @@ var InjectionMap = {
     cache: 'cache',
     plugins: 'plugins',
     registry: 'registry',
+    scale: 'scale',
     sound: 'sound',
     textures: 'textures',
 
     events: 'events',
     cameras: 'cameras',
-    cameras3d: 'cameras3d',
     add: 'add',
     make: 'make',
     scenePlugin: 'scene',
@@ -45,5 +45,15 @@ var InjectionMap = {
     matterPhysics: 'matter'
 
 };
+
+if (typeof PLUGIN_CAMERA3D)
+{
+    InjectionMap.cameras3d = 'cameras3d';
+}
+
+if (typeof PLUGIN_FBINSTANT)
+{
+    InjectionMap.facebook = 'facebook';
+}
 
 module.exports = InjectionMap;

@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Clone = require('../../utils/object/Clone');
@@ -17,15 +17,15 @@ var Timeline = require('../Timeline');
 var TweenBuilder = require('./TweenBuilder');
 
 /**
- * [description]
+ * Builds a Timeline of Tweens based on a configuration object.
  *
  * @function Phaser.Tweens.Builders.TimelineBuilder
  * @since 3.0.0
  *
- * @param {Phaser.Tweens.TweenManager} manager - [description]
- * @param {object} config - [description]
+ * @param {Phaser.Tweens.TweenManager} manager - The Tween Manager to which the Timeline will belong.
+ * @param {Phaser.Types.Tweens.TimelineBuilderConfig} config - The configuration object for the Timeline.
  *
- * @return {Phaser.Tweens.Timeline} [description]
+ * @return {Phaser.Tweens.Timeline} The created Timeline.
  */
 var TimelineBuilder = function (manager, config)
 {

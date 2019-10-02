@@ -177,7 +177,11 @@ module.exports = Common;
      * @return {boolean} True if the object is a HTMLElement, otherwise false
      */
     Common.isElement = function(obj) {
-        return obj instanceof HTMLElement;
+        if (typeof HTMLElement !== 'undefined') {
+            return obj instanceof HTMLElement;
+        }
+
+        return !!(obj && obj.nodeType && obj.nodeName);
     };
 
     /**
@@ -217,7 +221,7 @@ module.exports = Common;
      * @return {boolean} True if the object is a string, otherwise false
      */
     Common.isString = function(obj) {
-        return Object.prototype.toString.call(obj) === '[object String]';
+        return toString.call(obj) === '[object String]';
     };
     
     /**
@@ -369,6 +373,7 @@ module.exports = Common;
      * @param {array} haystack
      * @param {object} needle
      * @return {number} The position of needle in haystack, otherwise -1.
+     */
     Common.indexOf = function(haystack, needle) {
         if (haystack.indexOf)
             return haystack.indexOf(needle);
@@ -380,7 +385,6 @@ module.exports = Common;
 
         return -1;
     };
-     */
 
     /**
      * A cross browser compatible array map implementation.
@@ -420,14 +424,14 @@ module.exports = Common;
 
         for (var node in graph) {
             if (!visited[node] && !temp[node]) {
-                _topologicalSort(node, visited, temp, graph, result);
+                Common._topologicalSort(node, visited, temp, graph, result);
             }
         }
 
         return result;
     };
 
-    var _topologicalSort = function(node, visited, temp, graph, result) {
+    Common._topologicalSort = function(node, visited, temp, graph, result) {
         var neighbors = graph[node] || [];
         temp[node] = true;
 
@@ -440,7 +444,7 @@ module.exports = Common;
             }
 
             if (!visited[neighbor]) {
-                _topologicalSort(neighbor, visited, temp, graph, result);
+                Common._topologicalSort(neighbor, visited, temp, graph, result);
             }
         }
 
@@ -532,4 +536,22 @@ module.exports = Common;
         ));
     };
 
+    /**
+     * Used to require external libraries outside of the bundle.
+     * It first looks for the `globalName` on the environment's global namespace.
+     * If the global is not found, it will fall back to using the standard `require` using the `moduleName`.
+     * @private
+     * @method _requireGlobal
+     * @param {string} globalName The global module name
+     * @param {string} moduleName The fallback CommonJS module name
+     * @return {} The loaded module
+     */
+    Common._requireGlobal = function(globalName, moduleName) {
+        var obj = (typeof window !== 'undefined' ? window[globalName] : typeof global !== 'undefined' ? global[globalName] : null);
+
+        //  Breaks webpack :(
+        // return obj || require(moduleName);
+
+        return obj;
+    };
 })();

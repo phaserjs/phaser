@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 //  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji
@@ -10,24 +10,17 @@
 var Class = require('../utils/Class');
 
 /**
- * @typedef {object} Vector2Like
- *
- * @property {number} x - The x component.
- * @property {number} y - The y component.
- */
-
-/**
  * @classdesc
  * A representation of a vector in 2D space.
  *
  * A two-component vector.
  *
  * @class Vector2
- * @memberOf Phaser.Math
+ * @memberof Phaser.Math
  * @constructor
  * @since 3.0.0
  *
- * @param {number} [x] - The x component.
+ * @param {number|Phaser.Types.Math.Vector2Like} [x] - The x component, or an object with `x` and `y` properties.
  * @param {number} [y] - The y component.
  */
 var Vector2 = new Class({
@@ -107,7 +100,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#setFromObject
      * @since 3.0.0
      *
-     * @param {Vector2Like} obj - The object containing the component values to set for this Vector.
+     * @param {Phaser.Types.Math.Vector2Like} obj - The object containing the component values to set for this Vector.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -463,14 +456,14 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Calculate the cross product of this Vector and the given Vector.
      *
      * @method Phaser.Math.Vector2#cross
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - [description]
+     * @param {Phaser.Math.Vector2} src - The Vector2 to cross with this Vector2.
      *
-     * @return {number} [description]
+     * @return {number} The cross product of this Vector and the given Vector.
      */
     cross: function (src)
     {
@@ -567,10 +560,74 @@ var Vector2 = new Class({
 
 /**
  * A static zero Vector2 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
  *
- * @method Phaser.Math.Vector2.ZERO
+ * @constant
+ * @name Phaser.Math.Vector2.ZERO
+ * @type {Phaser.Math.Vector2}
  * @since 3.1.0
  */
 Vector2.ZERO = new Vector2();
+
+/**
+ * A static right Vector2 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector2.RIGHT
+ * @type {Phaser.Math.Vector2}
+ * @since 3.16.0
+ */
+Vector2.RIGHT = new Vector2(1, 0);
+
+/**
+ * A static left Vector2 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector2.LEFT
+ * @type {Phaser.Math.Vector2}
+ * @since 3.16.0
+ */
+Vector2.LEFT = new Vector2(-1, 0);
+
+/**
+ * A static up Vector2 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector2.UP
+ * @type {Phaser.Math.Vector2}
+ * @since 3.16.0
+ */
+Vector2.UP = new Vector2(0, -1);
+
+/**
+ * A static down Vector2 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector2.DOWN
+ * @type {Phaser.Math.Vector2}
+ * @since 3.16.0
+ */
+Vector2.DOWN = new Vector2(0, 1);
+
+/**
+ * A static one Vector2 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector2.ONE
+ * @type {Phaser.Math.Vector2}
+ * @since 3.16.0
+ */
+Vector2.ONE = new Vector2(1, 1);
 
 module.exports = Vector2;

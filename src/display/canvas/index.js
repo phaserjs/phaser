@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -10,8 +10,8 @@
 
 module.exports = {
 
-    Interpolation: require('./CanvasInterpolation'),
-    Pool: require('./CanvasPool'),
+    CanvasInterpolation: require('./CanvasInterpolation'),
+    CanvasPool: require('./CanvasPool'),
     Smoothing: require('./Smoothing'),
     TouchAction: require('./TouchAction'),
     UserSelect: require('./UserSelect')

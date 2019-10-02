@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Components = require('./components');
@@ -9,7 +9,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var Vector2 = require('../../math/Vector2');
 
 /**
- * [description]
+ * Internal function to check if the object has a getter or setter.
  *
  * @function hasGetterOrSetter
  * @private
@@ -29,11 +29,11 @@ function hasGetterOrSetter (def)
  * @function Phaser.Physics.Matter.MatterGameObject
  * @since 3.3.0
  *
- * @param {Phaser.Physics.Matter.World} world - [description]
- * @param {Phaser.GameObjects.GameObject} gameObject - [description]
- * @param {object} options - [description]
+ * @param {Phaser.Physics.Matter.World} world - The Matter world to add the body to.
+ * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that will have the Matter body applied to it.
+ * @param {(object|MatterJS.Body)} options - A Matter Body configuration object, or an instance of a Matter Body.
  *
- * @return {Phaser.GameObjects.GameObject} [description]
+ * @return {Phaser.GameObjects.GameObject} The Game Object that was created with the Matter body.
  */
 var MatterGameObject = function (world, gameObject, options)
 {
@@ -44,6 +44,7 @@ var MatterGameObject = function (world, gameObject, options)
 
     //  Temp body pos to avoid body null checks
     gameObject.body = {
+        temp: true,
         position: {
             x: x,
             y: y
@@ -89,14 +90,21 @@ var MatterGameObject = function (world, gameObject, options)
 
     gameObject._tempVec2 = new Vector2(x, y);
 
-    var shape = GetFastValue(options, 'shape', null);
-
-    if (!shape)
+    if (options.hasOwnProperty('type') && options.type === 'body')
     {
-        shape = 'rectangle';
+        gameObject.setExistingBody(options, true);
     }
+    else
+    {
+        var shape = GetFastValue(options, 'shape', null);
 
-    gameObject.setBody(shape, options);
+        if (!shape)
+        {
+            shape = 'rectangle';
+        }
+    
+        gameObject.setBody(shape, options);
+    }
 
     return gameObject;
 };

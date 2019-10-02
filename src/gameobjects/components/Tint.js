@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -18,7 +18,7 @@ var GetColor = function (value)
  * Provides methods used for setting the tint of a Game Object.
  * Should be applied as a mixin and not used directly.
  * 
- * @name Phaser.GameObjects.Components.Tint
+ * @namespace Phaser.GameObjects.Components.Tint
  * @webglOnly
  * @since 3.0.0
  */
@@ -131,7 +131,7 @@ var Tint = {
      * @webglOnly
      * @since 3.0.0
      *
-     * @param {integer} [topLeft=0xffffff] - The tint being applied to the top-left of the Game Object. If not other values are given this value is applied evenly, tinting the whole Game Object.
+     * @param {integer} [topLeft=0xffffff] - The tint being applied to the top-left of the Game Object. If no other values are given this value is applied evenly, tinting the whole Game Object.
      * @param {integer} [topRight] - The tint being applied to the top-right of the Game Object.
      * @param {integer} [bottomLeft] - The tint being applied to the bottom-left of the Game Object.
      * @param {integer} [bottomRight] - The tint being applied to the bottom-right of the Game Object.
@@ -296,6 +296,7 @@ var Tint = {
 
     /**
      * The tint value being applied to the whole of the Game Object.
+     * This property is a setter-only. Use the properties `tintTopLeft` etc to read the current tint value.
      * 
      * @name Phaser.GameObjects.Components.Tint#tint
      * @type {integer}
@@ -316,7 +317,7 @@ var Tint = {
      * @name Phaser.GameObjects.Components.Tint#isTinted
      * @type {boolean}
      * @webglOnly
-     * @readOnly
+     * @readonly
      * @since 3.11.0
      */
     isTinted: {

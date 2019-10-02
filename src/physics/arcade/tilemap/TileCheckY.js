@@ -1,33 +1,48 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var ProcessTileSeparationY = require('./ProcessTileSeparationY');
 
 /**
  * Check the body against the given tile on the Y axis.
+ * Used internally by the SeparateTile function.
  *
  * @function Phaser.Physics.Arcade.Tilemap.TileCheckY
  * @since 3.0.0
  *
  * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
  * @param {Phaser.Tilemaps.Tile} tile - The tile to check.
- * @param {number} tileTop - [description]
- * @param {number} tileBottom - [description]
- * @param {number} tileBias - [description]
+ * @param {number} tileTop - The top position of the tile within the tile world.
+ * @param {number} tileBottom - The bottom position of the tile within the tile world.
+ * @param {number} tileBias - The tile bias value. Populated by the `World.TILE_BIAS` constant.
+ * @param {boolean} isLayer - Is this check coming from a TilemapLayer or an array of tiles?
  *
  * @return {number} The amount of separation that occurred.
  */
-var TileCheckY = function (body, tile, tileTop, tileBottom, tileBias)
+var TileCheckY = function (body, tile, tileTop, tileBottom, tileBias, isLayer)
 {
     var oy = 0;
 
-    if (body.deltaY() < 0 && !body.blocked.up && tile.collideDown && body.checkCollision.up)
+    var faceTop = tile.faceTop;
+    var faceBottom = tile.faceBottom;
+    var collideUp = tile.collideUp;
+    var collideDown = tile.collideDown;
+
+    if (!isLayer)
+    {
+        faceTop = true;
+        faceBottom = true;
+        collideUp = true;
+        collideDown = true;
+    }
+
+    if (body.deltaY() < 0 && collideDown && body.checkCollision.up)
     {
         //  Body is moving UP
-        if (tile.faceBottom && body.y < tileBottom)
+        if (faceBottom && body.y < tileBottom)
         {
             oy = body.y - tileBottom;
 
@@ -37,10 +52,10 @@ var TileCheckY = function (body, tile, tileTop, tileBottom, tileBias)
             }
         }
     }
-    else if (body.deltaY() > 0 && !body.blocked.down && tile.collideUp && body.checkCollision.down)
+    else if (body.deltaY() > 0 && collideUp && body.checkCollision.down)
     {
         //  Body is moving DOWN
-        if (tile.faceTop && body.bottom > tileTop)
+        if (faceTop && body.bottom > tileTop)
         {
             oy = body.bottom - tileTop;
 

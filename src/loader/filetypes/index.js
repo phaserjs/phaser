@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -17,6 +17,7 @@ module.exports = {
     AudioSpriteFile: require('./AudioSpriteFile'),
     BinaryFile: require('./BinaryFile'),
     BitmapFontFile: require('./BitmapFontFile'),
+    CSSFile: require('./CSSFile'),
     GLSLFile: require('./GLSLFile'),
     HTML5AudioFile: require('./HTML5AudioFile'),
     HTMLFile: require('./HTMLFile'),
@@ -24,8 +25,10 @@ module.exports = {
     ImageFile: require('./ImageFile'),
     JSONFile: require('./JSONFile'),
     MultiAtlasFile: require('./MultiAtlasFile'),
+    MultiScriptFile: require('./MultiScriptFile'),
     PackFile: require('./PackFile'),
     PluginFile: require('./PluginFile'),
+    SceneFile: require('./SceneFile'),
     ScenePluginFile: require('./ScenePluginFile'),
     ScriptFile: require('./ScriptFile'),
     SpriteSheetFile: require('./SpriteSheetFile'),

@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
@@ -12,7 +12,7 @@ var Components = require('./components');
  * [description]
  *
  * @class ImpactBody
- * @memberOf Phaser.Physics.Impact
+ * @memberof Phaser.Physics.Impact
  * @constructor
  * @since 3.0.0
  *
@@ -30,9 +30,9 @@ var Components = require('./components');
  * @extends Phaser.Physics.Impact.Components.Velocity
  *
  * @param {Phaser.Physics.Impact.World} world - [description]
- * @param {number} x - [description]
- * @param {number} y - [description]
- * @param {number} width - [description]
+ * @param {number} x - x - The horizontal position of this physics body in the world.
+ * @param {number} y - y - The vertical position of this physics body in the world.
+ * @param {number} width - The width of the physics body in the world.
  * @param {number} height - [description]
  */
 var ImpactBody = new Class({

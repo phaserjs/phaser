@@ -1,20 +1,20 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * [description]
+ * Rounds a Rectangle's position and size up to the smallest integer greater than or equal to each respective value.
  *
  * @function Phaser.Geom.Rectangle.CeilAll
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Rectangle} O - [rect,$return]
  *
- * @param {Phaser.Geom.Rectangle} rect - [description]
+ * @param {Phaser.Geom.Rectangle} rect - The Rectangle to modify.
  *
- * @return {Phaser.Geom.Rectangle} [description]
+ * @return {Phaser.Geom.Rectangle} The modified Rectangle.
  */
 var CeilAll = function (rect)
 {

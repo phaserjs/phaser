@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var CanvasPool = require('../display/canvas/CanvasPool');
@@ -17,12 +17,12 @@ var ScaleModes = require('../renderer/ScaleModes');
  * A Texture can contain multiple Texture Sources, which only happens when a multi-atlas is loaded.
  *
  * @class TextureSource
- * @memberOf Phaser.Textures
+ * @memberof Phaser.Textures
  * @constructor
  * @since 3.0.0
  *
  * @param {Phaser.Textures.Texture} texture - The Texture this TextureSource belongs to.
- * @param {(HTMLImageElement|HTMLCanvasElement)} source - The source image data.
+ * @param {(HTMLImageElement|HTMLCanvasElement|Phaser.GameObjects.RenderTexture|WebGLTexture)} source - The source image data.
  * @param {integer} [width] - Optional width of the source image. If not given it's derived from the source itself.
  * @param {integer} [height] - Optional height of the source image. If not given it's derived from the source itself.
  */
@@ -47,13 +47,24 @@ var TextureSource = new Class({
          * The Texture this TextureSource belongs to.
          *
          * @name Phaser.Textures.TextureSource#texture
-         * @type {string}
+         * @type {Phaser.Textures.Texture}
          * @since 3.0.0
          */
         this.texture = texture;
 
         /**
-         * The source image data. This is either an Image Element, or a Canvas Element.
+         * The source of the image data.
+         * This is either an Image Element, a Canvas Element, a RenderTexture or a WebGLTexture.
+         *
+         * @name Phaser.Textures.TextureSource#source
+         * @type {(HTMLImageElement|HTMLCanvasElement|Phaser.GameObjects.RenderTexture|WebGLTexture)}
+         * @since 3.12.0
+         */
+        this.source = source;
+
+        /**
+         * The image data.
+         * This is either an Image element or a Canvas element.
          *
          * @name Phaser.Textures.TextureSource#image
          * @type {(HTMLImageElement|HTMLCanvasElement)}
@@ -121,6 +132,24 @@ var TextureSource = new Class({
         this.isCanvas = (source instanceof HTMLCanvasElement);
 
         /**
+         * Is the source image a Render Texture?
+         *
+         * @name Phaser.Textures.TextureSource#isRenderTexture
+         * @type {boolean}
+         * @since 3.12.0
+         */
+        this.isRenderTexture = (source.type === 'RenderTexture');
+
+        /**
+         * Is the source image a WebGLTexture?
+         *
+         * @name Phaser.Textures.TextureSource#isGLTexture
+         * @type {boolean}
+         * @since 3.19.0
+         */
+        this.isGLTexture = (window.hasOwnProperty('WebGLTexture') && source instanceof WebGLTexture);
+
+        /**
          * Are the source image dimensions a power of two?
          *
          * @name Phaser.Textures.TextureSource#isPowerOf2
@@ -130,7 +159,8 @@ var TextureSource = new Class({
         this.isPowerOf2 = IsSizePowerOfTwo(this.width, this.height);
 
         /**
-         * The WebGL Texture of the source image.
+         * The WebGL Texture of the source image. If this TextureSource is driven from a WebGLTexture
+         * already, then this is a reference to that WebGLTexture.
          *
          * @name Phaser.Textures.TextureSource#glTexture
          * @type {?WebGLTexture}
@@ -152,15 +182,32 @@ var TextureSource = new Class({
      */
     init: function (game)
     {
-        if (this.renderer && this.renderer.gl)
+        if (this.renderer)
         {
-            if (this.isCanvas)
+            if (this.renderer.gl)
             {
-                this.glTexture = this.renderer.canvasToTexture(this.image);
+                if (this.isCanvas)
+                {
+                    this.glTexture = this.renderer.canvasToTexture(this.image);
+                }
+                else if (this.isRenderTexture)
+                {
+                    this.image = this.source.canvas;
+                 
+                    this.glTexture = this.renderer.createTextureFromSource(null, this.width, this.height, this.scaleMode);
+                }
+                else if (this.isGLTexture)
+                {
+                    this.glTexture = this.source;
+                }
+                else
+                {
+                    this.glTexture = this.renderer.createTextureFromSource(this.image, this.width, this.height, this.scaleMode);
+                }
             }
-            else
+            else if (this.isRenderTexture)
             {
-                this.glTexture = this.renderer.createTextureFromSource(this.image, this.width, this.height, this.scaleMode);
+                this.image = this.source.canvas;
             }
         }
 
@@ -188,6 +235,8 @@ var TextureSource = new Class({
         {
             this.renderer.setTextureFilter(this.glTexture, filterMode);
         }
+
+        this.scaleMode = filterMode;
     },
 
     /**
@@ -201,7 +250,7 @@ var TextureSource = new Class({
     {
         if (this.renderer.gl && this.isCanvas)
         {
-            this.renderer.canvasToTexture(this.image, this.glTexture);
+            this.glTexture = this.renderer.canvasToTexture(this.image, this.glTexture);
         }
     },
 
@@ -225,7 +274,9 @@ var TextureSource = new Class({
 
         this.renderer = null;
         this.texture = null;
+        this.source = null;
         this.image = null;
+        this.glTexture = null;
     }
 
 });

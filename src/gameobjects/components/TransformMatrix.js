@@ -1,10 +1,12 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
+var MATH_CONST = require('../../math/const');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * @classdesc
@@ -19,13 +21,13 @@ var Class = require('../../utils/Class');
  * ```
  *
  * @class TransformMatrix
- * @memberOf Phaser.GameObjects.Components
+ * @memberof Phaser.GameObjects.Components
  * @constructor
  * @since 3.0.0
  *
  * @param {number} [a=1] - The Scale X value.
- * @param {number} [b=0] - The Shear Y value.
- * @param {number} [c=0] - The Shear X value.
+ * @param {number} [b=0] - The Skew Y value.
+ * @param {number} [c=0] - The Skew X value.
  * @param {number} [d=1] - The Scale Y value.
  * @param {number} [tx=0] - The Translate X value.
  * @param {number} [ty=0] - The Translate Y value.
@@ -90,7 +92,7 @@ var TransformMatrix = new Class({
     },
 
     /**
-     * The Shear Y value.
+     * The Skew Y value.
      *
      * @name Phaser.GameObjects.Components.TransformMatrix#b
      * @type {number}
@@ -111,7 +113,7 @@ var TransformMatrix = new Class({
     },
 
     /**
-     * The Shear X value.
+     * The Skew X value.
      *
      * @name Phaser.GameObjects.Components.TransformMatrix#c
      * @type {number}
@@ -237,52 +239,92 @@ var TransformMatrix = new Class({
     },
 
     /**
-     * The rotation of the Matrix.
+     * The rotation of the Matrix. Value is in radians.
      *
      * @name Phaser.GameObjects.Components.TransformMatrix#rotation
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     rotation: {
 
         get: function ()
         {
-            return Math.acos(this.a / this.scaleX) * (Math.atan(-this.c / this.a) < 0 ? -1 : 1);
+            return Math.acos(this.a / this.scaleX) * ((Math.atan(-this.c / this.a) < 0) ? -1 : 1);
         }
 
     },
 
     /**
-     * The horizontal scale of the Matrix.
+     * The rotation of the Matrix, normalized to be within the Phaser right-handed
+     * clockwise rotation space. Value is in radians.
+     *
+     * @name Phaser.GameObjects.Components.TransformMatrix#rotationNormalized
+     * @type {number}
+     * @readonly
+     * @since 3.19.0
+     */
+    rotationNormalized: {
+
+        get: function ()
+        {
+            var matrix = this.matrix;
+
+            var a = matrix[0];
+            var b = matrix[1];
+            var c = matrix[2];
+            var d = matrix[3];
+
+            if (a || b)
+            {
+                // var r = Math.sqrt(a * a + b * b);
+    
+                return (b > 0) ? Math.acos(a / this.scaleX) : -Math.acos(a / this.scaleX);
+            }
+            else if (c || d)
+            {
+                // var s = Math.sqrt(c * c + d * d);
+    
+                return MATH_CONST.TAU - ((d > 0) ? Math.acos(-c / this.scaleY) : -Math.acos(c / this.scaleY));
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+    },
+
+    /**
+     * The decomposed horizontal scale of the Matrix. This value is always positive.
      *
      * @name Phaser.GameObjects.Components.TransformMatrix#scaleX
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     scaleX: {
 
         get: function ()
         {
-            return Math.sqrt((this.a * this.a) + (this.c * this.c));
+            return Math.sqrt((this.a * this.a) + (this.b * this.b));
         }
 
     },
 
     /**
-     * The vertical scale of the Matrix.
+     * The decomposed vertical scale of the Matrix. This value is always positive.
      *
      * @name Phaser.GameObjects.Components.TransformMatrix#scaleY
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     scaleY: {
 
         get: function ()
         {
-            return Math.sqrt((this.b * this.b) + (this.d * this.d));
+            return Math.sqrt((this.c * this.c) + (this.d * this.d));
         }
 
     },
@@ -359,24 +401,26 @@ var TransformMatrix = new Class({
      * @method Phaser.GameObjects.Components.TransformMatrix#rotate
      * @since 3.0.0
      *
-     * @param {number} radian - The angle of rotation in radians.
+     * @param {number} angle - The angle of rotation in radians.
      *
      * @return {this} This TransformMatrix.
      */
-    rotate: function (radian)
+    rotate: function (angle)
     {
-        var radianSin = Math.sin(radian);
-        var radianCos = Math.cos(radian);
+        var sin = Math.sin(angle);
+        var cos = Math.cos(angle);
+
         var matrix = this.matrix;
+
         var a = matrix[0];
         var b = matrix[1];
         var c = matrix[2];
         var d = matrix[3];
 
-        matrix[0] = a * radianCos + c * radianSin;
-        matrix[1] = b * radianCos + d * radianSin;
-        matrix[2] = a * -radianSin + c * radianCos;
-        matrix[3] = b * -radianSin + d * radianCos;
+        matrix[0] = a * cos + c * sin;
+        matrix[1] = b * cos + d * sin;
+        matrix[2] = a * -sin + c * cos;
+        matrix[3] = b * -sin + d * cos;
 
         return this;
     },
@@ -417,12 +461,12 @@ var TransformMatrix = new Class({
 
         var destinationMatrix = (out === undefined) ? this : out;
 
-        destinationMatrix.a = sourceA * localA + sourceB * localC;
-        destinationMatrix.b = sourceA * localB + sourceB * localD;
-        destinationMatrix.c = sourceC * localA + sourceD * localC;
-        destinationMatrix.d = sourceC * localB + sourceD * localD;
-        destinationMatrix.e = sourceE * localA + sourceF * localC + localE;
-        destinationMatrix.f = sourceE * localB + sourceF * localD + localF;
+        destinationMatrix.a = (sourceA * localA) + (sourceB * localC);
+        destinationMatrix.b = (sourceA * localB) + (sourceB * localD);
+        destinationMatrix.c = (sourceC * localA) + (sourceD * localC);
+        destinationMatrix.d = (sourceC * localB) + (sourceD * localD);
+        destinationMatrix.e = (sourceE * localA) + (sourceF * localC) + localE;
+        destinationMatrix.f = (sourceE * localB) + (sourceF * localD) + localF;
 
         return destinationMatrix;
     },
@@ -622,6 +666,79 @@ var TransformMatrix = new Class({
     },
 
     /**
+     * Copy the values from this Matrix to the given Canvas Rendering Context.
+     * This will use the Context.transform method.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#copyToContext
+     * @since 3.12.0
+     *
+     * @param {CanvasRenderingContext2D} ctx - The Canvas Rendering Context to copy the matrix values to.
+     *
+     * @return {CanvasRenderingContext2D} The Canvas Rendering Context.
+     */
+    copyToContext: function (ctx)
+    {
+        var matrix = this.matrix;
+
+        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+
+        return ctx;
+    },
+
+    /**
+     * Copy the values from this Matrix to the given Canvas Rendering Context.
+     * This will use the Context.setTransform method.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#setToContext
+     * @since 3.12.0
+     *
+     * @param {CanvasRenderingContext2D} ctx - The Canvas Rendering Context to copy the matrix values to.
+     *
+     * @return {CanvasRenderingContext2D} The Canvas Rendering Context.
+     */
+    setToContext: function (ctx)
+    {
+        var matrix = this.matrix;
+
+        ctx.setTransform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+
+        return ctx;
+    },
+
+    /**
+     * Copy the values in this Matrix to the array given.
+     * 
+     * Where array indexes 0, 1, 2, 3, 4 and 5 are mapped to a, b, c, d, e and f.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#copyToArray
+     * @since 3.12.0
+     *
+     * @param {array} [out] - The array to copy the matrix values in to.
+     *
+     * @return {array} An array where elements 0 to 5 contain the values from this matrix.
+     */
+    copyToArray: function (out)
+    {
+        var matrix = this.matrix;
+
+        if (out === undefined)
+        {
+            out = [ matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5] ];
+        }
+        else
+        {
+            out[0] = matrix[0];
+            out[1] = matrix[1];
+            out[2] = matrix[2];
+            out[3] = matrix[3];
+            out[4] = matrix[4];
+            out[5] = matrix[5];
+        }
+
+        return out;
+    },
+
+    /**
      * Set the values of this Matrix.
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#setTransform
@@ -651,7 +768,11 @@ var TransformMatrix = new Class({
     },
 
     /**
-     * Decompose this Matrix into its translation, scale and rotation values.
+     * Decompose this Matrix into its translation, scale and rotation values using QR decomposition.
+     * 
+     * The result must be applied in the following order to reproduce the current matrix:
+     * 
+     * translate -> rotate -> scale
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#decomposeMatrix
      * @since 3.0.0
@@ -674,21 +795,33 @@ var TransformMatrix = new Class({
         var c = matrix[2];
         var d = matrix[3];
 
-        var a2 = a * a;
-        var b2 = b * b;
-        var c2 = c * c;
-        var d2 = d * d;
-
-        var sx = Math.sqrt(a2 + c2);
-        var sy = Math.sqrt(b2 + d2);
+        var determ = a * d - b * c;
 
         decomposedMatrix.translateX = matrix[4];
         decomposedMatrix.translateY = matrix[5];
 
-        decomposedMatrix.scaleX = sx;
-        decomposedMatrix.scaleY = sy;
+        if (a || b)
+        {
+            var r = Math.sqrt(a * a + b * b);
 
-        decomposedMatrix.rotation = Math.acos(a / sx) * (Math.atan(-c / a) < 0 ? -1 : 1);
+            decomposedMatrix.rotation = (b > 0) ? Math.acos(a / r) : -Math.acos(a / r);
+            decomposedMatrix.scaleX = r;
+            decomposedMatrix.scaleY = determ / r;
+        }
+        else if (c || d)
+        {
+            var s = Math.sqrt(c * c + d * d);
+
+            decomposedMatrix.rotation = Math.PI * 0.5 - (d > 0 ? Math.acos(-c / s) : -Math.acos(c / s));
+            decomposedMatrix.scaleX = determ / s;
+            decomposedMatrix.scaleY = s;
+        }
+        else
+        {
+            decomposedMatrix.rotation = 0;
+            decomposedMatrix.scaleX = 0;
+            decomposedMatrix.scaleY = 0;
+        }
 
         return decomposedMatrix;
     },
@@ -725,6 +858,76 @@ var TransformMatrix = new Class({
         matrix[3] = radianCos * scaleY;
 
         return this;
+    },
+
+    /**
+     * Takes the `x` and `y` values and returns a new position in the `output` vector that is the inverse of
+     * the current matrix with its transformation applied.
+     * 
+     * Can be used to translate points from world to local space.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#applyInverse
+     * @since 3.12.0
+     *
+     * @param {number} x - The x position to translate.
+     * @param {number} y - The y position to translate.
+     * @param {Phaser.Math.Vector2} [output] - A Vector2, or point-like object, to store the results in.
+     *
+     * @return {Phaser.Math.Vector2} The coordinates, inverse-transformed through this matrix.
+     */
+    applyInverse: function (x, y, output)
+    {
+        if (output === undefined) { output = new Vector2(); }
+
+        var matrix = this.matrix;
+
+        var a = matrix[0];
+        var b = matrix[1];
+        var c = matrix[2];
+        var d = matrix[3];
+        var tx = matrix[4];
+        var ty = matrix[5];
+
+        var id = 1 / ((a * d) + (c * -b));
+
+        output.x = (d * id * x) + (-c * id * y) + (((ty * c) - (tx * d)) * id);
+        output.y = (a * id * y) + (-b * id * x) + (((-ty * a) + (tx * b)) * id);
+
+        return output;
+    },
+
+    /**
+     * Returns the X component of this matrix multiplied by the given values.
+     * This is the same as `x * a + y * c + e`.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#getX
+     * @since 3.12.0
+     * 
+     * @param {number} x - The x value.
+     * @param {number} y - The y value.
+     *
+     * @return {number} The calculated x value.
+     */
+    getX: function (x, y)
+    {
+        return x * this.a + y * this.c + this.e;
+    },
+
+    /**
+     * Returns the Y component of this matrix multiplied by the given values.
+     * This is the same as `x * b + y * d + f`.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#getY
+     * @since 3.12.0
+     * 
+     * @param {number} x - The x value.
+     * @param {number} y - The y value.
+     *
+     * @return {number} The calculated y value.
+     */
+    getY: function (x, y)
+    {
+        return x * this.b + y * this.d + this.f;
     },
 
     /**

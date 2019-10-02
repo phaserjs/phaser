@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../utils/Class');
@@ -16,7 +16,7 @@ var Vector2 = require('../math/Vector2');
  * Based on the three.js Curve classes created by [zz85](http://www.lab4games.net/zz85/blog)
  *
  * @class Curve
- * @memberOf Phaser.Curves
+ * @memberof Phaser.Curves
  * @constructor
  * @since 3.0.0
  *
@@ -131,7 +131,7 @@ var Curve = new Class({
         //  So you can chain graphics calls
         return graphics.strokePoints(this.getPoints(pointsTotal));
     },
-
+    
     /**
      * Returns a Rectangle where the position and dimensions match the bounds of this Curve.
      *
@@ -192,9 +192,9 @@ var Curve = new Class({
      * @method Phaser.Curves.Curve#getEndPoint
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} out - [description]
+     * @param {Phaser.Math.Vector2} [out] - Optional Vector object to store the result in.
      *
-     * @return {Phaser.Math.Vector2} [description]
+     * @return {Phaser.Math.Vector2} Vector2 containing the coordinates of the curves end point.
      */
     getEndPoint: function (out)
     {
@@ -203,10 +203,8 @@ var Curve = new Class({
         return this.getPointAt(1, out);
     },
 
-    // Get total curve arc length
-
     /**
-     * [description]
+     * Get total curve arc length
      *
      * @method Phaser.Curves.Curve#getLength
      * @since 3.0.0
@@ -220,10 +218,9 @@ var Curve = new Class({
         return lengths[lengths.length - 1];
     },
 
-    // Get list of cumulative segment lengths
 
     /**
-     * [description]
+     * Get list of cumulative segment lengths
      *
      * @method Phaser.Curves.Curve#getLengths
      * @since 3.0.0
@@ -382,13 +379,11 @@ var Curve = new Class({
         return this.getPointAt(0, out);
     },
 
-    // Returns a unit vector tangent at t
-    // In case any sub curve does not implement its tangent derivation,
-    // 2 points a small delta apart will be used to find its gradient
-    // which seems to give a reasonable approximation
-
     /**
-     * [description]
+     * Returns a unit vector tangent at t
+     * In case any sub curve does not implement its tangent derivation,
+     * 2 points a small delta apart will be used to find its gradient
+     * which seems to give a reasonable approximation
      *
      * @method Phaser.Curves.Curve#getTangent
      * @since 3.0.0
@@ -398,7 +393,7 @@ var Curve = new Class({
      * @param {number} t - [description]
      * @param {Phaser.Math.Vector2} [out] - [description]
      *
-     * @return {Phaser.Math.Vector2} [description]
+     * @return {Phaser.Math.Vector2} Vector approximating the tangent line at the point t (delta +/- 0.0001)
      */
     getTangent: function (t, out)
     {

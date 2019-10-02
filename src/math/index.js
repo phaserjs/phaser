@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var CONST = require('./const');
@@ -57,6 +57,7 @@ var PhaserMath = {
     SinCosTableGenerator: require('./SinCosTableGenerator'),
     SmootherStep: require('./SmootherStep'),
     SmoothStep: require('./SmoothStep'),
+    ToXY: require('./ToXY'),
     TransformXY: require('./TransformXY'),
     Within: require('./Within'),
     Wrap: require('./Wrap'),

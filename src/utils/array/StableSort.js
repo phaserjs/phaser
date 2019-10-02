@@ -1,21 +1,46 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 //! stable.js 0.1.6, https://github.com/Two-Screen/stable
 //! © 2017 Angry Bytes and contributors. MIT licensed.
 
+/**
+ * @namespace Phaser.Utils.Array.StableSortFunctions
+ */
+
 (function() {
 
-// A stable array sort, because `Array#sort()` is not guaranteed stable.
-// This is an implementation of merge sort, without recursion.
-
+ /**
+ * A stable array sort, because `Array#sort()` is not guaranteed stable.
+ * This is an implementation of merge sort, without recursion.
+ *
+ * @function Phaser.Utils.Array.StableSort
+ * @since 3.0.0
+ *
+ * @param {array} arr - The input array to be sorted.
+ * @param {function} comp - The comparison handler.
+ *
+ * @return {array} The sorted result.
+ */
 var stable = function(arr, comp) {
     return exec(arr.slice(), comp);
 };
 
+ /**
+ * Sort the input array and simply copy it back if the result isn't in the original array, which happens on an odd number of passes.
+ *
+ * @function Phaser.Utils.Array.StableSortFunctions.inplace
+ * @memberof Phaser.Utils.Array.StableSortFunctions
+ * @since 3.0.0
+ *
+ * @param {array} arr - The input array.
+ * @param {function} comp - The comparison handler.
+ *
+ * @return {array} The sorted array.
+ */
 stable.inplace = function(arr, comp) {
     var result = exec(arr, comp);
 

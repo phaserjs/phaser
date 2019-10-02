@@ -1,19 +1,19 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * [description]
+ * Decomposes a Triangle into an array of its points.
  *
  * @function Phaser.Geom.Triangle.Decompose
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Triangle} triangle - [description]
- * @param {array} [out] - [description]
+ * @param {Phaser.Geom.Triangle} triangle - The Triangle to decompose.
+ * @param {array} [out] - An array to store the points into.
  *
- * @return {array} [description]
+ * @return {array} The provided `out` array, or a new array if none was provided, with three objects with `x` and `y` properties representing each point of the Triangle appended to it.
  */
 var Decompose = function (triangle, out)
 {

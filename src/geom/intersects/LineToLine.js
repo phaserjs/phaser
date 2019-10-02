@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Point = require('../point/Point');
@@ -10,16 +10,16 @@ var Point = require('../point/Point');
 //  See http:'local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/
 
 /**
- * [description]
+ * Checks if two Lines intersect. If the Lines are identical, they will be treated as parallel and thus non-intersecting.
  *
  * @function Phaser.Geom.Intersects.LineToLine
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Line} line1 - [description]
- * @param {Phaser.Geom.Line} line2 - [description]
- * @param {Phaser.Geom.Point} [out] - [description]
+ * @param {Phaser.Geom.Line} line1 - The first Line to check.
+ * @param {Phaser.Geom.Line} line2 - The second Line to check.
+ * @param {Phaser.Geom.Point} [out] - A Point in which to optionally store the point of intersection.
  *
- * @return {boolean} [description]
+ * @return {boolean} `true` if the two Lines intersect, and the `out` object will be populated, if given. Otherwise, `false`.
  */
 var LineToLine = function (line1, line2, out)
 {

@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var SetTileCollision = require('./SetTileCollision');
@@ -20,10 +20,8 @@ var SetLayerCollisionIndex = require('./SetLayerCollisionIndex');
  *
  * @param {integer} start - The first index of the tile to be set for collision.
  * @param {integer} stop - The last index of the tile to be set for collision.
- * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear
- * collision.
- * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the
- * update.
+ * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
+ * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the update.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * @param {boolean} [updateLayer=true] - If true, updates the current tiles on the layer. Set to
  * false if no tiles have been placed for significant performance boost.
@@ -43,13 +41,14 @@ var SetCollisionBetween = function (start, stop, collides, recalculateFaces, lay
     }
 
     // Update the tiles
-    if(updateLayer)
+    if (updateLayer)
     {
         for (var ty = 0; ty < layer.height; ty++)
         {
             for (var tx = 0; tx < layer.width; tx++)
             {
                 var tile = layer.data[ty][tx];
+              
                 if (tile)
                 {
                     if (tile.index >= start && tile.index <= stop)
@@ -60,8 +59,11 @@ var SetCollisionBetween = function (start, stop, collides, recalculateFaces, lay
             }
         }
     }
-    
-    if (recalculateFaces) { CalculateFacesWithin(0, 0, layer.width, layer.height, layer); }
+
+    if (recalculateFaces)
+    {
+        CalculateFacesWithin(0, 0, layer.width, layer.height, layer);
+    }
 };
 
 module.exports = SetCollisionBetween;

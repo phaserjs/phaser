@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var BitmapText = require('../static/BitmapText');
@@ -9,33 +9,36 @@ var Class = require('../../../utils/Class');
 var Render = require('./DynamicBitmapTextRender');
 
 /**
- * @typedef {object} DisplayCallbackConfig
- * 
- * @property {{topLeft:number, topRight:number, bottomLeft:number, bottomRight:number}} tint - The tint of the character being rendered.
- * @property {number} index - The index of the character being rendered.
- * @property {number} charCode - The character code of the character being rendered.
- * @property {number} x - The x position of the character being rendered.
- * @property {number} y - The y position of the character being rendered.
- * @property {number} scale - The scale of the character being rendered.
- * @property {number} rotation - The rotation of the character being rendered.
- * @property {any} data - Custom data stored with the character being rendered.
- */
-
-/**
- * @callback DisplayCallback
- *
- * @param {DisplayCallbackConfig} display - Settings of the character that is about to be rendered.
- *
- * @return {{x:number, y:number, scale:number, rotation:number}} Altered position, scale and rotation values for the character that is about to be rendered.
- */
-
-/**
  * @classdesc
- * [description]
+ * BitmapText objects work by taking a texture file and an XML or JSON file that describes the font structure.
+ * 
+ * During rendering for each letter of the text is rendered to the display, proportionally spaced out and aligned to
+ * match the font structure.
+ * 
+ * Dynamic Bitmap Text objects are different from Static Bitmap Text in that they invoke a callback for each
+ * letter being rendered during the render pass. This callback allows you to manipulate the properties of
+ * each letter being rendered, such as its position, scale or tint, allowing you to create interesting effects
+ * like jiggling text, which can't be done with Static text. This means that Dynamic Text takes more processing
+ * time, so only use them if you require the callback ability they have.
+ *
+ * BitmapText objects are less flexible than Text objects, in that they have less features such as shadows, fills and the ability
+ * to use Web Fonts, however you trade this flexibility for rendering speed. You can also create visually compelling BitmapTexts by
+ * processing the font texture in an image editor, applying fills and any other effects required.
+ *
+ * To create multi-line text insert \r, \n or \r\n escape codes into the text string.
+ *
+ * To create a BitmapText data files you need a 3rd party app such as:
+ *
+ * BMFont (Windows, free): http://www.angelcode.com/products/bmfont/
+ * Glyph Designer (OS X, commercial): http://www.71squared.com/en/glyphdesigner
+ * Littera (Web-based, free): http://kvazars.com/littera/
+ *
+ * For most use cases it is recommended to use XML. If you wish to use JSON, the formatting should be equal to the result of
+ * converting a valid XML file through the popular X2JS library. An online tool for conversion can be found here: http://codebeautify.org/xmltojson
  *
  * @class DynamicBitmapText
  * @extends Phaser.GameObjects.BitmapText
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
@@ -107,7 +110,7 @@ var DynamicBitmapText = new Class({
          * A callback that alters how each character of the Bitmap Text is rendered.
          *
          * @name Phaser.GameObjects.DynamicBitmapText#displayCallback
-         * @type {DisplayCallback}
+         * @type {Phaser.Types.GameObjects.BitmapText.DisplayCallback}
          * @since 3.0.0
          */
         this.displayCallback;
@@ -121,10 +124,11 @@ var DynamicBitmapText = new Class({
          * should shallow copy it, as it's updated and re-used for every glyph in the text.
          *
          * @name Phaser.GameObjects.DynamicBitmapText#callbackData
-         * @type {DisplayCallbackConfig}
+         * @type {Phaser.Types.GameObjects.BitmapText.DisplayCallbackConfig}
          * @since 3.11.0
          */
         this.callbackData = {
+            parent: this,
             color: 0,
             tint: {
                 topLeft: 0,
@@ -164,7 +168,7 @@ var DynamicBitmapText = new Class({
     /**
      * Set a callback that alters how each character of the Bitmap Text is rendered.
      *
-     * The callback receives a {@link DisplayCallbackConfig} object that contains information about the character that's
+     * The callback receives a {@link Phaser.Types.GameObjects.BitmapText.DisplayCallbackConfig} object that contains information about the character that's
      * about to be rendered.
      *
      * It should return an object with `x`, `y`, `scale` and `rotation` properties that will be used instead of the
@@ -173,7 +177,7 @@ var DynamicBitmapText = new Class({
      * @method Phaser.GameObjects.DynamicBitmapText#setDisplayCallback
      * @since 3.0.0
      *
-     * @param {DisplayCallback} callback - The display callback to set.
+     * @param {Phaser.Types.GameObjects.BitmapText.DisplayCallback} callback - The display callback to set.
      *
      * @return {Phaser.GameObjects.DynamicBitmapText} This Game Object.
      */

@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var GetFastValue = require('../../../utils/object/GetFastValue');
@@ -9,14 +9,14 @@ var ParseObject = require('./ParseObject');
 var ObjectLayer = require('../../mapdata/ObjectLayer');
 
 /**
- * [description]
+ * Parses a Tiled JSON object into an array of ObjectLayer objects.
  *
  * @function Phaser.Tilemaps.Parsers.Tiled.ParseObjectLayers
  * @since 3.0.0
  *
- * @param {object} json - [description]
+ * @param {object} json - The Tiled JSON object.
  *
- * @return {array} [description]
+ * @return {array} An array of all object layers in the tilemap as `ObjectLayer`s.
  */
 var ParseObjectLayers = function (json)
 {

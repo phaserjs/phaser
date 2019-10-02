@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var HSVToRGB = require('./HSVToRGB');
@@ -15,7 +15,7 @@ var HSVToRGB = require('./HSVToRGB');
  * @param {number} [s=1] - The saturation, in the range 0 - 1.
  * @param {number} [v=1] - The value, in the range 0 - 1.
  *
- * @return {ColorObject[]} An array containing 360 elements, where each contains a single numeric value corresponding to the color at that point in the HSV color wheel.
+ * @return {Phaser.Types.Display.ColorObject[]} An array containing 360 elements, where each contains a single numeric value corresponding to the color at that point in the HSV color wheel.
  */
 var HSVColorWheel = function (s, v)
 {

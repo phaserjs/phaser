@@ -1,24 +1,23 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * [description]
+ * Checks for intersection between the given tile rectangle-like object and an Arcade Physics body.
  *
  * @function Phaser.Physics.Arcade.Tilemap.TileIntersectsBody
  * @since 3.0.0
  *
- * @param {{ left: number, right: number, top: number, bottom: number }} tileWorldRect - [description]
- * @param {Phaser.Physics.Arcade.Body} body - [description]
+ * @param {{ left: number, right: number, top: number, bottom: number }} tileWorldRect - A rectangle object that defines the tile placement in the world.
+ * @param {Phaser.Physics.Arcade.Body} body - The body to check for intersection against.
  *
- * @return {boolean} [description]
+ * @return {boolean} Returns `true` of the tile intersects with the body, otherwise `false`.
  */
 var TileIntersectsBody = function (tileWorldRect, body)
 {
-    // Currently, all bodies are treated as rectangles when colliding with a Tile. Eventually, this
-    // should support circle bodies when those are less buggy in v3.
+    // Currently, all bodies are treated as rectangles when colliding with a Tile.
 
     return !(
         body.right <= tileWorldRect.left ||

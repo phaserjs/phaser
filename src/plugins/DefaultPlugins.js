@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -24,10 +24,12 @@ var DefaultPlugins = {
      */
     Global: [
 
+        'game',
         'anims',
         'cache',
         'plugins',
         'registry',
+        'scale',
         'sound',
         'textures'
 
@@ -73,7 +75,6 @@ var DefaultPlugins = {
      */
     DefaultScene: [
 
-        'CameraManager3D',
         'Clock',
         'DataManagerPlugin',
         'InputPlugin',
@@ -84,5 +85,15 @@ var DefaultPlugins = {
     ]
 
 };
+
+if (typeof PLUGIN_CAMERA3D)
+{
+    DefaultPlugins.DefaultScene.push('CameraManager3D');
+}
+
+if (typeof PLUGIN_FBINSTANT)
+{
+    DefaultPlugins.Global.push('facebook');
+}
 
 module.exports = DefaultPlugins;

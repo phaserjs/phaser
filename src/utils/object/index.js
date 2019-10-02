@@ -1,11 +1,11 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * @namespace Phaser.Utils.Object
+ * @namespace Phaser.Utils.Objects
  */
 
 module.exports = {
@@ -21,6 +21,8 @@ module.exports = {
     HasValue: require('./HasValue'),
     IsPlainObject: require('./IsPlainObject'),
     Merge: require('./Merge'),
-    MergeRight: require('./MergeRight')
+    MergeRight: require('./MergeRight'),
+    Pick: require('./Pick'),
+    SetValue: require('./SetValue')
 
 };

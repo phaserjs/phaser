@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Length = require('../line/Length');
@@ -9,7 +9,7 @@ var Length = require('../line/Length');
 // The 2D area of a triangle. The area value is always non-negative.
 
 /**
- * [description]
+ * Gets the length of the perimeter of the given triangle.
  *
  * @function Phaser.Geom.Triangle.Perimeter
  * @since 3.0.0

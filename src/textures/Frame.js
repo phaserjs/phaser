@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../utils/Class');
@@ -13,7 +13,7 @@ var Extend = require('../utils/object/Extend');
  * A Frame is a section of a Texture.
  *
  * @class Frame
- * @memberOf Phaser.Textures
+ * @memberof Phaser.Textures
  * @constructor
  * @since 3.0.0
  *
@@ -502,6 +502,9 @@ var Frame = new Class({
             //  Need to check for intersection between the cut area and the crop area
             //  If there is none, we set UV to be empty, otherwise set it to be the intersection area
 
+            width = Clamp(width, 0, cw - x);
+            height = Clamp(height, 0, ch - y);
+    
             var cropRight = x + width;
             var cropBottom = y + height;
 
@@ -704,16 +707,18 @@ var Frame = new Class({
     },
 
     /**
-     * Destroys this Frames references.
+     * Destroys this Frame by nulling its reference to the parent Texture and and data objects.
      *
      * @method Phaser.Textures.Frame#destroy
      * @since 3.0.0
      */
     destroy: function ()
     {
-        this.texture = null;
-
         this.source = null;
+        this.texture = null;
+        this.glTexture = null;
+        this.customData = null;
+        this.data = null;
     },
 
     /**
@@ -722,7 +727,7 @@ var Frame = new Class({
      *
      * @name Phaser.Textures.Frame#realWidth
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     realWidth: {
@@ -740,7 +745,7 @@ var Frame = new Class({
      *
      * @name Phaser.Textures.Frame#realHeight
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     realHeight: {
@@ -757,7 +762,7 @@ var Frame = new Class({
      *
      * @name Phaser.Textures.Frame#radius
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     radius: {
@@ -774,7 +779,7 @@ var Frame = new Class({
      *
      * @name Phaser.Textures.Frame#trimmed
      * @type {boolean}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     trimmed: {
@@ -791,7 +796,7 @@ var Frame = new Class({
      *
      * @name Phaser.Textures.Frame#canvasData
      * @type {object}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     canvasData: {

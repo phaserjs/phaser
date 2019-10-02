@@ -1,15 +1,17 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Bodies = require('./lib/factory/Bodies');
+var Body = require('./lib/body/Body');
 var Class = require('../../utils/Class');
 var Common = require('./lib/core/Common');
 var Composite = require('./lib/body/Composite');
 var Engine = require('./lib/core/Engine');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
 var MatterBody = require('./lib/body/Body');
@@ -24,12 +26,12 @@ var Vector = require('./lib/geometry/Vector');
  *
  * @class World
  * @extends Phaser.Events.EventEmitter
- * @memberOf Phaser.Physics.Matter
+ * @memberof Phaser.Physics.Matter
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - [description]
- * @param {object} config - [description]
+ * @param {Phaser.Scene} scene - The Scene to which this Matter World instance belongs.
+ * @param {Phaser.Types.Physics.Matter.MatterWorldConfig} config - The Matter World configuration object.
  */
 var World = new Class({
 
@@ -42,7 +44,7 @@ var World = new Class({
         EventEmitter.call(this);
 
         /**
-         * [description]
+         * The Scene to which this Matter World instance belongs.
          *
          * @name Phaser.Physics.Matter.World#scene
          * @type {Phaser.Scene}
@@ -51,7 +53,7 @@ var World = new Class({
         this.scene = scene;
 
         /**
-         * [description]
+         * An instance of the MatterJS Engine.
          *
          * @name Phaser.Physics.Matter.World#engine
          * @type {MatterJS.Engine}
@@ -96,8 +98,8 @@ var World = new Class({
             {
                 var x = GetFastValue(boundsConfig, 'x', 0);
                 var y = GetFastValue(boundsConfig, 'y', 0);
-                var width = GetFastValue(boundsConfig, 'width', scene.sys.game.config.width);
-                var height = GetFastValue(boundsConfig, 'height', scene.sys.game.config.height);
+                var width = GetFastValue(boundsConfig, 'width', scene.sys.scale.width);
+                var height = GetFastValue(boundsConfig, 'height', scene.sys.scale.height);
                 var thickness = GetFastValue(boundsConfig, 'thickness', 64);
                 var left = GetFastValue(boundsConfig, 'left', true);
                 var right = GetFastValue(boundsConfig, 'right', true);
@@ -109,7 +111,7 @@ var World = new Class({
         }
 
         /**
-         * [description]
+         * A flag that toggles if the world is enabled or not.
          *
          * @name Phaser.Physics.Matter.World#enabled
          * @type {boolean}
@@ -175,7 +177,7 @@ var World = new Class({
         this.autoUpdate = GetValue(config, 'autoUpdate', true);
 
         /**
-         * [description]
+         * A flag that controls if the debug graphics will be drawn to or not.
          *
          * @name Phaser.Physics.Matter.World#drawDebug
          * @type {boolean}
@@ -185,7 +187,7 @@ var World = new Class({
         this.drawDebug = GetValue(config, 'debug', false);
 
         /**
-         * [description]
+         * An instance of the Graphics object the debug bodies are drawn to, if enabled.
          *
          * @name Phaser.Physics.Matter.World#debugGraphic
          * @type {Phaser.GameObjects.Graphics}
@@ -194,21 +196,27 @@ var World = new Class({
         this.debugGraphic;
 
         /**
-         * [description]
+         * The default configuration values.
          *
          * @name Phaser.Physics.Matter.World#defaults
          * @type {object}
          * @since 3.0.0
          */
         this.defaults = {
-            debugShowBody: GetValue(config, 'debugShowBody', true),
-            debugShowStaticBody: GetValue(config, 'debugShowStaticBody', true),
-            debugShowVelocity: GetValue(config, 'debugShowVelocity', true),
-            bodyDebugColor: GetValue(config, 'debugBodyColor', 0xff00ff),
-            staticBodyDebugColor: GetValue(config, 'debugBodyColor', 0x0000ff),
-            velocityDebugColor: GetValue(config, 'debugVelocityColor', 0x00ff00),
-            debugShowJoint: GetValue(config, 'debugShowJoint', true),
-            jointDebugColor: GetValue(config, 'debugJointColor', 0x000000)
+            debugShowBody: GetFastValue(config, 'debugShowBody', true),
+            debugShowStaticBody: GetFastValue(config, 'debugShowStaticBody', true),
+            debugShowVelocity: GetFastValue(config, 'debugShowVelocity', true),
+            bodyDebugColor: GetFastValue(config, 'debugBodyColor', 0xff00ff),
+            bodyDebugFillColor: GetFastValue(config, 'debugBodyFillColor', 0xe3a7e3),
+            staticBodyDebugColor: GetFastValue(config, 'debugStaticBodyColor', 0x0000ff),
+            velocityDebugColor: GetFastValue(config, 'debugVelocityColor', 0x00ff00),
+            debugShowJoint: GetFastValue(config, 'debugShowJoint', true),
+            jointDebugColor: GetFastValue(config, 'debugJointColor', 0x000000),
+            debugWireframes: GetFastValue(config, 'debugWireframes', true),
+            debugShowInternalEdges: GetFastValue(config, 'debugShowInternalEdges', false),
+            debugShowConvexHulls: GetFastValue(config, 'debugShowConvexHulls', false),
+            debugConvexHullColor: GetFastValue(config, 'debugConvexHullColor', 0xaaaaaa),
+            debugShowSleeping: GetFastValue(config, 'debugShowSleeping', false)
         };
 
         if (this.drawDebug)
@@ -232,12 +240,12 @@ var World = new Class({
 
         MatterEvents.on(engine, 'beforeUpdate', function (event)
         {
-            _this.emit('beforeupdate', event);
+            _this.emit(Events.BEFORE_UPDATE, event);
         });
 
         MatterEvents.on(engine, 'afterUpdate', function (event)
         {
-            _this.emit('afterupdate', event);
+            _this.emit(Events.AFTER_UPDATE, event);
         });
 
         MatterEvents.on(engine, 'collisionStart', function (event)
@@ -252,7 +260,7 @@ var World = new Class({
                 bodyB = pairs[0].bodyB;
             }
 
-            _this.emit('collisionstart', event, bodyA, bodyB);
+            _this.emit(Events.COLLISION_START, event, bodyA, bodyB);
         });
 
         MatterEvents.on(engine, 'collisionActive', function (event)
@@ -267,7 +275,7 @@ var World = new Class({
                 bodyB = pairs[0].bodyB;
             }
 
-            _this.emit('collisionactive', event, bodyA, bodyB);
+            _this.emit(Events.COLLISION_ACTIVE, event, bodyA, bodyB);
         });
 
         MatterEvents.on(engine, 'collisionEnd', function (event)
@@ -282,7 +290,7 @@ var World = new Class({
                 bodyB = pairs[0].bodyB;
             }
 
-            _this.emit('collisionend', event, bodyA, bodyB);
+            _this.emit(Events.COLLISION_END, event, bodyA, bodyB);
         });
     },
 
@@ -313,16 +321,16 @@ var World = new Class({
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
-        if (width === undefined) { width = this.scene.sys.game.config.width; }
-        if (height === undefined) { height = this.scene.sys.game.config.height; }
+        if (width === undefined) { width = this.scene.sys.scale.width; }
+        if (height === undefined) { height = this.scene.sys.scale.height; }
         if (thickness === undefined) { thickness = 128; }
         if (left === undefined) { left = true; }
         if (right === undefined) { right = true; }
         if (top === undefined) { top = true; }
         if (bottom === undefined) { bottom = true; }
 
-        this.updateWall(left, 'left', x - thickness, y, thickness, height);
-        this.updateWall(right, 'right', x + width, y, thickness, height);
+        this.updateWall(left, 'left', x - thickness, y - thickness, thickness, height + (thickness * 2));
+        this.updateWall(right, 'right', x + width, y - thickness, thickness, height + (thickness * 2));
         this.updateWall(top, 'top', x, y - thickness, width, thickness);
         this.updateWall(bottom, 'bottom', x, y + height, width, thickness);
 
@@ -393,7 +401,7 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Sets the world's gravity and gravity scale to 0.
      *
      * @method Phaser.Physics.Matter.World#disableGravity
      * @since 3.0.0
@@ -410,13 +418,13 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Sets the world's gravity
      *
      * @method Phaser.Physics.Matter.World#setGravity
      * @since 3.0.0
      *
-     * @param {number} [x=0] - [description]
-     * @param {number} [y=1] - [description]
+     * @param {number} [x=0] - The world gravity x component.
+     * @param {number} [y=1] - The world gravity y component.
      * @param {number} [scale] - [description]
      *
      * @return {Phaser.Physics.Matter.World} This Matter World object.
@@ -438,18 +446,18 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Creates a rectangle Matter body and adds it to the world.
      *
      * @method Phaser.Physics.Matter.World#create
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} height - [description]
-     * @param {object} options - [description]
+     * @param {number} x - The horizontal position of the body in the world.
+     * @param {number} y - The vertical position of the body in the world.
+     * @param {number} width - The width of the body.
+     * @param {number} height - The height of the body.
+     * @param {object} options - Optional Matter configuration object.
      *
-     * @return {MatterJS.Body} [description]
+     * @return {MatterJS.Body} The Matter.js body that was created.
      */
     create: function (x, y, width, height, options)
     {
@@ -461,7 +469,7 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Adds an object to the world.
      *
      * @method Phaser.Physics.Matter.World#add
      * @since 3.0.0
@@ -492,7 +500,7 @@ var World = new Class({
     {
         var body = (object.body) ? object.body : object;
 
-        Composite.removeBody(this.localWorld, body, deep);
+        Composite.remove(this.localWorld, body, deep);
 
         return this;
     },
@@ -531,7 +539,7 @@ var World = new Class({
     convertTilemapLayer: function (tilemapLayer, options)
     {
         var layerData = tilemapLayer.layer;
-        var tiles = tilemapLayer.getTilesWithin(0, 0, layerData.width, layerData.height, {isColliding: true});
+        var tiles = tilemapLayer.getTilesWithin(0, 0, layerData.width, layerData.height, { isColliding: true });
 
         this.convertTiles(tiles, options);
 
@@ -586,7 +594,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#nextCategory
      * @since 3.0.0
      *
-     * @return {number} [description]
+     * @return {number} Returns the next unique category bitfield.
      */
     nextCategory: function ()
     {
@@ -597,6 +605,7 @@ var World = new Class({
      * [description]
      *
      * @method Phaser.Physics.Matter.World#pause
+     * @fires Phaser.Physics.Matter.Events#PAUSE
      * @since 3.0.0
      *
      * @return {Phaser.Physics.Matter.World} This Matter World object.
@@ -605,7 +614,7 @@ var World = new Class({
     {
         this.enabled = false;
 
-        this.emit('pause');
+        this.emit(Events.PAUSE);
 
         return this;
     },
@@ -614,6 +623,7 @@ var World = new Class({
      * [description]
      *
      * @method Phaser.Physics.Matter.World#resume
+     * @fires Phaser.Physics.Matter.Events#RESUME
      * @since 3.0.0
      *
      * @return {Phaser.Physics.Matter.World} This Matter World object.
@@ -622,7 +632,7 @@ var World = new Class({
     {
         this.enabled = true;
 
-        this.emit('resume');
+        this.emit(Events.RESUME);
 
         return this;
     },
@@ -633,8 +643,8 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#update
      * @since 3.0.0
      *
-     * @param {number} time - [description]
-     * @param {number} delta - [description]
+     * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
     update: function (time, delta)
     {
@@ -703,9 +713,10 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Handles the rendering of bodies and debug information to the debug Graphics object, if enabled.
      *
      * @method Phaser.Physics.Matter.World#postUpdate
+     * @private
      * @since 3.0.0
      */
     postUpdate: function ()
@@ -715,135 +726,325 @@ var World = new Class({
             return;
         }
 
-        var graphics = this.debugGraphic;
+        this.debugGraphic.clear();
+
         var bodies = Composite.allBodies(this.localWorld);
 
-        graphics.clear();
-        graphics.lineStyle(1, this.defaults.bodyDebugColor);
-        graphics.beginPath();
-
-        var i,j;
-
-        for (i = 0; i < bodies.length; i++)
+        if (this.defaults.debugWireframes)
         {
-            if (!bodies[i].render.visible)
+            if (this.defaults.debugShowConvexHulls)
             {
-                return;
+                this.renderConvexHulls(bodies);
             }
 
-            // Handle drawing both single bodies and compound bodies. If compound, draw both the
-            // convex hull (first part) and the rest of the bodies.
-            for (j = 0; j < bodies[i].parts.length; j++)
-            {
-                var body = bodies[i].parts[j];
-
-                var vertices = body.vertices;
-
-                graphics.moveTo(vertices[0].x, vertices[0].y);
-
-                for (var k = 1; k < vertices.length; k++)
-                {
-                    graphics.lineTo(vertices[k].x, vertices[k].y);
-                }
-
-                graphics.lineTo(vertices[0].x, vertices[0].y);
-
-                graphics.strokePath();
-            }
+            this.renderWireframes(bodies);
         }
-
-        graphics.closePath();
+        else
+        {
+            this.renderBodies(bodies);
+        }
 
         if (this.defaults.debugShowJoint)
         {
-            graphics.lineStyle(2, this.defaults.jointDebugColor);
+            this.renderJoints();
+        }
+    },
 
-            // Render constraints 
-            var constraints = Composite.allConstraints(this.localWorld);
+    /**
+     * Renders the debug convex hulls from the given array of bodies.
+     *
+     * @method Phaser.Physics.Matter.World#renderConvexHulls
+     * @private
+     * @since 3.14.0
+     * 
+     * @param {array} bodies - An array of bodies from the localWorld.
+     */
+    renderConvexHulls: function (bodies)
+    {
+        var graphics = this.debugGraphic;
 
-            for (i = 0; i < constraints.length; i++)
+        graphics.lineStyle(1, this.defaults.debugConvexHullColor);
+
+        graphics.beginPath();
+
+        for (var i = 0; i < bodies.length; i++)
+        {
+            var body = bodies[i];
+
+            if (!body.render.visible || body.parts.length === 1)
             {
-                var constraint = constraints[i];
+                continue;
+            }
 
-                if (!constraint.render.visible || !constraint.pointA || !constraint.pointB)
+            graphics.moveTo(body.vertices[0].x, body.vertices[0].y);
+
+            for (var j = 1; j < body.vertices.length; j++)
+            {
+                graphics.lineTo(body.vertices[j].x, body.vertices[j].y);
+            }
+            
+            graphics.lineTo(body.vertices[0].x, body.vertices[0].y);
+        }
+
+        graphics.strokePath();
+    },
+
+    /**
+     * Renders the wireframes of the given array of bodies.
+     *
+     * @method Phaser.Physics.Matter.World#renderWireframes
+     * @private
+     * @since 3.14.0
+     * 
+     * @param {array} bodies - An array of bodies from the localWorld.
+     */
+    renderWireframes: function (bodies)
+    {
+        var graphics = this.debugGraphic;
+        var showInternalEdges = this.defaults.debugShowInternalEdges;
+
+        graphics.lineStyle(1, this.defaults.bodyDebugColor);
+
+        graphics.beginPath();
+
+        for (var i = 0; i < bodies.length; i++)
+        {
+            var body = bodies[i];
+
+            if (!body.render.visible)
+            {
+                continue;
+            }
+
+            for (var k = (body.parts.length > 1) ? 1 : 0; k < body.parts.length; k++)
+            {
+                var part = body.parts[k];
+
+                var vertLength = part.vertices.length;
+
+                graphics.moveTo(part.vertices[0].x, part.vertices[0].y);
+
+                for (var j = 1; j < vertLength; j++)
+                {
+                    if (!part.vertices[j - 1].isInternal || showInternalEdges)
+                    {
+                        graphics.lineTo(part.vertices[j].x, part.vertices[j].y);
+                    }
+                    else
+                    {
+                        graphics.moveTo(part.vertices[j].x, part.vertices[j].y);
+                    }
+
+                    if (part.vertices[j].isInternal && !showInternalEdges)
+                    {
+                        graphics.moveTo(part.vertices[(j + 1) % vertLength].x, part.vertices[(j + 1) % vertLength].y);
+                    }
+                }
+                
+                graphics.lineTo(part.vertices[0].x, part.vertices[0].y);
+            }
+        }
+
+        graphics.strokePath();
+    },
+
+    /**
+     * Renders the array of bodies.
+     *
+     * @method Phaser.Physics.Matter.World#renderBodies
+     * @private
+     * @since 3.14.0
+     * 
+     * @param {array} bodies - An array of bodies from the localWorld.
+     */
+    renderBodies: function (bodies)
+    {
+        var graphics = this.debugGraphic;
+
+        var showInternalEdges = this.defaults.debugShowInternalEdges || !this.defaults.debugWireframes;
+        var showSleeping = this.defaults.debugShowSleeping;
+        var wireframes = this.defaults.debugWireframes;
+
+        var body;
+        var part;
+        var i;
+        var k;
+
+        for (i = 0; i < bodies.length; i++)
+        {
+            body = bodies[i];
+
+            if (!body.render.visible)
+            {
+                continue;
+            }
+
+            //  Handle compound parts
+            for (k = body.parts.length > 1 ? 1 : 0; k < body.parts.length; k++)
+            {
+                part = body.parts[k];
+
+                if (!part.render.visible)
                 {
                     continue;
                 }
 
-                if (constraint.render.lineWidth)
+                if (showSleeping && body.isSleeping)
                 {
-                    graphics.lineStyle(constraint.render.lineWidth, Common.colorToNumber(constraint.render.strokeStyle));
-                }
-
-                var bodyA = constraint.bodyA;
-                var bodyB = constraint.bodyB;
-                var start;
-                var end;
-
-                if (bodyA)
-                {
-                    start = Vector.add(bodyA.position, constraint.pointA);
+                    graphics.lineStyle(1, this.defaults.bodyDebugColor, 0.5 * part.render.opacity);
+                    graphics.fillStyle(this.defaults.bodyDebugColor, 0.5 * part.render.opacity);
                 }
                 else
                 {
-                    start = constraint.pointA;
+                    graphics.lineStyle(1, this.defaults.bodyDebugColor, part.render.opacity);
+                    graphics.fillStyle(this.defaults.bodyDebugColor, part.render.opacity);
                 }
 
-                if (constraint.render.type === 'pin')
+                //  Part polygon
+                if (part.circleRadius)
                 {
                     graphics.beginPath();
-                    graphics.arc(start.x, start.y, 3, 0, 2 * Math.PI);
-                    graphics.closePath();
+                    graphics.arc(part.position.x, part.position.y, part.circleRadius, 0, 2 * Math.PI);
                 }
                 else
                 {
-                    if (bodyB)
-                    {
-                        end = Vector.add(bodyB.position, constraint.pointB);
-                    }
-                    else
-                    {
-                        end = constraint.pointB;
-                    }
-
                     graphics.beginPath();
-                    graphics.moveTo(start.x, start.y);
+                    graphics.moveTo(part.vertices[0].x, part.vertices[0].y);
 
-                    if (constraint.render.type === 'spring')
+                    var vertLength = part.vertices.length;
+
+                    for (var j = 1; j < vertLength; j++)
                     {
-                        var delta = Vector.sub(end, start);
-                        var normal = Vector.perp(Vector.normalise(delta));
-                        var coils = Math.ceil(Common.clamp(constraint.length / 5, 12, 20));
-                        var offset;
-
-                        for (j = 1; j < coils; j += 1)
+                        if (!part.vertices[j - 1].isInternal || showInternalEdges)
                         {
-                            offset = (j % 2 === 0) ? 1 : -1;
+                            graphics.lineTo(part.vertices[j].x, part.vertices[j].y);
+                        }
+                        else
+                        {
+                            graphics.moveTo(part.vertices[j].x, part.vertices[j].y);
+                        }
 
-                            graphics.lineTo(
-                                start.x + delta.x * (j / coils) + normal.x * offset * 4,
-                                start.y + delta.y * (j / coils) + normal.y * offset * 4
-                            );
+                        if (part.vertices[j].isInternal && !showInternalEdges)
+                        {
+                            graphics.moveTo(part.vertices[(j + 1) % part.vertices.length].x, part.vertices[(j + 1) % part.vertices.length].y);
                         }
                     }
+                    
+                    graphics.lineTo(part.vertices[0].x, part.vertices[0].y);
 
-                    graphics.lineTo(end.x, end.y);
+                    graphics.closePath();
                 }
 
-                if (constraint.render.lineWidth)
+                if (!wireframes)
+                {
+                    graphics.fillPath();
+                }
+                else
                 {
                     graphics.strokePath();
                 }
+            }
+        }
+    },
 
-                if (constraint.render.anchors)
+    /**
+     * Renders world constraints.
+     *
+     * @method Phaser.Physics.Matter.World#renderJoints
+     * @private
+     * @since 3.14.0
+     */
+    renderJoints: function ()
+    {
+        var graphics = this.debugGraphic;
+
+        graphics.lineStyle(2, this.defaults.jointDebugColor);
+
+        // Render constraints 
+        var constraints = Composite.allConstraints(this.localWorld);
+
+        for (var i = 0; i < constraints.length; i++)
+        {
+            var constraint = constraints[i];
+
+            if (!constraint.render.visible || !constraint.pointA || !constraint.pointB)
+            {
+                continue;
+            }
+
+            if (constraint.render.lineWidth)
+            {
+                graphics.lineStyle(constraint.render.lineWidth, Common.colorToNumber(constraint.render.strokeStyle));
+            }
+
+            var bodyA = constraint.bodyA;
+            var bodyB = constraint.bodyB;
+            var start;
+            var end;
+
+            if (bodyA)
+            {
+                start = Vector.add(bodyA.position, constraint.pointA);
+            }
+            else
+            {
+                start = constraint.pointA;
+            }
+
+            if (constraint.render.type === 'pin')
+            {
+                graphics.beginPath();
+                graphics.arc(start.x, start.y, 3, 0, 2 * Math.PI);
+                graphics.closePath();
+            }
+            else
+            {
+                if (bodyB)
                 {
-                    graphics.fillStyle(Common.colorToNumber(constraint.render.strokeStyle));
-                    graphics.beginPath();
-                    graphics.arc(start.x, start.y, 6, 0, 2 * Math.PI);
-                    graphics.arc(end.x, end.y, 6, 0, 2 * Math.PI);
-                    graphics.closePath();
-                    graphics.fillPath();
+                    end = Vector.add(bodyB.position, constraint.pointB);
                 }
+                else
+                {
+                    end = constraint.pointB;
+                }
+
+                graphics.beginPath();
+                graphics.moveTo(start.x, start.y);
+
+                if (constraint.render.type === 'spring')
+                {
+                    var delta = Vector.sub(end, start);
+                    var normal = Vector.perp(Vector.normalise(delta));
+                    var coils = Math.ceil(Common.clamp(constraint.length / 5, 12, 20));
+                    var offset;
+
+                    for (var j = 1; j < coils; j += 1)
+                    {
+                        offset = (j % 2 === 0) ? 1 : -1;
+
+                        graphics.lineTo(
+                            start.x + delta.x * (j / coils) + normal.x * offset * 4,
+                            start.y + delta.y * (j / coils) + normal.y * offset * 4
+                        );
+                    }
+                }
+
+                graphics.lineTo(end.x, end.y);
+            }
+
+            if (constraint.render.lineWidth)
+            {
+                graphics.strokePath();
+            }
+
+            if (constraint.render.anchors)
+            {
+                graphics.fillStyle(Common.colorToNumber(constraint.render.strokeStyle));
+                graphics.beginPath();
+                graphics.arc(start.x, start.y, 6, 0, 2 * Math.PI);
+                graphics.arc(end.x, end.y, 6, 0, 2 * Math.PI);
+                graphics.closePath();
+                graphics.fillPath();
             }
         }
     },
@@ -877,7 +1078,28 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Resets the internal collision IDs that Matter.JS uses for Body collision groups.
+     * 
+     * You should call this before destroying your game if you need to restart the game
+     * again on the same page, without first reloading the page. Or, if you wish to
+     * consistently destroy a Scene that contains Matter.js and then run it again
+     * later in the same game.
+     *
+     * @method Phaser.Physics.Matter.World#resetCollisionIDs
+     * @since 3.17.0
+     */
+    resetCollisionIDs: function ()
+    {
+        Body._nextCollidingGroupId = 1;
+        Body._nextNonCollidingGroupId = -1;
+        Body._nextCategory = 0x0001;
+
+        return this;
+    },
+
+    /**
+     * Will remove all Matter physics event listeners and clear the matter physics world,
+     * engine and any debug graphics, if any.
      *
      * @method Phaser.Physics.Matter.World#shutdown
      * @since 3.0.0
@@ -891,10 +1113,18 @@ var World = new Class({
         MatterWorld.clear(this.localWorld, false);
 
         Engine.clear(this.engine);
+
+        if (this.drawDebug)
+        {
+            this.debugGraphic.destroy();
+        }
     },
 
     /**
-     * [description]
+     * Will remove all Matter physics event listeners and clear the matter physics world,
+     * engine and any debug graphics, if any.
+     *
+     * After destroying the world it cannot be re-used again.
      *
      * @method Phaser.Physics.Matter.World#destroy
      * @since 3.0.0

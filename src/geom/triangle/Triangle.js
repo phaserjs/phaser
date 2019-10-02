@@ -1,13 +1,14 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
 var Contains = require('./Contains');
 var GetPoint = require('./GetPoint');
 var GetPoints = require('./GetPoints');
+var GEOM_CONST = require('../const');
 var Line = require('../line/Line');
 var Random = require('./Random');
 
@@ -18,16 +19,16 @@ var Random = require('./Random');
  * specify the second point, and the last two arguments specify the third point.
  *
  * @class Triangle
- * @memberOf Phaser.Geom
+ * @memberof Phaser.Geom
  * @constructor
  * @since 3.0.0
  *
- * @param {number} [x1=0] - [description]
- * @param {number} [y1=0] - [description]
- * @param {number} [x2=0] - [description]
- * @param {number} [y2=0] - [description]
- * @param {number} [x3=0] - [description]
- * @param {number} [y3=0] - [description]
+ * @param {number} [x1=0] - `x` coordinate of the first point.
+ * @param {number} [y1=0] - `y` coordinate of the first point.
+ * @param {number} [x2=0] - `x` coordinate of the second point.
+ * @param {number} [y2=0] - `y` coordinate of the second point.
+ * @param {number} [x3=0] - `x` coordinate of the third point.
+ * @param {number} [y3=0] - `y` coordinate of the third point.
  */
 var Triangle = new Class({
 
@@ -43,7 +44,18 @@ var Triangle = new Class({
         if (y3 === undefined) { y3 = 0; }
 
         /**
-         * [description]
+         * The geometry constant type of this object: `GEOM_CONST.TRIANGLE`.
+         * Used for fast type comparisons.
+         *
+         * @name Phaser.Geom.Triangle#type
+         * @type {integer}
+         * @readonly
+         * @since 3.19.0
+         */
+        this.type = GEOM_CONST.TRIANGLE;
+
+        /**
+         * `x` coordinate of the first point.
          *
          * @name Phaser.Geom.Triangle#x1
          * @type {number}
@@ -53,7 +65,7 @@ var Triangle = new Class({
         this.x1 = x1;
 
         /**
-         * [description]
+         * `y` coordinate of the first point.
          *
          * @name Phaser.Geom.Triangle#y1
          * @type {number}
@@ -63,7 +75,7 @@ var Triangle = new Class({
         this.y1 = y1;
 
         /**
-         * [description]
+         * `x` coordinate of the second point.
          *
          * @name Phaser.Geom.Triangle#x2
          * @type {number}
@@ -73,7 +85,7 @@ var Triangle = new Class({
         this.x2 = x2;
 
         /**
-         * [description]
+         * `y` coordinate of the second point.
          *
          * @name Phaser.Geom.Triangle#y2
          * @type {number}
@@ -83,7 +95,7 @@ var Triangle = new Class({
         this.y2 = y2;
 
         /**
-         * [description]
+         * `x` coordinate of the third point.
          *
          * @name Phaser.Geom.Triangle#x3
          * @type {number}
@@ -93,7 +105,7 @@ var Triangle = new Class({
         this.x3 = x3;
 
         /**
-         * [description]
+         * `y` coordinate of the third point.
          *
          * @name Phaser.Geom.Triangle#y3
          * @type {number}
@@ -104,15 +116,15 @@ var Triangle = new Class({
     },
 
     /**
-     * [description]
+     * Checks whether a given points lies within the triangle.
      *
      * @method Phaser.Geom.Triangle#contains
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {number} x - The x coordinate of the point to check.
+     * @param {number} y - The y coordinate of the point to check.
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if the coordinate pair is within the triangle, otherwise `false`.
      */
     contains: function (x, y)
     {
@@ -120,17 +132,17 @@ var Triangle = new Class({
     },
 
     /**
-     * [description]
+     * Returns a specific point  on the triangle.
      *
      * @method Phaser.Geom.Triangle#getPoint
      * @since 3.0.0
      *
      * @generic {Phaser.Geom.Point} O - [output,$return]
      *
-     * @param {number} position - [description]
-     * @param {(Phaser.Geom.Point|object)} [output] - [description]
+     * @param {number} position - Position as float within `0` and `1`. `0` equals the first point.
+     * @param {(Phaser.Geom.Point|object)} [output] - Optional Point, or point-like object, that the calculated point will be written to.
      *
-     * @return {(Phaser.Geom.Point|object)} [description]
+     * @return {(Phaser.Geom.Point|object)} Calculated `Point` that represents the requested position. It is the same as `output` when this parameter has been given.
      */
     getPoint: function (position, output)
     {
@@ -138,18 +150,18 @@ var Triangle = new Class({
     },
 
     /**
-     * [description]
+     * Calculates a list of evenly distributed points on the triangle. It is either possible to pass an amount of points to be generated (`quantity`) or the distance between two points (`stepRate`).
      *
      * @method Phaser.Geom.Triangle#getPoints
      * @since 3.0.0
      *
      * @generic {Phaser.Geom.Point[]} O - [output,$return]
      *
-     * @param {integer} quantity - [description]
-     * @param {number} [stepRate] - [description]
-     * @param {(array|Phaser.Geom.Point[])} [output] - [description]
+     * @param {integer} quantity - Number of points to be generated. Can be falsey when `stepRate` should be used. All points have the same distance along the triangle.
+     * @param {number} [stepRate] - Distance between two points. Will only be used when `quantity` is falsey.
+     * @param {(array|Phaser.Geom.Point[])} [output] - Optional Array for writing the calculated points into. Otherwise a new array will be created.
      *
-     * @return {(array|Phaser.Geom.Point[])} [description]
+     * @return {(array|Phaser.Geom.Point[])} Returns a list of calculated `Point` instances or the filled array passed as parameter `output`.
      */
     getPoints: function (quantity, stepRate, output)
     {
@@ -157,16 +169,16 @@ var Triangle = new Class({
     },
 
     /**
-     * [description]
+     * Returns a random point along the triangle.
      *
      * @method Phaser.Geom.Triangle#getRandomPoint
      * @since 3.0.0
      *
      * @generic {Phaser.Geom.Point} O - [point,$return]
      *
-     * @param {Phaser.Geom.Point} [point] - [description]
+     * @param {Phaser.Geom.Point} [point] - Optional `Point` that should be modified. Otherwise a new one will be created.
      *
-     * @return {Phaser.Geom.Point} [description]
+     * @return {Phaser.Geom.Point} Random `Point`. When parameter `point` has been provided it will be returned.
      */
     getRandomPoint: function (point)
     {
@@ -174,17 +186,17 @@ var Triangle = new Class({
     },
 
     /**
-     * [description]
+     * Sets all three points of the triangle. Leaving out any coordinate sets it to be `0`.
      *
      * @method Phaser.Geom.Triangle#setTo
      * @since 3.0.0
      *
-     * @param {number} [x1=0] - [description]
-     * @param {number} [y1=0] - [description]
-     * @param {number} [x2=0] - [description]
-     * @param {number} [y2=0] - [description]
-     * @param {number} [x3=0] - [description]
-     * @param {number} [y3=0] - [description]
+     * @param {number} [x1=0] - `x` coordinate of the first point.
+     * @param {number} [y1=0] - `y` coordinate of the first point.
+     * @param {number} [x2=0] - `x` coordinate of the second point.
+     * @param {number} [y2=0] - `y` coordinate of the second point.
+     * @param {number} [x3=0] - `x` coordinate of the third point.
+     * @param {number} [y3=0] - `y` coordinate of the third point.
      *
      * @return {Phaser.Geom.Triangle} This Triangle object.
      */
@@ -273,7 +285,7 @@ var Triangle = new Class({
     },
 
     /**
-     * [description]
+     * Left most X coordinate of the triangle. Setting it moves the triangle on the X axis accordingly.
      *
      * @name Phaser.Geom.Triangle#left
      * @type {number}
@@ -311,7 +323,7 @@ var Triangle = new Class({
     },
 
     /**
-     * [description]
+     * Right most X coordinate of the triangle. Setting it moves the triangle on the X axis accordingly.
      *
      * @name Phaser.Geom.Triangle#right
      * @type {number}
@@ -349,7 +361,7 @@ var Triangle = new Class({
     },
 
     /**
-     * [description]
+     * Top most Y coordinate of the triangle. Setting it moves the triangle on the Y axis accordingly.
      *
      * @name Phaser.Geom.Triangle#top
      * @type {number}
@@ -387,7 +399,7 @@ var Triangle = new Class({
     },
 
     /**
-     * [description]
+     * Bottom most Y coordinate of the triangle. Setting it moves the triangle on the Y axis accordingly.
      *
      * @name Phaser.Geom.Triangle#bottom
      * @type {number}

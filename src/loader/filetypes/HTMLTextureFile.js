@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
@@ -12,36 +12,25 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
- * @typedef {object} Phaser.Loader.FileTypes.HTMLTextureFileConfig
- *
- * @property {string} key - The key of the file. Must be unique within both the Loader and the Texture Manager.
- * @property {string} [url] - The absolute or relative URL to load the file from.
- * @property {string} [extension='html'] - The default file extension to use if no url is provided.
- * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
- * @property {integer} [width=512] - The width of the texture the HTML will be rendered to.
- * @property {integer} [height=512] - The height of the texture the HTML will be rendered to.
- */
-
-/**
  * @classdesc
  * A single HTML File suitable for loading by the Loader.
  *
- * These are created when you use the Phaser.Loader.LoaderPlugin#html method and are not typically created directly.
+ * These are created when you use the Phaser.Loader.LoaderPlugin#htmlTexture method and are not typically created directly.
  * 
- * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#html.
+ * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#htmlTexture.
  *
  * @class HTMLTextureFile
  * @extends Phaser.Loader.File
- * @memberOf Phaser.Loader.FileTypes
+ * @memberof Phaser.Loader.FileTypes
  * @constructor
  * @since 3.12.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {(string|Phaser.Loader.FileTypes.HTMLTextureFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|Phaser.Types.Loader.FileTypes.HTMLTextureFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
  * @param {integer} [width] - The width of the texture the HTML will be rendered to.
  * @param {integer} [height] - The height of the texture the HTML will be rendered to.
- * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var HTMLTextureFile = new Class({
 
@@ -198,7 +187,7 @@ var HTMLTextureFile = new Class({
  * });
  * ```
  *
- * See the documentation for `Phaser.Loader.FileTypes.HTMLTextureFileConfig` for more details.
+ * See the documentation for `Phaser.Types.Loader.FileTypes.HTMLTextureFileConfig` for more details.
  *
  * Once the file has finished loading you can use it as a texture for a Game Object by referencing its key:
  * 
@@ -227,18 +216,18 @@ var HTMLTextureFile = new Class({
  * limitations on what HTML can be inside an SVG. You can find out more details in this
  * [Mozilla MDN entry](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Drawing_DOM_objects_into_a_canvas).
  *
- * Note: The ability to load this type of file will only be available if the Image File type has been built into Phaser.
+ * Note: The ability to load this type of file will only be available if the HTMLTextureFile File type has been built into Phaser.
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#htmlTexture
  * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.12.0
  *
- * @param {(string|Phaser.Loader.FileTypes.ImageFileConfig|Phaser.Loader.FileTypes.ImageFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
- * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+ * @param {(string|Phaser.Types.Loader.FileTypes.HTMLTextureFileConfig|Phaser.Types.Loader.FileTypes.HTMLTextureFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.html`, i.e. if `key` was "alien" then the URL will be "alien.html".
  * @param {integer} [width=512] - The width of the texture the HTML will be rendered to.
  * @param {integer} [height=512] - The height of the texture the HTML will be rendered to.
- * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */

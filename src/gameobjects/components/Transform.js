@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var MATH_CONST = require('../../math/const');
@@ -15,7 +15,7 @@ var _FLAG = 4; // 0100
 /**
  * Provides methods used for getting and setting the position, scale and rotation of a Game Object.
  *
- * @name Phaser.GameObjects.Components.Transform
+ * @namespace Phaser.GameObjects.Components.Transform
  * @since 3.0.0
  */
 
@@ -96,6 +96,42 @@ var Transform = {
     w: 0,
 
     /**
+     * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+     * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+     * 
+     * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+     * isn't the case, use the `scaleX` or `scaleY` properties instead.
+     *
+     * @name Phaser.GameObjects.Components.Transform#scale
+     * @type {number}
+     * @default 1
+     * @since 3.18.0
+     */
+    scale: {
+
+        get: function ()
+        {
+            return (this._scaleX + this._scaleY) / 2;
+        },
+
+        set: function (value)
+        {
+            this._scaleX = value;
+            this._scaleY = value;
+
+            if (value === 0)
+            {
+                this.renderFlags &= ~_FLAG;
+            }
+            else
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    },
+
+    /**
      * The horizontal scale of this Game Object.
      *
      * @name Phaser.GameObjects.Components.Transform#scaleX
@@ -114,7 +150,7 @@ var Transform = {
         {
             this._scaleX = value;
 
-            if (this._scaleX === 0)
+            if (value === 0)
             {
                 this.renderFlags &= ~_FLAG;
             }
@@ -145,7 +181,7 @@ var Transform = {
         {
             this._scaleY = value;
 
-            if (this._scaleY === 0)
+            if (value === 0)
             {
                 this.renderFlags &= ~_FLAG;
             }
@@ -159,8 +195,9 @@ var Transform = {
 
     /**
      * The angle of this Game Object as expressed in degrees.
-     *
-     * Where 0 is to the right, 90 is down, 180 is left.
+     * 
+     * Phaser uses a right-hand clockwise rotation system, where 0 is right, 90 is down, 180/-180 is left
+     * and -90 is up.
      *
      * If you prefer to work in radians, see the `rotation` property instead.
      *
@@ -185,6 +222,9 @@ var Transform = {
 
     /**
      * The angle of this Game Object in radians.
+     * 
+     * Phaser uses a right-hand clockwise rotation system, where 0 is right, 90 is down, 180/-180 is left
+     * and -90 is up.
      *
      * If you prefer to work in degrees, see the `angle` property instead.
      *
@@ -258,8 +298,8 @@ var Transform = {
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
-        if (width === undefined) { width = this.scene.sys.game.config.width; }
-        if (height === undefined) { height = this.scene.sys.game.config.height; }
+        if (width === undefined) { width = this.scene.sys.scale.width; }
+        if (height === undefined) { height = this.scene.sys.scale.height; }
 
         this.x = x + (Math.random() * width);
         this.y = y + (Math.random() * height);
@@ -427,12 +467,14 @@ var Transform = {
      * @since 3.4.0
      *
      * @param {Phaser.GameObjects.Components.TransformMatrix} [tempMatrix] - The matrix to populate with the values from this Game Object.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - A temporary matrix to hold parent values during the calculations.
      *
      * @return {Phaser.GameObjects.Components.TransformMatrix} The populated Transform Matrix.
      */
-    getWorldTransformMatrix: function (tempMatrix)
+    getWorldTransformMatrix: function (tempMatrix, parentMatrix)
     {
         if (tempMatrix === undefined) { tempMatrix = new TransformMatrix(); }
+        if (parentMatrix === undefined) { parentMatrix = new TransformMatrix(); }
 
         var parent = this.parentContainer;
 
@@ -441,32 +483,44 @@ var Transform = {
             return this.getLocalTransformMatrix(tempMatrix);
         }
 
-        var parents = [];
-        
+        tempMatrix.applyITRS(this.x, this.y, this._rotation, this._scaleX, this._scaleY);
+
         while (parent)
         {
-            parents.unshift(parent);
+            parentMatrix.applyITRS(parent.x, parent.y, parent._rotation, parent._scaleX, parent._scaleY);
+
+            parentMatrix.multiply(tempMatrix, tempMatrix);
+
             parent = parent.parentContainer;
         }
 
-        tempMatrix.loadIdentity();
+        return tempMatrix;
+    },
 
-        var length = parents.length;
-        
-        for (var i = 0; i < length; ++i)
+    /**
+     * Gets the sum total rotation of all of this Game Objects parent Containers.
+     * 
+     * The returned value is in radians and will be zero if this Game Object has no parent container.
+     *
+     * @method Phaser.GameObjects.Components.Transform#getParentRotation
+     * @since 3.18.0
+     *
+     * @return {number} The sum total rotation, in radians, of all parent containers of this Game Object.
+     */
+    getParentRotation: function ()
+    {
+        var rotation = 0;
+
+        var parent = this.parentContainer;
+
+        while (parent)
         {
-            parent = parents[i];
+            rotation += parent.rotation;
 
-            tempMatrix.translate(parent.x, parent.y);
-            tempMatrix.rotate(parent.rotation);
-            tempMatrix.scale(parent.scaleX, parent.scaleY);
+            parent = parent.parentContainer;
         }
 
-        tempMatrix.translate(this.x, this.y);
-        tempMatrix.rotate(this._rotation);
-        tempMatrix.scale(this._scaleX, this._scaleY);
-
-        return tempMatrix;
+        return rotation;
     }
 
 };

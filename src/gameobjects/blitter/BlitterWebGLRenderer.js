@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Utils = require('../../renderer/webgl/Utils');
@@ -37,13 +37,13 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage, cam
     var cameraScrollX = camera.scrollX * src.scrollFactorX;
     var cameraScrollY = camera.scrollY * src.scrollFactorY;
 
-    var matrix = pipeline._tempMatrix1;
+    var calcMatrix = pipeline._tempMatrix1;
 
-    matrix.copyFrom(camera.matrix);
+    calcMatrix.copyFrom(camera.matrix);
 
     if (parentMatrix)
     {
-        matrix.multiplyWithOffset(parentMatrix, -cameraScrollX, -cameraScrollY);
+        calcMatrix.multiplyWithOffset(parentMatrix, -cameraScrollX, -cameraScrollY);
 
         cameraScrollX = 0;
         cameraScrollY = 0;
@@ -88,12 +88,13 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage, cam
         var xw = x + width;
         var yh = y + height;
 
-        var tx0 = x * matrix.a + y * matrix.c + matrix.e;
-        var ty0 = x * matrix.b + y * matrix.d + matrix.f;
-        var tx1 = xw * matrix.a + yh * matrix.c + matrix.e;
-        var ty1 = xw * matrix.b + yh * matrix.d + matrix.f;
+        var tx0 = calcMatrix.getX(x, y);
+        var ty0 = calcMatrix.getY(x, y);
 
-        var tint = Utils.getTintAppendFloatAlpha(0xffffff, bobAlpha);
+        var tx1 = calcMatrix.getX(xw, yh);
+        var ty1 = calcMatrix.getY(xw, yh);
+
+        var tint = Utils.getTintAppendFloatAlpha(bob.tint, bobAlpha);
 
         //  Bind texture only if the Texture Source is different from before
         if (frame.sourceIndex !== prevTextureSourceIndex)
@@ -105,15 +106,15 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage, cam
 
         if (roundPixels)
         {
-            tx0 |= 0;
-            ty0 |= 0;
+            tx0 = Math.round(tx0);
+            ty0 = Math.round(ty0);
 
-            tx1 |= 0;
-            ty1 |= 0;
+            tx1 = Math.round(tx1);
+            ty1 = Math.round(ty1);
         }
 
         //  TL x/y, BL x/y, BR x/y, TR x/y
-        if (pipeline.batchVertices(tx0, ty0, tx0, ty1, tx1, ty1, tx1, ty0, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect))
+        if (pipeline.batchQuad(tx0, ty0, tx0, ty1, tx1, ty1, tx1, ty0, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect, frame.glTexture, 0))
         {
             prevTextureSourceIndex = -1;
         }

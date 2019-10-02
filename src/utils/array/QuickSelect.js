@@ -1,35 +1,51 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-//  This is from the quickselect npm package: https://www.npmjs.com/package/quickselect
-//  Coded by https://www.npmjs.com/~mourner (Vladimir Agafonkin)
-
-// https://en.wikipedia.org/wiki/Floyd%E2%80%93Rivest_algorithm
-
-// Floyd-Rivest selection algorithm:
-// Rearrange items so that all items in the [left, k] range are smaller than all items in (k, right];
-// The k-th element will have the (k - left + 1)th smallest value in [left, right]
+/**
+ * @ignore
+ */
+function swap (arr, i, j)
+{
+    var tmp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = tmp;
+}
 
 /**
- * [description]
+ * @ignore
+ */
+function defaultCompare (a, b)
+{
+    return a < b ? -1 : a > b ? 1 : 0;
+}
+
+/**
+ * A [Floyd-Rivest](https://en.wikipedia.org/wiki/Floyd%E2%80%93Rivest_algorithm) quick selection algorithm.
+ *
+ * Rearranges the array items so that all items in the [left, k] range are smaller than all items in [k, right];
+ * The k-th element will have the (k - left + 1)th smallest value in [left, right].
+ *
+ * The array is modified in-place.
+ *
+ * Based on code by [Vladimir Agafonkin](https://www.npmjs.com/~mourner)
  *
  * @function Phaser.Utils.Array.QuickSelect
  * @since 3.0.0
  *
- * @param {array} arr - [description]
- * @param {number} k - [description]
- * @param {number} left - [description]
- * @param {number} right - [description]
- * @param {function} compare - [description]
+ * @param {array} arr - The array to sort.
+ * @param {integer} k - The k-th element index.
+ * @param {integer} [left=0] - The index of the left part of the range.
+ * @param {integer} [right] - The index of the right part of the range.
+ * @param {function} [compare] - An optional comparison function. Is passed two elements and should return 0, 1 or -1.
  */
 var QuickSelect = function (arr, k, left, right, compare)
 {
-    left = left || 0;
-    right = right || (arr.length - 1);
-    compare = compare || defaultCompare;
+    if (left === undefined) { left = 0; }
+    if (right === undefined) { right = arr.length - 1; }
+    if (compare === undefined) { compare = defaultCompare; }
 
     while (right > left)
     {
@@ -96,17 +112,5 @@ var QuickSelect = function (arr, k, left, right, compare)
         }
     }
 };
-
-function swap (arr, i, j)
-{
-    var tmp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = tmp;
-}
-
-function defaultCompare (a, b)
-{
-    return a < b ? -1 : a > b ? 1 : 0;
-}
 
 module.exports = QuickSelect;

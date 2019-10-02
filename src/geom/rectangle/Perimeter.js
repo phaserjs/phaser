@@ -1,18 +1,18 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * [description]
+ * Calculates the perimeter of a Rectangle.
  *
  * @function Phaser.Geom.Rectangle.Perimeter
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Rectangle} rect - [description]
+ * @param {Phaser.Geom.Rectangle} rect - The Rectangle to use.
  *
- * @return {number} [description]
+ * @return {number} The perimeter of the Rectangle, equal to `(width * 2) + (height * 2)`.
  */
 var Perimeter = function (rect)
 {

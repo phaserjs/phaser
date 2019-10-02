@@ -1,8 +1,10 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
+
+var Utils = require('../../renderer/webgl/Utils');
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -34,14 +36,18 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
     var camMatrix = pipeline._tempMatrix1.copyFrom(camera.matrix);
     var calcMatrix = pipeline._tempMatrix2;
     var particleMatrix = pipeline._tempMatrix3;
+    var managerMatrix = pipeline._tempMatrix4.applyITRS(emitterManager.x, emitterManager.y, emitterManager.rotation, emitterManager.scaleX, emitterManager.scaleY);
+
+    camMatrix.multiply(managerMatrix);
 
     renderer.setPipeline(pipeline);
 
     var roundPixels = camera.roundPixels;
     var texture = emitterManager.defaultFrame.glTexture;
+    var getTint = Utils.getTintAppendFloatAlphaAndSwap;
 
     pipeline.setTexture2D(texture, 0);
-    
+
     for (var e = 0; e < emittersLength; e++)
     {
         var emitter = emitters[e];
@@ -65,21 +71,32 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
             scrollY = 0;
         }
 
-        renderer.setBlendMode(emitter.blendMode);
+        if (renderer.setBlendMode(emitter.blendMode))
+        {
+            //  Rebind the texture if we've flushed
+            pipeline.setTexture2D(texture, 0);
+        }
 
-        var tintEffect = false;
+        if (emitter.mask)
+        {
+            emitter.mask.preRenderWebGL(renderer, emitter, camera);
+            pipeline.setTexture2D(texture, 0);
+        }
+    
+        var tintEffect = 0;
 
         for (var i = 0; i < particleCount; i++)
         {
             var particle = particles[i];
 
-            if (particle.alpha <= 0)
+            var alpha = particle.alpha * camera.alpha;
+
+            if (alpha <= 0)
             {
                 continue;
             }
 
             var frame = particle.frame;
-            var color = particle.color;
 
             var x = -(frame.halfWidth);
             var y = -(frame.halfHeight);
@@ -93,37 +110,42 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
 
             camMatrix.multiply(particleMatrix, calcMatrix);
 
-            var tx0 = x * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
-            var ty0 = x * calcMatrix.b + y * calcMatrix.d + calcMatrix.f;
+            var tx0 = calcMatrix.getX(x, y);
+            var ty0 = calcMatrix.getY(x, y);
     
-            var tx1 = x * calcMatrix.a + yh * calcMatrix.c + calcMatrix.e;
-            var ty1 = x * calcMatrix.b + yh * calcMatrix.d + calcMatrix.f;
+            var tx1 = calcMatrix.getX(x, yh);
+            var ty1 = calcMatrix.getY(x, yh);
     
-            var tx2 = xw * calcMatrix.a + yh * calcMatrix.c + calcMatrix.e;
-            var ty2 = xw * calcMatrix.b + yh * calcMatrix.d + calcMatrix.f;
+            var tx2 = calcMatrix.getX(xw, yh);
+            var ty2 = calcMatrix.getY(xw, yh);
     
-            var tx3 = xw * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
-            var ty3 = xw * calcMatrix.b + y * calcMatrix.d + calcMatrix.f;
+            var tx3 = calcMatrix.getX(xw, y);
+            var ty3 = calcMatrix.getY(xw, y);
 
             if (roundPixels)
             {
-                tx0 |= 0;
-                ty0 |= 0;
-
-                tx1 |= 0;
-                ty1 |= 0;
-
-                tx2 |= 0;
-                ty2 |= 0;
-
-                tx3 |= 0;
-                ty3 |= 0;
+                tx0 = Math.round(tx0);
+                ty0 = Math.round(ty0);
+    
+                tx1 = Math.round(tx1);
+                ty1 = Math.round(ty1);
+    
+                tx2 = Math.round(tx2);
+                ty2 = Math.round(ty2);
+    
+                tx3 = Math.round(tx3);
+                ty3 = Math.round(ty3);
             }
 
-            if (pipeline.batchVertices(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, color, color, color, color, tintEffect))
-            {
-                pipeline.setTexture2D(texture, 0);
-            }
+            var tint = getTint(particle.tint, alpha);
+
+            pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect, texture, 0);
+        }
+
+        if (emitter.mask)
+        {
+            emitter.mask.postRenderWebGL(renderer, camera);
+            pipeline.setTexture2D(texture, 0);
         }
     }
 };

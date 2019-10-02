@@ -1,15 +1,14 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Linear = require('../../math/Linear');
 
 /**
- * Interpolates color values
- *
  * @namespace Phaser.Display.Color.Interpolate
+ * @memberof Phaser.Display.Color
  * @since 3.0.0
  */
 
@@ -17,6 +16,8 @@ var Linear = require('../../math/Linear');
  * Interpolates between the two given color ranges over the length supplied.
  *
  * @function Phaser.Display.Color.Interpolate.RGBWithRGB
+ * @memberof Phaser.Display.Color.Interpolate
+ * @static
  * @since 3.0.0
  *
  * @param {number} r1 - Red value.
@@ -28,7 +29,7 @@ var Linear = require('../../math/Linear');
  * @param {number} [length=100] - Distance to interpolate over.
  * @param {number} [index=0] - Index to start from.
  *
- * @return {ColorObject} An object containing the interpolated color values.
+ * @return {Phaser.Types.Display.ColorObject} An object containing the interpolated color values.
  */
 var RGBWithRGB = function (r1, g1, b1, r2, g2, b2, length, index)
 {
@@ -48,6 +49,8 @@ var RGBWithRGB = function (r1, g1, b1, r2, g2, b2, length, index)
  * Interpolates between the two given color objects over the length supplied.
  *
  * @function Phaser.Display.Color.Interpolate.ColorWithColor
+ * @memberof Phaser.Display.Color.Interpolate
+ * @static
  * @since 3.0.0
  *
  * @param {Phaser.Display.Color} color1 - The first Color object.
@@ -55,7 +58,7 @@ var RGBWithRGB = function (r1, g1, b1, r2, g2, b2, length, index)
  * @param {number} [length=100] - Distance to interpolate over.
  * @param {number} [index=0] - Index to start from.
  *
- * @return {ColorObject} An object containing the interpolated color values.
+ * @return {Phaser.Types.Display.ColorObject} An object containing the interpolated color values.
  */
 var ColorWithColor = function (color1, color2, length, index)
 {
@@ -69,6 +72,8 @@ var ColorWithColor = function (color1, color2, length, index)
  * Interpolates between the Color object and color values over the length supplied.
  *
  * @function Phaser.Display.Color.Interpolate.ColorWithRGB
+ * @memberof Phaser.Display.Color.Interpolate
+ * @static
  * @since 3.0.0
  *
  * @param {Phaser.Display.Color} color1 - The first Color object.
@@ -78,7 +83,7 @@ var ColorWithColor = function (color1, color2, length, index)
  * @param {number} [length=100] - Distance to interpolate over.
  * @param {number} [index=0] - Index to start from.
  *
- * @return {ColorObject} An object containing the interpolated color values.
+ * @return {Phaser.Types.Display.ColorObject} An object containing the interpolated color values.
  */
 var ColorWithRGB = function (color, r, g, b, length, index)
 {

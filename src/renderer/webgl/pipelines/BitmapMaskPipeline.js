@@ -1,8 +1,8 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Felipe Alfonso <@bitnenfer>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../../utils/Class');
@@ -26,7 +26,7 @@ var WebGLPipeline = require('../WebGLPipeline');
  *
  * @class BitmapMaskPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
- * @memberOf Phaser.Renderer.WebGL.Pipelines
+ * @memberof Phaser.Renderer.WebGL.Pipelines
  * @constructor
  * @since 3.0.0
  *
@@ -105,7 +105,7 @@ var BitmapMaskPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#onBind
      * @since 3.0.0
      *
-     * @return {Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline} [description]
+     * @return {this} This WebGLPipeline instance.
      */
     onBind: function ()
     {
@@ -135,7 +135,7 @@ var BitmapMaskPipeline = new Class({
      * @param {number} height - [description]
      * @param {number} resolution - [description]
      *
-     * @return {Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline} [description]
+     * @return {this} This WebGLPipeline instance.
      */
     resize: function (width, height, resolution)
     {
@@ -157,33 +157,36 @@ var BitmapMaskPipeline = new Class({
      */
     beginMask: function (mask, maskedObject, camera)
     {
-        var bitmapMask = mask.bitmapMask;
         var renderer = this.renderer;
         var gl = this.gl;
-        var visible = bitmapMask.visible;
+
+        //  The renderable Game Object that is being used for the bitmap mask
+        var bitmapMask = mask.bitmapMask;
 
         if (bitmapMask && gl)
         {
-            // First we clear the mask framebuffer
-            renderer.setFramebuffer(mask.maskFramebuffer);
-            gl.clearColor(0, 0, 0, 0);
-            gl.clear(gl.COLOR_BUFFER_BIT);
-
-            // We render our mask source
-            bitmapMask.visible = true;
-            bitmapMask.renderWebGL(renderer, bitmapMask, 0.0, camera);
-            bitmapMask.visible = visible;
             renderer.flush();
 
-            // Bind and clear our main source (masked object)
+            mask.prevFramebuffer = renderer.currentFramebuffer;
+
             renderer.setFramebuffer(mask.mainFramebuffer);
+
+            gl.disable(gl.STENCIL_TEST);
+
             gl.clearColor(0, 0, 0, 0);
+
             gl.clear(gl.COLOR_BUFFER_BIT);
+
+            if (renderer.currentCameraMask.mask !== mask)
+            {
+                renderer.currentMask.mask = mask;
+                renderer.currentMask.camera = camera;
+            }
         }
     },
 
     /**
-     * The masked game object's framebuffer is unbound and it's texture 
+     * The masked game objects framebuffer is unbound and its texture 
      * is bound together with the mask texture and the mask shader and 
      * a draw call with a single quad is processed. Here is where the
      * masking effect is applied.  
@@ -193,25 +196,58 @@ var BitmapMaskPipeline = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} mask - GameObject used as a mask.
      */
-    endMask: function (mask)
+    endMask: function (mask, camera)
     {
-        var bitmapMask = mask.bitmapMask;
-        var renderer = this.renderer;
         var gl = this.gl;
+        var renderer = this.renderer;
 
-        if (bitmapMask)
+        //  The renderable Game Object that is being used for the bitmap mask
+        var bitmapMask = mask.bitmapMask;
+
+        if (bitmapMask && gl)
         {
-            // Return to default framebuffer
-            renderer.setFramebuffer(null);
-            
-            // Bind bitmap mask pipeline and draw
-            renderer.setPipeline(this);
-            
-            renderer.setTexture2D(mask.maskTexture, 1);
-            renderer.setTexture2D(mask.mainTexture, 0);
-            renderer.setInt1(this.program, 'uInvertMaskAlpha', mask.invertAlpha);
+            renderer.flush();
 
-            // Finally draw a triangle filling the whole screen
+            //  First we draw the mask to the mask fb
+            renderer.setFramebuffer(mask.maskFramebuffer);
+
+            gl.clearColor(0, 0, 0, 0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+
+            renderer.setBlendMode(0, true);
+
+            bitmapMask.renderWebGL(renderer, bitmapMask, 0, camera);
+
+            renderer.flush();
+
+            renderer.setFramebuffer(mask.prevFramebuffer);
+
+            //  Is there a stencil further up the stack?
+            var prev = renderer.getCurrentStencilMask();
+
+            if (prev)
+            {
+                gl.enable(gl.STENCIL_TEST);
+
+                prev.mask.applyStencil(renderer, prev.camera, true);
+            }
+            else
+            {
+                renderer.currentMask.mask = null;
+            }
+
+            //  Bind bitmap mask pipeline and draw
+            renderer.setPipeline(this);
+
+            gl.activeTexture(gl.TEXTURE1);
+            gl.bindTexture(gl.TEXTURE_2D, mask.maskTexture);
+
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, mask.mainTexture);
+
+            gl.uniform1i(gl.getUniformLocation(this.program, 'uInvertMaskAlpha'), mask.invertAlpha);
+
+            //  Finally, draw a triangle filling the whole screen
             gl.drawArrays(this.topology, 0, 3);
         }
     }

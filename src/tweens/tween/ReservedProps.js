@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 //  RESERVED properties that a Tween config object uses
@@ -38,6 +38,9 @@ module.exports = [
     'loop',
     'loopDelay',
     'offset',
+    'onActive',
+    'onActiveParams',
+    'onActiveScope',
     'onComplete',
     'onCompleteParams',
     'onCompleteScope',

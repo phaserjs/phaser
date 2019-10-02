@@ -1,10 +1,8 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
-
-var GameObject = require('../../gameobjects/GameObject');
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -25,39 +23,44 @@ var GameObject = require('../../gameobjects/GameObject');
  */
 var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)))
-    {
-        return;
-    }
+    var tilesets = src.tileset;
 
-    src.upload(camera);
+    var pipeline = src.pipeline;
+    var pipelineVertexBuffer = pipeline.vertexBuffer;
 
-    if (src.vertexCount > 0)
+    renderer.setPipeline(pipeline);
+
+    pipeline.modelIdentity();
+    pipeline.modelTranslate(src.x - (camera.scrollX * src.scrollFactorX), src.y - (camera.scrollY * src.scrollFactorY), 0);
+    pipeline.modelScale(src.scaleX, src.scaleY, 1);
+    pipeline.viewLoad2D(camera.matrix.matrix);
+
+    for (var i = 0; i < tilesets.length; i++)
     {
-        var gl = renderer.gl;
-        var pipeline = this.pipeline;
-        var pipelineVertexBuffer = pipeline.vertexBuffer;
-    
-        var frame = src.tileset.image.get();
-    
-        if (renderer.currentPipeline && renderer.currentPipeline.vertexCount > 0)
+        src.upload(camera, i);
+
+        if (src.vertexCount[i] > 0)
         {
-            renderer.flush();
+            if (renderer.currentPipeline && renderer.currentPipeline.vertexCount > 0)
+            {
+                renderer.flush();
+            }
+        
+            pipeline.vertexBuffer = src.vertexBuffer[i];
+        
+            renderer.setPipeline(pipeline);
+        
+            renderer.setTexture2D(tilesets[i].glTexture, 0);
+        
+            renderer.gl.drawArrays(pipeline.topology, 0, src.vertexCount[i]);
         }
-    
-        pipeline.vertexBuffer = src.vertexBuffer;
-    
-        renderer.setPipeline(pipeline);
-    
-        renderer.setTexture2D(frame.glTexture, 0);
-    
-        gl.drawArrays(pipeline.topology, 0, src.vertexCount);
-    
-        pipeline.vertexBuffer = pipelineVertexBuffer;
-    
-        pipeline.viewIdentity();
-        pipeline.modelIdentity();
     }
+
+    //  Restore the pipeline
+    pipeline.vertexBuffer = pipelineVertexBuffer;
+
+    pipeline.viewIdentity();
+    pipeline.modelIdentity();
 };
 
 module.exports = StaticTilemapLayerWebGLRenderer;

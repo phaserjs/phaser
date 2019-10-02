@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Utils = require('../../../renderer/webgl/Utils');
@@ -23,31 +23,28 @@ var Utils = require('../../../renderer/webgl/Utils');
  */
 var TextWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    if (src.text === '')
+    if ((src.width === 0) || (src.height === 0))
     {
         return;
     }
-    
-    if (src.dirty)
-    {
-        src.canvasTexture = renderer.canvasToTexture(src.canvas, src.canvasTexture);
-        src.dirty = false;
-    }
 
+    var frame = src.frame;
+    var width = frame.width;
+    var height = frame.height;
     var getTint = Utils.getTintAppendFloatAlpha;
 
     this.pipeline.batchTexture(
         src,
-        src.canvasTexture,
-        src.canvasTexture.width, src.canvasTexture.height,
+        frame.glTexture,
+        width, height,
         src.x, src.y,
-        src.canvasTexture.width / src.style.resolution, src.canvasTexture.height / src.style.resolution,
+        width / src.style.resolution, height / src.style.resolution,
         src.scaleX, src.scaleY,
         src.rotation,
         src.flipX, src.flipY,
         src.scrollFactorX, src.scrollFactorY,
         src.displayOriginX, src.displayOriginY,
-        0, 0, src.canvasTexture.width, src.canvasTexture.height,
+        0, 0, width, height,
         getTint(src._tintTL, camera.alpha * src._alphaTL),
         getTint(src._tintTR, camera.alpha * src._alphaTR),
         getTint(src._tintBL, camera.alpha * src._alphaBL),

@@ -1,8 +1,10 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
+
+var SetTransform = require('../../../renderer/canvas/utils/SetTransform');
 
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
@@ -24,7 +26,9 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
     var text = src._text;
     var textLength = text.length;
 
-    if (textLength === 0)
+    var ctx = renderer.currentContext;
+
+    if (textLength === 0 || !SetTransform(renderer, ctx, src, camera, parentMatrix))
     {
         return;
     }
@@ -52,7 +56,6 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
     var lastGlyph = null;
     var lastCharCode = 0;
 
-    var ctx = renderer.currentContext;
     var image = src.frame.source.image;
 
     var textureX = textureFrame.cutX;
@@ -78,60 +81,9 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
         lineOffsetX = (lineData.longest - lineData.lengths[0]);
     }
 
-    //  Alpha
-
-    var alpha = camera.alpha * src.alpha;
-
-    if (alpha === 0)
-    {
-        //  Nothing to see, so abort early
-        return;
-    }
-    else if (renderer.currentAlpha !== alpha)
-    {
-        renderer.currentAlpha = alpha;
-        ctx.globalAlpha = alpha;
-    }
-
-    //  Blend Mode
-    if (renderer.currentBlendMode !== src.blendMode)
-    {
-        renderer.currentBlendMode = src.blendMode;
-        ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
-    }
-
-    //  Smoothing
-    if (renderer.currentScaleMode !== src.scaleMode)
-    {
-        renderer.currentScaleMode = src.scaleMode;
-    }
-
-    var tx = (src.x - camera.scrollX * src.scrollFactorX) + src.frame.x;
-    var ty = (src.y - camera.scrollY * src.scrollFactorY) + src.frame.y;
-
-    var roundPixels = camera.roundPixels;
-
-    if (roundPixels)
-    {
-        tx |= 0;
-        ty |= 0;
-    }
-
-    ctx.save();
-
-    if (parentMatrix !== undefined)
-    {
-        var matrix = parentMatrix.matrix;
-        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
-    }
-
-    ctx.translate(tx, ty);
-
-    ctx.rotate(src.rotation);
-
     ctx.translate(-src.displayOriginX, -src.displayOriginY);
 
-    ctx.scale(src.scaleX, src.scaleY);
+    var roundPixels = camera.roundPixels;
 
     for (var i = 0; i < textLength; i++)
     {
@@ -196,8 +148,8 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
 
         if (roundPixels)
         {
-            x |= 0;
-            y |= 0;
+            x = Math.round(x);
+            y = Math.round(y);
         }
 
         ctx.save();

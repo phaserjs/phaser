@@ -1,19 +1,19 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * [description]
+ * A comparison of two `Point` objects to see if they are equal.
  *
  * @function Phaser.Geom.Point.Equals
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Point} point - [description]
- * @param {Phaser.Geom.Point} toCompare - [description]
+ * @param {Phaser.Geom.Point} point - The original `Point` to compare against.
+ * @param {Phaser.Geom.Point} toCompare - The second `Point` to compare.
  *
- * @return {boolean} [description]
+ * @return {boolean} Returns true if the both `Point` objects are equal.
  */
 var Equals = function (point, toCompare)
 {

@@ -1,23 +1,24 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var CONST = require('./const');
 
 /**
- * [description]
+ * Calculates and returns the horizontal overlap between two arcade physics bodies and sets their properties
+ * accordingly, including: `touching.left`, `touching.right`, `touching.none` and `overlapX'.
  *
  * @function Phaser.Physics.Arcade.GetOverlapX
  * @since 3.0.0
  *
- * @param {Phaser.Physics.Arcade.Body} body1 - [description]
- * @param {Phaser.Physics.Arcade.Body} body2 - [description]
- * @param {boolean} overlapOnly - [description]
- * @param {number} bias - [description]
+ * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to separate.
+ * @param {Phaser.Physics.Arcade.Body} body2 - The second Body to separate.
+ * @param {boolean} overlapOnly - Is this an overlap only check, or part of separation?
+ * @param {number} bias - A value added to the delta values during collision checks. Increase it to prevent sprite tunneling(sprites passing through another instead of colliding).
  *
- * @return {number} [description]
+ * @return {number} The amount of overlap.
  */
 var GetOverlapX = function (body1, body2, overlapOnly, bias)
 {

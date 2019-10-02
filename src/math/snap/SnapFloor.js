@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -16,10 +16,11 @@
  * @param {number} value - The value to snap.
  * @param {number} gap - The interval gap of the grid.
  * @param {number} [start=0] - Optional starting offset for gap.
+ * @param {boolean} [divide=false] - If `true` it will divide the snapped value by the gap before returning.
  *
  * @return {number} The snapped value.
  */
-var SnapFloor = function (value, gap, start)
+var SnapFloor = function (value, gap, start, divide)
 {
     if (start === undefined) { start = 0; }
 
@@ -31,7 +32,7 @@ var SnapFloor = function (value, gap, start)
     value -= start;
     value = gap * Math.floor(value / gap);
 
-    return start + value;
+    return (divide) ? (start + value) / gap : start + value;
 };
 
 module.exports = SnapFloor;

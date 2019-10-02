@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Body = require('./Body');
@@ -9,6 +9,7 @@ var Class = require('../../utils/Class');
 var COLLIDES = require('./COLLIDES');
 var CollisionMap = require('./CollisionMap');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var HasValue = require('../../utils/object/HasValue');
 var Set = require('../../structs/Set');
@@ -17,72 +18,17 @@ var TILEMAP_FORMATS = require('../../tilemaps/Formats');
 var TYPE = require('./TYPE');
 
 /**
- * @typedef {object} Phaser.Physics.Impact.WorldConfig
- *
- * @property {number} [gravity=0] - [description]
- * @property {number} [cellSize=64] - [description]
- * @property {number} [timeScale=1] - [description]
- * @property {number} [maxStep=0.05] - [description]
- * @property {boolean} [debug=false] - [description]
- * @property {number} [maxVelocity=100] - [description]
- * @property {boolean} [debugShowBody=true] - [description]
- * @property {boolean} [debugShowVelocity=true] - [description]
- * @property {number} [debugBodyColor=0xff00ff] - [description]
- * @property {number} [debugVelocityColor=0x00ff00] - [description]
- * @property {number} [maxVelocityX=maxVelocity] - [description]
- * @property {number} [maxVelocityY=maxVelocity] - [description]
- * @property {number} [minBounceVelocity=40] - [description]
- * @property {number} [gravityFactor=1] - [description]
- * @property {number} [bounciness=0] - [description]
- * @property {(object|boolean)} [setBounds] - [description]
- * @property {number} [setBounds.x=0] - [description]
- * @property {number} [setBounds.y=0] - [description]
- * @property {number} [setBounds.width] - [description]
- * @property {number} [setBounds.height] - [description]
- * @property {number} [setBounds.thickness=64] - [description]
- * @property {boolean} [setBounds.left=true] - [description]
- * @property {boolean} [setBounds.right=true] - [description]
- * @property {boolean} [setBounds.top=true] - [description]
- * @property {boolean} [setBounds.bottom=true] - [description]
- */
-
-/**
- * An object containing the 4 wall bodies that bound the physics world.
- * 
- * @typedef {object} Phaser.Physics.Impact.WorldDefaults
- *
- * @property {boolean} debugShowBody - [description]
- * @property {boolean} debugShowVelocity - [description]
- * @property {number} bodyDebugColor - [description]
- * @property {number} velocityDebugColor - [description]
- * @property {number} maxVelocityX - [description]
- * @property {number} maxVelocityY - [description]
- * @property {number} minBounceVelocity - [description]
- * @property {number} gravityFactor - [description]
- * @property {number} bounciness - [description]
- */
-
-/**
- * @typedef {object} Phaser.Physics.Impact.WorldWalls
- *
- * @property {?Phaser.Physics.Impact.Body} left - [description]
- * @property {?Phaser.Physics.Impact.Body} right - [description]
- * @property {?Phaser.Physics.Impact.Body} top - [description]
- * @property {?Phaser.Physics.Impact.Body} bottom - [description]
- */
-
-/**
  * @classdesc
  * [description]
  *
  * @class World
  * @extends Phaser.Events.EventEmitter
- * @memberOf Phaser.Physics.Impact
+ * @memberof Phaser.Physics.Impact
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - [description]
- * @param {Phaser.Physics.Impact.WorldConfig} config - [description]
+ * @param {Phaser.Scene} scene - The Scene to which this Impact World instance belongs.
+ * @param {Phaser.Types.Physics.Impact.WorldConfig} config - [description]
  */
 var World = new Class({
 
@@ -195,7 +141,7 @@ var World = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.World#defaults
-         * @type {Phaser.Physics.Impact.WorldDefaults}
+         * @type {Phaser.Types.Physics.Impact.WorldDefaults}
          * @since 3.0.0
          */
         this.defaults = {
@@ -214,7 +160,7 @@ var World = new Class({
          * An object containing the 4 wall bodies that bound the physics world.
          *
          * @name Phaser.Physics.Impact.World#walls
-         * @type {Phaser.Physics.Impact.WorldWalls}
+         * @type {Phaser.Types.Physics.Impact.WorldWalls}
          * @since 3.0.0
          */
         this.walls = { left: null, right: null, top: null, bottom: null };
@@ -252,8 +198,8 @@ var World = new Class({
             {
                 var x = GetFastValue(boundsConfig, 'x', 0);
                 var y = GetFastValue(boundsConfig, 'y', 0);
-                var width = GetFastValue(boundsConfig, 'width', scene.sys.game.config.width);
-                var height = GetFastValue(boundsConfig, 'height', scene.sys.game.config.height);
+                var width = GetFastValue(boundsConfig, 'width', scene.sys.scale.width);
+                var height = GetFastValue(boundsConfig, 'height', scene.sys.scale.height);
                 var thickness = GetFastValue(boundsConfig, 'thickness', 64);
                 var left = GetFastValue(boundsConfig, 'left', true);
                 var right = GetFastValue(boundsConfig, 'right', true);
@@ -334,16 +280,7 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - The tilemap layer to use.
-     * @param {object} [options] - Options for controlling the mapping from tiles to slope IDs.
-     * @param {string} [options.slopeTileProperty=null] - Slope IDs can be stored on tiles directly
-     * using Tiled's tileset editor. If a tile has a property with the given slopeTileProperty string
-     * name, the value of that property for the tile will be used for its slope mapping. E.g. a 45
-     * degree slope upward could be given a "slope" property with a value of 2.
-     * @param {object} [options.slopeMap=null] - A tile index to slope definition map.
-     * @param {integer} [options.defaultCollidingSlope=null] - If specified, the default slope ID to
-     * assign to a colliding tile. If not specified, the tile's index is used.
-     * @param {integer} [options.defaultNonCollidingSlope=0] - The default slope ID to assign to a
-     * non-colliding tile.
+     * @param {Phaser.Types.Physics.Impact.CollisionOptions} [options] - Options for controlling the mapping from tiles to slope IDs.
      *
      * @return {Phaser.Physics.Impact.CollisionMap} The newly created CollisionMap.
      */
@@ -425,8 +362,8 @@ var World = new Class({
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
-        if (width === undefined) { width = this.scene.sys.game.config.width; }
-        if (height === undefined) { height = this.scene.sys.game.config.height; }
+        if (width === undefined) { width = this.scene.sys.scale.width; }
+        if (height === undefined) { height = this.scene.sys.scale.height; }
         if (thickness === undefined) { thickness = 64; }
         if (left === undefined) { left = true; }
         if (right === undefined) { right = true; }
@@ -484,12 +421,12 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Creates a Graphics Game Object used for debug display and enables the world for debug drawing.
      *
      * @method Phaser.Physics.Impact.World#createDebugGraphic
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Graphics} [description]
+     * @return {Phaser.GameObjects.Graphics} The Graphics object created that will have the debug visuals drawn to it.
      */
     createDebugGraphic: function ()
     {
@@ -556,6 +493,7 @@ var World = new Class({
      * [description]
      *
      * @method Phaser.Physics.Impact.World#pause
+     * @fires Phaser.Physics.Impact.Events#PAUSE
      * @since 3.0.0
      *
      * @return {Phaser.Physics.Impact.World} This World object.
@@ -564,7 +502,7 @@ var World = new Class({
     {
         this.enabled = false;
 
-        this.emit('pause');
+        this.emit(Events.PAUSE);
 
         return this;
     },
@@ -573,6 +511,7 @@ var World = new Class({
      * [description]
      *
      * @method Phaser.Physics.Impact.World#resume
+     * @fires Phaser.Physics.Impact.Events#RESUME
      * @since 3.0.0
      *
      * @return {Phaser.Physics.Impact.World} This World object.
@@ -581,7 +520,7 @@ var World = new Class({
     {
         this.enabled = true;
 
-        this.emit('resume');
+        this.emit(Events.RESUME);
 
         return this;
     },
@@ -592,8 +531,8 @@ var World = new Class({
      * @method Phaser.Physics.Impact.World#update
      * @since 3.0.0
      *
-     * @param {number} time - [description]
-     * @param {number} delta - [description]
+     * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
     update: function (time, delta)
     {

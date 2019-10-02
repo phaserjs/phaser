@@ -1,23 +1,23 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Rectangle = require('../rectangle/Rectangle');
 
 /**
- * [description]
+ * Calculates the bounding AABB rectangle of a polygon.
  *
  * @function Phaser.Geom.Polygon.GetAABB
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Rectangle} O - [out,$return]
  *
- * @param {Phaser.Geom.Polygon} polygon - [description]
- * @param {(Phaser.Geom.Rectangle|object)} [out] - [description]
+ * @param {Phaser.Geom.Polygon} polygon - The polygon that should be calculated.
+ * @param {(Phaser.Geom.Rectangle|object)} [out] - The rectangle or object that has x, y, width, and height properties to store the result. Optional.
  *
- * @return {(Phaser.Geom.Rectangle|object)} [description]
+ * @return {(Phaser.Geom.Rectangle|object)} The resulting rectangle or object that is passed in with position and dimensions of the polygon's AABB.
  */
 var GetAABB = function (polygon, out)
 {

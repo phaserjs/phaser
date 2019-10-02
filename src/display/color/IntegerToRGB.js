@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -14,7 +14,7 @@
  *
  * @param {integer} input - The color value to convert into a Color object.
  *
- * @return {ColorObject} An object with the red, green and blue values set in the r, g and b properties.
+ * @return {Phaser.Types.Display.ColorObject} An object with the red, green and blue values set in the r, g and b properties.
  */
 var IntegerToRGB = function (color)
 {

@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Utils = require('../../renderer/webgl/Utils');
@@ -59,8 +59,6 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     var frame = src.frame;
     var texture = frame.glTexture;
 
-    pipeline.setTexture2D(texture, 0);
-
     var vertices = src.vertices;
     var uvs = src.uv;
     var colors = src.colors;
@@ -69,10 +67,12 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     var meshVerticesLength = vertices.length;
     var vertexCount = Math.floor(meshVerticesLength * 0.5);
 
-    if (pipeline.vertexCount + vertexCount >= pipeline.vertexCapacity)
+    if (pipeline.vertexCount + vertexCount > pipeline.vertexCapacity)
     {
         pipeline.flush();
     }
+
+    pipeline.setTexture2D(texture, 0);
 
     var vertexViewF32 = pipeline.vertexViewF32;
     var vertexViewU32 = pipeline.vertexViewU32;
@@ -92,8 +92,8 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
 
         if (camera.roundPixels)
         {
-            tx |= 0;
-            ty |= 0;
+            tx = Math.round(tx);
+            ty = Math.round(ty);
         }
 
         vertexViewF32[++vertexOffset] = tx;

@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var ContainsArray = require('../triangle/ContainsArray');
@@ -9,15 +9,17 @@ var Decompose = require('../triangle/Decompose');
 var LineToLine = require('./LineToLine');
 
 /**
- * [description]
+ * Checks if two Triangles intersect.
+ *
+ * A Triangle intersects another Triangle if any pair of their lines intersects or if any point of one Triangle is within the other Triangle. Thus, the Triangles are considered "solid".
  *
  * @function Phaser.Geom.Intersects.TriangleToTriangle
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Triangle} triangleA - [description]
- * @param {Phaser.Geom.Triangle} triangleB - [description]
+ * @param {Phaser.Geom.Triangle} triangleA - The first Triangle to check for intersection.
+ * @param {Phaser.Geom.Triangle} triangleB - The second Triangle to check for intersection.
  *
- * @return {boolean} [description]
+ * @return {boolean} `true` if the Triangles intersect, otherwise `false`.
  */
 var TriangleToTriangle = function (triangleA, triangleB)
 {

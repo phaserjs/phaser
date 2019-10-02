@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var BitmapMask = require('../../display/mask/BitmapMask');
@@ -10,7 +10,7 @@ var GeometryMask = require('../../display/mask/GeometryMask');
 /**
  * Provides methods used for getting and setting the mask of a Game Object.
  *
- * @name Phaser.GameObjects.Components.Mask
+ * @namespace Phaser.GameObjects.Components.Mask
  * @since 3.0.0
  */
 
@@ -98,7 +98,7 @@ var Mask = {
      */
     createBitmapMask: function (renderable)
     {
-        if (renderable === undefined && this.texture)
+        if (renderable === undefined && (this.texture || this.shader))
         {
             // eslint-disable-next-line consistent-this
             renderable = this;

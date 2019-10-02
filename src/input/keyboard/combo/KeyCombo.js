@@ -1,28 +1,14 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../../utils/Class');
+var Events = require('../events');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var ProcessKeyCombo = require('./ProcessKeyCombo');
 var ResetKeyCombo = require('./ResetKeyCombo');
-
-/**
- * @callback KeyboardKeydownCallback
- *
- * @param {KeyboardEvent} event - The Keyboard Event.
- */
-
-/**
- * @typedef {object} KeyComboConfig
- *
- * @property {boolean} [resetOnWrongKey=true] - If they press the wrong key do we reset the combo?
- * @property {number} [maxKeyDelay=0] - The max delay in ms between each key press. Above this the combo is reset. 0 means disabled.
- * @property {boolean} [resetOnMatch=false] - If previously matched and they press the first key of the combo again, will it reset?
- * @property {boolean} [deleteOnMatch=false] - If the combo matches, will it delete itself?
- */
 
 /**
  * @classdesc
@@ -35,11 +21,11 @@ var ResetKeyCombo = require('./ResetKeyCombo');
  * An array of either integers (key codes) or strings, or a mixture of both
  * An array of objects (such as Key objects) with a public 'keyCode' property
  *
- * For example, to listen for the Konami code (up, up, up, down, down, down, left, left, left, right, right, right)
+ * For example, to listen for the Konami code (up, up, down, down, left, right, left, right, b, a, enter)
  * you could pass the following array of key codes:
  *
  * ```javascript
- * this.input.keyboard.createCombo([ 38, 38, 38, 40, 40, 40, 37, 37, 37, 39, 39, 39 ], { resetOnMatch: true });
+ * this.input.keyboard.createCombo([ 38, 38, 40, 40, 37, 39, 37, 39, 66, 65, 13 ], { resetOnMatch: true });
  *
  * this.input.keyboard.on('keycombomatch', function (event) {
  *     console.log('Konami Code entered!');
@@ -53,13 +39,14 @@ var ResetKeyCombo = require('./ResetKeyCombo');
  * ```
  *
  * @class KeyCombo
- * @memberOf Phaser.Input.Keyboard
+ * @memberof Phaser.Input.Keyboard
  * @constructor
+ * @listens Phaser.Input.Keyboard.Events#ANY_KEY_DOWN
  * @since 3.0.0
  *
  * @param {Phaser.Input.Keyboard.KeyboardPlugin} keyboardPlugin - A reference to the Keyboard Plugin.
  * @param {(string|integer[]|object[])} keys - The keys that comprise this combo.
- * @param {KeyComboConfig} [config] - A Key Combo configuration object.
+ * @param {Phaser.Types.Input.Keyboard.KeyComboConfig} [config] - A Key Combo configuration object.
  */
 var KeyCombo = new Class({
 
@@ -235,7 +222,7 @@ var KeyCombo = new Class({
 
             if (matched)
             {
-                _this.manager.emit('keycombomatch', _this, event);
+                _this.manager.emit(Events.COMBO_MATCH, _this, event);
 
                 if (_this.resetOnMatch)
                 {
@@ -254,11 +241,12 @@ var KeyCombo = new Class({
          * @name Phaser.Input.Keyboard.KeyCombo#onKeyDown
          * @private
          * @type {KeyboardKeydownCallback}
+         * @fires Phaser.Input.Keyboard.Events#COMBO_MATCH
          * @since 3.0.0
          */
         this.onKeyDown = onKeyDownHandler;
 
-        this.manager.on('keydown', onKeyDownHandler);
+        this.manager.on(Events.ANY_KEY_DOWN, this.onKeyDown);
     },
 
     /**
@@ -266,7 +254,7 @@ var KeyCombo = new Class({
      *
      * @name Phaser.Input.Keyboard.KeyCombo#progress
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     progress: {
@@ -289,7 +277,7 @@ var KeyCombo = new Class({
         this.enabled = false;
         this.keyCodes = [];
 
-        this.manager.off('keydown', this.onKeyDown);
+        this.manager.off(Events.ANY_KEY_DOWN, this.onKeyDown);
 
         this.manager = null;
     }

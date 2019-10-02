@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var IsPlainObject = require('./IsPlainObject');
@@ -13,10 +13,10 @@ var IsPlainObject = require('./IsPlainObject');
 /**
  * This is a slightly modified version of http://api.jquery.com/jQuery.extend/
  *
- * @function Phaser.Utils.Object.Extend
+ * @function Phaser.Utils.Objects.Extend
  * @since 3.0.0
  *
- * @return {object} [description]
+ * @return {object} The extended object.
  */
 var Extend = function ()
 {

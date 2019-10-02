@@ -1,8 +1,8 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Felipe Alfonso <@bitnenfer>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -18,8 +18,8 @@ module.exports = {
      * @since 3.0.0
      * 
      * @param {number} r - Red component in a range from 0.0 to 1.0 
-     * @param {number} g - [description]
-     * @param {number} b - [description]
+     * @param {number} g - Green component in a range from 0.0 to 1.0
+     * @param {number} b - Blue component in a range from 0.0 to 1.0
      * @param {number} a - Alpha component in a range from 0.0 to 1.0
      * 
      * @return {number} [description]

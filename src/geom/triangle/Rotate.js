@@ -1,24 +1,24 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var RotateAroundXY = require('./RotateAroundXY');
 var InCenter = require('./InCenter');
 
 /**
- * [description]
+ * Rotates a Triangle about its incenter, which is the point at which its three angle bisectors meet.
  *
  * @function Phaser.Geom.Triangle.Rotate
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Triangle} O - [triangle,$return]
  *
- * @param {Phaser.Geom.Triangle} triangle - [description]
- * @param {number} angle - [description]
+ * @param {Phaser.Geom.Triangle} triangle - The Triangle to rotate.
+ * @param {number} angle - The angle by which to rotate the Triangle, in radians.
  *
- * @return {Phaser.Geom.Triangle} [description]
+ * @return {Phaser.Geom.Triangle} The rotated Triangle.
  */
 var Rotate = function (triangle, angle)
 {

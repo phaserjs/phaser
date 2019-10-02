@@ -16,7 +16,8 @@
         "CANVAS_RENDERER": true,
         "Phaser": true,
         "process": true,
-        "ActiveXObject": true
+        "ActiveXObject": true,
+        "FBInstant": true
     },
     "rules": {
 
@@ -71,7 +72,8 @@
         "eol-last": [ "error" ],
         "func-call-spacing": [ "error", "never" ],
         "indent": [ "error", 4, { "SwitchCase": 1 } ],
-        "key-spacing": [ "error", { "beforeColon": false, "afterColon": true }],
+        "key-spacing": [ "error", { "beforeColon": false, "afterColon": true } ],
+        "keyword-spacing": [ "error", { "after": true } ],
         "linebreak-style": [ "off" ],
         "lines-around-comment": [ "error", { "beforeBlockComment": true, "afterBlockComment": false, "beforeLineComment": true, "afterLineComment": false, "allowBlockStart": true, "allowBlockEnd": false, "allowObjectStart": true, "allowArrayStart": true }],
         "new-parens": "error",
@@ -83,7 +85,7 @@
         "no-trailing-spaces": [ "error", { "skipBlankLines": true, "ignoreComments": true } ],
         "no-underscore-dangle": "off",
         "no-whitespace-before-property": "error",
-        "object-curly-newline": [ "error", { "multiline": true, "minProperties": 0 } ],
+        "object-curly-newline": [ "error", { "multiline": true, "minProperties": 0, "consistent": true } ],
         "one-var-declaration-per-line": [ "error", "initializations" ],
         "quote-props": [ "error", "as-needed" ],
         "quotes": [ "error", "single" ],

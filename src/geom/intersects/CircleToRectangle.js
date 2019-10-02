@@ -1,19 +1,19 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * [description]
+ * Checks for intersection between a circle and a rectangle.
  *
  * @function Phaser.Geom.Intersects.CircleToRectangle
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Circle} circle - [description]
- * @param {Phaser.Geom.Rectangle} rect - [description]
+ * @param {Phaser.Geom.Circle} circle - The circle to be checked.
+ * @param {Phaser.Geom.Rectangle} rect - The rectangle to be checked.
  *
- * @return {boolean} [description]
+ * @return {boolean} `true` if the two objects intersect, otherwise `false`.
  */
 var CircleToRectangle = function (circle, rect)
 {

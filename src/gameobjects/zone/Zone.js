@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var BlendModes = require('../../renderer/BlendModes');
@@ -29,14 +29,13 @@ var RectangleContains = require('../../geom/rectangle/Contains');
  *
  * @class Zone
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.ScaleMode
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Visible
@@ -55,7 +54,6 @@ var Zone = new Class({
         Components.Depth,
         Components.GetBounds,
         Components.Origin,
-        Components.ScaleMode,
         Components.Transform,
         Components.ScrollFactor,
         Components.Visible
@@ -100,6 +98,8 @@ var Zone = new Class({
          * @since 3.0.0
          */
         this.blendMode = BlendModes.NORMAL;
+
+        this.updateDisplayOrigin();
     },
 
     /**
@@ -165,10 +165,14 @@ var Zone = new Class({
         this.width = width;
         this.height = height;
 
-        if (resizeInput && this.input && this.input.hitArea instanceof Rectangle)
+        this.updateDisplayOrigin();
+
+        var input = this.input;
+
+        if (resizeInput && input && !input.customHitArea)
         {
-            this.input.hitArea.width = width;
-            this.input.hitArea.height = height;
+            input.hitArea.width = width;
+            input.hitArea.height = height;
         }
 
         return this;
@@ -224,10 +228,7 @@ var Zone = new Class({
      */
     setRectangleDropZone: function (width, height)
     {
-        var x = -(width / 2);
-        var y = -(height / 2);
-
-        return this.setDropZone(new Rectangle(x, y, width, height), RectangleContains);
+        return this.setDropZone(new Rectangle(0, 0, width, height), RectangleContains);
     },
 
     /**
@@ -237,7 +238,7 @@ var Zone = new Class({
      * @since 3.0.0
      *
      * @param {object} shape - A Geometry shape instance, such as Phaser.Geom.Ellipse, or your own custom shape.
-     * @param {HitAreaCallback} callback - A function that will return `true` if the given x/y coords it is sent are within the shape.
+     * @param {Phaser.Types.Input.HitAreaCallback} callback - A function that will return `true` if the given x/y coords it is sent are within the shape.
      *
      * @return {Phaser.GameObjects.Zone} This Game Object.
      */
@@ -247,8 +248,7 @@ var Zone = new Class({
         {
             this.setRectangleDropZone(this.width, this.height);
         }
-        else
-        if (!this.input)
+        else if (!this.input)
         {
             this.setInteractive(shape, callback, true);
         }
@@ -268,6 +268,18 @@ var Zone = new Class({
     {
     },
     
+    /**
+     * A NOOP method so you can pass a Zone to a Container in Canvas.
+     * Calling this method will do nothing. It is intentionally empty.
+     *
+     * @method Phaser.GameObjects.Zone#setBlendMode
+     * @private
+     * @since 3.16.2
+     */
+    setBlendMode: function ()
+    {
+    },
+
     /**
      * A Zone does not render.
      *

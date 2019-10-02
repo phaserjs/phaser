@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 //  Contains the plugins that Phaser uses globally and locally.
@@ -12,23 +12,11 @@ var corePlugins = {};
 //  These are the source objects, not instantiated.
 var customPlugins = {};
 
-/**
- * @typedef {object} CorePluginContainer
- *
- * @property {string} key - The unique name of this plugin in the core plugin cache.
- * @property {function} plugin - The plugin to be stored. Should be the source object, not instantiated.
- * @property {string} [mapping] - If this plugin is to be injected into the Scene Systems, this is the property key map used.
- * @property {boolean} [custom=false] - Core Scene plugin or a Custom Scene plugin?
- */
-
-/**
- * @typedef {object} CustomPluginContainer
- *
- * @property {string} key - The unique name of this plugin in the custom plugin cache.
- * @property {function} plugin - The plugin to be stored. Should be the source object, not instantiated.
- */
-
 var PluginCache = {};
+
+/**
+ * @namespace Phaser.Plugins.PluginCache
+ */
 
 /**
  * Static method called directly by the Core internal Plugins.
@@ -61,10 +49,11 @@ PluginCache.register = function (key, plugin, mapping, custom)
  * @param {string} key - A reference used to get this plugin from the plugin cache.
  * @param {function} plugin - The plugin to be stored. Should be the core object, not instantiated.
  * @param {string} mapping - If this plugin is to be injected into the Scene Systems, this is the property key map used.
+ * @param {?any} data - A value to be passed to the plugin's `init` method.
  */
-PluginCache.registerCustom = function (key, plugin, mapping)
+PluginCache.registerCustom = function (key, plugin, mapping, data)
 {
-    customPlugins[key] = { plugin: plugin, mapping: mapping };
+    customPlugins[key] = { plugin: plugin, mapping: mapping, data: data };
 };
 
 /**
@@ -105,7 +94,7 @@ PluginCache.hasCustom = function (key)
  * 
  * @param {string} key - The key of the core plugin to get.
  *
- * @return {CorePluginContainer} The core plugin object.
+ * @return {Phaser.Types.Plugins.CorePluginContainer} The core plugin object.
  */
 PluginCache.getCore = function (key)
 {
@@ -120,7 +109,7 @@ PluginCache.getCore = function (key)
  * 
  * @param {string} key - The key of the custom plugin to get.
  *
- * @return {CustomPluginContainer} The custom plugin object.
+ * @return {Phaser.Types.Plugins.CustomPluginContainer} The custom plugin object.
  */
 PluginCache.getCustom = function (key)
 {
@@ -171,6 +160,43 @@ PluginCache.removeCustom = function (key)
     if (customPlugins.hasOwnProperty(key))
     {
         delete customPlugins[key];
+    }
+};
+
+/**
+ * Removes all Core Plugins.
+ * 
+ * This includes all of the internal system plugins that Phaser needs, like the Input Plugin and Loader Plugin.
+ * So be sure you only call this if you do not wish to run Phaser again.
+ *
+ * @method Phaser.Plugins.PluginCache.destroyCorePlugins
+ * @since 3.12.0
+ */
+PluginCache.destroyCorePlugins = function ()
+{
+    for (var key in corePlugins)
+    {
+        if (corePlugins.hasOwnProperty(key))
+        {
+            delete corePlugins[key];
+        }
+    }
+};
+
+/**
+ * Removes all Custom Plugins.
+ *
+ * @method Phaser.Plugins.PluginCache.destroyCustomPlugins
+ * @since 3.12.0
+ */
+PluginCache.destroyCustomPlugins = function ()
+{
+    for (var key in customPlugins)
+    {
+        if (customPlugins.hasOwnProperty(key))
+        {
+            delete customPlugins[key];
+        }
     }
 };
 

@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -28,9 +28,7 @@ var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, ca
         return;
     }
 
-    var ctx = renderer.gameContext;
-
-    //  Alpha
+    var ctx = renderer.currentContext;
 
     var alpha = camera.alpha * src.alpha;
 
@@ -39,26 +37,23 @@ var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, ca
         //  Nothing to see, so abort early
         return;
     }
-    else if (renderer.currentAlpha !== alpha)
-    {
-        renderer.currentAlpha = alpha;
-        ctx.globalAlpha = alpha;
-    }
 
-    //  Blend Mode
+    //  Blend Mode + Scale Mode
+    ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
 
-    renderer.setBlendMode(src.blendMode);
+    ctx.imageSmoothingEnabled = !(!renderer.antialias || src.frame.source.scaleMode);
 
     var cameraScrollX = src.x - camera.scrollX * src.scrollFactorX;
     var cameraScrollY = src.y - camera.scrollY * src.scrollFactorY;
 
     ctx.save();
 
-    if (parentMatrix !== undefined)
+    if (parentMatrix)
     {
-        var matrix = parentMatrix.matrix;
-        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+        parentMatrix.copyToContext(ctx);
     }
+
+    var roundPixels = camera.roundPixels;
 
     //  Render bobs
     for (var i = 0; i < list.length; i++)
@@ -78,34 +73,47 @@ var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, ca
         {
             continue;
         }
-        else if (renderer.currentAlpha !== bobAlpha)
-        {
-            renderer.currentAlpha = bobAlpha;
-            ctx.globalAlpha = bobAlpha;
-        }
+
+        ctx.globalAlpha = bobAlpha;
     
         if (!flip)
         {
-            renderer.blitImage(dx + bob.x + cameraScrollX, dy + bob.y + cameraScrollY, bob.frame);
+            if (roundPixels)
+            {
+                dx = Math.round(dx);
+                dy = Math.round(dy);
+            }
+
+            ctx.drawImage(
+                frame.source.image,
+                cd.x,
+                cd.y,
+                cd.width,
+                cd.height,
+                dx + bob.x + cameraScrollX,
+                dy + bob.y + cameraScrollY,
+                cd.width,
+                cd.height
+            );
         }
         else
         {
             if (bob.flipX)
             {
                 fx = -1;
-                dx -= cd.dWidth;
+                dx -= cd.width;
             }
 
             if (bob.flipY)
             {
                 fy = -1;
-                dy -= cd.dHeight;
+                dy -= cd.height;
             }
 
             ctx.save();
             ctx.translate(bob.x + cameraScrollX, bob.y + cameraScrollY);
             ctx.scale(fx, fy);
-            ctx.drawImage(frame.source.image, cd.sx, cd.sy, cd.sWidth, cd.sHeight, dx, dy, cd.dWidth, cd.dHeight);
+            ctx.drawImage(frame.source.image, cd.x, cd.y, cd.width, cd.height, dx, dy, cd.width, cd.height);
             ctx.restore();
         }
     }

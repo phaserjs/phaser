@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
@@ -13,6 +13,7 @@ module.exports = {
     Format: require('./Format'),
     Pad: require('./Pad'),
     Reverse: require('./Reverse'),
-    UppercaseFirst: require('./UppercaseFirst')
+    UppercaseFirst: require('./UppercaseFirst'),
+    UUID: require('./UUID')
 
 };

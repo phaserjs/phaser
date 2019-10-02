@@ -1,23 +1,23 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var GetMagnitude = require('./GetMagnitude');
 
 /**
- * [description]
+ * Changes the magnitude (length) of a two-dimensional vector without changing its direction.
  *
  * @function Phaser.Geom.Point.SetMagnitude
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Point} O - [point,$return]
  *
- * @param {Phaser.Geom.Point} point - [description]
- * @param {number} magnitude - [description]
+ * @param {Phaser.Geom.Point} point - The Point to treat as the end point of the vector.
+ * @param {number} magnitude - The new magnitude of the vector.
  *
- * @return {Phaser.Geom.Point} [description]
+ * @return {Phaser.Geom.Point} The modified Point.
  */
 var SetMagnitude = function (point, magnitude)
 {

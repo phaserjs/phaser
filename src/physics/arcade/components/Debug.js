@@ -1,26 +1,29 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * [description]
+ * Provides methods used for setting the debug properties of an Arcade Physics Body.
  *
- * @name Phaser.Physics.Arcade.Components.Debug
+ * @namespace Phaser.Physics.Arcade.Components.Debug
  * @since 3.0.0
  */
 var Debug = {
 
     /**
-     * [description]
+     * Sets the debug values of this body.
+     * 
+     * Bodies will only draw their debug if debug has been enabled for Arcade Physics as a whole.
+     * Note that there is a performance cost in drawing debug displays. It should never be used in production.
      *
      * @method Phaser.Physics.Arcade.Components.Debug#setDebug
      * @since 3.0.0
      *
-     * @param {boolean} showBody - [description]
-     * @param {boolean} showVelocity - [description]
-     * @param {number} bodyColor - [description]
+     * @param {boolean} showBody - Set to `true` to have this body render its outline to the debug display.
+     * @param {boolean} showVelocity - Set to `true` to have this body render a velocity marker to the debug display.
+     * @param {number} bodyColor - The color of the body outline when rendered to the debug display.
      *
      * @return {this} This Game Object.
      */
@@ -34,12 +37,12 @@ var Debug = {
     },
 
     /**
-     * [description]
+     * Sets the color of the body outline when it renders to the debug display.
      *
      * @method Phaser.Physics.Arcade.Components.Debug#setDebugBodyColor
      * @since 3.0.0
      *
-     * @param {number} value - [description]
+     * @param {number} value - The color of the body outline when rendered to the debug display.
      *
      * @return {this} This Game Object.
      */
@@ -51,7 +54,7 @@ var Debug = {
     },
 
     /**
-     * [description]
+     * Set to `true` to have this body render its outline to the debug display.
      *
      * @name Phaser.Physics.Arcade.Components.Debug#debugShowBody
      * @type {boolean}
@@ -72,7 +75,7 @@ var Debug = {
     },
 
     /**
-     * [description]
+     * Set to `true` to have this body render a velocity marker to the debug display.
      *
      * @name Phaser.Physics.Arcade.Components.Debug#debugShowVelocity
      * @type {boolean}
@@ -93,7 +96,7 @@ var Debug = {
     },
 
     /**
-     * [description]
+     * The color of the body outline when it renders to the debug display.
      *
      * @name Phaser.Physics.Arcade.Components.Debug#debugBodyColor
      * @type {number}

@@ -1,18 +1,18 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * [description]
+ * Calculates the width/height ratio of a rectangle.
  *
  * @function Phaser.Geom.Rectangle.GetAspectRatio
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Rectangle} rect - [description]
+ * @param {Phaser.Geom.Rectangle} rect - The rectangle.
  *
- * @return {number} [description]
+ * @return {number} The width/height ratio of the rectangle.
  */
 var GetAspectRatio = function (rect)
 {

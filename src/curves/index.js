@@ -1,18 +1,11 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * @namespace Phaser.Curves
- */
-
-/**
- * @typedef {object} JSONCurve
- *
- * @property {string} type - The of the curve
- * @property {number[]} points - The arrays of points like `[x1, y1, x2, y2]`
  */
 
 module.exports = {

@@ -1,7 +1,7 @@
 /**
  * @author       Joachim Grill <joachim@codeandweb.com>
  * @copyright    2018 CodeAndWeb GmbH
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Bodies = require('./lib/factory/Bodies');

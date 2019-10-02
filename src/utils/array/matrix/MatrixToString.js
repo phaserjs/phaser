@@ -1,24 +1,24 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Pad = require('../../string/Pad');
 var CheckMatrix = require('./CheckMatrix');
 
-//  Generates a string (which you can pass to console.log) from the given
-//  Array Matrix.
-
 /**
- * [description]
+ * Generates a string (which you can pass to console.log) from the given Array Matrix.
  *
  * @function Phaser.Utils.Array.Matrix.MatrixToString
  * @since 3.0.0
  *
- * @param {array} matrix - [description]
+ * @generic T
+ * @genericUse {T[][]} - [matrix]
  *
- * @return {string} [description]
+ * @param {T[][]} [matrix] - A 2-dimensional array.
+ *
+ * @return {string} A string representing the matrix.
  */
 var MatrixToString = function (matrix)
 {

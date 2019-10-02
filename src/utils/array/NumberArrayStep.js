@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var RoundAwayFromZero = require('../../math/RoundAwayFromZero');
@@ -41,7 +41,7 @@ var RoundAwayFromZero = require('../../math/RoundAwayFromZero');
  * @param {number} [end=null] - The end of the range.
  * @param {number} [step=1] - The value to increment or decrement by.
  *
- * @return {number[]} [description]
+ * @return {number[]} The array of number values.
  */
 var NumberArrayStep = function (start, end, step)
 {

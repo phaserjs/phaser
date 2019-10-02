@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var CONST = require('./const');
@@ -12,6 +12,8 @@ var Extend = require('../utils/object/Extend');
  */
 
 var Loader = {
+
+    Events: require('./events'),
 
     FileTypes: require('./filetypes'),
 

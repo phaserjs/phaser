@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Circle = require('../circle/Circle');
@@ -9,17 +9,17 @@ var Circle = require('../circle/Circle');
 //  Adapted from https://gist.github.com/mutoo/5617691
 
 /**
- * [description]
+ * Finds the circumscribed circle (circumcircle) of a Triangle object. The circumcircle is the circle which touches all of the triangle's vertices.
  *
  * @function Phaser.Geom.Triangle.CircumCircle
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Circle} O - [out,$return]
  *
- * @param {Phaser.Geom.Triangle} triangle - [description]
- * @param {Phaser.Geom.Circle} [out] - [description]
+ * @param {Phaser.Geom.Triangle} triangle - The Triangle to use as input.
+ * @param {Phaser.Geom.Circle} [out] - An optional Circle to store the result in.
  *
- * @return {Phaser.Geom.Circle} [description]
+ * @return {Phaser.Geom.Circle} The updated `out` Circle, or a new Circle if none was provided.
  */
 var CircumCircle = function (triangle, out)
 {

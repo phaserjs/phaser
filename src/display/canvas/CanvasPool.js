@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var CONST = require('../../const');
@@ -38,7 +38,7 @@ var CanvasPool = function ()
      * @param {integer} [canvasType=Phaser.CANVAS] - The type of the Canvas. Either `Phaser.CANVAS` or `Phaser.WEBGL`.
      * @param {boolean} [selfParent=false] - Use the generated Canvas element as the parent?
      *
-     * @return {HTMLCanvasElement} [description]
+     * @return {HTMLCanvasElement} The canvas element that was created or pulled from the pool
      */
     var create = function (parent, width, height, canvasType, selfParent)
     {
@@ -98,7 +98,7 @@ var CanvasPool = function ()
      * @param {integer} [width=1] - The width of the Canvas.
      * @param {integer} [height=1] - The height of the Canvas.
      *
-     * @return {HTMLCanvasElement} [description]
+     * @return {HTMLCanvasElement} The created canvas.
      */
     var create2D = function (parent, width, height)
     {
@@ -115,7 +115,7 @@ var CanvasPool = function ()
      * @param {integer} [width=1] - The width of the Canvas.
      * @param {integer} [height=1] - The height of the Canvas.
      *
-     * @return {HTMLCanvasElement} [description]
+     * @return {HTMLCanvasElement} The created WebGL canvas.
      */
     var createWebGL = function (parent, width, height)
     {
@@ -130,7 +130,7 @@ var CanvasPool = function ()
      *
      * @param {integer} [canvasType=Phaser.CANVAS] - The type of the Canvas. Either `Phaser.CANVAS` or `Phaser.WEBGL`.
      *
-     * @return {HTMLCanvasElement} [description]
+     * @return {HTMLCanvasElement} The first free canvas, or `null` if a WebGL canvas was requested or if the pool doesn't have free canvases.
      */
     var first = function (canvasType)
     {
@@ -161,7 +161,7 @@ var CanvasPool = function ()
      * @function Phaser.Display.Canvas.CanvasPool.remove
      * @since 3.0.0
      *
-     * @param {*} parent - [description]
+     * @param {*} parent - The canvas or the parent of the canvas to free.
      */
     var remove = function (parent)
     {
@@ -185,7 +185,7 @@ var CanvasPool = function ()
      * @function Phaser.Display.Canvas.CanvasPool.total
      * @since 3.0.0
      *
-     * @return {integer} [description]
+     * @return {integer} The number of used canvases.
      */
     var total = function ()
     {
@@ -208,7 +208,7 @@ var CanvasPool = function ()
      * @function Phaser.Display.Canvas.CanvasPool.free
      * @since 3.0.0
      *
-     * @return {integer} [description]
+     * @return {integer} The number of free canvases.
      */
     var free = function ()
     {
