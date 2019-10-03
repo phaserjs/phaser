@@ -1497,9 +1497,10 @@ var WebGLRenderer = new Class({
      *
      * @return {WebGLTexture} The WebGLTexture that was created.
      */
-    createTexture2D: function (mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma)
+    createTexture2D: function (mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma, forceSize)
     {
         pma = (pma === undefined || pma === null) ? true : pma;
+        if (forceSize === undefined) { forceSize = false; }
 
         var gl = this.gl;
         var texture = gl.createTexture();
@@ -1518,10 +1519,13 @@ var WebGLRenderer = new Class({
         }
         else
         {
-            gl.texImage2D(gl.TEXTURE_2D, mipLevel, format, format, gl.UNSIGNED_BYTE, pixels);
+            if (!forceSize)
+            {
+                width = pixels.width;
+                height = pixels.height;
+            }
 
-            width = pixels.width;
-            height = pixels.height;
+            gl.texImage2D(gl.TEXTURE_2D, mipLevel, format, format, gl.UNSIGNED_BYTE, pixels);
         }
 
         this.setTexture2D(null, 0);
@@ -2312,12 +2316,67 @@ var WebGLRenderer = new Class({
         {
             this.setTexture2D(dstTexture, 0);
 
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, srcCanvas);
+            if (srcCanvas.width > 0 && srcCanvas.height > 0)
+            {
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, srcCanvas);
+            }
 
             dstTexture.width = srcCanvas.width;
             dstTexture.height = srcCanvas.height;
 
             this.setTexture2D(null, 0);
+        }
+
+        return dstTexture;
+    },
+
+    /**
+     * Creates a WebGL Texture based on the given canvas element.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#videoToTexture
+     * @since 3.0.0
+     *
+     * @param {HTMLVideoElement} srcVideo - The Video element that will be used to populate the texture.
+     * @param {WebGLTexture} [dstTexture] - Is this going to replace an existing texture? If so, pass it here.
+     * @param {boolean} [noRepeat=false] - Should this canvas never be allowed to set REPEAT? (such as for Text objects)
+     *
+     * @return {WebGLTexture} The newly created WebGL Texture.
+     */
+    videoToTexture: function (srcVideo, dstTexture, noRepeat)
+    {
+        if (noRepeat === undefined) { noRepeat = false; }
+
+        var gl = this.gl;
+
+        var width = srcVideo.videoWidth;
+        var height = srcVideo.videoHeight;
+
+        if (!dstTexture)
+        {
+            var wrapping = gl.CLAMP_TO_EDGE;
+
+            if (!noRepeat && IsSizePowerOfTwo(width, height))
+            {
+                wrapping = gl.REPEAT;
+            }
+
+            var filter = (this.config.antialias) ? gl.LINEAR : gl.NEAREST;
+
+            dstTexture = this.createTexture2D(0, filter, filter, wrapping, wrapping, gl.RGBA, srcVideo, width, height, true, true);
+        }
+        else if (dstTexture)
+        {
+            if (width > 0 && height > 0)
+            {
+                this.setTexture2D(dstTexture, 0);
+
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, srcVideo);
+
+                dstTexture.width = width;
+                dstTexture.height = height;
+
+                this.setTexture2D(null, 0);
+            }
         }
 
         return dstTexture;
