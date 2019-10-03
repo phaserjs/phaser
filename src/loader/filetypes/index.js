@@ -38,6 +38,7 @@ module.exports = {
     TilemapImpactFile: require('./TilemapImpactFile'),
     TilemapJSONFile: require('./TilemapJSONFile'),
     UnityAtlasFile: require('./UnityAtlasFile'),
+    VideoFile: require('./VideoFile'),
     XMLFile: require('./XMLFile')
 
 };
