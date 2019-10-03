@@ -132,6 +132,15 @@ var TextureSource = new Class({
         this.isCanvas = (source instanceof HTMLCanvasElement);
 
         /**
+         * Is the source image a Video Element?
+         *
+         * @name Phaser.Textures.TextureSource#isVideo
+         * @type {boolean}
+         * @since 3.20.0
+         */
+        this.isVideo = (source instanceof HTMLVideoElement);
+
+        /**
          * Is the source image a Render Texture?
          *
          * @name Phaser.Textures.TextureSource#isRenderTexture
@@ -186,7 +195,7 @@ var TextureSource = new Class({
         {
             if (this.renderer.gl)
             {
-                if (this.isCanvas)
+                if (this.isCanvas || this.isVideo)
                 {
                     this.glTexture = this.renderer.canvasToTexture(this.image);
                 }
@@ -248,7 +257,7 @@ var TextureSource = new Class({
      */
     update: function ()
     {
-        if (this.renderer.gl && this.isCanvas)
+        if (this.renderer.gl && (this.isCanvas || this.isVideo))
         {
             this.glTexture = this.renderer.canvasToTexture(this.image, this.glTexture);
         }
