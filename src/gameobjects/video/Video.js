@@ -215,6 +215,8 @@ var Video = new Class({
          */
         this._crop = this.resetCropObject();
 
+        this._textureState = 0;
+
         this.setTexture(textureKey);
         this.setPosition(x, y);
         this.setSizeToFrame();
@@ -296,6 +298,8 @@ var Video = new Class({
 
         if (this.touchLocked)
         {
+            console.log('TL bail out');
+
             this._pending = true;
         }
         else
@@ -305,26 +309,61 @@ var Video = new Class({
             if (this.video.readyState !== 4)
             {
                 this.retry = this.retryLimit;
+
                 this._retryID = window.setTimeout(this.checkVideoProgress.bind(this), this.retryInterval);
+
+                this.video.play();
             }
             else
             {
+                this._textureState = 0;
                 this._setPlay = false;
                 this._setUpdate = false;
 
                 this._playCallback = this.playHandler.bind(this);
                 this._timeUpdateCallback = this.timeUpdateHandler.bind(this);
 
-                this.video.addEventListener('playing', this._playCallback, true);
                 this.video.addEventListener('timeupdate', this._timeUpdateCallback, true);
+
+                if (typeof Promise !== 'undefined')
+                {
+                    console.log('video play promise');
+
+                    this.video.play()
+                        .then(this.playSuccessHandler.bind(this))
+                        .catch(this.playErrorHandler.bind(this));
+                }
+                else
+                {
+                    this.video.addEventListener('playing', this._playCallback, true);
+
+                    // this.video.addEventListener('timeupdate', this._timeUpdateCallback, true);
+    
+                    this.video.play();
+                }
             }
-
-            this.video.play();
-
-            // this.onPlay.dispatch(this, loop, playbackRate);
         }
 
         return this;
+    },
+
+    playSuccessHandler: function ()
+    {
+        console.log('playSuccessHandler');
+
+        if (this._textureState === 0)
+        {
+            this._textureState = 1;
+        }
+        else
+        {
+            this._textureState = 2;
+        }
+    },
+
+    playErrorHandler: function ()
+    {
+        console.log('playErrorHandler');
     },
 
     /**
@@ -342,22 +381,38 @@ var Video = new Class({
 
     timeUpdateHandler: function ()
     {
-        if (!this._setUpdate)
-        {
+        // if (!this._setUpdate)
+        // {
             console.log('>>> timeUpdateHandler <<<');
 
-            this._setUpdate = true;
+            // this._setUpdate = true;
 
-            // this.video.removeEventListener('timeupdate', this._timeUpdateCallback, true);
-    
-            if (this._setPlay && this._setUpdate)
+            if (this._textureState === 1)
             {
-                this.updateTexture();
-    
-                this.texture = this.videoTexture;
-                this.frame = this.videoTexture.get();
+                console.log('>>> timeUpdateHandler completed <<<');
+
+                this.video.removeEventListener('timeupdate', this._timeUpdateCallback, true);
+
+                this._textureState = 2;
             }
-        }
+            else if (this._textureState === 0)
+            {
+                console.log('>>> timeUpdateHandler called before play handler <<<');
+
+                this.video.removeEventListener('timeupdate', this._timeUpdateCallback, true);
+
+                this._textureState = 1;
+            }
+    
+            // if (this._setPlay && this._setUpdate)
+            // {
+                // this._textureState = 2;
+
+                // console.log('>>> timeUpdateHandler ---- swap it <<<');
+
+                // this.playSuccessHandler();
+            // }
+        // }
     },
 
     /**
@@ -368,18 +423,21 @@ var Video = new Class({
      */
     playHandler: function ()
     {
-        console.log('>>> playHandler <<<');
-        
-        this._setPlay = true;
-
-        this.video.removeEventListener('playing', this._playCallback, true);
-
-        if (this._setPlay && this._setUpdate)
+        if (!this._setPlay)
         {
-            this.updateTexture();
+            console.log('>>> playHandler <<<');
+        
+            this._setPlay = true;
+    
+            this.video.removeEventListener('playing', this._playCallback, true);
+    
+            if (this._setPlay && this._setUpdate)
+            {
+                this.texture = this.videoTexture;
+                this.frame = this.videoTexture.get();
 
-            this.texture = this.videoTexture;
-            this.frame = this.videoTexture.get();
+                // this.playSuccessHandler();
+            }
         }
     },
 
@@ -575,7 +633,7 @@ var Video = new Class({
         //  First we'll update our current CanvasTexture
         if (newSize)
         {
-            this.snapshot.setSize(width, height);
+            // this.snapshot.setSize(width, height);
         }
 
         if (!this.videoTexture)
@@ -597,21 +655,26 @@ var Video = new Class({
             textureSource.height = height;
         }
 
-        // this.texture = this.videoTexture;
-        // this.frame = this.videoTexture.get();
-
-        this.setSizeToFrame();
-        this.setOriginFromFrame();
-
-        // if (this._autoplay)
-        // {
-        //     this.video.play();
-        // }
+        // this.setSizeToFrame();
+        // this.setOriginFromFrame();
     },
 
     preUpdate: function ()
     {
-        if (this.videoTextureSource && this.playing)
+        if (this._textureState === 2)
+        {
+            this.updateTexture();
+
+            this.texture = this.videoTexture;
+            this.frame = this.videoTexture.get();
+
+            this.setSizeToFrame();
+            this.setOriginFromFrame();
+    
+            this._textureState = 3;
+        }
+
+        if (this._textureState === 3 && this.playing)
         {
             this.videoTextureSource.update();
         }
