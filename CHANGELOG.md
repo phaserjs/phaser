@@ -84,6 +84,7 @@ In combination these updates fix issues #4732 and #4672. My thanks to @BenjaminD
 * The `BasePlugin.boot` method has been removed and moved to `ScenePlugin.boot` as it's a Scene-level method only (thanks @samme)
 * The `BasePlugin.scene` and `BasePlugin.systems` properties have been removed and are defined in `ScenePlugin`, as they are Scene-level properties only (thanks @samme)
 * The `Tween.getValue` method has been removed. It was a legacy function from Phaser 2 and always only returned the first TweenData from the data array, ignoring any subsequent properties or targets, making it redundant. Fix #4717 (thanks @chepe263)
+* `TextureSource.isVideo` is a new boolean property that is set when the Texture Source is backed by an HTML Video Element.
 
 ### Bug Fixes
 
