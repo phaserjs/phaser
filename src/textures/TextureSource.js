@@ -12,7 +12,8 @@ var ScaleModes = require('../renderer/ScaleModes');
 /**
  * @classdesc
  * A Texture Source is the encapsulation of the actual source data for a Texture.
- * This is typically an Image Element, loaded from the file system or network, or a Canvas Element.
+ * 
+ * This is typically an Image Element, loaded from the file system or network, a Canvas Element or a Video Element.
  *
  * A Texture can contain multiple Texture Sources, which only happens when a multi-atlas is loaded.
  *
@@ -22,7 +23,7 @@ var ScaleModes = require('../renderer/ScaleModes');
  * @since 3.0.0
  *
  * @param {Phaser.Textures.Texture} texture - The Texture this TextureSource belongs to.
- * @param {(HTMLImageElement|HTMLCanvasElement|Phaser.GameObjects.RenderTexture|WebGLTexture)} source - The source image data.
+ * @param {(HTMLImageElement|HTMLCanvasElement|HTMLVideoElement|Phaser.GameObjects.RenderTexture|WebGLTexture)} source - The source image data.
  * @param {integer} [width] - Optional width of the source image. If not given it's derived from the source itself.
  * @param {integer} [height] - Optional height of the source image. If not given it's derived from the source itself.
  */
@@ -54,20 +55,22 @@ var TextureSource = new Class({
 
         /**
          * The source of the image data.
-         * This is either an Image Element, a Canvas Element, a RenderTexture or a WebGLTexture.
+         * 
+         * This is either an Image Element, a Canvas Element, a Video Element, a RenderTexture or a WebGLTexture.
          *
          * @name Phaser.Textures.TextureSource#source
-         * @type {(HTMLImageElement|HTMLCanvasElement|Phaser.GameObjects.RenderTexture|WebGLTexture)}
+         * @type {(HTMLImageElement|HTMLCanvasElement|HTMLVideoElement|Phaser.GameObjects.RenderTexture|WebGLTexture)}
          * @since 3.12.0
          */
         this.source = source;
 
         /**
          * The image data.
-         * This is either an Image element or a Canvas element.
+         * 
+         * This is either an Image element, Canvas element or a Video Element.
          *
          * @name Phaser.Textures.TextureSource#image
-         * @type {(HTMLImageElement|HTMLCanvasElement)}
+         * @type {(HTMLImageElement|HTMLCanvasElement|HTMLVideoElement)}
          * @since 3.0.0
          */
         this.image = source;
@@ -100,7 +103,7 @@ var TextureSource = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.width = width || source.naturalWidth || source.width || 0;
+        this.width = width || source.naturalWidth || source.videoWidth || source.width || 0;
 
         /**
          * The height of the source image. If not specified in the constructor it will check
@@ -110,7 +113,7 @@ var TextureSource = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.height = height || source.naturalHeight || source.height || 0;
+        this.height = height || source.naturalHeight || source.videoHeight || source.height || 0;
 
         /**
          * The Scale Mode the image will use when rendering.
@@ -195,9 +198,13 @@ var TextureSource = new Class({
         {
             if (this.renderer.gl)
             {
-                if (this.isCanvas || this.isVideo)
+                if (this.isCanvas)
                 {
                     this.glTexture = this.renderer.canvasToTexture(this.image);
+                }
+                else if (this.isVideo)
+                {
+                    this.glTexture = this.renderer.videoToTexture(this.image);
                 }
                 else if (this.isRenderTexture)
                 {
@@ -257,9 +264,15 @@ var TextureSource = new Class({
      */
     update: function ()
     {
-        if (this.renderer.gl && (this.isCanvas || this.isVideo))
+        var gl = this.renderer.gl;
+
+        if (gl && this.isCanvas)
         {
             this.glTexture = this.renderer.canvasToTexture(this.image, this.glTexture);
+        }
+        else if (gl && this.isVideo)
+        {
+            this.glTexture = this.renderer.videoToTexture(this.image, this.glTexture);
         }
     },
 
