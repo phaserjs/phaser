@@ -95,6 +95,15 @@ var CacheManager = new Class({
         this.audio = new BaseCache();
 
         /**
+         * A Cache storing all non-streaming video files, typically added via the Loader.
+         *
+         * @name Phaser.Cache.CacheManager#video
+         * @type {Phaser.Cache.BaseCache}
+         * @since 3.20.0
+         */
+        this.video = new BaseCache();
+
+        /**
          * A Cache storing all text files, typically added via the Loader.
          *
          * @name Phaser.Cache.CacheManager#text
@@ -190,6 +199,7 @@ var CacheManager = new Class({
             'physics',
             'shader',
             'audio',
+            'video',
             'text',
             'html',
             'obj',
