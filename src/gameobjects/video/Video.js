@@ -13,6 +13,8 @@ var VideoRender = require('./VideoRender');
 /**
  * @classdesc
  * A Video Game Object.
+ * 
+ * https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement
  *
  * @class Video
  * @extends Phaser.GameObjects.GameObject
@@ -65,7 +67,7 @@ var Video = new Class({
 
     initialize:
 
-    function Video (scene, x, y, key)
+    function Video (scene, x, y, key, url)
     {
         GameObject.call(this, scene, 'Video');
 
@@ -213,17 +215,6 @@ var Video = new Class({
          */
         this._crop = this.resetCropObject();
 
-        // if (this.game.device.needsTouchUnlock())
-        // {
-        //     this.setTouchLock();
-        // }
-        // else if (_video)
-        // {
-        //     _video.locked = false;
-        // }
-    
-
-
         this.setTexture(textureKey);
         this.setPosition(x, y);
         this.setSizeToFrame();
@@ -235,6 +226,20 @@ var Video = new Class({
         ctx.fillRect(0, 0, 8, 8);
 
         this.texture.refresh();
+
+        if (key)
+        {
+            var _video = scene.sys.cache.video.get(key);
+
+            if (_video)
+            {
+                this.video = _video;
+            }
+        }
+        else if (url)
+        {
+            this.createVideoFromURL(url);
+        }
     },
 
     /**
@@ -251,6 +256,8 @@ var Video = new Class({
     {
         if (loop === undefined) { loop = false; }
         if (playbackRate === undefined) { playbackRate = 1; }
+
+        console.log('Video.play - readystate', this.video.readyState);
 
         if (this._pendingChangeSource)
         {
@@ -295,18 +302,21 @@ var Video = new Class({
         {
             this._pending = false;
 
-            if (this.key !== null)
+            if (this.video.readyState !== 4)
             {
-                if (this.video.readyState !== 4)
-                {
-                    this.retry = this.retryLimit;
-                    this._retryID = window.setTimeout(this.checkVideoProgress.bind(this), this.retryInterval);
-                }
-                else
-                {
-                    this._playCallback = this.playHandler.bind(this);
-                    this.video.addEventListener('playing', this._playCallback, true);
-                }
+                this.retry = this.retryLimit;
+                this._retryID = window.setTimeout(this.checkVideoProgress.bind(this), this.retryInterval);
+            }
+            else
+            {
+                this._setPlay = false;
+                this._setUpdate = false;
+
+                this._playCallback = this.playHandler.bind(this);
+                this._timeUpdateCallback = this.timeUpdateHandler.bind(this);
+
+                this.video.addEventListener('playing', this._playCallback, true);
+                this.video.addEventListener('timeupdate', this._timeUpdateCallback, true);
             }
 
             this.video.play();
@@ -318,6 +328,39 @@ var Video = new Class({
     },
 
     /**
+     * Called when the video completes playback (reaches and ended state).
+     * Dispatches the Video.onComplete signal.
+     *
+     * @method Phaser.Video#complete
+     */
+    complete: function ()
+    {
+        console.log('------ complete');
+        
+        // this.onComplete.dispatch(this);
+    },
+
+    timeUpdateHandler: function ()
+    {
+        if (!this._setUpdate)
+        {
+            console.log('>>> timeUpdateHandler <<<');
+
+            this._setUpdate = true;
+
+            // this.video.removeEventListener('timeupdate', this._timeUpdateCallback, true);
+    
+            if (this._setPlay && this._setUpdate)
+            {
+                this.updateTexture();
+    
+                this.texture = this.videoTexture;
+                this.frame = this.videoTexture.get();
+            }
+        }
+    },
+
+    /**
      * Called when the video starts to play. Updates the texture.
      *
      * @method Phaser.Video#playHandler
@@ -325,9 +368,19 @@ var Video = new Class({
      */
     playHandler: function ()
     {
+        console.log('>>> playHandler <<<');
+        
+        this._setPlay = true;
+
         this.video.removeEventListener('playing', this._playCallback, true);
 
-        this.updateTexture();
+        if (this._setPlay && this._setUpdate)
+        {
+            this.updateTexture();
+
+            this.texture = this.videoTexture;
+            this.frame = this.videoTexture.get();
+        }
     },
 
     /**
@@ -414,6 +467,29 @@ var Video = new Class({
     },
 
     /**
+     * Creates a new Video element from the given Blob. The Blob must contain the video data in the correct encoded format.
+     * This method is typically called by the Phaser.Loader and Phaser.Cache for you, but is exposed publicly for convenience.
+     *
+     * @method Phaser.Video#createVideoFromBlob
+     * @param {Blob} blob - The Blob containing the video data.
+     * @return {Phaser.Video} This Video object for method chaining.
+     */
+    createVideoFromBlob: function (blob)
+    {
+        var _this = this;
+
+        this.video = document.createElement('video');
+        this.video.controls = false;
+        this.video.setAttribute('autoplay', 'autoplay');
+        this.video.setAttribute('playsinline', 'playsinline');
+        this.video.addEventListener('loadeddata', function (event) { _this.updateTexture(event); }, true);
+        this.video.src = window.URL.createObjectURL(blob);
+        this.video.canplay = true;
+
+        return this;
+    },
+
+    /**
      * Creates a new Video element from the given URL.
      *
      * @method Phaser.Video#createVideoFromURL
@@ -454,6 +530,8 @@ var Video = new Class({
      */
     checkVideoProgress: function ()
     {
+        console.log('checkVideoProgress');
+
         if (this.video.readyState === 4)
         {
             this._pendingChangeSource = false;
@@ -492,20 +570,26 @@ var Video = new Class({
         if (width === undefined || width === null) { width = this.video.videoWidth; newSize = true; }
         if (height === undefined || height === null) { height = this.video.videoHeight; }
 
+        console.log('Video.updateTexture called', width, height);
+
         //  First we'll update our current CanvasTexture
         if (newSize)
         {
-            this.texture.setSize(width, height);
+            this.snapshot.setSize(width, height);
         }
 
         if (!this.videoTexture)
         {
+            console.log('Creating videoTexture');
+            
             this.videoTexture = this.scene.sys.textures.create(UUID(), this.video, width, height);
             this.videoTextureSource = this.videoTexture.source[0];
             this.videoTexture.add('__BASE', 0, 0, 0, width, height);
         }
         else
         {
+            console.log('Assigning videoTexture');
+
             var textureSource = this.videoTextureSource;
 
             textureSource.source = this.video;
@@ -513,20 +597,16 @@ var Video = new Class({
             textureSource.height = height;
         }
 
-        //  Swap out the canvas texture for the video texture
-        // this.canvasTexture = this.texture;
-        // this.canvasFrame = this.frame;
-
-        this.texture = this.videoTexture;
-        this.frame = this.videoTexture.get();
+        // this.texture = this.videoTexture;
+        // this.frame = this.videoTexture.get();
 
         this.setSizeToFrame();
         this.setOriginFromFrame();
 
-        if (this._autoplay)
-        {
-            this.video.play();
-        }
+        // if (this._autoplay)
+        // {
+        //     this.video.play();
+        // }
     },
 
     preUpdate: function ()
@@ -733,7 +813,7 @@ var Video = new Class({
      */
     isPlaying: function ()
     {
-        return (this.video) ? !(this.video.paused && this.video.ended) : false;
+        return (this.video) ? !(this.video.paused || this.video.ended) : false;
     },
     
     /**
@@ -829,7 +909,7 @@ var Video = new Class({
 
         get: function ()
         {
-            return (this.video) ? !(this.video.paused && this.video.ended) : false;
+            return (this.video) ? !(this.video.paused || this.video.ended) : false;
         }
 
     }
