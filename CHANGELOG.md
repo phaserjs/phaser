@@ -2,6 +2,18 @@
 
 ## Version 3.20.0 - Fitoria - in dev
 
+### Video Game Object
+
+* `WebGLRenderer.videoToTexture` is a new method that will create or update a WebGL Texture from the given Video Element.
+* `TextureSource.isVideo` is a new boolean property that is set when the Texture Source is backed by an HTML Video Element.
+* `Cache.video` is a new global cache that store loaded Video content.
+* `Device.Video.h264Video` has been renamed to `Device.Video.h264` to keep it in-line with the Audio Device names.
+* `Device.Video.hlsVideo` has been renamed to `Device.Video.hls` to keep it in-line with the Audio Device names.
+* `Device.Video.mp4Video` has been renamed to `Device.Video.mp4` to keep it in-line with the Audio Device names.
+* `Device.Video.oggVideo` has been renamed to `Device.Video.ogg` to keep it in-line with the Audio Device names.
+* `Device.Video.vp9Video` has been renamed to `Device.Video.vp9` to keep it in-line with the Audio Device names.
+* `Device.Video.webmVideo` has been renamed to `Device.Video.webm` to keep it in-line with the Audio Device names.
+
 ### Spine Plugin
 
 * The Spine runtimes have been updated to 3.8. Please note that Spine runtimes are _not_ backwards compatible. Animations exported with Spine 3.7 (or earlier) will need re-exporting with 3.8 in order to work with the new runtimes.
@@ -84,7 +96,7 @@ In combination these updates fix issues #4732 and #4672. My thanks to @BenjaminD
 * The `BasePlugin.boot` method has been removed and moved to `ScenePlugin.boot` as it's a Scene-level method only (thanks @samme)
 * The `BasePlugin.scene` and `BasePlugin.systems` properties have been removed and are defined in `ScenePlugin`, as they are Scene-level properties only (thanks @samme)
 * The `Tween.getValue` method has been removed. It was a legacy function from Phaser 2 and always only returned the first TweenData from the data array, ignoring any subsequent properties or targets, making it redundant. Fix #4717 (thanks @chepe263)
-* `TextureSource.isVideo` is a new boolean property that is set when the Texture Source is backed by an HTML Video Element.
+* `WebGLRenderer.createTexture2D` has a new optional parameter `forceSize`, which will force the gl texture creation to use the dimensions passed to the method, instead of extracting them from the pixels object, if provided.
 
 ### Bug Fixes
 
