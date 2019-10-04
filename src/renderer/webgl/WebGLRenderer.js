@@ -1490,10 +1490,11 @@ var WebGLRenderer = new Class({
      * @param {integer} wrapT - Wrapping mode of the texture.
      * @param {integer} wrapS - Wrapping mode of the texture.
      * @param {integer} format - Which format does the texture use.
-     * @param {object} pixels - pixel data.
+     * @param {?object} pixels - pixel data.
      * @param {integer} width - Width of the texture in pixels.
      * @param {integer} height - Height of the texture in pixels.
-     * @param {boolean} pma - Does the texture have premultiplied alpha?
+     * @param {boolean} [pma=true] - Does the texture have premultiplied alpha?
+     * @param {boolean} [forceSize=false] - If `true` it will use the width and height passed to this method, regardless of the pixels dimension.
      *
      * @return {WebGLTexture} The WebGLTexture that was created.
      */
@@ -2331,14 +2332,14 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Creates a WebGL Texture based on the given canvas element.
+     * Creates a WebGL Texture based on the given Video element.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#videoToTexture
-     * @since 3.0.0
+     * @since 3.20.0
      *
      * @param {HTMLVideoElement} srcVideo - The Video element that will be used to populate the texture.
      * @param {WebGLTexture} [dstTexture] - Is this going to replace an existing texture? If so, pass it here.
-     * @param {boolean} [noRepeat=false] - Should this canvas never be allowed to set REPEAT? (such as for Text objects)
+     * @param {boolean} [noRepeat=false] - Should this texture never be allowed to set REPEAT?
      *
      * @return {WebGLTexture} The newly created WebGL Texture.
      */
