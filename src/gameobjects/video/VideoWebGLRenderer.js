@@ -21,7 +21,10 @@
  */
 var VideoWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    this.pipeline.batchSprite(src, camera, parentMatrix);
+    if (src.videoTexture)
+    {
+        this.pipeline.batchSprite(src, camera, parentMatrix);
+    }
 };
 
 module.exports = VideoWebGLRenderer;

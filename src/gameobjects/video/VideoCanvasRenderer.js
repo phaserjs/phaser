@@ -21,7 +21,10 @@
  */
 var VideoCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    renderer.batchSprite(src, src.frame, camera, parentMatrix);
+    if (src.videoTexture)
+    {
+        renderer.batchSprite(src, src.frame, camera, parentMatrix);
+    }
 };
 
 module.exports = VideoCanvasRenderer;
