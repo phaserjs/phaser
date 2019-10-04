@@ -312,9 +312,7 @@ var WebAudioSoundManager = new Class({
 
             this.context.close().then(function ()
             {
-
                 _this.context = null;
-
             });
         }
 
