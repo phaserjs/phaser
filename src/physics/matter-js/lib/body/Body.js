@@ -468,6 +468,7 @@ var Axes = require('../geometry/Axes');
             Axes.rotate(part.axes, delta);
             Bounds.update(part.bounds, part.vertices, body.velocity);
             if (i > 0) {
+                part.angle += body.angularVelocity;
                 Vector.rotateAbout(part.position, delta, body.position, part.position);
             }
         }
