@@ -10,6 +10,8 @@
  * They are then referenced by internal game systems and are available for you to access
  * via `this.sys.game.device.video` from within any Scene.
  * 
+ * In Phaser 3.20 the properties were renamed to drop the 'Video' suffix.
+ * 
  * @typedef {object} Phaser.Device.Video
  * @since 3.0.0
  * 
