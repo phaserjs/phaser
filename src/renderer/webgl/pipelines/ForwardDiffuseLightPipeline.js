@@ -171,7 +171,9 @@ var ForwardDiffuseLightPipeline = new Class({
             renderer.setFloat1(program, lightName + 'intensity', light.intensity);
             renderer.setFloat1(program, lightName + 'radius', light.radius);
         }
-        
+
+        this.currentNormalMapRotation = null;
+
         return this;
     },
 
@@ -438,25 +440,35 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     setNormalMapRotation: function (rotation)
     {
-        var inverseRotationMatrix = this.inverseRotationMatrix;
-
-        if (rotation)
+        if (rotation !== this.currentNormalMapRotation || this.batches.length === 0)
         {
-            var rot = -rotation;
-            var c = Math.cos(rot);
-            var s = Math.sin(rot);
+            if (this.batches.length > 0)
+            {
+                this.flush();
+            }
 
-            inverseRotationMatrix[1] = s;
-            inverseRotationMatrix[3] = -s;
-            inverseRotationMatrix[0] = inverseRotationMatrix[4] = c;
-        }
-        else
-        {
-            inverseRotationMatrix[0] = inverseRotationMatrix[4] = 1;
-            inverseRotationMatrix[1] = inverseRotationMatrix[3] = 0;
-        }
+            var inverseRotationMatrix = this.inverseRotationMatrix;
 
-        this.renderer.setMatrix3(this.program, 'uInverseRotationMatrix', false, inverseRotationMatrix);
+            if (rotation)
+            {
+                var rot = -rotation;
+                var c = Math.cos(rot);
+                var s = Math.sin(rot);
+
+                inverseRotationMatrix[1] = s;
+                inverseRotationMatrix[3] = -s;
+                inverseRotationMatrix[0] = inverseRotationMatrix[4] = c;
+            }
+            else
+            {
+                inverseRotationMatrix[0] = inverseRotationMatrix[4] = 1;
+                inverseRotationMatrix[1] = inverseRotationMatrix[3] = 0;
+            }
+
+            this.renderer.setMatrix3(this.program, 'uInverseRotationMatrix', false, inverseRotationMatrix);
+
+            this.currentNormalMapRotation = rotation;
+        }
     },
 
     /**
