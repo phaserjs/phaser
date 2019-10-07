@@ -17,6 +17,8 @@ var VideoRender = require('./VideoRender');
  * A Video Game Object.
  * 
  * https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement
+ * 
+ * https://developer.mozilla.org/en-US/docs/Web/Media/Formats
  *
  * @class Video
  * @extends Phaser.GameObjects.GameObject
@@ -220,6 +222,14 @@ var Video = new Class({
             if (_video)
             {
                 this.video = _video;
+
+                console.log(_video);
+                console.log(_video.videoWidth, _video.videoHeight);
+
+                //   Doesn't wait for a frame to be ready :(
+                //  Video could extend a Size component?
+
+                this.updateTexture();
             }
         }
         else if (url)
@@ -298,14 +308,8 @@ var Video = new Class({
         }
 
         this.video.loop = (loop) ? 'loop' : '';
-
         this.video.playbackRate = playbackRate;
-
-        this.video.addEventListener('ended', this._callbacks.end, true);
-        this.video.addEventListener('webkitendfullscreen', this._callbacks.end, true);
-        this.video.addEventListener('timeupdate', this._callbacks.time, true);
-        this.video.addEventListener('playing', this._callbacks.play, true);
-    
+   
         if (this.video.readyState !== 4)
         {
             this.retry = this.retryLimit;
@@ -319,23 +323,34 @@ var Video = new Class({
             this._textureState = 0;
 
             var playPromise = this.video.play();
-
+    
             if (playPromise !== undefined)
             {
                 playPromise.then(this.playSuccessHandler.bind(this)).catch(this.playErrorHandler.bind(this));
             }
         }
 
+        //  Set these after calling `play` or they don't fire (useful Chrome, thanks)
+        this.video.addEventListener('ended', this._callbacks.end, true);
+        this.video.addEventListener('webkitendfullscreen', this._callbacks.end, true);
+
+        // this.video.addEventListener('timeupdate', this._callbacks.time, true);
+        // this.video.addEventListener('playing', this._callbacks.play, true);
+
         return this;
     },
 
     playSuccessHandler: function ()
     {
+        console.log('playSuccessHandler');
+
         this.touchLocked = false;
     },
 
     playErrorHandler: function (error)
     {
+        console.log('playErrorHandler');
+
         this.scene.sys.input.once('pointerdown', this.unlockHandler, this);
 
         this.touchLocked = true;
@@ -360,11 +375,14 @@ var Video = new Class({
      */
     completeHandler: function ()
     {
+        console.log('Video has ended!');
     },
 
     timeUpdateHandler: function ()
     {
-        this._textureState++;
+        console.log('timeUpdateHandler');
+
+        // this._textureState++;
 
         this.video.removeEventListener('timeupdate', this._callbacks.time, true);
     },
@@ -377,20 +395,24 @@ var Video = new Class({
      */
     playHandler: function ()
     {
-        this._textureState++;
+        console.log('playHandler');
+
+        // this._textureState++;
         
         this.video.removeEventListener('playing', this._callbacks.play, true);
     },
 
     preUpdate: function ()
     {
-        if (this._textureState === 3 && this.playing)
-        {
-            this.videoTextureSource.update();
-        }
-        else if (this._textureState === 2)
+        if (this._textureState === 0 && this.getCurrentTime() > 0)
         {
             this.updateTexture();
+
+            this._textureState = 2;
+        }
+        else if (this._textureState === 2 && this.playing)
+        {
+            this.videoTextureSource.update();
         }
     },
 
@@ -575,7 +597,7 @@ var Video = new Class({
             this.frame = this.videoTexture.get();
     
             this.setSizeToFrame();
-            this.setOriginFromFrame();
+            this.updateDisplayOrigin();
     
             this._textureState = 3;
 
@@ -589,6 +611,26 @@ var Video = new Class({
             textureSource.width = width;
             textureSource.height = height;
         }
+    },
+
+    //  0 to 1
+    seekTo: function (value)
+    {
+        var video = this.video;
+
+        if (video)
+        {
+            var duration = video.duration;
+
+            if (duration !== Infinity && !isNaN(duration))
+            {
+                var seekTime = duration * value;
+
+                this.setCurrentTime(seekTime);
+            }
+        }
+
+        return this;
     },
 
     /**
@@ -611,6 +653,32 @@ var Video = new Class({
     },
 
     /**
+     * @name Phaser.Video#currentTime
+     */
+    getProgress: function ()
+    {
+        var video = this.video;
+
+        if (video)
+        {
+            var now = video.currentTime;
+            var duration = video.duration;
+
+            if (duration !== Infinity && !isNaN(duration))
+            {
+                return now / duration;
+            }
+        }
+        
+        return 0;
+    },
+
+    /**
+     * A double-precision floating-point value which indicates the duration (total length) of the media in seconds, on the media's timeline.
+     * If no media is present on the element, or the media is not valid, the returned value is NaN.
+     * If the media has no known end (such as for live streams of unknown duration, web radio, media incoming from WebRTC, and so forth),
+     * this value is +Infinity.
+     * 
      * @name Phaser.Video#duration
      * @property {number} duration - The duration of the video in seconds.
      * @readOnly
@@ -618,16 +686,6 @@ var Video = new Class({
     getDuration: function ()
     {
         return (this.video) ? this.video.duration : 0;
-    },
-
-    /**
-     * @name Phaser.Video#progress
-     * @property {number} progress - The progress of this video. This is a value between 0 and 1, where 0 is the start and 1 is the end of the video.
-     * @readOnly
-     */
-    getProgress: function ()
-    {
-        return (this.video) ? (this.video.currentTime / this.video.duration) : 0;
     },
 
     isMuted: function ()

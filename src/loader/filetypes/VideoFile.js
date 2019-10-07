@@ -170,9 +170,11 @@ var VideoFile = new Class({
             var video = document.createElement('video');
     
             video.controls = false;
+            video.crossOrigin = this.loader.crossOrigin;
     
             video.setAttribute('autoplay', 'autoplay');
             video.setAttribute('playsinline', 'playsinline');
+            video.setAttribute('preload', 'auto');
 
             var _this = this;
     
