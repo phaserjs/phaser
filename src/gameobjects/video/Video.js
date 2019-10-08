@@ -308,6 +308,7 @@ var Video = new Class({
         video.loop = loop;
         video.playbackRate = playbackRate;
    
+        //  If video hasn't downloaded properly yet ...
         if (video.readyState !== 4)
         {
             this.retry = this.retryLimit;
@@ -320,6 +321,11 @@ var Video = new Class({
         if (playPromise !== undefined)
         {
             playPromise.then(this.playSuccessHandler.bind(this)).catch(this.playErrorHandler.bind(this));
+        }
+        else
+        {
+            //  Old-school browsers with no Promises
+            video.addEventListener('playing', this._callbacks.play, true);
         }
 
         //  Set these after calling `play` or they don't fire (useful, thanks browsers)
@@ -389,6 +395,8 @@ var Video = new Class({
     playHandler: function ()
     {
         console.log('playHandler');
+
+        this.touchLocked = false;
        
         this.video.removeEventListener('playing', this._callbacks.play, true);
     },
@@ -640,6 +648,10 @@ var Video = new Class({
         if (this.video)
         {
             this.video.currentTime = value;
+
+            this.updateTexture();
+
+            this._lastUpdate = value;
         }
 
         return this;
