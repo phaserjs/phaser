@@ -185,8 +185,9 @@ var VideoFile = new Class({
             if (noAudio)
             {
                 video.muted = true;
+                video.defaultMuted = true;
             }
-    
+
             video.setAttribute('autoplay', 'autoplay');
             video.setAttribute('playsinline', 'playsinline');
             video.setAttribute('preload', 'auto');
@@ -214,8 +215,6 @@ var VideoFile = new Class({
 
             video.src = GetURL(this, this.loader.baseURL);
 
-            video.canplay = true;
-
             video.load();
         }
     }
@@ -242,7 +241,7 @@ VideoFile.create = function (loader, key, urls, loadEvent, asBlob, noAudio, xhrS
 
     if (urlConfig)
     {
-        return new VideoFile(loader, key, urlConfig, loadEvent, asBlob, xhrSettings);
+        return new VideoFile(loader, key, urlConfig, loadEvent, asBlob, noAudio, xhrSettings);
     }
 };
 

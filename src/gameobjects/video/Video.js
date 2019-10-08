@@ -87,8 +87,6 @@ var Video = new Class({
 
         this._key = UUID();
 
-        this.snapshot = null;
-
         /**
          * @property {boolean} touchLocked - true if this video is currently locked awaiting a touch event. This happens on some mobile devices, such as iOS.
          * @default
@@ -179,20 +177,6 @@ var Video = new Class({
          */
         this._codePaused = false;
 
-        /**
-         * @property {boolean} _pendingChangeSource - Internal var tracking play pending.
-         * @private
-         * @default
-         */
-        this._pendingChangeSource = false;
-
-        /**
-         * @property {boolean} _autoplay - Internal var tracking autoplay when changing source.
-         * @private
-         * @default
-         */
-        this._autoplay = false;
-
         this._callbacks = {
             end: this.completeHandler.bind(this),
             play: this.playHandler.bind(this),
@@ -210,6 +194,7 @@ var Video = new Class({
         this._crop = this.resetCropObject();
 
         this._lastUpdate = 0;
+        this._cacheKey = '';
 
         this.setPosition(x, y);
         this.initPipeline();
@@ -222,6 +207,8 @@ var Video = new Class({
             {
                 this.video = _video;
 
+                this._cacheKey = key;
+
                 console.log('Video constructor, setting defaults', _video.videoWidth, 'x', _video.videoHeight);
 
                 this._codePaused = _video.paused;
@@ -232,7 +219,7 @@ var Video = new Class({
         }
         else if (url)
         {
-            this.createVideoFromURL(url);
+            this.playURL(url);
         }
 
         var game = scene.sys.game.events;
@@ -279,7 +266,7 @@ var Video = new Class({
      */
     play: function (loop, playbackRate)
     {
-        if (this._pendingChangeSource || (this.touchLocked && this.playWhenUnlocked) || this.isPlaying())
+        if ((this.touchLocked && this.playWhenUnlocked) || this.isPlaying())
         {
             return this;
         }
@@ -336,6 +323,37 @@ var Video = new Class({
         return this;
     },
 
+    /**
+     * Creates a new Video element from the given URL.
+     *
+     * @method Phaser.Video#playURL
+     * @param {string} url - The URL of the video.
+     * @param {boolean} [autoplay=false] - Automatically start the video?
+     * @return {Phaser.Video} This Video object for method chaining.
+     */
+    playURL: function (url, loop, playbackRate)
+    {
+        // this.video = document.createElement('video');
+        // this.video.controls = false;
+
+        // if (autoplay)
+        // {
+        //     this.video.setAttribute('autoplay', 'autoplay');
+        // }
+
+        // this.video.src = url;
+
+        // this.video.canplay = true;
+
+        // this.video.load();
+
+        // this.retry = this.retryLimit;
+
+        // this._retryID = window.setTimeout(this.checkVideoProgress.bind(this), this.retryInterval);
+
+        return this;
+    },
+
     playSuccessHandler: function ()
     {
         console.log('playSuccessHandler');
@@ -346,6 +364,7 @@ var Video = new Class({
     playErrorHandler: function (error)
     {
         console.log('playErrorHandler');
+        console.log(error);
 
         this.scene.sys.input.once('pointerdown', this.unlockHandler, this);
 
@@ -509,39 +528,6 @@ var Video = new Class({
     },
 
     /**
-     * Creates a new Video element from the given URL.
-     *
-     * @method Phaser.Video#createVideoFromURL
-     * @param {string} url - The URL of the video.
-     * @param {boolean} [autoplay=false] - Automatically start the video?
-     * @return {Phaser.Video} This Video object for method chaining.
-     */
-    createVideoFromURL: function (url, autoplay)
-    {
-        if (autoplay === undefined) { autoplay = false; }
-
-        this.video = document.createElement('video');
-        this.video.controls = false;
-
-        if (autoplay)
-        {
-            this.video.setAttribute('autoplay', 'autoplay');
-        }
-
-        this.video.src = url;
-
-        this.video.canplay = true;
-
-        this.video.load();
-
-        this.retry = this.retryLimit;
-
-        this._retryID = window.setTimeout(this.checkVideoProgress.bind(this), this.retryInterval);
-
-        return this;
-    },
-
-    /**
      * Internal callback that monitors the download progress of a video after changing its source.
      *
      * @method Phaser.Video#checkVideoProgress
@@ -578,7 +564,7 @@ var Video = new Class({
      * @method Phaser.Video#updateTexture
      * @param {object} [event] - The event which triggered the texture update.
      */
-    updateTexture: function (event)
+    updateTexture: function ()
     {
         var video = this.video;
 
@@ -903,54 +889,6 @@ var Video = new Class({
     },
 
     /**
-     * Grabs the current frame from the Video or Video Stream and renders it to the Video.snapshot BitmapData.
-     *
-     * You can optionally set if the BitmapData should be cleared or not, the alpha and the blend mode of the draw.
-     *
-     * If you need more advanced control over the grabbing them call `Video.snapshot.copy` directly with the same parameters as BitmapData.copy.
-     *
-     * @method Phaser.Video#grab
-     * @param {boolean} [clear=false] - Should the BitmapData be cleared before the Video is grabbed? Unless you are using alpha or a blend mode you can usually leave this set to false.
-     * @param {number} [alpha=1] - The alpha that will be set on the video before drawing. A value between 0 (fully transparent) and 1, opaque.
-     * @param {string} [blendMode=null] - The composite blend mode that will be used when drawing. The default is no blend mode at all. This is a Canvas globalCompositeOperation value such as 'lighter' or 'xor'.
-     * @return {Phaser.BitmapData} A reference to the Video.snapshot BitmapData object for further method chaining.
-     */
-    grab: function (clear, alpha, blendMode)
-    {
-        if (clear === undefined) { clear = false; }
-        if (alpha === undefined) { alpha = 1; }
-        if (blendMode === undefined) { blendMode = null; }
-
-        var source = this.videoTextureSource;
-        var width = (source) ? source.width : 128;
-        var height = (source) ? source.height : 128;
-
-        if (!this.snapshot)
-        {
-            this.snapshot = this.scene.sys.textures.createCanvas(UUID(), width, height);
-        }
-        else if (this.snapshot.width !== width || this.snapshot.height !== height)
-        {
-            this.snapshot.setSize(width, height);
-        }
-
-        if (clear)
-        {
-            this.snapshot.clear();
-        }
-
-        if (source)
-        {
-            //  Set globalAlpha
-            //  Set blendMode
-
-            this.snapshot.draw(0, 0, source.image);
-        }
-
-        return this.snapshot;
-    },
-
-    /**
      * Removes the Video element from the DOM by calling parentNode.removeChild on itself.
      * Also removes the autoplay and src attributes and nulls the reference.
      *
@@ -958,23 +896,25 @@ var Video = new Class({
      */
     removeVideoElement: function ()
     {
-        if (!this.video)
+        var video = this.video;
+
+        if (!video)
         {
             return;
         }
 
-        if (this.video.parentNode)
+        if (video.parentNode)
         {
-            this.video.parentNode.removeChild(this.video);
+            video.parentNode.removeChild(video);
         }
 
-        while (this.video.hasChildNodes())
+        while (video.hasChildNodes())
         {
-            this.video.removeChild(this.video.firstChild);
+            video.removeChild(video.firstChild);
         }
 
-        this.video.removeAttribute('autoplay');
-        this.video.removeAttribute('src');
+        video.removeAttribute('autoplay');
+        video.removeAttribute('src');
 
         this.video = null;
     },
@@ -993,8 +933,8 @@ var Video = new Class({
 
         var game = this.scene.sys.game.events;
 
-        game.off(GameEvents.PAUSE, this.pause, this);
-        game.off(GameEvents.RESUME, this.resume, this);
+        game.off(GameEvents.PAUSE, this.globalPause, this);
+        game.off(GameEvents.RESUME, this.globalResume, this);
 
         var sound = this.scene.sys.sound;
 
@@ -1007,20 +947,6 @@ var Video = new Class({
         {
             window.clearTimeout(this._retryID);
         }
-    },
-
-    /**
-     * @name Phaser.Video#playing
-     * @property {boolean} playing - True if the video is currently playing (and not paused or ended), otherwise false.
-     * @readOnly
-     */
-    playing: {
-
-        get: function ()
-        {
-            return (this.video) ? !(this.video.paused || this.video.ended) : false;
-        }
-
     }
 
 });
