@@ -39,10 +39,11 @@ var VideoFile = new Class({
     initialize:
 
     //  URL is an object created by VideoFile.getVideoURL
-    function VideoFile (loader, key, urlConfig, loadEvent, asBlob, xhrSettings)
+    function VideoFile (loader, key, urlConfig, loadEvent, asBlob, noAudio, xhrSettings)
     {
-        if (loadEvent === undefined) { loadEvent = 'canplaythrough'; }
+        if (loadEvent === undefined) { loadEvent = 'loadeddata'; }
         if (asBlob === undefined) { asBlob = false; }
+        if (noAudio === undefined) { noAudio = false; }
 
         var fileConfig = {
             type: 'video',
@@ -54,11 +55,12 @@ var VideoFile = new Class({
             xhrSettings: xhrSettings,
             config: {
                 loadEvent: loadEvent,
-                asBlob: asBlob
+                asBlob: asBlob,
+                noAudio: noAudio
             }
         };
 
-        console.log(fileConfig);
+        // console.log(fileConfig);
 
         File.call(this, loader, fileConfig);
     },
@@ -72,7 +74,7 @@ var VideoFile = new Class({
      */
     onProcess: function ()
     {
-        console.log('Video.onProcess', this.config.asBlob);
+        // console.log('Video.onProcess', this.config.asBlob);
 
         this.state = CONST.FILE_PROCESSING;
 
@@ -84,10 +86,17 @@ var VideoFile = new Class({
         }
 
         var video = document.createElement('video');
+
         video.controls = false;
         video.canplay = true;
+
         video.setAttribute('autoplay', 'autoplay');
         video.setAttribute('playsinline', 'playsinline');
+
+        if (this.config.noAudio)
+        {
+            video.muted = true;
+        }
 
         this.data = video;
 
@@ -95,7 +104,7 @@ var VideoFile = new Class({
 
         this.data.onloadeddata = function ()
         {
-            console.log('data.onloadeddata');
+            // console.log('data.onloadeddata');
             
             File.revokeObjectURL(_this.data);
 
@@ -104,14 +113,14 @@ var VideoFile = new Class({
 
         this.data.onerror = function ()
         {
-            console.log('data.onerror');
+            // console.log('data.onerror');
 
             File.revokeObjectURL(_this.data);
 
             _this.onProcessError();
         };
 
-        console.log('onProcess createURL');
+        // console.log('onProcess createURL');
 
         File.createObjectURL(this.data, this.xhrLoader.response, '');
     },
@@ -154,10 +163,11 @@ var VideoFile = new Class({
     {
         var loadEvent = this.config.loadEvent;
         var asBlob = this.config.asBlob;
+        var noAudio = this.config.noAudio;
 
         if (asBlob)
         {
-            console.log('Passing load over to File.load');
+            // console.log('Passing load over to File.load');
             
             File.prototype.load.call(this);
         }
@@ -171,6 +181,11 @@ var VideoFile = new Class({
     
             video.controls = false;
             video.crossOrigin = this.loader.crossOrigin;
+
+            if (noAudio)
+            {
+                video.muted = true;
+            }
     
             video.setAttribute('autoplay', 'autoplay');
             video.setAttribute('playsinline', 'playsinline');
@@ -180,9 +195,9 @@ var VideoFile = new Class({
     
             this.onVideoLoadHandler = function (event)
             {
-                console.log('onVideoLoadHandler');
-                console.log(event);
-                console.log(_this.config.loadEvent);
+                // console.log('onVideoLoadHandler');
+                // console.log(event);
+                // console.log(_this.config.loadEvent);
         
                 var video = event.target;
         
@@ -207,7 +222,7 @@ var VideoFile = new Class({
 
 });
 
-VideoFile.create = function (loader, key, urls, loadEvent, asBlob, xhrSettings)
+VideoFile.create = function (loader, key, urls, loadEvent, asBlob, noAudio, xhrSettings)
 {
     var game = loader.systems.game;
 
@@ -217,12 +232,13 @@ VideoFile.create = function (loader, key, urls, loadEvent, asBlob, xhrSettings)
         urls = GetFastValue(key, 'url', []);
         loadEvent = GetFastValue(key, 'loadEvent', 'canplaythrough');
         asBlob = GetFastValue(key, 'asBlob', false);
+        noAudio = GetFastValue(key, 'noAudio', false);
         xhrSettings = GetFastValue(key, 'xhrSettings');
     }
 
     var urlConfig = VideoFile.getVideoURL(game, urls);
 
-    console.log(urlConfig);
+    // console.log(urlConfig);
 
     if (urlConfig)
     {
@@ -320,7 +336,7 @@ VideoFile.getVideoURL = function (game, urls)
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */
-FileTypesManager.register('video', function (key, urls, loadEvent, asBlob, xhrSettings)
+FileTypesManager.register('video', function (key, urls, loadEvent, asBlob, noAudio, xhrSettings)
 {
     var videoFile;
 
@@ -339,7 +355,7 @@ FileTypesManager.register('video', function (key, urls, loadEvent, asBlob, xhrSe
     }
     else
     {
-        videoFile = VideoFile.create(this, key, urls, loadEvent, asBlob, xhrSettings);
+        videoFile = VideoFile.create(this, key, urls, loadEvent, asBlob, noAudio, xhrSettings);
 
         if (videoFile)
         {
