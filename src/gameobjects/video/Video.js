@@ -206,6 +206,8 @@ var Video = new Class({
 
         this._isSeeking = false;
 
+        this.snapshotTexture = null;
+
         this.setPosition(x, y);
         this.initPipeline();
 
@@ -361,6 +363,40 @@ var Video = new Class({
         }
 
         return this;
+    },
+
+    removeMarker: function (key)
+    {
+        delete this.markers[key];
+
+        return this;
+    },
+
+    snapshot: function ()
+    {
+        return this.snapshotArea(0, 0, this.width, this.height);
+    },
+
+    snapshotArea: function (x, y, width, height)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = this.width; }
+        if (height === undefined) { height = this.height; }
+
+        if (!this.snapshotTexture)
+        {
+            this.snapshotTexture = this.scene.sys.textures.createCanvas(UUID(), width, height);
+        }
+
+        var video = this.video;
+
+        if (video)
+        {
+            this.snapshotTexture.context.drawImage(video, x, y, width, height, 0, 0, width, height);
+        }
+
+        return this.snapshotTexture.update();
     },
 
     /**
