@@ -867,13 +867,17 @@ var TextureManager = new Class({
 
     /**
      * Returns a Texture from the Texture Manager that matches the given key.
-     * If the key is undefined it will return the `__DEFAULT` Texture.
-     * If the key is given, but not found, it will return the `__MISSING` Texture.
+     * 
+     * If the key is `undefined` it will return the `__DEFAULT` Texture.
+     * 
+     * If the key is an instance of a Texture, it will return the key directly.
+     * 
+     * Finally. if the key is given, but not found and not a Texture instance, it will return the `__MISSING` Texture.
      *
      * @method Phaser.Textures.TextureManager#get
      * @since 3.0.0
      *
-     * @param {string} key - The unique string-based key of the Texture.
+     * @param {(string|Phaser.Textures.Texture)} key - The unique string-based key of the Texture, or a Texture instance.
      *
      * @return {Phaser.Textures.Texture} The Texture that was created.
      */
@@ -884,6 +888,10 @@ var TextureManager = new Class({
         if (this.list[key])
         {
             return this.list[key];
+        }
+        else if (key instanceof Texture)
+        {
+            return key;
         }
         else
         {
