@@ -213,6 +213,9 @@ var Video = new Class({
 
         if (key)
         {
+            this.changeSource(key, false);
+
+            /*
             var _video = scene.sys.cache.video.get(key);
 
             if (_video)
@@ -231,6 +234,7 @@ var Video = new Class({
 
                 this.updateTexture();
             }
+            */
         }
         else if (url)
         {
@@ -307,14 +311,12 @@ var Video = new Class({
 
         if (!isNaN(markerIn) && !isNaN(markerOut) && markerOut > markerIn)
         {
-            console.log('markers', markerIn, markerOut);
-
             this._markerIn = markerIn;
             this._markerOut = markerOut;
         }
 
         video.loop = loop;
-   
+
         //  If video hasn't downloaded properly yet ...
         if (video.readyState !== 4)
         {
@@ -322,6 +324,8 @@ var Video = new Class({
 
             this._retryID = window.setTimeout(this.checkVideoProgress.bind(this), this.retryInterval);
         }
+
+        var callbacks = this._callbacks;
 
         var playPromise = video.play();
 
@@ -332,13 +336,72 @@ var Video = new Class({
         else
         {
             //  Old-school browsers with no Promises
-            video.addEventListener('playing', this._callbacks.play, true);
+            video.addEventListener('playing', callbacks.play, true);
         }
 
         //  Set these after calling `play` or they don't fire (useful, thanks browsers)
-        video.addEventListener('ended', this._callbacks.end, true);
-        video.addEventListener('webkitendfullscreen', this._callbacks.end, true);
-        video.addEventListener('timeupdate', this._callbacks.time, true);
+        video.addEventListener('ended', callbacks.end, true);
+        video.addEventListener('webkitendfullscreen', callbacks.end, true);
+        video.addEventListener('timeupdate', callbacks.time, true);
+
+        return this;
+    },
+
+    changeSource: function (key, autoplay, loop, markerIn, markerOut)
+    {
+        if (autoplay === undefined) { autoplay = true; }
+
+        var currentVideo = this.video;
+
+        if (currentVideo)
+        {
+            this.stop();
+        }
+
+        var newVideo = this.scene.sys.cache.video.get(key);
+
+        if (newVideo)
+        {
+            this.video = newVideo;
+
+            this._cacheKey = key;
+
+            this._codePaused = newVideo.paused;
+            this._codeMuted = newVideo.muted;
+
+            newVideo.addEventListener('seeking', this._callbacks.seeking, true);
+            newVideo.addEventListener('seeked', this._callbacks.seeked, true);
+
+            if (this.videoTexture)
+            {
+                this.scene.sys.textures.remove(this._key);
+
+                this.videoTexture = this.scene.sys.textures.create(this._key, newVideo, newVideo.videoWidth, newVideo.videoHeight);
+                this.videoTextureSource = this.videoTexture.source[0];
+                this.videoTexture.add('__BASE', 0, 0, 0, newVideo.videoWidth, newVideo.videoHeight);
+        
+                this.setTexture(this.videoTexture);
+                this.setSizeToFrame();
+                this.updateDisplayOrigin();
+            }
+            else
+            {
+                this.updateTexture();
+            }
+
+            newVideo.currentTime = 0;
+
+            this._lastUpdate = 0;
+
+            if (autoplay)
+            {
+                this.play(loop, markerIn, markerOut);
+            }
+        }
+        else
+        {
+            this.video = null;
+        }
 
         return this;
     },
@@ -372,31 +435,62 @@ var Video = new Class({
         return this;
     },
 
-    snapshot: function ()
+    snapshot: function (width, height)
     {
-        return this.snapshotArea(0, 0, this.width, this.height);
-    },
-
-    snapshotArea: function (x, y, width, height)
-    {
-        if (x === undefined) { x = 0; }
-        if (y === undefined) { y = 0; }
         if (width === undefined) { width = this.width; }
         if (height === undefined) { height = this.height; }
 
-        if (!this.snapshotTexture)
-        {
-            this.snapshotTexture = this.scene.sys.textures.createCanvas(UUID(), width, height);
-        }
+        return this.snapshotArea(0, 0, this.width, this.height, width, height);
+    },
+
+    snapshotArea: function (x, y, srcWidth, srcHeight, destWidth, destHeight)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (srcWidth === undefined) { srcWidth = this.width; }
+        if (srcHeight === undefined) { srcHeight = this.height; }
+        if (destWidth === undefined) { destWidth = srcWidth; }
+        if (destHeight === undefined) { destHeight = srcHeight; }
 
         var video = this.video;
+        var snap = this.snapshotTexture;
 
-        if (video)
+        if (!snap)
         {
-            this.snapshotTexture.context.drawImage(video, x, y, width, height, 0, 0, width, height);
+            snap = this.scene.sys.textures.createCanvas(UUID(), destWidth, destHeight);
+
+            this.snapshotTexture = snap;
+
+            if (video)
+            {
+                snap.context.drawImage(video, x, y, srcWidth, srcHeight, 0, 0, destWidth, destHeight);
+            }
+        }
+        else
+        {
+            snap.setSize(destWidth, destHeight);
+
+            if (video)
+            {
+                snap.context.drawImage(video, x, y, srcWidth, srcHeight, 0, 0, destWidth, destHeight);
+            }
         }
 
-        return this.snapshotTexture.update();
+        return snap.update();
+    },
+
+    saveSnapshotTexture: function (key)
+    {
+        if (this.snapshotTexture)
+        {
+            this.scene.sys.textures.renameTexture(this.snapshotTexture.key, key);
+        }
+        else
+        {
+            this.snapshotTexture = this.scene.sys.textures.createCanvas(key, this.width, this.height);
+        }
+
+        return this.snapshotTexture;
     },
 
     /**
@@ -603,15 +697,16 @@ var Video = new Class({
         }
         else if (video)
         {
-            video.removeEventListener('ended', this._callbacks.end, true);
-            video.removeEventListener('webkitendfullscreen', this._callbacks.end, true);
-            video.removeEventListener('timeupdate', this._callbacks.time, true);
-            video.removeEventListener('playing', this._callbacks.play, true);
+            var callbacks = this._callbacks;
 
-            if (!this.touchLocked)
-            {
-                video.pause();
-            }
+            video.removeEventListener('ended', callbacks.end, true);
+            video.removeEventListener('webkitendfullscreen', callbacks.end, true);
+            video.removeEventListener('timeupdate', callbacks.time, true);
+            video.removeEventListener('playing', callbacks.play, true);
+            video.removeEventListener('seeking', callbacks.seeking, true);
+            video.removeEventListener('seeked', callbacks.seeked, true);
+
+            video.pause();
         }
 
         return this;
@@ -689,10 +784,8 @@ var Video = new Class({
             this.videoTexture = this.scene.sys.textures.create(this._key, video, width, height);
             this.videoTextureSource = this.videoTexture.source[0];
             this.videoTexture.add('__BASE', 0, 0, 0, width, height);
-
-            this.texture = this.videoTexture;
-            this.frame = this.videoTexture.get();
     
+            this.setTexture(this.videoTexture);
             this.setSizeToFrame();
             this.updateDisplayOrigin();
     
@@ -711,6 +804,11 @@ var Video = new Class({
             
             textureSource.update();
         }
+    },
+
+    getVideoKey: function ()
+    {
+        return this._cacheKey;
     },
 
     //  0 to 1
