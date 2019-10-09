@@ -72,7 +72,7 @@ var Video = new Class({
 
     initialize:
 
-    function Video (scene, x, y, key, url)
+    function Video (scene, x, y, key)
     {
         GameObject.call(this, scene, 'Video');
 
@@ -182,7 +182,10 @@ var Video = new Class({
             play: this.playHandler.bind(this),
             time: this.timeUpdateHandler.bind(this),
             seeking: this.seekingHandler.bind(this),
-            seeked: this.seekedHandler.bind(this)
+            seeked: this.seekedHandler.bind(this),
+            loadeddata: this.loadeddataHandler.bind(this),
+            canplay: this.canplayHandler.bind(this),
+            canplaythrough: this.canplaythroughHandler.bind(this)
         };
 
         /**
@@ -214,31 +217,6 @@ var Video = new Class({
         if (key)
         {
             this.changeSource(key, false);
-
-            /*
-            var _video = scene.sys.cache.video.get(key);
-
-            if (_video)
-            {
-                this.video = _video;
-
-                this._cacheKey = key;
-
-                console.log('Video constructor, setting defaults', _video.videoWidth, 'x', _video.videoHeight);
-
-                this._codePaused = _video.paused;
-                this._codeMuted = _video.muted;
-
-                _video.addEventListener('seeking', this._callbacks.seeking, true);
-                _video.addEventListener('seeked', this._callbacks.seeked, true);
-
-                this.updateTexture();
-            }
-            */
-        }
-        else if (url)
-        {
-            this.playURL(url);
         }
 
         var game = scene.sys.game.events;
@@ -309,9 +287,13 @@ var Video = new Class({
             this.setMute(true);
         }
 
-        if (!isNaN(markerIn) && !isNaN(markerOut) && markerOut > markerIn)
+        if (!isNaN(markerIn))
         {
             this._markerIn = markerIn;
+        }
+
+        if (!isNaN(markerOut) && markerOut > markerIn)
+        {
             this._markerOut = markerOut;
         }
 
@@ -406,6 +388,7 @@ var Video = new Class({
         return this;
     },
 
+    //  https://github.com/w3c/media-and-entertainment/issues/4
     addMarker: function (key, markerIn, markerOut)
     {
         if (!isNaN(markerIn) && markerIn >= 0 && !isNaN(markerOut))
@@ -493,6 +476,36 @@ var Video = new Class({
         return this.snapshotTexture;
     },
 
+    loadeddataHandler: function (event)
+    {
+        console.log('Video.loadeddataHandler');
+        console.log(event);
+
+        var video = event.target;
+
+        video.removeEventListener('loadeddata', this._callbacks.loadeddata, true);
+    },
+
+    canplayHandler: function (event)
+    {
+        console.log('Video.canplayHandler');
+        console.log(event);
+
+        var video = event.target;
+
+        video.removeEventListener('canplay', this._callbacks.canplay, true);
+    },
+
+    canplaythroughHandler: function (event)
+    {
+        console.log('Video.canplaythroughHandler');
+        console.log(event);
+
+        var video = event.target;
+
+        video.removeEventListener('canplaythrough', this._callbacks.canplaythrough, true);
+    },
+
     /**
      * Creates a new Video element from the given URL.
      *
@@ -501,25 +514,69 @@ var Video = new Class({
      * @param {boolean} [autoplay=false] - Automatically start the video?
      * @return {Phaser.Video} This Video object for method chaining.
      */
-    playURL: function (url, loop, playbackRate)
+    loadURL: function (url, loadEvent, noAudio)
     {
-        // this.video = document.createElement('video');
-        // this.video.controls = false;
+        if (loadEvent === undefined) { loadEvent = 'loadeddata'; }
+        if (noAudio === undefined) { noAudio = false; }
+
+        if (this.video)
+        {
+            this.stop();
+        }
+
+        if (this.videoTexture)
+        {
+            this.scene.sys.textures.remove(this._key);
+        }
+
+        var video = document.createElement('video');
+    
+        video.controls = false;
+
+        if (noAudio)
+        {
+            video.muted = true;
+            video.defaultMuted = true;
+
+            video.setAttribute('autoplay', 'autoplay');
+        }
+
+        video.setAttribute('playsinline', 'playsinline');
+        video.setAttribute('preload', 'auto');
+
+        video.addEventListener(loadEvent, this._callbacks[loadEvent], true);
+
+        video.addEventListener('error', function (e)
+        {
+            console.log('Load Error');
+            console.log(e);
+        }, true);
+
+        video.addEventListener('loadstart', function (e)
+        {
+            console.log('Load Start');
+        }, true);
+
+        video.addEventListener('loadedmetadata', function (e)
+        {
+            console.log('Loaded Meta Data');
+        }, true);
+
+        video.addEventListener('emptied', function (e)
+        {
+            console.log('Load Emptied');
+        }, true);
+
+        video.src = url;
+
+        video.load();
+
+        this.video = video;
 
         // if (autoplay)
         // {
-        //     this.video.setAttribute('autoplay', 'autoplay');
+        //     this.play(loop);
         // }
-
-        // this.video.src = url;
-
-        // this.video.canplay = true;
-
-        // this.video.load();
-
-        // this.retry = this.retryLimit;
-
-        // this._retryID = window.setTimeout(this.checkVideoProgress.bind(this), this.retryInterval);
 
         return this;
     },
@@ -1177,6 +1234,7 @@ var Video = new Class({
     {
         this.stop();
 
+        //  Only if this is a custom video AND hasn't been saved as a texture?
         this.removeVideoElement();
 
         var game = this.scene.sys.game.events;
