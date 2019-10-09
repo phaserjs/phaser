@@ -91,7 +91,7 @@ var Video = new Class({
          * @property {boolean} touchLocked - true if this video is currently locked awaiting a touch event. This happens on some mobile devices, such as iOS.
          * @default
          */
-        this.touchLocked = false;
+        this.touchLocked = true;
 
         /**
          * Start playing the video when it's unlocked.
@@ -180,7 +180,9 @@ var Video = new Class({
         this._callbacks = {
             end: this.completeHandler.bind(this),
             play: this.playHandler.bind(this),
-            time: this.timeUpdateHandler.bind(this)
+            time: this.timeUpdateHandler.bind(this),
+            seeking: this.seekingHandler.bind(this),
+            seeked: this.seekedHandler.bind(this)
         };
 
         /**
@@ -193,8 +195,16 @@ var Video = new Class({
          */
         this._crop = this.resetCropObject();
 
+        this.markers = {};
+
+        this._markerIn = -1;
+        this._markerOut = Number.MAX_SAFE_INTEGER;
+
         this._lastUpdate = 0;
+
         this._cacheKey = '';
+
+        this._isSeeking = false;
 
         this.setPosition(x, y);
         this.initPipeline();
@@ -213,6 +223,9 @@ var Video = new Class({
 
                 this._codePaused = _video.paused;
                 this._codeMuted = _video.muted;
+
+                _video.addEventListener('seeking', this._callbacks.seeking, true);
+                _video.addEventListener('seeked', this._callbacks.seeked, true);
 
                 this.updateTexture();
             }
@@ -261,10 +274,9 @@ var Video = new Class({
      *
      * @method Phaser.Video#play
      * @param {boolean} [loop=false] - Should the video loop automatically when it reaches the end? Please note that at present some browsers (i.e. Chrome) do not support *seamless* video looping.
-     * @param {number} [playbackRate=1] - The playback rate of the video. 1 is normal speed, 2 is x2 speed, and so on. You cannot set a negative playback rate.
      * @return {Phaser.Video} This Video object for method chaining.
      */
-    play: function (loop, playbackRate)
+    play: function (loop, markerIn, markerOut)
     {
         if ((this.touchLocked && this.playWhenUnlocked) || this.isPlaying())
         {
@@ -282,7 +294,6 @@ var Video = new Class({
         }
 
         if (loop === undefined) { loop = video.loop; }
-        if (playbackRate === undefined) { playbackRate = video.playbackRate; }
 
         var sound = this.scene.sys.sound;
         
@@ -292,8 +303,15 @@ var Video = new Class({
             this.setMute(true);
         }
 
+        if (!isNaN(markerIn) && !isNaN(markerOut) && markerOut > markerIn)
+        {
+            console.log('markers', markerIn, markerOut);
+
+            this._markerIn = markerIn;
+            this._markerOut = markerOut;
+        }
+
         video.loop = loop;
-        video.playbackRate = playbackRate;
    
         //  If video hasn't downloaded properly yet ...
         if (video.readyState !== 4)
@@ -319,6 +337,28 @@ var Video = new Class({
         video.addEventListener('ended', this._callbacks.end, true);
         video.addEventListener('webkitendfullscreen', this._callbacks.end, true);
         video.addEventListener('timeupdate', this._callbacks.time, true);
+
+        return this;
+    },
+
+    addMarker: function (key, markerIn, markerOut)
+    {
+        if (!isNaN(markerIn) && markerIn >= 0 && !isNaN(markerOut))
+        {
+            this.markers[key] = [ markerIn, markerOut ];
+        }
+
+        return this;
+    },
+
+    playMarker: function (key, loop)
+    {
+        var marker = this.markers[key];
+
+        if (marker)
+        {
+            this.play(loop, marker[0], marker[1]);
+        }
 
         return this;
     },
@@ -359,6 +399,13 @@ var Video = new Class({
         console.log('playSuccessHandler');
 
         this.touchLocked = false;
+
+        if (this._markerIn > -1)
+        {
+            console.log('jumping to', this._markerIn);
+
+            this.video.currentTime = this._markerIn;
+        }
     },
 
     playErrorHandler: function (error)
@@ -378,6 +425,13 @@ var Video = new Class({
     {
         this.touchLocked = false;
         this.playWhenUnlocked = false;
+
+        if (this._markerIn > -1)
+        {
+            console.log('jumping to', this._markerIn);
+
+            this.video.currentTime = this._markerIn;
+        }
 
         this.video.play();
     },
@@ -424,12 +478,32 @@ var Video = new Class({
     {
         var video = this.video;
 
+        var currentTime = video.currentTime;
+
         //  Don't render a new frame unless the video has actually changed time
-        if (video && video.currentTime > this._lastUpdate)
+        if (video && currentTime !== this._lastUpdate)
         {
+            this._lastUpdate = currentTime;
+
             this.updateTexture();
 
-            this._lastUpdate = video.currentTime;
+            if (currentTime >= this._markerOut)
+            {
+                console.log('marker out', currentTime, this._markerOut);
+
+                if (video.loop)
+                {
+                    video.currentTime = this._markerIn;
+
+                    this.updateTexture();
+
+                    this._lastUpdate = currentTime;
+                }
+                else
+                {
+                    this.stop();
+                }
+            }
         }
     },
 
@@ -451,53 +525,56 @@ var Video = new Class({
     {
         //  Stream or file?
 
+        var video = this.video;
+
         if (this.isStreaming)
         {
-            if (this.video.mozSrcObject)
+            var videoStream = this.videoStream;
+
+            if (video.mozSrcObject)
             {
-                this.video.mozSrcObject.stop();
-                this.video.src = null;
+                video.mozSrcObject.stop();
+                video.src = null;
             }
-            else if (this.video.srcObject)
+            else if (video.srcObject)
             {
-                this.video.srcObject.stop();
-                this.video.src = null;
+                video.srcObject.stop();
+                video.src = null;
             }
             else
             {
-                this.video.src = '';
+                video.src = '';
 
-                if (this.videoStream.active)
+                if (videoStream.active)
                 {
-                    this.videoStream.active = false;
+                    videoStream.active = false;
                 }
-                else
-                if (this.videoStream.getTracks)
+                else if (videoStream.getTracks)
                 {
-                    this.videoStream.getTracks().forEach(function (track)
+                    videoStream.getTracks().forEach(function (track)
                     {
                         track.stop();
                     });
                 }
                 else
                 {
-                    this.videoStream.stop();
+                    videoStream.stop();
                 }
             }
 
             this.videoStream = null;
             this.isStreaming = false;
         }
-        else if (this.video)
+        else if (video)
         {
-            this.video.removeEventListener('ended', this._callbacks.end, true);
-            this.video.removeEventListener('webkitendfullscreen', this._callbacks.end, true);
-            this.video.removeEventListener('timeupdate', this._callbacks.time, true);
-            this.video.removeEventListener('playing', this._callbacks.play, true);
+            video.removeEventListener('ended', this._callbacks.end, true);
+            video.removeEventListener('webkitendfullscreen', this._callbacks.end, true);
+            video.removeEventListener('timeupdate', this._callbacks.time, true);
+            video.removeEventListener('playing', this._callbacks.play, true);
 
             if (!this.touchLocked)
             {
-                this.video.pause();
+                video.pause();
             }
         }
 
@@ -631,16 +708,53 @@ var Video = new Class({
 
     setCurrentTime: function (value)
     {
-        if (this.video)
-        {
-            this.video.currentTime = value;
+        var video = this.video;
 
-            this.updateTexture();
+        if (video)
+        {
+            if (typeof value === 'string')
+            {
+                var op = value[0];
+                var num = parseFloat(value.substr(1));
+
+                if (op === '+')
+                {
+                    value = video.currentTime + num;
+                }
+                else if (op === '-')
+                {
+                    value = video.currentTime - num;
+                }
+            }
+
+            video.currentTime = value;
 
             this._lastUpdate = value;
         }
 
         return this;
+    },
+
+    isSeeking: function ()
+    {
+        return this._isSeeking;
+    },
+
+    seekingHandler: function ()
+    {
+        this._isSeeking = true;
+    },
+
+    seekedHandler: function ()
+    {
+        this._isSeeking = false;
+
+        var video = this.video;
+
+        if (video)
+        {
+            this.updateTexture();
+        }
     },
 
     /**
