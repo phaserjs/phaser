@@ -22,9 +22,9 @@ var GameObjectFactory = require('../GameObjectFactory');
  *
  * @return {Phaser.GameObjects.Image} The Game Object that was created.
  */
-GameObjectFactory.register('video', function (x, y, key, url)
+GameObjectFactory.register('video', function (x, y, key)
 {
-    var video = new Video(this.scene, x, y, key, url);
+    var video = new Video(this.scene, x, y, key);
 
     this.displayList.add(video);
     this.updateList.add(video);
