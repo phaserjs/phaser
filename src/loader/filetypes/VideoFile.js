@@ -186,9 +186,10 @@ var VideoFile = new Class({
             {
                 video.muted = true;
                 video.defaultMuted = true;
+
+                video.setAttribute('autoplay', 'autoplay');
             }
 
-            video.setAttribute('autoplay', 'autoplay');
             video.setAttribute('playsinline', 'playsinline');
             video.setAttribute('preload', 'auto');
 
@@ -196,9 +197,8 @@ var VideoFile = new Class({
     
             this.onVideoLoadHandler = function (event)
             {
-                // console.log('onVideoLoadHandler');
-                // console.log(event);
-                // console.log(_this.config.loadEvent);
+                console.log('onVideoLoadHandler');
+                console.log(event);
         
                 var video = event.target;
         
@@ -212,6 +212,27 @@ var VideoFile = new Class({
             };
 
             video.addEventListener(loadEvent, this.onVideoLoadHandler, true);
+
+            video.addEventListener('error', function (e)
+            {
+                console.log('Load Error');
+                console.log(e);
+            }, true);
+
+            video.addEventListener('loadstart', function (e)
+            {
+                console.log('Load Start');
+            }, true);
+
+            video.addEventListener('loadedmetadata', function (e)
+            {
+                console.log('Loaded Meta Data');
+            }, true);
+
+            video.addEventListener('emptied', function (e)
+            {
+                console.log('Load Emptied');
+            }, true);
 
             video.src = GetURL(this, this.loader.baseURL);
 
@@ -229,7 +250,7 @@ VideoFile.create = function (loader, key, urls, loadEvent, asBlob, noAudio, xhrS
     if (IsPlainObject(key))
     {
         urls = GetFastValue(key, 'url', []);
-        loadEvent = GetFastValue(key, 'loadEvent', 'canplaythrough');
+        loadEvent = GetFastValue(key, 'loadEvent', 'loadeddata');
         asBlob = GetFastValue(key, 'asBlob', false);
         noAudio = GetFastValue(key, 'noAudio', false);
         xhrSettings = GetFastValue(key, 'xhrSettings');
