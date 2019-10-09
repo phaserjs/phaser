@@ -97,6 +97,8 @@ In combination these updates fix issues #4732 and #4672. My thanks to @BenjaminD
 * The `BasePlugin.scene` and `BasePlugin.systems` properties have been removed and are defined in `ScenePlugin`, as they are Scene-level properties only (thanks @samme)
 * The `Tween.getValue` method has been removed. It was a legacy function from Phaser 2 and always only returned the first TweenData from the data array, ignoring any subsequent properties or targets, making it redundant. Fix #4717 (thanks @chepe263)
 * `WebGLRenderer.createTexture2D` has a new optional parameter `forceSize`, which will force the gl texture creation to use the dimensions passed to the method, instead of extracting them from the pixels object, if provided.
+* The `GameObject.setTexture` method can now accept either a string, in which case it looks for the texture in the Texture Manager, or a Texture instance, in which case that instance is set as the Game Object's texture.
+* `TextureManager.get` can now accept either a string-based key, or a Texture instance, as its parameter.
 
 ### Bug Fixes
 
