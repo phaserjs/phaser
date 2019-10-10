@@ -26,13 +26,16 @@ var ScaleModes = require('../renderer/ScaleModes');
  * @param {(HTMLImageElement|HTMLCanvasElement|HTMLVideoElement|Phaser.GameObjects.RenderTexture|WebGLTexture)} source - The source image data.
  * @param {integer} [width] - Optional width of the source image. If not given it's derived from the source itself.
  * @param {integer} [height] - Optional height of the source image. If not given it's derived from the source itself.
+ * @param {boolean} [flipY=false] - Sets the `UNPACK_FLIP_Y_WEBGL` flag the WebGL Texture uses during upload.
  */
 var TextureSource = new Class({
 
     initialize:
 
-    function TextureSource (texture, source, width, height)
+    function TextureSource (texture, source, width, height, flipY)
     {
+        if (flipY === undefined) { flipY = false; }
+
         var game = texture.manager.game;
 
         /**
@@ -181,6 +184,15 @@ var TextureSource = new Class({
          */
         this.glTexture = null;
 
+        /**
+         * Sets the `UNPACK_FLIP_Y_WEBGL` flag the WebGL Texture uses during upload.
+         *
+         * @name Phaser.Textures.TextureSource#flipY
+         * @type {boolean}
+         * @since 3.20.0
+         */
+        this.flipY = flipY;
+
         this.init(game);
     },
 
@@ -200,11 +212,11 @@ var TextureSource = new Class({
             {
                 if (this.isCanvas)
                 {
-                    this.glTexture = this.renderer.canvasToTexture(this.image);
+                    this.glTexture = this.renderer.createCanvasTexture(this.image, false, this.flipY);
                 }
                 else if (this.isVideo)
                 {
-                    this.glTexture = this.renderer.videoToTexture(this.image);
+                    this.glTexture = this.renderer.createVideoTexture(this.image, false, this.flipY);
                 }
                 else if (this.isRenderTexture)
                 {
@@ -256,6 +268,23 @@ var TextureSource = new Class({
     },
 
     /**
+     * Sets the `UNPACK_FLIP_Y_WEBGL` flag for the WebGL Texture during texture upload.
+     *
+     * @method Phaser.Textures.TextureSource#setFlipY
+     * @since 3.20.0
+     *
+     * @param {boolean} [value=true] - Should the WebGL Texture be flipped on the Y axis on texture upload or not?
+     */
+    setFlipY: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.flipY = value;
+
+        return this;
+    },
+
+    /**
      * If this TextureSource is backed by a Canvas and is running under WebGL,
      * it updates the WebGLTexture using the canvas data.
      *
@@ -268,11 +297,11 @@ var TextureSource = new Class({
 
         if (gl && this.isCanvas)
         {
-            this.glTexture = this.renderer.canvasToTexture(this.image, this.glTexture);
+            this.glTexture = this.renderer.updateCanvasTexture(this.image, this.glTexture, this.flipY);
         }
         else if (gl && this.isVideo)
         {
-            this.glTexture = this.renderer.videoToTexture(this.image, this.glTexture);
+            this.glTexture = this.renderer.updateVideoTexture(this.image, this.glTexture, this.flipY);
         }
     },
 
