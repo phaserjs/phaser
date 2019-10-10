@@ -273,8 +273,7 @@ var Video = new Class({
 
         if (!video)
         {
-            // eslint-disable-next-line no-console
-            console.error('Video not loaded');
+            console.warn('Video not loaded');
 
             return this;
         }
@@ -664,30 +663,33 @@ var Video = new Class({
     {
         var video = this.video;
 
-        var currentTime = video.currentTime;
-
-        //  Don't render a new frame unless the video has actually changed time
-        if (video && currentTime !== this._lastUpdate)
+        if (video)
         {
-            this._lastUpdate = currentTime;
+            var currentTime = video.currentTime;
 
-            this.updateTexture();
-
-            if (currentTime >= this._markerOut)
+            //  Don't render a new frame unless the video has actually changed time
+            if (currentTime !== this._lastUpdate)
             {
-                console.log('marker out', currentTime, this._markerOut);
+                this._lastUpdate = currentTime;
 
-                if (video.loop)
+                this.updateTexture();
+
+                if (currentTime >= this._markerOut)
                 {
-                    video.currentTime = this._markerIn;
+                    console.log('marker out', currentTime, this._markerOut);
 
-                    this.updateTexture();
+                    if (video.loop)
+                    {
+                        video.currentTime = this._markerIn;
 
-                    this._lastUpdate = currentTime;
-                }
-                else
-                {
-                    this.stop();
+                        this.updateTexture();
+
+                        this._lastUpdate = currentTime;
+                    }
+                    else
+                    {
+                        this.stop();
+                    }
                 }
             }
         }
@@ -837,7 +839,7 @@ var Video = new Class({
 
         if (!this.videoTexture)
         {
-            this.videoTexture = this.scene.sys.textures.create(this._key, video, width, height, this.flipY);
+            this.videoTexture = this.scene.sys.textures.create(this._key, video, width, height);
             this.videoTextureSource = this.videoTexture.source[0];
             this.videoTexture.add('__BASE', 0, 0, 0, width, height);
     
