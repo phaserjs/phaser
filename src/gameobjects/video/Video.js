@@ -211,6 +211,8 @@ var Video = new Class({
 
         this.snapshotTexture = null;
 
+        this.flipY = false;
+
         this.setPosition(x, y);
         this.initPipeline();
 
@@ -365,6 +367,8 @@ var Video = new Class({
                 this.setTexture(this.videoTexture);
                 this.setSizeToFrame();
                 this.updateDisplayOrigin();
+
+                this.emit('created', this, newVideo.videoWidth, newVideo.videoHeight);
             }
             else
             {
@@ -572,11 +576,6 @@ var Video = new Class({
         video.load();
 
         this.video = video;
-
-        // if (autoplay)
-        // {
-        //     this.play(loop);
-        // }
 
         return this;
     },
@@ -838,7 +837,7 @@ var Video = new Class({
 
         if (!this.videoTexture)
         {
-            this.videoTexture = this.scene.sys.textures.create(this._key, video, width, height);
+            this.videoTexture = this.scene.sys.textures.create(this._key, video, width, height, this.flipY);
             this.videoTextureSource = this.videoTexture.source[0];
             this.videoTexture.add('__BASE', 0, 0, 0, width, height);
     
@@ -1181,14 +1180,23 @@ var Video = new Class({
      *
      * @return {Phaser.Textures.Texture} The Texture that was saved.
      */
-    saveTexture: function (key)
+    saveTexture: function (key, flipY)
     {
+        if (flipY === undefined) { flipY = false; }
+
         if (this.videoTexture)
         {
             this.scene.sys.textures.renameTexture(this._key, key);
         }
 
         this._key = key;
+
+        this.flipY = flipY;
+
+        if (this.videoTextureSource)
+        {
+            this.videoTextureSource.setFlipY(flipY);
+        }
 
         return this.videoTexture;
     },
