@@ -60,6 +60,14 @@ In combination these updates fix issues #4732 and #4672. My thanks to @BenjaminD
 * `ArcadePhysics.Body.setBoundsRectangle` is a new method that allows you to set a custom bounds rectangle for any Body to use, rather than the World bounds, which is the default (thanks @francois-n-dream)
 * `ArcadePhysics.Body.customBoundsRectangle` is a new property used for custom bounds collision (thanks @francois-n-dream)
 * The Arcade Physics Group has a new config object property `customBoundsRectangle` which, if set, will set the custom world bounds for all Bodies that Group creates (thanks @francois-n-dream)
+* `WebGLRenderer.createTexture2D` has a new optional parameter `flipY` which sets the `UNPACK_FLIP_Y_WEBGL` flag of the uploaded texture.
+* `WebGLRenderer.canvasToTexture` has a new optional parameter `flipY` which sets the `UNPACK_FLIP_Y_WEBGL` flag of the uploaded texture.
+* `WebGLRenderer.createCanvasTexture` is a new method that will create a WebGL Texture based on the given Canvas Element.
+* `WebGLRenderer.updateCanvasTexture` is a new method that will update an existing WebGL Texture based on the given Canvas Element.
+* `WebGLRenderer.createVideoTexture` is a new method that will create a WebGL Texture based on the given Video Element.
+* `WebGLRenderer.updateVideoTexture` is a new method that will update an existing WebGL Texture based on the given Video Element.
+* `TextureSource.flipY` is a new boolean that controls if the `UNPACK_FLIP_Y_WEBGL` flag is set when a WebGL Texture is uploaded.
+* `TextureSource.setFlipY` is a new method that toggles the `TextureSource.flipY` property.
 
 ### Updates
 
