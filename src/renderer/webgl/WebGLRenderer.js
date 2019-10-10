@@ -1495,13 +1495,15 @@ var WebGLRenderer = new Class({
      * @param {integer} height - Height of the texture in pixels.
      * @param {boolean} [pma=true] - Does the texture have premultiplied alpha?
      * @param {boolean} [forceSize=false] - If `true` it will use the width and height passed to this method, regardless of the pixels dimension.
+     * @param {boolean} [flipY=false] - Sets the `UNPACK_FLIP_Y_WEBGL` flag the WebGL Texture uses during upload.
      *
      * @return {WebGLTexture} The WebGLTexture that was created.
      */
-    createTexture2D: function (mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma, forceSize)
+    createTexture2D: function (mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma, forceSize, flipY)
     {
         pma = (pma === undefined || pma === null) ? true : pma;
         if (forceSize === undefined) { forceSize = false; }
+        if (flipY === undefined) { flipY = false; }
 
         var gl = this.gl;
         var texture = gl.createTexture();
@@ -1512,7 +1514,9 @@ var WebGLRenderer = new Class({
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, magFilter);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
+
         gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, pma);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
 
         if (pixels === null || pixels === undefined)
         {
@@ -2283,48 +2287,101 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Creates a WebGL Texture based on the given canvas element.
+     * Creates a new WebGL Texture based on the given Canvas Element.
+     * 
+     * If the `dstTexture` parameter is given, the WebGL Texture is updated, rather than created fresh.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#canvasToTexture
      * @since 3.0.0
-     *
-     * @param {HTMLCanvasElement} srcCanvas - The Canvas element that will be used to populate the texture.
-     * @param {WebGLTexture} [dstTexture] - Is this going to replace an existing texture? If so, pass it here.
-     * @param {boolean} [noRepeat=false] - Should this canvas never be allowed to set REPEAT? (such as for Text objects)
-     *
-     * @return {WebGLTexture} The newly created WebGL Texture.
+     * 
+     * @param {HTMLCanvasElement} srcCanvas - The Canvas to create the WebGL Texture from
+     * @param {WebGLTexture} [dstTexture] - The destination WebGL Texture to set.
+     * @param {boolean} [noRepeat=false] - Should this canvas be allowed to set `REPEAT` (such as for Text objects?)
+     * @param {boolean} [flipY=false] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
+     * 
+     * @return {WebGLTexture} The newly created, or updated, WebGL Texture.
      */
-    canvasToTexture: function (srcCanvas, dstTexture, noRepeat)
+    canvasToTexture: function (srcCanvas, dstTexture, noRepeat, flipY)
     {
         if (noRepeat === undefined) { noRepeat = false; }
-
-        var gl = this.gl;
+        if (flipY === undefined) { flipY = false; }
 
         if (!dstTexture)
         {
-            var wrapping = gl.CLAMP_TO_EDGE;
-
-            if (!noRepeat && IsSizePowerOfTwo(srcCanvas.width, srcCanvas.height))
-            {
-                wrapping = gl.REPEAT;
-            }
-
-            var filter = (this.config.antialias) ? gl.LINEAR : gl.NEAREST;
-
-            dstTexture = this.createTexture2D(0, filter, filter, wrapping, wrapping, gl.RGBA, srcCanvas, srcCanvas.width, srcCanvas.height, true);
+            return this.createCanvasTexture(srcCanvas, noRepeat, flipY);
         }
         else
         {
+            return this.updateCanvasTexture(srcCanvas, dstTexture, flipY);
+        }
+    },
+
+    /**
+     * Creates a new WebGL Texture based on the given Canvas Element.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#createCanvasTexture
+     * @since 3.20.0
+     * 
+     * @param {HTMLCanvasElement} srcCanvas - The Canvas to create the WebGL Texture from
+     * @param {boolean} [noRepeat=false] - Should this canvas be allowed to set `REPEAT` (such as for Text objects?)
+     * @param {boolean} [flipY=false] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
+     * 
+     * @return {WebGLTexture} The newly created WebGL Texture.
+     */
+    createCanvasTexture: function (srcCanvas, noRepeat, flipY)
+    {
+        if (noRepeat === undefined) { noRepeat = false; }
+        if (flipY === undefined) { flipY = false; }
+
+        var gl = this.gl;
+
+        var width = srcCanvas.width;
+        var height = srcCanvas.height;
+
+        var wrapping = gl.CLAMP_TO_EDGE;
+
+        if (!noRepeat && IsSizePowerOfTwo(width, height))
+        {
+            wrapping = gl.REPEAT;
+        }
+
+        var filter = (this.config.antialias) ? gl.LINEAR : gl.NEAREST;
+
+        return this.createTexture2D(0, filter, filter, wrapping, wrapping, gl.RGBA, srcCanvas, width, height, true, false, flipY);
+    },
+
+    /**
+     * Updates a WebGL Texture based on the given Canvas Element.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#updateCanvasTexture
+     * @since 3.20.0
+     * 
+     * @param {HTMLCanvasElement} srcCanvas - The Canvas to update the WebGL Texture from.
+     * @param {WebGLTexture} dstTexture - The destination WebGL Texture to update.
+     * @param {boolean} [flipY=false] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
+     * 
+     * @return {WebGLTexture} The updated WebGL Texture.
+     */
+    updateCanvasTexture: function (srcCanvas, dstTexture, flipY)
+    {
+        if (flipY === undefined) { flipY = false; }
+
+        var gl = this.gl;
+
+        var width = srcCanvas.width;
+        var height = srcCanvas.height;
+
+        if (width > 0 && height > 0)
+        {
             this.setTexture2D(dstTexture, 0);
 
-            if (srcCanvas.width > 0 && srcCanvas.height > 0)
-            {
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, srcCanvas);
-            }
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
 
-            dstTexture.width = srcCanvas.width;
-            dstTexture.height = srcCanvas.height;
-
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, srcCanvas);
+    
+            dstTexture.width = width;
+            dstTexture.height = height;
+    
             this.setTexture2D(null, 0);
         }
 
@@ -2332,52 +2389,72 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Creates a WebGL Texture based on the given Video element.
+     * Creates a new WebGL Texture based on the given HTML Video Element.
      *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#videoToTexture
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#createVideoTexture
      * @since 3.20.0
-     *
-     * @param {HTMLVideoElement} srcVideo - The Video element that will be used to populate the texture.
-     * @param {WebGLTexture} [dstTexture] - Is this going to replace an existing texture? If so, pass it here.
-     * @param {boolean} [noRepeat=false] - Should this texture never be allowed to set REPEAT?
-     *
+     * 
+     * @param {HTMLVideoElement} srcVideo - The Video to create the WebGL Texture from
+     * @param {boolean} [noRepeat=false] - Should this canvas be allowed to set `REPEAT`?
+     * @param {boolean} [flipY=false] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
+     * 
      * @return {WebGLTexture} The newly created WebGL Texture.
      */
-    videoToTexture: function (srcVideo, dstTexture, noRepeat)
+    createVideoTexture: function (srcVideo, noRepeat, flipY)
     {
         if (noRepeat === undefined) { noRepeat = false; }
+        if (flipY === undefined) { flipY = false; }
 
         var gl = this.gl;
 
         var width = srcVideo.videoWidth;
         var height = srcVideo.videoHeight;
 
-        if (!dstTexture)
+        var wrapping = gl.CLAMP_TO_EDGE;
+
+        if (!noRepeat && IsSizePowerOfTwo(width, height))
         {
-            var wrapping = gl.CLAMP_TO_EDGE;
-
-            if (!noRepeat && IsSizePowerOfTwo(width, height))
-            {
-                wrapping = gl.REPEAT;
-            }
-
-            var filter = (this.config.antialias) ? gl.LINEAR : gl.NEAREST;
-
-            dstTexture = this.createTexture2D(0, filter, filter, wrapping, wrapping, gl.RGBA, srcVideo, width, height, true, true);
+            wrapping = gl.REPEAT;
         }
-        else if (dstTexture)
+
+        var filter = (this.config.antialias) ? gl.LINEAR : gl.NEAREST;
+
+        return this.createTexture2D(0, filter, filter, wrapping, wrapping, gl.RGBA, srcVideo, width, height, true, true, flipY);
+    },
+
+    /**
+     * Updates a WebGL Texture based on the given HTML Video Element.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#updateVideoTexture
+     * @since 3.20.0
+     * 
+     * @param {HTMLVideoElement} srcVideo - The Video to update the WebGL Texture with.
+     * @param {WebGLTexture} dstTexture - The destination WebGL Texture to update.
+     * @param {boolean} [flipY=false] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
+     * 
+     * @return {WebGLTexture} The updated WebGL Texture.
+     */
+    updateVideoTexture: function (srcVideo, dstTexture, flipY)
+    {
+        if (flipY === undefined) { flipY = false; }
+
+        var gl = this.gl;
+
+        var width = srcVideo.videoWidth;
+        var height = srcVideo.videoHeight;
+
+        if (width > 0 && height > 0)
         {
-            if (width > 0 && height > 0)
-            {
-                this.setTexture2D(dstTexture, 0);
+            this.setTexture2D(dstTexture, 0);
 
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, srcVideo);
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
 
-                dstTexture.width = width;
-                dstTexture.height = height;
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, srcVideo);
 
-                this.setTexture2D(null, 0);
-            }
+            dstTexture.width = width;
+            dstTexture.height = height;
+
+            this.setTexture2D(null, 0);
         }
 
         return dstTexture;
