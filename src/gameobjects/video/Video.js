@@ -45,8 +45,7 @@ var VideoRender = require('./VideoRender');
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
- * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
- * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
+ * @param {string} [key] - The key of the Video this Game Object will use to render with, as stored in the Video Cache.
  */
 var Video = new Class({
 
@@ -77,106 +76,173 @@ var Video = new Class({
         GameObject.call(this, scene, 'Video');
 
         /**
-         * @property {HTMLVideoElement} video - The HTML Video Element that is added to the document.
+         * A reference to the HTML Video Element this Video Game Object is playing.
+         * Will be `null` until a video is loaded for playback.
+         *
+         * @name Phaser.GameObjects.Video#video
+         * @type {?HTMLVideoElement}
+         * @since 3.20.0
          */
         this.video = null;
 
+        /**
+         * The Phaser Texture this Game Object is using to render the video to.
+         * Will be `null` until a video is loaded for playback.
+         *
+         * @name Phaser.GameObjects.Video#videoTexture
+         * @type {?Phaser.Textures.Texture}
+         * @since 3.20.0
+         */
         this.videoTexture = null;
 
+        /**
+         * A reference to the TextureSource belong to the `videoTexture` Texture object.
+         * Will be `null` until a video is loaded for playback.
+         *
+         * @name Phaser.GameObjects.Video#videoTextureSource
+         * @type {?Phaser.Textures.TextureSource}
+         * @since 3.20.0
+         */
         this.videoTextureSource = null;
 
+        /**
+         * A Phaser CanvasTexture instance that holds the most recent snapshot taken from the video.
+         * This will only be set if `snapshot` or `snapshotArea` have been called, and will be `null` until that point.
+         *
+         * @name Phaser.GameObjects.Video#snapshotTexture
+         * @type {?Phaser.Textures.CanvasTexture}
+         * @since 3.20.0
+         */
+        this.snapshotTexture = null;
+
+        /**
+         * If you have saved this video to a texture via the `saveTexture` method, this controls if the video
+         * is rendered with `flipY` in WebGL or not. You often need to set this if you wish to use the video texture
+         * as the input source for a shader. If you find your video is appearing upside down within a shader or
+         * custom pipeline, flip this property.
+         *
+         * @name Phaser.GameObjects.Video#flipY
+         * @type {boolean}
+         * @since 3.20.0
+         */
+        this.flipY = false;
+
+        /**
+         * The key used by the texture as stored in the Texture Manager.
+         *
+         * @name Phaser.GameObjects.Video#_key
+         * @type {string}
+         * @private
+         * @since 3.20.0
+         */
         this._key = UUID();
 
         /**
-         * @property {boolean} touchLocked - true if this video is currently locked awaiting a touch event. This happens on some mobile devices, such as iOS.
-         * @default
+         * An internal flag holding the current state of the video lock, should document interaction be required
+         * before playback can begin.
+         *
+         * @name Phaser.GameObjects.Video#touchLocked
+         * @type {boolean}
+         * @since 3.20.0
          */
         this.touchLocked = true;
 
         /**
-         * Start playing the video when it's unlocked.
-         * @property {boolean} playWhenUnlocked
-         * @default
+         * Should the video auto play when document interaction is required and happens?
+         *
+         * @name Phaser.GameObjects.Video#playWhenUnlocked
+         * @type {boolean}
+         * @since 3.20.0
          */
         this.playWhenUnlocked = false;
 
         /**
-         * @property {integer} timeout - The amount of ms allowed to elapsed before the Video.onTimeout signal is dispatched while waiting for webcam access.
-         * @default
-         */
-        this.timeout = 15000;
-
-        /**
-         * @property {integer} _timeOutID - setTimeout ID.
-         * @private
-         */
-        this._timeOutID = null;
-
-        /**
-         * @property {MediaStream} videoStream - The Video Stream data. Only set if this Video is streaming from the webcam via `startMediaStream`.
-         */
-        this.videoStream = null;
-
-        /**
-         * @property {boolean} isStreaming - Is there a streaming video source? I.e. from a webcam.
-         */
-        this.isStreaming = false;
-
-        /**
-         * When starting playback of a video Phaser will monitor its readyState using a setTimeout call.
-         * The setTimeout happens once every `Video.retryInterval` ms. It will carry on monitoring the video
+         * When starting playback of a video Phaser will monitor its `readyState` using a `setTimeout` call.
+         * The `setTimeout` happens once every `Video.retryInterval` ms. It will carry on monitoring the video
          * state in this manner until the `retryLimit` is reached and then abort.
-         * @property {integer} retryLimit
-         * @default
+         *
+         * @name Phaser.GameObjects.Video#retryLimit
+         * @type {integer}
+         * @since 3.20.0
          */
         this.retryLimit = 20;
 
         /**
-         * @property {integer} retry - The current retry attempt.
-         * @default
+         * The current retry attempt.
+         *
+         * @name Phaser.GameObjects.Video#retry
+         * @type {integer}
+         * @since 3.20.0
          */
         this.retry = 0;
 
         /**
-         * @property {integer} retryInterval - The number of ms between each retry at monitoring the status of a downloading video.
-         * @default
+         * The number of ms between each retry while monitoring the ready state of a downloading video.
+         *
+         * @name Phaser.GameObjects.Video#retryInterval
+         * @type {integer}
+         * @since 3.20.0
          */
         this.retryInterval = 500;
 
         /**
-         * @property {integer} _retryID - The callback ID of the retry setTimeout.
+         * The setTimeout callback ID.
+         *
+         * @name Phaser.GameObjects.Video#_retryID
+         * @type {integer}
          * @private
+         * @since 3.20.0
          */
         this._retryID = null;
 
         /**
-         * @property {boolean} _systemMuted - The video was muted due to a system event like losing focus, not a game code event.
+         * The video was muted due to a system event, such as the game losing focus.
+         *
+         * @name Phaser.GameObjects.Video#_systemMuted
+         * @type {boolean}
          * @private
-         * @default
+         * @since 3.20.0
          */
         this._systemMuted = false;
 
         /**
-         * @property {boolean} _codeMuted - The video was muted due to a game code event, or the Loader setting, not a system event.
+         * The video was muted due to game code, not a system event.
+         *
+         * @name Phaser.GameObjects.Video#_codeMuted
+         * @type {boolean}
          * @private
-         * @default
+         * @since 3.20.0
          */
         this._codeMuted = false;
 
         /**
-         * @property {boolean} _systemPaused - The video was paused due to a system event like losing focus, not a game code event.
+         * The video was paused due to a system event, such as the game losing focus.
+         *
+         * @name Phaser.GameObjects.Video#_systemPaused
+         * @type {boolean}
          * @private
-         * @default
+         * @since 3.20.0
          */
         this._systemPaused = false;
 
         /**
-         * @property {boolean} _codePaused - The video was paused due to a game code event, not a system event.
+         * The video was paused due to game code, not a system event.
+         *
+         * @name Phaser.GameObjects.Video#_codePaused
+         * @type {boolean}
          * @private
-         * @default
+         * @since 3.20.0
          */
         this._codePaused = false;
 
+        /**
+         * The locally bound event callback handlers.
+         *
+         * @name Phaser.GameObjects.Video#_callbacks
+         * @type {any}
+         * @private
+         * @since 3.20.0
+         */
         this._callbacks = {
             end: this.completeHandler.bind(this),
             play: this.playHandler.bind(this),
@@ -191,27 +257,71 @@ var Video = new Class({
         /**
          * The internal crop data object, as used by `setCrop` and passed to the `Frame.setCropUVs` method.
          *
-         * @name Phaser.GameObjects.Image#_crop
+         * @name Phaser.GameObjects.Video#_crop
          * @type {object}
          * @private
-         * @since 3.11.0
+         * @since 3.20.0
          */
         this._crop = this.resetCropObject();
 
+        /**
+         * An object containing in and out markers for sequence playback.
+         *
+         * @name Phaser.GameObjects.Video#markers
+         * @type {any}
+         * @since 3.20.0
+         */
         this.markers = {};
 
+        /**
+         * The in marker.
+         *
+         * @name Phaser.GameObjects.Video#_markerIn
+         * @type {integer}
+         * @private
+         * @since 3.20.0
+         */
         this._markerIn = -1;
+
+        /**
+         * The out marker.
+         *
+         * @name Phaser.GameObjects.Video#_markerOut
+         * @type {integer}
+         * @private
+         * @since 3.20.0
+         */
         this._markerOut = Number.MAX_SAFE_INTEGER;
 
+        /**
+         * The last time the TextureSource was updated.
+         *
+         * @name Phaser.GameObjects.Video#_lastUpdate
+         * @type {integer}
+         * @private
+         * @since 3.20.0
+         */
         this._lastUpdate = 0;
 
+        /**
+         * The key of the video being played from the Video cache, if any.
+         *
+         * @name Phaser.GameObjects.Video#_cacheKey
+         * @type {string}
+         * @private
+         * @since 3.20.0
+         */
         this._cacheKey = '';
 
+        /**
+         * Is the video currently seeking?
+         *
+         * @name Phaser.GameObjects.Video#_isSeeking
+         * @type {boolean}
+         * @private
+         * @since 3.20.0
+         */
         this._isSeeking = false;
-
-        this.snapshotTexture = null;
-
-        this.flipY = false;
 
         this.setPosition(x, y);
         this.initPipeline();
@@ -258,9 +368,14 @@ var Video = new Class({
      * If need video audio, then you'll have to factor into your game flow the fact that the video cannot start playing
      * until the user has interacted with the browser.
      *
-     * @method Phaser.Video#play
-     * @param {boolean} [loop=false] - Should the video loop automatically when it reaches the end? Please note that at present some browsers (i.e. Chrome) do not support *seamless* video looping.
-     * @return {Phaser.Video} This Video object for method chaining.
+     * @method Phaser.GameObjects.Video#play
+     * @since 3.20.0
+     * 
+     * @param {boolean} [loop=false] - Should the video loop automatically when it reaches the end? Please note that not all browsers support _seamless_ video looping for all encoding formats.
+     * @param {integer} [markerIn] - Optional in marker time, in seconds, for playback of a sequence of the video.
+     * @param {integer} [markerOut] - Optional out marker time, in seconds, for playback of a sequence of the video.
+     * 
+     * @return {this} This Video Game Object for method chaining.
      */
     play: function (loop, markerIn, markerOut)
     {
@@ -300,14 +415,6 @@ var Video = new Class({
 
         video.loop = loop;
 
-        //  If video hasn't downloaded properly yet ...
-        if (video.readyState !== 4)
-        {
-            this.retry = this.retryLimit;
-
-            this._retryID = window.setTimeout(this.checkVideoProgress.bind(this), this.retryInterval);
-        }
-
         var callbacks = this._callbacks;
 
         var playPromise = video.play();
@@ -320,6 +427,14 @@ var Video = new Class({
         {
             //  Old-school browsers with no Promises
             video.addEventListener('playing', callbacks.play, true);
+
+            //  If video hasn't downloaded properly yet ...
+            if (video.readyState < 2)
+            {
+                this.retry = this.retryLimit;
+
+                this._retryID = window.setTimeout(this.checkVideoProgress.bind(this), this.retryInterval);
+            }
         }
 
         //  Set these after calling `play` or they don't fire (useful, thanks browsers)
@@ -330,6 +445,20 @@ var Video = new Class({
         return this;
     },
 
+    /**
+     * TODO
+     *
+     * @method Phaser.GameObjects.Video#changeSource
+     * @since 3.20.0
+     * 
+     * @param {string} key - The key of the Video this Game Object will swap to playing, as stored in the Video Cache.
+     * @param {boolean} [autoplay=true] - Should the video start playing immediately, once the swap is complete?
+     * @param {boolean} [loop=false] - Should the video loop automatically when it reaches the end? Please note that not all browsers support _seamless_ video looping for all encoding formats.
+     * @param {integer} [markerIn] - Optional in marker time, in seconds, for playback of a sequence of the video.
+     * @param {integer} [markerOut] - Optional out marker time, in seconds, for playback of a sequence of the video.
+     * 
+     * @return {this} This Video Game Object for method chaining.
+     */
     changeSource: function (key, autoplay, loop, markerIn, markerOut)
     {
         if (autoplay === undefined) { autoplay = true; }
@@ -391,7 +520,27 @@ var Video = new Class({
         return this;
     },
 
-    //  https://github.com/w3c/media-and-entertainment/issues/4
+    /**
+     * Adds a sequence marker to this video.
+     * 
+     * Markers allow you to split a video up into sequences, delineated by a start and end time, given in seconds.
+     * 
+     * You can then play back specific markers via the `playMarker` method.
+     * 
+     * Note that marker timing is _not_ frame-perfect. You should construct your videos in such a way that you allow for
+     * plenty of extra padding before and after each sequence to allow for discrepencies in browser seek and currentTime accuracy.
+     * 
+     * See https://github.com/w3c/media-and-entertainment/issues/4 for more details about this issue.
+     *
+     * @method Phaser.GameObjects.Video#addMarker
+     * @since 3.20.0
+     * 
+     * @param {string} key - A unique name to give this marker.
+     * @param {integer} markerIn - The time, in seconds, representing the start of this marker.
+     * @param {integer} markerOut - The time, in seconds, representing the end of this marker.
+     * 
+     * @return {this} This Video Game Object for method chaining.
+     */
     addMarker: function (key, markerIn, markerOut)
     {
         if (!isNaN(markerIn) && markerIn >= 0 && !isNaN(markerOut))
@@ -402,6 +551,25 @@ var Video = new Class({
         return this;
     },
 
+    /**
+     * Plays a pre-defined sequence in this video.
+     * 
+     * Markers allow you to split a video up into sequences, delineated by a start and end time, given in seconds and
+     * specified via the `addMarker` method.
+     * 
+     * Note that marker timing is _not_ frame-perfect. You should construct your videos in such a way that you allow for
+     * plenty of extra padding before and after each sequence to allow for discrepencies in browser seek and currentTime accuracy.
+     * 
+     * See https://github.com/w3c/media-and-entertainment/issues/4 for more details about this issue.
+     *
+     * @method Phaser.GameObjects.Video#playMarker
+     * @since 3.20.0
+     * 
+     * @param {string} key - The name of the marker sequence to play.
+     * @param {boolean} [loop=false] - Should the video loop automatically when it reaches the end? Please note that not all browsers support _seamless_ video looping for all encoding formats.
+     * 
+     * @return {this} This Video Game Object for method chaining.
+     */
     playMarker: function (key, loop)
     {
         var marker = this.markers[key];
@@ -414,6 +582,18 @@ var Video = new Class({
         return this;
     },
 
+    /**
+     * Removes a previously set marker from this video.
+     * 
+     * If the marker is currently playing it will _not_ stop playback.
+     *
+     * @method Phaser.GameObjects.Video#removeMarker
+     * @since 3.20.0
+     * 
+     * @param {string} key - The name of the marker to remove.
+     * 
+     * @return {this} This Video Game Object for method chaining.
+     */
     removeMarker: function (key)
     {
         delete this.markers[key];
@@ -421,6 +601,21 @@ var Video = new Class({
         return this;
     },
 
+    /**
+     * Takes a snapshot of the current frame of the video and renders it to a CanvasTexture object,
+     * which is then returned. You can optionally resize the grab by passing a width and height.
+     * 
+     * This method returns a reference to the `Video.snapshotTexture` object. Calling this method
+     * multiple times will overwrite the previous snapshot with the most recent one.
+     *
+     * @method Phaser.GameObjects.Video#snapshot
+     * @since 3.20.0
+     * 
+     * @param {integer} [width] - The width of the resulting CanvasTexture.
+     * @param {integer} [height] - The height of the resulting CanvasTexture.
+     * 
+     * @return {Phaser.Textures.CanvasTexture} 
+     */
     snapshot: function (width, height)
     {
         if (width === undefined) { width = this.width; }
@@ -429,6 +624,25 @@ var Video = new Class({
         return this.snapshotArea(0, 0, this.width, this.height, width, height);
     },
 
+    /**
+     * Takes a snapshot of the specified area of the current frame of the video and renders it to a CanvasTexture object,
+     * which is then returned. You can optionally resize the grab by passing a different `destWidth` and `destHeight`.
+     * 
+     * This method returns a reference to the `Video.snapshotTexture` object. Calling this method
+     * multiple times will overwrite the previous snapshot with the most recent one.
+     *
+     * @method Phaser.GameObjects.Video#snapshotArea
+     * @since 3.20.0
+     * 
+     * @param {integer} [x=0] - The horizontal location of the top-left of the area to grab from.
+     * @param {integer} [y=0] - The vertical location of the top-left of the area to grab from.
+     * @param {integer} [srcWidth] - The width of area to grab from the video. If not given it will grab the full video dimensions.
+     * @param {integer} [srcHeight] - The height of area to grab from the video. If not given it will grab the full video dimensions.
+     * @param {integer} [destWidth] - The destination width of the grab, allowing you to resize it.
+     * @param {integer} [destHeight] - The destination height of the grab, allowing you to resize it.
+     * 
+     * @return {Phaser.Textures.CanvasTexture} 
+     */
     snapshotArea: function (x, y, srcWidth, srcHeight, destWidth, destHeight)
     {
         if (x === undefined) { x = 0; }
@@ -555,17 +769,17 @@ var Video = new Class({
             console.log(e);
         }, true);
 
-        video.addEventListener('loadstart', function (e)
+        video.addEventListener('loadstart', function ()
         {
             console.log('Load Start');
         }, true);
 
-        video.addEventListener('loadedmetadata', function (e)
+        video.addEventListener('loadedmetadata', function ()
         {
             console.log('Loaded Meta Data');
         }, true);
 
-        video.addEventListener('emptied', function (e)
+        video.addEventListener('emptied', function ()
         {
             console.log('Load Emptied');
         }, true);
@@ -715,45 +929,7 @@ var Video = new Class({
 
         var video = this.video;
 
-        if (this.isStreaming)
-        {
-            var videoStream = this.videoStream;
-
-            if (video.mozSrcObject)
-            {
-                video.mozSrcObject.stop();
-                video.src = null;
-            }
-            else if (video.srcObject)
-            {
-                video.srcObject.stop();
-                video.src = null;
-            }
-            else
-            {
-                video.src = '';
-
-                if (videoStream.active)
-                {
-                    videoStream.active = false;
-                }
-                else if (videoStream.getTracks)
-                {
-                    videoStream.getTracks().forEach(function (track)
-                    {
-                        track.stop();
-                    });
-                }
-                else
-                {
-                    videoStream.stop();
-                }
-            }
-
-            this.videoStream = null;
-            this.isStreaming = false;
-        }
-        else if (video)
+        if (video)
         {
             var callbacks = this._callbacks;
 
@@ -771,29 +947,6 @@ var Video = new Class({
     },
 
     /**
-     * Creates a new Video element from the given Blob. The Blob must contain the video data in the correct encoded format.
-     * This method is typically called by the Phaser.Loader and Phaser.Cache for you, but is exposed publicly for convenience.
-     *
-     * @method Phaser.Video#createVideoFromBlob
-     * @param {Blob} blob - The Blob containing the video data.
-     * @return {Phaser.Video} This Video object for method chaining.
-     */
-    createVideoFromBlob: function (blob)
-    {
-        var _this = this;
-
-        this.video = document.createElement('video');
-        this.video.controls = false;
-        this.video.setAttribute('autoplay', 'autoplay');
-        this.video.setAttribute('playsinline', 'playsinline');
-        this.video.addEventListener('loadeddata', function (event) { _this.updateTexture(event); }, true);
-        this.video.src = window.URL.createObjectURL(blob);
-        this.video.canplay = true;
-
-        return this;
-    },
-
-    /**
      * Internal callback that monitors the download progress of a video after changing its source.
      *
      * @method Phaser.Video#checkVideoProgress
@@ -801,10 +954,8 @@ var Video = new Class({
      */
     checkVideoProgress: function ()
     {
-        if (this.video.readyState === 4)
+        if (this.video.readyState >= 2)
         {
-            this._pendingChangeSource = false;
-
             //  We've got enough data to update the texture for playback
             this.updateTexture();
         }
@@ -818,7 +969,7 @@ var Video = new Class({
             }
             else
             {
-                console.warn('Phaser.Video: Unable to start downloading video in time', this.isStreaming);
+                console.warn('Phaser.Video: Unable to start downloading video in time');
             }
         }
     },
@@ -1240,12 +1391,16 @@ var Video = new Class({
      *
      * @method Phaser.Video#destroy
      */
-    destroy: function ()
+    destroy: function (removeVideoElement)
     {
+        if (removeVideoElement === undefined) { removeVideoElement = true; }
+
         this.stop();
 
-        //  Only if this is a custom video AND hasn't been saved as a texture?
-        this.removeVideoElement();
+        if (removeVideoElement)
+        {
+            this.removeVideoElement();
+        }
 
         var game = this.scene.sys.game.events;
 
