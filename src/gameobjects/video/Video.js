@@ -7,6 +7,7 @@
 var Class = require('../../utils/Class');
 var Clamp = require('../../math/Clamp');
 var Components = require('../components');
+var Events = require('../events');
 var GameEvents = require('../../core/events/');
 var GameObject = require('../GameObject');
 var SoundEvents = require('../../sound/events/');
@@ -17,8 +18,51 @@ var VideoRender = require('./VideoRender');
  * @classdesc
  * A Video Game Object.
  * 
- * https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement
+ * This Game Object is capable of handling playback of a previously loaded video from the Phaser Video Cache,
+ * or playing a video based on a given URL. Videos can be either local, or streamed.
  * 
+ * ```javascript
+ * preload () {
+ *   this.load.video('pixar', 'nemo.mp4');
+ * }
+ * 
+ * create () {
+ *   this.add.video(400, 300, 'pixar');
+ * }
+ * ```
+ * 
+ * To all intents and purposes, a video is a standard Game Object, just like a Sprite. And as such, you can do
+ * all the usual things to it, such as scaling, rotating, cropping, tinting, making interactive, giving a
+ * physics body, etc.
+ * 
+ * Transparent videos are also possible via the WebM file format. Providing the video file has was encoded with
+ * an alpha channel, and providing the browser supports WebM playback (not all of them do), then it willl render
+ * in-game with full transparency.
+ * 
+ * ### Autoplaying Videos
+ * 
+ * Videos can only autoplay if the browser has been unlocked with an interaction, or satisfies the MEI settings.
+ * The policies that control autoplaying are vast and vary between browser.
+ * You can, ahd should, read more about it here: https://developer.mozilla.org/en-US/docs/Web/Media/Autoplay_guide
+ * 
+ * If your video doesn't contain any audio, then set the `noAudio` parameter to `true` when the video is _loaded_,
+ * and it will often allow the video to play immediately:
+ * 
+ * ```javascript
+ * preload () {
+ *   this.load.video('pixar', 'nemo.mp4', 'loadeddata', false, true);
+ * }
+ * ```
+ * 
+ * The 5th parameter in the load call tells Phaser that the video doesn't contain any audio tracks. Video without
+ * audio can autoplay without requiring a user interaction. Video with audio cannot do this unless it satisfies
+ * the browsers MEI settings. See the MDN Autoplay Guide for further details.
+ * 
+ * Note that due to a bug in IE11 you cannot play a video texture to a Sprite in WebGL. For IE11 force Canvas mode.
+ * 
+ * More details about video playback and the supported media formats can be found on MDN:
+ * 
+ * https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement
  * https://developer.mozilla.org/en-US/docs/Web/Media/Formats
  *
  * @class Video
@@ -45,7 +89,7 @@ var VideoRender = require('./VideoRender');
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
- * @param {string} [key] - The key of the Video this Game Object will use to render with, as stored in the Video Cache.
+ * @param {string} [key] - Optional key of the Video this Game Object will play, as stored in the Video Cache.
  */
 var Video = new Class({
 
@@ -244,8 +288,9 @@ var Video = new Class({
          * @since 3.20.0
          */
         this._callbacks = {
-            end: this.completeHandler.bind(this),
             play: this.playHandler.bind(this),
+            error: this.loadErrorHandler.bind(this),
+            end: this.completeHandler.bind(this),
             time: this.timeUpdateHandler.bind(this),
             seeking: this.seekingHandler.bind(this),
             seeked: this.seekedHandler.bind(this)
@@ -360,10 +405,11 @@ var Video = new Class({
      * ```
      * 
      * The 5th parameter in the load call tells Phaser that the video doesn't contain any audio tracks. Video without
-     * audio can autoplay without a user gesture first. Video with audio cannot.
+     * audio can autoplay without requiring a user interaction. Video with audio cannot do this unless it satisfies
+     * the browsers MEI settings. See the MDN Autoplay Guide for details.
      * 
-     * If need video audio, then you'll have to factor into your game flow the fact that the video cannot start playing
-     * until the user has interacted with the browser.
+     * If you need audio in your videos, then you'll have to consider the fact that the video cannot start playing until the
+     * user has interacted with the browser, into your game flow.
      *
      * @method Phaser.GameObjects.Video#play
      * @since 3.20.0
@@ -418,7 +464,7 @@ var Video = new Class({
 
         if (playPromise !== undefined)
         {
-            playPromise.then(this.playSuccessHandler.bind(this)).catch(this.playErrorHandler.bind(this));
+            playPromise.then(this.playPromiseSuccessHandler.bind(this)).catch(this.playPromiseErrorHandler.bind(this));
         }
         else
         {
@@ -436,14 +482,21 @@ var Video = new Class({
 
         //  Set these _after_ calling `play` or they don't fire (useful, thanks browsers)
         video.addEventListener('ended', callbacks.end, true);
-        video.addEventListener('webkitendfullscreen', callbacks.end, true);
         video.addEventListener('timeupdate', callbacks.time, true);
+        video.addEventListener('seeking', callbacks.seeking, true);
+        video.addEventListener('seeked', callbacks.seeked, true);
 
         return this;
     },
 
     /**
-     * TODO
+     * This method allows you to change the source of the current video element. It works by first stopping the
+     * current video, if playing. Then deleting the video texture, if one has been created. Finally, it makes a
+     * new video texture and starts playback of the new source through the existing video element.
+     * 
+     * The reason you may wish to do this is because videos that require interaction to unlock, remain in an unlocked
+     * state, even if you change the source of the video. By changing the source to a new video you avoid having to
+     * go through the unlock process again.
      *
      * @method Phaser.GameObjects.Video#changeSource
      * @since 3.20.0
@@ -478,9 +531,6 @@ var Video = new Class({
             this._codePaused = newVideo.paused;
             this._codeMuted = newVideo.muted;
 
-            newVideo.addEventListener('seeking', this._callbacks.seeking, true);
-            newVideo.addEventListener('seeked', this._callbacks.seeked, true);
-
             if (this.videoTexture)
             {
                 this.scene.sys.textures.remove(this._key);
@@ -493,7 +543,7 @@ var Video = new Class({
                 this.setSizeToFrame();
                 this.updateDisplayOrigin();
 
-                this.emit('created', this, newVideo.videoWidth, newVideo.videoHeight);
+                this.emit(Events.VIDEO_CREATED, this, newVideo.videoWidth, newVideo.videoHeight);
             }
             else
             {
@@ -770,13 +820,7 @@ var Video = new Class({
         video.setAttribute('playsinline', 'playsinline');
         video.setAttribute('preload', 'auto');
 
-        video.addEventListener(loadEvent, this._callbacks[loadEvent], true);
-
-        video.addEventListener('error', function (e)
-        {
-            console.log('Load Error');
-            console.log(e);
-        }, true);
+        video.addEventListener('error', this._callbacks.error, true);
 
         video.src = url;
 
@@ -790,13 +834,16 @@ var Video = new Class({
     /**
      * This internal method is called automatically if the playback Promise resolves successfully.
      *
-     * @method Phaser.GameObjects.Video#playSuccessHandler
+     * @method Phaser.GameObjects.Video#playPromiseSuccessHandler
+     * @fires Phaser.GameObjects.Events#VIDEO_PLAY
      * @private
      * @since 3.20.0
      */
-    playSuccessHandler: function ()
+    playPromiseSuccessHandler: function ()
     {
         this.touchLocked = false;
+
+        this.emit(Events.VIDEO_PLAY, this);
 
         if (this._markerIn > -1)
         {
@@ -807,20 +854,56 @@ var Video = new Class({
     /**
      * This internal method is called automatically if the playback Promise fails to resolve.
      *
-     * @method Phaser.GameObjects.Video#playErrorHandler
+     * @method Phaser.GameObjects.Video#playPromiseErrorHandler
+     * @fires Phaser.GameObjects.Events#VIDEO_ERROR
      * @private
      * @since 3.20.0
      * 
      * @param {any} error - The Promise resolution error.
      */
-    playErrorHandler: function (error)
+    playPromiseErrorHandler: function (error)
     {
         this.scene.sys.input.once('pointerdown', this.unlockHandler, this);
 
         this.touchLocked = true;
         this.playWhenUnlocked = true;
 
-        this.emit('error', error);
+        this.emit(Events.VIDEO_ERROR, this, error);
+    },
+
+    /**
+     * Called when the video emits a `playing` event during load.
+     * 
+     * This is only listened for if the browser doesn't support Promises.
+     *
+     * @method Phaser.GameObjects.Video#playHandler
+     * @fires Phaser.GameObjects.Events#VIDEO_PLAY
+     * @since 3.20.0
+     */
+    playHandler: function ()
+    {
+        this.touchLocked = false;
+
+        this.emit(Events.VIDEO_PLAY, this);
+       
+        this.video.removeEventListener('playing', this._callbacks.play, true);
+    },
+
+    /**
+     * This internal method is called automatically if the video fails to load.
+     *
+     * @method Phaser.GameObjects.Video#loadErrorHandler
+     * @fires Phaser.GameObjects.Events#VIDEO_ERROR
+     * @private
+     * @since 3.20.0
+     * 
+     * @param {Event} event - The error Event.
+     */
+    loadErrorHandler: function (event)
+    {
+        this.stop();
+
+        this.emit(Events.VIDEO_ERROR, this, event);
     },
 
     /**
@@ -828,6 +911,7 @@ var Video = new Class({
      * by the browser, but an input event has since been received.
      *
      * @method Phaser.GameObjects.Video#unlockHandler
+     * @fires Phaser.GameObjects.Events#VIDEO_UNLOCKED
      * @private
      * @since 3.20.0
      * 
@@ -838,6 +922,8 @@ var Video = new Class({
         this.touchLocked = false;
         this.playWhenUnlocked = false;
 
+        this.emit(Events.VIDEO_UNLOCKED, this);
+
         if (this._markerIn > -1)
         {
             this.video.currentTime = this._markerIn;
@@ -847,16 +933,17 @@ var Video = new Class({
     },
 
     /**
-     * Called when the video completes plaback, i.e. reaches an `ended` state.
+     * Called when the video completes playback, i.e. reaches an `ended` state.
      * 
-     * This will never happen if the video is coming from a live stream.
+     * This will never happen if the video is coming from a live stream, where the duration is `Infinity`.
      *
      * @method Phaser.GameObjects.Video#completeHandler
+     * @fires Phaser.GameObjects.Events#VIDEO_COMPLETE
      * @since 3.20.0
      */
     completeHandler: function ()
     {
-        this.emit('complete');
+        this.emit(Events.VIDEO_COMPLETE, this);
     },
 
     /**
@@ -866,31 +953,17 @@ var Video = new Class({
      * but we can use it to determine if a video has looped.
      *
      * @method Phaser.GameObjects.Video#timeUpdateHandler
+     * @fires Phaser.GameObjects.Events#VIDEO_LOOP
      * @since 3.20.0
      */
     timeUpdateHandler: function ()
     {
         if (this.video && this.video.currentTime < this._lastUpdate)
         {
-            this.emit('loop', this);
+            this.emit(Events.VIDEO_LOOP, this);
 
             this._lastUpdate = 0;
         }
-    },
-
-    /**
-     * Called when the video emits a `playing` event during load.
-     * 
-     * This is only listened for if the browser doesn't support Promises.
-     *
-     * @method Phaser.GameObjects.Video#playHandler
-     * @since 3.20.0
-     */
-    playHandler: function ()
-    {
-        this.touchLocked = false;
-       
-        this.video.removeEventListener('playing', this._callbacks.play, true);
     },
 
     /**
@@ -924,9 +997,13 @@ var Video = new Class({
                         this.updateTexture();
 
                         this._lastUpdate = currentTime;
+
+                        this.emit(Events.VIDEO_LOOP, this);
                     }
                     else
                     {
+                        this.emit(Events.VIDEO_COMPLETE, this);
+
                         this.stop();
                     }
                 }
@@ -938,6 +1015,7 @@ var Video = new Class({
      * Internal callback that monitors the download progress of a video after changing its source.
      *
      * @method Phaser.GameObjects.Video#checkVideoProgress
+     * @fires Phaser.GameObjects.Events#VIDEO_TIMEOUT
      * @private
      * @since 3.20.0
      */
@@ -958,7 +1036,7 @@ var Video = new Class({
             }
             else
             {
-                console.warn('Timeout opening video');
+                this.emit(Events.VIDEO_TIMEOUT, this);
             }
         }
     },
@@ -988,7 +1066,7 @@ var Video = new Class({
             this.setSizeToFrame();
             this.updateDisplayOrigin();
     
-            this.emit('created', this, width, height);
+            this.emit(Events.VIDEO_CREATED, this, width, height);
         }
         else
         {
@@ -1136,6 +1214,7 @@ var Video = new Class({
      * Internal seeking handler.
      *
      * @method Phaser.GameObjects.Video#seekingHandler
+     * @fires Phaser.GameObjects.Events#VIDEO_SEEKING
      * @private
      * @since 3.20.0
      */
@@ -1143,13 +1222,14 @@ var Video = new Class({
     {
         this._isSeeking = true;
 
-        this.emit('seeking');
+        this.emit(Events.VIDEO_SEEKING, this);
     },
 
     /**
      * Internal seeked handler.
      *
      * @method Phaser.GameObjects.Video#seekedHandler
+     * @fires Phaser.GameObjects.Events#VIDEO_SEEKED
      * @private
      * @since 3.20.0
      */
@@ -1157,7 +1237,7 @@ var Video = new Class({
     {
         this._isSeeking = false;
 
-        this.emit('seeked');
+        this.emit(Events.VIDEO_SEEKED, this);
 
         var video = this.video;
 
@@ -1555,6 +1635,7 @@ var Video = new Class({
      * call `destroy` instead.
      *
      * @method Phaser.GameObjects.Video#stop
+     * @fires Phaser.GameObjects.Events#VIDEO_STOP
      * @since 3.20.0
      * 
      * @return {this} This Video Game Object for method chaining.
@@ -1567,15 +1648,20 @@ var Video = new Class({
         {
             var callbacks = this._callbacks;
 
-            video.removeEventListener('ended', callbacks.end, true);
-            video.removeEventListener('webkitendfullscreen', callbacks.end, true);
-            video.removeEventListener('timeupdate', callbacks.time, true);
-            video.removeEventListener('playing', callbacks.play, true);
-            video.removeEventListener('seeking', callbacks.seeking, true);
-            video.removeEventListener('seeked', callbacks.seeked, true);
+            for (var callback in callbacks)
+            {
+                video.removeEventListener(callback, callbacks[callback], true);
+            }
 
             video.pause();
         }
+
+        if (this._retryID)
+        {
+            window.clearTimeout(this._retryID);
+        }
+
+        this.emit(Events.VIDEO_STOP, this);
 
         return this;
     },
