@@ -1,10 +1,38 @@
 # Change Log
 
-## Version 3.20.0 - Fitoria - in dev
+## Version 3.20.0 - Fitoria - 11th October 2019
 
 ### Video Game Object
 
-* `WebGLRenderer.videoToTexture` is a new method that will create or update a WebGL Texture from the given Video Element.
+This is a new Game Object is capable of handling playback of a previously loaded video from the Phaser Video Cache,
+or playing a video based on a given URL. Videos can be either local, or streamed:
+
+```javascript
+preload () {
+  this.load.video('pixar', 'nemo.mp4');
+}
+
+create () {
+  this.add.video(400, 300, 'pixar');
+}
+```
+
+To all intents and purposes, a video is a standard Game Object, just like a Sprite. And as such, you can do
+all the usual things to it, such as scaling, rotating, cropping, tinting, making interactive, giving a
+physics body, etc.
+
+Transparent videos are also possible via the WebM file format. Providing the video file has was encoded with
+an alpha channel, and providing the browser supports WebM playback (not all of them do), then it willl render
+in-game with full transparency.
+
+You can also save a video to the Texture Manager, allowing other Game Objects to use it as their texture,
+including using it as a sampler2D input for a shader.
+
+See the Video Game Object class for more details. Other Video related changes are as follows:
+
+* `Loader.FileTypes.VideoFile` is a new Video File Loader File Type, used for preloading videos as streams or blobs.
+* `WebGLRenderer.createVideoTexture` is a new method that will create a WebGL Texture from the given Video Element.
+* `WebGLRenderer.updateVideoTexture` is a new method that will update a WebGL Texture from the given Video Element.
 * `TextureSource.isVideo` is a new boolean property that is set when the Texture Source is backed by an HTML Video Element.
 * `Cache.video` is a new global cache that store loaded Video content.
 * `Device.Video.h264Video` has been renamed to `Device.Video.h264` to keep it in-line with the Audio Device names.
@@ -103,7 +131,7 @@ In combination these updates fix issues #4732 and #4672. My thanks to @BenjaminD
 * `MouseManager.target` can now be defined as either a string or by passing an HTMLElement directly. Fix #4353 (thanks @BigZaphod)
 * The `BasePlugin.boot` method has been removed and moved to `ScenePlugin.boot` as it's a Scene-level method only (thanks @samme)
 * The `BasePlugin.scene` and `BasePlugin.systems` properties have been removed and are defined in `ScenePlugin`, as they are Scene-level properties only (thanks @samme)
-* The `Tween.getValue` method has been removed. It was a legacy function from Phaser 2 and always only returned the first TweenData from the data array, ignoring any subsequent properties or targets, making it redundant. Fix #4717 (thanks @chepe263)
+* The `Tween.getValue` method has been updated so you can specify the index of the Tween Data to get the value of. Previously, it only returned the first TweenData from the data array, ignoring any subsequent properties or targets. Fix #4717 (thanks @chepe263)
 * `WebGLRenderer.createTexture2D` has a new optional parameter `forceSize`, which will force the gl texture creation to use the dimensions passed to the method, instead of extracting them from the pixels object, if provided.
 * The `GameObject.setTexture` method can now accept either a string, in which case it looks for the texture in the Texture Manager, or a Texture instance, in which case that instance is set as the Game Object's texture.
 * `TextureManager.get` can now accept either a string-based key, or a Texture instance, as its parameter.
@@ -148,9 +176,6 @@ My thanks to the following for helping with the Phaser 3 Examples, Docs and Type
 Thank you to the following people for contributing ideas for new features to be added to Phaser 3. Because we've now started Phaser 4 development, I am closing off old feature requests that I personally will not work on for Phaser 3 itself. They may be considered for v4 and, of course, if someone from the community wishes to submit a PR to add them, I will be only too happy to look at that. So, if you want to get involved, filter the GitHub issues by the [Feature Request tag](https://github.com/photonstorm/phaser/issues?q=is%3Aissue+is%3Aopen+label%3A%22%F0%9F%92%96+Feature+Request%22) and dig in. In the meantime, thank you to the following people for suggesting features, even if they didn't make it this time around:
 
 @njt1982 @TheTrope @allanbreyes @alexandernst @Secretmapper @murteira @oktayacikalin @TadejZupancic @SBCGames @hadikcz @jcyuan @pinkkis @Aedalus @jestarray @BigZaphod @Secretmapper @francois-n-dream @G-Rath 
-
-
-
 
 ## Version 3.19.0 - Naofumi - 8th August 2019
 
