@@ -912,6 +912,7 @@ var Video = new Class({
      *
      * @method Phaser.GameObjects.Video#unlockHandler
      * @fires Phaser.GameObjects.Events#VIDEO_UNLOCKED
+     * @fires Phaser.GameObjects.Events#VIDEO_PLAY
      * @private
      * @since 3.20.0
      * 
@@ -930,6 +931,8 @@ var Video = new Class({
         }
 
         this.video.play();
+
+        this.emit(Events.VIDEO_PLAY, this);
     },
 
     /**
