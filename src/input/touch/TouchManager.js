@@ -32,7 +32,7 @@ var TouchManager = new Class({
     initialize:
 
     function TouchManager (inputManager)
-    {ó
+    {
         /**
          * A reference to the Input Manager.
          *
