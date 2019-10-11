@@ -1340,17 +1340,23 @@ var FacebookInstantGamesPlugin = new Class({
      */
 
     /**
+     * A configuration object that may be applied to a Context Choose operation.
+     * 
+     * @typedef {object} ChooseContextConfig
+     * @property {ContextFilter[]} [filters] - The set of filters to apply to the context suggestions: 'NEW_CONTEXT_ONLY', 'INCLUDE_EXISTING_CHALLENGES' or 'NEW_PLAYERS_ONLY'.
+     * @property {number} [maxSize] - The maximum number of participants that a suggested context should ideally have.
+     * @property {number} [minSize] - The minimum number of participants that a suggested context should ideally have.
+     */
+
+    /**
      * Opens a context selection dialog for the player. If the player selects an available context,
      * the client will attempt to switch into that context, and emit the `choose` event if successful.
      * Otherwise, if the player exits the menu or the client fails to switch into the new context, the `choosefail` event will be emitted.
-     *
+     * 
      * @method Phaser.FacebookInstantGamesPlugin#chooseContext
      * @since 3.13.0
      * 
-     * @param {*} [options] - An object specifying conditions on the contexts that should be offered.
-     * @param {ContextFilter[]} [options.filters] - The set of filters to apply to the context suggestions: 'NEW_CONTEXT_ONLY', 'INCLUDE_EXISTING_CHALLENGES' or 'NEW_PLAYERS_ONLY'.
-     * @param {number} [options.maxSize] - The maximum number of participants that a suggested context should ideally have.
-     * @param {number} [options.minSize] - The minimum number of participants that a suggested context should ideally have.
+     * @param {ChooseContextConfig} [options] - An object specifying conditions on the contexts that should be offered.
      * 
      * @return {this} This Facebook Instant Games Plugin instance.
      */
