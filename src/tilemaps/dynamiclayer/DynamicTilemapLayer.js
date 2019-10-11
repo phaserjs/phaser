@@ -963,7 +963,7 @@ var DynamicTilemapLayer = new Class({
      *
      * If no layer specified, the map's current layer is used.
      *
-     * @method Phaser.Tilemaps.Tilemap#setCollision
+     * @method Phaser.Tilemaps.DynamicTilemapLayer#setCollision
      * @since 3.0.0
      *
      * @param {(integer|array)} indexes - Either a single tile index, or an array of tile indexes.
