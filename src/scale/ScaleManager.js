@@ -1239,41 +1239,29 @@ var ScaleManager = new Class({
             var fsTarget = this.getFullscreenTarget();
 
             this._requestedFullscreenChange = true;
+
+            var fsPromise;
             
-            if (typeof Promise !== 'undefined')
+            if (fullscreen.keyboard)
             {
-                if (fullscreen.keyboard)
-                {
-                    fsTarget[fullscreen.request](Element.ALLOW_KEYBOARD_INPUT)
-                        .then(this.fullscreenSuccessHandler.bind(this))
-                        .catch(this.fullscreenErrorHandler.bind(this));
-                }
-                else
-                {
-                    fsTarget[fullscreen.request](fullscreenOptions)
-                        .then(this.fullscreenSuccessHandler.bind(this))
-                        .catch(this.fullscreenErrorHandler.bind(this));
-                }
+                fsPromise = fsTarget[fullscreen.request](Element.ALLOW_KEYBOARD_INPUT);
             }
             else
             {
-                if (fullscreen.keyboard)
-                {
-                    fsTarget[fullscreen.request](Element.ALLOW_KEYBOARD_INPUT);
-                }
-                else
-                {
-                    fsTarget[fullscreen.request](fullscreenOptions);
-                }
+                fsPromise = fsTarget[fullscreen.request](fullscreenOptions);
+            }
 
-                if (fullscreen.active)
-                {
-                    this.fullscreenSuccessHandler();
-                }
-                else
-                {
-                    this.fullscreenErrorHandler();
-                }
+            if (fsPromise)
+            {
+                fsPromise.then(this.fullscreenSuccessHandler.bind(this)).catch(this.fullscreenErrorHandler.bind(this));
+            }
+            else if (fullscreen.active)
+            {
+                this.fullscreenSuccessHandler();
+            }
+            else
+            {
+                this.fullscreenErrorHandler();
             }
         }
     },
