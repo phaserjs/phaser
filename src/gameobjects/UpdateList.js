@@ -53,9 +53,6 @@ var UpdateList = new Class({
          */
         this.systems = scene.sys;
 
-        // this._addEvent = 'add';
-        // this.removeEvent = 'remove';
-
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
         scene.sys.events.on(SceneEvents.START, this.start, this);
     },
