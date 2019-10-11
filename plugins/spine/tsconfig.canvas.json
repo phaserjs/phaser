@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"module": "none",
+		"noImplicitAny": true,
+		"removeComments": true,
+		"preserveConstEnums": true,
+		"outFile": "src/runtimes/spine-canvas.js",
+		"sourceMap": true,
+		"declaration": true
+	},
+	"include": [
+		"spine-runtimes/spine-ts/core/src/**/*",
+		"spine-runtimes/spine-ts/canvas/src/**/*"
+	],
+	"exclude": [
+		"spine-runtimes/spine-ts/webgl",
+		"spine-runtimes/spine-ts/widget",
+		"spine-runtimes/spine-ts/threejs",
+		"spine-runtimes/spine-ts/build",
+        "spine-runtimes/spine-ts/player"
+	]
+}

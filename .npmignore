@@ -1,2 +1,3 @@
 **/.*
 build/
+plugins/spine/spine-runtimes/

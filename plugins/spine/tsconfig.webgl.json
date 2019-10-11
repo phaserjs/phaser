@@ -1,0 +1,23 @@
+{
+	"compilerOptions": {
+		"module": "none",
+		"noImplicitAny": true,
+		"removeComments": true,
+		"preserveConstEnums": true,
+		"outFile": "src/runtimes/spine-webgl.js",
+		"sourceMap": true,
+		"declaration": true
+	},
+	"include": [
+		"spine-runtimes/spine-ts/core/src/**/*",
+		"spine-runtimes/spine-ts/webgl/src/**/*"
+	],
+	"exclude": [
+		"spine-runtimes/spine-ts/canvas",
+		"spine-runtimes/spine-ts/widget",
+		"spine-runtimes/spine-ts/threejs",
+		"spine-runtimes/spine-ts/build",
+        "spine-runtimes/spine-ts/webgl/src/Input.ts",
+        "spine-runtimes/spine-ts/webgl/src/LoadingScreen.ts"
+	]
+}
