@@ -1346,12 +1346,12 @@ var spine;
     var AnimationState = (function () {
         function AnimationState(data) {
             this.tracks = new Array();
+            this.timeScale = 1;
             this.events = new Array();
             this.listeners = new Array();
             this.queue = new EventQueue(this);
             this.propertyIDs = new spine.IntSet();
             this.animationsChanged = false;
-            this.timeScale = 1;
             this.trackEntryPool = new spine.Pool(function () { return new TrackEntry(); });
             this.data = data;
         }
@@ -2097,24 +2097,24 @@ var spine;
         EventType[EventType["complete"] = 4] = "complete";
         EventType[EventType["event"] = 5] = "event";
     })(EventType = spine.EventType || (spine.EventType = {}));
-    var AnimationStateAdapter2 = (function () {
-        function AnimationStateAdapter2() {
+    var AnimationStateAdapter = (function () {
+        function AnimationStateAdapter() {
         }
-        AnimationStateAdapter2.prototype.start = function (entry) {
+        AnimationStateAdapter.prototype.start = function (entry) {
         };
-        AnimationStateAdapter2.prototype.interrupt = function (entry) {
+        AnimationStateAdapter.prototype.interrupt = function (entry) {
         };
-        AnimationStateAdapter2.prototype.end = function (entry) {
+        AnimationStateAdapter.prototype.end = function (entry) {
         };
-        AnimationStateAdapter2.prototype.dispose = function (entry) {
+        AnimationStateAdapter.prototype.dispose = function (entry) {
         };
-        AnimationStateAdapter2.prototype.complete = function (entry) {
+        AnimationStateAdapter.prototype.complete = function (entry) {
         };
-        AnimationStateAdapter2.prototype.event = function (entry, event) {
+        AnimationStateAdapter.prototype.event = function (entry, event) {
         };
-        return AnimationStateAdapter2;
+        return AnimationStateAdapter;
     }());
-    spine.AnimationStateAdapter2 = AnimationStateAdapter2;
+    spine.AnimationStateAdapter = AnimationStateAdapter;
 })(spine || (spine = {}));
 var spine;
 (function (spine) {
@@ -2484,10 +2484,10 @@ var spine;
             this.appliedValid = false;
             this.a = 0;
             this.b = 0;
-            this.worldX = 0;
             this.c = 0;
             this.d = 0;
             this.worldY = 0;
+            this.worldX = 0;
             this.sorted = false;
             this.active = false;
             if (data == null)
@@ -6416,6 +6416,9 @@ var spine;
             this.darkColor = data.darkColor == null ? null : new spine.Color();
             this.setToSetupPose();
         }
+        Slot.prototype.getSkeleton = function () {
+            return this.bone.skeleton;
+        };
         Slot.prototype.getAttachment = function () {
             return this.attachment;
         };
