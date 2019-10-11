@@ -107,6 +107,7 @@ In combination these updates fix issues #4732 and #4672. My thanks to @BenjaminD
 * `WebGLRenderer.createTexture2D` has a new optional parameter `forceSize`, which will force the gl texture creation to use the dimensions passed to the method, instead of extracting them from the pixels object, if provided.
 * The `GameObject.setTexture` method can now accept either a string, in which case it looks for the texture in the Texture Manager, or a Texture instance, in which case that instance is set as the Game Object's texture.
 * `TextureManager.get` can now accept either a string-based key, or a Texture instance, as its parameter.
+* `SceneManager.stop` now has an optional `data` parameter, which is passed to the Scene shutdown method. Fix #4510 (thanks @Olliebrown @GetsukenStudios)
 
 ### Bug Fixes
 
@@ -129,12 +130,13 @@ In combination these updates fix issues #4732 and #4672. My thanks to @BenjaminD
 * `DynamicBitmapText.setOrigin` wouldn't change the origin when using the Canvas Renderer, only in WebGL. It now sets the origin regardless of renderer. Fix #4108 (thanks @garethwhittaker)
 * `DynamicBitmapText` wouldn't respect the multi-line alignment values when using the Canvas Renderer. It now uses them in the line calculations.
 * `DynamicBitmapText` and `BitmapText` wouldn't render at the correct position when using scaled BitmapText and an origin. Fix #4054 (thanks @Aveyder)
+* Incorrect lighting on batched Sprites. The lighting was not correct when batching several sprites with different rotations. Each sprite now uses its own `uInverseRotationMatrix` to compute the lighting correctly (thanks @gogoprog)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@krzysztof-grzybek @NokFrt @r-onodera @colorcube @neon-dev @SavedByZero
+@krzysztof-grzybek @NokFrt @r-onodera @colorcube @neon-dev @SavedByZero @arnekeller 
 
 ### Thanks
 
