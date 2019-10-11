@@ -107,7 +107,7 @@ In combination these updates fix issues #4732 and #4672. My thanks to @BenjaminD
 * `WebGLRenderer.createTexture2D` has a new optional parameter `forceSize`, which will force the gl texture creation to use the dimensions passed to the method, instead of extracting them from the pixels object, if provided.
 * The `GameObject.setTexture` method can now accept either a string, in which case it looks for the texture in the Texture Manager, or a Texture instance, in which case that instance is set as the Game Object's texture.
 * `TextureManager.get` can now accept either a string-based key, or a Texture instance, as its parameter.
-* `SceneManager.stop` now has an optional `data` parameter, which is passed to the Scene shutdown method. Fix #4510 (thanks @Olliebrown @GetsukenStudios)
+* `SceneManager.stop` and the matching `ScenePlugin.stop` now have an optional `data` parameter, which is passed to the Scene shutdown method. Fix #4510 (thanks @Olliebrown @GetsukenStudios)
 
 ### Bug Fixes
 
