@@ -1529,7 +1529,7 @@ var SceneManager = new Class({
      *
      * @param {string} op - The operation to perform.
      * @param {(string|Phaser.Scene)} keyA - Scene A.
-     * @param {(string|Phaser.Scene)} [keyB] - Scene B.
+     * @param {(any|string|Phaser.Scene)} [keyB] - Scene B, or a data object.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
