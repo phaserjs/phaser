@@ -135,6 +135,7 @@ In combination these updates fix issues #4732 and #4672. My thanks to @BenjaminD
 * `DynamicBitmapText` and `BitmapText` wouldn't render at the correct position when using scaled BitmapText and an origin. Fix #4054 (thanks @Aveyder)
 * Incorrect lighting on batched Sprites. The lighting was not correct when batching several sprites with different rotations. Each sprite now uses its own `uInverseRotationMatrix` to compute the lighting correctly (thanks @gogoprog)
 * Matter.js Body wasn't setting the part angles correctly in `Body.update` (thanks @Frozzy6)
+* `ScaleManager.startFullscreen` now checks to see if the call returns a Promise, rather than checking if the browser supports them, before waiting for promise resolution. This fixes a runtime console warning in Microsoft Edge. Fix #4795 (thanks @maksdk)
 
 ### Examples, Documentation and TypeScript
 
