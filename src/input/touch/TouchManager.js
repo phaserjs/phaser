@@ -32,7 +32,7 @@ var TouchManager = new Class({
     initialize:
 
     function TouchManager (inputManager)
-    {
+    {ó
         /**
          * A reference to the Input Manager.
          *
@@ -186,10 +186,38 @@ var TouchManager = new Class({
             this.target = this.manager.game.canvas;
         }
 
+        if (config.disableContextMenu)
+        {
+            this.disableContextMenu();
+        }
+
         if (this.enabled && this.target)
         {
             this.startListeners();
         }
+    },
+
+    /**
+     * Attempts to disable the context menu from appearing if you touch-hold on the browser.
+     * 
+     * Works by listening for the `contextmenu` event and prevent defaulting it.
+     * 
+     * Use this if you need to disable the OS context menu on mobile.
+     *
+     * @method Phaser.Input.Touch.TouchManager#disableContextMenu
+     * @since 3.20.0
+     *
+     * @return {Phaser.Input.Touch.TouchManager} This Touch Manager instance.
+     */
+    disableContextMenu: function ()
+    {
+        document.body.addEventListener('contextmenu', function (event)
+        {
+            event.preventDefault();
+            return false;
+        });
+
+        return this;
     },
 
     /**
