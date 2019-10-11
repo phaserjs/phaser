@@ -18,7 +18,6 @@ var SceneEvents = require('../scene/events');
  * Some or all of these Game Objects may also be part of the Scene's [Display List]{@link Phaser.GameObjects.DisplayList}, for Rendering.
  *
  * @class UpdateList
- * @extends Phaser.Structs.ProcessQueue
  * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
@@ -52,6 +51,46 @@ var UpdateList = new Class({
          * @since 3.0.0
          */
         this.systems = scene.sys;
+
+        /**
+         * The `pending` list is a selection of items which are due to be made 'active' in the next update.
+         *
+         * @name Phaser.GameObjects.UpdateList#_pending
+         * @type {Array.<*>}
+         * @private
+         * @default []
+         * @since 3.20.0
+         */
+
+        /**
+         * The `active` list is a selection of items which are considered active and should be updated.
+         *
+         * @name Phaser.GameObjects.UpdateList#_active
+         * @type {Array.<*>}
+         * @private
+         * @default []
+         * @since 3.20.0
+         */
+
+        /**
+         * The `destroy` list is a selection of items that were active and are awaiting being destroyed in the next update.
+         *
+         * @name Phaser.GameObjects.UpdateList#_destroy
+         * @type {Array.<*>}
+         * @private
+         * @default []
+         * @since 3.20.0
+         */
+
+        /**
+         * The total number of items awaiting processing.
+         *
+         * @name Phaser.GameObjects.UpdateList#_toProcess
+         * @type {integer}
+         * @private
+         * @default 0
+         * @since 3.0.0
+         */
 
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
         scene.sys.events.on(SceneEvents.START, this.start, this);
@@ -177,6 +216,75 @@ var UpdateList = new Class({
         this.systems = null;
     }
 
+    /**
+     * Adds a new item to the Update List.
+     * 
+     * The item is added to the pending list and made active in the next update.
+     *
+     * @method Phaser.GameObjects.UpdateList#add
+     * @since 3.0.0
+     *
+     * @param {*} item - The item to add to the queue.
+     *
+     * @return {*} The item that was added.
+     */
+
+    /**
+     * Removes an item from the Update List.
+     * 
+     * The item is added to the pending destroy and fully removed in the next update.
+     *
+     * @method Phaser.GameObjects.UpdateList#remove
+     * @since 3.0.0
+     *
+     * @param {*} item - The item to be removed from the queue.
+     *
+     * @return {*} The item that was removed.
+     */
+
+    /**
+     * Removes all active items from this Update List.
+     * 
+     * All the items are marked as 'pending destroy' and fully removed in the next update.
+     *
+     * @method Phaser.GameObjects.UpdateList#removeAll
+     * @since 3.20.0
+     *
+     * @return {this} This Update List object.
+     */
+
+    /**
+     * Update this queue. First it will process any items awaiting destruction, and remove them.
+     * 
+     * Then it will check to see if there are any items pending insertion, and move them to an
+     * active state. Finally, it will return a list of active items for further processing.
+     *
+     * @method Phaser.GameObjects.UpdateList#update
+     * @since 3.0.0
+     *
+     * @return {Array.<*>} A list of active items.
+     */
+
+    /**
+     * Returns the current list of active items.
+     * 
+     * This method returns a reference to the active list array, not a copy of it.
+     * Therefore, be careful to not modify this array outside of the ProcessQueue.
+     *
+     * @method Phaser.GameObjects.UpdateList#getActive
+     * @since 3.0.0
+     *
+     * @return {Array.<*>} A list of active items.
+     */
+
+    /**
+     * The number of entries in the active list.
+     *
+     * @name Phaser.GameObjects.UpdateList#length
+     * @type {integer}
+     * @readonly
+     * @since 3.20.0
+     */
 });
 
 PluginCache.register('UpdateList', UpdateList, 'updateList');
