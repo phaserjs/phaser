@@ -1264,7 +1264,6 @@ module.exports = {
 
 var BlendModes = __webpack_require__(/*! ../renderer/BlendModes */ "../../../src/renderer/BlendModes.js");
 var GetAdvancedValue = __webpack_require__(/*! ../utils/object/GetAdvancedValue */ "../../../src/utils/object/GetAdvancedValue.js");
-var ScaleModes = __webpack_require__(/*! ../renderer/ScaleModes */ "../../../src/renderer/ScaleModes.js");
 
 /**
  * Builds a Game Object using the provided configuration object.
@@ -1352,10 +1351,6 @@ var BuildGameObject = function (scene, gameObject, config)
 
         gameObject.setOrigin(ox, oy);
     }
-
-    //  ScaleMode
-
-    gameObject.scaleMode = GetAdvancedValue(config, 'scaleMode', ScaleModes.DEFAULT);
 
     //  BlendMode
 
@@ -2612,7 +2607,6 @@ var ToJSON = function (gameObject)
         rotation: gameObject.rotation,
         alpha: gameObject.alpha,
         visible: gameObject.visible,
-        scaleMode: gameObject.scaleMode,
         blendMode: gameObject.blendMode,
         textureKey: '',
         frameKey: '',
@@ -4269,6 +4263,332 @@ module.exports = 'destroy';
 
 /***/ }),
 
+/***/ "../../../src/gameobjects/events/VIDEO_COMPLETE_EVENT.js":
+/*!*************************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_COMPLETE_EVENT.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Video Game Object Complete Event.
+ * 
+ * This event is dispatched when a Video finishes playback by reaching the end of its duration. It
+ * is also dispatched if a video marker sequence is being played and reaches the end.
+ * 
+ * Note that not all videos can fire this event. Live streams, for example, have no fixed duration,
+ * so never technically 'complete'.
+ * 
+ * If a video is stopped from playback, via the `Video.stop` method, it will emit the
+ * `VIDEO_STOP` event instead of this one.
+ * 
+ * Listen for it from a Video Game Object instance using `Video.on('complete', listener)`.
+ *
+ * @event Phaser.GameObjects.Events#VIDEO_COMPLETE
+ * @since 3.20.0
+ * 
+ * @param {Phaser.GameObjects.Video} video - The Video Game Object which completed playback.
+ */
+module.exports = 'complete';
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/events/VIDEO_CREATED_EVENT.js":
+/*!************************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_CREATED_EVENT.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Video Game Object Created Event.
+ * 
+ * This event is dispatched when the texture for a Video has been created. This happens
+ * when enough of the video source has been loaded that the browser is able to render a
+ * frame from it.
+ * 
+ * Listen for it from a Video Game Object instance using `Video.on('created', listener)`.
+ *
+ * @event Phaser.GameObjects.Events#VIDEO_CREATED
+ * @since 3.20.0
+ * 
+ * @param {Phaser.GameObjects.Video} video - The Video Game Object which raised the event.
+ * @param {integer} width - The width of the video.
+ * @param {integer} height - The height of the video.
+ */
+module.exports = 'created';
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/events/VIDEO_ERROR_EVENT.js":
+/*!**********************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_ERROR_EVENT.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Video Game Object Error Event.
+ * 
+ * This event is dispatched when a Video tries to play a source that does not exist, or is the wrong file type.
+ * 
+ * Listen for it from a Video Game Object instance using `Video.on('error', listener)`.
+ *
+ * @event Phaser.GameObjects.Events#VIDEO_ERROR
+ * @since 3.20.0
+ * 
+ * @param {Phaser.GameObjects.Video} video - The Video Game Object which threw the error.
+ * @param {Event} event - The native DOM event the browser raised during playback.
+ */
+module.exports = 'error';
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/events/VIDEO_LOOP_EVENT.js":
+/*!*********************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_LOOP_EVENT.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Video Game Object Loop Event.
+ * 
+ * This event is dispatched when a Video that is currently playing has looped. This only
+ * happens if the `loop` parameter was specified, or the `setLoop` method was called,
+ * and if the video has a fixed duration. Video streams, for example, cannot loop, as
+ * they have no duration.
+ * 
+ * Looping is based on the result of the Video `timeupdate` event. This event is not
+ * frame-accurate, due to the way browsers work, so please do not rely on this loop
+ * event to be time or frame precise.
+ * 
+ * Listen for it from a Video Game Object instance using `Video.on('loop', listener)`.
+ *
+ * @event Phaser.GameObjects.Events#VIDEO_LOOP
+ * @since 3.20.0
+ * 
+ * @param {Phaser.GameObjects.Video} video - The Video Game Object which has looped.
+ */
+module.exports = 'loop';
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/events/VIDEO_PLAY_EVENT.js":
+/*!*********************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_PLAY_EVENT.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Video Game Object Play Event.
+ * 
+ * This event is dispatched when a Video begins playback. For videos that do not require
+ * interaction unlocking, this is usually as soon as the `Video.play` method is called.
+ * However, for videos that require unlocking, it is fired once playback begins after
+ * they've been unlocked.
+ * 
+ * Listen for it from a Video Game Object instance using `Video.on('play', listener)`.
+ *
+ * @event Phaser.GameObjects.Events#VIDEO_PLAY
+ * @since 3.20.0
+ * 
+ * @param {Phaser.GameObjects.Video} video - The Video Game Object which started playback.
+ */
+module.exports = 'play';
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/events/VIDEO_SEEKED_EVENT.js":
+/*!***********************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_SEEKED_EVENT.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Video Game Object Seeked Event.
+ * 
+ * This event is dispatched when a Video completes seeking to a new point in its timeline.
+ * 
+ * Listen for it from a Video Game Object instance using `Video.on('seeked', listener)`.
+ *
+ * @event Phaser.GameObjects.Events#VIDEO_SEEKED
+ * @since 3.20.0
+ * 
+ * @param {Phaser.GameObjects.Video} video - The Video Game Object which completed seeking.
+ */
+module.exports = 'seeked';
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/events/VIDEO_SEEKING_EVENT.js":
+/*!************************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_SEEKING_EVENT.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Video Game Object Seeking Event.
+ * 
+ * This event is dispatched when a Video _begins_ seeking to a new point in its timeline.
+ * When the seek is complete, it will dispatch the `VIDEO_SEEKED` event to conclude.
+ * 
+ * Listen for it from a Video Game Object instance using `Video.on('seeking', listener)`.
+ *
+ * @event Phaser.GameObjects.Events#VIDEO_SEEKING
+ * @since 3.20.0
+ * 
+ * @param {Phaser.GameObjects.Video} video - The Video Game Object which started seeking.
+ */
+module.exports = 'seeking';
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/events/VIDEO_STOP_EVENT.js":
+/*!*********************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_STOP_EVENT.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Video Game Object Stopped Event.
+ * 
+ * This event is dispatched when a Video is stopped from playback via a call to the `Video.stop` method,
+ * either directly via game code, or indirectly as the result of changing a video source or destroying it.
+ * 
+ * Listen for it from a Video Game Object instance using `Video.on('stop', listener)`.
+ *
+ * @event Phaser.GameObjects.Events#VIDEO_STOP
+ * @since 3.20.0
+ * 
+ * @param {Phaser.GameObjects.Video} video - The Video Game Object which stopped playback.
+ */
+module.exports = 'stop';
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/events/VIDEO_TIMEOUT_EVENT.js":
+/*!************************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_TIMEOUT_EVENT.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Video Game Object Timeout Event.
+ * 
+ * This event is dispatched when a Video has exhausted its allocated time while trying to connect to a video
+ * source to start playback.
+ * 
+ * Listen for it from a Video Game Object instance using `Video.on('timeout', listener)`.
+ *
+ * @event Phaser.GameObjects.Events#VIDEO_TIMEOUT
+ * @since 3.20.0
+ * 
+ * @param {Phaser.GameObjects.Video} video - The Video Game Object which timed out.
+ */
+module.exports = 'timeout';
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/events/VIDEO_UNLOCKED_EVENT.js":
+/*!*************************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_UNLOCKED_EVENT.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2019 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Video Game Object Unlocked Event.
+ * 
+ * This event is dispatched when a Video that was prevented from playback due to the browsers
+ * Media Engagement Interaction policy, is unlocked by a user gesture.
+ * 
+ * Listen for it from a Video Game Object instance using `Video.on('unlocked', listener)`.
+ *
+ * @event Phaser.GameObjects.Events#VIDEO_UNLOCKED
+ * @since 3.20.0
+ * 
+ * @param {Phaser.GameObjects.Video} video - The Video Game Object which raised the event.
+ */
+module.exports = 'unlocked';
+
+
+/***/ }),
+
 /***/ "../../../src/gameobjects/events/index.js":
 /*!**********************************************************!*\
   !*** D:/wamp/www/phaser/src/gameobjects/events/index.js ***!
@@ -4286,7 +4606,21 @@ module.exports = 'destroy';
  * @namespace Phaser.GameObjects.Events
  */
 
-module.exports = { DESTROY: __webpack_require__(/*! ./DESTROY_EVENT */ "../../../src/gameobjects/events/DESTROY_EVENT.js") };
+module.exports = {
+
+    DESTROY: __webpack_require__(/*! ./DESTROY_EVENT */ "../../../src/gameobjects/events/DESTROY_EVENT.js"),
+    VIDEO_COMPLETE: __webpack_require__(/*! ./VIDEO_COMPLETE_EVENT */ "../../../src/gameobjects/events/VIDEO_COMPLETE_EVENT.js"),
+    VIDEO_CREATED: __webpack_require__(/*! ./VIDEO_CREATED_EVENT */ "../../../src/gameobjects/events/VIDEO_CREATED_EVENT.js"),
+    VIDEO_ERROR: __webpack_require__(/*! ./VIDEO_ERROR_EVENT */ "../../../src/gameobjects/events/VIDEO_ERROR_EVENT.js"),
+    VIDEO_LOOP: __webpack_require__(/*! ./VIDEO_LOOP_EVENT */ "../../../src/gameobjects/events/VIDEO_LOOP_EVENT.js"),
+    VIDEO_PLAY: __webpack_require__(/*! ./VIDEO_PLAY_EVENT */ "../../../src/gameobjects/events/VIDEO_PLAY_EVENT.js"),
+    VIDEO_SEEKED: __webpack_require__(/*! ./VIDEO_SEEKED_EVENT */ "../../../src/gameobjects/events/VIDEO_SEEKED_EVENT.js"),
+    VIDEO_SEEKING: __webpack_require__(/*! ./VIDEO_SEEKING_EVENT */ "../../../src/gameobjects/events/VIDEO_SEEKING_EVENT.js"),
+    VIDEO_STOP: __webpack_require__(/*! ./VIDEO_STOP_EVENT */ "../../../src/gameobjects/events/VIDEO_STOP_EVENT.js"),
+    VIDEO_TIMEOUT: __webpack_require__(/*! ./VIDEO_TIMEOUT_EVENT */ "../../../src/gameobjects/events/VIDEO_TIMEOUT_EVENT.js"),
+    VIDEO_UNLOCKED: __webpack_require__(/*! ./VIDEO_UNLOCKED_EVENT */ "../../../src/gameobjects/events/VIDEO_UNLOCKED_EVENT.js")
+
+};
 
 
 /***/ }),
@@ -5074,6 +5408,16 @@ var MultiFile = new Class({
          * @since 3.7.0
          */
         this.key = key;
+
+        /**
+         * The current index being used by multi-file loaders to avoid key clashes.
+         *
+         * @name Phaser.Loader.MultiFile#multiKeyIndex
+         * @type {integer}
+         * @private
+         * @since 3.20.0
+         */
+        this.multiKeyIndex = loader.multiKeyIndex++;
 
         /**
          * Array of files that make up this MultiFile.
@@ -16977,39 +17321,14 @@ var BasePlugin = new Class({
          * @since 3.8.0
          */
         this.game = pluginManager.game;
-
-        /**
-         * A reference to the Scene that has installed this plugin.
-         * Only set if it's a Scene Plugin, otherwise `null`.
-         * This property is only set when the plugin is instantiated and added to the Scene, not before.
-         * You cannot use it during the `init` method, but you can during the `boot` method.
-         *
-         * @name Phaser.Plugins.BasePlugin#scene
-         * @type {?Phaser.Scene}
-         * @protected
-         * @since 3.8.0
-         */
-        this.scene;
-
-        /**
-         * A reference to the Scene Systems of the Scene that has installed this plugin.
-         * Only set if it's a Scene Plugin, otherwise `null`.
-         * This property is only set when the plugin is instantiated and added to the Scene, not before.
-         * You cannot use it during the `init` method, but you can during the `boot` method.
-         *
-         * @name Phaser.Plugins.BasePlugin#systems
-         * @type {?Phaser.Scenes.Systems}
-         * @protected
-         * @since 3.8.0
-         */
-        this.systems;
     },
 
     /**
-     * Called by the PluginManager when this plugin is first instantiated.
+     * The PluginManager calls this method on a Global Plugin when the plugin is first instantiated.
      * It will never be called again on this instance.
      * In here you can set-up whatever you need for this plugin to run.
      * If a plugin is set to automatically start then `BasePlugin.start` will be called immediately after this.
+     * On a Scene Plugin, this method is never called. Use {@link Phaser.Plugins.ScenePlugin#boot} instead.
      *
      * @method Phaser.Plugins.BasePlugin#init
      * @since 3.8.0
@@ -17021,9 +17340,10 @@ var BasePlugin = new Class({
     },
 
     /**
-     * Called by the PluginManager when this plugin is started.
+     * The PluginManager calls this method on a Global Plugin when the plugin is started.
      * If a plugin is stopped, and then started again, this will get called again.
      * Typically called immediately after `BasePlugin.init`.
+     * On a Scene Plugin, this method is never called.
      *
      * @method Phaser.Plugins.BasePlugin#start
      * @since 3.8.0
@@ -17047,45 +17367,18 @@ var BasePlugin = new Class({
     },
 
     /**
-     * Called by the PluginManager when this plugin is stopped.
+     * The PluginManager calls this method on a Global Plugin when the plugin is stopped.
      * The game code has requested that your plugin stop doing whatever it does.
      * It is now considered as 'inactive' by the PluginManager.
      * Handle that process here (i.e. stop listening for events, etc)
      * If the plugin is started again then `BasePlugin.start` will be called again.
+     * On a Scene Plugin, this method is never called.
      *
      * @method Phaser.Plugins.BasePlugin#stop
      * @since 3.8.0
      */
     stop: function ()
     {
-    },
-
-    /**
-     * If this is a Scene Plugin (i.e. installed into a Scene) then this method is called when the Scene boots.
-     * By this point the plugin properties `scene` and `systems` will have already been set.
-     * In here you can listen for Scene events and set-up whatever you need for this plugin to run.
-     *
-     * @method Phaser.Plugins.BasePlugin#boot
-     * @since 3.8.0
-     */
-    boot: function ()
-    {
-        //  Here are the Scene events you can listen to.
-        //  At the very least you should offer a destroy handler for when the Scene closes down.
-
-        // var eventEmitter = this.systems.events;
-
-        // eventEmitter.once('destroy', this.sceneDestroy, this);
-        // eventEmitter.on('start', this.sceneStart, this);
-        // eventEmitter.on('preupdate', this.scenePreUpdate, this);
-        // eventEmitter.on('update', this.sceneUpdate, this);
-        // eventEmitter.on('postupdate', this.scenePostUpdate, this);
-        // eventEmitter.on('pause', this.scenePause, this);
-        // eventEmitter.on('resume', this.sceneResume, this);
-        // eventEmitter.on('sleep', this.sceneSleep, this);
-        // eventEmitter.on('wake', this.sceneWake, this);
-        // eventEmitter.on('shutdown', this.sceneShutdown, this);
-        // eventEmitter.on('destroy', this.sceneDestroy, this);
     },
 
     /**
@@ -17152,7 +17445,30 @@ var ScenePlugin = new Class({
     {
         BasePlugin.call(this, pluginManager);
 
+        /**
+         * A reference to the Scene that has installed this plugin.
+         * Only set if it's a Scene Plugin, otherwise `null`.
+         * This property is only set when the plugin is instantiated and added to the Scene, not before.
+         * You can use it during the `boot` method.
+         *
+         * @name Phaser.Plugins.ScenePlugin#scene
+         * @type {?Phaser.Scene}
+         * @protected
+         * @since 3.8.0
+         */
         this.scene = scene;
+
+        /**
+         * A reference to the Scene Systems of the Scene that has installed this plugin.
+         * Only set if it's a Scene Plugin, otherwise `null`.
+         * This property is only set when the plugin is instantiated and added to the Scene, not before.
+         * You can use it during the `boot` method.
+         *
+         * @name Phaser.Plugins.ScenePlugin#systems
+         * @type {?Phaser.Scenes.Systems}
+         * @protected
+         * @since 3.8.0
+         */
         this.systems = scene.sys;
 
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
@@ -17160,29 +17476,29 @@ var ScenePlugin = new Class({
 
     /**
      * This method is called when the Scene boots. It is only ever called once.
-     * 
+     *
      * By this point the plugin properties `scene` and `systems` will have already been set.
-     * 
-     * In here you can listen for Scene events and set-up whatever you need for this plugin to run.
+     *
+     * In here you can listen for {@link Phaser.Scenes.Events Scene events} and set-up whatever you need for this plugin to run.
      * Here are the Scene events you can listen to:
-     * 
-     * start
-     * ready
-     * preupdate
-     * update
-     * postupdate
-     * resize
-     * pause
-     * resume
-     * sleep
-     * wake
-     * transitioninit
-     * transitionstart
-     * transitioncomplete
-     * transitionout
-     * shutdown
-     * destroy
-     * 
+     *
+     * - start
+     * - ready
+     * - preupdate
+     * - update
+     * - postupdate
+     * - resize
+     * - pause
+     * - resume
+     * - sleep
+     * - wake
+     * - transitioninit
+     * - transitionstart
+     * - transitioncomplete
+     * - transitionout
+     * - shutdown
+     * - destroy
+     *
      * At the very least you should offer a destroy handler for when the Scene closes down, i.e:
      *
      * ```javascript
@@ -17195,6 +17511,22 @@ var ScenePlugin = new Class({
      */
     boot: function ()
     {
+    },
+
+    /**
+     * Game instance has been destroyed.
+     * 
+     * You must release everything in here, all references, all objects, free it all up.
+     *
+     * @method Phaser.Plugins.ScenePlugin#destroy
+     * @since 3.8.0
+     */
+    destroy: function ()
+    {
+        this.pluginManager = null;
+        this.game = null;
+        this.scene = null;
+        this.systems = null;
     }
 
 });
@@ -17544,65 +17876,6 @@ module.exports = {
     XOR: 27
 
 };
-
-
-/***/ }),
-
-/***/ "../../../src/renderer/ScaleModes.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/ScaleModes.js ***!
-  \*****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * Phaser Scale Modes.
- * 
- * @namespace Phaser.ScaleModes
- * @since 3.0.0
- */
-
-var ScaleModes = {
-
-    /**
-     * Default Scale Mode (Linear).
-     * 
-     * @name Phaser.ScaleModes.DEFAULT
-     * @type {integer}
-     * @readonly
-     * @since 3.0.0
-     */
-    DEFAULT: 0,
-
-    /**
-     * Linear Scale Mode.
-     * 
-     * @name Phaser.ScaleModes.LINEAR
-     * @type {integer}
-     * @readonly
-     * @since 3.0.0
-     */
-    LINEAR: 0,
-
-    /**
-     * Nearest Scale Mode.
-     * 
-     * @name Phaser.ScaleModes.NEAREST
-     * @type {integer}
-     * @readonly
-     * @since 3.0.0
-     */
-    NEAREST: 1
-
-};
-
-module.exports = ScaleModes;
 
 
 /***/ }),
@@ -19242,7 +19515,7 @@ var SpineFile = new Class({
                 {
                     var textureURL = textures[i];
 
-                    var key = '_SP_' + textureURL;
+                    var key = 'SP' + this.multiKeyIndex + '_' + textureURL;
 
                     var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
 
@@ -19275,7 +19548,7 @@ var SpineFile = new Class({
 
             var atlasCache;
             var atlasKey = '';
-            var combinedAtlastData = '';
+            var combinedAtlasData = '';
             var preMultipliedAlpha = (this.config.preMultipliedAlpha) ? true : false;
 
             for (var i = 1; i < this.files.length; i++)
@@ -19288,19 +19561,21 @@ var SpineFile = new Class({
 
                     atlasCache = file.cache;
 
-                    combinedAtlastData = combinedAtlastData.concat(file.data);
+                    combinedAtlasData = combinedAtlasData.concat(file.data);
                 }
                 else
                 {
-                    var key = file.key.substr(4).trim();
-   
+                    var src = file.key.trim();
+                    var pos = src.indexOf('_');
+                    var key = src.substr(pos + 1);
+       
                     this.loader.textureManager.addImage(key, file.data);
                 }
 
                 file.pendingDestroy();
             }
 
-            atlasCache.add(atlasKey, { preMultipliedAlpha: preMultipliedAlpha, data: combinedAtlastData });
+            atlasCache.add(atlasKey, { preMultipliedAlpha: preMultipliedAlpha, data: combinedAtlasData });
 
             this.complete = true;
         }
@@ -22530,6 +22805,9 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     }
 
     //  Draw the current skeleton
+
+    // console.log('draw', src.name);
+
     sceneRenderer.drawSkeleton(skeleton, src.preMultipliedAlpha);
 
     if (plugin.drawDebug || src.drawDebug)
@@ -23919,12 +24197,12 @@ var spine;
     var AnimationState = (function () {
         function AnimationState(data) {
             this.tracks = new Array();
+            this.timeScale = 1;
             this.events = new Array();
             this.listeners = new Array();
             this.queue = new EventQueue(this);
             this.propertyIDs = new spine.IntSet();
             this.animationsChanged = false;
-            this.timeScale = 1;
             this.trackEntryPool = new spine.Pool(function () { return new TrackEntry(); });
             this.data = data;
         }
@@ -24670,24 +24948,24 @@ var spine;
         EventType[EventType["complete"] = 4] = "complete";
         EventType[EventType["event"] = 5] = "event";
     })(EventType = spine.EventType || (spine.EventType = {}));
-    var AnimationStateAdapter2 = (function () {
-        function AnimationStateAdapter2() {
+    var AnimationStateAdapter = (function () {
+        function AnimationStateAdapter() {
         }
-        AnimationStateAdapter2.prototype.start = function (entry) {
+        AnimationStateAdapter.prototype.start = function (entry) {
         };
-        AnimationStateAdapter2.prototype.interrupt = function (entry) {
+        AnimationStateAdapter.prototype.interrupt = function (entry) {
         };
-        AnimationStateAdapter2.prototype.end = function (entry) {
+        AnimationStateAdapter.prototype.end = function (entry) {
         };
-        AnimationStateAdapter2.prototype.dispose = function (entry) {
+        AnimationStateAdapter.prototype.dispose = function (entry) {
         };
-        AnimationStateAdapter2.prototype.complete = function (entry) {
+        AnimationStateAdapter.prototype.complete = function (entry) {
         };
-        AnimationStateAdapter2.prototype.event = function (entry, event) {
+        AnimationStateAdapter.prototype.event = function (entry, event) {
         };
-        return AnimationStateAdapter2;
+        return AnimationStateAdapter;
     }());
-    spine.AnimationStateAdapter2 = AnimationStateAdapter2;
+    spine.AnimationStateAdapter = AnimationStateAdapter;
 })(spine || (spine = {}));
 var spine;
 (function (spine) {
@@ -25057,10 +25335,10 @@ var spine;
             this.appliedValid = false;
             this.a = 0;
             this.b = 0;
-            this.worldX = 0;
             this.c = 0;
             this.d = 0;
             this.worldY = 0;
+            this.worldX = 0;
             this.sorted = false;
             this.active = false;
             if (data == null)
@@ -28989,6 +29267,9 @@ var spine;
             this.darkColor = data.darkColor == null ? null : new spine.Color();
             this.setToSetupPose();
         }
+        Slot.prototype.getSkeleton = function () {
+            return this.bone.skeleton;
+        };
         Slot.prototype.getAttachment = function () {
             return this.attachment;
         };
@@ -31065,7 +31346,19 @@ var spine;
                 var gl = this.context.gl;
                 this.bind();
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, minFilter);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, magFilter);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, GLTexture.validateMagFilter(magFilter));
+            };
+            GLTexture.validateMagFilter = function (magFilter) {
+                switch (magFilter) {
+                    case spine.TextureFilter.MipMap:
+                    case spine.TextureFilter.MipMapLinearLinear:
+                    case spine.TextureFilter.MipMapLinearNearest:
+                    case spine.TextureFilter.MipMapNearestLinear:
+                    case spine.TextureFilter.MipMapNearestNearest:
+                        return spine.TextureFilter.Linear;
+                    default:
+                        return magFilter;
+                }
             };
             GLTexture.prototype.setWraps = function (uWrap, vWrap) {
                 var gl = this.context.gl;
