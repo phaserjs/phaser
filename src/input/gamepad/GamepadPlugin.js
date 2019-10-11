@@ -254,8 +254,6 @@ var GamepadPlugin = new Class({
 
         var handler = function (event)
         {
-            // console.log(event);
-
             if (event.defaultPrevented || !_this.isActive())
             {
                 // Do nothing if event already handled

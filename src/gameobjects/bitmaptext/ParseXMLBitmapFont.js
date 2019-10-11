@@ -102,8 +102,6 @@ var ParseXMLBitmapFont = function (xml, xSpacing, ySpacing, frame)
 
     if (adjustForTrim && top !== 0 && left !== 0)
     {
-        // console.log('top and left', top, left, frame.x, frame.y);
-
         //  Now we know the top and left coordinates of the glyphs in the original data
         //  so we can work out how much to adjust the glyphs by
 
