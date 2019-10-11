@@ -344,6 +344,23 @@ var Tween = new Class({
         this.callbackScope;
     },
 
+    /**	
+     * Returns the current value of the specified Tween Data.
+     *
+     * @method Phaser.Tweens.Tween#getValue
+     * @since 3.0.0
+     * 
+     * @param {integer} [index=0] - The Tween Data to return the value from.
+     *
+     * @return {number} The value of the requested Tween Data.
+     */	
+    getValue: function (index)
+    {
+        if (index === undefined) { index = 0; }
+
+        return this.data[index].current;
+    },
+
     /**
      * Set the scale the time applied to this Tween. A value of 1 runs in real-time. A value of 0.5 runs 50% slower, and so on.
      *
