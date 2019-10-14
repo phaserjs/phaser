@@ -1,5 +1,18 @@
 # Change Log
 
+## Version 3.20.1 - Fitoria - in development
+
+### Updates
+
+* The `remove-files-webpack-plugin` plugin has been moved to a devDependency (thanks @noseglid)
+
+### Examples, Documentation and TypeScript
+
+My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
+
+@xSke
+
+
 ## Version 3.20.0 - Fitoria - 11th October 2019
 
 ### Video Game Object
