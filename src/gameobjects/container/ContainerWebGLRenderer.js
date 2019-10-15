@@ -52,8 +52,6 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
         renderer.setBlendMode(0);
     }
 
-    // var alpha = container._alpha;
-
     var alphaTopLeft = container.alphaTopLeft;
     var alphaTopRight = container.alphaTopRight;
     var alphaBottomLeft = container.alphaBottomLeft;
@@ -64,7 +62,6 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
 
     var list = children;
     var childCount = children.length;
-    var current = renderer.mask;
 
     for (var i = 0; i < childCount; i++)
     {
@@ -108,15 +105,7 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
 
         var mask = child.mask;
 
-        current = renderer.currentMask;
-
-        if (current.mask && current.mask !== mask)
-        {
-            //  Render out the previously set mask
-            current.mask.postRenderWebGL(renderer, current.camera);
-        }
-
-        if (mask && current.mask !== mask)
+        if (mask)
         {
             mask.preRenderWebGL(renderer, child, camera);
         }
@@ -144,6 +133,11 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
         child.setAlpha(childAlphaTopLeft, childAlphaTopRight, childAlphaBottomLeft, childAlphaBottomRight);
 
         child.setScrollFactor(childScrollFactorX, childScrollFactorY);
+
+        if (mask)
+        {
+            mask.postRenderWebGL(renderer, camera);
+        }
 
         renderer.newType = false;
     }
