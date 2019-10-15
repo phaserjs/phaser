@@ -9,6 +9,7 @@
 ### Bug Fixes
 
 * `UpdateList.shutdown` wasn't removing the Scene Update event listener, causing actions to be multiplied on Scene restart (such as animation playback). Fix #4799 (thanks @jronn)
+* `Container.mask` wouldn't render in WebGL due to a change in the way child masks were handled. Container masking now works again as in 3.19. Fix #4803 (thanks @paulsymphony)
 
 ### Examples, Documentation and TypeScript
 
