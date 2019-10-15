@@ -1080,7 +1080,7 @@ var SceneManager = new Class({
     },
 
     /**
-     * Runs the given Scene, but does not change the state of this Scene.
+     * Runs the given Scene.
      *
      * If the given Scene is paused, it will resume it. If sleeping, it will wake it.
      * If not running at all, it will be started.
@@ -1118,7 +1118,7 @@ var SceneManager = new Class({
             //  Sleeping?
             scene.sys.wake(data);
         }
-        else if (scene.sys.isBooted && !scene.sys.isActive())
+        else if (scene.sys.isPaused())
         {
             //  Paused?
             scene.sys.resume(data);
