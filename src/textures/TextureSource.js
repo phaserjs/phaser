@@ -135,7 +135,7 @@ var TextureSource = new Class({
          * @type {boolean}
          * @since 3.0.0
          */
-        this.isCanvas = (source instanceof HTMLCanvasElement);
+        this.isCanvas = (window.hasOwnProperty('HTMLCanvasElement') && source instanceof HTMLCanvasElement);
 
         /**
          * Is the source image a Video Element?
@@ -144,7 +144,7 @@ var TextureSource = new Class({
          * @type {boolean}
          * @since 3.20.0
          */
-        this.isVideo = (source instanceof HTMLVideoElement);
+        this.isVideo = (window.hasOwnProperty('HTMLVideoElement') && source instanceof HTMLVideoElement);
 
         /**
          * Is the source image a Render Texture?
