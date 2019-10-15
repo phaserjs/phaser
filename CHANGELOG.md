@@ -6,6 +6,10 @@
 
 * The `remove-files-webpack-plugin` plugin has been moved to a devDependency (thanks @noseglid)
 
+### Bug Fixes
+
+* `UpdateList.shutdown` wasn't removing the Scene Update event listener, causing actions to be multiplied on Scene restart (such as animation playback). Fix #4799 (thanks @jronn)
+
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
