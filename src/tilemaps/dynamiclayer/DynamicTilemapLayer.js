@@ -976,7 +976,7 @@ var DynamicTilemapLayer = new Class({
      */
     setCollision: function (indexes, collides, recalculateFaces, updateLayer)
     {
-        TilemapComponents.SetCollision(indexes, collides, recalculateFaces, this, updateLayer);
+        TilemapComponents.SetCollision(indexes, collides, recalculateFaces, this.layer, updateLayer);
 
         return this;
     },
