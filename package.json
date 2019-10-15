@@ -1,6 +1,6 @@
 {
   "name": "phaser",
-  "version": "3.20.1-beta1",
+  "version": "3.20.1",
   "release": "Fitoria",
   "description": "A fast, free and fun HTML5 Game Framework for Desktop and Mobile web browsers.",
   "author": "Richard Davey <rich@photonstorm.com> (http://www.photonstorm.com)",

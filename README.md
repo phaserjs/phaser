@@ -111,13 +111,13 @@ npm install phaser
 [Phaser is on jsDelivr](https://www.jsdelivr.com/projects/phaser) which is a "super-fast CDN for developers". Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.20.0/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.20.1/dist/phaser.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.20.0/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.20.1/dist/phaser.min.js"></script>
 ```
 
 ### API Documentation
@@ -198,13 +198,13 @@ We've 3 tutorials related to Facebook Instant Games and Phaser:
 A special build of Phaser with the Facebook Instant Games Plugin ready-enabled is [available on jsDelivr](https://www.jsdelivr.com/projects/phaser). Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.20.0/dist/phaser-facebook-instant-games.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.20.1/dist/phaser-facebook-instant-games.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.20.0/dist/phaser-facebook-instant-games.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.20.1/dist/phaser-facebook-instant-games.min.js"></script>
 ```
 
 The build files are in the git repository in the `dist` folder, and you can also include the plugin in custom builds.
@@ -221,7 +221,7 @@ Create an `index.html` page locally and paste the following code into it:
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.20.0/dist/phaser-arcade-physics.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.20.1/dist/phaser-arcade-physics.min.js"></script> 
 </head>
 <body>
 
@@ -331,6 +331,19 @@ You can then run `webpack` to create a development build in the `build` folder w
 <a name="changelog"></a>
 
 # Change Log
+
+## Version 3.20.1 - Fitoria - 15th October 2019
+
+### Updates
+
+* The `remove-files-webpack-plugin` plugin has been moved to a devDependency (thanks @noseglid)
+
+### Bug Fixes
+
+* `UpdateList.shutdown` wasn't removing the Scene Update event listener, causing actions to be multiplied on Scene restart (such as animation playback). Fix #4799 (thanks @jronn)
+* `Container.mask` wouldn't render in WebGL due to a change in the way child masks were handled. Container masking now works again as in 3.19. Fix #4803 (thanks @paulsymphony)
+* `DynamicTilemapLayer.setCollision` would cause an `indexOf` error when trying to access the layer data. Fix #4800 (thanks @PavelMishin)
+* `SceneManager.run` (and consequently `ScenePlugin.run`) was using an out-dated way of checking if a Scene was paused before trying to resume it, causing a Scene to be started again instead of resumed. It now uses the `Systems.isPaused` function instead. Fix #3931 (thanks @alexeymolchan)
 
 ## Version 3.20.0 - Fitoria - 11th October 2019
 
@@ -538,8 +551,8 @@ All rights reserved.
 
 "Above all, video games are meant to be just one thing: fun. Fun for everyone." - Satoru Iwata
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.20.0/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.20.0/phaser.min.js
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.20.1/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.20.1/phaser.min.js
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-ghwin]: github-windows://openRepo/https://github.com/photonstorm/phaser
