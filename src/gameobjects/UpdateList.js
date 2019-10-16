@@ -18,6 +18,7 @@ var SceneEvents = require('../scene/events');
  * Some or all of these Game Objects may also be part of the Scene's [Display List]{@link Phaser.GameObjects.DisplayList}, for Rendering.
  *
  * @class UpdateList
+ * @extends Phaser.Structs.ProcessQueue.<Phaser.GameObjects.GameObject>
  * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0

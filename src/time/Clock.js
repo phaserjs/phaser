@@ -182,8 +182,8 @@ var Clock = new Class({
      *
      * @param {number} delay - The delay of the function call, in milliseconds.
      * @param {function} callback - The function to call after the delay expires.
-     * @param {Array.<*>} args - The arguments to call the function with.
-     * @param {*} callbackScope - The scope (`this` object) to call the function with.
+     * @param {Array.<*>} [args] - The arguments to call the function with.
+     * @param {*} [callbackScope] - The scope (`this` object) to call the function with.
      *
      * @return {Phaser.Time.TimerEvent} The Timer Event which was created.
      */
