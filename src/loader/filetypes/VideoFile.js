@@ -101,8 +101,6 @@ var VideoFile = new Class({
 
         this.data.onloadeddata = function ()
         {
-            File.revokeObjectURL(_this.data);
-
             _this.onProcessComplete();
         };
 
