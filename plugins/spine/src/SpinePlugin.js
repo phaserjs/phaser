@@ -1013,6 +1013,11 @@ var SpinePlugin = new Class({
         var eventEmitter = this.systems.events;
 
         eventEmitter.off('shutdown', this.shutdown, this);
+
+        if (this.isWebGL)
+        {
+            this.game.scale.off(ResizeEvent, this.onResize, this);
+        }
     },
 
     /**
