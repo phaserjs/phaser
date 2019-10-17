@@ -1,5 +1,11 @@
 # Change Log
 
+## Version 3.20.2 - Fitoria - in dev
+
+### Bug Fixes
+
+* The Spine Plugin was not clearing down the resize event listener in WebGL, causing it to still fire even if the Scene was closed. Fix #4808 (thanks @RollinSafary)
+
 ## Version 3.20.1 - Fitoria - 15th October 2019
 
 ### Updates
