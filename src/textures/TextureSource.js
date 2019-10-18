@@ -135,7 +135,7 @@ var TextureSource = new Class({
          * @type {boolean}
          * @since 3.0.0
          */
-        this.isCanvas = source instanceof HTMLCanvasElement;
+        this.isCanvas = (source instanceof HTMLCanvasElement);
 
         /**
          * Is the source image a Video Element?
