@@ -7,6 +7,7 @@
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var ParseObject = require('./ParseObject');
 var ObjectLayer = require('../../mapdata/ObjectLayer');
+var CreateGroupLayer = require('./CreateGroupLayer');
 
 /**
  * Parses a Tiled JSON object into an array of ObjectLayer objects.
@@ -22,18 +23,57 @@ var ParseObjectLayers = function (json)
 {
     var objectLayers = [];
 
-    for (var i = 0; i < json.layers.length; i++)
+    // State inherited from a parent group
+    var groupStack = [];
+    var curGroupState = CreateGroupLayer(json);
+
+    while (curGroupState.i < curGroupState.layers.length || groupStack.length > 0)
     {
-        if (json.layers[i].type !== 'objectgroup')
+        if (curGroupState.i >= curGroupState.layers.length)
         {
+            // Ensure recursion stack is not empty first
+            if (groupStack.length < 1)
+            {
+                console.warn(
+                    'TilemapParser.parseTiledJSON - Invalid layer group hierarchy'
+                );
+                break;
+            }
+
+            // Return to previous recursive state
+            curGroupState = groupStack.pop();
             continue;
         }
 
-        var curo = json.layers[i];
-        var offsetX = GetFastValue(curo, 'offsetx', 0);
-        var offsetY = GetFastValue(curo, 'offsety', 0);
-        var objects = [];
+        // Get current layer and advance iterator
+        var curo = curGroupState.layers[curGroupState.i];
+        curGroupState.i++;
 
+        // Modify inherited properties
+        curo.opacity *= curGroupState.opacity;
+        curo.visible = curGroupState.visible && curo.visible;
+
+        if (curo.type !== 'objectgroup')
+        {
+            if (curo.type === 'group')
+            {
+                // Compute next state inherited from group
+                var nextGroupState = CreateGroupLayer(json, curo, curGroupState);
+
+                // Preserve current state before recursing
+                groupStack.push(curGroupState);
+                curGroupState = nextGroupState;
+            }
+
+            // Skip this layer OR 'recurse' (iterative style) into the group
+            continue;
+        }
+
+        curo.name = curGroupState.name + curo.name;
+        var offsetX = curGroupState.x + GetFastValue(curo, 'startx', 0) + GetFastValue(curo, 'offsetx', 0);
+        var offsetY = curGroupState.y + GetFastValue(curo, 'starty', 0) + GetFastValue(curo, 'offsety', 0);
+
+        var objects = [];
         for (var j = 0; j < curo.objects.length; j++)
         {
             var parsedObject = ParseObject(curo.objects[j], offsetX, offsetY);
