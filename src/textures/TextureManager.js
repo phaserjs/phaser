@@ -391,6 +391,8 @@ var TextureManager = new Class({
      *
      * @param {string} key - The unique string-based key of the Texture.
      * @param {WebGLTexture} glTexture - The source Render Texture.
+     * @param {number} width - The new width of the Texture.
+     * @param {number} height - The new height of the Texture.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
