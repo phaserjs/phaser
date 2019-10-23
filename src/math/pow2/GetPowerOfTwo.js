@@ -7,7 +7,7 @@
 /**
  * Returns the nearest power of 2 to the given `value`.
  *
- * @function Phaser.Math.Pow2.GetPowerOfTwo
+ * @function Phaser.Math.Pow2.GetNext
  * @since 3.0.0
  *
  * @param {number} value - The value.
