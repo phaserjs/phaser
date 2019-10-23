@@ -55,6 +55,19 @@ var Tileset = require('./Tileset');
  * StaticTilemapLayer or DynamicTilemapLayer may have its own unique tile size that overrides
  * it.
  *
+ * As of Phaser 3.21.0, if your tilemap includes layer groups (a feature of Tiled 1.2.0+) these
+ * will be traversed and the following properties will affect children:
+ * - opacity (blended with parent) and visibility (parent overrides child)
+ * - Vertical and horizontal offset
+ * The grouping hierarchy is not preserved and all layers will be flattened into a single array.
+ * Group layers are parsed during Tilemap construction but are discarded after parsing so dynamic
+ * layers will NOT continue to be affected by a parent.
+ *
+ * To avoid duplicate layer names, a layer that is a child of a group layer will have its parent
+ * group name prepended with a '/'.  For example, consider a group called 'ParentGroup' with a
+ * child called 'Layer 1'. In the Tilemap object, 'Layer 1' will have the name
+ * 'ParentGroup/Layer 1'.
+ *
  * @class Tilemap
  * @memberof Phaser.Tilemaps
  * @constructor
@@ -546,6 +559,10 @@ var Tilemap = new Class({
         if (index === null)
         {
             console.warn('Invalid Tilemap Layer ID: ' + layerID);
+            if (typeof layerID === 'string')
+            {
+                console.warn('Valid tilelayer names:\n\t' + this.getTileLayerNames().join(',\n\t'));
+            }
             return null;
         }
 
@@ -613,7 +630,11 @@ var Tilemap = new Class({
         if (!objectLayer)
         {
             console.warn('Cannot create from object. Invalid objectgroup name given: ' + name);
-            return;
+            if (typeof layerID === 'string')
+            {
+                console.warn('Valid objectgroup names:\n\t' + this.getObjectLayerNames().join(',\n\t'));
+            }
+            return null;
         }
 
         var objects = objectLayer.objects;
@@ -743,6 +764,10 @@ var Tilemap = new Class({
         if (index === null)
         {
             console.warn('Invalid Tilemap Layer ID: ' + layerID);
+            if (typeof layerID === 'string')
+            {
+                console.warn('Valid tilelayer names:\n\t' + this.getTileLayerNames().join(',\n\t'));
+            }
             return null;
         }
 
@@ -1017,6 +1042,20 @@ var Tilemap = new Class({
     },
 
     /**
+     * Return a list of all valid imagelayer names loaded in this Tilemap.
+     *
+     * @method Phaser.Tilemaps.Tilemap#getImageLayerNames
+     * @since 3.21.0
+     *
+     * @return {[string]} Array of valid imagelayer names / IDs loaded into this Tilemap.
+     */
+    getImageLayerNames: function ()
+    {
+        if (!this.images || !Array.isArray(this.images)) { return []; }
+        return this.images.map(function (image) { return image.name; });
+    },
+
+    /**
      * Internally used. Returns the index of the object in one of the Tilemaps arrays whose name
      * property matches the given `name`.
      *
@@ -1077,6 +1116,20 @@ var Tilemap = new Class({
         var index = this.getIndex(this.objects, name);
 
         return (index !== null) ? this.objects[index] : null;
+    },
+
+    /**
+     * Return a list of all valid objectgroup names loaded in this Tilemap.
+     *
+     * @method Phaser.Tilemaps.Tilemap#getObjectLayerNames
+     * @since 3.21.0
+     *
+     * @return {[string]} Array of valid objectgroup names / IDs loaded into this Tilemap.
+     */
+    getObjectLayerNames: function ()
+    {
+        if (!this.objects || !Array.isArray(this.objects)) { return []; }
+        return this.objects.map(function (object) { return object.name; });
     },
 
     /**
@@ -1177,6 +1230,20 @@ var Tilemap = new Class({
         if (layer === null) { return null; }
 
         return TilemapComponents.GetTileAtWorldXY(worldX, worldY, nonNull, camera, layer);
+    },
+
+    /**
+     * Return a list of all valid tilelayer names loaded in this Tilemap.
+     *
+     * @method Phaser.Tilemaps.Tilemap#getTileLayerNames
+     * @since 3.21.0
+     *
+     * @return {[string]} Array of valid tilelayer names / IDs loaded into this Tilemap.
+     */
+    getTileLayerNames: function ()
+    {
+        if (!this.layers || !Array.isArray(this.layers)) { return []; }
+        return this.layers.map(function (layer) { return layer.name; });
     },
 
     /**
