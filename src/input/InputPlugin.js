@@ -48,7 +48,7 @@ var TriangleContains = require('../geom/triangle/Contains');
  * sprite.setInteractive();
  * sprite.on('pointerdown', callback, context);
  * ```
- * 
+ *
  * There are lots of game configuration options available relating to input.
  * See the [Input Config object]{@linkcode Phaser.Types.Core.InputConfig} for more details, including how to deal with Phaser
  * listening for input events outside of the canvas, how to set a default number of pointers, input
@@ -153,9 +153,9 @@ var InputPlugin = new Class({
 
         /**
          * A reference to the Mouse Manager.
-         * 
+         *
          * This property is only set if Mouse support has been enabled in your Game Configuration file.
-         * 
+         *
          * If you just wish to get access to the mouse pointer, use the `mousePointer` property instead.
          *
          * @name Phaser.Input.InputPlugin#mouse
@@ -179,17 +179,17 @@ var InputPlugin = new Class({
 
         /**
          * How often should the Pointers be checked?
-         * 
+         *
          * The value is a time, given in ms, and is the time that must have elapsed between game steps before
          * the Pointers will be polled again. When a pointer is polled it runs a hit test to see which Game
          * Objects are currently below it, or being interacted with it.
-         * 
+         *
          * Pointers will *always* be checked if they have been moved by the user, or press or released.
-         * 
+         *
          * This property only controls how often they will be polled if they have not been updated.
          * You should set this if you want to have Game Objects constantly check against the pointers, even
          * if the pointer didn't itself move.
-         * 
+         *
          * Set to 0 to poll constantly. Set to -1 to only poll on user movement.
          *
          * @name Phaser.Input.InputPlugin#pollRate
@@ -249,6 +249,12 @@ var InputPlugin = new Class({
 
         /**
          * The amount of time, in ms, a pointer has to be held down before it thinks it is dragging.
+         *
+         * The default polling rate is to poll only on move so once the time threshold is reached the
+         * drag event will not start until you move the mouse. If you want it to start immediately
+         * when the time threshold is reached, you must increase the polling rate by calling
+         * [setPollAlways]{@linkcode Phaser.Input.InputPlugin#setPollAlways} or
+         * [setPollRate]{@linkcode Phaser.Input.InputPlugin#setPollRate}.
          *
          * @name Phaser.Input.InputPlugin#dragTimeThreshold
          * @type {number}
@@ -532,7 +538,7 @@ var InputPlugin = new Class({
      *
      * @method Phaser.Input.InputPlugin#updatePoll
      * @since 3.18.0
-     * 
+     *
      * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      *
@@ -630,7 +636,10 @@ var InputPlugin = new Class({
 
             total += this.processOverOutEvents(pointer);
 
-            this.processDragThresholdEvent(pointer);
+            if (this.getDragState(pointer) === 2)
+            {
+                this.processDragThresholdEvent(pointer, time);
+            }
 
             if (total > 0)
             {
@@ -653,7 +662,7 @@ var InputPlugin = new Class({
      *
      * @param {integer} type - The type of event to process.
      * @param {Phaser.Input.Pointer[]} pointers - An array of Pointers on which the event occurred.
-     * 
+     *
      * @return {boolean} `true` if this Scene has captured the input events from all other Scenes, otherwise `false`.
      */
     update: function (type, pointers)
@@ -1002,9 +1011,9 @@ var InputPlugin = new Class({
 
     /**
      * Returns the drag state of the given Pointer for this Input Plugin.
-     * 
+     *
      * The state will be one of the following:
-     * 
+     *
      * 0 = Not dragging anything
      * 1 = Primary button down and objects below, so collect a draglist
      * 2 = Pointer being checked if meets drag criteria
@@ -1026,9 +1035,9 @@ var InputPlugin = new Class({
 
     /**
      * Sets the drag state of the given Pointer for this Input Plugin.
-     * 
+     *
      * The state must be one of the following values:
-     * 
+     *
      * 0 = Not dragging anything
      * 1 = Primary button down and objects below, so collect a draglist
      * 2 = Pointer being checked if meets drag criteria
@@ -1093,7 +1102,7 @@ var InputPlugin = new Class({
      * @since 3.18.0
      *
      * @param {Phaser.Input.Pointer} pointer - The Pointer to process the drag event on.
-     * 
+     *
      * @return {integer} The number of items that DRAG_START was called on.
      */
     processDragStartList: function (pointer)
@@ -1142,7 +1151,7 @@ var InputPlugin = new Class({
      * @since 3.18.0
      *
      * @param {Phaser.Input.Pointer} pointer - The Pointer to process the drag event on.
-     * 
+     *
      * @return {integer} The number of items that were collected on the drag list.
      */
     processDragDownEvent: function (pointer)
@@ -1190,7 +1199,7 @@ var InputPlugin = new Class({
         //  draglist now contains all potential candidates for dragging
         this._drag[pointer.id] = draglist;
 
-        if (this.dragDistanceThreshold === 0 || this.dragTimeThreshold === 0)
+        if (this.dragDistanceThreshold === 0 && this.dragTimeThreshold === 0)
         {
             //  No drag criteria, so snap immediately to mode 3
             this.setDragState(pointer, 3);
@@ -1207,7 +1216,7 @@ var InputPlugin = new Class({
     },
 
     /**
-     * Processes a 'drag move' event for the given pointer. 
+     * Processes a 'drag move' event for the given pointer.
      *
      * @method Phaser.Input.InputPlugin#processDragMoveEvent
      * @private
@@ -1222,11 +1231,17 @@ var InputPlugin = new Class({
      * @since 3.18.0
      *
      * @param {Phaser.Input.Pointer} pointer - The Pointer to process the drag event on.
-     * 
+     *
      * @return {integer} The number of items that were updated by this drag event.
      */
     processDragMoveEvent: function (pointer)
     {
+        //  2 = Pointer being checked if meets drag criteria
+        if (this.getDragState(pointer) === 2)
+        {
+            this.processDragThresholdEvent(pointer, this.manager.game.loop.now);
+        }
+
         if (this.getDragState(pointer) !== 4)
         {
             return 0;
@@ -1324,7 +1339,7 @@ var InputPlugin = new Class({
                 var dy = pointer.y - input.dragStartYGlobal;
 
                 var rotation = gameObject.getParentRotation();
-    
+
                 var dxRotated = dx * Math.cos(rotation) + dy * Math.sin(rotation);
                 var dyRotated = dy * Math.cos(rotation) - dx * Math.sin(rotation);
 
@@ -1356,7 +1371,7 @@ var InputPlugin = new Class({
      * @since 3.18.0
      *
      * @param {Phaser.Input.Pointer} pointer - The Pointer to process the drag event on.
-     * 
+     *
      * @return {integer} The number of items that were updated by this drag event.
      */
     processDragUpEvent: function (pointer)
@@ -1573,12 +1588,12 @@ var InputPlugin = new Class({
         if (total > 0)
         {
             var manager = this.manager;
-    
+
             var _eventData = this._eventData;
             var _eventContainer = this._eventContainer;
-    
+
             _eventData.cancelled = false;
-    
+
             var aborted = false;
 
             for (var i = 0; i < total; i++)
@@ -1654,9 +1669,9 @@ var InputPlugin = new Class({
 
             var _eventData = this._eventData;
             var _eventContainer = this._eventContainer;
-    
+
             _eventData.cancelled = false;
-    
+
             var aborted = false;
 
             this.sortGameObjects(previouslyOver);
@@ -1664,38 +1679,38 @@ var InputPlugin = new Class({
             for (var i = 0; i < total; i++)
             {
                 var gameObject = previouslyOver[i];
-    
+
                 //  Call onOut for everything in the previouslyOver array
                 for (i = 0; i < total; i++)
                 {
                     gameObject = previouslyOver[i];
-    
+
                     if (!gameObject.input)
                     {
                         continue;
                     }
-    
+
                     manager.resetCursor(gameObject.input);
 
                     gameObject.emit(Events.GAMEOBJECT_POINTER_OUT, pointer, _eventContainer);
-    
+
                     totalInteracted++;
-    
+
                     if (_eventData.cancelled || !gameObject.input)
                     {
                         aborted = true;
                         break;
                     }
-    
+
                     this.emit(Events.GAMEOBJECT_OUT, pointer, gameObject, _eventContainer);
-    
+
                     if (_eventData.cancelled || !gameObject.input)
                     {
                         aborted = true;
                         break;
                     }
                 }
-    
+
                 if (!aborted)
                 {
                     this.emit(Events.POINTER_OUT, pointer, previouslyOver);
@@ -2048,7 +2063,7 @@ var InputPlugin = new Class({
      * ```javascript
      * this.add.sprite(x, y, key).setInteractive(this.input.makePixelPerfect());
      * ```
-     * 
+     *
      * The following will create a sprite that is clickable on any pixel that has an alpha value >= 150.
      *
      * ```javascript
@@ -2061,7 +2076,7 @@ var InputPlugin = new Class({
      * As a pointer interacts with the Game Object it will constantly poll the texture, extracting a single pixel from
      * the given coordinates and checking its color values. This is an expensive process, so should only be enabled on
      * Game Objects that really need it.
-     * 
+     *
      * You cannot make non-texture based Game Objects pixel perfect. So this will not work on Graphics, BitmapText,
      * Render Textures, Text, Tilemaps, Containers or Particles.
      *
@@ -2346,24 +2361,24 @@ var InputPlugin = new Class({
 
     /**
      * Creates an Input Debug Shape for the given Game Object.
-     * 
+     *
      * The Game Object must have _already_ been enabled for input prior to calling this method.
-     * 
+     *
      * This is intended to assist you during development and debugging.
-     * 
+     *
      * Debug Shapes can only be created for Game Objects that are using standard Phaser Geometry for input,
      * including: Circle, Ellipse, Line, Polygon, Rectangle and Triangle.
-     * 
+     *
      * Game Objects that are using their automatic hit areas are using Rectangles by default, so will also work.
-     * 
+     *
      * The Debug Shape is created and added to the display list and is then kept in sync with the Game Object
      * it is connected with. Should you need to modify it yourself, such as to hide it, you can access it via
      * the Game Object property: `GameObject.input.hitAreaDebug`.
-     * 
+     *
      * Calling this method on a Game Object that already has a Debug Shape will first destroy the old shape,
      * before creating a new one. If you wish to remove the Debug Shape entirely, you should call the
      * method `InputPlugin.removeDebug`.
-     * 
+     *
      * Note that the debug shape will only show the outline of the input area. If the input test is using a
      * pixel perfect check, for example, then this is not displayed. If you are using a custom shape, that
      * doesn't extend one of the base Phaser Geometry objects, as your hit area, then this method will not
@@ -2437,16 +2452,16 @@ var InputPlugin = new Class({
             debug.preUpdate = function ()
             {
                 debug.setStrokeStyle(1 / gameObject.scale, color);
-    
+
                 debug.setDisplayOrigin(gameObject.displayOriginX, gameObject.displayOriginY);
                 debug.setRotation(gameObject.rotation);
                 debug.setScale(gameObject.scaleX, gameObject.scaleY);
                 debug.setPosition(gameObject.x, gameObject.y);
                 debug.setScrollFactor(gameObject.scrollFactorX, gameObject.scrollFactorY);
             };
-    
+
             updateList.add(debug);
-    
+
             input.hitAreaDebug = debug;
         }
 
@@ -2455,7 +2470,7 @@ var InputPlugin = new Class({
 
     /**
      * Removes an Input Debug Shape from the given Game Object.
-     * 
+     *
      * The shape is destroyed immediately and the `hitAreaDebug` property is set to `null`.
      *
      * @method Phaser.Input.InputPlugin#removeDebug
@@ -2474,7 +2489,7 @@ var InputPlugin = new Class({
             var debug = input.hitAreaDebug;
 
             this.systems.updateList.remove(debug);
-    
+
             debug.destroy();
 
             input.hitAreaDebug = null;
@@ -2485,7 +2500,7 @@ var InputPlugin = new Class({
 
     /**
      * Sets the Pointers to always poll.
-     * 
+     *
      * When a pointer is polled it runs a hit test to see which Game Objects are currently below it,
      * or being interacted with it, regardless if the Pointer has actually moved or not.
      *
@@ -2505,7 +2520,7 @@ var InputPlugin = new Class({
 
     /**
      * Sets the Pointers to only poll when they are moved or updated.
-     * 
+     *
      * When a pointer is polled it runs a hit test to see which Game Objects are currently below it,
      * or being interacted with it.
      *
@@ -2666,7 +2681,7 @@ var InputPlugin = new Class({
 
     /**
      * This method should be called from within an input event handler, such as `pointerdown`.
-     * 
+     *
      * When called, it stops the Input Manager from allowing _this specific event_ to be processed by any other Scene
      * not yet handled in the scene list.
      *
@@ -2695,7 +2710,7 @@ var InputPlugin = new Class({
      *
      * @method Phaser.Input.InputPlugin#addPointer
      * @since 3.10.0
-     * 
+     *
      * @param {integer} [quantity=1] The number of new Pointers to create. A maximum of 10 is allowed in total.
      *
      * @return {Phaser.Input.Pointer[]} An array containing all of the new Pointer objects that were created.
@@ -2707,7 +2722,7 @@ var InputPlugin = new Class({
 
     /**
      * Tells the Input system to set a custom cursor.
-     * 
+     *
      * This cursor will be the default cursor used when interacting with the game canvas.
      *
      * If an Interactive Object also sets a custom cursor, this is the cursor that is reset after its use.
@@ -2717,7 +2732,7 @@ var InputPlugin = new Class({
      * ```javascript
      * this.input.setDefaultCursor('url(assets/cursors/sword.cur), pointer');
      * ```
-     * 
+     *
      * Please read about the differences between browsers when it comes to the file formats and sizes they support:
      *
      * https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
@@ -2727,7 +2742,7 @@ var InputPlugin = new Class({
      *
      * @method Phaser.Input.InputPlugin#setDefaultCursor
      * @since 3.10.0
-     * 
+     *
      * @param {string} cursor - The CSS to be used when setting the default cursor.
      *
      * @return {Phaser.Input.InputPlugin} This Input instance.
@@ -2821,7 +2836,7 @@ var InputPlugin = new Class({
     },
 
     /**
-     * The Scene that owns this plugin is being destroyed.     
+     * The Scene that owns this plugin is being destroyed.
      * We need to shutdown and then kill off all external references.
      *
      * @method Phaser.Input.InputPlugin#destroy
