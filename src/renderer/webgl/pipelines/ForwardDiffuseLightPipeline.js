@@ -250,7 +250,14 @@ var ForwardDiffuseLightPipeline = new Class({
         }
         else if (gameObject.tileset)
         {
-            normalTexture = gameObject.tileset.image.dataSource[0];
+            if (Array.isArray(gameObject.tileset))
+            {
+                normalTexture = gameObject.tileset[0].image.dataSource[0];
+            }
+            else
+            {
+                normalTexture = gameObject.tileset.image.dataSource[0];
+            }
         }
 
         if (!normalTexture)
