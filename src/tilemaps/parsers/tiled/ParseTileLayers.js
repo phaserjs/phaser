@@ -246,10 +246,6 @@ var ParseTileLayers = function (json, insertNull)
         tileLayers.push(layerData);
     }
 
-    tileLayers.forEach(function (curLayer)
-    {
-        console.warn(`${curLayer.name} - (${curLayer.x}, ${curLayer.y}) [${curLayer.alpha} / ${curLayer.visible}]`);
-    });
     return tileLayers;
 };
 
