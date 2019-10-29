@@ -1575,7 +1575,7 @@ var Video = new Class({
     },
 
     /**
-     * Stores this Video in the Texture Manager using the given key as a dyanmic texture,
+     * Stores this Video in the Texture Manager using the given key as a dynamic texture,
      * which any texture-based Game Object, such as a Sprite, can use as its texture:
      * 
      * ```javascript
