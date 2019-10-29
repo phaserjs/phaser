@@ -259,12 +259,21 @@ VideoFile.getVideoURL = function (game, urls)
     {
         var url = GetFastValue(urls[i], 'url', urls[i]);
 
-        if (url.indexOf('blob:') === 0 || url.indexOf('data:') === 0)
+        if (url.indexOf('blob:') === 0)
         {
             return url;
         }
 
-        var videoType = url.match(/\.([a-zA-Z0-9]+)($|\?)/);
+        var videoType;
+
+        if (url.indexOf('data:') === 0)
+        {
+            videoType = url.split(',')[0].match(/\/(.*?);/);
+        }
+        else
+        {
+            videoType = url.match(/\.([a-zA-Z0-9]+)($|\?)/);
+        }
 
         videoType = GetFastValue(urls[i], 'type', (videoType) ? videoType[1] : '').toLowerCase();
 
