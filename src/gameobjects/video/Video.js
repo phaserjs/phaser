@@ -36,7 +36,7 @@ var VideoRender = require('./VideoRender');
  * physics body, etc.
  * 
  * Transparent videos are also possible via the WebM file format. Providing the video file has was encoded with
- * an alpha channel, and providing the browser supports WebM playback (not all of them do), then it willl render
+ * an alpha channel, and providing the browser supports WebM playback (not all of them do), then it will render
  * in-game with full transparency.
  * 
  * ### Autoplaying Videos

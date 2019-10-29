@@ -28,7 +28,7 @@ It's with great pleasure that I'm announcing the release of Phaser 3.20. You may
 
 3.20 also introduces the brand new Video Game Object. This is a new Game Object is capable of handling playback of a previously loaded video from the Phaser Video Cache, or playing a video based on a given URL. Videos can be either local, or streamed. To all intents and purposes, a video is a standard Game Object, just like a Sprite. And as such, you can do all the usual things to it, such as scaling, rotating, cropping, tinting, making interactive, giving a physics body, etc.
 
-Transparent videos are also possible via the WebM file format. Providing the video file has was encoded with an alpha channel, and providing the browser supports WebM playback (not all of them do), then it willl render in-game with full transparency. You can also save a video to the Texture Manager, allowing other Game Objects to use it as their texture, including using it as a sampler2D input for a shader. See the Video Game Object class for more details. Other Video related changes are as follows:
+Transparent videos are also possible via the WebM file format. Providing the video file has was encoded with an alpha channel, and providing the browser supports WebM playback (not all of them do), then it will render in-game with full transparency. You can also save a video to the Texture Manager, allowing other Game Objects to use it as their texture, including using it as a sampler2D input for a shader. See the Video Game Object class for more details. Other Video related changes are as follows:
 
 There are also updates to Arcade Physics, from the team at GameFroot, helping to fix issues on low, or super-high FPS systems. The Facebook Instant Games Plugin has also been updated, fixing a few issues with showing ads and in the docs. I've also spent a good while addressing `pixelArt` mode in WebGL, so now _all_ native Game Objects should respect the setting, meaning your games can be crispier than ever before!
 
@@ -367,7 +367,7 @@ all the usual things to it, such as scaling, rotating, cropping, tinting, making
 physics body, etc.
 
 Transparent videos are also possible via the WebM file format. Providing the video file has was encoded with
-an alpha channel, and providing the browser supports WebM playback (not all of them do), then it willl render
+an alpha channel, and providing the browser supports WebM playback (not all of them do), then it will render
 in-game with full transparency.
 
 You can also save a video to the Texture Manager, allowing other Game Objects to use it as their texture,
