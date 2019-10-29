@@ -71,7 +71,7 @@ var SpineGameObject = require('./gameobject/SpineGameObject');
  * this.load.spine('stretchyman', 'stretchyman-pro.json', [ 'stretchyman-pma.atlas' ], true);
  * ```
  * 
- * It also installs a Game Object Factory method, allowin you to create Spine Game Objects:
+ * It also installs a Game Object Factory method, allowing you to create Spine Game Objects:
  * 
  * ```javascript
  * this.add.spine(512, 650, 'stretchyman')
