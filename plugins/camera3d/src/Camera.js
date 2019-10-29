@@ -821,7 +821,7 @@ var Camera = new Class({
         return this;
     },
 
-    //  Overriden by subclasses
+    //  Overridden by subclasses
     /**
      * [description]
      *
