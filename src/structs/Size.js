@@ -219,7 +219,7 @@ var Size = new Class({
      * 
      * To clear the parent call this method with no arguments.
      * 
-     * The parent influences the maximum extents to which this Size compoent can expand,
+     * The parent influences the maximum extents to which this Size component can expand,
      * based on the aspect mode:
      * 
      * NONE - The parent clamps both the width and height.
