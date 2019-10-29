@@ -92,7 +92,7 @@ Over 140 previous editions can be found on our [Back Issues](https://phaser.io/c
 
 Phaser 3 is available via GitHub, npm and CDNs:
 
-* Clone the git repository via [https][clone-http], [ssh][clone-ssh] or with the Github [Windows][clone-ghwin] or [Mac][clone-ghmac] clients.
+* Clone the git repository via [https][clone-http], [ssh][clone-ssh] or with the GitHub [Windows][clone-ghwin] or [Mac][clone-ghmac] clients.
 * Download as [zip](https://github.com/photonstorm/phaser/archive/master.zip)
 * Download the build files: [phaser.js][get-js] and [phaser.min.js][get-minjs]
 
