@@ -30,7 +30,7 @@ var Randomize = function (tileX, tileY, width, height, indexes, layer)
     var i;
     var tiles = GetTilesWithin(tileX, tileY, width, height, null, layer);
 
-    // If no indicies are given, then find all the unique indexes within the specified region
+    // If no indices are given, then find all the unique indexes within the specified region
     if (indexes === undefined)
     {
         indexes = [];
