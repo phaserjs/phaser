@@ -286,7 +286,7 @@ var GLSLFile = new Class({
                 }
                 else
                 {
-                    //  We've hit another --- delimeter, break out
+                    //  We've hit another --- delimiter, break out
                     captureSource = false;
                     break;
                 }
