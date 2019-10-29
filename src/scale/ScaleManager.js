@@ -1062,7 +1062,7 @@ var ScaleManager = new Class({
             style.height = styleHeight + 'px';
         }
 
-        //  Update the parentSize incase the canvas / style change modified it
+        //  Update the parentSize in case the canvas / style change modified it
         this.getParentBounds();
 
         //  Finally, update the centering
