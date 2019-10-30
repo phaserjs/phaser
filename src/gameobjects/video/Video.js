@@ -333,7 +333,7 @@ var Video = new Class({
          * @private
          * @since 3.20.0
          */
-        this._markerOut = Number.MAX_SAFE_INTEGER;
+        this._markerOut = Number.MAX_SAFE_INTEGER || 9007199254740991;
 
         /**
          * The last time the TextureSource was updated.

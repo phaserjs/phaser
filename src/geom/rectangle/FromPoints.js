@@ -39,8 +39,8 @@ var FromPoints = function (points, out)
     var minX = Number.MAX_VALUE;
     var minY = Number.MAX_VALUE;
 
-    var maxX = Number.MIN_SAFE_INTEGER;
-    var maxY = Number.MIN_SAFE_INTEGER;
+    var maxX = Number.MIN_SAFE_INTEGER || -9007199254740991;
+    var maxY = Number.MIN_SAFE_INTEGER || -9007199254740991;
 
     var p;
     var px;

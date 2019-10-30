@@ -105,7 +105,7 @@ var StaggerBuilder = function (value, options)
             fromY = (gridHeight - 1) / 2;
         }
 
-        var gridMax = Number.MIN_SAFE_INTEGER;
+        var gridMax = Number.MIN_SAFE_INTEGER || -9007199254740991;
 
         for (var toY = 0; toY < gridHeight; toY++)
         {

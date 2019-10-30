@@ -516,7 +516,7 @@ var Tween = new Class({
     calcDuration: function ()
     {
         var maxDuration = 0;
-        var minDelay = Number.MAX_SAFE_INTEGER;
+        var minDelay = Number.MAX_SAFE_INTEGER || 9007199254740991;
 
         var data = this.data;
 
