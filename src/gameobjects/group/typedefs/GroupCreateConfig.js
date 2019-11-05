@@ -38,6 +38,14 @@
  * @property {?object} [setAlpha]
  * @property {?number} [setAlpha.value=0] - The alpha value of each new Game Object.
  * @property {?number} [setAlpha.step=0] - Increment each Game Object's alpha from the previous by this amount, starting from `setAlpha.value`.
+ * @property {?object} [setDepth]
+ * @property {?number} [setDepth.value=0] - The depth value of each new Game Object.
+ * @property {?number} [setDepth.step=0] - Increment each Game Object's depth from the previous by this amount, starting from `setDepth.value`.
+ * @property {?object} [setScrollFactor]
+ * @property {?number} [setScrollFactor.x=0] - The horizontal scroll factor of each new Game Object.
+ * @property {?number} [setScrollFactor.y=0] - The vertical scroll factor of each new Game Object.
+ * @property {?number} [setScrollFactor.stepX=0] - Increment each Game Object's horizontal scroll factor from the previous by this amount, starting from `setScrollFactor.x`.
+ * @property {?number} [setScrollFactor.stepY=0] - Increment each Game object's vertical scroll factor from the previous by this amount, starting from `setScrollFactor.y`.
  * @property {?*} [hitArea] - A geometric shape that defines the hit area for the Game Object.
  * @property {?Phaser.Types.Input.HitAreaCallback} [hitAreaCallback] - A callback to be invoked when the Game Object is interacted with.
  * @property {?(false|Phaser.Types.Actions.GridAlignConfig)} [gridAlign=false] - Align the new Game Objects in a grid using these settings.
@@ -48,6 +56,8 @@
  * @see Phaser.Actions.SetRotation
  * @see Phaser.Actions.SetScale
  * @see Phaser.Actions.SetXY
+ * @see Phaser.Actions.SetDepth
+ * @see Phaser.Actions.SetScrollFactor
  * @see Phaser.GameObjects.Group#createFromConfig
  * @see Phaser.Utils.Array.Range
  */
