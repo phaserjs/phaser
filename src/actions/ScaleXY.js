@@ -23,7 +23,7 @@ var PropertyValueInc = require('./PropertyValueInc');
  * @param {number} scaleX - The amount to be added to the `scaleX` property.
  * @param {number} [scaleY] - The amount to be added to the `scaleY` property. If `undefined` or `null` it uses the `scaleX` value.
  * @param {number} [stepX=0] - This is added to the `scaleX` amount, multiplied by the iteration counter.
- * @param {number} [stepY=0] - This is added to the `y` amount, multiplied by the iteration counter.
+ * @param {number} [stepY=0] - This is added to the `scaleY` amount, multiplied by the iteration counter.
  * @param {integer} [index=0] - An optional offset to start searching from within the items array.
  * @param {integer} [direction=1] - The direction to iterate through the array. 1 is from beginning to end, -1 from end to beginning.
  *
