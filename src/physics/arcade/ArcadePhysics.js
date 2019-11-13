@@ -367,67 +367,102 @@ var ArcadePhysics = new Class({
     },
 
     /**
-     * Finds the Dynamic Body closest to a source point or object.
+     * Finds the Body or Game Object closest to a source point or object.
      *
-     * If two or more bodies are the exact same distance from the source point, only the first body
+     * If a `targets` argument is passed, this method finds the closest of those.
+     * The targets can be Arcade Physics Game Objects, Dynamic Bodies, or Static Bodies.
+     *
+     * If no `targets` argument is passed, this method finds the closest Dynamic Body.
+     *
+     * If two or more targets are the exact same distance from the source point, only the first target
      * is returned.
      *
      * @method Phaser.Physics.Arcade.ArcadePhysics#closest
      * @since 3.0.0
      *
      * @param {any} source - Any object with public `x` and `y` properties, such as a Game Object or Geometry object.
+     * @param {(Phaser.Physics.Arcade.Body[]|Phaser.Physics.Arcade.StaticBody[]|Phaser.GameObjects.GameObject[])} [targets] - The targets.
      *
-     * @return {Phaser.Physics.Arcade.Body} The closest Dynamic Body to the given source point.
+     * @return {?(Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody|Phaser.GameObjects.GameObject)} The target closest to the given source point.
      */
-    closest: function (source)
+    closest: function (source, targets)
     {
-        var bodies = this.world.bodies;
+        if (!targets)
+        {
+            targets = this.world.bodies.entries;
+        }
 
         var min = Number.MAX_VALUE;
         var closest = null;
         var x = source.x;
         var y = source.y;
+        var len = targets.length;
 
-        bodies.iterate(function (target)
+        for (var i = 0; i < len; i++)
         {
-            var distance = DistanceSquared(x, y, target.center.x, target.center.y);
+            var target = targets[i];
+            var body = target.body || target;
+
+            if (source === target || source === body || source === body.gameObject || source === body.center)
+            {
+                continue;
+            }
+
+            var distance = DistanceSquared(x, y, body.center.x, body.center.y);
 
             if (distance < min)
             {
                 closest = target;
                 min = distance;
             }
-
-        });
+        }
 
         return closest;
     },
 
     /**
-     * Finds the Dynamic Body farthest from a source point or object.
+     * Finds the Body or Game Object farthest from a source point or object.
      *
-     * If two or more bodies are the exact same distance from the source point, only the first body
+     * If a `targets` argument is passed, this method finds the farthest of those.
+     * The targets can be Arcade Physics Game Objects, Dynamic Bodies, or Static Bodies.
+     *
+     * If no `targets` argument is passed, this method finds the farthest Dynamic Body.
+     *
+     * If two or more targets are the exact same distance from the source point, only the first target
      * is returned.
      *
      * @method Phaser.Physics.Arcade.ArcadePhysics#furthest
      * @since 3.0.0
      *
      * @param {any} source - Any object with public `x` and `y` properties, such as a Game Object or Geometry object.
+     * @param {(Phaser.Physics.Arcade.Body[]|Phaser.Physics.Arcade.StaticBody[]|Phaser.GameObjects.GameObject[])} [targets] - The targets.
      *
-     * @return {Phaser.Physics.Arcade.Body} The Dynamic Body furthest away from the given source point.
+     * @return {?(Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody|Phaser.GameObjects.GameObject)} The target farthest from the given source point.
      */
-    furthest: function (source)
+    furthest: function (source, targets)
     {
-        var bodies = this.world.bodies;
+        if (!targets)
+        {
+            targets = this.world.bodies.entries;
+        }
 
         var max = -1;
         var farthest = null;
         var x = source.x;
         var y = source.y;
+        var len = targets.length;
 
-        bodies.iterate(function (target)
+        for (var i = 0; i < len; i++)
         {
-            var distance = DistanceSquared(x, y, target.center.x, target.center.y);
+            var target = targets[i];
+            var body = target.body || target;
+
+            if (source === target || source === body || source === body.gameObject || source === body.center)
+            {
+                continue;
+            }
+
+            var distance = DistanceSquared(x, y, body.center.x, body.center.y);
 
             if (distance > max)
             {
@@ -435,7 +470,7 @@ var ArcadePhysics = new Class({
                 max = distance;
             }
 
-        });
+        }
 
         return farthest;
     },
