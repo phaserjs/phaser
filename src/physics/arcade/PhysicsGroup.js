@@ -87,7 +87,7 @@ var PhysicsGroup = new Class({
 
         /**
          * The class to create new Group members from.
-         * 
+         *
          * This should be either `Phaser.Physics.Arcade.Image`, `Phaser.Physics.Arcade.Sprite`, or a class extending one of those.
          *
          * @name Phaser.Physics.Arcade.Group#classType
@@ -146,6 +146,17 @@ var PhysicsGroup = new Class({
         }
 
         Group.call(this, scene, children, config);
+
+        /**
+         * A textual representation of this Game Object.
+         * Used internally by Phaser but is available for your own custom classes to populate.
+         *
+         * @name Phaser.Physics.Arcade.Group#type
+         * @type {string}
+         * @default 'PhysicsGroup'
+         * @since 3.21.0
+         */
+        this.type = 'PhysicsGroup';
     },
 
     /**
