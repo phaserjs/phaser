@@ -10,6 +10,7 @@ var Events = require('../events');
 var GameObjectCreator = require('../../gameobjects/GameObjectCreator');
 var GameObjectFactory = require('../../gameobjects/GameObjectFactory');
 var TWEEN_CONST = require('./const');
+var MATH_CONST = require('../../math/const');
 
 /**
  * @classdesc
@@ -516,7 +517,7 @@ var Tween = new Class({
     calcDuration: function ()
     {
         var maxDuration = 0;
-        var minDelay = Number.MAX_SAFE_INTEGER;
+        var minDelay = MATH_CONST.MAX_SAFE_INTEGER;
 
         var data = this.data;
 

@@ -6,6 +6,7 @@
 
 var GetEaseFunction = require('./GetEaseFunction');
 var GetValue = require('../../utils/object/GetValue');
+var MATH_CONST = require('../../math/const');
 
 /**
  * Creates a Stagger function to be used by a Tween property.
@@ -105,7 +106,7 @@ var StaggerBuilder = function (value, options)
             fromY = (gridHeight - 1) / 2;
         }
 
-        var gridMax = Number.MIN_SAFE_INTEGER;
+        var gridMax = MATH_CONST.MIN_SAFE_INTEGER;
 
         for (var toY = 0; toY < gridHeight; toY++)
         {

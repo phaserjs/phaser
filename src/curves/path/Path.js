@@ -16,6 +16,7 @@ var QuadraticBezierCurve = require('../QuadraticBezierCurve');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var SplineCurve = require('../SplineCurve');
 var Vector2 = require('../../math/Vector2');
+var MATH_CONST = require('../../math/const');
 
 /**
  * @classdesc
@@ -404,8 +405,8 @@ var Path = new Class({
         out.y = Number.MAX_VALUE;
 
         var bounds = new Rectangle();
-        var maxRight = Number.MIN_SAFE_INTEGER;
-        var maxBottom = Number.MIN_SAFE_INTEGER;
+        var maxRight = MATH_CONST.MIN_SAFE_INTEGER;
+        var maxBottom = MATH_CONST.MIN_SAFE_INTEGER;
 
         for (var i = 0; i < this.curves.length; i++)
         {

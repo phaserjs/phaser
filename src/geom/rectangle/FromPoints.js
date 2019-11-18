@@ -5,6 +5,7 @@
  */
 
 var Rectangle = require('./Rectangle');
+var MATH_CONST = require('../../math/const');
 
 //  points is an array of Point-like objects,
 //  either 2 dimensional arrays, or objects with public x/y properties:
@@ -39,8 +40,8 @@ var FromPoints = function (points, out)
     var minX = Number.MAX_VALUE;
     var minY = Number.MAX_VALUE;
 
-    var maxX = Number.MIN_SAFE_INTEGER;
-    var maxY = Number.MIN_SAFE_INTEGER;
+    var maxX = MATH_CONST.MIN_SAFE_INTEGER;
+    var maxY = MATH_CONST.MIN_SAFE_INTEGER;
 
     var p;
     var px;

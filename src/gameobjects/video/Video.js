@@ -13,6 +13,7 @@ var GameObject = require('../GameObject');
 var SoundEvents = require('../../sound/events/');
 var UUID = require('../../utils/string/UUID');
 var VideoRender = require('./VideoRender');
+var MATH_CONST = require('../../math/const');
 
 /**
  * @classdesc
@@ -333,7 +334,7 @@ var Video = new Class({
          * @private
          * @since 3.20.0
          */
-        this._markerOut = Number.MAX_SAFE_INTEGER;
+        this._markerOut = MATH_CONST.MAX_SAFE_INTEGER;
 
         /**
          * The last time the TextureSource was updated.
