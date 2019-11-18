@@ -366,6 +366,16 @@ var Video = new Class({
          */
         this._isSeeking = false;
 
+        /**
+         * Should the Video element that this Video is using, be removed from the DOM
+         * when this Video is destroyed?
+         *
+         * @name Phaser.GameObjects.Video#removeVideoElementOnDestroy
+         * @type {boolean}
+         * @since 3.21.0
+         */
+        this.removeVideoElementOnDestroy = false;
+
         this.setPosition(x, y);
         this.initPipeline();
 
@@ -1711,22 +1721,21 @@ var Video = new Class({
     },
 
     /**
-     * Destroys the Video object. This calls `Video.stop` and optionally `Video.removeVideoElement`.
+     * Handles the pre-destroy step for the Video object.
+     * 
+     * This calls `Video.stop` and optionally `Video.removeVideoElement`.
      * 
      * If any Sprites are using this Video as their texture it is up to you to manage those.
      *
-     * @method Phaser.GameObjects.Video#destroy
-     * @since 3.20.0
-     * 
-     * @param {boolean} [removeVideoElement=false] - Should the video element be removed from the DOM?
+     * @method Phaser.GameObjects.Video#preDestroy
+     * @private
+     * @since 3.21.0
      */
-    destroy: function (removeVideoElement)
+    preDestroy: function ()
     {
-        if (removeVideoElement === undefined) { removeVideoElement = false; }
-
         this.stop();
 
-        if (removeVideoElement)
+        if (this.removeVideoElementOnDestroy)
         {
             this.removeVideoElement();
         }
