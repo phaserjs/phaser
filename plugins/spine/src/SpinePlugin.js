@@ -18,7 +18,9 @@ var SpineGameObject = require('./gameobject/SpineGameObject');
  * The Spine Plugin is a Scene based plugin that handles the creation and rendering of Spine Game Objects.
  * 
  * All rendering and object creation is handled via the official Spine Runtimes. This version of the plugin
- * uses the Spine 3.8 runtimes. Files created in a different version of Spine may not work as a result.
+ * uses the Spine 3.8.72 runtimes. Please note that due to the way the Spine runtimes use semver, you will
+ * get breaking changes in point-releases. Therefore, files created in a different version of Spine may not
+ * work as a result, without you first updating the runtimes and rebuilding the plugin.
  * 
  * You can find more details about Spine at http://esotericsoftware.com/.
  * 

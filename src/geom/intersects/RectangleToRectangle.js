@@ -7,7 +7,9 @@
 /**
  * Checks if two Rectangles intersect.
  *
- * A Rectangle intersects another Rectangle if any part of its bounds is within the other Rectangle's bounds. As such, the two Rectangles are considered "solid". A Rectangle with no width or no height will never intersect another Rectangle.
+ * A Rectangle intersects another Rectangle if any part of its bounds is within the other Rectangle's bounds.
+ * As such, the two Rectangles are considered "solid".
+ * A Rectangle with no width or no height will never intersect another Rectangle.
  *
  * @function Phaser.Geom.Intersects.RectangleToRectangle
  * @since 3.0.0
