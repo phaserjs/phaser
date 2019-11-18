@@ -23,7 +23,7 @@ var World = require('./World');
  * It also holds some useful methods for moving and rotating Arcade Physics Bodies.
  *
  * You can access it from within a Scene using `this.physics`.
- * 
+ *
  * Arcade Physics uses the Projection Method of collision resolution and separation. While it's fast and suitable
  * for 'arcade' style games it lacks stability when multiple objects are in close proximity or resting upon each other.
  * The separation that stops two objects penetrating may create a new penetration against a different object. If you
@@ -186,7 +186,7 @@ var ArcadePhysics = new Class({
      * If two Groups or arrays are passed, each member of one will be tested against each member of the other.
      *
      * If **only** one Group is passed (as `object1`), each member of the Group will be collided against the other members.
-     * 
+     *
      * If **only** one Array is passed, the array is iterated and every element in it is tested against the others.
      *
      * Two callbacks can be provided. The `collideCallback` is invoked if a collision occurs and the two colliding
@@ -221,15 +221,15 @@ var ArcadePhysics = new Class({
 
     /**
      * This advanced method is specifically for testing for collision between a single Sprite and an array of Tile objects.
-     * 
+     *
      * You should generally use the `collide` method instead, with a Sprite vs. a Tilemap Layer, as that will perform
      * tile filtering and culling for you, as well as handle the interesting face collision automatically.
-     * 
+     *
      * This method is offered for those who would like to check for collision with specific Tiles in a layer, without
      * having to set any collision attributes on the tiles in question. This allows you to perform quick dynamic collisions
      * on small sets of Tiles. As such, no culling or checks are made to the array of Tiles given to this method,
      * you should filter them before passing them to this method.
-     * 
+     *
      * Important: Use of this method skips the `interesting faces` system that Tilemap Layers use. This means if you have
      * say a row or column of tiles, and you jump into, or walk over them, it's possible to get stuck on the edges of the
      * tiles as the interesting face calculations are skipped. However, for quick-fire small collision set tests on
@@ -254,10 +254,10 @@ var ArcadePhysics = new Class({
 
     /**
      * This advanced method is specifically for testing for overlaps between a single Sprite and an array of Tile objects.
-     * 
+     *
      * You should generally use the `overlap` method instead, with a Sprite vs. a Tilemap Layer, as that will perform
      * tile filtering and culling for you, as well as handle the interesting face collision automatically.
-     * 
+     *
      * This method is offered for those who would like to check for overlaps with specific Tiles in a layer, without
      * having to set any collision attributes on the tiles in question. This allows you to perform quick dynamic overlap
      * tests on small sets of Tiles. As such, no culling or checks are made to the array of Tiles given to this method,
@@ -367,67 +367,102 @@ var ArcadePhysics = new Class({
     },
 
     /**
-     * Finds the Dynamic Body closest to a source point or object.
-     * 
-     * If two or more bodies are the exact same distance from the source point, only the first body
+     * Finds the Body or Game Object closest to a source point or object.
+     *
+     * If a `targets` argument is passed, this method finds the closest of those.
+     * The targets can be Arcade Physics Game Objects, Dynamic Bodies, or Static Bodies.
+     *
+     * If no `targets` argument is passed, this method finds the closest Dynamic Body.
+     *
+     * If two or more targets are the exact same distance from the source point, only the first target
      * is returned.
      *
      * @method Phaser.Physics.Arcade.ArcadePhysics#closest
      * @since 3.0.0
      *
      * @param {any} source - Any object with public `x` and `y` properties, such as a Game Object or Geometry object.
+     * @param {(Phaser.Physics.Arcade.Body[]|Phaser.Physics.Arcade.StaticBody[]|Phaser.GameObjects.GameObject[])} [targets] - The targets.
      *
-     * @return {Phaser.Physics.Arcade.Body} The closest Dynamic Body to the given source point.
+     * @return {?(Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody|Phaser.GameObjects.GameObject)} The target closest to the given source point.
      */
-    closest: function (source)
+    closest: function (source, targets)
     {
-        var bodies = this.world.bodies;
+        if (!targets)
+        {
+            targets = this.world.bodies.entries;
+        }
 
         var min = Number.MAX_VALUE;
         var closest = null;
         var x = source.x;
         var y = source.y;
+        var len = targets.length;
 
-        bodies.iterate(function (target)
+        for (var i = 0; i < len; i++)
         {
-            var distance = DistanceSquared(x, y, target.x, target.y);
+            var target = targets[i];
+            var body = target.body || target;
+
+            if (source === target || source === body || source === body.gameObject || source === body.center)
+            {
+                continue;
+            }
+
+            var distance = DistanceSquared(x, y, body.center.x, body.center.y);
 
             if (distance < min)
             {
                 closest = target;
                 min = distance;
             }
-
-        });
+        }
 
         return closest;
     },
 
     /**
-     * Finds the Dynamic Body farthest from a source point or object.
-     * 
-     * If two or more bodies are the exact same distance from the source point, only the first body
+     * Finds the Body or Game Object farthest from a source point or object.
+     *
+     * If a `targets` argument is passed, this method finds the farthest of those.
+     * The targets can be Arcade Physics Game Objects, Dynamic Bodies, or Static Bodies.
+     *
+     * If no `targets` argument is passed, this method finds the farthest Dynamic Body.
+     *
+     * If two or more targets are the exact same distance from the source point, only the first target
      * is returned.
      *
      * @method Phaser.Physics.Arcade.ArcadePhysics#furthest
      * @since 3.0.0
      *
      * @param {any} source - Any object with public `x` and `y` properties, such as a Game Object or Geometry object.
+     * @param {(Phaser.Physics.Arcade.Body[]|Phaser.Physics.Arcade.StaticBody[]|Phaser.GameObjects.GameObject[])} [targets] - The targets.
      *
-     * @return {Phaser.Physics.Arcade.Body} The Dynamic Body furthest away from the given source point.
+     * @return {?(Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody|Phaser.GameObjects.GameObject)} The target farthest from the given source point.
      */
-    furthest: function (source)
+    furthest: function (source, targets)
     {
-        var bodies = this.world.bodies;
+        if (!targets)
+        {
+            targets = this.world.bodies.entries;
+        }
 
         var max = -1;
         var farthest = null;
         var x = source.x;
         var y = source.y;
+        var len = targets.length;
 
-        bodies.iterate(function (target)
+        for (var i = 0; i < len; i++)
         {
-            var distance = DistanceSquared(x, y, target.x, target.y);
+            var target = targets[i];
+            var body = target.body || target;
+
+            if (source === target || source === body || source === body.gameObject || source === body.center)
+            {
+                continue;
+            }
+
+            var distance = DistanceSquared(x, y, body.center.x, body.center.y);
 
             if (distance > max)
             {
@@ -435,7 +470,7 @@ var ArcadePhysics = new Class({
                 max = distance;
             }
 
-        });
+        }
 
         return farthest;
     },
@@ -545,10 +580,10 @@ var ArcadePhysics = new Class({
     /**
      * This method will search the given rectangular area and return an array of all physics bodies that
      * overlap with it. It can return either Dynamic, Static bodies or a mixture of both.
-     * 
+     *
      * A body only has to intersect with the search area to be considered, it doesn't have to be fully
      * contained within it.
-     * 
+     *
      * If Arcade Physics is set to use the RTree (which it is by default) then the search for is extremely fast,
      * otherwise the search is O(N) for Dynamic Bodies.
      *
@@ -568,7 +603,7 @@ var ArcadePhysics = new Class({
     {
         return OverlapRect(this.world, x, y, width, height, includeDynamic, includeStatic);
     },
-    
+
     /**
      * The Scene that owns this plugin is shutting down.
      * We need to kill and reset all internal properties as well as stop listening to Scene events.
