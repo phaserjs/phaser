@@ -72,7 +72,7 @@ var LineCurve = new Class({
          * @default 1
          * @since 3.0.0
          */
-        this.arcLengthDivisions = 1;        
+        this.arcLengthDivisions = 1;
     },
 
     /**

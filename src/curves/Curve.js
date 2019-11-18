@@ -308,7 +308,7 @@ var Curve = new Class({
         //  If divisions is a falsey value (false, null, 0, undefined, etc) then we calculate it based on the stepRate instead.
         if (!divisions)
         {
-            if (!stepRate) 
+            if (!stepRate)
             {
                 divisions = this.defaultDivisions;
             }
