@@ -2112,7 +2112,7 @@ var Tilemap = new Class({
     },
 
     /**
-     * Sets a collision callback for the given rectangular area (in tile coordindates) within the layer.
+     * Sets a collision callback for the given rectangular area (in tile coordinates) within the layer.
      * If a callback is already set for the tile index it will be replaced. Set the callback to null to
      * remove it.
      *

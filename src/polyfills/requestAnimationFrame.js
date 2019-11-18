@@ -5,7 +5,7 @@
 // https://gist.github.com/timhall/4078614
 // https://github.com/Financial-Times/polyfill-service/tree/master/polyfills/requestAnimationFrame
 
-// Expected to be used with Browserfiy
+// Expected to be used with Browserify
 // Browserify automatically detects the use of `global` and passes the
 // correct reference of `global`, `self`, and finally `window`
 

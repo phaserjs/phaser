@@ -6,7 +6,7 @@
 
 /**
  * Converts an RGB color value to HSV (hue, saturation and value).
- * Conversion forumla from http://en.wikipedia.org/wiki/HSL_color_space.
+ * Conversion formula from http://en.wikipedia.org/wiki/HSL_color_space.
  * Assumes RGB values are contained in the set [0, 255] and returns h, s and v in the set [0, 1].
  * Based on code by Michael Jackson (https://github.com/mjijackson)
  *

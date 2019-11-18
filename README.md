@@ -28,7 +28,7 @@ It's with great pleasure that I'm announcing the release of Phaser 3.20. You may
 
 3.20 also introduces the brand new Video Game Object. This is a new Game Object is capable of handling playback of a previously loaded video from the Phaser Video Cache, or playing a video based on a given URL. Videos can be either local, or streamed. To all intents and purposes, a video is a standard Game Object, just like a Sprite. And as such, you can do all the usual things to it, such as scaling, rotating, cropping, tinting, making interactive, giving a physics body, etc.
 
-Transparent videos are also possible via the WebM file format. Providing the video file has was encoded with an alpha channel, and providing the browser supports WebM playback (not all of them do), then it willl render in-game with full transparency. You can also save a video to the Texture Manager, allowing other Game Objects to use it as their texture, including using it as a sampler2D input for a shader. See the Video Game Object class for more details. Other Video related changes are as follows:
+Transparent videos are also possible via the WebM file format. Providing the video file has was encoded with an alpha channel, and providing the browser supports WebM playback (not all of them do), then it will render in-game with full transparency. You can also save a video to the Texture Manager, allowing other Game Objects to use it as their texture, including using it as a sampler2D input for a shader. See the Video Game Object class for more details. Other Video related changes are as follows:
 
 There are also updates to Arcade Physics, from the team at GameFroot, helping to fix issues on low, or super-high FPS systems. The Facebook Instant Games Plugin has also been updated, fixing a few issues with showing ads and in the docs. I've also spent a good while addressing `pixelArt` mode in WebGL, so now _all_ native Game Objects should respect the setting, meaning your games can be crispier than ever before!
 
@@ -92,7 +92,7 @@ Over 140 previous editions can be found on our [Back Issues](https://phaser.io/c
 
 Phaser 3 is available via GitHub, npm and CDNs:
 
-* Clone the git repository via [https][clone-http], [ssh][clone-ssh] or with the Github [Windows][clone-ghwin] or [Mac][clone-ghmac] clients.
+* Clone the git repository via [https][clone-http], [ssh][clone-ssh] or with the GitHub [Windows][clone-ghwin] or [Mac][clone-ghmac] clients.
 * Download as [zip](https://github.com/photonstorm/phaser/archive/master.zip)
 * Download the build files: [phaser.js][get-js] and [phaser.min.js][get-minjs]
 
@@ -367,7 +367,7 @@ all the usual things to it, such as scaling, rotating, cropping, tinting, making
 physics body, etc.
 
 Transparent videos are also possible via the WebM file format. Providing the video file has was encoded with
-an alpha channel, and providing the browser supports WebM playback (not all of them do), then it willl render
+an alpha channel, and providing the browser supports WebM playback (not all of them do), then it will render
 in-game with full transparency.
 
 You can also save a video to the Texture Manager, allowing other Game Objects to use it as their texture,
@@ -429,7 +429,7 @@ In combination these updates fix issues #4732 and #4672. My thanks to @BenjaminD
 * `InteractiveObject.alwaysEnabled` is a new boolean that allows an interactive Game Object to always receive input events, even if it's invisible or won't render.
 * `Bob.setTint` is  a new method that allows you to set the tint of a Bob object within a Blitter. This is then used by the Blitter WebGL Renderer (thanks @rexrainbow)
 * The `UpdateList` now emits two new events: 'add' and 'remove' when children are added and removed from it. Fix #3487 (thanks @hexus)
-* The `Tilemap.setCollision` method has a new optional boolean parameter `updateLayer`. If set to `true`, it will update all of the collision settings of all tiles on the layer. If `false` it will skip doing this, which can be a huge performance boost in situations where the layer tiles haven't been modified and you're just changing collision flags. This is especially suitable for maps using procedural generated tilemaps, infinite tilemaps, multiplayer tilemaps, particularly large tilemaps (especially those dyanmic in nature) or who otherwise intend to index collisions before the tiles are loaded. This update also added the new parameter to the `SetCollision`, `SetCollisionBetween` and `DynamicTilemapLayer.setCollision` methods (thanks @tarsupin)
+* The `Tilemap.setCollision` method has a new optional boolean parameter `updateLayer`. If set to `true`, it will update all of the collision settings of all tiles on the layer. If `false` it will skip doing this, which can be a huge performance boost in situations where the layer tiles haven't been modified and you're just changing collision flags. This is especially suitable for maps using procedural generated tilemaps, infinite tilemaps, multiplayer tilemaps, particularly large tilemaps (especially those dynamic in nature) or who otherwise intend to index collisions before the tiles are loaded. This update also added the new parameter to the `SetCollision`, `SetCollisionBetween` and `DynamicTilemapLayer.setCollision` methods (thanks @tarsupin)
 * `ArcadePhysics.Body.setBoundsRectangle` is a new method that allows you to set a custom bounds rectangle for any Body to use, rather than the World bounds, which is the default (thanks @francois-n-dream)
 * `ArcadePhysics.Body.customBoundsRectangle` is a new property used for custom bounds collision (thanks @francois-n-dream)
 * The Arcade Physics Group has a new config object property `customBoundsRectangle` which, if set, will set the custom world bounds for all Bodies that Group creates (thanks @francois-n-dream)

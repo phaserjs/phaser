@@ -71,7 +71,7 @@ var SpineGameObject = require('./gameobject/SpineGameObject');
  * this.load.spine('stretchyman', 'stretchyman-pro.json', [ 'stretchyman-pma.atlas' ], true);
  * ```
  * 
- * It also installs a Game Object Factory method, allowin you to create Spine Game Objects:
+ * It also installs a Game Object Factory method, allowing you to create Spine Game Objects:
  * 
  * ```javascript
  * this.add.spine(512, 650, 'stretchyman')
@@ -83,7 +83,7 @@ var SpineGameObject = require('./gameobject/SpineGameObject');
  * 
  * Phaser expects the Spine data to be exported from the Spine application in a JSON format, not binary.
  * The associated atlas files are scanned for any texture files present in them, which are then loaded.
- * If you have exported your Spine data with preMultipiedAlpha set, then you should enable this in the
+ * If you have exported your Spine data with preMultipliedAlpha set, then you should enable this in the
  * load arguments, or you may see black outlines around skeleton textures.
  * 
  * The Spine plugin is local to the Scene in which it is installed. This means a change to something,
@@ -516,7 +516,7 @@ var SpinePlugin = new Class({
      * 
      * Phaser expects the Spine data to be exported from the Spine application in a JSON format, not binary. The associated
      * atlas files are scanned for any texture files present in them, which are then loaded. If you have exported
-     * your Spine data with preMultipiedAlpha set, then you should enable this in the arguments, or you may see black
+     * your Spine data with preMultipliedAlpha set, then you should enable this in the arguments, or you may see black
      * outlines around skeleton textures.
      * 
      * The key must be a unique String. It is used to add the file to the global Spine cache upon a successful load.
@@ -564,7 +564,7 @@ var SpinePlugin = new Class({
      * @param {(string|Phaser.Types.Loader.FileTypes.JSONFileConfig|Phaser.Types.Loader.FileTypes.JSONFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
      * @param {string} jsonURL - The absolute or relative URL to load the Spine json file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
      * @param {string|string[]} atlasURL - The absolute or relative URL to load the Spine atlas file from. If undefined or `null` it will be set to `<key>.atlas`, i.e. if `key` was "alien" then the URL will be "alien.atlas".
-     * @param {boolean} [preMultipiedAlpha=false] - Do the texture files include pre-multiplied alpha or not?
+     * @param {boolean} [preMultipliedAlpha=false] - Do the texture files include pre-multiplied alpha or not?
      * @param {Phaser.Types.Loader.XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the Spine json file. Used in replacement of the Loaders default XHR Settings.
      * @param {Phaser.Types.Loader.XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the Spine atlas file. Used in replacement of the Loaders default XHR Settings.
      *

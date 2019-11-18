@@ -19,7 +19,7 @@ var GetAspectRatio = require('./GetAspectRatio');
  * @generic {Phaser.Geom.Rectangle} O - [target,$return]
  *
  * @param {Phaser.Geom.Rectangle} target - The target rectangle to adjust.
- * @param {Phaser.Geom.Rectangle} source - The source rectangle to envlope the target in.
+ * @param {Phaser.Geom.Rectangle} source - The source rectangle to envelope the target in.
  *
  * @return {Phaser.Geom.Rectangle} The modified target rectangle instance.
  */

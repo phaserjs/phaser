@@ -37,7 +37,7 @@ var MATH_CONST = require('../../math/const');
  * physics body, etc.
  * 
  * Transparent videos are also possible via the WebM file format. Providing the video file has was encoded with
- * an alpha channel, and providing the browser supports WebM playback (not all of them do), then it willl render
+ * an alpha channel, and providing the browser supports WebM playback (not all of them do), then it will render
  * in-game with full transparency.
  * 
  * ### Autoplaying Videos
@@ -576,7 +576,7 @@ var Video = new Class({
      * You can then play back specific markers via the `playMarker` method.
      * 
      * Note that marker timing is _not_ frame-perfect. You should construct your videos in such a way that you allow for
-     * plenty of extra padding before and after each sequence to allow for discrepencies in browser seek and currentTime accuracy.
+     * plenty of extra padding before and after each sequence to allow for discrepancies in browser seek and currentTime accuracy.
      * 
      * See https://github.com/w3c/media-and-entertainment/issues/4 for more details about this issue.
      *
@@ -606,7 +606,7 @@ var Video = new Class({
      * specified via the `addMarker` method.
      * 
      * Note that marker timing is _not_ frame-perfect. You should construct your videos in such a way that you allow for
-     * plenty of extra padding before and after each sequence to allow for discrepencies in browser seek and currentTime accuracy.
+     * plenty of extra padding before and after each sequence to allow for discrepancies in browser seek and currentTime accuracy.
      * 
      * See https://github.com/w3c/media-and-entertainment/issues/4 for more details about this issue.
      *
@@ -1576,7 +1576,7 @@ var Video = new Class({
     },
 
     /**
-     * Stores this Video in the Texture Manager using the given key as a dyanmic texture,
+     * Stores this Video in the Texture Manager using the given key as a dynamic texture,
      * which any texture-based Game Object, such as a Sprite, can use as its texture:
      * 
      * ```javascript

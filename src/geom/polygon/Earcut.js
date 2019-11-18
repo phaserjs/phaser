@@ -85,7 +85,7 @@ function linkedList(data, start, end, dim, clockwise) {
     return last;
 }
 
-// eliminate colinear or duplicate points
+// eliminate collinear or duplicate points
 function filterPoints(start, end) {
     if (!start) return start;
     if (!end) end = start;
@@ -270,7 +270,7 @@ function splitEarcut(start, triangles, dim, minX, minY, invSize) {
                 // split the polygon in two by the diagonal
                 var c = splitPolygon(a, b);
 
-                // filter colinear points around the cuts
+                // filter collinear points around the cuts
                 a = filterPoints(a, a.next);
                 c = filterPoints(c, c.next);
 

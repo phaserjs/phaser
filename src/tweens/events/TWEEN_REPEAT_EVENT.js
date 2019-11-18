@@ -34,6 +34,6 @@
  * 
  * @param {Phaser.Tweens.Tween} tween - A reference to the Tween instance that emitted the event.
  * @param {string} key - The key of the property that just repeated.
- * @param {any} target - The target that the property just repated on.
+ * @param {any} target - The target that the property just repeated on.
  */
 module.exports = 'repeat';
