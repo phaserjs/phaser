@@ -19,6 +19,7 @@
 * `Line.arcLengthDivisions` now overrides the default Curve value and is set to 1 to optimize the amount of points returned for a Line curve (thanks @rexrainbow)
 * `ArcadePhysics.closest` will now no longer ever return the source in the target results (thanks @samme)
 * `ArcadePhysics.furthest` will now no longer ever return the source in the target results (thanks @samme)
+* `RequestAnimationFrame.target` is a new property that controls the fps rate (in ms) when setTimeout is used (thanks @pavels)
 
 ### Bug Fixes
 
