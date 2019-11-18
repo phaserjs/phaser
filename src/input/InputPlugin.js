@@ -2403,14 +2403,20 @@ var InputPlugin = new Class({
             debug = null;
         }
 
+        var offsetx = 0;
+        var offsety = 0;
         switch (shapeType)
         {
             case GEOM_CONST.CIRCLE:
                 debug = factory.arc(0, 0, shape.radius);
+                offsetx = shape.x - shape.radius;
+                offsety = shape.y - shape.radius;
                 break;
 
             case GEOM_CONST.ELLIPSE:
                 debug = factory.ellipse(0, 0, shape.width, shape.height);
+                offsetx = shape.x - shape.width / 2;
+                offsety = shape.y - shape.height / 2;
                 break;
 
             case GEOM_CONST.LINE:
@@ -2423,6 +2429,8 @@ var InputPlugin = new Class({
 
             case GEOM_CONST.RECTANGLE:
                 debug = factory.rectangle(0, 0, shape.width, shape.height);
+                offsetx = shape.x;
+                offsety = shape.y;
                 break;
 
             case GEOM_CONST.TRIANGLE:
@@ -2441,7 +2449,7 @@ var InputPlugin = new Class({
                 debug.setDisplayOrigin(gameObject.displayOriginX, gameObject.displayOriginY);
                 debug.setRotation(gameObject.rotation);
                 debug.setScale(gameObject.scaleX, gameObject.scaleY);
-                debug.setPosition(gameObject.x, gameObject.y);
+                debug.setPosition(gameObject.x + offsetx, gameObject.y + offsety);
                 debug.setScrollFactor(gameObject.scrollFactorX, gameObject.scrollFactorY);
             };
     
