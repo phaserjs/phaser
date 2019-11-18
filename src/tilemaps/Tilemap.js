@@ -1564,6 +1564,13 @@ var Tilemap = new Class({
         if (index !== null)
         {
             SpliceOne(this.layers, index);
+            for (var i = index; i < this.layers.length; i++)
+            {
+                if (this.layers[i].tilemapLayer)
+                {
+                    this.layers[i].tilemapLayer.layerIndex--;
+                }
+            }
 
             if (this.currentLayerIndex === index)
             {
