@@ -295,22 +295,35 @@ var Curve = new Class({
      * @method Phaser.Curves.Curve#getPoints
      * @since 3.0.0
      *
-     * @param {integer} [divisions] - [description]
+     * @param {integer} divisions - The number of evenly spaced points from the curve to return. If falsy, step param will be used to calculate the number of points.
+     * @param {number} step - Step between points. Used to calculate the number of points to return when quantity is falsy. Ignored if quantity is positive.     
+     * @param {(array|Phaser.Geom.Point[])} [out] - An optional array to store the points in.
      *
-     * @return {Phaser.Math.Vector2[]} [description]
+     * @return {(array|Phaser.Geom.Point[])} An array of Points from the perimeter of the rectangle.
      */
-    getPoints: function (divisions)
+    getPoints: function (divisions, stepRate, out)
     {
-        if (divisions === undefined) { divisions = this.defaultDivisions; }
+        if (out === undefined) { out = []; }
 
-        var points = [];
+        //  If divisions is a falsey value (false, null, 0, undefined, etc) then we calculate it based on the stepRate instead.
+        if (!divisions)
+        {
+            if (!stepRate) 
+            {
+                divisions = this.defaultDivisions;
+            }
+            else
+            {
+                divisions = this.getLength() / stepRate;
+            }
+        }
 
         for (var d = 0; d <= divisions; d++)
         {
-            points.push(this.getPoint(d / divisions));
+            out.push(this.getPoint(d / divisions));
         }
 
-        return points;
+        return out;
     },
 
     /**
