@@ -61,6 +61,18 @@ var LineCurve = new Class({
          * @since 3.0.0
          */
         this.p1 = p1;
+
+        //  Override default Curve.arcLengthDivisions
+
+        /**
+         * The quantity of arc length divisions within the curve.
+         *
+         * @name Phaser.Curves.Curve#arcLengthDivisions
+         * @type {integer}
+         * @default 1
+         * @since 3.0.0
+         */
+        this.arcLengthDivisions = 1;        
     },
 
     /**
