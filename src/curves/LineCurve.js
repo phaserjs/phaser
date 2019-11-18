@@ -67,7 +67,7 @@ var LineCurve = new Class({
         /**
          * The quantity of arc length divisions within the curve.
          *
-         * @name Phaser.Curves.Curve#arcLengthDivisions
+         * @name Phaser.Curves.Line#arcLengthDivisions
          * @type {integer}
          * @default 1
          * @since 3.0.0
