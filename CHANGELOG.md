@@ -17,6 +17,7 @@
 * `Math.MAX_SAFE_INTEGER` is a new math const that stores the maximum safe integer for browsers that don't provide this, such as IE (thanks @jronn)
 * `KeyCodes.NUMPAD_ADD` has been added to the keycodes list (thanks @Martin-Antonov)
 * `KeyCodes.NUMPAD_SUBTRACT` has been added to the keycodes list (thanks @Martin-Antonov)
+* `Video.removeVideoElementOnDestroy` is a new boolean property that allows you to control if the Video element is removed from the DOM when the Video Game Object is destroyed.
 
 ### Updates
 
@@ -40,12 +41,13 @@
 * The `Rectangle.FromPoints` function now uses a cached MIN_SAFE_INTEGER making it compatible with Internet Explorer (thanks @jronn)
 * The `Video` class now uses a cached MIN_SAFE_INTEGER making it compatible with Internet Explorer (thanks @jronn)
 * The `Path` class now uses a cached MIN_SAFE_INTEGER making it compatible with Internet Explorer (thanks @jronn)
+* `Video.destroy` has been renamed to `Video.preDestroy`, so that it now destroys properly like all other Game Objects. Fix #4821 (thanks @rexrainbow)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@samme (for contributing loads of new Arcade Physics examples) @dranitski @jcyuan @RollinSafary @ilyaryabchinski
+@samme (for contributing loads of new Arcade Physics examples) @dranitski @jcyuan @RollinSafary @ilyaryabchinski @jsoref
 
 ## Version 3.20.1 - Fitoria - 15th October 2019
 
