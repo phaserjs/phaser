@@ -559,10 +559,12 @@ var Tilemap = new Class({
         if (index === null)
         {
             console.warn('Invalid Tilemap Layer ID: ' + layerID);
+
             if (typeof layerID === 'string')
             {
                 console.warn('Valid tilelayer names:\n\t' + this.getTileLayerNames().join(',\n\t'));
             }
+
             return null;
         }
 
@@ -630,10 +632,12 @@ var Tilemap = new Class({
         if (!objectLayer)
         {
             console.warn('Cannot create from object. Invalid objectgroup name given: ' + name);
+
             if (typeof layerID === 'string')
             {
                 console.warn('Valid objectgroup names:\n\t' + this.getObjectLayerNames().join(',\n\t'));
             }
+
             return null;
         }
 
@@ -1047,12 +1051,19 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#getImageLayerNames
      * @since 3.21.0
      *
-     * @return {[string]} Array of valid imagelayer names / IDs loaded into this Tilemap.
+     * @return {string[]} Array of valid imagelayer names / IDs loaded into this Tilemap.
      */
     getImageLayerNames: function ()
     {
-        if (!this.images || !Array.isArray(this.images)) { return []; }
-        return this.images.map(function (image) { return image.name; });
+        if (!this.images || !Array.isArray(this.images))
+        {
+            return [];
+        }
+
+        return this.images.map(function (image)
+        {
+            return image.name;
+        });
     },
 
     /**
@@ -1124,12 +1135,19 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#getObjectLayerNames
      * @since 3.21.0
      *
-     * @return {[string]} Array of valid objectgroup names / IDs loaded into this Tilemap.
+     * @return {string[]} Array of valid objectgroup names / IDs loaded into this Tilemap.
      */
     getObjectLayerNames: function ()
     {
-        if (!this.objects || !Array.isArray(this.objects)) { return []; }
-        return this.objects.map(function (object) { return object.name; });
+        if (!this.objects || !Array.isArray(this.objects))
+        {
+            return [];
+        }
+
+        return this.objects.map(function (object)
+        {
+            return object.name;
+        });
     },
 
     /**
@@ -1242,8 +1260,15 @@ var Tilemap = new Class({
      */
     getTileLayerNames: function ()
     {
-        if (!this.layers || !Array.isArray(this.layers)) { return []; }
-        return this.layers.map(function (layer) { return layer.name; });
+        if (!this.layers || !Array.isArray(this.layers))
+        {
+            return [];
+        }
+
+        return this.layers.map(function (layer)
+        {
+            return layer.name;
+        });
     },
 
     /**
