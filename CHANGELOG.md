@@ -1,11 +1,16 @@
 # Change Log
 
-## Version 3.20.2 - Fitoria - in dev
+## Version 3.21.0 - Fitoria - in dev
 
 ### New Features
 
 * `ArcadePhysics.closest` now has an optional `targets` argument. The targets can be any Arcade Physics Game Object, Body or Static Body and it will return only the closet target from those given (thanks @samme)
 * `ArcadePhysics.furthest` now has an optional `targets` argument. The targets can be any Arcade Physics Game Object, Body or Static Body and it will return only the furthest target from those given (thanks @samme)
+* `Tilemaps.Parsers.Tiled.CreateGroupLayer` is a new function that parses a Tiled group layer and adds in support for Tiled layer groups (introduced in Tiled 1.2.0). Feature #4099 (thanks @Babeetlebum @Olliebrown)
+* The Tilemap system now supports infinite Tilemaps from the Tiled map editor (thanks @Olliebrown)
+* `Tilemap.getImageLayerNames` is a new method that returns a list of all valid imagelayer names loaded in the Tilemap (thanks @Olliebrown)
+* `Tilemap.getObjectLayerNames` is a new method that returns a list of all valid objectgroup names loaded in the Tilemap (thanks @Olliebrown)
+* `Tilemap.getTileLayerNames` is a new method that returns a list of all valid tilelayer names loaded in the Tilemap (thanks @Olliebrown)
 
 ### Updates
 
