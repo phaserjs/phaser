@@ -15,6 +15,8 @@
 * Videos can now be loaded from a data URI, allowing for base64 encoded videos to be used in the Loader instead of file based ones. Although, as with all base64 encoded data, we strongly recommend against this (thanks @apasov)
 * `Math.MIN_SAFE_INTEGER` is a new math const that stores the minimum safe integer for browsers that don't provide this, such as IE (thanks @jronn)
 * `Math.MAX_SAFE_INTEGER` is a new math const that stores the maximum safe integer for browsers that don't provide this, such as IE (thanks @jronn)
+* `KeyCodes.NUMPAD_ADD` has been added to the keycodes list (thanks @Martin-Antonov)
+* `KeyCodes.NUMPAD_SUBTRACT` has been added to the keycodes list (thanks @Martin-Antonov)
 
 ### Updates
 
@@ -44,9 +46,6 @@
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
 @samme (for contributing loads of new Arcade Physics examples) @dranitski @jcyuan @RollinSafary @ilyaryabchinski
-
-
-
 
 ## Version 3.20.1 - Fitoria - 15th October 2019
 

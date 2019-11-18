@@ -384,6 +384,24 @@ var KeyCodes = {
     NUMPAD_NINE: 105,
 
     /**
+     * The Numpad Addition (+) key.
+     * 
+     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_ADD
+     * @type {integer}
+     * @since 3.21.0
+     */
+    NUMPAD_ADD: 107,
+
+    /**
+     * The Numpad Subtraction (-) key.
+     * 
+     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_SUBTRACT
+     * @type {integer}
+     * @since 3.21.0
+     */
+    NUMPAD_SUBTRACT: 109,
+
+    /**
      * The A key.
      * 
      * @name Phaser.Input.Keyboard.KeyCodes.A
