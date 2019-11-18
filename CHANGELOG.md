@@ -11,6 +11,7 @@
 * `Tilemap.getImageLayerNames` is a new method that returns a list of all valid imagelayer names loaded in the Tilemap (thanks @Olliebrown)
 * `Tilemap.getObjectLayerNames` is a new method that returns a list of all valid objectgroup names loaded in the Tilemap (thanks @Olliebrown)
 * `Tilemap.getTileLayerNames` is a new method that returns a list of all valid tilelayer names loaded in the Tilemap (thanks @Olliebrown)
+* When `forceSetTimeOut` is set to `true` in the Game Config, you can now set the target frame rate by setting the `fps.target` value (thanks @pavels)
 
 ### Updates
 

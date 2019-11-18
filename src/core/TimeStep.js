@@ -447,7 +447,7 @@ var TimeStep = new Class({
 
         this.callback = callback;
 
-        this.raf.start(this.step.bind(this), this.forceSetTimeOut);
+        this.raf.start(this.step.bind(this), this.forceSetTimeOut, this._target);
     },
 
     /**
