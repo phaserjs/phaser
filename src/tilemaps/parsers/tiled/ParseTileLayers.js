@@ -9,31 +9,66 @@ var GetFastValue = require('../../../utils/object/GetFastValue');
 var LayerData = require('../../mapdata/LayerData');
 var ParseGID = require('./ParseGID');
 var Tile = require('../../Tile');
+var CreateGroupLayer = require('./CreateGroupLayer');
 
 /**
- * [description]
+ * Parses all tilemap layers in a Tiled JSON object into new LayerData objects.
  *
  * @function Phaser.Tilemaps.Parsers.Tiled.ParseTileLayers
  * @since 3.0.0
  *
- * @param {object} json - [description]
- * @param {boolean} insertNull - [description]
+ * @param {object} json - The Tiled JSON object.
+ * @param {boolean} insertNull - Controls how empty tiles, tiles with an index of -1, in the map
+ * data are handled (see {@link Phaser.Tilemaps.Parsers.Tiled.ParseJSONTiled}).
  *
- * @return {array} [description]
+ * @return {Phaser.Tilemaps.LayerData[]} - An array of LayerData objects, one for each entry in
+ * json.layers with the type 'tilelayer'.
  */
 var ParseTileLayers = function (json, insertNull)
 {
     var infiniteMap = GetFastValue(json, 'infinite', false);
     var tileLayers = [];
 
-    for (var i = 0; i < json.layers.length; i++)
+    // State inherited from a parent group
+    var groupStack = [];
+    var curGroupState = CreateGroupLayer(json);
+
+    while (curGroupState.i < curGroupState.layers.length || groupStack.length > 0)
     {
-        if (json.layers[i].type !== 'tilelayer')
+        if (curGroupState.i >= curGroupState.layers.length)
         {
+            // Ensure recursion stack is not empty first
+            if (groupStack.length < 1)
+            {
+                console.warn(
+                    'TilemapParser.parseTiledJSON - Invalid layer group hierarchy'
+                );
+                break;
+            }
+
+            // Return to previous recursive state
+            curGroupState = groupStack.pop();
             continue;
         }
 
-        var curl = json.layers[i];
+        var curl = curGroupState.layers[curGroupState.i];
+        curGroupState.i++;
+
+        if (curl.type !== 'tilelayer')
+        {
+            if (curl.type === 'group')
+            {
+                // Compute next state inherited from group
+                var nextGroupState = CreateGroupLayer(json, curl, curGroupState);
+
+                // Preserve current state before recursing
+                groupStack.push(curGroupState);
+                curGroupState = nextGroupState;
+            }
+
+            // Skip this layer OR 'recurse' (iterative style) into the group
+            continue;
+        }
 
         // Base64 decode data if necessary. NOTE: uncompressed base64 only.
         if (curl.compression)
@@ -46,7 +81,21 @@ var ParseTileLayers = function (json, insertNull)
         }
         else if (curl.encoding && curl.encoding === 'base64')
         {
-            curl.data = Base64Decode(curl.data);
+            // Chunks for an infinite map
+            if (curl.chunks)
+            {
+                for (var i = 0; i < curl.chunks.length; i++)
+                {
+                    curl.chunks[i].data = Base64Decode(curl.chunks[i].data);
+                }
+            }
+
+            // Non-infinite map data
+            if (curl.data)
+            {
+                curl.data = Base64Decode(curl.data);
+            }
+
             delete curl.encoding; // Allow the same map to be parsed multiple times
         }
 
@@ -66,18 +115,18 @@ var ParseTileLayers = function (json, insertNull)
 
         if (infiniteMap)
         {
-            var layerOffsetX = GetFastValue(curl, 'startx', 0) + curl.x;
-            var layerOffsetY = GetFastValue(curl, 'starty', 0) + curl.y;
+            var layerOffsetX = (GetFastValue(curl, 'startx', 0) + curl.x);
+            var layerOffsetY = (GetFastValue(curl, 'starty', 0) + curl.y);
             layerData = new LayerData({
-                name: curl.name,
-                x: layerOffsetX,
-                y: layerOffsetY,
+                name: (curGroupState.name + curl.name),
+                x: (curGroupState.x + GetFastValue(curl, 'offsetx', 0) + layerOffsetX * json.tilewidth),
+                y: (curGroupState.y + GetFastValue(curl, 'offsety', 0) + layerOffsetY * json.tileheight),
                 width: curl.width,
                 height: curl.height,
                 tileWidth: json.tilewidth,
                 tileHeight: json.tileheight,
-                alpha: curl.opacity,
-                visible: curl.visible,
+                alpha: (curGroupState.opacity * curl.opacity),
+                visible: (curGroupState.visible && curl.visible),
                 properties: GetFastValue(curl, 'properties', {})
             });
 
@@ -142,15 +191,15 @@ var ParseTileLayers = function (json, insertNull)
         else
         {
             layerData = new LayerData({
-                name: curl.name,
-                x: GetFastValue(curl, 'offsetx', 0) + curl.x,
-                y: GetFastValue(curl, 'offsety', 0) + curl.y,
+                name: (curGroupState.name + curl.name),
+                x: (curGroupState.x + GetFastValue(curl, 'offsetx', 0) + curl.x),
+                y: (curGroupState.y + GetFastValue(curl, 'offsety', 0) + curl.y),
                 width: curl.width,
                 height: curl.height,
                 tileWidth: json.tilewidth,
                 tileHeight: json.tileheight,
-                alpha: curl.opacity,
-                visible: curl.visible,
+                alpha: (curGroupState.opacity * curl.opacity),
+                visible: (curGroupState.visible && curl.visible),
                 properties: GetFastValue(curl, 'properties', {})
             });
 
@@ -194,7 +243,6 @@ var ParseTileLayers = function (json, insertNull)
         }
 
         layerData.data = output;
-
         tileLayers.push(layerData);
     }
 
