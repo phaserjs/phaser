@@ -415,7 +415,7 @@ var Group = new Class({
         var depth = GetValue(options, 'setDepth.value', 0);
         var stepDepth = GetValue(options, 'setDepth.step', 0);
 
-        Actions.SetDepth(entries, depth, stepDepth);        
+        Actions.SetDepth(entries, depth, stepDepth);
 
         var scrollFactorX = GetValue(options, 'setScrollFactor.x', 1);
         var scrollFactorY = GetValue(options, 'setScrollFactor.y', scrollFactorX);

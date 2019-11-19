@@ -49,7 +49,7 @@ module.exports = {
     SetScaleY: require('./SetScaleY'),
     SetScrollFactor: require('./SetScrollFactor'),
     SetScrollFactorX: require('./SetScrollFactorX'),
-    SetScrollFactorY: require('./SetScrollFactorY'),    
+    SetScrollFactorY: require('./SetScrollFactorY'),
     SetTint: require('./SetTint'),
     SetVisible: require('./SetVisible'),
     SetX: require('./SetX'),
