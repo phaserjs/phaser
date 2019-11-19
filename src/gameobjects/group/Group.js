@@ -422,7 +422,7 @@ var Group = new Class({
         var stepScrollFactorX = GetValue(options, 'setScrollFactor.stepX', 0);
         var stepScrollFactorY = GetValue(options, 'setScrollFactor.stepY', 0);
 
-        Actions.SetScrollFactor(entries, scrollFactorX, scrollFactorY, stepScrollFactorX, stepScrollFactorY);        
+        Actions.SetScrollFactor(entries, scrollFactorX, scrollFactorY, stepScrollFactorX, stepScrollFactorY);
 
         var hitArea = GetFastValue(options, 'hitArea', null);
         var hitAreaCallback = GetFastValue(options, 'hitAreaCallback', null);
@@ -1242,7 +1242,7 @@ var Group = new Class({
      * @method Phaser.GameObjects.Group#angle
      * @since 3.21.0
      *
-     * @param {number} value - The amount to set the property to.
+     * @param {number} value - The amount to set the angle to, in degrees.
      * @param {number} [step=0] - This is added to the `value` amount, multiplied by the iteration counter.
      *
      * @return {Phaser.GameObjects.Group} This Group object.
@@ -1260,7 +1260,7 @@ var Group = new Class({
      * @method Phaser.GameObjects.Group#rotate
      * @since 3.21.0
      *
-     * @param {number} value - The amount to set the property to.
+     * @param {number} value - The amount to set the rotation to, in radians.
      * @param {number} [step=0] - This is added to the `value` amount, multiplied by the iteration counter.
      *
      * @return {Phaser.GameObjects.Group} This Group object.
@@ -1278,7 +1278,7 @@ var Group = new Class({
      * @method Phaser.GameObjects.Group#rotateAround
      * @since 3.21.0
      *
-     * @param {object} point - Any object with public `x` and `y` properties.
+     * @param {Phaser.Types.Math.Vector2Like} point - Any object with public `x` and `y` properties.
      * @param {number} angle - The angle to rotate by, in radians.
      *
      * @return {Phaser.GameObjects.Group} This Group object.
@@ -1296,7 +1296,7 @@ var Group = new Class({
      * @method Phaser.GameObjects.Group#rotateAroundDistance
      * @since 3.21.0
      *
-     * @param {object} point - Any object with public `x` and `y` properties.
+     * @param {Phaser.Types.Math.Vector2Like} point - Any object with public `x` and `y` properties.
      * @param {number} angle - The angle to rotate by, in radians.
      * @param {number} distance - The distance from the point of rotation in pixels.
      *
@@ -1312,10 +1312,10 @@ var Group = new Class({
     /**
      * Sets the alpha of each group member.
      *
-     * @method Phaser.GameObjects.Group#scaleX
+     * @method Phaser.GameObjects.Group#setAlpha
      * @since 3.21.0
      *
-     * @param {number} value - The amount to set the property to.
+     * @param {number} value - The amount to set the alpha to.
      * @param {number} [step=0] - This is added to the `value` amount, multiplied by the iteration counter.
      *
      * @return {Phaser.GameObjects.Group} This Group object.
@@ -1530,13 +1530,15 @@ var Group = new Class({
      * @method Phaser.GameObjects.Group#setVisible
      * @since 3.21.0
      *
-     * @param {number} value - The value to set the property to.
+     * @param {boolean} value - The value to set the property to.
+     * @param {integer} [index=0] - An optional offset to start searching from within the items array.
+     * @param {integer} [direction=1] - The direction to iterate through the array. 1 is from beginning to end, -1 from end to beginning.
      *
      * @return {Phaser.GameObjects.Group} This Group object.
      */
-    setVisible: function (value)
+    setVisible: function (value, index, direction)
     {
-        Actions.SetVisible(this.children.entries, value);
+        Actions.SetVisible(this.children.entries, value, index, direction);
 
         return this;
     },
