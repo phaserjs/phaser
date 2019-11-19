@@ -35,26 +35,26 @@ var GetScreenOrientation = function (width, height)
 
     if (screen)
     {
-        return (screen.height > screen.width) ? CONST.PORTRAIT : CONST.LANDSCAPE;
+        return (screen.height > screen.width) ? CONST.ORIENTATION.PORTRAIT : CONST.ORIENTATION.LANDSCAPE;
     }
     else if (typeof window.orientation === 'number')
     {
         //  This may change by device based on "natural" orientation.
-        return (window.orientation === 0 || window.orientation === 180) ? CONST.PORTRAIT : CONST.LANDSCAPE;
+        return (window.orientation === 0 || window.orientation === 180) ? CONST.ORIENTATION.PORTRAIT : CONST.ORIENTATION.LANDSCAPE;
     }
     else if (window.matchMedia)
     {
         if (window.matchMedia('(orientation: portrait)').matches)
         {
-            return CONST.PORTRAIT;
+            return CONST.ORIENTATION.PORTRAIT;
         }
         else if (window.matchMedia('(orientation: landscape)').matches)
         {
-            return CONST.LANDSCAPE;
+            return CONST.ORIENTATION.LANDSCAPE;
         }
     }
     
-    return (height > width) ? CONST.PORTRAIT : CONST.LANDSCAPE;
+    return (height > width) ? CONST.ORIENTATION.PORTRAIT : CONST.ORIENTATION.LANDSCAPE;
 };
 
 module.exports = GetScreenOrientation;

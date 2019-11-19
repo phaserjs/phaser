@@ -155,7 +155,7 @@ var TweenManager = new Class({
      * @method Phaser.Tweens.TweenManager#createTimeline
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Tweens.TimelineBuilderConfig} config - The configuration object for the Timeline and its Tweens.
+     * @param {Phaser.Types.Tweens.TimelineBuilderConfig} [config] - The configuration object for the Timeline and its Tweens.
      *
      * @return {Phaser.Tweens.Timeline} The created Timeline object.
      */
@@ -170,7 +170,7 @@ var TweenManager = new Class({
      * @method Phaser.Tweens.TweenManager#timeline
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Tweens.TimelineBuilderConfig} config - The configuration object for the Timeline and its Tweens.
+     * @param {Phaser.Types.Tweens.TimelineBuilderConfig} [config] - The configuration object for the Timeline and its Tweens.
      *
      * @return {Phaser.Tweens.Timeline} The created Timeline object.
      */

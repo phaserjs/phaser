@@ -10,6 +10,7 @@
  * @property {(HTMLElement|string)} [parent=null] - The DOM element that will contain the game canvas, or its `id`. If undefined or if the named element doesn't exist, the game canvas is inserted directly into the document body. If `null` no parent will be used and you are responsible for adding the canvas to your environment.
  * @property {HTMLCanvasElement} [canvas=null] - Provide your own Canvas element for Phaser to use instead of creating one.
  * @property {string} [canvasStyle=null] - CSS styles to apply to the game canvas instead of Phasers default styles.
+ * @property {boolean}[customEnvironment=false] - Is Phaser running under a custom (non-native web) environment? If so, set this to `true` to skip internal Feature detection. If `true` the `renderType` cannot be left as `AUTO`.
  * @property {CanvasRenderingContext2D} [context] - Provide your own Canvas Context for Phaser to use, instead of creating one.
  * @property {(Phaser.Scene|Phaser.Scene[]|Phaser.Types.Scenes.SettingsConfig|Phaser.Types.Scenes.SettingsConfig[]|Phaser.Types.Scenes.CreateSceneFromObjectConfig|Phaser.Types.Scenes.CreateSceneFromObjectConfig[]|function|function[])} [scene=null] - A scene or scenes to add to the game. If several are given, the first is started; the remainder are started only if they have `{ active: true }`. See the `sceneConfig` argument in `Phaser.Scenes.SceneManager#add`.
  * @property {string[]} [seed] - Seed for the random number generator.

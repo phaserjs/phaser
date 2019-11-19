@@ -144,7 +144,7 @@ var TextureSource = new Class({
          * @type {boolean}
          * @since 3.20.0
          */
-        this.isVideo = (source instanceof HTMLVideoElement);
+        this.isVideo = (window.hasOwnProperty('HTMLVideoElement') && source instanceof HTMLVideoElement);
 
         /**
          * Is the source image a Render Texture?
