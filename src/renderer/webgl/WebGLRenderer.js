@@ -83,7 +83,8 @@ var WebGLRenderer = new Class({
             maxTextures: gameConfig.maxTextures,
             maxTextureSize: gameConfig.maxTextureSize,
             batchSize: gameConfig.batchSize,
-            maxLights: gameConfig.maxLights
+            maxLights: gameConfig.maxLights,
+            mipmapFilter: gameConfig.mipmapFilter
         };
 
         /**
@@ -524,6 +525,32 @@ var WebGLRenderer = new Class({
          */
         this.nextTypeMatch = false;
 
+        /**
+         * The mipmap magFilter to be used when creating textures.
+         * 
+         * You can specify this as a string in the game config, i.e.:
+         * 
+         * `renderer: { mipmapFilter: 'NEAREST_MIPMAP_LINEAR' }`
+         * 
+         * The 6 options for WebGL1 are, in order from least to most computationally expensive:
+         * 
+         * NEAREST (for pixel art)
+         * LINEAR (the default)
+         * NEAREST_MIPMAP_NEAREST
+         * LINEAR_MIPMAP_NEAREST
+         * NEAREST_MIPMAP_LINEAR
+         * LINEAR_MIPMAP_LINEAR
+         * 
+         * Mipmaps only work with textures that are fully power-of-two in size.
+         * 
+         * For more details see https://webglfundamentals.org/webgl/lessons/webgl-3d-textures.html
+         * 
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#mipmapFilter
+         * @type {GLenum}
+         * @since 3.21.0
+         */
+        this.mipmapFilter = null;
+
         this.init(this.config);
     },
 
@@ -670,6 +697,9 @@ var WebGLRenderer = new Class({
         gl.enable(gl.BLEND);
 
         gl.clearColor(clearColor.redGL, clearColor.greenGL, clearColor.blueGL, clearColor.alphaGL);
+
+        //  Mipmaps
+        this.mipmapFilter = gl[config.mipmapFilter];
 
         // Initialize all textures to null
         for (var index = 0; index < this.currentTextures.length; ++index)
@@ -1449,30 +1479,34 @@ var WebGLRenderer = new Class({
     createTextureFromSource: function (source, width, height, scaleMode)
     {
         var gl = this.gl;
-        var filter = gl.NEAREST;
+        var minFilter = gl.NEAREST;
+        var magFilter = gl.NEAREST;
         var wrap = gl.CLAMP_TO_EDGE;
         var texture = null;
 
         width = source ? source.width : width;
         height = source ? source.height : height;
 
-        if (IsSizePowerOfTwo(width, height))
+        var pow = IsSizePowerOfTwo(width, height);
+
+        if (pow)
         {
             wrap = gl.REPEAT;
         }
 
         if (scaleMode === CONST.ScaleModes.LINEAR && this.config.antialias)
         {
-            filter = gl.LINEAR;
+            minFilter = (pow) ? this.mipmapFilter : gl.LINEAR;
+            magFilter = gl.LINEAR;
         }
 
         if (!source && typeof width === 'number' && typeof height === 'number')
         {
-            texture = this.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+            texture = this.createTexture2D(0, minFilter, magFilter, wrap, wrap, gl.RGBA, null, width, height);
         }
         else
         {
-            texture = this.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, source);
+            texture = this.createTexture2D(0, minFilter, magFilter, wrap, wrap, gl.RGBA, source);
         }
 
         return texture;
@@ -1531,6 +1565,11 @@ var WebGLRenderer = new Class({
             }
 
             gl.texImage2D(gl.TEXTURE_2D, mipLevel, format, format, gl.UNSIGNED_BYTE, pixels);
+        }
+
+        if (IsSizePowerOfTwo(width, height))
+        {
+            gl.generateMipmap(gl.TEXTURE_2D);
         }
 
         this.setTexture2D(null, 0);
@@ -2334,20 +2373,28 @@ var WebGLRenderer = new Class({
         if (flipY === undefined) { flipY = false; }
 
         var gl = this.gl;
+        var minFilter = gl.NEAREST;
+        var magFilter = gl.NEAREST;
 
         var width = srcCanvas.width;
         var height = srcCanvas.height;
 
         var wrapping = gl.CLAMP_TO_EDGE;
 
-        if (!noRepeat && IsSizePowerOfTwo(width, height))
+        var pow = IsSizePowerOfTwo(width, height);
+
+        if (!noRepeat && pow)
         {
             wrapping = gl.REPEAT;
         }
 
-        var filter = (this.config.antialias) ? gl.LINEAR : gl.NEAREST;
+        if (this.config.antialias)
+        {
+            minFilter = (pow) ? this.mipmapFilter : gl.LINEAR;
+            magFilter = gl.LINEAR;
+        }
 
-        return this.createTexture2D(0, filter, filter, wrapping, wrapping, gl.RGBA, srcCanvas, width, height, true, false, flipY);
+        return this.createTexture2D(0, minFilter, magFilter, wrapping, wrapping, gl.RGBA, srcCanvas, width, height, true, false, flipY);
     },
 
     /**
@@ -2406,20 +2453,28 @@ var WebGLRenderer = new Class({
         if (flipY === undefined) { flipY = false; }
 
         var gl = this.gl;
+        var minFilter = gl.NEAREST;
+        var magFilter = gl.NEAREST;
 
         var width = srcVideo.videoWidth;
         var height = srcVideo.videoHeight;
 
         var wrapping = gl.CLAMP_TO_EDGE;
 
-        if (!noRepeat && IsSizePowerOfTwo(width, height))
+        var pow = IsSizePowerOfTwo(width, height);
+
+        if (!noRepeat && pow)
         {
             wrapping = gl.REPEAT;
         }
 
-        var filter = (this.config.antialias) ? gl.LINEAR : gl.NEAREST;
+        if (this.config.antialias)
+        {
+            minFilter = (pow) ? this.mipmapFilter : gl.LINEAR;
+            magFilter = gl.LINEAR;
+        }
 
-        return this.createTexture2D(0, filter, filter, wrapping, wrapping, gl.RGBA, srcVideo, width, height, true, true, flipY);
+        return this.createTexture2D(0, minFilter, magFilter, wrapping, wrapping, gl.RGBA, srcVideo, width, height, true, true, flipY);
     },
 
     /**
