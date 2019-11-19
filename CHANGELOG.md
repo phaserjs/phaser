@@ -71,6 +71,7 @@
 * `Video.destroy` has been renamed to `Video.preDestroy`, so that it now destroys properly like all other Game Objects. Fix #4821 (thanks @rexrainbow)
 * The Video Game Object will now check to see if the browser supports the `HTMLVideoElement` before creating one (thanks @jcyuan)
 * The `DOM.GetScreenOrientation` functions would return out-dated consts (thanks @jcyuan)
+* When calling `TileSprite.setTexture` or `setFrame`, if the new frame size didn't match the old one, the new fill pattern would become distorted and the `potWidth` and `potHeight` values would be incorrect.
 
 ### Examples, Documentation and TypeScript
 
