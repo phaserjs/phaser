@@ -279,12 +279,10 @@ var Timeline = new Class({
      */
     dispatchTimelineEvent: function (event, callback)
     {
-        this.emit(event, this, this.targets);
+        this.emit(event, this);
 
         if (callback)
         {
-            callback.params[1] = this.targets;
-
             callback.func.apply(callback.scope, callback.params);
         }
     },
