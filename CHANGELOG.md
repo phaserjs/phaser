@@ -18,6 +18,10 @@
 * `KeyCodes.NUMPAD_ADD` has been added to the keycodes list (thanks @Martin-Antonov)
 * `KeyCodes.NUMPAD_SUBTRACT` has been added to the keycodes list (thanks @Martin-Antonov)
 * `Video.removeVideoElementOnDestroy` is a new boolean property that allows you to control if the Video element is removed from the DOM when the Video Game Object is destroyed.
+* `Actions.SetScrollFactor` is a new Action that will set the scroll factor on an array of Game Objects, including stepped incremental changes per item (thanks @rexrainbow)
+* `Actions.SetScrollFactorX` is a new Action that will set the horizontal scroll factor on an array of Game Objects, including stepped incremental changes per item (thanks @rexrainbow)
+* `Actions.SetScrollFactorY` is a new Action that will set the horizontal scroll factor on an array of Game Objects, including stepped incremental changes per item (thanks @rexrainbow)
+* The `Group` config object now supports use of the `setScrollFactor` property to set the value on each child of the Group (thanks @rexrainbow)
 
 ### Updates
 
