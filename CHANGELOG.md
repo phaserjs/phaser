@@ -4,6 +4,7 @@
 
 ### New Features
 
+* You can now specify the mipmap filter level to be used when creating WebGL textures. This can be set in the Game Config using the new `mipmapFilter` property, which is a string, such as 'NEAREST_MIPMAP_NEAREST'. Or, you can set the new `WebGLRenderer.mipmapFilter` property to a valid GLenum. If you set it on the renderer, it will only impact any textures loaded _after_ it has been set, so do so in your Scene `init` method if you want it to be used for textures you're about to load. By changing the mipmap level you can drastically improve the quality when reducing large textures. Please note, due to WebGL1 limitations, this only works on power-of-two sized textures. It also works on textures created from Canvas, Videos or RenderTextures.
 * `ArcadePhysics.closest` now has an optional `targets` argument. The targets can be any Arcade Physics Game Object, Body or Static Body and it will return only the closet target from those given (thanks @samme)
 * `ArcadePhysics.furthest` now has an optional `targets` argument. The targets can be any Arcade Physics Game Object, Body or Static Body and it will return only the furthest target from those given (thanks @samme)
 * `Tilemaps.Parsers.Tiled.CreateGroupLayer` is a new function that parses a Tiled group layer and adds in support for Tiled layer groups (introduced in Tiled 1.2.0). Feature #4099 (thanks @Babeetlebum @Olliebrown)
