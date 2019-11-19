@@ -15,7 +15,7 @@ var PropertyValueSet = require('./PropertyValueSet');
  * To use this with a Group: `SetScrollFactorY(group.getChildren(), value, step)`
  *
  * @function Phaser.Actions.SetScrollFactorY
- * @since 3.0.0
+ * @since 3.21.0
  *
  * @generic {Phaser.GameObjects.GameObject[]} G - [items,$return]
  *
