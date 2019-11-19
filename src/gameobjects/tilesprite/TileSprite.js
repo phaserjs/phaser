@@ -322,9 +322,15 @@ var TileSprite = new Class({
      */
     setFrame: function (frame)
     {
-        this.displayFrame = this.displayTexture.get(frame);
+        var newFrame = this.displayTexture.get(frame);
 
-        if (!this.displayFrame.cutWidth || !this.displayFrame.cutHeight)
+        this.potWidth = GetPowerOfTwo(newFrame.width);
+        this.potHeight = GetPowerOfTwo(newFrame.height);
+
+        //  So updateCanvas is triggered
+        this.canvas.width = 0;
+
+        if (!newFrame.cutWidth || !newFrame.cutHeight)
         {
             this.renderFlags &= ~_FLAG;
         }
@@ -332,6 +338,8 @@ var TileSprite = new Class({
         {
             this.renderFlags |= _FLAG;
         }
+
+        this.displayFrame = newFrame;
 
         this.dirty = true;
 
