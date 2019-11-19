@@ -42,12 +42,14 @@
 * The `Video` class now uses a cached MIN_SAFE_INTEGER making it compatible with Internet Explorer (thanks @jronn)
 * The `Path` class now uses a cached MIN_SAFE_INTEGER making it compatible with Internet Explorer (thanks @jronn)
 * `Video.destroy` has been renamed to `Video.preDestroy`, so that it now destroys properly like all other Game Objects. Fix #4821 (thanks @rexrainbow)
+* The Video Game Object will now check to see if the browser supports the `HTMLVideoElement` before creating one (thanks @jcyuan)
+* The `DOM.GetScreenOrientation` functions would return out-dated consts (thanks @jcyuan)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@samme (for contributing loads of new Arcade Physics examples) @dranitski @jcyuan @RollinSafary @ilyaryabchinski @jsoref
+@samme (for contributing loads of new Arcade Physics examples) @dranitski @jcyuan @RollinSafary @ilyaryabchinski @jsoref @jcyuan
 
 ## Version 3.20.1 - Fitoria - 15th October 2019
 
