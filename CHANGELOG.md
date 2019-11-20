@@ -46,6 +46,7 @@
 * `Group.setHitArea` is a new method that passes all Group members to the Input Plugin to enable them for input (thanks @rexrainbow)
 * `Group.shuffle` is a new method that shuffles all of the Group members in place (thanks @rexrainbow)
 * `Group.setVisible` is a new method that sets the visible state on each Group member (thanks @rexrainbow)
+* `WebAudioSoundManager.setAudioContext` is a new method that allows you to set the Sound Manager Audio Context to a different context instance. It will also disconnect and re-create the gain nodes on the new context.
 
 ### Updates
 
