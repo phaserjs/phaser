@@ -11,6 +11,7 @@ var DistanceSquared = require('../../math/distance/DistanceSquared');
 var Factory = require('./Factory');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Merge = require('../../utils/object/Merge');
+var OverlapCirc = require('./components/OverlapCirc');
 var OverlapRect = require('./components/OverlapRect');
 var PluginCache = require('../../plugins/PluginCache');
 var SceneEvents = require('../../scene/events');
@@ -602,6 +603,32 @@ var ArcadePhysics = new Class({
     overlapRect: function (x, y, width, height, includeDynamic, includeStatic)
     {
         return OverlapRect(this.world, x, y, width, height, includeDynamic, includeStatic);
+    },
+
+    /**
+     * This method will search the given circular area and return an array of all physics bodies that
+     * overlap with it. It can return either Dynamic, Static bodies or a mixture of both.
+     *
+     * A body only has to intersect with the search area to be considered, it doesn't have to be fully
+     * contained within it.
+     *
+     * If Arcade Physics is set to use the RTree (which it is by default) then the search is rather fast,
+     * otherwise the search is O(N) for Dynamic Bodies.
+     *
+     * @method Phaser.Physics.Arcade.ArcadePhysics#overlapCirc
+     * @since 3.21.0
+     *
+     * @param {number} x - The x coordinate of the center of the area to search within.
+     * @param {number} y - The y coordinate of the center of the area to search within.
+     * @param {number} radius - The radius of the area to search within.
+     * @param {boolean} [includeDynamic=true] - Should the search include Dynamic Bodies?
+     * @param {boolean} [includeStatic=false] - Should the search include Static Bodies?
+     *
+     * @return {(Phaser.Physics.Arcade.Body[]|Phaser.Physics.Arcade.StaticBody[])} An array of bodies that overlap with the given area.
+     */
+    overlapCirc: function (x, y, radius, includeDynamic, includeStatic)
+    {
+        return OverlapCirc(this.world, x, y, radius, includeDynamic, includeStatic);
     },
 
     /**
