@@ -47,6 +47,9 @@
 * `Group.shuffle` is a new method that shuffles all of the Group members in place (thanks @rexrainbow)
 * `Group.setVisible` is a new method that sets the visible state on each Group member (thanks @rexrainbow)
 * `WebAudioSoundManager.setAudioContext` is a new method that allows you to set the Sound Manager Audio Context to a different context instance. It will also disconnect and re-create the gain nodes on the new context.
+* `Group.type` is a new property that holds a string-based name of the Game Object type, as with other GO's (thanks @samme)
+* `Arade.Group.type` is a new property that holds a string-based name of the Game Object type, as with other GO's (thanks @samme)
+* `Arcade.StaticGroup.type` is a new property that holds a string-based name of the Game Object type, as with other GO's (thanks @samme)
 
 ### Updates
 
