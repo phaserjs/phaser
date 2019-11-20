@@ -50,6 +50,7 @@
 * `Group.type` is a new property that holds a string-based name of the Game Object type, as with other GO's (thanks @samme)
 * `Arade.Group.type` is a new property that holds a string-based name of the Game Object type, as with other GO's (thanks @samme)
 * `Arcade.StaticGroup.type` is a new property that holds a string-based name of the Game Object type, as with other GO's (thanks @samme)
+* `ArcadePhysics.overlapCirc` is a new method that allows you to return an array of all Arcade Physics bodies that overlap with the given circular area of the world. It can return either dynamic or static bodies, or a mixture of both (thanks @samme)
 
 ### Updates
 
