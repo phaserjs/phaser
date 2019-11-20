@@ -98,7 +98,7 @@ var StaticPhysicsGroup = new Class({
          * A textual representation of this Game Object.
          * Used internally by Phaser but is available for your own custom classes to populate.
          *
-         * @name Phaser.Physics.Arcade.Group#type
+         * @name Phaser.Physics.Arcade.StaticGroup#type
          * @type {string}
          * @default 'StaticPhysicsGroup'
          * @since 3.21.0
