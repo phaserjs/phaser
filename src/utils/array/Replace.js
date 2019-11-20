@@ -12,6 +12,7 @@
  * @function Phaser.Utils.Array.Replace
  * @since 3.4.0
  *
+ * @param {array} array - The array to search within.
  * @param {*} oldChild - The element in the array that will be replaced.
  * @param {*} newChild - The element to be inserted into the array at the position of `oldChild`.
  *
