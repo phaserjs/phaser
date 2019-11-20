@@ -73,12 +73,13 @@
 * The Video Game Object will now check to see if the browser supports the `HTMLVideoElement` before creating one (thanks @jcyuan)
 * The `DOM.GetScreenOrientation` functions would return out-dated consts (thanks @jcyuan)
 * When calling `TileSprite.setTexture` or `setFrame`, if the new frame size didn't match the old one, the new fill pattern would become distorted and the `potWidth` and `potHeight` values would be incorrect.
+* Timeline callbacks with extra parameters like `onStart`  would miss the first parameter when the callback was invoked. Fix #4810 (thanks @samme)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@samme (for contributing loads of new Arcade Physics examples) @dranitski @jcyuan @RollinSafary @ilyaryabchinski @jsoref @jcyuan
+@samme (for contributing loads of new Arcade Physics examples) @dranitski @jcyuan @RollinSafary @ilyaryabchinski @jsoref @jcyuan @ghclark2 
 
 ## Version 3.20.1 - Fitoria - 15th October 2019
 
