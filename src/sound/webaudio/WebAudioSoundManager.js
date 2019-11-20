@@ -115,6 +115,50 @@ var WebAudioSoundManager = new Class({
     },
 
     /**
+     * This method takes a new AudioContext reference and then sets
+     * this Sound Manager to use that context for all playback.
+     * 
+     * As part of this call it also disconnects the master mute and volume
+     * nodes and then re-creates them on the new given context.
+     *
+     * @method Phaser.Sound.WebAudioSoundManager#setAudioContext
+     * @since 3.21.0
+     *
+     * @param {AudioContext} context - Reference to an already created AudioContext instance.
+     *
+     * @return {this} The WebAudioSoundManager instance.
+     */
+    setAudioContext: function (context)
+    {
+        if (this.context)
+        {
+            this.context.close();
+        }
+
+        if (this.masterMuteNode)
+        {
+            this.masterMuteNode.disconnect();
+        }
+
+        if (this.masterVolumeNode)
+        {
+            this.masterVolumeNode.disconnect();
+        }
+
+        this.context = context;
+
+        this.masterMuteNode = context.createGain();
+        this.masterVolumeNode = context.createGain();
+
+        this.masterMuteNode.connect(this.masterVolumeNode);
+        this.masterVolumeNode.connect(context.destination);
+
+        this.destination = this.masterMuteNode;
+
+        return this;
+    },
+
+    /**
      * Adds a new sound into the sound manager.
      *
      * @method Phaser.Sound.WebAudioSoundManager#add
