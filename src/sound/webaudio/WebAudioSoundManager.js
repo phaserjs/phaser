@@ -227,31 +227,36 @@ var WebAudioSoundManager = new Class({
     {
         var _this = this;
 
+        var body = document.body;
+
         var unlockHandler = function unlockHandler ()
         {
             if (_this.context)
             {
                 _this.context.resume().then(function ()
                 {
-                    document.body.removeEventListener('touchstart', unlockHandler);
-                    document.body.removeEventListener('touchend', unlockHandler);
-                    document.body.removeEventListener('click', unlockHandler);
+                    body.removeEventListener('touchstart', unlockHandler);
+                    body.removeEventListener('touchend', unlockHandler);
+                    body.removeEventListener('click', unlockHandler);
+                    body.removeEventListener('keydown', unlockHandler);
     
                     _this.unlocked = true;
                 }, function ()
                 {
-                    document.body.removeEventListener('touchstart', unlockHandler);
-                    document.body.removeEventListener('touchend', unlockHandler);
-                    document.body.removeEventListener('click', unlockHandler);
+                    body.removeEventListener('touchstart', unlockHandler);
+                    body.removeEventListener('touchend', unlockHandler);
+                    body.removeEventListener('click', unlockHandler);
+                    body.removeEventListener('keydown', unlockHandler);
                 });
             }
         };
 
-        if (document.body)
+        if (body)
         {
-            document.body.addEventListener('touchstart', unlockHandler, false);
-            document.body.addEventListener('touchend', unlockHandler, false);
-            document.body.addEventListener('click', unlockHandler, false);
+            body.addEventListener('touchstart', unlockHandler, false);
+            body.addEventListener('touchend', unlockHandler, false);
+            body.addEventListener('click', unlockHandler, false);
+            body.addEventListener('keydown', unlockHandler, false);
         }
     },
 
