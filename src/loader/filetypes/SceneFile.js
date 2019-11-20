@@ -89,7 +89,10 @@ var SceneFile = new Class({
     {
         var code = this.data.concat('(function(){\n' + 'return new ' + this.key + '();\n' + '}).call(this);');
 
-        this.loader.sceneManager.add(this.key, eval(code));
+        //  Stops rollup from freaking out during build
+        var eval2 = eval;
+
+        this.loader.sceneManager.add(this.key, eval2(code));
 
         this.complete = true;
     }
