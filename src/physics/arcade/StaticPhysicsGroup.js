@@ -93,6 +93,17 @@ var StaticPhysicsGroup = new Class({
         this.physicsType = CONST.STATIC_BODY;
 
         Group.call(this, scene, children, config);
+
+        /**
+         * A textual representation of this Game Object.
+         * Used internally by Phaser but is available for your own custom classes to populate.
+         *
+         * @name Phaser.Physics.Arcade.Group#type
+         * @type {string}
+         * @default 'StaticPhysicsGroup'
+         * @since 3.21.0
+         */
+        this.type = 'StaticPhysicsGroup';
     },
 
     /**

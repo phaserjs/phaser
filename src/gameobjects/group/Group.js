@@ -104,6 +104,17 @@ var Group = new Class({
         this.isParent = true;
 
         /**
+         * A textual representation of this Game Object.
+         * Used internally by Phaser but is available for your own custom classes to populate.
+         *
+         * @name Phaser.GameObjects.Group#type
+         * @type {string}
+         * @default 'Group'
+         * @since 3.21.0
+         */
+        this.type = 'Group';
+
+        /**
          * The class to create new group members from.
          *
          * @name Phaser.GameObjects.Group#classType
@@ -291,7 +302,7 @@ var Group = new Class({
             for (var i = 0; i < config.length; i++)
             {
                 var entries = this.createFromConfig(config[i]);
-    
+
                 output = output.concat(entries);
             }
         }
