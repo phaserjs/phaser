@@ -112,6 +112,13 @@ var BitmapText = new Class({
         this.fontData = entry.data;
 
         /**
+         * @property {number} _maxWidth - Internal cache var.
+         * @private
+         * @since 3.21.0
+         */
+        this._maxWidth = 0;
+
+        /**
          * The text that this Bitmap Text object displays.
          *
          * @name Phaser.GameObjects.BitmapText#_text
@@ -351,6 +358,15 @@ var BitmapText = new Class({
         if (this._dirty)
         {
             GetBitmapTextSize(this, round, this._bounds);
+
+            if (this._bounds.reset)
+            {
+                this._bounds.reset = false;
+
+                this.updateDisplayOrigin();
+            }
+
+            this._dirty = false;
         }
 
         return this._bounds;
@@ -392,6 +408,31 @@ var BitmapText = new Class({
                 GetBitmapTextSize(this, false, this._bounds);
             }
         }
+
+        return this;
+    },
+
+    /**
+     * Sets the maximum display width of this BitmapText in pixels.
+     *
+     * If `BitmapText.text` is longer than `maxWidth` then the lines will be automatically wrapped
+     * based on the previous whitespace character found in the line.
+     *
+     * If no whitespace was found then no wrapping will take place and consequently the `maxWidth` value will not be honored.
+     *
+     * Disable maxWidth by setting the value to 0.
+     *
+     * @method Phaser.GameObjects.BitmapText#setMaxWidth
+     * @since 3.21.0
+     *
+     * @param {number} value - The maximum display width of this BitmapText in pixels. Set to zero to disable.
+     *
+     * @return {this} This BitmapText Object.
+     */
+    setMaxWidth: function (value)
+    {
+        this._maxWidth = value;
+        this._dirty = true;
 
         return this;
     },
@@ -498,6 +539,35 @@ var BitmapText = new Class({
         get: function ()
         {
             return this._letterSpacing;
+        }
+
+    },
+
+    /**
+     * The maximum display width of this BitmapText in pixels.
+     *
+     * If BitmapText.text is longer than maxWidth then the lines will be automatically wrapped
+     * based on the last whitespace character found in the line.
+     *
+     * If no whitespace was found then no wrapping will take place and consequently the maxWidth value will not be honored.
+     *
+     * Disable maxWidth by setting the value to 0.
+     *
+     * @name Phaser.GameObjects.BitmapText#maxWidth
+     * @type {number}
+     * @since 3.21.0
+     */
+    maxWidth: {
+
+        set: function (value)
+        {
+            this._maxWidth = value;
+            this._dirty = true;
+        },
+
+        get: function ()
+        {
+            return this._maxWidth;
         }
 
     },

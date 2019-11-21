@@ -70,6 +70,10 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
     //  Update the bounds - skipped internally if not dirty
     src.getTextBounds(false);
 
+    //  In case the method above changed it (word wrapping)
+    text = src._text;
+    textLength = text.length;
+
     var lineData = src._bounds.lines;
 
     if (align === 1)
