@@ -101,11 +101,14 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
     var lineOffsetX = 0;
 
     //  Update the bounds - skipped internally if not dirty
-    src.getTextBounds(false);
+    var bounds = src.getTextBounds(false);
 
     //  In case the method above changed it (word wrapping)
-    text = src._text;
-    textLength = text.length;
+    if (src.maxWidth > 0)
+    {
+        text = bounds.wrappedText;
+        textLength = text.length;
+    }
 
     var lineData = src._bounds.lines;
 
