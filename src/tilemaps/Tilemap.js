@@ -1256,7 +1256,7 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#getTileLayerNames
      * @since 3.21.0
      *
-     * @return {[string]} Array of valid tilelayer names / IDs loaded into this Tilemap.
+     * @return {string[]} Array of valid tilelayer names / IDs loaded into this Tilemap.
      */
     getTileLayerNames: function ()
     {
