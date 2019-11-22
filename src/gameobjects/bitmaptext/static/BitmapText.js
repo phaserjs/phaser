@@ -190,6 +190,16 @@ var BitmapText = new Class({
          */
         this._dirty = false;
 
+        /**
+         * The character code used to detect for word wrapping.
+         * Defaults to 32 (a space character).
+         *
+         * @name Phaser.GameObjects.BitmapText#wordWrapCharCode
+         * @type {number}
+         * @since 3.21.0
+         */
+        this.wordWrapCharCode = 32;
+
         this.setTexture(entry.texture, entry.frame);
         this.setPosition(x, y);
         this.setOrigin(0, 0);
@@ -355,21 +365,18 @@ var BitmapText = new Class({
         //  global = The BitmapText, taking into account scale and world position
         //  lines = The BitmapText line data
 
-        if (this._dirty)
+        var bounds = this._bounds;
+
+        if (this._dirty || this.scaleX !== bounds.scaleX || this.scaleY !== bounds.scaleY)
         {
-            GetBitmapTextSize(this, round, this._bounds);
-
-            if (this._bounds.reset)
-            {
-                this._bounds.reset = false;
-
-                this.updateDisplayOrigin();
-            }
+            GetBitmapTextSize(this, round, bounds);
 
             this._dirty = false;
+
+            this.updateDisplayOrigin();
         }
 
-        return this._bounds;
+        return bounds;
     },
 
     /**
@@ -421,18 +428,27 @@ var BitmapText = new Class({
      * If no whitespace was found then no wrapping will take place and consequently the `maxWidth` value will not be honored.
      *
      * Disable maxWidth by setting the value to 0.
+     * 
+     * You can set the whitespace character to be searched for by setting the `wordWrapCharCode` parameter or property.
      *
      * @method Phaser.GameObjects.BitmapText#setMaxWidth
      * @since 3.21.0
      *
      * @param {number} value - The maximum display width of this BitmapText in pixels. Set to zero to disable.
+     * @param {number} [wordWrapCharCode] - The character code to check for when word wrapping. Defaults to 32 (the space character).
      *
      * @return {this} This BitmapText Object.
      */
-    setMaxWidth: function (value)
+    setMaxWidth: function (value, wordWrapCharCode)
     {
         this._maxWidth = value;
+
         this._dirty = true;
+
+        if (wordWrapCharCode !== undefined)
+        {
+            this.wordWrapCharCode = wordWrapCharCode;
+        }
 
         return this;
     },
