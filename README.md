@@ -22,19 +22,19 @@ Grab the source and join the fun!
 
 <div align="center"><img src="https://phaser.io/images/github/news.jpg"></div>
 
-> 11th October 2019
+> 22nd November 2019
 
-It's with great pleasure that I'm announcing the release of Phaser 3.20. You may remember that 3.19 introduced native support for Spine animations via the new Spine Plugin. 3.20 updates this plugin, bringing it in-line with the latest Spine runtimes and features. I've also fixed a few issues that crept in, so the plugin is now more solid than ever. As before, it's fully documented and exports both debug and minified files, suitable for ES6 'importing' or ES5 plugin inclusion. The whole plugin is just 68KB in size (min+gz), or a paltry 57KB if you only need the Canvas renderer! That's a really tiny payload for such a massive feature-set. You can find out more about Spine from the [Esoteric Software website](http://esotericsoftware.com/).
+Welcome to the release of Phaser 3.21. This version continues our efforts to keep Phaser 3 updated and enhanced, including lots of great new features, updates and bug fixes. New in 3.21 is the ability for you to directly set the mipmap filter levels the WebGL Renderer uses when creating textures. Any valid WebGL1 filter is allowed and you can set the filter in your game config, or at runtime, as needed. This gives you far more control over the quality of highly scaled textures.
 
-3.20 also introduces the brand new Video Game Object. This is a new Game Object is capable of handling playback of a previously loaded video from the Phaser Video Cache, or playing a video based on a given URL. Videos can be either local, or streamed. To all intents and purposes, a video is a standard Game Object, just like a Sprite. And as such, you can do all the usual things to it, such as scaling, rotating, cropping, tinting, making interactive, giving a physics body, etc.
+Also new in 3.21 is the ability to soft-wrap BitmapText objects, based on a fixed pixel width. You can also define the wrapping character to be used. Arcade Physics has updates including `overlapCirc` which allows you to return all bodies (both dynamic and static) that intersect the given circular region. The Tilemap system has been updated  to support Group Layers, which were introduced in a recent update of the Tiled Map Editor. These, along with Infinite Tilemaps, are now parsed correctly.
 
-Transparent videos are also possible via the WebM file format. Providing the video file has was encoded with an alpha channel, and providing the browser supports WebM playback (not all of them do), then it will render in-game with full transparency. You can also save a video to the Texture Manager, allowing other Game Objects to use it as their texture, including using it as a sampler2D input for a shader. See the Video Game Object class for more details. Other Video related changes are as follows:
-
-There are also updates to Arcade Physics, from the team at GameFroot, helping to fix issues on low, or super-high FPS systems. The Facebook Instant Games Plugin has also been updated, fixing a few issues with showing ads and in the docs. I've also spent a good while addressing `pixelArt` mode in WebGL, so now _all_ native Game Objects should respect the setting, meaning your games can be crispier than ever before!
+As usual, there's more: Including lots of new Group features, several new Actions for setting scroll factors, the ability to run at a fixed frame rate under setTimeout, a new method that lets you rebind the Web Audio Context (handy for PWA environments), fixes for drag distances and we even fixed a few IE9 (yes, really!) compatibility issues.
 
 As usual, it doesn't end here. There are plenty more fixes, features and updates across the API. You'll find loads more great new features, updates and fixes. So, as usual, please do spend some time digging through the [Change Log](#changelog). I assure you, it's worth while :)
 
-A massive thank-you to everyone who supports Phaser on Patreon and PayPal. Your continued backing has allowed me to work on Phaser all year, and this great new releases is the very real result of that. If you've ever considered becoming a backer, now is the perfect time!
+It was really great to receive a bunch of quality Pull Requests from the Phaser community, many of which found their way into 3.21. The past few versions have seen a lot of significant improvements, from comprehensive Spine support, to full Video playback, it's been an exciting few months. Things traditionally get a little more quiet around this time of the year but we're planning out 3.22 already and continuing to work through the issues list. During this time, we're also working hard on Phaser 4. You can follow development progress of both on the Phaser Patreon.
+
+As usual, I'd like to send a massive thank-you to everyone who supports Phaser on Patreon (and now even GitHub Sponsors, too!) Your continued backing keeps allowing me to work on Phaser full-time and this great new releases is the very real result of that. If you've ever considered becoming a backer, now is the perfect time!
 
 If you'd like to stay abreast of developments then I publish my [Developer Logs](https://phaser.io/phaser3/devlog) in the [Phaser World](https://phaser.io/community/newsletter) newsletter. Subscribe to stay in touch and get all the latest news from the core team and the wider community.
 
@@ -111,13 +111,13 @@ npm install phaser
 [Phaser is on jsDelivr](https://www.jsdelivr.com/projects/phaser) which is a "super-fast CDN for developers". Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.20.1/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.21.0/dist/phaser.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.20.1/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.21.0/dist/phaser.min.js"></script>
 ```
 
 ### API Documentation
@@ -143,7 +143,9 @@ Depending on your project, you may need to add the following to your `tsconfig.j
 ]
 ```
 
-The defs are automatically generated from the JSDoc comments found in the Phaser source code. If you wish to help refine them then you must edit the Phaser JSDoc blocks directly, not the defs file. You can find more details about the parser we built in the `scripts/tsgen` folder.
+We recently published a new [Phaser 3 TypeScript Project Template](https://github.com/photonstorm/phaser3-typescript-project-template), which you can use to get started with if you like.
+
+The TS defs are automatically generated from the JSDoc comments found in the Phaser source code. If you wish to help refine them then you must edit the Phaser JSDoc blocks directly, not the defs file. You can find more details about the parser we built in the `scripts/tsgen` folder.
 
 ### Webpack
 
@@ -198,13 +200,13 @@ We've 3 tutorials related to Facebook Instant Games and Phaser:
 A special build of Phaser with the Facebook Instant Games Plugin ready-enabled is [available on jsDelivr](https://www.jsdelivr.com/projects/phaser). Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.20.1/dist/phaser-facebook-instant-games.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.21.0/dist/phaser-facebook-instant-games.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.20.1/dist/phaser-facebook-instant-games.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.21.0/dist/phaser-facebook-instant-games.min.js"></script>
 ```
 
 The build files are in the git repository in the `dist` folder, and you can also include the plugin in custom builds.
@@ -221,7 +223,7 @@ Create an `index.html` page locally and paste the following code into it:
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.20.1/dist/phaser-arcade-physics.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.21.0/dist/phaser-arcade-physics.min.js"></script> 
 </head>
 <body>
 
@@ -332,195 +334,96 @@ You can then run `webpack` to create a development build in the `build` folder w
 
 # Change Log
 
-## Version 3.20.1 - Fitoria - 15th October 2019
-
-### Updates
-
-* The `remove-files-webpack-plugin` plugin has been moved to a devDependency (thanks @noseglid)
-
-### Bug Fixes
-
-* `UpdateList.shutdown` wasn't removing the Scene Update event listener, causing actions to be multiplied on Scene restart (such as animation playback). Fix #4799 (thanks @jronn)
-* `Container.mask` wouldn't render in WebGL due to a change in the way child masks were handled. Container masking now works again as in 3.19. Fix #4803 (thanks @paulsymphony)
-* `DynamicTilemapLayer.setCollision` would cause an `indexOf` error when trying to access the layer data. Fix #4800 (thanks @PavelMishin)
-* `SceneManager.run` (and consequently `ScenePlugin.run`) was using an out-dated way of checking if a Scene was paused before trying to resume it, causing a Scene to be started again instead of resumed. It now uses the `Systems.isPaused` function instead. Fix #3931 (thanks @alexeymolchan)
-
-## Version 3.20.0 - Fitoria - 11th October 2019
-
-### Video Game Object
-
-This is a new Game Object is capable of handling playback of a previously loaded video from the Phaser Video Cache,
-or playing a video based on a given URL. Videos can be either local, or streamed:
-
-```javascript
-preload () {
-  this.load.video('pixar', 'nemo.mp4');
-}
-
-create () {
-  this.add.video(400, 300, 'pixar');
-}
-```
-
-To all intents and purposes, a video is a standard Game Object, just like a Sprite. And as such, you can do
-all the usual things to it, such as scaling, rotating, cropping, tinting, making interactive, giving a
-physics body, etc.
-
-Transparent videos are also possible via the WebM file format. Providing the video file has was encoded with
-an alpha channel, and providing the browser supports WebM playback (not all of them do), then it will render
-in-game with full transparency.
-
-You can also save a video to the Texture Manager, allowing other Game Objects to use it as their texture,
-including using it as a sampler2D input for a shader.
-
-See the Video Game Object class for more details. Other Video related changes are as follows:
-
-* `Loader.FileTypes.VideoFile` is a new Video File Loader File Type, used for preloading videos as streams or blobs.
-* `WebGLRenderer.createVideoTexture` is a new method that will create a WebGL Texture from the given Video Element.
-* `WebGLRenderer.updateVideoTexture` is a new method that will update a WebGL Texture from the given Video Element.
-* `TextureSource.isVideo` is a new boolean property that is set when the Texture Source is backed by an HTML Video Element.
-* `Cache.video` is a new global cache that store loaded Video content.
-* `Device.Video.h264Video` has been renamed to `Device.Video.h264` to keep it in-line with the Audio Device names.
-* `Device.Video.hlsVideo` has been renamed to `Device.Video.hls` to keep it in-line with the Audio Device names.
-* `Device.Video.mp4Video` has been renamed to `Device.Video.mp4` to keep it in-line with the Audio Device names.
-* `Device.Video.oggVideo` has been renamed to `Device.Video.ogg` to keep it in-line with the Audio Device names.
-* `Device.Video.vp9Video` has been renamed to `Device.Video.vp9` to keep it in-line with the Audio Device names.
-* `Device.Video.webmVideo` has been renamed to `Device.Video.webm` to keep it in-line with the Audio Device names.
-
-### Spine Plugin
-
-* The Spine runtimes have been updated to 3.8. Please note that Spine runtimes are _not_ backwards compatible. Animations exported with Spine 3.7 (or earlier) will need re-exporting with 3.8 in order to work with the new runtimes.
-* Fixed a bug with the binding of the Spine Plugin causing the GameObjectFactory to remain bound to the first instance of the plugin, causing Scene changes to result in blank Spine Game Objects. Fix #4716 (thanks @olilanz)
-* Fixed a bug with the caching of the Spine Texture Atlases, causing shader errors when returning from one Scene to another with a cached Texture Atlas.
-* The WebGL Scene Renderer is now only disposed if the Scene is destroyed, not just shut-down.
-* The Spine Game Object will no longer set the default skin name to be 'default', it will leave the name empty. Fix #4764 (thanks @Jonchun @badlogic)
-* Thanks to a fix inside the Container WebGLRenderer, a bug was crushed which involved multiple Containers in a Scene, with Spine objects, from causing run-time errors. Fix #4710 (thanks @nalgorry)
-* Using `Loader.setPath` to define the Spine assets locations could error if trying to load multiple files from different folders. It will now retain the path state at the time of invocation, rather than during the load.
-* When loading Spine files that used the same internal image file names, only the first file would successfully load. Now, all files load correctly.
-
-### Facebook Instant Games Plugin
-
-* Calling `showAd` or `showVideoAd` will now check to see if the ad has already been displayed, and skip it when iterating the ads array, allowing you to display an ad with the same Placement ID without preloading it again. Fix #4728 (thanks @NokFrt)
-* Calling `gameStarted` in a game that doesn't load any assets would cause the error `{code: "INVALID_OPERATION", message: "Can not perform this operation before game start."}`. The plugin will now has a new internal method `gameStartedHandler` and will redirect the flow accordingly based on asset loading. Fix #4550 (thanks @bchee)
-* The documentation for the `chooseContext` method has been fixed. Fix #4425 (thanks @krzysztof-grzybek)
-* `Leaderboard.getConnectedScores` incorrectly specified two parameters, neither of which were used. Fix #4702 (thanks @NokFrt)
-* `Leaderboard` extends Event Emitter, which was missing in the TypeScript defs. Fix #4703 (thanks @NokFrt)
-
-### Arcade Physics Updates
-
-@BenjaminDRichards and the GameFroot team contributed the following updates to Arcade Physics, which fixes 3 issues encountered when the framerate drops below 60 (technically, any time when multiple physics steps run per frame, so if physics FPS is above 60 this will also occur.)
-
-Issue 1: Friction starts to flip out. Objects on moving platforms get pushed ahead of the platform and "catch" on the leading edge.
-Issue 2: Physics objects start to dip into the floor. In the "Before" demo, the camera is locked to the player, so this appears as the entire world starting to shake up and down.
-Issue 3: When objects dip into the floor, their "rest velocity" is non-zero. This can affect debug and other logic.
-
-* `Body.prevFrame` is a new vector allowing a Body to distinguish between frame-length changes and step-length changes. Several steps may run for every frame, particularly when fps is low.
-* `Body._reset` flag was removed and replaced it with a check of `Body.moves`. The flag only turned on when `moves` was true, and never turned off.
-* Added a reset of `prev` in Arcade.Body#step. This fixes the friction issue.
-* Stopped the `Body.postUpdate` method from setting `_dx`, `_dy`, and `prev`. They remain in the state they were at the end of the last physics step. This will affect the delta methods, which are documented to provide step-based data (not frame-based data); they now do so. However, because several steps may run per frame, you can't interrogate every step unless you're running functions based on physics events like collisions. You'll just see the latest step. This should partially balance out the extra load of resetting prev.
-* Added a zero-out of stepsLastFrame in Arcade.World#postUpdate, which would otherwise never zero out and keep running at least one pass per frame. This should improve performance when frames can be skipped.
-* Removed `blocked` checks from `TileCheckX` and `TileCheckY`. Originally, this prevented multiple checks when an object had come to rest on a floor. However, when multiple steps run per frame, the object will accelerate again, the floor won't stop it on steps 2+, and it will end the frame a short distance into the floor. Removing the blocked checks will fix the floor dip issue and the rest velocity issue. Although this opens up multiple checks, this is probably very rare: how many times does an object hit two different floors in a single frame?
-
-In combination these updates fix issues #4732 and #4672. My thanks to @BenjaminDRichards and @falifm.
+## Version 3.21.0 - Senku - 22nd November 2019
 
 ### New Features
 
-* `GameConfig.antialiasGL` is a new boolean that allows you to set the `antialias` property of the WebGL context during creation, without impacting any subsequent textures or the canvas CSS.
-* `InteractiveObject.alwaysEnabled` is a new boolean that allows an interactive Game Object to always receive input events, even if it's invisible or won't render.
-* `Bob.setTint` is  a new method that allows you to set the tint of a Bob object within a Blitter. This is then used by the Blitter WebGL Renderer (thanks @rexrainbow)
-* The `UpdateList` now emits two new events: 'add' and 'remove' when children are added and removed from it. Fix #3487 (thanks @hexus)
-* The `Tilemap.setCollision` method has a new optional boolean parameter `updateLayer`. If set to `true`, it will update all of the collision settings of all tiles on the layer. If `false` it will skip doing this, which can be a huge performance boost in situations where the layer tiles haven't been modified and you're just changing collision flags. This is especially suitable for maps using procedural generated tilemaps, infinite tilemaps, multiplayer tilemaps, particularly large tilemaps (especially those dynamic in nature) or who otherwise intend to index collisions before the tiles are loaded. This update also added the new parameter to the `SetCollision`, `SetCollisionBetween` and `DynamicTilemapLayer.setCollision` methods (thanks @tarsupin)
-* `ArcadePhysics.Body.setBoundsRectangle` is a new method that allows you to set a custom bounds rectangle for any Body to use, rather than the World bounds, which is the default (thanks @francois-n-dream)
-* `ArcadePhysics.Body.customBoundsRectangle` is a new property used for custom bounds collision (thanks @francois-n-dream)
-* The Arcade Physics Group has a new config object property `customBoundsRectangle` which, if set, will set the custom world bounds for all Bodies that Group creates (thanks @francois-n-dream)
-* `WebGLRenderer.createTexture2D` has a new optional parameter `flipY` which sets the `UNPACK_FLIP_Y_WEBGL` flag of the uploaded texture.
-* `WebGLRenderer.canvasToTexture` has a new optional parameter `flipY` which sets the `UNPACK_FLIP_Y_WEBGL` flag of the uploaded texture.
-* `WebGLRenderer.createCanvasTexture` is a new method that will create a WebGL Texture based on the given Canvas Element.
-* `WebGLRenderer.updateCanvasTexture` is a new method that will update an existing WebGL Texture based on the given Canvas Element.
-* `WebGLRenderer.createVideoTexture` is a new method that will create a WebGL Texture based on the given Video Element.
-* `WebGLRenderer.updateVideoTexture` is a new method that will update an existing WebGL Texture based on the given Video Element.
-* `TextureSource.flipY` is a new boolean that controls if the `UNPACK_FLIP_Y_WEBGL` flag is set when a WebGL Texture is uploaded.
-* `TextureSource.setFlipY` is a new method that toggles the `TextureSource.flipY` property.
+* You can now specify the mipmap filter level to be used when creating WebGL textures. This can be set in the Game Config using the new `mipmapFilter` property, which is a string, such as 'NEAREST_MIPMAP_NEAREST'. Or, you can set the new `WebGLRenderer.mipmapFilter` property to a valid GLenum. If you set it on the renderer, it will only impact any textures loaded _after_ it has been set, so do so in your Scene `init` method if you want it to be used for textures you're about to load. By changing the mipmap level you can drastically improve the quality when reducing large textures. Please note, due to WebGL1 limitations, this only works on power-of-two sized textures. It also works on textures created from Canvas, Videos or RenderTextures.
+* `BitmapText.setMaxWidth` is a new method that allows you to set a maximum width (in pixels) for the BitmapText to take up when rendering. Lines of text longer than `maxWidth` will be wrapped, based on whitespace, to the next line. This allows you to do word-wrapping on BitmapText objects, something only previously possible on Text objects.
+* `BitmapText.wordWrapCharCode` is a new property that works with `setMaxWidth` that allows you to control which character code causes a line-wrap. By default it is 32 (a space character).
+* `ArcadePhysics.closest` now has an optional `targets` argument. The targets can be any Arcade Physics Game Object, Body or Static Body and it will return only the closet target from those given (thanks @samme)
+* `ArcadePhysics.furthest` now has an optional `targets` argument. The targets can be any Arcade Physics Game Object, Body or Static Body and it will return only the furthest target from those given (thanks @samme)
+* `Tilemaps.Parsers.Tiled.CreateGroupLayer` is a new function that parses a Tiled group layer and adds in support for Tiled layer groups (introduced in Tiled 1.2.0). Feature #4099 (thanks @Babeetlebum @Olliebrown)
+* The Tilemap system now supports infinite Tilemaps from the Tiled map editor (thanks @Olliebrown)
+* `Tilemap.getImageLayerNames` is a new method that returns a list of all valid imagelayer names loaded in the Tilemap (thanks @Olliebrown)
+* `Tilemap.getObjectLayerNames` is a new method that returns a list of all valid objectgroup names loaded in the Tilemap (thanks @Olliebrown)
+* `Tilemap.getTileLayerNames` is a new method that returns a list of all valid tilelayer names loaded in the Tilemap (thanks @Olliebrown)
+* When `forceSetTimeOut` is set to `true` in the Game Config, you can now set the target frame rate by setting the `fps.target` value (thanks @pavels)
+* Videos can now be loaded from a data URI, allowing for base64 encoded videos to be used in the Loader instead of file based ones. Although, as with all base64 encoded data, we strongly recommend against this (thanks @apasov)
+* `Math.MIN_SAFE_INTEGER` is a new math const that stores the minimum safe integer for browsers that don't provide this, such as IE (thanks @jronn)
+* `Math.MAX_SAFE_INTEGER` is a new math const that stores the maximum safe integer for browsers that don't provide this, such as IE (thanks @jronn)
+* `KeyCodes.NUMPAD_ADD` has been added to the keycodes list (thanks @Martin-Antonov)
+* `KeyCodes.NUMPAD_SUBTRACT` has been added to the keycodes list (thanks @Martin-Antonov)
+* `Video.removeVideoElementOnDestroy` is a new boolean property that allows you to control if the Video element is removed from the DOM when the Video Game Object is destroyed.
+* `Actions.SetScrollFactor` is a new Action that will set the scroll factor on an array of Game Objects, including stepped incremental changes per item (thanks @rexrainbow)
+* `Actions.SetScrollFactorX` is a new Action that will set the horizontal scroll factor on an array of Game Objects, including stepped incremental changes per item (thanks @rexrainbow)
+* `Actions.SetScrollFactorY` is a new Action that will set the horizontal scroll factor on an array of Game Objects, including stepped incremental changes per item (thanks @rexrainbow)
+* The `Group` config object now supports use of the `setScrollFactor` property to set the value on each child of the Group (thanks @rexrainbow)
+* `Group.propertyValueSet` is a new method that sets a given property on each Group member (thanks @rexrainbow)
+* `Group.propertyValueInc` is a new method that adds an amount to a given property on each Group member (thanks @rexrainbow)
+* `Group.setX` is a new method that sets the x coordinate on each Group member (thanks @rexrainbow)
+* `Group.setY` is a new method that sets the y coordinate on each Group member (thanks @rexrainbow)
+* `Group.setXY` is a new method that sets the x and y coordinate on each Group member (thanks @rexrainbow)
+* `Group.incX` is a new method that increments the x coordinate on each Group member (thanks @rexrainbow)
+* `Group.incY` is a new method that increments the y coordinate on each Group member (thanks @rexrainbow)
+* `Group.incXY` is a new method that increments the x and y coordinate on each Group member (thanks @rexrainbow)
+* `Group.shiftPosition` is a new method that iterates the Group members and shifts the position of each to the previous members position (thanks @rexrainbow)
+* `Group.angle` is a new method that sets the angle property on each Group member (thanks @rexrainbow)
+* `Group.rotate` is a new method that sets the rotation property on each Group member (thanks @rexrainbow)
+* `Group.rotateAround` is a new method that rotates each Group member around the given point, by the given angle (thanks @rexrainbow)
+* `Group.rotateAroundDistance` is a new method that rotates each Group member around the given point, by the given angle and distance (thanks @rexrainbow)
+* `Group.setAlpha` is a new method that sets the alpha property on each Group member (thanks @rexrainbow)
+* `Group.setTint` is a new method that sets the tint property on each Group member (thanks @rexrainbow)
+* `Group.setOrigin` is a new method that sets the origin property on each Group member (thanks @rexrainbow)
+* `Group.scaleX` is a new method that sets the x scale on each Group member (thanks @rexrainbow)
+* `Group.scaleY` is a new method that sets the y scale on each Group member (thanks @rexrainbow)
+* `Group.scaleXY` is a new method that sets the x and y scale on each Group member (thanks @rexrainbow)
+* `Group.setBlendMode` is a new method that sets the blend mode on each Group member (thanks @rexrainbow)
+* `Group.setHitArea` is a new method that passes all Group members to the Input Plugin to enable them for input (thanks @rexrainbow)
+* `Group.shuffle` is a new method that shuffles all of the Group members in place (thanks @rexrainbow)
+* `Group.setVisible` is a new method that sets the visible state on each Group member (thanks @rexrainbow)
+* `WebAudioSoundManager.setAudioContext` is a new method that allows you to set the Sound Manager Audio Context to a different context instance. It will also disconnect and re-create the gain nodes on the new context.
+* `Group.type` is a new property that holds a string-based name of the Game Object type, as with other GO's (thanks @samme)
+* `Arade.Group.type` is a new property that holds a string-based name of the Game Object type, as with other GO's (thanks @samme)
+* `Arcade.StaticGroup.type` is a new property that holds a string-based name of the Game Object type, as with other GO's (thanks @samme)
+* `ArcadePhysics.overlapCirc` is a new method that allows you to return an array of all Arcade Physics bodies that overlap with the given circular area of the world. It can return either dynamic or static bodies, or a mixture of both (thanks @samme)
 
 ### Updates
 
-* When calling `Shader.setRenderToTexture()` it will now draw the shader just once, immediately to the texture, to avoid the texture being blank for a single frame (thanks Kyle)
-* The private `Shader._savedKey` property has been removed as it wasn't used anywhere internally.
-* A `hasOwnProperty` check has been applied to the `SceneManager.createSceneFromObject` method when parsing additional properties in the `extend` object (thanks @halilcakar)
-* The `Blitter.dirty` flag is no longer set if the render state of a Bob is changed to make it invisible (thanks @rexrainbow)
-* `WebGLPipeline.addAttribute` will now automatically update the vertextComponentCount for you, without you having to do it manually any more (thanks @yhwh)
-* `MultiFile` has three new internal properties: `baseURL`, `path` and `prefix` which allow them to retain the state of the loader at the time of creation, to be passed on to all child-files. Fix #4679.
-* `LoaderPlugin` and `MultiFile` have a new private property `multiKeyIndex` which multi-files use and increment when batching sub-file loads.
-* TileSprites will now throw a console warning if you try to use a RenderTexture or GLTexture as their frame source. Fix #4719 (thanks @pavel-shirobok)
-* `TextureSource.isGLTexture` now checks if the browser supports `WebGLTexture` before checking to see if source is an instance of one. This should fix issues with Phaser in HEADLESS mode running under node / jsdom, or where WebGLTexture isn't present. Fix #4711 (thanks @tsphillips)
-* `GameObject.ToJSON` will no longer output the `scaleMode` in the json because it's not a valid Game Object property.
-* `TextureSource.setFilter` will now set the `scaleMode` to the given filter.
-* `CanvasInterpolation` has updated the order of the CSS properties so that `crisp-edges` comes after the browser prefix versions.
-* The `CanvasRenderer.scaleMode` property has been removed as it was never set or used internally.
-* The `CanvasRenderer.currentScaleMode` property has been removed as it was never set or used internally.
-* The `BuildGameObject` function will no longer set `scaleMode` because it's not a valid Game Object property.
-* `CanvasRenderer.antialias` is a new property, populated by the game config property of the same name (or via the `pixelArt` property) that will tell the canvas renderer what to set image interpolation to during rendering of Sprites.
-* `SetTransform` will now set the imageSmoothingEnabled context value based on the renderer and texture source scale mode.
-* The Blitter Canvas Renderer will now respect the game config anti-alias / pixel art settings and render accordingly.
-* The Particle Emitter Canvas Renderer will now respect the game config anti-alias / pixel art settings and render accordingly.
-* The Static Tilemap Canvas Renderer will now respect the game config anti-alias / pixel art settings and render accordingly.
-* The Dynamic Tilemap Canvas Renderer will now respect the game config anti-alias / pixel art settings and render accordingly.
-* All Game Objects that use the Canvas Set Transform function (which is most of them) will aos now respect the game config anti-alias / pixel art settings and render accordingly. This means you can now have properly scaled Bitmap Text, Text, Sprites, Render Textures, etc when pixel art is enabled in your game. Fix #4701 (thanks @agar3s)
-* Containers are now able to set the alpha quadrant values (topLeft, topRight, bottomLeft and bottomRight) and have these passed onto children which are capable of supporting them, such as Sprites. Fix #4714 (thanks @MrcSnm)
-* The `ProcessQueue` struct now extends Event Emitter and will emit `PROCESS_QUEUE_ADD_EVENT` when a new item is added to it.
-* The `ProcessQueue` struct now extends Event Emitter and will emit `PROCESS_QUEUE_REMOVE_EVENT` when an item is removed from it.
-* `ProcessQueue.removeAll` is a new method that will remove all active entries from the queue.
-* `ProcessQueue.length` is a new property that returns the size of the active list.
-* `UpdateList` now extends the `ProcessQueue` struct and uses all of its methods for list management, instead of doing it directly. This means private properties such as `UpdateList._list` no longer exist. It also fixes an issue re: memory management where list items would remain until the end of a Scene. Fix #4721 (thanks @darkgod6)
-* `BaseSoundManager.forEachActiveSound` will now only invoke the callback if the sound actually exists and isn't pending removal. Fix #3383 (thanks @DouglasLapsley)
-* `MouseManager.target` can now be defined as either a string or by passing an HTMLElement directly. Fix #4353 (thanks @BigZaphod)
-* The `BasePlugin.boot` method has been removed and moved to `ScenePlugin.boot` as it's a Scene-level method only (thanks @samme)
-* The `BasePlugin.scene` and `BasePlugin.systems` properties have been removed and are defined in `ScenePlugin`, as they are Scene-level properties only (thanks @samme)
-* The `Tween.getValue` method has been updated so you can specify the index of the Tween Data to get the value of. Previously, it only returned the first TweenData from the data array, ignoring any subsequent properties or targets. Fix #4717 (thanks @chepe263)
-* `WebGLRenderer.createTexture2D` has a new optional parameter `forceSize`, which will force the gl texture creation to use the dimensions passed to the method, instead of extracting them from the pixels object, if provided.
-* The `GameObject.setTexture` method can now accept either a string, in which case it looks for the texture in the Texture Manager, or a Texture instance, in which case that instance is set as the Game Object's texture.
-* `TextureManager.get` can now accept either a string-based key, or a Texture instance, as its parameter.
-* `SceneManager.stop` and the matching `ScenePlugin.stop` now have an optional `data` parameter, which is passed to the Scene shutdown method. Fix #4510 (thanks @Olliebrown @GetsukenStudios)
-* `Cameras.BaseCamera` is now exposed in the namespace, allowing you to access them directly (thanks @rexrainbow)
-* Shaders have a new optional constructor parameter `textureData` which allows you to specify additional texture data, especially for NPOT textures (thanks @cristlee)
-* `TouchManager.disableContextMenu` is a new method that will try to disable the context menu on touch devices, if the Game Config `disableContextMenu` is set. Previously, it only tried to do it for the Mouse Manager, but now does it for touch as well. Fix #4778 (thanks @simplewei)
+* `Curve.getPoints` can now take an optional array as the 3rd parameter in which to store the points results (thanks @rexrainbow)
+* `Line.arcLengthDivisions` now overrides the default Curve value and is set to 1 to optimize the amount of points returned for a Line curve (thanks @rexrainbow)
+* `ArcadePhysics.closest` will now no longer ever return the source in the target results (thanks @samme)
+* `ArcadePhysics.furthest` will now no longer ever return the source in the target results (thanks @samme)
+* `RequestAnimationFrame.target` is a new property that controls the fps rate (in ms) when setTimeout is used (thanks @pavels)
+* The `WebAudioSoundManager.unlock` method will now listen for `keydown` events in order to unlock the Audio Context, as well as touch and pointer events, making it more accessible (thanks Nick Tipping)
+* The `requestAnimationFrame` polyfill no longer expects a Browserify environment and uses `window` through-out, it also no longer adds in the same as performance.now does.
+* `BitmapText.getTextBounds` didn't reset the dirty flag, causing the `GetBitmapTextSize` function to be called every time the Bitmap Text was rendered. With enough text objects on-screen this could negatively impact performance. The flag is now reset every time the bounds are recalculated.
 
 ### Bug Fixes
 
-* `SpineCanvasPlugin.shutdown` would try to dispose of the `sceneRenderer`, but the property isn't set for Canvas.
-* `ArcadePhysics.Body.checkWorldBounds` would incorrectly report as being on the World bounds if the `blocked.none` flag had been toggled elsewhere in the Body. It now only sets if it toggles a new internal flag (thanks Pablo)
-* `RenderTexture.resize` wouldn't update the CanvasTexture width and height, causing the cal to draw or drawFrame to potentially distort the texture (thanks @yhwh)
-* `InputPlugin.processDragMove` has been updated so that the resulting `dragX` and `dragY` values, sent to the event handler, now compensate for the scale of the Game Objects parent container, if inside of one. This means dragging a child of a scale Container will now still drag at 'full' speed.
-* The RenderTextures `displayOrigin` values are now automatically updated if you call `setSize` on the Render Texture. Fix #4757 (thanks @rexrainbow)
-* `onTouchStart`, `onTouchEnd` and `onTouchMove` will now check for `event.cancelable` before calling preventDefault on the touch event, fixing issues with "Ignored attempt to cancel a touchstart event with cancelable=false, for example because scrolling is in progress and cannot be interrupted." errors in some situations. Fix #4706 (thanks @MatthewAlner)
-* `MatterPhysics.shutdown` could try to access properties that may have been previously removed during the Game.destroy process, causing a console error. It now checks properties before removing events from them (thanks @nagyv)
-* `ArcadePhysics.Body.hitTest` would use CircleContains to do a hit test, which assumex x/y was the Circle center, but for a Body it's the top-left, causing the hit test to be off. Fix #4748 (thanks @funnisimo)
-* `ArcadePhysics.World.separateCircle` has had the velocity scaling moved to after the angle is calculated, fixing a weird collision issue when `Body.bounce=0`. Also, if both bodies are movable, they now only offset by half the offset and use the center of the body for angle calculation, allowing for any offsets to be included. Fix #4751 (thanks @funnisimo @hizzd)
-* `Tween.updateTo` would break out of the TweenData iteration as soon as it adjusted the first matching key, causing tweens acting on multiple targets to only update the first target. It now updates them all. Fix #4763 (thanks @RBrNx)
-* The Container WebGLRenderer will now handle child mask batching properly, based on the renderers current mask.
-* The Container WebGLRenderer will now handle child new type switching, allowing you to carry on with a batch of same-type Game Objects even if they're nested within Containers. Fix #4710 (thanks @nalgorry)
-* `MultiAtlasFiles` that loaded their own external images would obtain incorrect path and URL values if the path had been changed by another file in the queue. They now retain the loader state and apply it to all child files during load.
-* If more than one `MultiAtlasFile` used the same internal file name for its images, subsequent multi-atlases would fail to load. Fix #4330 (thanks @giviz)
-* `MultiAtlasFiles` would incorrectly add the atlas JSON into the JSON cache, causing you to not be able to destroy and reload the texture using the same atlas key as before. Fix #4720 (thanks @giviz)
-* `RenderTexture.fill` wasn't setting the camera up before drawing the fill rect, causing it to appear in the wrong place and the wrong size. Fix #4390 (thanks @Jerenaux)
-* `DynamicBitmapText.setOrigin` wouldn't change the origin when using the Canvas Renderer, only in WebGL. It now sets the origin regardless of renderer. Fix #4108 (thanks @garethwhittaker)
-* `DynamicBitmapText` wouldn't respect the multi-line alignment values when using the Canvas Renderer. It now uses them in the line calculations.
-* `DynamicBitmapText` and `BitmapText` wouldn't render at the correct position when using scaled BitmapText and an origin. Fix #4054 (thanks @Aveyder)
-* Incorrect lighting on batched Sprites. The lighting was not correct when batching several sprites with different rotations. Each sprite now uses its own `uInverseRotationMatrix` to compute the lighting correctly (thanks @gogoprog)
-* Matter.js Body wasn't setting the part angles correctly in `Body.update` (thanks @Frozzy6)
-* `ScaleManager.startFullscreen` now checks to see if the call returns a Promise, rather than checking if the browser supports them, before waiting for promise resolution. This fixes a runtime console warning in Microsoft Edge. Fix #4795 (thanks @maksdk)
+* The Spine Plugin was not clearing down the resize event listener in WebGL, causing it to still fire even if the Scene was closed. Fix #4808 (thanks @RollinSafary)
+* When a game is created with the HEADLESS renderer, `Game.destroy()` had no effect and the game kept on running. Now it destroys itself properly. Fix #4804 (thanks @samme)
+* `DOM.GetScreenOrientation` was returning the wrong consts from the Scale Manager (thanks @jcyuan)
+* When using `Input.enableDebug` on Game Objects it would not render the debug graphic correctly if the hit area had been offset. It now adjusts the debug correctly for all common hit-area geometry types. Fix #4722 (thanks @HaoboZ @Olliebrown)
+* Light2D was not properly working for DynamicTilemapLayers due to a change in the way tilesets were stored, throwing an Uncaught TypeError at runtime. This is now handled correctly. Fix #4167 #4079 (thanks @koljakutschera @blackjack26 @kainage)
+* `Input.dragDistanceThreshold` was not working correctly since 3.18, snapping to the wrong drag state unless the time threshold was also set. Fix #4667 (thanks @muliawanw @Olliebrown)
+* `Tilemap.convertLayerToStatic` would throw an error when used multiple times, due to an error with the layer index count. Fix #4737 (thanks @Olliebrown @Vegita2)
+* The `Tween` class now uses a cached MAX_SAFE_INTEGER making it compatible with Internet Explorer (thanks @jronn)
+* The `StaggerBuilder` class now uses a cached MAX_SAFE_INTEGER making it compatible with Internet Explorer (thanks @jronn)
+* The `Rectangle.FromPoints` function now uses a cached MIN_SAFE_INTEGER making it compatible with Internet Explorer (thanks @jronn)
+* The `Video` class now uses a cached MIN_SAFE_INTEGER making it compatible with Internet Explorer (thanks @jronn)
+* The `Path` class now uses a cached MIN_SAFE_INTEGER making it compatible with Internet Explorer (thanks @jronn)
+* `Video.destroy` has been renamed to `Video.preDestroy`, so that it now destroys properly like all other Game Objects. Fix #4821 (thanks @rexrainbow)
+* The Video Game Object will now check to see if the browser supports the `HTMLVideoElement` before creating one (thanks @jcyuan)
+* The `DOM.GetScreenOrientation` functions would return out-dated consts (thanks @jcyuan)
+* When calling `TileSprite.setTexture` or `setFrame`, if the new frame size didn't match the old one, the new fill pattern would become distorted and the `potWidth` and `potHeight` values would be incorrect.
+* Timeline callbacks with extra parameters like `onStart`  would miss the first parameter when the callback was invoked. Fix #4810 (thanks @samme)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@krzysztof-grzybek @NokFrt @r-onodera @colorcube @neon-dev @SavedByZero @arnekeller 
-
-### Thanks
-
-Thank you to the following people for contributing ideas for new features to be added to Phaser 3. Because we've now started Phaser 4 development, I am closing off old feature requests that I personally will not work on for Phaser 3 itself. They may be considered for v4 and, of course, if someone from the community wishes to submit a PR to add them, I will be only too happy to look at that. So, if you want to get involved, filter the GitHub issues by the [Feature Request tag](https://github.com/photonstorm/phaser/issues?q=is%3Aissue+is%3Aopen+label%3A%22%F0%9F%92%96+Feature+Request%22) and dig in. In the meantime, thank you to the following people for suggesting features, even if they didn't make it this time around:
-
-@njt1982 @TheTrope @allanbreyes @alexandernst @Secretmapper @murteira @oktayacikalin @TadejZupancic @SBCGames @hadikcz @jcyuan @pinkkis @Aedalus @jestarray @BigZaphod @Secretmapper @francois-n-dream @G-Rath 
+@samme (for contributing loads of new Arcade Physics examples) @dranitski @jcyuan @RollinSafary @ilyaryabchinski @jsoref @jcyuan @ghclark2 
 
 Please see the complete [Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md) for previous releases.
 
@@ -551,8 +454,8 @@ All rights reserved.
 
 "Above all, video games are meant to be just one thing: fun. Fun for everyone." - Satoru Iwata
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.20.1/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.20.1/phaser.min.js
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.21.0/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.21.0/phaser.min.js
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-ghwin]: github-windows://openRepo/https://github.com/photonstorm/phaser
