@@ -12,7 +12,7 @@ class Parser {
         this.resolveObjects(docs);
         // removes members inherited from classes
         // possibly could be avoided if mixins were defined as such before JSDoc parses them and then we could globally remove all inherited (not
-        // overriden) members globally from the parsed DB
+        // overridden) members globally from the parsed DB
         this.resolveInheritance(docs);
         this.resolveParents(docs);
         // add integer alias
