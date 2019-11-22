@@ -112,13 +112,6 @@ var BitmapText = new Class({
         this.fontData = entry.data;
 
         /**
-         * @property {number} _maxWidth - Internal cache var.
-         * @private
-         * @since 3.21.0
-         */
-        this._maxWidth = 0;
-
-        /**
          * The text that this Bitmap Text object displays.
          *
          * @name Phaser.GameObjects.BitmapText#_text
@@ -178,7 +171,7 @@ var BitmapText = new Class({
          * @private
          * @since 3.0.0
          */
-        this._bounds = GetBitmapTextSize(this, false, this._bounds);
+        this._bounds = GetBitmapTextSize();
 
         /**
          * An internal dirty flag for bounds calculation.
@@ -188,7 +181,17 @@ var BitmapText = new Class({
          * @private
          * @since 3.11.0
          */
-        this._dirty = false;
+        this._dirty = true;
+
+        /**
+         * Internal cache var holding the maxWidth.
+         * 
+         * @name Phaser.GameObjects.BitmapText#_maxWidth
+         * @type {number}
+         * @private
+         * @since 3.21.0
+         */
+        this._maxWidth = 0;
 
         /**
          * The character code used to detect for word wrapping.
