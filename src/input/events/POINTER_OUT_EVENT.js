@@ -9,7 +9,7 @@
  * 
  * This event is dispatched by the Input Plugin belonging to a Scene if a pointer moves out of any interactive Game Object.
  * 
- * Listen to this event from within a Scene using: `this.input.on('pointerup', listener)`.
+ * Listen to this event from within a Scene using: `this.input.on('pointerout', listener)`.
  * 
  * The event hierarchy is as follows:
  * 
