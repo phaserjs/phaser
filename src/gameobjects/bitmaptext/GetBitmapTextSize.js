@@ -49,7 +49,6 @@ var GetBitmapTextSize = function (src, round, out)
             },
             wrappedText: '',
             words: [],
-            maxWidth: 0,
             scaleX: 0,
             scaleY: 0
         };
@@ -98,7 +97,7 @@ var GetBitmapTextSize = function (src, round, out)
     var current = null;
 
     //  Scan for breach of maxWidth and insert carriage-returns
-    if (maxWidth > 0 && out.maxWidth !== maxWidth)
+    if (maxWidth > 0)
     {
         for (i = 0; i < textLength; i++)
         {
@@ -253,7 +252,6 @@ var GetBitmapTextSize = function (src, round, out)
             text = stringInsert(text, crs[i], "\n");
         }
 
-        out.maxWidth = maxWidth;
         out.wrappedText = text;
 
         textLength = text.length;
