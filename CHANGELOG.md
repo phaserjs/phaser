@@ -1,5 +1,14 @@
 # Change Log
 
+## Version 3.21.1 - Senku - in development
+
+### Examples, Documentation and TypeScript
+
+My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
+
+@fselcukcan 
+
+
 ## Version 3.21.0 - Senku - 22nd November 2019
 
 ### New Features
