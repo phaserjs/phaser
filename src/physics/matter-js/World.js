@@ -198,25 +198,27 @@ var World = new Class({
         /**
          * The default configuration values.
          *
-         * @name Phaser.Physics.Matter.World#defaults
+         * @name Phaser.Physics.Matter.World#debugConfig
          * @type {object}
-         * @since 3.0.0
+         * @since 3.22.0
          */
-        this.defaults = {
-            debugShowBody: GetFastValue(config, 'debugShowBody', true),
-            debugShowStaticBody: GetFastValue(config, 'debugShowStaticBody', true),
-            debugShowVelocity: GetFastValue(config, 'debugShowVelocity', true),
-            bodyDebugColor: GetFastValue(config, 'debugBodyColor', 0xff00ff),
-            bodyDebugFillColor: GetFastValue(config, 'debugBodyFillColor', 0xe3a7e3),
-            staticBodyDebugColor: GetFastValue(config, 'debugStaticBodyColor', 0x0000ff),
-            velocityDebugColor: GetFastValue(config, 'debugVelocityColor', 0x00ff00),
-            debugShowJoint: GetFastValue(config, 'debugShowJoint', true),
-            jointDebugColor: GetFastValue(config, 'debugJointColor', 0x000000),
-            debugWireframes: GetFastValue(config, 'debugWireframes', true),
-            debugShowInternalEdges: GetFastValue(config, 'debugShowInternalEdges', false),
-            debugShowConvexHulls: GetFastValue(config, 'debugShowConvexHulls', false),
-            debugConvexHullColor: GetFastValue(config, 'debugConvexHullColor', 0xaaaaaa),
-            debugShowSleeping: GetFastValue(config, 'debugShowSleeping', false)
+        this.debugConfig = {
+            showBody: GetFastValue(config, 'debugShowBody', true),
+            showStaticBody: GetFastValue(config, 'debugShowStaticBody', true),
+            showSleeping: GetFastValue(config, 'debugShowSleeping', false),
+            showJoint: GetFastValue(config, 'debugShowJoint', true),
+            showInternalEdges: GetFastValue(config, 'debugShowInternalEdges', false),
+            showConvexHulls: GetFastValue(config, 'debugShowConvexHulls', false),
+
+            renderFill: GetFastValue(config, 'renderFill', true),
+            renderStroke: GetFastValue(config, 'renderStroke', true),
+            fillColor: GetFastValue(config, 'debugFillColor', 0x0e1a8b),
+            strokeColor: GetFastValue(config, 'debugStrokeColor', 0x1c30ef),
+            staticFillColor: GetFastValue(config, 'debugStaticFillColor', 0x198c10),
+            staticStrokeColor: GetFastValue(config, 'debugStaticStrokeColor', 0x20f410),
+
+            jointColor: GetFastValue(config, 'debugJointColor', 0xdddddd),
+            hullColor: GetFastValue(config, 'debugHullColor', 0xaaaaaa)
         };
 
         if (this.drawDebug)
@@ -721,7 +723,13 @@ var World = new Class({
      */
     postUpdate: function ()
     {
-        if (!this.drawDebug)
+        var config = this.debugConfig;
+
+        var showBody = config.showBody;
+        var showStaticBody = config.showStaticBody;
+        var showJoint = config.showJoint;
+
+        if (!this.drawDebug || (!showBody && !showStaticBody && !showJoint))
         {
             return;
         }
@@ -730,23 +738,11 @@ var World = new Class({
 
         var bodies = Composite.allBodies(this.localWorld);
 
-        if (this.defaults.debugWireframes)
-        {
-            if (this.defaults.debugShowConvexHulls)
-            {
-                this.renderConvexHulls(bodies);
-            }
+        this.renderBodies(bodies);
 
-            this.renderWireframes(bodies);
-        }
-        else
+        if (showJoint)
         {
-            this.renderBodies(bodies);
-        }
-
-        if (this.defaults.debugShowJoint)
-        {
-            this.renderJoints();
+            // this.renderJoints();
         }
     },
 
@@ -758,7 +754,6 @@ var World = new Class({
      * @since 3.14.0
      * 
      * @param {array} bodies - An array of bodies from the localWorld.
-     */
     renderConvexHulls: function (bodies)
     {
         var graphics = this.debugGraphic;
@@ -788,6 +783,7 @@ var World = new Class({
 
         graphics.strokePath();
     },
+     */
 
     /**
      * Renders the wireframes of the given array of bodies.
@@ -797,11 +793,11 @@ var World = new Class({
      * @since 3.14.0
      * 
      * @param {array} bodies - An array of bodies from the localWorld.
-     */
     renderWireframes: function (bodies)
     {
         var graphics = this.debugGraphic;
         var showInternalEdges = this.defaults.debugShowInternalEdges;
+        var showStatic = this.defaults.debugShowStaticBody;
 
         graphics.lineStyle(1, this.defaults.bodyDebugColor);
 
@@ -811,7 +807,7 @@ var World = new Class({
         {
             var body = bodies[i];
 
-            if (!body.render.visible)
+            if (!body.render.visible || (body.isStatic && !showStatic))
             {
                 continue;
             }
@@ -847,6 +843,7 @@ var World = new Class({
 
         graphics.strokePath();
     },
+     */
 
     /**
      * Renders the array of bodies.
@@ -861,43 +858,73 @@ var World = new Class({
     {
         var graphics = this.debugGraphic;
 
-        var showInternalEdges = this.defaults.debugShowInternalEdges || !this.defaults.debugWireframes;
-        var showSleeping = this.defaults.debugShowSleeping;
-        var wireframes = this.defaults.debugWireframes;
+        var config = this.debugConfig;
+
+        var showBody = config.showBody;
+        var showStaticBody = config.showStaticBody;
+        var showSleeping = config.showSleeping;
+        var showInternalEdges = config.showInternalEdges;
+        var showConvexHulls = config.showConvexHulls;
+
+        var renderFill = config.renderFill;
+        var renderStroke = config.renderStroke;
+
+        var fillColor = config.fillColor;
+        var strokeColor = config.strokeColor;
+        var staticFillColor = config.staticFillColor;
+        var staticStrokeColor = config.staticStrokeColor;
+        var hullColor = config.hullColor;
 
         var body;
         var part;
-        var i;
-        var k;
+        var render;
 
-        for (i = 0; i < bodies.length; i++)
+        for (var i = 0; i < bodies.length; i++)
         {
             body = bodies[i];
 
+            //  1) Don't show invisible bodies
             if (!body.render.visible)
             {
                 continue;
             }
 
+            //  2) Don't show static bodies, OR
+            //  3) Don't show dynamic bodies
+            if ((!showStaticBody && body.isStatic) || (!showBody && !body.isStatic))
+            {
+                continue;
+            }
+
             //  Handle compound parts
-            for (k = body.parts.length > 1 ? 1 : 0; k < body.parts.length; k++)
+            var partsLength = body.parts.length;
+
+            for (var k = (partsLength > 1) ? 1 : 0; k < partsLength; k++)
             {
                 part = body.parts[k];
+                render = part.render;
 
-                if (!part.render.visible)
+                if (!render.visible)
                 {
                     continue;
                 }
 
+                var opacity = render.opacity;
+
                 if (showSleeping && body.isSleeping)
                 {
-                    graphics.lineStyle(1, this.defaults.bodyDebugColor, 0.5 * part.render.opacity);
-                    graphics.fillStyle(this.defaults.bodyDebugColor, 0.5 * part.render.opacity);
+                    opacity *= 0.5;
+                }
+
+                if (body.isStatic)
+                {
+                    graphics.lineStyle(1, staticStrokeColor, opacity);
+                    graphics.fillStyle(staticFillColor, opacity);
                 }
                 else
                 {
-                    graphics.lineStyle(1, this.defaults.bodyDebugColor, part.render.opacity);
-                    graphics.fillStyle(this.defaults.bodyDebugColor, part.render.opacity);
+                    graphics.lineStyle(1, strokeColor, opacity);
+                    graphics.fillStyle(fillColor, opacity);
                 }
 
                 //  Part polygon
@@ -935,14 +962,36 @@ var World = new Class({
                     graphics.closePath();
                 }
 
-                if (!wireframes)
+                if (renderFill)
                 {
                     graphics.fillPath();
                 }
-                else
+
+                if (renderStroke)
                 {
                     graphics.strokePath();
                 }
+            }
+
+            //  Render Convex Hulls
+            if (showConvexHulls && partsLength > 1)
+            {
+                var verts = body.vertices;
+
+                graphics.lineStyle(1, hullColor);
+
+                graphics.beginPath();
+
+                graphics.moveTo(verts[0].x, verts[0].y);
+
+                for (var v = 1; v < verts.length; v++)
+                {
+                    graphics.lineTo(verts[v].x, verts[v].y);
+                }
+                
+                graphics.lineTo(verts[0].x, verts[0].y);
+
+                graphics.strokePath();
             }
         }
     },
