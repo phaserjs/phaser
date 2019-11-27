@@ -2,6 +2,10 @@
 
 ## Version 3.21.1 - Senku - in development
 
+### Updates
+
+* The `Matter.Factory.worldConstraint` argument signature has changed. It now takes `x` and `y` arguments first, as the world position where the constraint will be created.
+
 ### Bug Fixes
 
 * BitmapText with a `maxWidth` set wouldn't update the text correctly if it was modified post-creation. You can now update the text and/or width independantly and it'll update correctly. Fix #4881 (thanks @oxguy3)
