@@ -176,6 +176,8 @@ var World = new Class({
          */
         this.autoUpdate = GetValue(config, 'autoUpdate', true);
 
+        var debugConfig = GetValue(config, 'debug', false);
+
         /**
          * A flag that controls if the debug graphics will be drawn to or not.
          *
@@ -184,7 +186,7 @@ var World = new Class({
          * @default false
          * @since 3.0.0
          */
-        this.drawDebug = GetValue(config, 'debug', false);
+        this.drawDebug = (!debugConfig) ? false : true;
 
         /**
          * An instance of the Graphics object the debug bodies are drawn to, if enabled.
@@ -203,22 +205,38 @@ var World = new Class({
          * @since 3.22.0
          */
         this.debugConfig = {
-            showBody: GetFastValue(config, 'debugShowBody', true),
-            showStaticBody: GetFastValue(config, 'debugShowStaticBody', true),
-            showSleeping: GetFastValue(config, 'debugShowSleeping', false),
-            showJoint: GetFastValue(config, 'debugShowJoint', true),
-            showInternalEdges: GetFastValue(config, 'debugShowInternalEdges', false),
-            showConvexHulls: GetFastValue(config, 'debugShowConvexHulls', false),
+            showBody: GetFastValue(debugConfig, 'showBody', true),
+            showStaticBody: GetFastValue(debugConfig, 'showStaticBody', true),
+            showSleeping: GetFastValue(debugConfig, 'showSleeping', false),
+            showJoint: GetFastValue(debugConfig, 'showJoint', true),
+            showInternalEdges: GetFastValue(debugConfig, 'showInternalEdges', false),
+            showConvexHulls: GetFastValue(debugConfig, 'showConvexHulls', false),
 
-            renderFill: GetFastValue(config, 'renderFill', true),
-            renderStroke: GetFastValue(config, 'renderStroke', true),
-            fillColor: GetFastValue(config, 'debugFillColor', 0x0e1a8b),
-            strokeColor: GetFastValue(config, 'debugStrokeColor', 0x1c30ef),
-            staticFillColor: GetFastValue(config, 'debugStaticFillColor', 0x198c10),
-            staticStrokeColor: GetFastValue(config, 'debugStaticStrokeColor', 0x20f410),
+            renderFill: GetFastValue(debugConfig, 'renderFill', true),
+            renderStroke: GetFastValue(debugConfig, 'renderStroke', true),
 
-            jointColor: GetFastValue(config, 'debugJointColor', 0xdddddd),
-            hullColor: GetFastValue(config, 'debugHullColor', 0xaaaaaa)
+            fillColor: GetFastValue(debugConfig, 'fillColor', 0x106909),
+            strokeColor: GetFastValue(debugConfig, 'strokeColor', 0x28de19),
+
+            staticFillColor: GetFastValue(debugConfig, 'staticFillColor', 0x0d177b),
+            staticStrokeColor: GetFastValue(debugConfig, 'staticStrokeColor', 0x1327e4),
+
+            staticBodySleepOpacity: GetFastValue(debugConfig, 'staticBodySleepOpacity', 0.7),
+            sleepFillColor: GetFastValue(debugConfig, 'sleepFillColor', 0x464646),
+            sleepStrokeColor: GetFastValue(debugConfig, 'sleepStrokeColor', 0x999a99),
+
+            jointColor: GetFastValue(debugConfig, 'jointColor', 0xe0e042),
+            jointLineThickness: GetFastValue(debugConfig, 'jointLineThickness', 2),
+
+            pinSize: GetFastValue(debugConfig, 'pinSize', 4),
+            pinColor: GetFastValue(debugConfig, 'pinColor', 0x42e0e0),
+
+            springColor: GetFastValue(debugConfig, 'springColor', 0xe042e0),
+
+            anchorColor: GetFastValue(debugConfig, 'anchorColor', 0xefefef),
+            anchorSize: GetFastValue(debugConfig, 'anchorSize', 6),
+
+            hullColor: GetFastValue(debugConfig, 'hullColor', 0xd703d0)
         };
 
         if (this.drawDebug)
@@ -742,108 +760,9 @@ var World = new Class({
 
         if (showJoint)
         {
-            // this.renderJoints();
+            this.renderJoints();
         }
     },
-
-    /**
-     * Renders the debug convex hulls from the given array of bodies.
-     *
-     * @method Phaser.Physics.Matter.World#renderConvexHulls
-     * @private
-     * @since 3.14.0
-     * 
-     * @param {array} bodies - An array of bodies from the localWorld.
-    renderConvexHulls: function (bodies)
-    {
-        var graphics = this.debugGraphic;
-
-        graphics.lineStyle(1, this.defaults.debugConvexHullColor);
-
-        graphics.beginPath();
-
-        for (var i = 0; i < bodies.length; i++)
-        {
-            var body = bodies[i];
-
-            if (!body.render.visible || body.parts.length === 1)
-            {
-                continue;
-            }
-
-            graphics.moveTo(body.vertices[0].x, body.vertices[0].y);
-
-            for (var j = 1; j < body.vertices.length; j++)
-            {
-                graphics.lineTo(body.vertices[j].x, body.vertices[j].y);
-            }
-            
-            graphics.lineTo(body.vertices[0].x, body.vertices[0].y);
-        }
-
-        graphics.strokePath();
-    },
-     */
-
-    /**
-     * Renders the wireframes of the given array of bodies.
-     *
-     * @method Phaser.Physics.Matter.World#renderWireframes
-     * @private
-     * @since 3.14.0
-     * 
-     * @param {array} bodies - An array of bodies from the localWorld.
-    renderWireframes: function (bodies)
-    {
-        var graphics = this.debugGraphic;
-        var showInternalEdges = this.defaults.debugShowInternalEdges;
-        var showStatic = this.defaults.debugShowStaticBody;
-
-        graphics.lineStyle(1, this.defaults.bodyDebugColor);
-
-        graphics.beginPath();
-
-        for (var i = 0; i < bodies.length; i++)
-        {
-            var body = bodies[i];
-
-            if (!body.render.visible || (body.isStatic && !showStatic))
-            {
-                continue;
-            }
-
-            for (var k = (body.parts.length > 1) ? 1 : 0; k < body.parts.length; k++)
-            {
-                var part = body.parts[k];
-
-                var vertLength = part.vertices.length;
-
-                graphics.moveTo(part.vertices[0].x, part.vertices[0].y);
-
-                for (var j = 1; j < vertLength; j++)
-                {
-                    if (!part.vertices[j - 1].isInternal || showInternalEdges)
-                    {
-                        graphics.lineTo(part.vertices[j].x, part.vertices[j].y);
-                    }
-                    else
-                    {
-                        graphics.moveTo(part.vertices[j].x, part.vertices[j].y);
-                    }
-
-                    if (part.vertices[j].isInternal && !showInternalEdges)
-                    {
-                        graphics.moveTo(part.vertices[(j + 1) % vertLength].x, part.vertices[(j + 1) % vertLength].y);
-                    }
-                }
-                
-                graphics.lineTo(part.vertices[0].x, part.vertices[0].y);
-            }
-        }
-
-        graphics.strokePath();
-    },
-     */
 
     /**
      * Renders the array of bodies.
@@ -871,8 +790,14 @@ var World = new Class({
 
         var fillColor = config.fillColor;
         var strokeColor = config.strokeColor;
+
         var staticFillColor = config.staticFillColor;
         var staticStrokeColor = config.staticStrokeColor;
+
+        var staticBodySleepOpacity = config.staticBodySleepOpacity;
+        var sleepFillColor = config.sleepFillColor;
+        var sleepStrokeColor = config.sleepStrokeColor;
+
         var hullColor = config.hullColor;
 
         var body;
@@ -911,21 +836,30 @@ var World = new Class({
 
                 var opacity = render.opacity;
 
+                var lineStyle = strokeColor;
+                var fillStyle = fillColor;
+
                 if (showSleeping && body.isSleeping)
                 {
-                    opacity *= 0.5;
+                    if (body.isStatic)
+                    {
+                        opacity *= staticBodySleepOpacity;
+                    }
+                    else
+                    {
+                        lineStyle = sleepStrokeColor;
+                        fillStyle = sleepFillColor;
+                    }
                 }
 
                 if (body.isStatic)
                 {
-                    graphics.lineStyle(1, staticStrokeColor, opacity);
-                    graphics.fillStyle(staticFillColor, opacity);
+                    lineStyle = staticStrokeColor;
+                    fillStyle = staticFillColor;
                 }
-                else
-                {
-                    graphics.lineStyle(1, strokeColor, opacity);
-                    graphics.fillStyle(fillColor, opacity);
-                }
+
+                graphics.lineStyle(1, lineStyle, opacity);
+                graphics.fillStyle(fillStyle, opacity);
 
                 //  Part polygon
                 if (part.circleRadius)
@@ -1006,8 +940,15 @@ var World = new Class({
     renderJoints: function ()
     {
         var graphics = this.debugGraphic;
+        var config = this.debugConfig;
 
-        graphics.lineStyle(2, this.defaults.jointDebugColor);
+        var jointColor = config.jointColor;
+        var jointLineThickness = config.jointLineThickness;
+        var pinSize = config.pinSize;
+        var pinColor = config.pinColor;
+        var springColor = config.springColor;
+        var anchorColor = config.anchorColor;
+        var anchorSize = config.anchorSize;
 
         // Render constraints 
         var constraints = Composite.allConstraints(this.localWorld);
@@ -1021,9 +962,15 @@ var World = new Class({
                 continue;
             }
 
-            if (constraint.render.lineWidth)
+            var custom = constraint.render.custom;
+
+            if (custom)
             {
                 graphics.lineStyle(constraint.render.lineWidth, Common.colorToNumber(constraint.render.strokeStyle));
+            }
+            else
+            {
+                graphics.lineStyle(jointLineThickness, jointColor);
             }
 
             var bodyA = constraint.bodyA;
@@ -1042,8 +989,13 @@ var World = new Class({
 
             if (constraint.render.type === 'pin')
             {
+                if (!custom)
+                {
+                    graphics.lineStyle(jointLineThickness, pinColor);
+                }
+
                 graphics.beginPath();
-                graphics.arc(start.x, start.y, 3, 0, 2 * Math.PI);
+                graphics.arc(start.x, start.y, pinSize, 0, 2 * Math.PI);
                 graphics.closePath();
             }
             else
@@ -1062,6 +1014,11 @@ var World = new Class({
 
                 if (constraint.render.type === 'spring')
                 {
+                    if (!custom)
+                    {
+                        graphics.lineStyle(jointLineThickness, springColor);
+                    }
+
                     var delta = Vector.sub(end, start);
                     var normal = Vector.perp(Vector.normalise(delta));
                     var coils = Math.ceil(Common.clamp(constraint.length / 5, 12, 20));
@@ -1081,17 +1038,15 @@ var World = new Class({
                 graphics.lineTo(end.x, end.y);
             }
 
-            if (constraint.render.lineWidth)
-            {
-                graphics.strokePath();
-            }
+            graphics.strokePath();
 
             if (constraint.render.anchors)
             {
-                graphics.fillStyle(Common.colorToNumber(constraint.render.strokeStyle));
+                graphics.fillStyle(anchorColor);
+
                 graphics.beginPath();
-                graphics.arc(start.x, start.y, 6, 0, 2 * Math.PI);
-                graphics.arc(end.x, end.y, 6, 0, 2 * Math.PI);
+                graphics.arc(start.x, start.y, anchorSize, 0, 2 * Math.PI);
+                graphics.arc(end.x, end.y, anchorSize, 0, 2 * Math.PI);
                 graphics.closePath();
                 graphics.fillPath();
             }
