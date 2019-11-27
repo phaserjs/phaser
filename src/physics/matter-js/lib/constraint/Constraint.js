@@ -69,7 +69,8 @@ var Common = require('../core/Common');
             lineWidth: 2,
             strokeStyle: '#ffffff',
             type: 'line',
-            anchors: true
+            anchors: true,
+            custom: false
         };
 
         if (constraint.length === 0 && constraint.stiffness > 0.1) {
@@ -77,6 +78,12 @@ var Common = require('../core/Common');
             render.anchors = false;
         } else if (constraint.stiffness < 0.9) {
             render.type = 'spring';
+        }
+
+        //  If the constraint has a render options set, we'll treat it as a custom override
+        if (constraint.hasOwnProperty('render'))
+        {
+            render.custom = true;
         }
 
         constraint.render = Common.extend(render, constraint.render);
