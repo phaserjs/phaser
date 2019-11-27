@@ -671,11 +671,11 @@ var Game = new Class({
      */
     runDestroy: function ()
     {
+        this.scene.destroy();
+        
         this.events.emit(Events.DESTROY);
 
         this.events.removeAllListeners();
-
-        this.scene.destroy();
 
         if (this.renderer)
         {
