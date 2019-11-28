@@ -2,9 +2,47 @@
 
 ## Version 3.21.1 - Senku - in development
 
+### Matter Physics Updates
+
+* `MatterDebugConfig` is a new configuration object that contains all of the following new Matter debug settings:
+* `showBody` - Render the dynamic bodies in the world to the Graphics object?
+* `showStaticBody` - Render the static bodies in the world to the Graphics object?
+* `showSleeping` - Render any sleeping bodies (dynamic or static) in the world to the Graphics object?
+* `showJoint` - Render all world constraints to the Graphics object?
+* `showInternalEdges` - When rendering bodies, render the internal edges as well?
+* `showConvexHulls` - When rendering polygon bodies, render the convex hull as well?
+* `renderFill` - Render the bodies using a fill color.
+* `renderStroke` - Render the bodies using a line stroke.
+* `lineThickness` - If rendering with a stroke, the thickness of the line.
+* `fillColor` - The color value of the fill when rendering dynamic bodies.
+* `strokeColor` - The color value of the line stroke when rendering dynamic bodies.
+* `staticFillColor` - The color value of the fill when rendering static bodies.
+* `staticStrokeColor` - The color value of the line stroke when rendering static bodies.
+* `staticBodySleepOpacity`7] - The amount to multiply the opacity of sleeping static bodies by.
+* `sleepFillColor` - The color value of the fill when rendering sleeping dynamic bodies.
+* `sleepStrokeColor` - The color value of the line stroke when rendering sleeping dynamic bodies.
+* `hullColor` - The color value of hulls when `showConvexHulls` is set.
+* `jointColor` - The color value of joints when `showJoint` is set.
+* `jointLineThickness` - The line thickness when rendering joints.
+* `pinSize` - The size of the circles drawn when rendering pin constraints.
+* `pinColor` - The color value of the circles drawn when rendering pin constraints.
+* `springColor` - The color value of spring constraints.
+* `anchorColor` - The color value of constraint anchors.
+* `anchorSize` - The size of the circles drawn as the constraint anchors.
+* The `debug` property in the Matter World Config is now a `MatterDebugConfig` option instead of a boolean.
+* The following `MatterWorldConfig` options are now deprecated: `debugShowBody`, `debugShowStaticBody`, `debugBodyColor`, `debugBodyFillColor`, `debugStaticBodyColor`, `debugShowJoint`, `debugJointColor`, `debugWireframes`, `debugShowInternalEdges`, `debugShowConvexHulls`, `debugConvexHullColor` and `debugShowSleeping`. These can all be set via the new `MatterDebugConfig` object instead. They will be removed fully in a future version.
+* The object `World.defaults` has been removed. Defaults are now access via `World.debugDefaults`.
+* `World.renderBody` is a new method that will render a single Matter Body to the given Graphics object. This is used internally during debug rendering but is also public. This allows you to control which bodies are rendered and to which Graphics object, should you wish to use them in-game and not just during debugging.
+* `World.renderConstraint` is a new method that will render a single Matter Constraint, such as a pin or a spring, to the given Graphics object. This is used internally during debug rendering but is also public. This allows you to control which constraints are rendered and to which Graphics object, should you wish to use them in-game and not just during debugging.
+* `World.renderConvexHull` is a new method that will render the convex hull of a single Matter Body, to the given Graphics object. This is used internally during debug rendering but is also public. This allows you to control which hulls are rendered and to which Graphics object, should you wish to use them in-game and not just during debugging.
+* `World.renderBodies` has been rewritten to cache commonly-used values and avoid a situation when a single body would be rendered twice.
+* The private method `World.renderConvexHulls` has been removed as it's no longer used internally.
+* The private method `World.renderWireframes` has been removed as it's no longer used internally.
+* The `Matter.Factory.worldConstraint` argument signature has changed. It now takes `x` and `y` arguments first, as the world position where the constraint will be created.
+* Due to the rewrite of the debug rendering, it is now possible to render _just_ constraints, where-as before this was only possible if bodies were being rendered as well. Fix #4880 (thanks @roberto257)
+
 ### Updates
 
-* The `Matter.Factory.worldConstraint` argument signature has changed. It now takes `x` and `y` arguments first, as the world position where the constraint will be created.
 
 ### Bug Fixes
 
