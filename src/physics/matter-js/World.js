@@ -178,6 +178,40 @@ var World = new Class({
 
         var debugConfig = GetValue(config, 'debug', false);
 
+        var drawDebug = (typeof(debugConfig) === 'object');
+
+        //  Legacy version
+        if (typeof(debugConfig) === 'boolean')
+        {
+            drawDebug = debugConfig;
+
+            var wireframes = GetFastValue(config, 'debugWireframes', true);
+
+            //  Old format config - remove in a later version
+            debugConfig = {
+                showBody: GetFastValue(config, 'debugShowBody', true),
+                showStaticBody: GetFastValue(config, 'debugShowStaticBody', true),
+                showSleeping: GetFastValue(config, 'debugShowSleeping', false),
+                showJoint: GetFastValue(config, 'debugShowJoint', true),
+                showInternalEdges: GetFastValue(config, 'debugShowInternalEdges', false),
+                showConvexHulls: GetFastValue(config, 'debugShowConvexHulls', false),
+
+                renderFill: !wireframes,
+                renderStroke: wireframes,
+
+                fillColor: GetFastValue(config, 'debugBodyFillColor', 0xe3a7e3),
+                strokeColor: GetFastValue(config, 'debugBodyColor', 0xff00ff),
+    
+                staticFillColor: GetFastValue(config, 'debugStaticBodyColor', 0x0000ff),
+                staticStrokeColor: GetFastValue(config, 'debugStaticBodyColor', 0x0000ff),
+    
+                staticBodySleepOpacity: 0.5,
+    
+                jointColor: GetFastValue(config, 'debugJointColor', 0x000000),
+                hullColor: GetFastValue(config, 'debugConvexHullColor', 0xaaaaaa)
+            };
+        }
+
         /**
          * A flag that controls if the debug graphics will be drawn to or not.
          *
@@ -186,7 +220,7 @@ var World = new Class({
          * @default false
          * @since 3.0.0
          */
-        this.drawDebug = (!debugConfig) ? false : true;
+        this.drawDebug = drawDebug;
 
         /**
          * An instance of the Graphics object the debug bodies are drawn to, if enabled.
@@ -198,10 +232,10 @@ var World = new Class({
         this.debugGraphic;
 
         /**
-         * The default configuration values.
+         * The debug configuration object.
          *
          * @name Phaser.Physics.Matter.World#debugConfig
-         * @type {object}
+         * @type {Phaser.Types.Physics.Matter.MatterDebugConfig}
          * @since 3.22.0
          */
         this.debugConfig = {
