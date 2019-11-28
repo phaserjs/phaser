@@ -42,7 +42,9 @@ var Render = require('./BitmapTextRender');
  *
  * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.BlendMode
+ * @extends Phaser.GameObjects.Components.ComputedSize
  * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
@@ -67,7 +69,9 @@ var BitmapText = new Class({
     Mixins: [
         Components.Alpha,
         Components.BlendMode,
+        Components.ComputedSize,
         Components.Depth,
+        Components.GetBounds,
         Components.Mask,
         Components.Origin,
         Components.Pipeline,
