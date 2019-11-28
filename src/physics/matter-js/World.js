@@ -214,6 +214,7 @@ var World = new Class({
 
             renderFill: GetFastValue(debugConfig, 'renderFill', true),
             renderStroke: GetFastValue(debugConfig, 'renderStroke', true),
+            lineThickness: GetFastValue(debugConfig, 'lineThickness', 1),
 
             fillColor: GetFastValue(debugConfig, 'fillColor', 0x106909),
             strokeColor: GetFastValue(debugConfig, 'strokeColor', 0x28de19),
@@ -765,7 +766,9 @@ var World = new Class({
     },
 
     /**
-     * Renders the array of bodies.
+     * Renders the given array of Bodies to the debug graphics instance.
+     * 
+     * Called automatically by the `postUpdate` method.
      *
      * @method Phaser.Physics.Matter.World#renderBodies
      * @private
@@ -790,6 +793,7 @@ var World = new Class({
 
         var fillColor = config.fillColor;
         var strokeColor = config.strokeColor;
+        var lineThickness = config.lineThickness;
 
         var staticFillColor = config.staticFillColor;
         var staticStrokeColor = config.staticStrokeColor;
@@ -800,13 +804,9 @@ var World = new Class({
 
         var hullColor = config.hullColor;
 
-        var body;
-        var part;
-        var render;
-
         for (var i = 0; i < bodies.length; i++)
         {
-            body = bodies[i];
+            var body = bodies[i];
 
             //  1) Don't show invisible bodies
             if (!body.render.visible)
@@ -821,117 +821,204 @@ var World = new Class({
                 continue;
             }
 
-            //  Handle compound parts
-            var partsLength = body.parts.length;
+            var opacity = body.render.opacity;
+            var lineStyle = strokeColor;
+            var fillStyle = fillColor;
 
-            for (var k = (partsLength > 1) ? 1 : 0; k < partsLength; k++)
+            if (showSleeping && body.isSleeping)
             {
-                part = body.parts[k];
-                render = part.render;
-
-                if (!render.visible)
-                {
-                    continue;
-                }
-
-                var opacity = render.opacity;
-
-                var lineStyle = strokeColor;
-                var fillStyle = fillColor;
-
-                if (showSleeping && body.isSleeping)
-                {
-                    if (body.isStatic)
-                    {
-                        opacity *= staticBodySleepOpacity;
-                    }
-                    else
-                    {
-                        lineStyle = sleepStrokeColor;
-                        fillStyle = sleepFillColor;
-                    }
-                }
-
                 if (body.isStatic)
                 {
-                    lineStyle = staticStrokeColor;
-                    fillStyle = staticFillColor;
-                }
-
-                graphics.lineStyle(1, lineStyle, opacity);
-                graphics.fillStyle(fillStyle, opacity);
-
-                //  Part polygon
-                if (part.circleRadius)
-                {
-                    graphics.beginPath();
-                    graphics.arc(part.position.x, part.position.y, part.circleRadius, 0, 2 * Math.PI);
+                    opacity *= staticBodySleepOpacity;
                 }
                 else
                 {
-                    graphics.beginPath();
-                    graphics.moveTo(part.vertices[0].x, part.vertices[0].y);
-
-                    var vertLength = part.vertices.length;
-
-                    for (var j = 1; j < vertLength; j++)
-                    {
-                        if (!part.vertices[j - 1].isInternal || showInternalEdges)
-                        {
-                            graphics.lineTo(part.vertices[j].x, part.vertices[j].y);
-                        }
-                        else
-                        {
-                            graphics.moveTo(part.vertices[j].x, part.vertices[j].y);
-                        }
-
-                        if (part.vertices[j].isInternal && !showInternalEdges)
-                        {
-                            graphics.moveTo(part.vertices[(j + 1) % part.vertices.length].x, part.vertices[(j + 1) % part.vertices.length].y);
-                        }
-                    }
-                    
-                    graphics.lineTo(part.vertices[0].x, part.vertices[0].y);
-
-                    graphics.closePath();
-                }
-
-                if (renderFill)
-                {
-                    graphics.fillPath();
-                }
-
-                if (renderStroke)
-                {
-                    graphics.strokePath();
+                    lineStyle = sleepStrokeColor;
+                    fillStyle = sleepFillColor;
                 }
             }
 
-            //  Render Convex Hulls
+            if (body.isStatic)
+            {
+                lineStyle = staticStrokeColor;
+                fillStyle = staticFillColor;
+            }
+
+            if (!renderFill)
+            {
+                fillStyle = null;
+            }
+
+            if (!renderStroke)
+            {
+                lineStyle = null;
+            }
+
+            this.renderBody(body, graphics, showInternalEdges, lineStyle, fillStyle, opacity, lineThickness);
+
+            var partsLength = body.parts.length;
+
             if (showConvexHulls && partsLength > 1)
             {
-                var verts = body.vertices;
-
-                graphics.lineStyle(1, hullColor);
-
-                graphics.beginPath();
-
-                graphics.moveTo(verts[0].x, verts[0].y);
-
-                for (var v = 1; v < verts.length; v++)
-                {
-                    graphics.lineTo(verts[v].x, verts[v].y);
-                }
-                
-                graphics.lineTo(verts[0].x, verts[0].y);
-
-                graphics.strokePath();
+                this.renderConvexHull(body, graphics, hullColor, lineThickness);
             }
         }
     },
 
     /**
-     * Renders world constraints.
+     * Renders a single Matter Body to the given Phaser Graphics Game Object.
+     * 
+     * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
+     * you wish to render a Body to your own Graphics instance.
+     * 
+     * @method Phaser.Physics.Matter.World#renderBody
+     * @since 3.22.0
+     * 
+     * @param {MatterJS.Body} body - The Matter Body to be rendered.
+     * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
+     * @param {boolean} showInternalEdges - Render internal edges of the polygon?
+     * @param {number} [lineColor] - The stroke color. Set to `null` if you don't want to render a stroke.
+     * @param {number} [fillColor] - The fill color. Set to `null` if you don't want to render a fill.
+     * @param {number} [opacity] - The opacity, between 0 and 1. Set to `null` if you want to use the opacity defined in the Body render object.
+     * @param {number} [lineThickness=1] - The stroke line thickness.
+     * 
+     * @return {this} This Matter World instance for method chaining.
+     */
+    renderBody: function (body, graphics, showInternalEdges, lineColor, fillColor, opacity, lineThickness)
+    {
+        if (lineColor === undefined) { lineColor = null; }
+        if (fillColor === undefined) { fillColor = null; }
+        if (opacity === undefined) { opacity = null; }
+        if (lineThickness === undefined) { lineThickness = 1; }
+
+        var usePartOpacity = !opacity;
+
+        //  Handle compound parts
+        var parts = body.parts;
+        var partsLength = parts.length;
+
+        for (var k = (partsLength > 1) ? 1 : 0; k < partsLength; k++)
+        {
+            var part = parts[k];
+            var render = part.render;
+
+            if (usePartOpacity)
+            {
+                opacity = render.opacity;
+            }
+
+            if (!render.visible || opacity === 0)
+            {
+                continue;
+            }
+
+            //  Part polygon
+            var circleRadius = part.circleRadius;
+
+            if (circleRadius)
+            {
+                graphics.beginPath();
+                graphics.arc(part.position.x, part.position.y, circleRadius, 0, 2 * Math.PI);
+            }
+            else
+            {
+                var vertices = part.vertices;
+                var vertLength = vertices.length;
+
+                graphics.beginPath();
+                graphics.moveTo(vertices[0].x, vertices[0].y);
+
+                for (var j = 1; j < vertLength; j++)
+                {
+                    var vert = vertices[j];
+
+                    if (!vertices[j - 1].isInternal || showInternalEdges)
+                    {
+                        graphics.lineTo(vert.x, vert.y);
+                    }
+                    else
+                    {
+                        graphics.moveTo(vert.x, vert.y);
+                    }
+
+                    if (vert.isInternal && !showInternalEdges)
+                    {
+                        var nextIndex = (j + 1) % vertLength;
+
+                        graphics.moveTo(vertices[nextIndex].x, vertices[nextIndex].y);
+                    }
+                }
+                
+                graphics.closePath();
+            }
+
+            if (fillColor !== null)
+            {
+                graphics.fillStyle(fillColor, opacity);
+                graphics.fillPath();
+            }
+
+            if (lineColor !== null)
+            {
+                graphics.lineStyle(lineThickness, lineColor, opacity);
+                graphics.strokePath();
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Renders the Convex Hull for a single Matter Body to the given Phaser Graphics Game Object.
+     * 
+     * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
+     * you wish to render a Body hull to your own Graphics instance.
+     * 
+     * @method Phaser.Physics.Matter.World#renderConvexHull
+     * @since 3.22.0
+     * 
+     * @param {MatterJS.Body} body - The Matter Body to be rendered.
+     * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
+     * @param {number} hullColor - The stroke color used to render the hull.
+     * @param {number} [lineThickness=1] - The stroke line thickness.
+     * 
+     * @return {this} This Matter World instance for method chaining.
+     */
+    renderConvexHull: function (body, graphics, hullColor, lineThickness)
+    {
+        if (lineThickness === undefined) { lineThickness = 1; }
+
+        var parts = body.parts;
+        var partsLength = parts.length;
+
+        //  Render Convex Hulls
+        if (partsLength > 1)
+        {
+            var verts = body.vertices;
+
+            graphics.lineStyle(lineThickness, hullColor);
+
+            graphics.beginPath();
+
+            graphics.moveTo(verts[0].x, verts[0].y);
+
+            for (var v = 1; v < verts.length; v++)
+            {
+                graphics.lineTo(verts[v].x, verts[v].y);
+            }
+            
+            graphics.lineTo(verts[0].x, verts[0].y);
+
+            graphics.strokePath();
+        }
+
+        return this;
+    },
+
+    /**
+     * Renders all of the constraints in the world (unless they are specifically set to invisible).
+     * 
+     * Called automatically by the `postUpdate` method.
      *
      * @method Phaser.Physics.Matter.World#renderJoints
      * @private
@@ -955,102 +1042,124 @@ var World = new Class({
 
         for (var i = 0; i < constraints.length; i++)
         {
-            var constraint = constraints[i];
+            this.renderConstraint(constraints[i], graphics, jointColor, jointLineThickness, springColor, pinColor, pinSize, anchorColor, anchorSize);
+        }
+    },
 
-            if (!constraint.render.visible || !constraint.pointA || !constraint.pointB)
+    /**
+     * Renders a single Matter Constraint, such as a Pin or a Spring, to the given Phaser Graphics Game Object.
+     * 
+     * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
+     * you wish to render a Constraint to your own Graphics instance.
+     * 
+     * @method Phaser.Physics.Matter.World#renderConstraint
+     * @since 3.22.0
+     * 
+     * @param {MatterJS.Constraint} constraint - The Matter Constraint to render.
+     * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
+     * @param {number} lineColor - The line color used when rendering this constraint.
+     * @param {number} lineThickness - The line thickness.
+     * @param {number} springColor - The color used when rendering, if this constraint is a spring.
+     * @param {number} pinColor - The color used when rendering, if this constraint is a pin.
+     * @param {number} pinSize - If this constraint is a pin, this sets the size of the pin circle.
+     * @param {number} anchorColor - The color used when rendering this constraints anchors. Set to `null` to not render anchors.
+     * @param {number} anchorSize - The size of the anchor circle, if this constraint has anchors and is rendering them.
+     * 
+     * @return {this} This Matter World instance for method chaining.
+     */
+    renderConstraint: function (constraint, graphics, lineColor, lineThickness, springColor, pinColor, pinSize, anchorColor, anchorSize)
+    {
+        var render = constraint.render;
+
+        if (!render.visible || !constraint.pointA || !constraint.pointB)
+        {
+            return this;
+        }
+
+        var custom = render.custom;
+
+        if (custom)
+        {
+            graphics.lineStyle(render.lineWidth, Common.colorToNumber(render.strokeStyle));
+        }
+        else
+        {
+            graphics.lineStyle(lineThickness, lineColor);
+        }
+
+        var bodyA = constraint.bodyA;
+        var bodyB = constraint.bodyB;
+        var start;
+        var end;
+
+        if (bodyA)
+        {
+            start = Vector.add(bodyA.position, constraint.pointA);
+        }
+        else
+        {
+            start = constraint.pointA;
+        }
+
+        if (render.type === 'pin')
+        {
+            if (!custom)
             {
-                continue;
+                graphics.lineStyle(lineThickness, pinColor);
             }
 
-            var custom = constraint.render.custom;
-
-            if (custom)
+            graphics.strokeCircle(start.x, start.y, pinSize);
+        }
+        else
+        {
+            if (bodyB)
             {
-                graphics.lineStyle(constraint.render.lineWidth, Common.colorToNumber(constraint.render.strokeStyle));
+                end = Vector.add(bodyB.position, constraint.pointB);
             }
             else
             {
-                graphics.lineStyle(jointLineThickness, jointColor);
+                end = constraint.pointB;
             }
 
-            var bodyA = constraint.bodyA;
-            var bodyB = constraint.bodyB;
-            var start;
-            var end;
+            graphics.beginPath();
+            graphics.moveTo(start.x, start.y);
 
-            if (bodyA)
-            {
-                start = Vector.add(bodyA.position, constraint.pointA);
-            }
-            else
-            {
-                start = constraint.pointA;
-            }
-
-            if (constraint.render.type === 'pin')
+            if (render.type === 'spring')
             {
                 if (!custom)
                 {
-                    graphics.lineStyle(jointLineThickness, pinColor);
+                    graphics.lineStyle(lineThickness, springColor);
                 }
 
-                graphics.beginPath();
-                graphics.arc(start.x, start.y, pinSize, 0, 2 * Math.PI);
-                graphics.closePath();
-            }
-            else
-            {
-                if (bodyB)
+                var delta = Vector.sub(end, start);
+                var normal = Vector.perp(Vector.normalise(delta));
+                var coils = Math.ceil(Common.clamp(constraint.length / 5, 12, 20));
+                var offset;
+
+                for (var j = 1; j < coils; j += 1)
                 {
-                    end = Vector.add(bodyB.position, constraint.pointB);
+                    offset = (j % 2 === 0) ? 1 : -1;
+
+                    graphics.lineTo(
+                        start.x + delta.x * (j / coils) + normal.x * offset * 4,
+                        start.y + delta.y * (j / coils) + normal.y * offset * 4
+                    );
                 }
-                else
-                {
-                    end = constraint.pointB;
-                }
-
-                graphics.beginPath();
-                graphics.moveTo(start.x, start.y);
-
-                if (constraint.render.type === 'spring')
-                {
-                    if (!custom)
-                    {
-                        graphics.lineStyle(jointLineThickness, springColor);
-                    }
-
-                    var delta = Vector.sub(end, start);
-                    var normal = Vector.perp(Vector.normalise(delta));
-                    var coils = Math.ceil(Common.clamp(constraint.length / 5, 12, 20));
-                    var offset;
-
-                    for (var j = 1; j < coils; j += 1)
-                    {
-                        offset = (j % 2 === 0) ? 1 : -1;
-
-                        graphics.lineTo(
-                            start.x + delta.x * (j / coils) + normal.x * offset * 4,
-                            start.y + delta.y * (j / coils) + normal.y * offset * 4
-                        );
-                    }
-                }
-
-                graphics.lineTo(end.x, end.y);
             }
 
-            graphics.strokePath();
-
-            if (constraint.render.anchors)
-            {
-                graphics.fillStyle(anchorColor);
-
-                graphics.beginPath();
-                graphics.arc(start.x, start.y, anchorSize, 0, 2 * Math.PI);
-                graphics.arc(end.x, end.y, anchorSize, 0, 2 * Math.PI);
-                graphics.closePath();
-                graphics.fillPath();
-            }
+            graphics.lineTo(end.x, end.y);
         }
+
+        graphics.strokePath();
+
+        if (render.anchors && anchorSize > 0)
+        {
+            graphics.fillStyle(anchorColor);
+            graphics.fillCircle(start.x, start.y, anchorSize);
+            graphics.fillCircle(end.x, end.y, anchorSize);
+        }
+
+        return this;
     },
 
     /**
