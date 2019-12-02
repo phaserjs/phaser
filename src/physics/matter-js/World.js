@@ -96,30 +96,6 @@ var World = new Class({
          */
         this.walls = { left: null, right: null, top: null, bottom: null };
 
-        if (GetFastValue(config, 'setBounds', false))
-        {
-            var boundsConfig = config['setBounds'];
-
-            if (typeof boundsConfig === 'boolean')
-            {
-                this.setBounds();
-            }
-            else
-            {
-                var x = GetFastValue(boundsConfig, 'x', 0);
-                var y = GetFastValue(boundsConfig, 'y', 0);
-                var width = GetFastValue(boundsConfig, 'width', scene.sys.scale.width);
-                var height = GetFastValue(boundsConfig, 'height', scene.sys.scale.height);
-                var thickness = GetFastValue(boundsConfig, 'thickness', 64);
-                var left = GetFastValue(boundsConfig, 'left', true);
-                var right = GetFastValue(boundsConfig, 'right', true);
-                var top = GetFastValue(boundsConfig, 'top', true);
-                var bottom = GetFastValue(boundsConfig, 'bottom', true);
-
-                this.setBounds(x, y, width, height, thickness, left, right, top, bottom);
-            }
-        }
-
         /**
          * A flag that toggles if the world is enabled or not.
          *
@@ -243,6 +219,15 @@ var World = new Class({
 
         /**
          * The debug configuration object.
+         * 
+         * The values stored in this object are read from the Matter World Config `debug` property.
+         * 
+         * When a new Body or Constraint is added to the World, they are given the values stored in this object,
+         * unless they have their own `render` object that will override them.
+         * 
+         * Note that while you can modify the values of properties in this object at run-time, it will not change
+         * any of the Matter objects _already added_. It will only impact objects newly added to the world, or one
+         * that is removed and then re-added at a later time.
          *
          * @name Phaser.Physics.Matter.World#debugConfig
          * @type {Phaser.Types.Physics.Matter.MatterDebugConfig}
@@ -290,6 +275,32 @@ var World = new Class({
         }
 
         this.setEventsProxy();
+
+        //  Create the walls
+
+        if (GetFastValue(config, 'setBounds', false))
+        {
+            var boundsConfig = config['setBounds'];
+
+            if (typeof boundsConfig === 'boolean')
+            {
+                this.setBounds();
+            }
+            else
+            {
+                var x = GetFastValue(boundsConfig, 'x', 0);
+                var y = GetFastValue(boundsConfig, 'y', 0);
+                var width = GetFastValue(boundsConfig, 'width', scene.sys.scale.width);
+                var height = GetFastValue(boundsConfig, 'height', scene.sys.scale.height);
+                var thickness = GetFastValue(boundsConfig, 'thickness', 64);
+                var left = GetFastValue(boundsConfig, 'left', true);
+                var right = GetFastValue(boundsConfig, 'right', true);
+                var top = GetFastValue(boundsConfig, 'top', true);
+                var bottom = GetFastValue(boundsConfig, 'bottom', true);
+
+                this.setBounds(x, y, width, height, thickness, left, right, top, bottom);
+            }
+        }
     },
 
     /**
@@ -302,7 +313,105 @@ var World = new Class({
     setEventsProxy: function ()
     {
         var _this = this;
+        var debugConfig = this.debugConfig;
         var engine = this.engine;
+        var world = this.localWorld;
+
+        //  Inject debug styles
+
+        if (this.drawDebug)
+        {
+            MatterEvents.on(world, 'beforeAdd', function (event)
+            {
+                var objects = [].concat(event.object);
+    
+                for (var i = 0; i < objects.length; i++)
+                {
+                    var obj = objects[i];
+                    var render = obj.render;
+    
+                    if (obj.type === 'body')
+                    {
+                        if (render.fillColor === null)
+                        {
+                            render.fillColor = (obj.isStatic) ? debugConfig.staticFillColor : debugConfig.fillColor;
+                        }
+    
+                        if (render.strokeColor === null)
+                        {
+                            render.strokeColor = (obj.isStatic) ? debugConfig.staticStrokeColor : debugConfig.strokeColor;
+                        }
+    
+                        if (render.lineThickness === null)
+                        {
+                            render.lineThickness = debugConfig.lineThickness;
+                        }
+                    }
+                    else if (obj.type === 'constraint')
+                    {
+                        var type = render.type;
+    
+                        if (render.strokeColor === null)
+                        {
+                            if (type === 'line')
+                            {
+                                render.strokeColor = debugConfig.jointColor;
+                            }
+                            else if (type === 'pin')
+                            {
+                                render.strokeColor = debugConfig.pinColor;
+                            }
+                            else if (type === 'spring')
+                            {
+                                render.strokeColor = debugConfig.springColor;
+                            }
+                        }
+    
+                        if (render.lineThickness === null)
+                        {
+                            render.lineThickness = debugConfig.jointLineThickness;
+                        }
+    
+                        if (render.pinSize === null)
+                        {
+                            render.pinSize = debugConfig.pinSize;
+                        }
+    
+                        if (render.anchorColor === null)
+                        {
+                            render.anchorColor = debugConfig.anchorColor;
+                        }
+    
+                        if (render.anchorSize === null)
+                        {
+                            render.anchorSize = debugConfig.anchorSize;
+                        }
+
+                        console.log(obj);
+                    }
+                }
+            });
+        }
+
+        MatterEvents.on(world, 'beforeAdd', function (event)
+        {
+            _this.emit(Events.BEFORE_ADD, event);
+        });
+
+        MatterEvents.on(world, 'afterAdd', function (event)
+        {
+            _this.emit(Events.AFTER_ADD, event);
+        });
+
+        MatterEvents.on(world, 'beforeRemove', function (event)
+        {
+            _this.emit(Events.BEFORE_REMOVE, event);
+        });
+
+        MatterEvents.on(world, 'afterRemove', function (event)
+        {
+            _this.emit(Events.AFTER_REMOVE, event);
+        });
 
         MatterEvents.on(engine, 'beforeUpdate', function (event)
         {
@@ -824,6 +933,45 @@ var World = new Class({
     },
 
     /**
+     * Returns all the bodies in the Matter World, including all bodies in children, recursively.
+     *
+     * @method Phaser.Physics.Matter.World#getAllBodies
+     * @since 3.22.0
+     * 
+     * @return {MatterJS.Body[]} An array of all the Matter JS Bodies in this World.
+     */
+    getAllBodies: function ()
+    {
+        return Composite.allBodies(this.localWorld);
+    },
+
+    /**
+     * Returns all the constraints in the Matter World, including all constraints in children, recursively.
+     *
+     * @method Phaser.Physics.Matter.World#getAllConstraints
+     * @since 3.22.0
+     * 
+     * @return {MatterJS.Constraint[]} An array of all the Matter JS Constraints in this World.
+     */
+    getAllConstraints: function ()
+    {
+        return Composite.allConstraints(this.localWorld);
+    },
+
+    /**
+     * Returns all the composites in the Matter World, including all composites in children, recursively.
+     *
+     * @method Phaser.Physics.Matter.World#getAllComposites
+     * @since 3.22.0
+     * 
+     * @return {MatterJS.Composite[]} An array of all the Matter JS Composites in this World.
+     */
+    getAllComposites: function ()
+    {
+        return Composite.allComposites(this.localWorld);
+    },
+
+    /**
      * Handles the rendering of bodies and debug information to the debug Graphics object, if enabled.
      * 
      * This method is called automatically by the Scene after all processing has taken place.
@@ -883,13 +1031,6 @@ var World = new Class({
         var renderFill = config.renderFill;
         var renderStroke = config.renderStroke;
 
-        var fillColor = config.fillColor;
-        var strokeColor = config.strokeColor;
-        var lineThickness = config.lineThickness;
-
-        var staticFillColor = config.staticFillColor;
-        var staticStrokeColor = config.staticStrokeColor;
-
         var staticBodySleepOpacity = config.staticBodySleepOpacity;
         var sleepFillColor = config.sleepFillColor;
         var sleepStrokeColor = config.sleepStrokeColor;
@@ -914,8 +1055,9 @@ var World = new Class({
             }
 
             var opacity = body.render.opacity;
-            var lineStyle = strokeColor;
-            var fillStyle = fillColor;
+            var lineStyle = body.render.strokeColor;
+            var fillStyle = body.render.fillColor;
+            var lineThickness = body.render.lineThickness;
 
             if (showSleeping && body.isSleeping)
             {
@@ -928,12 +1070,6 @@ var World = new Class({
                     lineStyle = sleepStrokeColor;
                     fillStyle = sleepFillColor;
                 }
-            }
-
-            if (body.isStatic)
-            {
-                lineStyle = staticStrokeColor;
-                fillStyle = staticFillColor;
             }
 
             if (!renderFill)
@@ -1119,22 +1255,21 @@ var World = new Class({
     renderJoints: function ()
     {
         var graphics = this.debugGraphic;
-        var config = this.debugConfig;
-
-        var jointColor = config.jointColor;
-        var jointLineThickness = config.jointLineThickness;
-        var pinSize = config.pinSize;
-        var pinColor = config.pinColor;
-        var springColor = config.springColor;
-        var anchorColor = config.anchorColor;
-        var anchorSize = config.anchorSize;
 
         // Render constraints 
         var constraints = Composite.allConstraints(this.localWorld);
 
         for (var i = 0; i < constraints.length; i++)
         {
-            this.renderConstraint(constraints[i], graphics, jointColor, jointLineThickness, springColor, pinColor, pinSize, anchorColor, anchorSize);
+            var config = constraints[i].render;
+
+            var strokeColor = config.strokeColor;
+            var lineThickness = config.lineThickness;
+            var pinSize = config.pinSize;
+            var anchorColor = config.anchorColor;
+            var anchorSize = config.anchorSize;
+
+            this.renderConstraint(constraints[i], graphics, strokeColor, lineThickness, pinSize, anchorColor, anchorSize);
         }
     },
 
@@ -1151,15 +1286,13 @@ var World = new Class({
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
      * @param {number} lineColor - The line color used when rendering this constraint.
      * @param {number} lineThickness - The line thickness.
-     * @param {number} springColor - The color used when rendering, if this constraint is a spring.
-     * @param {number} pinColor - The color used when rendering, if this constraint is a pin.
      * @param {number} pinSize - If this constraint is a pin, this sets the size of the pin circle.
      * @param {number} anchorColor - The color used when rendering this constraints anchors. Set to `null` to not render anchors.
      * @param {number} anchorSize - The size of the anchor circle, if this constraint has anchors and is rendering them.
      * 
      * @return {this} This Matter World instance for method chaining.
      */
-    renderConstraint: function (constraint, graphics, lineColor, lineThickness, springColor, pinColor, pinSize, anchorColor, anchorSize)
+    renderConstraint: function (constraint, graphics, lineColor, lineThickness, pinSize, anchorColor, anchorSize)
     {
         var render = constraint.render;
 
@@ -1168,16 +1301,7 @@ var World = new Class({
             return this;
         }
 
-        var custom = render.custom;
-
-        if (custom)
-        {
-            graphics.lineStyle(render.lineWidth, Common.colorToNumber(render.strokeStyle));
-        }
-        else
-        {
-            graphics.lineStyle(lineThickness, lineColor);
-        }
+        graphics.lineStyle(lineThickness, lineColor);
 
         var bodyA = constraint.bodyA;
         var bodyB = constraint.bodyB;
@@ -1195,11 +1319,6 @@ var World = new Class({
 
         if (render.type === 'pin')
         {
-            if (!custom)
-            {
-                graphics.lineStyle(lineThickness, pinColor);
-            }
-
             graphics.strokeCircle(start.x, start.y, pinSize);
         }
         else
@@ -1218,11 +1337,6 @@ var World = new Class({
 
             if (render.type === 'spring')
             {
-                if (!custom)
-                {
-                    graphics.lineStyle(lineThickness, springColor);
-                }
-
                 var delta = Vector.sub(end, start);
                 var normal = Vector.perp(Vector.normalise(delta));
                 var coils = Math.ceil(Common.clamp(constraint.length / 5, 12, 20));
