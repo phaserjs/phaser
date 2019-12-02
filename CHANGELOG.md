@@ -42,6 +42,32 @@
 * Due to the rewrite of the debug rendering, it is now possible to render _just_ constraints, where-as before this was only possible if bodies were being rendered as well. Fix #4880 (thanks @roberto257)
 * The method `World.fromPath` has been removed. This was never used internally and you can get the same results by calling `Vertices.fromPath`.
 * The `World.setBounds` argument `thickness` now defaults to 64, not 128, to keep it matching the Matter World Config.
+* `World.getAllBodies` is a new method that will return all bodies in the Matter World.
+* `World.getAllConstraints` is a new method that will return all constraints in the Matter World.
+* `World.getAllComposites` is a new method that will return all composites in the Matter World.
+* `MatterPhysics.composite` is a new reference to the `Matter.Composite` module for each access from within a Scene.
+* `MatterPhysics.detector` is a new reference to the `Matter.Dectector` module for each access from within a Scene.
+* `MatterPhysics.grid` is a new reference to the `Matter.Grid` module for each access from within a Scene.
+* `MatterPhysics.pair` is a new reference to the `Matter.Pair` module for each access from within a Scene.
+* `MatterPhysics.pairs` is a new reference to the `Matter.Pairs` module for each access from within a Scene.
+* `MatterPhysics.query` is a new reference to the `Matter.Query` module for each access from within a Scene.
+* `MatterPhysics.resolver` is a new reference to the `Matter.Resolver` module for each access from within a Scene.
+* `MatterPhysics.sat` is a new reference to the `Matter.SAT` module for each access from within a Scene.
+* `MatterPhysics.constraint` is a new reference to the `Matter.Constraint` module for each access from within a Scene.
+* `MatterPhysics.composites` is a new reference to the `Matter.Composites` module for each access from within a Scene.
+* `MatterPhysics.axes` is a new reference to the `Matter.Axes` module for each access from within a Scene.
+* `MatterPhysics.bounds` is a new reference to the `Matter.Bounds` module for each access from within a Scene.
+* `MatterPhysics.svg` is a new reference to the `Matter.Svg` module for each access from within a Scene.
+* `MatterPhysics.vector` is a new reference to the `Matter.Vector` module for each access from within a Scene.
+* `MatterPhysics.vertices` is a new reference to the `Matter.Vertices` module for each access from within a Scene.
+* `BEFORE_ADD` is a new Event dispatched by `Matter.World` when a Body or Constraint is about to be added to the World.
+* `AFTER_ADD` is a new Event dispatched by `Matter.World` when a Body or Constraint has been added to the World.
+* `BEFORE_REMOVE` is a new Event dispatched by `Matter.World` when a Body or Constraint is about to be removed from the World.
+* `AFTER_REMOVE` is a new Event dispatched by `Matter.World` when a Body or Constraint has been removed from the World.
+* The `Body.render.fillStyle` property that existed on the Matter Body object has been removed and replaced with `fillColor`.
+* The `Body.render.strokeStyle` property that existed on the Matter Body object has been removed and replaced with `strokeColor`.
+* `MatterPhysics.containsPoint` is a new method that will let you check to see if a Body, or an array of Bodies, contains the given point or not.
+* `MatterPhysics.getBodiesBelowPoint` is a new method that will return an array of all bodies in the World that have vertices that contain the given point.
 
 ### Updates
 
