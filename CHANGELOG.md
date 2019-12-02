@@ -40,6 +40,8 @@
 * The private method `World.renderWireframes` has been removed as it's no longer used internally.
 * The `Matter.Factory.worldConstraint` argument signature has changed. It now takes `x` and `y` arguments first, as the world position where the constraint will be created.
 * Due to the rewrite of the debug rendering, it is now possible to render _just_ constraints, where-as before this was only possible if bodies were being rendered as well. Fix #4880 (thanks @roberto257)
+* The method `World.fromPath` has been removed. This was never used internally and you can get the same results by calling `Vertices.fromPath`.
+* The `World.setBounds` argument `thickness` now defaults to 64, not 128, to keep it matching the Matter World Config.
 
 ### Updates
 
