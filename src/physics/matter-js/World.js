@@ -22,7 +22,17 @@ var Vector = require('./lib/geometry/Vector');
 
 /**
  * @classdesc
- * [description]
+ * The Matter World class is responsible for managing one single instance of a Matter Physics World for Phaser.
+ * 
+ * Access this via `this.matter.world` from within a Scene.
+ * 
+ * This class creates a Matter JS World Composite along with the Matter JS Engine during instantiation. It also
+ * handles delta timing, bounds, body and constraint creation and debug drawing.
+ * 
+ * If you wish to access the Matter JS World object directly, see the `localWorld` property.
+ * If you wish to access the Matter Engine directly, see the `engine` property.
+ * 
+ * This class is an Event Emitter and will proxy _all_ Matter JS events, as they are received.
  *
  * @class World
  * @extends Phaser.Events.EventEmitter
@@ -283,7 +293,8 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * This internal method acts as a proxy between all of the Matter JS events and then re-emits them
+     * via this class.
      *
      * @method Phaser.Physics.Matter.World#setEventsProxy
      * @since 3.0.0
@@ -364,7 +375,7 @@ var World = new Class({
      * @param {number} [y=0] - The y coordinate of the top-left corner of the bounds.
      * @param {number} [width] - The width of the bounds.
      * @param {number} [height] - The height of the bounds.
-     * @param {number} [thickness=128] - The thickness of each wall, in pixels.
+     * @param {number} [thickness=64] - The thickness of each wall, in pixels.
      * @param {boolean} [left=true] - If true will create the left bounds wall.
      * @param {boolean} [right=true] - If true will create the right bounds wall.
      * @param {boolean} [top=true] - If true will create the top bounds wall.
@@ -378,7 +389,7 @@ var World = new Class({
         if (y === undefined) { y = 0; }
         if (width === undefined) { width = this.scene.sys.scale.width; }
         if (height === undefined) { height = this.scene.sys.scale.height; }
-        if (thickness === undefined) { thickness = 128; }
+        if (thickness === undefined) { thickness = 64; }
         if (left === undefined) { left = true; }
         if (right === undefined) { right = true; }
         if (top === undefined) { top = true; }
@@ -392,19 +403,19 @@ var World = new Class({
         return this;
     },
 
-    //  position = 'left', 'right', 'top' or 'bottom'
     /**
-     * [description]
+     * Updates the 4 rectangle bodies that were created, if `setBounds` was set in the Matter config, to use
+     * the new positions and sizes. This method is usually only called internally via the `setBounds` method.
      *
      * @method Phaser.Physics.Matter.World#updateWall
      * @since 3.0.0
      *
-     * @param {boolean} add - [description]
-     * @param {string} position - [description]
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} height - [description]
+     * @param {boolean} add - `true` if the walls are being added or updated, `false` to remove them from the world.
+     * @param {string} [position] - Either `left`, `right`, `top` or `bottom`. Only optional if `add` is `false`.
+     * @param {number} [x] - The horizontal position to place the walls at. Only optional if `add` is `false`.
+     * @param {number} [y] - The vertical position to place the walls at. Only optional if `add` is `false`.
+     * @param {number} [width] - The width of the walls, in pixels. Only optional if `add` is `false`.
+     * @param {number} [height] - The height of the walls, in pixels. Only optional if `add` is `false`.
      */
     updateWall: function (add, position, x, y, width, height)
     {
@@ -435,12 +446,19 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Creates a Phaser.GameObjects.Graphics object that is used to render all of the debug bodies and joints to.
+     * 
+     * This method is called automatically by the constructor, if debugging has been enabled.
+     * 
+     * The created Graphics object is automatically added to the Scene at 0x0 and given a depth of `Number.MAX_VALUE`,
+     * so it renders above all else in the Scene.
+     * 
+     * The Graphics object is assigned to the `debugGraphic` property of this class and `drawDebug` is enabled.
      *
      * @method Phaser.Physics.Matter.World#createDebugGraphic
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Graphics} [description]
+     * @return {Phaser.GameObjects.Graphics} The newly created Graphics object.
      */
     createDebugGraphic: function ()
     {
@@ -456,12 +474,12 @@ var World = new Class({
     },
 
     /**
-     * Sets the world's gravity and gravity scale to 0.
+     * Sets the world gravity and gravity scale to 0.
      *
      * @method Phaser.Physics.Matter.World#disableGravity
      * @since 3.0.0
      *
-     * @return {Phaser.Physics.Matter.World} This Matter World object.
+     * @return {this} This Matter World object.
      */
     disableGravity: function ()
     {
@@ -473,16 +491,18 @@ var World = new Class({
     },
 
     /**
-     * Sets the world's gravity
+     * Sets the worlds gravity to the values given.
+     * 
+     * Gravity effects all bodies in the world, unless they have the `ignoreGravity` flag set.
      *
      * @method Phaser.Physics.Matter.World#setGravity
      * @since 3.0.0
      *
      * @param {number} [x=0] - The world gravity x component.
      * @param {number} [y=1] - The world gravity y component.
-     * @param {number} [scale] - [description]
+     * @param {number} [scale=0.001] - The gravity scale factor.
      *
-     * @return {Phaser.Physics.Matter.World} This Matter World object.
+     * @return {this} This Matter World object.
      */
     setGravity: function (x, y, scale)
     {
@@ -524,14 +544,18 @@ var World = new Class({
     },
 
     /**
-     * Adds an object to the world.
+     * Adds a Matter JS object, or array of objects, to the world.
+     * 
+     * The objects should be valid Matter JS entities, such as a Body, Composite or Constraint.
+     * 
+     * Triggers `beforeAdd` and `afterAdd` events.
      *
      * @method Phaser.Physics.Matter.World#add
      * @since 3.0.0
      *
-     * @param {(object|object[])} object - Can be single or an array, and can be a body, composite or constraint
+     * @param {(object|object[])} object - Can be single object, or an array, and can be a body, composite or constraint.
      *
-     * @return {Phaser.Physics.Matter.World} This Matter World object.
+     * @return {this} This Matter World object.
      */
     add: function (object)
     {
@@ -541,35 +565,51 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Removes a Matter JS object, or array of objects, from the world.
+     * 
+     * The objects should be valid Matter JS entities, such as a Body, Composite or Constraint.
+     * 
+     * Triggers `beforeRemove` and `afterRemove` events.
      *
      * @method Phaser.Physics.Matter.World#remove
      * @since 3.0.0
      *
-     * @param {object} object - The object to be removed from the world.
-     * @param {boolean} deep - [description]
+     * @param {(object|object[])} object - Can be single object, or an array, and can be a body, composite or constraint.
+     * @param {boolean} [deep=false] - Optionally search the objects children and recursively remove those as well.
      *
-     * @return {Phaser.Physics.Matter.World} This Matter World object.
+     * @return {this} This Matter World object.
      */
     remove: function (object, deep)
     {
-        var body = (object.body) ? object.body : object;
+        if (!Array.isArray(object))
+        {
+            object = [ object ];
+        }
 
-        Composite.remove(this.localWorld, body, deep);
+        for (var i = 0; i < object.length; i++)
+        {
+            var entity = object[i];
+
+            var body = (entity.body) ? entity.body : entity;
+
+            Composite.remove(this.localWorld, body, deep);
+        }
 
         return this;
     },
 
     /**
-     * [description]
+     * Removes a Matter JS constraint, or array of constraints, from the world.
+     * 
+     * Triggers `beforeRemove` and `afterRemove` events.
      *
      * @method Phaser.Physics.Matter.World#removeConstraint
      * @since 3.0.0
      *
-     * @param {MatterJS.Constraint} constraint - [description]
-     * @param {boolean} deep - [description]
+     * @param {(MatterJS.Constraint|MatterJS.Constraint[])} constraint - A Matter JS Constraint, or an array of constraints, to be removed.
+     * @param {boolean} [deep=false] - Optionally search the objects children and recursively remove those as well.
      *
-     * @return {Phaser.Physics.Matter.World} This Matter World object.
+     * @return {this} This Matter World object.
      */
     removeConstraint: function (constraint, deep)
     {
@@ -579,17 +619,18 @@ var World = new Class({
     },
 
     /**
-     * Adds MatterTileBody instances for all the colliding tiles within the given tilemap layer. Set
-     * the appropriate tiles in your layer to collide before calling this method!
+     * Adds `MatterTileBody` instances for all the colliding tiles within the given tilemap layer.
+     * 
+     * Set the appropriate tiles in your layer to collide before calling this method!
      *
      * @method Phaser.Physics.Matter.World#convertTilemapLayer
      * @since 3.0.0
      *
      * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer -
      * An array of tiles.
-     * @param {object} [options] - Options to be passed to the MatterTileBody constructor. {@ee Phaser.Physics.Matter.TileBody}
+     * @param {object} [options] - Options to be passed to the MatterTileBody constructor. {@see Phaser.Physics.Matter.TileBody}
      *
-     * @return {Phaser.Physics.Matter.World} This Matter World object.
+     * @return {this} This Matter World object.
      */
     convertTilemapLayer: function (tilemapLayer, options)
     {
@@ -602,7 +643,7 @@ var World = new Class({
     },
 
     /**
-     * Adds MatterTileBody instances for the given tiles. This adds bodies regardless of whether the
+     * Adds `MatterTileBody` instances for the given tiles. This adds bodies regardless of whether the
      * tiles are set to collide or not.
      *
      * @method Phaser.Physics.Matter.World#convertTiles
@@ -611,7 +652,7 @@ var World = new Class({
      * @param {Phaser.Tilemaps.Tile[]} tiles - An array of tiles.
      * @param {object} [options] - Options to be passed to the MatterTileBody constructor. {@see Phaser.Physics.Matter.TileBody}
      *
-     * @return {Phaser.Physics.Matter.World} This Matter World object.
+     * @return {this} This Matter World object.
      */
     convertTiles: function (tiles, options)
     {
@@ -629,14 +670,15 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Returns the next unique group index for which bodies will collide.
+     * If `isNonColliding` is `true`, returns the next unique group index for which bodies will not collide.
      *
      * @method Phaser.Physics.Matter.World#nextGroup
      * @since 3.0.0
      *
-     * @param {boolean} isNonColliding - [description]
+     * @param {boolean} [isNonColliding=false] - If `true`, returns the next unique group index for which bodies will _not_ collide.
      *
-     * @return {number} [description]
+     * @return {number} Unique category bitfield
      */
     nextGroup: function (isNonColliding)
     {
@@ -644,12 +686,13 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Returns the next unique category bitfield (starting after the initial default category 0x0001).
+     * There are 32 available.
      *
      * @method Phaser.Physics.Matter.World#nextCategory
      * @since 3.0.0
      *
-     * @return {number} Returns the next unique category bitfield.
+     * @return {number} Unique category bitfield
      */
     nextCategory: function ()
     {
@@ -657,13 +700,15 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Pauses this Matter World instance and sets `enabled` to `false`.
+     * 
+     * A paused world will not run any simulations for the duration it is paused.
      *
      * @method Phaser.Physics.Matter.World#pause
      * @fires Phaser.Physics.Matter.Events#PAUSE
      * @since 3.0.0
      *
-     * @return {Phaser.Physics.Matter.World} This Matter World object.
+     * @return {this} This Matter World object.
      */
     pause: function ()
     {
@@ -675,13 +720,13 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Resumes this Matter World instance from a paused state and sets `enabled` to `true`.
      *
      * @method Phaser.Physics.Matter.World#resume
      * @fires Phaser.Physics.Matter.Events#RESUME
      * @since 3.0.0
      *
-     * @return {Phaser.Physics.Matter.World} This Matter World object.
+     * @return {this} This Matter World object.
      */
     resume: function ()
     {
@@ -693,7 +738,18 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * The internal update method. This is called automatically by the parent Scene.
+     * 
+     * Moves the simulation forward in time by delta ms. Uses `World.correction` value as an optional number that
+     * specifies the time correction factor to apply to the update. This can help improve the accuracy of the
+     * simulation in cases where delta is changing between updates. The value of correction is defined as `delta / lastDelta`,
+     * i.e. the percentage change of delta over the last step. Therefore the value is always 1 (no correction) when
+     * delta is constant (or when no correction is desired, which is the default).
+     * See the paper on Time Corrected Verlet for more information.
+     * 
+     * Triggers `beforeUpdate` and `afterUpdate` events. Triggers `collisionStart`, `collisionActive` and `collisionEnd` events.
+     * 
+     * If the World is paused, `update` is still run, but exits early and does not update the Matter Engine.
      *
      * @method Phaser.Physics.Matter.World#update
      * @since 3.0.0
@@ -733,8 +789,8 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#step
      * @since 3.4.0
      *
-     * @param {number} [delta=16.666] - [description]
-     * @param {number} [correction=1] - [description]
+     * @param {number} [delta=16.666] - The delta value.
+     * @param {number} [correction=1] - Optional delta correction value.
      */
     step: function (delta, correction)
     {
@@ -769,6 +825,8 @@ var World = new Class({
 
     /**
      * Handles the rendering of bodies and debug information to the debug Graphics object, if enabled.
+     * 
+     * This method is called automatically by the Scene after all processing has taken place.
      *
      * @method Phaser.Physics.Matter.World#postUpdate
      * @private
@@ -1194,34 +1252,6 @@ var World = new Class({
         }
 
         return this;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Physics.Matter.World#fromPath
-     * @since 3.0.0
-     *
-     * @param {string} path - [description]
-     * @param {array} points - [description]
-     *
-     * @return {array} [description]
-     */
-    fromPath: function (path, points)
-    {
-        if (points === undefined) { points = []; }
-
-        // var pathPattern = /L?\s*([-\d.e]+)[\s,]*([-\d.e]+)*/ig;
-
-        // eslint-disable-next-line no-useless-escape
-        var pathPattern = /L?\s*([\-\d\.e]+)[\s,]*([\-\d\.e]+)*/ig;
-
-        path.replace(pathPattern, function (match, x, y)
-        {
-            points.push({ x: parseFloat(x), y: parseFloat(y) });
-        });
-
-        return points;
     },
 
     /**
