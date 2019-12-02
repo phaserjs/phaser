@@ -19,6 +19,9 @@
  * @property {boolean} [enableSleeping=false] - A flag that specifies whether the engine should allow sleeping via the `Matter.Sleeping` module. Sleeping can improve stability and performance, but often at the expense of accuracy.
  * @property {number} [timing.timestamp=0] - A `Number` that specifies the current simulation-time in milliseconds starting from `0`. It is incremented on every `Engine.update` by the given `delta` argument.
  * @property {number} [timing.timeScale=1] - A `Number` that specifies the global scaling factor of time for all bodies. A value of `0` freezes the simulation. A value of `0.1` gives a slow-motion effect. A value of `1.2` gives a speed-up effect.
+ * @property {boolean} [plugins.attractors=false] - Should the Matter Attractor Plugin be enabled? An attractors plugin that makes it easy to apply continual forces on bodies. It's possible to simulate effects such as wind, gravity and magnetism.
+ * @property {boolean} [plugins.wrap=false] - Should the Matter Wrap Plugin be enabled? A coordinate wrapping plugin that automatically wraps the position of bodies such that they always stay within the given bounds. Upon crossing a boundary the body will appear on the opposite side of the bounds, while maintaining its velocity.
+ * @property {boolean} [plugins.collisionevents=true] - Should the Matter Collision Events Plugin be enabled?
  * @property {boolean} [enabled=true] - Toggles if the world is enabled or not.
  * @property {number} [correction=1] - An optional Number that specifies the time correction factor to apply to the update.
  * @property {function} [getDelta] - This function is called every time the core game loop steps, which is bound to the Request Animation Frame frequency unless otherwise modified.
