@@ -66,11 +66,13 @@ var Common = require('../core/Common');
         // render
         var render = {
             visible: true,
-            lineWidth: 2,
-            strokeStyle: '#ffffff',
             type: 'line',
             anchors: true,
-            custom: false
+            strokeColor: null, // custom Phaser property
+            lineThickness: null, // custom Phaser property
+            pinSize: null, // custom Phaser property
+            anchorColor: null, // custom Phaser property
+            anchorSize: null // custom Phaser property
         };
 
         if (constraint.length === 0 && constraint.stiffness > 0.1) {
@@ -78,12 +80,6 @@ var Common = require('../core/Common');
             render.anchors = false;
         } else if (constraint.stiffness < 0.9) {
             render.type = 'spring';
-        }
-
-        //  If the constraint has a render options set, we'll treat it as a custom override
-        if (constraint.hasOwnProperty('render'))
-        {
-            render.custom = true;
         }
 
         constraint.render = Common.extend(render, constraint.render);
