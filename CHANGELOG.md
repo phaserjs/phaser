@@ -70,6 +70,11 @@
 * `MatterPhysics.getBodiesBelowPoint` is a new method that will return an array of all bodies in the World that have vertices that contain the given point.
 * `MatterPhysics.setBodyRenderStyle` is a new method that lets you quickly set the render style values on the given Body.
 * `MatterPhysics.setConstraintRenderStyle` is a new method that lets you quickly set the render style values on the given Constraint.
+* You can now set `restingThresh` in the Matter Configuration file to adjust the Resolver property.
+* You can now set `restingThreshTangent` in the Matter Configuration file to adjust the Resolver property.
+* You can now set `positionDampen` in the Matter Configuration file to adjust the Resolver property.
+* You can now set `positionWarming` in the Matter Configuration file to adjust the Resolver property.
+* You can now set `frictionNormalMultiplier` in the Matter Configuration file to adjust the Resolver property.
 
 ### Updates
 

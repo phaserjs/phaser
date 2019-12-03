@@ -391,6 +391,12 @@ var MatterPhysics = new Class({
             this.enableWrapPlugin();
         }
 
+        Resolver._restingThresh = GetValue(this.config, 'restingThresh', 4);
+        Resolver._restingThreshTangent = GetValue(this.config, 'restingThreshTangent', 6);
+        Resolver._positionDampen = GetValue(this.config, 'positionDampen', 0.9);
+        Resolver._positionWarming = GetValue(this.config, 'positionWarming', 0.8);
+        Resolver._frictionNormalMultiplier = GetValue(this.config, 'frictionNormalMultiplier', 5);
+
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
         scene.sys.events.on(SceneEvents.START, this.start, this);
     },
