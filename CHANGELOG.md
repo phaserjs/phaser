@@ -68,6 +68,8 @@
 * The `Body.render.strokeStyle` property that existed on the Matter Body object has been removed and replaced with `strokeColor`.
 * `MatterPhysics.containsPoint` is a new method that will let you check to see if a Body, or an array of Bodies, contains the given point or not.
 * `MatterPhysics.getBodiesBelowPoint` is a new method that will return an array of all bodies in the World that have vertices that contain the given point.
+* `MatterPhysics.setBodyRenderStyle` is a new method that lets you quickly set the render style values on the given Body.
+* `MatterPhysics.setConstraintRenderStyle` is a new method that lets you quickly set the render style values on the given Constraint.
 
 ### Updates
 
