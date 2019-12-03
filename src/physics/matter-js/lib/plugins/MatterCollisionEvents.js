@@ -75,7 +75,6 @@ var MatterCollisionEvents = {
                     matter.Events.trigger(bodyA, 'onCollideActive', { pair: pair });
                     matter.Events.trigger(bodyB, 'onCollideActive', { pair: pair });
 
-
                     if (bodyA.onCollideActiveCallback)
                     {
                         bodyA.onCollideActiveCallback(pair);
