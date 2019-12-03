@@ -523,11 +523,11 @@ var MatterPhysics = new Class({
      * 
      * This plugin also extends Matter.Body with three convenience functions:
      * 
-     * `Matter.Body.onCollide(callback)`
-     * `Matter.Body.onCollideEnd(callback)`
-     * `Matter.Body.onCollideActive(callback)`
+     * `Matter.Body.setOnCollide(callback)`
+     * `Matter.Body.setOnCollideEnd(callback)`
+     * `Matter.Body.setOnCollideActive(callback)`
      * 
-     * You can register event callbacks by providing a function of type ( pair: Matter.Pair) => void:
+     * You can register event callbacks by providing a function of type (pair: Matter.Pair) => void
      * 
      * https://github.com/dxu/matter-collision-events
      *
@@ -696,6 +696,114 @@ var MatterPhysics = new Class({
         var position = Vector.create(x, y);
 
         return Query.point(bodies, position);
+    },
+
+    /**
+     * Sets the debug render style for the given Matter Body.
+     * 
+     * If you are using this on a Phaser Game Object, such as a Matter Sprite, then pass in the body property
+     * to this method, not the Game Object itself.
+     * 
+     * If you wish to skip a value, pass `undefined` for it.
+     * If you wish to reset a value, so it uses those set in the World Debug Config, pass `null` or `false` as the value.
+     * All other values are considered numeric color values.
+     * 
+     * @method Phaser.Physics.Matter.MatterPhysics#setBodyRenderStyle
+     * @since 3.22.0
+     *
+     * @param {MatterJS.Body} body - The Matter Body to set the render style on.
+     * @param {number} [lineColor] - The stroke color. Set to `null` to use the default debug config values.
+     * @param {number} [fillColor] - The fill color. Set to `null` to use the default debug config values.
+     * @param {number} [opacity] - The opacity, between 0 and 1. Set to `null` to use the default debug config values.
+     * @param {number} [lineThickness] - The stroke line thickness. Set to `null` to use the default debug config values.
+     * 
+     * @return {this} This Matter Physics instance for method chaining.
+     */
+    setBodyRenderStyle: function (body, lineColor, fillColor, opacity, lineThickness)
+    {
+        var render = body.render;
+
+        if (render)
+        {
+            if (fillColor !== undefined)
+            {
+                render.fillColor = fillColor;
+            }
+
+            if (lineColor !== undefined)
+            {
+                render.strokeColor = lineColor;
+            }
+
+            if (opacity !== undefined)
+            {
+                render.opacity = opacity;
+            }
+
+            if (lineThickness !== undefined)
+            {
+                render.lineThickness = lineThickness;
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Sets the debug render style for the given Matter Constraint.
+     * 
+     * If you are using this on a Phaser Game Object, then pass in the body property
+     * to this method, not the Game Object itself.
+     * 
+     * If you wish to skip a value, pass `undefined` for it.
+     * If you wish to reset a value, so it uses those set in the World Debug Config, pass `null` or `false` as the value.
+     * All other values are considered numeric color values.
+     * 
+     * @method Phaser.Physics.Matter.MatterPhysics#setConstraintRenderStyle
+     * @since 3.22.0
+     *
+     * @param {MatterJS.Constraint} constraint - The Matter Constraint to set the render style on.
+     * @param {number} [lineColor] - The line color used when rendering this constraint.
+     * @param {number} [lineThickness] - The line thickness.
+     * @param {number} [pinSize] - If this constraint is a pin, this sets the size of the pin circle.
+     * @param {number} [anchorColor] - The color used when rendering this constraints anchors. Set to `null` to not render anchors.
+     * @param {number} [anchorSize] - The size of the anchor circle, if this constraint has anchors and is rendering them.
+     * 
+     * @return {this} This Matter Physics instance for method chaining.
+     */
+    setConstraintRenderStyle: function (constraint, lineColor, lineThickness, pinSize, anchorColor, anchorSize)
+    {
+        var render = constraint.render;
+
+        if (render)
+        {
+            if (lineColor !== undefined)
+            {
+                render.strokeColor = lineColor;
+            }
+
+            if (lineThickness !== undefined)
+            {
+                render.lineThickness = lineThickness;
+            }
+
+            if (pinSize !== undefined)
+            {
+                render.pinSize = pinSize;
+            }
+
+            if (anchorColor !== undefined)
+            {
+                render.anchorColor = anchorColor;
+            }
+
+            if (anchorSize !== undefined)
+            {
+                render.anchorSize = anchorSize;
+            }
+        }
+
+        return this;
     },
 
     /**
