@@ -304,6 +304,180 @@ var World = new Class({
     },
 
     /**
+     * Sets the debug render style for the given Matter Body.
+     * 
+     * If you are using this on a Phaser Game Object, such as a Matter Sprite, then pass in the body property
+     * to this method, not the Game Object itself.
+     * 
+     * If you wish to skip a parameter, so it retains its current value, pass `false` for it.
+     * 
+     * If you wish to reset the Body render colors to the defaults found in the World Debug Config, then call
+     * this method with just the `body` argument provided, and no others.
+     * 
+     * All other values are considered numeric color values.
+     * 
+     * @method Phaser.Physics.Matter.World#setBodyRenderStyle
+     * @since 3.22.0
+     *
+     * @param {MatterJS.Body} body - The Matter Body to set the render style on.
+     * @param {number} [lineColor] - The line color. If `null` it will use the World Debug Config value.
+     * @param {number} [fillColor] - The fill color. If `null` it will use the World Debug Config value.
+     * @param {number} [lineThickness] - The line thickness. If `null` it will use the World Debug Config value.
+     * @param {number} [opacity] - The opacity, between 0 and 1.
+     * 
+     * @return {this} This Matter World instance for method chaining.
+     */
+    setBodyRenderStyle: function (body, lineColor, fillColor, lineThickness, opacity)
+    {
+        var render = body.render;
+        var config = this.debugConfig;
+
+        if (!render)
+        {
+            return this;
+        }
+
+        if (lineColor === undefined || lineColor === null)
+        {
+            lineColor = (body.isStatic) ? config.staticStrokeColor : config.strokeColor;
+        }
+
+        if (fillColor === undefined || fillColor === null)
+        {
+            fillColor = (body.isStatic) ? config.staticFillColor : config.fillColor;
+        }
+
+        if (lineThickness === undefined || lineThickness === null)
+        {
+            lineThickness = config.lineThickness;
+        }
+
+        if (lineColor !== false)
+        {
+            render.strokeColor = lineColor;
+        }
+
+        if (fillColor !== false)
+        {
+            render.fillColor = fillColor;
+        }
+
+        if (lineThickness !== false)
+        {
+            render.lineThickness = lineThickness;
+        }
+
+        if (typeof(opacity) === 'number')
+        {
+            render.opacity = opacity;
+        }
+
+        return this;
+    },
+
+    /**
+     * Sets the debug render style for the given Matter Constraint.
+     * 
+     * If you are using this on a Phaser Game Object, then pass in the body property
+     * to this method, not the Game Object itself.
+     * 
+     * If you wish to skip a parameter, so it retains its current value, pass `false` for it.
+     * 
+     * If you wish to reset the Constraint render colors to the defaults found in the World Debug Config, then call
+     * this method with just the `constraint` argument provided, and no others.
+     * 
+     * All other values are considered numeric color values.
+     * 
+     * @method Phaser.Physics.Matter.World#setConstraintRenderStyle
+     * @since 3.22.0
+     *
+     * @param {MatterJS.Constraint} constraint - The Matter Constraint to set the render style on.
+     * @param {number} [lineColor] - The line color. If `null` it will use the World Debug Config value.
+     * @param {number} [lineThickness] - The line thickness. If `null` it will use the World Debug Config value.
+     * @param {number} [pinSize] - If this constraint is a pin, this sets the size of the pin circle. If `null` it will use the World Debug Config value.
+     * @param {number} [anchorColor] - The color used when rendering this constraints anchors.  If `null` it will use the World Debug Config value.
+     * @param {number} [anchorSize] - The size of the anchor circle, if this constraint has anchors. If `null` it will use the World Debug Config value.
+     * 
+     * @return {this} This Matter World instance for method chaining.
+     */
+    setConstraintRenderStyle: function (constraint, lineColor, lineThickness, pinSize, anchorColor, anchorSize)
+    {
+        var render = constraint.render;
+        var config = this.debugConfig;
+
+        if (!render)
+        {
+            return this;
+        }
+
+        //  Reset them
+        if (lineColor === undefined || lineColor === null)
+        {
+            var type = render.type;
+
+            if (type === 'line')
+            {
+                lineColor = config.jointColor;
+            }
+            else if (type === 'pin')
+            {
+                lineColor = config.pinColor;
+            }
+            else if (type === 'spring')
+            {
+                lineColor = config.springColor;
+            }
+        }
+
+        if (lineThickness === undefined || lineThickness === null)
+        {
+            lineThickness = config.jointLineThickness;
+        }
+
+        if (pinSize === undefined || pinSize === null)
+        {
+            pinSize = config.pinSize;
+        }
+
+        if (anchorColor === undefined || anchorColor === null)
+        {
+            anchorColor = config.anchorColor;
+        }
+
+        if (anchorSize === undefined || anchorSize === null)
+        {
+            anchorSize = config.anchorSize;
+        }
+
+        if (lineColor !== false)
+        {
+            render.strokeColor = lineColor;
+        }
+
+        if (lineThickness !== false)
+        {
+            render.lineThickness = lineThickness;
+        }
+
+        if (pinSize !== false)
+        {
+            render.pinSize = pinSize;
+        }
+
+        if (anchorColor !== false)
+        {
+            render.anchorColor = anchorColor;
+        }
+
+        if (anchorSize !== false)
+        {
+            render.anchorSize = anchorSize;
+        }
+
+        return this;
+    },
+
+    /**
      * This internal method acts as a proxy between all of the Matter JS events and then re-emits them
      * via this class.
      *
@@ -313,7 +487,6 @@ var World = new Class({
     setEventsProxy: function ()
     {
         var _this = this;
-        var debugConfig = this.debugConfig;
         var engine = this.engine;
         var world = this.localWorld;
 
@@ -332,60 +505,11 @@ var World = new Class({
     
                     if (obj.type === 'body')
                     {
-                        if (render.fillColor === null)
-                        {
-                            render.fillColor = (obj.isStatic) ? debugConfig.staticFillColor : debugConfig.fillColor;
-                        }
-    
-                        if (render.strokeColor === null)
-                        {
-                            render.strokeColor = (obj.isStatic) ? debugConfig.staticStrokeColor : debugConfig.strokeColor;
-                        }
-    
-                        if (render.lineThickness === null)
-                        {
-                            render.lineThickness = debugConfig.lineThickness;
-                        }
+                        _this.setBodyRenderStyle(obj, render.strokeColor, render.fillColor, render.lineThickness);
                     }
                     else if (obj.type === 'constraint')
                     {
-                        var type = render.type;
-    
-                        if (render.strokeColor === null)
-                        {
-                            if (type === 'line')
-                            {
-                                render.strokeColor = debugConfig.jointColor;
-                            }
-                            else if (type === 'pin')
-                            {
-                                render.strokeColor = debugConfig.pinColor;
-                            }
-                            else if (type === 'spring')
-                            {
-                                render.strokeColor = debugConfig.springColor;
-                            }
-                        }
-    
-                        if (render.lineThickness === null)
-                        {
-                            render.lineThickness = debugConfig.jointLineThickness;
-                        }
-    
-                        if (render.pinSize === null)
-                        {
-                            render.pinSize = debugConfig.pinSize;
-                        }
-    
-                        if (render.anchorColor === null)
-                        {
-                            render.anchorColor = debugConfig.anchorColor;
-                        }
-    
-                        if (render.anchorSize === null)
-                        {
-                            render.anchorSize = debugConfig.anchorSize;
-                        }
+                        _this.setConstraintRenderStyle(obj, render.strokeColor, render.lineThickness, render.pinSize, render.anchorColor, render.anchorSize);
                     }
                 }
             });

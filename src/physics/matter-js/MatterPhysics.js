@@ -704,47 +704,27 @@ var MatterPhysics = new Class({
      * If you are using this on a Phaser Game Object, such as a Matter Sprite, then pass in the body property
      * to this method, not the Game Object itself.
      * 
-     * If you wish to skip a value, pass `undefined` for it.
-     * If you wish to reset a value, so it uses those set in the World Debug Config, pass `null` or `false` as the value.
+     * If you wish to skip a parameter, so it retains its current value, pass `false` for it.
+     * 
+     * If you wish to reset the Body render colors to the defaults found in the World Debug Config, then call
+     * this method with just the `body` argument provided, and no others.
+     * 
      * All other values are considered numeric color values.
      * 
      * @method Phaser.Physics.Matter.MatterPhysics#setBodyRenderStyle
      * @since 3.22.0
      *
      * @param {MatterJS.Body} body - The Matter Body to set the render style on.
-     * @param {number} [lineColor] - The stroke color. Set to `null` to use the default debug config values.
-     * @param {number} [fillColor] - The fill color. Set to `null` to use the default debug config values.
-     * @param {number} [opacity] - The opacity, between 0 and 1. Set to `null` to use the default debug config values.
-     * @param {number} [lineThickness] - The stroke line thickness. Set to `null` to use the default debug config values.
+     * @param {number} [lineColor] - The line color.
+     * @param {number} [fillColor] - The fill color.
+     * @param {number} [lineThickness] - The line thickness.
+     * @param {number} [opacity] - The opacity, between 0 and 1.
      * 
      * @return {this} This Matter Physics instance for method chaining.
      */
-    setBodyRenderStyle: function (body, lineColor, fillColor, opacity, lineThickness)
+    setBodyRenderStyle: function (body, lineColor, fillColor, lineThickness, opacity)
     {
-        var render = body.render;
-
-        if (render)
-        {
-            if (fillColor !== undefined)
-            {
-                render.fillColor = fillColor;
-            }
-
-            if (lineColor !== undefined)
-            {
-                render.strokeColor = lineColor;
-            }
-
-            if (opacity !== undefined)
-            {
-                render.opacity = opacity;
-            }
-
-            if (lineThickness !== undefined)
-            {
-                render.lineThickness = lineThickness;
-            }
-        }
+        this.world.setBodyRenderStyle(body, lineColor, fillColor, lineThickness, opacity);
 
         return this;
     },
@@ -755,8 +735,11 @@ var MatterPhysics = new Class({
      * If you are using this on a Phaser Game Object, then pass in the body property
      * to this method, not the Game Object itself.
      * 
-     * If you wish to skip a value, pass `undefined` for it.
-     * If you wish to reset a value, so it uses those set in the World Debug Config, pass `null` or `false` as the value.
+     * If you wish to skip a parameter, so it retains its current value, pass `false` for it.
+     * 
+     * If you wish to reset the Constraint render colors to the defaults found in the World Debug Config, then call
+     * this method with just the `constraint` argument provided, and no others.
+     * 
      * All other values are considered numeric color values.
      * 
      * @method Phaser.Physics.Matter.MatterPhysics#setConstraintRenderStyle
@@ -773,35 +756,7 @@ var MatterPhysics = new Class({
      */
     setConstraintRenderStyle: function (constraint, lineColor, lineThickness, pinSize, anchorColor, anchorSize)
     {
-        var render = constraint.render;
-
-        if (render)
-        {
-            if (lineColor !== undefined)
-            {
-                render.strokeColor = lineColor;
-            }
-
-            if (lineThickness !== undefined)
-            {
-                render.lineThickness = lineThickness;
-            }
-
-            if (pinSize !== undefined)
-            {
-                render.pinSize = pinSize;
-            }
-
-            if (anchorColor !== undefined)
-            {
-                render.anchorColor = anchorColor;
-            }
-
-            if (anchorSize !== undefined)
-            {
-                render.anchorSize = anchorSize;
-            }
-        }
+        this.world.setConstraintRenderStyle(constraint, lineColor, lineThickness, pinSize, anchorColor, anchorSize);
 
         return this;
     },
