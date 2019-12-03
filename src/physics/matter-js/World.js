@@ -386,8 +386,6 @@ var World = new Class({
                         {
                             render.anchorSize = debugConfig.anchorSize;
                         }
-
-                        console.log(obj);
                     }
                 }
             });
@@ -1055,8 +1053,8 @@ var World = new Class({
             }
 
             var opacity = body.render.opacity;
-            var lineStyle = body.render.strokeColor;
-            var fillStyle = body.render.fillColor;
+            var strokeColor = body.render.strokeColor;
+            var fillColor = body.render.fillColor;
             var lineThickness = body.render.lineThickness;
 
             if (showSleeping && body.isSleeping)
@@ -1067,22 +1065,22 @@ var World = new Class({
                 }
                 else
                 {
-                    lineStyle = sleepStrokeColor;
-                    fillStyle = sleepFillColor;
+                    strokeColor = sleepStrokeColor;
+                    fillColor = sleepFillColor;
                 }
             }
 
             if (!renderFill)
             {
-                fillStyle = null;
+                fillColor = null;
             }
 
             if (!renderStroke)
             {
-                lineStyle = null;
+                strokeColor = null;
             }
 
-            this.renderBody(body, graphics, showInternalEdges, lineStyle, fillStyle, opacity, lineThickness);
+            this.renderBody(body, graphics, showInternalEdges, strokeColor, fillColor, opacity, lineThickness);
 
             var partsLength = body.parts.length;
 
@@ -1143,9 +1141,20 @@ var World = new Class({
             //  Part polygon
             var circleRadius = part.circleRadius;
 
+            graphics.beginPath();
+
+            if (fillColor !== null)
+            {
+                graphics.fillStyle(fillColor, opacity);
+            }
+
+            if (lineColor !== null)
+            {
+                graphics.lineStyle(lineThickness, lineColor, opacity);
+            }
+
             if (circleRadius)
             {
-                graphics.beginPath();
                 graphics.arc(part.position.x, part.position.y, circleRadius, 0, 2 * Math.PI);
             }
             else
@@ -1153,7 +1162,6 @@ var World = new Class({
                 var vertices = part.vertices;
                 var vertLength = vertices.length;
 
-                graphics.beginPath();
                 graphics.moveTo(vertices[0].x, vertices[0].y);
 
                 for (var j = 1; j < vertLength; j++)
@@ -1182,13 +1190,11 @@ var World = new Class({
 
             if (fillColor !== null)
             {
-                graphics.fillStyle(fillColor, opacity);
                 graphics.fillPath();
             }
 
             if (lineColor !== null)
             {
-                graphics.lineStyle(lineThickness, lineColor, opacity);
                 graphics.strokePath();
             }
         }
