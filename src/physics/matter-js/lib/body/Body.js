@@ -85,7 +85,9 @@ var Axes = require('../geometry/Axes');
                     yOffset: 0
                 },
                 fillColor: null, // custom Phaser property
-                strokeColor: null, // custom Phaser property
+                fillOpacity: null, // custom Phaser property
+                lineColor: null, // custom Phaser property
+                lineOpacity: null, // custom Phaser property
                 lineThickness: null // custom Phaser property
             },
 

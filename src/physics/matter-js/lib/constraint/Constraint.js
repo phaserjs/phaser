@@ -68,7 +68,8 @@ var Common = require('../core/Common');
             visible: true,
             type: 'line',
             anchors: true,
-            strokeColor: null, // custom Phaser property
+            lineColor: null, // custom Phaser property
+            lineOpacity: null, // custom Phaser property
             lineThickness: null, // custom Phaser property
             pinSize: null, // custom Phaser property
             anchorColor: null, // custom Phaser property
