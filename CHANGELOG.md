@@ -12,25 +12,28 @@
 * `showInternalEdges` - When rendering bodies, render the internal edges as well?
 * `showConvexHulls` - When rendering polygon bodies, render the convex hull as well?
 * `renderFill` - Render the bodies using a fill color.
-* `renderStroke` - Render the bodies using a line stroke.
-* `lineThickness` - If rendering with a stroke, the thickness of the line.
+* `renderLine`- Render the bodies using a line stroke.
 * `fillColor` - The color value of the fill when rendering dynamic bodies.
-* `strokeColor` - The color value of the line stroke when rendering dynamic bodies.
+* `fillOpacity` - The opacity of the fill when rendering dynamic bodies, a value between 0 and 1.
+* `lineColor` - The color value of the line stroke when rendering dynamic bodies.
+* `lineOpacity` - The opacity of the line when rendering dynamic bodies, a value between 0 and 1.
+* `lineThickness` - If rendering lines, the thickness of the line.
 * `staticFillColor` - The color value of the fill when rendering static bodies.
-* `staticStrokeColor` - The color value of the line stroke when rendering static bodies.
+* `staticLineColor` - The color value of the line stroke when rendering static bodies.
 * `staticBodySleepOpacity`7] - The amount to multiply the opacity of sleeping static bodies by.
 * `sleepFillColor` - The color value of the fill when rendering sleeping dynamic bodies.
-* `sleepStrokeColor` - The color value of the line stroke when rendering sleeping dynamic bodies.
-* `hullColor` - The color value of hulls when `showConvexHulls` is set.
+* `sleepLineColor` - The color value of the line stroke when rendering sleeping dynamic bodies.
 * `jointColor` - The color value of joints when `showJoint` is set.
+* `jointLineOpacity` - The line opacity when rendering joints, a value between 0 and 1.
 * `jointLineThickness` - The line thickness when rendering joints.
 * `pinSize` - The size of the circles drawn when rendering pin constraints.
 * `pinColor` - The color value of the circles drawn when rendering pin constraints.
 * `springColor` - The color value of spring constraints.
 * `anchorColor` - The color value of constraint anchors.
 * `anchorSize` - The size of the circles drawn as the constraint anchors.
-* The `debug` property in the Matter World Config is now a `MatterDebugConfig` option instead of a boolean.
-* The following `MatterWorldConfig` options are now deprecated: `debugShowBody`, `debugShowStaticBody`, `debugBodyColor`, `debugBodyFillColor`, `debugStaticBodyColor`, `debugShowJoint`, `debugJointColor`, `debugWireframes`, `debugShowInternalEdges`, `debugShowConvexHulls`, `debugConvexHullColor` and `debugShowSleeping`. These can all be set via the new `MatterDebugConfig` object instead. They will be removed fully in a future version.
+* `hullColor` - The color value of hulls when `showConvexHulls` is set.
+* The `debug` property in the Matter World Config is now a `MatterDebugConfig` option instead of a boolean. However, if a boolean is given, it will use the default debug config values.
+* The following `MatterWorldConfig` options have now been removed: `debugShowBody`, `debugShowStaticBody`, `debugBodyColor`, `debugBodyFillColor`, `debugStaticBodyColor`, `debugShowJoint`, `debugJointColor`, `debugWireframes`, `debugShowInternalEdges`, `debugShowConvexHulls`, `debugConvexHullColor` and `debugShowSleeping`. These can all be set via the new `MatterDebugConfig` object instead.
 * The object `World.defaults` has been removed. Defaults are now access via `World.debugDefaults`.
 * `World.renderBody` is a new method that will render a single Matter Body to the given Graphics object. This is used internally during debug rendering but is also public. This allows you to control which bodies are rendered and to which Graphics object, should you wish to use them in-game and not just during debugging.
 * `World.renderConstraint` is a new method that will render a single Matter Constraint, such as a pin or a spring, to the given Graphics object. This is used internally during debug rendering but is also public. This allows you to control which constraints are rendered and to which Graphics object, should you wish to use them in-game and not just during debugging.
@@ -45,29 +48,30 @@
 * `World.getAllBodies` is a new method that will return all bodies in the Matter World.
 * `World.getAllConstraints` is a new method that will return all constraints in the Matter World.
 * `World.getAllComposites` is a new method that will return all composites in the Matter World.
-* `MatterPhysics.composite` is a new reference to the `Matter.Composite` module for each access from within a Scene.
-* `MatterPhysics.detector` is a new reference to the `Matter.Dectector` module for each access from within a Scene.
-* `MatterPhysics.grid` is a new reference to the `Matter.Grid` module for each access from within a Scene.
-* `MatterPhysics.pair` is a new reference to the `Matter.Pair` module for each access from within a Scene.
-* `MatterPhysics.pairs` is a new reference to the `Matter.Pairs` module for each access from within a Scene.
-* `MatterPhysics.query` is a new reference to the `Matter.Query` module for each access from within a Scene.
-* `MatterPhysics.resolver` is a new reference to the `Matter.Resolver` module for each access from within a Scene.
-* `MatterPhysics.sat` is a new reference to the `Matter.SAT` module for each access from within a Scene.
-* `MatterPhysics.constraint` is a new reference to the `Matter.Constraint` module for each access from within a Scene.
-* `MatterPhysics.composites` is a new reference to the `Matter.Composites` module for each access from within a Scene.
-* `MatterPhysics.axes` is a new reference to the `Matter.Axes` module for each access from within a Scene.
-* `MatterPhysics.bounds` is a new reference to the `Matter.Bounds` module for each access from within a Scene.
-* `MatterPhysics.svg` is a new reference to the `Matter.Svg` module for each access from within a Scene.
-* `MatterPhysics.vector` is a new reference to the `Matter.Vector` module for each access from within a Scene.
-* `MatterPhysics.vertices` is a new reference to the `Matter.Vertices` module for each access from within a Scene.
+* `MatterPhysics.composite` is a new reference to the `Matter.Composite` module for easy access from within a Scene.
+* `MatterPhysics.detector` is a new reference to the `Matter.Dectector` module for easy access from within a Scene.
+* `MatterPhysics.grid` is a new reference to the `Matter.Grid` module for easy access from within a Scene.
+* `MatterPhysics.pair` is a new reference to the `Matter.Pair` module for easy access from within a Scene.
+* `MatterPhysics.pairs` is a new reference to the `Matter.Pairs` module for easy access from within a Scene.
+* `MatterPhysics.query` is a new reference to the `Matter.Query` module for easy access from within a Scene.
+* `MatterPhysics.resolver` is a new reference to the `Matter.Resolver` module for easy access from within a Scene.
+* `MatterPhysics.sat` is a new reference to the `Matter.SAT` module for easy access from within a Scene.
+* `MatterPhysics.constraint` is a new reference to the `Matter.Constraint` module for easy access from within a Scene.
+* `MatterPhysics.composites` is a new reference to the `Matter.Composites` module for easy access from within a Scene.
+* `MatterPhysics.axes` is a new reference to the `Matter.Axes` module for easy access from within a Scene.
+* `MatterPhysics.bounds` is a new reference to the `Matter.Bounds` module for easy access from within a Scene.
+* `MatterPhysics.svg` is a new reference to the `Matter.Svg` module for easy access from within a Scene.
+* `MatterPhysics.vector` is a new reference to the `Matter.Vector` module for easy access from within a Scene.
+* `MatterPhysics.vertices` is a new reference to the `Matter.Vertices` module for easy access from within a Scene.
 * `BEFORE_ADD` is a new Event dispatched by `Matter.World` when a Body or Constraint is about to be added to the World.
 * `AFTER_ADD` is a new Event dispatched by `Matter.World` when a Body or Constraint has been added to the World.
 * `BEFORE_REMOVE` is a new Event dispatched by `Matter.World` when a Body or Constraint is about to be removed from the World.
 * `AFTER_REMOVE` is a new Event dispatched by `Matter.World` when a Body or Constraint has been removed from the World.
 * The `Body.render.fillStyle` property that existed on the Matter Body object has been removed and replaced with `fillColor`.
-* The `Body.render.strokeStyle` property that existed on the Matter Body object has been removed and replaced with `strokeColor`.
-* `MatterPhysics.containsPoint` is a new method that will let you check to see if a Body, or an array of Bodies, contains the given point or not.
-* `MatterPhysics.getBodiesBelowPoint` is a new method that will return an array of all bodies in the World that have vertices that contain the given point.
+* The `Body.render.strokeStyle` property that existed on the Matter Body object has been removed and replaced with `lineColor`.
+* `Body.render.lineOpacity` is a new property on the Matter Body object that allows for custom debug rendering.
+* `Body.render.lineThickness` is a new property on the Matter Body object that allows for custom debug rendering.
+* `Body.render.fillOpacity` is a new property on the Matter Body object that allows for custom debug rendering.
 * `MatterPhysics.setBodyRenderStyle` is a new method that lets you quickly set the render style values on the given Body.
 * `MatterPhysics.setConstraintRenderStyle` is a new method that lets you quickly set the render style values on the given Constraint.
 * You can now set `restingThresh` in the Matter Configuration file to adjust the Resolver property.
@@ -75,6 +79,15 @@
 * You can now set `positionDampen` in the Matter Configuration file to adjust the Resolver property.
 * You can now set `positionWarming` in the Matter Configuration file to adjust the Resolver property.
 * You can now set `frictionNormalMultiplier` in the Matter Configuration file to adjust the Resolver property.
+* `MatterPhysics.containsPoint` is a new method that returns a boolean if any of the given bodies intersect with the given point.
+* `MatterPhysics.intersectPoint` is a new method that checks which bodies intersect with the given point and returns them.
+* `MatterPhysics.intersectRect` is a new method that checks which bodies intersect with the given rectangular area, and returns them. Optionally, it can check which bodies are outside of the area.
+* `MatterPhysics.intersectRay` is a new method that checks which bodies intersect with the given ray segment and returns them. Optionally, you can set the width of the ray.
+* `MatterPhysics.intersectBody` is a new method that checks which bodies intersect with the given body and returns them. If the bodies are set to not collide this can be used as an overlaps check.
+* `MatterPhysics.overlap` is a new method that takes a target body and checks to see if it overlaps with any of the bodies given. If they do, optional `process` and `overlap` callbacks are invoked, passing the overlapping bodies to them, along with additional collision data.
+* `MatterPhysics.setCollisionCategory` is a new method that will set the collision filter category to the value given, on all of the bodies given. This allows you to easily set the category on bodies that don't have a Phaser Matter Collision component.
+* `MatterPhysics.setCollisionGroup` is a new method that will set the collision filter group to the value given, on all of the bodies given. This allows you to easily set the group on bodies that don't have a Phaser Matter Collision component.
+* `MatterPhysics.setCollidesWith` is a new method that will set the collision filter mask to the value given, on all of the bodies given. This allows you to easily set the filter mask on bodies that don't have a Phaser Matter Collision component.
 
 ### Updates
 
