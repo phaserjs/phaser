@@ -31,17 +31,5 @@
  * @property {number} [positionDampen=0.9] - Sets the Resolver position dampen property.
  * @property {number} [positionWarming=0.8] - Sets the Resolver position warming property.
  * @property {number} [frictionNormalMultiplier=5] - Sets the Resolver friction normal multiplier property.
- * @property {(boolean|Phaser.Types.Physics.Matter.MatterDebugConfig)} [debug=false] - Sets if Matter will render to the debug Graphic overlay. As of Phaser 3.22 it should be a `MatterDebugConfig` object instead of a boolean.
- * @property {boolean} [debugShowBody=true] - Should dynamic bodies be drawn to the debug graphic? Deprecated in Phaser 3.22: use a `MatterDebugConfig` object instead.
- * @property {boolean} [debugShowStaticBody=true] - Should static bodies be drawn to the debug graphic? Deprecated in Phaser 3.22: use a `MatterDebugConfig` object instead.
- * @property {number} [debugBodyColor=0xff00ff] - The color that dynamic body debug outlines are drawn in. Deprecated in Phaser 3.22: use a `MatterDebugConfig` object instead.
- * @property {number} [debugBodyFillColor=0xe3a7e3] - The color that dynamic body debug fills are drawn in. Deprecated in Phaser 3.22: use a `MatterDebugConfig` object instead.
- * @property {number} [debugStaticBodyColor=0x0000ff] - The color that static body debug outlines are drawn in. Deprecated in Phaser 3.22: use a `MatterDebugConfig` object instead.
- * @property {boolean} [debugShowJoint=true] - Render joints to the debug graphic. Deprecated in Phaser 3.22: use a `MatterDebugConfig` object instead.
- * @property {number} [debugJointColor=0x000000] - The color that the debug joints are drawn in. Deprecated in Phaser 3.22: use a `MatterDebugConfig` object instead.
- * @property {boolean} [debugWireframes=true] - Render the debug output as wireframes. Deprecated in Phaser 3.22: use a `MatterDebugConfig` object instead.
- * @property {boolean} [debugShowInternalEdges=false] - Render internal edges to the debug. Deprecated in Phaser 3.22: use a `MatterDebugConfig` object instead.
- * @property {boolean} [debugShowConvexHulls=false] - Render convex hulls to the debug. Deprecated in Phaser 3.22: use a `MatterDebugConfig` object instead.
- * @property {number} [debugConvexHullColor=0xaaaaaa] - The color that the debug convex hulls are drawn in, if enabled. Deprecated in Phaser 3.22: use a `MatterDebugConfig` object instead.
- * @property {boolean} [debugShowSleeping=false] - Render sleeping bodies the debug. Deprecated in Phaser 3.22: use a `MatterDebugConfig` object instead.
+ * @property {(boolean|Phaser.Types.Physics.Matter.MatterDebugConfig)} [debug=false] - Controls the Matter Debug Rendering options. If a boolean it will use the default values, otherwise, specify a Debug Config object.
  */
