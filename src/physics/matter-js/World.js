@@ -164,40 +164,6 @@ var World = new Class({
 
         var debugConfig = GetValue(config, 'debug', false);
 
-        var drawDebug = (typeof(debugConfig) === 'object');
-
-        //  Legacy version
-        if (typeof(debugConfig) === 'boolean')
-        {
-            drawDebug = debugConfig;
-
-            var wireframes = GetFastValue(config, 'debugWireframes', true);
-
-            //  Old format config - remove in a later version
-            debugConfig = {
-                showBody: GetFastValue(config, 'debugShowBody', true),
-                showStaticBody: GetFastValue(config, 'debugShowStaticBody', true),
-                showSleeping: GetFastValue(config, 'debugShowSleeping', false),
-                showJoint: GetFastValue(config, 'debugShowJoint', true),
-                showInternalEdges: GetFastValue(config, 'debugShowInternalEdges', false),
-                showConvexHulls: GetFastValue(config, 'debugShowConvexHulls', false),
-
-                renderFill: !wireframes,
-                renderStroke: wireframes,
-
-                fillColor: GetFastValue(config, 'debugBodyFillColor', 0xe3a7e3),
-                strokeColor: GetFastValue(config, 'debugBodyColor', 0xff00ff),
-    
-                staticFillColor: GetFastValue(config, 'debugStaticBodyColor', 0x0000ff),
-                staticStrokeColor: GetFastValue(config, 'debugStaticBodyColor', 0x0000ff),
-    
-                staticBodySleepOpacity: 0.5,
-    
-                jointColor: GetFastValue(config, 'debugJointColor', 0x000000),
-                hullColor: GetFastValue(config, 'debugConvexHullColor', 0xaaaaaa)
-            };
-        }
-
         /**
          * A flag that controls if the debug graphics will be drawn to or not.
          *
@@ -206,7 +172,7 @@ var World = new Class({
          * @default false
          * @since 3.0.0
          */
-        this.drawDebug = drawDebug;
+        this.drawDebug = (typeof(debugConfig) === 'object') ? true : debugConfig;
 
         /**
          * An instance of the Graphics object the debug bodies are drawn to, if enabled.
@@ -222,8 +188,8 @@ var World = new Class({
          * 
          * The values stored in this object are read from the Matter World Config `debug` property.
          * 
-         * When a new Body or Constraint is added to the World, they are given the values stored in this object,
-         * unless they have their own `render` object that will override them.
+         * When a new Body or Constraint is _added to the World_, they are given the values stored in this object,
+         * unless they have their own `render` object set that will override them.
          * 
          * Note that while you can modify the values of properties in this object at run-time, it will not change
          * any of the Matter objects _already added_. It will only impact objects newly added to the world, or one
@@ -241,21 +207,24 @@ var World = new Class({
             showInternalEdges: GetFastValue(debugConfig, 'showInternalEdges', false),
             showConvexHulls: GetFastValue(debugConfig, 'showConvexHulls', false),
 
-            renderFill: GetFastValue(debugConfig, 'renderFill', true),
-            renderStroke: GetFastValue(debugConfig, 'renderStroke', true),
-            lineThickness: GetFastValue(debugConfig, 'lineThickness', 1),
+            renderFill: GetFastValue(debugConfig, 'renderFill', false),
+            renderLine: GetFastValue(debugConfig, 'renderLine', true),
 
             fillColor: GetFastValue(debugConfig, 'fillColor', 0x106909),
-            strokeColor: GetFastValue(debugConfig, 'strokeColor', 0x28de19),
+            fillOpacity: GetFastValue(debugConfig, 'fillOpacity', 1),
+            lineColor: GetFastValue(debugConfig, 'lineColor', 0x28de19),
+            lineOpacity: GetFastValue(debugConfig, 'lineOpacity', 1),
+            lineThickness: GetFastValue(debugConfig, 'lineThickness', 1),
 
             staticFillColor: GetFastValue(debugConfig, 'staticFillColor', 0x0d177b),
-            staticStrokeColor: GetFastValue(debugConfig, 'staticStrokeColor', 0x1327e4),
+            staticLineColor: GetFastValue(debugConfig, 'staticLineColor', 0x1327e4),
 
             staticBodySleepOpacity: GetFastValue(debugConfig, 'staticBodySleepOpacity', 0.7),
             sleepFillColor: GetFastValue(debugConfig, 'sleepFillColor', 0x464646),
-            sleepStrokeColor: GetFastValue(debugConfig, 'sleepStrokeColor', 0x999a99),
+            sleepLineColor: GetFastValue(debugConfig, 'sleepLineColor', 0x999a99),
 
             jointColor: GetFastValue(debugConfig, 'jointColor', 0xe0e042),
+            jointLineOpacity: GetFastValue(debugConfig, 'jointLineOpacity', 1),
             jointLineThickness: GetFastValue(debugConfig, 'jointLineThickness', 2),
 
             pinSize: GetFastValue(debugConfig, 'pinSize', 4),
@@ -312,22 +281,21 @@ var World = new Class({
      * If you wish to skip a parameter, so it retains its current value, pass `false` for it.
      * 
      * If you wish to reset the Body render colors to the defaults found in the World Debug Config, then call
-     * this method with just the `body` argument provided, and no others.
-     * 
-     * All other values are considered numeric color values.
+     * this method with just the `body` parameter provided and no others.
      * 
      * @method Phaser.Physics.Matter.World#setBodyRenderStyle
      * @since 3.22.0
      *
      * @param {MatterJS.Body} body - The Matter Body to set the render style on.
      * @param {number} [lineColor] - The line color. If `null` it will use the World Debug Config value.
-     * @param {number} [fillColor] - The fill color. If `null` it will use the World Debug Config value.
+     * @param {number} [lineOpacity] - The line opacity, between 0 and 1. If `null` it will use the World Debug Config value.
      * @param {number} [lineThickness] - The line thickness. If `null` it will use the World Debug Config value.
-     * @param {number} [opacity] - The opacity, between 0 and 1.
+     * @param {number} [fillColor] - The fill color. If `null` it will use the World Debug Config value.
+     * @param {number} [fillOpacity] - The fill opacity, between 0 and 1. If `null` it will use the World Debug Config value.
      * 
      * @return {this} This Matter World instance for method chaining.
      */
-    setBodyRenderStyle: function (body, lineColor, fillColor, lineThickness, opacity)
+    setBodyRenderStyle: function (body, lineColor, lineOpacity, lineThickness, fillColor, fillOpacity)
     {
         var render = body.render;
         var config = this.debugConfig;
@@ -339,12 +307,12 @@ var World = new Class({
 
         if (lineColor === undefined || lineColor === null)
         {
-            lineColor = (body.isStatic) ? config.staticStrokeColor : config.strokeColor;
+            lineColor = (body.isStatic) ? config.staticLineColor : config.lineColor;
         }
 
-        if (fillColor === undefined || fillColor === null)
+        if (lineOpacity === undefined || lineOpacity === null)
         {
-            fillColor = (body.isStatic) ? config.staticFillColor : config.fillColor;
+            lineOpacity = config.lineOpacity;
         }
 
         if (lineThickness === undefined || lineThickness === null)
@@ -352,14 +320,24 @@ var World = new Class({
             lineThickness = config.lineThickness;
         }
 
-        if (lineColor !== false)
+        if (fillColor === undefined || fillColor === null)
         {
-            render.strokeColor = lineColor;
+            fillColor = (body.isStatic) ? config.staticFillColor : config.fillColor;
         }
 
-        if (fillColor !== false)
+        if (fillOpacity === undefined || fillOpacity === null)
         {
-            render.fillColor = fillColor;
+            fillOpacity = config.fillOpacity;
+        }
+
+        if (lineColor !== false)
+        {
+            render.lineColor = lineColor;
+        }
+
+        if (lineOpacity !== false)
+        {
+            render.lineOpacity = lineOpacity;
         }
 
         if (lineThickness !== false)
@@ -367,9 +345,14 @@ var World = new Class({
             render.lineThickness = lineThickness;
         }
 
-        if (typeof(opacity) === 'number')
+        if (fillColor !== false)
         {
-            render.opacity = opacity;
+            render.fillColor = fillColor;
+        }
+
+        if (fillOpacity !== false)
+        {
+            render.fillOpacity = fillOpacity;
         }
 
         return this;
@@ -384,15 +367,14 @@ var World = new Class({
      * If you wish to skip a parameter, so it retains its current value, pass `false` for it.
      * 
      * If you wish to reset the Constraint render colors to the defaults found in the World Debug Config, then call
-     * this method with just the `constraint` argument provided, and no others.
-     * 
-     * All other values are considered numeric color values.
+     * this method with just the `constraint` parameter provided and no others.
      * 
      * @method Phaser.Physics.Matter.World#setConstraintRenderStyle
      * @since 3.22.0
      *
      * @param {MatterJS.Constraint} constraint - The Matter Constraint to set the render style on.
      * @param {number} [lineColor] - The line color. If `null` it will use the World Debug Config value.
+     * @param {number} [lineOpacity] - The line opacity, between 0 and 1. If `null` it will use the World Debug Config value.
      * @param {number} [lineThickness] - The line thickness. If `null` it will use the World Debug Config value.
      * @param {number} [pinSize] - If this constraint is a pin, this sets the size of the pin circle. If `null` it will use the World Debug Config value.
      * @param {number} [anchorColor] - The color used when rendering this constraints anchors.  If `null` it will use the World Debug Config value.
@@ -400,7 +382,7 @@ var World = new Class({
      * 
      * @return {this} This Matter World instance for method chaining.
      */
-    setConstraintRenderStyle: function (constraint, lineColor, lineThickness, pinSize, anchorColor, anchorSize)
+    setConstraintRenderStyle: function (constraint, lineColor, lineOpacity, lineThickness, pinSize, anchorColor, anchorSize)
     {
         var render = constraint.render;
         var config = this.debugConfig;
@@ -429,6 +411,11 @@ var World = new Class({
             }
         }
 
+        if (lineOpacity === undefined || lineOpacity === null)
+        {
+            lineOpacity = config.jointLineOpacity;
+        }
+
         if (lineThickness === undefined || lineThickness === null)
         {
             lineThickness = config.jointLineThickness;
@@ -451,7 +438,12 @@ var World = new Class({
 
         if (lineColor !== false)
         {
-            render.strokeColor = lineColor;
+            render.lineColor = lineColor;
+        }
+
+        if (lineOpacity !== false)
+        {
+            render.lineOpacity = lineOpacity;
         }
 
         if (lineThickness !== false)
@@ -505,11 +497,12 @@ var World = new Class({
     
                     if (obj.type === 'body')
                     {
-                        _this.setBodyRenderStyle(obj, render.strokeColor, render.fillColor, render.lineThickness);
+                        _this.setBodyRenderStyle(obj, render.lineColor, render.lineOpacity, render.lineThickness, render.fillColor, render.fillOpacity);
+
                     }
                     else if (obj.type === 'constraint')
                     {
-                        _this.setConstraintRenderStyle(obj, render.strokeColor, render.lineThickness, render.pinSize, render.anchorColor, render.anchorSize);
+                        _this.setConstraintRenderStyle(obj, render.lineColor, render.lineOpacity, render.lineThickness, render.pinSize, render.anchorColor, render.anchorSize);
                     }
                 }
             });
@@ -1151,11 +1144,11 @@ var World = new Class({
         var showConvexHulls = config.showConvexHulls;
 
         var renderFill = config.renderFill;
-        var renderStroke = config.renderStroke;
+        var renderLine = config.renderLine;
 
         var staticBodySleepOpacity = config.staticBodySleepOpacity;
         var sleepFillColor = config.sleepFillColor;
-        var sleepStrokeColor = config.sleepStrokeColor;
+        var sleepLineColor = config.sleepLineColor;
 
         var hullColor = config.hullColor;
 
@@ -1176,20 +1169,22 @@ var World = new Class({
                 continue;
             }
 
-            var opacity = body.render.opacity;
-            var strokeColor = body.render.strokeColor;
-            var fillColor = body.render.fillColor;
+            var lineColor = body.render.lineColor;
+            var lineOpacity = body.render.lineOpacity;
             var lineThickness = body.render.lineThickness;
+            var fillColor = body.render.fillColor;
+            var fillOpacity = body.render.fillOpacity;
 
             if (showSleeping && body.isSleeping)
             {
                 if (body.isStatic)
                 {
-                    opacity *= staticBodySleepOpacity;
+                    lineOpacity *= staticBodySleepOpacity;
+                    fillOpacity *= staticBodySleepOpacity;
                 }
                 else
                 {
-                    strokeColor = sleepStrokeColor;
+                    lineColor = sleepLineColor;
                     fillColor = sleepFillColor;
                 }
             }
@@ -1199,12 +1194,12 @@ var World = new Class({
                 fillColor = null;
             }
 
-            if (!renderStroke)
+            if (!renderLine)
             {
-                strokeColor = null;
+                lineColor = null;
             }
 
-            this.renderBody(body, graphics, showInternalEdges, strokeColor, fillColor, opacity, lineThickness);
+            this.renderBody(body, graphics, showInternalEdges, lineColor, lineOpacity, lineThickness, fillColor, fillOpacity);
 
             var partsLength = body.parts.length;
 
@@ -1221,27 +1216,30 @@ var World = new Class({
      * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
      * you wish to render a Body to your own Graphics instance.
      * 
+     * If you don't wish to render a line around the body, set the `lineColor` parameter to `null`.
+     * Equally, if you don't wish to render a fill, set the `fillColor` parameter to `null`.
+     * 
      * @method Phaser.Physics.Matter.World#renderBody
      * @since 3.22.0
      * 
      * @param {MatterJS.Body} body - The Matter Body to be rendered.
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
      * @param {boolean} showInternalEdges - Render internal edges of the polygon?
-     * @param {number} [lineColor] - The stroke color. Set to `null` if you don't want to render a stroke.
-     * @param {number} [fillColor] - The fill color. Set to `null` if you don't want to render a fill.
-     * @param {number} [opacity] - The opacity, between 0 and 1. Set to `null` if you want to use the opacity defined in the Body render object.
-     * @param {number} [lineThickness=1] - The stroke line thickness.
+     * @param {number} [lineColor] - The line color.
+     * @param {number} [lineOpacity] - The line opacity, between 0 and 1.
+     * @param {number} [lineThickness=1] - The line thickness.
+     * @param {number} [fillColor] - The fill color.
+     * @param {number} [fillOpacity] - The fill opacity, between 0 and 1.
      * 
      * @return {this} This Matter World instance for method chaining.
      */
-    renderBody: function (body, graphics, showInternalEdges, lineColor, fillColor, opacity, lineThickness)
+    renderBody: function (body, graphics, showInternalEdges, lineColor, lineOpacity, lineThickness, fillColor, fillOpacity)
     {
         if (lineColor === undefined) { lineColor = null; }
-        if (fillColor === undefined) { fillColor = null; }
-        if (opacity === undefined) { opacity = null; }
+        if (lineOpacity === undefined) { lineOpacity = null; }
         if (lineThickness === undefined) { lineThickness = 1; }
-
-        var usePartOpacity = !opacity;
+        if (fillColor === undefined) { fillColor = null; }
+        if (fillOpacity === undefined) { fillOpacity = null; }
 
         //  Handle compound parts
         var parts = body.parts;
@@ -1251,11 +1249,7 @@ var World = new Class({
         {
             var part = parts[k];
             var render = part.render;
-
-            if (usePartOpacity)
-            {
-                opacity = render.opacity;
-            }
+            var opacity = render.opacity;
 
             if (!render.visible || opacity === 0)
             {
@@ -1269,12 +1263,12 @@ var World = new Class({
 
             if (fillColor !== null)
             {
-                graphics.fillStyle(fillColor, opacity);
+                graphics.fillStyle(fillColor, fillOpacity * opacity);
             }
 
             if (lineColor !== null)
             {
-                graphics.lineStyle(lineThickness, lineColor, opacity);
+                graphics.lineStyle(lineThickness, lineColor, lineOpacity * opacity);
             }
 
             if (circleRadius)
@@ -1337,8 +1331,8 @@ var World = new Class({
      * 
      * @param {MatterJS.Body} body - The Matter Body to be rendered.
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
-     * @param {number} hullColor - The stroke color used to render the hull.
-     * @param {number} [lineThickness=1] - The stroke line thickness.
+     * @param {number} hullColor - The color used to render the hull.
+     * @param {number} [lineThickness=1] - The hull line thickness.
      * 
      * @return {this} This Matter World instance for method chaining.
      */
@@ -1393,13 +1387,14 @@ var World = new Class({
         {
             var config = constraints[i].render;
 
-            var strokeColor = config.strokeColor;
+            var lineColor = config.lineColor;
+            var lineOpacity = config.lineOpacity;
             var lineThickness = config.lineThickness;
             var pinSize = config.pinSize;
             var anchorColor = config.anchorColor;
             var anchorSize = config.anchorSize;
 
-            this.renderConstraint(constraints[i], graphics, strokeColor, lineThickness, pinSize, anchorColor, anchorSize);
+            this.renderConstraint(constraints[i], graphics, lineColor, lineOpacity, lineThickness, pinSize, anchorColor, anchorSize);
         }
     },
 
@@ -1414,7 +1409,8 @@ var World = new Class({
      * 
      * @param {MatterJS.Constraint} constraint - The Matter Constraint to render.
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
-     * @param {number} lineColor - The line color used when rendering this constraint.
+     * @param {number} lineColor - The line color.
+     * @param {number} lineOpacity - The line opacity, between 0 and 1.
      * @param {number} lineThickness - The line thickness.
      * @param {number} pinSize - If this constraint is a pin, this sets the size of the pin circle.
      * @param {number} anchorColor - The color used when rendering this constraints anchors. Set to `null` to not render anchors.
@@ -1422,7 +1418,7 @@ var World = new Class({
      * 
      * @return {this} This Matter World instance for method chaining.
      */
-    renderConstraint: function (constraint, graphics, lineColor, lineThickness, pinSize, anchorColor, anchorSize)
+    renderConstraint: function (constraint, graphics, lineColor, lineOpacity, lineThickness, pinSize, anchorColor, anchorSize)
     {
         var render = constraint.render;
 
@@ -1431,7 +1427,7 @@ var World = new Class({
             return this;
         }
 
-        graphics.lineStyle(lineThickness, lineColor);
+        graphics.lineStyle(lineThickness, lineColor, lineOpacity * render.opacity);
 
         var bodyA = constraint.bodyA;
         var bodyB = constraint.bodyB;
