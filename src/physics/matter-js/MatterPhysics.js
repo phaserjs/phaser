@@ -648,11 +648,9 @@ var MatterPhysics = new Class({
     /**
      * Checks if the vertices of the given body, or an array of bodies, contains the given point, or not.
      * 
-     * If you wish to check this against a Phaser Game Object, such as a Matter Sprite,
-     * then pass in the body property, i.e. `this.matter.containsPoint(sprite.body, x, y)`
-     * 
      * You can pass in either a single body, or an array of bodies to be checked. This method will
-     * return `true` if _any_ of the bodies in the array contain the point. See also the `getBodiesBelowPoint` method.
+     * return `true` if _any_ of the bodies in the array contain the point. See the `intersectPoint` method if you need
+     * to get a list of intersecting bodies.
      * 
      * The point should be transformed into the Matter World coordinate system in advance. This happens by
      * default with Input Pointers, but if you wish to use points from another system you may need to
@@ -669,10 +667,7 @@ var MatterPhysics = new Class({
      */
     containsPoint: function (body, x, y)
     {
-        if (!Array.isArray(body))
-        {
-            body = [ body ];
-        }
+        body = this.getMatterBodies(body);
 
         var position = Vector.create(x, y);
 
@@ -682,89 +677,349 @@ var MatterPhysics = new Class({
     },
 
     /**
-     * Checks the given point to see if it lays within the vertices of any bodies in the Matter World.
+     * Checks the given coordinates to see if any vertices of the given bodies contain it.
      * 
-     * The point should be transformed into the Matter World coordinate system in advance. This happens by
-     * default with Input Pointers, but if you wish to use points from another system you may need to
+     * If no bodies are provided it will search all bodies in the Matter World.
+     * 
+     * The coordinates should be transformed into the Matter World coordinate system in advance. This happens by
+     * default with Input Pointers, but if you wish to use coordinates from another system you may need to
      * transform them before passing them.
      * 
-     * @method Phaser.Physics.Matter.MatterPhysics#getBodiesBelowPoint
+     * @method Phaser.Physics.Matter.MatterPhysics#intersectPoint
      * @since 3.22.0
      *
      * @param {number} x - The horizontal coordinate of the point.
      * @param {number} y - The vertical coordinate of the point.
+     * @param {MatterJS.Body[]} [bodies] - An array of bodies to check. If not provided it will search all bodies in the world.
      * 
-     * @return {MatterJS.Body[]} An array of bodies whos vertices contain the given point.
+     * @return {MatterJS.Body[]} An array of bodies which contain the given point.
      */
-    getBodiesBelowPoint: function (x, y)
+    intersectPoint: function (x, y, bodies)
     {
-        var bodies = this.world.getAllBodies();
+        bodies = this.getMatterBodies(bodies);
+
         var position = Vector.create(x, y);
 
         return Query.point(bodies, position);
     },
 
     /**
-     * Sets the debug render style for the given Matter Body.
+     * Checks the given rectangular area to see if any vertices of the given bodies intersect with it.
+     * Or, if the `outside` parameter is set to `true`, it checks to see which bodies do not
+     * intersect with it.
      * 
-     * If you are using this on a Phaser Game Object, such as a Matter Sprite, then pass in the body property
-     * to this method, not the Game Object itself.
+     * If no bodies are provided it will search all bodies in the Matter World.
      * 
-     * If you wish to skip a parameter, so it retains its current value, pass `false` for it.
-     * 
-     * If you wish to reset the Body render colors to the defaults found in the World Debug Config, then call
-     * this method with just the `body` argument provided, and no others.
-     * 
-     * All other values are considered numeric color values.
-     * 
-     * @method Phaser.Physics.Matter.MatterPhysics#setBodyRenderStyle
+     * @method Phaser.Physics.Matter.MatterPhysics#intersectRect
      * @since 3.22.0
      *
-     * @param {MatterJS.Body} body - The Matter Body to set the render style on.
-     * @param {number} [lineColor] - The line color.
-     * @param {number} [fillColor] - The fill color.
-     * @param {number} [lineThickness] - The line thickness.
-     * @param {number} [opacity] - The opacity, between 0 and 1.
+     * @param {number} x - The horizontal coordinate of the top-left of the area.
+     * @param {number} y - The vertical coordinate of the top-left of the area.
+     * @param {number} width - The width of the area.
+     * @param {number} height - The height of the area.
+     * @param {boolean} [outside=false] - If `false` it checks for vertices inside the area, if `true` it checks for vertices outside the area.
+     * @param {MatterJS.Body[]} [bodies] - An array of bodies to check. If not provided it will search all bodies in the world.
      * 
-     * @return {this} This Matter Physics instance for method chaining.
+     * @return {MatterJS.Body[]} An array of bodies that intersect with the given area.
      */
-    setBodyRenderStyle: function (body, lineColor, fillColor, lineThickness, opacity)
+    intersectRect: function (x, y, width, height, outside, bodies)
     {
-        this.world.setBodyRenderStyle(body, lineColor, fillColor, lineThickness, opacity);
+        if (outside === undefined) { outside = false; }
+
+        bodies = this.getMatterBodies(bodies);
+
+        var bounds = {
+            min: { x: x, y: y },
+            max: { x: x + width, y: y + height }
+        };
+
+        return Query.region(bodies, bounds, outside);
+    },
+
+    /**
+     * Checks the given ray segment to see if any vertices of the given bodies intersect with it.
+     * 
+     * If no bodies are provided it will search all bodies in the Matter World.
+     * 
+     * The width of the ray can be specified via the `rayWidth` parameter.
+     * 
+     * @method Phaser.Physics.Matter.MatterPhysics#intersectRay
+     * @since 3.22.0
+     *
+     * @param {number} x1 - The horizontal coordinate of the start of the ray segment.
+     * @param {number} y1 - The vertical coordinate of the start of the ray segment.
+     * @param {number} x2 - The horizontal coordinate of the end of the ray segment.
+     * @param {number} y2 - The vertical coordinate of the end of the ray segment.
+     * @param {number} [rayWidth=1] - The width of the ray segment.
+     * @param {MatterJS.Body[]} [bodies] - An array of bodies to check. If not provided it will search all bodies in the world.
+     * 
+     * @return {MatterJS.Body[]} An array of bodies whos vertices intersect with the ray segment.
+     */
+    intersectRay: function (x1, y1, x2, y2, rayWidth, bodies)
+    {
+        if (rayWidth === undefined) { rayWidth = 1; }
+        
+        bodies = this.getMatterBodies(bodies);
+
+        var result = [];
+        var collisions = Query.ray(bodies, Vector.create(x1, y1), Vector.create(x2, y2), rayWidth);
+
+        for (var i = 0; i < collisions.length; i++)
+        {
+            result.push(collisions[i].body);
+        }
+
+        return result;
+    },
+
+    /**
+     * Checks the given Matter Body to see if it intersects with any of the given bodies.
+     * 
+     * If no bodies are provided it will check against all bodies in the Matter World.
+     * 
+     * @method Phaser.Physics.Matter.MatterPhysics#intersectBody
+     * @since 3.22.0
+     *
+     * @param {MatterJS.Body} body - The target body.
+     * @param {MatterJS.Body[]} [bodies] - An array of bodies to check the target body against. If not provided it will search all bodies in the world.
+     * 
+     * @return {MatterJS.Body[]} An array of bodies whos vertices intersect with target body.
+     */
+    intersectBody: function (body, bodies)
+    {
+        bodies = this.getMatterBodies(bodies);
+
+        var result = [];
+        var collisions = Query.collides(body, bodies);
+
+        for (var i = 0; i < collisions.length; i++)
+        {
+            var pair = collisions[i];
+
+            if (pair.bodyA === body)
+            {
+                result.push(pair.bodyB);
+            }
+            else
+            {
+                result.push(pair.bodyA);
+            }
+        }
+
+        return result;
+    },
+
+    /**
+     * Checks to see if the target body, or an array of target bodies, intersects with any of the given bodies.
+     * 
+     * If intersection occurs this method will return `true` and, if provided, invoke the callbacks.
+     * 
+     * If no bodies are provided for the second parameter the target will check again all bodies in the Matter World.
+     * 
+     * Note that bodies can only overlap if they are in non-colliding collision groups or categories.
+     * 
+     * If you provide a `processCallback` then the two bodies that overlap are sent to it. This callback
+     * must return a boolean and is used to allow you to perform additional processing tests before a final
+     * outcome is decided. If it returns `true` then the bodies are finally passed to the `overlapCallback`, if set.
+     * 
+     * If you provide an `overlapCallback` then the matching pairs of overlapping bodies will be sent to it.
+     * 
+     * Both callbacks have the following signature: `function (bodyA, bodyB, collisionInfo)` where `bodyA` is always
+     * the target body. The `collisionInfo` object contains additional data, such as the angle and depth of penetration.
+     * 
+     * @method Phaser.Physics.Matter.MatterPhysics#overlap
+     * @since 3.22.0
+     *
+     * @param {(MatterJS.Body|MatterJS.Body[])} body - The target body, or array of target bodies, to check.
+     * @param {MatterJS.Body[]} [object2] - The second body, or array of bodies, to check. If falsey it will check against all bodis in the world.
+     * @param {ArcadePhysicsCallback} [overlapCallback] - An optional callback function that is called if the bodies overlap.
+     * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two bodies if they overlap. If this is set then `overlapCallback` will only be invoked if this callback returns `true`.
+     * @param {*} [callbackContext] - The context, or scope, in which to run the callbacks.
+     * 
+     * @return {boolean} `true` if the target body intersects with _any_ of the bodies given, otherwise `false`.
+     */
+    overlap: function (body, bodies, overlapCallback, processCallback, callbackContext)
+    {
+        if (overlapCallback === undefined) { overlapCallback = null; }
+        if (processCallback === undefined) { processCallback = null; }
+        if (callbackContext === undefined) { callbackContext = overlapCallback; }
+
+        if (!Array.isArray(body))
+        {
+            body = [ body ];
+        }
+
+        bodies = this.getMatterBodies(bodies);
+
+        var match = false;
+
+        for (var i = 0; i < body.length; i++)
+        {
+            var target = body[i];
+
+            var collisions = Query.collides(target, bodies);
+
+            for (var c = 0; c < collisions.length; c++)
+            {
+                var info = collisions[c];
+                var bodyB = (info.bodyA.id === target.id) ? info.bodyB : info.bodyA;
+
+                if (!processCallback || processCallback.call(callbackContext, target, bodyB, info))
+                {
+                    match = true;
+
+                    if (overlapCallback)
+                    {
+                        overlapCallback.call(callbackContext, target, bodyB, info);
+                    }
+                    else if (!processCallback)
+                    {
+                        //  If there are no callbacks we don't need to test every body, just exit when the first is found
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return match;
+    },
+
+    /**
+     * Sets the collision filter category of all given Matter Bodies to the given value.
+     * 
+     * This number must be a power of two between 2^0 (= 1) and 2^31.
+     * 
+     * Bodies with different collision groups (see {@link #setCollisionGroup}) will only collide if their collision
+     * categories are included in their collision masks (see {@link #setCollidesWith}).
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#setCollisionCategory
+     * @since 3.22.0
+     *
+     * @param {MatterJS.Body[]} bodies - An array of bodies to update. If falsey it will use all bodies in the world.
+     * @param {number} value - Unique category bitfield.
+     *
+     * @return {this} This Matter Physics instance.
+     */
+    setCollisionCategory: function (bodies, value)
+    {
+        bodies = this.getMatterBodies(bodies);
+
+        bodies.forEach(function (body)
+        {
+            body.collisionFilter.category = value;
+        });
 
         return this;
     },
 
     /**
-     * Sets the debug render style for the given Matter Constraint.
+     * Sets the collision filter group of all given Matter Bodies to the given value.
      * 
-     * If you are using this on a Phaser Game Object, then pass in the body property
-     * to this method, not the Game Object itself.
+     * If the group value is zero, or if two Matter Bodies have different group values,
+     * they will collide according to the usual collision filter rules (see {@link #setCollisionCategory} and {@link #setCollisionGroup}).
      * 
-     * If you wish to skip a parameter, so it retains its current value, pass `false` for it.
-     * 
-     * If you wish to reset the Constraint render colors to the defaults found in the World Debug Config, then call
-     * this method with just the `constraint` argument provided, and no others.
-     * 
-     * All other values are considered numeric color values.
-     * 
-     * @method Phaser.Physics.Matter.MatterPhysics#setConstraintRenderStyle
+     * If two Matter Bodies have the same positive group value, they will always collide;
+     * if they have the same negative group value they will never collide.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#setCollisionGroup
      * @since 3.22.0
      *
-     * @param {MatterJS.Constraint} constraint - The Matter Constraint to set the render style on.
-     * @param {number} [lineColor] - The line color used when rendering this constraint.
-     * @param {number} [lineThickness] - The line thickness.
-     * @param {number} [pinSize] - If this constraint is a pin, this sets the size of the pin circle.
-     * @param {number} [anchorColor] - The color used when rendering this constraints anchors. Set to `null` to not render anchors.
-     * @param {number} [anchorSize] - The size of the anchor circle, if this constraint has anchors and is rendering them.
-     * 
-     * @return {this} This Matter Physics instance for method chaining.
+     * @param {MatterJS.Body[]} bodies - An array of bodies to update. If falsey it will use all bodies in the world.
+     * @param {number} value - Unique group index.
+     *
+     * @return {this} This Matter Physics instance.
      */
-    setConstraintRenderStyle: function (constraint, lineColor, lineThickness, pinSize, anchorColor, anchorSize)
+    setCollisionGroup: function (bodies, value)
     {
-        this.world.setConstraintRenderStyle(constraint, lineColor, lineThickness, pinSize, anchorColor, anchorSize);
+        bodies = this.getMatterBodies(bodies);
+
+        bodies.forEach(function (body)
+        {
+            body.collisionFilter.group = value;
+        });
 
         return this;
+    },
+
+    /**
+     * Sets the collision filter mask of all given Matter Bodies to the given value.
+     * 
+     * Two Matter Bodies with different collision groups will only collide if each one includes the others
+     * category in its mask based on a bitwise AND operation: `(categoryA & maskB) !== 0` and 
+     * `(categoryB & maskA) !== 0` are both true.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#setCollidesWith
+     * @since 3.22.0
+     *
+     * @param {MatterJS.Body[]} bodies - An array of bodies to update. If falsey it will use all bodies in the world.
+     * @param {(number|number[])} categories - A unique category bitfield, or an array of them.
+     *
+     * @return {this} This Matter Physics instance.
+     */
+    setCollidesWith: function (bodies, categories)
+    {
+        bodies = this.getMatterBodies(bodies);
+
+        var flags = 0;
+
+        if (!Array.isArray(categories))
+        {
+            flags = categories;
+        }
+        else
+        {
+            for (var i = 0; i < categories.length; i++)
+            {
+                flags |= categories[i];
+            }
+        }
+
+        bodies.forEach(function (body)
+        {
+            body.collisionFilter.mask = flags;
+        });
+
+        return this;
+    },
+
+    /**
+     * Takes an array and returns a new array made from all of the Matter Bodies found in the original array.
+     * 
+     * For example, passing in Matter Game Objects, such as a bunch of Matter Sprites, to this method, would
+     * return an array containing all of their native Matter Body objects.
+     * 
+     * If the `bodies` argument is falsey, it will return all bodies in the world.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#getMatterBodies
+     * @since 3.22.0
+     *
+     * @param {array} [bodies] - An array of objects to extract the bodies from. If falsey, it will return all bodis in the world.
+     *
+     * @return {MatterJS.Body[]} An array of native Matter Body objects.
+     */
+    getMatterBodies: function (bodies)
+    {
+        if (!bodies)
+        {
+            return this.world.getAllBodies();
+        }
+
+        if (!Array.isArray(bodies))
+        {
+            bodies = [ bodies ];
+        }
+
+        var output = [];
+
+        for (var i = 0; i < bodies.length; i++)
+        {
+            var body = (bodies[i].hasOwnProperty('body')) ? bodies[i].body : bodies[i];
+
+            output.push(body);
+
+        }
+
+        return output;
     },
 
     /**
