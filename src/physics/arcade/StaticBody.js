@@ -450,8 +450,7 @@ var StaticBody = new Class({
     },
 
     /**
-     * Updates this Static Body so that its position and dimensions are updated
-     * based on the current Game Object it is bound to.
+     * Syncs the Body's position and size with its parent Game Object.
      *
      * @method Phaser.Physics.Arcade.StaticBody#updateFromGameObject
      * @since 3.1.0
@@ -630,7 +629,6 @@ var StaticBody = new Class({
 
     /**
      * Resets this Body to the given coordinates. Also positions its parent Game Object to the same coordinates.
-     * Similar to `updateFromGameObject`, but doesn't modify the Body's dimensions.
      *
      * @method Phaser.Physics.Arcade.StaticBody#reset
      * @since 3.0.0
