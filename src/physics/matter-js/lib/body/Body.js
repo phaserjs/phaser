@@ -45,7 +45,7 @@ var Axes = require('../geometry/Axes');
             plugin: {},
             angle: 0,
             vertices: Vertices.fromPath('L 0 0 L 40 0 L 40 40 L 0 40'),
-            centerOfMass: { x: 0, y: 0 },
+            centerOfMass: { x: 0, y: 0 },  // custom Phaser property
             position: { x: 0, y: 0 },
             force: { x: 0, y: 0 },
             torque: 0,
@@ -108,6 +108,11 @@ var Axes = require('../geometry/Axes');
             _original: null
         };
 
+        if (!options.hasOwnProperty('position') && options.hasOwnProperty('vertices'))
+        {
+            options.position = Vertices.centre(options.vertices);
+        }
+
         var body = Common.extend(defaults, options);
 
         _initProperties(body, options);
@@ -150,11 +155,6 @@ var Axes = require('../geometry/Axes');
      */
     var _initProperties = function(body, options) {
         options = options || {};
-
-        if (!options.hasOwnProperty('position'))
-        {
-            body.position = Vertices.centre(body.vertices);
-        }
 
         // init required properties (order is important)
         Body.set(body, {
