@@ -23,7 +23,7 @@ var Transform = {
 
     /**
      * Private internal value. Holds the horizontal scale value.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Transform#_scaleX
      * @type {number}
      * @private
@@ -34,7 +34,7 @@ var Transform = {
 
     /**
      * Private internal value. Holds the vertical scale value.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Transform#_scaleY
      * @type {number}
      * @private
@@ -45,7 +45,7 @@ var Transform = {
 
     /**
      * Private internal value. Holds the rotation value in radians.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Transform#_rotation
      * @type {number}
      * @private
@@ -76,7 +76,9 @@ var Transform = {
 
     /**
      * The z position of this Game Object.
-     * Note: Do not use this value to set the z-index, instead see the `depth` property.
+     *
+     * Note: The z position does not control the rendering order of 2D Game Objects. Use
+     * {@link Phaser.GameObjects.Components.Depth#depth} instead.
      *
      * @name Phaser.GameObjects.Components.Transform#z
      * @type {number}
@@ -98,7 +100,7 @@ var Transform = {
     /**
      * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
      * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
-     * 
+     *
      * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
      * isn't the case, use the `scaleX` or `scaleY` properties instead.
      *
@@ -195,7 +197,7 @@ var Transform = {
 
     /**
      * The angle of this Game Object as expressed in degrees.
-     * 
+     *
      * Phaser uses a right-hand clockwise rotation system, where 0 is right, 90 is down, 180/-180 is left
      * and -90 is up.
      *
@@ -222,7 +224,7 @@ var Transform = {
 
     /**
      * The angle of this Game Object in radians.
-     * 
+     *
      * Phaser uses a right-hand clockwise rotation system, where 0 is right, 90 is down, 180/-180 is left
      * and -90 is up.
      *
@@ -278,7 +280,7 @@ var Transform = {
     /**
      * Sets the position of this Game Object to be a random position within the confines of
      * the given area.
-     * 
+     *
      * If no area is specified a random position between 0 x 0 and the game width x height is used instead.
      *
      * The position does not factor in the size of this Game Object, meaning that only the origin is
@@ -408,6 +410,9 @@ var Transform = {
     /**
      * Sets the z position of this Game Object.
      *
+     * Note: The z position does not control the rendering order of 2D Game Objects. Use
+     * {@link Phaser.GameObjects.Components.Depth#setDepth} instead.
+     *
      * @method Phaser.GameObjects.Components.Transform#setZ
      * @since 3.0.0
      *
@@ -499,7 +504,7 @@ var Transform = {
 
     /**
      * Gets the sum total rotation of all of this Game Objects parent Containers.
-     * 
+     *
      * The returned value is in radians and will be zero if this Game Object has no parent container.
      *
      * @method Phaser.GameObjects.Components.Transform#getParentRotation
