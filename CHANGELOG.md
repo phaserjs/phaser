@@ -1,6 +1,6 @@
 # Change Log
 
-## Version 3.21.1 - Senku - in development
+## Version 3.22 - Senku - in development
 
 ### Matter Physics Updates
 
@@ -91,6 +91,10 @@
 
 ### Updates
 
+* `Body.deltaXFinal` is a new method on Arcade Physics Bodies that will return the final change in the horizontal position of the body, as based on all the steps that took place this frame. This property is calculated during the `postUpdate` phase, so must be listened for accordingly (thanks Bambosh)
+* `Body.deltaYFinal` is a new method on Arcade Physics Bodies that will return the final change in the vertical position of the body, as based on all the steps that took place this frame. This property is calculated during the `postUpdate` phase, so must be listened for accordingly (thanks Bambosh)
+* `Body._tx` is a new internal private var, holding the Arcade Physics Body combined total delta x value.
+* `Body._ty` is a new internal private var, holding the Arcade Physics Body combined total delta y value.
 
 ### Bug Fixes
 
@@ -100,7 +104,7 @@
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@fselcukcan 
+@fselcukcan Bambosh
 
 
 ## Version 3.21.0 - Senku - 22nd November 2019

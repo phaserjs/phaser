@@ -762,6 +762,28 @@ var Body = new Class({
         this._dy = 0;
 
         /**
+         * The calculated change in the Body's horizontal position during as of `postUpdate`.
+         *
+         * @name Phaser.Physics.Arcade.Body#_tx
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.22.0
+         */
+        this._tx = 0;
+
+        /**
+         * The calculated change in the Body's vertical position during as of `postUpdate`.
+         *
+         * @name Phaser.Physics.Arcade.Body#_ty
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.22.0
+         */
+        this._ty = 0;
+
+        /**
          * Stores the Game Object's bounds.
          *
          * @name Phaser.Physics.Arcade.Body#_bounds
@@ -1050,6 +1072,9 @@ var Body = new Class({
         {
             this.gameObject.angle += this.deltaZ();
         }
+
+        this._tx = dx;
+        this._ty = dy;
     },
 
     /**
@@ -1423,6 +1448,9 @@ var Body = new Class({
     /**
      * The change in this Body's horizontal position from the previous step.
      * This value is set during the Body's update phase.
+     * 
+     * As a Body can update multiple times per step this may not hold the final
+     * delta value for the Body. In this case, please see the `deltaXFinal` method.
      *
      * @method Phaser.Physics.Arcade.Body#deltaX
      * @since 3.0.0
@@ -1437,6 +1465,9 @@ var Body = new Class({
     /**
      * The change in this Body's vertical position from the previous step.
      * This value is set during the Body's update phase.
+     * 
+     * As a Body can update multiple times per step this may not hold the final
+     * delta value for the Body. In this case, please see the `deltaYFinal` method.
      *
      * @method Phaser.Physics.Arcade.Body#deltaY
      * @since 3.0.0
@@ -1446,6 +1477,48 @@ var Body = new Class({
     deltaY: function ()
     {
         return this._dy;
+    },
+
+    /**
+     * The change in this Body's horizontal position from the previous game update.
+     * 
+     * This value is set during the `postUpdate` phase and takes into account the
+     * `deltaMax` and final position of the Body.
+     * 
+     * Because this value is not calculated until `postUpdate`, you must listen for it
+     * during a Scene `POST_UPDATE` or `RENDER` event, and not in `update`, as it will
+     * not be calculated by that point. If you _do_ use these values in `update` they
+     * will represent the delta from the _previous_ game frame.
+     *
+     * @method Phaser.Physics.Arcade.Body#deltaXFinal
+     * @since 3.22.0
+     *
+     * @return {number} The final delta x value.
+     */
+    deltaXFinal: function ()
+    {
+        return this._tx;
+    },
+
+    /**
+     * The change in this Body's vertical position from the previous game update.
+     * 
+     * This value is set during the `postUpdate` phase and takes into account the
+     * `deltaMax` and final position of the Body.
+     * 
+     * Because this value is not calculated until `postUpdate`, you must listen for it
+     * during a Scene `POST_UPDATE` or `RENDER` event, and not in `update`, as it will
+     * not be calculated by that point. If you _do_ use these values in `update` they
+     * will represent the delta from the _previous_ game frame.
+     *
+     * @method Phaser.Physics.Arcade.Body#deltaYFinal
+     * @since 3.22.0
+     *
+     * @return {number} The final delta y value.
+     */
+    deltaYFinal: function ()
+    {
+        return this._ty;
     },
 
     /**
