@@ -762,7 +762,7 @@ var Body = new Class({
         this._dy = 0;
 
         /**
-         * The calculated change in the Body's horizontal position during as of `postUpdate`.
+         * The final calculated change in the Body's horizontal position as of `postUpdate`.
          *
          * @name Phaser.Physics.Arcade.Body#_tx
          * @type {number}
@@ -773,7 +773,7 @@ var Body = new Class({
         this._tx = 0;
 
         /**
-         * The calculated change in the Body's vertical position during as of `postUpdate`.
+         * The final calculated change in the Body's vertical position as of `postUpdate`.
          *
          * @name Phaser.Physics.Arcade.Body#_ty
          * @type {number}
