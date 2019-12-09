@@ -133,7 +133,7 @@ var SetBody = {
 
         if (this._originComponent)
         {
-            this.setOrigin(body.render.sprite.xOffset, body.render.sprite.yOffset);
+            this.setOrigin(this.originX + this.centerOffsetX, this.originY + this.centerOffsetY);
         }
 
         return this;
