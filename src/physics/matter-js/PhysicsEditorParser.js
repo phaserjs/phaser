@@ -58,13 +58,10 @@ var PhysicsEditorParser = {
         var body = Body.create(matterConfig);
 
         Body.setParts(body, fixtures);
-        body.render.sprite.xOffset = body.position.x / w;
-        body.render.sprite.yOffset = body.position.y / h;
         Body.setPosition(body, { x: x, y: y });
 
         return body;
     },
-
 
     /**
      * Parses an element of the "fixtures" list exported by PhysicsEditor
