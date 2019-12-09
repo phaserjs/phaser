@@ -40,11 +40,12 @@ var Axes = require('../geometry/Axes');
             id: Common.nextId(),
             type: 'body',
             label: 'Body',
-            gameObject: null,
+            gameObject: null, // custom Phaser property
             parts: [],
             plugin: {},
             angle: 0,
             vertices: Vertices.fromPath('L 0 0 L 40 0 L 40 40 L 0 40'),
+            centerOfMass: { x: 0, y: 0 },
             position: { x: 0, y: 0 },
             force: { x: 0, y: 0 },
             torque: 0,
@@ -173,17 +174,6 @@ var Axes = require('../geometry/Axes');
             mass: options.mass || body.mass,
             inertia: options.inertia || body.inertia
         });
-
-        // render properties
-        /*
-        var defaultFillStyle = (body.isStatic ? '#2e2b44' : Common.choose(['#006BA6', '#0496FF', '#FFBC42', '#D81159', '#8F2D56'])),
-            defaultStrokeStyle = '#000';
-        body.render.fillStyle = body.render.fillStyle || defaultFillStyle;
-        body.render.strokeStyle = body.render.strokeStyle || defaultStrokeStyle;
-        */
-
-        body.render.sprite.xOffset += -(body.bounds.min.x - body.position.x) / (body.bounds.max.x - body.bounds.min.x);
-        body.render.sprite.yOffset += -(body.bounds.min.y - body.position.y) / (body.bounds.max.y - body.bounds.min.y);
     };
 
     /**
@@ -426,12 +416,19 @@ var Axes = require('../geometry/Axes');
         // sum the properties of all compound parts of the parent body
         var total = Body._totalProperties(body);
 
+        //  Phaser addition
+        var cx = total.centre.x;
+        var cy = total.centre.y;
+
+        body.centerOfMass.x = cx;
+        body.centerOfMass.y = cy;
+
         body.area = total.area;
         body.parent = body;
-        body.position.x = total.centre.x;
-        body.position.y = total.centre.y;
-        body.positionPrev.x = total.centre.x;
-        body.positionPrev.y = total.centre.y;
+        body.position.x = cx;
+        body.position.y = cy;
+        body.positionPrev.x = cx;
+        body.positionPrev.y = cy;
 
         Body.setMass(body, total.mass);
         Body.setInertia(body, total.inertia);
