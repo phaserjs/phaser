@@ -151,6 +151,11 @@ var Axes = require('../geometry/Axes');
     var _initProperties = function(body, options) {
         options = options || {};
 
+        if (!options.hasOwnProperty('position'))
+        {
+            body.position = Vertices.centre(body.vertices);
+        }
+
         // init required properties (order is important)
         Body.set(body, {
             bounds: body.bounds || Bounds.create(body.vertices),
@@ -193,6 +198,8 @@ var Axes = require('../geometry/Axes');
             settings[property] = value;
         }
 
+        var hasParts = false;
+
         for (property in settings) {
 
             if (!settings.hasOwnProperty(property))
@@ -233,11 +240,21 @@ var Axes = require('../geometry/Axes');
                 break;
             case 'parts':
                 Body.setParts(body, value);
+                hasParts = true;
                 break;
             default:
                 body[property] = value;
 
             }
+        }
+
+        if (!hasParts)
+        {
+            // sum the properties of all compound parts of the parent body
+            var total = Body._totalProperties(body);
+
+            body.centerOfMass.x = total.centre.x;
+            body.centerOfMass.y = total.centre.y;
         }
     };
 
