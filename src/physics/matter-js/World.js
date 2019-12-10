@@ -1317,6 +1317,21 @@ var World = new Class({
             }
         }
 
+        if (!body.isStatic)
+        {
+            var w = body.bounds.max.x - body.bounds.min.x;
+            var h = body.bounds.max.y - body.bounds.min.y;
+
+            graphics.fillStyle(0x00ffff, 0.5);
+            graphics.fillRect(body.bounds.min.x, body.bounds.min.y, w, h);
+
+            graphics.fillStyle(0xff0000, 1);
+            graphics.fillRect(body.position.x - 3, body.position.y - 3, 6, 6);
+
+            graphics.fillStyle(0xffff00, 1);
+            graphics.fillRect(body.centerOfMass.x - 2, body.centerOfMass.y - 2, 4, 4);
+        }
+
         return this;
     },
 
