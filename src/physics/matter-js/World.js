@@ -1328,19 +1328,11 @@ var World = new Class({
 
         if (!body.isStatic)
         {
-            graphics.fillStyle(0xff0000, 1);
-            graphics.fillRect(body.position.x - 3, body.position.y - 3, 6, 6);
+            var px = body.position.x;
+            var py = body.position.y;
 
-            var bx = body.bounds.min.x + body.centerOfMass.x / 2;
-            var by = body.bounds.min.y + body.centerOfMass.y / 2;
-
-            graphics.fillStyle(0xffff00, 1);
-
-            // graphics.fillRect(body.centerOfMass.x - 2, body.centerOfMass.y - 2, 4, 4);
-
-            graphics.fillRect(bx, by, 4, 4);
-
-            // graphics.fillRect(body.origin.x, body.origin.y, 4, 4);
+            graphics.fillStyle(0xff00ff, 1);
+            graphics.fillRect(px - 3, py - 3, 6, 6);
         }
 
         return this;
