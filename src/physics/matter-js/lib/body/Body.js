@@ -45,6 +45,7 @@ var Axes = require('../geometry/Axes');
             plugin: {},
             angle: 0,
             vertices: Vertices.fromPath('L 0 0 L 40 0 L 40 40 L 0 40'),
+            scale: { x: 1, y: 1 },  // custom Phaser property
             centerOfMass: { x: 0, y: 0 },  // custom Phaser property
             position: { x: 0, y: 0 },
             force: { x: 0, y: 0 },
@@ -246,7 +247,6 @@ var Axes = require('../geometry/Axes');
                 break;
             default:
                 body[property] = value;
-
             }
         }
 
@@ -257,6 +257,8 @@ var Axes = require('../geometry/Axes');
 
             body.centerOfMass.x = total.centre.x;
             body.centerOfMass.y = total.centre.y;
+
+            Vertices.calcOffset(body.vertices, body.position);
         }
     };
 
@@ -381,6 +383,7 @@ var Axes = require('../geometry/Axes');
 
         // update geometry
         Vertices.translate(body.vertices, body.position);
+
         Bounds.update(body.bounds, body.vertices, body.velocity);
     };
 
@@ -452,6 +455,11 @@ var Axes = require('../geometry/Axes');
         Body.setMass(body, total.mass);
         Body.setInertia(body, total.inertia);
         Body.setPosition(body, total.centre);
+
+        for (i = 0; i < parts.length; i++)
+        {
+            Vertices.calcOffset(parts[i].vertices, total.centre);
+        }
     };
 
     /**
@@ -599,6 +607,9 @@ var Axes = require('../geometry/Axes');
         for (var i = 0; i < body.parts.length; i++) {
             var part = body.parts[i];
 
+            part.scale.x = scaleX;
+            part.scale.y = scaleY;
+
             // scale vertices
             Vertices.scale(part.vertices, scaleX, scaleY, point);
 
@@ -700,6 +711,45 @@ var Axes = require('../geometry/Axes');
             }
 
             Bounds.update(part.bounds, part.vertices, body.velocity);
+        }
+    };
+
+    /**
+     * Syncs the vertices back to the Body position.
+     * 
+     * @method syncVerts
+     * @param {body} body
+     */
+    Body.syncVerts = function (body)
+    {
+        var parts = body.parts;
+        var angle = body.angle;
+
+        var px = body.position.x;
+        var py = body.position.y;
+
+        var sx = body.scale.x;
+        var sy = body.scale.y;
+
+        for (var i = 0; i < parts.length; i++)
+        {
+            var vertices = parts[i].vertices;
+
+            for (var c = 0; c < vertices.length; c++)
+            {
+                var vert = vertices[c];
+                var offset = vert.offset;
+
+                var distance = offset.distance;
+
+                var tx = px + offset.x;
+                var ty = py + offset.y;
+
+                var t = angle + Math.atan2(ty - py, tx - px);
+
+                vert.x = px + ((distance * Math.cos(t)) * sx);
+                vert.y = py + ((distance * Math.sin(t)) * sy);
+            }
         }
     };
 
@@ -866,6 +916,15 @@ var Axes = require('../geometry/Axes');
      * @property position
      * @type vector
      * @default { x: 0, y: 0 }
+     */
+
+    /**
+     * A `Vector` that holds the current scale values as set by `Body.setScale`.
+     * These values are not used internally, other than by the syncVerts function.
+     *
+     * @property scale
+     * @type vector
+     * @default { x: 1, y: 1 }
      */
 
     /**
