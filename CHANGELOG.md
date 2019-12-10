@@ -99,6 +99,7 @@
 * `Constraint.pointAWorld` is a new method added to Matter that returns the world-space position of `constraint.pointA`, accounting for `constraint.bodyA`.
 * `Constraint.pointBWorld` is a new method added to Matter that returns the world-space position of `constraint.pointB`, accounting for `constraint.bodyB`.
 * `Body.setCentre` is a new method added to Matter that allows you to set the center of mass of a Body (please note the English spelling of this function.)
+* Bumped Matter Plugin versions to avoid console logs from Common.info and Common.warn.
 
 ### Updates
 
