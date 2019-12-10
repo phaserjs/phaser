@@ -45,7 +45,8 @@ var Common = require('../core/Common');
                     index: i,
                     body: body,
                     isInternal: false,
-                    contact: null
+                    contact: null,
+                    offset: null
                 };
 
             vertex.contact = {
@@ -54,7 +55,44 @@ var Common = require('../core/Common');
                 tangentImpulse: 0
             };
 
+            //  Phaser addition - offset data from PARENT body position and default scale
+            vertex.offset = {
+                x: 0, 
+                y: 0,
+                distance: 0
+            };
+
             vertices.push(vertex);
+        }
+
+        return vertices;
+    };
+
+    /**
+     * Calculates the vertice offset coordinates and distance from the Body position.
+     * Used for vert syncing and to avoid Engine drift.
+     * 
+     * @method calcOffset
+     * @param {vertices} vertices
+     * @param {vector} position
+     * @return {vertices} vertices
+     */
+    Vertices.calcOffset = function (vertices, position)
+    {
+        var px = position.x;
+        var py = position.y;
+
+        for (var i = 0; i < vertices.length; i++)
+        {
+            var vert = vertices[i];
+            var offset = vert.offset;
+
+            var dx = px - vert.x;
+            var dy = py - vert.y;
+
+            offset.x = vert.x - px;
+            offset.y = vert.y - py;
+            offset.distance = Math.sqrt(dx * dx + dy * dy);
         }
 
         return vertices;
