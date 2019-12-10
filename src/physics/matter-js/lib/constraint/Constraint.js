@@ -304,6 +304,32 @@ var Common = require('../core/Common');
         }
     };
 
+    /**
+     * Returns the world-space position of `constraint.pointA`, accounting for `constraint.bodyA`.
+     * @method pointAWorld
+     * @param {constraint} constraint
+     * @returns {vector} the world-space position
+     */
+    Constraint.pointAWorld = function(constraint) {
+        return {
+            x: (constraint.bodyA ? constraint.bodyA.position.x : 0) + constraint.pointA.x,
+            y: (constraint.bodyA ? constraint.bodyA.position.y : 0) + constraint.pointA.y
+        };
+    };
+
+    /**
+     * Returns the world-space position of `constraint.pointB`, accounting for `constraint.bodyB`.
+     * @method pointBWorld
+     * @param {constraint} constraint
+     * @returns {vector} the world-space position
+     */
+    Constraint.pointBWorld = function(constraint) {
+        return {
+            x: (constraint.bodyB ? constraint.bodyB.position.x : 0) + constraint.pointB.x,
+            y: (constraint.bodyB ? constraint.bodyB.position.y : 0) + constraint.pointB.y
+        };
+    };
+
     /*
     *
     *  Properties Documentation
