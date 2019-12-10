@@ -1245,6 +1245,15 @@ var World = new Class({
         var parts = body.parts;
         var partsLength = parts.length;
 
+        if (!body.isStatic)
+        {
+            var w = body.bounds.max.x - body.bounds.min.x;
+            var h = body.bounds.max.y - body.bounds.min.y;
+
+            graphics.fillStyle(0x6d6d6d, 0.3);
+            graphics.fillRect(body.bounds.min.x, body.bounds.min.y, w, h);
+        }
+
         for (var k = (partsLength > 1) ? 1 : 0; k < partsLength; k++)
         {
             var part = parts[k];
@@ -1319,17 +1328,19 @@ var World = new Class({
 
         if (!body.isStatic)
         {
-            var w = body.bounds.max.x - body.bounds.min.x;
-            var h = body.bounds.max.y - body.bounds.min.y;
-
-            graphics.fillStyle(0x00ffff, 0.5);
-            graphics.fillRect(body.bounds.min.x, body.bounds.min.y, w, h);
-
             graphics.fillStyle(0xff0000, 1);
             graphics.fillRect(body.position.x - 3, body.position.y - 3, 6, 6);
 
+            var bx = body.bounds.min.x + body.centerOfMass.x / 2;
+            var by = body.bounds.min.y + body.centerOfMass.y / 2;
+
             graphics.fillStyle(0xffff00, 1);
-            graphics.fillRect(body.centerOfMass.x - 2, body.centerOfMass.y - 2, 4, 4);
+
+            // graphics.fillRect(body.centerOfMass.x - 2, body.centerOfMass.y - 2, 4, 4);
+
+            graphics.fillRect(bx, by, 4, 4);
+
+            // graphics.fillRect(body.origin.x, body.origin.y, 4, 4);
         }
 
         return this;
