@@ -46,7 +46,7 @@ var decomp = require('../../poly-decomp');
         if (options.chamfer) {
             var chamfer = options.chamfer;
             rectangle.vertices = Vertices.chamfer(rectangle.vertices, chamfer.radius, 
-                                    chamfer.quality, chamfer.qualityMin, chamfer.qualityMax);
+                chamfer.quality, chamfer.qualityMin, chamfer.qualityMax);
             delete options.chamfer;
         }
 
@@ -92,7 +92,7 @@ var decomp = require('../../poly-decomp');
         if (options.chamfer) {
             var chamfer = options.chamfer;
             trapezoid.vertices = Vertices.chamfer(trapezoid.vertices, chamfer.radius, 
-                                    chamfer.quality, chamfer.qualityMin, chamfer.qualityMax);
+                chamfer.quality, chamfer.qualityMin, chamfer.qualityMax);
             delete options.chamfer;
         }
 
@@ -169,7 +169,7 @@ var decomp = require('../../poly-decomp');
         if (options.chamfer) {
             var chamfer = options.chamfer;
             polygon.vertices = Vertices.chamfer(polygon.vertices, chamfer.radius, 
-                                    chamfer.quality, chamfer.qualityMin, chamfer.qualityMax);
+                chamfer.quality, chamfer.qualityMin, chamfer.qualityMax);
             delete options.chamfer;
         }
 
