@@ -201,8 +201,7 @@ var Axes = require('../geometry/Axes');
         var hasParts = false;
 
         for (property in settings) {
-
-            if (!settings.hasOwnProperty(property))
+            if (!Object.prototype.hasOwnProperty.call(settings, property))
                 continue;
 
             value = settings[property];
@@ -241,6 +240,9 @@ var Axes = require('../geometry/Axes');
             case 'parts':
                 Body.setParts(body, value);
                 hasParts = true;
+                break;
+            case 'centre':
+                Body.setCentre(body, value);
                 break;
             default:
                 body[property] = value;
@@ -334,7 +336,7 @@ var Axes = require('../geometry/Axes');
     };
 
     /**
-     * Sets the moment of inertia (i.e. second moment of area) of the body of the body. 
+     * Sets the moment of inertia (i.e. second moment of area) of the body. 
      * Inverse inertia is automatically updated to reflect the change. Mass is not changed.
      * @method setInertia
      * @param {body} body
@@ -453,6 +455,31 @@ var Axes = require('../geometry/Axes');
     };
 
     /**
+     * Set the centre of mass of the body. 
+     * The `centre` is a vector in world-space unless `relative` is set, in which case it is a translation.
+     * The centre of mass is the point the body rotates about and can be used to simulate non-uniform density.
+     * This is equal to moving `body.position` but not the `body.vertices`.
+     * Invalid if the `centre` falls outside the body's convex hull.
+     * @method setCentre
+     * @param {body} body
+     * @param {vector} centre
+     * @param {bool} relative
+     */
+    Body.setCentre = function(body, centre, relative) {
+        if (!relative) {
+            body.positionPrev.x = centre.x - (body.position.x - body.positionPrev.x);
+            body.positionPrev.y = centre.y - (body.position.y - body.positionPrev.y);
+            body.position.x = centre.x;
+            body.position.y = centre.y;
+        } else {
+            body.positionPrev.x += centre.x;
+            body.positionPrev.y += centre.y;
+            body.position.x += centre.x;
+            body.position.y += centre.y;
+        }
+    };
+
+    /**
      * Sets the position of the body instantly. Velocity, angle, force etc. are unchanged.
      * @method setPosition
      * @param {body} body
@@ -489,7 +516,6 @@ var Axes = require('../geometry/Axes');
             Axes.rotate(part.axes, delta);
             Bounds.update(part.bounds, part.vertices, body.velocity);
             if (i > 0) {
-                part.angle += body.angularVelocity;
                 Vector.rotateAbout(part.position, delta, body.position, part.position);
             }
         }
