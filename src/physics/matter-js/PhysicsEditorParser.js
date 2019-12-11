@@ -110,7 +110,6 @@ var PhysicsEditorParser = {
      */
     parseVertices: function (vertexSets, options)
     {
-        // var i, j, k, v, z;
         var parts = [];
 
         options = options || {};
