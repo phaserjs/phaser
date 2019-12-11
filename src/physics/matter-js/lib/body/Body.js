@@ -92,7 +92,6 @@ var Axes = require('../geometry/Axes');
                 lineOpacity: null, // custom Phaser property
                 lineThickness: null // custom Phaser property
             },
-
             events: null,
             bounds: null,
             chamfer: null,
@@ -100,12 +99,10 @@ var Axes = require('../geometry/Axes');
             positionPrev: null,
             anglePrev: 0,
             parent: null,
-
             axes: null,
             area: 0,
             mass: 0,
             inertia: 0,
-
             _original: null
         };
 
