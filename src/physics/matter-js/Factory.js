@@ -186,6 +186,49 @@ var Factory = new Class({
         return body;
     },
 
+    fromJSON: function (x, y, data, options)
+    {
+        if (options === undefined) { options = {}; }
+
+        var body;
+        var vertexSets = data.verts;
+
+        if (vertexSets.length === 1)
+        {
+            //  Just a single Body
+            options.vertices = vertexSets[0];
+
+            body = Body.create(options);
+
+            Bodies.flagCoincidentParts(body.parts);
+        }
+        else
+        {
+            var parts = [];
+
+            for (var i = 0; i < vertexSets.length; i++)
+            {
+                var part = Body.create({
+                    vertices: vertexSets[i]
+                });
+
+                parts.push(part);
+            }
+
+            Bodies.flagCoincidentParts(parts);
+
+            options.parts = parts;
+
+            body = Body.create(options);
+        }
+
+        Body.setPosition(body, { x: x, y: y });
+
+        this.world.add(body);
+
+        return body;
+    },
+
     /**
      * Create a new composite containing Matter Image objects created in a grid arrangement.
      * This function uses the body bounds to prevent overlaps.
