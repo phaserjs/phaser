@@ -177,6 +177,17 @@ var Axes = require('../geometry/Axes');
             mass: options.mass || body.mass,
             inertia: options.inertia || body.inertia
         });
+
+        if (body.parts.length === 1)
+        {
+            var w = (body.bounds.max.x - body.bounds.min.x);
+            var h = (body.bounds.max.y - body.bounds.min.y);
+
+            body.centerOfMass.x = w / 2;
+            body.centerOfMass.y = h / 2;
+
+            Vertices.calcOffset(body.vertices, body.position);
+        }
     };
 
     /**
@@ -195,8 +206,6 @@ var Axes = require('../geometry/Axes');
             settings = {};
             settings[property] = value;
         }
-
-        var hasParts = false;
 
         for (property in settings) {
             if (!Object.prototype.hasOwnProperty.call(settings, property))
@@ -237,7 +246,6 @@ var Axes = require('../geometry/Axes');
                 break;
             case 'parts':
                 Body.setParts(body, value);
-                hasParts = true;
                 break;
             case 'centre':
                 Body.setCentre(body, value);
@@ -245,17 +253,6 @@ var Axes = require('../geometry/Axes');
             default:
                 body[property] = value;
             }
-        }
-
-        if (!hasParts)
-        {
-            // sum the properties of all compound parts of the parent body
-            var total = Body._totalProperties(body);
-
-            body.centerOfMass.x = total.centre.x;
-            body.centerOfMass.y = total.centre.y;
-
-            Vertices.calcOffset(body.vertices, body.position);
         }
     };
 
