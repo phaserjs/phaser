@@ -679,7 +679,7 @@ var MatterPhysics = new Class({
     /**
      * Checks the given coordinates to see if any vertices of the given bodies contain it.
      * 
-     * If no bodies are provided it will search all bodies in the Matter World.
+     * If no bodies are provided it will search all bodies in the Matter World, including within Composites.
      * 
      * The coordinates should be transformed into the Matter World coordinate system in advance. This happens by
      * default with Input Pointers, but if you wish to use coordinates from another system you may need to
@@ -700,7 +700,19 @@ var MatterPhysics = new Class({
 
         var position = Vector.create(x, y);
 
-        return Query.point(bodies, position);
+        var output = [];
+
+        var result = Query.point(bodies, position);
+
+        result.forEach(function (body)
+        {
+            if (output.indexOf(body) === -1)
+            {
+                output.push(body);
+            }
+        });
+
+        return output;
     },
 
     /**
@@ -708,7 +720,7 @@ var MatterPhysics = new Class({
      * Or, if the `outside` parameter is set to `true`, it checks to see which bodies do not
      * intersect with it.
      * 
-     * If no bodies are provided it will search all bodies in the Matter World.
+     * If no bodies are provided it will search all bodies in the Matter World, including within Composites.
      * 
      * @method Phaser.Physics.Matter.MatterPhysics#intersectRect
      * @since 3.22.0
@@ -733,7 +745,19 @@ var MatterPhysics = new Class({
             max: { x: x + width, y: y + height }
         };
 
-        return Query.region(bodies, bounds, outside);
+        var output = [];
+
+        var result = Query.region(bodies, bounds, outside);
+
+        result.forEach(function (body)
+        {
+            if (output.indexOf(body) === -1)
+            {
+                output.push(body);
+            }
+        });
+
+        return output;
     },
 
     /**
