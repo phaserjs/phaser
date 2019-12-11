@@ -104,6 +104,8 @@
 * `Engine.syncVerts` is a new Engine config property that allows you to run a vert re-sync at the end of the Engine step. This can help massively if you find you've got verts drifting out of alignment with the body position when using pointer contraints, or high velocity environments. Uses the new `Engine._bodiesSync` function.
 * `Body.syncVerts` is a new function that will re-sync the vert positions with the body position. Called if `Engine.syncVerts` is set (which is now the default)
 * `Body.scale` is a new vector that holds the most recent scale values as passed to `Body.scale`.
+* `Matter.Bodies.flagCoincidentParts` is a new function that will flags all internal edges (coincident parts) on an array of body parts. This was previously part of the `fromVertices` function, but has been made external for outside use.
+* `PhysicsEditorParser.parseVertices` now uses `Bodies.flagCoincidentParts` to avoid duplicating code.
 
 ### Updates
 
