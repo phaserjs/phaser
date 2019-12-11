@@ -1245,6 +1245,7 @@ var World = new Class({
         var parts = body.parts;
         var partsLength = parts.length;
 
+        /*
         if (!body.isStatic)
         {
             var w = body.bounds.max.x - body.bounds.min.x;
@@ -1253,6 +1254,7 @@ var World = new Class({
             graphics.fillStyle(0x6d6d6d, 0.3);
             graphics.fillRect(body.bounds.min.x, body.bounds.min.y, w, h);
         }
+        */
 
         for (var k = (partsLength > 1) ? 1 : 0; k < partsLength; k++)
         {
@@ -1304,7 +1306,7 @@ var World = new Class({
                         graphics.moveTo(vert.x, vert.y);
                     }
 
-                    if (vert.isInternal && !showInternalEdges)
+                    if (j < vertLength && vert.isInternal && !showInternalEdges)
                     {
                         var nextIndex = (j + 1) % vertLength;
 
@@ -1326,6 +1328,7 @@ var World = new Class({
             }
         }
 
+        /*
         if (!body.isStatic)
         {
             var px = body.position.x;
@@ -1334,6 +1337,7 @@ var World = new Class({
             graphics.fillStyle(0xff00ff, 1);
             graphics.fillRect(px - 3, py - 3, 6, 6);
         }
+        */
 
         return this;
     },
