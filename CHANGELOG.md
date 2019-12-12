@@ -20,7 +20,7 @@
 * `lineThickness` - If rendering lines, the thickness of the line.
 * `staticFillColor` - The color value of the fill when rendering static bodies.
 * `staticLineColor` - The color value of the line stroke when rendering static bodies.
-* `staticBodySleepOpacity`7] - The amount to multiply the opacity of sleeping static bodies by.
+* `staticBodySleepOpacity` - The amount to multiply the opacity of sleeping static bodies by.
 * `sleepFillColor` - The color value of the fill when rendering sleeping dynamic bodies.
 * `sleepLineColor` - The color value of the line stroke when rendering sleeping dynamic bodies.
 * `jointColor` - The color value of joints when `showJoint` is set.
@@ -41,7 +41,6 @@
 * `World.renderBodies` has been rewritten to cache commonly-used values and avoid a situation when a single body would be rendered twice.
 * The private method `World.renderConvexHulls` has been removed as it's no longer used internally.
 * The private method `World.renderWireframes` has been removed as it's no longer used internally.
-* The `Matter.Factory.worldConstraint` argument signature has changed. It now takes `x` and `y` arguments first, as the world position where the constraint will be created.
 * Due to the rewrite of the debug rendering, it is now possible to render _just_ constraints, where-as before this was only possible if bodies were being rendered as well. Fix #4880 (thanks @roberto257)
 * The method `World.fromPath` has been removed. This was never used internally and you can get the same results by calling `Vertices.fromPath`.
 * The `World.setBounds` argument `thickness` now defaults to 64, not 128, to keep it matching the Matter World Config.
@@ -72,8 +71,9 @@
 * `Body.render.lineOpacity` is a new property on the Matter Body object that allows for custom debug rendering.
 * `Body.render.lineThickness` is a new property on the Matter Body object that allows for custom debug rendering.
 * `Body.render.fillOpacity` is a new property on the Matter Body object that allows for custom debug rendering.
-* `MatterPhysics.setBodyRenderStyle` is a new method that lets you quickly set the render style values on the given Body.
-* `MatterPhysics.setConstraintRenderStyle` is a new method that lets you quickly set the render style values on the given Constraint.
+* `World.setCompositeRenderStyle` is a new method that lets you quickly set the render style values on the children of the given compposite.
+* `World.setBodyRenderStyle` is a new method that lets you quickly set the render style values on the given Body.
+* `World.setConstraintRenderStyle` is a new method that lets you quickly set the render style values on the given Constraint.
 * You can now set `restingThresh` in the Matter Configuration file to adjust the Resolver property.
 * You can now set `restingThreshTangent` in the Matter Configuration file to adjust the Resolver property.
 * You can now set `positionDampen` in the Matter Configuration file to adjust the Resolver property.
