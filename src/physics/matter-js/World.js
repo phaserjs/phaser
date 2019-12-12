@@ -273,6 +273,56 @@ var World = new Class({
     },
 
     /**
+     * Sets the debug render style for the children of the given Matter Composite.
+     * 
+     * Composites themselves do not render, but they can contain bodies, constraints and other composites that may do.
+     * So the children of this composite are passed to the `setBodyRenderStyle`, `setCompositeRenderStyle` and
+     * `setConstraintRenderStyle` methods accordingly.
+     * 
+     * @method Phaser.Physics.Matter.World#setCompositeRenderStyle
+     * @since 3.22.0
+     *
+     * @param {MatterJS.Composite} composite - The Matter Composite to set the render style on.
+     * 
+     * @return {this} This Matter World instance for method chaining.
+     */
+    setCompositeRenderStyle: function (composite)
+    {
+        var bodies = composite.bodies;
+        var constraints = composite.constraints;
+        var composites = composite.composites;
+
+        var i;
+        var obj;
+        var render;
+
+        for (i = 0; i < bodies.length; i++)
+        {
+            obj = bodies[i];
+            render = obj.render;
+
+            this.setBodyRenderStyle(obj, render.lineColor, render.lineOpacity, render.lineThickness, render.fillColor, render.fillOpacity);
+        }
+
+        for (i = 0; i < constraints.length; i++)
+        {
+            obj = constraints[i];
+            render = obj.render;
+
+            this.setConstraintRenderStyle(obj, render.lineColor, render.lineOpacity, render.lineThickness, render.pinSize, render.anchorColor, render.anchorSize);
+        }
+
+        for (i = 0; i < composites.length; i++)
+        {
+            obj = composites[i];
+
+            this.setCompositeRenderStyle(obj);
+        }
+
+        return this;
+    },
+
+    /**
      * Sets the debug render style for the given Matter Body.
      * 
      * If you are using this on a Phaser Game Object, such as a Matter Sprite, then pass in the body property
@@ -498,7 +548,10 @@ var World = new Class({
                     if (obj.type === 'body')
                     {
                         _this.setBodyRenderStyle(obj, render.lineColor, render.lineOpacity, render.lineThickness, render.fillColor, render.fillOpacity);
-
+                    }
+                    else if (obj.type === 'composite')
+                    {
+                        _this.setCompositeRenderStyle(obj);
                     }
                     else if (obj.type === 'constraint')
                     {
@@ -1328,7 +1381,6 @@ var World = new Class({
             }
         }
 
-        /*
         if (!body.isStatic)
         {
             var px = body.position.x;
@@ -1337,7 +1389,6 @@ var World = new Class({
             graphics.fillStyle(0xff00ff, 1);
             graphics.fillRect(px - 3, py - 3, 6, 6);
         }
-        */
 
         return this;
     },
