@@ -658,13 +658,14 @@ var Factory = new Class({
      * @since 3.3.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to inject the Matter Body in to.
-     * @param {(object|MatterJS.Body)} options - A Matter Body configuration object, or an instance of a Matter Body.
+     * @param {(object|MatterJS.Body)} [options] - A Matter Body configuration object, or an instance of a Matter Body.
+     * @param {boolean} [addToWorld=true] - Add this Matter Body to the World?
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that had the Matter Body injected into it.
      */
-    gameObject: function (gameObject, options)
+    gameObject: function (gameObject, options, addToWorld)
     {
-        return MatterGameObject(this.world, gameObject, options);
+        return MatterGameObject(this.world, gameObject, options, addToWorld);
     },
 
     /**
