@@ -49,7 +49,7 @@ var Body = require('../body/Body');
             velocityIterations: 4,
             constraintIterations: 2,
             enableSleeping: false,
-            syncVerts: true,
+            syncVerts: true, // custom Phaser property
             events: [],
             plugin: {},
             timing: {
@@ -338,7 +338,7 @@ var Body = require('../body/Body');
         {
             var body = bodies[i];
 
-            if (body.isStatic || body.isSleeping)
+            if (!body.syncVerts || body.isStatic || body.isSleeping)
             {
                 continue;
             }

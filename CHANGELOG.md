@@ -101,8 +101,8 @@
 * `Body.setCentre` is a new method added to Matter that allows you to set the center of mass of a Body (please note the English spelling of this function.)
 * Bumped Matter Plugin versions to avoid console logs from Common.info and Common.warn.
 * `Vertices.calcOffset` is a new function that calculates the vert body position offset, used for keeping data in sync.
-* `Engine.syncVerts` is a new Engine config property that allows you to run a vert re-sync at the end of the Engine step. This can help massively if you find you've got verts drifting out of alignment with the body position when using pointer contraints, or high velocity environments. Uses the new `Engine._bodiesSync` function.
-* `Body.syncVerts` is a new function that will re-sync the vert positions with the body position. Called if `Engine.syncVerts` is set (which is now the default)
+* `Engine.syncVerts` is a new Engine config property that allows you to re-sync all the vertices ofa Body with the bodies position at the end of the Engine step. This can help massively if you find you've got verts drifting out of alignment with the body position when using pointer contraints, or high velocity environments. Uses the new `Engine._bodiesSync` function.
+* `Body.syncVerts` is a new function that will re-sync the vert positions with the body position. Called if `Engine.syncVerts` is `true` and if the Body has its `syncVerts` property set to `true`.
 * `Body.scale` is a new vector that holds the most recent scale values as passed to `Body.scale`.
 * `Matter.Bodies.flagCoincidentParts` is a new function that will flags all internal edges (coincident parts) on an array of body parts. This was previously part of the `fromVertices` function, but has been made external for outside use.
 * `PhysicsEditorParser.parseVertices` now uses `Bodies.flagCoincidentParts` to avoid duplicating code.

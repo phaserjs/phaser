@@ -26,6 +26,7 @@
  * @property {number} [correction=1] - An optional Number that specifies the time correction factor to apply to the update.
  * @property {function} [getDelta] - This function is called every time the core game loop steps, which is bound to the Request Animation Frame frequency unless otherwise modified.
  * @property {boolean} [autoUpdate=true] - Automatically call Engine.update every time the game steps.
+ * @property {boolean} [syncVerts=false] - Sync the vertices of a Body as the final step in `Engine.update`. `Body.syncVerts` also needs to be enabled.
  * @property {number} [restingThresh=4] - Sets the Resolver resting threshold property.
  * @property {number} [restingThreshTangent=6] - Sets the Resolver resting threshold tangent property.
  * @property {number} [positionDampen=0.9] - Sets the Resolver position dampen property.

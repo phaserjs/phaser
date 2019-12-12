@@ -41,6 +41,7 @@ var Axes = require('../geometry/Axes');
             type: 'body',
             label: 'Body',
             gameObject: null, // custom Phaser property
+            syncVerts: false, // custom Phaser property
             parts: [],
             plugin: {},
             angle: 0,
@@ -902,6 +903,18 @@ var Axes = require('../geometry/Axes');
      *
      * @property vertices
      * @type vector[]
+     */
+
+    /**
+     * If `Engine.syncVerts` has been enabled in the Matter config, then this Body will have its vertices
+     * resynced with its body position at the end of the `Engine.update` step. This is important if you are
+     * moving a Body around at high speed and colliding with static objects, or are using pointer constraints
+     * and allowing a Body to be dragged around, as Matter can often lose sync between the body position and
+     * its vertices under these situations.
+     *
+     * @property syncVerts
+     * @type boolean
+     * @default false
      */
 
     /**
