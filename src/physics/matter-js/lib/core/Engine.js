@@ -199,10 +199,10 @@ var Body = require('../body/Body');
         if (pairs.collisionEnd.length > 0)
             Events.trigger(engine, 'collisionEnd', { pairs: pairs.collisionEnd });
 
-        if (engine.syncVerts)
-        {
-            Engine._bodiesSync(allBodies);
-        }
+        // if (engine.syncVerts)
+        // {
+        //     Engine._bodiesSync(allBodies);
+        // }
 
         // @if DEBUG
         // update metrics log
