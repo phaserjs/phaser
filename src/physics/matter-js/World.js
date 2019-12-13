@@ -150,6 +150,27 @@ var World = new Class({
          */
         this.getDelta = GetValue(config, 'getDelta', this.update60Hz);
 
+        this.runner = {
+            fps: 60,
+            correction: 1,
+            deltaSampleSize: 60,
+            counterTimestamp: 0,
+            frameCounter: 0,
+            deltaHistory: [],
+            timePrev: null,
+            timeScalePrev: 1,
+            frameRequestId: null,
+            isFixed: false,
+            enabled: true
+        };
+
+        // var runner = Common.extend(defaults, options);
+
+        this.runner.delta = this.runner.delta || 1000 / this.runner.fps;
+        this.runner.deltaMin = this.runner.deltaMin || 1000 / this.runner.fps;
+        this.runner.deltaMax = this.runner.deltaMax || 1000 / (this.runner.fps * 0.5);
+        this.runner.fps = 1000 / this.runner.delta;
+
         /**
          * Automatically call Engine.update every time the game steps.
          * If you disable this then you are responsible for calling `World.step` directly from your game.
@@ -1034,12 +1055,84 @@ var World = new Class({
      * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
-    update: function (time, delta)
+    OLDupdate: function (time, delta)
     {
         if (this.enabled && this.autoUpdate)
         {
             Engine.update(this.engine, this.getDelta(time, delta), this.correction);
         }
+    },
+
+    update: function (time)
+    {
+        var engine = this.engine;
+        var runner = this.runner;
+
+        var timing = engine.timing;
+        var correction = 1;
+        var delta;
+
+        if (runner.isFixed)
+        {
+            //  fixed timestep
+            delta = this.getDelta(time, delta);
+        }
+        else
+        {
+            //  dynamic timestep based on wall clock between calls
+            delta = (time - runner.timePrev) || runner.delta;
+            runner.timePrev = time;
+
+            // optimistically filter delta over a few frames, to improve stability
+            runner.deltaHistory.push(delta);
+            runner.deltaHistory = runner.deltaHistory.slice(-runner.deltaSampleSize);
+            delta = Math.min.apply(null, runner.deltaHistory);
+            
+            // limit delta
+            delta = delta < runner.deltaMin ? runner.deltaMin : delta;
+            delta = delta > runner.deltaMax ? runner.deltaMax : delta;
+
+            // correction for delta
+            correction = delta / runner.delta;
+
+            // update engine timing object
+            runner.delta = delta;
+        }
+
+        // time correction for time scaling
+        if (runner.timeScalePrev !== 0)
+        {
+            correction *= timing.timeScale / runner.timeScalePrev;
+        }
+
+        if (timing.timeScale === 0)
+        {
+            correction = 0;
+        }
+
+        runner.timeScalePrev = timing.timeScale;
+        runner.correction = correction;
+
+        // fps counter
+        runner.frameCounter += 1;
+
+        if (time - runner.counterTimestamp >= 1000)
+        {
+            runner.fps = runner.frameCounter * ((time - runner.counterTimestamp) / 1000);
+            runner.counterTimestamp = time;
+            runner.frameCounter = 0;
+        }
+
+        // Events.trigger(runner, 'tick', event);
+
+        // update
+        // Events.trigger(runner, 'beforeUpdate', event);
+
+        Engine.update(engine, delta, correction);
+
+        // Events.trigger(runner, 'afterUpdate', event);
+
+        // Events.trigger(runner, 'afterTick', event);
     },
 
     /**
