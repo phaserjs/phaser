@@ -338,7 +338,7 @@ var Body = require('../body/Body');
         {
             var body = bodies[i];
 
-            if (!body.syncVerts || body.isStatic || body.isSleeping)
+            if (!body.syncVerts || body.isStatic)
             {
                 continue;
             }
