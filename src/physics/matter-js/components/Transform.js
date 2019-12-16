@@ -206,9 +206,10 @@ var Transform = {
 
         get: function ()
         {
-            var body = this.body;
+            return this.body.centerOfMass.x;
 
-            return body.render.sprite.xOffset + ((body.centerOfMass.x - (this.width / 2)) / this.width);
+            // var body = this.body;
+            // return body.render.sprite.xOffset + ((body.centerOfMass.x - (this.width / 2)) / this.width);
         }
     },
 
@@ -231,9 +232,10 @@ var Transform = {
 
         get: function ()
         {
-            var body = this.body;
+            return this.body.centerOfMass.y;
 
-            return body.render.sprite.yOffset + ((body.centerOfMass.y - (this.height / 2)) / this.height);
+            // var body = this.body;
+            // return body.render.sprite.yOffset + ((body.centerOfMass.y - (this.height / 2)) / this.height);
         }
     },
 

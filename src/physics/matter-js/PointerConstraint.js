@@ -49,7 +49,6 @@ var PointerConstraint = new Class({
             label: 'Pointer Constraint',
             pointA: { x: 0, y: 0 },
             pointB: { x: 0, y: 0 },
-            _damping: 0,
             length: 0.01,
             stiffness: 0.1,
             angularStiffness: 1,
@@ -177,12 +176,9 @@ var PointerConstraint = new Class({
         }
     },
 
-    onUp: function (pointer)
+    onUp: function ()
     {
-        if (this.pointer === pointer)
-        {
-            this.pointer = null;
-        }
+        this.pointer = null;
     },
 
     /**
@@ -250,7 +246,8 @@ var PointerConstraint = new Class({
 
             if (Vertices.contains(part.vertices, position))
             {
-                constraint.pointA = position;
+                // constraint.pointA = position;
+                constraint.pointA = { x: position.x, y: position.y };
 
                 constraint.bodyB = body;
 
@@ -313,7 +310,8 @@ var PointerConstraint = new Class({
             this.camera.getWorldPoint(pointer.x, pointer.y, pos);
    
             //  Drag update
-            constraint.pointA = pos;
+            constraint.pointA.x = pos.x;
+            constraint.pointA.y = pos.y;
 
             Sleeping.set(body, false);
 

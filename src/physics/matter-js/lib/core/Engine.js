@@ -49,7 +49,6 @@ var Body = require('../body/Body');
             velocityIterations: 4,
             constraintIterations: 2,
             enableSleeping: false,
-            syncVerts: true, // custom Phaser property
             events: [],
             plugin: {},
             timing: {
@@ -199,11 +198,6 @@ var Body = require('../body/Body');
         if (pairs.collisionEnd.length > 0)
             Events.trigger(engine, 'collisionEnd', { pairs: pairs.collisionEnd });
 
-        // if (engine.syncVerts)
-        // {
-        //     Engine._bodiesSync(allBodies);
-        // }
-
         // @if DEBUG
         // update metrics log
         Metrics.update(engine.metrics, engine);
@@ -322,28 +316,6 @@ var Body = require('../body/Body');
                 continue;
 
             Body.update(body, deltaTime, timeScale, correction);
-        }
-    };
-
-    /**
-     * Calls `Body.syncVerts` on all valid bodies if `Engine.syncVerts` property is set.
-     * 
-     * @method _bodiesSync
-     * @private
-     * @param {body[]} bodies
-     */
-    Engine._bodiesSync = function(bodies)
-    {
-        for (var i = 0; i < bodies.length; i++)
-        {
-            var body = bodies[i];
-
-            if (!body.syncVerts || body.isStatic)
-            {
-                continue;
-            }
-
-            Body.syncVerts(body);
         }
     };
 

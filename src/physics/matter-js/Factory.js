@@ -208,6 +208,7 @@ var Factory = new Class({
             for (var i = 0; i < vertexSets.length; i++)
             {
                 var part = Body.create({
+                    _position: Vertices.centre(vertexSets[i]),
                     vertices: vertexSets[i]
                 });
 

@@ -41,7 +41,6 @@ var Axes = require('../geometry/Axes');
             type: 'body',
             label: 'Body',
             gameObject: null, // custom Phaser property
-            syncVerts: false, // custom Phaser property
             parts: [],
             plugin: {},
             angle: 0,
@@ -179,6 +178,7 @@ var Axes = require('../geometry/Axes');
             inertia: options.inertia || body.inertia
         });
 
+        /*
         if (body.parts.length === 1)
         {
             var w = (body.bounds.max.x - body.bounds.min.x);
@@ -188,6 +188,15 @@ var Axes = require('../geometry/Axes');
             body.centerOfMass.y = h / 2;
 
             Vertices.calcOffset(body.vertices, body.position);
+        }
+        */
+
+        body.centerOfMass.x = -(body.bounds.min.x - body.position.x) / (body.bounds.max.x - body.bounds.min.x);
+        body.centerOfMass.y = -(body.bounds.min.y - body.position.y) / (body.bounds.max.y - body.bounds.min.y);
+
+        if (!body.isStatic)
+        {
+            console.log('com', body.centerOfMass.x, body.centerOfMass.y);
         }
     };
 
@@ -451,10 +460,10 @@ var Axes = require('../geometry/Axes');
         Body.setInertia(body, total.inertia);
         Body.setPosition(body, total.centre);
 
-        for (i = 0; i < parts.length; i++)
-        {
-            Vertices.calcOffset(parts[i].vertices, total.centre);
-        }
+        // for (i = 0; i < parts.length; i++)
+        // {
+        //     Vertices.calcOffset(parts[i].vertices, total.centre);
+        // }
     };
 
     /**
@@ -710,45 +719,6 @@ var Axes = require('../geometry/Axes');
     };
 
     /**
-     * Syncs the vertices back to the Body position.
-     * 
-     * @method syncVerts
-     * @param {body} body
-     */
-    Body.syncVerts = function (body)
-    {
-        var parts = body.parts;
-        var angle = body.angle;
-
-        var px = body.position.x;
-        var py = body.position.y;
-
-        var sx = body.scale.x;
-        var sy = body.scale.y;
-
-        for (var i = 0; i < parts.length; i++)
-        {
-            var vertices = parts[i].vertices;
-
-            for (var c = 0; c < vertices.length; c++)
-            {
-                var vert = vertices[c];
-                var offset = vert.offset;
-
-                var distance = offset.distance;
-
-                var tx = px + offset.x;
-                var ty = py + offset.y;
-
-                var t = angle + Math.atan2(ty - py, tx - px);
-
-                vert.x = px + ((distance * Math.cos(t)) * sx);
-                vert.y = py + ((distance * Math.sin(t)) * sy);
-            }
-        }
-    };
-
-    /**
      * Applies a force to a body from a given world-space position, including resulting torque.
      * @method applyForce
      * @param {body} body
@@ -906,18 +876,6 @@ var Axes = require('../geometry/Axes');
      */
 
     /**
-     * If `Engine.syncVerts` has been enabled in the Matter config, then this Body will have its vertices
-     * resynced with its body position at the end of the `Engine.update` step. This is important if you are
-     * moving a Body around at high speed and colliding with static objects, or are using pointer constraints
-     * and allowing a Body to be dragged around, as Matter can often lose sync between the body position and
-     * its vertices under these situations.
-     *
-     * @property syncVerts
-     * @type boolean
-     * @default false
-     */
-
-    /**
      * A `Vector` that specifies the current world-space position of the body.
      *
      * @property position
@@ -927,7 +885,6 @@ var Axes = require('../geometry/Axes');
 
     /**
      * A `Vector` that holds the current scale values as set by `Body.setScale`.
-     * These values are not used internally, other than by the syncVerts function.
      *
      * @property scale
      * @type vector
