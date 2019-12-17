@@ -185,9 +185,26 @@ var Factory = new Class({
         return body;
     },
 
-    fromJSON: function (x, y, data, options)
+    /**
+     * **This function is still in development**
+     * 
+     * Creates a body using the supplied body data, as provided by a JSON file.
+     *
+     * @method Phaser.Physics.Matter.Factory#fromJSON
+     * @since 3.22.0
+     *
+     * @param {number} x - The X coordinate of the body.
+     * @param {number} y - The Y coordinate of the body.
+     * @param {object} data - The body data object as parsed from the JSON body format.
+     * @param {object} [options] - Optional Matter body configuration object, as passed to `Body.create`.
+     * @param {boolean} [addToWorld=true] - Should the newly created body be immediately added to the World?
+     *
+     * @return {MatterJS.Body} A Matter JS Body.
+     */
+    fromJSON: function (x, y, data, options, addToWorld)
     {
         if (options === undefined) { options = {}; }
+        if (addToWorld === undefined) { addToWorld = true; }
 
         var body;
         var vertexSets = data.verts;
@@ -208,7 +225,6 @@ var Factory = new Class({
             for (var i = 0; i < vertexSets.length; i++)
             {
                 var part = Body.create({
-                    _position: Vertices.centre(vertexSets[i]),
                     vertices: vertexSets[i]
                 });
 
@@ -224,7 +240,10 @@ var Factory = new Class({
 
         Body.setPosition(body, { x: x, y: y });
 
-        this.world.add(body);
+        if (addToWorld)
+        {
+            this.world.add(body);
+        }
 
         return body;
     },
