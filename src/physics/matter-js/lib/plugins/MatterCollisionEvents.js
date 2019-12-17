@@ -34,6 +34,16 @@ var MatterCollisionEvents = {
                     {
                         bodyB.onCollideCallback(pair);
                     }
+
+                    if (bodyA.onCollideWith[bodyB.id])
+                    {
+                        bodyA.onCollideWith[bodyB.id](bodyB, pair);
+                    }
+
+                    if (bodyB.onCollideWith[bodyA.id])
+                    {
+                        bodyB.onCollideWith[bodyA.id](bodyA, pair);
+                    }
                 });
             });
 
