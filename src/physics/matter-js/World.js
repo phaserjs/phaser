@@ -110,7 +110,7 @@ var World = new Class({
          * The correction argument is an optional Number that specifies the time correction factor to apply to the update.
          * This can help improve the accuracy of the simulation in cases where delta is changing between updates.
          * The value of correction is defined as delta / lastDelta, i.e. the percentage change of delta over the last step.
-         * Therefore the value is always 1 (no correction) when delta constant (or when no correction is desired, which is the default).
+         * Therefore the value is always 1 (no correction) when delta is constant (or when no correction is desired, which is the default).
          * See the paper on Time Corrected Verlet for more information.
          *
          * @name Phaser.Physics.Matter.World#correction
@@ -150,26 +150,46 @@ var World = new Class({
          */
         this.getDelta = GetValue(config, 'getDelta', this.update60Hz);
 
+        var runnerConfig = GetFastValue(config, 'runner', {});
+
+        var hasFPS = GetFastValue(runnerConfig, 'fps', false);
+
+        var fps = GetFastValue(runnerConfig, 'fps', 60);
+
+        var delta = GetFastValue(runnerConfig, 'delta', 1000 / fps);
+        var deltaMin = GetFastValue(runnerConfig, 'deltaMin', 1000 / fps);
+        var deltaMax = GetFastValue(runnerConfig, 'deltaMax', 1000 / (fps * 0.5));
+
+        if (!hasFPS)
+        {
+            fps = 1000 / delta;
+        }
+
+        /**
+         * The Matter JS Runner Configuration object.
+         * 
+         * This object is populated via the Matter Configuration object's `runner` property and is
+         * updated constantly during the game step.
+         *
+         * @name Phaser.Physics.Matter.World#runner
+         * @type {Phaser.Types.Physics.Matter.MatterRunnerConfig}
+         * @since 3.22.0
+         */
         this.runner = {
-            fps: 60,
-            correction: 1,
-            deltaSampleSize: 60,
+            fps: fps,
+            correction: GetFastValue(runnerConfig, 'correction', 1),
+            deltaSampleSize: GetFastValue(runnerConfig, 'deltaSampleSize', 60),
             counterTimestamp: 0,
             frameCounter: 0,
             deltaHistory: [],
             timePrev: null,
             timeScalePrev: 1,
             frameRequestId: null,
-            isFixed: false,
-            enabled: true
+            isFixed: GetFastValue(runnerConfig, 'isFixed', false),
+            delta: delta,
+            deltaMin: deltaMin,
+            deltaMax: deltaMax
         };
-
-        // var runner = Common.extend(defaults, options);
-
-        this.runner.delta = this.runner.delta || 1000 / this.runner.fps;
-        this.runner.deltaMin = this.runner.deltaMin || 1000 / this.runner.fps;
-        this.runner.deltaMax = this.runner.deltaMax || 1000 / (this.runner.fps * 0.5);
-        this.runner.fps = 1000 / this.runner.delta;
 
         /**
          * Automatically call Engine.update every time the game steps.
@@ -1055,22 +1075,18 @@ var World = new Class({
      * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
-    OLDupdate: function (time, delta)
+    update: function (time, delta)
     {
-        if (this.enabled && this.autoUpdate)
+        if (!this.enabled || !this.autoUpdate)
         {
-            Engine.update(this.engine, this.getDelta(time, delta), this.correction);
+            return;
         }
-    },
 
-    update: function (time)
-    {
         var engine = this.engine;
         var runner = this.runner;
 
         var timing = engine.timing;
-        var correction = 1;
-        var delta;
+        var correction = this.correction;
 
         if (runner.isFixed)
         {
@@ -1123,16 +1139,7 @@ var World = new Class({
             runner.frameCounter = 0;
         }
 
-        // Events.trigger(runner, 'tick', event);
-
-        // update
-        // Events.trigger(runner, 'beforeUpdate', event);
-
         Engine.update(engine, delta, correction);
-
-        // Events.trigger(runner, 'afterUpdate', event);
-
-        // Events.trigger(runner, 'afterTick', event);
     },
 
     /**
