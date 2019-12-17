@@ -108,7 +108,15 @@
 * `PointerConstraint` has been recoded so that when pressed down, it only polls the World for a body hit test during the next game update. This stops it coming out of sync with the state of the world. Useage of the constraint remains the same as before.
 * `Matter.getMatterBodies` is a new function that will return an array of Matter JS Bodies from the given input array, which can be Matter Game Objects, or any class that extends them.
 * `Matter.World.has` is a new method that will take a Matter Body, or Game Object, and search the world for it. If found, it will return `true`.
-* Matter now has the option to use the Runner that it ships with. The Matter Runner operates in two modes: fixed and variable. In the fixed mode, the Matter Engine updates at a fixed delta value every frame (which is what Phaser has used since the first version). This is still the default. In variable mode, the delta will be smoothed each frame to keep the simulation constant, but at the cost of determininism. You can enable the runner by setting the Runner Config in the Matter Config object, both of which are fully covered with JSDocs.
+* Matter now has the option to use the Runner that it ships with. The Matter Runner operates in two modes: fixed and variable. In the fixed mode, the Matter Engine updates at a fixed delta value every frame (which is what Phaser has used since the first version). In variable mode, the delta will be smoothed and capped each frame to keep the simulation constant, but at the cost of determininism. You can configure the runner by setting the `runner` property in the Matter Config object, both of which are fully covered with JSDocs. As of 3.22 the runner is now used by default in variable (non-fixed) mode. If you wish to return to the previous behavior, set `runner: { isFixed: true }`.
+* `Body.onCollideCallback` is a new Matter Body property that can point to a callback to invoke when the body starts colliding.
+* `Body.onCollideEndCallback` is a new Matter Body property that can point to a callback to invoke when the body stops colliding.
+* `Body.onCollideActiveCallback` is a new Matter Body property that can point to a callback to invoke for the duration the body is colliding.
+* `Body.onCollideWith` is a new Matter Body property that holds a mapping between bodies and collision callbacks.
+* `MatterGameObject.setOnCollide` is a new method available on any Matter Game Object, that sets a callback that is invoked when the body collides with another.
+* `MatterGameObject.setOnCollideEnd` is a new method available on any Matter Game Object, that sets a callback that is invoked when the body stops colliding.
+* `MatterGameObject.setOnCollideActive` is a new method available on any Matter Game Object, that sets a callback which is invoked for the duration of the bodies collision with another.
+* `MatterGameObject.setOnCollideWith` is a new method available on any Matter Game Object, that allows you to set a callback to be invoked whenever the body collides with another specific body, or array of bodies.
 
 ### New Features
 
