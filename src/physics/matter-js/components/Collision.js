@@ -82,6 +82,97 @@ var Collision = {
         this.body.collisionFilter.mask = flags;
 
         return this;
+    },
+
+    /**
+     * The callback is sent a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
+     * 
+     * This does not change the bodies collision category, group or filter. Those must be set in addition
+     * to the callback.
+     *
+     * @method Phaser.Physics.Matter.Components.Collision#setOnCollide
+     * @since 3.22.0
+     *
+     * @param {function} callback - The callback to invoke when this body starts colliding with another.
+     *
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     */
+    setOnCollide: function (callback)
+    {
+        this.body.onCollideCallback = callback;
+
+        return this;
+    },
+
+    /**
+     * The callback is sent a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
+     * 
+     * This does not change the bodies collision category, group or filter. Those must be set in addition
+     * to the callback.
+     *
+     * @method Phaser.Physics.Matter.Components.Collision#setOnCollideEnd
+     * @since 3.22.0
+     *
+     * @param {function} callback - The callback to invoke when this body stops colliding with another.
+     *
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     */
+    setOnCollideEnd: function (callback)
+    {
+        this.body.onCollideEndCallback = callback;
+
+        return this;
+    },
+
+    /**
+     * The callback is sent a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
+     * 
+     * This does not change the bodies collision category, group or filter. Those must be set in addition
+     * to the callback.
+     *
+     * @method Phaser.Physics.Matter.Components.Collision#setOnCollideActive
+     * @since 3.22.0
+     *
+     * @param {function} callback - The callback to invoke for the duration of this body colliding with another.
+     *
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     */
+    setOnCollideActive: function (callback)
+    {
+        this.body.onCollideActiveCallback = callback;
+
+        return this;
+    },
+
+    /**
+     * The callback is sent a reference to the other body, along with a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
+     * 
+     * This does not change the bodies collision category, group or filter. Those must be set in addition
+     * to the callback.
+     *
+     * @method Phaser.Physics.Matter.Components.Collision#setOnCollideWith
+     * @since 3.22.0
+     *
+     * @param {(MatterJS.Body|MatterJS.Body[])} body - The body, or an array of bodies, to test for collisions with.
+     * @param {function} callback - The callback to invoke when this body collides with the given body or bodies.
+     *
+     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     */
+    setOnCollideWith: function (body, callback)
+    {
+        if (!Array.isArray(body))
+        {
+            body = [ body ];
+        }
+
+        for (var i = 0; i < body.length; i++)
+        {
+            var src = (body[i].hasOwnProperty('body')) ? body[i].body : body[i];
+
+            this.body.setOnCollideWith(src, callback);
+        }
+
+        return this;
     }
 
 };
