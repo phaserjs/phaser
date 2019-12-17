@@ -6,10 +6,8 @@
 
 var Bodies = require('./lib/factory/Bodies');
 var Body = require('./lib/body/Body');
-var Bounds = require('./lib/geometry/Bounds');
 var Common = require('./lib/core/Common');
 var GetFastValue = require('../../utils/object/GetFastValue');
-var Vector = require('./lib/geometry/Vector');
 var Vertices = require('./lib/geometry/Vertices');
 
 /**
