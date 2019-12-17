@@ -88,8 +88,6 @@ var Axes = require('../geometry/Axes');
                 visible: true,
                 opacity: 1,
                 sprite: {
-                    xScale: 1,
-                    yScale: 1,
                     xOffset: 0,
                     yOffset: 0
                 },
@@ -106,7 +104,8 @@ var Axes = require('../geometry/Axes');
             ignorePointer: false,           // custom Phaser property
             onCollideCallback: null,        // custom Phaser property
             onCollideEndCallback: null,     // custom Phaser property
-            onCollideActiveCallback: null   // custom Phaser property
+            onCollideActiveCallback: null,  // custom Phaser property
+            onCollideWith: {}               // custom Phaser property
         };
 
         if (!options.hasOwnProperty('position') && options.hasOwnProperty('vertices'))
@@ -122,24 +121,17 @@ var Axes = require('../geometry/Axes');
 
         _initProperties(body, options);
 
-        //  Merge in the Matter Collision Events plugin defaults:
-        body.setOnCollide = function (callback)
+        //  Helper function
+        body.setOnCollideWith = function (body, callback)
         {
-            this.onCollideCallback = callback;
-
-            return this;
-        }
-
-        body.setOnCollideEnd = function (callback)
-        {
-            this.onCollideEndCallback = callback;
-
-            return this;
-        }
-
-        body.setOnCollideActive = function (callback)
-        {
-            this.onCollideActiveCallback = callback;
+            if (callback)
+            {
+                this.onCollideWith[body.id] = callback;
+            }
+            else
+            {
+                delete this.onCollideWith[body.id];
+            }
 
             return this;
         }
@@ -1193,29 +1185,6 @@ var Axes = require('../geometry/Axes');
      * @type object
      */
 
-    /**
-     * An `String` that defines the path to the image to use as the sprite texture, if any.
-     *
-     * @property render.sprite.texture
-     * @type string
-     */
-     
-    /**
-     * A `Number` that defines the scaling in the x-axis for the sprite, if any.
-     *
-     * @property render.sprite.xScale
-     * @type number
-     * @default 1
-     */
-
-    /**
-     * A `Number` that defines the scaling in the y-axis for the sprite, if any.
-     *
-     * @property render.sprite.yScale
-     * @type number
-     * @default 1
-     */
-
      /**
       * A `Number` that defines the offset in the x-axis for the sprite (normalised by texture width).
       *
@@ -1233,30 +1202,38 @@ var Axes = require('../geometry/Axes');
       */
 
     /**
-     * A `Number` that defines the line width to use when rendering the body outline (if a sprite is not defined).
-     * A value of `0` means no outline will be rendered.
+     * A hex color value that defines the fill color to use when rendering the body.
      *
-     * @property render.lineWidth
+     * @property render.fillColor
      * @type number
-     * @default 0
      */
 
     /**
-     * A `String` that defines the fill style to use when rendering the body (if a sprite is not defined).
-     * It is the same as when using a canvas, so it accepts CSS style property values.
+     * A value that defines the fill opqcity to use when rendering the body.
      *
-     * @property render.fillStyle
-     * @type string
-     * @default a random colour
+     * @property render.fillOpacity
+     * @type number
+     */
+
+     /**
+     * A hex color value that defines the line color to use when rendering the body.
+     *
+     * @property render.lineColor
+     * @type number
      */
 
     /**
-     * A `String` that defines the stroke style to use when rendering the body outline (if a sprite is not defined).
-     * It is the same as when using a canvas, so it accepts CSS style property values.
+     * A value that defines the line opqcity to use when rendering the body.
      *
-     * @property render.strokeStyle
-     * @type string
-     * @default a random colour
+     * @property render.lineOpacity
+     * @type number
+     */
+
+     /**
+     * A `Number` that defines the line width to use when rendering the body outline.
+     *
+     * @property render.lineThickness
+     * @type number
      */
 
     /**
@@ -1282,6 +1259,83 @@ var Axes = require('../geometry/Axes');
      *
      * @property bounds
      * @type bounds
+     */
+
+    /**
+     * A reference to the Phaser Game Object this body belongs to, if any.
+     *
+     * @property gameObject
+     * @type Phaser.GameObjects.GameObject
+     */
+
+    /**
+     * The scale of the Body when Body.setScale was called. Not used internally by Matter.
+     *
+     * @property scale
+     * @type vector
+     * @default { x: 1, y: 1 }
+     */
+
+    /**
+     * The center of mass of the Body.
+     *
+     * @property centerOfMass
+     * @type vector
+     * @default { x: 0, y: 0 }
+     */
+
+    /**
+     * Will this Body ignore World gravity during the Engine update?
+     *
+     * @property ignoreGravity
+     * @type boolean
+     * @default false
+     */
+
+    /**
+     * Will this Body ignore Phaser Pointer input events?
+     *
+     * @property ignorePointer
+     * @type boolean
+     * @default false
+     */
+
+    /**
+     * A callback that is invoked when this Body starts colliding with any other Body.
+     * 
+     * You can register callbacks by providing a function of type `( pair: Matter.Pair) => void`.
+     *
+     * @property onCollideCallback
+     * @type function
+     * @default null
+     */
+
+    /**
+     * A callback that is invoked when this Body stops colliding with any other Body.
+     * 
+     * You can register callbacks by providing a function of type `( pair: Matter.Pair) => void`.
+     *
+     * @property onCollideEndCallback
+     * @type function
+     * @default null
+     */
+
+    /**
+     * A callback that is invoked for the duration that this Body is colliding with any other Body.
+     * 
+     * You can register callbacks by providing a function of type `( pair: Matter.Pair) => void`.
+     *
+     * @property onCollideActiveCallback
+     * @type function
+     * @default null
+     */
+
+    /**
+     * A collision callback dictionary used by the `Body.setOnCollideWith` function.
+     *
+     * @property onCollideWith
+     * @type object
+     * @default null
      */
 
 })();
