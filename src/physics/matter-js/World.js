@@ -1194,6 +1194,23 @@ var World = new Class({
     },
 
     /**
+     * Returns `true` if the given body can be found within the World.
+     *
+     * @method Phaser.Physics.Matter.World#has
+     * @since 3.22.0
+     * 
+     * @param {(MatterJS.Body|Phaser.GameObjects.GameObject)} body - The Matter Body, or Game Object, to search for within the world.
+     * 
+     * @return {MatterJS.Body[]} An array of all the Matter JS Bodies in this World.
+     */
+    has: function (body)
+    {
+        var src = (body.hasOwnProperty('body')) ? body.body : body;
+
+        return (Composite.get(this.localWorld, src.id, src.type) !== null);
+    },
+
+    /**
      * Returns all the bodies in the Matter World, including all bodies in children, recursively.
      *
      * @method Phaser.Physics.Matter.World#getAllBodies
