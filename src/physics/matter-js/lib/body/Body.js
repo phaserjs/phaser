@@ -63,6 +63,9 @@ var Axes = require('../geometry/Axes');
             isSleeping: false,
             ignoreGravity: false, // custom Phaser property
             ignorePointer: false, // custom Phaser property
+            onCollideCallback: null, // custom Phaser property
+            onCollideEndCallback: null, // custom Phaser property
+            onCollideActiveCallback: null, // custom Phaser property
             motion: 0,
             sleepThreshold: 60,
             density: 0.001,
@@ -114,6 +117,28 @@ var Axes = require('../geometry/Axes');
         var body = Common.extend(defaults, options);
 
         _initProperties(body, options);
+
+        //  Merge in the Matter Collision Events plugin defaults:
+        body.setOnCollide = function (callback)
+        {
+            this.onCollideCallback = callback;
+
+            return this;
+        }
+
+        body.setOnCollideEnd = function (callback)
+        {
+            this.onCollideEndCallback = callback;
+
+            return this;
+        }
+
+        body.setOnCollideActive = function (callback)
+        {
+            this.onCollideActiveCallback = callback;
+
+            return this;
+        }
 
         return body;
     };

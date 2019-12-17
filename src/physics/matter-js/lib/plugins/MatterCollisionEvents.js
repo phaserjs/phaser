@@ -13,34 +13,6 @@ var MatterCollisionEvents = {
 
     install: function (matter)
     {
-        matter.after('Body.create', function (body)
-        {
-            body.onCollideCallback;
-            body.onCollideEndCallback;
-            body.onCollideActiveCallback;
-
-            body.setOnCollide = function (callback)
-            {
-                this.onCollideCallback = callback;
-
-                return this;
-            }
-
-            body.setOnCollideEnd = function (callback)
-            {
-                this.onCollideEndCallback = callback;
-
-                return this;
-            }
-
-            body.setOnCollideActive = function (callback)
-            {
-                this.onCollideActiveCallback = callback;
-
-                return this;
-            }
-        });
-      
         matter.after('Engine.create', function ()
         {
             matter.Events.on(this, 'collisionStart', function (event)
