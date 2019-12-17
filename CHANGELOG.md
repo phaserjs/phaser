@@ -100,13 +100,18 @@
 * `Constraint.pointBWorld` is a new method added to Matter that returns the world-space position of `constraint.pointB`, accounting for `constraint.bodyB`.
 * `Body.setCentre` is a new method added to Matter that allows you to set the center of mass of a Body (please note the English spelling of this function.)
 * Bumped Matter Plugin versions to avoid console logs from Common.info and Common.warn.
-* `Vertices.calcOffset` is a new function that calculates the vert body position offset, used for keeping data in sync.
-* `Engine.syncVerts` is a new Engine config property that allows you to re-sync all the vertices ofa Body with the bodies position at the end of the Engine step. This can help massively if you find you've got verts drifting out of alignment with the body position when using pointer contraints, or high velocity environments. Uses the new `Engine._bodiesSync` function.
-* `Body.syncVerts` is a new function that will re-sync the vert positions with the body position. Called if `Engine.syncVerts` is `true` and if the Body has its `syncVerts` property set to `true`.
 * `Body.scale` is a new vector that holds the most recent scale values as passed to `Body.scale`.
 * `Matter.Bodies.flagCoincidentParts` is a new function that will flags all internal edges (coincident parts) on an array of body parts. This was previously part of the `fromVertices` function, but has been made external for outside use.
 * `PhysicsEditorParser.parseVertices` now uses `Bodies.flagCoincidentParts` to avoid duplicating code.
 * `MatterGameObject` has a new optional boolean parameter `addToWorld` which lets you control if the Body should be added to the world or not. Useful for toggling off should you be merging pre-existing bodies with Game Objects.
+* The `Matter.SetBody.setExistingBody` function, which all Matter Game Objects have, has a new parameter `addToWorld` which allows you to control when the body is added to the Matter world should you not require it immediately. It will also only add the body to the world if it doesn't already exist within it, or any of its composites.
+* `PointerConstraint` has been recoded so that when pressed down, it only polls the World for a body hit test during the next game update. This stops it coming out of sync with the state of the world. Useage of the constraint remains the same as before.
+* `Matter.getMatterBodies` is a new function that will return an array of Matter JS Bodies from the given input array, which can be Matter Game Objects, or any class that extends them.
+* `Matter.World.has` is a new method that will take a Matter Body, or Game Object, and search the world for it. If found, it will return `true`.
+
+### New Features
+
+* `TimeStep.smoothStep` is a new boolean property that controls if any delta smoothing takes place during the game step. Delta smoothing has been enabled in Phaser since the first version and helps avoid delta spikes and dips, especially after loss of focus. However, you can now easily toggle if this happens via this property and the corresponding `FPSConfig` property.
 
 ### Updates
 
