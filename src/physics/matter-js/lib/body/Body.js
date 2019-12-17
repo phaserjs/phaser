@@ -40,13 +40,10 @@ var Axes = require('../geometry/Axes');
             id: Common.nextId(),
             type: 'body',
             label: 'Body',
-            gameObject: null, // custom Phaser property
             parts: [],
             plugin: {},
             angle: 0,
-            vertices: Vertices.fromPath('L 0 0 L 40 0 L 40 40 L 0 40'),
-            scale: { x: 1, y: 1 },  // custom Phaser property
-            centerOfMass: { x: 0, y: 0 },  // custom Phaser property
+            vertices: null, // Phaser change: no point calling fromPath if they pass in vertices anyway
             position: { x: 0, y: 0 },
             force: { x: 0, y: 0 },
             torque: 0,
@@ -61,11 +58,6 @@ var Axes = require('../geometry/Axes');
             isSensor: false,
             isStatic: false,
             isSleeping: false,
-            ignoreGravity: false, // custom Phaser property
-            ignorePointer: false, // custom Phaser property
-            onCollideCallback: null, // custom Phaser property
-            onCollideEndCallback: null, // custom Phaser property
-            onCollideActiveCallback: null, // custom Phaser property
             motion: 0,
             sleepThreshold: 60,
             density: 0.001,
@@ -80,21 +72,6 @@ var Axes = require('../geometry/Axes');
             },
             slop: 0.05,
             timeScale: 1,
-            render: {
-                visible: true,
-                opacity: 1,
-                sprite: {
-                    xScale: 1,
-                    yScale: 1,
-                    xOffset: 0,
-                    yOffset: 0
-                },
-                fillColor: null, // custom Phaser property
-                fillOpacity: null, // custom Phaser property
-                lineColor: null, // custom Phaser property
-                lineOpacity: null, // custom Phaser property
-                lineThickness: null // custom Phaser property
-            },
             events: null,
             bounds: null,
             chamfer: null,
@@ -106,12 +83,39 @@ var Axes = require('../geometry/Axes');
             area: 0,
             mass: 0,
             inertia: 0,
-            _original: null
+            _original: null,
+            render: {
+                visible: true,
+                opacity: 1,
+                sprite: {
+                    xScale: 1,
+                    yScale: 1,
+                    xOffset: 0,
+                    yOffset: 0
+                },
+                fillColor: null,            // custom Phaser property
+                fillOpacity: null,          // custom Phaser property
+                lineColor: null,            // custom Phaser property
+                lineOpacity: null,          // custom Phaser property
+                lineThickness: null         // custom Phaser property
+            },
+            gameObject: null,               // custom Phaser property
+            scale: { x: 1, y: 1 },          // custom Phaser property
+            centerOfMass: { x: 0, y: 0 },   // custom Phaser property
+            ignoreGravity: false,           // custom Phaser property
+            ignorePointer: false,           // custom Phaser property
+            onCollideCallback: null,        // custom Phaser property
+            onCollideEndCallback: null,     // custom Phaser property
+            onCollideActiveCallback: null   // custom Phaser property
         };
 
         if (!options.hasOwnProperty('position') && options.hasOwnProperty('vertices'))
         {
             options.position = Vertices.centre(options.vertices);
+        }
+        else if (!options.hasOwnProperty('vertices'))
+        {
+            defaults.vertices = Vertices.fromPath('L 0 0 L 40 0 L 40 40 L 0 40');
         }
 
         var body = Common.extend(defaults, options);
@@ -203,26 +207,8 @@ var Axes = require('../geometry/Axes');
             inertia: options.inertia || body.inertia
         });
 
-        /*
-        if (body.parts.length === 1)
-        {
-            var w = (body.bounds.max.x - body.bounds.min.x);
-            var h = (body.bounds.max.y - body.bounds.min.y);
-
-            body.centerOfMass.x = w / 2;
-            body.centerOfMass.y = h / 2;
-
-            Vertices.calcOffset(body.vertices, body.position);
-        }
-        */
-
         body.centerOfMass.x = -(body.bounds.min.x - body.position.x) / (body.bounds.max.x - body.bounds.min.x);
         body.centerOfMass.y = -(body.bounds.min.y - body.position.y) / (body.bounds.max.y - body.bounds.min.y);
-
-        if (!body.isStatic)
-        {
-            console.log('com', body.centerOfMass.x, body.centerOfMass.y);
-        }
     };
 
     /**
@@ -484,11 +470,6 @@ var Axes = require('../geometry/Axes');
         Body.setMass(body, total.mass);
         Body.setInertia(body, total.inertia);
         Body.setPosition(body, total.centre);
-
-        // for (i = 0; i < parts.length; i++)
-        // {
-        //     Vertices.calcOffset(parts[i].vertices, total.centre);
-        // }
     };
 
     /**
