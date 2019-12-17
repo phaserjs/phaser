@@ -157,12 +157,11 @@ var PointerConstraint = new Class({
     /**
      * A Pointer has been pressed down onto the Scene.
      * 
-     * If this Constraint doesn't have an active Pointer then a hit test is
-     * run against all active bodies in the world. If one is found it is bound
-     * to this constraint and the drag begins.
+     * If this Constraint doesn't have an active Pointer then a hit test is set to
+     * run against all active bodies in the world during the _next_ call to `update`.
+     * If a body is found, it is bound to this constraint and the drag begins.
      *
      * @method Phaser.Physics.Matter.PointerConstraint#onDown
-     * @fires Phaser.Physics.Matter.Events#DRAG_START
      * @since 3.0.0
      *
      * @param {Phaser.Input.Pointer} pointer - A reference to the Pointer that was pressed.
@@ -176,9 +175,20 @@ var PointerConstraint = new Class({
         }
     },
 
-    onUp: function ()
+    /**
+     * A Pointer has been released from the Scene. If it was the one this constraint was using, it's cleared.
+     *
+     * @method Phaser.Physics.Matter.PointerConstraint#onUp
+     * @since 3.22.0
+     *
+     * @param {Phaser.Input.Pointer} pointer - A reference to the Pointer that was pressed.
+     */
+    onUp: function (pointer)
     {
-        this.pointer = null;
+        if (pointer === this.pointer)
+        {
+            this.pointer = null;
+        }
     },
 
     /**
@@ -187,6 +197,7 @@ var PointerConstraint = new Class({
      * body.
      *
      * @method Phaser.Physics.Matter.PointerConstraint#getBody
+     * @fires Phaser.Physics.Matter.Events#DRAG_START
      * @since 3.16.2
      * 
      * @return {boolean} `true` if a body was found and set, otherwise `false`.
@@ -196,7 +207,7 @@ var PointerConstraint = new Class({
         var pos = this.position;
         var constraint = this.constraint;
 
-        pointer.camera.getWorldPoint(pointer.x, pointer.y, pos);
+        this.camera.getWorldPoint(pointer.x, pointer.y, pos);
 
         var bodies = Composite.allBodies(this.world.localWorld);
 
@@ -246,13 +257,10 @@ var PointerConstraint = new Class({
 
             if (Vertices.contains(part.vertices, position))
             {
-                // constraint.pointA = position;
-                constraint.pointA = { x: position.x, y: position.y };
-
-                constraint.bodyB = body;
-
+                constraint.pointA = position;
                 constraint.pointB = { x: position.x - body.position.x, y: position.y - body.position.y };
 
+                constraint.bodyB = body;
                 constraint.angleB = body.angle;
 
                 Sleeping.set(body, false);
@@ -366,6 +374,7 @@ var PointerConstraint = new Class({
         this.world.off(Events.BEFORE_UPDATE, this.update);
 
         this.scene.sys.input.off(InputEvents.POINTER_DOWN, this.onDown, this);
+        this.scene.sys.input.off(InputEvents.POINTER_UP, this.onUp, this);
     }
 
 });
