@@ -173,8 +173,7 @@ var GameObjectFactory = new Class({
  * providing a name (`factoryType`) and the constructor (`factoryFunction`) in order
  * to be called when you call to Phaser.Scene.add[ factoryType ] method.
  *
- * @name Phaser.GameObjects.GameObjectFactory.register
- * @type {function}
+ * @method Phaser.GameObjects.GameObjectFactory.register
  * @static
  * @since 3.0.0
  *
@@ -194,8 +193,7 @@ GameObjectFactory.register = function (factoryType, factoryFunction)
  * With this method you can remove a custom GameObject factory registered in the GameObjectFactory,
  * providing a its `factoryType`.
  *
- * @name Phaser.GameObjects.GameObjectFactory.remove
- * @type {function}
+ * @method Phaser.GameObjects.GameObjectFactory.remove
  * @static
  * @since 3.0.0
  *
