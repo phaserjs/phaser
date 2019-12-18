@@ -286,7 +286,9 @@ var Body = new Class({
         this.velocity = new Vector2();
 
         /**
-         * The Body's calculated velocity, in pixels per second, at the last step.
+         * The Body's change in position (due to velocity) at the last step, in pixels.
+         *
+         * The size of this value depends on the simulation's step rate.
          *
          * @name Phaser.Physics.Arcade.Body#newVelocity
          * @type {Phaser.Math.Vector2}
@@ -443,23 +445,24 @@ var Body = new Class({
         this.maxVelocity = new Vector2(10000, 10000);
 
         /**
-         * The maximum speed this Body is allowed to reach.
+         * The maximum speed this Body is allowed to reach, in pixels per second.
          *
          * If not negative it limits the scalar value of speed.
          *
-         * Any negative value means no maximum is being applied.
+         * Any negative value means no maximum is being applied (the default).
          *
          * @name Phaser.Physics.Arcade.Body#maxSpeed
          * @type {number}
+         * @default -1
          * @since 3.16.0
          */
         this.maxSpeed = -1;
 
         /**
          * If this Body is `immovable` and in motion, `friction` is the proportion of this Body's motion received by the riding Body on each axis, relative to 1.
-         * The default value (1, 0) moves the riding Body horizontally in equal proportion to this Body and vertically not at all.
          * The horizontal component (x) is applied only when two colliding Bodies are separated vertically.
          * The vertical component (y) is applied only when two colliding Bodies are separated horizontally.
+         * The default value (1, 0) moves the riding Body horizontally in equal proportion to this Body and vertically not at all.
          *
          * @name Phaser.Physics.Arcade.Body#friction
          * @type {Phaser.Math.Vector2}
@@ -641,7 +644,7 @@ var Body = new Class({
         this.overlapR = 0;
 
         /**
-         * Whether this Body is overlapped with another and both are not moving.
+         * Whether this Body is overlapped with another and both are not moving, on at least one axis.
          *
          * @name Phaser.Physics.Arcade.Body#embedded
          * @type {boolean}
@@ -671,29 +674,39 @@ var Body = new Class({
         this.checkCollision = { none: false, up: true, down: true, left: true, right: true };
 
         /**
-         * Whether this Body is colliding with another and in which direction.
+         * Whether this Body is colliding with a Body or Static Body and in which direction.
+         * In a collision where both bodies have zero velocity, `embedded` will be set instead.
          *
          * @name Phaser.Physics.Arcade.Body#touching
          * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
+         *
+         * @see Phaser.Physics.Arcade.Body#blocked
+         * @see Phaser.Physics.Arcade.Body#embedded
          */
         this.touching = { none: true, up: false, down: false, left: false, right: false };
 
         /**
-         * Whether this Body was colliding with another during the last step, and in which direction.
+         * This Body's `touching` value during the previous step.
          *
          * @name Phaser.Physics.Arcade.Body#wasTouching
          * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
+         *
+         * @see Phaser.Physics.Arcade.Body#touching
          */
         this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
 
         /**
-         * Whether this Body is colliding with a tile or the world boundary.
+         * Whether this Body is colliding with a Static Body, a tile, or the world boundary.
+         * In a collision with a Static Body, if this Body has zero velocity then `embedded` will be set instead.
          *
          * @name Phaser.Physics.Arcade.Body#blocked
          * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
+         *
+         * @see Phaser.Physics.Arcade.Body#embedded
+         * @see Phaser.Physics.Arcade.Body#touching
          */
         this.blocked = { none: true, up: false, down: false, left: false, right: false };
 
