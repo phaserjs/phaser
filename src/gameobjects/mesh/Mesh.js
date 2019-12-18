@@ -23,7 +23,6 @@ var NOOP = require('../../utils/NOOP');
  *
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
- * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.Size
@@ -49,7 +48,6 @@ var Mesh = new Class({
     Mixins: [
         Components.BlendMode,
         Components.Depth,
-        Components.GetBounds,
         Components.Mask,
         Components.Pipeline,
         Components.Size,
