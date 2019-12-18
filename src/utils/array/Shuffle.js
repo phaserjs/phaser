@@ -12,9 +12,12 @@
  * @function Phaser.Utils.Array.Shuffle
  * @since 3.0.0
  *
- * @param {array} array - The array to shuffle. This array is modified in place.
+ * @generic T
+ * @genericUse {T[]} - [array,$return]
  *
- * @return {array} The shuffled array.
+ * @param {T[]} array - The array to shuffle. This array is modified in place.
+ *
+ * @return {T[]} The shuffled array.
  */
 var Shuffle = function (array)
 {

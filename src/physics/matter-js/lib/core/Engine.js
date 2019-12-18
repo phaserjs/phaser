@@ -62,26 +62,6 @@ var Body = require('../body/Body');
 
         var engine = Common.extend(defaults, options);
 
-        // @deprecated
-        if (element || engine.render) {
-            var renderDefaults = {
-                element: element,
-                controller: Render
-            };
-            
-            engine.render = Common.extend(renderDefaults, engine.render);
-        }
-
-        // @deprecated
-        if (engine.render && engine.render.controller) {
-            engine.render = engine.render.controller.create(engine.render);
-        }
-
-        // @deprecated
-        if (engine.render) {
-            engine.render.engine = engine;
-        }
-
         engine.world = options.world || World.create(engine.world);
         engine.pairs = Pairs.create();
         engine.broadphase = engine.broadphase.controller.create(engine.broadphase);

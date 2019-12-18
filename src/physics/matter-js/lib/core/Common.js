@@ -257,7 +257,7 @@ module.exports = Common;
      * @return {number} the current timestamp
      */
     Common.now = function() {
-        if (window.performance) {
+        if (typeof window !== 'undefined' && window.performance) {
             if (window.performance.now) {
                 return window.performance.now();
             } else if (window.performance.webkitNow) {
@@ -534,24 +534,5 @@ module.exports = Common;
             Common.get(base, path),
             func
         ));
-    };
-
-    /**
-     * Used to require external libraries outside of the bundle.
-     * It first looks for the `globalName` on the environment's global namespace.
-     * If the global is not found, it will fall back to using the standard `require` using the `moduleName`.
-     * @private
-     * @method _requireGlobal
-     * @param {string} globalName The global module name
-     * @param {string} moduleName The fallback CommonJS module name
-     * @return {} The loaded module
-     */
-    Common._requireGlobal = function(globalName, moduleName) {
-        var obj = (typeof window !== 'undefined' ? window[globalName] : typeof global !== 'undefined' ? global[globalName] : null);
-
-        //  Breaks webpack :(
-        // return obj || require(moduleName);
-
-        return obj;
     };
 })();

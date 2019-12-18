@@ -285,7 +285,7 @@ var Text = new Class({
 
         if (style && style.lineSpacing)
         {
-            this.lineSpacing = style.lineSpacing;
+            this.setLineSpacing(style.lineSpacing);
         }
 
         scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, function ()
@@ -508,16 +508,20 @@ var Text = new Class({
     {
         var result = '';
         var lines = text.split(this.splitRegExp);
+        var lastLineIndex = lines.length - 1;
+        var whiteSpaceWidth = context.measureText(' ').width;
 
-        for (var i = 0; i < lines.length; i++)
+        for (var i = 0; i <= lastLineIndex; i++)
         {
             var spaceLeft = wordWrapWidth;
             var words = lines[i].split(' ');
+            var lastWordIndex = words.length - 1;
 
-            for (var j = 0; j < words.length; j++)
+            for (var j = 0; j <= lastWordIndex; j++)
             {
-                var wordWidth = context.measureText(words[j]).width;
-                var wordWidthWithSpace = wordWidth + context.measureText(' ').width;
+                var word = words[j];
+                var wordWidth = context.measureText(word).width;
+                var wordWidthWithSpace = wordWidth + whiteSpaceWidth;
 
                 if (wordWidthWithSpace > spaceLeft)
                 {
@@ -526,24 +530,24 @@ var Text = new Class({
                     if (j > 0)
                     {
                         result += '\n';
+                        spaceLeft = wordWrapWidth;
                     }
+                }
 
-                    result += words[j] + ' ';
-                    spaceLeft = wordWrapWidth - wordWidthWithSpace;
+                result += word;
+
+                if (j < lastWordIndex)
+                {
+                    result += ' ';
+                    spaceLeft -= wordWidthWithSpace;
                 }
                 else
                 {
-                    spaceLeft -= wordWidthWithSpace;
-                    result += words[j];
-
-                    if (j < (words.length - 1))
-                    {
-                        result += ' ';
-                    }
+                    spaceLeft -= wordWidth;
                 }
             }
 
-            if (i < lines.length - 1)
+            if (i < lastLineIndex)
             {
                 result += '\n';
             }

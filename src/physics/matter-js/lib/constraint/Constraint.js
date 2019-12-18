@@ -66,11 +66,14 @@ var Common = require('../core/Common');
         // render
         var render = {
             visible: true,
-            lineWidth: 2,
-            strokeStyle: '#ffffff',
             type: 'line',
             anchors: true,
-            custom: false
+            lineColor: null, // custom Phaser property
+            lineOpacity: null, // custom Phaser property
+            lineThickness: null, // custom Phaser property
+            pinSize: null, // custom Phaser property
+            anchorColor: null, // custom Phaser property
+            anchorSize: null // custom Phaser property
         };
 
         if (constraint.length === 0 && constraint.stiffness > 0.1) {
@@ -78,12 +81,6 @@ var Common = require('../core/Common');
             render.anchors = false;
         } else if (constraint.stiffness < 0.9) {
             render.type = 'spring';
-        }
-
-        //  If the constraint has a render options set, we'll treat it as a custom override
-        if (constraint.hasOwnProperty('render'))
-        {
-            render.custom = true;
         }
 
         constraint.render = Common.extend(render, constraint.render);
@@ -305,6 +302,32 @@ var Common = require('../core/Common');
             impulse.x *= Constraint._warming;
             impulse.y *= Constraint._warming;
         }
+    };
+
+    /**
+     * Returns the world-space position of `constraint.pointA`, accounting for `constraint.bodyA`.
+     * @method pointAWorld
+     * @param {constraint} constraint
+     * @returns {vector} the world-space position
+     */
+    Constraint.pointAWorld = function(constraint) {
+        return {
+            x: (constraint.bodyA ? constraint.bodyA.position.x : 0) + constraint.pointA.x,
+            y: (constraint.bodyA ? constraint.bodyA.position.y : 0) + constraint.pointA.y
+        };
+    };
+
+    /**
+     * Returns the world-space position of `constraint.pointB`, accounting for `constraint.bodyB`.
+     * @method pointBWorld
+     * @param {constraint} constraint
+     * @returns {vector} the world-space position
+     */
+    Constraint.pointBWorld = function(constraint) {
+        return {
+            x: (constraint.bodyB ? constraint.bodyB.position.x : 0) + constraint.pointB.x,
+            y: (constraint.bodyB ? constraint.bodyB.position.y : 0) + constraint.pointB.y
+        };
     };
 
     /*

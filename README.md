@@ -77,7 +77,7 @@ Extra special thanks to the following companies who's support makes Phaser possi
 * [Y8 Games](https://www.y8.com)
 * [Poki](https://developers.poki.com/)
 
-![Sponsors](https://phaser.io/images/github/sponsors-2019-08.png "Awesome  Sponsors")
+![Sponsors](https://phaser.io/images/github/sponsors-2019-12.png "Awesome  Sponsors")
 
 ![Phaser Newsletter](https://phaser.io/images/github/div-newsletter.png "Phaser Newsletter")
 

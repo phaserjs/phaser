@@ -95,20 +95,17 @@ var SetBody = {
      * @since 3.0.0
      *
      * @param {MatterJS.Body} body - [description]
-     * @param {boolean} [addToWorld=true] - [description]
+     * @param {boolean} [addToWorld=true] - Should the newly created body be immediately added to the World?
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
     setExistingBody: function (body, addToWorld)
     {
-        if (addToWorld === undefined)
-        {
-            addToWorld = true;
-        }
+        if (addToWorld === undefined) { addToWorld = true; }
 
         if (this.body)
         {
-            this.world.remove(this.body);
+            this.world.remove(this.body, true);
         }
 
         this.body = body;
@@ -122,18 +119,25 @@ var SetBody = {
 
         body.destroy = function destroy ()
         {
-            _this.world.remove(_this.body);
+            _this.world.remove(_this.body, true);
             _this.body.gameObject = null;
         };
 
         if (addToWorld)
         {
+            if (this.world.has(body))
+            {
+                //  Because it could be part of another Composite
+                this.world.remove(body, true);
+            }
+
+            //  Only add the body if it's not already in the world
             this.world.add(body);
         }
 
         if (this._originComponent)
         {
-            this.setOrigin(body.render.sprite.xOffset, body.render.sprite.yOffset);
+            this.setOrigin(this.centerOffsetX, this.centerOffsetY);
         }
 
         return this;

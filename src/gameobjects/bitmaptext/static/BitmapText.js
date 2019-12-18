@@ -15,7 +15,7 @@ var Render = require('./BitmapTextRender');
 /**
  * @classdesc
  * BitmapText objects work by taking a texture file and an XML or JSON file that describes the font structure.
- * 
+ *
  * During rendering for each letter of the text is rendered to the display, proportionally spaced out and aligned to
  * match the font structure.
  *
@@ -185,7 +185,7 @@ var BitmapText = new Class({
 
         /**
          * Internal cache var holding the maxWidth.
-         * 
+         *
          * @name Phaser.GameObjects.BitmapText#_maxWidth
          * @type {number}
          * @private
@@ -431,7 +431,7 @@ var BitmapText = new Class({
      * If no whitespace was found then no wrapping will take place and consequently the `maxWidth` value will not be honored.
      *
      * Disable maxWidth by setting the value to 0.
-     * 
+     *
      * You can set the whitespace character to be searched for by setting the `wordWrapCharCode` parameter or property.
      *
      * @method Phaser.GameObjects.BitmapText#setMaxWidth
@@ -690,8 +690,7 @@ BitmapText.ALIGN_RIGHT = 2;
  *
  * Adds the parsed Bitmap Font data to the cache with the `fontName` key.
  *
- * @name Phaser.GameObjects.BitmapText.ParseFromAtlas
- * @type {function}
+ * @method Phaser.GameObjects.BitmapText.ParseFromAtlas
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - The Scene to parse the Bitmap Font for.
@@ -709,8 +708,7 @@ BitmapText.ParseFromAtlas = ParseFromAtlas;
 /**
  * Parse an XML font to Bitmap Font data for the Bitmap Font cache.
  *
- * @name Phaser.GameObjects.BitmapText.ParseXMLBitmapFont
- * @type {function}
+ * @method Phaser.GameObjects.BitmapText.ParseXMLBitmapFont
  * @since 3.17.0
  *
  * @param {XMLDocument} xml - The XML Document to parse the font from.

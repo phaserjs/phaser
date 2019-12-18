@@ -22,7 +22,17 @@ var Vector = require('./lib/geometry/Vector');
 
 /**
  * @classdesc
- * [description]
+ * The Matter World class is responsible for managing one single instance of a Matter Physics World for Phaser.
+ * 
+ * Access this via `this.matter.world` from within a Scene.
+ * 
+ * This class creates a Matter JS World Composite along with the Matter JS Engine during instantiation. It also
+ * handles delta timing, bounds, body and constraint creation and debug drawing.
+ * 
+ * If you wish to access the Matter JS World object directly, see the `localWorld` property.
+ * If you wish to access the Matter Engine directly, see the `engine` property.
+ * 
+ * This class is an Event Emitter and will proxy _all_ Matter JS events, as they are received.
  *
  * @class World
  * @extends Phaser.Events.EventEmitter
@@ -86,30 +96,6 @@ var World = new Class({
          */
         this.walls = { left: null, right: null, top: null, bottom: null };
 
-        if (GetFastValue(config, 'setBounds', false))
-        {
-            var boundsConfig = config['setBounds'];
-
-            if (typeof boundsConfig === 'boolean')
-            {
-                this.setBounds();
-            }
-            else
-            {
-                var x = GetFastValue(boundsConfig, 'x', 0);
-                var y = GetFastValue(boundsConfig, 'y', 0);
-                var width = GetFastValue(boundsConfig, 'width', scene.sys.scale.width);
-                var height = GetFastValue(boundsConfig, 'height', scene.sys.scale.height);
-                var thickness = GetFastValue(boundsConfig, 'thickness', 64);
-                var left = GetFastValue(boundsConfig, 'left', true);
-                var right = GetFastValue(boundsConfig, 'right', true);
-                var top = GetFastValue(boundsConfig, 'top', true);
-                var bottom = GetFastValue(boundsConfig, 'bottom', true);
-
-                this.setBounds(x, y, width, height, thickness, left, right, top, bottom);
-            }
-        }
-
         /**
          * A flag that toggles if the world is enabled or not.
          *
@@ -124,7 +110,7 @@ var World = new Class({
          * The correction argument is an optional Number that specifies the time correction factor to apply to the update.
          * This can help improve the accuracy of the simulation in cases where delta is changing between updates.
          * The value of correction is defined as delta / lastDelta, i.e. the percentage change of delta over the last step.
-         * Therefore the value is always 1 (no correction) when delta constant (or when no correction is desired, which is the default).
+         * Therefore the value is always 1 (no correction) when delta is constant (or when no correction is desired, which is the default).
          * See the paper on Time Corrected Verlet for more information.
          *
          * @name Phaser.Physics.Matter.World#correction
@@ -164,6 +150,47 @@ var World = new Class({
          */
         this.getDelta = GetValue(config, 'getDelta', this.update60Hz);
 
+        var runnerConfig = GetFastValue(config, 'runner', {});
+
+        var hasFPS = GetFastValue(runnerConfig, 'fps', false);
+
+        var fps = GetFastValue(runnerConfig, 'fps', 60);
+
+        var delta = GetFastValue(runnerConfig, 'delta', 1000 / fps);
+        var deltaMin = GetFastValue(runnerConfig, 'deltaMin', 1000 / fps);
+        var deltaMax = GetFastValue(runnerConfig, 'deltaMax', 1000 / (fps * 0.5));
+
+        if (!hasFPS)
+        {
+            fps = 1000 / delta;
+        }
+
+        /**
+         * The Matter JS Runner Configuration object.
+         * 
+         * This object is populated via the Matter Configuration object's `runner` property and is
+         * updated constantly during the game step.
+         *
+         * @name Phaser.Physics.Matter.World#runner
+         * @type {Phaser.Types.Physics.Matter.MatterRunnerConfig}
+         * @since 3.22.0
+         */
+        this.runner = {
+            fps: fps,
+            correction: GetFastValue(runnerConfig, 'correction', 1),
+            deltaSampleSize: GetFastValue(runnerConfig, 'deltaSampleSize', 60),
+            counterTimestamp: 0,
+            frameCounter: 0,
+            deltaHistory: [],
+            timePrev: null,
+            timeScalePrev: 1,
+            frameRequestId: null,
+            isFixed: GetFastValue(runnerConfig, 'isFixed', false),
+            delta: delta,
+            deltaMin: deltaMin,
+            deltaMax: deltaMax
+        };
+
         /**
          * Automatically call Engine.update every time the game steps.
          * If you disable this then you are responsible for calling `World.step` directly from your game.
@@ -178,40 +205,6 @@ var World = new Class({
 
         var debugConfig = GetValue(config, 'debug', false);
 
-        var drawDebug = (typeof(debugConfig) === 'object');
-
-        //  Legacy version
-        if (typeof(debugConfig) === 'boolean')
-        {
-            drawDebug = debugConfig;
-
-            var wireframes = GetFastValue(config, 'debugWireframes', true);
-
-            //  Old format config - remove in a later version
-            debugConfig = {
-                showBody: GetFastValue(config, 'debugShowBody', true),
-                showStaticBody: GetFastValue(config, 'debugShowStaticBody', true),
-                showSleeping: GetFastValue(config, 'debugShowSleeping', false),
-                showJoint: GetFastValue(config, 'debugShowJoint', true),
-                showInternalEdges: GetFastValue(config, 'debugShowInternalEdges', false),
-                showConvexHulls: GetFastValue(config, 'debugShowConvexHulls', false),
-
-                renderFill: !wireframes,
-                renderStroke: wireframes,
-
-                fillColor: GetFastValue(config, 'debugBodyFillColor', 0xe3a7e3),
-                strokeColor: GetFastValue(config, 'debugBodyColor', 0xff00ff),
-    
-                staticFillColor: GetFastValue(config, 'debugStaticBodyColor', 0x0000ff),
-                staticStrokeColor: GetFastValue(config, 'debugStaticBodyColor', 0x0000ff),
-    
-                staticBodySleepOpacity: 0.5,
-    
-                jointColor: GetFastValue(config, 'debugJointColor', 0x000000),
-                hullColor: GetFastValue(config, 'debugConvexHullColor', 0xaaaaaa)
-            };
-        }
-
         /**
          * A flag that controls if the debug graphics will be drawn to or not.
          *
@@ -220,7 +213,7 @@ var World = new Class({
          * @default false
          * @since 3.0.0
          */
-        this.drawDebug = drawDebug;
+        this.drawDebug = (typeof(debugConfig) === 'object') ? true : debugConfig;
 
         /**
          * An instance of the Graphics object the debug bodies are drawn to, if enabled.
@@ -233,6 +226,15 @@ var World = new Class({
 
         /**
          * The debug configuration object.
+         * 
+         * The values stored in this object are read from the Matter World Config `debug` property.
+         * 
+         * When a new Body or Constraint is _added to the World_, they are given the values stored in this object,
+         * unless they have their own `render` object set that will override them.
+         * 
+         * Note that while you can modify the values of properties in this object at run-time, it will not change
+         * any of the Matter objects _already added_. It will only impact objects newly added to the world, or one
+         * that is removed and then re-added at a later time.
          *
          * @name Phaser.Physics.Matter.World#debugConfig
          * @type {Phaser.Types.Physics.Matter.MatterDebugConfig}
@@ -246,21 +248,24 @@ var World = new Class({
             showInternalEdges: GetFastValue(debugConfig, 'showInternalEdges', false),
             showConvexHulls: GetFastValue(debugConfig, 'showConvexHulls', false),
 
-            renderFill: GetFastValue(debugConfig, 'renderFill', true),
-            renderStroke: GetFastValue(debugConfig, 'renderStroke', true),
-            lineThickness: GetFastValue(debugConfig, 'lineThickness', 1),
+            renderFill: GetFastValue(debugConfig, 'renderFill', false),
+            renderLine: GetFastValue(debugConfig, 'renderLine', true),
 
             fillColor: GetFastValue(debugConfig, 'fillColor', 0x106909),
-            strokeColor: GetFastValue(debugConfig, 'strokeColor', 0x28de19),
+            fillOpacity: GetFastValue(debugConfig, 'fillOpacity', 1),
+            lineColor: GetFastValue(debugConfig, 'lineColor', 0x28de19),
+            lineOpacity: GetFastValue(debugConfig, 'lineOpacity', 1),
+            lineThickness: GetFastValue(debugConfig, 'lineThickness', 1),
 
             staticFillColor: GetFastValue(debugConfig, 'staticFillColor', 0x0d177b),
-            staticStrokeColor: GetFastValue(debugConfig, 'staticStrokeColor', 0x1327e4),
+            staticLineColor: GetFastValue(debugConfig, 'staticLineColor', 0x1327e4),
 
             staticBodySleepOpacity: GetFastValue(debugConfig, 'staticBodySleepOpacity', 0.7),
             sleepFillColor: GetFastValue(debugConfig, 'sleepFillColor', 0x464646),
-            sleepStrokeColor: GetFastValue(debugConfig, 'sleepStrokeColor', 0x999a99),
+            sleepLineColor: GetFastValue(debugConfig, 'sleepLineColor', 0x999a99),
 
             jointColor: GetFastValue(debugConfig, 'jointColor', 0xe0e042),
+            jointLineOpacity: GetFastValue(debugConfig, 'jointLineOpacity', 1),
             jointLineThickness: GetFastValue(debugConfig, 'jointLineThickness', 2),
 
             pinSize: GetFastValue(debugConfig, 'pinSize', 4),
@@ -280,10 +285,284 @@ var World = new Class({
         }
 
         this.setEventsProxy();
+
+        //  Create the walls
+
+        if (GetFastValue(config, 'setBounds', false))
+        {
+            var boundsConfig = config['setBounds'];
+
+            if (typeof boundsConfig === 'boolean')
+            {
+                this.setBounds();
+            }
+            else
+            {
+                var x = GetFastValue(boundsConfig, 'x', 0);
+                var y = GetFastValue(boundsConfig, 'y', 0);
+                var width = GetFastValue(boundsConfig, 'width', scene.sys.scale.width);
+                var height = GetFastValue(boundsConfig, 'height', scene.sys.scale.height);
+                var thickness = GetFastValue(boundsConfig, 'thickness', 64);
+                var left = GetFastValue(boundsConfig, 'left', true);
+                var right = GetFastValue(boundsConfig, 'right', true);
+                var top = GetFastValue(boundsConfig, 'top', true);
+                var bottom = GetFastValue(boundsConfig, 'bottom', true);
+
+                this.setBounds(x, y, width, height, thickness, left, right, top, bottom);
+            }
+        }
     },
 
     /**
-     * [description]
+     * Sets the debug render style for the children of the given Matter Composite.
+     * 
+     * Composites themselves do not render, but they can contain bodies, constraints and other composites that may do.
+     * So the children of this composite are passed to the `setBodyRenderStyle`, `setCompositeRenderStyle` and
+     * `setConstraintRenderStyle` methods accordingly.
+     * 
+     * @method Phaser.Physics.Matter.World#setCompositeRenderStyle
+     * @since 3.22.0
+     *
+     * @param {MatterJS.Composite} composite - The Matter Composite to set the render style on.
+     * 
+     * @return {this} This Matter World instance for method chaining.
+     */
+    setCompositeRenderStyle: function (composite)
+    {
+        var bodies = composite.bodies;
+        var constraints = composite.constraints;
+        var composites = composite.composites;
+
+        var i;
+        var obj;
+        var render;
+
+        for (i = 0; i < bodies.length; i++)
+        {
+            obj = bodies[i];
+            render = obj.render;
+
+            this.setBodyRenderStyle(obj, render.lineColor, render.lineOpacity, render.lineThickness, render.fillColor, render.fillOpacity);
+        }
+
+        for (i = 0; i < constraints.length; i++)
+        {
+            obj = constraints[i];
+            render = obj.render;
+
+            this.setConstraintRenderStyle(obj, render.lineColor, render.lineOpacity, render.lineThickness, render.pinSize, render.anchorColor, render.anchorSize);
+        }
+
+        for (i = 0; i < composites.length; i++)
+        {
+            obj = composites[i];
+
+            this.setCompositeRenderStyle(obj);
+        }
+
+        return this;
+    },
+
+    /**
+     * Sets the debug render style for the given Matter Body.
+     * 
+     * If you are using this on a Phaser Game Object, such as a Matter Sprite, then pass in the body property
+     * to this method, not the Game Object itself.
+     * 
+     * If you wish to skip a parameter, so it retains its current value, pass `false` for it.
+     * 
+     * If you wish to reset the Body render colors to the defaults found in the World Debug Config, then call
+     * this method with just the `body` parameter provided and no others.
+     * 
+     * @method Phaser.Physics.Matter.World#setBodyRenderStyle
+     * @since 3.22.0
+     *
+     * @param {MatterJS.Body} body - The Matter Body to set the render style on.
+     * @param {number} [lineColor] - The line color. If `null` it will use the World Debug Config value.
+     * @param {number} [lineOpacity] - The line opacity, between 0 and 1. If `null` it will use the World Debug Config value.
+     * @param {number} [lineThickness] - The line thickness. If `null` it will use the World Debug Config value.
+     * @param {number} [fillColor] - The fill color. If `null` it will use the World Debug Config value.
+     * @param {number} [fillOpacity] - The fill opacity, between 0 and 1. If `null` it will use the World Debug Config value.
+     * 
+     * @return {this} This Matter World instance for method chaining.
+     */
+    setBodyRenderStyle: function (body, lineColor, lineOpacity, lineThickness, fillColor, fillOpacity)
+    {
+        var render = body.render;
+        var config = this.debugConfig;
+
+        if (!render)
+        {
+            return this;
+        }
+
+        if (lineColor === undefined || lineColor === null)
+        {
+            lineColor = (body.isStatic) ? config.staticLineColor : config.lineColor;
+        }
+
+        if (lineOpacity === undefined || lineOpacity === null)
+        {
+            lineOpacity = config.lineOpacity;
+        }
+
+        if (lineThickness === undefined || lineThickness === null)
+        {
+            lineThickness = config.lineThickness;
+        }
+
+        if (fillColor === undefined || fillColor === null)
+        {
+            fillColor = (body.isStatic) ? config.staticFillColor : config.fillColor;
+        }
+
+        if (fillOpacity === undefined || fillOpacity === null)
+        {
+            fillOpacity = config.fillOpacity;
+        }
+
+        if (lineColor !== false)
+        {
+            render.lineColor = lineColor;
+        }
+
+        if (lineOpacity !== false)
+        {
+            render.lineOpacity = lineOpacity;
+        }
+
+        if (lineThickness !== false)
+        {
+            render.lineThickness = lineThickness;
+        }
+
+        if (fillColor !== false)
+        {
+            render.fillColor = fillColor;
+        }
+
+        if (fillOpacity !== false)
+        {
+            render.fillOpacity = fillOpacity;
+        }
+
+        return this;
+    },
+
+    /**
+     * Sets the debug render style for the given Matter Constraint.
+     * 
+     * If you are using this on a Phaser Game Object, then pass in the body property
+     * to this method, not the Game Object itself.
+     * 
+     * If you wish to skip a parameter, so it retains its current value, pass `false` for it.
+     * 
+     * If you wish to reset the Constraint render colors to the defaults found in the World Debug Config, then call
+     * this method with just the `constraint` parameter provided and no others.
+     * 
+     * @method Phaser.Physics.Matter.World#setConstraintRenderStyle
+     * @since 3.22.0
+     *
+     * @param {MatterJS.Constraint} constraint - The Matter Constraint to set the render style on.
+     * @param {number} [lineColor] - The line color. If `null` it will use the World Debug Config value.
+     * @param {number} [lineOpacity] - The line opacity, between 0 and 1. If `null` it will use the World Debug Config value.
+     * @param {number} [lineThickness] - The line thickness. If `null` it will use the World Debug Config value.
+     * @param {number} [pinSize] - If this constraint is a pin, this sets the size of the pin circle. If `null` it will use the World Debug Config value.
+     * @param {number} [anchorColor] - The color used when rendering this constraints anchors.  If `null` it will use the World Debug Config value.
+     * @param {number} [anchorSize] - The size of the anchor circle, if this constraint has anchors. If `null` it will use the World Debug Config value.
+     * 
+     * @return {this} This Matter World instance for method chaining.
+     */
+    setConstraintRenderStyle: function (constraint, lineColor, lineOpacity, lineThickness, pinSize, anchorColor, anchorSize)
+    {
+        var render = constraint.render;
+        var config = this.debugConfig;
+
+        if (!render)
+        {
+            return this;
+        }
+
+        //  Reset them
+        if (lineColor === undefined || lineColor === null)
+        {
+            var type = render.type;
+
+            if (type === 'line')
+            {
+                lineColor = config.jointColor;
+            }
+            else if (type === 'pin')
+            {
+                lineColor = config.pinColor;
+            }
+            else if (type === 'spring')
+            {
+                lineColor = config.springColor;
+            }
+        }
+
+        if (lineOpacity === undefined || lineOpacity === null)
+        {
+            lineOpacity = config.jointLineOpacity;
+        }
+
+        if (lineThickness === undefined || lineThickness === null)
+        {
+            lineThickness = config.jointLineThickness;
+        }
+
+        if (pinSize === undefined || pinSize === null)
+        {
+            pinSize = config.pinSize;
+        }
+
+        if (anchorColor === undefined || anchorColor === null)
+        {
+            anchorColor = config.anchorColor;
+        }
+
+        if (anchorSize === undefined || anchorSize === null)
+        {
+            anchorSize = config.anchorSize;
+        }
+
+        if (lineColor !== false)
+        {
+            render.lineColor = lineColor;
+        }
+
+        if (lineOpacity !== false)
+        {
+            render.lineOpacity = lineOpacity;
+        }
+
+        if (lineThickness !== false)
+        {
+            render.lineThickness = lineThickness;
+        }
+
+        if (pinSize !== false)
+        {
+            render.pinSize = pinSize;
+        }
+
+        if (anchorColor !== false)
+        {
+            render.anchorColor = anchorColor;
+        }
+
+        if (anchorSize !== false)
+        {
+            render.anchorSize = anchorSize;
+        }
+
+        return this;
+    },
+
+    /**
+     * This internal method acts as a proxy between all of the Matter JS events and then re-emits them
+     * via this class.
      *
      * @method Phaser.Physics.Matter.World#setEventsProxy
      * @since 3.0.0
@@ -292,6 +571,56 @@ var World = new Class({
     {
         var _this = this;
         var engine = this.engine;
+        var world = this.localWorld;
+
+        //  Inject debug styles
+
+        if (this.drawDebug)
+        {
+            MatterEvents.on(world, 'beforeAdd', function (event)
+            {
+                var objects = [].concat(event.object);
+    
+                for (var i = 0; i < objects.length; i++)
+                {
+                    var obj = objects[i];
+                    var render = obj.render;
+    
+                    if (obj.type === 'body')
+                    {
+                        _this.setBodyRenderStyle(obj, render.lineColor, render.lineOpacity, render.lineThickness, render.fillColor, render.fillOpacity);
+                    }
+                    else if (obj.type === 'composite')
+                    {
+                        _this.setCompositeRenderStyle(obj);
+                    }
+                    else if (obj.type === 'constraint')
+                    {
+                        _this.setConstraintRenderStyle(obj, render.lineColor, render.lineOpacity, render.lineThickness, render.pinSize, render.anchorColor, render.anchorSize);
+                    }
+                }
+            });
+        }
+
+        MatterEvents.on(world, 'beforeAdd', function (event)
+        {
+            _this.emit(Events.BEFORE_ADD, event);
+        });
+
+        MatterEvents.on(world, 'afterAdd', function (event)
+        {
+            _this.emit(Events.AFTER_ADD, event);
+        });
+
+        MatterEvents.on(world, 'beforeRemove', function (event)
+        {
+            _this.emit(Events.BEFORE_REMOVE, event);
+        });
+
+        MatterEvents.on(world, 'afterRemove', function (event)
+        {
+            _this.emit(Events.AFTER_REMOVE, event);
+        });
 
         MatterEvents.on(engine, 'beforeUpdate', function (event)
         {
@@ -364,7 +693,7 @@ var World = new Class({
      * @param {number} [y=0] - The y coordinate of the top-left corner of the bounds.
      * @param {number} [width] - The width of the bounds.
      * @param {number} [height] - The height of the bounds.
-     * @param {number} [thickness=128] - The thickness of each wall, in pixels.
+     * @param {number} [thickness=64] - The thickness of each wall, in pixels.
      * @param {boolean} [left=true] - If true will create the left bounds wall.
      * @param {boolean} [right=true] - If true will create the right bounds wall.
      * @param {boolean} [top=true] - If true will create the top bounds wall.
@@ -378,7 +707,7 @@ var World = new Class({
         if (y === undefined) { y = 0; }
         if (width === undefined) { width = this.scene.sys.scale.width; }
         if (height === undefined) { height = this.scene.sys.scale.height; }
-        if (thickness === undefined) { thickness = 128; }
+        if (thickness === undefined) { thickness = 64; }
         if (left === undefined) { left = true; }
         if (right === undefined) { right = true; }
         if (top === undefined) { top = true; }
@@ -392,19 +721,19 @@ var World = new Class({
         return this;
     },
 
-    //  position = 'left', 'right', 'top' or 'bottom'
     /**
-     * [description]
+     * Updates the 4 rectangle bodies that were created, if `setBounds` was set in the Matter config, to use
+     * the new positions and sizes. This method is usually only called internally via the `setBounds` method.
      *
      * @method Phaser.Physics.Matter.World#updateWall
      * @since 3.0.0
      *
-     * @param {boolean} add - [description]
-     * @param {string} position - [description]
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} height - [description]
+     * @param {boolean} add - `true` if the walls are being added or updated, `false` to remove them from the world.
+     * @param {string} [position] - Either `left`, `right`, `top` or `bottom`. Only optional if `add` is `false`.
+     * @param {number} [x] - The horizontal position to place the walls at. Only optional if `add` is `false`.
+     * @param {number} [y] - The vertical position to place the walls at. Only optional if `add` is `false`.
+     * @param {number} [width] - The width of the walls, in pixels. Only optional if `add` is `false`.
+     * @param {number} [height] - The height of the walls, in pixels. Only optional if `add` is `false`.
      */
     updateWall: function (add, position, x, y, width, height)
     {
@@ -435,12 +764,19 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Creates a Phaser.GameObjects.Graphics object that is used to render all of the debug bodies and joints to.
+     * 
+     * This method is called automatically by the constructor, if debugging has been enabled.
+     * 
+     * The created Graphics object is automatically added to the Scene at 0x0 and given a depth of `Number.MAX_VALUE`,
+     * so it renders above all else in the Scene.
+     * 
+     * The Graphics object is assigned to the `debugGraphic` property of this class and `drawDebug` is enabled.
      *
      * @method Phaser.Physics.Matter.World#createDebugGraphic
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Graphics} [description]
+     * @return {Phaser.GameObjects.Graphics} The newly created Graphics object.
      */
     createDebugGraphic: function ()
     {
@@ -456,12 +792,12 @@ var World = new Class({
     },
 
     /**
-     * Sets the world's gravity and gravity scale to 0.
+     * Sets the world gravity and gravity scale to 0.
      *
      * @method Phaser.Physics.Matter.World#disableGravity
      * @since 3.0.0
      *
-     * @return {Phaser.Physics.Matter.World} This Matter World object.
+     * @return {this} This Matter World object.
      */
     disableGravity: function ()
     {
@@ -473,16 +809,18 @@ var World = new Class({
     },
 
     /**
-     * Sets the world's gravity
+     * Sets the worlds gravity to the values given.
+     * 
+     * Gravity effects all bodies in the world, unless they have the `ignoreGravity` flag set.
      *
      * @method Phaser.Physics.Matter.World#setGravity
      * @since 3.0.0
      *
      * @param {number} [x=0] - The world gravity x component.
      * @param {number} [y=1] - The world gravity y component.
-     * @param {number} [scale] - [description]
+     * @param {number} [scale=0.001] - The gravity scale factor.
      *
-     * @return {Phaser.Physics.Matter.World} This Matter World object.
+     * @return {this} This Matter World object.
      */
     setGravity: function (x, y, scale)
     {
@@ -524,14 +862,18 @@ var World = new Class({
     },
 
     /**
-     * Adds an object to the world.
+     * Adds a Matter JS object, or array of objects, to the world.
+     * 
+     * The objects should be valid Matter JS entities, such as a Body, Composite or Constraint.
+     * 
+     * Triggers `beforeAdd` and `afterAdd` events.
      *
      * @method Phaser.Physics.Matter.World#add
      * @since 3.0.0
      *
-     * @param {(object|object[])} object - Can be single or an array, and can be a body, composite or constraint
+     * @param {(object|object[])} object - Can be single object, or an array, and can be a body, composite or constraint.
      *
-     * @return {Phaser.Physics.Matter.World} This Matter World object.
+     * @return {this} This Matter World object.
      */
     add: function (object)
     {
@@ -541,35 +883,51 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Removes a Matter JS object, or array of objects, from the world.
+     * 
+     * The objects should be valid Matter JS entities, such as a Body, Composite or Constraint.
+     * 
+     * Triggers `beforeRemove` and `afterRemove` events.
      *
      * @method Phaser.Physics.Matter.World#remove
      * @since 3.0.0
      *
-     * @param {object} object - The object to be removed from the world.
-     * @param {boolean} deep - [description]
+     * @param {(object|object[])} object - Can be single object, or an array, and can be a body, composite or constraint.
+     * @param {boolean} [deep=false] - Optionally search the objects children and recursively remove those as well.
      *
-     * @return {Phaser.Physics.Matter.World} This Matter World object.
+     * @return {this} This Matter World object.
      */
     remove: function (object, deep)
     {
-        var body = (object.body) ? object.body : object;
+        if (!Array.isArray(object))
+        {
+            object = [ object ];
+        }
 
-        Composite.remove(this.localWorld, body, deep);
+        for (var i = 0; i < object.length; i++)
+        {
+            var entity = object[i];
+
+            var body = (entity.body) ? entity.body : entity;
+
+            Composite.remove(this.localWorld, body, deep);
+        }
 
         return this;
     },
 
     /**
-     * [description]
+     * Removes a Matter JS constraint, or array of constraints, from the world.
+     * 
+     * Triggers `beforeRemove` and `afterRemove` events.
      *
      * @method Phaser.Physics.Matter.World#removeConstraint
      * @since 3.0.0
      *
-     * @param {MatterJS.Constraint} constraint - [description]
-     * @param {boolean} deep - [description]
+     * @param {(MatterJS.Constraint|MatterJS.Constraint[])} constraint - A Matter JS Constraint, or an array of constraints, to be removed.
+     * @param {boolean} [deep=false] - Optionally search the objects children and recursively remove those as well.
      *
-     * @return {Phaser.Physics.Matter.World} This Matter World object.
+     * @return {this} This Matter World object.
      */
     removeConstraint: function (constraint, deep)
     {
@@ -579,17 +937,18 @@ var World = new Class({
     },
 
     /**
-     * Adds MatterTileBody instances for all the colliding tiles within the given tilemap layer. Set
-     * the appropriate tiles in your layer to collide before calling this method!
+     * Adds `MatterTileBody` instances for all the colliding tiles within the given tilemap layer.
+     * 
+     * Set the appropriate tiles in your layer to collide before calling this method!
      *
      * @method Phaser.Physics.Matter.World#convertTilemapLayer
      * @since 3.0.0
      *
      * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer -
      * An array of tiles.
-     * @param {object} [options] - Options to be passed to the MatterTileBody constructor. {@ee Phaser.Physics.Matter.TileBody}
+     * @param {object} [options] - Options to be passed to the MatterTileBody constructor. {@see Phaser.Physics.Matter.TileBody}
      *
-     * @return {Phaser.Physics.Matter.World} This Matter World object.
+     * @return {this} This Matter World object.
      */
     convertTilemapLayer: function (tilemapLayer, options)
     {
@@ -602,7 +961,7 @@ var World = new Class({
     },
 
     /**
-     * Adds MatterTileBody instances for the given tiles. This adds bodies regardless of whether the
+     * Adds `MatterTileBody` instances for the given tiles. This adds bodies regardless of whether the
      * tiles are set to collide or not.
      *
      * @method Phaser.Physics.Matter.World#convertTiles
@@ -611,7 +970,7 @@ var World = new Class({
      * @param {Phaser.Tilemaps.Tile[]} tiles - An array of tiles.
      * @param {object} [options] - Options to be passed to the MatterTileBody constructor. {@see Phaser.Physics.Matter.TileBody}
      *
-     * @return {Phaser.Physics.Matter.World} This Matter World object.
+     * @return {this} This Matter World object.
      */
     convertTiles: function (tiles, options)
     {
@@ -629,14 +988,15 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Returns the next unique group index for which bodies will collide.
+     * If `isNonColliding` is `true`, returns the next unique group index for which bodies will not collide.
      *
      * @method Phaser.Physics.Matter.World#nextGroup
      * @since 3.0.0
      *
-     * @param {boolean} isNonColliding - [description]
+     * @param {boolean} [isNonColliding=false] - If `true`, returns the next unique group index for which bodies will _not_ collide.
      *
-     * @return {number} [description]
+     * @return {number} Unique category bitfield
      */
     nextGroup: function (isNonColliding)
     {
@@ -644,12 +1004,13 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Returns the next unique category bitfield (starting after the initial default category 0x0001).
+     * There are 32 available.
      *
      * @method Phaser.Physics.Matter.World#nextCategory
      * @since 3.0.0
      *
-     * @return {number} Returns the next unique category bitfield.
+     * @return {number} Unique category bitfield
      */
     nextCategory: function ()
     {
@@ -657,13 +1018,15 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Pauses this Matter World instance and sets `enabled` to `false`.
+     * 
+     * A paused world will not run any simulations for the duration it is paused.
      *
      * @method Phaser.Physics.Matter.World#pause
      * @fires Phaser.Physics.Matter.Events#PAUSE
      * @since 3.0.0
      *
-     * @return {Phaser.Physics.Matter.World} This Matter World object.
+     * @return {this} This Matter World object.
      */
     pause: function ()
     {
@@ -675,13 +1038,13 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Resumes this Matter World instance from a paused state and sets `enabled` to `true`.
      *
      * @method Phaser.Physics.Matter.World#resume
      * @fires Phaser.Physics.Matter.Events#RESUME
      * @since 3.0.0
      *
-     * @return {Phaser.Physics.Matter.World} This Matter World object.
+     * @return {this} This Matter World object.
      */
     resume: function ()
     {
@@ -693,7 +1056,18 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * The internal update method. This is called automatically by the parent Scene.
+     * 
+     * Moves the simulation forward in time by delta ms. Uses `World.correction` value as an optional number that
+     * specifies the time correction factor to apply to the update. This can help improve the accuracy of the
+     * simulation in cases where delta is changing between updates. The value of correction is defined as `delta / lastDelta`,
+     * i.e. the percentage change of delta over the last step. Therefore the value is always 1 (no correction) when
+     * delta is constant (or when no correction is desired, which is the default).
+     * See the paper on Time Corrected Verlet for more information.
+     * 
+     * Triggers `beforeUpdate` and `afterUpdate` events. Triggers `collisionStart`, `collisionActive` and `collisionEnd` events.
+     * 
+     * If the World is paused, `update` is still run, but exits early and does not update the Matter Engine.
      *
      * @method Phaser.Physics.Matter.World#update
      * @since 3.0.0
@@ -703,10 +1077,69 @@ var World = new Class({
      */
     update: function (time, delta)
     {
-        if (this.enabled && this.autoUpdate)
+        if (!this.enabled || !this.autoUpdate)
         {
-            Engine.update(this.engine, this.getDelta(time, delta), this.correction);
+            return;
         }
+
+        var engine = this.engine;
+        var runner = this.runner;
+
+        var timing = engine.timing;
+        var correction = this.correction;
+
+        if (runner.isFixed)
+        {
+            //  fixed timestep
+            delta = this.getDelta(time, delta);
+        }
+        else
+        {
+            //  dynamic timestep based on wall clock between calls
+            delta = (time - runner.timePrev) || runner.delta;
+            runner.timePrev = time;
+
+            // optimistically filter delta over a few frames, to improve stability
+            runner.deltaHistory.push(delta);
+            runner.deltaHistory = runner.deltaHistory.slice(-runner.deltaSampleSize);
+            delta = Math.min.apply(null, runner.deltaHistory);
+            
+            // limit delta
+            delta = delta < runner.deltaMin ? runner.deltaMin : delta;
+            delta = delta > runner.deltaMax ? runner.deltaMax : delta;
+
+            // correction for delta
+            correction = delta / runner.delta;
+
+            // update engine timing object
+            runner.delta = delta;
+        }
+
+        // time correction for time scaling
+        if (runner.timeScalePrev !== 0)
+        {
+            correction *= timing.timeScale / runner.timeScalePrev;
+        }
+
+        if (timing.timeScale === 0)
+        {
+            correction = 0;
+        }
+
+        runner.timeScalePrev = timing.timeScale;
+        runner.correction = correction;
+
+        // fps counter
+        runner.frameCounter += 1;
+
+        if (time - runner.counterTimestamp >= 1000)
+        {
+            runner.fps = runner.frameCounter * ((time - runner.counterTimestamp) / 1000);
+            runner.counterTimestamp = time;
+            runner.frameCounter = 0;
+        }
+
+        Engine.update(engine, delta, correction);
     },
 
     /**
@@ -733,8 +1166,8 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#step
      * @since 3.4.0
      *
-     * @param {number} [delta=16.666] - [description]
-     * @param {number} [correction=1] - [description]
+     * @param {number} [delta=16.666] - The delta value.
+     * @param {number} [correction=1] - Optional delta correction value.
      */
     step: function (delta, correction)
     {
@@ -768,7 +1201,65 @@ var World = new Class({
     },
 
     /**
+     * Returns `true` if the given body can be found within the World.
+     *
+     * @method Phaser.Physics.Matter.World#has
+     * @since 3.22.0
+     * 
+     * @param {(MatterJS.Body|Phaser.GameObjects.GameObject)} body - The Matter Body, or Game Object, to search for within the world.
+     * 
+     * @return {MatterJS.Body[]} An array of all the Matter JS Bodies in this World.
+     */
+    has: function (body)
+    {
+        var src = (body.hasOwnProperty('body')) ? body.body : body;
+
+        return (Composite.get(this.localWorld, src.id, src.type) !== null);
+    },
+
+    /**
+     * Returns all the bodies in the Matter World, including all bodies in children, recursively.
+     *
+     * @method Phaser.Physics.Matter.World#getAllBodies
+     * @since 3.22.0
+     * 
+     * @return {MatterJS.Body[]} An array of all the Matter JS Bodies in this World.
+     */
+    getAllBodies: function ()
+    {
+        return Composite.allBodies(this.localWorld);
+    },
+
+    /**
+     * Returns all the constraints in the Matter World, including all constraints in children, recursively.
+     *
+     * @method Phaser.Physics.Matter.World#getAllConstraints
+     * @since 3.22.0
+     * 
+     * @return {MatterJS.Constraint[]} An array of all the Matter JS Constraints in this World.
+     */
+    getAllConstraints: function ()
+    {
+        return Composite.allConstraints(this.localWorld);
+    },
+
+    /**
+     * Returns all the composites in the Matter World, including all composites in children, recursively.
+     *
+     * @method Phaser.Physics.Matter.World#getAllComposites
+     * @since 3.22.0
+     * 
+     * @return {MatterJS.Composite[]} An array of all the Matter JS Composites in this World.
+     */
+    getAllComposites: function ()
+    {
+        return Composite.allComposites(this.localWorld);
+    },
+
+    /**
      * Handles the rendering of bodies and debug information to the debug Graphics object, if enabled.
+     * 
+     * This method is called automatically by the Scene after all processing has taken place.
      *
      * @method Phaser.Physics.Matter.World#postUpdate
      * @private
@@ -823,18 +1314,11 @@ var World = new Class({
         var showConvexHulls = config.showConvexHulls;
 
         var renderFill = config.renderFill;
-        var renderStroke = config.renderStroke;
-
-        var fillColor = config.fillColor;
-        var strokeColor = config.strokeColor;
-        var lineThickness = config.lineThickness;
-
-        var staticFillColor = config.staticFillColor;
-        var staticStrokeColor = config.staticStrokeColor;
+        var renderLine = config.renderLine;
 
         var staticBodySleepOpacity = config.staticBodySleepOpacity;
         var sleepFillColor = config.sleepFillColor;
-        var sleepStrokeColor = config.sleepStrokeColor;
+        var sleepLineColor = config.sleepLineColor;
 
         var hullColor = config.hullColor;
 
@@ -855,40 +1339,37 @@ var World = new Class({
                 continue;
             }
 
-            var opacity = body.render.opacity;
-            var lineStyle = strokeColor;
-            var fillStyle = fillColor;
+            var lineColor = body.render.lineColor;
+            var lineOpacity = body.render.lineOpacity;
+            var lineThickness = body.render.lineThickness;
+            var fillColor = body.render.fillColor;
+            var fillOpacity = body.render.fillOpacity;
 
             if (showSleeping && body.isSleeping)
             {
                 if (body.isStatic)
                 {
-                    opacity *= staticBodySleepOpacity;
+                    lineOpacity *= staticBodySleepOpacity;
+                    fillOpacity *= staticBodySleepOpacity;
                 }
                 else
                 {
-                    lineStyle = sleepStrokeColor;
-                    fillStyle = sleepFillColor;
+                    lineColor = sleepLineColor;
+                    fillColor = sleepFillColor;
                 }
-            }
-
-            if (body.isStatic)
-            {
-                lineStyle = staticStrokeColor;
-                fillStyle = staticFillColor;
             }
 
             if (!renderFill)
             {
-                fillStyle = null;
+                fillColor = null;
             }
 
-            if (!renderStroke)
+            if (!renderLine)
             {
-                lineStyle = null;
+                lineColor = null;
             }
 
-            this.renderBody(body, graphics, showInternalEdges, lineStyle, fillStyle, opacity, lineThickness);
+            this.renderBody(body, graphics, showInternalEdges, lineColor, lineOpacity, lineThickness, fillColor, fillOpacity);
 
             var partsLength = body.parts.length;
 
@@ -905,41 +1386,51 @@ var World = new Class({
      * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
      * you wish to render a Body to your own Graphics instance.
      * 
+     * If you don't wish to render a line around the body, set the `lineColor` parameter to `null`.
+     * Equally, if you don't wish to render a fill, set the `fillColor` parameter to `null`.
+     * 
      * @method Phaser.Physics.Matter.World#renderBody
      * @since 3.22.0
      * 
      * @param {MatterJS.Body} body - The Matter Body to be rendered.
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
      * @param {boolean} showInternalEdges - Render internal edges of the polygon?
-     * @param {number} [lineColor] - The stroke color. Set to `null` if you don't want to render a stroke.
-     * @param {number} [fillColor] - The fill color. Set to `null` if you don't want to render a fill.
-     * @param {number} [opacity] - The opacity, between 0 and 1. Set to `null` if you want to use the opacity defined in the Body render object.
-     * @param {number} [lineThickness=1] - The stroke line thickness.
+     * @param {number} [lineColor] - The line color.
+     * @param {number} [lineOpacity] - The line opacity, between 0 and 1.
+     * @param {number} [lineThickness=1] - The line thickness.
+     * @param {number} [fillColor] - The fill color.
+     * @param {number} [fillOpacity] - The fill opacity, between 0 and 1.
      * 
      * @return {this} This Matter World instance for method chaining.
      */
-    renderBody: function (body, graphics, showInternalEdges, lineColor, fillColor, opacity, lineThickness)
+    renderBody: function (body, graphics, showInternalEdges, lineColor, lineOpacity, lineThickness, fillColor, fillOpacity)
     {
         if (lineColor === undefined) { lineColor = null; }
-        if (fillColor === undefined) { fillColor = null; }
-        if (opacity === undefined) { opacity = null; }
+        if (lineOpacity === undefined) { lineOpacity = null; }
         if (lineThickness === undefined) { lineThickness = 1; }
-
-        var usePartOpacity = !opacity;
+        if (fillColor === undefined) { fillColor = null; }
+        if (fillOpacity === undefined) { fillOpacity = null; }
 
         //  Handle compound parts
         var parts = body.parts;
         var partsLength = parts.length;
 
+        /*
+        if (!body.isStatic)
+        {
+            var w = body.bounds.max.x - body.bounds.min.x;
+            var h = body.bounds.max.y - body.bounds.min.y;
+
+            graphics.fillStyle(0x6d6d6d, 0.3);
+            graphics.fillRect(body.bounds.min.x, body.bounds.min.y, w, h);
+        }
+        */
+
         for (var k = (partsLength > 1) ? 1 : 0; k < partsLength; k++)
         {
             var part = parts[k];
             var render = part.render;
-
-            if (usePartOpacity)
-            {
-                opacity = render.opacity;
-            }
+            var opacity = render.opacity;
 
             if (!render.visible || opacity === 0)
             {
@@ -949,9 +1440,20 @@ var World = new Class({
             //  Part polygon
             var circleRadius = part.circleRadius;
 
+            graphics.beginPath();
+
+            if (fillColor !== null)
+            {
+                graphics.fillStyle(fillColor, fillOpacity * opacity);
+            }
+
+            if (lineColor !== null)
+            {
+                graphics.lineStyle(lineThickness, lineColor, lineOpacity * opacity);
+            }
+
             if (circleRadius)
             {
-                graphics.beginPath();
                 graphics.arc(part.position.x, part.position.y, circleRadius, 0, 2 * Math.PI);
             }
             else
@@ -959,7 +1461,6 @@ var World = new Class({
                 var vertices = part.vertices;
                 var vertLength = vertices.length;
 
-                graphics.beginPath();
                 graphics.moveTo(vertices[0].x, vertices[0].y);
 
                 for (var j = 1; j < vertLength; j++)
@@ -975,7 +1476,7 @@ var World = new Class({
                         graphics.moveTo(vert.x, vert.y);
                     }
 
-                    if (vert.isInternal && !showInternalEdges)
+                    if (j < vertLength && vert.isInternal && !showInternalEdges)
                     {
                         var nextIndex = (j + 1) % vertLength;
 
@@ -988,15 +1489,22 @@ var World = new Class({
 
             if (fillColor !== null)
             {
-                graphics.fillStyle(fillColor, opacity);
                 graphics.fillPath();
             }
 
             if (lineColor !== null)
             {
-                graphics.lineStyle(lineThickness, lineColor, opacity);
                 graphics.strokePath();
             }
+        }
+
+        if (!body.isStatic)
+        {
+            var px = body.position.x;
+            var py = body.position.y;
+
+            graphics.fillStyle(0xff00ff, 1);
+            graphics.fillRect(px - 3, py - 3, 6, 6);
         }
 
         return this;
@@ -1013,8 +1521,8 @@ var World = new Class({
      * 
      * @param {MatterJS.Body} body - The Matter Body to be rendered.
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
-     * @param {number} hullColor - The stroke color used to render the hull.
-     * @param {number} [lineThickness=1] - The stroke line thickness.
+     * @param {number} hullColor - The color used to render the hull.
+     * @param {number} [lineThickness=1] - The hull line thickness.
      * 
      * @return {this} This Matter World instance for method chaining.
      */
@@ -1061,22 +1569,22 @@ var World = new Class({
     renderJoints: function ()
     {
         var graphics = this.debugGraphic;
-        var config = this.debugConfig;
-
-        var jointColor = config.jointColor;
-        var jointLineThickness = config.jointLineThickness;
-        var pinSize = config.pinSize;
-        var pinColor = config.pinColor;
-        var springColor = config.springColor;
-        var anchorColor = config.anchorColor;
-        var anchorSize = config.anchorSize;
 
         // Render constraints 
         var constraints = Composite.allConstraints(this.localWorld);
 
         for (var i = 0; i < constraints.length; i++)
         {
-            this.renderConstraint(constraints[i], graphics, jointColor, jointLineThickness, springColor, pinColor, pinSize, anchorColor, anchorSize);
+            var config = constraints[i].render;
+
+            var lineColor = config.lineColor;
+            var lineOpacity = config.lineOpacity;
+            var lineThickness = config.lineThickness;
+            var pinSize = config.pinSize;
+            var anchorColor = config.anchorColor;
+            var anchorSize = config.anchorSize;
+
+            this.renderConstraint(constraints[i], graphics, lineColor, lineOpacity, lineThickness, pinSize, anchorColor, anchorSize);
         }
     },
 
@@ -1091,17 +1599,16 @@ var World = new Class({
      * 
      * @param {MatterJS.Constraint} constraint - The Matter Constraint to render.
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
-     * @param {number} lineColor - The line color used when rendering this constraint.
+     * @param {number} lineColor - The line color.
+     * @param {number} lineOpacity - The line opacity, between 0 and 1.
      * @param {number} lineThickness - The line thickness.
-     * @param {number} springColor - The color used when rendering, if this constraint is a spring.
-     * @param {number} pinColor - The color used when rendering, if this constraint is a pin.
      * @param {number} pinSize - If this constraint is a pin, this sets the size of the pin circle.
      * @param {number} anchorColor - The color used when rendering this constraints anchors. Set to `null` to not render anchors.
      * @param {number} anchorSize - The size of the anchor circle, if this constraint has anchors and is rendering them.
      * 
      * @return {this} This Matter World instance for method chaining.
      */
-    renderConstraint: function (constraint, graphics, lineColor, lineThickness, springColor, pinColor, pinSize, anchorColor, anchorSize)
+    renderConstraint: function (constraint, graphics, lineColor, lineOpacity, lineThickness, pinSize, anchorColor, anchorSize)
     {
         var render = constraint.render;
 
@@ -1110,16 +1617,7 @@ var World = new Class({
             return this;
         }
 
-        var custom = render.custom;
-
-        if (custom)
-        {
-            graphics.lineStyle(render.lineWidth, Common.colorToNumber(render.strokeStyle));
-        }
-        else
-        {
-            graphics.lineStyle(lineThickness, lineColor);
-        }
+        graphics.lineStyle(lineThickness, lineColor, lineOpacity * render.opacity);
 
         var bodyA = constraint.bodyA;
         var bodyB = constraint.bodyB;
@@ -1137,11 +1635,6 @@ var World = new Class({
 
         if (render.type === 'pin')
         {
-            if (!custom)
-            {
-                graphics.lineStyle(lineThickness, pinColor);
-            }
-
             graphics.strokeCircle(start.x, start.y, pinSize);
         }
         else
@@ -1160,11 +1653,6 @@ var World = new Class({
 
             if (render.type === 'spring')
             {
-                if (!custom)
-                {
-                    graphics.lineStyle(lineThickness, springColor);
-                }
-
                 var delta = Vector.sub(end, start);
                 var normal = Vector.perp(Vector.normalise(delta));
                 var coils = Math.ceil(Common.clamp(constraint.length / 5, 12, 20));
@@ -1194,34 +1682,6 @@ var World = new Class({
         }
 
         return this;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Physics.Matter.World#fromPath
-     * @since 3.0.0
-     *
-     * @param {string} path - [description]
-     * @param {array} points - [description]
-     *
-     * @return {array} [description]
-     */
-    fromPath: function (path, points)
-    {
-        if (points === undefined) { points = []; }
-
-        // var pathPattern = /L?\s*([-\d.e]+)[\s,]*([-\d.e]+)*/ig;
-
-        // eslint-disable-next-line no-useless-escape
-        var pathPattern = /L?\s*([\-\d\.e]+)[\s,]*([\-\d\.e]+)*/ig;
-
-        path.replace(pathPattern, function (match, x, y)
-        {
-            points.push({ x: parseFloat(x), y: parseFloat(y) });
-        });
-
-        return points;
     },
 
     /**

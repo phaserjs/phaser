@@ -30,6 +30,12 @@ var Vertices = require('../geometry/Vertices');
 
         for (var i = 0; i < bodies.length; i++) {
             var bodyA = bodies[i];
+
+            //  Phaser addition - skip same body checks
+            if (body === bodyA)
+            {
+                continue;
+            }
             
             if (Bounds.overlaps(bodyA.bounds, body.bounds)) {
                 for (var j = bodyA.parts.length === 1 ? 0 : 1; j < bodyA.parts.length; j++) {

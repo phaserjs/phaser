@@ -1,6 +1,6 @@
 # Change Log
 
-## Version 3.21.1 - Senku - in development
+## Version 3.22 - Senku - in development
 
 ### Matter Physics Updates
 
@@ -12,25 +12,28 @@
 * `showInternalEdges` - When rendering bodies, render the internal edges as well?
 * `showConvexHulls` - When rendering polygon bodies, render the convex hull as well?
 * `renderFill` - Render the bodies using a fill color.
-* `renderStroke` - Render the bodies using a line stroke.
-* `lineThickness` - If rendering with a stroke, the thickness of the line.
+* `renderLine`- Render the bodies using a line stroke.
 * `fillColor` - The color value of the fill when rendering dynamic bodies.
-* `strokeColor` - The color value of the line stroke when rendering dynamic bodies.
+* `fillOpacity` - The opacity of the fill when rendering dynamic bodies, a value between 0 and 1.
+* `lineColor` - The color value of the line stroke when rendering dynamic bodies.
+* `lineOpacity` - The opacity of the line when rendering dynamic bodies, a value between 0 and 1.
+* `lineThickness` - If rendering lines, the thickness of the line.
 * `staticFillColor` - The color value of the fill when rendering static bodies.
-* `staticStrokeColor` - The color value of the line stroke when rendering static bodies.
-* `staticBodySleepOpacity`7] - The amount to multiply the opacity of sleeping static bodies by.
+* `staticLineColor` - The color value of the line stroke when rendering static bodies.
+* `staticBodySleepOpacity` - The amount to multiply the opacity of sleeping static bodies by.
 * `sleepFillColor` - The color value of the fill when rendering sleeping dynamic bodies.
-* `sleepStrokeColor` - The color value of the line stroke when rendering sleeping dynamic bodies.
-* `hullColor` - The color value of hulls when `showConvexHulls` is set.
+* `sleepLineColor` - The color value of the line stroke when rendering sleeping dynamic bodies.
 * `jointColor` - The color value of joints when `showJoint` is set.
+* `jointLineOpacity` - The line opacity when rendering joints, a value between 0 and 1.
 * `jointLineThickness` - The line thickness when rendering joints.
 * `pinSize` - The size of the circles drawn when rendering pin constraints.
 * `pinColor` - The color value of the circles drawn when rendering pin constraints.
 * `springColor` - The color value of spring constraints.
 * `anchorColor` - The color value of constraint anchors.
 * `anchorSize` - The size of the circles drawn as the constraint anchors.
-* The `debug` property in the Matter World Config is now a `MatterDebugConfig` option instead of a boolean.
-* The following `MatterWorldConfig` options are now deprecated: `debugShowBody`, `debugShowStaticBody`, `debugBodyColor`, `debugBodyFillColor`, `debugStaticBodyColor`, `debugShowJoint`, `debugJointColor`, `debugWireframes`, `debugShowInternalEdges`, `debugShowConvexHulls`, `debugConvexHullColor` and `debugShowSleeping`. These can all be set via the new `MatterDebugConfig` object instead. They will be removed fully in a future version.
+* `hullColor` - The color value of hulls when `showConvexHulls` is set.
+* The `debug` property in the Matter World Config is now a `MatterDebugConfig` option instead of a boolean. However, if a boolean is given, it will use the default debug config values.
+* The following `MatterWorldConfig` options have now been removed: `debugShowBody`, `debugShowStaticBody`, `debugBodyColor`, `debugBodyFillColor`, `debugStaticBodyColor`, `debugShowJoint`, `debugJointColor`, `debugWireframes`, `debugShowInternalEdges`, `debugShowConvexHulls`, `debugConvexHullColor` and `debugShowSleeping`. These can all be set via the new `MatterDebugConfig` object instead.
 * The object `World.defaults` has been removed. Defaults are now access via `World.debugDefaults`.
 * `World.renderBody` is a new method that will render a single Matter Body to the given Graphics object. This is used internally during debug rendering but is also public. This allows you to control which bodies are rendered and to which Graphics object, should you wish to use them in-game and not just during debugging.
 * `World.renderConstraint` is a new method that will render a single Matter Constraint, such as a pin or a spring, to the given Graphics object. This is used internally during debug rendering but is also public. This allows you to control which constraints are rendered and to which Graphics object, should you wish to use them in-game and not just during debugging.
@@ -38,21 +41,109 @@
 * `World.renderBodies` has been rewritten to cache commonly-used values and avoid a situation when a single body would be rendered twice.
 * The private method `World.renderConvexHulls` has been removed as it's no longer used internally.
 * The private method `World.renderWireframes` has been removed as it's no longer used internally.
-* The `Matter.Factory.worldConstraint` argument signature has changed. It now takes `x` and `y` arguments first, as the world position where the constraint will be created.
 * Due to the rewrite of the debug rendering, it is now possible to render _just_ constraints, where-as before this was only possible if bodies were being rendered as well. Fix #4880 (thanks @roberto257)
+* The method `World.fromPath` has been removed. This was never used internally and you can get the same results by calling `Vertices.fromPath`.
+* The `World.setBounds` argument `thickness` now defaults to 64, not 128, to keep it matching the Matter World Config.
+* `World.getAllBodies` is a new method that will return all bodies in the Matter World.
+* `World.getAllConstraints` is a new method that will return all constraints in the Matter World.
+* `World.getAllComposites` is a new method that will return all composites in the Matter World.
+* `MatterPhysics.composite` is a new reference to the `Matter.Composite` module for easy access from within a Scene.
+* `MatterPhysics.detector` is a new reference to the `Matter.Dectector` module for easy access from within a Scene.
+* `MatterPhysics.grid` is a new reference to the `Matter.Grid` module for easy access from within a Scene.
+* `MatterPhysics.pair` is a new reference to the `Matter.Pair` module for easy access from within a Scene.
+* `MatterPhysics.pairs` is a new reference to the `Matter.Pairs` module for easy access from within a Scene.
+* `MatterPhysics.query` is a new reference to the `Matter.Query` module for easy access from within a Scene.
+* `MatterPhysics.resolver` is a new reference to the `Matter.Resolver` module for easy access from within a Scene.
+* `MatterPhysics.sat` is a new reference to the `Matter.SAT` module for easy access from within a Scene.
+* `MatterPhysics.constraint` is a new reference to the `Matter.Constraint` module for easy access from within a Scene.
+* `MatterPhysics.composites` is a new reference to the `Matter.Composites` module for easy access from within a Scene.
+* `MatterPhysics.axes` is a new reference to the `Matter.Axes` module for easy access from within a Scene.
+* `MatterPhysics.bounds` is a new reference to the `Matter.Bounds` module for easy access from within a Scene.
+* `MatterPhysics.svg` is a new reference to the `Matter.Svg` module for easy access from within a Scene.
+* `MatterPhysics.vector` is a new reference to the `Matter.Vector` module for easy access from within a Scene.
+* `MatterPhysics.vertices` is a new reference to the `Matter.Vertices` module for easy access from within a Scene.
+* `BEFORE_ADD` is a new Event dispatched by `Matter.World` when a Body or Constraint is about to be added to the World.
+* `AFTER_ADD` is a new Event dispatched by `Matter.World` when a Body or Constraint has been added to the World.
+* `BEFORE_REMOVE` is a new Event dispatched by `Matter.World` when a Body or Constraint is about to be removed from the World.
+* `AFTER_REMOVE` is a new Event dispatched by `Matter.World` when a Body or Constraint has been removed from the World.
+* The `Body.render.fillStyle` property that existed on the Matter Body object has been removed and replaced with `fillColor`.
+* The `Body.render.strokeStyle` property that existed on the Matter Body object has been removed and replaced with `lineColor`.
+* `Body.render.lineOpacity` is a new property on the Matter Body object that allows for custom debug rendering.
+* `Body.render.lineThickness` is a new property on the Matter Body object that allows for custom debug rendering.
+* `Body.render.fillOpacity` is a new property on the Matter Body object that allows for custom debug rendering.
+* `World.setCompositeRenderStyle` is a new method that lets you quickly set the render style values on the children of the given compposite.
+* `World.setBodyRenderStyle` is a new method that lets you quickly set the render style values on the given Body.
+* `World.setConstraintRenderStyle` is a new method that lets you quickly set the render style values on the given Constraint.
+* You can now set `restingThresh` in the Matter Configuration file to adjust the Resolver property.
+* You can now set `restingThreshTangent` in the Matter Configuration file to adjust the Resolver property.
+* You can now set `positionDampen` in the Matter Configuration file to adjust the Resolver property.
+* You can now set `positionWarming` in the Matter Configuration file to adjust the Resolver property.
+* You can now set `frictionNormalMultiplier` in the Matter Configuration file to adjust the Resolver property.
+* `MatterPhysics.containsPoint` is a new method that returns a boolean if any of the given bodies intersect with the given point.
+* `MatterPhysics.intersectPoint` is a new method that checks which bodies intersect with the given point and returns them.
+* `MatterPhysics.intersectRect` is a new method that checks which bodies intersect with the given rectangular area, and returns them. Optionally, it can check which bodies are outside of the area.
+* `MatterPhysics.intersectRay` is a new method that checks which bodies intersect with the given ray segment and returns them. Optionally, you can set the width of the ray.
+* `MatterPhysics.intersectBody` is a new method that checks which bodies intersect with the given body and returns them. If the bodies are set to not collide this can be used as an overlaps check.
+* `MatterPhysics.overlap` is a new method that takes a target body and checks to see if it overlaps with any of the bodies given. If they do, optional `process` and `overlap` callbacks are invoked, passing the overlapping bodies to them, along with additional collision data.
+* `MatterPhysics.setCollisionCategory` is a new method that will set the collision filter category to the value given, on all of the bodies given. This allows you to easily set the category on bodies that don't have a Phaser Matter Collision component.
+* `MatterPhysics.setCollisionGroup` is a new method that will set the collision filter group to the value given, on all of the bodies given. This allows you to easily set the group on bodies that don't have a Phaser Matter Collision component.
+* `MatterPhysics.setCollidesWith` is a new method that will set the collision filter mask to the value given, on all of the bodies given. This allows you to easily set the filter mask on bodies that don't have a Phaser Matter Collision component.
+* `Matter.Body.centerOfMass` is a new property added to the Matter Body object that retains the center of mass coordinates when the Body is first created.
+* `Matter.Body.render.sprite.xOffset` and `yOffset` are no longer set to anything when a Body is created. They are left as zero, or you can override them in the Body config, in which case the value is added to the sprite origin offset.
+* `Matter.Transform.centerOffsetX` is a new read-only property available on all Matter Game Objects that returns the horizontal offset between the center of the frame and the center of mass. This can be used to allow for accurately mapping texture centers to the body center.
+* `Matter.Transform.centerOffsetY` is a new read-only property available on all Matter Game Objects that returns the vertical offset between the center of the frame and the center of mass. This can be used to allow for accurately mapping texture centers to the body center.
+* The `Matter.Mass.centerOfMass` component property now returns the pre-calculated Body `centerOfMass` property, which is much more accurate than the previous bounds offset value.
+* `Matter.setExistingBody`, which is called interally whenever a Body is set on a Game Object, now uses the new `centerOffset` values to ensure that the texture frame is correctly centered based on the center of mass, not the Body bounds, allowing for much more accurate body to texture mapping with complex multi-part compound bodies.
+* The `Matter.PhysicsEditorParser` has been updated so it no longer needs to set the render offsets, and instead uses the center of mass values.
+* If the `Matter.Body` config doesn't contain a `position` property, it will now default to using `Vertices.centre(body.vertices)` as the position. In most cases, this is what you need, so it saves having to pass it in the config object.
+* `Constraint.pointAWorld` is a new method added to Matter that returns the world-space position of `constraint.pointA`, accounting for `constraint.bodyA`.
+* `Constraint.pointBWorld` is a new method added to Matter that returns the world-space position of `constraint.pointB`, accounting for `constraint.bodyB`.
+* `Body.setCentre` is a new method added to Matter that allows you to set the center of mass of a Body (please note the English spelling of this function.)
+* Bumped Matter Plugin versions to avoid console logs from Common.info and Common.warn.
+* `Body.scale` is a new vector that holds the most recent scale values as passed to `Body.scale`.
+* `Matter.Bodies.flagCoincidentParts` is a new function that will flags all internal edges (coincident parts) on an array of body parts. This was previously part of the `fromVertices` function, but has been made external for outside use.
+* `PhysicsEditorParser.parseVertices` now uses `Bodies.flagCoincidentParts` to avoid duplicating code.
+* `MatterGameObject` has a new optional boolean parameter `addToWorld` which lets you control if the Body should be added to the world or not. Useful for toggling off should you be merging pre-existing bodies with Game Objects.
+* The `Matter.SetBody.setExistingBody` function, which all Matter Game Objects have, has a new parameter `addToWorld` which allows you to control when the body is added to the Matter world should you not require it immediately. It will also only add the body to the world if it doesn't already exist within it, or any of its composites.
+* `PointerConstraint` has been recoded so that when pressed down, it only polls the World for a body hit test during the next game update. This stops it coming out of sync with the state of the world. Useage of the constraint remains the same as before.
+* `Matter.getMatterBodies` is a new function that will return an array of Matter JS Bodies from the given input array, which can be Matter Game Objects, or any class that extends them.
+* `Matter.World.has` is a new method that will take a Matter Body, or Game Object, and search the world for it. If found, it will return `true`.
+* Matter now has the option to use the Runner that it ships with. The Matter Runner operates in two modes: fixed and variable. In the fixed mode, the Matter Engine updates at a fixed delta value every frame (which is what Phaser has used since the first version). In variable mode, the delta will be smoothed and capped each frame to keep the simulation constant, but at the cost of determininism. You can configure the runner by setting the `runner` property in the Matter Config object, both of which are fully covered with JSDocs. As of 3.22 the runner is now used by default in variable (non-fixed) mode. If you wish to return to the previous behavior, set `runner: { isFixed: true }`.
+* `Body.onCollideCallback` is a new Matter Body property that can point to a callback to invoke when the body starts colliding.
+* `Body.onCollideEndCallback` is a new Matter Body property that can point to a callback to invoke when the body stops colliding.
+* `Body.onCollideActiveCallback` is a new Matter Body property that can point to a callback to invoke for the duration the body is colliding.
+* `Body.onCollideWith` is a new Matter Body property that holds a mapping between bodies and collision callbacks.
+* `MatterGameObject.setOnCollide` is a new method available on any Matter Game Object, that sets a callback that is invoked when the body collides with another.
+* `MatterGameObject.setOnCollideEnd` is a new method available on any Matter Game Object, that sets a callback that is invoked when the body stops colliding.
+* `MatterGameObject.setOnCollideActive` is a new method available on any Matter Game Object, that sets a callback which is invoked for the duration of the bodies collision with another.
+* `MatterGameObject.setOnCollideWith` is a new method available on any Matter Game Object, that allows you to set a callback to be invoked whenever the body collides with another specific body, or array of bodies.
+
+### New Features
+
+* `TimeStep.smoothStep` is a new boolean property that controls if any delta smoothing takes place during the game step. Delta smoothing has been enabled in Phaser since the first version and helps avoid delta spikes and dips, especially after loss of focus. However, you can now easily toggle if this happens via this property and the corresponding `FPSConfig` property.
 
 ### Updates
 
+* `Body.deltaXFinal` is a new method on Arcade Physics Bodies that will return the final change in the horizontal position of the body, as based on all the steps that took place this frame. This property is calculated during the `postUpdate` phase, so must be listened for accordingly (thanks Bambosh)
+* `Body.deltaYFinal` is a new method on Arcade Physics Bodies that will return the final change in the vertical position of the body, as based on all the steps that took place this frame. This property is calculated during the `postUpdate` phase, so must be listened for accordingly (thanks Bambosh)
+* `Body._tx` is a new internal private var, holding the Arcade Physics Body combined total delta x value.
+* `Body._ty` is a new internal private var, holding the Arcade Physics Body combined total delta y value.
+* `LineCurve.getUtoTmapping` has been updated to return `u` directly to avoid calculations as it's identical to `t` in a Line (thanks @rexrainbow)
+* `Curve.getSpacedPoints` will now take an optional array as the 3rd parameter to store the points results in (thanks @rexrainbow)
 
 ### Bug Fixes
 
 * BitmapText with a `maxWidth` set wouldn't update the text correctly if it was modified post-creation. You can now update the text and/or width independantly and it'll update correctly. Fix #4881 (thanks @oxguy3)
+* Text objects will no longer add any white-space when word-wrapping if the last line is only one word long. Fix #4867 (thanks @gaamoo @rexrainbow)
+* When `Game.destroy` is running, Scenes are now destroyed _before_ plugins, avoiding bugs when closing down plugins and deleting Render Textures. Fix #4849 #4876 (thanks @rexrainbow @siyuanqiao)
+* The `Mesh` and `Quad` Game Objects have had the `GetBounds` component removed as it cannot operate on a Mesh as they don't have origins. Fix #4902 (thanks @samme)
+* Setting `lineSpacing` in the Text Game Object style config would set the value but not apply it to the Text, leaving you to call `updateText` yourself. If set, it's now applied on instantiation. Fix #4901 (thanks @FantaZZ)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@fselcukcan 
+@fselcukcan Bambosh @louisth @hexus @javigaralva @samme @BeLi4L
 
 
 ## Version 3.21.0 - Senku - 22nd November 2019

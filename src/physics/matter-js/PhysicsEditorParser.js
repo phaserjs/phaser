@@ -6,10 +6,8 @@
 
 var Bodies = require('./lib/factory/Bodies');
 var Body = require('./lib/body/Body');
-var Bounds = require('./lib/geometry/Bounds');
 var Common = require('./lib/core/Common');
 var GetFastValue = require('../../utils/object/GetFastValue');
-var Vector = require('./lib/geometry/Vector');
 var Vertices = require('./lib/geometry/Vertices');
 
 /**
@@ -58,13 +56,10 @@ var PhysicsEditorParser = {
         var body = Body.create(matterConfig);
 
         Body.setParts(body, fixtures);
-        body.render.sprite.xOffset = body.position.x / w;
-        body.render.sprite.yOffset = body.position.y / h;
         Body.setPosition(body, { x: x, y: y });
 
         return body;
     },
-
 
     /**
      * Parses an element of the "fixtures" list exported by PhysicsEditor
@@ -113,12 +108,11 @@ var PhysicsEditorParser = {
      */
     parseVertices: function (vertexSets, options)
     {
-        var i, j, k, v, z;
         var parts = [];
 
         options = options || {};
 
-        for (v = 0; v < vertexSets.length; v += 1)
+        for (var v = 0; v < vertexSets.length; v++)
         {
             parts.push(Body.create(Common.extend({
                 position: Vertices.centre(vertexSets[v]),
@@ -127,44 +121,7 @@ var PhysicsEditorParser = {
         }
 
         // flag coincident part edges
-        var coincidentMaxDist = 5;
-
-        for (i = 0; i < parts.length; i++)
-        {
-            var partA = parts[i];
-
-            for (j = i + 1; j < parts.length; j++)
-            {
-                var partB = parts[j];
-
-                if (Bounds.overlaps(partA.bounds, partB.bounds))
-                {
-                    var pav = partA.vertices,
-                        pbv = partB.vertices;
-
-                    // iterate vertices of both parts
-                    for (k = 0; k < partA.vertices.length; k++)
-                    {
-                        for (z = 0; z < partB.vertices.length; z++)
-                        {
-                            // find distances between the vertices
-                            var da = Vector.magnitudeSquared(Vector.sub(pav[(k + 1) % pav.length], pbv[z])),
-                                db = Vector.magnitudeSquared(Vector.sub(pav[k], pbv[(z + 1) % pbv.length]));
-
-                            // if both vertices are very close, consider the edge concident (internal)
-                            if (da < coincidentMaxDist && db < coincidentMaxDist)
-                            {
-                                pav[k].isInternal = true;
-                                pbv[z].isInternal = true;
-                            }
-                        }
-                    }
-
-                }
-            }
-        }
-
-        return parts;
+        return Bodies.flagCoincidentParts(parts);
     }
 };
 

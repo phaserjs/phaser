@@ -46,7 +46,7 @@ var decomp = require('../../poly-decomp');
         if (options.chamfer) {
             var chamfer = options.chamfer;
             rectangle.vertices = Vertices.chamfer(rectangle.vertices, chamfer.radius, 
-                                    chamfer.quality, chamfer.qualityMin, chamfer.qualityMax);
+                chamfer.quality, chamfer.qualityMin, chamfer.qualityMax);
             delete options.chamfer;
         }
 
@@ -92,7 +92,7 @@ var decomp = require('../../poly-decomp');
         if (options.chamfer) {
             var chamfer = options.chamfer;
             trapezoid.vertices = Vertices.chamfer(trapezoid.vertices, chamfer.radius, 
-                                    chamfer.quality, chamfer.qualityMin, chamfer.qualityMax);
+                chamfer.quality, chamfer.qualityMin, chamfer.qualityMax);
             delete options.chamfer;
         }
 
@@ -169,7 +169,7 @@ var decomp = require('../../poly-decomp');
         if (options.chamfer) {
             var chamfer = options.chamfer;
             polygon.vertices = Vertices.chamfer(polygon.vertices, chamfer.radius, 
-                                    chamfer.quality, chamfer.qualityMin, chamfer.qualityMax);
+                chamfer.quality, chamfer.qualityMin, chamfer.qualityMax);
             delete options.chamfer;
         }
 
@@ -283,38 +283,9 @@ var decomp = require('../../poly-decomp');
             parts[i] = Body.create(Common.extend(parts[i], options));
         }
 
-        // flag internal edges (coincident part edges)
-        if (flagInternal) {
-            var coincident_max_dist = 5;
-
-            for (i = 0; i < parts.length; i++) {
-                var partA = parts[i];
-
-                for (j = i + 1; j < parts.length; j++) {
-                    var partB = parts[j];
-
-                    if (Bounds.overlaps(partA.bounds, partB.bounds)) {
-                        var pav = partA.vertices,
-                            pbv = partB.vertices;
-
-                        // iterate vertices of both parts
-                        for (k = 0; k < partA.vertices.length; k++) {
-                            for (z = 0; z < partB.vertices.length; z++) {
-                                // find distances between the vertices
-                                var da = Vector.magnitudeSquared(Vector.sub(pav[(k + 1) % pav.length], pbv[z])),
-                                    db = Vector.magnitudeSquared(Vector.sub(pav[k], pbv[(z + 1) % pbv.length]));
-
-                                // if both vertices are very close, consider the edge concident (internal)
-                                if (da < coincident_max_dist && db < coincident_max_dist) {
-                                    pav[k].isInternal = true;
-                                    pbv[z].isInternal = true;
-                                }
-                            }
-                        }
-
-                    }
-                }
-            }
+        if (flagInternal)
+        {
+            Bodies.flagCoincidentParts(parts, 5);
         }
 
         if (parts.length > 1) {
@@ -326,6 +297,56 @@ var decomp = require('../../poly-decomp');
         } else {
             return parts[0];
         }
+    };
+
+    /**
+     * Takes an array of Body objects and flags all internal edges (coincident parts) based on the maxDistance
+     * value. The array is changed in-place and returned, so you can pass this function a `Body.parts` property.
+     * 
+     * @method flagCoincidentParts
+     * @param {body[]} parts - The Body parts, or array of bodies, to flag.
+     * @param {number} [maxDistance=5]
+     * @return {body[]} The modified `parts` parameter.
+     */
+    Bodies.flagCoincidentParts = function (parts, maxDistance)
+    {
+        if (maxDistance === undefined) { maxDistance = 5; }
+
+        for (var i = 0; i < parts.length; i++)
+        {
+            var partA = parts[i];
+
+            for (var j = i + 1; j < parts.length; j++)
+            {
+                var partB = parts[j];
+
+                if (Bounds.overlaps(partA.bounds, partB.bounds))
+                {
+                    var pav = partA.vertices;
+                    var pbv = partB.vertices;
+
+                    // iterate vertices of both parts
+                    for (var k = 0; k < partA.vertices.length; k++)
+                    {
+                        for (var z = 0; z < partB.vertices.length; z++)
+                        {
+                            // find distances between the vertices
+                            var da = Vector.magnitudeSquared(Vector.sub(pav[(k + 1) % pav.length], pbv[z]));
+                            var db = Vector.magnitudeSquared(Vector.sub(pav[k], pbv[(z + 1) % pbv.length]));
+
+                            // if both vertices are very close, consider the edge concident (internal)
+                            if (da < maxDistance && db < maxDistance)
+                            {
+                                pav[k].isInternal = true;
+                                pbv[z].isInternal = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return parts;
     };
 
 })();

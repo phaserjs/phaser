@@ -10,7 +10,11 @@
 
 module.exports = {
 
+    AFTER_ADD: require('./AFTER_ADD_EVENT'),
+    AFTER_REMOVE: require('./AFTER_REMOVE_EVENT'),
     AFTER_UPDATE: require('./AFTER_UPDATE_EVENT'),
+    BEFORE_ADD: require('./BEFORE_ADD_EVENT'),
+    BEFORE_REMOVE: require('./BEFORE_REMOVE_EVENT'),
     BEFORE_UPDATE: require('./BEFORE_UPDATE_EVENT'),
     COLLISION_ACTIVE: require('./COLLISION_ACTIVE_EVENT'),
     COLLISION_END: require('./COLLISION_END_EVENT'),

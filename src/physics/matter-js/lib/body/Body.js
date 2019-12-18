@@ -40,11 +40,10 @@ var Axes = require('../geometry/Axes');
             id: Common.nextId(),
             type: 'body',
             label: 'Body',
-            gameObject: null,
             parts: [],
             plugin: {},
             angle: 0,
-            vertices: Vertices.fromPath('L 0 0 L 40 0 L 40 40 L 0 40'),
+            vertices: null, // Phaser change: no point calling fromPath if they pass in vertices anyway
             position: { x: 0, y: 0 },
             force: { x: 0, y: 0 },
             torque: 0,
@@ -59,8 +58,6 @@ var Axes = require('../geometry/Axes');
             isSensor: false,
             isStatic: false,
             isSleeping: false,
-            ignoreGravity: false,
-            ignorePointer: false,
             motion: 0,
             sleepThreshold: 60,
             density: 0.001,
@@ -75,18 +72,6 @@ var Axes = require('../geometry/Axes');
             },
             slop: 0.05,
             timeScale: 1,
-            render: {
-                visible: true,
-                opacity: 1,
-                sprite: {
-                    xScale: 1,
-                    yScale: 1,
-                    xOffset: 0,
-                    yOffset: 0
-                },
-                lineWidth: 0
-            },
-
             events: null,
             bounds: null,
             chamfer: null,
@@ -94,18 +79,62 @@ var Axes = require('../geometry/Axes');
             positionPrev: null,
             anglePrev: 0,
             parent: null,
-
             axes: null,
             area: 0,
             mass: 0,
             inertia: 0,
-
-            _original: null
+            _original: null,
+            render: {
+                visible: true,
+                opacity: 1,
+                sprite: {
+                    xOffset: 0,
+                    yOffset: 0
+                },
+                fillColor: null,            // custom Phaser property
+                fillOpacity: null,          // custom Phaser property
+                lineColor: null,            // custom Phaser property
+                lineOpacity: null,          // custom Phaser property
+                lineThickness: null         // custom Phaser property
+            },
+            gameObject: null,               // custom Phaser property
+            scale: { x: 1, y: 1 },          // custom Phaser property
+            centerOfMass: { x: 0, y: 0 },   // custom Phaser property
+            ignoreGravity: false,           // custom Phaser property
+            ignorePointer: false,           // custom Phaser property
+            onCollideCallback: null,        // custom Phaser property
+            onCollideEndCallback: null,     // custom Phaser property
+            onCollideActiveCallback: null,  // custom Phaser property
+            onCollideWith: {}               // custom Phaser property
         };
+
+        if (!options.hasOwnProperty('position') && options.hasOwnProperty('vertices'))
+        {
+            options.position = Vertices.centre(options.vertices);
+        }
+        else if (!options.hasOwnProperty('vertices'))
+        {
+            defaults.vertices = Vertices.fromPath('L 0 0 L 40 0 L 40 40 L 0 40');
+        }
 
         var body = Common.extend(defaults, options);
 
         _initProperties(body, options);
+
+        //  Helper function
+        body.setOnCollideWith = function (body, callback)
+        {
+            if (callback)
+            {
+                this.onCollideWith[body.id] = callback;
+            }
+            else
+            {
+                delete this.onCollideWith[body.id];
+            }
+
+            return this;
+        }
 
         return body;
     };
@@ -170,13 +199,8 @@ var Axes = require('../geometry/Axes');
             inertia: options.inertia || body.inertia
         });
 
-        // render properties
-        var defaultFillStyle = (body.isStatic ? '#2e2b44' : Common.choose(['#006BA6', '#0496FF', '#FFBC42', '#D81159', '#8F2D56'])),
-            defaultStrokeStyle = '#000';
-        body.render.fillStyle = body.render.fillStyle || defaultFillStyle;
-        body.render.strokeStyle = body.render.strokeStyle || defaultStrokeStyle;
-        body.render.sprite.xOffset += -(body.bounds.min.x - body.position.x) / (body.bounds.max.x - body.bounds.min.x);
-        body.render.sprite.yOffset += -(body.bounds.min.y - body.position.y) / (body.bounds.max.y - body.bounds.min.y);
+        body.centerOfMass.x = -(body.bounds.min.x - body.position.x) / (body.bounds.max.x - body.bounds.min.x);
+        body.centerOfMass.y = -(body.bounds.min.y - body.position.y) / (body.bounds.max.y - body.bounds.min.y);
     };
 
     /**
@@ -197,8 +221,7 @@ var Axes = require('../geometry/Axes');
         }
 
         for (property in settings) {
-
-            if (!settings.hasOwnProperty(property))
+            if (!Object.prototype.hasOwnProperty.call(settings, property))
                 continue;
 
             value = settings[property];
@@ -237,9 +260,11 @@ var Axes = require('../geometry/Axes');
             case 'parts':
                 Body.setParts(body, value);
                 break;
+            case 'centre':
+                Body.setCentre(body, value);
+                break;
             default:
                 body[property] = value;
-
             }
         }
     };
@@ -320,7 +345,7 @@ var Axes = require('../geometry/Axes');
     };
 
     /**
-     * Sets the moment of inertia (i.e. second moment of area) of the body of the body. 
+     * Sets the moment of inertia (i.e. second moment of area) of the body. 
      * Inverse inertia is automatically updated to reflect the change. Mass is not changed.
      * @method setInertia
      * @param {body} body
@@ -365,6 +390,7 @@ var Axes = require('../geometry/Axes');
 
         // update geometry
         Vertices.translate(body.vertices, body.position);
+
         Bounds.update(body.bounds, body.vertices, body.velocity);
     };
 
@@ -419,16 +445,48 @@ var Axes = require('../geometry/Axes');
         // sum the properties of all compound parts of the parent body
         var total = Body._totalProperties(body);
 
+        //  Phaser addition
+        var cx = total.centre.x;
+        var cy = total.centre.y;
+
+        body.centerOfMass.x = cx;
+        body.centerOfMass.y = cy;
+
         body.area = total.area;
         body.parent = body;
-        body.position.x = total.centre.x;
-        body.position.y = total.centre.y;
-        body.positionPrev.x = total.centre.x;
-        body.positionPrev.y = total.centre.y;
+        body.position.x = cx;
+        body.position.y = cy;
+        body.positionPrev.x = cx;
+        body.positionPrev.y = cy;
 
         Body.setMass(body, total.mass);
         Body.setInertia(body, total.inertia);
         Body.setPosition(body, total.centre);
+    };
+
+    /**
+     * Set the centre of mass of the body. 
+     * The `centre` is a vector in world-space unless `relative` is set, in which case it is a translation.
+     * The centre of mass is the point the body rotates about and can be used to simulate non-uniform density.
+     * This is equal to moving `body.position` but not the `body.vertices`.
+     * Invalid if the `centre` falls outside the body's convex hull.
+     * @method setCentre
+     * @param {body} body
+     * @param {vector} centre
+     * @param {bool} relative
+     */
+    Body.setCentre = function(body, centre, relative) {
+        if (!relative) {
+            body.positionPrev.x = centre.x - (body.position.x - body.positionPrev.x);
+            body.positionPrev.y = centre.y - (body.position.y - body.positionPrev.y);
+            body.position.x = centre.x;
+            body.position.y = centre.y;
+        } else {
+            body.positionPrev.x += centre.x;
+            body.positionPrev.y += centre.y;
+            body.position.x += centre.x;
+            body.position.y += centre.y;
+        }
     };
 
     /**
@@ -468,7 +526,6 @@ var Axes = require('../geometry/Axes');
             Axes.rotate(part.axes, delta);
             Bounds.update(part.bounds, part.vertices, body.velocity);
             if (i > 0) {
-                part.angle += body.angularVelocity;
                 Vector.rotateAbout(part.position, delta, body.position, part.position);
             }
         }
@@ -551,6 +608,9 @@ var Axes = require('../geometry/Axes');
 
         for (var i = 0; i < body.parts.length; i++) {
             var part = body.parts[i];
+
+            part.scale.x = scaleX;
+            part.scale.y = scaleY;
 
             // scale vertices
             Vertices.scale(part.vertices, scaleX, scaleY, point);
@@ -819,6 +879,14 @@ var Axes = require('../geometry/Axes');
      * @property position
      * @type vector
      * @default { x: 0, y: 0 }
+     */
+
+    /**
+     * A `Vector` that holds the current scale values as set by `Body.setScale`.
+     *
+     * @property scale
+     * @type vector
+     * @default { x: 1, y: 1 }
      */
 
     /**
@@ -1117,29 +1185,6 @@ var Axes = require('../geometry/Axes');
      * @type object
      */
 
-    /**
-     * An `String` that defines the path to the image to use as the sprite texture, if any.
-     *
-     * @property render.sprite.texture
-     * @type string
-     */
-     
-    /**
-     * A `Number` that defines the scaling in the x-axis for the sprite, if any.
-     *
-     * @property render.sprite.xScale
-     * @type number
-     * @default 1
-     */
-
-    /**
-     * A `Number` that defines the scaling in the y-axis for the sprite, if any.
-     *
-     * @property render.sprite.yScale
-     * @type number
-     * @default 1
-     */
-
      /**
       * A `Number` that defines the offset in the x-axis for the sprite (normalised by texture width).
       *
@@ -1157,30 +1202,38 @@ var Axes = require('../geometry/Axes');
       */
 
     /**
-     * A `Number` that defines the line width to use when rendering the body outline (if a sprite is not defined).
-     * A value of `0` means no outline will be rendered.
+     * A hex color value that defines the fill color to use when rendering the body.
      *
-     * @property render.lineWidth
+     * @property render.fillColor
      * @type number
-     * @default 0
      */
 
     /**
-     * A `String` that defines the fill style to use when rendering the body (if a sprite is not defined).
-     * It is the same as when using a canvas, so it accepts CSS style property values.
+     * A value that defines the fill opqcity to use when rendering the body.
      *
-     * @property render.fillStyle
-     * @type string
-     * @default a random colour
+     * @property render.fillOpacity
+     * @type number
+     */
+
+     /**
+     * A hex color value that defines the line color to use when rendering the body.
+     *
+     * @property render.lineColor
+     * @type number
      */
 
     /**
-     * A `String` that defines the stroke style to use when rendering the body outline (if a sprite is not defined).
-     * It is the same as when using a canvas, so it accepts CSS style property values.
+     * A value that defines the line opqcity to use when rendering the body.
      *
-     * @property render.strokeStyle
-     * @type string
-     * @default a random colour
+     * @property render.lineOpacity
+     * @type number
+     */
+
+     /**
+     * A `Number` that defines the line width to use when rendering the body outline.
+     *
+     * @property render.lineThickness
+     * @type number
      */
 
     /**
@@ -1206,6 +1259,83 @@ var Axes = require('../geometry/Axes');
      *
      * @property bounds
      * @type bounds
+     */
+
+    /**
+     * A reference to the Phaser Game Object this body belongs to, if any.
+     *
+     * @property gameObject
+     * @type Phaser.GameObjects.GameObject
+     */
+
+    /**
+     * The scale of the Body when Body.setScale was called. Not used internally by Matter.
+     *
+     * @property scale
+     * @type vector
+     * @default { x: 1, y: 1 }
+     */
+
+    /**
+     * The center of mass of the Body.
+     *
+     * @property centerOfMass
+     * @type vector
+     * @default { x: 0, y: 0 }
+     */
+
+    /**
+     * Will this Body ignore World gravity during the Engine update?
+     *
+     * @property ignoreGravity
+     * @type boolean
+     * @default false
+     */
+
+    /**
+     * Will this Body ignore Phaser Pointer input events?
+     *
+     * @property ignorePointer
+     * @type boolean
+     * @default false
+     */
+
+    /**
+     * A callback that is invoked when this Body starts colliding with any other Body.
+     * 
+     * You can register callbacks by providing a function of type `( pair: Matter.Pair) => void`.
+     *
+     * @property onCollideCallback
+     * @type function
+     * @default null
+     */
+
+    /**
+     * A callback that is invoked when this Body stops colliding with any other Body.
+     * 
+     * You can register callbacks by providing a function of type `( pair: Matter.Pair) => void`.
+     *
+     * @property onCollideEndCallback
+     * @type function
+     * @default null
+     */
+
+    /**
+     * A callback that is invoked for the duration that this Body is colliding with any other Body.
+     * 
+     * You can register callbacks by providing a function of type `( pair: Matter.Pair) => void`.
+     *
+     * @property onCollideActiveCallback
+     * @type function
+     * @default null
+     */
+
+    /**
+     * A collision callback dictionary used by the `Body.setOnCollideWith` function.
+     *
+     * @property onCollideWith
+     * @type object
+     * @default null
      */
 
 })();
