@@ -22,11 +22,10 @@ var InputPluginCache = {};
  * Plugin is the object to instantiate to create the plugin
  * Mapping is what the plugin is injected into the Scene.Systems as (i.e. input)
  *
- * @name Phaser.Input.InputPluginCache.register
- * @type {function}
+ * @function Phaser.Input.InputPluginCache.register
  * @static
  * @since 3.10.0
- * 
+ *
  * @param {string} key - A reference used to get this plugin from the plugin cache.
  * @param {function} plugin - The plugin to be stored. Should be the core object, not instantiated.
  * @param {string} mapping - If this plugin is to be injected into the Input Plugin, this is the property key used.
@@ -41,11 +40,10 @@ InputPluginCache.register = function (key, plugin, mapping, settingsKey, configK
 /**
  * Returns the input plugin object from the cache based on the given key.
  *
- * @name Phaser.Input.InputPluginCache.getCore
- * @type {function}
+ * @function Phaser.Input.InputPluginCache.getCore
  * @static
  * @since 3.10.0
- * 
+ *
  * @param {string} key - The key of the input plugin to get.
  *
  * @return {Phaser.Types.Input.InputPluginContainer} The input plugin object.
@@ -58,11 +56,10 @@ InputPluginCache.getPlugin = function (key)
 /**
  * Installs all of the registered Input Plugins into the given target.
  *
- * @name Phaser.Input.InputPluginCache.install
- * @type {function}
+ * @function Phaser.Input.InputPluginCache.install
  * @static
  * @since 3.10.0
- * 
+ *
  * @param {Phaser.Input.InputPlugin} target - The target InputPlugin to install the plugins into.
  */
 InputPluginCache.install = function (target)
@@ -88,11 +85,10 @@ InputPluginCache.install = function (target)
 /**
  * Removes an input plugin based on the given key.
  *
- * @name Phaser.Input.InputPluginCache.remove
- * @type {function}
+ * @function Phaser.Input.InputPluginCache.remove
  * @static
  * @since 3.10.0
- * 
+ *
  * @param {string} key - The key of the input plugin to remove.
  */
 InputPluginCache.remove = function (key)
