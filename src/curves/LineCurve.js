@@ -194,6 +194,41 @@ var LineCurve = new Class({
         return tangent.normalize();
     },
 
+    //  Override default Curve.getUtoTmapping
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Curves.Line#getUtoTmapping
+     * @since 3.0.0
+     *
+     * @param {number} u - [description]
+     * @param {integer} distance - [description]
+     * @param {integer} [divisions] - [description]
+     *
+     * @return {number} [description]
+     */
+    getUtoTmapping: function (u, distance, divisions)
+    {
+        var t;
+
+        if (distance)
+        {
+            var arcLengths = this.getLengths(divisions);
+            var lineLength = arcLengths[arcLengths.length - 1];
+            //  Cannot overshoot the curve
+            var targetLineLength = Math.min(distance, lineLength);
+
+            t = targetLineLength / lineLength;
+        }
+        else
+        {
+            t = u;
+        }        
+
+        return t;
+    },
+
     //  Override default Curve.draw because this is better than calling getPoints on a line!
 
     /**
