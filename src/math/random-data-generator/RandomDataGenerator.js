@@ -347,10 +347,14 @@ var RandomDataGenerator = new Class({
      *
      * @method Phaser.Math.RandomDataGenerator#pick
      * @since 3.0.0
+     * 
+     * @generic T
+     * @genericUse {T[]} - [array]
+     * @genericUse {T} - [$return]
      *
-     * @param {array} array - The array to pick a random element from.
+     * @param {T[]} array - The array to pick a random element from.
      *
-     * @return {*} A random member of the array.
+     * @return {T} A random member of the array.
      */
     pick: function (array)
     {
@@ -376,9 +380,13 @@ var RandomDataGenerator = new Class({
      * @method Phaser.Math.RandomDataGenerator#weightedPick
      * @since 3.0.0
      *
-     * @param {array} array - The array to pick a random element from.
+     * @generic T
+     * @genericUse {T[]} - [array]
+     * @genericUse {T} - [$return]
      *
-     * @return {*} A random member of the array.
+     * @param {T[]} array - The array to pick a random element from.
+     *
+     * @return {T} A random member of the array.
      */
     weightedPick: function (array)
     {
@@ -468,9 +476,12 @@ var RandomDataGenerator = new Class({
      * @method Phaser.Math.RandomDataGenerator#shuffle
      * @since 3.7.0
      *
-     * @param {array} [array] - The array to be shuffled.
+     * @generic T
+     * @genericUse {T[]} - [array,$return]
      *
-     * @return {array} The shuffled array.
+     * @param {T[]} [array] - The array to be shuffled.
+     *
+     * @return {T[]} The shuffled array.
      */
     shuffle: function (array)
     {
