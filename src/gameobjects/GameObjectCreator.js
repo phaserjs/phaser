@@ -63,7 +63,7 @@ var GameObjectCreator = new Class({
         /**
          * A reference to the Scene Update List.
          *
-         * @name Phaser.GameObjects.GameObjectCreator#updateList;
+         * @name Phaser.GameObjects.GameObjectCreator#updateList
          * @type {Phaser.GameObjects.UpdateList}
          * @protected
          * @since 3.0.0
