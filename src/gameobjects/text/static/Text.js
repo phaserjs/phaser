@@ -285,7 +285,7 @@ var Text = new Class({
 
         if (style && style.lineSpacing)
         {
-            this.lineSpacing = style.lineSpacing;
+            this.setLineSpacing(style.lineSpacing);
         }
 
         scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, function ()
