@@ -105,7 +105,7 @@ var GameObjectFactory = new Class({
 
     /**
      * Adds an existing Game Object to this Scene.
-     * 
+     *
      * If the Game Object renders, it will be added to the Display List.
      * If it has a `preUpdate` method, it will be added to the Update List.
      *
@@ -167,8 +167,20 @@ var GameObjectFactory = new Class({
 
 });
 
-//  Static method called directly by the Game Object factory functions
-
+/**
+ * Static method called directly by the Game Object factory functions.
+ * With this method you can register a custom GameObject factory in the GameObjectFactory,
+ * providing a name (`factoryType`) and the constructor (`factoryFunction`) in order
+ * to be called when you call to Phaser.Scene.add[ factoryType ] method.
+ *
+ * @name Phaser.GameObjects.GameObjectFactory.register
+ * @type {function}
+ * @static
+ * @since 3.0.0
+ *
+ * @param {string} factoryType - The key of the factory that you will use to call to Phaser.Scene.add[ factoryType ] method.
+ * @param {function} factoryFunction - The constructor function to be called when you invoke to the Phaser.Scene.add method.
+ */
 GameObjectFactory.register = function (factoryType, factoryFunction)
 {
     if (!GameObjectFactory.prototype.hasOwnProperty(factoryType))
@@ -177,6 +189,18 @@ GameObjectFactory.register = function (factoryType, factoryFunction)
     }
 };
 
+/**
+ * Static method called directly by the Game Object factory functions.
+ * With this method you can remove a custom GameObject factory registered in the GameObjectFactory,
+ * providing a its `factoryType`.
+ *
+ * @name Phaser.GameObjects.GameObjectFactory.remove
+ * @type {function}
+ * @static
+ * @since 3.0.0
+ *
+ * @param {string} factoryType - The key of the factory that you want to remove from the GameObjectFactory.
+ */
 GameObjectFactory.remove = function (factoryType)
 {
     if (GameObjectFactory.prototype.hasOwnProperty(factoryType))
