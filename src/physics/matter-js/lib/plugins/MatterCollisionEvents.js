@@ -22,6 +22,16 @@ var MatterCollisionEvents = {
                     var bodyA = pair.bodyA;
                     var bodyB = pair.bodyB;
 
+                    if (bodyA.gameObject)
+                    {
+                        bodyA.gameObject.emit('collide', bodyA, bodyB, pair);
+                    }
+
+                    if (bodyB.gameObject)
+                    {
+                        bodyB.gameObject.emit('collide', bodyB, bodyA, pair);
+                    }
+
                     matter.Events.trigger(bodyA, 'onCollide', { pair: pair });
                     matter.Events.trigger(bodyB, 'onCollide', { pair: pair });
 
@@ -54,6 +64,16 @@ var MatterCollisionEvents = {
                     var bodyA = pair.bodyA;
                     var bodyB = pair.bodyB;
 
+                    if (bodyA.gameObject)
+                    {
+                        bodyA.gameObject.emit('collideActive', bodyA, bodyB, pair);
+                    }
+
+                    if (bodyB.gameObject)
+                    {
+                        bodyB.gameObject.emit('collideActive', bodyB, bodyA, pair);
+                    }
+
                     matter.Events.trigger(bodyA, 'onCollideActive', { pair: pair });
                     matter.Events.trigger(bodyB, 'onCollideActive', { pair: pair });
 
@@ -75,6 +95,16 @@ var MatterCollisionEvents = {
                 {
                     var bodyA = pair.bodyA;
                     var bodyB = pair.bodyB;
+
+                    if (bodyA.gameObject)
+                    {
+                        bodyA.gameObject.emit('collideEnd', bodyA, bodyB, pair);
+                    }
+
+                    if (bodyB.gameObject)
+                    {
+                        bodyB.gameObject.emit('collideEnd', bodyB, bodyA, pair);
+                    }
 
                     matter.Events.trigger(bodyA, 'onCollideEnd', { pair: pair });
                     matter.Events.trigger(bodyB, 'onCollideEnd', { pair: pair });
