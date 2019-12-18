@@ -137,6 +137,7 @@
 * Text objects will no longer add any white-space when word-wrapping if the last line is only one word long. Fix #4867 (thanks @gaamoo @rexrainbow)
 * When `Game.destroy` is running, Scenes are now destroyed _before_ plugins, avoiding bugs when closing down plugins and deleting Render Textures. Fix #4849 #4876 (thanks @rexrainbow @siyuanqiao)
 * The `Mesh` and `Quad` Game Objects have had the `GetBounds` component removed as it cannot operate on a Mesh as they don't have origins. Fix #4902 (thanks @samme)
+* Setting `lineSpacing` in the Text Game Object style config would set the value but not apply it to the Text, leaving you to call `updateText` yourself. If set, it's now applied on instantiation. Fix #4901 (thanks @FantaZZ)
 
 ### Examples, Documentation and TypeScript
 
