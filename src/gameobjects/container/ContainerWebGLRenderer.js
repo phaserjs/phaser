@@ -132,7 +132,7 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
         }
         else
         {
-            child.setAlpha(childAlpha * alpha)
+            child.setAlpha(childAlpha * alpha);
         }
 
         //  Render
@@ -146,7 +146,7 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
         }
         else
         {
-            child.setAlpha(childAlpha)
+            child.setAlpha(childAlpha);
         }
 
         child.setScrollFactor(childScrollFactorX, childScrollFactorY);
