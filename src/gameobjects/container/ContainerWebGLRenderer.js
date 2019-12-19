@@ -89,8 +89,6 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
         }
         else
         {
-            var childAlpha = child.alpha;
-
             childAlphaTopLeft = childAlpha;
             childAlphaTopRight = childAlpha;
             childAlphaBottomLeft = childAlpha;
