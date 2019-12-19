@@ -52,6 +52,7 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
         renderer.setBlendMode(0);
     }
 
+    var alpha = container._alpha;
     var alphaTopLeft = container.alphaTopLeft;
     var alphaTopRight = container.alphaTopRight;
     var alphaBottomLeft = container.alphaBottomLeft;
@@ -72,6 +73,8 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
             continue;
         }
 
+        var quadAlpha = child.constructor.name === 'Sprite';
+        var childAlpha = child.alpha;
         var childAlphaTopLeft;
         var childAlphaTopRight;
         var childAlphaBottomLeft;
@@ -123,14 +126,28 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
         //  Set parent values
         child.setScrollFactor(childScrollFactorX * scrollFactorX, childScrollFactorY * scrollFactorY);
 
-        child.setAlpha(childAlphaTopLeft * alphaTopLeft, childAlphaTopRight * alphaTopRight, childAlphaBottomLeft * alphaBottomLeft, childAlphaBottomRight * alphaBottomRight);
+        if (quadAlpha)
+        {
+            child.setAlpha(childAlphaTopLeft * alphaTopLeft, childAlphaTopRight * alphaTopRight, childAlphaBottomLeft * alphaBottomLeft, childAlphaBottomRight * alphaBottomRight);
+        }
+        else
+        {
+            child.setAlpha(childAlpha * alpha)
+        }
 
         //  Render
         child.renderWebGL(renderer, child, interpolationPercentage, camera, transformMatrix);
 
         //  Restore original values
 
-        child.setAlpha(childAlphaTopLeft, childAlphaTopRight, childAlphaBottomLeft, childAlphaBottomRight);
+        if (quadAlpha)
+        {
+            child.setAlpha(childAlphaTopLeft, childAlphaTopRight, childAlphaBottomLeft, childAlphaBottomRight);
+        }
+        else
+        {
+            child.setAlpha(childAlpha)
+        }
 
         child.setScrollFactor(childScrollFactorX, childScrollFactorY);
 
