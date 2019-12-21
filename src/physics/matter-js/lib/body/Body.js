@@ -100,6 +100,7 @@ var Axes = require('../geometry/Axes');
             gameObject: null,               // custom Phaser property
             scale: { x: 1, y: 1 },          // custom Phaser property
             centerOfMass: { x: 0, y: 0 },   // custom Phaser property
+            gravityScale: { x: 1, y: 1 },   // custom Phaser property
             ignoreGravity: false,           // custom Phaser property
             ignorePointer: false,           // custom Phaser property
             onCollideCallback: null,        // custom Phaser property
@@ -1293,6 +1294,14 @@ var Axes = require('../geometry/Axes');
      */
 
     /**
+     * Scale the influence of World gravity when applied to this body.
+     *
+     * @property gravityScale
+     * @type vector
+     * @default { x: 1, y: 1 }
+     */
+
+     /**
      * Will this Body ignore Phaser Pointer input events?
      *
      * @property ignorePointer

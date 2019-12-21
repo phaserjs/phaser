@@ -291,8 +291,8 @@ var Body = require('../body/Body');
                 continue;
 
             // apply gravity
-            body.force.y += body.mass * gravity.y * gravityScale;
-            body.force.x += body.mass * gravity.x * gravityScale;
+            body.force.x += (body.mass * gravity.x * gravityScale) * body.gravityScale.x;
+            body.force.y += (body.mass * gravity.y * gravityScale) * body.gravityScale.y;
         }
     };
 
