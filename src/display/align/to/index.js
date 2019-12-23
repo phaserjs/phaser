@@ -16,6 +16,7 @@ module.exports = {
     LeftBottom: require('./LeftBottom'),
     LeftCenter: require('./LeftCenter'),
     LeftTop: require('./LeftTop'),
+    QuickSet: require('./QuickSet'),
     RightBottom: require('./RightBottom'),
     RightCenter: require('./RightCenter'),
     RightTop: require('./RightTop'),

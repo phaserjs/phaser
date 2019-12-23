@@ -10,6 +10,7 @@
 
 module.exports = {
 
+    AlignTo: require('./AlignTo'),
     Angle: require('./Angle'),
     Call: require('./Call'),
     GetFirst: require('./GetFirst'),
