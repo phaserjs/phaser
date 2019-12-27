@@ -343,7 +343,7 @@ var ScenePlugin = new Class({
     checkValidTransition: function (target)
     {
         //  Not a valid target if it doesn't exist, isn't active or is already transitioning in or out
-        if (!target || target.sys.isActive() || target.sys.isTransitioning() || target === this.scene || this.systems.isTransitioning())
+        if (!target || !target.sys.isActive() || target.sys.isTransitioning() || target === this.scene || this.systems.isTransitioning())
         {
             return false;
         }
