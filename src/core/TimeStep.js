@@ -313,7 +313,7 @@ var TimeStep = new Class({
          * @default 10
          * @since 3.0.0
          */
-        this.deltaSmoothingMax = GetValue(config, 'deltaHistory', 10);
+        this.deltaSmoothingMax = Math.max(1, GetValue(config, 'deltaHistory', 10));
 
         /**
          * The number of frames that the cooldown is set to after the browser panics over the FPS rate, usually
