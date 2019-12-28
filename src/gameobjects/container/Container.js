@@ -58,7 +58,7 @@ var Vector2 = require('../../math/Vector2');
  * @constructor
  * @since 3.4.0
  *
- * @extends Phaser.GameObjects.Components.Alpha
+ * @extends Phaser.GameObjects.Components.AlphaSingle
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.ComputedSize
  * @extends Phaser.GameObjects.Components.Depth
@@ -76,7 +76,7 @@ var Container = new Class({
     Extends: GameObject,
 
     Mixins: [
-        Components.Alpha,
+        Components.AlphaSingle,
         Components.BlendMode,
         Components.ComputedSize,
         Components.Depth,
