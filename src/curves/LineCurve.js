@@ -216,6 +216,7 @@ var LineCurve = new Class({
         {
             var arcLengths = this.getLengths(divisions);
             var lineLength = arcLengths[arcLengths.length - 1];
+
             //  Cannot overshoot the curve
             var targetLineLength = Math.min(distance, lineLength);
 
@@ -224,7 +225,7 @@ var LineCurve = new Class({
         else
         {
             t = u;
-        }        
+        }
 
         return t;
     },
