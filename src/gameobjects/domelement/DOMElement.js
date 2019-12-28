@@ -72,7 +72,7 @@ var Vector4 = require('../../math/Vector4');
  * @constructor
  * @since 3.17.0
  *
- * @extends Phaser.GameObjects.Components.Alpha
+ * @extends Phaser.GameObjects.Components.AlphaSingle
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Origin
@@ -92,7 +92,7 @@ var DOMElement = new Class({
     Extends: GameObject,
 
     Mixins: [
-        Components.Alpha,
+        Components.AlphaSingle,
         Components.BlendMode,
         Components.Depth,
         Components.Origin,
