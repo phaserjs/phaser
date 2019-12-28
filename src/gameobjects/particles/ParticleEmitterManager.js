@@ -278,6 +278,21 @@ var ParticleEmitterManager = new Class({
     },
 
     /**
+     * Removes a Particle Emitter from this Emitter Manager, if the Emitter belongs to this Manager.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitterManager#removeEmitter
+     * @since 3.22.0
+     *
+     * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter
+     *
+     * @return {?Phaser.GameObjects.Particles.ParticleEmitter} The Particle Emitter if it was removed or null if it was not.
+     */
+    removeEmitter: function (emitter)
+    {
+        return this.emitters.remove(emitter, true);
+    },
+
+    /**
      * Adds an existing Gravity Well object to this Emitter Manager.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitterManager#addGravityWell

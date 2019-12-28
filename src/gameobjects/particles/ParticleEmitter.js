@@ -1800,6 +1800,21 @@ var ParticleEmitter = new Class({
     },
 
     /**
+     * Removes the emitter from its manager and the scene.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#remove
+     * @since 3.22.0
+     *
+     * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
+     */
+    remove: function ()
+    {
+        this.manager.removeEmitter(this);
+
+        return this;
+    },
+
+    /**
      * Sorts active particles with {@link Phaser.GameObjects.Particles.ParticleEmitter#depthSortCallback}.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#depthSort
