@@ -194,7 +194,7 @@ var LayerData = new Class({
          * An array of the tile indexes
          *
          * @name Phaser.Tilemaps.LayerData#data
-         * @type {(number[])}
+         * @type {Phaser.Tilemaps.Tile[][]}
          * @since 3.0.0
          */
         this.data = GetFastValue(config, 'data', []);

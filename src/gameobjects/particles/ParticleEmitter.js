@@ -1324,6 +1324,23 @@ var ParticleEmitter = new Class({
     },
 
     /**
+     * Sets the color tint of emitted particles.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#setTint
+     * @since 3.22.0
+     *
+     * @param {(Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType)} value - A value between 0 and 0xffffff.
+     *
+     * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
+     */
+    setTint: function (value)
+    {
+        this.tint.onChange(value);
+
+        return this;
+    },
+
+    /**
      * Sets the angle of a {@link Phaser.GameObjects.Particles.ParticleEmitter#radial} particle stream.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setEmitterAngle
@@ -1778,6 +1795,21 @@ var ParticleEmitter = new Class({
     resume: function ()
     {
         this.active = true;
+
+        return this;
+    },
+
+    /**
+     * Removes the emitter from its manager and the scene.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#remove
+     * @since 3.22.0
+     *
+     * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
+     */
+    remove: function ()
+    {
+        this.manager.removeEmitter(this);
 
         return this;
     },
