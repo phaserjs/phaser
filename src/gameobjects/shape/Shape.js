@@ -20,7 +20,7 @@ var Line = require('../../geom/line/Line');
  * @constructor
  * @since 3.13.0
  *
- * @extends Phaser.GameObjects.Components.Alpha
+ * @extends Phaser.GameObjects.Components.AlphaSingle
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.ComputedSize
  * @extends Phaser.GameObjects.Components.Depth
@@ -41,7 +41,7 @@ var Shape = new Class({
     Extends: GameObject,
 
     Mixins: [
-        Components.Alpha,
+        Components.AlphaSingle,
         Components.BlendMode,
         Components.ComputedSize,
         Components.Depth,
