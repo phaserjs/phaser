@@ -47,9 +47,7 @@ var HTML5AudioSound = new Class({
 
         if (!this.tags)
         {
-            // eslint-disable-next-line no-console
-            console.warn('Audio cache entry missing: ' + key);
-            return;
+            throw new Error('There is no audio asset with key "' + key + '" in the audio cache');
         }
 
         /**
