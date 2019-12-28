@@ -7,7 +7,7 @@
 var BaseCamera = require('../../cameras/2d/BaseCamera.js');
 var Class = require('../../utils/Class');
 var Commands = require('./Commands');
-var ComponentsAlpha = require('../components/Alpha');
+var ComponentsAlpha = require('../components/AlphaSingle');
 var ComponentsBlendMode = require('../components/BlendMode');
 var ComponentsDepth = require('../components/Depth');
 var ComponentsMask = require('../components/Mask');
@@ -72,7 +72,7 @@ var Render = require('./GraphicsRender');
  * @constructor
  * @since 3.0.0
  *
- * @extends Phaser.GameObjects.Components.Alpha
+ * @extends Phaser.GameObjects.Components.AlphaSingle
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Mask
