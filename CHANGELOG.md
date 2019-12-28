@@ -122,6 +122,14 @@
 ### New Features
 
 * `TimeStep.smoothStep` is a new boolean property that controls if any delta smoothing takes place during the game step. Delta smoothing has been enabled in Phaser since the first version and helps avoid delta spikes and dips, especially after loss of focus. However, you can now easily toggle if this happens via this property and the corresponding `FPSConfig` property.
+* `Phaser.Math.Distance.BetweenPoints` is a new function that will return the distance between two Vector2-like objects (thanks @samme)
+* `Phaser.Math.Distance.BetweenPointsSquared` is a new function that will return the squared distance between two Vector2-like objects (thanks @samme)
+* `Phaser.Math.Distance.Chebyshev` is a new function that will return the Chebyshev (or chessboard) distance between two Vector2-like objects (thanks @samme)
+* `Phaser.Math.Distance.Snake` is a new function that will return the rectilinear distance between two Vector2-like objects (thanks @samme)
+* `ParticleEmitter.setTint` is a new method that will set the tint of emitted particles for the given Emitter only (thanks @samme)
+* `ParticleEmitter.remove` is a new method that will remove the Emitter from its Emitter Manager (thanks @samme)
+* `ParticleEmitterManager.removeEmitter` is a new method that will remove the given emitter from the manager, if the emitter belongs to it (thanks @samme)
+* `AlphaSingle` is a new Game Object Component that allows a Game Object to set its alpha values, but only as a single uniform value, not on a per-quad basis.
 
 ### Updates
 
@@ -131,6 +139,9 @@
 * `Body._ty` is a new internal private var, holding the Arcade Physics Body combined total delta y value.
 * `LineCurve.getUtoTmapping` has been updated to return `u` directly to avoid calculations as it's identical to `t` in a Line (thanks @rexrainbow)
 * `Curve.getSpacedPoints` will now take an optional array as the 3rd parameter to store the points results in (thanks @rexrainbow)
+* Trying to play or resume an audio file with an incorrect key will now throw a runtime error, instead of a console warning (thanks @samme)
+* The `Shape` Game Object now uses the AlphaSingle component, allowing you to uniformly set the alpha of the shape, rather than a quad alpha, which never worked for Shape objects.
+* The `Container` Game Object now uses the AlphaSingle component, allowing you to uniformly set the alpha of the container, rather than a quad alpha, which never worked consistently across Container children. Fix #4916 (thanks @laineus)
 
 ### Bug Fixes
 
@@ -144,7 +155,7 @@
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@fselcukcan Bambosh @louisth @hexus @javigaralva @samme @BeLi4L
+@fselcukcan Bambosh @louisth @hexus @javigaralva @samme @BeLi4L @jcyuan 
 
 
 ## Version 3.21.0 - Senku - 22nd November 2019
