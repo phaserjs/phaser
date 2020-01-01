@@ -1617,7 +1617,7 @@ var World = new Class({
             return this;
         }
 
-        graphics.lineStyle(lineThickness, lineColor, lineOpacity * render.opacity);
+        graphics.lineStyle(lineThickness, lineColor, lineOpacity);
 
         var bodyA = constraint.bodyA;
         var bodyB = constraint.bodyB;
