@@ -14,9 +14,9 @@
  *
  * @param {Phaser.Geom.Line} line - The line.
  * @param {integer} [stepRate=1] - The optional step rate for the points on the line.
- * @param {array} [results] - An optional array to push the resulting coordinates into.
+ * @param {Phaser.Types.Math.Vector2Like[]} [results] - An optional array to push the resulting coordinates into.
  *
- * @return {object[]} The array of coordinates on the line.
+ * @return {Phaser.Types.Math.Vector2Like[]} The array of coordinates on the line.
  */
 var BresenhamPoints = function (line, stepRate, results)
 {
