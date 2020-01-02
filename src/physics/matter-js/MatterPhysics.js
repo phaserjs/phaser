@@ -1018,7 +1018,7 @@ var MatterPhysics = new Class({
      * @method Phaser.Physics.Matter.MatterPhysics#getMatterBodies
      * @since 3.22.0
      *
-     * @param {array} [bodies] - An array of objects to extract the bodies from. If falsey, it will return all bodis in the world.
+     * @param {array} [bodies] - An array of objects to extract the bodies from. If falsey, it will return all bodies in the world.
      *
      * @return {MatterJS.Body[]} An array of native Matter Body objects.
      */
