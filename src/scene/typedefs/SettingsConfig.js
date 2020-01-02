@@ -1,8 +1,10 @@
 /**
  * @typedef {object} Phaser.Types.Scenes.SettingsConfig
  * @since 3.0.0
+ * 
+ * @generic {string=string} K - [key]
  *
- * @property {string} [key] - The unique key of this Scene. Must be unique within the entire Game instance.
+ * @property {K} [key] - The unique key of this Scene. Must be unique within the entire Game instance.
  * @property {boolean} [active=false] - Does the Scene start as active or not? An active Scene updates each step.
  * @property {boolean} [visible=true] - Does the Scene start as visible or not? A visible Scene renders each step.
  * @property {(false|Phaser.Types.Loader.FileTypes.PackFileConfig)} [pack=false] - An optional Loader Packfile to be loaded before the Scene begins.

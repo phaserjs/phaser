@@ -17,6 +17,9 @@ var Systems = require('./Systems');
  * @memberof Phaser
  * @constructor
  * @since 3.0.0
+ * 
+ * @generic {string=string} K
+ * @genericUse {K | Phaser.Types.Scenes.SettingsConfig.<K>} - [config]
  *
  * @param {(string|Phaser.Types.Scenes.SettingsConfig)} config - Scene specific configuration settings.
  */
