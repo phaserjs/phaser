@@ -569,14 +569,12 @@ var Path = new Class({
     },
 
     /**
-     * Returns the defined starting point of the Path.
-     *
-     * This is not necessarily equal to the starting point of the first Curve if it differs from {@link startPoint}.
+     * Get a sequence of points on the path.
      *
      * @method Phaser.Curves.Path#getPoints
      * @since 3.0.0
      *
-     * @param {integer} [divisions=12] - The number of points to divide the path in to.
+     * @param {integer} [divisions=12] - The number of divisions per resolution per curve.
      *
      * @return {Phaser.Math.Vector2[]} An array of Vector2 objects that containing the points along the Path.
      */
@@ -626,7 +624,7 @@ var Path = new Class({
 
     /**
      * Returns a randomly chosen point anywhere on the path. This follows the same rules as `getPoint` in that it may return a point on any Curve inside this path.
-     * 
+     *
      * When calling this method multiple times, the points are not guaranteed to be equally spaced spatially.
      *
      * @method Phaser.Curves.Path#getRandomPoint
@@ -647,7 +645,7 @@ var Path = new Class({
 
     /**
      * Divides this Path into a set of equally spaced points,
-     * 
+     *
      * The resulting points are equally spaced with respect to the points' position on the path, but not necessarily equally spaced spatially.
      *
      * @method Phaser.Curves.Path#getSpacedPoints
@@ -741,7 +739,7 @@ var Path = new Class({
 
     /**
      * Creates a "gap" in this path from the path's current end point to the given coordinates.
-     * 
+     *
      * After calling this function, this Path's end point will be equal to the given coordinates
      *
      * @method Phaser.Curves.Path#moveTo
