@@ -295,6 +295,8 @@ var Curve = new Class({
      * @method Phaser.Curves.Curve#getPoints
      * @since 3.0.0
      *
+     * @generic {Phaser.Math.Vector2[]} O - [out,$return]
+     *
      * @param {integer} divisions - The number of evenly spaced points from the curve to return. If falsy, step param will be used to calculate the number of points.
      * @param {number} step - Step between points. Used to calculate the number of points to return when divisions is falsy. Ignored if divisions is positive.     
      * @param {(array|Phaser.Math.Vector2[])} [out] - An optional array to store the points in.
