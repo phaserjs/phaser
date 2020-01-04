@@ -188,6 +188,8 @@ var ScenePlugin = new Class({
     /**
      * Shutdown this Scene and run the given one.
      *
+     * This will happen at the next Scene Manager update, not immediately.
+     *
      * @method Phaser.Scenes.ScenePlugin#start
      * @since 3.0.0
      *
@@ -208,6 +210,8 @@ var ScenePlugin = new Class({
 
     /**
      * Restarts this Scene.
+     *
+     * This will happen at the next Scene Manager update, not immediately.
      *
      * @method Phaser.Scenes.ScenePlugin#restart
      * @since 3.4.0
@@ -444,6 +448,8 @@ var ScenePlugin = new Class({
     /**
      * Launch the given Scene and run it in parallel with this one.
      *
+     * This will happen at the next Scene Manager update, not immediately.
+     *
      * @method Phaser.Scenes.ScenePlugin#launch
      * @since 3.0.0
      *
@@ -464,6 +470,8 @@ var ScenePlugin = new Class({
 
     /**
      * Runs the given Scene, but does not change the state of this Scene.
+     *
+     * This will happen at the next Scene Manager update, not immediately.
      *
      * If the given Scene is paused, it will resume it. If sleeping, it will wake it.
      * If not running at all, it will be started.
@@ -492,6 +500,8 @@ var ScenePlugin = new Class({
     /**
      * Pause the Scene - this stops the update step from happening but it still renders.
      *
+     * This will happen at the next Scene Manager update, not immediately.
+     *
      * @method Phaser.Scenes.ScenePlugin#pause
      * @since 3.0.0
      *
@@ -511,6 +521,8 @@ var ScenePlugin = new Class({
 
     /**
      * Resume the Scene - starts the update loop again.
+     *
+     * This will happen at the next Scene Manager update, not immediately.
      *
      * @method Phaser.Scenes.ScenePlugin#resume
      * @since 3.0.0
@@ -532,6 +544,8 @@ var ScenePlugin = new Class({
     /**
      * Makes the Scene sleep (no update, no render) but doesn't shutdown.
      *
+     * This will happen at the next Scene Manager update, not immediately.
+     *
      * @method Phaser.Scenes.ScenePlugin#sleep
      * @since 3.0.0
      *
@@ -552,6 +566,8 @@ var ScenePlugin = new Class({
     /**
      * Makes the Scene wake-up (starts update and render)
      *
+     * This will happen at the next Scene Manager update, not immediately.
+     *
      * @method Phaser.Scenes.ScenePlugin#wake
      * @since 3.0.0
      *
@@ -571,11 +587,8 @@ var ScenePlugin = new Class({
 
     /**
      * Makes this Scene sleep then starts the Scene given.
-     * 
-     * No checks are made to see if an instance of the given Scene is already running.
-     * Because Scenes in Phaser are non-exclusive, you are allowed to run multiple
-     * instances of them _at the same time_. This means, calling this function
-     * may launch another instance of the requested Scene if it's already running.
+     *
+     * This will happen at the next Scene Manager update, not immediately.
      *
      * @method Phaser.Scenes.ScenePlugin#switch
      * @since 3.0.0
@@ -596,6 +609,8 @@ var ScenePlugin = new Class({
 
     /**
      * Shutdown the Scene, clearing display list, timers, etc.
+     *
+     * This happens at the next Scene Manager update, not immediately.
      *
      * @method Phaser.Scenes.ScenePlugin#stop
      * @since 3.0.0
@@ -814,7 +829,7 @@ var ScenePlugin = new Class({
      * The Scene is removed from the local scenes array, it's key is cleared from the keys
      * cache and Scene.Systems.destroy is then called on it.
      *
-     * If the SceneManager is processing the Scenes when this method is called it wil
+     * If the SceneManager is processing the Scenes when this method is called it will
      * queue the operation for the next update sequence.
      *
      * @method Phaser.Scenes.ScenePlugin#remove

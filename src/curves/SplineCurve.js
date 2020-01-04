@@ -13,7 +13,7 @@ var Vector2 = require('../math/Vector2');
 
 /**
  * @classdesc
- * [description]
+ * Create a smooth 2d spline curve from a series of points.
  *
  * @class Spline
  * @extends Phaser.Curves.Curve
@@ -21,7 +21,7 @@ var Vector2 = require('../math/Vector2');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Math.Vector2[]} [points] - [description]
+ * @param {(Phaser.Math.Vector2[]|number[]|number[][])} [points] - The points that configure the curve.
  */
 var SplineCurve = new Class({
 
@@ -36,7 +36,7 @@ var SplineCurve = new Class({
         Curve.call(this, 'SplineCurve');
 
         /**
-         * [description]
+         * The Vector2 points that configure the curve.
          *
          * @name Phaser.Curves.Spline#points
          * @type {Phaser.Math.Vector2[]}
@@ -49,12 +49,12 @@ var SplineCurve = new Class({
     },
 
     /**
-     * [description]
+     * Add a list of points to the current list of Vector2 points of the curve.
      *
      * @method Phaser.Curves.Spline#addPoints
      * @since 3.0.0
      *
-     * @param {(Phaser.Math.Vector2[]|number[]|number[][])} points - [description]
+     * @param {(Phaser.Math.Vector2[]|number[]|number[][])} points - The points that configure the curve.
      *
      * @return {Phaser.Curves.Spline} This curve object.
      */
@@ -89,15 +89,15 @@ var SplineCurve = new Class({
     },
 
     /**
-     * [description]
+     * Add a point to the current list of Vector2 points of the curve.
      *
      * @method Phaser.Curves.Spline#addPoint
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {number} x - The x coordinate of this curve
+     * @param {number} y - The y coordinate of this curve
      *
-     * @return {Phaser.Math.Vector2} [description]
+     * @return {Phaser.Math.Vector2} The new Vector2 added to the curve
      */
     addPoint: function (x, y)
     {
@@ -176,7 +176,7 @@ var SplineCurve = new Class({
     },
 
     /**
-     * [description]
+     * Exports a JSON object containing this curve data.
      *
      * @method Phaser.Curves.Spline#toJSON
      * @since 3.0.0
@@ -202,14 +202,14 @@ var SplineCurve = new Class({
 });
 
 /**
- * [description]
+ * Imports a JSON object containing this curve data.
  *
  * @function Phaser.Curves.Spline.fromJSON
  * @since 3.0.0
  *
  * @param {Phaser.Types.Curves.JSONCurve} data - The JSON object containing this curve data.
  *
- * @return {Phaser.Curves.Spline} [description]
+ * @return {Phaser.Curves.Spline} The spline curve created.
  */
 SplineCurve.fromJSON = function (data)
 {
