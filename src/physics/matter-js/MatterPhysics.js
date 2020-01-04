@@ -374,6 +374,16 @@ var MatterPhysics = new Class({
          */
         this.verts = Vertices;
 
+        /**
+         * An internal temp vector used for velocity and force calculations.
+         *
+         * @name Phaser.Physics.Matter.MatterPhysics#_tempVec2
+         * @type {MatterJS.Vector}
+         * @private
+         * @since 3.22.0
+         */
+        this._tempVec2 = Vector.create();
+
         //  Matter plugins
 
         if (GetValue(this.config, 'plugins.collisionevents', true))
@@ -1045,6 +1055,182 @@ var MatterPhysics = new Class({
         }
 
         return output;
+    },
+
+    /**
+     * Sets both the horizontal and vertical linear velocity of the physics bodies.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#setVelocity
+     * @since 3.22.0
+     *
+     * @param {(MatterJS.Body|MatterJS.Body[])} bodies - Either a single Body, or an array of bodies to update. If falsey it will use all bodies in the world.
+     * @param {number} x - The horizontal linear velocity value.
+     * @param {number} y - The vertical linear velocity value.
+     *
+     * @return {this} This Matter Physics instance.
+     */
+    setVelocity: function (bodies, x, y)
+    {
+        bodies = this.getMatterBodies(bodies);
+
+        var vec2 = this._tempVec2;
+
+        vec2.x = x;
+        vec2.y = y;
+
+        bodies.forEach(function (body)
+        {
+            Body.setVelocity(body, vec2);
+        });
+
+        return this;
+    },
+
+    /**
+     * Sets just the horizontal linear velocity of the physics bodies.
+     * The vertical velocity of the body is unchanged.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#setVelocity
+     * @since 3.22.0
+     *
+     * @param {(MatterJS.Body|MatterJS.Body[])} bodies - Either a single Body, or an array of bodies to update. If falsey it will use all bodies in the world.
+     * @param {number} x - The horizontal linear velocity value.
+     *
+     * @return {this} This Matter Physics instance.
+     */
+    setVelocityX: function (bodies, x)
+    {
+        bodies = this.getMatterBodies(bodies);
+
+        var vec2 = this._tempVec2;
+
+        vec2.x = x;
+
+        bodies.forEach(function (body)
+        {
+            vec2.y = body.velocity.y;
+            Body.setVelocity(body, vec2);
+        });
+
+        return this;
+    },
+
+    /**
+     * Sets just the vertical linear velocity of the physics bodies.
+     * The horizontal velocity of the body is unchanged.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#setVelocity
+     * @since 3.22.0
+     *
+     * @param {(MatterJS.Body|MatterJS.Body[])} bodies - Either a single Body, or an array of bodies to update. If falsey it will use all bodies in the world.
+     * @param {number} y - The vertical linear velocity value.
+     *
+     * @return {this} This Matter Physics instance.
+     */
+    setVelocityY: function (bodies, y)
+    {
+        bodies = this.getMatterBodies(bodies);
+
+        var vec2 = this._tempVec2;
+
+        vec2.y = y;
+
+        bodies.forEach(function (body)
+        {
+            vec2.x = body.velocity.x;
+            Body.setVelocity(body, vec2);
+        });
+
+        return this;
+    },
+
+    /**
+     * Sets the angular velocity of the bodies instantly.
+     * Position, angle, force etc. are unchanged.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#setAngularVelocity
+     * @since 3.22.0
+     *
+     * @param {(MatterJS.Body|MatterJS.Body[])} bodies - Either a single Body, or an array of bodies to update. If falsey it will use all bodies in the world.
+     * @param {number} value - The angular velocity.
+     *
+     * @return {this} This Matter Physics instance.
+     */
+    setAngularVelocity: function (bodies, value)
+    {
+        bodies = this.getMatterBodies(bodies);
+
+        bodies.forEach(function (body)
+        {
+            Body.setAngularVelocity(body, value);
+        });
+
+        return this;
+    },
+
+    /**
+     * Applies a force to a body, at the bodies current position, including resulting torque.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#applyForce
+     * @since 3.22.0
+     *
+     * @param {(MatterJS.Body|MatterJS.Body[])} bodies - Either a single Body, or an array of bodies to update. If falsey it will use all bodies in the world.
+     * @param {Phaser.Math.Vector2Like} force - A Vector that specifies the force to apply.
+     *
+     * @return {this} This Matter Physics instance.
+     */
+    applyForce: function (bodies, force)
+    {
+        bodies = this.getMatterBodies(bodies);
+
+        var vec2 = this._tempVec2;
+
+        bodies.forEach(function (body)
+        {
+            vec2.x = body.position.x;
+            vec2.y = body.position.y;
+
+            Body.applyForce(body, vec2, force);
+        });
+
+        return this;
+    },
+
+    /**
+     * Apply a force to a body based on the given angle and speed.
+     * If no angle is given, the current body angle is used.
+     * 
+     * Use very small speed values, such as 0.1, depending on the mass and required velocity.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#applyForceFromAngle
+     * @since 3.22.0
+     *
+     * @param {(MatterJS.Body|MatterJS.Body[])} bodies - Either a single Body, or an array of bodies to update. If falsey it will use all bodies in the world.
+     * @param {number} speed - A speed value to be applied to a directional force.
+     * @param {number} [angle] - The angle, in radians, to apply the force from. Leave undefined to use the current body angle.
+     *
+     * @return {this} This Matter Physics instance.
+     */
+    applyForceFromAngle: function (bodies, speed, angle)
+    {
+        bodies = this.getMatterBodies(bodies);
+
+        var vec2 = this._tempVec2;
+
+        bodies.forEach(function (body)
+        {
+            if (angle === undefined)
+            {
+                angle = body.angle;
+            }
+
+            vec2.x = speed * Math.cos(angle);
+            vec2.y = speed * Math.sin(angle);
+
+            Body.applyForce(body, { x: body.position.x, y: body.position.y }, vec2);
+        });
+
+        return this;
     },
 
     /**
