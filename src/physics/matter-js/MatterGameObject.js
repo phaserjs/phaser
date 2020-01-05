@@ -24,7 +24,11 @@ function hasGetterOrSetter (def)
 }
 
 /**
- * [description]
+ * A Matter Game Object is a generic object that allows you to combine any Phaser Game Object,
+ * including those you have extended or created yourself, with all of the Matter Components.
+ * 
+ * This enables you to use component methods such as `setVelocity` or `isSensor` directly from
+ * this Game Object.
  *
  * @function Phaser.Physics.Matter.MatterGameObject
  * @since 3.3.0
