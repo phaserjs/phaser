@@ -39,7 +39,7 @@ var Vertices = require('./lib/geometry/Vertices');
  * @extends Phaser.Physics.Matter.Components.Sleep
  * @extends Phaser.Physics.Matter.Components.Static
  *
- * @param {Phaser.Physics.Matter.World} world - [description]
+ * @param {Phaser.Physics.Matter.World} world - The Matter world instance this body belongs to.
  * @param {Phaser.Tilemaps.Tile} tile - The target tile that should have a Matter body.
  * @param {Phaser.Types.Physics.Matter.MatterTileOptions} [options] - Options to be used when creating the Matter body.
  */
