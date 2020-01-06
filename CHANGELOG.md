@@ -11,6 +11,7 @@
 * `showJoint` - Render all world constraints to the Graphics object?
 * `showInternalEdges` - When rendering bodies, render the internal edges as well?
 * `showConvexHulls` - When rendering polygon bodies, render the convex hull as well?
+* `showBodyPosition` - Render the position of non-static bodies?
 * `renderFill` - Render the bodies using a fill color.
 * `renderLine`- Render the bodies using a line stroke.
 * `fillColor` - The color value of the fill when rendering dynamic bodies.
@@ -32,6 +33,8 @@
 * `anchorColor` - The color value of constraint anchors.
 * `anchorSize` - The size of the circles drawn as the constraint anchors.
 * `hullColor` - The color value of hulls when `showConvexHulls` is set.
+* `positionSize` - The size of the rectangle drawn when rendering the body position.
+* `positionColor` - The color value of the rectangle drawn when rendering the body position.
 * The `debug` property in the Matter World Config is now a `MatterDebugConfig` option instead of a boolean. However, if a boolean is given, it will use the default debug config values.
 * The following `MatterWorldConfig` options have now been removed: `debugShowBody`, `debugShowStaticBody`, `debugBodyColor`, `debugBodyFillColor`, `debugStaticBodyColor`, `debugShowJoint`, `debugJointColor`, `debugWireframes`, `debugShowInternalEdges`, `debugShowConvexHulls`, `debugConvexHullColor` and `debugShowSleeping`. These can all be set via the new `MatterDebugConfig` object instead.
 * The object `World.defaults` has been removed. Defaults are now access via `World.debugDefaults`.
