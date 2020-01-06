@@ -8,6 +8,7 @@
  * @property {boolean} [showJoint=true] - Render all world constraints to the Graphics object?
  * @property {boolean} [showInternalEdges=false] - When rendering bodies, render the internal edges as well?
  * @property {boolean} [showConvexHulls=false] - When rendering polygon bodies, render the convex hull as well?
+ * @property {boolean} [showBodyPosition=true] - Render the position of non-static bodies?
  * @property {boolean} [renderFill=false] - Render the bodies using a fill color.
  * @property {boolean} [renderLine=true] - Render the bodies using a line stroke.
  * @property {number} [fillColor=0x106909] - The color value of the fill when rendering dynamic bodies.
@@ -20,6 +21,8 @@
  * @property {number} [staticBodySleepOpacity=0.7] - The amount to multiply the opacity of sleeping static bodies by.
  * @property {number} [sleepFillColor=0x464646] - The color value of the fill when rendering sleeping dynamic bodies.
  * @property {number} [sleepLineColor=0x999a99] - The color value of the line stroke when rendering sleeping dynamic bodies.
+ * @property {number} [positionSize=4] - The size of the rectangle drawn when rendering the body position.
+ * @property {number} [positionColor=0xe042da] - The color value of the rectangle drawn when rendering the body position.
  * @property {number} [jointColor=0xe0e042] - The color value of joints when `showJoint` is set.
  * @property {number} [jointLineOpacity=1] - The line opacity when rendering joints, a value between 0 and 1.
  * @property {number} [jointLineThickness=2] - The line thickness when rendering joints.
