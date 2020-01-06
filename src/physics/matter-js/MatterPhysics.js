@@ -1197,6 +1197,44 @@ var MatterPhysics = new Class({
     },
 
     /**
+     * Applies a force to a body, from the given world position, including resulting torque.
+     * If no angle is given, the current body angle is used.
+     * 
+     * Use very small speed values, such as 0.1, depending on the mass and required velocity.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#applyForceFromPosition
+     * @since 3.22.0
+     *
+     * @param {(MatterJS.Body|MatterJS.Body[])} bodies - Either a single Body, or an array of bodies to update. If falsey it will use all bodies in the world.
+     * @param {Phaser.Math.Vector2Like} position - A Vector that specifies the world-space position to apply the force at.
+     * @param {number} speed - A speed value to be applied to a directional force.
+     * @param {number} [angle] - The angle, in radians, to apply the force from. Leave undefined to use the current body angle.
+     *
+     * @return {this} This Matter Physics instance.
+     */
+    applyForceFromPosition: function (bodies, position, speed, angle)
+    {
+        bodies = this.getMatterBodies(bodies);
+
+        var vec2 = this._tempVec2;
+
+        bodies.forEach(function (body)
+        {
+            if (angle === undefined)
+            {
+                angle = body.angle;
+            }
+
+            vec2.x = speed * Math.cos(angle);
+            vec2.y = speed * Math.sin(angle);
+
+            Body.applyForce(body, position, vec2);
+        });
+
+        return this;
+    },
+
+    /**
      * Apply a force to a body based on the given angle and speed.
      * If no angle is given, the current body angle is used.
      * 
