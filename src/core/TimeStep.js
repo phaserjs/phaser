@@ -9,16 +9,6 @@ var GetValue = require('../utils/object/GetValue');
 var NOOP = require('../utils/NOOP');
 var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 
-//  Frame Rate config
-//      fps: {
-//          min: 10,
-//          target: 60,
-//          forceSetTimeOut: false,
-//          deltaHistory: 10,
-//          panicMax: 120,
-//          smoothStep: true
-//     }
-
 // http://www.testufo.com/#test=animation-time-graph
 
 /**
