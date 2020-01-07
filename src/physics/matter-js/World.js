@@ -241,14 +241,6 @@ var World = new Class({
          * @since 3.22.0
          */
         this.debugConfig = {
-
-            showCollisions: true,
-            showSeparations: true,
-            showIds: true,
-            showShadows: true,
-            showVertexNumbers: true,
-            showMousePosition: true,
-
             showAxes: GetFastValue(debugConfig, 'showAxes', false),
             showAngleIndicator: GetFastValue(debugConfig, 'showAngleIndicator', false),
             angleColor: GetFastValue(debugConfig, 'angleColor', 0xe81153),
@@ -261,6 +253,12 @@ var World = new Class({
 
             showVelocity: GetFastValue(debugConfig, 'showVelocity', false),
             velocityColor: GetFastValue(debugConfig, 'velocityColor', 0x00aeef),
+
+            showCollisions: GetFastValue(debugConfig, 'showCollisions', false),
+            collisionColor: GetFastValue(debugConfig, 'collisionColor', 0xf5950c),
+
+            showSeparations: GetFastValue(debugConfig, 'showSeparations', false),
+            separationColor: GetFastValue(debugConfig, 'separationColor', 0xffa500),
 
             showBody: GetFastValue(debugConfig, 'showBody', true),
             showStaticBody: GetFastValue(debugConfig, 'showStaticBody', true),
@@ -1319,6 +1317,16 @@ var World = new Class({
             this.renderBodyBounds(bodies, graphics, config.boundsColor, 0.2);
         }
 
+        if (config.showBody || config.showStaticBody)
+        {
+            this.renderBodies(bodies);
+        }
+
+        if (config.showJoint)
+        {
+            this.renderJoints();
+        }
+
         if (config.showAxes || config.showAngleIndicator)
         {
             this.renderBodyAxes(bodies, graphics, config.showAxes, config.angleColor, 0.5);
@@ -1329,14 +1337,14 @@ var World = new Class({
             this.renderBodyVelocity(bodies, graphics, config.velocityColor, 1, 2);
         }
 
-        if (config.showBody || config.showStaticBody)
+        if (config.showSeparations)
         {
-            this.renderBodies(bodies);
+            this.renderSeparations(engine.pairs.list, graphics, config.separationColor);
         }
 
-        if (config.showJoint)
+        if (config.showCollisions)
         {
-            this.renderJoints();
+            this.renderCollisions(engine.pairs.list, graphics, config.collisionColor);
         }
     },
 
@@ -1381,6 +1389,169 @@ var World = new Class({
                 grid.bucketWidth,
                 grid.bucketHeight
             );
+        }
+
+        return this;
+    },
+
+    /**
+     * Renders the list of Pair separations to the given Graphics instance.
+     * 
+     * The debug renderer calls this method if the `showSeparations` config value is set.
+     * 
+     * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
+     * you wish to render the Grid to your own Graphics instance.
+     * 
+     * @method Phaser.Physics.Matter.World#renderSeparations
+     * @since 3.22.0
+     * 
+     * @param {MatterJS.Pair[]} pairs - An array of Matter Pairs to be rendered.
+     * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
+     * @param {number} lineColor - The line color.
+     * 
+     * @return {this} This Matter World instance for method chaining.
+     */
+    renderSeparations: function (pairs, graphics, lineColor)
+    {
+        graphics.lineStyle(1, lineColor, 1);
+
+        for (var i = 0; i < pairs.length; i++)
+        {
+            var pair = pairs[i];
+
+            if (!pair.isActive)
+            {
+                continue;
+            }
+
+            var collision = pair.collision;
+            var bodyA = collision.bodyA;
+            var bodyB = collision.bodyB;
+            var posA = bodyA.position;
+            var posB = bodyB.position;
+            var penetration = collision.penetration;
+
+            var k = (!bodyA.isStatic && !bodyB.isStatic) ? 4 : 1;
+            
+            if (bodyB.isStatic)
+            {
+                k = 0;
+            }
+
+            graphics.lineBetween(
+                posB.x,
+                posB.y,
+                posB.x - (penetration.x * k),
+                posB.y - (penetration.y * k)
+            );
+
+            k = (!bodyA.isStatic && !bodyB.isStatic) ? 4 : 1;
+
+            if (bodyA.isStatic)
+            {
+                k = 0;
+            }
+
+            graphics.lineBetween(
+                posA.x,
+                posA.y,
+                posA.x - (penetration.x * k),
+                posA.y - (penetration.y * k)
+            );
+        }
+
+        return this;
+    },
+
+    /**
+     * Renders the list of collision points and normals to the given Graphics instance.
+     * 
+     * The debug renderer calls this method if the `showCollisions` config value is set.
+     * 
+     * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
+     * you wish to render the Grid to your own Graphics instance.
+     * 
+     * @method Phaser.Physics.Matter.World#renderCollisions
+     * @since 3.22.0
+     * 
+     * @param {MatterJS.Pair[]} pairs - An array of Matter Pairs to be rendered.
+     * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
+     * @param {number} lineColor - The line color.
+     * 
+     * @return {this} This Matter World instance for method chaining.
+     */
+    renderCollisions: function (pairs, graphics, lineColor)
+    {
+        graphics.lineStyle(1, lineColor, 0.5);
+        graphics.fillStyle(lineColor, 1);
+
+        var i;
+        var pair;
+
+        //  Collision Positions
+
+        for (i = 0; i < pairs.length; i++)
+        {
+            pair = pairs[i];
+
+            if (!pair.isActive)
+            {
+                continue;
+            }
+
+            for (var j = 0; j < pair.activeContacts.length; j++)
+            {
+                var contact = pair.activeContacts[j];
+                var vertex = contact.vertex;
+
+                graphics.fillRect(vertex.x - 2, vertex.y - 2, 5, 5);
+            }
+        }
+
+        //  Collision Normals
+
+        for (i = 0; i < pairs.length; i++)
+        {
+            pair = pairs[i];
+
+            if (!pair.isActive)
+            {
+                continue;
+            }
+
+            var collision = pair.collision;
+            var contacts = pair.activeContacts;
+
+            if (contacts.length > 0)
+            {
+                var normalPosX = contacts[0].vertex.x;
+                var normalPosY = contacts[0].vertex.y;
+
+                if (contacts.length === 2)
+                {
+                    normalPosX = (contacts[0].vertex.x + contacts[1].vertex.x) / 2;
+                    normalPosY = (contacts[0].vertex.y + contacts[1].vertex.y) / 2;
+                }
+
+                if (collision.bodyB === collision.supports[0].body || collision.bodyA.isStatic)
+                {
+                    graphics.lineBetween(
+                        normalPosX - collision.normal.x * 8,
+                        normalPosY - collision.normal.y * 8,
+                        normalPosX,
+                        normalPosY
+                    );
+                }
+                else
+                {
+                    graphics.lineBetween(
+                        normalPosX + collision.normal.x * 8,
+                        normalPosY + collision.normal.y * 8,
+                        normalPosX,
+                        normalPosY
+                    );
+                }
+            }
         }
 
         return this;
