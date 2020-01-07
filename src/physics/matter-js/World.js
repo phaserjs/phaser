@@ -608,6 +608,11 @@ var World = new Class({
 
         if (this.drawDebug)
         {
+            MatterEvents.on(world, 'compositeModified', function (composite)
+            {
+                _this.setCompositeRenderStyle(composite);
+            });
+
             MatterEvents.on(world, 'beforeAdd', function (event)
             {
                 var objects = [].concat(event.object);

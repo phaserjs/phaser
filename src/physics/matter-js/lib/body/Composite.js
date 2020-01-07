@@ -52,6 +52,9 @@ var Body = require('./Body');
      * @param {boolean} [updateChildren=false]
      */
     Composite.setModified = function(composite, isModified, updateParents, updateChildren) {
+
+        Events.trigger(composite, 'compositeModified', composite);
+
         composite.isModified = isModified;
 
         if (updateParents && composite.parent) {
