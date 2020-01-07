@@ -16,6 +16,8 @@
  * @property {boolean} [showAxes=false] - Render all of the body axes?
  * @property {boolean} [showAngleIndicator=false] - Render just the single body angle?
  * @property {boolean} [angleColor=0xe81153] - The color of the body angle / axes lines.
+ * @property {boolean} [showVelocity=false] - Render the velocity of the bodies in the world?
+ * @property {boolean} [velocityColor=0x00aeef] - The color of the body velocity line.
  * @property {boolean} [renderFill=false] - Render the bodies using a fill color.
  * @property {boolean} [renderLine=true] - Render the bodies using a line stroke.
  * @property {number} [fillColor=0x106909] - The color value of the fill when rendering dynamic bodies.

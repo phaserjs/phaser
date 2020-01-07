@@ -242,7 +242,6 @@ var World = new Class({
          */
         this.debugConfig = {
 
-            showVelocity: true,
             showCollisions: true,
             showSeparations: true,
             showIds: true,
@@ -259,6 +258,9 @@ var World = new Class({
 
             showBounds: GetFastValue(debugConfig, 'showBounds', false),
             boundsColor: GetFastValue(debugConfig, 'boundsColor', 0xffffff),
+
+            showVelocity: GetFastValue(debugConfig, 'showVelocity', false),
+            velocityColor: GetFastValue(debugConfig, 'velocityColor', 0x00aeef),
 
             showBody: GetFastValue(debugConfig, 'showBody', true),
             showStaticBody: GetFastValue(debugConfig, 'showStaticBody', true),
@@ -1322,6 +1324,11 @@ var World = new Class({
             this.renderBodyAxes(bodies, graphics, config.showAxes, config.angleColor, 0.5);
         }
 
+        if (config.showVelocity)
+        {
+            this.renderBodyVelocity(bodies, graphics, config.velocityColor, 1, 2);
+        }
+
         if (config.showBody || config.showStaticBody)
         {
             this.renderBodies(bodies);
@@ -1499,6 +1506,48 @@ var World = new Class({
                     }
                 }
             }
+        }
+
+        return this;
+    },
+
+    /**
+     * Renders a velocity indicator for an array of Bodies, to the given Graphics instance.
+     * 
+     * The debug renderer calls this method if the `showVelocity` config value is set.
+     * 
+     * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
+     * you wish to render bounds to your own Graphics instance.
+     *
+     * @method Phaser.Physics.Matter.World#renderBodyVelocity
+     * @since 3.22.0
+     * 
+     * @param {array} bodies - An array of bodies from the localWorld.
+     * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
+     * @param {number} lineColor - The line color.
+     * @param {number} lineOpacity - The line opacity, between 0 and 1.
+     * @param {number} lineThickness - The line thickness.
+     */
+    renderBodyVelocity: function (bodies, graphics, lineColor, lineOpacity, lineThickness)
+    {
+        graphics.lineStyle(lineThickness, lineColor, lineOpacity);
+
+        for (var i = 0; i < bodies.length; i++)
+        {
+            var body = bodies[i];
+
+            //  1) Don't show invisible bodies
+            if (!body.render.visible)
+            {
+                continue;
+            }
+
+            graphics.lineBetween(
+                body.position.x,
+                body.position.y,
+                body.position.x + (body.position.x - body.positionPrev.x) * 2,
+                body.position.y + (body.position.y - body.positionPrev.y) * 2
+            );
         }
 
         return this;
