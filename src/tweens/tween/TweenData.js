@@ -96,6 +96,7 @@ var TweenData = function (target, index, key, getEnd, getStart, getActive, ease,
         //  Ease Value Data:
 
         start: 0,
+        previous: 0,
         current: 0,
         end: 0,
 
