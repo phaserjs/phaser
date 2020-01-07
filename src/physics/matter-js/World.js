@@ -248,6 +248,7 @@ var World = new Class({
             showJoint: GetFastValue(debugConfig, 'showJoint', true),
             showInternalEdges: GetFastValue(debugConfig, 'showInternalEdges', false),
             showConvexHulls: GetFastValue(debugConfig, 'showConvexHulls', false),
+            showSensors: GetFastValue(debugConfig, 'showSensors', true),
 
             renderFill: GetFastValue(debugConfig, 'renderFill', false),
             renderLine: GetFastValue(debugConfig, 'renderLine', true),
@@ -264,6 +265,9 @@ var World = new Class({
             staticBodySleepOpacity: GetFastValue(debugConfig, 'staticBodySleepOpacity', 0.7),
             sleepFillColor: GetFastValue(debugConfig, 'sleepFillColor', 0x464646),
             sleepLineColor: GetFastValue(debugConfig, 'sleepLineColor', 0x999a99),
+
+            sensorFillColor: GetFastValue(debugConfig, 'sensorFillColor', 0x0d177b),
+            sensorLineColor: GetFastValue(debugConfig, 'sensorLineColor', 0x1327e4),
 
             positionSize: GetFastValue(debugConfig, 'positionSize', 4),
             positionColor: GetFastValue(debugConfig, 'positionColor', 0xe042da),
@@ -1417,6 +1421,9 @@ var World = new Class({
 
         var config = this.debugConfig;
 
+        var sensorFillColor = config.sensorFillColor;
+        var sensorLineColor = config.sensorLineColor;
+
         //  Handle compound parts
         var parts = body.parts;
         var partsLength = parts.length;
@@ -1427,7 +1434,7 @@ var World = new Class({
             var render = part.render;
             var opacity = render.opacity;
 
-            if (!render.visible || opacity === 0)
+            if (!render.visible || opacity === 0 || (part.isSensor && !config.showSensors))
             {
                 continue;
             }
@@ -1437,14 +1444,29 @@ var World = new Class({
 
             graphics.beginPath();
 
-            if (fillColor !== null)
+            if (part.isSensor)
             {
-                graphics.fillStyle(fillColor, fillOpacity * opacity);
+                if (fillColor !== null)
+                {
+                    graphics.fillStyle(sensorFillColor, fillOpacity * opacity);
+                }
+    
+                if (lineColor !== null)
+                {
+                    graphics.lineStyle(lineThickness, sensorLineColor, lineOpacity * opacity);
+                }
             }
-
-            if (lineColor !== null)
+            else
             {
-                graphics.lineStyle(lineThickness, lineColor, lineOpacity * opacity);
+                if (fillColor !== null)
+                {
+                    graphics.fillStyle(fillColor, fillOpacity * opacity);
+                }
+    
+                if (lineColor !== null)
+                {
+                    graphics.lineStyle(lineThickness, lineColor, lineOpacity * opacity);
+                }
             }
 
             if (circleRadius)
