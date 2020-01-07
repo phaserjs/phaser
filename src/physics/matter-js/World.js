@@ -86,6 +86,10 @@ var World = new Class({
         {
             this.setGravity(gravity.x, gravity.y, gravity.scale);
         }
+        else if (gravity === false)
+        {
+            this.setGravity(0, 0, 0);
+        }
 
         /**
          * An object containing the 4 wall bodies that bound the physics world.
