@@ -304,7 +304,7 @@ var World = new Class({
             springColor: GetFastValue(debugConfig, 'springColor', 0xe042e0),
 
             anchorColor: GetFastValue(debugConfig, 'anchorColor', 0xefefef),
-            anchorSize: GetFastValue(debugConfig, 'anchorSize', 6),
+            anchorSize: GetFastValue(debugConfig, 'anchorSize', 4),
 
             showConvexHulls: GetFastValue(debugConfig, 'showConvexHulls', false),
             hullColor: GetFastValue(debugConfig, 'hullColor', 0xd703d0)

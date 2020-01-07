@@ -45,7 +45,7 @@
  * @property {number} [pinColor=0x42e0e0] - The color value of the circles drawn when rendering pin constraints.
  * @property {number} [springColor=0xe042e0] - The color value of spring constraints.
  * @property {number} [anchorColor=0xefefef] - The color value of constraint anchors.
- * @property {number} [anchorSize=6] - The size of the circles drawn as the constraint anchors.
+ * @property {number} [anchorSize=4] - The size of the circles drawn as the constraint anchors.
  * @property {boolean} [showConvexHulls=false] - When rendering polygon bodies, render the convex hull as well?
  * @property {number} [hullColor=0xd703d0] - The color value of hulls when `showConvexHulls` is set.
  */
