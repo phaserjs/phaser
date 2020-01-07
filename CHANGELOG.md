@@ -15,6 +15,11 @@
 * `showSensors` - Render sensors?
 * `showBroadphase` - Render the broadphase grid behind the bodies?
 * `broadphaseColor` - The color of the broadphase grid lines.
+* `showBounds` - Render the bounds of the bodies?
+* `boundsColor` - The color of the body bounds lines.
+* `showAxes` - Render all of the body axes?
+* `showAngleIndicator` - Render just a single axis indicator per body?
+* `angleColor` - The color of the body axis lines.
 * `renderFill` - Render the bodies using a fill color.
 * `renderLine`- Render the bodies using a line stroke.
 * `fillColor` - The color value of the fill when rendering dynamic bodies.
@@ -47,6 +52,8 @@
 * `World.renderConstraint` is a new method that will render a single Matter Constraint, such as a pin or a spring, to the given Graphics object. This is used internally during debug rendering but is also public. This allows you to control which constraints are rendered and to which Graphics object, should you wish to use them in-game and not just during debugging.
 * `World.renderConvexHull` is a new method that will render the convex hull of a single Matter Body, to the given Graphics object. This is used internally during debug rendering but is also public. This allows you to control which hulls are rendered and to which Graphics object, should you wish to use them in-game and not just during debugging.
 * `World.renderGrid` is a new method that will render the broadphase Grid to the given graphics instance.
+* `World.renderBodyBounds` is a new method that will render the bounds of all the given bodies to the given graphics instance.
+* `World.renderBodyAxes` is a new method that will render the axes of all the given bodies to the given graphics instance.
 * `World.renderBodies` has been rewritten to cache commonly-used values and avoid a situation when a single body would be rendered twice.
 * The private method `World.renderConvexHulls` has been removed as it's no longer used internally.
 * The private method `World.renderWireframes` has been removed as it's no longer used internally.
