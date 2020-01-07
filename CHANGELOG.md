@@ -57,6 +57,8 @@
 * `World.renderBodyBounds` is a new method that will render the bounds of all the given bodies to the given graphics instance.
 * `World.renderBodyAxes` is a new method that will render the axes of all the given bodies to the given graphics instance.
 * `World.renderBodyVelocity` is a new method that will render a velocity line for all the given bodies to the given graphics instance.
+* `World.renderSeparations` is a new method that will render the separations in the current pairs list to the given graphics instance.
+* `World.renderCollisions` is a new method that will render the collision points and normals in the current pairs list to the given graphics instance.
 * `World.renderBodies` has been rewritten to cache commonly-used values and avoid a situation when a single body would be rendered twice.
 * The private method `World.renderConvexHulls` has been removed as it's no longer used internally.
 * The private method `World.renderWireframes` has been removed as it's no longer used internally.
