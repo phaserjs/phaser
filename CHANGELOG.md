@@ -178,6 +178,8 @@
 * The `Container` Game Object now uses the AlphaSingle component, allowing you to uniformly set the alpha of the container, rather than a quad alpha, which never worked consistently across Container children. Fix #4916 (thanks @laineus)
 * The `DOMElement` Game Object now uses the AlphaSingle component, allowing you to uniformly set the alpha of the element, rather than a quad alpha, which never worked for these objects.
 * The `Graphics` Game Object now uses the AlphaSingle component, allowing you to uniformly set the alpha of the element, rather than a quad alpha, which never worked for these objects.
+* `TweenData` has a new property called `previous` which holds the eased property value prior to the update.
+* The `TWEEN_UPDATE` event now sends two new parameters to the handler: `current` and `previous` which contain the current and previous property values.
 
 ### Bug Fixes
 
