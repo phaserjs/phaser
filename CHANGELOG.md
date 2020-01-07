@@ -20,6 +20,8 @@
 * `showAxes` - Render all of the body axes?
 * `showAngleIndicator` - Render just a single axis indicator per body?
 * `angleColor` - The color of the body axis lines.
+* `showVelocity` - Render a velocity line for the bodies?
+* `velocityColor` - The color of the body velocity line.
 * `renderFill` - Render the bodies using a fill color.
 * `renderLine`- Render the bodies using a line stroke.
 * `fillColor` - The color value of the fill when rendering dynamic bodies.
@@ -54,6 +56,7 @@
 * `World.renderGrid` is a new method that will render the broadphase Grid to the given graphics instance.
 * `World.renderBodyBounds` is a new method that will render the bounds of all the given bodies to the given graphics instance.
 * `World.renderBodyAxes` is a new method that will render the axes of all the given bodies to the given graphics instance.
+* `World.renderBodyVelocity` is a new method that will render a velocity line for all the given bodies to the given graphics instance.
 * `World.renderBodies` has been rewritten to cache commonly-used values and avoid a situation when a single body would be rendered twice.
 * The private method `World.renderConvexHulls` has been removed as it's no longer used internally.
 * The private method `World.renderWireframes` has been removed as it's no longer used internally.
