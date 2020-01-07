@@ -151,6 +151,7 @@
 * `MatterPhysics.applyForce` is a new method that applies a force to a body, at the bodies current position, including resulting torque. This can be used on all Matter bodies, not just those created via the factory.
 * `MatterPhysics.applyForceFromPosition` is a new method that applies a force to a body from the given world position, including resulting torque. If no angle is given, the current body angle is used. This can be used on all Matter bodies, not just those created via the factory.
 * You can now set `gravity: false` in your Matter Config and it will reset gravity from the defaults to zero.
+* The internal Matter `Composite.setModified` function will now emit a `compositeModified` event, which the Matter World listens for, if debug draw is enabled, so it can update the composite children render styles.
 
 ### New Features
 
