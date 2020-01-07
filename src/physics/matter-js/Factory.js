@@ -389,13 +389,13 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#newtonsCradle
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} number - [description]
-     * @param {number} size - [description]
-     * @param {number} length - [description]
+     * @param {number} x - The horizontal position of the start of the cradle.
+     * @param {number} y - The vertical position of the start of the cradle.
+     * @param {number} number - The number of balls in the cradle.
+     * @param {number} size - The radius of each ball in the cradle.
+     * @param {number} length - The length of the 'string' the balls hang from.
      *
-     * @return {MatterJS.Composite} A new composite newtonsCradle body.
+     * @return {MatterJS.Composite} A Newton's cradle composite.
      */
     newtonsCradle: function (x, y, number, size, length)
     {
