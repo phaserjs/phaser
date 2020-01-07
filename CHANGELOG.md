@@ -5,48 +5,52 @@
 ### Matter Physics Updates
 
 * `MatterDebugConfig` is a new configuration object that contains all of the following new Matter debug settings:
-* `showBody` - Render the dynamic bodies in the world to the Graphics object?
-* `showStaticBody` - Render the static bodies in the world to the Graphics object?
-* `showSleeping` - Render any sleeping bodies (dynamic or static) in the world to the Graphics object?
-* `showJoint` - Render all world constraints to the Graphics object?
-* `showInternalEdges` - When rendering bodies, render the internal edges as well?
-* `showConvexHulls` - When rendering polygon bodies, render the convex hull as well?
-* `showPositions` - Render the position of non-static bodies?
-* `showSensors` - Render sensors?
-* `showBroadphase` - Render the broadphase grid behind the bodies?
-* `broadphaseColor` - The color of the broadphase grid lines.
-* `showBounds` - Render the bounds of the bodies?
-* `boundsColor` - The color of the body bounds lines.
-* `showAxes` - Render all of the body axes?
-* `showAngleIndicator` - Render just a single axis indicator per body?
-* `angleColor` - The color of the body axis lines.
-* `showVelocity` - Render a velocity line for the bodies?
-* `velocityColor` - The color of the body velocity line.
-* `renderFill` - Render the bodies using a fill color.
+* `showAxes`- Render all of the body axes?
+* `showAngleIndicator`- Render just a single body axis?
+* `angleColor`- The color of the body angle / axes lines.
+* `showBroadphase`- Render the broadphase grid?
+* `broadphaseColor`- The color of the broadphase grid.
+* `showBounds`- Render the bounds of the bodies in the world?
+* `boundsColor`- The color of the body bounds.
+* `showVelocity`- Render the velocity of the bodies in the world?
+* `velocityColor`- The color of the body velocity line.
+* `showCollisions`- Render the collision points and normals for colliding pairs.
+* `collisionColor`- The color of the collision points.
+* `showSeparation`- Render lines showing the separation between bodies.
+* `separationColor`- The color of the body separation line.
+* `showBody`- Render the dynamic bodies in the world to the Graphics object?
+* `showStaticBody`- Render the static bodies in the world to the Graphics object?
+* `showInternalEdges`- When rendering bodies, render the internal edges as well?
+* `renderFill`- Render the bodies using a fill color.
 * `renderLine`- Render the bodies using a line stroke.
-* `fillColor` - The color value of the fill when rendering dynamic bodies.
-* `fillOpacity` - The opacity of the fill when rendering dynamic bodies, a value between 0 and 1.
-* `lineColor` - The color value of the line stroke when rendering dynamic bodies.
-* `lineOpacity` - The opacity of the line when rendering dynamic bodies, a value between 0 and 1.
-* `lineThickness` - If rendering lines, the thickness of the line.
-* `staticFillColor` - The color value of the fill when rendering static bodies.
-* `staticLineColor` - The color value of the line stroke when rendering static bodies.
-* `staticBodySleepOpacity` - The amount to multiply the opacity of sleeping static bodies by.
-* `sleepFillColor` - The color value of the fill when rendering sleeping dynamic bodies.
-* `sleepLineColor` - The color value of the line stroke when rendering sleeping dynamic bodies.
-* `sensorFillColor` - The color value of the fill when rendering sensor bodies.
-* `sensorLineColor` - The color value of the line stroke when rendering sensor bodies.
-* `jointColor` - The color value of joints when `showJoint` is set.
-* `jointLineOpacity` - The line opacity when rendering joints, a value between 0 and 1.
-* `jointLineThickness` - The line thickness when rendering joints.
-* `pinSize` - The size of the circles drawn when rendering pin constraints.
-* `pinColor` - The color value of the circles drawn when rendering pin constraints.
-* `springColor` - The color value of spring constraints.
-* `anchorColor` - The color value of constraint anchors.
-* `anchorSize` - The size of the circles drawn as the constraint anchors.
-* `hullColor` - The color value of hulls when `showConvexHulls` is set.
-* `positionSize` - The size of the rectangle drawn when rendering the body position.
-* `positionColor` - The color value of the rectangle drawn when rendering the body position.
+* `fillColor`- The color value of the fill when rendering dynamic bodies.
+* `fillOpacity`- The opacity of the fill when rendering dynamic bodies, a value between 0 and 1.
+* `lineColor`- The color value of the line stroke when rendering dynamic bodies.
+* `lineOpacity`- The opacity of the line when rendering dynamic bodies, a value between 0 and 1.
+* `lineThickness`- If rendering lines, the thickness of the line.
+* `staticFillColor`- The color value of the fill when rendering static bodies.
+* `staticLineColor`- The color value of the line stroke when rendering static bodies.
+* `showSleeping`- Render any sleeping bodies (dynamic or static) in the world to the Graphics object?
+* `staticBodySleepOpacity`] - The amount to multiply the opacity of sleeping static bodies by.
+* `sleepFillColor`- The color value of the fill when rendering sleeping dynamic bodies.
+* `sleepLineColor`- The color value of the line stroke when rendering sleeping dynamic bodies.
+* `showSensors`- Render bodies or body parts that are flagged as being a sensor?
+* `sensorFillColor`- The fill color when rendering body sensors.
+* `sensorLineColor`- The line color when rendering body sensors.
+* `showPositions`- Render the position of non-static bodies?
+* `positionSize`- The size of the rectangle drawn when rendering the body position.
+* `positionColor`- The color value of the rectangle drawn when rendering the body position.
+* `showJoint`- Render all world constraints to the Graphics object?
+* `jointColor`- The color value of joints when `showJoint` is set.
+* `jointLineOpacity`- The line opacity when rendering joints, a value between 0 and 1.
+* `jointLineThickness`- The line thickness when rendering joints.
+* `pinSize`- The size of the circles drawn when rendering pin constraints.
+* `pinColor`- The color value of the circles drawn when rendering pin constraints.
+* `springColor`- The color value of spring constraints.
+* `anchorColor`- The color value of constraint anchors.
+* `anchorSize`- The size of the circles drawn as the constraint anchors.
+* `showConvexHulls`- When rendering polygon bodies, render the convex hull as well?
+* `hullColor`- The color value of hulls when `showConvexHulls` is set.
 * The `debug` property in the Matter World Config is now a `MatterDebugConfig` option instead of a boolean. However, if a boolean is given, it will use the default debug config values.
 * The following `MatterWorldConfig` options have now been removed: `debugShowBody`, `debugShowStaticBody`, `debugBodyColor`, `debugBodyFillColor`, `debugStaticBodyColor`, `debugShowJoint`, `debugJointColor`, `debugWireframes`, `debugShowInternalEdges`, `debugShowConvexHulls`, `debugConvexHullColor` and `debugShowSleeping`. These can all be set via the new `MatterDebugConfig` object instead.
 * The object `World.defaults` has been removed. Defaults are now access via `World.debugDefaults`.
@@ -145,7 +149,7 @@
 * `MatterPhysics.setVelocityY` is a new method that will set the vertical linear velocity of the given physics bodies. This can be used on all Matter bodies, not just those created via the factory.
 * `MatterPhysics.setAngularVelocity` is a new method that will set the angular velocity of the given physics bodies. This can be used on all Matter bodies, not just those created via the factory.
 * `MatterPhysics.applyForce` is a new method that applies a force to a body, at the bodies current position, including resulting torque. This can be used on all Matter bodies, not just those created via the factory.
-* `MatterPhysics.applyForceFromAngle` is a new method that applies a force to a body from the given angle, at the bodies current position, including resulting torque. This can be used on all Matter bodies, not just those created via the factory.
+* `MatterPhysics.applyForceFromPosition` is a new method that applies a force to a body from the given world position, including resulting torque. If no angle is given, the current body angle is used. This can be used on all Matter bodies, not just those created via the factory.
 
 ### New Features
 
