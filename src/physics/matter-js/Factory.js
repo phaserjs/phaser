@@ -350,14 +350,14 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#chain
      * @since 3.0.0
      *
-     * @param {MatterJS.Composite} composite - [description]
-     * @param {number} xOffsetA - [description]
-     * @param {number} yOffsetA - [description]
-     * @param {number} xOffsetB - [description]
-     * @param {number} yOffsetB - [description]
-     * @param {object} options - [description]
+     * @param {MatterJS.Composite} composite - The composite in which all bodies will be chained together sequentially.
+     * @param {number} xOffsetA - The horizontal offset of the BodyA constraint. This is a percentage based on the body size, not a world position.
+     * @param {number} yOffsetA - The vertical offset of the BodyA constraint. This is a percentage based on the body size, not a world position.
+     * @param {number} xOffsetB - The horizontal offset of the BodyB constraint. This is a percentage based on the body size, not a world position.
+     * @param {number} yOffsetB - The vertical offset of the BodyB constraint. This is a percentage based on the body size, not a world position.
+     * @param {object} options - An optional Constraint configuration object passed to the newly created constraints.
      *
-     * @return {MatterJS.Composite} A new composite containing objects chained together with constraints.
+     * @return {MatterJS.Composite} The original composite that was passed to this method.
      */
     chain: function (composite, xOffsetA, yOffsetA, xOffsetB, yOffsetB, options)
     {
@@ -370,13 +370,13 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#mesh
      * @since 3.0.0
      *
-     * @param {MatterJS.Composite} composite - [description]
-     * @param {number} columns - [description]
-     * @param {number} rows - [description]
-     * @param {boolean} crossBrace - [description]
-     * @param {object} options - [description]
+     * @param {MatterJS.Composite} composite - The composite in which all bodies will be chained together.
+     * @param {number} columns - The number of columns in the mesh.
+     * @param {number} rows - The number of rows in the mesh.
+     * @param {boolean} crossBrace - Create cross braces for the mesh as well?
+     * @param {object} options - An optional Constraint configuration object passed to the newly created constraints.
      *
-     * @return {MatterJS.Composite} The composite containing objects meshed together with constraints.
+     * @return {MatterJS.Composite} The original composite that was passed to this method.
      */
     mesh: function (composite, columns, rows, crossBrace, options)
     {
