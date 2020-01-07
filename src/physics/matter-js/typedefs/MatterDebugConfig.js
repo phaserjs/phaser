@@ -8,7 +8,9 @@
  * @property {boolean} [showJoint=true] - Render all world constraints to the Graphics object?
  * @property {boolean} [showInternalEdges=false] - When rendering bodies, render the internal edges as well?
  * @property {boolean} [showConvexHulls=false] - When rendering polygon bodies, render the convex hull as well?
- * @property {boolean} [showBodyPosition=true] - Render the position of non-static bodies?
+ * @property {boolean} [showPositions=true] - Render the position of non-static bodies?
+ * @property {boolean} [showBroadphase=false] - Render the broadphase grid?
+ * @property {boolean} [broadphaseColor=0xffb400] - The color of the broadphase grid.
  * @property {boolean} [renderFill=false] - Render the bodies using a fill color.
  * @property {boolean} [renderLine=true] - Render the bodies using a line stroke.
  * @property {number} [fillColor=0x106909] - The color value of the fill when rendering dynamic bodies.

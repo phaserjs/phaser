@@ -244,11 +244,25 @@ var World = new Class({
             showBody: GetFastValue(debugConfig, 'showBody', true),
             showStaticBody: GetFastValue(debugConfig, 'showStaticBody', true),
             showSleeping: GetFastValue(debugConfig, 'showSleeping', false),
-            showBodyPosition: GetFastValue(debugConfig, 'showBodyPosition', true),
+            showPositions: GetFastValue(debugConfig, 'showPositions', true),
             showJoint: GetFastValue(debugConfig, 'showJoint', true),
             showInternalEdges: GetFastValue(debugConfig, 'showInternalEdges', false),
             showConvexHulls: GetFastValue(debugConfig, 'showConvexHulls', false),
             showSensors: GetFastValue(debugConfig, 'showSensors', true),
+
+            showBroadphase: GetFastValue(debugConfig, 'showBroadphase', false),
+            broadphaseColor: GetFastValue(debugConfig, 'broadphaseColor', 0xffb400),
+
+            showBounds: true,
+            showVelocity: true,
+            showCollisions: true,
+            showSeparations: true,
+            showAxes: true,
+            showAngleIndicator: true,
+            showIds: true,
+            showShadows: true,
+            showVertexNumbers: true,
+            showMousePosition: true,
 
             renderFill: GetFastValue(debugConfig, 'renderFill', false),
             renderLine: GetFastValue(debugConfig, 'renderLine', true),
@@ -1276,6 +1290,8 @@ var World = new Class({
     postUpdate: function ()
     {
         var config = this.debugConfig;
+        var engine = this.engine;
+        var graphics = this.debugGraphic;
 
         var showBody = config.showBody;
         var showStaticBody = config.showStaticBody;
@@ -1288,6 +1304,11 @@ var World = new Class({
 
         this.debugGraphic.clear();
 
+        if (config.showBroadphase && engine.broadphase.controller)
+        {
+            this.renderGrid(engine.broadphase, graphics, config.broadphaseColor, 0.2);
+        }
+
         var bodies = Composite.allBodies(this.localWorld);
 
         this.renderBodies(bodies);
@@ -1296,6 +1317,50 @@ var World = new Class({
         {
             this.renderJoints();
         }
+    },
+
+    /**
+     * Renders the Engine Broadphase Controller Grid to the given Graphics instance.
+     * 
+     * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
+     * you wish to render the Grid to your own Graphics instance.
+     * 
+     * @method Phaser.Physics.Matter.World#renderGrid
+     * @since 3.22.0
+     * 
+     * @param {MatterJS.Grid} grid - The Matter Grid to be rendered.
+     * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
+     * @param {number} lineColor - The line color.
+     * @param {number} lineOpacity - The line opacity, between 0 and 1.
+     * 
+     * @return {this} This Matter World instance for method chaining.
+     */
+    renderGrid: function (grid, graphics, lineColor, lineOpacity)
+    {
+        graphics.lineStyle(1, lineColor, lineOpacity);
+
+        var bucketKeys = Common.keys(grid.buckets);
+
+        for (var i = 0; i < bucketKeys.length; i++)
+        {
+            var bucketId = bucketKeys[i];
+
+            if (grid.buckets[bucketId].length < 2)
+            {
+                continue;
+            }
+
+            var region = bucketId.split(/C|R/);
+
+            graphics.strokeRect(
+                parseInt(region[1], 10) * grid.bucketWidth,
+                parseInt(region[2], 10) * grid.bucketHeight,
+                grid.bucketWidth,
+                grid.bucketHeight
+            );
+        }
+
+        return this;
     },
 
     /**
@@ -1515,7 +1580,7 @@ var World = new Class({
             }
         }
 
-        if (config.showBodyPosition && !body.isStatic)
+        if (config.showPositions && !body.isStatic)
         {
             var px = body.position.x;
             var py = body.position.y;
