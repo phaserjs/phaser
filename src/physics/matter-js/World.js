@@ -241,28 +241,28 @@ var World = new Class({
          * @since 3.22.0
          */
         this.debugConfig = {
-            showBody: GetFastValue(debugConfig, 'showBody', true),
-            showStaticBody: GetFastValue(debugConfig, 'showStaticBody', true),
-            showSleeping: GetFastValue(debugConfig, 'showSleeping', false),
-            showPositions: GetFastValue(debugConfig, 'showPositions', true),
-            showJoint: GetFastValue(debugConfig, 'showJoint', true),
-            showInternalEdges: GetFastValue(debugConfig, 'showInternalEdges', false),
-            showConvexHulls: GetFastValue(debugConfig, 'showConvexHulls', false),
-            showSensors: GetFastValue(debugConfig, 'showSensors', true),
 
-            showBroadphase: GetFastValue(debugConfig, 'showBroadphase', false),
-            broadphaseColor: GetFastValue(debugConfig, 'broadphaseColor', 0xffb400),
-
-            showBounds: true,
             showVelocity: true,
             showCollisions: true,
             showSeparations: true,
-            showAxes: true,
-            showAngleIndicator: true,
             showIds: true,
             showShadows: true,
             showVertexNumbers: true,
             showMousePosition: true,
+
+            showAxes: GetFastValue(debugConfig, 'showAxes', false),
+            showAngleIndicator: GetFastValue(debugConfig, 'showAngleIndicator', false),
+            angleColor: GetFastValue(debugConfig, 'angleColor', 0xe81153),
+
+            showBroadphase: GetFastValue(debugConfig, 'showBroadphase', false),
+            broadphaseColor: GetFastValue(debugConfig, 'broadphaseColor', 0xffb400),
+
+            showBounds: GetFastValue(debugConfig, 'showBounds', false),
+            boundsColor: GetFastValue(debugConfig, 'boundsColor', 0xffffff),
+
+            showBody: GetFastValue(debugConfig, 'showBody', true),
+            showStaticBody: GetFastValue(debugConfig, 'showStaticBody', true),
+            showInternalEdges: GetFastValue(debugConfig, 'showInternalEdges', false),
 
             renderFill: GetFastValue(debugConfig, 'renderFill', false),
             renderLine: GetFastValue(debugConfig, 'renderLine', true),
@@ -276,16 +276,20 @@ var World = new Class({
             staticFillColor: GetFastValue(debugConfig, 'staticFillColor', 0x0d177b),
             staticLineColor: GetFastValue(debugConfig, 'staticLineColor', 0x1327e4),
 
+            showSleeping: GetFastValue(debugConfig, 'showSleeping', false),
             staticBodySleepOpacity: GetFastValue(debugConfig, 'staticBodySleepOpacity', 0.7),
             sleepFillColor: GetFastValue(debugConfig, 'sleepFillColor', 0x464646),
             sleepLineColor: GetFastValue(debugConfig, 'sleepLineColor', 0x999a99),
 
+            showSensors: GetFastValue(debugConfig, 'showSensors', true),
             sensorFillColor: GetFastValue(debugConfig, 'sensorFillColor', 0x0d177b),
             sensorLineColor: GetFastValue(debugConfig, 'sensorLineColor', 0x1327e4),
 
+            showPositions: GetFastValue(debugConfig, 'showPositions', true),
             positionSize: GetFastValue(debugConfig, 'positionSize', 4),
             positionColor: GetFastValue(debugConfig, 'positionColor', 0xe042da),
 
+            showJoint: GetFastValue(debugConfig, 'showJoint', true),
             jointColor: GetFastValue(debugConfig, 'jointColor', 0xe0e042),
             jointLineOpacity: GetFastValue(debugConfig, 'jointLineOpacity', 1),
             jointLineThickness: GetFastValue(debugConfig, 'jointLineThickness', 2),
@@ -298,6 +302,7 @@ var World = new Class({
             anchorColor: GetFastValue(debugConfig, 'anchorColor', 0xefefef),
             anchorSize: GetFastValue(debugConfig, 'anchorSize', 6),
 
+            showConvexHulls: GetFastValue(debugConfig, 'showConvexHulls', false),
             hullColor: GetFastValue(debugConfig, 'hullColor', 0xd703d0)
         };
 
@@ -1289,18 +1294,16 @@ var World = new Class({
      */
     postUpdate: function ()
     {
+        if (!this.drawDebug)
+        {
+            return;
+        }
+
         var config = this.debugConfig;
         var engine = this.engine;
         var graphics = this.debugGraphic;
 
-        var showBody = config.showBody;
-        var showStaticBody = config.showStaticBody;
-        var showJoint = config.showJoint;
-
-        if (!this.drawDebug || (!showBody && !showStaticBody && !showJoint))
-        {
-            return;
-        }
+        var bodies = Composite.allBodies(this.localWorld);
 
         this.debugGraphic.clear();
 
@@ -1309,11 +1312,22 @@ var World = new Class({
             this.renderGrid(engine.broadphase, graphics, config.broadphaseColor, 0.2);
         }
 
-        var bodies = Composite.allBodies(this.localWorld);
+        if (config.showBounds)
+        {
+            this.renderBodyBounds(bodies, graphics, config.boundsColor, 0.2);
+        }
 
-        this.renderBodies(bodies);
+        if (config.showAxes || config.showAngleIndicator)
+        {
+            this.renderBodyAxes(bodies, graphics, config.showAxes, config.angleColor, 0.5);
+        }
 
-        if (showJoint)
+        if (config.showBody || config.showStaticBody)
+        {
+            this.renderBodies(bodies);
+        }
+
+        if (config.showJoint)
         {
             this.renderJoints();
         }
@@ -1321,6 +1335,8 @@ var World = new Class({
 
     /**
      * Renders the Engine Broadphase Controller Grid to the given Graphics instance.
+     * 
+     * The debug renderer calls this method if the `showBroadphase` config value is set.
      * 
      * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
      * you wish to render the Grid to your own Graphics instance.
@@ -1358,6 +1374,131 @@ var World = new Class({
                 grid.bucketWidth,
                 grid.bucketHeight
             );
+        }
+
+        return this;
+    },
+
+    /**
+     * Renders the bounds of an array of Bodies to the given Graphics instance.
+     * 
+     * The debug renderer calls this method if the `showBounds` config value is set.
+     * 
+     * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
+     * you wish to render bounds to your own Graphics instance.
+     *
+     * @method Phaser.Physics.Matter.World#renderBodyBounds
+     * @since 3.22.0
+     * 
+     * @param {array} bodies - An array of bodies from the localWorld.
+     * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
+     * @param {number} lineColor - The line color.
+     * @param {number} lineOpacity - The line opacity, between 0 and 1.
+     */
+    renderBodyBounds: function (bodies, graphics, lineColor, lineOpacity)
+    {
+        graphics.lineStyle(1, lineColor, lineOpacity);
+
+        for (var i = 0; i < bodies.length; i++)
+        {
+            var body = bodies[i];
+
+            //  1) Don't show invisible bodies
+            if (!body.render.visible)
+            {
+                continue;
+            }
+
+            var parts = body.parts;
+
+            for (var j = parts.length > 1 ? 1 : 0; j < parts.length; j++)
+            {
+                var part = parts[j];
+
+                graphics.strokeRect(
+                    part.bounds.min.x,
+                    part.bounds.min.y,
+                    part.bounds.max.x - part.bounds.min.x,
+                    part.bounds.max.y - part.bounds.min.y
+                );
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Renders either all axes, or a single axis indicator, for an array of Bodies, to the given Graphics instance.
+     * 
+     * The debug renderer calls this method if the `showAxes` or `showAngleIndicator` config values are set.
+     * 
+     * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
+     * you wish to render bounds to your own Graphics instance.
+     *
+     * @method Phaser.Physics.Matter.World#renderBodyAxes
+     * @since 3.22.0
+     * 
+     * @param {array} bodies - An array of bodies from the localWorld.
+     * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
+     * @param {boolean} showAxes - If `true` it will render all body axes. If `false` it will render a single axis indicator.
+     * @param {number} lineColor - The line color.
+     * @param {number} lineOpacity - The line opacity, between 0 and 1.
+     */
+    renderBodyAxes: function (bodies, graphics, showAxes, lineColor, lineOpacity)
+    {
+        graphics.lineStyle(1, lineColor, lineOpacity);
+
+        for (var i = 0; i < bodies.length; i++)
+        {
+            var body = bodies[i];
+            var parts = body.parts;
+
+            //  1) Don't show invisible bodies
+            if (!body.render.visible)
+            {
+                continue;
+            }
+
+            var part;
+            var j;
+            var k;
+
+            if (showAxes)
+            {
+                for (j = parts.length > 1 ? 1 : 0; j < parts.length; j++)
+                {
+                    part = parts[j];
+    
+                    for (k = 0; k < part.axes.length; k++)
+                    {
+                        var axis = part.axes[k];
+
+                        graphics.lineBetween(
+                            part.position.x,
+                            part.position.y,
+                            part.position.x + axis.x * 20,
+                            part.position.y + axis.y * 20
+                        );
+                    }
+                }
+            }
+            else
+            {
+                for (j = parts.length > 1 ? 1 : 0; j < parts.length; j++)
+                {
+                    part = parts[j];
+    
+                    for (k = 0; k < part.axes.length; k++)
+                    {
+                        graphics.lineBetween(
+                            part.position.x,
+                            part.position.y,
+                            (part.vertices[0].x + part.vertices[part.vertices.length - 1].x) / 2,
+                            (part.vertices[0].y + part.vertices[part.vertices.length - 1].y) / 2
+                        );
+                    }
+                }
+            }
         }
 
         return this;
