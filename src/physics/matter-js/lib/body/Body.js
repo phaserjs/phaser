@@ -82,6 +82,7 @@ var Axes = require('../geometry/Axes');
             axes: null,
             area: 0,
             mass: 0,
+            inverseMass: 0,
             inertia: 0,
             _original: null,
             render: {
@@ -1267,14 +1268,6 @@ var Axes = require('../geometry/Axes');
      *
      * @property gameObject
      * @type Phaser.GameObjects.GameObject
-     */
-
-    /**
-     * The scale of the Body when Body.setScale was called. Not used internally by Matter.
-     *
-     * @property scale
-     * @type vector
-     * @default { x: 1, y: 1 }
      */
 
     /**
