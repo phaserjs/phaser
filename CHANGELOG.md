@@ -4,6 +4,7 @@
 
 ### Matter Physics Updates
 
+* Matter Physics now has 100% JSDoc coverage! Woohoo :)
 * `MatterDebugConfig` is a new configuration object that contains all of the following new Matter debug settings:
 * `showAxes`- Render all of the body axes?
 * `showAngleIndicator`- Render just a single body axis?
@@ -162,6 +163,7 @@
 * `MatterCollisionFilter` is a new type def that contains all of the collision configuration properties. This is now used through-out the JSDocs to aid in code-completion.
 * `MatterConstraintConfig` is a new type def that contains all of the constraint configuration properties. This is now used through-out the JSDocs to aid in code-completion.
 * `MatterConstraintRenderConfig` is a new type def that contains all of the Constraint debug rendering configuration properties. This is now used through-out the JSDocs to aid in code-completion.
+* `MatterSetBodyConfig` is a new type def that contains all of the Constraint debug rendering configuration properties. This is now used through-out the JSDocs to aid in code-completion.
 
 ### New Features
 
