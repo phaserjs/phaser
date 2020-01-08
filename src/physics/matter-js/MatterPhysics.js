@@ -1090,7 +1090,7 @@ var MatterPhysics = new Class({
      * Sets just the horizontal linear velocity of the physics bodies.
      * The vertical velocity of the body is unchanged.
      *
-     * @method Phaser.Physics.Matter.MatterPhysics#setVelocity
+     * @method Phaser.Physics.Matter.MatterPhysics#setVelocityX
      * @since 3.22.0
      *
      * @param {(MatterJS.Body|MatterJS.Body[])} bodies - Either a single Body, or an array of bodies to update. If falsey it will use all bodies in the world.
@@ -1119,7 +1119,7 @@ var MatterPhysics = new Class({
      * Sets just the vertical linear velocity of the physics bodies.
      * The horizontal velocity of the body is unchanged.
      *
-     * @method Phaser.Physics.Matter.MatterPhysics#setVelocity
+     * @method Phaser.Physics.Matter.MatterPhysics#setVelocityY
      * @since 3.22.0
      *
      * @param {(MatterJS.Body|MatterJS.Body[])} bodies - Either a single Body, or an array of bodies to update. If falsey it will use all bodies in the world.
@@ -1175,7 +1175,7 @@ var MatterPhysics = new Class({
      * @since 3.22.0
      *
      * @param {(MatterJS.Body|MatterJS.Body[])} bodies - Either a single Body, or an array of bodies to update. If falsey it will use all bodies in the world.
-     * @param {Phaser.Math.Vector2Like} force - A Vector that specifies the force to apply.
+     * @param {Phaser.Types.Math.Vector2Like} force - A Vector that specifies the force to apply.
      *
      * @return {this} This Matter Physics instance.
      */
@@ -1206,7 +1206,7 @@ var MatterPhysics = new Class({
      * @since 3.22.0
      *
      * @param {(MatterJS.Body|MatterJS.Body[])} bodies - Either a single Body, or an array of bodies to update. If falsey it will use all bodies in the world.
-     * @param {Phaser.Math.Vector2Like} position - A Vector that specifies the world-space position to apply the force at.
+     * @param {Phaser.Types.Math.Vector2Like} position - A Vector that specifies the world-space position to apply the force at.
      * @param {number} speed - A speed value to be applied to a directional force.
      * @param {number} [angle] - The angle, in radians, to apply the force from. Leave undefined to use the current body angle.
      *

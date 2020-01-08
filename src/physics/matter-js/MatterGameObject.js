@@ -35,7 +35,7 @@ function hasGetterOrSetter (def)
  *
  * @param {Phaser.Physics.Matter.World} world - The Matter world to add the body to.
  * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that will have the Matter body applied to it.
- * @param {(object|MatterJS.Body)} [options] - A Matter Body configuration object, or an instance of a Matter Body.
+ * @param {(Phaser.Types.Physics.Matter.MatterBodyConfig|MatterJS.Body)} [options] - A Matter Body configuration object, or an instance of a Matter Body.
  * @param {boolean} [addToWorld=true] - Should the newly created body be immediately added to the World?
  *
  * @return {Phaser.GameObjects.GameObject} The Game Object that was created with the Matter body.
