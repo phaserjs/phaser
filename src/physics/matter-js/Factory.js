@@ -9,6 +9,7 @@ var Body = require('./lib/body/Body');
 var Class = require('../../utils/Class');
 var Composites = require('./lib/factory/Composites');
 var Constraint = require('./lib/constraint/Constraint');
+var Svg = require('./lib/geometry/Svg');
 var MatterGameObject = require('./MatterGameObject');
 var MatterImage = require('./MatterImage');
 var MatterSprite = require('./MatterSprite');
@@ -181,6 +182,52 @@ var Factory = new Class({
         var body = Bodies.fromVertices(x, y, vertexSets, options, flagInternal, removeCollinear, minimumArea);
 
         this.world.add(body);
+
+        return body;
+    },
+
+    /**
+     * Creates a body using the supplied body data, as provided by an SVG file.
+     *
+     * @method Phaser.Physics.Matter.Factory#fromSVG
+     * @since 3.22.0
+     *
+     * @param {number} x - The X coordinate of the body.
+     * @param {number} y - The Y coordinate of the body.
+     * @param {object} xml - The SVG Path data.
+     * @param {number} [scale=1] - Scale the vertices by this amount after creation.
+     * @param {object} [options] - Optional Matter body configuration object, as passed to `Body.create`.
+     * @param {boolean} [addToWorld=true] - Should the newly created body be immediately added to the World?
+     *
+     * @return {MatterJS.Body} A Matter JS Body.
+     */
+    fromSVG: function (x, y, xml, scale, options, addToWorld)
+    {
+        if (scale === undefined) { scale = 1; }
+        if (options === undefined) { options = {}; }
+        if (addToWorld === undefined) { addToWorld = true; }
+
+        var path = xml.getElementsByTagName('path');
+        var vertexSets = [];
+
+        for (var i = 0; i < path.length; i++)
+        {
+            var points = Svg.pathToVertices(path[i], 30);
+
+            if (scale !== 1)
+            {
+                Vertices.scale(points, scale, scale);
+            }
+
+            vertexSets.push(points);
+        }
+
+        var body = Bodies.fromVertices(x, y, vertexSets, options);
+
+        if (addToWorld)
+        {
+            this.world.add(body);
+        }
 
         return body;
     },
