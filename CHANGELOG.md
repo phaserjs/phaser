@@ -164,6 +164,7 @@
 * `MatterConstraintConfig` is a new type def that contains all of the constraint configuration properties. This is now used through-out the JSDocs to aid in code-completion.
 * `MatterConstraintRenderConfig` is a new type def that contains all of the Constraint debug rendering configuration properties. This is now used through-out the JSDocs to aid in code-completion.
 * `MatterSetBodyConfig` is a new type def that contains all of the Constraint debug rendering configuration properties. This is now used through-out the JSDocs to aid in code-completion.
+* `MatterPhysics.getConstraintLength` is a new method that will return the length of the given constraint, as this is something you cannot get from the constraint properties directly.
 
 ### New Features
 
