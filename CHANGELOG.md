@@ -160,6 +160,8 @@
 * `MatterBodyRenderConfig` is a new type def that contains all of the Body debug rendering configuration properties. This is now used through-out the JSDocs to aid in code-completion.
 * `MatterChamferConfig` is a new type def that contains all of the chamfer configuration properties. This is now used through-out the JSDocs to aid in code-completion.
 * `MatterCollisionFilter` is a new type def that contains all of the collision configuration properties. This is now used through-out the JSDocs to aid in code-completion.
+* `MatterConstraintConfig` is a new type def that contains all of the constraint configuration properties. This is now used through-out the JSDocs to aid in code-completion.
+* `MatterConstraintRenderConfig` is a new type def that contains all of the Constraint debug rendering configuration properties. This is now used through-out the JSDocs to aid in code-completion.
 
 ### New Features
 
