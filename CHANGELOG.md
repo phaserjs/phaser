@@ -153,6 +153,13 @@
 * You can now set `gravity: false` in your Matter Config and it will reset gravity from the defaults to zero.
 * The internal Matter `Composite.setModified` function will now emit a `compositeModified` event, which the Matter World listens for, if debug draw is enabled, so it can update the composite children render styles.
 * `MatterPhysics.fromSVG` is a new method that allows you to create a Body from the given SVG path data.
+* The `Matter.Factory.velocity` method has been removed. Please now use `MatterPhysics.setVelocity` instead.
+* The `Matter.Factory.angularVelocity` method has been removed. Please now use `MatterPhysics.setAngularVelocity` instead.
+* The `Matter.Factory.force` method has been removed. Please now use `MatterPhysics.applyForce` instead.
+* `MatterBodyConfig` is a new type def that contains all of the Body configuration properties. This is now used through-out the JSDocs to aid in code-completion.
+* `MatterBodyRenderConfig` is a new type def that contains all of the Body debug rendering configuration properties. This is now used through-out the JSDocs to aid in code-completion.
+* `MatterChamferConfig` is a new type def that contains all of the chamfer configuration properties. This is now used through-out the JSDocs to aid in code-completion.
+* `MatterCollisionFilter` is a new type def that contains all of the collision configuration properties. This is now used through-out the JSDocs to aid in code-completion.
 
 ### New Features
 
