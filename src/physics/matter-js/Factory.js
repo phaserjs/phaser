@@ -104,8 +104,8 @@ var Factory = new Class({
      *
      * @param {number} x - The X coordinate of the center of the Body.
      * @param {number} y - The Y coordinate of the center of the Body.
-     * @param {number} width - The width of the trapezoid of the Body.
-     * @param {number} height - The height of the trapezoid of the Body.
+     * @param {number} width - The width of the trapezoid Body.
+     * @param {number} height - The height of the trapezoid Body.
      * @param {number} slope - The slope of the trapezoid. 0 creates a rectangle, while 1 creates a triangle. Positive values make the top side shorter, while negative values make the bottom side shorter.
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      *
