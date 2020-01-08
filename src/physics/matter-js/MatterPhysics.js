@@ -13,6 +13,7 @@ var Composite = require('./lib/body/Composite');
 var Composites = require('./lib/factory/Composites');
 var Constraint = require('./lib/constraint/Constraint');
 var Detector = require('./lib/collision/Detector');
+var DistanceBetween = require('../../math/distance/DistanceBetween');
 var Factory = require('./Factory');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
@@ -1269,6 +1270,38 @@ var MatterPhysics = new Class({
         });
 
         return this;
+    },
+
+    /**
+     * Returns the length of the given constraint, which is the distance between the two points.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#getConstraintLength
+     * @since 3.22.0
+     *
+     * @param {MatterJS.Constraint} constraint - The constraint to get the length from.
+     *
+     * @return {number} The length of the constraint.
+     */
+    getConstraintLength: function (constraint)
+    {
+        var aX = constraint.pointA.x;
+        var aY = constraint.pointA.y;
+        var bX = constraint.pointB.x;
+        var bY = constraint.pointB.y;
+
+        if (constraint.bodyA)
+        {
+            aX += constraint.bodyA.position.x;
+            aY += constraint.bodyA.position.y;
+        }
+
+        if (constraint.bodyB)
+        {
+            bX += constraint.bodyB.position.x;
+            bY += constraint.bodyB.position.y;
+        }
+
+        return DistanceBetween(aX, aY, bX, bY);
     },
 
     /**
