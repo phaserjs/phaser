@@ -1304,6 +1304,11 @@ var MatterPhysics = new Class({
         return DistanceBetween(aX, aY, bX, bY);
     },
 
+    // alignBody: function (body, x, y, align)
+    // {
+
+    // },
+
     /**
      * The Scene that owns this plugin is shutting down.
      * We need to kill and reset all internal properties as well as stop listening to Scene events.
