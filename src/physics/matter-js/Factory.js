@@ -19,7 +19,18 @@ var Vertices = require('./lib/geometry/Vertices');
 
 /**
  * @classdesc
- * The Matter Factory can create different types of bodies and them to a physics world.
+ * The Matter Factory is responsible for quickly creating a variety of different types of
+ * bodies, constraints and Game Objects and adding them into the physics world.
+ * 
+ * You access the factory from within a Scene using `add`:
+ * 
+ * ```javascript
+ * this.matter.add.rectangle(x, y, width, height);
+ * ```
+ * 
+ * Use of the Factory is optional. All of the objects it creates can also be created
+ * directly via your own code or constructors. It is provided as a means to keep your
+ * code concise.
  *
  * @class Factory
  * @memberof Phaser.Physics.Matter
@@ -72,7 +83,7 @@ var Factory = new Class({
      * @param {number} y - The Y coordinate of the center of the Body.
      * @param {number} width - The width of the Body.
      * @param {number} height - The height of the Body.
-     * @param {object} options - An object of properties to set on the Body. You can also specify a `chamfer` property to automatically adjust the body.
+     * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      *
      * @return {MatterJS.Body} A Matter JS Body.
      */
@@ -96,7 +107,7 @@ var Factory = new Class({
      * @param {number} width - The width of the trapezoid of the Body.
      * @param {number} height - The height of the trapezoid of the Body.
      * @param {number} slope - The slope of the trapezoid. 0 creates a rectangle, while 1 creates a triangle. Positive values make the top side shorter, while negative values make the bottom side shorter.
-     * @param {object} options - An object of properties to set on the Body. You can also specify a `chamfer` property to automatically adjust the body.
+     * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      *
      * @return {MatterJS.Body} A Matter JS Body.
      */
@@ -118,7 +129,7 @@ var Factory = new Class({
      * @param {number} x - The X coordinate of the center of the Body.
      * @param {number} y - The Y coordinate of the center of the Body.
      * @param {number} radius - The radius of the circle.
-     * @param {object} [options] - An object of properties to set on the Body. You can also specify a `chamfer` property to automatically adjust the body.
+     * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      * @param {number} [maxSides] - The maximum amount of sides to use for the polygon which will approximate this circle.
      *
      * @return {MatterJS.Body} A Matter JS Body.
@@ -142,7 +153,7 @@ var Factory = new Class({
      * @param {number} y - The Y coordinate of the center of the Body.
      * @param {number} sides - The number of sides the polygon will have.
      * @param {number} radius - The "radius" of the polygon, i.e. the distance from its center to any vertex. This is also the radius of its circumcircle.
-     * @param {object} options - An object of properties to set on the Body. You can also specify a `chamfer` property to automatically adjust the body.
+     * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      *
      * @return {MatterJS.Body} A Matter JS Body.
      */
@@ -165,7 +176,7 @@ var Factory = new Class({
      * @param {number} x - The X coordinate of the center of the Body.
      * @param {number} y - The Y coordinate of the center of the Body.
      * @param {(string|array)} vertexSets - [description]
-     * @param {object} [options] - [description]
+     * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      * @param {boolean} [flagInternal=false] - Flag internal edges (coincident part edges)
      * @param {number} [removeCollinear=0.01] - Whether Matter.js will discard collinear edges (to improve performance).
      * @param {number} [minimumArea=10] - During decomposition discard parts that have an area less than this.
@@ -196,7 +207,7 @@ var Factory = new Class({
      * @param {number} y - The Y coordinate of the body.
      * @param {object} xml - The SVG Path data.
      * @param {number} [scale=1] - Scale the vertices by this amount after creation.
-     * @param {object} [options] - Optional Matter body configuration object, as passed to `Body.create`.
+     * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      * @param {boolean} [addToWorld=true] - Should the newly created body be immediately added to the World?
      *
      * @return {MatterJS.Body} A Matter JS Body.
@@ -243,7 +254,7 @@ var Factory = new Class({
      * @param {number} x - The X coordinate of the body.
      * @param {number} y - The Y coordinate of the body.
      * @param {object} data - The body data object as parsed from the JSON body format.
-     * @param {object} [options] - Optional Matter body configuration object, as passed to `Body.create`.
+     * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      * @param {boolean} [addToWorld=true] - Should the newly created body be immediately added to the World?
      *
      * @return {MatterJS.Body} A Matter JS Body.
@@ -310,7 +321,7 @@ var Factory = new Class({
      * @param {number} rows - The number of rows in the grid.
      * @param {number} [columnGap=0] - The distance between each column.
      * @param {number} [rowGap=0] - The distance between each row.
-     * @param {object} [options] - [description]
+     * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      *
      * @return {MatterJS.Composite} A Matter JS Composite Stack.
      */
@@ -459,11 +470,11 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#car
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} height - [description]
-     * @param {number} wheelSize - [description]
+     * @param {number} x - The horizontal position of the car in the world.
+     * @param {number} y - The vertical position of the car in the world.
+     * @param {number} width - The width of the car chasis.
+     * @param {number} height - The height of the car chasis.
+     * @param {number} wheelSize - The radius of the car wheels.
      *
      * @return {MatterJS.Composite} A new composite car body.
      */
@@ -488,7 +499,7 @@ var Factory = new Class({
      * @param {number} rows - The number of rows in the Composite.
      * @param {number} columnGap - The distance between each column.
      * @param {number} rowGap - The distance between each row.
-     * @param {boolean} crossBrace - [description]
+     * @param {boolean} crossBrace - `true` to create cross braces between the bodies, or `false` to create just straight braces.
      * @param {number} particleRadius - The radius of this circlular composite.
      * @param {object} particleOptions - [description]
      * @param {object} constraintOptions - [description]
@@ -654,7 +665,12 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * Creates a Matter Physics Image Game Object.
+     * 
+     * An Image is a light-weight Game Object useful for the display of static images in your game,
+     * such as logos, backgrounds, scenery or other non-animated elements. Images can have input
+     * events and physics bodies, or be tweened, tinted or scrolled. The main difference between an
+     * Image and a Sprite is that you cannot animate an Image as they do not have the Animation component.
      *
      * @method Phaser.Physics.Matter.Factory#image
      * @since 3.0.0
@@ -663,9 +679,9 @@ var Factory = new Class({
      * @param {number} y - The vertical position of this Game Object in the world.
      * @param {string} key - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
      * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with. Set to `null` to skip this value.
-     * @param {object} [options={}] - [description]
+     * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      *
-     * @return {Phaser.Physics.Matter.Image} [description]
+     * @return {Phaser.Physics.Matter.Image} The Matter Image Game Object.
      */
     image: function (x, y, key, frame, options)
     {
@@ -682,8 +698,8 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#tileBody
      * @since 3.0.0
      *
-     * @param {Phaser.Tilemaps.Tile} tile - [description]
-     * @param {object} options - [description]
+     * @param {Phaser.Tilemaps.Tile} tile - The target tile that should have a Matter body.
+     * @param {Phaser.Types.Physics.Matter.MatterTileOptions} [options] - Options to be used when creating the Matter body.
      *
      * @return {Phaser.Physics.Matter.TileBody} [description]
      */
@@ -695,7 +711,15 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * Creates a Matter Physics Sprite Game Object.
+     *
+     * A Sprite Game Object is used for the display of both static and animated images in your game.
+     * Sprites can have input events and physics bodies. They can also be tweened, tinted, scrolled
+     * and animated.
+     *
+     * The main difference between a Sprite and an Image Game Object is that you cannot animate Images.
+     * As such, Sprites take a fraction longer to process and have a larger API footprint due to the Animation
+     * Component. If you do not require animation then you can safely use Images to replace Sprites in all cases.
      *
      * @method Phaser.Physics.Matter.Factory#sprite
      * @since 3.0.0
@@ -704,9 +728,9 @@ var Factory = new Class({
      * @param {number} y - The vertical position of this Game Object in the world.
      * @param {string} key - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
      * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with. Set to `null` to skip this value.
-     * @param {object} [options={}] - [description]
+     * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      *
-     * @return {Phaser.Physics.Matter.Sprite} [description]
+     * @return {Phaser.Physics.Matter.Sprite} The Matter Sprite Game Object.
      */
     sprite: function (x, y, key, frame, options)
     {
@@ -719,79 +743,26 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * Takes an existing Game Object and injects all of the Matter Components into it.
+     * 
+     * This enables you to use component methods such as `setVelocity` or `isSensor` directly from
+     * this Game Object.
+     * 
+     * You can also pass in either a Matter Body Configuration object, or a Matter Body instance
+     * to link with this Game Object.
      *
      * @method Phaser.Physics.Matter.Factory#gameObject
      * @since 3.3.0
      *
-     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to inject the Matter Body in to.
-     * @param {(object|MatterJS.Body)} [options] - A Matter Body configuration object, or an instance of a Matter Body.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to inject the Matter Components in to.
+     * @param {(Phaser.Types.Physics.Matter.MatterBodyConfig|MatterJS.Body)} [options] - A Matter Body configuration object, or an instance of a Matter Body.
      * @param {boolean} [addToWorld=true] - Add this Matter Body to the World?
      *
-     * @return {Phaser.GameObjects.GameObject} The Game Object that had the Matter Body injected into it.
+     * @return {Phaser.GameObjects.GameObject} The Game Object that had the Matter Components injected into it.
      */
     gameObject: function (gameObject, options, addToWorld)
     {
         return MatterGameObject(this.world, gameObject, options, addToWorld);
-    },
-
-    /**
-     * Instantly sets the linear velocity of the given body. Position, angle, force etc. are unchanged.
-     * 
-     * See also `force`.
-     *
-     * @method Phaser.Physics.Matter.Factory#velocity
-     * @since 3.18.0
-     *
-     * @param {MatterJS.Body} body - The Matter Body to set the velocity on.
-     * @param {Phaser.Types.Math.Vector2Like} velocity - The velocity to set. An object with public `x` and `y` components.
-     *
-     * @return {MatterJS.Body} The Matter body.
-     */
-    velocity: function (body, velocity)
-    {
-        Body.setVelocity(body, velocity);
-
-        return body;
-    },
-
-    /**
-     * Instantly sets the angular velocity of the given body. Position, angle, force etc. are unchanged.
-     * 
-     * See also `force`.
-     *
-     * @method Phaser.Physics.Matter.Factory#angularVelocity
-     * @since 3.18.0
-     *
-     * @param {MatterJS.Body} body - The Matter Body to set the velocity on.
-     * @param {number} velocity - The angular velocity to set.
-     *
-     * @return {MatterJS.Body} The Matter body.
-     */
-    angularVelocity: function (body, velocity)
-    {
-        Body.setAngularVelocity(body, velocity);
-
-        return body;
-    },
-
-    /**
-     * Applies a force to a body from a given world-space position, including resulting torque.
-     *
-     * @method Phaser.Physics.Matter.Factory#force
-     * @since 3.18.0
-     *
-     * @param {MatterJS.Body} body - The Matter Body to set the force on.
-     * @param {Phaser.Types.Math.Vector2Like} position - The world position to apply the force from. An object with public `x` and `y` components.
-     * @param {Phaser.Types.Math.Vector2Like} force - The force to set. An object with public `x` and `y` components.
-     *
-     * @return {MatterJS.Body} The Matter body.
-     */
-    force: function (body, position, force)
-    {
-        Body.applyForce(body, position, force);
-
-        return body;
     },
 
     /**
