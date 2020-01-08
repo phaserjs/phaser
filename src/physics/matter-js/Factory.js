@@ -175,7 +175,7 @@ var Factory = new Class({
      *
      * @param {number} x - The X coordinate of the center of the Body.
      * @param {number} y - The Y coordinate of the center of the Body.
-     * @param {(string|array)} vertexSets - [description]
+     * @param {(string|array)} vertexSets - The vertices data. Either a path string or an array of vertices.
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      * @param {boolean} [flagInternal=false] - Flag internal edges (coincident part edges)
      * @param {number} [removeCollinear=0.01] - Whether Matter.js will discard collinear edges (to improve performance).
@@ -198,7 +198,24 @@ var Factory = new Class({
     },
 
     /**
-     * Creates a body using the supplied body data, as provided by an SVG file.
+     * Creates a body using the path data from an SVG file.
+     * 
+     * SVG Parsing requires the pathseg polyfill from https://github.com/progers/pathseg
+     * 
+     * The SVG file should be loaded as XML, as this method requires the ability to extract
+     * the path data from it. I.e.:
+     * 
+     * ```javascript
+     * preload ()
+     * {
+     *   this.load.xml('face', 'assets/face.svg);
+     * }
+     * 
+     * create ()
+     * {
+     *   this.matter.add.fromSVG(400, 300, this.cache.xml.get('face'));
+     * }
+     * ```
      *
      * @method Phaser.Physics.Matter.Factory#fromSVG
      * @since 3.22.0
@@ -413,7 +430,7 @@ var Factory = new Class({
      * @param {number} yOffsetA - The vertical offset of the BodyA constraint. This is a percentage based on the body size, not a world position.
      * @param {number} xOffsetB - The horizontal offset of the BodyB constraint. This is a percentage based on the body size, not a world position.
      * @param {number} yOffsetB - The vertical offset of the BodyB constraint. This is a percentage based on the body size, not a world position.
-     * @param {object} options - An optional Constraint configuration object passed to the newly created constraints.
+     * @param {Phaser.Types.Physics.Matter.MatterConstraintConfig} [options] - An optional Constraint configuration object that is used to set initial Constraint properties on creation.
      *
      * @return {MatterJS.Composite} The original composite that was passed to this method.
      */
@@ -432,7 +449,7 @@ var Factory = new Class({
      * @param {number} columns - The number of columns in the mesh.
      * @param {number} rows - The number of rows in the mesh.
      * @param {boolean} crossBrace - Create cross braces for the mesh as well?
-     * @param {object} options - An optional Constraint configuration object passed to the newly created constraints.
+     * @param {Phaser.Types.Physics.Matter.MatterConstraintConfig} [options] - An optional Constraint configuration object that is used to set initial Constraint properties on creation.
      *
      * @return {MatterJS.Composite} The original composite that was passed to this method.
      */
@@ -501,8 +518,8 @@ var Factory = new Class({
      * @param {number} rowGap - The distance between each row.
      * @param {boolean} crossBrace - `true` to create cross braces between the bodies, or `false` to create just straight braces.
      * @param {number} particleRadius - The radius of this circlular composite.
-     * @param {object} particleOptions - [description]
-     * @param {object} constraintOptions - [description]
+     * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [particleOptions] - An optional Body configuration object that is used to set initial Body properties on creation.
+     * @param {Phaser.Types.Physics.Matter.MatterConstraintConfig} [constraintOptions] - An optional Constraint configuration object that is used to set initial Constraint properties on creation.
      *
      * @return {MatterJS.Composite} A new composite simple soft body.
      */
@@ -516,7 +533,20 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * This method is an alias for `Factory.constraint`.
+     * 
+     * Constraints (or joints) are used for specifying that a fixed distance must be maintained
+     * between two bodies, or a body and a fixed world-space position.
+     * 
+     * The stiffness of constraints can be modified to create springs or elastic.
+     * 
+     * To simulate a revolute constraint (or pin joint) set `length: 0` and a high `stiffness`
+     * value (e.g. `0.7` or above).
+     * 
+     * If the constraint is unstable, try lowering the `stiffness` value and / or increasing
+     * `constraintIterations` within the Matter Config.
+     * 
+     * For compound bodies, constraints must be applied to the parent body and not one of its parts.
      *
      * @method Phaser.Physics.Matter.Factory#joint
      * @since 3.0.0
@@ -525,7 +555,7 @@ var Factory = new Class({
      * @param {MatterJS.Body} bodyB - The second possible `Body` that this constraint is attached to.
      * @param {number} [length] - A Number that specifies the target resting length of the constraint. If not given it is calculated automatically in `Constraint.create` from initial positions of the `constraint.bodyA` and `constraint.bodyB`.
      * @param {number} [stiffness=1] - A Number that specifies the stiffness of the constraint, i.e. the rate at which it returns to its resting `constraint.length`. A value of `1` means the constraint should be very stiff. A value of `0.2` means the constraint acts as a soft spring.
-     * @param {object} [options={}] - [description]
+     * @param {Phaser.Types.Physics.Matter.MatterConstraintConfig} [options] - An optional Constraint configuration object that is used to set initial Constraint properties on creation.
      *
      * @return {MatterJS.Constraint} A Matter JS Constraint.
      */
@@ -535,7 +565,20 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * This method is an alias for `Factory.constraint`.
+     * 
+     * Constraints (or joints) are used for specifying that a fixed distance must be maintained
+     * between two bodies, or a body and a fixed world-space position.
+     * 
+     * The stiffness of constraints can be modified to create springs or elastic.
+     * 
+     * To simulate a revolute constraint (or pin joint) set `length: 0` and a high `stiffness`
+     * value (e.g. `0.7` or above).
+     * 
+     * If the constraint is unstable, try lowering the `stiffness` value and / or increasing
+     * `constraintIterations` within the Matter Config.
+     * 
+     * For compound bodies, constraints must be applied to the parent body and not one of its parts.
      *
      * @method Phaser.Physics.Matter.Factory#spring
      * @since 3.0.0
@@ -544,7 +587,7 @@ var Factory = new Class({
      * @param {MatterJS.Body} bodyB - The second possible `Body` that this constraint is attached to.
      * @param {number} [length] - A Number that specifies the target resting length of the constraint. If not given it is calculated automatically in `Constraint.create` from initial positions of the `constraint.bodyA` and `constraint.bodyB`.
      * @param {number} [stiffness=1] - A Number that specifies the stiffness of the constraint, i.e. the rate at which it returns to its resting `constraint.length`. A value of `1` means the constraint should be very stiff. A value of `0.2` means the constraint acts as a soft spring.
-     * @param {object} [options={}] - [description]
+     * @param {Phaser.Types.Physics.Matter.MatterConstraintConfig} [options] - An optional Constraint configuration object that is used to set initial Constraint properties on creation.
      *
      * @return {MatterJS.Constraint} A Matter JS Constraint.
      */
@@ -554,7 +597,18 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * Constraints (or joints) are used for specifying that a fixed distance must be maintained
+     * between two bodies, or a body and a fixed world-space position.
+     * 
+     * The stiffness of constraints can be modified to create springs or elastic.
+     * 
+     * To simulate a revolute constraint (or pin joint) set `length: 0` and a high `stiffness`
+     * value (e.g. `0.7` or above).
+     * 
+     * If the constraint is unstable, try lowering the `stiffness` value and / or increasing
+     * `constraintIterations` within the Matter Config.
+     * 
+     * For compound bodies, constraints must be applied to the parent body and not one of its parts.
      *
      * @method Phaser.Physics.Matter.Factory#constraint
      * @since 3.0.0
@@ -563,7 +617,7 @@ var Factory = new Class({
      * @param {MatterJS.Body} bodyB - The second possible `Body` that this constraint is attached to.
      * @param {number} [length] - A Number that specifies the target resting length of the constraint. If not given it is calculated automatically in `Constraint.create` from initial positions of the `constraint.bodyA` and `constraint.bodyB`.
      * @param {number} [stiffness=1] - A Number that specifies the stiffness of the constraint, i.e. the rate at which it returns to its resting `constraint.length`. A value of `1` means the constraint should be very stiff. A value of `0.2` means the constraint acts as a soft spring.
-     * @param {object} [options={}] - [description]
+     * @param {Phaser.Types.Physics.Matter.MatterConstraintConfig} [options] - An optional Constraint configuration object that is used to set initial Constraint properties on creation.
      *
      * @return {MatterJS.Constraint} A Matter JS Constraint.
      */
@@ -590,7 +644,21 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * Constraints (or joints) are used for specifying that a fixed distance must be maintained
+     * between two bodies, or a body and a fixed world-space position.
+     * 
+     * A world constraint has only one body, you should specify a `pointA` position in
+     * the constraint options parameter to attach the constraint to the world.
+     * 
+     * The stiffness of constraints can be modified to create springs or elastic.
+     * 
+     * To simulate a revolute constraint (or pin joint) set `length: 0` and a high `stiffness`
+     * value (e.g. `0.7` or above).
+     * 
+     * If the constraint is unstable, try lowering the `stiffness` value and / or increasing
+     * `constraintIterations` within the Matter Config.
+     * 
+     * For compound bodies, constraints must be applied to the parent body and not one of its parts.
      *
      * @method Phaser.Physics.Matter.Factory#worldConstraint
      * @since 3.0.0
@@ -598,7 +666,7 @@ var Factory = new Class({
      * @param {MatterJS.Body} body - The Matter `Body` that this constraint is attached to.
      * @param {number} [length] - A number that specifies the target resting length of the constraint. If not given it is calculated automatically in `Constraint.create` from initial positions of the `constraint.bodyA` and `constraint.bodyB`.
      * @param {number} [stiffness=1] - A Number that specifies the stiffness of the constraint, i.e. the rate at which it returns to its resting `constraint.length`. A value of `1` means the constraint should be very stiff. A value of `0.2` means the constraint acts as a soft spring.
-     * @param {object} [options={}] - [description]
+     * @param {Phaser.Types.Physics.Matter.MatterConstraintConfig} [options] - An optional Constraint configuration object that is used to set initial Constraint properties on creation.
      *
      * @return {MatterJS.Constraint} A Matter JS Constraint.
      */
@@ -624,12 +692,21 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * This method is an alias for `Factory.pointerConstraint`.
+     * 
+     * A Pointer Constraint is a special type of constraint that allows you to click
+     * and drag bodies in a Matter World. It monitors the active Pointers in a Scene,
+     * and when one is pressed down it checks to see if that hit any part of any active
+     * body in the world. If it did, and the body has input enabled, it will begin to
+     * drag it until either released, or you stop it via the `stopDrag` method.
+     * 
+     * You can adjust the stiffness, length and other properties of the constraint via
+     * the `options` object on creation.
      *
      * @method Phaser.Physics.Matter.Factory#mouseSpring
      * @since 3.0.0
      *
-     * @param {object} options - [description]
+     * @param {Phaser.Types.Physics.Matter.MatterConstraintConfig} [options] - An optional Constraint configuration object that is used to set initial Constraint properties on creation.
      *
      * @return {MatterJS.Constraint} A Matter JS Constraint.
      */
@@ -639,12 +716,19 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * A Pointer Constraint is a special type of constraint that allows you to click
+     * and drag bodies in a Matter World. It monitors the active Pointers in a Scene,
+     * and when one is pressed down it checks to see if that hit any part of any active
+     * body in the world. If it did, and the body has input enabled, it will begin to
+     * drag it until either released, or you stop it via the `stopDrag` method.
+     * 
+     * You can adjust the stiffness, length and other properties of the constraint via
+     * the `options` object on creation.
      *
      * @method Phaser.Physics.Matter.Factory#pointerConstraint
      * @since 3.0.0
      *
-     * @param {object} options - [description]
+     * @param {Phaser.Types.Physics.Matter.MatterConstraintConfig} [options] - An optional Constraint configuration object that is used to set initial Constraint properties on creation.
      *
      * @return {MatterJS.Constraint} A Matter JS Constraint.
      */
@@ -693,7 +777,16 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * Creates a wrapper around a Tile that provides access to a corresponding Matter body. A tile can only
+     * have one Matter body associated with it. You can either pass in an existing Matter body for
+     * the tile or allow the constructor to create the corresponding body for you. If the Tile has a
+     * collision group (defined in Tiled), those shapes will be used to create the body. If not, the
+     * tile's rectangle bounding box will be used.
+     *
+     * The corresponding body will be accessible on the Tile itself via Tile.physics.matterBody.
+     *
+     * Note: not all Tiled collision shapes are supported. See
+     * Phaser.Physics.Matter.TileBody#setFromTileCollision for more information.
      *
      * @method Phaser.Physics.Matter.Factory#tileBody
      * @since 3.0.0
@@ -701,13 +794,11 @@ var Factory = new Class({
      * @param {Phaser.Tilemaps.Tile} tile - The target tile that should have a Matter body.
      * @param {Phaser.Types.Physics.Matter.MatterTileOptions} [options] - Options to be used when creating the Matter body.
      *
-     * @return {Phaser.Physics.Matter.TileBody} [description]
+     * @return {Phaser.Physics.Matter.TileBody} The Matter Tile Body Game Object.
      */
     tileBody: function (tile, options)
     {
-        var tileBody = new MatterTileBody(this.world, tile, options);
-
-        return tileBody;
+        return new MatterTileBody(this.world, tile, options);
     },
 
     /**
