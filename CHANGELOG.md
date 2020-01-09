@@ -165,6 +165,9 @@
 * `MatterConstraintRenderConfig` is a new type def that contains all of the Constraint debug rendering configuration properties. This is now used through-out the JSDocs to aid in code-completion.
 * `MatterSetBodyConfig` is a new type def that contains all of the Constraint debug rendering configuration properties. This is now used through-out the JSDocs to aid in code-completion.
 * `MatterPhysics.getConstraintLength` is a new method that will return the length of the given constraint, as this is something you cannot get from the constraint properties directly.
+* `MatterPhysics.alignBody` is a new method that will align a Body, or Matter Game Object, against the given coordinates, using the given alignment constant. For example, this allows you to easily position a body to the `BOTTOM_LEFT`, or `TOP_CENTER`, or a coordinate. Alignment is based on the body bounds.
+* `Phaser.Types.Physics.Matter.MatterBody` is a new type def that contains all of the valid Matter Body objects. This is now used through-out the JSDocs to aid in code-completion.
+* `Matter.BodyBounds` is a new class that contains methods to help you extract world coordinates from various points around the bounds of a Matter Body. Because Matter bodies are positioned based on their center of mass, and not a dimension based center, you often need to get the bounds coordinates in order to properly align them in the world. You can access this new class via `this.matter.bodyBounds`.
 
 ### New Features
 
