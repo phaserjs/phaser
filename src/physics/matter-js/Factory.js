@@ -14,6 +14,7 @@ var MatterGameObject = require('./MatterGameObject');
 var MatterImage = require('./MatterImage');
 var MatterSprite = require('./MatterSprite');
 var MatterTileBody = require('./MatterTileBody');
+var PhysicsEditorParser = require('./PhysicsEditorParser');
 var PointerConstraint = require('./PointerConstraint');
 var Vertices = require('./lib/geometry/Vertices');
 
@@ -193,6 +194,15 @@ var Factory = new Class({
         var body = Bodies.fromVertices(x, y, vertexSets, options, flagInternal, removeCollinear, minimumArea);
 
         this.world.add(body);
+
+        return body;
+    },
+
+    fromPhysicsEditor: function (x, y, width, height, config)
+    {
+        var body = PhysicsEditorParser.parseBody(x, y, width, height, config);
+
+        // this.world.add(body);
 
         return body;
     },
