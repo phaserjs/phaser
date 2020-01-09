@@ -10,6 +10,7 @@
 
 module.exports = {
 
+    BodyBounds: require('./BodyBounds'),
     Factory: require('./Factory'),
     Image: require('./MatterImage'),
     Matter: require('./CustomMain'),
