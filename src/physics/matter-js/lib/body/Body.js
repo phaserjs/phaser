@@ -101,6 +101,7 @@ var Axes = require('../geometry/Axes');
             gameObject: null,               // custom Phaser property
             scale: { x: 1, y: 1 },          // custom Phaser property
             centerOfMass: { x: 0, y: 0 },   // custom Phaser property
+            centerOffset: { x: 0, y: 0 },   // custom Phaser property
             gravityScale: { x: 1, y: 1 },   // custom Phaser property
             ignoreGravity: false,           // custom Phaser property
             ignorePointer: false,           // custom Phaser property
@@ -189,9 +190,23 @@ var Axes = require('../geometry/Axes');
             parent: body.parent || body
         });
 
+        var bounds = body.bounds;
+        var centerOfMass = body.centerOfMass;
+
+        Bounds.update(bounds, body.vertices, body.velocity);
+
+        var boundsWidth = bounds.max.x - bounds.min.x;
+        var boundsHeight = bounds.max.y - bounds.min.y;
+
+        centerOfMass.x = -(bounds.min.x - body.position.x) / boundsWidth;
+        centerOfMass.y = -(bounds.min.y - body.position.y) / boundsHeight;
+
+        body.centerOffset.x = (boundsWidth * centerOfMass.x) - (boundsWidth / 2);
+        body.centerOffset.y = (boundsHeight * centerOfMass.y) - (boundsHeight / 2);
+
         Vertices.rotate(body.vertices, body.angle, body.position);
         Axes.rotate(body.axes, body.angle);
-        Bounds.update(body.bounds, body.vertices, body.velocity);
+        Bounds.update(bounds, body.vertices, body.velocity);
 
         // allow options to override the automatically calculated properties
         Body.set(body, {
@@ -200,9 +215,6 @@ var Axes = require('../geometry/Axes');
             mass: options.mass || body.mass,
             inertia: options.inertia || body.inertia
         });
-
-        body.centerOfMass.x = -(body.bounds.min.x - body.position.x) / (body.bounds.max.x - body.bounds.min.x);
-        body.centerOfMass.y = -(body.bounds.min.y - body.position.y) / (body.bounds.max.y - body.bounds.min.y);
     };
 
     /**
@@ -451,8 +463,23 @@ var Axes = require('../geometry/Axes');
         var cx = total.centre.x;
         var cy = total.centre.y;
 
-        body.centerOfMass.x = cx;
-        body.centerOfMass.y = cy;
+        var bounds = body.bounds;
+        var centerOfMass = body.centerOfMass;
+
+        Bounds.update(bounds, body.vertices, body.velocity);
+
+        var boundsWidth = bounds.max.x - bounds.min.x;
+        var boundsHeight = bounds.max.y - bounds.min.y;
+
+        centerOfMass.x = -(bounds.min.x - cx) / boundsWidth;
+        centerOfMass.y = -(bounds.min.y - cy) / boundsHeight;
+
+        body.centerOffset.x = (boundsWidth * centerOfMass.x) - (boundsWidth / 2);
+        body.centerOffset.y = (boundsHeight * centerOfMass.y) - (boundsHeight / 2);
+
+        console.log('setParts1-com', body.centerOfMass.x, body.centerOfMass.y);
+        console.log('setParts2-off', body.centerOffset.x, body.centerOffset.y);
+        console.log('setParts3-bwh', boundsWidth, boundsHeight);
 
         body.area = total.area;
         body.parent = body;

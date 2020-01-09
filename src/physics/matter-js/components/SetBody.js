@@ -152,7 +152,55 @@ var SetBody = {
 
         if (this._originComponent)
         {
-            this.setOrigin(this.centerOffsetX, this.centerOffsetY);
+            /*
+            var cx = this.width / 2;
+            var cy = this.height / 2;
+
+            console.log('cx', this.width * body.centerOfMass.x);
+            console.log('cy', this.height * body.centerOfMass.y);
+
+            var dx = (this.width * body.centerOfMass.x) - cx;
+            var dy = (this.height * body.centerOfMass.y) - cy;
+
+            console.log('dx', dx);
+            console.log('dy', dy);
+
+            // cx -= body.centerOffset.x * 2;
+            // cy += body.centerOffset.y * 2;
+
+            cx -= dx * 2;
+            cy += dy * 1;
+
+            this.setDisplayOrigin(cx, cy);
+            */
+
+            // var cx = this.x / this.width;
+            // var cy = this.y / this.height;
+
+            // var cx = this.width / 2;
+            // var cy = this.height / 2;
+
+            // var dx = cx + (this.width * body.centerOfMass.x) + body.centerOffset.x;
+            // var dy = cy * body.centerOfMass.y) + body.centerOffset.y;
+
+            // console.log(cx, cy);
+
+            // this.setOrigin(cx, cy);
+
+            // this.setOrigin(body.render.sprite.xOffset, body.render.sprite.yOffset);
+
+            // console.log('SO', this.centerOffsetX, this.centerOffsetY);
+
+            // this.setDisplayOrigin(this.centerOffsetX, this.centerOffsetY);
+
+            // this.setOrigin(this.originX - this.centerOffsetX, this.originY + this.centerOffsetY);
+
+            // this.setOrigin(this.body.centerOfMass.x, this.body.centerOfMass.y);
+
+            // this.displayOriginX -= (this.body.centerOffset.x * 2);
+            // this.displayOriginY -= this.body.centerOffset.y;
+
+            // this.setOrigin(this.centerOffsetX, this.centerOffsetY);
         }
 
         return this;
