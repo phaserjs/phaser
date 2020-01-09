@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var ALIGN_CONST = require('../../display/align/const');
 var Axes = require('./lib/geometry/Axes');
 var Bodies = require('./lib/factory/Bodies');
 var Body = require('./lib/body/Body');
@@ -1052,7 +1053,6 @@ var MatterPhysics = new Class({
             var body = (bodies[i].hasOwnProperty('body')) ? bodies[i].body : bodies[i];
 
             output.push(body);
-
         }
 
         return output;
@@ -1304,10 +1304,99 @@ var MatterPhysics = new Class({
         return DistanceBetween(aX, aY, bX, bY);
     },
 
-    // alignBody: function (body, x, y, align)
-    // {
+    /**
+     * Aligns a Body, or Matter Game Object, against the given coordinates.
+     * 
+     * The alignment takes place using the body bounds, which take into consideration things
+     * like body scale and rotation.
+     * 
+     * For example, if you wanted to align a body so it sat in the bottom-left of the
+     * Scene, and the world was 800 x 600 in size:
+     * 
+     * ```javascript
+     * this.matter.alignBody(body, 0, 600, Phaser.Display.Align.BOTTOM_LEFT);
+     * ```
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#alignBody
+     * @since 3.22.0
+     *
+     * @param {MatterJS.Body} body - The Body to align.
+     * @param {number} x - The horizontal position to align the body to.
+     * @param {number} y - The vertical position to align the body to.
+     * @param {integer} align - One of the `Phaser.Display.Align` constants, such as `Phaser.Display.Align.TOP_LEFT`.
+     *
+     * @return {number} The length of the constraint.
+     */
+    alignBody: function (body, x, y, align)
+    {
+        body = (body.hasOwnProperty('body')) ? body.body : body;
 
-    // },
+        var boundsWidth = body.bounds.max.x - body.bounds.min.x;
+        var boundsHeight = body.bounds.max.y - body.bounds.min.y;
+
+        var boundsCenterX = boundsWidth / 2;
+        var boundsCenterY = boundsHeight / 2;
+
+        var bodyCenterX = boundsWidth * body.centerOfMass.x;
+        var bodyCenterY = boundsHeight * body.centerOfMass.y;
+
+        var diffX = bodyCenterX - boundsCenterX;
+        var diffY = bodyCenterY - boundsCenterY;
+
+        var posX;
+        var posY;
+
+        switch (align)
+        {
+            case ALIGN_CONST.TOP_LEFT:
+            case ALIGN_CONST.LEFT_TOP:
+                posX = x + boundsCenterX + diffX;
+                posY = y + boundsCenterY + diffY;
+                break;
+
+            case ALIGN_CONST.TOP_CENTER:
+                posX = x + diffX;
+                posY = y + boundsCenterY + diffY;
+                break;
+    
+            case ALIGN_CONST.TOP_RIGHT:
+            case ALIGN_CONST.RIGHT_TOP:
+                posX = x - (boundsCenterX - diffX);
+                posY = y + boundsCenterY + diffY;
+                break;
+
+            case ALIGN_CONST.LEFT_CENTER:
+                posX = x + boundsCenterX + diffX;
+                posY = y + diffY;
+                break;
+
+            case ALIGN_CONST.LEFT_BOTTOM:
+            case ALIGN_CONST.BOTTOM_LEFT:
+                posX = x + boundsCenterX + diffX;
+                posY = y - (boundsCenterY - diffY);
+                break;
+
+            case ALIGN_CONST.BOTTOM_CENTER:
+                posX = x + diffX;
+                posY = y - (boundsCenterY - diffY);
+                break;
+
+            case ALIGN_CONST.BOTTOM_RIGHT:
+            case ALIGN_CONST.RIGHT_BOTTOM:
+                posX = x - (boundsCenterX - diffX);
+                posY = y - (boundsCenterY - diffY);
+                break;
+
+            case ALIGN_CONST.RIGHT_CENTER:
+                posX = x - (boundsCenterX - diffX);
+                posY = y + diffY;
+                break;
+        }
+
+        Body.setPosition(body, { x: posX, y: posY });
+
+        return this;
+    },
 
     /**
      * The Scene that owns this plugin is shutting down.
