@@ -1569,6 +1569,8 @@ var World = new Class({
     /**
      * Renders the bounds of an array of Bodies to the given Graphics instance.
      * 
+     * If the body is a compound body, it will render the bounds for the parent compound.
+     * 
      * The debug renderer calls this method if the `showBounds` config value is set.
      * 
      * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
@@ -1596,18 +1598,32 @@ var World = new Class({
                 continue;
             }
 
-            var parts = body.parts;
+            var bounds = body.bounds;
 
-            for (var j = parts.length > 1 ? 1 : 0; j < parts.length; j++)
+            if (bounds)
             {
-                var part = parts[j];
-
                 graphics.strokeRect(
-                    part.bounds.min.x,
-                    part.bounds.min.y,
-                    part.bounds.max.x - part.bounds.min.x,
-                    part.bounds.max.y - part.bounds.min.y
+                    bounds.min.x,
+                    bounds.min.y,
+                    bounds.max.x - bounds.min.x,
+                    bounds.max.y - bounds.min.y
                 );
+            }
+            else
+            {
+                var parts = body.parts;
+
+                for (var j = parts.length > 1 ? 1 : 0; j < parts.length; j++)
+                {
+                    var part = parts[j];
+    
+                    graphics.strokeRect(
+                        part.bounds.min.x,
+                        part.bounds.min.y,
+                        part.bounds.max.x - part.bounds.min.x,
+                        part.bounds.max.y - part.bounds.min.y
+                    );
+                }
             }
         }
 
