@@ -1,11 +1,10 @@
 /**
-* The `Matter.Body` module contains methods for creating and manipulating body models.
-* A `Matter.Body` is a rigid body that can be simulated by a `Matter.Engine`.
-* Factories for commonly used body configurations (such as rectangles, circles and other polygons) can be found in the module `Matter.Bodies`.
-*
-* See the included usage [examples](https://github.com/liabru/matter-js/tree/master/examples).
-
-* @class Body
+ * The `Matter.Body` module contains methods for creating and manipulating body models.
+ * A `Matter.Body` is a rigid body that can be simulated by a `Matter.Engine`.
+ * Factories for commonly used body configurations (such as rectangles, circles and other polygons) can be found in the module `Matter.Bodies`.
+ *
+ * See the included usage [examples](https://github.com/liabru/matter-js/tree/master/examples).
+ * @class Body
 */
 
 var Body = {};
@@ -100,8 +99,8 @@ var Axes = require('../geometry/Axes');
             },
             gameObject: null,               // custom Phaser property
             scale: { x: 1, y: 1 },          // custom Phaser property
-            centerOfMass: { x: 0, y: 0 },   // custom Phaser property
-            centerOffset: { x: 0, y: 0 },   // custom Phaser property
+            centerOfMass: { x: 0, y: 0 },   // custom Phaser property (float, 0 - 1)
+            centerOffset: { x: 0, y: 0 },   // custom Phaser property (pixel values)
             gravityScale: { x: 1, y: 1 },   // custom Phaser property
             ignoreGravity: false,           // custom Phaser property
             ignorePointer: false,           // custom Phaser property
@@ -192,17 +191,18 @@ var Axes = require('../geometry/Axes');
 
         var bounds = body.bounds;
         var centerOfMass = body.centerOfMass;
+        var centerOffset = body.centerOffset;
 
         Bounds.update(bounds, body.vertices, body.velocity);
 
-        var boundsWidth = bounds.max.x - bounds.min.x;
-        var boundsHeight = bounds.max.y - bounds.min.y;
+        var bodyWidth = bounds.max.x - bounds.min.x;
+        var bodyHeight = bounds.max.y - bounds.min.y;
 
-        centerOfMass.x = -(bounds.min.x - body.position.x) / boundsWidth;
-        centerOfMass.y = -(bounds.min.y - body.position.y) / boundsHeight;
+        centerOfMass.x = -(bounds.min.x - body.position.x) / bodyWidth;
+        centerOfMass.y = -(bounds.min.y - body.position.y) / bodyHeight;
 
-        body.centerOffset.x = (boundsWidth * centerOfMass.x) - (boundsWidth / 2);
-        body.centerOffset.y = (boundsHeight * centerOfMass.y) - (boundsHeight / 2);
+        centerOffset.x = body.position.x;
+        centerOffset.y = body.position.y;
 
         Vertices.rotate(body.vertices, body.angle, body.position);
         Axes.rotate(body.axes, body.angle);
@@ -465,21 +465,15 @@ var Axes = require('../geometry/Axes');
 
         var bounds = body.bounds;
         var centerOfMass = body.centerOfMass;
+        var centerOffset = body.centerOffset;
 
         Bounds.update(bounds, body.vertices, body.velocity);
 
-        var boundsWidth = bounds.max.x - bounds.min.x;
-        var boundsHeight = bounds.max.y - bounds.min.y;
+        centerOfMass.x = -(bounds.min.x - cx) / (bounds.max.x - bounds.min.x);
+        centerOfMass.y = -(bounds.min.y - cy) / (bounds.max.y - bounds.min.y);
 
-        centerOfMass.x = -(bounds.min.x - cx) / boundsWidth;
-        centerOfMass.y = -(bounds.min.y - cy) / boundsHeight;
-
-        body.centerOffset.x = (boundsWidth * centerOfMass.x) - (boundsWidth / 2);
-        body.centerOffset.y = (boundsHeight * centerOfMass.y) - (boundsHeight / 2);
-
-        console.log('setParts1-com', body.centerOfMass.x, body.centerOfMass.y);
-        console.log('setParts2-off', body.centerOffset.x, body.centerOffset.y);
-        console.log('setParts3-bwh', boundsWidth, boundsHeight);
+        centerOffset.x = cx;
+        centerOffset.y = cy;
 
         body.area = total.area;
         body.parent = body;
