@@ -19,6 +19,7 @@ module.exports = {
     Sprite: require('./MatterSprite'),
     TileBody: require('./MatterTileBody'),
     PhysicsEditorParser: require('./PhysicsEditorParser'),
+    PhysicsJSONParser: require('./PhysicsJSONParser'),
     World: require('./World')
 
 };

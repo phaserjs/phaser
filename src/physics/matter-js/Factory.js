@@ -5,7 +5,6 @@
  */
 
 var Bodies = require('./lib/factory/Bodies');
-var Body = require('./lib/body/Body');
 var Class = require('../../utils/Class');
 var Composites = require('./lib/factory/Composites');
 var Constraint = require('./lib/constraint/Constraint');
@@ -15,6 +14,7 @@ var MatterImage = require('./MatterImage');
 var MatterSprite = require('./MatterSprite');
 var MatterTileBody = require('./MatterTileBody');
 var PhysicsEditorParser = require('./PhysicsEditorParser');
+var PhysicsJSONParser = require('./PhysicsJSONParser');
 var PointerConstraint = require('./PointerConstraint');
 var Vertices = require('./lib/geometry/Vertices');
 
@@ -309,61 +309,62 @@ var Factory = new Class({
     },
 
     /**
-     * **This function is still in development**
+     * Creates a body using the supplied physics data, as provided by a JSON file.
      * 
-     * Creates a body using the supplied body data, as provided by a JSON file.
+     * The data file should be loaded as JSON:
+     * 
+     * ```javascript
+     * preload ()
+     * {
+     *   this.load.json('ninjas', 'assets/ninjas.json);
+     * }
+     * 
+     * create ()
+     * {
+     *   const ninjaShapes = this.cache.json.get('ninjas');
+     * 
+     *   this.matter.add.fromJSON(400, 300, ninjaShapes.shinobi);
+     * }
+     * ```
+     * 
+     * Do not pass the entire JSON file to this method, but instead pass one of the shapes contained within it.
+     * 
+     * If you pas in an `options` object, any settings in there will override those in the config object.
+     * 
+     * The structure of the JSON file is as follows:
+     * 
+     * ```text
+     * {
+     *   'generator_info': // The name of the application that created the JSON data
+     *   'shapeName': {
+     *     'type': // The type of body
+     *     'label': // Optional body label
+     *     'vertices': // An array, or an array of arrays, containing the vertex data in x/y object pairs
+     *   }
+     * }
+     * ```
+     * 
+     * At the time of writing, only the Phaser Physics Tracer App exports in this format.
      *
      * @method Phaser.Physics.Matter.Factory#fromJSON
      * @since 3.22.0
      *
      * @param {number} x - The X coordinate of the body.
      * @param {number} y - The Y coordinate of the body.
-     * @param {object} data - The body data object as parsed from the JSON body format.
+     * @param {any} config - The JSON physics data.
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      * @param {boolean} [addToWorld=true] - Should the newly created body be immediately added to the World?
      *
      * @return {MatterJS.Body} A Matter JS Body.
      */
-    fromJSON: function (x, y, data, options, addToWorld)
+    fromJSON: function (x, y, config, options, addToWorld)
     {
         if (options === undefined) { options = {}; }
         if (addToWorld === undefined) { addToWorld = true; }
 
-        var body;
-        var vertexSets = data.verts;
+        var body = PhysicsJSONParser.parseBody(x, y, config, options);
 
-        if (vertexSets.length === 1)
-        {
-            //  Just a single Body
-            options.vertices = vertexSets[0];
-
-            body = Body.create(options);
-
-            Bodies.flagCoincidentParts(body.parts);
-        }
-        else
-        {
-            var parts = [];
-
-            for (var i = 0; i < vertexSets.length; i++)
-            {
-                var part = Body.create({
-                    vertices: vertexSets[i]
-                });
-
-                parts.push(part);
-            }
-
-            Bodies.flagCoincidentParts(parts);
-
-            options.parts = parts;
-
-            body = Body.create(options);
-        }
-
-        Body.setPosition(body, { x: x, y: y });
-
-        if (addToWorld)
+        if (body && addToWorld)
         {
             this.world.add(body);
         }
