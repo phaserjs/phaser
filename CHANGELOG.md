@@ -170,6 +170,7 @@
 * The method signature for `Matter.PhysicsEditorParser.parseBody` has changed. It now takes `(x, y, config, options)` and no longer has `width` and `height` parameters. Please see the updated documentation for more details if you were calling this method directly.
 * `Matter.PhysicsEditorParser.parseBody` can now accept a MatterBodyConfig file as a 4th parameter. This allows you to set Body properties when the body is created, overriding whatever values may have been set in the PhysicsEditor JSON.
 * `MatterPhysics.fromPhysicsEditor` is a new method that allows you to create a Matter Body based on the given PhysicsEditor shape data. Previously, you could only using PhysicsEditor data with a Matter Game Object, but now you can create a body directly using it.
+* `Matter.PhysicsEditorParser` had a bug where it would allow fixtures with non-clockwise sorted vertices through, which would break pointer constraint interaction with these bodies. The parser now sorts the vertices properly. Fix #4261 (thanks @Sanchez3)
 
 ### New Features
 
