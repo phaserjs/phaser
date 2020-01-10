@@ -155,7 +155,7 @@ var SetBody = {
             var cx = body.centerOffset.x;
             var cy = body.centerOffset.y;
 
-            this.setOrigin(rx + (cx / this.width), ry + (cy / this.height));
+            this.setOrigin(rx + (cx / this.displayWidth), ry + (cy / this.displayHeight));
         }
 
         return this;
