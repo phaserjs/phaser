@@ -120,6 +120,8 @@ var PhysicsEditorParser = {
 
         for (var v = 0; v < vertexSets.length; v++)
         {
+            Vertices.clockwiseSort(vertexSets[v]);
+
             parts.push(Body.create(Common.extend({
                 position: Vertices.centre(vertexSets[v]),
                 vertices: vertexSets[v]
