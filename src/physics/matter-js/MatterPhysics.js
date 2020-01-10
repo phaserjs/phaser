@@ -1349,6 +1349,8 @@ var MatterPhysics = new Class({
      */
     alignBody: function (body, x, y, align)
     {
+        body = (body.hasOwnProperty('body')) ? body.body : body;
+
         var pos;
 
         switch (align)
@@ -1394,7 +1396,10 @@ var MatterPhysics = new Class({
                 break;
         }
 
-        Body.setPosition(body, pos);
+        if (pos)
+        {
+            Body.setPosition(body, pos);
+        }
 
         return this;
     },
