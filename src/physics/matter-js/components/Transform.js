@@ -190,52 +190,6 @@ var Transform = {
     },
 
     /**
-     * Returns the center x offset of the Body this Game Object is using.
-     * 
-     * This is calculated by taking the difference between the center of the frame and the center of
-     * the physics body. If set, the `body.render.sprite.xOffset` value is then added to it.
-     * 
-     * Use this when setting the Origin of a Physics Game Object post-creation, i.e.:
-     * 
-     * `setOrigin(originX + centerOffsetX, originY + centerOffsetY)`
-     *
-     * @name Phaser.Physics.Matter.Components.Transform#centerOffsetX
-     * @type {number}
-     * @readonly
-     * @since 3.22.0
-     */
-    centerOffsetX: {
-
-        get: function ()
-        {
-            return this.body.centerOffset.x;
-        }
-    },
-
-    /**
-     * Returns the center y offset of the Body this Game Object is using.
-     * 
-     * This is calculated by taking the difference between the center of the frame and the center of
-     * the physics body. If set, the `body.render.sprite.yOffset` value is then added to it.
-     * 
-     * Use this when setting the Origin of a Physics Game Object post-creation, i.e.:
-     * 
-     * `setOrigin(originX + centerOffsetX, originY + centerOffsetY)`
-     *
-     * @name Phaser.Physics.Matter.Components.Transform#centerOffsetY
-     * @type {number}
-     * @readonly
-     * @since 3.22.0
-     */
-    centerOffsetY: {
-
-        get: function ()
-        {
-            return this.body.centerOffset.y;
-        }
-    },
-
-    /**
      * Sets the position of the physics body along x and y axes.
      * Both the parameters to this function are optional and if not passed any they default to 0.
      * Velocity, angle, force etc. are unchanged.
