@@ -8,6 +8,7 @@ var Bodies = require('../lib/factory/Bodies');
 var Body = require('../lib/body/Body');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var PhysicsEditorParser = require('../PhysicsEditorParser');
+var PhysicsJSONParser = require('../PhysicsJSONParser');
 var Vertices = require('../lib/geometry/Vertices');
 
 /**
@@ -252,6 +253,10 @@ var SetBody = {
 
             case 'fromPhysicsEditor':
                 body = PhysicsEditorParser.parseBody(bodyX, bodyY, config, options);
+                break;
+
+            case 'fromPhysicsTracer':
+                body = PhysicsJSONParser.parseBody(bodyX, bodyY, config, options);
                 break;
         }
 
