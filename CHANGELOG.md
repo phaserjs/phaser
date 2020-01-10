@@ -174,6 +174,8 @@
 * `Matter.PhysicsJSONParser` is a new parser that will create Matter bodies from JSON physics data files. Currently onto the Phaser Physics Tracer app exports in this format, but details are published in the JSDocs, so any app can do so.
 * `Matter.Factory.fromJSON` is a new method that will create a body from a JSON physics data file.
 * The `SetBody` Matter component can now automatically use shapes created in the Phaser Physics Tracer App in the JSON data format.
+* `Matter.Components.Sleep.setToSleep` is a new method available on any Matter Game Object that will send the body to sleep, if Engine sleeping has been enabled.
+* `Matter.Components.Sleep.setAwake` is a new method available on any Matter Game Object that will awake a body from sleep, if Engine sleeping has been enabled.
 
 ### New Features
 
