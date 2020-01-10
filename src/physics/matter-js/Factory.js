@@ -198,11 +198,49 @@ var Factory = new Class({
         return body;
     },
 
-    fromPhysicsEditor: function (x, y, width, height, config)
+    /**
+     * Creates a body using data exported from the application PhysicsEditor (https://www.codeandweb.com/physicseditor)
+     * 
+     * The PhysicsEditor file should be loaded as JSON:
+     * 
+     * ```javascript
+     * preload ()
+     * {
+     *   this.load.json('vehicles', 'assets/vehicles.json);
+     * }
+     * 
+     * create ()
+     * {
+     *   const vehicleShapes = this.cache.json.get('vehicles');
+     *   this.matter.add.fromPhysicsEditor(400, 300, vehicleShapes.truck);
+     * }
+     * ```
+     * 
+     * Do not pass the entire JSON file to this method, but instead pass one of the shapes contained within it.
+     * 
+     * If you pas in an `options` object, any settings in there will override those in the PhysicsEditor config object.
+     *
+     * @method Phaser.Physics.Matter.Factory#fromPhysicsEditor
+     * @since 3.22.0
+     *
+     * @param {number} x - The horizontal world location of the body.
+     * @param {number} y - The vertical world location of the body.
+     * @param {any} config - The JSON data exported from PhysicsEditor.
+     * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
+     * @param {boolean} [addToWorld=true] - Should the newly created body be immediately added to the World?
+     *
+     * @return {MatterJS.Body} A Matter JS Body.
+     */
+    fromPhysicsEditor: function (x, y, config, options, addToWorld)
     {
-        var body = PhysicsEditorParser.parseBody(x, y, width, height, config);
+        if (addToWorld === undefined) { addToWorld = true; }
 
-        // this.world.add(body);
+        var body = PhysicsEditorParser.parseBody(x, y, config, options);
+
+        if (addToWorld && !this.world.has(body))
+        {
+            this.world.add(body);
+        }
 
         return body;
     },
