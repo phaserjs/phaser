@@ -203,17 +203,20 @@ var Axes = require('../geometry/Axes');
             inertia: options.inertia || body.inertia
         });
 
-        var centerOfMass = body.centerOfMass;
-        var centerOffset = body.centerOffset;
-
-        var bodyWidth = bounds.max.x - bounds.min.x;
-        var bodyHeight = bounds.max.y - bounds.min.y;
-
-        centerOfMass.x = -(bounds.min.x - body.position.x) / bodyWidth;
-        centerOfMass.y = -(bounds.min.y - body.position.y) / bodyHeight;
-
-        centerOffset.x = body.position.x;
-        centerOffset.y = body.position.y;
+        if (body.parts.length === 1)
+        {
+            var centerOfMass = body.centerOfMass;
+            var centerOffset = body.centerOffset;
+    
+            var bodyWidth = bounds.max.x - bounds.min.x;
+            var bodyHeight = bounds.max.y - bounds.min.y;
+    
+            centerOfMass.x = -(bounds.min.x - body.position.x) / bodyWidth;
+            centerOfMass.y = -(bounds.min.y - body.position.y) / bodyHeight;
+    
+            centerOffset.x = bodyWidth * centerOfMass.x;
+            centerOffset.y = bodyHeight * centerOfMass.y;
+        }
     };
 
     /**
