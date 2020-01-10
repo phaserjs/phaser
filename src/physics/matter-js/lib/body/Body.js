@@ -5,7 +5,7 @@
  *
  * See the included usage [examples](https://github.com/liabru/matter-js/tree/master/examples).
  * @class Body
-*/
+ */
 
 var Body = {};
 
@@ -190,19 +190,6 @@ var Axes = require('../geometry/Axes');
         });
 
         var bounds = body.bounds;
-        var centerOfMass = body.centerOfMass;
-        var centerOffset = body.centerOffset;
-
-        Bounds.update(bounds, body.vertices, body.velocity);
-
-        var bodyWidth = bounds.max.x - bounds.min.x;
-        var bodyHeight = bounds.max.y - bounds.min.y;
-
-        centerOfMass.x = -(bounds.min.x - body.position.x) / bodyWidth;
-        centerOfMass.y = -(bounds.min.y - body.position.y) / bodyHeight;
-
-        centerOffset.x = body.position.x;
-        centerOffset.y = body.position.y;
 
         Vertices.rotate(body.vertices, body.angle, body.position);
         Axes.rotate(body.axes, body.angle);
@@ -215,6 +202,18 @@ var Axes = require('../geometry/Axes');
             mass: options.mass || body.mass,
             inertia: options.inertia || body.inertia
         });
+
+        var centerOfMass = body.centerOfMass;
+        var centerOffset = body.centerOffset;
+
+        var bodyWidth = bounds.max.x - bounds.min.x;
+        var bodyHeight = bounds.max.y - bounds.min.y;
+
+        centerOfMass.x = -(bounds.min.x - body.position.x) / bodyWidth;
+        centerOfMass.y = -(bounds.min.y - body.position.y) / bodyHeight;
+
+        centerOffset.x = body.position.x;
+        centerOffset.y = body.position.y;
     };
 
     /**
@@ -1295,6 +1294,15 @@ var Axes = require('../geometry/Axes');
      * The center of mass of the Body.
      *
      * @property centerOfMass
+     * @type vector
+     * @default { x: 0, y: 0 }
+     */
+
+    /**
+     * The center of the body in pixel values.
+     * Used by Phaser for texture aligment.
+     *
+     * @property centerOffset
      * @type vector
      * @default { x: 0, y: 0 }
      */
