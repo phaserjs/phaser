@@ -102,9 +102,6 @@ var SetBody = {
      * Set this Game Object to use the given existing Matter Body.
      * 
      * The body is first removed from the world before being added to this Game Object.
-     * 
-     * Calling this methods resets previous properties you may have set on the body, including
-     * plugins, mass, friction, etc. So be sure to re-apply these in the options object if needed.
      *
      * @method Phaser.Physics.Matter.Components.SetBody#setExistingBody
      * @since 3.0.0
@@ -146,61 +143,18 @@ var SetBody = {
                 this.world.remove(body, true);
             }
 
-            //  Only add the body if it's not already in the world
             this.world.add(body);
         }
 
         if (this._originComponent)
         {
-            /*
-            var cx = this.width / 2;
-            var cy = this.height / 2;
+            var rx = body.render.sprite.xOffset;
+            var ry = body.render.sprite.yOffset;
 
-            console.log('cx', this.width * body.centerOfMass.x);
-            console.log('cy', this.height * body.centerOfMass.y);
+            var cx = body.centerOffset.x;
+            var cy = body.centerOffset.y;
 
-            var dx = (this.width * body.centerOfMass.x) - cx;
-            var dy = (this.height * body.centerOfMass.y) - cy;
-
-            console.log('dx', dx);
-            console.log('dy', dy);
-
-            // cx -= body.centerOffset.x * 2;
-            // cy += body.centerOffset.y * 2;
-
-            cx -= dx * 2;
-            cy += dy * 1;
-
-            this.setDisplayOrigin(cx, cy);
-            */
-
-            // var cx = this.x / this.width;
-            // var cy = this.y / this.height;
-
-            // var cx = this.width / 2;
-            // var cy = this.height / 2;
-
-            // var dx = cx + (this.width * body.centerOfMass.x) + body.centerOffset.x;
-            // var dy = cy * body.centerOfMass.y) + body.centerOffset.y;
-
-            // console.log(cx, cy);
-
-            // this.setOrigin(cx, cy);
-
-            // this.setOrigin(body.render.sprite.xOffset, body.render.sprite.yOffset);
-
-            // console.log('SO', this.centerOffsetX, this.centerOffsetY);
-
-            // this.setDisplayOrigin(this.centerOffsetX, this.centerOffsetY);
-
-            // this.setOrigin(this.originX - this.centerOffsetX, this.originY + this.centerOffsetY);
-
-            // this.setOrigin(this.body.centerOfMass.x, this.body.centerOfMass.y);
-
-            // this.displayOriginX -= (this.body.centerOffset.x * 2);
-            // this.displayOriginY -= this.body.centerOffset.y;
-
-            // this.setOrigin(this.centerOffsetX, this.centerOffsetY);
+            this.setOrigin(rx + (cx / this.width), ry + (cy / this.height));
         }
 
         return this;
@@ -209,7 +163,7 @@ var SetBody = {
     /**
      * Set this Game Object to create and use a new Body based on the configuration object given.
      * 
-     * Calling this methods resets previous properties you may have set on the body, including
+     * Calling this method resets previous properties you may have set on the body, including
      * plugins, mass, friction, etc. So be sure to re-apply these in the options object if needed.
      *
      * @method Phaser.Physics.Matter.Components.SetBody#setBody
@@ -297,7 +251,7 @@ var SetBody = {
                 break;
 
             case 'fromPhysicsEditor':
-                body = PhysicsEditorParser.parseBody(bodyX, bodyY, bodyWidth, bodyHeight, config);
+                body = PhysicsEditorParser.parseBody(bodyX, bodyY, config, options);
                 break;
         }
 
