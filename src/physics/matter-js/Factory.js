@@ -417,6 +417,7 @@ var Factory = new Class({
 
     /**
      * Create a new composite containing bodies created in the callback in a grid arrangement.
+     * 
      * This function uses the body bounds to prevent overlaps.
      *
      * @method Phaser.Physics.Matter.Factory#stack
