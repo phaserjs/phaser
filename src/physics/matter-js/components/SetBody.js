@@ -152,10 +152,20 @@ var SetBody = {
             var rx = body.render.sprite.xOffset;
             var ry = body.render.sprite.yOffset;
 
-            var cx = body.centerOffset.x;
-            var cy = body.centerOffset.y;
+            var comx = body.centerOfMass.x;
+            var comy = body.centerOfMass.y;
 
-            this.setOrigin(rx + (cx / this.displayWidth), ry + (cy / this.displayHeight));
+            if (comx === 0.5 && comy === 0.5)
+            {
+                this.setOrigin(rx + 0.5, ry + 0.5);
+            }
+            else
+            {
+                var cx = body.centerOffset.x;
+                var cy = body.centerOffset.y;
+
+                this.setOrigin(rx + (cx / this.displayWidth), ry + (cy / this.displayHeight));
+            }
         }
 
         return this;
