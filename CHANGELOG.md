@@ -1,6 +1,6 @@
 # Change Log
 
-## Version 3.22 - Senku - in development
+## Version 3.22 - Kohaku - in development
 
 ### Matter Physics Updates
 
@@ -114,10 +114,9 @@
 * `MatterPhysics.setCollisionCategory` is a new method that will set the collision filter category to the value given, on all of the bodies given. This allows you to easily set the category on bodies that don't have a Phaser Matter Collision component.
 * `MatterPhysics.setCollisionGroup` is a new method that will set the collision filter group to the value given, on all of the bodies given. This allows you to easily set the group on bodies that don't have a Phaser Matter Collision component.
 * `MatterPhysics.setCollidesWith` is a new method that will set the collision filter mask to the value given, on all of the bodies given. This allows you to easily set the filter mask on bodies that don't have a Phaser Matter Collision component.
-* `Matter.Body.centerOfMass` is a new property added to the Matter Body object that retains the center of mass coordinates when the Body is first created.
-* `Matter.Body.render.sprite.xOffset` and `yOffset` are no longer set to anything when a Body is created. They are left as zero, or you can override them in the Body config, in which case the value is added to the sprite origin offset.
-* `Matter.Transform.centerOffsetX` is a new read-only property available on all Matter Game Objects that returns the horizontal offset between the center of the frame and the center of mass. This can be used to allow for accurately mapping texture centers to the body center.
-* `Matter.Transform.centerOffsetY` is a new read-only property available on all Matter Game Objects that returns the vertical offset between the center of the frame and the center of mass. This can be used to allow for accurately mapping texture centers to the body center.
+* `Matter.Body.centerOfMass` is a new vec2 property added to the Matter Body object that retains the center of mass coordinates when the Body is first created, or has parts added to it. These are float values, derived from the body position and bounds.
+* `Matter.Body.centerOffset` is a new vec2 property added to the Matter Body object that retains the center offset coordinates when the Body is first created, or has parts added to it. These are pixel values.
+* `Matter.Body.render.sprite.xOffset` and `yOffset` are no longer set to anything when a Body is created. They are left as zero, or you can override them in the Body config, in which case the value is added to the sprite origin offset during a call to `setExistingBody`.
 * The `Matter.Mass.centerOfMass` component property now returns the pre-calculated Body `centerOfMass` property, which is much more accurate than the previous bounds offset value.
 * `Matter.setExistingBody`, which is called interally whenever a Body is set on a Game Object, now uses the new `centerOffset` values to ensure that the texture frame is correctly centered based on the center of mass, not the Body bounds, allowing for much more accurate body to texture mapping with complex multi-part compound bodies.
 * The `Matter.PhysicsEditorParser` has been updated so it no longer needs to set the render offsets, and instead uses the center of mass values.
@@ -126,12 +125,12 @@
 * `Constraint.pointBWorld` is a new method added to Matter that returns the world-space position of `constraint.pointB`, accounting for `constraint.bodyB`.
 * `Body.setCentre` is a new method added to Matter that allows you to set the center of mass of a Body (please note the English spelling of this function.)
 * Bumped Matter Plugin versions to avoid console logs from Common.info and Common.warn.
-* `Body.scale` is a new vector that holds the most recent scale values as passed to `Body.scale`.
+* `Body.scale` is a new read-only vector that holds the most recent scale values as passed to `Body.scale`.
 * `Matter.Bodies.flagCoincidentParts` is a new function that will flags all internal edges (coincident parts) on an array of body parts. This was previously part of the `fromVertices` function, but has been made external for outside use.
 * `PhysicsEditorParser.parseVertices` now uses `Bodies.flagCoincidentParts` to avoid duplicating code.
 * `MatterGameObject` has a new optional boolean parameter `addToWorld` which lets you control if the Body should be added to the world or not. Useful for toggling off should you be merging pre-existing bodies with Game Objects.
 * The `Matter.SetBody.setExistingBody` function, which all Matter Game Objects have, has a new parameter `addToWorld` which allows you to control when the body is added to the Matter world should you not require it immediately. It will also only add the body to the world if it doesn't already exist within it, or any of its composites.
-* `PointerConstraint` has been recoded so that when pressed down, it only polls the World for a body hit test during the next game update. This stops it coming out of sync with the state of the world. Useage of the constraint remains the same as before.
+* `PointerConstraint` has been recoded so that when pressed down, it only polls the World for a body hit test during the next game update. This stops it coming out of sync with the state of the world. Use of the constraint remains the same as before.
 * `Matter.getMatterBodies` is a new function that will return an array of Matter JS Bodies from the given input array, which can be Matter Game Objects, or any class that extends them.
 * `Matter.World.has` is a new method that will take a Matter Body, or Game Object, and search the world for it. If found, it will return `true`.
 * Matter now has the option to use the Runner that it ships with. The Matter Runner operates in two modes: fixed and variable. In the fixed mode, the Matter Engine updates at a fixed delta value every frame (which is what Phaser has used since the first version). In variable mode, the delta will be smoothed and capped each frame to keep the simulation constant, but at the cost of determininism. You can configure the runner by setting the `runner` property in the Matter Config object, both of which are fully covered with JSDocs. As of 3.22 the runner is now used by default in variable (non-fixed) mode. If you wish to return to the previous behavior, set `runner: { isFixed: true }`.
@@ -168,6 +167,9 @@
 * `MatterPhysics.alignBody` is a new method that will align a Body, or Matter Game Object, against the given coordinates, using the given alignment constant. For example, this allows you to easily position a body to the `BOTTOM_LEFT`, or `TOP_CENTER`, or a coordinate. Alignment is based on the body bounds.
 * `Phaser.Types.Physics.Matter.MatterBody` is a new type def that contains all of the valid Matter Body objects. This is now used through-out the JSDocs to aid in code-completion.
 * `Matter.BodyBounds` is a new class that contains methods to help you extract world coordinates from various points around the bounds of a Matter Body. Because Matter bodies are positioned based on their center of mass, and not a dimension based center, you often need to get the bounds coordinates in order to properly align them in the world. You can access this new class via `this.matter.bodyBounds`.
+* The method signature for `Matter.PhysicsEditorParser.parseBody` has changed. It now takes `(x, y, config, options)` and no longer has `width` and `height` parameters. Please see the updated documentation for more details if you were calling this method directly.
+* `Matter.PhysicsEditorParser.parseBody` can now accept a MatterBodyConfig file as a 4th parameter. This allows you to set Body properties when the body is created, overriding whatever values may have been set in the PhysicsEditor JSON.
+* `MatterPhysics.fromPhysicsEditor` is a new method that allows you to create a Matter Body based on the given PhysicsEditor shape data. Previously, you could only using PhysicsEditor data with a Matter Game Object, but now you can create a body directly using it.
 
 ### New Features
 
