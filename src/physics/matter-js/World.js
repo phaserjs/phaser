@@ -1318,12 +1318,12 @@ var World = new Class({
 
         if (config.showBroadphase && engine.broadphase.controller)
         {
-            this.renderGrid(engine.broadphase, graphics, config.broadphaseColor, 0.2);
+            this.renderGrid(engine.broadphase, graphics, config.broadphaseColor, 0.5);
         }
 
         if (config.showBounds)
         {
-            this.renderBodyBounds(bodies, graphics, config.boundsColor, 0.2);
+            this.renderBodyBounds(bodies, graphics, config.boundsColor, 0.5);
         }
 
         if (config.showBody || config.showStaticBody)
