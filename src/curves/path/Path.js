@@ -198,12 +198,12 @@ var Path = new Class({
      * @method Phaser.Curves.Path#cubicBezierTo
      * @since 3.0.0
      *
-     * @param {(number|Phaser.Math.Vector2)} x - The x coordinate of the end point. Or, if a Vec2, the p1 value.
-     * @param {(number|Phaser.Math.Vector2)} y - The y coordinate of the end point. Or, if a Vec2, the p2 value.
-     * @param {(number|Phaser.Math.Vector2)} control1X - The x coordinate of the first control point. Or, if a Vec2, the p3 value.
-     * @param {number} [control1Y] - The y coordinate of the first control point. Not used if vec2s are provided as the first 3 arguments.
-     * @param {number} [control2X] - The x coordinate of the second control point. Not used if vec2s are provided as the first 3 arguments.
-     * @param {number} [control2Y] - The y coordinate of the second control point. Not used if vec2s are provided as the first 3 arguments.
+     * @param {(number|Phaser.Math.Vector2)} x - The x coordinate of the end point. Or, if a Vector2, the p1 value.
+     * @param {(number|Phaser.Math.Vector2)} y - The y coordinate of the end point. Or, if a Vector2, the p2 value.
+     * @param {(number|Phaser.Math.Vector2)} control1X - The x coordinate of the first control point. Or, if a Vector2, the p3 value.
+     * @param {number} [control1Y] - The y coordinate of the first control point. Not used if Vector2s are provided as the first 3 arguments.
+     * @param {number} [control2X] - The x coordinate of the second control point. Not used if Vector2s are provided as the first 3 arguments.
+     * @param {number} [control2Y] - The y coordinate of the second control point. Not used if Vector2s are provided as the first 3 arguments.
      *
      * @return {Phaser.Curves.Path} This Path object.
      */
@@ -214,7 +214,7 @@ var Path = new Class({
         var p2;
         var p3;
 
-        //  Assume they're all vec2s
+        //  Assume they're all Vector2s
         if (x instanceof Vector2)
         {
             p1 = x;
@@ -252,7 +252,7 @@ var Path = new Class({
         var p1;
         var p2;
 
-        //  Assume they're all vec2s
+        //  Assume they're all Vector2s
         if (x instanceof Vector2)
         {
             p1 = x;
