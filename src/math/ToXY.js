@@ -7,11 +7,11 @@
 var Vector2 = require('./Vector2');
 
 /**
- * Returns a Vec2 containing the x and y position of the given index in a `width` x `height` sized grid.
+ * Returns a Vector2 containing the x and y position of the given index in a `width` x `height` sized grid.
  * 
  * For example, in a 6 x 4 grid, index 16 would equal x: 4 y: 2.
  * 
- * If the given index is out of range an empty Vec2 is returned.
+ * If the given index is out of range an empty Vector2 is returned.
  *
  * @function Phaser.Math.ToXY
  * @since 3.19.0
