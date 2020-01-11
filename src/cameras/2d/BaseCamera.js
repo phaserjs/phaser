@@ -577,7 +577,7 @@ var BaseCamera = new Class({
      *
      * @param {number} x - The horizontal coordinate to center on.
      * @param {number} y - The vertical coordinate to center on.
-     * @param {Phaser.Math.Vector2} [out] - A Vec2 to store the values in. If not given a new Vec2 is created.
+     * @param {Phaser.Math.Vector2} [out] - A Vector2 to store the values in. If not given a new Vector2 is created.
      *
      * @return {Phaser.Math.Vector2} The scroll coordinates stored in the `x` and `y` properties.
      */
