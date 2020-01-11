@@ -13,7 +13,6 @@ var GEOM_CONST = require('../const');
  * @classdesc
  * A Polygon object
  *
-
  * The polygon is a closed shape consists of a series of connected straight lines defined by list of ordered points.
  * Several formats are supported to define the list of points, check the setTo method for details. 
  * This is a geometry object allowing you to define and inspect the shape.
