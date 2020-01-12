@@ -17,6 +17,10 @@ AlignInMap[ALIGN_CONST.RIGHT_CENTER] = require('./RightCenter');
 AlignInMap[ALIGN_CONST.TOP_CENTER] = require('./TopCenter');
 AlignInMap[ALIGN_CONST.TOP_LEFT] = require('./TopLeft');
 AlignInMap[ALIGN_CONST.TOP_RIGHT] = require('./TopRight');
+AlignInMap[ALIGN_CONST.LEFT_BOTTOM] = AlignInMap[ALIGN_CONST.BOTTOM_LEFT];
+AlignInMap[ALIGN_CONST.LEFT_TOP] = AlignInMap[ALIGN_CONST.TOP_LEFT];
+AlignInMap[ALIGN_CONST.RIGHT_BOTTOM] = AlignInMap[ALIGN_CONST.BOTTOM_RIGHT];
+AlignInMap[ALIGN_CONST.RIGHT_TOP] = AlignInMap[ALIGN_CONST.TOP_RIGHT];
 
 /**
  * Takes given Game Object and aligns it so that it is positioned relative to the other.
