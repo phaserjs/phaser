@@ -214,6 +214,7 @@ All of the following are specific to the Matter Physics implementation used by P
 * The `Graphics` Game Object now uses the AlphaSingle component, allowing you to uniformly set the alpha of the element, rather than a quad alpha, which never worked for these objects.
 * `TweenData` has a new property called `previous` which holds the eased property value prior to the update.
 * The `TWEEN_UPDATE` event now sends two new parameters to the handler: `current` and `previous` which contain the current and previous property values.
+* During `collideSpriteVsGroup` checks it will now skip bodies that are disabled to save doing a `contains` test (thanks @samme)
 
 ### Bug Fixes
 
