@@ -235,6 +235,8 @@ My thanks to the following for helping with the Phaser 3 Examples, Docs and Type
 
 @fselcukcan Bambosh @louisth @hexus @javigaralva @samme @BeLi4L @jcyuan @javigaralva @T-Grave @bramp @Chnapy @dranitski
 
+The Matter TypeScript defs have been updated to include lots of missing classes, removed some redundant elements and general fixes. The Phaser TypeScript defs now reference the Matter defs directly and no longer try to parse them from the JSDocs. This allows the `MatterJS` namespace to work in TypeScript projects without any compilation warnings.
+
 The Spine Plugin now has new TypeScript defs in the `types` folder thanks to @supertommy
 
 ## Version 3.21.0 - Senku - 22nd November 2019
