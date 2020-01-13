@@ -464,6 +464,7 @@ var ScaleManager = new Class({
         }
 
         game.events.on(GameEvents.PRE_STEP, this.step, this);
+        game.events.once(GameEvents.DESTROY, this.destroy, this);
 
         this.startListeners();
     },
