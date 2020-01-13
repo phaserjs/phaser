@@ -36,7 +36,7 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPer
     var gidMap = src.gidMap;
     var pipeline = src.pipeline;
 
-    var getTint = Utils.getTintAppendFloatAlpha;
+    var getTint = Utils.getTintAppendFloatAlphaAndSwap;
 
     var scrollFactorX = src.scrollFactorX;
     var scrollFactorY = src.scrollFactorY;
