@@ -1,8 +1,12 @@
 # Change Log
 
-## Version 3.22 - Kohaku - in development
+## Version 3.22 - Kohaku - January 13th 2020
 
-### Matter Physics Updates
+### Matter Physics
+
+All of the following are specific to the Matter Physics implementation used by Phaser:
+
+#### Matter Physics New Features
 
 * Matter Physics now has 100% JSDoc coverage! Woohoo :)
 * `MatterDebugConfig` is a new configuration object that contains all of the following new Matter debug settings:
@@ -52,9 +56,6 @@
 * `anchorSize`- The size of the circles drawn as the constraint anchors.
 * `showConvexHulls`- When rendering polygon bodies, render the convex hull as well?
 * `hullColor`- The color value of hulls when `showConvexHulls` is set.
-* The `debug` property in the Matter World Config is now a `MatterDebugConfig` option instead of a boolean. However, if a boolean is given, it will use the default debug config values.
-* The following `MatterWorldConfig` options have now been removed: `debugShowBody`, `debugShowStaticBody`, `debugBodyColor`, `debugBodyFillColor`, `debugStaticBodyColor`, `debugShowJoint`, `debugJointColor`, `debugWireframes`, `debugShowInternalEdges`, `debugShowConvexHulls`, `debugConvexHullColor` and `debugShowSleeping`. These can all be set via the new `MatterDebugConfig` object instead.
-* The object `World.defaults` has been removed. Defaults are now access via `World.debugDefaults`.
 * `World.renderBody` is a new method that will render a single Matter Body to the given Graphics object. This is used internally during debug rendering but is also public. This allows you to control which bodies are rendered and to which Graphics object, should you wish to use them in-game and not just during debugging.
 * `World.renderConstraint` is a new method that will render a single Matter Constraint, such as a pin or a spring, to the given Graphics object. This is used internally during debug rendering but is also public. This allows you to control which constraints are rendered and to which Graphics object, should you wish to use them in-game and not just during debugging.
 * `World.renderConvexHull` is a new method that will render the convex hull of a single Matter Body, to the given Graphics object. This is used internally during debug rendering but is also public. This allows you to control which hulls are rendered and to which Graphics object, should you wish to use them in-game and not just during debugging.
@@ -64,12 +65,6 @@
 * `World.renderBodyVelocity` is a new method that will render a velocity line for all the given bodies to the given graphics instance.
 * `World.renderSeparations` is a new method that will render the separations in the current pairs list to the given graphics instance.
 * `World.renderCollisions` is a new method that will render the collision points and normals in the current pairs list to the given graphics instance.
-* `World.renderBodies` has been rewritten to cache commonly-used values and avoid a situation when a single body would be rendered twice.
-* The private method `World.renderConvexHulls` has been removed as it's no longer used internally.
-* The private method `World.renderWireframes` has been removed as it's no longer used internally.
-* Due to the rewrite of the debug rendering, it is now possible to render _just_ constraints, where-as before this was only possible if bodies were being rendered as well. Fix #4880 (thanks @roberto257)
-* The method `World.fromPath` has been removed. This was never used internally and you can get the same results by calling `Vertices.fromPath`.
-* The `World.setBounds` argument `thickness` now defaults to 64, not 128, to keep it matching the Matter World Config.
 * `World.getAllBodies` is a new method that will return all bodies in the Matter World.
 * `World.getAllConstraints` is a new method that will return all constraints in the Matter World.
 * `World.getAllComposites` is a new method that will return all composites in the Matter World.
@@ -92,8 +87,6 @@
 * `AFTER_ADD` is a new Event dispatched by `Matter.World` when a Body or Constraint has been added to the World.
 * `BEFORE_REMOVE` is a new Event dispatched by `Matter.World` when a Body or Constraint is about to be removed from the World.
 * `AFTER_REMOVE` is a new Event dispatched by `Matter.World` when a Body or Constraint has been removed from the World.
-* The `Body.render.fillStyle` property that existed on the Matter Body object has been removed and replaced with `fillColor`.
-* The `Body.render.strokeStyle` property that existed on the Matter Body object has been removed and replaced with `lineColor`.
 * `Body.render.lineOpacity` is a new property on the Matter Body object that allows for custom debug rendering.
 * `Body.render.lineThickness` is a new property on the Matter Body object that allows for custom debug rendering.
 * `Body.render.fillOpacity` is a new property on the Matter Body object that allows for custom debug rendering.
@@ -116,21 +109,11 @@
 * `MatterPhysics.setCollidesWith` is a new method that will set the collision filter mask to the value given, on all of the bodies given. This allows you to easily set the filter mask on bodies that don't have a Phaser Matter Collision component.
 * `Matter.Body.centerOfMass` is a new vec2 property added to the Matter Body object that retains the center of mass coordinates when the Body is first created, or has parts added to it. These are float values, derived from the body position and bounds.
 * `Matter.Body.centerOffset` is a new vec2 property added to the Matter Body object that retains the center offset coordinates when the Body is first created, or has parts added to it. These are pixel values.
-* `Matter.Body.render.sprite.xOffset` and `yOffset` are no longer set to anything when a Body is created. They are left as zero, or you can override them in the Body config, in which case the value is added to the sprite origin offset during a call to `setExistingBody`.
-* The `Matter.Mass.centerOfMass` component property now returns the pre-calculated Body `centerOfMass` property, which is much more accurate than the previous bounds offset value.
-* `Matter.setExistingBody`, which is called interally whenever a Body is set on a Game Object, now uses the new `centerOffset` values to ensure that the texture frame is correctly centered based on the center of mass, not the Body bounds, allowing for much more accurate body to texture mapping with complex multi-part compound bodies.
-* The `Matter.PhysicsEditorParser` has been updated so it no longer needs to set the render offsets, and instead uses the center of mass values.
-* If the `Matter.Body` config doesn't contain a `position` property, it will now default to using `Vertices.centre(body.vertices)` as the position. In most cases, this is what you need, so it saves having to pass it in the config object.
 * `Constraint.pointAWorld` is a new method added to Matter that returns the world-space position of `constraint.pointA`, accounting for `constraint.bodyA`.
 * `Constraint.pointBWorld` is a new method added to Matter that returns the world-space position of `constraint.pointB`, accounting for `constraint.bodyB`.
 * `Body.setCentre` is a new method added to Matter that allows you to set the center of mass of a Body (please note the English spelling of this function.)
-* Bumped Matter Plugin versions to avoid console logs from Common.info and Common.warn.
 * `Body.scale` is a new read-only vector that holds the most recent scale values as passed to `Body.scale`.
 * `Matter.Bodies.flagCoincidentParts` is a new function that will flags all internal edges (coincident parts) on an array of body parts. This was previously part of the `fromVertices` function, but has been made external for outside use.
-* `PhysicsEditorParser.parseVertices` now uses `Bodies.flagCoincidentParts` to avoid duplicating code.
-* `MatterGameObject` has a new optional boolean parameter `addToWorld` which lets you control if the Body should be added to the world or not. Useful for toggling off should you be merging pre-existing bodies with Game Objects.
-* The `Matter.SetBody.setExistingBody` function, which all Matter Game Objects have, has a new parameter `addToWorld` which allows you to control when the body is added to the Matter world should you not require it immediately. It will also only add the body to the world if it doesn't already exist within it, or any of its composites.
-* `PointerConstraint` has been recoded so that when pressed down, it only polls the World for a body hit test during the next game update. This stops it coming out of sync with the state of the world. Use of the constraint remains the same as before.
 * `Matter.getMatterBodies` is a new function that will return an array of Matter JS Bodies from the given input array, which can be Matter Game Objects, or any class that extends them.
 * `Matter.World.has` is a new method that will take a Matter Body, or Game Object, and search the world for it. If found, it will return `true`.
 * Matter now has the option to use the Runner that it ships with. The Matter Runner operates in two modes: fixed and variable. In the fixed mode, the Matter Engine updates at a fixed delta value every frame (which is what Phaser has used since the first version). In variable mode, the delta will be smoothed and capped each frame to keep the simulation constant, but at the cost of determininism. You can configure the runner by setting the `runner` property in the Matter Config object, both of which are fully covered with JSDocs. As of 3.22 the runner is now used by default in variable (non-fixed) mode. If you wish to return to the previous behavior, set `runner: { isFixed: true }`.
@@ -150,8 +133,6 @@
 * `MatterPhysics.setAngularVelocity` is a new method that will set the angular velocity of the given physics bodies. This can be used on all Matter bodies, not just those created via the factory.
 * `MatterPhysics.applyForce` is a new method that applies a force to a body, at the bodies current position, including resulting torque. This can be used on all Matter bodies, not just those created via the factory.
 * `MatterPhysics.applyForceFromPosition` is a new method that applies a force to a body from the given world position, including resulting torque. If no angle is given, the current body angle is used. This can be used on all Matter bodies, not just those created via the factory.
-* You can now set `gravity: false` in your Matter Config and it will reset gravity from the defaults to zero.
-* The internal Matter `Composite.setModified` function will now emit a `compositeModified` event, which the Matter World listens for, if debug draw is enabled, so it can update the composite children render styles.
 * `MatterPhysics.fromSVG` is a new method that allows you to create a Body from the given SVG path data.
 * The `Matter.Factory.velocity` method has been removed. Please now use `MatterPhysics.setVelocity` instead.
 * The `Matter.Factory.angularVelocity` method has been removed. Please now use `MatterPhysics.setAngularVelocity` instead.
@@ -168,14 +149,43 @@
 * `Phaser.Types.Physics.Matter.MatterBody` is a new type def that contains all of the valid Matter Body objects. This is now used through-out the JSDocs to aid in code-completion.
 * `Matter.BodyBounds` is a new class that contains methods to help you extract world coordinates from various points around the bounds of a Matter Body. Because Matter bodies are positioned based on their center of mass, and not a dimension based center, you often need to get the bounds coordinates in order to properly align them in the world. You can access this new class via `this.matter.bodyBounds`.
 * The method signature for `Matter.PhysicsEditorParser.parseBody` has changed. It now takes `(x, y, config, options)` and no longer has `width` and `height` parameters. Please see the updated documentation for more details if you were calling this method directly.
-* `Matter.PhysicsEditorParser.parseBody` can now accept a MatterBodyConfig file as a 4th parameter. This allows you to set Body properties when the body is created, overriding whatever values may have been set in the PhysicsEditor JSON.
 * `MatterPhysics.fromPhysicsEditor` is a new method that allows you to create a Matter Body based on the given PhysicsEditor shape data. Previously, you could only using PhysicsEditor data with a Matter Game Object, but now you can create a body directly using it.
-* `Matter.PhysicsEditorParser` had a bug where it would allow fixtures with non-clockwise sorted vertices through, which would break pointer constraint interaction with these bodies. The parser now sorts the vertices properly. Fix #4261 (thanks @Sanchez3)
 * `Matter.PhysicsJSONParser` is a new parser that will create Matter bodies from JSON physics data files. Currently onto the Phaser Physics Tracer app exports in this format, but details are published in the JSDocs, so any app can do so.
 * `Matter.Factory.fromJSON` is a new method that will create a body from a JSON physics data file.
 * The `SetBody` Matter component can now automatically use shapes created in the Phaser Physics Tracer App in the JSON data format.
 * `Matter.Components.Sleep.setToSleep` is a new method available on any Matter Game Object that will send the body to sleep, if Engine sleeping has been enabled.
 * `Matter.Components.Sleep.setAwake` is a new method available on any Matter Game Object that will awake a body from sleep, if Engine sleeping has been enabled.
+
+#### Matter Physics Updates
+
+* The `debug` property in the Matter World Config is now a `MatterDebugConfig` option instead of a boolean. However, if a boolean is given, it will use the default debug config values.
+* The following `MatterWorldConfig` options have now been removed: `debugShowBody`, `debugShowStaticBody`, `debugBodyColor`, `debugBodyFillColor`, `debugStaticBodyColor`, `debugShowJoint`, `debugJointColor`, `debugWireframes`, `debugShowInternalEdges`, `debugShowConvexHulls`, `debugConvexHullColor` and `debugShowSleeping`. These can all be set via the new `MatterDebugConfig` object instead.
+* The object `World.defaults` has been removed. Defaults are now access via `World.debugDefaults`.
+* `World.renderBodies` has been rewritten to cache commonly-used values and avoid a situation when a single body would be rendered twice.
+* The private method `World.renderConvexHulls` has been removed as it's no longer used internally.
+* The private method `World.renderWireframes` has been removed as it's no longer used internally.
+* The method `World.fromPath` has been removed. This was never used internally and you can get the same results by calling `Vertices.fromPath`.
+* The `World.setBounds` argument `thickness` now defaults to 64, not 128, to keep it matching the Matter World Config.
+* The `Body.render.fillStyle` property that existed on the Matter Body object has been removed and replaced with `fillColor`.
+* The `Body.render.strokeStyle` property that existed on the Matter Body object has been removed and replaced with `lineColor`.
+* `Matter.Body.render.sprite.xOffset` and `yOffset` are no longer set to anything when a Body is created. They are left as zero, or you can override them in the Body config, in which case the value is added to the sprite origin offset during a call to `setExistingBody`.
+* The `Matter.Mass.centerOfMass` component property now returns the pre-calculated Body `centerOfMass` property, which is much more accurate than the previous bounds offset value.
+* `Matter.setExistingBody`, which is called interally whenever a Body is set on a Game Object, now uses the new `centerOffset` values to ensure that the texture frame is correctly centered based on the center of mass, not the Body bounds, allowing for much more accurate body to texture mapping with complex multi-part compound bodies.
+* The `Matter.PhysicsEditorParser` has been updated so it no longer needs to set the render offsets, and instead uses the center of mass values.
+* If the `Matter.Body` config doesn't contain a `position` property, it will now default to using `Vertices.centre(body.vertices)` as the position. In most cases, this is what you need, so it saves having to pass it in the config object.
+* Bumped Matter Plugin versions to avoid console logs from Common.info and Common.warn.
+* `PhysicsEditorParser.parseVertices` now uses `Bodies.flagCoincidentParts` to avoid duplicating code.
+* `MatterGameObject` has a new optional boolean constructor parameter `addToWorld` which lets you control if the Body should be added to the world or not. Useful for toggling off should you be merging pre-existing bodies with Game Objects.
+* The `Matter.SetBody.setExistingBody` function, which all Matter Game Objects have, has a new parameter `addToWorld` which allows you to control when the body is added to the Matter world should you not require it immediately. It will also only add the body to the world if it doesn't already exist within it, or any of its composites.
+* `PointerConstraint` has been recoded so that when pressed down, it only polls the World for a body hit test during the next game update. This stops it coming out of sync with the state of the world. Use of the constraint remains the same as before.
+* You can now set `gravity: false` in your Matter Config and it will reset gravity from the defaults to zero.
+* The internal Matter `Composite.setModified` function will now emit a `compositeModified` event, which the Matter World listens for, if debug draw is enabled, so it can update the composite children render styles.
+* `Matter.PhysicsEditorParser.parseBody` can now accept a MatterBodyConfig file as a 4th parameter. This allows you to set Body properties when the body is created, overriding whatever values may have been set in the PhysicsEditor JSON.
+
+#### Matter Physics Bug Fixes
+
+* Due to the rewrite of the debug rendering, it is now possible to render _just_ constraints, where-as before this was only possible if bodies were being rendered as well. Fix #4880 (thanks @roberto257)
+* `Matter.PhysicsEditorParser` had a bug where it would allow fixtures with non-clockwise sorted vertices through, which would break pointer constraint interaction with these bodies. The parser now sorts the vertices properly. Fix #4261 (thanks @Sanchez3)
 
 ### New Features
 
@@ -218,7 +228,6 @@
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
 @fselcukcan Bambosh @louisth @hexus @javigaralva @samme @BeLi4L @jcyuan @javigaralva @T-Grave @bramp 
-
 
 ## Version 3.21.0 - Senku - 22nd November 2019
 
