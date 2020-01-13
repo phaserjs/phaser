@@ -18,6 +18,7 @@ module.exports = {
     GetTweens: require('./GetTweens'),
     GetValueOp: require('./GetValueOp'),
     NumberTweenBuilder: require('./NumberTweenBuilder'),
+    StaggerBuilder: require('./StaggerBuilder'),
     TimelineBuilder: require('./TimelineBuilder'),
     TweenBuilder: require('./TweenBuilder')
 

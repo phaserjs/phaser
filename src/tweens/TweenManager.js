@@ -300,6 +300,7 @@ var TweenManager = new Class({
      * @method Phaser.Tweens.TweenManager#stagger
      * @since 3.19.0
      *
+     * @param {(number|number[])} value - The amount to stagger by, or an array containing two elements representing the min and max values to stagger between.
      * @param {Phaser.Types.Tweens.StaggerConfig} config - The configuration object for the Stagger function.
      *
      * @return {function} The stagger function.
