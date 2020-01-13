@@ -22,7 +22,7 @@ var AlphaSingle = {
     /**
      * Private internal value. Holds the global alpha value.
      *
-     * @name Phaser.GameObjects.Components.Alpha#_alpha
+     * @name Phaser.GameObjects.Components.AlphaSingle#_alpha
      * @type {number}
      * @private
      * @default 1
@@ -35,7 +35,7 @@ var AlphaSingle = {
      *
      * Immediately sets the alpha levels back to 1 (fully opaque).
      *
-     * @method Phaser.GameObjects.Components.Alpha#clearAlpha
+     * @method Phaser.GameObjects.Components.AlphaSingle#clearAlpha
      * @since 3.0.0
      *
      * @return {this} This Game Object instance.
@@ -49,7 +49,7 @@ var AlphaSingle = {
      * Set the Alpha level of this Game Object. The alpha controls the opacity of the Game Object as it renders.
      * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
      *
-     * @method Phaser.GameObjects.Components.Alpha#setAlpha
+     * @method Phaser.GameObjects.Components.AlphaSingle#setAlpha
      * @since 3.0.0
      *
      * @param {number} [value=1] - The alpha value applied across the whole Game Object.
@@ -70,7 +70,7 @@ var AlphaSingle = {
      *
      * This is a global value, impacting the entire Game Object, not just a region of it.
      *
-     * @name Phaser.GameObjects.Components.Alpha#alpha
+     * @name Phaser.GameObjects.Components.AlphaSingle#alpha
      * @type {number}
      * @since 3.0.0
      */
