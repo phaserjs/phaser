@@ -113,7 +113,7 @@ var Line = new Class({
      * @method Phaser.Geom.Line#getPoints
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point} O - [output,$return]
+     * @generic {Phaser.Geom.Point[]} O - [output,$return]
      *
      * @param {integer} quantity - The number of points to place on the line. Set to `0` to use `stepRate` instead.
      * @param {integer} [stepRate] - The distance between each point on the line. When set, `quantity` is implied and should be set to `0`.

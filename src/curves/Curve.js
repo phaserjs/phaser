@@ -313,6 +313,8 @@ var Curve = new Class({
      * @method Phaser.Curves.Curve#getPoints
      * @since 3.0.0
      *
+     * @generic {Phaser.Math.Vector2[]} O - [out,$return]
+     *
      * @param {integer} [divisions] - The number of divisions to make.
      * @param {number} [stepRate] - The curve distance between points, implying `divisions`.
      * @param {(array|Phaser.Math.Vector2[])} [out] - An optional array to store the points in.
