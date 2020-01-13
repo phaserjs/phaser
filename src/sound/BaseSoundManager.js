@@ -14,12 +14,7 @@ var NOOP = require('../utils/NOOP');
 
 /**
  * @classdesc
- * The sound manager is responsible for playing back audio via Web Audio API or HTML Audio tag as fallback.
- * The audio file type and the encoding of those files are extremely important.
- *
- * Not all browsers can play all audio formats.
- *
- * There is a good guide to what's supported [here](https://developer.mozilla.org/en-US/Apps/Fundamentals/Audio_and_video_delivery/Cross-browser_audio_basics#Audio_Codec_Support).
+ * Base class for other Sound Manager classes.
  *
  * @class BaseSoundManager
  * @extends Phaser.Events.EventEmitter
@@ -28,6 +23,10 @@ var NOOP = require('../utils/NOOP');
  * @since 3.0.0
  *
  * @param {Phaser.Game} game - Reference to the current game instance.
+ *
+ * @see Phaser.Sound.HTML5AudioSoundManager
+ * @see Phaser.Sound.NoAudioSoundManager
+ * @see Phaser.Sound.WebAudioSoundManager
  */
 var BaseSoundManager = new Class({
 

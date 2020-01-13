@@ -13,10 +13,10 @@ var NOOP = require('../../utils/NOOP');
 
 /**
  * @classdesc
- * No audio implementation of the sound manager. It is used if audio has been
+ * No-audio implementation of the Sound Manager. It is used if audio has been
  * disabled in the game config or the device doesn't support any audio.
  *
- * It represents a graceful degradation of sound manager logic that provides
+ * It represents a graceful degradation of Sound Manager logic that provides
  * minimal functionality and prevents Phaser projects that use audio from
  * breaking on devices that don't support any audio playback technologies.
  *
