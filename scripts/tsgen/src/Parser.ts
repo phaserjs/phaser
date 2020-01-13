@@ -36,15 +36,12 @@ export class Parser {
     }
 
     emit() {
+
+        const matter = '/// <reference types="matter" />';
+
         let ignored = [];
         let result = this.topLevel.reduce((out: string, obj: dom.TopLevelDeclaration) => {
-            // TODO: remove once stable
-            // if (<string>obj.kind === 'property') {
-            //     ignored.push((<any>obj).name);
-            //     return out;
-            // }
-            //////////////////////////
-            return out + dom.emit(obj);
+            return matter + '\n\n' + out + dom.emit(obj);
         }, '');
 
         if (ignored.length > 0)
