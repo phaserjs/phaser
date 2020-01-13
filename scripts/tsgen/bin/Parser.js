@@ -24,15 +24,10 @@ class Parser {
     }
     emit() {
         let ignored = [];
-        let result = this.topLevel.reduce((out, obj) => {
-            // TODO: remove once stable
-            // if (<string>obj.kind === 'property') {
-            //     ignored.push((<any>obj).name);
-            //     return out;
-            // }
-            //////////////////////////
+        let result = '/// <reference types="./matter" />\n\n';
+        result = result.concat(this.topLevel.reduce((out, obj) => {
             return out + dom.emit(obj);
-        }, '');
+        }, ''));
         if (ignored.length > 0) {
             console.log('ignored top level properties:');
             console.log(ignored);
@@ -45,6 +40,7 @@ class Parser {
             // TODO: Custom temporary rules
             switch (doclet.longname) {
                 case 'Phaser.GameObjects.Components.Alpha':
+                case 'Phaser.GameObjects.Components.AlphaSingle':
                 case 'Phaser.GameObjects.Components.Animation':
                 case 'Phaser.GameObjects.Components.BlendMode':
                 case 'Phaser.GameObjects.Components.ComputedSize':

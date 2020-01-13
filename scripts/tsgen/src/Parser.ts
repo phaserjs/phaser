@@ -37,12 +37,13 @@ export class Parser {
 
     emit() {
 
-        const matter = '/// <reference types="matter" />';
-
         let ignored = [];
-        let result = this.topLevel.reduce((out: string, obj: dom.TopLevelDeclaration) => {
-            return matter + '\n\n' + out + dom.emit(obj);
-        }, '');
+
+        let result = '/// <reference types="./matter" />\n\n';
+
+        result = result.concat(this.topLevel.reduce((out: string, obj: dom.TopLevelDeclaration) => {
+            return out + dom.emit(obj);
+        }, ''));
 
         if (ignored.length > 0)
         {
@@ -62,6 +63,7 @@ export class Parser {
             switch (doclet.longname)
             {
                 case 'Phaser.GameObjects.Components.Alpha':
+                case 'Phaser.GameObjects.Components.AlphaSingle':
                 case 'Phaser.GameObjects.Components.Animation':
                 case 'Phaser.GameObjects.Components.BlendMode':
                 case 'Phaser.GameObjects.Components.ComputedSize':
