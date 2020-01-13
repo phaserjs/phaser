@@ -290,7 +290,7 @@ var MatterPhysics = new Class({
         /**
          * A reference to the `Matter.Bodies` module.
          * 
-         * The `Matter.Bodies` module contains factory methods for creating rigid body models 
+         * The `Matter.Bodies` module contains factory methods for creating rigid bodies
          * with commonly used body configurations (such as rectangles, circles and other polygons).
          *
          * @name Phaser.Physics.Matter.MatterPhysics#bodies
