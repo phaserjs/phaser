@@ -1,14 +1,16 @@
-// Type definitions for Matter.js - 0.10.1
+// Type definitions for Matter.js as used by Phaser 3
+//
 // Project: https://github.com/liabru/matter-js
+//
 // Definitions by: Ivane Gegia <https://twitter.com/ivanegegia>,
 //                 David Asmuth <https://github.com/piranha771>,
-//                 Piotr Pietrzak <https://github.com/hasparus> 
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+//                 Piotr Pietrzak <https://github.com/hasparus>,
+//                 Richard Davey <rich@photonstorm.com>
 
-export = Matter;
-export as namespace Matter;
+export = MatterJS;
+export as namespace MatterJS;
 
-declare namespace Matter {
+declare namespace MatterJS {
     /**
      * Installs the given plugins on the `Matter` namespace.
      * This is a short-hand for `Plugin.use`, see it for more information.
@@ -2030,19 +2032,6 @@ declare namespace Matter {
         positionIterations: number;
 
         /**
-         * An instance of a `Render` controller. The default value is a `Matter.Render` instance created by `Engine.create`.
-         * One may also develop a custom renderer module based on `Matter.Render` and pass an instance of it to `Engine.create` via `options.render`.
-         *
-        * A minimal custom renderer object must define at least three functions: `create`, `clear` and `world` (see `Matter.Render`).
-        * It is also possible to instead pass the _module_ reference via `options.render.controller` and `Engine.create` will instantiate one for you.
-        *
-        * @property render
-        * @type render
-        * @default a Matter.Render instance
-        */
-        render: Render;
-
-        /**
          * An `Object` containing properties regarding the timing systems of the engine.
          *
         * @property timing
@@ -2255,6 +2244,185 @@ declare namespace Matter {
         slop: number;
     }
 
+    export interface ICollisionData {
+        collided: boolean;
+        bodyA: Body;
+        bodyB: Body;
+        axisBody: Body;
+        axisNumber: number;
+        depth: number;
+        parentA: Body;
+        parentB: Body;
+        normal: Vector;
+        tangent: Vector;
+        penetration: Vector;
+        supports: Vector[];
+        inverseMass: number;
+        friction: number;
+        frictionStatic: number;
+        restitution: number;
+        slop: number;
+    }
+
+    export interface ICollisionPair {
+        id: string;
+        bodyA: Body;
+        bodyB: Body;
+        activeContacts: Vector[];
+        separation: number;
+        isActive: boolean;
+        confirmedActive: boolean;
+        isSensor: boolean;
+        timeCreated: number;
+        timeUpdated: number;
+        collision: ICollisionData;
+        inverseMass: number;
+        friction: number;
+        frictionStatic: number;
+        restitution: number;
+        slop: number;
+    }
+
+    /**
+    * The `Matter.Pair` module contains methods for creating and manipulating collision pairs.
+    *
+    * @class Pair
+    */
+    export class Pair {
+
+        /**
+         * Creates a pair.
+         * @method create
+         * @param {ICollisionData} collision
+         * @param {number} timestamp
+         * @return {IPair} A new pair
+         */
+        static create(collision: ICollisionData, timestamp: number): any;
+
+        /**
+         * Updates a pair given a collision.
+         * @method update
+         * @param {IPair} pair
+         * @param {ICollisionData} collision
+         * @param {number} timestamp
+         */
+        static update (pair: IPair, collision: ICollisionData, timestamp: number): void;
+
+        /**
+         * Set a pair as active or inactive.
+         * @method setActive
+         * @param {IPair} pair
+         * @param {boolean} isActive
+         * @param {number} timestamp
+         */
+        static setActive (pair: IPair, isActive: boolean, timestamp: number): void;
+
+        /**
+         * Get the id for the given pair.
+         * @method id
+         * @param {Body} bodyA
+         * @param {Body} bodyB
+         * @return {string} Unique pairId
+         */
+        static id (bodyA: Body, bodyB: Body): string;
+
+    }
+
+    /**
+     * The `Matter.Detector` module contains methods for detecting collisions given a set of pairs.
+     *
+     * @class Detector
+     */
+    export class Detector {
+
+        /**
+         * Finds all collisions given a list of pairs.
+         * @method collisions
+         * @param {pair[]} broadphasePairs
+         * @param {engine} engine
+         * @return {ICollisionData[]} collisions
+         */
+        static collisions (broadphasePairs: IPair[], engine: Engine): ICollisionData[];
+
+        /**
+         * Returns `true` if both supplied collision filters will allow a collision to occur.
+         * See `body.collisionFilter` for more information.
+         * @method canCollide
+         * @param {} filterA
+         * @param {} filterB
+         * @return {bool} `true` if collision can occur
+         */
+        static canCollide (filterA: ICollisionFilter, filterB: ICollisionFilter): boolean;
+
+    }
+
+    /**
+     * The `Matter.Resolver` module contains methods for resolving collision pairs.
+     *
+     * @class Resolver
+     */
+    export class Resolver {
+
+        /**
+         * Prepare pairs for position solving.
+         * @method preSolvePosition
+         * @param {pair[]} pairs
+         */
+        static preSolvePosition (pairs: IPair[]): void;
+
+        /**
+         * Find a solution for pair positions.
+         * @method solvePosition
+         * @param {pair[]} pairs
+         * @param {body[]} bodies
+         * @param {number} timeScale
+         */
+        static solvePosition (pairs: IPair[], bodies: Body[], timeScale: number): void;
+
+        /**
+         * Apply position resolution.
+         * @method postSolvePosition
+         * @param {body[]} bodies
+         */
+        static postSolvePosition (bodies: Body[]): void;
+
+        /**
+         * Prepare pairs for velocity solving.
+         * @method preSolveVelocity
+         * @param {pair[]} pairs
+         */
+        static preSolveVelocity (pairs: IPair[]): void;
+
+        /**
+         * Find a solution for pair velocities.
+         * @method solveVelocity
+         * @param {pair[]} pairs
+         * @param {number} timeScale
+         */
+        static solveVelocity (pairs: IPair[], timeScale: number): void;
+
+    }
+
+    /**
+     * The `Matter.SAT` module contains methods for detecting collisions using the Separating Axis Theorem.
+     *
+     * @class SAT
+     */
+
+    export class SAT {
+
+        /**
+         * Detect collision between two bodies using the Separating Axis Theorem.
+         * @method collides
+         * @param {body} bodyA
+         * @param {body} bodyB
+         * @param {ICollisionData} previousCollision
+         * @return {ICollisionData} collision
+         */
+        static collides  (bodyA: Body, bodyB: Body, previousCollision: ICollisionData): ICollisionData
+
+    }
+
     /**
     * The `Matter.Query` module contains methods for performing collision queries.
     *
@@ -2293,220 +2461,6 @@ declare namespace Matter {
          */
         static point(bodies: Array<Body>, point: Vector): Array<Body>;
     }
-
-    export interface IRenderDefinition {
-        /**
-         * A back-reference to the `Matter.Render` module.
-         *
-        * @property controller
-        * @type render
-        */
-        controller?: any;
-        /**
-        * A reference to the `Matter.Engine` instance to be used.
-        *
-        * @property engine
-        * @type engine
-        */
-        engine: Engine;
-        /**
-         * A reference to the element where the canvas is to be inserted (if `render.canvas` has not been specified)
-        *
-        * @property element
-        * @type HTMLElement
-        * @default null
-        * @deprecated
-        */
-        element?: HTMLElement;
-        /**
-         * The canvas element to render to. If not specified, one will be created if `render.element` has been specified.
-         *
-        * @property canvas
-        * @type HTMLCanvasElement
-        * @default null
-        */
-        canvas?: HTMLCanvasElement;
-
-        /**
-         * The configuration options of the renderer.
-         *
-        * @property options
-        * @type {}
-        */
-        options?: IRendererOptions;
-
-        /**
-         * A `Bounds` object that specifies the drawing view region.
-         * Rendering will be automatically transformed and scaled to fit within the canvas size (`render.options.width` and `render.options.height`).
-         * This allows for creating views that can pan or zoom around the scene.
-         * You must also set `render.options.hasBounds` to `true` to enable bounded rendering.
-         *
-        * @property bounds
-        * @type bounds
-        */
-        bounds?: Bounds;
-
-        /**
-         * The 2d rendering context from the `render.canvas` element.
-         *
-        * @property context
-        * @type CanvasRenderingContext2D
-        */
-        context?: CanvasRenderingContext2D;
-
-        /**
-         * The sprite texture cache.
-         *
-        * @property textures
-        * @type {}
-        */
-        textures?: any;
-
-
-    }
-
-    export interface IRendererOptions {
-        /**
-         * The target width in pixels of the `render.canvas` to be created.
-         *
-        * @property options.width
-        * @type number
-        * @default 800
-        */
-        width?: number;
-
-        /**
-         * The target height in pixels of the `render.canvas` to be created.
-         *
-        * @property options.height
-        * @type number
-        * @default 600
-        */
-        height?: number;
-
-        /**
-         * A flag that specifies if `render.bounds` should be used when rendering.
-         *
-        * @property options.hasBounds
-        * @type boolean
-        * @default false
-        */
-        hasBounds?: boolean;
-
-        /**
-         * Render wireframes only
-         * @type boolean
-         * @default true 
-         */
-        wireframes?: boolean;
-    }
-
-    /**
-    * The `Matter.Render` module is a simple HTML5 canvas based renderer for visualising instances of `Matter.Engine`.
-    * It is intended for development and debugging purposes, but may also be suitable for simple games.
-    * It includes a number of drawing options including wireframe, vector with support for sprites and viewports.
-    *
-    * @class Render
-    */
-    export class Render {
-        /**
-         * Creates a new renderer. The options parameter is an object that specifies any properties you wish to override the defaults.
-         * All properties have default values, and many are pre-calculated automatically based on other properties.
-         * See the properties section below for detailed information on what you can pass via the `options` object.
-         * @method create
-         * @param {object} [options]
-         * @return {render} A new renderer
-         */
-        static create(options: IRenderDefinition): Render;
-        /**
-         * Continuously updates the render canvas on the `requestAnimationFrame` event.
-         * @method run
-         * @param {render} render
-         */
-        static run(render: Render): void;
-        /**
-         * Ends execution of `Render.run` on the given `render`, by canceling the animation frame request event loop.
-         * @method stop
-         * @param {render} render
-         */
-        static stop(render: Render): void;
-        /**
-         * Sets the pixel ratio of the renderer and updates the canvas.
-         * To automatically detect the correct ratio, pass the string `'auto'` for `pixelRatio`.
-         * @method setPixelRatio
-         * @param {render} render
-         * @param {number} pixelRatio
-         */
-        static setPixelRatio(render: Render, pixelRatio: number): void;
-        /**
-         * Renders the given `engine`'s `Matter.World` object.
-         * This is the entry point for all rendering and should be called every time the scene changes.
-         * @method world
-         * @param {engine} engine
-         */
-        static world(render: Render): void;
-
-        /**
-        * A back-reference to the `Matter.Render` module.
-        *
-        * @property controller
-        * @type render
-        */
-        controller: any;
-        /**
-         * A reference to the element where the canvas is to be inserted (if `render.canvas` has not been specified)
-        *
-        * @property element
-        * @type HTMLElement
-        * @default null
-        */
-        element: HTMLElement;
-        /**
-         * The canvas element to render to. If not specified, one will be created if `render.element` has been specified.
-         *
-        * @property canvas
-        * @type HTMLCanvasElement
-        * @default null
-        */
-        canvas: HTMLCanvasElement;
-
-        /**
-         * The configuration options of the renderer.
-         *
-        * @property options
-        * @type {}
-        */
-        options: IRendererOptions;
-
-        /**
-         * A `Bounds` object that specifies the drawing view region.
-         * Rendering will be automatically transformed and scaled to fit within the canvas size (`render.options.width` and `render.options.height`).
-         * This allows for creating views that can pan or zoom around the scene.
-         * You must also set `render.options.hasBounds` to `true` to enable bounded rendering.
-         *
-        * @property bounds
-        * @type bounds
-        */
-        bounds: Bounds;
-
-        /**
-         * The 2d rendering context from the `render.canvas` element.
-         *
-        * @property context
-        * @type CanvasRenderingContext2D
-        */
-        context: CanvasRenderingContext2D;
-
-        /**
-         * The sprite texture cache.
-         *
-        * @property textures
-        * @type {}
-        */
-        textures: any;
-    }
-
-
 
     export interface IRunnerOptions {
         /**
@@ -3188,28 +3142,6 @@ declare namespace Matter {
         * @param {} event.name The name of the event
         */
         static on(obj: Engine, name: "afterUpdate", callback: (e: IEventTimestamped<Engine>) => void): void;
-
-        /**
-        * Fired before rendering
-        *
-        * @event beforeRender
-        * @param {} event An event object
-        * @param {number} event.timestamp The engine.timing.timestamp of the event
-        * @param {} event.source The source object of the event
-        * @param {} event.name The name of the event
-        */
-        static on(obj: Engine, name: "beforeRender", callback: (e: IEventTimestamped<Render>) => void): void;
-        /**
-        * Fired after rendering
-        *
-        * @event afterRender
-        * @param {} event An event object
-        * @param {number} event.timestamp The engine.timing.timestamp of the event
-        * @param {} event.source The source object of the event
-        * @param {} event.name The name of the event
-        */
-        static on(obj: Engine, name: "afterRender", callback: (e: IEventTimestamped<Render>) => void): void;
-
 
         /**
         * Fired just before an update
