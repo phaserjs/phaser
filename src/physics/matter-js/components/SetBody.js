@@ -6,6 +6,7 @@
 
 var Bodies = require('../lib/factory/Bodies');
 var Body = require('../lib/body/Body');
+var FuzzyEquals = require('../../../math/fuzzy/Equal');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var PhysicsEditorParser = require('../PhysicsEditorParser');
 var PhysicsJSONParser = require('../PhysicsJSONParser');
@@ -155,7 +156,7 @@ var SetBody = {
             var comx = body.centerOfMass.x;
             var comy = body.centerOfMass.y;
 
-            if (comx === 0.5 && comy === 0.5)
+            if (FuzzyEquals(comx, 0.5) && FuzzyEquals(comy, 0.5))
             {
                 this.setOrigin(rx + 0.5, ry + 0.5);
             }
