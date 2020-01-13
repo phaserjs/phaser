@@ -198,6 +198,7 @@ All of the following are specific to the Matter Physics implementation used by P
 * `ParticleEmitter.remove` is a new method that will remove the Emitter from its Emitter Manager (thanks @samme)
 * `ParticleEmitterManager.removeEmitter` is a new method that will remove the given emitter from the manager, if the emitter belongs to it (thanks @samme)
 * `AlphaSingle` is a new Game Object Component that allows a Game Object to set its alpha values, but only as a single uniform value, not on a per-quad basis.
+* `Actions.AlignTo` (in combination with the new `Display.Align.To.QuickSet` function) allows you to align an array of Game Objects so they sit next to each other, one at a time. The first item isn't moved, the second is moved to sit next to the first, and so on. You can align them using any of the alignment constants (thanks @samme)
 
 ### Updates
 
@@ -215,6 +216,7 @@ All of the following are specific to the Matter Physics implementation used by P
 * `TweenData` has a new property called `previous` which holds the eased property value prior to the update.
 * The `TWEEN_UPDATE` event now sends two new parameters to the handler: `current` and `previous` which contain the current and previous property values.
 * During `collideSpriteVsGroup` checks it will now skip bodies that are disabled to save doing a `contains` test (thanks @samme)
+* `Display.Align.In.QuickSet` now accepts `LEFT_BOTTOM` as `BOTTOM_LEFT`, `LEFT_TOP` as `TOP_LEFT`, `RIGHT_BOTTOM` as `BOTTOM_RIGHT` and `RIGHT_TOP` as `TOP_RIGHT`. Fix #4927 (thanks @zaniar)
 
 ### Bug Fixes
 
@@ -223,12 +225,17 @@ All of the following are specific to the Matter Physics implementation used by P
 * When `Game.destroy` is running, Scenes are now destroyed _before_ plugins, avoiding bugs when closing down plugins and deleting Render Textures. Fix #4849 #4876 (thanks @rexrainbow @siyuanqiao)
 * The `Mesh` and `Quad` Game Objects have had the `GetBounds` component removed as it cannot operate on a Mesh as they don't have origins. Fix #4902 (thanks @samme)
 * Setting `lineSpacing` in the Text Game Object style config would set the value but not apply it to the Text, leaving you to call `updateText` yourself. If set, it's now applied on instantiation. Fix #4901 (thanks @FantaZZ)
+* External calls to the Fullscreen API using `element.requestFullscreen()` would be blocked by the Scale Manager. The Scale Manager will no longer call `stopFullScreen` should it be triggered outside of Phaser (thanks @AdamXA)
+* The `Tilemaps.Tile.tint` property wasn't working correctly as it expected the colors in the wrong order (BGR instead of RGB). It will now expect them in the correct RGB order (thanks @Aedalus @plissken2013es)
+* The `ScaleManager.destroy` method wasn't being called when the Game `DESTROY` event was dispatched, causing minor gc to build up. The destroy method will now be called properly on game destruction. Fix #4944 (thanks @sunshineuoow)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@fselcukcan Bambosh @louisth @hexus @javigaralva @samme @BeLi4L @jcyuan @javigaralva @T-Grave @bramp 
+@fselcukcan Bambosh @louisth @hexus @javigaralva @samme @BeLi4L @jcyuan @javigaralva @T-Grave @bramp @Chnapy
+
+The Spine Plugin now has new TypeScript defs in the `types` folder thanks to @supertommy
 
 ## Version 3.21.0 - Senku - 22nd November 2019
 
