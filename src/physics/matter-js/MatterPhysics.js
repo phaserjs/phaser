@@ -172,7 +172,7 @@ var MatterPhysics = new Class({
          * Factories for commonly used body configurations (such as rectangles, circles and other polygons) can be found in the `Bodies` module.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#body
-         * @type {MatterJS.Body}
+         * @type {MatterJS.BodyFactory}
          * @since 3.18.0
          */
         this.body = Body;
@@ -186,7 +186,7 @@ var MatterPhysics = new Class({
          * Note that the `Matter.World` object is also a type of `Matter.Composite` and as such all composite methods here can also operate on a `Matter.World`.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#composite
-         * @type {MatterJS.Composite}
+         * @type {MatterJS.CompositeFactory}
          * @since 3.22.0
          */
         this.composite = Composite;
@@ -199,7 +199,7 @@ var MatterPhysics = new Class({
          * The `Matter.Detector` module contains methods for detecting collisions given a set of pairs.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#detector
-         * @type {MatterJS.Detector}
+         * @type {MatterJS.DetectorFactory}
          * @since 3.22.0
          */
         this.detector = Detector;
@@ -210,7 +210,7 @@ var MatterPhysics = new Class({
          * The `Matter.Grid` module contains methods for creating and manipulating collision broadphase grid structures.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#grid
-         * @type {MatterJS.Grid}
+         * @type {MatterJS.GridFactory}
          * @since 3.22.0
          */
         this.grid = Grid;
@@ -221,7 +221,7 @@ var MatterPhysics = new Class({
          * The `Matter.Pair` module contains methods for creating and manipulating collision pairs.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#pair
-         * @type {MatterJS.Pair}
+         * @type {MatterJS.PairFactory}
          * @since 3.22.0
          */
         this.pair = Pair;
@@ -232,7 +232,7 @@ var MatterPhysics = new Class({
          * The `Matter.Pairs` module contains methods for creating and manipulating collision pair sets.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#pairs
-         * @type {MatterJS.Pairs}
+         * @type {MatterJS.PairsFactory}
          * @since 3.22.0
          */
         this.pairs = Pairs;
@@ -243,7 +243,7 @@ var MatterPhysics = new Class({
          * The `Matter.Query` module contains methods for performing collision queries.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#query
-         * @type {MatterJS.Query}
+         * @type {MatterJS.QueryFactory}
          * @since 3.22.0
          */
         this.query = Query;
@@ -254,7 +254,7 @@ var MatterPhysics = new Class({
          * The `Matter.Resolver` module contains methods for resolving collision pairs.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#resolver
-         * @type {MatterJS.Resolver}
+         * @type {MatterJS.ResolverFactory}
          * @since 3.22.0
          */
         this.resolver = Resolver;
@@ -265,7 +265,7 @@ var MatterPhysics = new Class({
          * The `Matter.SAT` module contains methods for detecting collisions using the Separating Axis Theorem.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#sat
-         * @type {MatterJS.SAT}
+         * @type {MatterJS.SATFactory}
          * @since 3.22.0
          */
         this.sat = SAT;
@@ -280,7 +280,7 @@ var MatterPhysics = new Class({
          * The stiffness of constraints can be modified to create springs or elastic.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#constraint
-         * @type {MatterJS.Constraint}
+         * @type {MatterJS.ConstraintFactory}
          * @since 3.22.0
          */
         this.constraint = Constraint;
@@ -294,7 +294,7 @@ var MatterPhysics = new Class({
          * with commonly used body configurations (such as rectangles, circles and other polygons).
          *
          * @name Phaser.Physics.Matter.MatterPhysics#bodies
-         * @type {MatterJS.Bodies}
+         * @type {MatterJS.BodiesFactory}
          * @since 3.18.0
          */
         this.bodies = Bodies;
@@ -306,7 +306,7 @@ var MatterPhysics = new Class({
          * with commonly used configurations (such as stacks and chains).
          *
          * @name Phaser.Physics.Matter.MatterPhysics#composites
-         * @type {MatterJS.Composites}
+         * @type {MatterJS.CompositesFactory}
          * @since 3.22.0
          */
         this.composites = Composites;
@@ -319,7 +319,7 @@ var MatterPhysics = new Class({
          * The `Matter.Axes` module contains methods for creating and manipulating sets of axes.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#axes
-         * @type {MatterJS.Axes}
+         * @type {MatterJS.AxesFactory}
          * @since 3.22.0
          */
         this.axes = Axes;
@@ -330,7 +330,7 @@ var MatterPhysics = new Class({
          * The `Matter.Bounds` module contains methods for creating and manipulating axis-aligned bounding boxes (AABB).
          *
          * @name Phaser.Physics.Matter.MatterPhysics#bounds
-         * @type {MatterJS.Bounds}
+         * @type {MatterJS.BoundsFactory}
          * @since 3.22.0
          */
         this.bounds = Bounds;
@@ -343,7 +343,7 @@ var MatterPhysics = new Class({
          * To use this module you also need the SVGPathSeg polyfill: https://github.com/progers/pathseg
          *
          * @name Phaser.Physics.Matter.MatterPhysics#svg
-         * @type {MatterJS.Svg}
+         * @type {MatterJS.SvgFactory}
          * @since 3.22.0
          */
         this.svg = Svg;
@@ -356,7 +356,7 @@ var MatterPhysics = new Class({
          * A `Matter.Vector` object is of the form `{ x: 0, y: 0 }`.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#vector
-         * @type {MatterJS.Vector}
+         * @type {MatterJS.VectorFactory}
          * @since 3.22.0
          */
         this.vector = Vector;
@@ -369,7 +369,7 @@ var MatterPhysics = new Class({
          * A `Matter.Body` maintains a set of vertices to represent the shape of the object (its convex hull).
          *
          * @name Phaser.Physics.Matter.MatterPhysics#vertices
-         * @type {MatterJS.Vertices}
+         * @type {MatterJS.VerticesFactory}
          * @since 3.22.0
          */
         this.vertices = Vertices;
@@ -382,7 +382,7 @@ var MatterPhysics = new Class({
          * A `Matter.Body` maintains a set of vertices to represent the shape of the object (its convex hull).
          *
          * @name Phaser.Physics.Matter.MatterPhysics#verts
-         * @type {MatterJS.Vertices}
+         * @type {MatterJS.VerticesFactory}
          * @since 3.14.0
          */
         this.verts = Vertices;
