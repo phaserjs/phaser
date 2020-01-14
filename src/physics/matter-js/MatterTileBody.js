@@ -243,7 +243,7 @@ var MatterTileBody = new Class({
      * @method Phaser.Physics.Matter.TileBody#setBody
      * @since 3.0.0
      *
-     * @param {MatterJS.Body} body - The new Matter body to use.
+     * @param {MatterJS.BodyType} body - The new Matter body to use.
      * @param {boolean} [addToWorld=true] - Whether or not to add the body to the Matter world.
      * 
      * @return {Phaser.Physics.Matter.TileBody} This TileBody object.

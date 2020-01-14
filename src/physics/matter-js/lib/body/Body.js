@@ -83,6 +83,7 @@ var Axes = require('../geometry/Axes');
             mass: 0,
             inverseMass: 0,
             inertia: 0,
+            inverseInertia: 0,
             _original: null,
             render: {
                 visible: true,
@@ -1234,7 +1235,7 @@ var Axes = require('../geometry/Axes');
      */
 
     /**
-     * A value that defines the fill opqcity to use when rendering the body.
+     * A value that defines the fill opacity to use when rendering the body.
      *
      * @property render.fillOpacity
      * @type number
@@ -1248,7 +1249,7 @@ var Axes = require('../geometry/Axes');
      */
 
     /**
-     * A value that defines the line opqcity to use when rendering the body.
+     * A value that defines the line opacity to use when rendering the body.
      *
      * @property render.lineOpacity
      * @type number

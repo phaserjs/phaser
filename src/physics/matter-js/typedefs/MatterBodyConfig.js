@@ -3,7 +3,7 @@
  * @since 3.22.0
  * 
  * @property {string} [label='Body'] - An arbitrary string-based name to help identify this body.
- * @property {MatterJS.Body[]} [parts] - An array of bodies that make up this body. The first body in the array must always be a self reference to the current body instance. All bodies in the `parts` array together form a single rigid compound body.
+ * @property {MatterJS.BodyType[]} [parts] - An array of bodies that make up this body. The first body in the array must always be a self reference to the current body instance. All bodies in the `parts` array together form a single rigid compound body.
  * @property {any} [plugin] - An object reserved for storing plugin-specific properties.
  * @property {number} [angle=0] - A number specifying the angle of the body, in radians.
  * @property {Phaser.Types.Math.Vector2Like[]} [vertices=null] - An array of `Vector` objects that specify the convex hull of the rigid body. These should be provided about the origin `(0, 0)`.

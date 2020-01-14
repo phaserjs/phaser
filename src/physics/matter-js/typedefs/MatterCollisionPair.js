@@ -3,8 +3,8 @@
  * @since 3.22.0
  * 
  * @property {string} id - The unique auto-generated collision pair id. A combination of the body A and B IDs.
- * @property {MatterJS.Body} bodyA - A reference to the first body involved in the collision.
- * @property {MatterJS.Body} bodyB - A reference to the second body involved in the collision.
+ * @property {MatterJS.BodyType} bodyA - A reference to the first body involved in the collision.
+ * @property {MatterJS.BodyType} bodyB - A reference to the second body involved in the collision.
  * @property {MatterJS.Vector[]} activeContacts - An array containing all of the active contacts between bodies A and B.
  * @property {number} separation - The amount of separation that occured between bodies A and B.
  * @property {boolean} isActive - Is the collision still active or not?

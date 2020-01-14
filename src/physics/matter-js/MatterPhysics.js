@@ -1044,7 +1044,7 @@ var MatterPhysics = new Class({
      *
      * @param {array} [bodies] - An array of objects to extract the bodies from. If falsey, it will return all bodies in the world.
      *
-     * @return {MatterJS.Body[]} An array of native Matter Body objects.
+     * @return {MatterJS.BodyType[]} An array of native Matter Body objects.
      */
     getMatterBodies: function (bodies)
     {
@@ -1290,7 +1290,7 @@ var MatterPhysics = new Class({
      * @method Phaser.Physics.Matter.MatterPhysics#getConstraintLength
      * @since 3.22.0
      *
-     * @param {MatterJS.Constraint} constraint - The constraint to get the length from.
+     * @param {MatterJS.ConstraintType} constraint - The constraint to get the length from.
      *
      * @return {number} The length of the constraint.
      */

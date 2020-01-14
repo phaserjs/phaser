@@ -3,13 +3,13 @@
  * @since 3.22.0
  * 
  * @property {boolean} collided - Have the pair collided or not?
- * @property {MatterJS.Body} bodyA - A reference to the first body involved in the collision.
- * @property {MatterJS.Body} bodyB - A reference to the second body involved in the collision.
- * @property {MatterJS.Body} axisBody - A reference to the dominant axis body.
+ * @property {MatterJS.BodyType} bodyA - A reference to the first body involved in the collision.
+ * @property {MatterJS.BodyType} bodyB - A reference to the second body involved in the collision.
+ * @property {MatterJS.BodyType} axisBody - A reference to the dominant axis body.
  * @property {number} axisNumber - The index of the dominant collision axis vector (edge normal)
  * @property {number} depth - The depth of the collision on the minimum overlap.
- * @property {MatterJS.Body} parentA - A reference to the parent of Body A, or to Body A itself if it has no parent.
- * @property {MatterJS.Body} parentB - A reference to the parent of Body B, or to Body B itself if it has no parent.
+ * @property {MatterJS.BodyType} parentA - A reference to the parent of Body A, or to Body A itself if it has no parent.
+ * @property {MatterJS.BodyType} parentB - A reference to the parent of Body B, or to Body B itself if it has no parent.
  * @property {MatterJS.Vector} normal - The collision normal, facing away from Body A.
  * @property {MatterJS.Vector} tangent - The tangent of the collision normal.
  * @property {MatterJS.Vector} penetration - The penetration distances between the two bodies.

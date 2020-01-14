@@ -354,7 +354,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#setCompositeRenderStyle
      * @since 3.22.0
      *
-     * @param {MatterJS.Composite} composite - The Matter Composite to set the render style on.
+     * @param {MatterJS.CompositeType} composite - The Matter Composite to set the render style on.
      * 
      * @return {this} This Matter World instance for method chaining.
      */
@@ -408,7 +408,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#setBodyRenderStyle
      * @since 3.22.0
      *
-     * @param {MatterJS.Body} body - The Matter Body to set the render style on.
+     * @param {MatterJS.BodyType} body - The Matter Body to set the render style on.
      * @param {number} [lineColor] - The line color. If `null` it will use the World Debug Config value.
      * @param {number} [lineOpacity] - The line opacity, between 0 and 1. If `null` it will use the World Debug Config value.
      * @param {number} [lineThickness] - The line thickness. If `null` it will use the World Debug Config value.
@@ -494,7 +494,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#setConstraintRenderStyle
      * @since 3.22.0
      *
-     * @param {MatterJS.Constraint} constraint - The Matter Constraint to set the render style on.
+     * @param {MatterJS.ConstraintType} constraint - The Matter Constraint to set the render style on.
      * @param {number} [lineColor] - The line color. If `null` it will use the World Debug Config value.
      * @param {number} [lineOpacity] - The line opacity, between 0 and 1. If `null` it will use the World Debug Config value.
      * @param {number} [lineThickness] - The line thickness. If `null` it will use the World Debug Config value.
@@ -886,7 +886,7 @@ var World = new Class({
      * @param {number} height - The height of the body.
      * @param {object} options - Optional Matter configuration object.
      *
-     * @return {MatterJS.Body} The Matter.js body that was created.
+     * @return {MatterJS.BodyType} The Matter.js body that was created.
      */
     create: function (x, y, width, height, options)
     {
@@ -960,7 +960,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#removeConstraint
      * @since 3.0.0
      *
-     * @param {(MatterJS.Constraint|MatterJS.Constraint[])} constraint - A Matter JS Constraint, or an array of constraints, to be removed.
+     * @param {(MatterJS.ConstraintType|MatterJS.ConstraintType[])} constraint - A Matter JS Constraint, or an array of constraints, to be removed.
      * @param {boolean} [deep=false] - Optionally search the objects children and recursively remove those as well.
      *
      * @return {this} This Matter World object.
@@ -1244,7 +1244,7 @@ var World = new Class({
      * 
      * @param {(MatterJS.Body|Phaser.GameObjects.GameObject)} body - The Matter Body, or Game Object, to search for within the world.
      * 
-     * @return {MatterJS.Body[]} An array of all the Matter JS Bodies in this World.
+     * @return {MatterJS.BodyType[]} An array of all the Matter JS Bodies in this World.
      */
     has: function (body)
     {
@@ -1259,7 +1259,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#getAllBodies
      * @since 3.22.0
      * 
-     * @return {MatterJS.Body[]} An array of all the Matter JS Bodies in this World.
+     * @return {MatterJS.BodyType[]} An array of all the Matter JS Bodies in this World.
      */
     getAllBodies: function ()
     {
@@ -1272,7 +1272,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#getAllConstraints
      * @since 3.22.0
      * 
-     * @return {MatterJS.Constraint[]} An array of all the Matter JS Constraints in this World.
+     * @return {MatterJS.ConstraintType[]} An array of all the Matter JS Constraints in this World.
      */
     getAllConstraints: function ()
     {
@@ -1285,7 +1285,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#getAllComposites
      * @since 3.22.0
      * 
-     * @return {MatterJS.Composite[]} An array of all the Matter JS Composites in this World.
+     * @return {MatterJS.CompositeType[]} An array of all the Matter JS Composites in this World.
      */
     getAllComposites: function ()
     {
@@ -1851,7 +1851,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#renderBody
      * @since 3.22.0
      * 
-     * @param {MatterJS.Body} body - The Matter Body to be rendered.
+     * @param {MatterJS.BodyType} body - The Matter Body to be rendered.
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
      * @param {boolean} showInternalEdges - Render internal edges of the polygon?
      * @param {number} [lineColor] - The line color.
@@ -1988,7 +1988,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#renderConvexHull
      * @since 3.22.0
      * 
-     * @param {MatterJS.Body} body - The Matter Body to be rendered.
+     * @param {MatterJS.BodyType} body - The Matter Body to be rendered.
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
      * @param {number} hullColor - The color used to render the hull.
      * @param {number} [lineThickness=1] - The hull line thickness.
@@ -2066,7 +2066,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#renderConstraint
      * @since 3.22.0
      * 
-     * @param {MatterJS.Constraint} constraint - The Matter Constraint to render.
+     * @param {MatterJS.ConstraintType} constraint - The Matter Constraint to render.
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
      * @param {number} lineColor - The line color.
      * @param {number} lineOpacity - The line opacity, between 0 and 1.

@@ -32,7 +32,7 @@ var PhysicsEditorParser = {
      * @param {object} config - The body configuration and fixture (child body) definitions, as exported by PhysicsEditor.
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      * 
-     * @return {MatterJS.Body} A compound Matter JS Body.
+     * @return {MatterJS.BodyType} A compound Matter JS Body.
      */
     parseBody: function (x, y, config, options)
     {
@@ -75,7 +75,7 @@ var PhysicsEditorParser = {
      *
      * @param {object} fixtureConfig - The fixture object to parse.
      * 
-     * @return {MatterJS.Body[]} - An array of Matter JS Bodies.
+     * @return {MatterJS.BodyType[]} - An array of Matter JS Bodies.
      */
     parseFixture: function (fixtureConfig)
     {
@@ -110,7 +110,7 @@ var PhysicsEditorParser = {
      * @param {array} vertexSets - The vertex lists to parse.
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      * 
-     * @return {MatterJS.Body[]} - An array of Matter JS Bodies.
+     * @return {MatterJS.BodyType[]} - An array of Matter JS Bodies.
      */
     parseVertices: function (vertexSets, options)
     {

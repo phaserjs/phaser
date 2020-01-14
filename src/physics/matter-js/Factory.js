@@ -86,7 +86,7 @@ var Factory = new Class({
      * @param {number} height - The height of the Body.
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      *
-     * @return {MatterJS.Body} A Matter JS Body.
+     * @return {MatterJS.BodyType} A Matter JS Body.
      */
     rectangle: function (x, y, width, height, options)
     {
@@ -110,7 +110,7 @@ var Factory = new Class({
      * @param {number} slope - The slope of the trapezoid. 0 creates a rectangle, while 1 creates a triangle. Positive values make the top side shorter, while negative values make the bottom side shorter.
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      *
-     * @return {MatterJS.Body} A Matter JS Body.
+     * @return {MatterJS.BodyType} A Matter JS Body.
      */
     trapezoid: function (x, y, width, height, slope, options)
     {
@@ -133,7 +133,7 @@ var Factory = new Class({
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      * @param {number} [maxSides] - The maximum amount of sides to use for the polygon which will approximate this circle.
      *
-     * @return {MatterJS.Body} A Matter JS Body.
+     * @return {MatterJS.BodyType} A Matter JS Body.
      */
     circle: function (x, y, radius, options, maxSides)
     {
@@ -156,7 +156,7 @@ var Factory = new Class({
      * @param {number} radius - The "radius" of the polygon, i.e. the distance from its center to any vertex. This is also the radius of its circumcircle.
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      *
-     * @return {MatterJS.Body} A Matter JS Body.
+     * @return {MatterJS.BodyType} A Matter JS Body.
      */
     polygon: function (x, y, sides, radius, options)
     {
@@ -182,7 +182,7 @@ var Factory = new Class({
      * @param {number} [removeCollinear=0.01] - Whether Matter.js will discard collinear edges (to improve performance).
      * @param {number} [minimumArea=10] - During decomposition discard parts that have an area less than this.
      *
-     * @return {MatterJS.Body} A Matter JS Body.
+     * @return {MatterJS.BodyType} A Matter JS Body.
      */
     fromVertices: function (x, y, vertexSets, options, flagInternal, removeCollinear, minimumArea)
     {
@@ -229,7 +229,7 @@ var Factory = new Class({
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      * @param {boolean} [addToWorld=true] - Should the newly created body be immediately added to the World?
      *
-     * @return {MatterJS.Body} A Matter JS Body.
+     * @return {MatterJS.BodyType} A Matter JS Body.
      */
     fromPhysicsEditor: function (x, y, config, options, addToWorld)
     {
@@ -275,7 +275,7 @@ var Factory = new Class({
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      * @param {boolean} [addToWorld=true] - Should the newly created body be immediately added to the World?
      *
-     * @return {MatterJS.Body} A Matter JS Body.
+     * @return {MatterJS.BodyType} A Matter JS Body.
      */
     fromSVG: function (x, y, xml, scale, options, addToWorld)
     {
@@ -355,7 +355,7 @@ var Factory = new Class({
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      * @param {boolean} [addToWorld=true] - Should the newly created body be immediately added to the World?
      *
-     * @return {MatterJS.Body} A Matter JS Body.
+     * @return {MatterJS.BodyType} A Matter JS Body.
      */
     fromJSON: function (x, y, config, options, addToWorld)
     {
@@ -389,7 +389,7 @@ var Factory = new Class({
      * @param {number} [rowGap=0] - The distance between each row.
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      *
-     * @return {MatterJS.Composite} A Matter JS Composite Stack.
+     * @return {MatterJS.CompositeType} A Matter JS Composite Stack.
      */
     imageStack: function (key, frame, x, y, columns, rows, columnGap, rowGap, options)
     {
@@ -432,7 +432,7 @@ var Factory = new Class({
      * @param {number} rowGap - The distance between each row.
      * @param {function} callback - The callback that creates the stack.
      *
-     * @return {MatterJS.Composite} A new composite containing objects created in the callback.
+     * @return {MatterJS.CompositeType} A new composite containing objects created in the callback.
      */
     stack: function (x, y, columns, rows, columnGap, rowGap, callback)
     {
@@ -458,7 +458,7 @@ var Factory = new Class({
      * @param {number} rowGap - The distance between each row.
      * @param {function} callback - The callback function to be invoked.
      *
-     * @return {MatterJS.Composite} A Matter JS Composite pyramid.
+     * @return {MatterJS.CompositeType} A Matter JS Composite pyramid.
      */
     pyramid: function (x, y, columns, rows, columnGap, rowGap, callback)
     {
@@ -475,14 +475,14 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#chain
      * @since 3.0.0
      *
-     * @param {MatterJS.Composite} composite - The composite in which all bodies will be chained together sequentially.
+     * @param {MatterJS.CompositeType} composite - The composite in which all bodies will be chained together sequentially.
      * @param {number} xOffsetA - The horizontal offset of the BodyA constraint. This is a percentage based on the body size, not a world position.
      * @param {number} yOffsetA - The vertical offset of the BodyA constraint. This is a percentage based on the body size, not a world position.
      * @param {number} xOffsetB - The horizontal offset of the BodyB constraint. This is a percentage based on the body size, not a world position.
      * @param {number} yOffsetB - The vertical offset of the BodyB constraint. This is a percentage based on the body size, not a world position.
      * @param {Phaser.Types.Physics.Matter.MatterConstraintConfig} [options] - An optional Constraint configuration object that is used to set initial Constraint properties on creation.
      *
-     * @return {MatterJS.Composite} The original composite that was passed to this method.
+     * @return {MatterJS.CompositeType} The original composite that was passed to this method.
      */
     chain: function (composite, xOffsetA, yOffsetA, xOffsetB, yOffsetB, options)
     {
@@ -495,13 +495,13 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#mesh
      * @since 3.0.0
      *
-     * @param {MatterJS.Composite} composite - The composite in which all bodies will be chained together.
+     * @param {MatterJS.CompositeType} composite - The composite in which all bodies will be chained together.
      * @param {number} columns - The number of columns in the mesh.
      * @param {number} rows - The number of rows in the mesh.
      * @param {boolean} crossBrace - Create cross braces for the mesh as well?
      * @param {Phaser.Types.Physics.Matter.MatterConstraintConfig} [options] - An optional Constraint configuration object that is used to set initial Constraint properties on creation.
      *
-     * @return {MatterJS.Composite} The original composite that was passed to this method.
+     * @return {MatterJS.CompositeType} The original composite that was passed to this method.
      */
     mesh: function (composite, columns, rows, crossBrace, options)
     {
@@ -520,7 +520,7 @@ var Factory = new Class({
      * @param {number} size - The radius of each ball in the cradle.
      * @param {number} length - The length of the 'string' the balls hang from.
      *
-     * @return {MatterJS.Composite} A Newton's cradle composite.
+     * @return {MatterJS.CompositeType} A Newton's cradle composite.
      */
     newtonsCradle: function (x, y, number, size, length)
     {
@@ -543,7 +543,7 @@ var Factory = new Class({
      * @param {number} height - The height of the car chasis.
      * @param {number} wheelSize - The radius of the car wheels.
      *
-     * @return {MatterJS.Composite} A new composite car body.
+     * @return {MatterJS.CompositeType} A new composite car body.
      */
     car: function (x, y, width, height, wheelSize)
     {
@@ -571,7 +571,7 @@ var Factory = new Class({
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [particleOptions] - An optional Body configuration object that is used to set initial Body properties on creation.
      * @param {Phaser.Types.Physics.Matter.MatterConstraintConfig} [constraintOptions] - An optional Constraint configuration object that is used to set initial Constraint properties on creation.
      *
-     * @return {MatterJS.Composite} A new composite simple soft body.
+     * @return {MatterJS.CompositeType} A new composite simple soft body.
      */
     softBody: function (x, y, columns, rows, columnGap, rowGap, crossBrace, particleRadius, particleOptions, constraintOptions)
     {
@@ -601,13 +601,13 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#joint
      * @since 3.0.0
      *
-     * @param {MatterJS.Body} bodyA - The first possible `Body` that this constraint is attached to.
-     * @param {MatterJS.Body} bodyB - The second possible `Body` that this constraint is attached to.
+     * @param {MatterJS.BodyType} bodyA - The first possible `Body` that this constraint is attached to.
+     * @param {MatterJS.BodyType} bodyB - The second possible `Body` that this constraint is attached to.
      * @param {number} [length] - A Number that specifies the target resting length of the constraint. If not given it is calculated automatically in `Constraint.create` from initial positions of the `constraint.bodyA` and `constraint.bodyB`.
      * @param {number} [stiffness=1] - A Number that specifies the stiffness of the constraint, i.e. the rate at which it returns to its resting `constraint.length`. A value of `1` means the constraint should be very stiff. A value of `0.2` means the constraint acts as a soft spring.
      * @param {Phaser.Types.Physics.Matter.MatterConstraintConfig} [options] - An optional Constraint configuration object that is used to set initial Constraint properties on creation.
      *
-     * @return {MatterJS.Constraint} A Matter JS Constraint.
+     * @return {MatterJS.ConstraintType} A Matter JS Constraint.
      */
     joint: function (bodyA, bodyB, length, stiffness, options)
     {
@@ -633,13 +633,13 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#spring
      * @since 3.0.0
      *
-     * @param {MatterJS.Body} bodyA - The first possible `Body` that this constraint is attached to.
-     * @param {MatterJS.Body} bodyB - The second possible `Body` that this constraint is attached to.
+     * @param {MatterJS.BodyType} bodyA - The first possible `Body` that this constraint is attached to.
+     * @param {MatterJS.BodyType} bodyB - The second possible `Body` that this constraint is attached to.
      * @param {number} [length] - A Number that specifies the target resting length of the constraint. If not given it is calculated automatically in `Constraint.create` from initial positions of the `constraint.bodyA` and `constraint.bodyB`.
      * @param {number} [stiffness=1] - A Number that specifies the stiffness of the constraint, i.e. the rate at which it returns to its resting `constraint.length`. A value of `1` means the constraint should be very stiff. A value of `0.2` means the constraint acts as a soft spring.
      * @param {Phaser.Types.Physics.Matter.MatterConstraintConfig} [options] - An optional Constraint configuration object that is used to set initial Constraint properties on creation.
      *
-     * @return {MatterJS.Constraint} A Matter JS Constraint.
+     * @return {MatterJS.ConstraintType} A Matter JS Constraint.
      */
     spring: function (bodyA, bodyB, length, stiffness, options)
     {
@@ -663,13 +663,13 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#constraint
      * @since 3.0.0
      *
-     * @param {MatterJS.Body} bodyA - The first possible `Body` that this constraint is attached to.
-     * @param {MatterJS.Body} bodyB - The second possible `Body` that this constraint is attached to.
+     * @param {MatterJS.BodyType} bodyA - The first possible `Body` that this constraint is attached to.
+     * @param {MatterJS.BodyType} bodyB - The second possible `Body` that this constraint is attached to.
      * @param {number} [length] - A Number that specifies the target resting length of the constraint. If not given it is calculated automatically in `Constraint.create` from initial positions of the `constraint.bodyA` and `constraint.bodyB`.
      * @param {number} [stiffness=1] - A Number that specifies the stiffness of the constraint, i.e. the rate at which it returns to its resting `constraint.length`. A value of `1` means the constraint should be very stiff. A value of `0.2` means the constraint acts as a soft spring.
      * @param {Phaser.Types.Physics.Matter.MatterConstraintConfig} [options] - An optional Constraint configuration object that is used to set initial Constraint properties on creation.
      *
-     * @return {MatterJS.Constraint} A Matter JS Constraint.
+     * @return {MatterJS.ConstraintType} A Matter JS Constraint.
      */
     constraint: function (bodyA, bodyB, length, stiffness, options)
     {
@@ -713,12 +713,12 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#worldConstraint
      * @since 3.0.0
      *
-     * @param {MatterJS.Body} body - The Matter `Body` that this constraint is attached to.
+     * @param {MatterJS.BodyType} body - The Matter `Body` that this constraint is attached to.
      * @param {number} [length] - A number that specifies the target resting length of the constraint. If not given it is calculated automatically in `Constraint.create` from initial positions of the `constraint.bodyA` and `constraint.bodyB`.
      * @param {number} [stiffness=1] - A Number that specifies the stiffness of the constraint, i.e. the rate at which it returns to its resting `constraint.length`. A value of `1` means the constraint should be very stiff. A value of `0.2` means the constraint acts as a soft spring.
      * @param {Phaser.Types.Physics.Matter.MatterConstraintConfig} [options] - An optional Constraint configuration object that is used to set initial Constraint properties on creation.
      *
-     * @return {MatterJS.Constraint} A Matter JS Constraint.
+     * @return {MatterJS.ConstraintType} A Matter JS Constraint.
      */
     worldConstraint: function (body, length, stiffness, options)
     {
@@ -758,7 +758,7 @@ var Factory = new Class({
      *
      * @param {Phaser.Types.Physics.Matter.MatterConstraintConfig} [options] - An optional Constraint configuration object that is used to set initial Constraint properties on creation.
      *
-     * @return {MatterJS.Constraint} A Matter JS Constraint.
+     * @return {MatterJS.ConstraintType} A Matter JS Constraint.
      */
     mouseSpring: function (options)
     {
@@ -780,7 +780,7 @@ var Factory = new Class({
      *
      * @param {Phaser.Types.Physics.Matter.MatterConstraintConfig} [options] - An optional Constraint configuration object that is used to set initial Constraint properties on creation.
      *
-     * @return {MatterJS.Constraint} A Matter JS Constraint.
+     * @return {MatterJS.ConstraintType} A Matter JS Constraint.
      */
     pointerConstraint: function (options)
     {

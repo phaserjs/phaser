@@ -3,8 +3,8 @@
  * @since 3.22.0
  * 
  * @property {string} [label='Constraint'] - An arbitrary string-based name to help identify this constraint.
- * @property {MatterJS.Body} [bodyA] - The first possible `Body` that this constraint is attached to.
- * @property {MatterJS.Body} [bodyB] - The second possible `Body` that this constraint is attached to.
+ * @property {MatterJS.BodyType} [bodyA] - The first possible `Body` that this constraint is attached to.
+ * @property {MatterJS.BodyType} [bodyB] - The second possible `Body` that this constraint is attached to.
  * @property {Phaser.Types.Math.Vector2Like} [pointA] - A `Vector` that specifies the offset of the constraint from center of the `constraint.bodyA` if defined, otherwise a world-space position.
  * @property {Phaser.Types.Math.Vector2Like} [pointB] - A `Vector` that specifies the offset of the constraint from center of the `constraint.bodyB` if defined, otherwise a world-space position.
  * @property {number} [stiffness=1] - A `Number` that specifies the stiffness of the constraint, i.e. the rate at which it returns to its resting `constraint.length`. A value of `1` means the constraint should be very stiff. A value of `0.2` means the constraint acts like a soft spring.
