@@ -9,6 +9,7 @@ All of the following are specific to the Matter Physics implementation used by P
 #### Matter Physics New Features
 
 * Matter Physics now has 100% JSDoc coverage! Woohoo :)
+* Matter Physics now has brand new TypeScript defs included in the `types` folder :)
 * `MatterDebugConfig` is a new configuration object that contains all of the following new Matter debug settings:
 * `showAxes`- Render all of the body axes?
 * `showAngleIndicator`- Render just a single body axis?
