@@ -2148,6 +2148,8 @@ var FacebookInstantGamesPlugin = new Class({
                     
                     _this.emit('adshowerror', e, ad);
                 });
+
+                break;
             }
         }
 
@@ -2197,6 +2199,8 @@ var FacebookInstantGamesPlugin = new Class({
                     
                     _this.emit('adshowerror', e, ad);
                 });
+
+                break;
             }
         }
 
