@@ -229,6 +229,7 @@ All of the following are specific to the Matter Physics implementation used by P
 * External calls to the Fullscreen API using `element.requestFullscreen()` would be blocked by the Scale Manager. The Scale Manager will no longer call `stopFullScreen` should it be triggered outside of Phaser (thanks @AdamXA)
 * The `Tilemaps.Tile.tint` property wasn't working correctly as it expected the colors in the wrong order (BGR instead of RGB). It will now expect them in the correct RGB order (thanks @Aedalus @plissken2013es)
 * The `ScaleManager.destroy` method wasn't being called when the Game `DESTROY` event was dispatched, causing minor gc to build up. The destroy method will now be called properly on game destruction. Fix #4944 (thanks @sunshineuoow)
+* `FacebookInstantGamesPlugin.showAd` and `showVideo` will now break out of the ad iteration search once a valid ad has been found and called. Previously, it would carry on interating if the async didn't complete quickly. Fix #4888 (thanks @east62687)
 
 ### Examples, Documentation and TypeScript
 
