@@ -536,6 +536,22 @@ var Systems = new Class({
     },
 
     /**
+     * Returns any data that was sent to this Scene by another Scene.
+     * 
+     * The data is also passed to `Scene.init` and in various Scene events, but
+     * you can access it at any point via this method.
+     *
+     * @method Phaser.Scenes.Systems#getData
+     * @since 3.22.0
+     *
+     * @return {any} 
+     */
+    getData: function ()
+    {
+        return this.settings.data;
+    },
+
+    /**
      * Is this Scene sleeping?
      *
      * @method Phaser.Scenes.Systems#isSleeping
