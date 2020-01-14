@@ -214,6 +214,28 @@ var Group = new Class({
          */
         this.createMultipleCallback = GetFastValue(config, 'createMultipleCallback', null);
 
+        /**
+         * A function to be called when adding or creating group members.
+         * For internal use only by a Group, or any class that extends it.
+         *
+         * @name Phaser.GameObjects.Group#internalCreateCallback
+         * @type {?Phaser.Types.GameObjects.Group.GroupCallback}
+         * @private
+         * @since 3.22.0
+         */
+        this.internalCreateCallback = null;
+
+        /**
+         * A function to be called when removing group members.
+         * For internal use only by a Group, or any class that extends it.
+         *
+         * @name Phaser.GameObjects.Group#internalRemoveCallback
+         * @type {?Phaser.Types.GameObjects.Group.GroupCallback}
+         * @private
+         * @since 3.22.0
+         */
+        this.internalRemoveCallback = null;
+
         if (config)
         {
             this.createMultiple(config);
@@ -512,6 +534,11 @@ var Group = new Class({
 
         this.children.set(child);
 
+        if (this.internalCreateCallback)
+        {
+            this.internalCreateCallback.call(this, child);
+        }
+
         if (this.createCallback)
         {
             this.createCallback.call(this, child);
@@ -585,6 +612,11 @@ var Group = new Class({
         }
 
         this.children.delete(child);
+
+        if (this.internalRemoveCallback)
+        {
+            this.internalRemoveCallback.call(this, child);
+        }
 
         if (this.removeCallback)
         {
