@@ -200,6 +200,9 @@ All of the following are specific to the Matter Physics implementation used by P
 * `ParticleEmitterManager.removeEmitter` is a new method that will remove the given emitter from the manager, if the emitter belongs to it (thanks @samme)
 * `AlphaSingle` is a new Game Object Component that allows a Game Object to set its alpha values, but only as a single uniform value, not on a per-quad basis.
 * `Actions.AlignTo` (in combination with the new `Display.Align.To.QuickSet` function) allows you to align an array of Game Objects so they sit next to each other, one at a time. The first item isn't moved, the second is moved to sit next to the first, and so on. You can align them using any of the alignment constants (thanks @samme)
+* `Scene.Systems.getData` is a new method that will return any data that was sent to the Scene by another Scene, i.e. during a `run` or `launch` command. You can access it via `this.sys.getData()` from within your Scene.
+* `Group.internalCreateCallback` is a new optional callback that is invoked whenever a child is added to a Group. This is the same as `createCallback` except it's only for use by the parent class, allowing a parent to invoke a creation callback and for you to still provide one via the Group config.
+* `Group.internalRemoveCallback` is a new optional callback that is invoked whenever a child is removed from a Group. This is the same as `removeCallback` except it's only for use by the parent class, allowing a parent to invoke a callback and for you to still provide one via the Group config.
 
 ### Updates
 
@@ -218,6 +221,7 @@ All of the following are specific to the Matter Physics implementation used by P
 * The `TWEEN_UPDATE` event now sends two new parameters to the handler: `current` and `previous` which contain the current and previous property values.
 * During `collideSpriteVsGroup` checks it will now skip bodies that are disabled to save doing a `contains` test (thanks @samme)
 * `Display.Align.In.QuickSet` now accepts `LEFT_BOTTOM` as `BOTTOM_LEFT`, `LEFT_TOP` as `TOP_LEFT`, `RIGHT_BOTTOM` as `BOTTOM_RIGHT` and `RIGHT_TOP` as `TOP_RIGHT`. Fix #4927 (thanks @zaniar)
+* `PhysicsGroup` now uses the new `internalCreateCallback` and `internalRemoveCallback` to handle its body creation and destruction, allowing you to use your own `createCallback` and `removeCallback` as defined in the Group config. Fix #4420 #4657 #4822 (thanks @S4n60w3n @kendistiller @scrubperson)
 
 ### Bug Fixes
 
