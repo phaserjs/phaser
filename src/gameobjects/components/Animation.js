@@ -526,6 +526,8 @@ var Animation = new Class({
 
         this.forward = true;
         this._reverse = false;
+        this._paused = false;
+        this._wasPlaying = true;
 
         return this._startAnimation(key, startFrame);
     },
