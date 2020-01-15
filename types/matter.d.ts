@@ -1264,7 +1264,7 @@ declare namespace MatterJS {
          * @type vector
          * @default { x: 0, y: 0 }
          */
-        pointA: Vector;
+        pointB: Vector;
 
         /**
          * A `Number` that specifies the target resting length of the constraint. 
