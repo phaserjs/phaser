@@ -38,20 +38,42 @@ var PhysicsGroup = new Class({
 
     function PhysicsGroup (world, scene, children, config)
     {
-        if (IsPlainObject(children))
+        if (!children && !config)
+        {
+            config = {
+                internalCreateCallback: this.createCallbackHandler,
+                internalRemoveCallback: this.removeCallbackHandler
+            };
+        }
+        else if (IsPlainObject(children))
         {
             //  children is a plain object, so swizzle them:
             config = children;
             children = null;
+
+            config.internalCreateCallback = this.createCallbackHandler;
+            config.internalRemoveCallback = this.removeCallbackHandler;
         }
         else if (Array.isArray(children) && IsPlainObject(children[0]))
         {
             //  children is an array of plain objects
             config = children[0];
+
+            var _this = this;
+
+            children.forEach(function (singleConfig)
+            {
+                singleConfig.internalCreateCallback = _this.createCallbackHandler;
+                singleConfig.internalRemoveCallback = _this.removeCallbackHandler;
+            });
         }
-        else if (config === undefined || children === undefined)
+        else
         {
-            config = {};
+            // config is not defined and children is not a plain object nor an array of plain objects
+            config = {
+                internalCreateCallback: this.createCallbackHandler,
+                internalRemoveCallback: this.removeCallbackHandler
+            };
         }
 
         /**
@@ -124,9 +146,6 @@ var PhysicsGroup = new Class({
         }
 
         Group.call(this, scene, children, config);
-
-        this.internalCreateCallback = this.createCallbackHandler;
-        this.internalRemoveCallback = this.removeCallbackHandler;
 
         /**
          * A textual representation of this Game Object.

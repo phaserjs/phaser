@@ -223,7 +223,7 @@ var Group = new Class({
          * @private
          * @since 3.22.0
          */
-        this.internalCreateCallback = null;
+        this.internalCreateCallback = GetFastValue(config, 'internalCreateCallback', null);
 
         /**
          * A function to be called when removing group members.
@@ -234,7 +234,7 @@ var Group = new Class({
          * @private
          * @since 3.22.0
          */
-        this.internalRemoveCallback = null;
+        this.internalRemoveCallback = GetFastValue(config, 'internalRemoveCallback', null);
 
         if (config)
         {
