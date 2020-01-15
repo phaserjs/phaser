@@ -47,7 +47,16 @@ var MultiAtlasFile = new Class({
             var config = key;
 
             key = GetFastValue(config, 'key');
-            atlasURL = GetFastValue(config, 'url');
+
+            if (GetFastValue(config, 'url', false))
+            {
+                atlasURL = GetFastValue(config, 'url');
+            }
+            else
+            {
+                atlasURL = GetFastValue(config, 'atlasURL');
+            }
+
             atlasXhrSettings = GetFastValue(config, 'xhrSettings');
             path = GetFastValue(config, 'path');
             baseURL = GetFastValue(config, 'baseURL');
