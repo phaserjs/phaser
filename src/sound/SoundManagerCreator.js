@@ -18,6 +18,8 @@ var WebAudioSoundManager = require('./webaudio/WebAudioSoundManager');
  * @since 3.0.0
  *
  * @param {Phaser.Game} game - Reference to the current game instance.
+ * 
+ * @return {(Phaser.Sound.HTML5AudioSoundManager|Phaser.Sound.WebAudioSoundManager|Phaser.Sound.NoAudioSoundManager)} The Sound Manager instance that was created.
  */
 var SoundManagerCreator = {
 
