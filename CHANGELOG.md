@@ -236,6 +236,7 @@ All of the following are specific to the Matter Physics implementation used by P
 * `FacebookInstantGamesPlugin.showAd` and `showVideo` will now break out of the ad iteration search once a valid ad has been found and called. Previously, it would carry on interating if the async didn't complete quickly. Fix #4888 (thanks @east62687)
 * When playing an Animation, if you were to play another, then pause it, then play another the internal `_paused` wouldn't get reset, preventing you from them pausing the animations from that point on. You can now play and pause animations at will. Fix #4835 (thanks @murteira)
 * In `Actions.GridAlign` if you set `width` to -1 it would align the items vertically, instead of horizontally. It now aligns them horizontally if `width` is set, or vertically if `height` is set. Fix #4899 (thanks @BenjaVR)
+* A `PathFollower` with a very short duration would often not end in the correct place, which is the very end of the Path, due to the tween handling the movement not running one final update when the tween was complete. It will now always end at the final point of the path, no matter how short the duration. Fix #4950 (thanks @bramp)
 
 ### Examples, Documentation and TypeScript
 
