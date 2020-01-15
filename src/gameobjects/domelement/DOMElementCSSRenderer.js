@@ -26,8 +26,9 @@ var DOMElementCSSRenderer = function (renderer, src, interpolationPercentage, ca
 {
     var node = src.node;
     var style = node.style;
+    var settings = src.scene.sys.settings;
 
-    if (!node || !style || GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)) || (src.parentContainer && !src.parentContainer.willRender()))
+    if (!node || !style || !settings.visible || GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)) || (src.parentContainer && !src.parentContainer.willRender()))
     {
         if (node)
         {
