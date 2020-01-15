@@ -10,6 +10,7 @@ var DOMElementRender = require('./DOMElementRender');
 var GameObject = require('../GameObject');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
 var RemoveFromDOM = require('../../dom/RemoveFromDOM');
+var SCENE_EVENTS = require('../../scene/events');
 var Vector4 = require('../../math/Vector4');
 
 /**
@@ -279,6 +280,29 @@ var DOMElement = new Class({
         else if (element)
         {
             this.setElement(element, style, innerText);
+        }
+
+        scene.sys.events.on(SCENE_EVENTS.SLEEP, this.handleSceneEvent, this);
+        scene.sys.events.on(SCENE_EVENTS.WAKE, this.handleSceneEvent, this);
+    },
+
+    /**
+     * Handles a Scene Sleep and Wake event.
+     *
+     * @method Phaser.GameObjects.DOMElement#handleSceneEvent
+     * @private
+     * @since 3.22.0
+     *
+     * @param {Phaser.Scenes.Systems} sys - The Scene Systems.
+     */
+    handleSceneEvent: function (sys)
+    {
+        var node = this.node;
+        var style = node.style;
+    
+        if (node)
+        {
+            style.display = (sys.settings.visible) ? 'block' : 'none';
         }
     },
 
@@ -934,6 +958,9 @@ var DOMElement = new Class({
     preDestroy: function ()
     {
         this.removeElement();
+
+        this.scene.sys.events.off(SCENE_EVENTS.SLEEP, this.handleSceneEvent, this);
+        this.scene.sys.events.off(SCENE_EVENTS.WAKE, this.handleSceneEvent, this);
     }
 
 });
