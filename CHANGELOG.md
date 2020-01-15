@@ -241,7 +241,7 @@ All of the following are specific to the Matter Physics implementation used by P
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@fselcukcan Bambosh @louisth @hexus @javigaralva @samme @BeLi4L @jcyuan @javigaralva @T-Grave @bramp @Chnapy @dranitski
+@fselcukcan Bambosh @louisth @hexus @javigaralva @samme @BeLi4L @jcyuan @javigaralva @T-Grave @bramp @Chnapy @dranitski @RollinSafary
 
 The Matter TypeScript defs have been updated to include lots of missing classes, removed some redundant elements and general fixes. The Phaser TypeScript defs now reference the Matter defs directly and no longer try to parse them from the JSDocs. This allows the `MatterJS` namespace to work in TypeScript projects without any compilation warnings.
 
