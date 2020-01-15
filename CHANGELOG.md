@@ -240,6 +240,7 @@ All of the following are specific to the Matter Physics implementation used by P
 * In `Actions.GridAlign` if you set `width` to -1 it would align the items vertically, instead of horizontally. It now aligns them horizontally if `width` is set, or vertically if `height` is set. Fix #4899 (thanks @BenjaVR)
 * A `PathFollower` with a very short duration would often not end in the correct place, which is the very end of the Path, due to the tween handling the movement not running one final update when the tween was complete. It will now always end at the final point of the path, no matter how short the duration. Fix #4950 (thanks @bramp)
 * A `DOMElement` would still remain visible even if the Scene in which it belongs to was sent to sleep. A sleeping Scene shouldn't render anything. DOM Elements will now respond to sleep and wake events from their parent Scene. Fix #4870 (thanks @peonmodel)
+* If a config object was passed to `MultiAtlasFile` it expected the atlas URL to be in the `url` property, however the docs and file config expected it in `atlasURL`. You can now use either of these properties to declare the url. Fix #4815 (thanks @xense)
 
 ### Examples, Documentation and TypeScript
 
