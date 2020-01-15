@@ -27,7 +27,7 @@ var MultiFile = require('../MultiFile.js');
  * @since 3.7.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {string} key - The key of the file. Must be unique within both the Loader and the Texture Manager.
+ * @param {(string|Phaser.Types.Loader.FileTypes.MultiAtlasFileConfig)} key - The key of the file. Must be unique within both the Loader and the Texture Manager. Or a config object.
  * @param {string} [atlasURL] - The absolute or relative URL to load the multi atlas json file from.
  * @param {string} [path] - Optional path to use when loading the textures defined in the atlas data.
  * @param {string} [baseURL] - Optional Base URL to use when loading the textures defined in the atlas data.
