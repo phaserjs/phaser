@@ -346,7 +346,7 @@ var PathFollower = {
             var tweenData = tween.data[0];
             var pathVector = this.pathVector;
 
-            if (tweenData.state !== TWEEN_CONST.COMPLETE)
+            if (tweenData.state === TWEEN_CONST.COMPLETE)
             {
                 this.path.getPoint(1, pathVector);
 
