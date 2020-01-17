@@ -210,6 +210,30 @@ var Rope = new Class({
     },
 
     /**
+     * Swap this Game Object from using a fill-tint to an additive tint.
+     * 
+     * Unlike an additive tint, a fill-tint literally replaces the pixel colors from the texture
+     * with those in the tint. You can use this for effects such as making a player flash 'white'
+     * if hit by something. See the `setColors` method for details of tinting the vertices.
+     *
+     * @method Phaser.GameObjects.Rope#setTintFill
+     * @webglOnly
+     * @since 3.23.0
+     *
+     * @param {boolean} [value=false] - Use tint fill (`true`) or an additive tint (`false`)
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setTintFill: function (value)
+    {
+        if (value === undefined) { value = false; }
+
+        this.tintFill = value;
+
+        return this;
+    },
+
+    /**
      * Set the alpha values used by the Rope during rendering.
      * 
      * You can provide the values in a number of ways:
