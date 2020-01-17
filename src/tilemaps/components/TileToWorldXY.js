@@ -37,8 +37,8 @@ var TileToWorldXY = function (tileX, tileY, point, camera, layer, orientation)
         point.x = TileToWorldX(tileX, camera, layer, orientation);
         point.y = TileToWorldY(tileY, camera, layer, orientation);
     } else if (orientation === "isometric") {
-        point.x = (WorldX - WorldY) * (tileWidth/2);
-        point.y = (WorldX + WorldY) * (tileHeight/2);
+        point.x = (tileX - tileY) * (tileWidth/2);
+        point.y = (tileX + tileY) * (tileHeight/2);
  
     }
     
