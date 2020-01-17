@@ -1,5 +1,21 @@
 # Change Log
 
+## Version 3.23 - Ginro - in development
+
+### New Features
+
+### Updates
+
+### Bug Fixes
+
+* The conditional checking if the `PathFollower` was at the end of the path or not was incorrect (thanks @samme)
+
+### Examples, Documentation and TypeScript
+
+My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
+
+
+
 ## Version 3.22 - Kohaku - January 15th 2020
 
 ### Matter Physics
