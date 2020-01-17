@@ -2345,7 +2345,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return TilemapComponents.TileToWorldX(tileX, camera, layer);
+        return TilemapComponents.TileToWorldX(tileX, camera, layer, this.orientation);
     },
 
     /**
@@ -2370,7 +2370,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return TilemapComponents.TileToWorldY(tileX, camera, layer);
+        return TilemapComponents.TileToWorldY(tileX, camera, layer, this.orientation);
     },
 
     /**
@@ -2397,7 +2397,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return TilemapComponents.TileToWorldXY(tileX, tileY, point, camera, layer);
+        return TilemapComponents.TileToWorldXY(tileX, tileY, point, camera, layer, this.orientation);
     },
 
     /**
@@ -2468,7 +2468,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return TilemapComponents.WorldToTileX(worldX, snapToFloor, camera, layer);
+        return TilemapComponents.WorldToTileX(worldX, snapToFloor, camera, layer, this.orientation);
     },
 
     /**
@@ -2493,7 +2493,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return TilemapComponents.WorldToTileY(worldY, snapToFloor, camera, layer);
+        return TilemapComponents.WorldToTileY(worldY, snapToFloor, camera, layer,this.orientation);
     },
 
     /**
@@ -2521,7 +2521,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return TilemapComponents.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, layer);
+        return TilemapComponents.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, layer, this.orientation);
     },
 
     /**

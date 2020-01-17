@@ -28,9 +28,7 @@ var TileToWorldY = function (tileY, camera, layer)
     if (tilemapLayer)
     {
         if (camera === undefined) { camera = tilemapLayer.scene.cameras.main; }
-
         layerWorldY = (tilemapLayer.y + camera.scrollY * (1 - tilemapLayer.scrollFactorY));
-
         tileHeight *= tilemapLayer.scaleY;
     }
 

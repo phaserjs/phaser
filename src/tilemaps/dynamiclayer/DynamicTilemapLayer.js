@@ -1178,7 +1178,7 @@ var DynamicTilemapLayer = new Class({
      */
     tileToWorldX: function (tileX, camera)
     {
-        return TilemapComponents.TileToWorldX(tileX, camera, this.layer);
+        return TilemapComponents.TileToWorldX(tileX, camera, this.layer, this.tilemap.orientation);
     },
 
     /**
@@ -1195,7 +1195,7 @@ var DynamicTilemapLayer = new Class({
      */
     tileToWorldY: function (tileY, camera)
     {
-        return TilemapComponents.TileToWorldY(tileY, camera, this.layer);
+        return TilemapComponents.TileToWorldY(tileY, camera, this.layer, this.tilemap.orientation);
     },
 
     /**
@@ -1215,7 +1215,7 @@ var DynamicTilemapLayer = new Class({
      */
     tileToWorldXY: function (tileX, tileY, point, camera)
     {
-        return TilemapComponents.TileToWorldXY(tileX, tileY, point, camera, this.layer);
+        return TilemapComponents.TileToWorldXY(tileX, tileY, point, camera, this.layer, this.tilemap.orientation);
     },
 
     /**
@@ -1268,7 +1268,7 @@ var DynamicTilemapLayer = new Class({
      */
     worldToTileX: function (worldX, snapToFloor, camera)
     {
-        return TilemapComponents.WorldToTileX(worldX, snapToFloor, camera, this.layer);
+        return TilemapComponents.WorldToTileX(worldX, snapToFloor, camera, this.layer, this.tilemap.orientation);
     },
 
     /**
@@ -1286,7 +1286,7 @@ var DynamicTilemapLayer = new Class({
      */
     worldToTileY: function (worldY, snapToFloor, camera)
     {
-        return TilemapComponents.WorldToTileY(worldY, snapToFloor, camera, this.layer);
+        return TilemapComponents.WorldToTileY(worldY, snapToFloor, camera, this.layer, this.tilemap.orientation);
     },
 
     /**
@@ -1307,7 +1307,7 @@ var DynamicTilemapLayer = new Class({
      */
     worldToTileXY: function (worldX, worldY, snapToFloor, point, camera)
     {
-        return TilemapComponents.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, this.layer);
+        return TilemapComponents.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, this.layer, this.tilemap.orientation);
     }
 
 });

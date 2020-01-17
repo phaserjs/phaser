@@ -27,19 +27,11 @@ var WorldToTileX = function (worldX, snapToFloor, camera, layer, orientation)
     if (snapToFloor === undefined) { snapToFloor = true; }
 
     var tileWidth = layer.baseTileWidth;
-    var tileHeight = layer.baseTileHeight;
     var tilemapLayer = layer.tilemapLayer;
 
     if (tilemapLayer)
     {
         if (camera === undefined) { camera = tilemapLayer.scene.cameras.main; }
-
-        // Find the world position relative to the static or dynamic layer's top left origin,
-        // factoring in the camera's vertical scroll
-        worldY = worldY - (tilemapLayer.y + camera.scrollY * (1 - tilemapLayer.scrollFactorY));
-
-        tileHeight *= tilemapLayer.scaleY;
-
         // Find the world position relative to the static or dynamic layer's top left origin,
         // factoring in the camera's horizontal scroll
         worldX = worldX - (tilemapLayer.x + camera.scrollX * (1 - tilemapLayer.scrollFactorX));
@@ -52,10 +44,8 @@ var WorldToTileX = function (worldX, snapToFloor, camera, layer, orientation)
             ? Math.floor(worldX / tileWidth)
             : worldX / tileWidth;
     } else if (orientation === "isometric") {
-        return snapToFloor
-            ? Math.floor((worldX/(tileWidth/2) + worldY/(tileHeight/2))/2) 
-            : ((worldX/(tileWidth/2) + worldY/(tileHeight/2))/2);
-
+        console.warn('With isometric map types you have to use the WorldToTileXY function.');
+        return null
     }
    
 };
