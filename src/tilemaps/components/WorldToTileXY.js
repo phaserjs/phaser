@@ -24,14 +24,15 @@ var Vector2 = require('../../math/Vector2');
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * 
+ * @param {string} orientation - The Tilemap's orientation
  * @return {Phaser.Math.Vector2} The XY location in tile units.
  */
-var WorldToTileXY = function (worldX, worldY, snapToFloor, point, camera, layer)
+var WorldToTileXY = function (worldX, worldY, snapToFloor, point, camera, layer,orientation)
 {
     if (point === undefined) { point = new Vector2(0, 0); }
 
-    point.x = WorldToTileX(worldX, snapToFloor, camera, layer);
-    point.y = WorldToTileY(worldY, snapToFloor, camera, layer);
+    point.x = WorldToTileX(worldX, snapToFloor, camera, layer, orientation);
+    point.y = WorldToTileY(worldY, snapToFloor, camera, layer, orientation);
 
     return point;
 };

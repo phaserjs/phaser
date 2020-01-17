@@ -23,7 +23,7 @@ var Utils = require('../../renderer/webgl/Utils');
  * 
  * Use a Static Tilemap Layer instead of a Dynamic Tilemap Layer when you don't need tile manipulation features.
  *
- * @class StaticTilemapLayer
+ * @class StaticTilemapLayers
  * @extends Phaser.GameObjects.GameObject
  * @memberof Phaser.Tilemaps
  * @constructor
@@ -1124,7 +1124,8 @@ var StaticTilemapLayer = new Class({
      */
     hasTileAtWorldXY: function (worldX, worldY, camera)
     {
-        return TilemapComponents.HasTileAtWorldXY(worldX, worldY, camera, this.layer);
+
+        return TilemapComponents.HasTileAtWorldXY(worldX, worldY, camera, this.tilemap.orientation);
     },
 
     /**
@@ -1320,13 +1321,14 @@ var StaticTilemapLayer = new Class({
     },
 
     /**
-     * Converts from tile X coordinates (tile units) to world X coordinates (pixels), factoring in the
+     * Converts from tile X and Y coordinates (tile units) to world X coordinates (pixels), factoring in the
      * layers position, scale and scroll.
      *
      * @method Phaser.Tilemaps.StaticTilemapLayer#tileToWorldX
      * @since 3.0.0
      *
      * @param {integer} tileX - The X coordinate, in tile coordinates.
+     * @param {integer} tileY - The Y coordinate, in tile coordinates.
      * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the world values from the tile index.
      *
      * @return {number}
@@ -1337,12 +1339,13 @@ var StaticTilemapLayer = new Class({
     },
 
     /**
-     * Converts from tile Y coordinates (tile units) to world Y coordinates (pixels), factoring in the
+     * Converts from tile X and Y  coordinates (tile units) to world Y coordinates (pixels), factoring in the
      * layers position, scale and scroll.
      *
      * @method Phaser.Tilemaps.StaticTilemapLayer#tileToWorldY
      * @since 3.0.0
      *
+     * @param {integer} tileY - The Y coordinate, in tile coordinates.
      * @param {integer} tileY - The Y coordinate, in tile coordinates.
      * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the world values from the tile index.
      *
@@ -1389,7 +1392,7 @@ var StaticTilemapLayer = new Class({
      */
     worldToTileX: function (worldX, snapToFloor, camera)
     {
-        return TilemapComponents.WorldToTileX(worldX, snapToFloor, camera, this.layer);
+        return TilemapComponents.WorldToTileX(worldX, snapToFloor, camera, this.layer, this.tilemap.orientation);
     },
 
     /**
@@ -1408,7 +1411,7 @@ var StaticTilemapLayer = new Class({
      */
     worldToTileY: function (worldY, snapToFloor, camera)
     {
-        return TilemapComponents.WorldToTileY(worldY, snapToFloor, camera, this.layer);
+        return TilemapComponents.WorldToTileY(worldY, snapToFloor, camera, this.layer, this.tilemap.orientation);
     },
 
     /**
@@ -1430,7 +1433,7 @@ var StaticTilemapLayer = new Class({
      */
     worldToTileXY: function (worldX, worldY, snapToFloor, point, camera)
     {
-        return TilemapComponents.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, this.layer);
+        return TilemapComponents.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, this.layer, this.tilemap.orientation);
     },
 
     /**

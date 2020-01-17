@@ -23,10 +23,11 @@ var WorldToTileY = require('./WorldToTileY');
  * 
  * @return {?boolean} Returns a boolean, or null if the layer given was invalid.
  */
-var HasTileAtWorldXY = function (worldX, worldY, camera, layer)
+var HasTileAtWorldXY = function (worldX, worldY, camera, orientation)
 {
-    var tileX = WorldToTileX(worldX, true, camera, layer);
-    var tileY = WorldToTileY(worldY, true, camera, layer);
+    var layer = stlayer.layer
+    var tileX = WorldToTileX(worldX, true, camera, layer, orientation);
+    var tileY = WorldToTileY(worldY, true, camera, layer, orientation);
 
     return HasTileAt(tileX, tileY, layer);
 };

@@ -15,10 +15,11 @@
  * @param {integer} tileX - The x coordinate, in tiles, not pixels.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
+ * @param {string} orientation - The Tilemap's orientation
  * 
  * @return {number}
  */
-var TileToWorldX = function (tileX, camera, layer)
+var TileToWorldX = function (tileX, camera, layer, orientation)
 {
     var tileWidth = layer.baseTileWidth;
     var tilemapLayer = layer.tilemapLayer;
@@ -33,7 +34,16 @@ var TileToWorldX = function (tileX, camera, layer)
         tileWidth *= tilemapLayer.scaleX;
     }
 
-    return layerWorldX + tileX * tileWidth;
+
+    if (orientation === "orthogonal") {
+        return layerWorldX + tileX * tileWidth;    
+    } else if (orientation === "isometric") {
+        // Not Best Solution ?
+        console.warn('With isometric map types you have to use the TileToWorldXY function.');
+        return null; 
+    }
+
+   
 };
 
 module.exports = TileToWorldX;
