@@ -13,6 +13,7 @@ module.exports = {
     BitmapMaskPipeline: require('./BitmapMaskPipeline'),
     ForwardDiffuseLightPipeline: require('./ForwardDiffuseLightPipeline'),
     TextureTintPipeline: require('./TextureTintPipeline'),
+    TextureTintStripPipeline: require('./TextureTintStripPipeline'),
     ModelViewProjection: require('./components/ModelViewProjection')
 
 };
