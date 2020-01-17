@@ -23,7 +23,7 @@ var Utils = require('../../renderer/webgl/Utils');
  */
 var RopeWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    var pipeline = this.pipeline;
+    var pipeline = src.pipeline;
 
     renderer.setPipeline(pipeline, src);
 
@@ -67,10 +67,8 @@ var RopeWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     var meshVerticesLength = vertices.length;
     var vertexCount = Math.floor(meshVerticesLength * 0.5);
 
-    if (pipeline.vertexCount + vertexCount > pipeline.vertexCapacity)
-    {
-        pipeline.flush();
-    }
+    //  Because it's a triangle strip
+    pipeline.flush();
 
     pipeline.setTexture2D(texture, 0);
 
