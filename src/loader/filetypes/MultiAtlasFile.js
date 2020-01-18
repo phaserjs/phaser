@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -27,7 +27,7 @@ var MultiFile = require('../MultiFile.js');
  * @since 3.7.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {string} key - The key of the file. Must be unique within both the Loader and the Texture Manager.
+ * @param {(string|Phaser.Types.Loader.FileTypes.MultiAtlasFileConfig)} key - The key of the file. Must be unique within both the Loader and the Texture Manager. Or a config object.
  * @param {string} [atlasURL] - The absolute or relative URL to load the multi atlas json file from.
  * @param {string} [path] - Optional path to use when loading the textures defined in the atlas data.
  * @param {string} [baseURL] - Optional Base URL to use when loading the textures defined in the atlas data.
@@ -47,7 +47,16 @@ var MultiAtlasFile = new Class({
             var config = key;
 
             key = GetFastValue(config, 'key');
-            atlasURL = GetFastValue(config, 'url');
+
+            if (GetFastValue(config, 'url', false))
+            {
+                atlasURL = GetFastValue(config, 'url');
+            }
+            else
+            {
+                atlasURL = GetFastValue(config, 'atlasURL');
+            }
+
             atlasXhrSettings = GetFastValue(config, 'xhrSettings');
             path = GetFastValue(config, 'path');
             baseURL = GetFastValue(config, 'baseURL');

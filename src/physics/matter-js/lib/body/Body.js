@@ -1,12 +1,11 @@
 /**
-* The `Matter.Body` module contains methods for creating and manipulating body models.
-* A `Matter.Body` is a rigid body that can be simulated by a `Matter.Engine`.
-* Factories for commonly used body configurations (such as rectangles, circles and other polygons) can be found in the module `Matter.Bodies`.
-*
-* See the included usage [examples](https://github.com/liabru/matter-js/tree/master/examples).
-
-* @class Body
-*/
+ * The `Matter.Body` module contains methods for creating and manipulating body models.
+ * A `Matter.Body` is a rigid body that can be simulated by a `Matter.Engine`.
+ * Factories for commonly used body configurations (such as rectangles, circles and other polygons) can be found in the module `Matter.Bodies`.
+ *
+ * See the included usage [examples](https://github.com/liabru/matter-js/tree/master/examples).
+ * @class Body
+ */
 
 var Body = {};
 
@@ -82,7 +81,9 @@ var Axes = require('../geometry/Axes');
             axes: null,
             area: 0,
             mass: 0,
+            inverseMass: 0,
             inertia: 0,
+            inverseInertia: 0,
             _original: null,
             render: {
                 visible: true,
@@ -99,7 +100,9 @@ var Axes = require('../geometry/Axes');
             },
             gameObject: null,               // custom Phaser property
             scale: { x: 1, y: 1 },          // custom Phaser property
-            centerOfMass: { x: 0, y: 0 },   // custom Phaser property
+            centerOfMass: { x: 0, y: 0 },   // custom Phaser property (float, 0 - 1)
+            centerOffset: { x: 0, y: 0 },   // custom Phaser property (pixel values)
+            gravityScale: { x: 1, y: 1 },   // custom Phaser property
             ignoreGravity: false,           // custom Phaser property
             ignorePointer: false,           // custom Phaser property
             onCollideCallback: null,        // custom Phaser property
@@ -187,9 +190,11 @@ var Axes = require('../geometry/Axes');
             parent: body.parent || body
         });
 
+        var bounds = body.bounds;
+
         Vertices.rotate(body.vertices, body.angle, body.position);
         Axes.rotate(body.axes, body.angle);
-        Bounds.update(body.bounds, body.vertices, body.velocity);
+        Bounds.update(bounds, body.vertices, body.velocity);
 
         // allow options to override the automatically calculated properties
         Body.set(body, {
@@ -199,8 +204,20 @@ var Axes = require('../geometry/Axes');
             inertia: options.inertia || body.inertia
         });
 
-        body.centerOfMass.x = -(body.bounds.min.x - body.position.x) / (body.bounds.max.x - body.bounds.min.x);
-        body.centerOfMass.y = -(body.bounds.min.y - body.position.y) / (body.bounds.max.y - body.bounds.min.y);
+        if (body.parts.length === 1)
+        {
+            var centerOfMass = body.centerOfMass;
+            var centerOffset = body.centerOffset;
+    
+            var bodyWidth = bounds.max.x - bounds.min.x;
+            var bodyHeight = bounds.max.y - bounds.min.y;
+    
+            centerOfMass.x = -(bounds.min.x - body.position.x) / bodyWidth;
+            centerOfMass.y = -(bounds.min.y - body.position.y) / bodyHeight;
+    
+            centerOffset.x = bodyWidth * centerOfMass.x;
+            centerOffset.y = bodyHeight * centerOfMass.y;
+        }
     };
 
     /**
@@ -449,8 +466,17 @@ var Axes = require('../geometry/Axes');
         var cx = total.centre.x;
         var cy = total.centre.y;
 
-        body.centerOfMass.x = cx;
-        body.centerOfMass.y = cy;
+        var bounds = body.bounds;
+        var centerOfMass = body.centerOfMass;
+        var centerOffset = body.centerOffset;
+
+        Bounds.update(bounds, body.vertices, body.velocity);
+
+        centerOfMass.x = -(bounds.min.x - cx) / (bounds.max.x - bounds.min.x);
+        centerOfMass.y = -(bounds.min.y - cy) / (bounds.max.y - bounds.min.y);
+
+        centerOffset.x = cx;
+        centerOffset.y = cy;
 
         body.area = total.area;
         body.parent = body;
@@ -1209,7 +1235,7 @@ var Axes = require('../geometry/Axes');
      */
 
     /**
-     * A value that defines the fill opqcity to use when rendering the body.
+     * A value that defines the fill opacity to use when rendering the body.
      *
      * @property render.fillOpacity
      * @type number
@@ -1223,7 +1249,7 @@ var Axes = require('../geometry/Axes');
      */
 
     /**
-     * A value that defines the line opqcity to use when rendering the body.
+     * A value that defines the line opacity to use when rendering the body.
      *
      * @property render.lineOpacity
      * @type number
@@ -1269,17 +1295,18 @@ var Axes = require('../geometry/Axes');
      */
 
     /**
-     * The scale of the Body when Body.setScale was called. Not used internally by Matter.
-     *
-     * @property scale
-     * @type vector
-     * @default { x: 1, y: 1 }
-     */
-
-    /**
      * The center of mass of the Body.
      *
      * @property centerOfMass
+     * @type vector
+     * @default { x: 0, y: 0 }
+     */
+
+    /**
+     * The center of the body in pixel values.
+     * Used by Phaser for texture aligment.
+     *
+     * @property centerOffset
      * @type vector
      * @default { x: 0, y: 0 }
      */
@@ -1293,6 +1320,14 @@ var Axes = require('../geometry/Axes');
      */
 
     /**
+     * Scale the influence of World gravity when applied to this body.
+     *
+     * @property gravityScale
+     * @type vector
+     * @default { x: 1, y: 1 }
+     */
+
+     /**
      * Will this Body ignore Phaser Pointer input events?
      *
      * @property ignorePointer

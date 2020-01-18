@@ -1,13 +1,13 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Body = require('../lib/body/Body');
 
 /**
- * [description]
+ * Contains methods for changing the velocity of a Matter Body. Should be used as a mixin and not called directly.
  *
  * @namespace Phaser.Physics.Matter.Components.Velocity
  * @since 3.0.0
@@ -15,12 +15,13 @@ var Body = require('../lib/body/Body');
 var Velocity = {
 
     /**
-     * [description]
+     * Sets the angular velocity of the body instantly.
+     * Position, angle, force etc. are unchanged.
      *
      * @method Phaser.Physics.Matter.Components.Velocity#setAngularVelocity
      * @since 3.0.0
      *
-     * @param {number} value - [description]
+     * @param {number} value - The angular velocity.
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */

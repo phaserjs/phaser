@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -58,7 +58,7 @@ var EventEmitter = new Class({
  * @method Phaser.Events.EventEmitter#eventNames
  * @since 3.0.0
  *
- * @return {array}
+ * @return {Array.<string|symbol>}
  */
 
 /**
@@ -69,7 +69,7 @@ var EventEmitter = new Class({
  *
  * @param {(string|symbol)} event - The event name.
  *
- * @return {array} The registered listeners.
+ * @return {Function[]} The registered listeners.
  */
 
 /**
@@ -105,7 +105,7 @@ var EventEmitter = new Class({
  * @param {function} fn - The listener function.
  * @param {*} [context=this] - The context to invoke the listener with.
  *
- * @return {Phaser.Events.EventEmitter} `this`.
+ * @return {this} `this`.
  */
 
 /**
@@ -118,7 +118,7 @@ var EventEmitter = new Class({
  * @param {function} fn - The listener function.
  * @param {*} [context=this] - The context to invoke the listener with.
  *
- * @return {Phaser.Events.EventEmitter} `this`.
+ * @return {this} `this`.
  */
 
 /**
@@ -131,7 +131,7 @@ var EventEmitter = new Class({
  * @param {function} fn - The listener function.
  * @param {*} [context=this] - The context to invoke the listener with.
  *
- * @return {Phaser.Events.EventEmitter} `this`.
+ * @return {this} `this`.
  */
 
 /**
@@ -145,7 +145,7 @@ var EventEmitter = new Class({
  * @param {*} [context] - Only remove the listeners that have this context.
  * @param {boolean} [once] - Only remove one-time listeners.
  *
- * @return {Phaser.Events.EventEmitter} `this`.
+ * @return {this} `this`.
  */
 
 /**
@@ -159,7 +159,7 @@ var EventEmitter = new Class({
  * @param {*} [context] - Only remove the listeners that have this context.
  * @param {boolean} [once] - Only remove one-time listeners.
  *
- * @return {Phaser.Events.EventEmitter} `this`.
+ * @return {this} `this`.
  */
 
 /**
@@ -170,7 +170,7 @@ var EventEmitter = new Class({
  *
  * @param {(string|symbol)} [event] - The event name.
  *
- * @return {Phaser.Events.EventEmitter} `this`.
+ * @return {this} `this`.
  */
 
 PluginCache.register('EventEmitter', EventEmitter, 'events');

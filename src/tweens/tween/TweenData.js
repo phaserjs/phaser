@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -96,6 +96,7 @@ var TweenData = function (target, index, key, getEnd, getStart, getActive, ease,
         //  Ease Value Data:
 
         start: 0,
+        previous: 0,
         current: 0,
         end: 0,
 

@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -275,6 +275,21 @@ var ParticleEmitterManager = new Class({
     createEmitter: function (config)
     {
         return this.addEmitter(new ParticleEmitter(this, config));
+    },
+
+    /**
+     * Removes a Particle Emitter from this Emitter Manager, if the Emitter belongs to this Manager.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitterManager#removeEmitter
+     * @since 3.22.0
+     *
+     * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter
+     *
+     * @return {?Phaser.GameObjects.Particles.ParticleEmitter} The Particle Emitter if it was removed or null if it was not.
+     */
+    removeEmitter: function (emitter)
+    {
+        return this.emitters.remove(emitter, true);
     },
 
     /**

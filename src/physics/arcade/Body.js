@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Benjamin D. Richards <benjamindrichards@gmail.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -190,7 +190,7 @@ var Body = new Class({
         this.rotation = gameObject.angle;
 
         /**
-         * The Body's rotation, in degrees, during the previous step.
+         * The Body rotation, in degrees, during the previous step.
          *
          * @name Phaser.Physics.Arcade.Body#preRotation
          * @type {number}
@@ -199,22 +199,26 @@ var Body = new Class({
         this.preRotation = gameObject.angle;
 
         /**
-         * The width of the Body's boundary, in pixels.
-         * If the Body is circular, this is also the Body's diameter.
+         * The width of the Body boundary, in pixels.
+         * If the Body is circular, this is also the diameter.
+         * If you wish to change the width use the `Body.setSize` method.
          *
          * @name Phaser.Physics.Arcade.Body#width
          * @type {number}
+         * @readonly
          * @default 64
          * @since 3.0.0
          */
         this.width = width;
 
         /**
-         * The height of the Body's boundary, in pixels.
-         * If the Body is circular, this is also the Body's diameter.
+         * The height of the Body boundary, in pixels.
+         * If the Body is circular, this is also the diameter.
+         * If you wish to change the height use the `Body.setSize` method.
          *
          * @name Phaser.Physics.Arcade.Body#height
          * @type {number}
+         * @readonly
          * @default 64
          * @since 3.0.0
          */
@@ -1634,7 +1638,7 @@ var Body = new Class({
     /**
      * Sets whether this Body collides with the world boundary.
      *
-     * Optionally also sets the World Bounce values. If the `Body.worldBounce` is null, it's set to a new Vec2 first.
+     * Optionally also sets the World Bounce values. If the `Body.worldBounce` is null, it's set to a new Phaser.Math.Vector2 first.
      *
      * @method Phaser.Physics.Arcade.Body#setCollideWorldBounds
      * @since 3.0.0

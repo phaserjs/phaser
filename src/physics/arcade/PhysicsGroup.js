@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -41,8 +41,8 @@ var PhysicsGroup = new Class({
         if (!children && !config)
         {
             config = {
-                createCallback: this.createCallbackHandler,
-                removeCallback: this.removeCallbackHandler
+                internalCreateCallback: this.createCallbackHandler,
+                internalRemoveCallback: this.removeCallbackHandler
             };
         }
         else if (IsPlainObject(children))
@@ -51,8 +51,8 @@ var PhysicsGroup = new Class({
             config = children;
             children = null;
 
-            config.createCallback = this.createCallbackHandler;
-            config.removeCallback = this.removeCallbackHandler;
+            config.internalCreateCallback = this.createCallbackHandler;
+            config.internalRemoveCallback = this.removeCallbackHandler;
         }
         else if (Array.isArray(children) && IsPlainObject(children[0]))
         {
@@ -63,16 +63,16 @@ var PhysicsGroup = new Class({
 
             children.forEach(function (singleConfig)
             {
-                singleConfig.createCallback = _this.createCallbackHandler;
-                singleConfig.removeCallback = _this.removeCallbackHandler;
+                singleConfig.internalCreateCallback = _this.createCallbackHandler;
+                singleConfig.internalRemoveCallback = _this.removeCallbackHandler;
             });
         }
         else
         {
             // config is not defined and children is not a plain object nor an array of plain objects
             config = {
-                createCallback: this.createCallbackHandler,
-                removeCallback: this.removeCallbackHandler
+                internalCreateCallback: this.createCallbackHandler,
+                internalRemoveCallback: this.removeCallbackHandler
             };
         }
 

@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -57,12 +57,12 @@ var Vector2 = require('../../math/Vector2');
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  *
- * @param {Phaser.Physics.Matter.World} world - [description]
+ * @param {Phaser.Physics.Matter.World} world - A reference to the Matter.World instance that this body belongs to.
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
  * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
- * @param {object} [options={}] - Matter.js configuration object.
+ * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
  */
 var MatterSprite = new Class({
 
@@ -97,7 +97,7 @@ var MatterSprite = new Class({
         this.setOrigin();
 
         /**
-         * [description]
+         * A reference to the Matter.World instance that this body belongs to.
          *
          * @name Phaser.Physics.Matter.Sprite#world
          * @type {Phaser.Physics.Matter.World}
@@ -106,7 +106,7 @@ var MatterSprite = new Class({
         this.world = world;
 
         /**
-         * [description]
+         * An internal temp vector used for velocity and force calculations.
          *
          * @name Phaser.Physics.Matter.Sprite#_tempVec2
          * @type {Phaser.Math.Vector2}
