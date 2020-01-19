@@ -36,7 +36,8 @@ var TriangleToRectangle = function (triangle, rect)
  * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that have at least one interesting face.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
- *
+ * @param {string} orientation - The Tilemap's orientation
+ * 
  * @return {Phaser.Tilemaps.Tile[]} Array of Tile objects.
  */
 var GetTilesWithinShape = function (shape, filteringOptions, camera, layer)
@@ -51,12 +52,14 @@ var GetTilesWithinShape = function (shape, filteringOptions, camera, layer)
     else if (shape instanceof Geom.Line) { intersectTest = Intersects.LineToRectangle; }
 
     // Top left corner of the shapes's bounding box, rounded down to include partial tiles
-    var xStart = WorldToTileX(shape.left, true, camera, layer);
-    var yStart = WorldToTileY(shape.top, true, camera, layer);
+    var pointStart = WorldToTileXY(shape.left, shape.top, true, camera, layer, orientation);
+    var xStart = pointStart.x;
+    var yStart = pointStart.y;
 
     // Bottom right corner of the shapes's bounding box, rounded up to include partial tiles
-    var xEnd = Math.ceil(WorldToTileX(shape.right, false, camera, layer));
-    var yEnd = Math.ceil(WorldToTileY(shape.bottom, false, camera, layer));
+    var pointEnd = WorldToTileXY(shape.right, shape.bottom, true, camera, layer, orientation);
+    var xEnd = Math.ceil(pointEnd.x);
+    var yEnd = Math.ceil(pointEnd.y);
 
     // Tiles within bounding rectangle of shape. Bounds are forced to be at least 1 x 1 tile in size
     // to grab tiles for shapes that don't have a height or width (e.g. a horizontal line).

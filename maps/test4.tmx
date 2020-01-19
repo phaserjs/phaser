@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="2019.11.26" orientation="orthogonal" renderorder="right-down" compressionlevel="-1" width="14" height="7" tilewidth="64" tileheight="64" infinite="0" nextlayerid="3" nextobjectid="8">
+ <editorsettings>
+  <export target="../game/assets/tilemaps/level1.json" format="json"/>
+ </editorsettings>
+ <tileset firstgid="1" name="kenny_simple_platformer" tilewidth="64" tileheight="64" tilecount="98" columns="14">
+  <image source="../game/assets/tilesets/platformPack_tilesheet.png" width="896" height="448"/>
+ </tileset>
+ <layer id="1" name="Platforms" width="14" height="7">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,1,1,1,1,1,1,1,1,1,1,
+5,5,5,5,4,4,4,4,4,4,4,4,4,4,
+19,19,19,19,4,4,4,4,4,4,4,4,4,4
+</data>
+ </layer>
+ <objectgroup id="2" name="Spikes">
+  <object id="3" gid="71" x="768.083" y="252.37" width="64" height="64"/>
+  <object id="4" gid="71" x="829.628" y="254.355" width="64" height="64"/>
+  <object id="5" gid="71" x="706.538" y="254.355" width="64" height="64"/>
+  <object id="7" gid="71" x="384.917" y="258.326" width="64" height="64"/>
+ </objectgroup>
+</map>

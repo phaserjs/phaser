@@ -1071,7 +1071,7 @@ var StaticTilemapLayer = new Class({
      */
     getTilesWithinWorldXY: function (worldX, worldY, width, height, filteringOptions, camera)
     {
-        return TilemapComponents.GetTilesWithinWorldXY(worldX, worldY, width, height, filteringOptions, camera, this.layer);
+        return TilemapComponents.GetTilesWithinWorldXY(worldX, worldY, width, height, filteringOptions, camera, this.layer, this.tilemap.orientation);
     },
 
     /**
@@ -1089,7 +1089,7 @@ var StaticTilemapLayer = new Class({
      */
     getTilesWithinShape: function (shape, filteringOptions, camera)
     {
-        return TilemapComponents.GetTilesWithinShape(shape, filteringOptions, camera, this.layer);
+        return TilemapComponents.GetTilesWithinShape(shape, filteringOptions, camera, this.layer, this.tilemap.orientation);
     },
 
     /**

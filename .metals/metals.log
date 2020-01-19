@@ -1,0 +1,2 @@
+INFO  time: initialize in 0.88s
+WARN  no build tool detected in workspace '/home/yggr/Documents/Projects/phaserSvip'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 

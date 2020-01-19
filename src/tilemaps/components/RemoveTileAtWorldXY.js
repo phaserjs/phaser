@@ -22,13 +22,15 @@ var WorldToTileY = require('./WorldToTileY');
  * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
- *
+ * @param {string} orientation - The Tilemap's orientation
+ * 
  * @return {Phaser.Tilemaps.Tile} The Tile object that was removed.
  */
-var RemoveTileAtWorldXY = function (worldX, worldY, replaceWithNull, recalculateFaces, camera, layer)
+var RemoveTileAtWorldXY = function (worldX, worldY, replaceWithNull, recalculateFaces, camera, layer,orientation)
 {
-    var tileX = WorldToTileX(worldX, true, camera, layer);
-    var tileY = WorldToTileY(worldY, true, camera, layer);
+    var point = WorldToTileXY(worldX, worldY, true, camera, layer, orientation);
+    var tileX = point.x
+    var tileY = point.y
     return RemoveTileAt(tileX, tileY, replaceWithNull, recalculateFaces, layer);
 };
 
