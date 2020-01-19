@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -344,14 +344,23 @@ var PathFollower = {
         if (tween)
         {
             var tweenData = tween.data[0];
+            var pathVector = this.pathVector;
 
-            if (tweenData.state !== TWEEN_CONST.PLAYING_FORWARD && tweenData.state !== TWEEN_CONST.PLAYING_BACKWARD)
+            if (tweenData.state === TWEEN_CONST.COMPLETE)
+            {
+                this.path.getPoint(1, pathVector);
+
+                pathVector.add(this.pathOffset);
+   
+                this.setPosition(pathVector.x, pathVector.y);
+
+                return;
+            }
+            else if (tweenData.state !== TWEEN_CONST.PLAYING_FORWARD && tweenData.state !== TWEEN_CONST.PLAYING_BACKWARD)
             {
                 //  If delayed, etc then bail out
                 return;
             }
-
-            var pathVector = this.pathVector;
 
             this.path.getPoint(tween.getValue(), pathVector);
 

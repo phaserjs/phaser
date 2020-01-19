@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22,6 +22,6 @@
  * @since 3.0.0
  * 
  * @param {Phaser.Physics.Matter.Events.SleepStartEvent} event - The Sleep Event object.
- * @param {MatterJS.Body} body - The body that has gone to sleep.
+ * @param {MatterJS.BodyType} body - The body that has gone to sleep.
  */
 module.exports = 'sleepstart';

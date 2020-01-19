@@ -21,9 +21,10 @@
  * @property {number} [progress=0] - Between 0 and 1 showing completion of this TweenData.
  * @property {number} [elapsed=0] - Delta counter
  * @property {integer} [repeatCounter=0] - How many repeats are left to run?
- * @property {number} [start=0] - Ease value data.
- * @property {number} [current=0] - Ease value data.
- * @property {number} [end=0] - Ease value data.
+ * @property {number} [start=0] - The property value at the start of the ease.
+ * @property {number} [current=0] - The current propety value.
+ * @property {number} [previous=0] - The previous property value.
+ * @property {number} [end=0] - The property value at the end of the ease.
  * @property {number} [t1=0] - Time duration 1.
  * @property {number} [t2=0] - Time duration 2.
  * @property {Phaser.Types.Tweens.TweenDataGenConfig} [gen] - LoadValue generation functions.

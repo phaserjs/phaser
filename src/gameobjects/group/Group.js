@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -213,6 +213,28 @@ var Group = new Class({
          * @since 3.0.0
          */
         this.createMultipleCallback = GetFastValue(config, 'createMultipleCallback', null);
+
+        /**
+         * A function to be called when adding or creating group members.
+         * For internal use only by a Group, or any class that extends it.
+         *
+         * @name Phaser.GameObjects.Group#internalCreateCallback
+         * @type {?Phaser.Types.GameObjects.Group.GroupCallback}
+         * @private
+         * @since 3.22.0
+         */
+        this.internalCreateCallback = GetFastValue(config, 'internalCreateCallback', null);
+
+        /**
+         * A function to be called when removing group members.
+         * For internal use only by a Group, or any class that extends it.
+         *
+         * @name Phaser.GameObjects.Group#internalRemoveCallback
+         * @type {?Phaser.Types.GameObjects.Group.GroupCallback}
+         * @private
+         * @since 3.22.0
+         */
+        this.internalRemoveCallback = GetFastValue(config, 'internalRemoveCallback', null);
 
         if (config)
         {
@@ -512,6 +534,11 @@ var Group = new Class({
 
         this.children.set(child);
 
+        if (this.internalCreateCallback)
+        {
+            this.internalCreateCallback.call(this, child);
+        }
+
         if (this.createCallback)
         {
             this.createCallback.call(this, child);
@@ -585,6 +612,11 @@ var Group = new Class({
         }
 
         this.children.delete(child);
+
+        if (this.internalRemoveCallback)
+        {
+            this.internalRemoveCallback.call(this, child);
+        }
 
         if (this.removeCallback)
         {

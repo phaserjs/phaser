@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25,7 +25,7 @@
  * @since 3.0.0
  * 
  * @param {Phaser.Physics.Matter.Events.CollisionStartEvent} event - The Collision Event object.
- * @param {MatterJS.Body} bodyA - The first body of the first colliding pair. The `event.pairs` array may contain more colliding bodies.
- * @param {MatterJS.Body} bodyB - The second body of the first colliding pair. The `event.pairs` array may contain more colliding bodies.
+ * @param {MatterJS.BodyType} bodyA - The first body of the first colliding pair. The `event.pairs` array may contain more colliding bodies.
+ * @param {MatterJS.BodyType} bodyB - The second body of the first colliding pair. The `event.pairs` array may contain more colliding bodies.
  */
 module.exports = 'collisionstart';

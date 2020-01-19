@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -125,7 +125,7 @@ var PointerConstraint = new Class({
          * The body that is currently being dragged, if any.
          *
          * @name Phaser.Physics.Matter.PointerConstraint#body
-         * @type {?MatterJS.Body}
+         * @type {?MatterJS.BodyType}
          * @since 3.16.2
          */
         this.body = null;
@@ -134,7 +134,7 @@ var PointerConstraint = new Class({
          * The part of the body that was clicked on to start the drag.
          *
          * @name Phaser.Physics.Matter.PointerConstraint#part
-         * @type {?MatterJS.Body}
+         * @type {?MatterJS.BodyType}
          * @since 3.16.2
          */
         this.part = null;
@@ -143,7 +143,7 @@ var PointerConstraint = new Class({
          * The native Matter Constraint that is used to attach to bodies.
          *
          * @name Phaser.Physics.Matter.PointerConstraint#constraint
-         * @type {MatterJS.Constraint}
+         * @type {MatterJS.ConstraintType}
          * @since 3.0.0
          */
         this.constraint = Constraint.create(Merge(options, defaults));
@@ -239,7 +239,7 @@ var PointerConstraint = new Class({
      * @method Phaser.Physics.Matter.PointerConstraint#hitTestBody
      * @since 3.16.2
      *
-     * @param {MatterJS.Body} body - The Matter Body to check.
+     * @param {MatterJS.BodyType} body - The Matter Body to check.
      * @param {Phaser.Math.Vector2} position - A translated hit test position.
      *
      * @return {boolean} `true` if a part of the body was hit, otherwise `false`.

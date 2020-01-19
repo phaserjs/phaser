@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -772,7 +772,7 @@ var DynamicTilemapLayer = new Class({
      */
     putTileAtWorldXY: function (tile, worldX, worldY, recalculateFaces, camera)
     {
-        return TilemapComponents.PutTileAtWorldXY(tile, worldX, worldY, recalculateFaces, camera, this.layer);
+        return TilemapComponents.PutTileAtWorldXY(tile, worldX, worldY, recalculateFaces, camera, this.layer, this.tilemap.orientation);
     },
 
     /**
@@ -840,7 +840,7 @@ var DynamicTilemapLayer = new Class({
      */
     removeTileAt: function (tileX, tileY, replaceWithNull, recalculateFaces)
     {
-        return TilemapComponents.RemoveTileAt(tileX, tileY, replaceWithNull, recalculateFaces, this.layer, this.tilemap.orientation);
+        return TilemapComponents.RemoveTileAt(tileX, tileY, replaceWithNull, recalculateFaces, this.layer);
     },
 
     /**

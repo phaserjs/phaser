@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -112,7 +112,7 @@ var GameObjectFactory = new Class({
      * @method Phaser.GameObjects.GameObjectFactory#existing
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} child - The child to be added to this Scene.
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.Group)} child - The child to be added to this Scene.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that was added.
      */

@@ -1,6 +1,8 @@
 /**
  * @author       Joachim Grill <joachim@codeandweb.com>
+ * @author       Richard Davey <rich@photonstorm.com>
  * @copyright    2018 CodeAndWeb GmbH
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25,16 +27,17 @@ var PhysicsEditorParser = {
      * @function Phaser.Physics.Matter.PhysicsEditorParser.parseBody
      * @since 3.10.0
      *
-     * @param {number} x - x position.
-     * @param {number} y - y position.
-     * @param {number} w - width.
-     * @param {number} h - height.
-     * @param {object} config - body configuration and fixture (child body) definitions.
+     * @param {number} x - The horizontal world location of the body.
+     * @param {number} y - The vertical world location of the body.
+     * @param {object} config - The body configuration and fixture (child body) definitions, as exported by PhysicsEditor.
+     * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      * 
-     * @return {object} A matter body, consisting of several parts (child bodies)
+     * @return {MatterJS.BodyType} A compound Matter JS Body.
      */
-    parseBody: function (x, y, w, h, config)
+    parseBody: function (x, y, config, options)
     {
+        if (options === undefined) { options = {}; }
+
         var fixtureConfigs = GetFastValue(config, 'fixtures', []);
         var fixtures = [];
 
@@ -48,7 +51,9 @@ var PhysicsEditorParser = {
             }
         }
 
-        var matterConfig = Common.extend({}, false, config);
+        var matterConfig = Common.clone(config, true);
+
+        Common.extend(matterConfig, options, true);
 
         delete matterConfig.fixtures;
         delete matterConfig.type;
@@ -56,6 +61,7 @@ var PhysicsEditorParser = {
         var body = Body.create(matterConfig);
 
         Body.setParts(body, fixtures);
+        
         Body.setPosition(body, { x: x, y: y });
 
         return body;
@@ -67,9 +73,9 @@ var PhysicsEditorParser = {
      * @function Phaser.Physics.Matter.PhysicsEditorParser.parseFixture
      * @since 3.10.0
      *
-     * @param {object} fixtureConfig - the fixture object to parse
+     * @param {object} fixtureConfig - The fixture object to parse.
      * 
-     * @return {object[]} - A list of matter bodies
+     * @return {MatterJS.BodyType[]} - An array of Matter JS Bodies.
      */
     parseFixture: function (fixtureConfig)
     {
@@ -101,19 +107,21 @@ var PhysicsEditorParser = {
      * @function Phaser.Physics.Matter.PhysicsEditorParser.parseVertices
      * @since 3.10.0
      *
-     * @param {object} vertexSets - The vertex lists to parse.
-     * @param {object} options - Matter body options.
+     * @param {array} vertexSets - The vertex lists to parse.
+     * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      * 
-     * @return {object[]} - A list of matter bodies.
+     * @return {MatterJS.BodyType[]} - An array of Matter JS Bodies.
      */
     parseVertices: function (vertexSets, options)
     {
-        var parts = [];
+        if (options === undefined) { options = {}; }
 
-        options = options || {};
+        var parts = [];
 
         for (var v = 0; v < vertexSets.length; v++)
         {
+            Vertices.clockwiseSort(vertexSets[v]);
+
             parts.push(Body.create(Common.extend({
                 position: Vertices.centre(vertexSets[v]),
                 vertices: vertexSets[v]

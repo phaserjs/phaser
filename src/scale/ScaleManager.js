@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -347,16 +347,6 @@ var ScaleManager = new Class({
         this._createdFullscreenTarget = false;
 
         /**
-         * Internal var that keeps track of the user, or the browser, requesting fullscreen changes.
-         *
-         * @name Phaser.Scale.ScaleManager#_requestedFullscreenChange
-         * @type {boolean}
-         * @private
-         * @since 3.16.2
-         */
-        this._requestedFullscreenChange = false;
-
-        /**
          * The dirty state of the Scale Manager.
          * Set if there is a change between the parent size and the current size.
          *
@@ -474,6 +464,7 @@ var ScaleManager = new Class({
         }
 
         game.events.on(GameEvents.PRE_STEP, this.step, this);
+        game.events.once(GameEvents.DESTROY, this.destroy, this);
 
         this.startListeners();
     },
@@ -1238,8 +1229,6 @@ var ScaleManager = new Class({
         {
             var fsTarget = this.getFullscreenTarget();
 
-            this._requestedFullscreenChange = true;
-
             var fsPromise;
             
             if (fullscreen.keyboard)
@@ -1382,8 +1371,6 @@ var ScaleManager = new Class({
 
         if (fullscreen.active)
         {
-            this._requestedFullscreenChange = true;
-
             document[fullscreen.cancel]();
         }
 
@@ -1490,12 +1477,10 @@ var ScaleManager = new Class({
     onFullScreenChange: function ()
     {
         //  They pressed ESC while in fullscreen mode
-        if (!this._requestedFullscreenChange)
+        if (!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement || document.mozFullScreenElement))
         {
             this.stopFullscreen();
         }
-
-        this._requestedFullscreenChange = false;
     },
 
     /**

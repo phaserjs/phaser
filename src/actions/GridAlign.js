@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -30,10 +30,15 @@ var GridAlign = function (items, options)
 {
     if (options === undefined) { options = {}; }
 
+    var widthSet = options.hasOwnProperty('width');
+    var heightSet = options.hasOwnProperty('height');
+
     var width = GetFastValue(options, 'width', -1);
     var height = GetFastValue(options, 'height', -1);
+
     var cellWidth = GetFastValue(options, 'cellWidth', 1);
     var cellHeight = GetFastValue(options, 'cellHeight', cellWidth);
+
     var position = GetFastValue(options, 'position', CONST.TOP_LEFT);
     var x = GetFastValue(options, 'x', 0);
     var y = GetFastValue(options, 'y', 0);
@@ -50,31 +55,15 @@ var GridAlign = function (items, options)
     {
         AlignIn(items[i], tempZone, position);
 
-        if (width === -1)
+        if (widthSet && width === -1)
         {
             //  We keep laying them out horizontally until we've done them all
-            cy += cellHeight;
-            tempZone.y += cellHeight;
-
-            if (cy === h)
-            {
-                cy = 0;
-                tempZone.x += cellWidth;
-                tempZone.y = y;
-            }
+            tempZone.x += cellWidth;
         }
-        else if (height === -1)
+        else if (heightSet && height === -1)
         {
             //  We keep laying them out vertically until we've done them all
-            cx += cellWidth;
-            tempZone.x += cellWidth;
-
-            if (cx === w)
-            {
-                cx = 0;
-                tempZone.x = x;
-                tempZone.y += cellHeight;
-            }
+            tempZone.y += cellHeight;
         }
         else
         {

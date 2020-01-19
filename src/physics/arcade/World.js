@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -1948,7 +1948,7 @@ var World = new Class({
             {
                 bodyB = results[i];
 
-                if (bodyA === bodyB || !group.contains(bodyB.gameObject))
+                if (bodyA === bodyB || !bodyB.enable || !group.contains(bodyB.gameObject))
                 {
                     //  Skip if comparing against itself, or if bodyB isn't actually part of the Group
                     continue;

@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,16 +8,6 @@ var Class = require('../utils/Class');
 var GetValue = require('../utils/object/GetValue');
 var NOOP = require('../utils/NOOP');
 var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
-
-//  Frame Rate config
-//      fps: {
-//          min: 10,
-//          target: 60,
-//          forceSetTimeOut: false,
-//          deltaHistory: 10,
-//          panicMax: 120,
-//          smoothStep: true
-//     }
 
 // http://www.testufo.com/#test=animation-time-graph
 

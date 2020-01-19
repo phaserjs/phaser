@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -1240,7 +1240,7 @@ var Tween = new Class({
     {
         if (!this.isSeeking)
         {
-            this.emit(event, this, tweenData.key, tweenData.target);
+            this.emit(event, this, tweenData.key, tweenData.target, tweenData.current, tweenData.previous);
 
             if (callback)
             {
@@ -1465,6 +1465,7 @@ var Tween = new Class({
 
                 tweenData.elapsed = elapsed;
                 tweenData.progress = progress;
+                tweenData.previous = tweenData.current;
 
                 if (progress === 1)
                 {

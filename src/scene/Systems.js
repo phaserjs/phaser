@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -480,8 +480,8 @@ var Systems = new Class({
     /**
      * Send this Scene to sleep.
      *
-     * A sleeping Scene doesn't run it's update step or render anything, but it also isn't shut down
-     * or have any of its systems or children removed, meaning it can be re-activated at any point and
+     * A sleeping Scene doesn't run its update step or render anything, but it also isn't shut down
+     * or has any of its systems or children removed, meaning it can be re-activated at any point and
      * will carry on from where it left off. It also keeps everything in memory and events and callbacks
      * from other Scenes may still invoke changes within it, so be careful what is left active.
      *
@@ -533,6 +533,22 @@ var Systems = new Class({
         }
 
         return this;
+    },
+
+    /**
+     * Returns any data that was sent to this Scene by another Scene.
+     * 
+     * The data is also passed to `Scene.init` and in various Scene events, but
+     * you can access it at any point via this method.
+     *
+     * @method Phaser.Scenes.Systems#getData
+     * @since 3.22.0
+     *
+     * @return {any} 
+     */
+    getData: function ()
+    {
+        return this.settings.data;
     },
 
     /**

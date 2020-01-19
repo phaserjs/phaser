@@ -1,18 +1,21 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var ALIGN_CONST = require('../../display/align/const');
 var Axes = require('./lib/geometry/Axes');
 var Bodies = require('./lib/factory/Bodies');
 var Body = require('./lib/body/Body');
+var BodyBounds = require('./BodyBounds');
 var Bounds = require('./lib/geometry/Bounds');
 var Class = require('../../utils/Class');
 var Composite = require('./lib/body/Composite');
 var Composites = require('./lib/factory/Composites');
 var Constraint = require('./lib/constraint/Constraint');
 var Detector = require('./lib/collision/Detector');
+var DistanceBetween = require('../../math/distance/DistanceBetween');
 var Factory = require('./Factory');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
@@ -136,7 +139,7 @@ var MatterPhysics = new Class({
         this.world;
 
         /**
-         * An instance of the Matter Factory. This class provides lots of functions for creatying a
+         * An instance of the Matter Factory. This class provides lots of functions for creating a
          * wide variety of physics objects and adds them automatically to the Matter World.
          * 
          * You can use this class to cut-down on the amount of code required in your game, however,
@@ -149,6 +152,16 @@ var MatterPhysics = new Class({
          */
         this.add;
 
+        /**
+         * An instance of the Body Bounds class. This class contains functions used for getting the
+         * world position from various points around the bounds of a physics body.
+         *
+         * @name Phaser.Physics.Matter.MatterPhysics#bodyBounds
+         * @type {Phaser.Physics.Matter.BodyBounds}
+         * @since 3.22.0
+         */
+        this.bodyBounds;
+
         //  Body
 
         /**
@@ -159,7 +172,7 @@ var MatterPhysics = new Class({
          * Factories for commonly used body configurations (such as rectangles, circles and other polygons) can be found in the `Bodies` module.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#body
-         * @type {MatterJS.Body}
+         * @type {MatterJS.BodyFactory}
          * @since 3.18.0
          */
         this.body = Body;
@@ -173,7 +186,7 @@ var MatterPhysics = new Class({
          * Note that the `Matter.World` object is also a type of `Matter.Composite` and as such all composite methods here can also operate on a `Matter.World`.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#composite
-         * @type {MatterJS.Composite}
+         * @type {MatterJS.CompositeFactory}
          * @since 3.22.0
          */
         this.composite = Composite;
@@ -186,7 +199,7 @@ var MatterPhysics = new Class({
          * The `Matter.Detector` module contains methods for detecting collisions given a set of pairs.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#detector
-         * @type {MatterJS.Detector}
+         * @type {MatterJS.DetectorFactory}
          * @since 3.22.0
          */
         this.detector = Detector;
@@ -197,7 +210,7 @@ var MatterPhysics = new Class({
          * The `Matter.Grid` module contains methods for creating and manipulating collision broadphase grid structures.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#grid
-         * @type {MatterJS.Grid}
+         * @type {MatterJS.GridFactory}
          * @since 3.22.0
          */
         this.grid = Grid;
@@ -208,7 +221,7 @@ var MatterPhysics = new Class({
          * The `Matter.Pair` module contains methods for creating and manipulating collision pairs.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#pair
-         * @type {MatterJS.Pair}
+         * @type {MatterJS.PairFactory}
          * @since 3.22.0
          */
         this.pair = Pair;
@@ -219,7 +232,7 @@ var MatterPhysics = new Class({
          * The `Matter.Pairs` module contains methods for creating and manipulating collision pair sets.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#pairs
-         * @type {MatterJS.Pairs}
+         * @type {MatterJS.PairsFactory}
          * @since 3.22.0
          */
         this.pairs = Pairs;
@@ -230,7 +243,7 @@ var MatterPhysics = new Class({
          * The `Matter.Query` module contains methods for performing collision queries.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#query
-         * @type {MatterJS.Query}
+         * @type {MatterJS.QueryFactory}
          * @since 3.22.0
          */
         this.query = Query;
@@ -241,7 +254,7 @@ var MatterPhysics = new Class({
          * The `Matter.Resolver` module contains methods for resolving collision pairs.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#resolver
-         * @type {MatterJS.Resolver}
+         * @type {MatterJS.ResolverFactory}
          * @since 3.22.0
          */
         this.resolver = Resolver;
@@ -252,7 +265,7 @@ var MatterPhysics = new Class({
          * The `Matter.SAT` module contains methods for detecting collisions using the Separating Axis Theorem.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#sat
-         * @type {MatterJS.SAT}
+         * @type {MatterJS.SATFactory}
          * @since 3.22.0
          */
         this.sat = SAT;
@@ -267,7 +280,7 @@ var MatterPhysics = new Class({
          * The stiffness of constraints can be modified to create springs or elastic.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#constraint
-         * @type {MatterJS.Constraint}
+         * @type {MatterJS.ConstraintFactory}
          * @since 3.22.0
          */
         this.constraint = Constraint;
@@ -277,11 +290,11 @@ var MatterPhysics = new Class({
         /**
          * A reference to the `Matter.Bodies` module.
          * 
-         * The `Matter.Bodies` module contains factory methods for creating rigid body models 
+         * The `Matter.Bodies` module contains factory methods for creating rigid bodies
          * with commonly used body configurations (such as rectangles, circles and other polygons).
          *
          * @name Phaser.Physics.Matter.MatterPhysics#bodies
-         * @type {MatterJS.Bodies}
+         * @type {MatterJS.BodiesFactory}
          * @since 3.18.0
          */
         this.bodies = Bodies;
@@ -293,7 +306,7 @@ var MatterPhysics = new Class({
          * with commonly used configurations (such as stacks and chains).
          *
          * @name Phaser.Physics.Matter.MatterPhysics#composites
-         * @type {MatterJS.Composites}
+         * @type {MatterJS.CompositesFactory}
          * @since 3.22.0
          */
         this.composites = Composites;
@@ -306,7 +319,7 @@ var MatterPhysics = new Class({
          * The `Matter.Axes` module contains methods for creating and manipulating sets of axes.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#axes
-         * @type {MatterJS.Axes}
+         * @type {MatterJS.AxesFactory}
          * @since 3.22.0
          */
         this.axes = Axes;
@@ -317,7 +330,7 @@ var MatterPhysics = new Class({
          * The `Matter.Bounds` module contains methods for creating and manipulating axis-aligned bounding boxes (AABB).
          *
          * @name Phaser.Physics.Matter.MatterPhysics#bounds
-         * @type {MatterJS.Bounds}
+         * @type {MatterJS.BoundsFactory}
          * @since 3.22.0
          */
         this.bounds = Bounds;
@@ -330,7 +343,7 @@ var MatterPhysics = new Class({
          * To use this module you also need the SVGPathSeg polyfill: https://github.com/progers/pathseg
          *
          * @name Phaser.Physics.Matter.MatterPhysics#svg
-         * @type {MatterJS.Svg}
+         * @type {MatterJS.SvgFactory}
          * @since 3.22.0
          */
         this.svg = Svg;
@@ -343,7 +356,7 @@ var MatterPhysics = new Class({
          * A `Matter.Vector` object is of the form `{ x: 0, y: 0 }`.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#vector
-         * @type {MatterJS.Vector}
+         * @type {MatterJS.VectorFactory}
          * @since 3.22.0
          */
         this.vector = Vector;
@@ -356,7 +369,7 @@ var MatterPhysics = new Class({
          * A `Matter.Body` maintains a set of vertices to represent the shape of the object (its convex hull).
          *
          * @name Phaser.Physics.Matter.MatterPhysics#vertices
-         * @type {MatterJS.Vertices}
+         * @type {MatterJS.VerticesFactory}
          * @since 3.22.0
          */
         this.vertices = Vertices;
@@ -369,10 +382,20 @@ var MatterPhysics = new Class({
          * A `Matter.Body` maintains a set of vertices to represent the shape of the object (its convex hull).
          *
          * @name Phaser.Physics.Matter.MatterPhysics#verts
-         * @type {MatterJS.Vertices}
+         * @type {MatterJS.VerticesFactory}
          * @since 3.14.0
          */
         this.verts = Vertices;
+
+        /**
+         * An internal temp vector used for velocity and force calculations.
+         *
+         * @name Phaser.Physics.Matter.MatterPhysics#_tempVec2
+         * @type {MatterJS.Vector}
+         * @private
+         * @since 3.22.0
+         */
+        this._tempVec2 = Vector.create();
 
         //  Matter plugins
 
@@ -413,6 +436,7 @@ var MatterPhysics = new Class({
     {
         this.world = new World(this.scene, this.config);
         this.add = new Factory(this.world);
+        this.bodyBounds = new BodyBounds();
 
         this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
     },
@@ -659,7 +683,7 @@ var MatterPhysics = new Class({
      * @method Phaser.Physics.Matter.MatterPhysics#containsPoint
      * @since 3.22.0
      *
-     * @param {(MatterJS.Body|MatterJS.Body[])} body - The body, or an array of bodies, to check against the point.
+     * @param {(Phaser.Types.Physics.Matter.MatterBody|Phaser.Types.Physics.Matter.MatterBody[])} body - The body, or an array of bodies, to check against the point.
      * @param {number} x - The horizontal coordinate of the point.
      * @param {number} y - The vertical coordinate of the point.
      * 
@@ -690,9 +714,9 @@ var MatterPhysics = new Class({
      *
      * @param {number} x - The horizontal coordinate of the point.
      * @param {number} y - The vertical coordinate of the point.
-     * @param {MatterJS.Body[]} [bodies] - An array of bodies to check. If not provided it will search all bodies in the world.
+     * @param {Phaser.Types.Physics.Matter.MatterBody[]} [bodies] - An array of bodies to check. If not provided it will search all bodies in the world.
      * 
-     * @return {MatterJS.Body[]} An array of bodies which contain the given point.
+     * @return {Phaser.Types.Physics.Matter.MatterBody[]} An array of bodies which contain the given point.
      */
     intersectPoint: function (x, y, bodies)
     {
@@ -730,9 +754,9 @@ var MatterPhysics = new Class({
      * @param {number} width - The width of the area.
      * @param {number} height - The height of the area.
      * @param {boolean} [outside=false] - If `false` it checks for vertices inside the area, if `true` it checks for vertices outside the area.
-     * @param {MatterJS.Body[]} [bodies] - An array of bodies to check. If not provided it will search all bodies in the world.
+     * @param {Phaser.Types.Physics.Matter.MatterBody[]} [bodies] - An array of bodies to check. If not provided it will search all bodies in the world.
      * 
-     * @return {MatterJS.Body[]} An array of bodies that intersect with the given area.
+     * @return {Phaser.Types.Physics.Matter.MatterBody[]} An array of bodies that intersect with the given area.
      */
     intersectRect: function (x, y, width, height, outside, bodies)
     {
@@ -775,9 +799,9 @@ var MatterPhysics = new Class({
      * @param {number} x2 - The horizontal coordinate of the end of the ray segment.
      * @param {number} y2 - The vertical coordinate of the end of the ray segment.
      * @param {number} [rayWidth=1] - The width of the ray segment.
-     * @param {MatterJS.Body[]} [bodies] - An array of bodies to check. If not provided it will search all bodies in the world.
+     * @param {Phaser.Types.Physics.Matter.MatterBody[]} [bodies] - An array of bodies to check. If not provided it will search all bodies in the world.
      * 
-     * @return {MatterJS.Body[]} An array of bodies whos vertices intersect with the ray segment.
+     * @return {Phaser.Types.Physics.Matter.MatterBody[]} An array of bodies whos vertices intersect with the ray segment.
      */
     intersectRay: function (x1, y1, x2, y2, rayWidth, bodies)
     {
@@ -804,10 +828,10 @@ var MatterPhysics = new Class({
      * @method Phaser.Physics.Matter.MatterPhysics#intersectBody
      * @since 3.22.0
      *
-     * @param {MatterJS.Body} body - The target body.
-     * @param {MatterJS.Body[]} [bodies] - An array of bodies to check the target body against. If not provided it will search all bodies in the world.
+     * @param {Phaser.Types.Physics.Matter.MatterBody} body - The target body.
+     * @param {Phaser.Types.Physics.Matter.MatterBody[]} [bodies] - An array of bodies to check the target body against. If not provided it will search all bodies in the world.
      * 
-     * @return {MatterJS.Body[]} An array of bodies whos vertices intersect with target body.
+     * @return {Phaser.Types.Physics.Matter.MatterBody[]} An array of bodies whos vertices intersect with target body.
      */
     intersectBody: function (body, bodies)
     {
@@ -854,8 +878,8 @@ var MatterPhysics = new Class({
      * @method Phaser.Physics.Matter.MatterPhysics#overlap
      * @since 3.22.0
      *
-     * @param {(MatterJS.Body|MatterJS.Body[])} target - The target body, or array of target bodies, to check.
-     * @param {MatterJS.Body[]} [bodies] - The second body, or array of bodies, to check. If falsey it will check against all bodies in the world.
+     * @param {(Phaser.Types.Physics.Matter.MatterBody|Phaser.Types.Physics.Matter.MatterBody[])} target - The target body, or array of target bodies, to check.
+     * @param {Phaser.Types.Physics.Matter.MatterBody[]} [bodies] - The second body, or array of bodies, to check. If falsey it will check against all bodies in the world.
      * @param {ArcadePhysicsCallback} [overlapCallback] - An optional callback function that is called if the bodies overlap.
      * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two bodies if they overlap. If this is set then `overlapCallback` will only be invoked if this callback returns `true`.
      * @param {*} [callbackContext] - The context, or scope, in which to run the callbacks.
@@ -920,7 +944,7 @@ var MatterPhysics = new Class({
      * @method Phaser.Physics.Matter.MatterPhysics#setCollisionCategory
      * @since 3.22.0
      *
-     * @param {MatterJS.Body[]} bodies - An array of bodies to update. If falsey it will use all bodies in the world.
+     * @param {Phaser.Types.Physics.Matter.MatterBody[]} bodies - An array of bodies to update. If falsey it will use all bodies in the world.
      * @param {number} value - Unique category bitfield.
      *
      * @return {this} This Matter Physics instance.
@@ -949,7 +973,7 @@ var MatterPhysics = new Class({
      * @method Phaser.Physics.Matter.MatterPhysics#setCollisionGroup
      * @since 3.22.0
      *
-     * @param {MatterJS.Body[]} bodies - An array of bodies to update. If falsey it will use all bodies in the world.
+     * @param {Phaser.Types.Physics.Matter.MatterBody[]} bodies - An array of bodies to update. If falsey it will use all bodies in the world.
      * @param {number} value - Unique group index.
      *
      * @return {this} This Matter Physics instance.
@@ -976,7 +1000,7 @@ var MatterPhysics = new Class({
      * @method Phaser.Physics.Matter.MatterPhysics#setCollidesWith
      * @since 3.22.0
      *
-     * @param {MatterJS.Body[]} bodies - An array of bodies to update. If falsey it will use all bodies in the world.
+     * @param {Phaser.Types.Physics.Matter.MatterBody[]} bodies - An array of bodies to update. If falsey it will use all bodies in the world.
      * @param {(number|number[])} categories - A unique category bitfield, or an array of them.
      *
      * @return {this} This Matter Physics instance.
@@ -1018,9 +1042,9 @@ var MatterPhysics = new Class({
      * @method Phaser.Physics.Matter.MatterPhysics#getMatterBodies
      * @since 3.22.0
      *
-     * @param {array} [bodies] - An array of objects to extract the bodies from. If falsey, it will return all bodis in the world.
+     * @param {array} [bodies] - An array of objects to extract the bodies from. If falsey, it will return all bodies in the world.
      *
-     * @return {MatterJS.Body[]} An array of native Matter Body objects.
+     * @return {MatterJS.BodyType[]} An array of native Matter Body objects.
      */
     getMatterBodies: function (bodies)
     {
@@ -1041,10 +1065,343 @@ var MatterPhysics = new Class({
             var body = (bodies[i].hasOwnProperty('body')) ? bodies[i].body : bodies[i];
 
             output.push(body);
-
         }
 
         return output;
+    },
+
+    /**
+     * Sets both the horizontal and vertical linear velocity of the physics bodies.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#setVelocity
+     * @since 3.22.0
+     *
+     * @param {(Phaser.Types.Physics.Matter.MatterBody|Phaser.Types.Physics.Matter.MatterBody[])} bodies - Either a single Body, or an array of bodies to update. If falsey it will use all bodies in the world.
+     * @param {number} x - The horizontal linear velocity value.
+     * @param {number} y - The vertical linear velocity value.
+     *
+     * @return {this} This Matter Physics instance.
+     */
+    setVelocity: function (bodies, x, y)
+    {
+        bodies = this.getMatterBodies(bodies);
+
+        var vec2 = this._tempVec2;
+
+        vec2.x = x;
+        vec2.y = y;
+
+        bodies.forEach(function (body)
+        {
+            Body.setVelocity(body, vec2);
+        });
+
+        return this;
+    },
+
+    /**
+     * Sets just the horizontal linear velocity of the physics bodies.
+     * The vertical velocity of the body is unchanged.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#setVelocityX
+     * @since 3.22.0
+     *
+     * @param {(Phaser.Types.Physics.Matter.MatterBody|Phaser.Types.Physics.Matter.MatterBody[])} bodies - Either a single Body, or an array of bodies to update. If falsey it will use all bodies in the world.
+     * @param {number} x - The horizontal linear velocity value.
+     *
+     * @return {this} This Matter Physics instance.
+     */
+    setVelocityX: function (bodies, x)
+    {
+        bodies = this.getMatterBodies(bodies);
+
+        var vec2 = this._tempVec2;
+
+        vec2.x = x;
+
+        bodies.forEach(function (body)
+        {
+            vec2.y = body.velocity.y;
+            Body.setVelocity(body, vec2);
+        });
+
+        return this;
+    },
+
+    /**
+     * Sets just the vertical linear velocity of the physics bodies.
+     * The horizontal velocity of the body is unchanged.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#setVelocityY
+     * @since 3.22.0
+     *
+     * @param {(Phaser.Types.Physics.Matter.MatterBody|Phaser.Types.Physics.Matter.MatterBody[])} bodies - Either a single Body, or an array of bodies to update. If falsey it will use all bodies in the world.
+     * @param {number} y - The vertical linear velocity value.
+     *
+     * @return {this} This Matter Physics instance.
+     */
+    setVelocityY: function (bodies, y)
+    {
+        bodies = this.getMatterBodies(bodies);
+
+        var vec2 = this._tempVec2;
+
+        vec2.y = y;
+
+        bodies.forEach(function (body)
+        {
+            vec2.x = body.velocity.x;
+            Body.setVelocity(body, vec2);
+        });
+
+        return this;
+    },
+
+    /**
+     * Sets the angular velocity of the bodies instantly.
+     * Position, angle, force etc. are unchanged.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#setAngularVelocity
+     * @since 3.22.0
+     *
+     * @param {(Phaser.Types.Physics.Matter.MatterBody|Phaser.Types.Physics.Matter.MatterBody[])} bodies - Either a single Body, or an array of bodies to update. If falsey it will use all bodies in the world.
+     * @param {number} value - The angular velocity.
+     *
+     * @return {this} This Matter Physics instance.
+     */
+    setAngularVelocity: function (bodies, value)
+    {
+        bodies = this.getMatterBodies(bodies);
+
+        bodies.forEach(function (body)
+        {
+            Body.setAngularVelocity(body, value);
+        });
+
+        return this;
+    },
+
+    /**
+     * Applies a force to a body, at the bodies current position, including resulting torque.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#applyForce
+     * @since 3.22.0
+     *
+     * @param {(Phaser.Types.Physics.Matter.MatterBody|Phaser.Types.Physics.Matter.MatterBody[])} bodies - Either a single Body, or an array of bodies to update. If falsey it will use all bodies in the world.
+     * @param {Phaser.Types.Math.Vector2Like} force - A Vector that specifies the force to apply.
+     *
+     * @return {this} This Matter Physics instance.
+     */
+    applyForce: function (bodies, force)
+    {
+        bodies = this.getMatterBodies(bodies);
+
+        var vec2 = this._tempVec2;
+
+        bodies.forEach(function (body)
+        {
+            vec2.x = body.position.x;
+            vec2.y = body.position.y;
+
+            Body.applyForce(body, vec2, force);
+        });
+
+        return this;
+    },
+
+    /**
+     * Applies a force to a body, from the given world position, including resulting torque.
+     * If no angle is given, the current body angle is used.
+     * 
+     * Use very small speed values, such as 0.1, depending on the mass and required velocity.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#applyForceFromPosition
+     * @since 3.22.0
+     *
+     * @param {(Phaser.Types.Physics.Matter.MatterBody|Phaser.Types.Physics.Matter.MatterBody[])} bodies - Either a single Body, or an array of bodies to update. If falsey it will use all bodies in the world.
+     * @param {Phaser.Types.Math.Vector2Like} position - A Vector that specifies the world-space position to apply the force at.
+     * @param {number} speed - A speed value to be applied to a directional force.
+     * @param {number} [angle] - The angle, in radians, to apply the force from. Leave undefined to use the current body angle.
+     *
+     * @return {this} This Matter Physics instance.
+     */
+    applyForceFromPosition: function (bodies, position, speed, angle)
+    {
+        bodies = this.getMatterBodies(bodies);
+
+        var vec2 = this._tempVec2;
+
+        bodies.forEach(function (body)
+        {
+            if (angle === undefined)
+            {
+                angle = body.angle;
+            }
+
+            vec2.x = speed * Math.cos(angle);
+            vec2.y = speed * Math.sin(angle);
+
+            Body.applyForce(body, position, vec2);
+        });
+
+        return this;
+    },
+
+    /**
+     * Apply a force to a body based on the given angle and speed.
+     * If no angle is given, the current body angle is used.
+     * 
+     * Use very small speed values, such as 0.1, depending on the mass and required velocity.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#applyForceFromAngle
+     * @since 3.22.0
+     *
+     * @param {(Phaser.Types.Physics.Matter.MatterBody|Phaser.Types.Physics.Matter.MatterBody[])} bodies - Either a single Body, or an array of bodies to update. If falsey it will use all bodies in the world.
+     * @param {number} speed - A speed value to be applied to a directional force.
+     * @param {number} [angle] - The angle, in radians, to apply the force from. Leave undefined to use the current body angle.
+     *
+     * @return {this} This Matter Physics instance.
+     */
+    applyForceFromAngle: function (bodies, speed, angle)
+    {
+        bodies = this.getMatterBodies(bodies);
+
+        var vec2 = this._tempVec2;
+
+        bodies.forEach(function (body)
+        {
+            if (angle === undefined)
+            {
+                angle = body.angle;
+            }
+
+            vec2.x = speed * Math.cos(angle);
+            vec2.y = speed * Math.sin(angle);
+
+            Body.applyForce(body, { x: body.position.x, y: body.position.y }, vec2);
+        });
+
+        return this;
+    },
+
+    /**
+     * Returns the length of the given constraint, which is the distance between the two points.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#getConstraintLength
+     * @since 3.22.0
+     *
+     * @param {MatterJS.ConstraintType} constraint - The constraint to get the length from.
+     *
+     * @return {number} The length of the constraint.
+     */
+    getConstraintLength: function (constraint)
+    {
+        var aX = constraint.pointA.x;
+        var aY = constraint.pointA.y;
+        var bX = constraint.pointB.x;
+        var bY = constraint.pointB.y;
+
+        if (constraint.bodyA)
+        {
+            aX += constraint.bodyA.position.x;
+            aY += constraint.bodyA.position.y;
+        }
+
+        if (constraint.bodyB)
+        {
+            bX += constraint.bodyB.position.x;
+            bY += constraint.bodyB.position.y;
+        }
+
+        return DistanceBetween(aX, aY, bX, bY);
+    },
+
+    /**
+     * Aligns a Body, or Matter Game Object, against the given coordinates.
+     * 
+     * The alignment takes place using the body bounds, which take into consideration things
+     * like body scale and rotation.
+     * 
+     * Although a Body has a `position` property, it is based on the center of mass for the body,
+     * not a dimension based center. This makes aligning bodies difficult, especially if they have
+     * rotated or scaled. This method will derive the correct position based on the body bounds and
+     * its center of mass offset, in order to align the body with the given coordinate.
+     * 
+     * For example, if you wanted to align a body so it sat in the bottom-center of the
+     * Scene, and the world was 800 x 600 in size:
+     * 
+     * ```javascript
+     * this.matter.alignBody(body, 400, 600, Phaser.Display.Align.BOTTOM_CENTER);
+     * ```
+     * 
+     * You pass in 400 for the x coordinate, because that is the center of the world, and 600 for
+     * the y coordinate, as that is the base of the world.
+     *
+     * @method Phaser.Physics.Matter.MatterPhysics#alignBody
+     * @since 3.22.0
+     *
+     * @param {Phaser.Types.Physics.Matter.MatterBody} body - The Body to align.
+     * @param {number} x - The horizontal position to align the body to.
+     * @param {number} y - The vertical position to align the body to.
+     * @param {integer} align - One of the `Phaser.Display.Align` constants, such as `Phaser.Display.Align.TOP_LEFT`.
+     *
+     * @return {this} This Matter Physics instance.
+     */
+    alignBody: function (body, x, y, align)
+    {
+        body = (body.hasOwnProperty('body')) ? body.body : body;
+
+        var pos;
+
+        switch (align)
+        {
+            case ALIGN_CONST.TOP_LEFT:
+            case ALIGN_CONST.LEFT_TOP:
+                pos = this.bodyBounds.getTopLeft(body, x, y);
+                break;
+
+            case ALIGN_CONST.TOP_CENTER:
+                pos = this.bodyBounds.getTopCenter(body, x, y);
+                break;
+    
+            case ALIGN_CONST.TOP_RIGHT:
+            case ALIGN_CONST.RIGHT_TOP:
+                pos = this.bodyBounds.getTopRight(body, x, y);
+                break;
+
+            case ALIGN_CONST.LEFT_CENTER:
+                pos = this.bodyBounds.getLeftCenter(body, x, y);
+                break;
+
+            case ALIGN_CONST.CENTER:
+                pos = this.bodyBounds.getCenter(body, x, y);
+                break;
+
+            case ALIGN_CONST.RIGHT_CENTER:
+                pos = this.bodyBounds.getRightCenter(body, x, y);
+                break;
+
+            case ALIGN_CONST.LEFT_BOTTOM:
+            case ALIGN_CONST.BOTTOM_LEFT:
+                pos = this.bodyBounds.getBottomLeft(body, x, y);
+                break;
+
+            case ALIGN_CONST.BOTTOM_CENTER:
+                pos = this.bodyBounds.getBottomCenter(body, x, y);
+                break;
+
+            case ALIGN_CONST.BOTTOM_RIGHT:
+            case ALIGN_CONST.RIGHT_BOTTOM:
+                pos = this.bodyBounds.getBottomRight(body, x, y);
+                break;
+        }
+
+        if (pos)
+        {
+            Body.setPosition(body, pos);
+        }
+
+        return this;
     },
 
     /**

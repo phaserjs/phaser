@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -39,7 +39,7 @@ var Vertices = require('./lib/geometry/Vertices');
  * @extends Phaser.Physics.Matter.Components.Sleep
  * @extends Phaser.Physics.Matter.Components.Static
  *
- * @param {Phaser.Physics.Matter.World} world - [description]
+ * @param {Phaser.Physics.Matter.World} world - The Matter world instance this body belongs to.
  * @param {Phaser.Tilemaps.Tile} tile - The target tile that should have a Matter body.
  * @param {Phaser.Types.Physics.Matter.MatterTileOptions} [options] - Options to be used when creating the Matter body.
  */
@@ -243,7 +243,7 @@ var MatterTileBody = new Class({
      * @method Phaser.Physics.Matter.TileBody#setBody
      * @since 3.0.0
      *
-     * @param {MatterJS.Body} body - The new Matter body to use.
+     * @param {MatterJS.BodyType} body - The new Matter body to use.
      * @param {boolean} [addToWorld=true] - Whether or not to add the body to the Matter world.
      * 
      * @return {Phaser.Physics.Matter.TileBody} This TileBody object.

@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -85,6 +85,10 @@ var World = new Class({
         if (gravity)
         {
             this.setGravity(gravity.x, gravity.y, gravity.scale);
+        }
+        else if (gravity === false)
+        {
+            this.setGravity(0, 0, 0);
         }
 
         /**
@@ -241,12 +245,28 @@ var World = new Class({
          * @since 3.22.0
          */
         this.debugConfig = {
+            showAxes: GetFastValue(debugConfig, 'showAxes', false),
+            showAngleIndicator: GetFastValue(debugConfig, 'showAngleIndicator', false),
+            angleColor: GetFastValue(debugConfig, 'angleColor', 0xe81153),
+
+            showBroadphase: GetFastValue(debugConfig, 'showBroadphase', false),
+            broadphaseColor: GetFastValue(debugConfig, 'broadphaseColor', 0xffb400),
+
+            showBounds: GetFastValue(debugConfig, 'showBounds', false),
+            boundsColor: GetFastValue(debugConfig, 'boundsColor', 0xffffff),
+
+            showVelocity: GetFastValue(debugConfig, 'showVelocity', false),
+            velocityColor: GetFastValue(debugConfig, 'velocityColor', 0x00aeef),
+
+            showCollisions: GetFastValue(debugConfig, 'showCollisions', false),
+            collisionColor: GetFastValue(debugConfig, 'collisionColor', 0xf5950c),
+
+            showSeparations: GetFastValue(debugConfig, 'showSeparations', false),
+            separationColor: GetFastValue(debugConfig, 'separationColor', 0xffa500),
+
             showBody: GetFastValue(debugConfig, 'showBody', true),
             showStaticBody: GetFastValue(debugConfig, 'showStaticBody', true),
-            showSleeping: GetFastValue(debugConfig, 'showSleeping', false),
-            showJoint: GetFastValue(debugConfig, 'showJoint', true),
             showInternalEdges: GetFastValue(debugConfig, 'showInternalEdges', false),
-            showConvexHulls: GetFastValue(debugConfig, 'showConvexHulls', false),
 
             renderFill: GetFastValue(debugConfig, 'renderFill', false),
             renderLine: GetFastValue(debugConfig, 'renderLine', true),
@@ -260,10 +280,20 @@ var World = new Class({
             staticFillColor: GetFastValue(debugConfig, 'staticFillColor', 0x0d177b),
             staticLineColor: GetFastValue(debugConfig, 'staticLineColor', 0x1327e4),
 
+            showSleeping: GetFastValue(debugConfig, 'showSleeping', false),
             staticBodySleepOpacity: GetFastValue(debugConfig, 'staticBodySleepOpacity', 0.7),
             sleepFillColor: GetFastValue(debugConfig, 'sleepFillColor', 0x464646),
             sleepLineColor: GetFastValue(debugConfig, 'sleepLineColor', 0x999a99),
 
+            showSensors: GetFastValue(debugConfig, 'showSensors', true),
+            sensorFillColor: GetFastValue(debugConfig, 'sensorFillColor', 0x0d177b),
+            sensorLineColor: GetFastValue(debugConfig, 'sensorLineColor', 0x1327e4),
+
+            showPositions: GetFastValue(debugConfig, 'showPositions', true),
+            positionSize: GetFastValue(debugConfig, 'positionSize', 4),
+            positionColor: GetFastValue(debugConfig, 'positionColor', 0xe042da),
+
+            showJoint: GetFastValue(debugConfig, 'showJoint', true),
             jointColor: GetFastValue(debugConfig, 'jointColor', 0xe0e042),
             jointLineOpacity: GetFastValue(debugConfig, 'jointLineOpacity', 1),
             jointLineThickness: GetFastValue(debugConfig, 'jointLineThickness', 2),
@@ -274,8 +304,9 @@ var World = new Class({
             springColor: GetFastValue(debugConfig, 'springColor', 0xe042e0),
 
             anchorColor: GetFastValue(debugConfig, 'anchorColor', 0xefefef),
-            anchorSize: GetFastValue(debugConfig, 'anchorSize', 6),
+            anchorSize: GetFastValue(debugConfig, 'anchorSize', 4),
 
+            showConvexHulls: GetFastValue(debugConfig, 'showConvexHulls', false),
             hullColor: GetFastValue(debugConfig, 'hullColor', 0xd703d0)
         };
 
@@ -323,7 +354,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#setCompositeRenderStyle
      * @since 3.22.0
      *
-     * @param {MatterJS.Composite} composite - The Matter Composite to set the render style on.
+     * @param {MatterJS.CompositeType} composite - The Matter Composite to set the render style on.
      * 
      * @return {this} This Matter World instance for method chaining.
      */
@@ -377,7 +408,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#setBodyRenderStyle
      * @since 3.22.0
      *
-     * @param {MatterJS.Body} body - The Matter Body to set the render style on.
+     * @param {MatterJS.BodyType} body - The Matter Body to set the render style on.
      * @param {number} [lineColor] - The line color. If `null` it will use the World Debug Config value.
      * @param {number} [lineOpacity] - The line opacity, between 0 and 1. If `null` it will use the World Debug Config value.
      * @param {number} [lineThickness] - The line thickness. If `null` it will use the World Debug Config value.
@@ -463,7 +494,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#setConstraintRenderStyle
      * @since 3.22.0
      *
-     * @param {MatterJS.Constraint} constraint - The Matter Constraint to set the render style on.
+     * @param {MatterJS.ConstraintType} constraint - The Matter Constraint to set the render style on.
      * @param {number} [lineColor] - The line color. If `null` it will use the World Debug Config value.
      * @param {number} [lineOpacity] - The line opacity, between 0 and 1. If `null` it will use the World Debug Config value.
      * @param {number} [lineThickness] - The line thickness. If `null` it will use the World Debug Config value.
@@ -577,6 +608,11 @@ var World = new Class({
 
         if (this.drawDebug)
         {
+            MatterEvents.on(world, 'compositeModified', function (composite)
+            {
+                _this.setCompositeRenderStyle(composite);
+            });
+
             MatterEvents.on(world, 'beforeAdd', function (event)
             {
                 var objects = [].concat(event.object);
@@ -850,7 +886,7 @@ var World = new Class({
      * @param {number} height - The height of the body.
      * @param {object} options - Optional Matter configuration object.
      *
-     * @return {MatterJS.Body} The Matter.js body that was created.
+     * @return {MatterJS.BodyType} The Matter.js body that was created.
      */
     create: function (x, y, width, height, options)
     {
@@ -924,7 +960,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#removeConstraint
      * @since 3.0.0
      *
-     * @param {(MatterJS.Constraint|MatterJS.Constraint[])} constraint - A Matter JS Constraint, or an array of constraints, to be removed.
+     * @param {(MatterJS.ConstraintType|MatterJS.ConstraintType[])} constraint - A Matter JS Constraint, or an array of constraints, to be removed.
      * @param {boolean} [deep=false] - Optionally search the objects children and recursively remove those as well.
      *
      * @return {this} This Matter World object.
@@ -1208,7 +1244,7 @@ var World = new Class({
      * 
      * @param {(MatterJS.Body|Phaser.GameObjects.GameObject)} body - The Matter Body, or Game Object, to search for within the world.
      * 
-     * @return {MatterJS.Body[]} An array of all the Matter JS Bodies in this World.
+     * @return {MatterJS.BodyType[]} An array of all the Matter JS Bodies in this World.
      */
     has: function (body)
     {
@@ -1223,7 +1259,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#getAllBodies
      * @since 3.22.0
      * 
-     * @return {MatterJS.Body[]} An array of all the Matter JS Bodies in this World.
+     * @return {MatterJS.BodyType[]} An array of all the Matter JS Bodies in this World.
      */
     getAllBodies: function ()
     {
@@ -1236,7 +1272,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#getAllConstraints
      * @since 3.22.0
      * 
-     * @return {MatterJS.Constraint[]} An array of all the Matter JS Constraints in this World.
+     * @return {MatterJS.ConstraintType[]} An array of all the Matter JS Constraints in this World.
      */
     getAllConstraints: function ()
     {
@@ -1249,7 +1285,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#getAllComposites
      * @since 3.22.0
      * 
-     * @return {MatterJS.Composite[]} An array of all the Matter JS Composites in this World.
+     * @return {MatterJS.CompositeType[]} An array of all the Matter JS Composites in this World.
      */
     getAllComposites: function ()
     {
@@ -1267,27 +1303,450 @@ var World = new Class({
      */
     postUpdate: function ()
     {
-        var config = this.debugConfig;
-
-        var showBody = config.showBody;
-        var showStaticBody = config.showStaticBody;
-        var showJoint = config.showJoint;
-
-        if (!this.drawDebug || (!showBody && !showStaticBody && !showJoint))
+        if (!this.drawDebug)
         {
             return;
         }
 
-        this.debugGraphic.clear();
+        var config = this.debugConfig;
+        var engine = this.engine;
+        var graphics = this.debugGraphic;
 
         var bodies = Composite.allBodies(this.localWorld);
 
-        this.renderBodies(bodies);
+        this.debugGraphic.clear();
 
-        if (showJoint)
+        if (config.showBroadphase && engine.broadphase.controller)
+        {
+            this.renderGrid(engine.broadphase, graphics, config.broadphaseColor, 0.5);
+        }
+
+        if (config.showBounds)
+        {
+            this.renderBodyBounds(bodies, graphics, config.boundsColor, 0.5);
+        }
+
+        if (config.showBody || config.showStaticBody)
+        {
+            this.renderBodies(bodies);
+        }
+
+        if (config.showJoint)
         {
             this.renderJoints();
         }
+
+        if (config.showAxes || config.showAngleIndicator)
+        {
+            this.renderBodyAxes(bodies, graphics, config.showAxes, config.angleColor, 0.5);
+        }
+
+        if (config.showVelocity)
+        {
+            this.renderBodyVelocity(bodies, graphics, config.velocityColor, 1, 2);
+        }
+
+        if (config.showSeparations)
+        {
+            this.renderSeparations(engine.pairs.list, graphics, config.separationColor);
+        }
+
+        if (config.showCollisions)
+        {
+            this.renderCollisions(engine.pairs.list, graphics, config.collisionColor);
+        }
+    },
+
+    /**
+     * Renders the Engine Broadphase Controller Grid to the given Graphics instance.
+     * 
+     * The debug renderer calls this method if the `showBroadphase` config value is set.
+     * 
+     * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
+     * you wish to render the Grid to your own Graphics instance.
+     * 
+     * @method Phaser.Physics.Matter.World#renderGrid
+     * @since 3.22.0
+     * 
+     * @param {MatterJS.Grid} grid - The Matter Grid to be rendered.
+     * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
+     * @param {number} lineColor - The line color.
+     * @param {number} lineOpacity - The line opacity, between 0 and 1.
+     * 
+     * @return {this} This Matter World instance for method chaining.
+     */
+    renderGrid: function (grid, graphics, lineColor, lineOpacity)
+    {
+        graphics.lineStyle(1, lineColor, lineOpacity);
+
+        var bucketKeys = Common.keys(grid.buckets);
+
+        for (var i = 0; i < bucketKeys.length; i++)
+        {
+            var bucketId = bucketKeys[i];
+
+            if (grid.buckets[bucketId].length < 2)
+            {
+                continue;
+            }
+
+            var region = bucketId.split(/C|R/);
+
+            graphics.strokeRect(
+                parseInt(region[1], 10) * grid.bucketWidth,
+                parseInt(region[2], 10) * grid.bucketHeight,
+                grid.bucketWidth,
+                grid.bucketHeight
+            );
+        }
+
+        return this;
+    },
+
+    /**
+     * Renders the list of Pair separations to the given Graphics instance.
+     * 
+     * The debug renderer calls this method if the `showSeparations` config value is set.
+     * 
+     * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
+     * you wish to render the Grid to your own Graphics instance.
+     * 
+     * @method Phaser.Physics.Matter.World#renderSeparations
+     * @since 3.22.0
+     * 
+     * @param {MatterJS.Pair[]} pairs - An array of Matter Pairs to be rendered.
+     * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
+     * @param {number} lineColor - The line color.
+     * 
+     * @return {this} This Matter World instance for method chaining.
+     */
+    renderSeparations: function (pairs, graphics, lineColor)
+    {
+        graphics.lineStyle(1, lineColor, 1);
+
+        for (var i = 0; i < pairs.length; i++)
+        {
+            var pair = pairs[i];
+
+            if (!pair.isActive)
+            {
+                continue;
+            }
+
+            var collision = pair.collision;
+            var bodyA = collision.bodyA;
+            var bodyB = collision.bodyB;
+            var posA = bodyA.position;
+            var posB = bodyB.position;
+            var penetration = collision.penetration;
+
+            var k = (!bodyA.isStatic && !bodyB.isStatic) ? 4 : 1;
+            
+            if (bodyB.isStatic)
+            {
+                k = 0;
+            }
+
+            graphics.lineBetween(
+                posB.x,
+                posB.y,
+                posB.x - (penetration.x * k),
+                posB.y - (penetration.y * k)
+            );
+
+            k = (!bodyA.isStatic && !bodyB.isStatic) ? 4 : 1;
+
+            if (bodyA.isStatic)
+            {
+                k = 0;
+            }
+
+            graphics.lineBetween(
+                posA.x,
+                posA.y,
+                posA.x - (penetration.x * k),
+                posA.y - (penetration.y * k)
+            );
+        }
+
+        return this;
+    },
+
+    /**
+     * Renders the list of collision points and normals to the given Graphics instance.
+     * 
+     * The debug renderer calls this method if the `showCollisions` config value is set.
+     * 
+     * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
+     * you wish to render the Grid to your own Graphics instance.
+     * 
+     * @method Phaser.Physics.Matter.World#renderCollisions
+     * @since 3.22.0
+     * 
+     * @param {MatterJS.Pair[]} pairs - An array of Matter Pairs to be rendered.
+     * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
+     * @param {number} lineColor - The line color.
+     * 
+     * @return {this} This Matter World instance for method chaining.
+     */
+    renderCollisions: function (pairs, graphics, lineColor)
+    {
+        graphics.lineStyle(1, lineColor, 0.5);
+        graphics.fillStyle(lineColor, 1);
+
+        var i;
+        var pair;
+
+        //  Collision Positions
+
+        for (i = 0; i < pairs.length; i++)
+        {
+            pair = pairs[i];
+
+            if (!pair.isActive)
+            {
+                continue;
+            }
+
+            for (var j = 0; j < pair.activeContacts.length; j++)
+            {
+                var contact = pair.activeContacts[j];
+                var vertex = contact.vertex;
+
+                graphics.fillRect(vertex.x - 2, vertex.y - 2, 5, 5);
+            }
+        }
+
+        //  Collision Normals
+
+        for (i = 0; i < pairs.length; i++)
+        {
+            pair = pairs[i];
+
+            if (!pair.isActive)
+            {
+                continue;
+            }
+
+            var collision = pair.collision;
+            var contacts = pair.activeContacts;
+
+            if (contacts.length > 0)
+            {
+                var normalPosX = contacts[0].vertex.x;
+                var normalPosY = contacts[0].vertex.y;
+
+                if (contacts.length === 2)
+                {
+                    normalPosX = (contacts[0].vertex.x + contacts[1].vertex.x) / 2;
+                    normalPosY = (contacts[0].vertex.y + contacts[1].vertex.y) / 2;
+                }
+
+                if (collision.bodyB === collision.supports[0].body || collision.bodyA.isStatic)
+                {
+                    graphics.lineBetween(
+                        normalPosX - collision.normal.x * 8,
+                        normalPosY - collision.normal.y * 8,
+                        normalPosX,
+                        normalPosY
+                    );
+                }
+                else
+                {
+                    graphics.lineBetween(
+                        normalPosX + collision.normal.x * 8,
+                        normalPosY + collision.normal.y * 8,
+                        normalPosX,
+                        normalPosY
+                    );
+                }
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Renders the bounds of an array of Bodies to the given Graphics instance.
+     * 
+     * If the body is a compound body, it will render the bounds for the parent compound.
+     * 
+     * The debug renderer calls this method if the `showBounds` config value is set.
+     * 
+     * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
+     * you wish to render bounds to your own Graphics instance.
+     *
+     * @method Phaser.Physics.Matter.World#renderBodyBounds
+     * @since 3.22.0
+     * 
+     * @param {array} bodies - An array of bodies from the localWorld.
+     * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
+     * @param {number} lineColor - The line color.
+     * @param {number} lineOpacity - The line opacity, between 0 and 1.
+     */
+    renderBodyBounds: function (bodies, graphics, lineColor, lineOpacity)
+    {
+        graphics.lineStyle(1, lineColor, lineOpacity);
+
+        for (var i = 0; i < bodies.length; i++)
+        {
+            var body = bodies[i];
+
+            //  1) Don't show invisible bodies
+            if (!body.render.visible)
+            {
+                continue;
+            }
+
+            var bounds = body.bounds;
+
+            if (bounds)
+            {
+                graphics.strokeRect(
+                    bounds.min.x,
+                    bounds.min.y,
+                    bounds.max.x - bounds.min.x,
+                    bounds.max.y - bounds.min.y
+                );
+            }
+            else
+            {
+                var parts = body.parts;
+
+                for (var j = parts.length > 1 ? 1 : 0; j < parts.length; j++)
+                {
+                    var part = parts[j];
+    
+                    graphics.strokeRect(
+                        part.bounds.min.x,
+                        part.bounds.min.y,
+                        part.bounds.max.x - part.bounds.min.x,
+                        part.bounds.max.y - part.bounds.min.y
+                    );
+                }
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Renders either all axes, or a single axis indicator, for an array of Bodies, to the given Graphics instance.
+     * 
+     * The debug renderer calls this method if the `showAxes` or `showAngleIndicator` config values are set.
+     * 
+     * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
+     * you wish to render bounds to your own Graphics instance.
+     *
+     * @method Phaser.Physics.Matter.World#renderBodyAxes
+     * @since 3.22.0
+     * 
+     * @param {array} bodies - An array of bodies from the localWorld.
+     * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
+     * @param {boolean} showAxes - If `true` it will render all body axes. If `false` it will render a single axis indicator.
+     * @param {number} lineColor - The line color.
+     * @param {number} lineOpacity - The line opacity, between 0 and 1.
+     */
+    renderBodyAxes: function (bodies, graphics, showAxes, lineColor, lineOpacity)
+    {
+        graphics.lineStyle(1, lineColor, lineOpacity);
+
+        for (var i = 0; i < bodies.length; i++)
+        {
+            var body = bodies[i];
+            var parts = body.parts;
+
+            //  1) Don't show invisible bodies
+            if (!body.render.visible)
+            {
+                continue;
+            }
+
+            var part;
+            var j;
+            var k;
+
+            if (showAxes)
+            {
+                for (j = parts.length > 1 ? 1 : 0; j < parts.length; j++)
+                {
+                    part = parts[j];
+    
+                    for (k = 0; k < part.axes.length; k++)
+                    {
+                        var axis = part.axes[k];
+
+                        graphics.lineBetween(
+                            part.position.x,
+                            part.position.y,
+                            part.position.x + axis.x * 20,
+                            part.position.y + axis.y * 20
+                        );
+                    }
+                }
+            }
+            else
+            {
+                for (j = parts.length > 1 ? 1 : 0; j < parts.length; j++)
+                {
+                    part = parts[j];
+    
+                    for (k = 0; k < part.axes.length; k++)
+                    {
+                        graphics.lineBetween(
+                            part.position.x,
+                            part.position.y,
+                            (part.vertices[0].x + part.vertices[part.vertices.length - 1].x) / 2,
+                            (part.vertices[0].y + part.vertices[part.vertices.length - 1].y) / 2
+                        );
+                    }
+                }
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Renders a velocity indicator for an array of Bodies, to the given Graphics instance.
+     * 
+     * The debug renderer calls this method if the `showVelocity` config value is set.
+     * 
+     * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
+     * you wish to render bounds to your own Graphics instance.
+     *
+     * @method Phaser.Physics.Matter.World#renderBodyVelocity
+     * @since 3.22.0
+     * 
+     * @param {array} bodies - An array of bodies from the localWorld.
+     * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
+     * @param {number} lineColor - The line color.
+     * @param {number} lineOpacity - The line opacity, between 0 and 1.
+     * @param {number} lineThickness - The line thickness.
+     */
+    renderBodyVelocity: function (bodies, graphics, lineColor, lineOpacity, lineThickness)
+    {
+        graphics.lineStyle(lineThickness, lineColor, lineOpacity);
+
+        for (var i = 0; i < bodies.length; i++)
+        {
+            var body = bodies[i];
+
+            //  1) Don't show invisible bodies
+            if (!body.render.visible)
+            {
+                continue;
+            }
+
+            graphics.lineBetween(
+                body.position.x,
+                body.position.y,
+                body.position.x + (body.position.x - body.positionPrev.x) * 2,
+                body.position.y + (body.position.y - body.positionPrev.y) * 2
+            );
+        }
+
+        return this;
     },
 
     /**
@@ -1392,7 +1851,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#renderBody
      * @since 3.22.0
      * 
-     * @param {MatterJS.Body} body - The Matter Body to be rendered.
+     * @param {MatterJS.BodyType} body - The Matter Body to be rendered.
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
      * @param {boolean} showInternalEdges - Render internal edges of the polygon?
      * @param {number} [lineColor] - The line color.
@@ -1411,20 +1870,14 @@ var World = new Class({
         if (fillColor === undefined) { fillColor = null; }
         if (fillOpacity === undefined) { fillOpacity = null; }
 
+        var config = this.debugConfig;
+
+        var sensorFillColor = config.sensorFillColor;
+        var sensorLineColor = config.sensorLineColor;
+
         //  Handle compound parts
         var parts = body.parts;
         var partsLength = parts.length;
-
-        /*
-        if (!body.isStatic)
-        {
-            var w = body.bounds.max.x - body.bounds.min.x;
-            var h = body.bounds.max.y - body.bounds.min.y;
-
-            graphics.fillStyle(0x6d6d6d, 0.3);
-            graphics.fillRect(body.bounds.min.x, body.bounds.min.y, w, h);
-        }
-        */
 
         for (var k = (partsLength > 1) ? 1 : 0; k < partsLength; k++)
         {
@@ -1432,7 +1885,7 @@ var World = new Class({
             var render = part.render;
             var opacity = render.opacity;
 
-            if (!render.visible || opacity === 0)
+            if (!render.visible || opacity === 0 || (part.isSensor && !config.showSensors))
             {
                 continue;
             }
@@ -1442,14 +1895,29 @@ var World = new Class({
 
             graphics.beginPath();
 
-            if (fillColor !== null)
+            if (part.isSensor)
             {
-                graphics.fillStyle(fillColor, fillOpacity * opacity);
+                if (fillColor !== null)
+                {
+                    graphics.fillStyle(sensorFillColor, fillOpacity * opacity);
+                }
+    
+                if (lineColor !== null)
+                {
+                    graphics.lineStyle(lineThickness, sensorLineColor, lineOpacity * opacity);
+                }
             }
-
-            if (lineColor !== null)
+            else
             {
-                graphics.lineStyle(lineThickness, lineColor, lineOpacity * opacity);
+                if (fillColor !== null)
+                {
+                    graphics.fillStyle(fillColor, fillOpacity * opacity);
+                }
+    
+                if (lineColor !== null)
+                {
+                    graphics.lineStyle(lineThickness, lineColor, lineOpacity * opacity);
+                }
             }
 
             if (circleRadius)
@@ -1498,13 +1966,14 @@ var World = new Class({
             }
         }
 
-        if (!body.isStatic)
+        if (config.showPositions && !body.isStatic)
         {
             var px = body.position.x;
             var py = body.position.y;
+            var hs = Math.ceil(config.positionSize / 2);
 
-            graphics.fillStyle(0xff00ff, 1);
-            graphics.fillRect(px - 3, py - 3, 6, 6);
+            graphics.fillStyle(config.positionColor, 1);
+            graphics.fillRect(px - hs, py - hs, config.positionSize, config.positionSize);
         }
 
         return this;
@@ -1519,7 +1988,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#renderConvexHull
      * @since 3.22.0
      * 
-     * @param {MatterJS.Body} body - The Matter Body to be rendered.
+     * @param {MatterJS.BodyType} body - The Matter Body to be rendered.
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
      * @param {number} hullColor - The color used to render the hull.
      * @param {number} [lineThickness=1] - The hull line thickness.
@@ -1597,7 +2066,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#renderConstraint
      * @since 3.22.0
      * 
-     * @param {MatterJS.Constraint} constraint - The Matter Constraint to render.
+     * @param {MatterJS.ConstraintType} constraint - The Matter Constraint to render.
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
      * @param {number} lineColor - The line color.
      * @param {number} lineOpacity - The line opacity, between 0 and 1.
@@ -1617,7 +2086,7 @@ var World = new Class({
             return this;
         }
 
-        graphics.lineStyle(lineThickness, lineColor, lineOpacity * render.opacity);
+        graphics.lineStyle(lineThickness, lineColor, lineOpacity);
 
         var bodyA = constraint.bodyA;
         var bodyB = constraint.bodyB;

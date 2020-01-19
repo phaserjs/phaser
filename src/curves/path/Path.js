@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -198,12 +198,12 @@ var Path = new Class({
      * @method Phaser.Curves.Path#cubicBezierTo
      * @since 3.0.0
      *
-     * @param {(number|Phaser.Math.Vector2)} x - The x coordinate of the end point. Or, if a Vec2, the p1 value.
-     * @param {(number|Phaser.Math.Vector2)} y - The y coordinate of the end point. Or, if a Vec2, the p2 value.
-     * @param {(number|Phaser.Math.Vector2)} control1X - The x coordinate of the first control point. Or, if a Vec2, the p3 value.
-     * @param {number} [control1Y] - The y coordinate of the first control point. Not used if vec2s are provided as the first 3 arguments.
-     * @param {number} [control2X] - The x coordinate of the second control point. Not used if vec2s are provided as the first 3 arguments.
-     * @param {number} [control2Y] - The y coordinate of the second control point. Not used if vec2s are provided as the first 3 arguments.
+     * @param {(number|Phaser.Math.Vector2)} x - The x coordinate of the end point. Or, if a Vector2, the p1 value.
+     * @param {(number|Phaser.Math.Vector2)} y - The y coordinate of the end point. Or, if a Vector2, the p2 value.
+     * @param {(number|Phaser.Math.Vector2)} control1X - The x coordinate of the first control point. Or, if a Vector2, the p3 value.
+     * @param {number} [control1Y] - The y coordinate of the first control point. Not used if Vector2s are provided as the first 3 arguments.
+     * @param {number} [control2X] - The x coordinate of the second control point. Not used if Vector2s are provided as the first 3 arguments.
+     * @param {number} [control2Y] - The y coordinate of the second control point. Not used if Vector2s are provided as the first 3 arguments.
      *
      * @return {Phaser.Curves.Path} This Path object.
      */
@@ -214,7 +214,7 @@ var Path = new Class({
         var p2;
         var p3;
 
-        //  Assume they're all vec2s
+        //  Assume they're all Vector2s
         if (x instanceof Vector2)
         {
             p1 = x;
@@ -252,7 +252,7 @@ var Path = new Class({
         var p1;
         var p2;
 
-        //  Assume they're all vec2s
+        //  Assume they're all Vector2s
         if (x instanceof Vector2)
         {
             p1 = x;
@@ -569,14 +569,12 @@ var Path = new Class({
     },
 
     /**
-     * Returns the defined starting point of the Path.
-     *
-     * This is not necessarily equal to the starting point of the first Curve if it differs from {@link startPoint}.
+     * Get a sequence of points on the path.
      *
      * @method Phaser.Curves.Path#getPoints
      * @since 3.0.0
      *
-     * @param {integer} [divisions=12] - The number of points to divide the path in to.
+     * @param {integer} [divisions=12] - The number of divisions per resolution per curve.
      *
      * @return {Phaser.Math.Vector2[]} An array of Vector2 objects that containing the points along the Path.
      */
@@ -626,7 +624,7 @@ var Path = new Class({
 
     /**
      * Returns a randomly chosen point anywhere on the path. This follows the same rules as `getPoint` in that it may return a point on any Curve inside this path.
-     * 
+     *
      * When calling this method multiple times, the points are not guaranteed to be equally spaced spatially.
      *
      * @method Phaser.Curves.Path#getRandomPoint
@@ -647,7 +645,7 @@ var Path = new Class({
 
     /**
      * Divides this Path into a set of equally spaced points,
-     * 
+     *
      * The resulting points are equally spaced with respect to the points' position on the path, but not necessarily equally spaced spatially.
      *
      * @method Phaser.Curves.Path#getSpacedPoints
@@ -741,7 +739,7 @@ var Path = new Class({
 
     /**
      * Creates a "gap" in this path from the path's current end point to the given coordinates.
-     * 
+     *
      * After calling this function, this Path's end point will be equal to the given coordinates
      *
      * @method Phaser.Curves.Path#moveTo

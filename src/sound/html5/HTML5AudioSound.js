@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -47,9 +47,7 @@ var HTML5AudioSound = new Class({
 
         if (!this.tags)
         {
-            // eslint-disable-next-line no-console
-            console.warn('Audio cache entry missing: ' + key);
-            return;
+            throw new Error('There is no audio asset with key "' + key + '" in the audio cache');
         }
 
         /**

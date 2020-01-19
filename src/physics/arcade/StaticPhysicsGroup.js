@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -41,8 +41,8 @@ var StaticPhysicsGroup = new Class({
         if (!children && !config)
         {
             config = {
-                createCallback: this.createCallbackHandler,
-                removeCallback: this.removeCallbackHandler,
+                internalCreateCallback: this.createCallbackHandler,
+                internalRemoveCallback: this.removeCallbackHandler,
                 createMultipleCallback: this.createMultipleCallbackHandler,
                 classType: ArcadeSprite
             };
@@ -53,8 +53,8 @@ var StaticPhysicsGroup = new Class({
             config = children;
             children = null;
 
-            config.createCallback = this.createCallbackHandler;
-            config.removeCallback = this.removeCallbackHandler;
+            config.internalCreateCallback = this.createCallbackHandler;
+            config.internalRemoveCallback = this.removeCallbackHandler;
             config.createMultipleCallback = this.createMultipleCallbackHandler;
             config.classType = GetFastValue(config, 'classType', ArcadeSprite);
         }
@@ -66,8 +66,8 @@ var StaticPhysicsGroup = new Class({
 
             config.forEach(function (singleConfig)
             {
-                singleConfig.createCallback = this.createCallbackHandler;
-                singleConfig.removeCallback = this.removeCallbackHandler;
+                singleConfig.internalCreateCallback = this.createCallbackHandler;
+                singleConfig.internalRemoveCallback = this.removeCallbackHandler;
                 singleConfig.createMultipleCallback = this.createMultipleCallbackHandler;
                 singleConfig.classType = GetFastValue(singleConfig, 'classType', ArcadeSprite);
             });

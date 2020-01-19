@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -42,7 +42,9 @@ var Friction = {
     },
 
     /**
-     * Sets a new air resistance for this Game Object's Matter Body. A value of 0 means the Body will never slow as it moves through space. The higher the value, the faster a Body slows when moving through space.
+     * Sets a new air resistance for this Game Object's Matter Body.
+     * A value of 0 means the Body will never slow as it moves through space.
+     * The higher the value, the faster a Body slows when moving through space.
      *
      * @method Phaser.Physics.Matter.Components.Friction#setFrictionAir
      * @since 3.0.0
@@ -59,7 +61,9 @@ var Friction = {
     },
 
     /**
-     * Sets a new static friction for this Game Object's Matter Body. A value of 0 means the Body will never "stick" when it is nearly stationary. The higher the value (e.g. 10), the more force it will take to initially get the Body moving when it is nearly stationary.
+     * Sets a new static friction for this Game Object's Matter Body.
+     * A value of 0 means the Body will never "stick" when it is nearly stationary.
+     * The higher the value (e.g. 10), the more force it will take to initially get the Body moving when it is nearly stationary.
      *
      * @method Phaser.Physics.Matter.Components.Friction#setFrictionStatic
      * @since 3.0.0

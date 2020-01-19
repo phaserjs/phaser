@@ -36,16 +36,14 @@ export class Parser {
     }
 
     emit() {
+
         let ignored = [];
-        let result = this.topLevel.reduce((out: string, obj: dom.TopLevelDeclaration) => {
-            // TODO: remove once stable
-            // if (<string>obj.kind === 'property') {
-            //     ignored.push((<any>obj).name);
-            //     return out;
-            // }
-            //////////////////////////
+
+        let result = '/// <reference types="./matter" />\n\n';
+
+        result = result.concat(this.topLevel.reduce((out: string, obj: dom.TopLevelDeclaration) => {
             return out + dom.emit(obj);
-        }, '');
+        }, ''));
 
         if (ignored.length > 0)
         {
@@ -65,6 +63,7 @@ export class Parser {
             switch (doclet.longname)
             {
                 case 'Phaser.GameObjects.Components.Alpha':
+                case 'Phaser.GameObjects.Components.AlphaSingle':
                 case 'Phaser.GameObjects.Components.Animation':
                 case 'Phaser.GameObjects.Components.BlendMode':
                 case 'Phaser.GameObjects.Components.ComputedSize':
@@ -554,10 +553,29 @@ export class Parser {
         if (doclet.tags)
             for (let tag of doclet.tags) {
                 if (tag.originalTitle === 'generic') {
-                    let matches = (<string>tag.value).match(/(?:(?:{)([^}]+)(?:}))?\s?([^\s]+)(?:\s?-\s?(?:\[)(.+)(?:\]))?/);
-                    let typeParam = dom.create.typeParameter(matches[2], matches[1] == null ? null : dom.create.typeParameter(matches[1]));
+                    
+                    /**
+                     * {string} K - [key]
+                     * 1 = string | 2 = null | 3 = K | 4 = key
+                     * 
+                     * {string=string} K - [key]
+                     * 1 = string | 2 = string | 3 = K | 4 = key
+                     */
+                    const matches = (<string>tag.value).match(/(?:(?:{)([^}=]+)(?:=)?([^}=]+)?(?:}))?\s?([^\s]+)(?:\s?-\s?(?:\[)(.+)(?:\]))?/);
+                    const [_, _type, _defaultType, _name, _paramsNames] = matches;
+
+                    const typeParam = dom.create.typeParameter(
+                        _name, 
+                        _type == null ? null : dom.create.typeParameter(_type)
+                    );
+                    
+                    if(_defaultType != null) {
+                        typeParam.defaultType = dom.create.typeParameter(_defaultType);
+                    }
+
                     (<dom.ClassDeclaration | dom.FunctionDeclaration | dom.TypeAliasDeclaration>obj).typeParameters.push(typeParam);
-                    handleOverrides(matches[3], matches[2]);
+                    handleOverrides(_paramsNames, _name);
+
                 } else if (tag.originalTitle === 'genericUse') {
                     let matches = (<string>tag.value).match(/(?:(?:{)([^}]+)(?:}))(?:\s?-\s?(?:\[)(.+)(?:\]))?/);
                     let overrideType: string = this.prepareTypeName(matches[1]);
