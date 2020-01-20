@@ -67,7 +67,7 @@ var RopeWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     var meshVerticesLength = vertices.length;
     var vertexCount = Math.floor(meshVerticesLength * 0.5);
 
-    //  Because it's a triangle strip
+    //  Because it's a triangle strip and we don't want lots of degenerate triangles joining things up
     pipeline.flush();
 
     pipeline.setTexture2D(texture, 0);

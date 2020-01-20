@@ -37,7 +37,7 @@ var Vector2 = require('../../math/Vector2');
  * @param {number} y - The vertical position of this Game Object in the world.
  * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {(string|integer|null)} [frame] - An optional frame from the Texture this Game Object is rendering with.
- * @param {Phaser.Types.Math.Vector2Like[]} [points] - An array containing the vertices data for this Rope. If none is provided a simple quad is created. See `setPoints` to set this post-creation.
+ * @param {(integer|Phaser.Types.Math.Vector2Like[])} [points] - An array containing the vertices data for this Rope, or a number that indicates how many segments to split the texture frame into. If none is provided a simple quad is created. See `setPoints` to set this post-creation.
  * @param {number[]} [colors] - An optional array containing the color data for this Rope. You should provide one color value per pair of vertices.
  * @param {number[]} [alphas] - An optional array containing the alpha data for this Rope. You should provide one alpha value per pair of vertices.
  */
@@ -64,7 +64,7 @@ var Rope = new Class({
     {
         if (points === undefined)
         {
-            points = [ { x: 0, y: 0 } ];
+            points = 2;
         }
 
         GameObject.call(this, scene, 'Rope');
@@ -175,7 +175,10 @@ var Rope = new Class({
         this.setSizeToFrame();
         this.initPipeline('TextureTintStripPipeline');
 
-        this.resizeArrays(points.length);
+        if (Array.isArray(points))
+        {
+            this.resizeArrays(points.length);
+        }
 
         this.setPoints(points, colors, alphas);
 
@@ -438,15 +441,21 @@ var Rope = new Class({
      * ]);
      * ```
      * 
+     * Or, you can provide an integer to do the same thing:
+     * 
+     * ```javascript
+     * rope.setPoints(4);
+     * ```
+     * 
+     * Which will divide the Rope into 4 equally sized segments based on the frame width.
+     * 
      * Note that calling this method with a different number of points than the Rope has currently will
      * _reset_ the color and alpha values, unless you provide them as arguments to this method.
-     * 
-     * See also `Rope.split`.
      * 
      * @method Phaser.GameObjects.Rope#setPoints
      * @since 3.23.0
      * 
-     * @param {Phaser.Math.Types.Vector2Like[]} [points] - An array of points to split the Rope into.
+     * @param {(integer|Phaser.Types.Math.Vector2Like[])} [points] - An array containing the vertices data for this Rope, or a number that indicates how many segments to split the texture frame into. If none is provided a simple quad is created.
      * @param {(number|number[])} [colors] - Either a single color value, or an array of values.
      * @param {(number|number[])} [alphas] - Either a single alpha value, or an array of values.
      * 
@@ -454,26 +463,57 @@ var Rope = new Class({
      */
     setPoints: function (points, colors, alphas)
     {
+        if (points === undefined) { points = 2; }
+
+        if (typeof points === 'number')
+        {
+            //  Generate an array based on the points
+            var segments = points;
+
+            if (segments < 2)
+            {
+                segments = 2;
+            }
+
+            var frameSegment = this.frame.width / (segments - 1);
+
+            points = [];
+
+            for (var s = 0; s < segments; s++)
+            {
+                points.push({ x: s * frameSegment, y: 0 });
+            }
+        }
+
         var total = points.length;
+        var currentTotal = this.points.length;
 
         if (total < 1)
         {
+            console.warn('Rope: Not enough points given');
+
             return this;
         }
+        else if (total === 1)
+        {
+            points.unshift({ x: 0, y: 0 });
+            total++;
+        }
 
-        var currentUVs = this.uv;
-
-        if (this.points.length !== total)
+        if (currentTotal !== total)
         {
             this.resizeArrays(total);
         }
+
+        var currentUVs = this.uv;
 
         var u0 = this.frame.u0;
         var v0 = this.frame.v0;
         var u1 = this.frame.u1;
         var v1 = this.frame.v1;
+
         var part = (u1 - u0) / (total - 1);
-    
+   
         for (var i = 0; i < total; i++)
         {
             var index = i * 4;
@@ -565,7 +605,7 @@ var Rope = new Class({
 
         var lastPoint = points[0];
         var nextPoint;
-    
+   
         for (var i = 0; i < total; i++)
         {
             var point = points[i];
@@ -579,16 +619,9 @@ var Rope = new Class({
             {
                 nextPoint = point;
             }
-    
+
             perp.x = nextPoint.y - lastPoint.y;
             perp.y = -(nextPoint.x - lastPoint.x);
-    
-            // var ratio = (1 - (i / (total - 1))) * 10;
-    
-            // if (ratio > 1)
-            // {
-            //     ratio = 1;
-            // }
     
             var perpLength = perp.length();
             var num = this.frame.halfHeight;
