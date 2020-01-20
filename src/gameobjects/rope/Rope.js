@@ -468,18 +468,20 @@ var Rope = new Class({
             this.resizeArrays(total);
         }
 
-        var index = 0;
-        var amount = 0;
+        var u0 = this.frame.u0;
+        var v0 = this.frame.v0;
+        var u1 = this.frame.u1;
+        var v1 = this.frame.v1;
+        var part = (u1 - u0) / (total - 1);
     
         for (var i = 0; i < total; i++)
         {
-            index = i * 4;
-            amount = i / (total - 1);
-    
-            currentUVs[index] = amount;
-            currentUVs[index + 1] = 0;
-            currentUVs[index + 2] = amount;
-            currentUVs[index + 3] = 1;
+            var index = i * 4;
+
+            currentUVs[index] = u0 + (i * part);
+            currentUVs[index + 1] = v0;
+            currentUVs[index + 2] = u0 + (i * part);
+            currentUVs[index + 3] = v1;
         }
 
         this.points = points;
@@ -581,12 +583,12 @@ var Rope = new Class({
             perp.x = nextPoint.y - lastPoint.y;
             perp.y = -(nextPoint.x - lastPoint.x);
     
-            var ratio = (1 - (i / (total - 1))) * 10;
+            // var ratio = (1 - (i / (total - 1))) * 10;
     
-            if (ratio > 1)
-            {
-                ratio = 1;
-            }
+            // if (ratio > 1)
+            // {
+            //     ratio = 1;
+            // }
     
             var perpLength = perp.length();
             var num = this.frame.halfHeight;
