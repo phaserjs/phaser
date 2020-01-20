@@ -12,8 +12,8 @@
  * @function Phaser.Math.Angle.BetweenPoints
  * @since 3.0.0
  *
- * @param {(Phaser.Geom.Point|object)} point1 - The first point.
- * @param {(Phaser.Geom.Point|object)} point2 - The second point.
+ * @param {Phaser.Types.Math.Vector2Like} point1 - The first point.
+ * @param {Phaser.Types.Math.Vector2Like} point2 - The second point.
  *
  * @return {number} The angle in radians.
  */
