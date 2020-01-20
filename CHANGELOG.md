@@ -4,6 +4,8 @@
 
 ### New Features
 
+* `Line.GetEasedPoints` is a new function that will take a Line, a quantity, and an ease function, and returns an array of points where each point has been spaced out across the length of the Line based on the ease function given.
+
 ### Updates
 
 ### Bug Fixes
