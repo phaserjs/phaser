@@ -5,8 +5,12 @@
 ### New Features
 
 * `Line.GetEasedPoints` is a new function that will take a Line, a quantity, and an ease function, and returns an array of points where each point has been spaced out across the length of the Line based on the ease function given.
+* `XHRSettings.withCredentials` is a new boolean property that controls the `withCredentials` setting of the XHR Request made by the Loader. It indicates whether or not cross-site Access-Control requests should be made using credentials such as cookies, authorization headers or TLS client certificates. You can set this on a per-file basis, or global in the Game Config.
+* `Config.loaderWithCredentials` is the new global setting for `XHRSettings.withCredentials`.
 
 ### Updates
+
+* `XHRLoader` will now use the `XHRSettings.withCredentials` as set in the file or global loader config.
 
 ### Bug Fixes
 
