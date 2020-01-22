@@ -15,16 +15,18 @@
  * @param {string} [user=''] - Optional username for the XHR request.
  * @param {string} [password=''] - Optional password for the XHR request.
  * @param {integer} [timeout=0] - Optional XHR timeout value.
+ * @param {boolean} [withCredentials=false] - Optional XHR withCredentials value.
  *
  * @return {Phaser.Types.Loader.XHRSettingsObject} The XHRSettings object as used by the Loader.
  */
-var XHRSettings = function (responseType, async, user, password, timeout)
+var XHRSettings = function (responseType, async, user, password, timeout, withCredentials)
 {
     if (responseType === undefined) { responseType = ''; }
     if (async === undefined) { async = true; }
     if (user === undefined) { user = ''; }
     if (password === undefined) { password = ''; }
     if (timeout === undefined) { timeout = 0; }
+    if (withCredentials === undefined) { withCredentials = false; }
 
     // Before sending a request, set the xhr.responseType to "text",
     // "arraybuffer", "blob", or "document", depending on your data needs.
@@ -50,7 +52,10 @@ var XHRSettings = function (responseType, async, user, password, timeout)
         requestedWith: false,
 
         //  overrideMimeType
-        overrideMimeType: undefined
+        overrideMimeType: undefined,
+
+        //  withCredentials
+        withCredentials: withCredentials
 
     };
 };
