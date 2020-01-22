@@ -45,6 +45,11 @@ var XHRLoader = function (file, globalXHRSettings)
         xhr.overrideMimeType(config.overrideMimeType);
     }
 
+    if (config.withCredentials)
+    {
+        xhr.withCredentials = true;
+    }
+
     // After a successful request, the xhr.response property will contain the requested data as a DOMString, ArrayBuffer, Blob, or Document (depending on what was set for responseType.)
 
     xhr.onload = file.onLoad.bind(file, xhr);
