@@ -194,7 +194,8 @@ var LoaderPlugin = new Class({
             GetFastValue(sceneConfig, 'async', gameConfig.loaderAsync),
             GetFastValue(sceneConfig, 'user', gameConfig.loaderUser),
             GetFastValue(sceneConfig, 'password', gameConfig.loaderPassword),
-            GetFastValue(sceneConfig, 'timeout', gameConfig.loaderTimeout)
+            GetFastValue(sceneConfig, 'timeout', gameConfig.loaderTimeout),
+            GetFastValue(sceneConfig, 'withCredentials', gameConfig.loaderWithCredentials)
         );
 
         /**
