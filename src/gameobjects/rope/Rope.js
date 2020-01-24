@@ -165,7 +165,7 @@ var Rope = new Class({
          * @type {integer}
          * @since 3.23.0
          */
-        this.tintFill = (texture = '__DEFAULT') ? 2 : 0;
+        this.tintFill = (texture === '__DEFAULT') ? 2 : 0;
 
         /**
          * If the Rope is marked as `dirty` it will automatically recalculate its vertices
