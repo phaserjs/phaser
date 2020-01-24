@@ -63,6 +63,9 @@ var RopeWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     var uvs = src.uv;
     var colors = src.colors;
     var alphas = src.alphas;
+    var alpha = src.alpha;
+    var getTint = Utils.getTintAppendFloatAlphaAndSwap;
+    var roundPixels = camera.roundPixels;
 
     var meshVerticesLength = vertices.length;
     var vertexCount = Math.floor(meshVerticesLength * 0.5);
@@ -94,7 +97,7 @@ var RopeWebGLRenderer = function (renderer, src, interpolationPercentage, camera
         var tx = x * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
         var ty = x * calcMatrix.b + y * calcMatrix.d + calcMatrix.f;
 
-        if (camera.roundPixels)
+        if (roundPixels)
         {
             tx = Math.round(tx);
             ty = Math.round(ty);
@@ -105,7 +108,7 @@ var RopeWebGLRenderer = function (renderer, src, interpolationPercentage, camera
         vertexViewF32[++vertexOffset] = uvs[i + 0];
         vertexViewF32[++vertexOffset] = uvs[i + 1];
         vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = Utils.getTintAppendFloatAlphaAndSwap(colors[colorIndex], camera.alpha * alphas[colorIndex]);
+        vertexViewU32[++vertexOffset] = getTint(colors[colorIndex], camera.alpha * (alphas[colorIndex] * alpha));
 
         colorIndex++;
     }
