@@ -902,6 +902,26 @@ var Rope = new Class({
     },
 
     /**
+     * Handles the pre-destroy step for the Rope, which removes the Animation component and typed arrays.
+     *
+     * @method Phaser.GameObjects.Rope#preDestroy
+     * @private
+     * @since 3.23.0
+     */
+    preDestroy: function ()
+    {
+        this.anims.destroy();
+
+        this.anims = undefined;
+
+        this.points = null;
+        this.vertices = null;
+        this.uv = null;
+        this.colors = null;
+        this.alphas = null;
+    },
+
+    /**
      * The horizontally flipped state of the Game Object.
      * 
      * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
