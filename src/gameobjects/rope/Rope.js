@@ -170,6 +170,11 @@ var Rope = new Class({
          */
         this._perp = new Vector2();
 
+        this.debug = null;
+
+        // this.horizontal = true;
+        this.horizontal = false;
+
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
@@ -475,13 +480,28 @@ var Rope = new Class({
                 segments = 2;
             }
 
-            var frameSegment = this.frame.width / (segments - 1);
-
             points = [];
 
-            for (var s = 0; s < segments; s++)
+            var s;
+            var frameSegment;
+
+            if (this.horizontal)
             {
-                points.push({ x: s * frameSegment, y: 0 });
+                frameSegment = this.frame.width / (segments - 1);
+
+                for (s = 0; s < segments; s++)
+                {
+                    points.push({ x: s * frameSegment, y: 0 });
+                }
+            }
+            else
+            {
+                frameSegment = this.frame.height / (segments - 1);
+
+                for (s = 0; s < segments; s++)
+                {
+                    points.push({ x: 0, y: s * frameSegment });
+                }
             }
         }
 
@@ -518,10 +538,20 @@ var Rope = new Class({
         {
             var index = i * 4;
 
-            currentUVs[index] = u0 + (i * part);
-            currentUVs[index + 1] = v0;
-            currentUVs[index + 2] = u0 + (i * part);
-            currentUVs[index + 3] = v1;
+            if (this.horizontal)
+            {
+                currentUVs[index] = u0 + (i * part);
+                currentUVs[index + 1] = v0;
+                currentUVs[index + 2] = u0 + (i * part);
+                currentUVs[index + 3] = v1;
+            }
+            else
+            {
+                currentUVs[index] = u1;
+                currentUVs[index + 1] = v0 + (i * part);
+                currentUVs[index + 2] = u0;
+                currentUVs[index + 3] = v0 + (i * part);
+            }
         }
 
         this.points = points;
@@ -603,8 +633,10 @@ var Rope = new Class({
             return;
         }
 
-        var lastPoint = points[0];
         var nextPoint;
+        var lastPoint = points[0];
+
+        var frameSize = (this.horizontal) ? this.frame.halfHeight : this.frame.halfWidth;
    
         for (var i = 0; i < total; i++)
         {
@@ -624,13 +656,12 @@ var Rope = new Class({
             perp.y = -(nextPoint.x - lastPoint.x);
     
             var perpLength = perp.length();
-            var num = this.frame.halfHeight;
 
             perp.x /= perpLength;
             perp.y /= perpLength;
     
-            perp.x *= num;
-            perp.y *= num;
+            perp.x *= frameSize;
+            perp.y *= frameSize;
     
             vertices[index] = point.x + perp.x;
             vertices[index + 1] = point.y + perp.y;
