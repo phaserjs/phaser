@@ -245,7 +245,7 @@ var ImageFile = new Class({
  * @param {string|string[]} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
- * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
+ * @return {this} The Loader instance.
  */
 FileTypesManager.register('image', function (key, url, xhrSettings)
 {

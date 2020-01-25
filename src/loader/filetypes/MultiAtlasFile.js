@@ -295,7 +295,7 @@ var MultiAtlasFile = new Class({
  * @param {string} [baseURL] - Optional Base URL to use when loading the textures defined in the atlas data.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the atlas json file. Used in replacement of the Loaders default XHR Settings.
  *
- * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
+ * @return {this} The Loader instance.
  */
 FileTypesManager.register('multiatlas', function (key, atlasURL, path, baseURL, atlasXhrSettings)
 {
