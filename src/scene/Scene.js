@@ -100,7 +100,7 @@ var Scene = new Class({
          * This property will only be available if defined in the Scene Injection Map.
          *
          * @name Phaser.Scene#events
-         * @type {Phaser.Events.EventEmitter}
+         * @type {Phaser.Types.Scenes.SceneEventsEmitter}
          * @since 3.0.0
          */
         this.events;
