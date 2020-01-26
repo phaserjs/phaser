@@ -1,4 +1,6 @@
 import * as dom from 'dts-dom';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const regexEndLine = /^(.*)\r\n|\n|\r/gm;
 
@@ -9,6 +11,8 @@ export class Parser {
     namespaces: Record<string, dom.NamespaceDeclaration>;
 
     constructor(docs: any[]) {
+
+        // fs.writeFileSync(path.resolve(process.cwd(), './jsdoc.json'), JSON.stringify(docs, null, 4));
 
         this.topLevel = [];
         this.objects = {};
@@ -191,7 +195,7 @@ export class Parser {
             if (!doclet.memberof) {
                 this.topLevel.push(obj as dom.TopLevelDeclaration);
             } else {
-                let isNamespaceMember = doclet.kind === 'class' || doclet.kind === 'typedef' || doclet.kind == 'namespace' || doclet.isEnum;
+                let isNamespaceMember = doclet.kind === 'class' || doclet.kind == 'interface' || doclet.kind === 'typedef' || doclet.kind == 'namespace' || doclet.isEnum;
                 let parent = isNamespaceMember ? this.namespaces[doclet.memberof] : (this.objects[doclet.memberof] || this.namespaces[doclet.memberof]);
 
                 if (Array.isArray(parent)) { parent = parent[0]; }
@@ -607,7 +611,7 @@ export class Parser {
                     );
                     
                     if(_defaultType != null) {
-                        typeParam.defaultType = dom.create.typeParameter(_defaultType);
+                        (typeParam as any).defaultType = dom.create.typeParameter(_defaultType);
                     }
 
                     (<dom.ClassDeclaration | dom.FunctionDeclaration | dom.TypeAliasDeclaration>obj).typeParameters.push(typeParam);
