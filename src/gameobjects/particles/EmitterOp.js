@@ -209,7 +209,7 @@ var EmitterOp = new Class({
      *
      * @param {number} value - The value of the property.
      *
-     * @return {Phaser.GameObjects.Particles.EmitterOp} This Emitter Op object.
+     * @return {this} This Emitter Op object.
      */
     onChange: function (value)
     {
@@ -226,7 +226,7 @@ var EmitterOp = new Class({
      * @method Phaser.GameObjects.Particles.EmitterOp#setMethods
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Particles.EmitterOp} This Emitter Op object.
+     * @return {this} This Emitter Op object.
      */
     setMethods: function ()
     {
