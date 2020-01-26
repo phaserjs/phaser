@@ -44,7 +44,7 @@ var GetEaseFunction = function (ease, easeParams)
             {
                 //  quad.in = Quad.easeIn
                 //  quad.out = Quad.easeOut
-                //  quad.inout =Quad.easeInOut
+                //  quad.inout = Quad.easeInOut
 
                 direction = ease.substr(ease.indexOf('.') + 1);
 
