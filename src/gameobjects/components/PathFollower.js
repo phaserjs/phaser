@@ -110,7 +110,7 @@ var PathFollower = {
      * @param {Phaser.Curves.Path} path - The Path this PathFollower is following. It can only follow one Path at a time.
      * @param {(number|Phaser.Types.GameObjects.PathFollower.PathConfig|Phaser.Types.Tweens.NumberTweenBuilderConfig)} [config] - Settings for the PathFollower.
      *
-     * @return {Phaser.GameObjects.PathFollower} This Game Object.
+     * @return {this} This Game Object.
      */
     setPath: function (path, config)
     {
@@ -142,7 +142,7 @@ var PathFollower = {
      * @param {boolean} value - Whether the PathFollower should automatically rotate to point in the direction of the Path.
      * @param {number} [offset=0] - Rotation offset in degrees.
      *
-     * @return {Phaser.GameObjects.PathFollower} This Game Object.
+     * @return {this} This Game Object.
      */
     setRotateToPath: function (value, offset)
     {
@@ -181,7 +181,7 @@ var PathFollower = {
      * @param {(number|Phaser.Types.GameObjects.PathFollower.PathConfig|Phaser.Types.Tweens.NumberTweenBuilderConfig)} [config={}] - The duration of the follow, or a PathFollower config object.
      * @param {number} [startAt=0] - Optional start position of the follow, between 0 and 1.
      *
-     * @return {Phaser.GameObjects.PathFollower} This Game Object.
+     * @return {this} This Game Object.
      */
     startFollow: function (config, startAt)
     {
@@ -271,7 +271,7 @@ var PathFollower = {
      * @method Phaser.GameObjects.Components.PathFollower#pauseFollow
      * @since 3.3.0
      *
-     * @return {Phaser.GameObjects.PathFollower} This Game Object.
+     * @return {this} This Game Object.
      */
     pauseFollow: function ()
     {
@@ -293,7 +293,7 @@ var PathFollower = {
      * @method Phaser.GameObjects.Components.PathFollower#resumeFollow
      * @since 3.3.0
      *
-     * @return {Phaser.GameObjects.PathFollower} This Game Object.
+     * @return {this} This Game Object.
      */
     resumeFollow: function ()
     {
@@ -315,7 +315,7 @@ var PathFollower = {
      * @method Phaser.GameObjects.Components.PathFollower#stopFollow
      * @since 3.3.0
      *
-     * @return {Phaser.GameObjects.PathFollower} This Game Object.
+     * @return {this} This Game Object.
      */
     stopFollow: function ()
     {
