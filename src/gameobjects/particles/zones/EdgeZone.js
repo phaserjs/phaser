@@ -131,7 +131,7 @@ var EdgeZone = new Class({
      * @method Phaser.GameObjects.Particles.Zones.EdgeZone#updateSource
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Particles.Zones.EdgeZone} This Edge Zone.
+     * @return {this} This Edge Zone.
      */
     updateSource: function ()
     {
@@ -170,7 +170,7 @@ var EdgeZone = new Class({
      *
      * @param {Phaser.Types.GameObjects.Particles.EdgeZoneSource} source - An object instance with a `getPoints(quantity, stepRate)` method returning an array of points.
      *
-     * @return {Phaser.GameObjects.Particles.Zones.EdgeZone} This Edge Zone.
+     * @return {this} This Edge Zone.
      */
     changeSource: function (source)
     {
