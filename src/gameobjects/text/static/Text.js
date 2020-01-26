@@ -588,7 +588,7 @@ var Text = new Class({
      *
      * @param {(string|string[])} value - The string, or array of strings, to be set as the content of this Text object.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setText: function (value)
     {
@@ -629,7 +629,7 @@ var Text = new Class({
      *
      * @param {object} style - The style settings to set.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setStyle: function (style)
     {
@@ -663,7 +663,7 @@ var Text = new Class({
      *
      * @param {string} font - The font family or font settings to set.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setFont: function (font)
     {
@@ -692,7 +692,7 @@ var Text = new Class({
      *
      * @param {string} family - The font family.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setFontFamily: function (family)
     {
@@ -707,7 +707,7 @@ var Text = new Class({
      *
      * @param {number} size - The font size.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setFontSize: function (size)
     {
@@ -722,7 +722,7 @@ var Text = new Class({
      *
      * @param {string} style - The font style.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setFontStyle: function (style)
     {
@@ -740,7 +740,7 @@ var Text = new Class({
      * @param {number} width - The fixed width to set. `0` disables fixed width.
      * @param {number} height - The fixed height to set. `0` disables fixed height.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setFixedSize: function (width, height)
     {
@@ -755,7 +755,7 @@ var Text = new Class({
      *
      * @param {string} color - The background color.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setBackgroundColor: function (color)
     {
@@ -775,7 +775,7 @@ var Text = new Class({
      *
      * @param {(string|any)} color - The text fill style. Can be any valid CanvasRenderingContext `fillStyle` value.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setFill: function (fillStyle)
     {
@@ -790,7 +790,7 @@ var Text = new Class({
      *
      * @param {string} color - The text fill color.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setColor: function (color)
     {
@@ -806,7 +806,7 @@ var Text = new Class({
      * @param {string} color - The stroke color.
      * @param {number} thickness - The stroke thickness.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setStroke: function (color, thickness)
     {
@@ -826,7 +826,7 @@ var Text = new Class({
      * @param {boolean} [shadowStroke=false] - Whether to stroke the shadow.
      * @param {boolean} [shadowFill=true] - Whether to fill the shadow.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setShadow: function (x, y, color, blur, shadowStroke, shadowFill)
     {
@@ -842,7 +842,7 @@ var Text = new Class({
      * @param {number} x - The horizontal shadow offset.
      * @param {number} y - The vertical shadow offset.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setShadowOffset: function (x, y)
     {
@@ -857,7 +857,7 @@ var Text = new Class({
      *
      * @param {string} color - The shadow color.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setShadowColor: function (color)
     {
@@ -872,7 +872,7 @@ var Text = new Class({
      *
      * @param {number} blur - The shadow blur radius.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setShadowBlur: function (blur)
     {
@@ -887,7 +887,7 @@ var Text = new Class({
      *
      * @param {boolean} enabled - Whether shadow stroke is enabled or not.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setShadowStroke: function (enabled)
     {
@@ -902,7 +902,7 @@ var Text = new Class({
      *
      * @param {boolean} enabled - Whether shadow fill is enabled or not.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setShadowFill: function (enabled)
     {
@@ -920,7 +920,7 @@ var Text = new Class({
      * algorithm. If true, spaces are collapsed and whitespace is trimmed from lines. If false,
      * spaces and whitespace are left as is.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setWordWrapWidth: function (width, useAdvancedWrap)
     {
@@ -939,7 +939,7 @@ var Text = new Class({
      * newline characters in place to indicate where breaks should happen.
      * @param {object} [scope=null] - The scope that will be applied when the callback is invoked.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setWordWrapCallback: function (callback, scope)
     {
@@ -958,7 +958,7 @@ var Text = new Class({
      *
      * @param {string} [align='left'] - The text alignment for multi-line text.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setAlign: function (align)
     {
@@ -981,7 +981,7 @@ var Text = new Class({
      *
      * @param {number} value - The resolution for this Text object to use.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setResolution: function (value)
     {
@@ -999,7 +999,7 @@ var Text = new Class({
      *
      * @param {number} value - The amount to add to the font height to achieve the overall line height.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setLineSpacing: function (value)
     {
@@ -1023,7 +1023,7 @@ var Text = new Class({
      * @param {number} right - The right padding value.
      * @param {number} bottom - The bottom padding value.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setPadding: function (left, top, right, bottom)
     {
@@ -1082,7 +1082,7 @@ var Text = new Class({
      *
      * @param {integer} [max=0] - The maximum number of lines to draw.
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     setMaxLines: function (max)
     {
@@ -1095,7 +1095,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#updateText
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Text} This Text object.
+     * @return {this} This Text object.
      */
     updateText: function ()
     {
