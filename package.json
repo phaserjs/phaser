@@ -61,6 +61,7 @@
     "web audio"
   ],
   "devDependencies": {
+    "@types/node": "^13.5.0",
     "clean-webpack-plugin": "^0.1.19",
     "dts-dom": "^3.3.0",
     "eslint": "^4.19.1",
