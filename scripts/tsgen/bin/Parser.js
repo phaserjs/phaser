@@ -4,6 +4,7 @@ const dom = require("dts-dom");
 const regexEndLine = /^(.*)\r\n|\n|\r/gm;
 class Parser {
     constructor(docs) {
+        // fs.writeFileSync(path.resolve(process.cwd(), './jsdoc.json'), JSON.stringify(docs, null, 4));
         this.topLevel = [];
         this.objects = {};
         this.namespaces = {};
@@ -92,7 +93,7 @@ class Parser {
                     obj = this.createClass(doclet);
                     break;
                 case 'mixin':
-                    obj = this.createInterface(doclet);
+                    obj = this.createMixinInterface(doclet);
                     break;
                 case 'member':
                     if (doclet.isEnum === true) {
@@ -104,6 +105,9 @@ class Parser {
                     break;
                 case 'function':
                     obj = this.createFunction(doclet);
+                    break;
+                case 'interface':
+                    obj = this.createInterface(doclet);
                     break;
                 case 'typedef':
                     obj = this.createTypedef(doclet);
@@ -117,11 +121,24 @@ class Parser {
             }
             if (obj) {
                 if (container[doclet.longname]) {
-                    console.log('Warning: ignoring duplicate doc name: ' + doclet.longname);
-                    docs.splice(i--, 1);
-                    continue;
+                    if (doclet.kind === 'function') {
+                        let entries = container[doclet.longname];
+                        if (!Array.isArray(entries)) {
+                            entries = [entries];
+                        }
+                        const index = entries.push(obj);
+                        container[doclet.longname] = entries;
+                        doclet.index = index - 1;
+                    }
+                    else {
+                        console.log('Warning: ignoring duplicate doc name: ' + doclet.longname);
+                        docs.splice(i--, 1);
+                        continue;
+                    }
                 }
-                container[doclet.longname] = obj;
+                else {
+                    container[doclet.longname] = obj;
+                }
                 if (doclet.description) {
                     let otherDocs = obj.jsDocComment || '';
                     obj.jsDocComment = doclet.description.replace(regexEndLine, '$1\n') + otherDocs;
@@ -138,12 +155,18 @@ class Parser {
                 console.log(`Warning: Didn't find object for ${doclet.longname}`);
                 continue;
             }
+            else if (Array.isArray(obj)) {
+                obj = obj[doclet.index ? doclet.index : 0];
+            }
             if (!doclet.memberof) {
                 this.topLevel.push(obj);
             }
             else {
-                let isNamespaceMember = doclet.kind === 'class' || doclet.kind === 'typedef' || doclet.kind == 'namespace' || doclet.isEnum;
+                let isNamespaceMember = doclet.kind === 'class' || doclet.kind == 'interface' || doclet.kind === 'typedef' || doclet.kind == 'namespace' || doclet.isEnum;
                 let parent = isNamespaceMember ? this.namespaces[doclet.memberof] : (this.objects[doclet.memberof] || this.namespaces[doclet.memberof]);
+                if (Array.isArray(parent)) {
+                    parent = parent[0];
+                }
                 //TODO: this whole section should be removed once stable
                 if (!parent) {
                     console.log(`${doclet.longname} in ${doclet.meta.filename}@${doclet.meta.lineno} has parent '${doclet.memberof}' that is not defined.`);
@@ -152,6 +175,9 @@ class Parser {
                     while (parts.length > 0 && this.objects[parts.join('.')] == null)
                         newParts.unshift(parts.pop());
                     parent = this.objects[parts.join('.')];
+                    if (Array.isArray(parent)) {
+                        parent = parent[0];
+                    }
                     if (parent == null) {
                         parent = dom.create.namespace(doclet.memberof);
                         this.namespaces[doclet.memberof] = parent;
@@ -199,6 +225,9 @@ class Parser {
                 console.log(`Didn't find type ${doclet.longname} ???`);
                 continue;
             }
+            else if (Array.isArray(obj)) {
+                obj = obj[doclet.index ? doclet.index : 0];
+            }
             if (!obj._parent)
                 continue;
             if (doclet.inherited) { // remove inherited members if they aren't from an interface
@@ -215,7 +244,10 @@ class Parser {
     resolveParents(docs) {
         for (let doclet of docs) {
             let obj = this.objects[doclet.longname];
-            if (!obj || doclet.kind !== 'class')
+            if (Array.isArray(obj)) {
+                obj = obj[doclet.index ? doclet.index : 0];
+            }
+            if (!obj || (doclet.kind !== 'class' && doclet.kind !== 'interface'))
                 continue;
             let o = obj;
             // resolve augments
@@ -226,14 +258,18 @@ class Parser {
                     let baseType = this.objects[wrappingName];
                     if (!baseType) {
                         console.log(`ERROR: Did not find base type: ${augment} for ${doclet.longname}`);
+                        continue;
                     }
-                    else {
+                    if (o.kind === 'class') {
                         if (baseType.kind == 'class') {
                             o.baseType = dom.create.class(name);
                         }
                         else {
                             o.implements.push(dom.create.interface(name));
                         }
+                    }
+                    else {
+                        o.baseTypes.push(dom.create.interface(name));
                     }
                 }
             }
@@ -275,7 +311,7 @@ class Parser {
             doclet.description = doclet.classdesc.replace(regexEndLine, '$1\n'); // make sure docs will be added
         return obj;
     }
-    createInterface(doclet) {
+    createMixinInterface(doclet) {
         return dom.create.interface(doclet.name);
     }
     createMember(doclet) {
@@ -305,6 +341,11 @@ class Parser {
         this.setParams(doclet, obj);
         this.processGeneric(doclet, obj, obj.parameters);
         this.processFlags(doclet, obj);
+        return obj;
+    }
+    createInterface(doclet) {
+        // console.log(doclet);
+        const obj = dom.create.interface(doclet.name);
         return obj;
     }
     createTypedef(doclet) {
