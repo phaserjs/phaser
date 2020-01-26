@@ -35,7 +35,9 @@ var Rectangle = require('../geom/rectangle');
  * @param {integer} baseHeight - The base height of the tile in pixels (in pixels). Tiled maps
  * support multiple tileset sizes within one map, but they are still placed at intervals of the
  * base tile height.
+ * @param {string} orientation - The Tilemap's orientation
  */
+
 var Tile = new Class({
 
     Mixins: [
@@ -46,7 +48,7 @@ var Tile = new Class({
 
     initialize:
 
-    function Tile (layer, index, x, y, width, height, baseWidth, baseHeight)
+    function Tile (layer, index, x, y, width, height, baseWidth, baseHeight, orientation)
     {
         /**
          * The LayerData in the Tilemap data that this tile belongs to.
@@ -274,6 +276,14 @@ var Tile = new Class({
          * @since 3.0.0
          */
         this.physics = {};
+ /**
+         * An empty object where physics-engine specific information (e.g. bodies) may be stored.
+         *
+         * @name Phaser.Tilemaps.Tile#orientation
+         * @type {string}
+         * @since 3.2.PR_svipal
+         */
+        this.orientation = orientation
     },
 
     /**
@@ -709,9 +719,16 @@ var Tile = new Class({
         // Tiled places tiles on a grid of baseWidth x baseHeight. The origin for a tile is the
         // bottom left, while the Phaser renderer assumes the origin is the top left. The y
         // coordinate needs to be adjusted by the difference.
-        this.pixelX = this.x * this.baseWidth;
-        this.pixelY = this.y * this.baseHeight;
-
+        if (this.orientation = "orthogonal") {
+            this.pixelX = this.x * this.baseWidth;
+            this.pixelY = this.y * this.baseHeight;
+        } else if  (this.orientation = "isometric") {
+            console.log("isopix")
+            // once we get the 'top' of the losange we need to remove half of the tile width.
+            this.pixelX = (this.x - this.y) * this.baseWidth / 2;
+            this.pixelY = (this.x + this.y) * this.baseHeight / 2;
+        } 
+        
         // this.pixelY = this.y * this.baseHeight - (this.height - this.baseHeight);
 
         return this;

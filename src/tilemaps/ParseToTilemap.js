@@ -66,12 +66,15 @@ var ParseToTilemap = function (scene, key, tileWidth, tileHeight, width, height,
 
     if (mapData === null)
     {
+        console.log("null mapdata")
         mapData = new MapData({
             tileWidth: tileWidth,
             tileHeight: tileHeight,
             width: width,
             height: height
         });
+    } else {
+        console.log(mapData.orientation)
     }
 
     return new Tilemap(scene, mapData);
