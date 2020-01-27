@@ -7,6 +7,8 @@
 * `Line.GetEasedPoints` is a new function that will take a Line, a quantity, and an ease function, and returns an array of points where each point has been spaced out across the length of the Line based on the ease function given.
 * `XHRSettings.withCredentials` is a new boolean property that controls the `withCredentials` setting of the XHR Request made by the Loader. It indicates whether or not cross-site Access-Control requests should be made using credentials such as cookies, authorization headers or TLS client certificates. You can set this on a per-file basis, or global in the Game Config.
 * `Config.loaderWithCredentials` is the new global setting for `XHRSettings.withCredentials`.
+* `Camera.renderToGame` is a new property used in conjunction with `renderToTexture`. It controls if the Camera should still render to the Game canvas after rendering to its own texture or not. By default, it will render to both, but you can now toggle this at run-time.
+* `Camera.setRenderToTexture` has a new optional parameter `renderToGame` which sets the `Camera.renderToGame` property, controlling if the Camera should render to both its texture and the Game canvas, or just its texture.
 
 ### Updates
 
