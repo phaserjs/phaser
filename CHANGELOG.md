@@ -11,6 +11,7 @@
 ### Updates
 
 * `XHRLoader` will now use the `XHRSettings.withCredentials` as set in the file or global loader config.
+* `Animation.setCurrentFrame` will no longer try to call `setOrigina` or `updateDisplayOrigin` if the Game Object doesn't have the Origin component, preventing unknown function errors.
 
 ### Bug Fixes
 
