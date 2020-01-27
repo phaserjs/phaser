@@ -1940,33 +1940,36 @@ var WebGLRenderer = new Class({
 
             camera.emit(CameraEvents.POST_RENDER, camera);
 
-            TextureTintPipeline.projOrtho(0, TextureTintPipeline.width, TextureTintPipeline.height, 0, -1000.0, 1000.0);
+            if (camera.renderToGame)
+            {
+                TextureTintPipeline.projOrtho(0, TextureTintPipeline.width, TextureTintPipeline.height, 0, -1000.0, 1000.0);
 
-            var getTint = Utils.getTintAppendFloatAlpha;
-
-            var pipeline = (camera.pipeline) ? camera.pipeline : TextureTintPipeline;
-
-            pipeline.batchTexture(
-                camera,
-                camera.glTexture,
-                camera.width, camera.height,
-                camera.x, camera.y,
-                camera.width, camera.height,
-                camera.zoom, camera.zoom,
-                camera.rotation,
-                camera.flipX, !camera.flipY,
-                1, 1,
-                0, 0,
-                0, 0, camera.width, camera.height,
-                getTint(camera._tintTL, camera._alphaTL),
-                getTint(camera._tintTR, camera._alphaTR),
-                getTint(camera._tintBL, camera._alphaBL),
-                getTint(camera._tintBR, camera._alphaBR),
-                (camera._isTinted && camera.tintFill),
-                0, 0,
-                this.defaultCamera,
-                null
-            );
+                var getTint = Utils.getTintAppendFloatAlpha;
+    
+                var pipeline = (camera.pipeline) ? camera.pipeline : TextureTintPipeline;
+    
+                pipeline.batchTexture(
+                    camera,
+                    camera.glTexture,
+                    camera.width, camera.height,
+                    camera.x, camera.y,
+                    camera.width, camera.height,
+                    camera.zoom, camera.zoom,
+                    camera.rotation,
+                    camera.flipX, !camera.flipY,
+                    1, 1,
+                    0, 0,
+                    0, 0, camera.width, camera.height,
+                    getTint(camera._tintTL, camera._alphaTL),
+                    getTint(camera._tintTR, camera._alphaTR),
+                    getTint(camera._tintBL, camera._alphaBL),
+                    getTint(camera._tintBR, camera._alphaBR),
+                    (camera._isTinted && camera.tintFill),
+                    0, 0,
+                    this.defaultCamera,
+                    null
+                );
+            }
 
             //  Force clear the current texture so that items next in the batch (like Graphics) don't try and use it
             this.setBlankTexture(true);
