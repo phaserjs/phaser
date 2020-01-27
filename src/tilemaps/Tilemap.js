@@ -135,6 +135,7 @@ var Tilemap = new Class({
          * @since 3.0.0
          */
         this.orientation = mapData.orientation;
+        console.log("map orientation :" + this.orientation)
 
         /**
          * The render (draw) order of the map data (as specified in Tiled), usually 'right-down'.

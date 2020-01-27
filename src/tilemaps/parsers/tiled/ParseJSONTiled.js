@@ -32,11 +32,14 @@ var AssignTileProperties = require('./AssignTileProperties');
  */
 var ParseJSONTiled = function (name, json, insertNull)
 {
-    // if (json.orientation !== 'orthogonal')
-    // {
-    //     console.warn('Only orthogonal map types are supported in this version of Phaser');
-    //     return null;
-    // }
+    if (json.orientation == 'isometric')
+    {
+        console.warn('isometric map types are WIP  in this version of Phaser');
+        
+    } else if (json.orientation == 'orthogonal') {
+        console.warn('Only orthogonal map types are supported in this version of Phaser');
+        return null;
+    }
 
     //  Map data will consist of: layers, objects, images, tilesets, sizes
     var mapData = new MapData({

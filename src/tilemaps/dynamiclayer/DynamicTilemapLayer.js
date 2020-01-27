@@ -750,7 +750,7 @@ var DynamicTilemapLayer = new Class({
      */
     putTileAt: function (tile, tileX, tileY, recalculateFaces)
     {
-        return TilemapComponents.PutTileAt(tile, tileX, tileY, recalculateFaces, this.layer);
+        return TilemapComponents.PutTileAt(tile, tileX, tileY, recalculateFaces, this.layer, this.tilemap.orientation);
     },
 
     /**
@@ -794,7 +794,7 @@ var DynamicTilemapLayer = new Class({
      */
     putTilesAt: function (tilesArray, tileX, tileY, recalculateFaces)
     {
-        TilemapComponents.PutTilesAt(tilesArray, tileX, tileY, recalculateFaces, this.layer);
+        TilemapComponents.PutTilesAt(tilesArray, tileX, tileY, recalculateFaces, this.layer, this.tilemap.orientation);
 
         return this;
     },

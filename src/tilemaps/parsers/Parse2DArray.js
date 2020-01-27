@@ -34,7 +34,7 @@ var Parse2DArray = function (name, data, tileWidth, tileHeight, insertNull)
         tileWidth: tileWidth,
         tileHeight: tileHeight
     });
-
+    console.log("parsing 2D array")
     var mapData = new MapData({
         name: name,
         tileWidth: tileWidth,

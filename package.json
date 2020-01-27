@@ -22,6 +22,8 @@
     "buildfb": "webpack --config config/webpack.fb.config.js",
     "watchfb": "webpack --config config/webpack.fb.config.js --watch",
     "dist": "webpack --config config/webpack.dist.config.js",
+    "distT": "webpack --config config/webpack.dist.config.js && npm run toT",
+    "toT": "@powershell Copy-Item ./dist/phaser.min.js ../phasertest/phaser.min.js",
     "distfb": "webpack --config config/webpack.fb.dist.config.js",
     "distfull": "npm run dist && npm run distfb",
     "plugin.cam3d": "webpack --config plugins/camera3d/webpack.config.js",

@@ -34,7 +34,7 @@ var WorldToTileXY = function (worldX, worldY, snapToFloor, point, camera, layer,
     if (orientation === "orthogonal") {    
         point.x = WorldToTileX(worldX, snapToFloor, camera, layer, orientation);
         point.y = WorldToTileY(worldY, snapToFloor, camera, layer, orientation);
-    } else if (orientation == 'isometric') {
+    } else if (orientation === 'isometric') {
         
         var tileWidth = layer.baseTileWidth;
         var tileHeight = layer.baseTileHeight;

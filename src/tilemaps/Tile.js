@@ -77,6 +77,7 @@ var Tile = new Class({
          * @since 3.0.0
          */
         this.x = x;
+        console.log("tile x : " + x)
 
         /**
          * The y map coordinate of this tile in tile units.
@@ -284,6 +285,7 @@ var Tile = new Class({
          * @since 3.2.PR_svipal
          */
         this.orientation = orientation
+        console.log("tile orientation : "+this.orientation)
     },
 
     /**
@@ -719,14 +721,16 @@ var Tile = new Class({
         // Tiled places tiles on a grid of baseWidth x baseHeight. The origin for a tile is the
         // bottom left, while the Phaser renderer assumes the origin is the top left. The y
         // coordinate needs to be adjusted by the difference.
-        if (this.orientation = "orthogonal") {
+        if (this.orientation === "orthogonal" || true) {
             this.pixelX = this.x * this.baseWidth;
             this.pixelY = this.y * this.baseHeight;
-        } else if  (this.orientation = "isometric") {
-            console.log("isopix")
+            console.log("orthopix "+this.pixelX+","+this.pixelY)
+        } else /*if  (this.orientation === "isometric")*/ {
+            
             // once we get the 'top' of the losange we need to remove half of the tile width.
-            this.pixelX = (this.x - this.y) * this.baseWidth / 2;
-            this.pixelY = (this.x + this.y) * this.baseHeight / 2;
+            this.pixelX = (this.x - this.y) * this.baseWidth *0.5;
+            this.pixelY = (this.x + this.y) * this.baseHeight *0.5;
+            console.log("isopix "+this.pixelX+","+this.pixelY)
         } 
         
         // this.pixelY = this.y * this.baseHeight - (this.height - this.baseHeight);
