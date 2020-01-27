@@ -269,18 +269,6 @@ var Rope = new Class({
     },
 
     /**
-     * NOOP. Included to allow animations to play.
-     *
-     * @method Phaser.GameObjects.Rope#updateDisplayOrigin
-     * @private
-     * @since 3.23.0
-     */
-    updateDisplayOrigin: function ()
-    {
-        //  NOOP
-    },
-
-    /**
      * Start playing the given animation.
      *
      * @method Phaser.GameObjects.Rope#play
@@ -421,7 +409,7 @@ var Rope = new Class({
      * the first Rope segment and on, until it runs out of values. This allows you to control the alpha values at all
      * vertices in the Rope.
      * 
-     * Note this method is called `setAlphas` (plural) and not `setAlpha`, which is a NOOP.
+     * Note this method is called `setAlphas` (plural) and not `setAlpha`.
      * 
      * @method Phaser.GameObjects.Rope#setAlphas
      * @since 3.23.0
@@ -727,7 +715,8 @@ var Rope = new Class({
         var u1 = this.frame.u1;
         var v1 = this.frame.v1;
 
-        var part = (u1 - u0) / (total - 1);
+        var partH = (u1 - u0) / (total - 1);
+        var partV = (v1 - v0) / (total - 1);
    
         for (var i = 0; i < total; i++)
         {
@@ -742,13 +731,13 @@ var Rope = new Class({
             {
                 if (this._flipX)
                 {
-                    uv0 = u1 - (i * part);
-                    uv2 = u1 - (i * part);
+                    uv0 = u1 - (i * partH);
+                    uv2 = u1 - (i * partH);
                 }
                 else
                 {
-                    uv0 = u0 + (i * part);
-                    uv2 = u0 + (i * part);
+                    uv0 = u0 + (i * partH);
+                    uv2 = u0 + (i * partH);
                 }
 
                 if (this._flipY)
@@ -777,13 +766,13 @@ var Rope = new Class({
 
                 if (this._flipY)
                 {
-                    uv1 = v1 - (i * part);
-                    uv3 = v1 - (i * part);
+                    uv1 = v1 - (i * partV);
+                    uv3 = v1 - (i * partV);
                 }
                 else
                 {
-                    uv1 = v0 + (i * part);
-                    uv3 = v0 + (i * part);
+                    uv1 = v0 + (i * partV);
+                    uv3 = v0 + (i * partV);
                 }
             }
 
