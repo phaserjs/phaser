@@ -962,7 +962,7 @@ var Rope = new Class({
         {
             this.debugCallback = null;
         }
-        else if (callback)
+        else if (!callback)
         {
             this.debugCallback = this.renderDebugVerts;
         }
