@@ -717,12 +717,12 @@ var Rope = new Class({
 
         this.updateUVs();
 
-        if (colors !== undefined)
+        if (colors !== undefined && colors !== null)
         {
             this.setColors(colors);
         }
 
-        if (alphas !== undefined)
+        if (alphas !== undefined && alphas !== null)
         {
             this.setAlphas(alphas);
         }
