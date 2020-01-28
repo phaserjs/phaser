@@ -306,6 +306,7 @@ var MatterTileBody = new Class({
     {
         this.removeBody();
         this.tile.physics.matterBody = undefined;
+        this.removeAllListeners();
     }
 
 });
