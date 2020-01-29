@@ -26,3 +26,17 @@
  * @param {Phaser.Physics.Matter.Events.BeforeAddEvent} event - The Add Event object.
  */
 module.exports = 'beforeadd';
+
+/**
+ * The Matter Physics Before Add Event.
+ * 
+ * This event is dispatched by a Matter Physics World instance at the start of the process when a new Body
+ * or Constraint is being added to the world.
+ * 
+ * Listen to it from a Scene using: `this.matter.world.on('beforeadd', listener)`.
+ *
+ * @method Phaser.Types.Physics.Matter.WorldEventsMap#beforeadd
+ * @since 3.22.0
+ * 
+ * @param {Phaser.Physics.Matter.Events.BeforeAddEvent} event - The Add Event object.
+ */

@@ -25,3 +25,16 @@
  * @param {Phaser.Physics.Matter.Events.BeforeUpdateEvent} event - The Update Event object.
  */
 module.exports = 'beforeupdate';
+
+/**
+ * The Matter Physics Before Update Event.
+ * 
+ * This event is dispatched by a Matter Physics World instance right before all the collision processing takes place.
+ * 
+ * Listen to it from a Scene using: `this.matter.world.on('beforeupdate', listener)`.
+ *
+ * @method Phaser.Types.Physics.Matter.WorldEventsMap#beforeupdate
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Physics.Matter.Events.BeforeUpdateEvent} event - The Update Event object.
+ */

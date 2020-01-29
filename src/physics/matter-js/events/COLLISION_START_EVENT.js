@@ -29,3 +29,19 @@
  * @param {MatterJS.BodyType} bodyB - The second body of the first colliding pair. The `event.pairs` array may contain more colliding bodies.
  */
 module.exports = 'collisionstart';
+
+/**
+ * The Matter Physics Collision Start Event.
+ * 
+ * This event is dispatched by a Matter Physics World instance after the engine has updated.
+ * It provides a list of all pairs that have started to collide in the current tick (if any).
+ * 
+ * Listen to it from a Scene using: `this.matter.world.on('collisionstart', listener)`.
+ *
+ * @method Phaser.Types.Physics.Matter.WorldEventsMap#collisionstart
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Physics.Matter.Events.CollisionStartEvent} event - The Collision Event object.
+ * @param {MatterJS.BodyType} bodyA - The first body of the first colliding pair. The `event.pairs` array may contain more colliding bodies.
+ * @param {MatterJS.BodyType} bodyB - The second body of the first colliding pair. The `event.pairs` array may contain more colliding bodies.
+ */

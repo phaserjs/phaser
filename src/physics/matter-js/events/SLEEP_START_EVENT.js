@@ -25,3 +25,17 @@
  * @param {MatterJS.BodyType} body - The body that has gone to sleep.
  */
 module.exports = 'sleepstart';
+
+/**
+ * The Matter Physics Sleep Start Event.
+ * 
+ * This event is dispatched by a Matter Physics World instance when a Body goes to sleep.
+ * 
+ * Listen to it from a Scene using: `this.matter.world.on('sleepstart', listener)`.
+ *
+ * @method Phaser.Types.Physics.Matter.WorldEventsMap#sleepstart
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Physics.Matter.Events.SleepStartEvent} event - The Sleep Event object.
+ * @param {MatterJS.BodyType} body - The body that has gone to sleep.
+ */

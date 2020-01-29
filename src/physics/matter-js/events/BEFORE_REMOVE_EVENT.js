@@ -26,3 +26,17 @@
  * @param {Phaser.Physics.Matter.Events.BeforeRemoveEvent} event - The Remove Event object.
  */
 module.exports = 'beforeremove';
+
+/**
+ * The Matter Physics Before Remove Event.
+ * 
+ * This event is dispatched by a Matter Physics World instance at the start of the process when a 
+ * Body or Constraint is being removed from the world.
+ * 
+ * Listen to it from a Scene using: `this.matter.world.on('beforeremove', listener)`.
+ *
+ * @method Phaser.Types.Physics.Matter.WorldEventsMap#beforeremove
+ * @since 3.22.0
+ * 
+ * @param {Phaser.Physics.Matter.Events.BeforeRemoveEvent} event - The Remove Event object.
+ */

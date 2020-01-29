@@ -25,3 +25,16 @@
  * @param {Phaser.Physics.Matter.Events.AfterUpdateEvent} event - The Update Event object.
  */
 module.exports = 'afterupdate';
+
+/**
+ * The Matter Physics After Update Event.
+ * 
+ * This event is dispatched by a Matter Physics World instance after the engine has updated and all collision events have resolved.
+ * 
+ * Listen to it from a Scene using: `this.matter.world.on('afterupdate', listener)`.
+ *
+ * @method Phaser.Types.Physics.Matter.WorldEventsMap#afterupdate
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Physics.Matter.Events.AfterUpdateEvent} event - The Update Event object.
+ */

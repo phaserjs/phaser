@@ -26,3 +26,17 @@
  * @param {Phaser.Physics.Matter.Events.AfterAddEvent} event - The Add Event object.
  */
 module.exports = 'afteradd';
+
+/**
+ * The Matter Physics After Add Event.
+ * 
+ * This event is dispatched by a Matter Physics World instance at the end of the process when a new Body
+ * or Constraint has just been added to the world.
+ * 
+ * Listen to it from a Scene using: `this.matter.world.on('afteradd', listener)`.
+ *
+ * @method Phaser.Types.Physics.Matter.WorldEventsMap#afteradd
+ * @since 3.22.0
+ * 
+ * @param {Phaser.Physics.Matter.Events.AfterAddEvent} event - The Add Event object.
+ */

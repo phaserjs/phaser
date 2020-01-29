@@ -29,3 +29,19 @@
  * @param {MatterJS.BodyType} bodyB - The second body of the first colliding pair. The `event.pairs` array may contain more colliding bodies.
  */
 module.exports = 'collisionend';
+
+/**
+ * The Matter Physics Collision End Event.
+ * 
+ * This event is dispatched by a Matter Physics World instance after the engine has updated.
+ * It provides a list of all pairs that have finished colliding in the current tick (if any).
+ * 
+ * Listen to it from a Scene using: `this.matter.world.on('collisionend', listener)`.
+ *
+ * @method Phaser.Types.Physics.Matter.WorldEventsMap#collisionend
+ * @since 3.0.0
+ * 
+ * @param {Phaser.Physics.Matter.Events.CollisionEndEvent} event - The Collision Event object.
+ * @param {MatterJS.BodyType} bodyA - The first body of the first colliding pair. The `event.pairs` array may contain more colliding bodies.
+ * @param {MatterJS.BodyType} bodyB - The second body of the first colliding pair. The `event.pairs` array may contain more colliding bodies.
+ */
