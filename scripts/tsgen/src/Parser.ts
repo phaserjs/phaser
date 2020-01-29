@@ -264,6 +264,10 @@ export class Parser {
 
             if (doclet.inherited) {// remove inherited members if they aren't from an interface
                 let from = this.objects[doclet.inherits];
+                if (Array.isArray(from)) {
+                    from = from[doclet.index ? doclet.index : 0];
+                }
+
                 if (!from || !(<any>from)._parent)
                     throw `'${doclet.longname}' should inherit from '${doclet.inherits}', which is not defined.`;
 
