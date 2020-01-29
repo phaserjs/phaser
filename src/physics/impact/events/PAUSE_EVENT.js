@@ -15,3 +15,14 @@
  * @since 3.0.0
  */
 module.exports = 'pause';
+
+/**
+ * The Impact Physics World Pause Event.
+ * 
+ * This event is dispatched by an Impact Physics World instance when it is paused.
+ * 
+ * Listen to it from a Scene using: `this.impact.world.on('pause', listener)`.
+ *
+ * @method Phaser.Types.Physics.Impact.WorldEventsMap#pause
+ * @since 3.0.0
+ */

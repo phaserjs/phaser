@@ -15,3 +15,14 @@
  * @since 3.0.0
  */
 module.exports = 'resume';
+
+/**
+ * The Impact Physics World Resume Event.
+ * 
+ * This event is dispatched by an Impact Physics World instance when it resumes from a paused state.
+ * 
+ * Listen to it from a Scene using: `this.impact.world.on('resume', listener)`.
+ *
+ * @method Phaser.Types.Physics.Impact.WorldEventsMap#resume
+ * @since 3.0.0
+ */
