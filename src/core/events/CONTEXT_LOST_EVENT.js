@@ -15,3 +15,14 @@
  * @since 3.19.0
  */
 module.exports = 'contextlost';
+
+/**
+ * The Game Context Lost Event.
+ * 
+ * This event is dispatched by the Game if the WebGL Renderer it is using encounters a WebGL Context Lost event from the browser.
+ * 
+ * The partner event is `CONTEXT_RESTORED`.
+ *
+ * @method Phaser.Types.Core.GameEventsMap#contextlost
+ * @since 3.19.0
+ */

@@ -15,3 +15,14 @@
  * @since 3.19.0
  */
 module.exports = 'contextrestored';
+
+/**
+ * The Game Context Restored Event.
+ * 
+ * This event is dispatched by the Game if the WebGL Renderer it is using encounters a WebGL Context Restored event from the browser.
+ * 
+ * The partner event is `CONTEXT_LOST`.
+ *
+ * @method Phaser.Types.Core.GameEventsMap#contextrestored
+ * @since 3.19.0
+ */

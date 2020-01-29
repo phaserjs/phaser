@@ -13,3 +13,12 @@
  * @since 3.0.0
  */
 module.exports = 'pause';
+
+/**
+ * The Game Pause Event.
+ * 
+ * This event is dispatched when the Game loop enters a paused state, usually as a result of the Visibility Handler.
+ *
+ * @method Phaser.Types.Core.GameEventsMap#pause
+ * @since 3.0.0
+ */

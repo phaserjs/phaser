@@ -14,3 +14,13 @@
  * @since 3.0.0
  */
 module.exports = 'ready';
+
+/**
+ * The Game Ready Event.
+ * 
+ * This event is dispatched when the Phaser Game instance has finished booting, the Texture Manager is fully ready,
+ * and all local systems are now able to start.
+ *
+ * @method Phaser.Types.Core.GameEventsMap#ready
+ * @since 3.0.0
+ */

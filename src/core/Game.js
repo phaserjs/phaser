@@ -148,7 +148,7 @@ var Game = new Class({
          * An Event Emitter which is used to broadcast game-level events from the global systems.
          *
          * @name Phaser.Game#events
-         * @type {Phaser.Events.EventEmitter}
+         * @type {Phaser.Types.Core.GameEventsEmitter}
          * @since 3.0.0
          */
         this.events = new EventEmitter();
