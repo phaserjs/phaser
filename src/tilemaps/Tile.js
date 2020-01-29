@@ -732,13 +732,12 @@ var Tile = new Class({
             this.pixelX = this.x * this.baseWidth;
             this.pixelY = this.y * this.baseHeight;
             console.log("orthopix "+this.pixelX+","+this.pixelY)
-        } else if  (this.orientation === "isometric" ) {
-            mapSize = 10
-            // once we get the 'top' of the losange we need to remove half of the tile width.
-            this.pixelX = (this.baseWidth/2)*mapSize + (this.x - this.y) * this.baseWidth *0.5;
+        } else if  (this.orientation === "isometric" ||true) {
+            // for the image to be centered we have to move the image to the right.
+            this.pixelX = this.layer.widthInPixels/2 + (this.x - this.y) * this.baseWidth *0.5;
             this.pixelY = (this.x + this.y) * this.baseHeight *0.5;
             console.log("isopix "+this.pixelX+","+this.pixelY)
-            console.log(this)
+            // console.log(this)
         } else {
             console.log("this :" + this)
             console.log("tile orientation 3: "+this.orientation)
