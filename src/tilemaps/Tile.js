@@ -733,8 +733,9 @@ var Tile = new Class({
             this.pixelY = this.y * this.baseHeight;
             console.log("orthopix "+this.pixelX+","+this.pixelY)
         } else if  (this.orientation === "isometric" ||true) {
-            // for the image to be centered we have to move the image to the right.
-            this.pixelX = this.layer.widthInPixels/2 + (this.x - this.y) * this.baseWidth *0.5;
+            // for the image to be centered we have to move the image to the right with the camera !
+            // this is crucial for wordtotile, tiletoworld to work.
+            this.pixelX = (this.x - this.y) * this.baseWidth *0.5;
             this.pixelY = (this.x + this.y) * this.baseHeight *0.5;
             console.log("isopix "+this.pixelX+","+this.pixelY)
             // console.log(this)
