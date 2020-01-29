@@ -25,7 +25,7 @@ var WorldToTileY = require('./WorldToTileY');
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * @param {string} orientation - The Tilemap's orientation
- *  //Instinct : mistake to put it there
+ * 
  * @return {Phaser.Tilemaps.Tile} The Tile object that was created or added to this map.
  */
 var PutTileAtWorldXY = function (tile, worldX, worldY, recalculateFaces, camera, layer, orientation)

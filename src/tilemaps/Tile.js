@@ -48,8 +48,9 @@ var Tile = new Class({
 
     initialize:
 
-    function Tile (layer, index, x, y, width, height, baseWidth, baseHeight, orientation)
+    function Tile (layer, index, x, y, width, height, orientation, baseWidth, baseHeight )
     {
+        console.log(this)
         /**
          * The LayerData in the Tilemap data that this tile belongs to.
          *
@@ -77,7 +78,6 @@ var Tile = new Class({
          * @since 3.0.0
          */
         this.x = x;
-        console.log("tile x : " + x)
 
         /**
          * The y map coordinate of this tile in tile units.
@@ -114,7 +114,7 @@ var Tile = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.baseWidth = (baseWidth !== undefined) ? baseWidth : width;
+        this.baseWidth = (baseWidth !== undefined && !baseWidth.isNaN()) ? baseWidth : width;
 
         /**
          * The map's base height of a tile in pixels. Tiled maps support multiple tileset sizes
@@ -124,7 +124,7 @@ var Tile = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.baseHeight = (baseHeight !== undefined) ? baseHeight : height;
+        this.baseHeight = (baseHeight !== undefined && !baseWidth.isNaN()) ? baseHeight : height;
 
         /**
          * The x coordinate of the top left of this tile in pixels. This is relative to the top left
@@ -284,8 +284,10 @@ var Tile = new Class({
          * @type {string}
          * @since 3.2.PR_svipal
          */
-        this.orientation = orientation
-        console.log("tile orientation : "+this.orientation)
+        // we default to orthogonal
+        this.orientation = (orientation !== undefined) ? orientation : "orthogonal";
+
+        // console.log("tile orientation : "+this.orientation)
     },
 
     /**
@@ -721,18 +723,24 @@ var Tile = new Class({
         // Tiled places tiles on a grid of baseWidth x baseHeight. The origin for a tile is the
         // bottom left, while the Phaser renderer assumes the origin is the top left. The y
         // coordinate needs to be adjusted by the difference.
-        if (this.orientation === "orthogonal" || true) {
+        console.log("width" + this.baseWidth)
+        console.log("height" + this.baseHeight)
+        if (this.orientation === "orthogonal") {
             this.pixelX = this.x * this.baseWidth;
             this.pixelY = this.y * this.baseHeight;
             console.log("orthopix "+this.pixelX+","+this.pixelY)
-        } else /*if  (this.orientation === "isometric")*/ {
-            
+        } else if  (this.orientation === "isometric") {
+            mapSize = 10
             // once we get the 'top' of the losange we need to remove half of the tile width.
-            this.pixelX = (this.x - this.y) * this.baseWidth *0.5;
+            this.pixelX = (this.baseWidth/2)*mapSize + (this.x - this.y) * this.baseWidth *0.5;
             this.pixelY = (this.x + this.y) * this.baseHeight *0.5;
             console.log("isopix "+this.pixelX+","+this.pixelY)
-        } 
-        
+            console.log(this)
+        } else {
+            console.log(this)
+            console.log("tile orientation : "+this.orientation)
+        }
+
         // this.pixelY = this.y * this.baseHeight - (this.height - this.baseHeight);
 
         return this;

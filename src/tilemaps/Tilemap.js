@@ -513,7 +513,8 @@ var Tilemap = new Class({
 
             for (var tileX = 0; tileX < width; tileX++)
             {
-                row.push(new Tile(layerData, -1, tileX, tileY, tileWidth, tileHeight, this.tileWidth, this.tileHeight, this.orientation));
+                console.log("Tile tm", tileX, tileY, tileWidth, tileHeight, this.orientation, this.tileWidth, this.tileHeight)
+                row.push(new Tile(layerData, -1, tileX, tileY, tileWidth, tileHeight, this.orientation, this.tileWidth, this.tileHeight));
             }
 
             layerData.data.push(row);
