@@ -18,3 +18,17 @@
  * @param {Phaser.GameObjects.Video} video - The Video Game Object which timed out.
  */
 module.exports = 'timeout';
+
+/**
+ * The Video Game Object Timeout Event.
+ * 
+ * This event is dispatched when a Video has exhausted its allocated time while trying to connect to a video
+ * source to start playback.
+ * 
+ * Listen for it from a Video Game Object instance using `Video.on('timeout', listener)`.
+ *
+ * @method Phaser.Types.GameObjects.Video.VideoEventsMap#timeout
+ * @since 3.20.0
+ * 
+ * @param {Phaser.GameObjects.Video} video - The Video Game Object which timed out.
+ */

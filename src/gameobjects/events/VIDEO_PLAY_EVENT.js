@@ -20,3 +20,19 @@
  * @param {Phaser.GameObjects.Video} video - The Video Game Object which started playback.
  */
 module.exports = 'play';
+
+/**
+ * The Video Game Object Play Event.
+ * 
+ * This event is dispatched when a Video begins playback. For videos that do not require
+ * interaction unlocking, this is usually as soon as the `Video.play` method is called.
+ * However, for videos that require unlocking, it is fired once playback begins after
+ * they've been unlocked.
+ * 
+ * Listen for it from a Video Game Object instance using `Video.on('play', listener)`.
+ *
+ * @method Phaser.Types.GameObjects.Video.VideoEventsMap#play
+ * @since 3.20.0
+ * 
+ * @param {Phaser.GameObjects.Video} video - The Video Game Object which started playback.
+ */

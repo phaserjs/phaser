@@ -18,3 +18,17 @@
  * @param {Phaser.GameObjects.Video} video - The Video Game Object which raised the event.
  */
 module.exports = 'unlocked';
+
+/**
+ * The Video Game Object Unlocked Event.
+ * 
+ * This event is dispatched when a Video that was prevented from playback due to the browsers
+ * Media Engagement Interaction policy, is unlocked by a user gesture.
+ * 
+ * Listen for it from a Video Game Object instance using `Video.on('unlocked', listener)`.
+ *
+ * @method Phaser.Types.GameObjects.Video.VideoEventsMap#unlocked
+ * @since 3.20.0
+ * 
+ * @param {Phaser.GameObjects.Video} video - The Video Game Object which raised the event.
+ */
