@@ -160,7 +160,7 @@ var ParticleEmitterManager = new Class({
      * @param {string} key - The key of the texture to be used, as stored in the Texture Manager.
      * @param {(string|integer)} [frame] - The name or index of the frame within the Texture.
      *
-     * @return {Phaser.GameObjects.Particles.ParticleEmitterManager} This Emitter Manager.
+     * @return {this} This Emitter Manager.
      */
     setTexture: function (key, frame)
     {
@@ -181,7 +181,7 @@ var ParticleEmitterManager = new Class({
      *
      * @param {(string|integer)} [frame] - The name or index of the frame within the Texture.
      *
-     * @return {Phaser.GameObjects.Particles.ParticleEmitterManager} This Emitter Manager.
+     * @return {this} This Emitter Manager.
      */
     setFrame: function (frame)
     {
@@ -212,7 +212,7 @@ var ParticleEmitterManager = new Class({
      * @param {(Phaser.Textures.Frame|Phaser.Textures.Frame[])} frames - The texture frames.
      * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - The particle emitter to modify.
      *
-     * @return {Phaser.GameObjects.Particles.ParticleEmitterManager} This Emitter Manager.
+     * @return {this} This Emitter Manager.
      */
     setEmitterFrames: function (frames, emitter)
     {
@@ -332,7 +332,7 @@ var ParticleEmitterManager = new Class({
      * @param {number} [x] - The x-coordinate to to emit particles from. The default is the x-coordinate of the emitter's current location.
      * @param {number} [y] - The y-coordinate to to emit particles from. The default is the y-coordinate of the emitter's current location.
      *
-     * @return {Phaser.GameObjects.Particles.ParticleEmitterManager} This Emitter Manager.
+     * @return {this} This Emitter Manager.
      */
     emitParticle: function (count, x, y)
     {
@@ -361,7 +361,7 @@ var ParticleEmitterManager = new Class({
      * @param {number} [y] - The y-coordinate to to emit particles from. The default is the y-coordinate of the emitter's current location.
      * @param {integer} [count] - The number of particles to release from each emitter. The default is the emitter's own {@link Phaser.GameObjects.Particles.ParticleEmitter#quantity}.
      *
-     * @return {Phaser.GameObjects.Particles.ParticleEmitterManager} This Emitter Manager.
+     * @return {this} This Emitter Manager.
      */
     emitParticleAt: function (x, y, count)
     {
@@ -378,7 +378,7 @@ var ParticleEmitterManager = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitterManager#pause
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Particles.ParticleEmitterManager} This Emitter Manager.
+     * @return {this} This Emitter Manager.
      */
     pause: function ()
     {
@@ -393,7 +393,7 @@ var ParticleEmitterManager = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitterManager#resume
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Particles.ParticleEmitterManager} This Emitter Manager.
+     * @return {this} This Emitter Manager.
      */
     resume: function ()
     {

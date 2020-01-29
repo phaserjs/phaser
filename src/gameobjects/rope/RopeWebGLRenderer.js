@@ -89,6 +89,9 @@ var RopeWebGLRenderer = function (renderer, src, interpolationPercentage, camera
         src.updateVertices();
     }
 
+    var debugCallback = src.debugCallback;
+    var debugVerts = [];
+
     for (var i = 0; i < meshVerticesLength; i += 2)
     {
         var x = vertices[i + 0];
@@ -111,6 +114,17 @@ var RopeWebGLRenderer = function (renderer, src, interpolationPercentage, camera
         vertexViewU32[++vertexOffset] = getTint(colors[colorIndex], camera.alpha * (alphas[colorIndex] * alpha));
 
         colorIndex++;
+
+        if (debugCallback)
+        {
+            debugVerts[i + 0] = tx;
+            debugVerts[i + 1] = ty;
+        }
+    }
+
+    if (debugCallback)
+    {
+        debugCallback.call(src, src, meshVerticesLength, debugVerts);
     }
 
     pipeline.vertexCount += vertexCount;

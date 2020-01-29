@@ -1020,13 +1020,16 @@ var Animation = new Class({
 
         gameObject.setSizeToFrame();
 
-        if (animationFrame.frame.customPivot)
+        if (gameObject._originComponent)
         {
-            gameObject.setOrigin(animationFrame.frame.pivotX, animationFrame.frame.pivotY);
-        }
-        else
-        {
-            gameObject.updateDisplayOrigin();
+            if (animationFrame.frame.customPivot)
+            {
+                gameObject.setOrigin(animationFrame.frame.pivotX, animationFrame.frame.pivotY);
+            }
+            else
+            {
+                gameObject.updateDisplayOrigin();
+            }
         }
 
         return gameObject;

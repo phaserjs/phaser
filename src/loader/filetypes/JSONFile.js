@@ -201,7 +201,7 @@ var JSONFile = new Class({
  * @param {string} [dataKey] - When the JSON file loads only this property will be stored in the Cache.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
- * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
+ * @return {this} The Loader instance.
  */
 FileTypesManager.register('json', function (key, url, dataKey, xhrSettings)
 {

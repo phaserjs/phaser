@@ -243,7 +243,7 @@ var Graphics = new Class({
      *
      * @param {Phaser.Types.GameObjects.Graphics.Styles} options - The styles to set as defaults.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     setDefaultStyles: function (options)
     {
@@ -277,7 +277,7 @@ var Graphics = new Class({
      * @param {number} color - The stroke color.
      * @param {number} [alpha=1] - The stroke alpha.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     lineStyle: function (lineWidth, color, alpha)
     {
@@ -302,7 +302,7 @@ var Graphics = new Class({
      * @param {number} color - The fill color.
      * @param {number} [alpha=1] - The fill alpha.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     fillStyle: function (color, alpha)
     {
@@ -341,7 +341,7 @@ var Graphics = new Class({
      * @param {integer} bottomRight - The tint being applied to the bottom-right of the Game Object.
      * @param {number} [alpha=1] - The fill alpha.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     fillGradientStyle: function (topLeft, topRight, bottomLeft, bottomRight, alpha)
     {
@@ -379,7 +379,7 @@ var Graphics = new Class({
      * @param {integer} bottomRight - The tint being applied to the bottom-right of the Game Object.
      * @param {number} [alpha=1] - The fill alpha.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     lineGradientStyle: function (lineWidth, topLeft, topRight, bottomLeft, bottomRight, alpha)
     {
@@ -455,7 +455,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#beginPath
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     beginPath: function ()
     {
@@ -472,7 +472,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#closePath
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     closePath: function ()
     {
@@ -489,7 +489,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#fillPath
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     fillPath: function ()
     {
@@ -509,7 +509,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#fill
      * @since 3.16.0
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     fill: function ()
     {
@@ -526,7 +526,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#strokePath
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     strokePath: function ()
     {
@@ -546,7 +546,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#stroke
      * @since 3.16.0
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     stroke: function ()
     {
@@ -565,7 +565,7 @@ var Graphics = new Class({
      *
      * @param {Phaser.Geom.Circle} circle - The circle to fill.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     fillCircleShape: function (circle)
     {
@@ -580,7 +580,7 @@ var Graphics = new Class({
      *
      * @param {Phaser.Geom.Circle} circle - The circle to stroke.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     strokeCircleShape: function (circle)
     {
@@ -597,7 +597,7 @@ var Graphics = new Class({
      * @param {number} y - The y coordinate of the center of the circle.
      * @param {number} radius - The radius of the circle.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     fillCircle: function (x, y, radius)
     {
@@ -618,7 +618,7 @@ var Graphics = new Class({
      * @param {number} y - The y coordinate of the center of the circle.
      * @param {number} radius - The radius of the circle.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     strokeCircle: function (x, y, radius)
     {
@@ -637,7 +637,7 @@ var Graphics = new Class({
      *
      * @param {Phaser.Geom.Rectangle} rect - The rectangle to fill.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     fillRectShape: function (rect)
     {
@@ -652,7 +652,7 @@ var Graphics = new Class({
      *
      * @param {Phaser.Geom.Rectangle} rect - The rectangle to stroke.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     strokeRectShape: function (rect)
     {
@@ -670,7 +670,7 @@ var Graphics = new Class({
      * @param {number} width - The width of the rectangle.
      * @param {number} height - The height of the rectangle.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     fillRect: function (x, y, width, height)
     {
@@ -693,7 +693,7 @@ var Graphics = new Class({
      * @param {number} width - The width of the rectangle.
      * @param {number} height - The height of the rectangle.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     strokeRect: function (x, y, width, height)
     {
@@ -736,7 +736,7 @@ var Graphics = new Class({
      * @param {number} height - The height of the rectangle.
      * @param {(Phaser.Types.GameObjects.Graphics.RoundedRectRadius|number)} [radius=20] - The corner radius; It can also be an object to specify different radii for corners.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     fillRoundedRect: function (x, y, width, height, radius)
     {
@@ -782,7 +782,7 @@ var Graphics = new Class({
      * @param {number} height - The height of the rectangle.
      * @param {(Phaser.Types.GameObjects.Graphics.RoundedRectRadius|number)} [radius=20] - The corner radius; It can also be an object to specify different radii for corners.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     strokeRoundedRect: function (x, y, width, height, radius)
     {
@@ -827,7 +827,7 @@ var Graphics = new Class({
      * @param {(Phaser.Geom.Point|Phaser.Math.Vector2|object)} point - The point to fill.
      * @param {number} [size=1] - The size of the square to draw.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     fillPointShape: function (point, size)
     {
@@ -846,7 +846,7 @@ var Graphics = new Class({
      * @param {number} y - The y coordinate of the point.
      * @param {number} [size=1] - The size of the square to draw.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     fillPoint: function (x, y, size)
     {
@@ -876,7 +876,7 @@ var Graphics = new Class({
      *
      * @param {Phaser.Geom.Triangle} triangle - The triangle to fill.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     fillTriangleShape: function (triangle)
     {
@@ -891,7 +891,7 @@ var Graphics = new Class({
      *
      * @param {Phaser.Geom.Triangle} triangle - The triangle to stroke.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     strokeTriangleShape: function (triangle)
     {
@@ -911,7 +911,7 @@ var Graphics = new Class({
      * @param {number} x2 - The x coordinate of the third point.
      * @param {number} y2 - The y coordinate of the third point.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     fillTriangle: function (x0, y0, x1, y1, x2, y2)
     {
@@ -936,7 +936,7 @@ var Graphics = new Class({
      * @param {number} x2 - The x coordinate of the third point.
      * @param {number} y2 - The y coordinate of the third point.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     strokeTriangle: function (x0, y0, x1, y1, x2, y2)
     {
@@ -956,7 +956,7 @@ var Graphics = new Class({
      *
      * @param {Phaser.Geom.Line} line - The line to stroke.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     strokeLineShape: function (line)
     {
@@ -974,7 +974,7 @@ var Graphics = new Class({
      * @param {number} x2 - The x coordinate of the end point of the line.
      * @param {number} y2 - The y coordinate of the end point of the line.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     lineBetween: function (x1, y1, x2, y2)
     {
@@ -997,7 +997,7 @@ var Graphics = new Class({
      * @param {number} x - The x coordinate to draw the line to.
      * @param {number} y - The y coordinate to draw the line to.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     lineTo: function (x, y)
     {
@@ -1018,7 +1018,7 @@ var Graphics = new Class({
      * @param {number} x - The x coordinate to move to.
      * @param {number} y - The y coordinate to move to.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     moveTo: function (x, y)
     {
@@ -1045,7 +1045,7 @@ var Graphics = new Class({
      * @param {boolean} [closePath=false] - When `true`, the path is closed before being stroked.
      * @param {integer} [endIndex] - The index of `points` to stop drawing at. Defaults to `points.length`.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     strokePoints: function (points, closeShape, closePath, endIndex)
     {
@@ -1092,7 +1092,7 @@ var Graphics = new Class({
      * @param {boolean} [closePath=false] - When `true`, the path is closed before being stroked.
      * @param {integer} [endIndex] - The index of `points` to stop at. Defaults to `points.length`.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     fillPoints: function (points, closeShape, closePath, endIndex)
     {
@@ -1133,7 +1133,7 @@ var Graphics = new Class({
      * @param {Phaser.Geom.Ellipse} ellipse - The ellipse to stroke.
      * @param {integer} [smoothness=32] - The number of points to draw the ellipse with.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     strokeEllipseShape: function (ellipse, smoothness)
     {
@@ -1156,7 +1156,7 @@ var Graphics = new Class({
      * @param {number} height - The height of the ellipse.
      * @param {integer} [smoothness=32] - The number of points to draw the ellipse with.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     strokeEllipse: function (x, y, width, height, smoothness)
     {
@@ -1178,7 +1178,7 @@ var Graphics = new Class({
      * @param {Phaser.Geom.Ellipse} ellipse - The ellipse to fill.
      * @param {integer} [smoothness=32] - The number of points to draw the ellipse with.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     fillEllipseShape: function (ellipse, smoothness)
     {
@@ -1201,7 +1201,7 @@ var Graphics = new Class({
      * @param {number} height - The height of the ellipse.
      * @param {integer} [smoothness=32] - The number of points to draw the ellipse with.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     fillEllipse: function (x, y, width, height, smoothness)
     {
@@ -1240,7 +1240,7 @@ var Graphics = new Class({
      * @param {boolean} [anticlockwise=false] - Whether the drawing should be anticlockwise or clockwise.
      * @param {number} [overshoot=0] - This value allows you to increase the segment iterations in WebGL rendering. Useful if the arc has a thick stroke and needs to overshoot to join-up cleanly. Use small numbers such as 0.01 to start with and increase as needed.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     arc: function (x, y, radius, startAngle, endAngle, anticlockwise, overshoot)
     {
@@ -1276,7 +1276,7 @@ var Graphics = new Class({
      * @param {boolean} [anticlockwise=false] - Whether the drawing should be anticlockwise or clockwise.
      * @param {number} [overshoot=0] - This value allows you to overshoot the endAngle by this amount. Useful if the arc has a thick stroke and needs to overshoot to join-up cleanly.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     slice: function (x, y, radius, startAngle, endAngle, anticlockwise, overshoot)
     {
@@ -1302,7 +1302,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#save
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     save: function ()
     {
@@ -1323,7 +1323,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#restore
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     restore: function ()
     {
@@ -1349,7 +1349,7 @@ var Graphics = new Class({
      * @param {number} x - The horizontal translation to apply.
      * @param {number} y - The vertical translation to apply.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     translateCanvas: function (x, y)
     {
@@ -1376,7 +1376,7 @@ var Graphics = new Class({
      * @param {number} x - The horizontal scale to apply.
      * @param {number} y - The vertical scale to apply.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     scaleCanvas: function (x, y)
     {
@@ -1402,7 +1402,7 @@ var Graphics = new Class({
      *
      * @param {number} radians - The rotation angle, in radians.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     rotateCanvas: function (radians)
     {
@@ -1420,7 +1420,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#clear
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     clear: function ()
     {
@@ -1455,7 +1455,7 @@ var Graphics = new Class({
      * @param {integer} [width] - The width of the graphics to generate.
      * @param {integer} [height] - The height of the graphics to generate.
      *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     * @return {this} This Game Object.
      */
     generateTexture: function (key, width, height)
     {
