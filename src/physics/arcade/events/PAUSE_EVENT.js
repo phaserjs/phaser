@@ -15,3 +15,14 @@
  * @since 3.0.0
  */
 module.exports = 'pause';
+
+/**
+ * The Arcade Physics World Pause Event.
+ * 
+ * This event is dispatched by an Arcade Physics World instance when it is paused.
+ * 
+ * Listen to it from a Scene using: `this.physics.world.on('pause', listener)`.
+ *
+ * @method Phaser.Types.Physics.Arcade.WorldEventsMap#pause
+ * @since 3.0.0
+ */

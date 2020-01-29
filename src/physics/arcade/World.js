@@ -1668,7 +1668,7 @@ var World = new Class({
      * Arcade Physics uses the Projection Method of collision resolution and separation. While it's fast and suitable
      * for 'arcade' style games it lacks stability when multiple objects are in close proximity or resting upon each other.
      * The separation that stops two objects penetrating may create a new penetration against a different object. If you
-     * require a high level of stability please consider using an alternative physics system, such as Matter.js.
+     * require a high level of stability please consider using an alternative physics system, such as Arcade.js.
      *
      * @method Phaser.Physics.Arcade.World#collide
      * @since 3.0.0
@@ -2379,5 +2379,255 @@ var World = new Class({
     }
 
 });
+
+/**
+ * Return the listeners registered for a given event.
+ *
+ * @method Phaser.Physics.Arcade.World#listeners
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.Physics.Arcade.WorldEventsMap} K - [event]
+ *
+ * @param {(string|symbol)} event - The event name.
+ *
+ * @return {Function[]} The registered listeners.
+ */
+
+/**
+ * Return the listeners registered for a given event.
+ *
+ * @method Phaser.Physics.Arcade.World#listeners
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} event - The event name.
+ *
+ * @return {Function[]} The registered listeners.
+ */
+
+/**
+ * Return the number of listeners listening to a given event.
+ *
+ * @method Phaser.Physics.Arcade.World#listenerCount
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.Physics.Arcade.WorldEventsMap} K - [event]
+ *
+ * @param {(string|symbol)} event - The event name.
+ *
+ * @return {number} The number of listeners.
+ */
+
+/**
+ * Return the number of listeners listening to a given event.
+ *
+ * @method Phaser.Physics.Arcade.World#listenerCount
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.Physics.Arcade.WorldEventsMap} K - [event]
+ *
+ * @param {(string|symbol)} event - The event name.
+ *
+ * @return {number} The number of listeners.
+ */
+
+/**
+ * Calls each of the listeners registered for a given event.
+ *
+ * @method Phaser.Physics.Arcade.World#emit
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.Physics.Arcade.WorldEventsMap} K - [event]
+ * @genericUse {Phaser.Types.Events.EmitArguments<Phaser.Types.Physics.Arcade.WorldEventsMap[K]>} - [args]
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {...*} [args] - Additional arguments that will be passed to the event handler.
+ *
+ * @return {boolean} `true` if the event had listeners, else `false`.
+ */
+
+/**
+ * Calls each of the listeners registered for a given event.
+ *
+ * @method Phaser.Physics.Arcade.World#emit
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {...*} [args] - Additional arguments that will be passed to the event handler.
+ *
+ * @return {boolean} `true` if the event had listeners, else `false`.
+ */
+
+/**
+ * Add a listener for a given event.
+ *
+ * @method Phaser.Physics.Arcade.World#on
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.Physics.Arcade.WorldEventsMap} K - [event]
+ * @genericUse {Phaser.Types.Physics.Arcade.WorldEventsMap[K]} - [fn]
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} fn - The listener function.
+ * @param {*} [context=this] - The context to invoke the listener with.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Add a listener for a given event.
+ *
+ * @method Phaser.Physics.Arcade.World#on
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} fn - The listener function.
+ * @param {*} [context=this] - The context to invoke the listener with.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Add a listener for a given event.
+ *
+ * @method Phaser.Physics.Arcade.World#addListener
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.Physics.Arcade.WorldEventsMap} K - [event]
+ * @genericUse {Phaser.Types.Physics.Arcade.WorldEventsMap[K]} - [fn]
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} fn - The listener function.
+ * @param {*} [context=this] - The context to invoke the listener with.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Add a listener for a given event.
+ *
+ * @method Phaser.Physics.Arcade.World#addListener
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} fn - The listener function.
+ * @param {*} [context=this] - The context to invoke the listener with.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Add a one-time listener for a given event.
+ *
+ * @method Phaser.Physics.Arcade.World#once
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.Physics.Arcade.WorldEventsMap} K - [event]
+ * @genericUse {Phaser.Types.Physics.Arcade.WorldEventsMap[K]} - [fn]
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} fn - The listener function.
+ * @param {*} [context=this] - The context to invoke the listener with.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Add a one-time listener for a given event.
+ *
+ * @method Phaser.Physics.Arcade.World#once
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} fn - The listener function.
+ * @param {*} [context=this] - The context to invoke the listener with.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Remove the listeners of a given event.
+ *
+ * @method Phaser.Physics.Arcade.World#removeListener
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.Physics.Arcade.WorldEventsMap} K - [event]
+ * @genericUse {Phaser.Types.Physics.Arcade.WorldEventsMap[K]} - [fn]
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} [fn] - Only remove the listeners that match this function.
+ * @param {*} [context] - Only remove the listeners that have this context.
+ * @param {boolean} [once] - Only remove one-time listeners.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Remove the listeners of a given event.
+ *
+ * @method Phaser.Physics.Arcade.World#removeListener
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} [fn] - Only remove the listeners that match this function.
+ * @param {*} [context] - Only remove the listeners that have this context.
+ * @param {boolean} [once] - Only remove one-time listeners.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Remove the listeners of a given event.
+ *
+ * @method Phaser.Physics.Arcade.World#off
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.Physics.Arcade.WorldEventsMap} K - [event]
+ * @genericUse {Phaser.Types.Physics.Arcade.WorldEventsMap[K]} - [fn]
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} [fn] - Only remove the listeners that match this function.
+ * @param {*} [context] - Only remove the listeners that have this context.
+ * @param {boolean} [once] - Only remove one-time listeners.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Remove the listeners of a given event.
+ *
+ * @method Phaser.Physics.Arcade.World#off
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} [fn] - Only remove the listeners that match this function.
+ * @param {*} [context] - Only remove the listeners that have this context.
+ * @param {boolean} [once] - Only remove one-time listeners.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Remove all listeners, or those of the specified event.
+ *
+ * @method Phaser.Physics.Arcade.World#removeAllListeners
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.Physics.Arcade.WorldEventsMap} K - [event]
+ *
+ * @param {(string|symbol)} [event] - The event name.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Remove all listeners, or those of the specified event.
+ *
+ * @method Phaser.Physics.Arcade.World#removeAllListeners
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} [event] - The event name.
+ *
+ * @return {this} `this`.
+ */
 
 module.exports = World;
