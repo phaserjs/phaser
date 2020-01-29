@@ -240,7 +240,7 @@ var Systems = new Class({
          * In the default set-up you can access this from within a Scene via the `this.events` property.
          *
          * @name Phaser.Scenes.Systems#events
-         * @type {Phaser.Events.EventEmitter}
+         * @type {Phaser.Types.Scenes.SceneEventsEmitterr}
          * @since 3.0.0
          */
         this.events;
