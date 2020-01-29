@@ -624,6 +624,256 @@ var GameObject = new Class({
 });
 
 /**
+ * Return the listeners registered for a given event.
+ *
+ * @method Phaser.GameObjects.GameObject#listeners
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.GameObjects.GameObjectEventsMap} K - [event]
+ *
+ * @param {(string|symbol)} event - The event name.
+ *
+ * @return {Function[]} The registered listeners.
+ */
+
+/**
+ * Return the listeners registered for a given event.
+ *
+ * @method Phaser.GameObjects.GameObject#listeners
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} event - The event name.
+ *
+ * @return {Function[]} The registered listeners.
+ */
+
+/**
+ * Return the number of listeners listening to a given event.
+ *
+ * @method Phaser.GameObjects.GameObject#listenerCount
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.GameObjects.GameObjectEventsMap} K - [event]
+ *
+ * @param {(string|symbol)} event - The event name.
+ *
+ * @return {number} The number of listeners.
+ */
+
+/**
+ * Return the number of listeners listening to a given event.
+ *
+ * @method Phaser.GameObjects.GameObject#listenerCount
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.GameObjects.GameObjectEventsMap} K - [event]
+ *
+ * @param {(string|symbol)} event - The event name.
+ *
+ * @return {number} The number of listeners.
+ */
+
+/**
+ * Calls each of the listeners registered for a given event.
+ *
+ * @method Phaser.GameObjects.GameObject#emit
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.GameObjects.GameObjectEventsMap} K - [event]
+ * @genericUse {Phaser.Types.Events.EmitArguments<Phaser.Types.GameObjects.GameObjectEventsMap[K]>} - [args]
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {...*} [args] - Additional arguments that will be passed to the event handler.
+ *
+ * @return {boolean} `true` if the event had listeners, else `false`.
+ */
+
+/**
+ * Calls each of the listeners registered for a given event.
+ *
+ * @method Phaser.GameObjects.GameObject#emit
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {...*} [args] - Additional arguments that will be passed to the event handler.
+ *
+ * @return {boolean} `true` if the event had listeners, else `false`.
+ */
+
+/**
+ * Add a listener for a given event.
+ *
+ * @method Phaser.GameObjects.GameObject#on
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.GameObjects.GameObjectEventsMap} K - [event]
+ * @genericUse {Phaser.Types.GameObjects.GameObjectEventsMap[K]} - [fn]
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} fn - The listener function.
+ * @param {*} [context=this] - The context to invoke the listener with.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Add a listener for a given event.
+ *
+ * @method Phaser.GameObjects.GameObject#on
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} fn - The listener function.
+ * @param {*} [context=this] - The context to invoke the listener with.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Add a listener for a given event.
+ *
+ * @method Phaser.GameObjects.GameObject#addListener
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.GameObjects.GameObjectEventsMap} K - [event]
+ * @genericUse {Phaser.Types.GameObjects.GameObjectEventsMap[K]} - [fn]
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} fn - The listener function.
+ * @param {*} [context=this] - The context to invoke the listener with.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Add a listener for a given event.
+ *
+ * @method Phaser.GameObjects.GameObject#addListener
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} fn - The listener function.
+ * @param {*} [context=this] - The context to invoke the listener with.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Add a one-time listener for a given event.
+ *
+ * @method Phaser.GameObjects.GameObject#once
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.GameObjects.GameObjectEventsMap} K - [event]
+ * @genericUse {Phaser.Types.GameObjects.GameObjectEventsMap[K]} - [fn]
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} fn - The listener function.
+ * @param {*} [context=this] - The context to invoke the listener with.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Add a one-time listener for a given event.
+ *
+ * @method Phaser.GameObjects.GameObject#once
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} fn - The listener function.
+ * @param {*} [context=this] - The context to invoke the listener with.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Remove the listeners of a given event.
+ *
+ * @method Phaser.GameObjects.GameObject#removeListener
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.GameObjects.GameObjectEventsMap} K - [event]
+ * @genericUse {Phaser.Types.GameObjects.GameObjectEventsMap[K]} - [fn]
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} [fn] - Only remove the listeners that match this function.
+ * @param {*} [context] - Only remove the listeners that have this context.
+ * @param {boolean} [once] - Only remove one-time listeners.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Remove the listeners of a given event.
+ *
+ * @method Phaser.GameObjects.GameObject#removeListener
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} [fn] - Only remove the listeners that match this function.
+ * @param {*} [context] - Only remove the listeners that have this context.
+ * @param {boolean} [once] - Only remove one-time listeners.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Remove the listeners of a given event.
+ *
+ * @method Phaser.GameObjects.GameObject#off
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.GameObjects.GameObjectEventsMap} K - [event]
+ * @genericUse {Phaser.Types.GameObjects.GameObjectEventsMap[K]} - [fn]
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} [fn] - Only remove the listeners that match this function.
+ * @param {*} [context] - Only remove the listeners that have this context.
+ * @param {boolean} [once] - Only remove one-time listeners.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Remove the listeners of a given event.
+ *
+ * @method Phaser.GameObjects.GameObject#off
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} [fn] - Only remove the listeners that match this function.
+ * @param {*} [context] - Only remove the listeners that have this context.
+ * @param {boolean} [once] - Only remove one-time listeners.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Remove all listeners, or those of the specified event.
+ *
+ * @method Phaser.GameObjects.GameObject#removeAllListeners
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.GameObjects.GameObjectEventsMap} K - [event]
+ *
+ * @param {(string|symbol)} [event] - The event name.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Remove all listeners, or those of the specified event.
+ *
+ * @method Phaser.GameObjects.GameObject#removeAllListeners
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} [event] - The event name.
+ *
+ * @return {this} `this`.
+ */
+
+/**
  * The bitmask that `GameObject.renderFlags` is compared against to determine if the Game Object will render or not.
  *
  * @constant {integer} RENDER_MASK
