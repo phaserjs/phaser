@@ -127,7 +127,7 @@ var Sprite = new Class({
      * @param {boolean} [ignoreIfPlaying=false] - If an animation is already playing then ignore this call.
      * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
      *
-     * @return {Phaser.GameObjects.Sprite} This Game Object.
+     * @return {this} This Game Object.
      */
     play: function (key, ignoreIfPlaying, startFrame)
     {

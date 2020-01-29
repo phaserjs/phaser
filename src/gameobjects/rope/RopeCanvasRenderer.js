@@ -8,7 +8,7 @@
  * This is a stub function for Rope.Render. There is no Canvas renderer for Rope objects.
  *
  * @method Phaser.GameObjects.Rope#renderCanvas
- * @since 3.0.0
+ * @since 3.23.0
  * @private
  *
  * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.

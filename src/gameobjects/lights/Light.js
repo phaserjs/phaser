@@ -135,7 +135,7 @@ var Light = new Class({
      * @param {number} b - The blue color. A value between 0 and 1.
      * @param {number} intensity - The intensity of the light.
      *
-     * @return {Phaser.GameObjects.Light} This Light object.
+     * @return {this} This Light object.
      */
     set: function (x, y, radius, r, g, b, intensity)
     {
@@ -165,7 +165,7 @@ var Light = new Class({
      * @param {number} x - The horizontal scroll factor of the light.
      * @param {number} y - The vertical scroll factor of the light.
      *
-     * @return {Phaser.GameObjects.Light} This Light object.
+     * @return {this} This Light object.
      */
     setScrollFactor: function (x, y)
     {
@@ -186,7 +186,7 @@ var Light = new Class({
      *
      * @param {number} rgb - The integer RGB color of the light.
      *
-     * @return {Phaser.GameObjects.Light} This Light object.
+     * @return {this} This Light object.
      */
     setColor: function (rgb)
     {
@@ -207,7 +207,7 @@ var Light = new Class({
      *
      * @param {number} intensity - The intensity of the light.
      *
-     * @return {Phaser.GameObjects.Light} This Light object.
+     * @return {this} This Light object.
      */
     setIntensity: function (intensity)
     {
@@ -225,7 +225,7 @@ var Light = new Class({
      * @param {number} x - The horizontal position of the light.
      * @param {number} y - The vertical position of the light.
      *
-     * @return {Phaser.GameObjects.Light} This Light object.
+     * @return {this} This Light object.
      */
     setPosition: function (x, y)
     {
@@ -243,7 +243,7 @@ var Light = new Class({
      *
      * @param {number} radius - The radius of the light.
      *
-     * @return {Phaser.GameObjects.Light} This Light object.
+     * @return {this} This Light object.
      */
     setRadius: function (radius)
     {

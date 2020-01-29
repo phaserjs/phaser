@@ -229,7 +229,7 @@ var HTMLTextureFile = new Class({
  * @param {integer} [height=512] - The height of the texture the HTML will be rendered to.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
- * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
+ * @return {this} The Loader instance.
  */
 FileTypesManager.register('htmlTexture', function (key, url, width, height, xhrSettings)
 {

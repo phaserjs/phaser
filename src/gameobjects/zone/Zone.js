@@ -156,7 +156,7 @@ var Zone = new Class({
      * @param {number} height - The height of this Game Object.
      * @param {boolean} [resizeInput=true] - If this Zone has a Rectangle for a hit area this argument will resize the hit area as well.
      *
-     * @return {Phaser.GameObjects.Zone} This Game Object.
+     * @return {this} This Game Object.
      */
     setSize: function (width, height, resizeInput)
     {
@@ -188,7 +188,7 @@ var Zone = new Class({
      * @param {number} width - The width of this Game Object.
      * @param {number} height - The height of this Game Object.
      *
-     * @return {Phaser.GameObjects.Zone} This Game Object.
+     * @return {this} This Game Object.
      */
     setDisplaySize: function (width, height)
     {
@@ -207,7 +207,7 @@ var Zone = new Class({
      *
      * @param {number} radius - The radius of the Circle that will form the Drop Zone.
      *
-     * @return {Phaser.GameObjects.Zone} This Game Object.
+     * @return {this} This Game Object.
      */
     setCircleDropZone: function (radius)
     {
@@ -224,7 +224,7 @@ var Zone = new Class({
      * @param {number} width - The width of the rectangle drop zone.
      * @param {number} height - The height of the rectangle drop zone.
      *
-     * @return {Phaser.GameObjects.Zone} This Game Object.
+     * @return {this} This Game Object.
      */
     setRectangleDropZone: function (width, height)
     {
@@ -240,7 +240,7 @@ var Zone = new Class({
      * @param {object} shape - A Geometry shape instance, such as Phaser.Geom.Ellipse, or your own custom shape.
      * @param {Phaser.Types.Input.HitAreaCallback} callback - A function that will return `true` if the given x/y coords it is sent are within the shape.
      *
-     * @return {Phaser.GameObjects.Zone} This Game Object.
+     * @return {this} This Game Object.
      */
     setDropZone: function (shape, callback)
     {

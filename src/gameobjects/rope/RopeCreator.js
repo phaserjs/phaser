@@ -29,11 +29,12 @@ GameObjectCreator.register('rope', function (config, addToScene)
 
     var key = GetAdvancedValue(config, 'key', null);
     var frame = GetAdvancedValue(config, 'frame', null);
+    var horizontal = GetAdvancedValue(config, 'horizontal', true);
     var points = GetValue(config, 'points', undefined);
     var colors = GetValue(config, 'colors', undefined);
     var alphas = GetValue(config, 'alphas', undefined);
 
-    var rope = new Rope(this.scene, 0, 0, key, frame, points, colors, alphas);
+    var rope = new Rope(this.scene, 0, 0, key, frame, points, horizontal, colors, alphas);
 
     if (addToScene !== undefined)
     {

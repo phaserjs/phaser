@@ -230,6 +230,39 @@ var Rope = new Class({
          */
         this._perp = new Vector2();
 
+        /**
+         * You can optionally choose to render the vertices of this Rope to a Graphics instance.
+         * 
+         * Achieve this by setting the `debugCallback` and the `debugGraphic` properties.
+         * 
+         * You can do this in a single call via the `Rope.setDebug` method, which will use the
+         * built-in debug function. You can also set it to your own callback. The callback
+         * will be invoked _once per render_ and sent the following parameters:
+         * 
+         * `debugCallback(src, meshLength, verts)`
+         * 
+         * `src` is the Rope instance being debugged.
+         * `meshLength` is the number of mesh vertices in total.
+         * `verts` is an array of the translated vertex coordinates.
+         * 
+         * To disable rendering, set this property back to `null`.
+         * 
+         * @name Phaser.GameObjects.Rope#debugCallback
+         * @type {function}
+         * @since 3.23.0
+         */
+        this.debugCallback = null;
+
+        /**
+         * The Graphics instance that the debug vertices will be drawn to, if `setDebug` has
+         * been called.
+         * 
+         * @name Phaser.GameObjects.Rope#debugGraphic
+         * @type {Phaser.GameObjects.Graphics}
+         * @since 3.23.0
+         */
+        this.debugGraphic = null;
+
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
@@ -266,18 +299,6 @@ var Rope = new Class({
             this.updateUVs();
             this.updateVertices();
         }
-    },
-
-    /**
-     * NOOP. Included to allow animations to play.
-     *
-     * @method Phaser.GameObjects.Rope#updateDisplayOrigin
-     * @private
-     * @since 3.23.0
-     */
-    updateDisplayOrigin: function ()
-    {
-        //  NOOP
     },
 
     /**
@@ -421,7 +442,7 @@ var Rope = new Class({
      * the first Rope segment and on, until it runs out of values. This allows you to control the alpha values at all
      * vertices in the Rope.
      * 
-     * Note this method is called `setAlphas` (plural) and not `setAlpha`, which is a NOOP.
+     * Note this method is called `setAlphas` (plural) and not `setAlpha`.
      * 
      * @method Phaser.GameObjects.Rope#setAlphas
      * @since 3.23.0
@@ -696,12 +717,12 @@ var Rope = new Class({
 
         this.updateUVs();
 
-        if (colors !== undefined)
+        if (colors !== undefined && colors !== null)
         {
             this.setColors(colors);
         }
 
-        if (alphas !== undefined)
+        if (alphas !== undefined && alphas !== null)
         {
             this.setAlphas(alphas);
         }
@@ -727,7 +748,8 @@ var Rope = new Class({
         var u1 = this.frame.u1;
         var v1 = this.frame.v1;
 
-        var part = (u1 - u0) / (total - 1);
+        var partH = (u1 - u0) / (total - 1);
+        var partV = (v1 - v0) / (total - 1);
    
         for (var i = 0; i < total; i++)
         {
@@ -742,13 +764,13 @@ var Rope = new Class({
             {
                 if (this._flipX)
                 {
-                    uv0 = u1 - (i * part);
-                    uv2 = u1 - (i * part);
+                    uv0 = u1 - (i * partH);
+                    uv2 = u1 - (i * partH);
                 }
                 else
                 {
-                    uv0 = u0 + (i * part);
-                    uv2 = u0 + (i * part);
+                    uv0 = u0 + (i * partH);
+                    uv2 = u0 + (i * partH);
                 }
 
                 if (this._flipY)
@@ -777,13 +799,13 @@ var Rope = new Class({
 
                 if (this._flipY)
                 {
-                    uv1 = v1 - (i * part);
-                    uv3 = v1 - (i * part);
+                    uv1 = v1 - (i * partV);
+                    uv3 = v1 - (i * partV);
                 }
                 else
                 {
-                    uv1 = v0 + (i * part);
-                    uv3 = v0 + (i * part);
+                    uv1 = v0 + (i * partV);
+                    uv3 = v0 + (i * partV);
                 }
             }
 
@@ -902,6 +924,99 @@ var Rope = new Class({
     },
 
     /**
+     * This method enables rendering of the Rope vertices to the given Graphics instance.
+     * 
+     * If you enable this feature, you must call `Graphics.clear()` in your Scene `update`,
+     * otherwise the Graphics instance will fill-in with draw calls. This is not done automatically
+     * to allow for you to debug render multiple Rope objects to a single Graphics instance.
+     * 
+     * The Rope class has a built-in debug rendering callback `Rope.renderDebugVerts`, however
+     * you can also provide your own callback to be used instead. Do this by setting the `callback` parameter.
+     * 
+     * The callback is invoked _once per render_ and sent the following parameters:
+     * 
+     * `callback(src, meshLength, verts)`
+     * 
+     * `src` is the Rope instance being debugged.
+     * `meshLength` is the number of mesh vertices in total.
+     * `verts` is an array of the translated vertex coordinates.
+     * 
+     * If using your own callback you do not have to provide a Graphics instance to this method.
+     * 
+     * To disable debug rendering, to either your own callback or the built-in one, call this method
+     * with no arguments.
+     * 
+     * @method Phaser.GameObjects.Rope#setDebug
+     * @since 3.23.0
+     * 
+     * @param {Phaser.GameObjects.Graphics} [graphic] - The Graphic instance to render to if using the built-in callback.
+     * @param {function} [callback] - The callback to invoke during debug render. Leave as undefined to use the built-in callback.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setDebug: function (graphic, callback)
+    {
+        this.debugGraphic = graphic;
+
+        if (!graphic && !callback)
+        {
+            this.debugCallback = null;
+        }
+        else if (!callback)
+        {
+            this.debugCallback = this.renderDebugVerts;
+        }
+        else
+        {
+            this.debugCallback = callback;
+        }
+
+        return this;
+    },
+
+    /**
+     * The built-in Rope vertices debug rendering method.
+     * 
+     * See `Rope.setDebug` for more details.
+     *
+     * @method Phaser.GameObjects.Rope#renderDebugVerts
+     * @since 3.23.0
+     * 
+     * @param {Phaser.GameObjects.Rope} src - The Rope object being rendered.
+     * @param {integer} meshLength - The number of vertices in the mesh.
+     * @param {number[]} verts - An array of translated vertex coordinates.
+     */
+    renderDebugVerts: function (src, meshLength, verts)
+    {
+        var graphic = src.debugGraphic;
+
+        var px0 = verts[0];
+        var py0 = verts[1];
+        var px1 = verts[2];
+        var py1 = verts[3];
+
+        graphic.lineBetween(px0, py0, px1, py1);
+
+        for (var i = 4; i < meshLength; i += 4)
+        {
+            var x0 = verts[i + 0];
+            var y0 = verts[i + 1];
+            var x1 = verts[i + 2];
+            var y1 = verts[i + 3];
+
+            graphic.lineBetween(px0, py0, x0, y0);
+            graphic.lineBetween(px1, py1, x1, y1);
+            graphic.lineBetween(px1, py1, x0, y0);
+            graphic.lineBetween(x0, y0, x1, y1);
+
+            px0 = x0;
+            py0 = y0;
+            px1 = x1;
+            py1 = y1;
+        }
+    },
+
+    /**
      * Handles the pre-destroy step for the Rope, which removes the Animation component and typed arrays.
      *
      * @method Phaser.GameObjects.Rope#preDestroy
@@ -919,6 +1034,9 @@ var Rope = new Class({
         this.uv = null;
         this.colors = null;
         this.alphas = null;
+
+        this.debugCallback = null;
+        this.debugGraphic = null;
     },
 
     /**
