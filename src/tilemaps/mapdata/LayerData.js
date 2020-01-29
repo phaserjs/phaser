@@ -207,6 +207,15 @@ var LayerData = new Class({
          * @since 3.0.0
          */
         this.tilemapLayer = GetFastValue(config, 'tilemapLayer', null);
+
+        /**
+         * The layer's orientation, necessary to be able to determine pixelX and pixelY.
+         *
+         * @name Phaser.Tilemaps.LayerData#orientation
+         * @type {string}
+         * @since 3.2.PR_svipal
+         */
+        this.orientation = GetFastValue(config, 'orientation', "orthogonal");
     }
 
 });

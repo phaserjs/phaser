@@ -127,8 +127,11 @@ var ParseTileLayers = function (json, insertNull)
                 tileHeight: json.tileheight,
                 alpha: (curGroupState.opacity * curl.opacity),
                 visible: (curGroupState.visible && curl.visible),
-                properties: GetFastValue(curl, 'properties', {})
+                properties: GetFastValue(curl, 'properties', {}),
+                orientation: json.orientation
             });
+
+            console.log("layerdata orientation", layerData.orientation)
 
             for (var c = 0; c < curl.height; c++)
             {
@@ -159,10 +162,8 @@ var ParseTileLayers = function (json, insertNull)
                     //  index, x, y, width, height
                     if (gidInfo.gid > 0)
                     {
-                        console.log("Tile ptl 1", newOffsetX, newOffsetY, json.tilewidth,
-                            json.tileheight,json.orientation)
                         tile = new Tile(layerData, gidInfo.gid, newOffsetX, newOffsetY, json.tilewidth,
-                            json.tileheight,json.orientation);
+                            json.tileheight);
 
                         // Turning Tiled's FlippedHorizontal, FlippedVertical and FlippedAntiDiagonal
                         // propeties into flipX, flipY and rotation
@@ -173,11 +174,9 @@ var ParseTileLayers = function (json, insertNull)
                     }
                     else
                     {
-                        console.log("Tile ptl 2", newOffsetX, newOffsetY, json.tilewidth,
-                        json.tileheight,json.orientation)
                         blankTile = insertNull
                             ? null
-                            : new Tile(layerData, -1, newOffsetX, newOffsetY, json.tilewidth, json.tileheight,json.orientation);
+                            : new Tile(layerData, -1, newOffsetX, newOffsetY, json.tilewidth, json.tileheight);
 
                         output[newOffsetY][newOffsetX] = blankTile;
                     }
@@ -204,9 +203,10 @@ var ParseTileLayers = function (json, insertNull)
                 tileHeight: json.tileheight,
                 alpha: (curGroupState.opacity * curl.opacity),
                 visible: (curGroupState.visible && curl.visible),
-                properties: GetFastValue(curl, 'properties', {})
+                properties: GetFastValue(curl, 'properties', {}),
+                orientation: json.orientation
             });
-
+            console.log("layerdata orientation", layerData.orientation)
             var row = [];
 
             //  Loop through the data field in the JSON.
@@ -217,10 +217,8 @@ var ParseTileLayers = function (json, insertNull)
                 //  index, x, y, width, height
                 if (gidInfo.gid > 0)
                 {
-                    console.log("Tile ptl 3", newOffsetX, newOffsetY, json.tilewidth,
-                    json.tileheight,json.orientation)
                     tile = new Tile(layerData, gidInfo.gid, x, output.length, json.tilewidth,
-                        json.tileheight, json.orientation);
+                        json.tileheight);
 
                     // Turning Tiled's FlippedHorizontal, FlippedVertical and FlippedAntiDiagonal
                     // propeties into flipX, flipY and rotation
@@ -231,11 +229,9 @@ var ParseTileLayers = function (json, insertNull)
                 }
                 else
                 {
-                    console.log("Tile ptl 4", newOffsetX, newOffsetY, json.tilewidth,
-                        json.tileheight,json.orientation)
                     blankTile = insertNull
                         ? null
-                        : new Tile(layerData, -1, x, output.length, json.tilewidth, json.tileheight, json.orientation);
+                        : new Tile(layerData, -1, x, output.length, json.tilewidth, json.tileheight);
                     row.push(blankTile);
                 }
 

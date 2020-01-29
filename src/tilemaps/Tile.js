@@ -35,7 +35,6 @@ var Rectangle = require('../geom/rectangle');
  * @param {integer} baseHeight - The base height of the tile in pixels (in pixels). Tiled maps
  * support multiple tileset sizes within one map, but they are still placed at intervals of the
  * base tile height.
- * @param {string} orientation - The Tilemap's orientation
  */
 
 var Tile = new Class({
@@ -48,7 +47,7 @@ var Tile = new Class({
 
     initialize:
 
-    function Tile (layer, index, x, y, width, height, orientation, baseWidth, baseHeight )
+    function Tile (layer, index, x, y, width, height, baseWidth, baseHeight )
     {
         console.log(this)
         /**
@@ -277,21 +276,7 @@ var Tile = new Class({
          * @since 3.0.0
          */
         this.physics = {};
-        /**
-         * The tile's orientation, necessary to be able to determine pixelX and pixelY.
-         *
-         * @name Phaser.Tilemaps.Tile#orientation
-         * @type {string}
-         * @since 3.2.PR_svipal
-         */
-        // we default to orthogonal
-        // we need to deep copy the string to prevent the orientation later going out of scope
-        if (orientation == undefined) {
-            this.orientation = "orthogonal";
-        } else {
-            this.orientation = (' ' + orientation).slice(1)
-        }
-        console.log("tile orientation : "+this.orientation)
+
     },
 
     /**
@@ -724,24 +709,23 @@ var Tile = new Class({
      */
     updatePixelXY: function ()
     {
-        console.log("tile orientation 2: "+this.orientation)
-        if (this.orientation === "orthogonal") {
+       if (this.layer.orientation === "orthogonal") {
             // In orthogonal mode, Tiled places tiles on a grid of baseWidth x baseHeight. The origin for a tile is the
             // bottom left, while the Phaser renderer assumes the origin is the top left. The y
             // coordinate needs to be adjusted by the difference.
             this.pixelX = this.x * this.baseWidth;
             this.pixelY = this.y * this.baseHeight;
             console.log("orthopix "+this.pixelX+","+this.pixelY)
-        } else if  (this.orientation === "isometric" ||true) {
+        } else if  (this.layer.orientation === "isometric" ) {
             // for the image to be centered we have to move the image to the right with the camera !
             // this is crucial for wordtotile, tiletoworld to work.
             this.pixelX = (this.x - this.y) * this.baseWidth *0.5;
             this.pixelY = (this.x + this.y) * this.baseHeight *0.5;
             console.log("isopix "+this.pixelX+","+this.pixelY)
-            // console.log(this)
+            console.log(this)
         } else {
             console.log("this :" + this)
-            console.log("tile orientation 3: "+this.orientation)
+            console.log("tile orientation 3: "+this.layer.orientation)
         }
 
         // this.pixelY = this.y * this.baseHeight - (this.height - this.baseHeight);
