@@ -13,7 +13,7 @@
 ### Updates
 
 * `XHRLoader` will now use the `XHRSettings.withCredentials` as set in the file or global loader config.
-* `Animation.setCurrentFrame` will no longer try to call `setOrigina` or `updateDisplayOrigin` if the Game Object doesn't have the Origin component, preventing unknown function errors.
+* `Animation.setCurrentFrame` will no longer try to call `setOrigin` or `updateDisplayOrigin` if the Game Object doesn't have the Origin component, preventing unknown function errors.
 * `MatterTileBody` now extends `EventEmitter`, meaning you can listen to collision events from Tiles directly and it will no longer throw errors about `gameObject.emit` not working. Fix #4967 (thanks @reinildo)
 
 ### Bug Fixes
@@ -24,7 +24,7 @@
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-
+@JasonHK
 
 ## Version 3.22 - Kohaku - January 15th 2020
 
