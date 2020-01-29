@@ -23,7 +23,6 @@
  */
 var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
 {
-    console.log("webgl renderer")
     var tilesets = src.tileset;
 
     var pipeline = src.pipeline;
