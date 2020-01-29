@@ -183,7 +183,7 @@ var PluginFile = new Class({
  * @param {string} [mapping] - If this plugin is to be injected into the Scene, this is the property key used.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
- * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
+ * @return {this} The Loader instance.
  */
 FileTypesManager.register('plugin', function (key, url, start, mapping, xhrSettings)
 {

@@ -153,7 +153,7 @@ var BinaryFile = new Class({
  * @param {any} [dataType] - Optional type to cast the binary file to once loaded. For example, `Uint8Array`.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
- * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
+ * @return {this} The Loader instance.
  */
 FileTypesManager.register('binary', function (key, url, dataType, xhrSettings)
 {
