@@ -137,7 +137,7 @@ var Path = new Class({
      *
      * @param {Phaser.Curves.Curve} curve - The Curve to append.
      *
-     * @return {Phaser.Curves.Path} This Path object.
+     * @return {this} This Path object.
      */
     add: function (curve)
     {
@@ -156,7 +156,7 @@ var Path = new Class({
      * @param {boolean} [clockwise=false] - `true` to create a clockwise circle as opposed to a counter-clockwise circle.
      * @param {number} [rotation=0] - The rotation of the circle in degrees.
      *
-     * @return {Phaser.Curves.Path} This Path object.
+     * @return {this} This Path object.
      */
     circleTo: function (radius, clockwise, rotation)
     {
@@ -175,7 +175,7 @@ var Path = new Class({
      * @method Phaser.Curves.Path#closePath
      * @since 3.0.0
      *
-     * @return {Phaser.Curves.Path} This Path object.
+     * @return {this} This Path object.
      */
     closePath: function ()
     {
@@ -205,7 +205,7 @@ var Path = new Class({
      * @param {number} [control2X] - The x coordinate of the second control point. Not used if Vector2s are provided as the first 3 arguments.
      * @param {number} [control2Y] - The y coordinate of the second control point. Not used if Vector2s are provided as the first 3 arguments.
      *
-     * @return {Phaser.Curves.Path} This Path object.
+     * @return {this} This Path object.
      */
     cubicBezierTo: function (x, y, control1X, control1Y, control2X, control2Y)
     {
@@ -244,7 +244,7 @@ var Path = new Class({
      * @param {number} [controlX] - If `x` is not a `Vector2`, the X coordinate of the first control point.
      * @param {number} [controlY] - If `x` is not a `Vector2`, the Y coordinate of the first control point.
      *
-     * @return {Phaser.Curves.Path} This Path object.
+     * @return {this} This Path object.
      */
     quadraticBezierTo: function (x, y, controlX, controlY)
     {
@@ -310,7 +310,7 @@ var Path = new Class({
      * @param {boolean} [clockwise=false] - Whether the ellipse angles are given as clockwise (`true`) or counter-clockwise (`false`).
      * @param {number} [rotation=0] - The rotation of the ellipse, in degrees.
      *
-     * @return {Phaser.Curves.Path} This Path object.
+     * @return {this} This Path object.
      */
     ellipseTo: function (xRadius, yRadius, startAngle, endAngle, clockwise, rotation)
     {
@@ -339,7 +339,7 @@ var Path = new Class({
      *
      * @param {Phaser.Types.Curves.JSONPath} data - The JSON object containing the Path data.
      *
-     * @return {Phaser.Curves.Path} This Path object.
+     * @return {this} This Path object.
      */
     fromJSON: function (data)
     {
@@ -702,7 +702,7 @@ var Path = new Class({
      * @param {(number|Phaser.Math.Vector2)} x - The X coordinate of the line's end point, or a `Vector2` containing the entire end point.
      * @param {number} [y] - The Y coordinate of the line's end point, if a number was passed as the X parameter.
      *
-     * @return {Phaser.Curves.Path} This Path object.
+     * @return {this} This Path object.
      */
     lineTo: function (x, y)
     {
@@ -728,7 +728,7 @@ var Path = new Class({
      *
      * @param {Phaser.Math.Vector2[]} points - The points the newly created spline curve should consist of.
      *
-     * @return {Phaser.Curves.Path} This Path object.
+     * @return {this} This Path object.
      */
     splineTo: function (points)
     {
@@ -748,7 +748,7 @@ var Path = new Class({
      * @param {(number|Phaser.Math.Vector2)} x - The X coordinate of the position to move the path's end point to, or a `Vector2` containing the entire new end point.
      * @param {number} y - The Y coordinate of the position to move the path's end point to, if a number was passed as the X coordinate.
      *
-     * @return {Phaser.Curves.Path} This Path object.
+     * @return {this} This Path object.
      */
     moveTo: function (x, y)
     {
