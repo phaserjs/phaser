@@ -24,11 +24,10 @@ var SetTileCollision = require('./SetTileCollision');
  * @param {integer} tileY - The y coordinate, in tiles, not pixels.
  * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
- * @param {string} orientation - The Tilemap's orientation
  *
  * @return {Phaser.Tilemaps.Tile} The Tile object that was created or added to this map.
  */
-var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer, orientation)
+var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer)
 {
     if (!IsInLayerBounds(tileX, tileY, layer)) { return null; }
     if (recalculateFaces === undefined) { recalculateFaces = true; }
@@ -40,7 +39,7 @@ var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer, orientati
     {
         if (layer.data[tileY][tileX] === null)
         {
-            layer.data[tileY][tileX] = new Tile(layer, tile.index, tileX, tileY, tile.width, tile.height, orientation);
+            layer.data[tileY][tileX] = new Tile(layer, tile.index, tileX, tileY, tile.width, tile.height);
         }
         layer.data[tileY][tileX].copy(tile);
     }

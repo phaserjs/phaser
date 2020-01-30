@@ -674,7 +674,7 @@ var DynamicTilemapLayer = new Class({
      */
     getTilesWithinShape: function (shape, filteringOptions, camera)
     {
-        return TilemapComponents.GetTilesWithinShape(shape, filteringOptions, camera, this.layer, this.tilemap.orientation);
+        return TilemapComponents.GetTilesWithinShape(shape, filteringOptions, camera, this.layer);
     },
 
     /**
@@ -694,7 +694,7 @@ var DynamicTilemapLayer = new Class({
      */
     getTilesWithinWorldXY: function (worldX, worldY, width, height, filteringOptions, camera)
     {
-        return TilemapComponents.GetTilesWithinWorldXY(worldX, worldY, width, height, filteringOptions, camera, this.layer, this.tilemap.orientation);
+        return TilemapComponents.GetTilesWithinWorldXY(worldX, worldY, width, height, filteringOptions, camera, this.layer);
     },
 
     /**
@@ -750,7 +750,7 @@ var DynamicTilemapLayer = new Class({
      */
     putTileAt: function (tile, tileX, tileY, recalculateFaces)
     {
-        return TilemapComponents.PutTileAt(tile, tileX, tileY, recalculateFaces, this.layer, this.tilemap.orientation);
+        return TilemapComponents.PutTileAt(tile, tileX, tileY, recalculateFaces, this.layer);
     },
 
     /**
@@ -772,7 +772,7 @@ var DynamicTilemapLayer = new Class({
      */
     putTileAtWorldXY: function (tile, worldX, worldY, recalculateFaces, camera)
     {
-        return TilemapComponents.PutTileAtWorldXY(tile, worldX, worldY, recalculateFaces, camera, this.layer, this.tilemap.orientation);
+        return TilemapComponents.PutTileAtWorldXY(tile, worldX, worldY, recalculateFaces, camera, this.layer);
     },
 
     /**
@@ -794,7 +794,7 @@ var DynamicTilemapLayer = new Class({
      */
     putTilesAt: function (tilesArray, tileX, tileY, recalculateFaces)
     {
-        TilemapComponents.PutTilesAt(tilesArray, tileX, tileY, recalculateFaces, this.layer, this.tilemap.orientation);
+        TilemapComponents.PutTilesAt(tilesArray, tileX, tileY, recalculateFaces, this.layer);
 
         return this;
     },
@@ -860,7 +860,7 @@ var DynamicTilemapLayer = new Class({
      */
     removeTileAtWorldXY: function (worldX, worldY, replaceWithNull, recalculateFaces, camera)
     {
-        return TilemapComponents.RemoveTileAtWorldXY(worldX, worldY, replaceWithNull, recalculateFaces, camera, this.layer, this.tilemap.orientation);
+        return TilemapComponents.RemoveTileAtWorldXY(worldX, worldY, replaceWithNull, recalculateFaces, camera, this.layer);
     },
 
     /**
@@ -1178,7 +1178,7 @@ var DynamicTilemapLayer = new Class({
      */
     tileToWorldX: function (tileX, camera)
     {
-        return TilemapComponents.TileToWorldX(tileX, camera, this.layer, this.tilemap.orientation);
+        return TilemapComponents.TileToWorldX(tileX, camera, this.layer);
     },
 
     /**
@@ -1195,7 +1195,7 @@ var DynamicTilemapLayer = new Class({
      */
     tileToWorldY: function (tileY, camera)
     {
-        return TilemapComponents.TileToWorldY(tileY, camera, this.layer, this.tilemap.orientation);
+        return TilemapComponents.TileToWorldY(tileY, camera, this.layer);
     },
 
     /**
@@ -1215,7 +1215,7 @@ var DynamicTilemapLayer = new Class({
      */
     tileToWorldXY: function (tileX, tileY, point, camera)
     {
-        return TilemapComponents.TileToWorldXY(tileX, tileY, point, camera, this.layer, this.tilemap.orientation);
+        return TilemapComponents.TileToWorldXY(tileX, tileY, point, camera, this.layer);
     },
 
     /**
@@ -1268,7 +1268,7 @@ var DynamicTilemapLayer = new Class({
      */
     worldToTileX: function (worldX, snapToFloor, camera)
     {
-        return TilemapComponents.WorldToTileX(worldX, snapToFloor, camera, this.layer, this.tilemap.orientation);
+        return TilemapComponents.WorldToTileX(worldX, snapToFloor, camera, this.layer);
     },
 
     /**
@@ -1286,7 +1286,7 @@ var DynamicTilemapLayer = new Class({
      */
     worldToTileY: function (worldY, snapToFloor, camera)
     {
-        return TilemapComponents.WorldToTileY(worldY, snapToFloor, camera, this.layer, this.tilemap.orientation);
+        return TilemapComponents.WorldToTileY(worldY, snapToFloor, camera, this.layer);
     },
 
     /**
@@ -1307,7 +1307,7 @@ var DynamicTilemapLayer = new Class({
      */
     worldToTileXY: function (worldX, worldY, snapToFloor, point, camera)
     {
-        return TilemapComponents.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, this.layer, this.tilemap.orientation);
+        return TilemapComponents.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, this.layer);
     }
 
 });

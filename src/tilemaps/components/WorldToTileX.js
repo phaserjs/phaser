@@ -16,14 +16,13 @@
  * @param {boolean} [snapToFloor=true] - Whether or not to round the tile coordinate down to the nearest integer.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
- * @param {string} orientation - The Tilemap's orientation
  * 
  * @return {number} The X location in tile units.
  */
-var WorldToTileX = function (worldX, snapToFloor, camera, layer, orientation)
+var WorldToTileX = function (worldX, snapToFloor, camera, layer)
 {
 
-
+    var orientation = layer.orientation;
     if (snapToFloor === undefined) { snapToFloor = true; }
 
     var tileWidth = layer.baseTileWidth;

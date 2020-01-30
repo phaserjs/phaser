@@ -23,10 +23,9 @@ var PutTileAt = require('./PutTileAt');
  * @param {integer} tileY - The y coordinate, in tiles, not pixels.
  * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
-* @param {string} orientation - The Tilemap's orientation
  *
  */
-var PutTilesAt = function (tilesArray, tileX, tileY, recalculateFaces, layer, orientation)
+var PutTilesAt = function (tilesArray, tileX, tileY, recalculateFaces, layer)
 {
     if (!Array.isArray(tilesArray)) { return null; }
     if (recalculateFaces === undefined) { recalculateFaces = true; }
@@ -45,7 +44,7 @@ var PutTilesAt = function (tilesArray, tileX, tileY, recalculateFaces, layer, or
         for (var tx = 0; tx < width; tx++)
         {
             var tile = tilesArray[ty][tx];
-            PutTileAt(tile, tileX + tx, tileY + ty, false, layer, orientation);
+            PutTileAt(tile, tileX + tx, tileY + ty, false, layer);
         }
     }
 

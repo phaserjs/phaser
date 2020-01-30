@@ -26,9 +26,9 @@ var WorldToTileY = require('./WorldToTileY');
  */
 var GetTileAtWorldXY = function (worldX, worldY, nonNull, camera, layer)
 {
-    var tileX = WorldToTileX(worldX, true, camera, layer);
-    var tileY = WorldToTileY(worldY, true, camera, layer);
-
+    var point = WorldToTileXY(worldX, worldY, true, camera, layer);
+    var tileX = point.x
+    var tileY = point.y
     return GetTileAt(tileX, tileY, nonNull, layer);
 };
 

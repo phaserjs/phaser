@@ -48,9 +48,9 @@ var CreateFromTiles = function (indexes, replacements, spriteConfig, scene, came
 
         if (indexes.indexOf(tile.index) !== -1)
         {
-            spriteConfig.x = TileToWorldX(tile.x, camera, layer);
-            spriteConfig.y = TileToWorldY(tile.y, camera, layer);
-
+            var point = TileToWorldXY(tile.x,tile.y, camera, layer)
+            spriteConfig.x = point.x;
+            spriteConfig.y = point.y;
             var sprite = scene.make.sprite(spriteConfig);
             sprites.push(sprite);
         }

@@ -110,6 +110,16 @@ var LayerData = new Class({
         this.baseTileHeight = GetFastValue(config, 'baseTileHeight', this.tileHeight);
 
         /**
+         * The layer's orientation, necessary to be able to determine q tile's pixelX and pixelY as well as the layer's width and height.
+         *
+         * @name Phaser.Tilemaps.LayerData#orientation
+         * @type {string}
+         * @since 3.22.PR_svipal
+         */
+        this.orientation = GetFastValue(config, 'orientation', "orthogonal");
+
+
+        /**
          * The width in pixels of the entire layer.
          *
          * @name Phaser.Tilemaps.LayerData#widthInPixels
@@ -208,14 +218,7 @@ var LayerData = new Class({
          */
         this.tilemapLayer = GetFastValue(config, 'tilemapLayer', null);
 
-        /**
-         * The layer's orientation, necessary to be able to determine pixelX and pixelY.
-         *
-         * @name Phaser.Tilemaps.LayerData#orientation
-         * @type {string}
-         * @since 3.2.PR_svipal
-         */
-        this.orientation = GetFastValue(config, 'orientation', "orthogonal");
+        
     }
 
 });

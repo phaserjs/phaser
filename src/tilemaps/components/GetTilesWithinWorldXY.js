@@ -25,12 +25,12 @@ var WorldToTileY = require('./WorldToTileY');
  * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that have at least one interesting face.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when factoring in which tiles to return.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
- * @param {string} orientation - The Tilemap's orientation
- *  
+ * 
  * @return {Phaser.Tilemaps.Tile[]} Array of Tile objects.
  */
-var GetTilesWithinWorldXY = function (worldX, worldY, width, height, filteringOptions, camera, layer, orientation)
+var GetTilesWithinWorldXY = function (worldX, worldY, width, height, filteringOptions, camera, layer)
 {
+    var orientation = layer.orientation
     // Top left corner of the rect, rounded down to include partial tiles
     var pointStart = WorldToTileXY(worldX, worldY, true, camera, layer, orientation);
     var xStart = pointStart.x;

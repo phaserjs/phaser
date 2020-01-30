@@ -22,12 +22,12 @@ var Vector2 = require('../../math/Vector2');
  * @param {Phaser.Math.Vector2} [point] - A Vector2 to store the coordinates in. If not given a new Vector2 is created.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
- * @param {string} orientation - The Tilemap's orientation
- * 
+ *
  * @return {Phaser.Math.Vector2} The XY location in world coordinates.
  */
-var TileToWorldXY = function (tileX, tileY, point, camera, layer, orientation)
+var TileToWorldXY = function (tileX, tileY, point, camera, layer)
 {
+    var orientation = layer.orientation;
     var tileWidth = layer.baseTileWidth;
     var tileHeight = layer.baseTileHeight;
 

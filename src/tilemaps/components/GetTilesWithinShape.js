@@ -36,12 +36,12 @@ var TriangleToRectangle = function (triangle, rect)
  * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that have at least one interesting face.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
- * @param {string} orientation - The Tilemap's orientation
  * 
  * @return {Phaser.Tilemaps.Tile[]} Array of Tile objects.
  */
 var GetTilesWithinShape = function (shape, filteringOptions, camera, layer)
 {
+    var orientation = layer.orientation;
     if (shape === undefined) { return []; }
 
     // intersectTest is a function with parameters: shape, rect

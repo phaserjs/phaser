@@ -15,12 +15,12 @@
  * @param {integer} tileY - The x coordinate, in tiles, not pixels.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
- * @param {string} orientation - The Tilemap's orientation
  * 
  * @return {number}
  */
 var TileToWorldY = function (tileY, camera, layer)
 {
+    var orientation = layer.orientation;
     var tileHeight = layer.baseTileHeight;
     var tilemapLayer = layer.tilemapLayer;
     var layerWorldY = 0;
