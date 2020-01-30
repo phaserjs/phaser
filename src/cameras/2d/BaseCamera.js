@@ -609,7 +609,7 @@ var BaseCamera = new Class({
      *
      * @param {number} x - The horizontal coordinate to center on.
      *
-     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     centerOnX: function (x)
     {
@@ -636,7 +636,7 @@ var BaseCamera = new Class({
      *
      * @param {number} y - The vertical coordinate to center on.
      *
-     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     centerOnY: function (y)
     {
@@ -663,7 +663,7 @@ var BaseCamera = new Class({
      * @param {number} x - The horizontal coordinate to center on.
      * @param {number} y - The vertical coordinate to center on.
      *
-     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     centerOn: function (x, y)
     {
@@ -679,7 +679,7 @@ var BaseCamera = new Class({
      * @method Phaser.Cameras.Scene2D.BaseCamera#centerToBounds
      * @since 3.0.0
      *
-     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     centerToBounds: function ()
     {
@@ -704,7 +704,7 @@ var BaseCamera = new Class({
      * @method Phaser.Cameras.Scene2D.BaseCamera#centerToSize
      * @since 3.0.0
      *
-     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     centerToSize: function ()
     {
@@ -872,7 +872,7 @@ var BaseCamera = new Class({
      *
      * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group)} entries - The Game Object, or array of Game Objects, to be ignored by this Camera.
      *
-     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     ignore: function (entries)
     {
@@ -1042,7 +1042,7 @@ var BaseCamera = new Class({
      * @method Phaser.Cameras.Scene2D.BaseCamera#removeBounds
      * @since 3.0.0
      *
-     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     removeBounds: function ()
     {
@@ -1065,7 +1065,7 @@ var BaseCamera = new Class({
      *
      * @param {number} [value=0] - The cameras angle of rotation, given in degrees.
      *
-     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     setAngle: function (value)
     {
@@ -1089,7 +1089,7 @@ var BaseCamera = new Class({
      *
      * @param {(string|number|Phaser.Types.Display.InputColorObject)} [color='rgba(0,0,0,0)'] - The color value. In CSS, hex or numeric color notation.
      *
-     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     setBackgroundColor: function (color)
     {
@@ -1130,7 +1130,7 @@ var BaseCamera = new Class({
      * @param {integer} height - The height of the bounds, in pixels.
      * @param {boolean} [centerOn=false] - If `true` the Camera will automatically be centered on the new bounds.
      *
-     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     setBounds: function (x, y, width, height, centerOn)
     {
@@ -1188,7 +1188,7 @@ var BaseCamera = new Class({
      *
      * @param {string} [value=''] - The name of the Camera.
      *
-     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     setName: function (value)
     {
@@ -1210,7 +1210,7 @@ var BaseCamera = new Class({
      * @param {number} x - The top-left x coordinate of the Camera viewport.
      * @param {number} [y=x] - The top-left y coordinate of the Camera viewport.
      *
-     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     setPosition: function (x, y)
     {
@@ -1232,7 +1232,7 @@ var BaseCamera = new Class({
      *
      * @param {number} [value=0] - The rotation of the Camera, in radians.
      *
-     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     setRotation: function (value)
     {
@@ -1253,7 +1253,7 @@ var BaseCamera = new Class({
      *
      * @param {boolean} value - `true` to round Camera pixels, `false` to not.
      *
-     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     setRoundPixels: function (value)
     {
@@ -1272,7 +1272,7 @@ var BaseCamera = new Class({
      *
      * @param {Phaser.Scene} scene - The Scene the camera is bound to.
      *
-     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     setScene: function (scene)
     {
@@ -1316,7 +1316,7 @@ var BaseCamera = new Class({
      * @param {number} x - The x coordinate of the Camera in the game world.
      * @param {number} [y=x] - The y coordinate of the Camera in the game world.
      *
-     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     setScroll: function (x, y)
     {
@@ -1341,7 +1341,7 @@ var BaseCamera = new Class({
      * @param {integer} width - The width of the Camera viewport.
      * @param {integer} [height=width] - The height of the Camera viewport.
      *
-     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     setSize: function (width, height)
     {
@@ -1372,7 +1372,7 @@ var BaseCamera = new Class({
      * @param {integer} width - The width of the Camera viewport.
      * @param {integer} [height=width] - The height of the Camera viewport.
      *
-     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     setViewport: function (x, y, width, height)
     {
@@ -1399,7 +1399,7 @@ var BaseCamera = new Class({
      *
      * @param {number} [value=1] - The zoom value of the Camera. The minimum it can be is 0.001.
      *
-     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     setZoom: function (value)
     {
