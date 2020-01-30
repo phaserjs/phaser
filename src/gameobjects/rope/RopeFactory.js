@@ -21,6 +21,7 @@ var GameObjectFactory = require('../GameObjectFactory');
  * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
  * @param {Phaser.Types.Math.Vector2Like[]} [points] - An array containing the vertices data for this Rope. If none is provided a simple quad is created. See `setPoints` to set this post-creation.
+ * @param {boolean} [horizontal=true] - Should the vertices of this Rope be aligned horizontally (`true`), or vertically (`false`)?
  * @param {number[]} [colors] - An optional array containing the color data for this Rope. You should provide one color value per pair of vertices.
  * @param {number[]} [alphas] - An optional array containing the alpha data for this Rope. You should provide one alpha value per pair of vertices.
  *
@@ -28,9 +29,13 @@ var GameObjectFactory = require('../GameObjectFactory');
  */
 if (typeof WEBGL_RENDERER)
 {
-    GameObjectFactory.register('rope', function (x, y, texture, frame, points, colors, alphas)
+    GameObjectFactory.register('rope', function (x, y, texture, frame, points, horizontal, colors, alphas)
     {
-        return this.displayList.add(new Rope(this.scene, x, y, texture, frame, points, colors, alphas));
+        var rope = new Rope(this.scene, x, y, texture, frame, points, horizontal, colors, alphas);
+
+        this.displayList.add(rope);
+
+        return this.updateList.add(rope);
     });
 }
 
