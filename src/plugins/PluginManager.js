@@ -620,7 +620,7 @@ var PluginManager = new Class({
      *
      * @param {string} key - The key of the plugin to stop.
      *
-     * @return {Phaser.Plugins.PluginManager} The Plugin Manager.
+     * @return {this} The Plugin Manager.
      */
     stop: function (key)
     {
