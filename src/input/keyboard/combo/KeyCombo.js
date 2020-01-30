@@ -45,7 +45,7 @@ var ResetKeyCombo = require('./ResetKeyCombo');
  * @since 3.0.0
  *
  * @param {Phaser.Input.Keyboard.KeyboardPlugin} keyboardPlugin - A reference to the Keyboard Plugin.
- * @param {(string|Array.<string|integer|Phaser.Types.Input.Keyboard.KeyLike>)} keys - The keys that comprise this combo.
+ * @param {Phaser.Types.Input.Keyboard.ComboKeys} keys - The keys that comprise this combo.
  * @param {Phaser.Types.Input.Keyboard.KeyComboConfig} [config] - A Key Combo configuration object.
  */
 var KeyCombo = new Class({
