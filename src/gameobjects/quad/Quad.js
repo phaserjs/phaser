@@ -499,7 +499,7 @@ var Quad = new Class({
      * @param {number} x - The horizontal coordinate of the vertex.
      * @param {number} y - The vertical coordinate of the vertex.
      *
-     * @return {Phaser.GameObjects.Quad} This Game Object.
+     * @return {this} This Game Object.
      */
     setTopLeft: function (x, y)
     {
@@ -518,7 +518,7 @@ var Quad = new Class({
      * @param {number} x - The horizontal coordinate of the vertex.
      * @param {number} y - The vertical coordinate of the vertex.
      *
-     * @return {Phaser.GameObjects.Quad} This Game Object.
+     * @return {this} This Game Object.
      */
     setTopRight: function (x, y)
     {
@@ -537,7 +537,7 @@ var Quad = new Class({
      * @param {number} x - The horizontal coordinate of the vertex.
      * @param {number} y - The vertical coordinate of the vertex.
      *
-     * @return {Phaser.GameObjects.Quad} This Game Object.
+     * @return {this} This Game Object.
      */
     setBottomLeft: function (x, y)
     {
@@ -556,7 +556,7 @@ var Quad = new Class({
      * @param {number} x - The horizontal coordinate of the vertex.
      * @param {number} y - The vertical coordinate of the vertex.
      *
-     * @return {Phaser.GameObjects.Quad} This Game Object.
+     * @return {this} This Game Object.
      */
     setBottomRight: function (x, y)
     {
@@ -572,7 +572,7 @@ var Quad = new Class({
      * @method Phaser.GameObjects.Quad#resetPosition
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Quad} This Game Object.
+     * @return {this} This Game Object.
      */
     resetPosition: function ()
     {
@@ -595,7 +595,7 @@ var Quad = new Class({
      * @method Phaser.GameObjects.Quad#resetAlpha
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Quad} This Game Object.
+     * @return {this} This Game Object.
      */
     resetAlpha: function ()
     {
@@ -617,7 +617,7 @@ var Quad = new Class({
      * @method Phaser.GameObjects.Quad#resetColors
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Quad} This Game Object.
+     * @return {this} This Game Object.
      */
     resetColors: function ()
     {
@@ -639,7 +639,7 @@ var Quad = new Class({
      * @method Phaser.GameObjects.Quad#reset
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Quad} This Game Object.
+     * @return {this} This Game Object.
      */
     reset: function ()
     {

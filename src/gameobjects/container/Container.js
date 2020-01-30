@@ -347,7 +347,7 @@ var Container = new Class({
      *
      * @param {boolean} [value=true] - The exclusive state of this Container.
      *
-     * @return {Phaser.GameObjects.Container} This Container.
+     * @return {this} This Container.
      */
     setExclusive: function (value)
     {
@@ -508,7 +508,7 @@ var Container = new Class({
      *
      * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} child - The Game Object, or array of Game Objects, to add to the Container.
      *
-     * @return {Phaser.GameObjects.Container} This Container instance.
+     * @return {this} This Container instance.
      */
     add: function (child)
     {
@@ -530,7 +530,7 @@ var Container = new Class({
      * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} child - The Game Object, or array of Game Objects, to add to the Container.
      * @param {integer} [index=0] - The position to insert the Game Object/s at.
      *
-     * @return {Phaser.GameObjects.Container} This Container instance.
+     * @return {this} This Container instance.
      */
     addAt: function (child, index)
     {
@@ -579,7 +579,7 @@ var Container = new Class({
      * @param {string} property - The property to lexically sort by.
      * @param {function} [handler] - Provide your own custom handler function. Will receive 2 children which it should compare and return a boolean.
      *
-     * @return {Phaser.GameObjects.Container} This Container instance.
+     * @return {this} This Container instance.
      */
     sort: function (property, handler)
     {
@@ -721,7 +721,7 @@ var Container = new Class({
      * @param {Phaser.GameObjects.GameObject} child1 - The first Game Object to swap.
      * @param {Phaser.GameObjects.GameObject} child2 - The second Game Object to swap.
      *
-     * @return {Phaser.GameObjects.Container} This Container instance.
+     * @return {this} This Container instance.
      */
     swap: function (child1, child2)
     {
@@ -744,7 +744,7 @@ var Container = new Class({
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to move.
      * @param {integer} index - The new position of the Game Object in this Container.
      *
-     * @return {Phaser.GameObjects.Container} This Container instance.
+     * @return {this} This Container instance.
      */
     moveTo: function (child, index)
     {
@@ -766,7 +766,7 @@ var Container = new Class({
      * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} child - The Game Object, or array of Game Objects, to be removed from the Container.
      * @param {boolean} [destroyChild=false] - Optionally call `destroy` on each child successfully removed from this Container.
      *
-     * @return {Phaser.GameObjects.Container} This Container instance.
+     * @return {this} This Container instance.
      */
     remove: function (child, destroyChild)
     {
@@ -799,7 +799,7 @@ var Container = new Class({
      * @param {integer} index - The index of the Game Object to be removed.
      * @param {boolean} [destroyChild=false] - Optionally call `destroy` on the Game Object if successfully removed from this Container.
      *
-     * @return {Phaser.GameObjects.Container} This Container instance.
+     * @return {this} This Container instance.
      */
     removeAt: function (index, destroyChild)
     {
@@ -825,7 +825,7 @@ var Container = new Class({
      * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
      * @param {boolean} [destroyChild=false] - Optionally call `destroy` on each Game Object successfully removed from this Container.
      *
-     * @return {Phaser.GameObjects.Container} This Container instance.
+     * @return {this} This Container instance.
      */
     removeBetween: function (startIndex, endIndex, destroyChild)
     {
@@ -852,7 +852,7 @@ var Container = new Class({
      *
      * @param {boolean} [destroyChild=false] - Optionally call `destroy` on each Game Object successfully removed from this Container.
      *
-     * @return {Phaser.GameObjects.Container} This Container instance.
+     * @return {this} This Container instance.
      */
     removeAll: function (destroyChild)
     {
@@ -878,7 +878,7 @@ var Container = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to bring to the top of the Container.
      *
-     * @return {Phaser.GameObjects.Container} This Container instance.
+     * @return {this} This Container instance.
      */
     bringToTop: function (child)
     {
@@ -896,7 +896,7 @@ var Container = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to send to the bottom of the Container.
      *
-     * @return {Phaser.GameObjects.Container} This Container instance.
+     * @return {this} This Container instance.
      */
     sendToBack: function (child)
     {
@@ -913,7 +913,7 @@ var Container = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to be moved in the Container.
      *
-     * @return {Phaser.GameObjects.Container} This Container instance.
+     * @return {this} This Container instance.
      */
     moveUp: function (child)
     {
@@ -930,7 +930,7 @@ var Container = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to be moved in the Container.
      *
-     * @return {Phaser.GameObjects.Container} This Container instance.
+     * @return {this} This Container instance.
      */
     moveDown: function (child)
     {
@@ -945,7 +945,7 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#reverse
      * @since 3.4.0
      *
-     * @return {Phaser.GameObjects.Container} This Container instance.
+     * @return {this} This Container instance.
      */
     reverse: function ()
     {
@@ -960,7 +960,7 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#shuffle
      * @since 3.4.0
      *
-     * @return {Phaser.GameObjects.Container} This Container instance.
+     * @return {this} This Container instance.
      */
     shuffle: function ()
     {
@@ -980,7 +980,7 @@ var Container = new Class({
      * @param {Phaser.GameObjects.GameObject} newChild - The Game Object to be added to this Container.
      * @param {boolean} [destroyChild=false] - Optionally call `destroy` on the Game Object if successfully removed from this Container.
      *
-     * @return {Phaser.GameObjects.Container} This Container instance.
+     * @return {this} This Container instance.
      */
     replace: function (oldChild, newChild, destroyChild)
     {
@@ -1032,7 +1032,7 @@ var Container = new Class({
      * @param {integer} [startIndex=0] - An optional start index to search from.
      * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
      *
-     * @return {Phaser.GameObjects.Container} This Container instance.
+     * @return {this} This Container instance.
      */
     setAll: function (property, value, startIndex, endIndex)
     {
@@ -1065,7 +1065,7 @@ var Container = new Class({
      * @param {object} [context] - Value to use as `this` when executing callback.
      * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
      *
-     * @return {Phaser.GameObjects.Container} This Container instance.
+     * @return {this} This Container instance.
      */
     each: function (callback, context)
     {
@@ -1102,7 +1102,7 @@ var Container = new Class({
      * @param {object} [context] - Value to use as `this` when executing callback.
      * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
      *
-     * @return {Phaser.GameObjects.Container} This Container instance.
+     * @return {this} This Container instance.
      */
     iterate: function (callback, context)
     {

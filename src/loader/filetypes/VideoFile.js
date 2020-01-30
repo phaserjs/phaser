@@ -350,7 +350,7 @@ VideoFile.getVideoURL = function (game, urls)
  * @param {boolean} [noAudio=false] - Does the video have an audio track? If not you can enable auto-playing on it.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
- * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
+ * @return {this} The Loader instance.
  */
 FileTypesManager.register('video', function (key, urls, loadEvent, asBlob, noAudio, xhrSettings)
 {

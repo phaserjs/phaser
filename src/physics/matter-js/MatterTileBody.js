@@ -8,6 +8,7 @@ var Bodies = require('./lib/factory/Bodies');
 var Body = require('./lib/body/Body');
 var Class = require('../../utils/Class');
 var Components = require('./components');
+var EventEmitter = require('eventemitter3');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var HasValue = require('../../utils/object/HasValue');
 var Vertices = require('./lib/geometry/Vertices');
@@ -27,6 +28,7 @@ var Vertices = require('./lib/geometry/Vertices');
  *
  * @class TileBody
  * @memberof Phaser.Physics.Matter
+ * @extends Phaser.Events.EventEmitter
  * @constructor
  * @since 3.0.0
  *
@@ -45,6 +47,8 @@ var Vertices = require('./lib/geometry/Vertices');
  */
 var MatterTileBody = new Class({
 
+    Extends: EventEmitter,
+
     Mixins: [
         Components.Bounce,
         Components.Collision,
@@ -60,6 +64,8 @@ var MatterTileBody = new Class({
 
     function MatterTileBody (world, tile, options)
     {
+        EventEmitter.call(this);
+
         /**
          * The tile object the body is associated with.
          *
@@ -300,6 +306,7 @@ var MatterTileBody = new Class({
     {
         this.removeBody();
         this.tile.physics.matterBody = undefined;
+        this.removeAllListeners();
     }
 
 });

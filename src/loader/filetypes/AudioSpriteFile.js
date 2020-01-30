@@ -238,7 +238,7 @@ var AudioSpriteFile = new Class({
  * @param {Phaser.Types.Loader.XHRSettingsObject} [audioXhrSettings] - An XHR Settings configuration object for the audio file. Used in replacement of the Loaders default XHR Settings.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [jsonXhrSettings] - An XHR Settings configuration object for the json file. Used in replacement of the Loaders default XHR Settings.
  *
- * @return {Phaser.Loader.LoaderPlugin} The Loader.
+ * @return {this} The Loader.
  */
 FileTypesManager.register('audioSprite', function (key, jsonURL, audioURL, audioConfig, audioXhrSettings, jsonXhrSettings)
 {

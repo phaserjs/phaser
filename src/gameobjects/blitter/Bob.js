@@ -152,7 +152,7 @@ var Bob = new Class({
      *
      * @param {(string|integer|Phaser.Textures.Frame)} [frame] - The frame to be used during rendering.
      *
-     * @return {Phaser.GameObjects.Bob} This Bob Game Object.
+     * @return {this} This Bob Game Object.
      */
     setFrame: function (frame)
     {
@@ -178,7 +178,7 @@ var Bob = new Class({
      * @method Phaser.GameObjects.Bob#resetFlip
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Bob} This Bob Game Object.
+     * @return {this} This Bob Game Object.
      */
     resetFlip: function ()
     {
@@ -202,7 +202,7 @@ var Bob = new Class({
      * @param {number} y - The y position of the Bob. Bob coordinate are relative to the position of the Blitter object.
      * @param {(string|integer|Phaser.Textures.Frame)} [frame] - The Frame the Bob will use. It _must_ be part of the Texture the parent Blitter object is using.
      *
-     * @return {Phaser.GameObjects.Bob} This Bob Game Object.
+     * @return {this} This Bob Game Object.
      */
     reset: function (x, y, frame)
     {
@@ -234,7 +234,7 @@ var Bob = new Class({
      * @param {number} x - The x position of the Bob. Bob coordinate are relative to the position of the Blitter object.
      * @param {number} y - The y position of the Bob. Bob coordinate are relative to the position of the Blitter object.
      *
-     * @return {Phaser.GameObjects.Bob} This Bob Game Object.
+     * @return {this} This Bob Game Object.
      */
     setPosition: function (x, y)
     {
@@ -252,7 +252,7 @@ var Bob = new Class({
      *
      * @param {boolean} value - The flipped state. `false` for no flip, or `true` to be flipped.
      *
-     * @return {Phaser.GameObjects.Bob} This Bob Game Object.
+     * @return {this} This Bob Game Object.
      */
     setFlipX: function (value)
     {
@@ -269,7 +269,7 @@ var Bob = new Class({
      *
      * @param {boolean} value - The flipped state. `false` for no flip, or `true` to be flipped.
      *
-     * @return {Phaser.GameObjects.Bob} This Bob Game Object.
+     * @return {this} This Bob Game Object.
      */
     setFlipY: function (value)
     {
@@ -287,7 +287,7 @@ var Bob = new Class({
      * @param {boolean} x - The horizontal flipped state. `false` for no flip, or `true` to be flipped.
      * @param {boolean} y - The horizontal flipped state. `false` for no flip, or `true` to be flipped.
      *
-     * @return {Phaser.GameObjects.Bob} This Bob Game Object.
+     * @return {this} This Bob Game Object.
      */
     setFlip: function (x, y)
     {
@@ -307,7 +307,7 @@ var Bob = new Class({
      *
      * @param {boolean} value - The visible state of the Game Object.
      *
-     * @return {Phaser.GameObjects.Bob} This Bob Game Object.
+     * @return {this} This Bob Game Object.
      */
     setVisible: function (value)
     {
@@ -327,7 +327,7 @@ var Bob = new Class({
      *
      * @param {number} value - The alpha value used for this Bob. Between 0 and 1.
      *
-     * @return {Phaser.GameObjects.Bob} This Bob Game Object.
+     * @return {this} This Bob Game Object.
      */
     setAlpha: function (value)
     {
@@ -344,7 +344,7 @@ var Bob = new Class({
      *
      * @param {number} value - The tint value used for this Bob. Between 0 and 0xffffff.
      *
-     * @return {Phaser.GameObjects.Bob} This Bob Game Object.
+     * @return {this} This Bob Game Object.
      */
     setTint: function (value)
     {

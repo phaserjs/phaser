@@ -155,7 +155,7 @@ var DynamicBitmapText = new Class({
      * @param {number} width - The width of the crop.
      * @param {number} height - The height of the crop.
      *
-     * @return {Phaser.GameObjects.DynamicBitmapText} This Game Object.
+     * @return {this} This Game Object.
      */
     setSize: function (width, height)
     {
@@ -179,7 +179,7 @@ var DynamicBitmapText = new Class({
      *
      * @param {Phaser.Types.GameObjects.BitmapText.DisplayCallback} callback - The display callback to set.
      *
-     * @return {Phaser.GameObjects.DynamicBitmapText} This Game Object.
+     * @return {this} This Game Object.
      */
     setDisplayCallback: function (callback)
     {
@@ -196,7 +196,7 @@ var DynamicBitmapText = new Class({
      *
      * @param {number} value - The horizontal scroll position to set.
      *
-     * @return {Phaser.GameObjects.DynamicBitmapText} This Game Object.
+     * @return {this} This Game Object.
      */
     setScrollX: function (value)
     {
@@ -213,7 +213,7 @@ var DynamicBitmapText = new Class({
      *
      * @param {number} value - The vertical scroll position to set.
      *
-     * @return {Phaser.GameObjects.DynamicBitmapText} This Game Object.
+     * @return {this} This Game Object.
      */
     setScrollY: function (value)
     {

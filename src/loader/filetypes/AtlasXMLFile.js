@@ -205,7 +205,7 @@ var AtlasXMLFile = new Class({
  * @param {Phaser.Types.Loader.XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the atlas xml file. Used in replacement of the Loaders default XHR Settings.
  *
- * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
+ * @return {this} The Loader instance.
  */
 FileTypesManager.register('atlasXML', function (key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
 {

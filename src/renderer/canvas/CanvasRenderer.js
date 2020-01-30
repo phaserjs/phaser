@@ -456,7 +456,10 @@ var CanvasRenderer = new Class({
         {
             camera.emit(CameraEvents.POST_RENDER, camera);
 
-            scene.sys.context.drawImage(camera.canvas, cx, cy);
+            if (camera.renderToGame)
+            {
+                scene.sys.context.drawImage(camera.canvas, cx, cy);
+            }
         }
     },
 
