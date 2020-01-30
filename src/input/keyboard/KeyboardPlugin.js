@@ -405,12 +405,46 @@ var KeyboardPlugin = new Class({
      *
      * @method Phaser.Input.Keyboard.KeyboardPlugin#addKeys
      * @since 3.10.0
+     * 
+     * @generic {Phaser.Types.Input.Keyboard.KeysSource=Phaser.Types.Input.Keyboard.KeysSource} T - [keys]
+     * @genericUse {Phaser.Types.Input.Keyboard.Keys<Extract<keyof T, string>>} - [$return]
      *
-     * @param {(object|string)} keys - An object containing Key Codes, or a comma-separated string.
+     * @param {Phaser.Types.Input.Keyboard.KeysSource} keys - An object containing Key Codes, or a comma-separated string.
      * @param {boolean} [enableCapture=true] - Automatically call `preventDefault` on the native DOM browser event for the key codes being added.
      * @param {boolean} [emitOnRepeat=false] - Controls if the Key will continuously emit a 'down' event while being held down (true), or emit the event just once (false, the default).
      *
-     * @return {object} An object containing Key objects mapped to the input properties.
+     * @return {Phaser.Types.Input.Keyboard.Keys} An object containing Key objects mapped to the input properties.
+     */
+
+    /**
+     * A practical way to create an object containing user selected hotkeys.
+     *
+     * For example:
+     *
+     * ```javascript
+     * this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.W, 'down': Phaser.Input.Keyboard.KeyCodes.S });
+     * ```
+     * 
+     * would return an object containing the properties (`up` and `down`) mapped to W and S {@link Phaser.Input.Keyboard.Key} objects.
+     *
+     * You can also pass in a comma-separated string:
+     * 
+     * ```javascript
+     * this.input.keyboard.addKeys('W,S,A,D');
+     * ```
+     *
+     * Which will return an object with the properties W, S, A and D mapped to the relevant Key objects.
+     *
+     * To use non-alpha numeric keys, use a string, such as 'UP', 'SPACE' or 'LEFT'.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#addKeys
+     * @since 3.10.0
+     *
+     * @param {string} keys - An object containing Key Codes, or a comma-separated string.
+     * @param {boolean} [enableCapture=true] - Automatically call `preventDefault` on the native DOM browser event for the key codes being added.
+     * @param {boolean} [emitOnRepeat=false] - Controls if the Key will continuously emit a 'down' event while being held down (true), or emit the event just once (false, the default).
+     *
+     * @return {Phaser.Types.Input.Keyboard.Keys} An object containing Key objects mapped to the input properties.
      */
     addKeys: function (keys, enableCapture, emitOnRepeat)
     {
@@ -454,7 +488,7 @@ var KeyboardPlugin = new Class({
      * @method Phaser.Input.Keyboard.KeyboardPlugin#addKey
      * @since 3.10.0
      *
-     * @param {(Phaser.Input.Keyboard.Key|string|integer)} key - Either a Key object, a string, such as `A` or `SPACE`, or a key code value.
+     * @param {Phaser.Types.Input.Keyboard.KeySource} key - Either a Key object, a string, such as `A` or `SPACE`, or a key code value.
      * @param {boolean} [enableCapture=true] - Automatically call `preventDefault` on the native DOM browser event for the key codes being added.
      * @param {boolean} [emitOnRepeat=false] - Controls if the Key will continuously emit a 'down' event while being held down (true), or emit the event just once (false, the default).
      *
@@ -518,7 +552,7 @@ var KeyboardPlugin = new Class({
      * @method Phaser.Input.Keyboard.KeyboardPlugin#removeKey
      * @since 3.10.0
      *
-     * @param {(Phaser.Input.Keyboard.Key|string|integer)} key - Either a Key object, a string, such as `A` or `SPACE`, or a key code value.
+     * @param {Phaser.Types.Input.Keyboard.KeySource} key - Either a Key object, a string, such as `A` or `SPACE`, or a key code value.
      * @param {boolean} [destroy=false] - Call `Key.destroy` on the removed Key object?
      *
      * @return {Phaser.Input.Keyboard.KeyboardPlugin} This KeyboardPlugin object.
