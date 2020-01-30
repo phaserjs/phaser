@@ -13,3 +13,12 @@
  * @since 3.0.0
  */
 module.exports = 'update';
+
+/**
+ * The Input Manager Update Event.
+ * 
+ * This internal event is dispatched by the Input Manager as part of its update step.
+ *
+ * @method Phaser.Types.Input.InputManagerEventsMap#update
+ * @since 3.0.0
+ */

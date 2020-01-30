@@ -19,3 +19,18 @@
  * @param {(MouseEvent|TouchEvent)} event - The DOM Event that triggered the canvas out.
  */
 module.exports = 'gameout';
+
+/**
+ * The Input Plugin Game Out Event.
+ * 
+ * This event is dispatched by the Input Plugin if the active pointer leaves the game canvas and is now
+ * outside of it, elsewhere on the web page.
+ * 
+ * Listen to this event from within a Scene using: `this.input.on('gameout', listener)`.
+ *
+ * @method Phaser.Types.Input.InputPluginEventsMap#gameout
+ * @since 3.16.1
+ * 
+ * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+ * @param {(MouseEvent|TouchEvent)} event - The DOM Event that triggered the canvas out.
+ */

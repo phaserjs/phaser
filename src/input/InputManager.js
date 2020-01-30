@@ -97,7 +97,7 @@ var InputManager = new Class({
          * The Event Emitter instance that the Input Manager uses to emit events from.
          *
          * @name Phaser.Input.InputManager#events
-         * @type {Phaser.Events.EventEmitter}
+         * @type {Phaser.Types.Input.InputManagerEventsEmitter}
          * @since 3.0.0
          */
         this.events = new EventEmitter();

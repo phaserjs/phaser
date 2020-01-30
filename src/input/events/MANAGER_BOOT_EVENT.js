@@ -13,3 +13,12 @@
  * @since 3.0.0
  */
 module.exports = 'boot';
+
+/**
+ * The Input Manager Boot Event.
+ * 
+ * This internal event is dispatched by the Input Manager when it boots.
+ *
+ * @method Phaser.Types.Input.InputManagerEventsMap#boot
+ * @since 3.0.0
+ */

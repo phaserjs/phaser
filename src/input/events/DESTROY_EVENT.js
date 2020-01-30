@@ -13,3 +13,12 @@
  * @since 3.0.0
  */
 module.exports = 'destroy';
+
+/**
+ * The Input Plugin Destroy Event.
+ * 
+ * This internal event is dispatched by the Input Plugin when it is destroyed, signalling to all of its systems to destroy themselves.
+ *
+ * @method Phaser.Types.Input.InputPluginEventsMap#destroy
+ * @since 3.0.0
+ */

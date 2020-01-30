@@ -3141,6 +3141,256 @@ var InputPlugin = new Class({
 
 });
 
+/**
+ * Return the listeners registered for a given event.
+ *
+ * @method Phaser.Input.InputPlugin#listeners
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.Input.InputPluginEventsMap} K - [event]
+ *
+ * @param {(string|symbol)} event - The event name.
+ *
+ * @return {Function[]} The registered listeners.
+ */
+
+/**
+ * Return the listeners registered for a given event.
+ *
+ * @method Phaser.Input.InputPlugin#listeners
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} event - The event name.
+ *
+ * @return {Function[]} The registered listeners.
+ */
+
+/**
+ * Return the number of listeners listening to a given event.
+ *
+ * @method Phaser.Input.InputPlugin#listenerCount
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.Input.InputPluginEventsMap} K - [event]
+ *
+ * @param {(string|symbol)} event - The event name.
+ *
+ * @return {number} The number of listeners.
+ */
+
+/**
+ * Return the number of listeners listening to a given event.
+ *
+ * @method Phaser.Input.InputPlugin#listenerCount
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.Input.InputPluginEventsMap} K - [event]
+ *
+ * @param {(string|symbol)} event - The event name.
+ *
+ * @return {number} The number of listeners.
+ */
+
+/**
+ * Calls each of the listeners registered for a given event.
+ *
+ * @method Phaser.Input.InputPlugin#emit
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.Input.InputPluginEventsMap} K - [event]
+ * @genericUse {Phaser.Types.Events.EmitArguments<Phaser.Types.Input.InputPluginEventsMap[K]>} - [args]
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {...*} [args] - Additional arguments that will be passed to the event handler.
+ *
+ * @return {boolean} `true` if the event had listeners, else `false`.
+ */
+
+/**
+ * Calls each of the listeners registered for a given event.
+ *
+ * @method Phaser.Input.InputPlugin#emit
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {...*} [args] - Additional arguments that will be passed to the event handler.
+ *
+ * @return {boolean} `true` if the event had listeners, else `false`.
+ */
+
+/**
+ * Add a listener for a given event.
+ *
+ * @method Phaser.Input.InputPlugin#on
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.Input.InputPluginEventsMap} K - [event]
+ * @genericUse {Phaser.Types.Input.InputPluginEventsMap[K]} - [fn]
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} fn - The listener function.
+ * @param {*} [context=this] - The context to invoke the listener with.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Add a listener for a given event.
+ *
+ * @method Phaser.Input.InputPlugin#on
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} fn - The listener function.
+ * @param {*} [context=this] - The context to invoke the listener with.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Add a listener for a given event.
+ *
+ * @method Phaser.Input.InputPlugin#addListener
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.Input.InputPluginEventsMap} K - [event]
+ * @genericUse {Phaser.Types.Input.InputPluginEventsMap[K]} - [fn]
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} fn - The listener function.
+ * @param {*} [context=this] - The context to invoke the listener with.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Add a listener for a given event.
+ *
+ * @method Phaser.Input.InputPlugin#addListener
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} fn - The listener function.
+ * @param {*} [context=this] - The context to invoke the listener with.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Add a one-time listener for a given event.
+ *
+ * @method Phaser.Input.InputPlugin#once
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.Input.InputPluginEventsMap} K - [event]
+ * @genericUse {Phaser.Types.Input.InputPluginEventsMap[K]} - [fn]
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} fn - The listener function.
+ * @param {*} [context=this] - The context to invoke the listener with.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Add a one-time listener for a given event.
+ *
+ * @method Phaser.Input.InputPlugin#once
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} fn - The listener function.
+ * @param {*} [context=this] - The context to invoke the listener with.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Remove the listeners of a given event.
+ *
+ * @method Phaser.Input.InputPlugin#removeListener
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.Input.InputPluginEventsMap} K - [event]
+ * @genericUse {Phaser.Types.Input.InputPluginEventsMap[K]} - [fn]
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} [fn] - Only remove the listeners that match this function.
+ * @param {*} [context] - Only remove the listeners that have this context.
+ * @param {boolean} [once] - Only remove one-time listeners.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Remove the listeners of a given event.
+ *
+ * @method Phaser.Input.InputPlugin#removeListener
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} [fn] - Only remove the listeners that match this function.
+ * @param {*} [context] - Only remove the listeners that have this context.
+ * @param {boolean} [once] - Only remove one-time listeners.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Remove the listeners of a given event.
+ *
+ * @method Phaser.Input.InputPlugin#off
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.Input.InputPluginEventsMap} K - [event]
+ * @genericUse {Phaser.Types.Input.InputPluginEventsMap[K]} - [fn]
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} [fn] - Only remove the listeners that match this function.
+ * @param {*} [context] - Only remove the listeners that have this context.
+ * @param {boolean} [once] - Only remove one-time listeners.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Remove the listeners of a given event.
+ *
+ * @method Phaser.Input.InputPlugin#off
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} event - The event name.
+ * @param {function} [fn] - Only remove the listeners that match this function.
+ * @param {*} [context] - Only remove the listeners that have this context.
+ * @param {boolean} [once] - Only remove one-time listeners.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Remove all listeners, or those of the specified event.
+ *
+ * @method Phaser.Input.InputPlugin#removeAllListeners
+ * @since 3.0.0
+ * 
+ * @generic {keyof Phaser.Types.Input.InputPluginEventsMap} K - [event]
+ *
+ * @param {(string|symbol)} [event] - The event name.
+ *
+ * @return {this} `this`.
+ */
+
+/**
+ * Remove all listeners, or those of the specified event.
+ *
+ * @method Phaser.Input.InputPlugin#removeAllListeners
+ * @since 3.0.0
+ *
+ * @param {(string|symbol)} [event] - The event name.
+ *
+ * @return {this} `this`.
+ */
+
 PluginCache.register('InputPlugin', InputPlugin, 'input');
 
 module.exports = InputPlugin;
