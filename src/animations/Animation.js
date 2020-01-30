@@ -226,7 +226,7 @@ var Animation = new Class({
      *
      * @param {(string|Phaser.Types.Animations.AnimationFrame[])} config - [description]
      *
-     * @return {Phaser.Animations.Animation} This Animation object.
+     * @return {this} This Animation object.
      */
     addFrame: function (config)
     {
@@ -242,7 +242,7 @@ var Animation = new Class({
      * @param {integer} index - The index to insert the frame at within the animation.
      * @param {(string|Phaser.Types.Animations.AnimationFrame[])} config - [description]
      *
-     * @return {Phaser.Animations.Animation} This Animation object.
+     * @return {this} This Animation object.
      */
     addFrameAt: function (index, config)
     {
@@ -694,7 +694,7 @@ var Animation = new Class({
      *
      * @param {Phaser.Animations.AnimationFrame} frame - [description]
      *
-     * @return {Phaser.Animations.Animation} This Animation object.
+     * @return {this} This Animation object.
      */
     removeFrame: function (frame)
     {
@@ -717,7 +717,7 @@ var Animation = new Class({
      *
      * @param {integer} index - The index in the AnimationFrame array
      *
-     * @return {Phaser.Animations.Animation} This Animation object.
+     * @return {this} This Animation object.
      */
     removeFrameAt: function (index)
     {
@@ -836,7 +836,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#updateFrameSequence
      * @since 3.0.0
      *
-     * @return {Phaser.Animations.Animation} This Animation object.
+     * @return {this} This Animation object.
      */
     updateFrameSequence: function ()
     {
@@ -893,7 +893,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#pause
      * @since 3.0.0
      *
-     * @return {Phaser.Animations.Animation} This Animation object.
+     * @return {this} This Animation object.
      */
     pause: function ()
     {
@@ -908,7 +908,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#resume
      * @since 3.0.0
      *
-     * @return {Phaser.Animations.Animation} This Animation object.
+     * @return {this} This Animation object.
      */
     resume: function ()
     {
