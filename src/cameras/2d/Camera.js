@@ -337,7 +337,7 @@ var Camera = new Class({
      * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} [pipeline] - An optional WebGL Pipeline to render with, can be either a string which is the name of the pipeline, or a pipeline reference.
      * @param {boolean} [renderToGame=true] - If you do not need the Camera to still render to the Game, set this parameter to `false`.
      *
-     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     setRenderToTexture: function (pipeline, renderToGame)
     {
@@ -379,7 +379,7 @@ var Camera = new Class({
      *
      * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} [pipeline] - The WebGL Pipeline to render with, can be either a string which is the name of the pipeline, or a pipeline reference. Or if left empty it will clear the pipeline.
      *
-     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     setPipeline: function (pipeline)
     {
@@ -410,7 +410,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#clearRenderToTexture
      * @since 3.13.0
      *
-     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     clearRenderToTexture: function ()
     {
@@ -477,7 +477,7 @@ var Camera = new Class({
      * @param {number} [width] - The width of the deadzone rectangle in pixels. If not specified the deadzone is removed.
      * @param {number} [height] - The height of the deadzone rectangle in pixels.
      *
-     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     setDeadzone: function (width, height)
     {
@@ -533,7 +533,7 @@ var Camera = new Class({
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
-     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     fadeIn: function (duration, red, green, blue, callback, context)
     {
@@ -557,7 +557,7 @@ var Camera = new Class({
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
-     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     fadeOut: function (duration, red, green, blue, callback, context)
     {
@@ -581,7 +581,7 @@ var Camera = new Class({
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
-     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     fadeFrom: function (duration, red, green, blue, force, callback, context)
     {
@@ -605,7 +605,7 @@ var Camera = new Class({
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
-     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     fade: function (duration, red, green, blue, force, callback, context)
     {
@@ -629,7 +629,7 @@ var Camera = new Class({
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
-     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     flash: function (duration, red, green, blue, force, callback, context)
     {
@@ -651,7 +651,7 @@ var Camera = new Class({
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
-     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     shake: function (duration, intensity, force, callback, context)
     {
@@ -677,7 +677,7 @@ var Camera = new Class({
      * the current camera scroll x coordinate and the current camera scroll y coordinate.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
-     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     pan: function (x, y, duration, ease, force, callback, context)
     {
@@ -701,7 +701,7 @@ var Camera = new Class({
      * the current camera scroll x coordinate and the current camera scroll y coordinate.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
-     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     zoomTo: function (zoom, duration, ease, force, callback, context)
     {
@@ -934,7 +934,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#stopFollow
      * @since 3.0.0
      *
-     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     stopFollow: function ()
     {
@@ -950,7 +950,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#resetFX
      * @since 3.0.0
      *
-     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     * @return {this} This Camera instance.
      */
     resetFX: function ()
     {
