@@ -231,7 +231,7 @@ var MouseManager = new Class({
      * @method Phaser.Input.Mouse.MouseManager#disableContextMenu
      * @since 3.0.0
      *
-     * @return {Phaser.Input.Mouse.MouseManager} This Mouse Manager instance.
+     * @return {this} This Mouse Manager instance.
      */
     disableContextMenu: function ()
     {
