@@ -7,8 +7,8 @@
 /**
  * Phaser Scale Manager constants for zoom modes.
  * 
- * @namespace Phaser.Scale.Zoom
- * @memberof Phaser.Scale
+ * @name Phaser.Scale.Zoom
+ * @enum {integer}
  * @since 3.16.0
  */
 

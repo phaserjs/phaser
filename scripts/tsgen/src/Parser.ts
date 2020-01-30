@@ -95,7 +95,6 @@ export class Parser {
                 case 'Phaser.Scale.Center':
                 case 'Phaser.Scale.Orientation':
                 case 'Phaser.Scale.ScaleModes':
-                case 'Phaser.Scale.Zoom':
                 case 'Phaser.Textures.FilterMode':
                     // console.log('Forcing enum for ' + doclet.longname);
                     doclet.kind = 'member';
@@ -122,6 +121,7 @@ export class Parser {
                 case 'mixin':
                     obj = this.createInterface(doclet);
                     break;
+                case 'enum':
                 case 'member':
                     if (doclet.isEnum === true) {
                         obj = this.createEnum(doclet);
