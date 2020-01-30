@@ -249,7 +249,7 @@ var KeyboardPlugin = new Class({
      * 
      * @param {(string|integer|integer[]|any[])} keycode - The Key Codes to enable event capture for.
      *
-     * @return {Phaser.Input.Keyboard.KeyboardPlugin} This KeyboardPlugin object.
+     * @return {this} This KeyboardPlugin object.
      */
     addCapture: function (keycode)
     {
@@ -291,7 +291,7 @@ var KeyboardPlugin = new Class({
      * 
      * @param {(string|integer|integer[]|any[])} keycode - The Key Codes to disable event capture for.
      *
-     * @return {Phaser.Input.Keyboard.KeyboardPlugin} This KeyboardPlugin object.
+     * @return {this} This KeyboardPlugin object.
      */
     removeCapture: function (keycode)
     {
@@ -320,7 +320,7 @@ var KeyboardPlugin = new Class({
      * @method Phaser.Input.Keyboard.KeyboardPlugin#enableGlobalCapture
      * @since 3.16.0
      *
-     * @return {Phaser.Input.Keyboard.KeyboardPlugin} This KeyboardPlugin object.
+     * @return {this} This KeyboardPlugin object.
      */
     enableGlobalCapture: function ()
     {
@@ -336,7 +336,7 @@ var KeyboardPlugin = new Class({
      * @method Phaser.Input.Keyboard.KeyboardPlugin#disableGlobalCapture
      * @since 3.16.0
      *
-     * @return {Phaser.Input.Keyboard.KeyboardPlugin} This KeyboardPlugin object.
+     * @return {this} This KeyboardPlugin object.
      */
     disableGlobalCapture: function ()
     {
@@ -353,7 +353,7 @@ var KeyboardPlugin = new Class({
      * @method Phaser.Input.Keyboard.KeyboardPlugin#clearCaptures
      * @since 3.16.0
      *
-     * @return {Phaser.Input.Keyboard.KeyboardPlugin} This KeyboardPlugin object.
+     * @return {this} This KeyboardPlugin object.
      */
     clearCaptures: function ()
     {
@@ -521,7 +521,7 @@ var KeyboardPlugin = new Class({
      * @param {(Phaser.Input.Keyboard.Key|string|integer)} key - Either a Key object, a string, such as `A` or `SPACE`, or a key code value.
      * @param {boolean} [destroy=false] - Call `Key.destroy` on the removed Key object?
      *
-     * @return {Phaser.Input.Keyboard.KeyboardPlugin} This KeyboardPlugin object.
+     * @return {this} This KeyboardPlugin object.
      */
     removeKey: function (key, destroy)
     {
@@ -767,7 +767,7 @@ var KeyboardPlugin = new Class({
      * @method Phaser.Input.Keyboard.KeyboardPlugin#resetKeys
      * @since 3.15.0
      *
-     * @return {Phaser.Input.Keyboard.KeyboardPlugin} This KeyboardPlugin object.
+     * @return {this} This KeyboardPlugin object.
      */
     resetKeys: function ()
     {
