@@ -1,5 +1,5 @@
 /**
- * @interface SceneEventsEmitter
+ * @interface SceneEventEmitter
  * @memberof Phaser.Types.Scenes
  * @extends Phaser.Events.EventEmitter
  * @since 3.0.0
@@ -8,7 +8,7 @@
 /**
  * Return the listeners registered for a given event.
  *
- * @method Phaser.Types.Scenes.SceneEventsEmitter#listeners
+ * @method Phaser.Types.Scenes.SceneEventEmitter#listeners
  * @since 3.0.0
  * 
  * @generic {keyof Phaser.Types.Scenes.SceneEventsMap} K - [event]
@@ -21,7 +21,7 @@
 /**
  * Return the listeners registered for a given event.
  *
- * @method Phaser.Types.Scenes.SceneEventsEmitter#listeners
+ * @method Phaser.Types.Scenes.SceneEventEmitter#listeners
  * @since 3.0.0
  *
  * @param {(string|symbol)} event - The event name.
@@ -32,7 +32,7 @@
 /**
  * Return the number of listeners listening to a given event.
  *
- * @method Phaser.Types.Scenes.SceneEventsEmitter#listenerCount
+ * @method Phaser.Types.Scenes.SceneEventEmitter#listenerCount
  * @since 3.0.0
  * 
  * @generic {keyof Phaser.Types.Scenes.SceneEventsMap} K - [event]
@@ -45,7 +45,7 @@
 /**
  * Return the number of listeners listening to a given event.
  *
- * @method Phaser.Types.Scenes.SceneEventsEmitter#listenerCount
+ * @method Phaser.Types.Scenes.SceneEventEmitter#listenerCount
  * @since 3.0.0
  * 
  * @generic {keyof Phaser.Types.Scenes.SceneEventsMap} K - [event]
@@ -58,7 +58,7 @@
 /**
  * Calls each of the listeners registered for a given event.
  *
- * @method Phaser.Types.Scenes.SceneEventsEmitter#emit
+ * @method Phaser.Types.Scenes.SceneEventEmitter#emit
  * @since 3.0.0
  * 
  * @generic {keyof Phaser.Types.Scenes.SceneEventsMap} K - [event]
@@ -73,7 +73,7 @@
 /**
  * Calls each of the listeners registered for a given event.
  *
- * @method Phaser.Types.Scenes.SceneEventsEmitter#emit
+ * @method Phaser.Types.Scenes.SceneEventEmitter#emit
  * @since 3.0.0
  *
  * @param {(string|symbol)} event - The event name.
@@ -85,7 +85,7 @@
 /**
  * Add a listener for a given event.
  *
- * @method Phaser.Types.Scenes.SceneEventsEmitter#on
+ * @method Phaser.Types.Scenes.SceneEventEmitter#on
  * @since 3.0.0
  * 
  * @generic {keyof Phaser.Types.Scenes.SceneEventsMap} K - [event]
@@ -101,7 +101,7 @@
 /**
  * Add a listener for a given event.
  *
- * @method Phaser.Types.Scenes.SceneEventsEmitter#on
+ * @method Phaser.Types.Scenes.SceneEventEmitter#on
  * @since 3.0.0
  *
  * @param {(string|symbol)} event - The event name.
@@ -114,7 +114,7 @@
 /**
  * Add a listener for a given event.
  *
- * @method Phaser.Types.Scenes.SceneEventsEmitter#addListener
+ * @method Phaser.Types.Scenes.SceneEventEmitter#addListener
  * @since 3.0.0
  * 
  * @generic {keyof Phaser.Types.Scenes.SceneEventsMap} K - [event]
@@ -130,7 +130,7 @@
 /**
  * Add a listener for a given event.
  *
- * @method Phaser.Types.Scenes.SceneEventsEmitter#addListener
+ * @method Phaser.Types.Scenes.SceneEventEmitter#addListener
  * @since 3.0.0
  *
  * @param {(string|symbol)} event - The event name.
@@ -143,7 +143,7 @@
 /**
  * Add a one-time listener for a given event.
  *
- * @method Phaser.Types.Scenes.SceneEventsEmitter#once
+ * @method Phaser.Types.Scenes.SceneEventEmitter#once
  * @since 3.0.0
  * 
  * @generic {keyof Phaser.Types.Scenes.SceneEventsMap} K - [event]
@@ -159,7 +159,7 @@
 /**
  * Add a one-time listener for a given event.
  *
- * @method Phaser.Types.Scenes.SceneEventsEmitter#once
+ * @method Phaser.Types.Scenes.SceneEventEmitter#once
  * @since 3.0.0
  *
  * @param {(string|symbol)} event - The event name.
@@ -172,7 +172,7 @@
 /**
  * Remove the listeners of a given event.
  *
- * @method Phaser.Types.Scenes.SceneEventsEmitter#removeListener
+ * @method Phaser.Types.Scenes.SceneEventEmitter#removeListener
  * @since 3.0.0
  * 
  * @generic {keyof Phaser.Types.Scenes.SceneEventsMap} K - [event]
@@ -189,7 +189,7 @@
 /**
  * Remove the listeners of a given event.
  *
- * @method Phaser.Types.Scenes.SceneEventsEmitter#removeListener
+ * @method Phaser.Types.Scenes.SceneEventEmitter#removeListener
  * @since 3.0.0
  *
  * @param {(string|symbol)} event - The event name.
@@ -203,7 +203,7 @@
 /**
  * Remove the listeners of a given event.
  *
- * @method Phaser.Types.Scenes.SceneEventsEmitter#off
+ * @method Phaser.Types.Scenes.SceneEventEmitter#off
  * @since 3.0.0
  * 
  * @generic {keyof Phaser.Types.Scenes.SceneEventsMap} K - [event]
@@ -220,7 +220,7 @@
 /**
  * Remove the listeners of a given event.
  *
- * @method Phaser.Types.Scenes.SceneEventsEmitter#off
+ * @method Phaser.Types.Scenes.SceneEventEmitter#off
  * @since 3.0.0
  *
  * @param {(string|symbol)} event - The event name.
@@ -234,7 +234,7 @@
 /**
  * Remove all listeners, or those of the specified event.
  *
- * @method Phaser.Types.Scenes.SceneEventsEmitter#removeAllListeners
+ * @method Phaser.Types.Scenes.SceneEventEmitter#removeAllListeners
  * @since 3.0.0
  * 
  * @generic {keyof Phaser.Types.Scenes.SceneEventsMap} K - [event]
@@ -247,7 +247,7 @@
 /**
  * Remove all listeners, or those of the specified event.
  *
- * @method Phaser.Types.Scenes.SceneEventsEmitter#removeAllListeners
+ * @method Phaser.Types.Scenes.SceneEventEmitter#removeAllListeners
  * @since 3.0.0
  *
  * @param {(string|symbol)} [event] - The event name.
