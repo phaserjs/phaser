@@ -198,7 +198,7 @@ var Triangle = new Class({
      * @param {number} [x3=0] - `x` coordinate of the third point.
      * @param {number} [y3=0] - `y` coordinate of the third point.
      *
-     * @return {Phaser.Geom.Triangle} This Triangle object.
+     * @return {this} This Triangle object.
      */
     setTo: function (x1, y1, x2, y2, x3, y3)
     {
