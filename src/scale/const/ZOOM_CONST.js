@@ -17,8 +17,8 @@
  * 
  * To find out what each mode does please see [Phaser.Scale.Zoom]{@link Phaser.Scale.Zoom}.
  * 
- * @typedef {Phaser.Scale.Zoom} Phaser.Scale.ZoomType
- * @memberof Phaser.Scale
+ * @name Phaser.Scale.Zoom
+ * @enum {integer}
  * @since 3.16.0
  */
 
