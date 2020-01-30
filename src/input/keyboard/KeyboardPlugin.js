@@ -598,7 +598,7 @@ var KeyboardPlugin = new Class({
      * @method Phaser.Input.Keyboard.KeyboardPlugin#createCombo
      * @since 3.10.0
      *
-     * @param {(string|integer[]|object[])} keys - The keys that comprise this combo.
+     * @param {(string|Array.<string|integer|Phaser.Types.Input.Keyboard.KeyLike>)} keys - The keys that comprise this combo.
      * @param {Phaser.Types.Input.Keyboard.KeyComboConfig} [config] - A Key Combo configuration object.
      *
      * @return {Phaser.Input.Keyboard.KeyCombo} The new KeyCombo object.
