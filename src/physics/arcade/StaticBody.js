@@ -35,8 +35,8 @@ var StaticBody = new Class({
 
     function StaticBody (world, gameObject)
     {
-        var width = (gameObject.width) ? gameObject.width : 64;
-        var height = (gameObject.height) ? gameObject.height : 64;
+        var width = (gameObject.displayWidth) ? gameObject.displayWidth : 64;
+        var height = (gameObject.displayHeight) ? gameObject.displayHeight : 64;
 
         /**
          * The Arcade Physics simulation this Static Body belongs to.
