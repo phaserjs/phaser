@@ -148,7 +148,10 @@ var Body = new Class({
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
-        this.position = new Vector2(gameObject.x, gameObject.y);
+        this.position = new Vector2(
+            gameObject.x - gameObject.scaleX * gameObject.displayOriginX,
+            gameObject.y - gameObject.scaleY * gameObject.displayOriginY
+        );
 
         /**
          * The position of this Body during the previous step.
