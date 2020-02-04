@@ -2,6 +2,25 @@
 
 ## Version 3.23 - Ginro - in development
 
+### JSDocs
+
+The following sections now have 100% complete JSDoc coverage:
+
+* Math
+
+### Removed
+
+The following features have been removed in this version of Phaser:
+
+* Impact Physics has been removed completely and is no longer a choice of physics system. The resulting `Scene.impact` property and Impact config object have also been removed.
+
+### Deprecated
+
+The following features are now deprecated and will be removed in a future version of Phaser:
+
+* The Light Pipeline and associated components will be removed. This feature was never properly finished and adds too much redundant, non-optional code into the core API. The ability to load normal maps alongside textures will _remain_, for use in your own lighting shaders, which gives you far more control over the final effect.
+
+
 ### New Features
 
 * `Line.GetEasedPoints` is a new function that will take a Line, a quantity, and an ease function, and returns an array of points where each point has been spaced out across the length of the Line based on the ease function given.
@@ -30,16 +49,6 @@
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
 @JasonHK @supertommy
-
-### Deprecated
-
-The following features have been deprecated and will be removed in _the next_ version:
-
-* Impact Physics will be removed completely and will no longer be a choice of physics system.
-* The Light Pipeline and associated components will be removed. This feature was never properly finished and adds too much redundant, non-optional code into the core API. The ability to load normal maps alongside textures will _remain_, for use in your own lighting shaders, which gives you far more control over the final effect.
-
-
-
 
 ## Version 3.22 - Kohaku - January 15th 2020
 
