@@ -4,7 +4,7 @@
  *
  * @property {string} key - The key that the animation will be associated with. i.e. sprite.animations.play(key)
  * @property {string} type - A frame based animation (as opposed to a bone based animation)
- * @property {Phaser.Types.Animations.JSONAnimationFrame[]} frames - [description]
+ * @property {Phaser.Types.Animations.JSONAnimationFrame[]} frames - An array of the AnimationFrame objects inside this Animation.
  * @property {integer} frameRate - The frame rate of playback in frames per second (default 24 if duration is null)
  * @property {integer} duration - How long the animation should play for in milliseconds. If not given its derived from frameRate.
  * @property {boolean} skipMissedFrames - Skip frames if the time lags, or always advanced anyway?
