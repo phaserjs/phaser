@@ -6,9 +6,10 @@
 
 The following sections now have 100% complete JSDoc coverage:
 
+* Animations
+* Geom
 * Math
 * Textures
-* Geom
 
 ### Removed
 
