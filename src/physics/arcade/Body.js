@@ -1236,10 +1236,10 @@ var Body = new Class({
 
         if (center && gameObject.getCenter)
         {
-            var ox = gameObject.displayWidth / 2;
-            var oy = gameObject.displayHeight / 2;
+            var ox = (gameObject.width - width) / 2;
+            var oy = (gameObject.height - height) / 2;
 
-            this.offset.set(ox - this.halfWidth, oy - this.halfHeight);
+            this.offset.set(ox, oy);
         }
 
         this.isCircle = false;
