@@ -7,6 +7,7 @@
 The following sections now have 100% complete JSDoc coverage:
 
 * Math
+* Textures
 
 ### Removed
 
