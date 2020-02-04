@@ -299,8 +299,8 @@ var TextureManager = new Class({
      *
      * @param {string} key - The unique string-based key of the Texture.
      * @param {(string|integer)} [frame] - The string-based name, or integer based index, of the Frame to get from the Texture.
-     * @param {string} [type='image/png'] - [description]
-     * @param {number} [encoderOptions=0.92] - [description]
+     * @param {string} [type='image/png'] - A DOMString indicating the image format. The default format type is image/png.
+     * @param {number} [encoderOptions=0.92] - A Number between 0 and 1 indicating the image quality to use for image formats that use lossy compression such as image/jpeg and image/webp. If this argument is anything else, the default value for image quality is used. The default value is 0.92. Other arguments are ignored.
      * 
      * @return {string} The base64 encoded data, or an empty string if the texture frame could not be found.
      */
