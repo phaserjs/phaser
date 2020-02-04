@@ -39,6 +39,7 @@ The following features are now deprecated and will be removed in a future versio
 * `XHRLoader` will now use the `XHRSettings.withCredentials` as set in the file or global loader config.
 * `Animation.setCurrentFrame` will no longer try to call `setOrigin` or `updateDisplayOrigin` if the Game Object doesn't have the Origin component, preventing unknown function errors.
 * `MatterTileBody` now extends `EventEmitter`, meaning you can listen to collision events from Tiles directly and it will no longer throw errors about `gameObject.emit` not working. Fix #4967 (thanks @reinildo)
+* Added `MatterJS.BodyType` to `GameObject.body` type. Fix #4962 (thanks @meisterpeeps)
 
 ### Bug Fixes
 
