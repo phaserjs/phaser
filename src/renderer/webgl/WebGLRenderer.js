@@ -2547,14 +2547,16 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Sets a 1f uniform value on the given shader.
+     * 
+     * If the shader is not currently active, it is made active first.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat1
      * @since 3.0.0
      *
      * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {number} x - [description]
+     * @param {number} x - The 1f value to set on the named uniform.
      *
      * @return {this} This WebGL Renderer instance.
      */
@@ -2568,15 +2570,17 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Sets the 2f uniform values on the given shader.
+     * 
+     * If the shader is not currently active, it is made active first.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat2
      * @since 3.0.0
      *
      * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {number} x - The 2f x value to set on the named uniform.
+     * @param {number} y - The 2f y value to set on the named uniform.
      *
      * @return {this} This WebGL Renderer instance.
      */
@@ -2590,16 +2594,18 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Sets the 3f uniform values on the given shader.
+     * 
+     * If the shader is not currently active, it is made active first.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat3
      * @since 3.0.0
      *
      * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} z - [description]
+     * @param {number} x - The 3f x value to set on the named uniform.
+     * @param {number} y - The 3f y value to set on the named uniform.
+     * @param {number} z - The 3f z value to set on the named uniform.
      *
      * @return {this} This WebGL Renderer instance.
      */
@@ -2613,17 +2619,19 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Sets uniform of a WebGLProgram
+     * Sets the 4f uniform values on the given shader.
+     * 
+     * If the shader is not currently active, it is made active first.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat4
      * @since 3.0.0
      *
      * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {number} x - X component
-     * @param {number} y - Y component
-     * @param {number} z - Z component
-     * @param {number} w - W component
+     * @param {number} x - The 4f x value to set on the named uniform.
+     * @param {number} y - The 4f y value to set on the named uniform.
+     * @param {number} z - The 4f z value to set on the named uniform.
+     * @param {number} w - The 4f w value to set on the named uniform.
      *
      * @return {this} This WebGL Renderer instance.
      */
@@ -2637,7 +2645,9 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Sets the value of a uniform variable in the given WebGLProgram.
+     * Sets the value of a 1fv uniform variable in the given WebGLProgram.
+     * 
+     * If the shader is not currently active, it is made active first.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat1v
      * @since 3.13.0
@@ -2658,7 +2668,9 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Sets the value of a uniform variable in the given WebGLProgram.
+     * Sets the value of a 2fv uniform variable in the given WebGLProgram.
+     * 
+     * If the shader is not currently active, it is made active first.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat2v
      * @since 3.13.0
@@ -2679,7 +2691,9 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Sets the value of a uniform variable in the given WebGLProgram.
+     * Sets the value of a 3fv uniform variable in the given WebGLProgram.
+     * 
+     * If the shader is not currently active, it is made active first.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat3v
      * @since 3.13.0
@@ -2700,7 +2714,9 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Sets the value of a uniform variable in the given WebGLProgram.
+     * Sets the value of a 4fv uniform variable in the given WebGLProgram.
+     * 
+     * If the shader is not currently active, it is made active first.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat4v
      * @since 3.13.0
@@ -2722,14 +2738,16 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Sets the value of a uniform variable in the given WebGLProgram.
+     * Sets a 1i uniform value on the given shader.
+     * 
+     * If the shader is not currently active, it is made active first.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setInt1
      * @since 3.0.0
      *
      * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {integer} x - [description]
+     * @param {integer} x - The 1i value to set on the named uniform.
      *
      * @return {this} This WebGL Renderer instance.
      */
@@ -2743,15 +2761,17 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Sets the value of a uniform variable in the given WebGLProgram.
+     * Sets the 2i uniform values on the given shader.
+     * 
+     * If the shader is not currently active, it is made active first.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setInt2
      * @since 3.0.0
      *
      * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {integer} x - The new X component
-     * @param {integer} y - The new Y component
+     * @param {integer} x - The 2i x value to set on the named uniform.
+     * @param {integer} y - The 2i y value to set on the named uniform.
      *
      * @return {this} This WebGL Renderer instance.
      */
@@ -2765,16 +2785,18 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Sets the value of a uniform variable in the given WebGLProgram.
+     * Sets the 3i uniform values on the given shader.
+     * 
+     * If the shader is not currently active, it is made active first.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setInt3
      * @since 3.0.0
      *
      * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {integer} x - The new X component
-     * @param {integer} y - The new Y component
-     * @param {integer} z - The new Z component
+     * @param {integer} x - The 3i x value to set on the named uniform.
+     * @param {integer} y - The 3i y value to set on the named uniform.
+     * @param {integer} z - The 3i z value to set on the named uniform.
      *
      * @return {this} This WebGL Renderer instance.
      */
@@ -2788,17 +2810,19 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Sets the value of a uniform variable in the given WebGLProgram.
+     * Sets the 4i uniform values on the given shader.
+     * 
+     * If the shader is not currently active, it is made active first.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setInt4
      * @since 3.0.0
      *
      * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {integer} x - X component
-     * @param {integer} y - Y component
-     * @param {integer} z - Z component
-     * @param {integer} w - W component
+     * @param {integer} x - The 4i x value to set on the named uniform.
+     * @param {integer} y - The 4i y value to set on the named uniform.
+     * @param {integer} z - The 4i z value to set on the named uniform.
+     * @param {integer} w - The 4i w value to set on the named uniform.
      *
      * @return {this} This WebGL Renderer instance.
      */
@@ -2812,7 +2836,9 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Sets the value of a 2x2 matrix uniform variable in the given WebGLProgram.
+     * Sets the value of a matrix 2fv uniform variable in the given WebGLProgram.
+     * 
+     * If the shader is not currently active, it is made active first.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setMatrix2
      * @since 3.0.0
@@ -2820,7 +2846,7 @@ var WebGLRenderer = new Class({
      * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
      * @param {string} name - The name of the uniform to look-up and modify.
      * @param {boolean} transpose - The value indicating whether to transpose the matrix. Must be false.
-     * @param {Float32Array} matrix - The new matrix value.
+     * @param {Float32Array} matrix - A Float32Array or sequence of 4 float values.
      *
      * @return {this} This WebGL Renderer instance.
      */
@@ -2834,15 +2860,17 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Sets the value of a matrix 3fv uniform variable in the given WebGLProgram.
+     * 
+     * If the shader is not currently active, it is made active first.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setMatrix3
      * @since 3.0.0
      *
      * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {boolean} transpose - [description]
-     * @param {Float32Array} matrix - [description]
+     * @param {boolean} transpose - The value indicating whether to transpose the matrix. Must be false.
+     * @param {Float32Array} matrix - A Float32Array or sequence of 9 float values.
      *
      * @return {this} This WebGL Renderer instance.
      */
@@ -2856,15 +2884,17 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Sets uniform of a WebGLProgram
+     * Sets the value of a matrix 4fv uniform variable in the given WebGLProgram.
+     * 
+     * If the shader is not currently active, it is made active first.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setMatrix4
      * @since 3.0.0
      *
      * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {boolean} transpose - Is the matrix transposed
-     * @param {Float32Array} matrix - Matrix data
+     * @param {boolean} transpose - The value indicating whether to transpose the matrix. Must be false.
+     * @param {Float32Array} matrix - A Float32Array or sequence of 16 float values.
      *
      * @return {this} This WebGL Renderer instance.
      */
