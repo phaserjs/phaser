@@ -33,8 +33,8 @@ var Body = new Class({
 
     function Body (world, gameObject)
     {
-        var width = (gameObject.width) ? gameObject.width : 64;
-        var height = (gameObject.height) ? gameObject.height : 64;
+        var width = (gameObject.displayWidth) ? gameObject.displayWidth : 64;
+        var height = (gameObject.displayHeight) ? gameObject.displayHeight : 64;
 
         /**
          * The Arcade Physics simulation this Body belongs to.
@@ -148,7 +148,10 @@ var Body = new Class({
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
-        this.position = new Vector2(gameObject.x, gameObject.y);
+        this.position = new Vector2(
+            gameObject.x - gameObject.scaleX * gameObject.displayOriginX,
+            gameObject.y - gameObject.scaleY * gameObject.displayOriginY
+        );
 
         /**
          * The position of this Body during the previous step.
@@ -278,7 +281,7 @@ var Body = new Class({
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
-        this.center = new Vector2(gameObject.x + this.halfWidth, gameObject.y + this.halfHeight);
+        this.center = new Vector2(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
 
         /**
          * The Body's velocity, in pixels per second.
