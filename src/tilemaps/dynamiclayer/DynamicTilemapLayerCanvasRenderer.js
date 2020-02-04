@@ -89,8 +89,19 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
 
         if (tileTexCoords)
         {
-            var halfWidth = tile.width / 2;
-            var halfHeight = tile.height / 2;
+            var width = 0;
+            var height = 0;
+
+            if (src.layer.orientation === "isometric") {
+                // here we use the tileset width and height to fix problems with isometric map types
+                width = tileset.tileWidth;
+                width = tileset.tileHeight;
+            } else {
+               width = tile.width;
+               height = tile.width
+            }
+            halfWidth = width / 2;
+            halfHeight = height / 2;
     
             ctx.save();
 
@@ -107,13 +118,13 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
             }
     
             ctx.globalAlpha = alpha * tile.alpha;
-    
+            
             ctx.drawImage(
                 image,
                 tileTexCoords.x, tileTexCoords.y,
-                tile.width, tile.height,
+                width, height,
                 -halfWidth, -halfHeight,
-                tile.width, tile.height
+                width, height
             );
     
             ctx.restore();

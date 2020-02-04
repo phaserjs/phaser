@@ -7,6 +7,7 @@
 var GetTilesWithin = require('./GetTilesWithin');
 var WorldToTileX = require('./WorldToTileX');
 var WorldToTileY = require('./WorldToTileY');
+var WorldToTileXY = require('./WorldToTileXY');
 
 /**
  * Gets the tiles in the given rectangular area (in world coordinates) of the layer.

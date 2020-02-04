@@ -30,15 +30,35 @@ var TileToWorldXY = function (tileX, tileY, point, camera, layer)
     var orientation = layer.orientation;
     var tileWidth = layer.baseTileWidth;
     var tileHeight = layer.baseTileHeight;
+    var tilemapLayer = layer.tilemapLayer;
 
     if (point === undefined) { point = new Vector2(0, 0); }
+
+    
+
+
 
     if (orientation === "orthogonal") {
         point.x = TileToWorldX(tileX, camera, layer, orientation);
         point.y = TileToWorldY(tileY, camera, layer, orientation);
     } else if (orientation === "isometric") {
-        point.x = (tileX - tileY) * (tileWidth/2);
-        point.y = (tileX + tileY) * (tileHeight/2);
+
+        var layerWorldX = 0;
+        var layerWorldY = 0;
+
+        if (tilemapLayer)
+        {
+            if (camera === undefined) { camera = tilemapLayer.scene.cameras.main; }
+            layerWorldX = tilemapLayer.x + camera.scrollX * (1 - tilemapLayer.scrollFactorX);
+            tileWidth *= tilemapLayer.scaleX;
+            layerWorldY = (tilemapLayer.y + camera.scrollY * (1 - tilemapLayer.scrollFactorY));
+            tileHeight *= tilemapLayer.scaleY;
+        }
+
+
+
+        point.x =  layerWorldX + (tileX - tileY) * (tileWidth/2);
+        point.y =  layerWorldY + (tileX + tileY) * (tileHeight/2);
  
     }
     

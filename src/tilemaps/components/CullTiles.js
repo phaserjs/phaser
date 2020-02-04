@@ -22,6 +22,7 @@ var SnapCeil = require('../../math/snap/SnapCeil');
  */
 var CullTiles = function (layer, camera, outputArray, renderOrder)
 {
+    
     if (outputArray === undefined) { outputArray = []; }
     if (renderOrder === undefined) { renderOrder = 0; }
 
@@ -44,103 +45,200 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
     var drawRight = mapWidth;
     var drawTop = 0;
     var drawBottom = mapHeight;
+    var inIsoBounds = function (x,y) { return true;}
+    if (!tilemapLayer.skipCull && tilemapLayer.scrollFactorX === 1 && tilemapLayer.scrollFactorY === 1)  {
+        if (layer.orientation == "orthogonal") {
+            //  Camera world view bounds, snapped for scaled tile size
+            //  Cull Padding values are given in tiles, not pixels
 
-    if (!tilemapLayer.skipCull && tilemapLayer.scrollFactorX === 1 && tilemapLayer.scrollFactorY === 1)
-    {
-        //  Camera world view bounds, snapped for scaled tile size
-        //  Cull Padding values are given in tiles, not pixels
+            var boundsLeft   = SnapFloor(camera.worldView.x - tilemapLayer.x, tileW, 0, true) - tilemapLayer.cullPaddingX;
+            var boundsRight  = SnapCeil(camera.worldView.right - tilemapLayer.x, tileW, 0, true) + tilemapLayer.cullPaddingX;
+            var boundsTop    = SnapFloor(camera.worldView.y - tilemapLayer.y, tileH, 0, true) - tilemapLayer.cullPaddingY;
+            var boundsBottom = SnapCeil(camera.worldView.bottom - tilemapLayer.y, tileH, 0, true) + tilemapLayer.cullPaddingY;
 
-        var boundsLeft = SnapFloor(camera.worldView.x - tilemapLayer.x, tileW, 0, true) - tilemapLayer.cullPaddingX;
-        var boundsRight = SnapCeil(camera.worldView.right - tilemapLayer.x, tileW, 0, true) + tilemapLayer.cullPaddingX;
-        var boundsTop = SnapFloor(camera.worldView.y - tilemapLayer.y, tileH, 0, true) - tilemapLayer.cullPaddingY;
-        var boundsBottom = SnapCeil(camera.worldView.bottom - tilemapLayer.y, tileH, 0, true) + tilemapLayer.cullPaddingY;
-
-        drawLeft = Math.max(0, boundsLeft);
-        drawRight = Math.min(mapWidth, boundsRight);
-        drawTop = Math.max(0, boundsTop);
-        drawBottom = Math.min(mapHeight, boundsBottom);
-    }
-
+            drawLeft = Math.max(0, boundsLeft);
+            drawRight = Math.min(mapWidth, boundsRight);
+            drawTop = Math.max(0, boundsTop);
+            drawBottom = Math.min(mapHeight, boundsBottom);
+        } else if (layer.orientation == "isometric") {
+            inIsoBounds = function (x,y){
+                var pos = tilemapLayer.tileToWorldXY(x,y,undefined,camera)
+                return (pos.x > camera.worldView.x && pos.x < camera.worldView.right) && (pos.y > camera.worldView.y && pos.y <  camera.worldView.bottom) 
+            }
+        }
+    } 
     var x;
     var y;
     var tile;
 
-    if (renderOrder === 0)
-    {
-        //  right-down
 
-        for (y = drawTop; y < drawBottom; y++)
+    if (layer.orientation == "orthogonal") {
+
+        if (renderOrder === 0)
         {
-            for (x = drawLeft; mapData[y] && x < drawRight; x++)
+            //  right-down
+
+            for (y = drawTop; y < drawBottom; y++)
             {
-                tile = mapData[y][x];
-
-                if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                for (x = drawLeft; mapData[y] && x < drawRight; x++)
                 {
-                    continue;
-                }
+                    tile = mapData[y][x];
 
-                outputArray.push(tile);
+                    if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                    {
+                        continue;
+                    }
+
+                    outputArray.push(tile);
+                }
             }
         }
-    }
-    else if (renderOrder === 1)
-    {
-        //  left-down
-
-        for (y = drawTop; y < drawBottom; y++)
+        else if (renderOrder === 1)
         {
-            for (x = drawRight; mapData[y] && x >= drawLeft; x--)
+            //  left-down
+
+            for (y = drawTop; y < drawBottom; y++)
             {
-                tile = mapData[y][x];
-
-                if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                for (x = drawRight; mapData[y] && x >= drawLeft; x--)
                 {
-                    continue;
-                }
+                    tile = mapData[y][x];
 
-                outputArray.push(tile);
+                    if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                    {
+                        continue;
+                    }
+
+                    outputArray.push(tile);
+                }
             }
         }
-    }
-    else if (renderOrder === 2)
-    {
-        //  right-up
-
-        for (y = drawBottom; y >= drawTop; y--)
+        else if (renderOrder === 2)
         {
-            for (x = drawLeft; mapData[y] && x < drawRight; x++)
+            //  right-up
+
+            for (y = drawBottom; y >= drawTop; y--)
             {
-                tile = mapData[y][x];
-
-                if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                for (x = drawLeft; mapData[y] && x < drawRight; x++)
                 {
-                    continue;
-                }
+                    tile = mapData[y][x];
 
-                outputArray.push(tile);
+                    if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                    {
+                        continue;
+                    }
+
+                    outputArray.push(tile);
+                }
             }
         }
-    }
-    else if (renderOrder === 3)
-    {
-        //  left-up
-
-        for (y = drawBottom; y >= drawTop; y--)
+        else if (renderOrder === 3)
         {
-            for (x = drawRight; mapData[y] && x >= drawLeft; x--)
+            //  left-up
+
+            for (y = drawBottom; y >= drawTop; y--)
             {
-                tile = mapData[y][x];
-
-                if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                for (x = drawRight; mapData[y] && x >= drawLeft; x--)
                 {
-                    continue;
-                }
+                    tile = mapData[y][x];
 
-                outputArray.push(tile);
+                    if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                    {
+                        continue;
+                    }
+
+                    outputArray.push(tile);
+                }
             }
         }
+    } else if (layer.orientation == "isometric") {
+         if (renderOrder === 0)
+        {
+            //  right-down
+
+            for (y = drawTop; y < drawBottom; y++)
+            {
+                for (x = drawLeft; mapData[y] && x < drawRight; x++)
+                {
+                    if (inIsoBounds(x,y)) {
+                        tile = mapData[y][x];
+
+                        if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                        {
+                            continue;
+                        }
+    
+                        outputArray.push(tile);
+                    }
+                    
+                }
+            }
+        }
+        else if (renderOrder === 1)
+        {
+            //  left-down
+
+            for (y = drawTop; y < drawBottom; y++)
+            {
+                for (x = drawRight; mapData[y] && x >= drawLeft; x--)
+                {
+                     if (inIsoBounds(x,y)) {
+                        tile = mapData[y][x];
+
+                        if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                        {
+                            continue;
+                        }
+    
+                        outputArray.push(tile);
+                    }
+                }
+            }
+        }
+        else if (renderOrder === 2)
+        {
+            //  right-up
+
+            for (y = drawBottom; y >= drawTop; y--)
+            {
+                for (x = drawLeft; mapData[y] && x < drawRight; x++)
+                {
+                     if (inIsoBounds(x,y)) {
+                        tile = mapData[y][x];
+
+                        if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                        {
+                            continue;
+                        }
+    
+                        outputArray.push(tile);
+                    }
+                }
+            }
+        }
+        else if (renderOrder === 3)
+        {
+            //  left-up
+
+            for (y = drawBottom; y >= drawTop; y--)
+            {
+                for (x = drawRight; mapData[y] && x >= drawLeft; x--)
+                {
+                     if (inIsoBounds(x,y)) {
+                        tile = mapData[y][x];
+
+                        if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                        {
+                            continue;
+                        }
+    
+                        outputArray.push(tile);
+                    }
+                }
+            }
+        }
+
     }
+
 
     tilemapLayer.tilesDrawn = outputArray.length;
     tilemapLayer.tilesTotal = mapWidth * mapHeight;

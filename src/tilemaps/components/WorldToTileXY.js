@@ -46,8 +46,9 @@ var WorldToTileXY = function (worldX, worldY, snapToFloor, point, camera, layer)
 
             // Find the world position relative to the static or dynamic layer's top left origin,
             // factoring in the camera's vertical scroll
+            // console.log(1,worldY)
             worldY = worldY - (tilemapLayer.y + camera.scrollY * (1 - tilemapLayer.scrollFactorY));
-
+            // console.log(worldY)
             tileHeight *= tilemapLayer.scaleY;
 
             // Find the world position relative to the static or dynamic layer's top left origin,
@@ -62,8 +63,8 @@ var WorldToTileXY = function (worldX, worldY, snapToFloor, point, camera, layer)
             : ((worldX/(tileWidth/2) + worldY/(tileHeight/2))/2);
 
         point.y = snapToFloor   
-            ? Math.floor(worldY/(tileHeight/2) - (worldX/(tileWidth/2))/2) 
-            : (worldY/(tileHeight/2) - (worldX/(tileWidth/2))/2);
+            ? Math.floor((worldY/(tileHeight/2) - worldX/(tileWidth/2))/2) 
+            : ((worldY/(tileHeight/2) - worldX/(tileWidth/2))/2);
     }
 
   
