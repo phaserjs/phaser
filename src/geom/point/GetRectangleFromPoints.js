@@ -14,10 +14,10 @@ var Rectangle = require('../rectangle/Rectangle');
  *
  * @generic {Phaser.Geom.Rectangle} O - [out,$return]
  *
- * @param {Phaser.Geom.Point[]} points - [description]
- * @param {Phaser.Geom.Rectangle} [out] - [description]
+ * @param {Phaser.Types.Math.Vector2Like[]} points - An array of Vector2Like objects to get the AABB from.
+ * @param {Phaser.Geom.Rectangle} [out] - A Rectangle object to store the results in. If not given, a new Rectangle instance is created.
  *
- * @return {Phaser.Geom.Rectangle} [description]
+ * @return {Phaser.Geom.Rectangle} A Rectangle object holding the AABB values for the given points.
  */
 var GetRectangleFromPoints = function (points, out)
 {

@@ -8,18 +8,18 @@ var Point = require('../point/Point');
 
 
 /**
- *  The size of the Rectangle object, expressed as a Point object
- *  with the values of the width and height properties.
+ * Returns the size of the Rectangle, expressed as a Point object.
+ * With the value of the `width` as the `x` property and the `height` as the `y` property.
  *
  * @function Phaser.Geom.Rectangle.GetSize
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Point} O - [out,$return]
  *
- * @param {Phaser.Geom.Rectangle} rect - [description]
- * @param {(Phaser.Geom.Point|object)} [out] - [description]
+ * @param {Phaser.Geom.Rectangle} rect - The Rectangle to get the size from.
+ * @param {(Phaser.Geom.Point|object)} [out] - The Point object to store the size in. If not given, a new Point instance is created.
  *
- * @return {(Phaser.Geom.Point|object)} [description]
+ * @return {(Phaser.Geom.Point|object)} A Point object where `x` holds the width and `y` holds the height of the Rectangle.
  */
 var GetSize = function (rect, out)
 {

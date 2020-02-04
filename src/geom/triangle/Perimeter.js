@@ -6,17 +6,16 @@
 
 var Length = require('../line/Length');
 
-// The 2D area of a triangle. The area value is always non-negative.
-
 /**
  * Gets the length of the perimeter of the given triangle.
+ * Calculated by adding together the length of each of the three sides.
  *
  * @function Phaser.Geom.Triangle.Perimeter
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Triangle} triangle - [description]
+ * @param {Phaser.Geom.Triangle} triangle - The Triangle to get the length from.
  *
- * @return {number} [description]
+ * @return {number} The length of the Triangle.
  */
 var Perimeter = function (triangle)
 {

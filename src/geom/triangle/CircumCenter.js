@@ -39,10 +39,10 @@ function det (m00, m01, m10, m11)
  *
  * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
- * @param {Phaser.Geom.Triangle} triangle - [description]
- * @param {Phaser.Math.Vector2} [out] - [description]
+ * @param {Phaser.Geom.Triangle} triangle - The Triangle to get the circumcenter of.
+ * @param {Phaser.Math.Vector2} [out] - The Vector2 object to store the position in. If not given, a new Vector2 instance is created.
  *
- * @return {Phaser.Math.Vector2} [description]
+ * @return {Phaser.Math.Vector2} A Vector2 object holding the coordinates of the circumcenter of the Triangle.
  */
 var CircumCenter = function (triangle, out)
 {

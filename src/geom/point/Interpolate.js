@@ -7,7 +7,7 @@
 var Point = require('./Point');
 
 /**
- * [description]
+ * Returns the linear interpolation point between the two given points, based on `t`.
  *
  * @function Phaser.Geom.Point.Interpolate
  * @since 3.0.0
