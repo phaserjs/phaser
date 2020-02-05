@@ -149,10 +149,10 @@ var LayerData = new Class({
          * Layer specific properties (can be specified in Tiled)
          *
          * @name Phaser.Tilemaps.LayerData#properties
-         * @type {object}
+         * @type {object[]}
          * @since 3.0.0
          */
-        this.properties = GetFastValue(config, 'properties', {});
+        this.properties = GetFastValue(config, 'properties', []);
 
         /**
          * [description]
