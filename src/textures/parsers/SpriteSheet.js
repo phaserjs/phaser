@@ -19,15 +19,15 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  *
  * @param {Phaser.Textures.Texture} texture - The Texture to add the Frames to.
  * @param {integer} sourceIndex - The index of the TextureSource.
- * @param {integer} x - [description]
- * @param {integer} y - [description]
- * @param {integer} width - [description]
- * @param {integer} height - [description]
+ * @param {integer} x - The top-left coordinate of the Sprite Sheet. Defaults to zero. Used when extracting sheets from atlases.
+ * @param {integer} y - The top-left coordinate of the Sprite Sheet. Defaults to zero. Used when extracting sheets from atlases.
+ * @param {integer} width - The width of the source image.
+ * @param {integer} height - The height of the source image.
  * @param {object} config - An object describing how to parse the Sprite Sheet.
  * @param {number} config.frameWidth - Width in pixels of a single frame in the sprite sheet.
  * @param {number} [config.frameHeight] - Height in pixels of a single frame in the sprite sheet. Defaults to frameWidth if not provided.
- * @param {number} [config.startFrame=0] - [description]
- * @param {number} [config.endFrame=-1] - [description]
+ * @param {number} [config.startFrame=0] - The frame to start extracting from. Defaults to zero.
+ * @param {number} [config.endFrame=-1] - The frame to finish extracting at. Defaults to -1, which means 'all frames'.
  * @param {number} [config.margin=0] - If the frames have been drawn with a margin, specify the amount here.
  * @param {number} [config.spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
  *

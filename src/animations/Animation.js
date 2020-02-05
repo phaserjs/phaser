@@ -224,7 +224,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#addFrame
      * @since 3.0.0
      *
-     * @param {(string|Phaser.Types.Animations.AnimationFrame[])} config - [description]
+     * @param {(string|Phaser.Types.Animations.AnimationFrame[])} config - Either a string, in which case it will use all frames from a texture with the matching key, or an array of Animation Frame configuration objects.
      *
      * @return {Phaser.Animations.Animation} This Animation object.
      */
@@ -240,7 +240,7 @@ var Animation = new Class({
      * @since 3.0.0
      *
      * @param {integer} index - The index to insert the frame at within the animation.
-     * @param {(string|Phaser.Types.Animations.AnimationFrame[])} config - [description]
+     * @param {(string|Phaser.Types.Animations.AnimationFrame[])} config - Either a string, in which case it will use all frames from a texture with the matching key, or an array of Animation Frame configuration objects.
      *
      * @return {Phaser.Animations.Animation} This Animation object.
      */
@@ -288,13 +288,14 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Called internally when this Animation completes playback.
+     * Optionally, hides the parent Game Object, then stops playback.
      *
      * @method Phaser.Animations.Animation#completeAnimation
      * @protected
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Components.Animation} component - [description]
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
      */
     completeAnimation: function (component)
     {
@@ -307,14 +308,15 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Called internally when this Animation first starts to play.
+     * Sets the accumulator and nextTick properties.
      *
      * @method Phaser.Animations.Animation#getFirstTick
      * @protected
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Components.Animation} component - [description]
-     * @param {boolean} [includeDelay=true] - [description]
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
+     * @param {boolean} [includeDelay=true] - If `true` the Animation Components delay value will be added to the `nextTick` total.
      */
     getFirstTick: function (component, includeDelay)
     {
@@ -347,16 +349,16 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Creates AnimationFrame instances based on the given frame data.
      *
      * @method Phaser.Animations.Animation#getFrames
      * @since 3.0.0
      *
-     * @param {Phaser.Textures.TextureManager} textureManager - [description]
-     * @param {(string|Phaser.Types.Animations.AnimationFrame[])} frames - [description]
-     * @param {string} [defaultTextureKey] - [description]
+     * @param {Phaser.Textures.TextureManager} textureManager - A reference to the global Texture Manager.
+     * @param {(string|Phaser.Types.Animations.AnimationFrame[])} frames - Either a string, in which case it will use all frames from a texture with the matching key, or an array of Animation Frame configuration objects.
+     * @param {string} [defaultTextureKey] - The key to use if no key is set in the frame configuration object.
      *
-     * @return {Phaser.Animations.AnimationFrame[]} [description]
+     * @return {Phaser.Animations.AnimationFrame[]} An array of newly created AnimationFrame instances.
      */
     getFrames: function (textureManager, frames, defaultTextureKey)
     {
@@ -449,12 +451,12 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Called internally. Sets the accumulator and nextTick values of the current Animation.
      *
      * @method Phaser.Animations.Animation#getNextTick
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Components.Animation} component - [description]
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
      */
     getNextTick: function (component)
     {
@@ -624,12 +626,13 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Called internally when the Animation is playing backwards.
+     * Sets the previous frame, causing a yoyo, repeat, complete or update, accordingly.
      *
      * @method Phaser.Animations.Animation#previousFrame
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Components.Animation} component - [description]
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
      */
     previousFrame: function (component)
     {
@@ -687,12 +690,13 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Removes the given AnimationFrame from this Animation instance.
+     * This is a global action. Any Game Object using this Animation will be impacted by this change.
      *
      * @method Phaser.Animations.Animation#removeFrame
      * @since 3.0.0
      *
-     * @param {Phaser.Animations.AnimationFrame} frame - [description]
+     * @param {Phaser.Animations.AnimationFrame} frame - The AnimationFrame to be removed.
      *
      * @return {Phaser.Animations.Animation} This Animation object.
      */
@@ -729,7 +733,8 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Called internally during playback. Forces the animation to repeat, providing there are enough counts left
+     * in the repeat counter.
      *
      * @method Phaser.Animations.Animation#repeatAnimation
      * @fires Phaser.Animations.Events#ANIMATION_REPEAT
@@ -737,7 +742,7 @@ var Animation = new Class({
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_REPEAT
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Components.Animation} component - [description]
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
      */
     repeatAnimation: function (component)
     {
@@ -782,7 +787,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#setFrame
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Components.Animation} component - [description]
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
      */
     setFrame: function (component)
     {
@@ -803,7 +808,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#toJSON
      * @since 3.0.0
      *
-     * @return {Phaser.Types.Animations.JSONAnimation} [description]
+     * @return {Phaser.Types.Animations.JSONAnimation} The resulting JSONAnimation formatted object.
      */
     toJSON: function ()
     {
@@ -831,7 +836,7 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Called internally whenever frames are added to, or removed from, this Animation.
      *
      * @method Phaser.Animations.Animation#updateFrameSequence
      * @since 3.0.0
@@ -888,7 +893,7 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Pauses playback of this Animation. The paused state is set immediately.
      *
      * @method Phaser.Animations.Animation#pause
      * @since 3.0.0
@@ -903,7 +908,7 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Resumes playback of this Animation. The paused state is reset immediately.
      *
      * @method Phaser.Animations.Animation#resume
      * @since 3.0.0
@@ -918,7 +923,9 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Destroys this Animation instance. It will remove all event listeners,
+     * remove this animation and its key from the global Animation Manager,
+     * and then destroy all Animation Frames in turn.
      *
      * @method Phaser.Animations.Animation#destroy
      * @since 3.0.0

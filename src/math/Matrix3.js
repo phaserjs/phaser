@@ -508,12 +508,12 @@ var Matrix3 = new Class({
     },
 
     /**
-     * [description]
+     * Set the values of this Matrix3 to be normalized from the given Matrix4.
      *
      * @method Phaser.Math.Matrix3#normalFromMat4
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix4} m - [description]
+     * @param {Phaser.Math.Matrix4} m - The Matrix4 to normalize the values from.
      *
      * @return {Phaser.Math.Matrix3} This Matrix3.
      */

@@ -5,16 +5,16 @@
  */
 
 /**
- * Calculates a Catmull-Rom value.
+ * Calculates a Catmull-Rom value from the given points, based on an alpha of 0.5.
  *
  * @function Phaser.Math.CatmullRom
  * @since 3.0.0
  *
- * @param {number} t - [description]
- * @param {number} p0 - [description]
- * @param {number} p1 - [description]
- * @param {number} p2 - [description]
- * @param {number} p3 - [description]
+ * @param {number} t - The amount to interpolate by.
+ * @param {number} p0 - The first control point.
+ * @param {number} p1 - The second control point.
+ * @param {number} p2 - The third control point.
+ * @param {number} p3 - The fourth control point.
  *
  * @return {number} The Catmull-Rom value.
  */

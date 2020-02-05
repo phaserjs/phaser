@@ -559,12 +559,12 @@ var Matrix4 = new Class({
     },
 
     /**
-     * [description]
+     * Multiply the values of this Matrix4 by those given in the `src` argument.
      *
      * @method Phaser.Math.Matrix4#multiplyLocal
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix4} src - [description]
+     * @param {Phaser.Math.Matrix4} src - The source Matrix4 that this Matrix4 is multiplied by.
      *
      * @return {Phaser.Math.Matrix4} This Matrix4.
      */
@@ -1356,9 +1356,9 @@ var Matrix4 = new Class({
      * @method Phaser.Math.Matrix4#yawPitchRoll
      * @since 3.0.0
      *
-     * @param {number} yaw - [description]
-     * @param {number} pitch - [description]
-     * @param {number} roll - [description]
+     * @param {number} yaw - The yaw value.
+     * @param {number} pitch - The pitch value.
+     * @param {number} roll - The roll value.
      *
      * @return {Phaser.Math.Matrix4} This Matrix4.
      */

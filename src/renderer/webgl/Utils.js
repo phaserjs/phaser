@@ -22,7 +22,7 @@ module.exports = {
      * @param {number} b - Blue component in a range from 0.0 to 1.0
      * @param {number} a - Alpha component in a range from 0.0 to 1.0
      * 
-     * @return {number} [description]
+     * @return {number} The packed RGBA values as a Uint32.
      */
     getTintFromFloats: function (r, g, b, a)
     {

@@ -8,18 +8,18 @@ var Point = require('../point/Point');
 var DegToRad = require('../../math/DegToRad');
 
 /**
- * [description]
+ * Returns a Point from the perimeter of a Rectangle based on the given angle.
  *
  * @function Phaser.Geom.Rectangle.PerimeterPoint
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Point} O - [out,$return]
  *
- * @param {Phaser.Geom.Rectangle} rectangle - [description]
- * @param {integer} angle - [description]
- * @param {Phaser.Geom.Point} [out] - [description]
+ * @param {Phaser.Geom.Rectangle} rectangle - The Rectangle to get the perimeter point from.
+ * @param {integer} angle - The angle of the point, in degrees.
+ * @param {Phaser.Geom.Point} [out] - The Point object to store the position in. If not given, a new Point instance is created.
  *
- * @return {Phaser.Geom.Point} [description]
+ * @return {Phaser.Geom.Point} A Point object holding the coordinates of the Rectangle perimeter.
  */
 var PerimeterPoint = function (rectangle, angle, out)
 {

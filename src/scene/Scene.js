@@ -226,16 +226,6 @@ var Scene = new Class({
         this.physics;
 
         /**
-         * A scene level Impact Physics Plugin.
-         * This property will only be available if defined in the Scene Injection Map, the plugin is installed and configured.
-         *
-         * @name Phaser.Scene#impact
-         * @type {Phaser.Physics.Impact.ImpactPhysics}
-         * @since 3.0.0
-         */
-        this.impact;
-
-        /**
          * A scene level Matter Physics Plugin.
          * This property will only be available if defined in the Scene Injection Map, the plugin is installed and configured.
          *

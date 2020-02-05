@@ -126,21 +126,23 @@ var BitmapMaskPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Resizes this pipeline and updates the projection.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#resize
      * @since 3.0.0
      *
-     * @param {number} width - [description]
-     * @param {number} height - [description]
-     * @param {number} resolution - [description]
+     * @param {number} width - The new width.
+     * @param {number} height - The new height.
+     * @param {number} resolution - The resolution.
      *
      * @return {this} This WebGLPipeline instance.
      */
     resize: function (width, height, resolution)
     {
         WebGLPipeline.prototype.resize.call(this, width, height, resolution);
+
         this.resolutionDirty = true;
+
         return this;
     },
 
@@ -153,7 +155,7 @@ var BitmapMaskPipeline = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} mask - GameObject used as mask.
      * @param {Phaser.GameObjects.GameObject} maskedObject - GameObject masked by the mask GameObject.
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera rendering the current mask.
      */
     beginMask: function (mask, maskedObject, camera)
     {

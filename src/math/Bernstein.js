@@ -7,15 +7,15 @@
 var Factorial = require('./Factorial');
 
 /**
- * [description]
+ * Calculates the Bernstein basis from the three factorial coefficients.
  *
  * @function Phaser.Math.Bernstein
  * @since 3.0.0
  *
- * @param {number} n - [description]
- * @param {number} i - [description]
+ * @param {number} n - The first value.
+ * @param {number} i - The second value.
  *
- * @return {number} [description]
+ * @return {number} The Bernstein basis of Factorial(n) / Factorial(i) / Factorial(n - i)
  */
 var Bernstein = function (n, i)
 {

@@ -2,6 +2,30 @@
 
 ## Version 3.23 - Ginro - in development
 
+### JSDocs
+
+The following sections now have 100% complete JSDoc coverage:
+
+* Animations
+* Create
+* Geom
+* Math
+* Renderer
+* Textures
+
+### Removed
+
+The following features have been removed in this version of Phaser:
+
+* Impact Physics has been removed completely and is no longer a choice of physics system. The resulting `Scene.impact` property and Impact config object have also been removed.
+
+### Deprecated
+
+The following features are now deprecated and will be removed in a future version of Phaser:
+
+* The Light Pipeline and associated components will be removed. This feature was never properly finished and adds too much redundant, non-optional code into the core API. The ability to load normal maps alongside textures will _remain_, for use in your own lighting shaders, which gives you far more control over the final effect.
+
+
 ### New Features
 
 * `Line.GetEasedPoints` is a new function that will take a Line, a quantity, and an ease function, and returns an array of points where each point has been spaced out across the length of the Line based on the ease function given.
@@ -15,16 +39,22 @@
 * `XHRLoader` will now use the `XHRSettings.withCredentials` as set in the file or global loader config.
 * `Animation.setCurrentFrame` will no longer try to call `setOrigin` or `updateDisplayOrigin` if the Game Object doesn't have the Origin component, preventing unknown function errors.
 * `MatterTileBody` now extends `EventEmitter`, meaning you can listen to collision events from Tiles directly and it will no longer throw errors about `gameObject.emit` not working. Fix #4967 (thanks @reinildo)
+* Added `MatterJS.BodyType` to `GameObject.body` type. Fix #4962 (thanks @meisterpeeps)
 
 ### Bug Fixes
 
 * The conditional checking if the `PathFollower` was at the end of the path or not was incorrect (thanks @samme)
+* Creating an `Arcade Physics Body` from a scaled Game Object would use the un-scaled dimensions for the body. They now use the scaled dimensions. This may be a breaking change in some games, so please be aware of it (thanks @samme)
+* Creating an `Arcade Physics Static Body` from a scaled Game Object would use the un-scaled dimensions for the body. They now use the scaled dimensions. This may be a breaking change in some games, so please be aware of it (thanks @samme)
+* The `Arcade Physics Static Body` center was incorrect after construction. Probably caused problems with circle collisions. Fix  #4770 (thanks @samme)
+* An Arcade Physics Body `center` and `position` are now correct after construction and before preUpdate(), for any Game Object origin or scale (thanks @samme)
+* When calling `Body.setSize` with the `center` parameter as `true` the calculated offset would be incorrect for scaled Game Objects. The offset now takes scaling into consideration (thanks @samme)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@JasonHK
+@JasonHK @supertommy
 
 ## Version 3.22 - Kohaku - January 15th 2020
 

@@ -15,10 +15,10 @@ var Point = require('./Point');
  *
  * @generic {Phaser.Geom.Point} O - [out,$return]
  *
- * @param {Phaser.Geom.Point[]} points - [description]
- * @param {Phaser.Geom.Point} [out] - [description]
+ * @param {Phaser.Types.Math.Vector2Like[]} points - An array of Vector2Like objects to get the geometric center of.
+ * @param {Phaser.Geom.Point} [out] - A Point object to store the output coordinates in. If not given, a new Point instance is created.
  *
- * @return {Phaser.Geom.Point} [description]
+ * @return {Phaser.Geom.Point} A Point object representing the geometric center of the given points.
  */
 var GetCentroid = function (points, out)
 {

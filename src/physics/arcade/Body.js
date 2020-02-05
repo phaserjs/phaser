@@ -33,8 +33,8 @@ var Body = new Class({
 
     function Body (world, gameObject)
     {
-        var width = (gameObject.width) ? gameObject.width : 64;
-        var height = (gameObject.height) ? gameObject.height : 64;
+        var width = (gameObject.displayWidth) ? gameObject.displayWidth : 64;
+        var height = (gameObject.displayHeight) ? gameObject.displayHeight : 64;
 
         /**
          * The Arcade Physics simulation this Body belongs to.
@@ -148,7 +148,10 @@ var Body = new Class({
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
-        this.position = new Vector2(gameObject.x, gameObject.y);
+        this.position = new Vector2(
+            gameObject.x - gameObject.scaleX * gameObject.displayOriginX,
+            gameObject.y - gameObject.scaleY * gameObject.displayOriginY
+        );
 
         /**
          * The position of this Body during the previous step.
@@ -278,7 +281,7 @@ var Body = new Class({
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
-        this.center = new Vector2(gameObject.x + this.halfWidth, gameObject.y + this.halfHeight);
+        this.center = new Vector2(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
 
         /**
          * The Body's velocity, in pixels per second.
@@ -904,23 +907,27 @@ var Body = new Class({
     resetFlags: function ()
     {
         //  Store and reset collision flags
-        this.wasTouching.none = this.touching.none;
-        this.wasTouching.up = this.touching.up;
-        this.wasTouching.down = this.touching.down;
-        this.wasTouching.left = this.touching.left;
-        this.wasTouching.right = this.touching.right;
+        var wasTouching = this.wasTouching;
+        var touching = this.touching;
+        var blocked = this.blocked;
 
-        this.touching.none = true;
-        this.touching.up = false;
-        this.touching.down = false;
-        this.touching.left = false;
-        this.touching.right = false;
+        wasTouching.none = touching.none;
+        wasTouching.up = touching.up;
+        wasTouching.down = touching.down;
+        wasTouching.left = touching.left;
+        wasTouching.right = touching.right;
 
-        this.blocked.none = true;
-        this.blocked.up = false;
-        this.blocked.down = false;
-        this.blocked.left = false;
-        this.blocked.right = false;
+        touching.none = true;
+        touching.up = false;
+        touching.down = false;
+        touching.left = false;
+        touching.right = false;
+
+        blocked.none = true;
+        blocked.up = false;
+        blocked.down = false;
+        blocked.left = false;
+        blocked.right = false;
 
         this.overlapR = 0;
         this.overlapX = 0;
@@ -1233,10 +1240,10 @@ var Body = new Class({
 
         if (center && gameObject.getCenter)
         {
-            var ox = gameObject.displayWidth / 2;
-            var oy = gameObject.displayHeight / 2;
+            var ox = (gameObject.width - width) / 2;
+            var oy = (gameObject.height - height) / 2;
 
-            this.offset.set(ox - this.halfWidth, oy - this.halfHeight);
+            this.offset.set(ox, oy);
         }
 
         this.isCircle = false;
