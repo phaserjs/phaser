@@ -25,7 +25,6 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
 
     var renderTiles = src.culledTiles;
     var tileCount = renderTiles.length;
-
     if (tileCount === 0)
     {
         return;
@@ -75,8 +74,8 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
 
     for (var i = 0; i < tileCount; i++)
     {
-        var tile = renderTiles[i];
 
+        var tile = renderTiles[i];
         var tileset = gidMap[tile.index];
 
         if (!tileset)
@@ -85,21 +84,20 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
         }
 
         var image = tileset.image.getSourceImage();
-        var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
 
+        var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
+  
         if (tileTexCoords)
         {
-            var width = 0;
-            var height = 0;
+            var width = tile.width;
+            var height = tile.width;
 
             if (src.layer.orientation === "isometric") {
                 // here we use the tileset width and height to fix problems with isometric map types
                 width = tileset.tileWidth;
                 width = tileset.tileHeight;
-            } else {
-               width = tile.width;
-               height = tile.width
             }
+
             halfWidth = width / 2;
             halfHeight = height / 2;
     
@@ -118,17 +116,18 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
             }
     
             ctx.globalAlpha = alpha * tile.alpha;
-            
+
             ctx.drawImage(
                 image,
                 tileTexCoords.x, tileTexCoords.y,
-                width, height,
+                tileset.tileWidth, tileset.tileHeight,
                 -halfWidth, -halfHeight,
                 width, height
             );
     
             ctx.restore();
         }
+
     }
 
     ctx.restore();

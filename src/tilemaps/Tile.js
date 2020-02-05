@@ -49,7 +49,6 @@ var Tile = new Class({
 
     function Tile (layer, index, x, y, width, height, baseWidth, baseHeight )
     {
-        console.log(this)
         /**
          * The LayerData in the Tilemap data that this tile belongs to.
          *
@@ -709,7 +708,7 @@ var Tile = new Class({
      */
     updatePixelXY: function ()
     {
-       if (this.layer.orientation === "orthogonal") {
+        if (this.layer.orientation === "orthogonal") {
             // In orthogonal mode, Tiled places tiles on a grid of baseWidth x baseHeight. The origin for a tile is the
             // bottom left, while the Phaser renderer assumes the origin is the top left. The y
             // coordinate needs to be adjusted by the difference.
@@ -717,14 +716,14 @@ var Tile = new Class({
             this.pixelY = this.y * this.baseHeight;
             // console.log("orthopix "+this.pixelX+","+this.pixelY)
         } else if  (this.layer.orientation === "isometric" ) {
-            // for the image to be centered we have to move the image to the right with the camera !
+            // reminder : for the tilemap to be centered we have to move the image to the right with the camera !
             // this is crucial for wordtotile, tiletoworld to work.
             this.pixelX = (this.x - this.y) * this.baseWidth *0.5;
             this.pixelY = (this.x + this.y) * this.baseHeight *0.5;
-            // console.log("isopix "+this.pixelX+","+this.pixelY)
+            // console.log("isopix from",this.x, this.y,"to", this.pixelX+","+this.pixelY)
         } else {
-            console.warn("this map orientation is not supported in this version of phaser")
-            console.log("tile orientation 3: "+this.layer.orientation)
+            // console.warn("this map orientation is not supported in this version of phaser")
+            // console.log("tile orientation 3: "+this.layer.orientation)
         }
 
         // this.pixelY = this.y * this.baseHeight - (this.height - this.baseHeight);

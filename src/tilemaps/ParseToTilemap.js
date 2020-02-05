@@ -73,8 +73,6 @@ var ParseToTilemap = function (scene, key, tileWidth, tileHeight, width, height,
             width: width,
             height: height
         });
-    } else {
-        console.log(mapData.orientation)
     }
 
     return new Tilemap(scene, mapData);

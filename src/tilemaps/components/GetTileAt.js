@@ -27,16 +27,13 @@ var GetTileAt = function (tileX, tileY, nonNull, layer)
 
     if (IsInLayerBounds(tileX, tileY, layer))
     {
-        console.log("tile in bounds", tileX, tileY)
         var tile = layer.data[tileY][tileX] || null;
         if (tile === null)
         {
-            console.log("null tile", tileX, tileY)
             return null;
         }
         else if (tile.index === -1)
         {
-            console.log("null tile", tileX, tileY)
             return nonNull ? tile : null;
         }
         else
