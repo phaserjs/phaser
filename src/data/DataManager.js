@@ -280,6 +280,72 @@ var DataManager = new Class({
     },
 
     /**
+     * Increase a value for the given key. If the key doesn't already exist in the Data Manager then it is increased from 0.
+     * 
+     * When the value is first set, a `setdata` event is emitted.
+     * 
+     * @method Phaser.Data.DataManager#inc
+     * @fires Phaser.Data.Events#SET_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA_KEY
+     * @since 3.23.0
+     *
+     * @param {(string|object)} key - The key to increase the value for.
+     * @param {*} [data] - The value to increase for the given key.
+     *
+     * @return {Phaser.Data.DataManager} This DataManager object.
+     */    
+    inc: function (key, data)
+    {
+        if (this._frozen)
+        {
+            return this;
+        }
+
+        if (data === undefined)
+        {
+            data = 1;
+        }
+
+        var value = this.get(key);
+        if (value === undefined)
+        {
+            value = 0;
+        }
+
+        this.set(key, (value + data));
+
+        return this;
+    },
+
+    /**
+     * Toggle a boolean value for the given key. If the key doesn't already exist in the Data Manager then it is toggled from false.
+     * 
+     * When the value is first set, a `setdata` event is emitted.
+     * 
+     * @method Phaser.Data.DataManager#toggle
+     * @fires Phaser.Data.Events#SET_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA_KEY
+     * @since 3.23.0
+     *
+     * @param {(string|object)} key - The key to toggle the value for.
+     *
+     * @return {Phaser.Data.DataManager} This DataManager object.
+     */  
+    toggle: function (key)
+    {
+        if (this._frozen)
+        {
+            return this;
+        }
+
+        this.set(key, !this.get(key));
+
+        return this;
+    },
+
+    /**
      * Internal value setter, called automatically by the `set` method.
      *
      * @method Phaser.Data.DataManager#setValue
