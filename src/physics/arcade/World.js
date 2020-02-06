@@ -155,6 +155,16 @@ var World = new Class({
         this.fps = GetValue(config, 'fps', 60);
 
         /**
+         * Physics/Render synchronisation. This property disables fps and timeScale properties. 
+         *
+         * @name Phaser.Physics.Arcade.World#syncToRender
+         * @type {boolean}
+         * @default false
+         * @since 3.23.0
+         */
+        this.syncToRender = false;
+
+        /**
          * The amount of elapsed ms since the last frame.
          *
          * @name Phaser.Physics.Arcade.World#_elapsed
@@ -926,6 +936,13 @@ var World = new Class({
 
         //  Will a step happen this frame?
         var willStep = (this._elapsed >= msPerFrame);
+
+        if(this.syncToRender)
+        {
+            fixedDelta = delta * 0.001;
+            willStep = true;
+            this._elapsed = 0;
+        }
 
         for (i = 0; i < bodies.length; i++)
         {
