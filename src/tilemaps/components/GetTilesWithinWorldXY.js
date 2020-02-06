@@ -5,8 +5,6 @@
  */
 
 var GetTilesWithin = require('./GetTilesWithin');
-var WorldToTileX = require('./WorldToTileX');
-var WorldToTileY = require('./WorldToTileY');
 var WorldToTileXY = require('./WorldToTileXY');
 
 /**
@@ -31,14 +29,15 @@ var WorldToTileXY = require('./WorldToTileXY');
  */
 var GetTilesWithinWorldXY = function (worldX, worldY, width, height, filteringOptions, camera, layer)
 {
-    var orientation = layer.orientation
+    var orientation = layer.orientation;
+
     // Top left corner of the rect, rounded down to include partial tiles
     var pointStart = WorldToTileXY(worldX, worldY, true, camera, layer, orientation);
     var xStart = pointStart.x;
     var yStart = pointStart.y;
 
     // Bottom right corner of the rect, rounded up to include partial tiles
-    var pointEnd = WorldToTileXY(worldX+ width, worldY+ height, true, camera, layer, orientation);
+    var pointEnd = WorldToTileXY(worldX + width, worldY + height, true, camera, layer, orientation);
     var xEnd = Math.ceil(pointEnd.x);
     var yEnd = Math.ceil(pointEnd.y);
 

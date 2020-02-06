@@ -74,28 +74,27 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPer
             {
                 continue;
             }
-            if (src.layer.orientation === "isometric") {
-                // here we use the tileset width and height to fix problems with isometric map types
-            
-                var frameWidth = tileset.tileWidth;
-                var frameHeight = tileset.tileHeight;
-    
-                var frameX = tileTexCoords.x;
-                var frameY = tileTexCoords.y;
-    
-                var tw = tileset.tileWidth * 0.5;
-                var th = tileset.tileHeight * 0.5;
-            } else {
-                var frameWidth = tile.width;
-                var frameHeight = tile.height;
-    
-                var frameX = tileTexCoords.x;
-                var frameY = tileTexCoords.y;
-    
-                var tw = tile.width * 0.5;
-                var th = tile.height * 0.5;
+
+            var frameWidth = 0;
+            var frameHeight = 0;
+
+            if (src.layer.orientation === 'isometric')
+            {
+                // we use the tileset width and height because in isometric maps the tileset's height is often different from the tilemap's.
+                frameWidth = tileset.tileWidth;
+                frameHeight = tileset.tileHeight;
+            }
+            else
+            {
+                frameWidth = tile.width;
+                frameHeight = tile.height;
             }
 
+            var frameX = tileTexCoords.x;
+            var frameY = tileTexCoords.y;
+
+            var tw = frameWidth * 0.5;
+            var th = frameHeight * 0.5;
           
 
             var tint = getTint(tile.tint, alpha * tile.alpha);

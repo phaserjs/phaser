@@ -8,10 +8,8 @@ var Geom = require('../../geom/');
 var GetTilesWithin = require('./GetTilesWithin');
 var Intersects = require('../../geom/intersects/');
 var NOOP = require('../../utils/NOOP');
-var TileToWorldX = require('./TileToWorldX');
-var TileToWorldY = require('./TileToWorldY');
-var WorldToTileX = require('./WorldToTileX');
-var WorldToTileY = require('./WorldToTileY');
+var TileToWorldXY = require('./TileToWorldXY');
+var WorldToTileXY = require('./WorldToTileXY');
 
 var TriangleToRectangle = function (triangle, rect)
 {
@@ -41,7 +39,6 @@ var TriangleToRectangle = function (triangle, rect)
  */
 var GetTilesWithinShape = function (shape, filteringOptions, camera, layer)
 {
-    var orientation = layer.orientation;
     if (shape === undefined) { return []; }
 
     // intersectTest is a function with parameters: shape, rect
@@ -52,12 +49,12 @@ var GetTilesWithinShape = function (shape, filteringOptions, camera, layer)
     else if (shape instanceof Geom.Line) { intersectTest = Intersects.LineToRectangle; }
 
     // Top left corner of the shapes's bounding box, rounded down to include partial tiles
-    var pointStart = WorldToTileXY(shape.left, shape.top, true, camera, layer, orientation);
+    var pointStart = WorldToTileXY(shape.left, shape.top, true, camera, layer);
     var xStart = pointStart.x;
     var yStart = pointStart.y;
 
     // Bottom right corner of the shapes's bounding box, rounded up to include partial tiles
-    var pointEnd = WorldToTileXY(shape.right, shape.bottom, true, camera, layer, orientation);
+    var pointEnd = WorldToTileXY(shape.right, shape.bottom, true, camera, layer);
     var xEnd = Math.ceil(pointEnd.x);
     var yEnd = Math.ceil(pointEnd.y);
 
@@ -80,8 +77,9 @@ var GetTilesWithinShape = function (shape, filteringOptions, camera, layer)
     for (var i = 0; i < tiles.length; i++)
     {
         var tile = tiles[i];
-        tileRect.x = TileToWorldX(tile.x, camera, layer);
-        tileRect.y = TileToWorldY(tile.y, camera, layer);
+        var point = TileToWorldXY(tile.x, tile.y, camera, layer);
+        tileRect.x = point.x;
+        tileRect.y = point.y;
         if (intersectTest(shape, tileRect))
         {
             results.push(tile);

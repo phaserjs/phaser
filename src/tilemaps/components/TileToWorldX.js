@@ -35,12 +35,15 @@ var TileToWorldX = function (tileX, camera, layer)
     }
 
 
-    if (orientation === "orthogonal") {
-        return layerWorldX + tileX * tileWidth;    
-    } else if (orientation === "isometric") {
+    if (orientation === 'orthogonal')
+    {
+        return layerWorldX + tileX * tileWidth;
+    }
+    else if (orientation === 'isometric')
+    {
         // Not Best Solution ?
         console.warn('With isometric map types you have to use the TileToWorldXY function.');
-        return null; 
+        return null;
     }
 
    

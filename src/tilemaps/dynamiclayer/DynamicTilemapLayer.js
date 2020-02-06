@@ -249,8 +249,8 @@ var DynamicTilemapLayer = new Class({
 
         this.initPipeline('TextureTintPipeline');
 
-        console.log("layer sizes")
-        console.log(this.layer.tileWidth,this.layer.tileHeight)
+        console.log('layer sizes');
+        console.log(this.layer.tileWidth,this.layer.tileHeight);
     },
 
     /**

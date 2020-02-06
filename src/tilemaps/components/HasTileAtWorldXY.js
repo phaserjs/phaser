@@ -5,8 +5,7 @@
  */
 
 var HasTileAt = require('./HasTileAt');
-var WorldToTileX = require('./WorldToTileX');
-var WorldToTileY = require('./WorldToTileY');
+var WorldToTileXY = require('./WorldToTileXY');
 
 /**
  * Checks if there is a tile at the given location (in world coordinates) in the given layer. Returns

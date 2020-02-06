@@ -31,6 +31,7 @@ var WorldToTileX = function (worldX, snapToFloor, camera, layer)
     if (tilemapLayer)
     {
         if (camera === undefined) { camera = tilemapLayer.scene.cameras.main; }
+
         // Find the world position relative to the static or dynamic layer's top left origin,
         // factoring in the camera's horizontal scroll
         worldX = worldX - (tilemapLayer.x + camera.scrollX * (1 - tilemapLayer.scrollFactorX));
@@ -38,13 +39,16 @@ var WorldToTileX = function (worldX, snapToFloor, camera, layer)
         tileWidth *= tilemapLayer.scaleX;
     }
 
-    if (orientation === "orthogonal") {
+    if (orientation === 'orthogonal')
+    {
         return snapToFloor
             ? Math.floor(worldX / tileWidth)
             : worldX / tileWidth;
-    } else if (orientation === "isometric") {
+    }
+    else if (orientation === 'isometric')
+    {
         console.warn('With isometric map types you have to use the WorldToTileXY function.');
-        return null
+        return null;
     }
    
 };

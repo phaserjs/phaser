@@ -135,7 +135,6 @@ var Tilemap = new Class({
          * @since 3.0.0
          */
         this.orientation = mapData.orientation;
-        console.log("map orientation :" + this.orientation)
 
         /**
          * The render (draw) order of the map data (as specified in Tiled), usually 'right-down'.
@@ -505,8 +504,7 @@ var Tilemap = new Class({
             height: height,
             orientation: this.orientation
         });
-        console.log("tm orientation : ",layerData.orientation)
-
+        
         var row;
 
         for (var tileY = 0; tileY < height; tileY++)
@@ -2348,7 +2346,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return TilemapComponents.TileToWorldX(tileX, camera, layer, this.orientation);
+        return TilemapComponents.TileToWorldX(tileX, camera, layer);
     },
 
     /**
@@ -2373,7 +2371,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return TilemapComponents.TileToWorldY(tileX, camera, layer, this.orientation);
+        return TilemapComponents.TileToWorldY(tileX, camera, layer);
     },
 
     /**
@@ -2400,7 +2398,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return TilemapComponents.TileToWorldXY(tileX, tileY, point, camera, layer, this.orientation);
+        return TilemapComponents.TileToWorldXY(tileX, tileY, point, camera, layer);
     },
 
     /**
@@ -2471,7 +2469,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return TilemapComponents.WorldToTileX(worldX, snapToFloor, camera, layer, this.orientation);
+        return TilemapComponents.WorldToTileX(worldX, snapToFloor, camera, layer);
     },
 
     /**
@@ -2496,7 +2494,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return TilemapComponents.WorldToTileY(worldY, snapToFloor, camera, layer,this.orientation);
+        return TilemapComponents.WorldToTileY(worldY, snapToFloor, camera, layer);
     },
 
     /**
@@ -2524,7 +2522,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return TilemapComponents.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, layer, this.orientation);
+        return TilemapComponents.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, layer);
     },
 
     /**

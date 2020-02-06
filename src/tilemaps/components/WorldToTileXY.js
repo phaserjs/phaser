@@ -31,10 +31,13 @@ var WorldToTileXY = function (worldX, worldY, snapToFloor, point, camera, layer)
     var orientation = layer.orientation;
     if (point === undefined) { point = new Vector2(0, 0); }
 
-    if (orientation === "orthogonal") {    
+    if (orientation === 'orthogonal')
+    {
         point.x = WorldToTileX(worldX, snapToFloor, camera, layer, orientation);
         point.y = WorldToTileY(worldY, snapToFloor, camera, layer, orientation);
-    } else if (orientation === 'isometric') {
+    }
+    else if (orientation === 'isometric')
+    {
         
         var tileWidth = layer.baseTileWidth;
         var tileHeight = layer.baseTileHeight;
@@ -48,6 +51,7 @@ var WorldToTileXY = function (worldX, worldY, snapToFloor, point, camera, layer)
             // factoring in the camera's vertical scroll
             // console.log(1,worldY)
             worldY = worldY - (tilemapLayer.y + camera.scrollY * (1 - tilemapLayer.scrollFactorY));
+
             // console.log(worldY)
             tileHeight *= tilemapLayer.scaleY;
 
@@ -59,12 +63,12 @@ var WorldToTileXY = function (worldX, worldY, snapToFloor, point, camera, layer)
         }
 
         point.x = snapToFloor
-            ? Math.floor((worldX/(tileWidth/2) + worldY/(tileHeight/2))/2) 
-            : ((worldX/(tileWidth/2) + worldY/(tileHeight/2))/2);
+            ? Math.floor((worldX / (tileWidth / 2) + worldY / (tileHeight / 2)) / 2)
+            : ((worldX / (tileWidth / 2) + worldY / (tileHeight / 2)) / 2);
 
-        point.y = snapToFloor   
-            ? Math.floor((worldY/(tileHeight/2) - worldX/(tileWidth/2))/2) 
-            : ((worldY/(tileHeight/2) - worldX/(tileWidth/2))/2);
+        point.y = snapToFloor
+            ? Math.floor((worldY / (tileHeight / 2) - worldX / (tileWidth / 2)) / 2)
+            : ((worldY / (tileHeight / 2) - worldX / (tileWidth / 2)) / 2);
     }
 
   

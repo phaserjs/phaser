@@ -92,14 +92,15 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
             var width = tile.width;
             var height = tile.width;
 
-            if (src.layer.orientation === "isometric") {
-                // here we use the tileset width and height to fix problems with isometric map types
+            if (src.layer.orientation === 'isometric')
+            {
+                // we use the tileset width and height because in isometric maps the tileset's height is often different from the tilemap's.
                 width = tileset.tileWidth;
                 width = tileset.tileHeight;
             }
 
-            halfWidth = width / 2;
-            halfHeight = height / 2;
+            var halfWidth = width / 2;
+            var halfHeight = height / 2;
     
             ctx.save();
 

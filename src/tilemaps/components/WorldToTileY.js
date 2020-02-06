@@ -38,13 +38,16 @@ var WorldToTileY = function (worldY, snapToFloor, camera, layer)
 
     }
 
-    if (orientation === "orthogonal") {
+    if (orientation === 'orthogonal')
+    {
         return snapToFloor
             ? Math.floor(worldY / tileHeight)
             : worldY / tileHeight;
-    } else if (orientation === "isometric") {
+    }
+    else if (orientation === 'isometric')
+    {
         console.warn('With isometric map types you have to use the WorldToTileXY function.');
-        return null
+        return null;
 
     }
 };

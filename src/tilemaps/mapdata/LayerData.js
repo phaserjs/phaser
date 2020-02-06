@@ -116,7 +116,7 @@ var LayerData = new Class({
          * @type {string}
          * @since 3.22.PR_svipal
          */
-        this.orientation = GetFastValue(config, 'orientation', "orthogonal");
+        this.orientation = GetFastValue(config, 'orientation', 'orthogonal');
 
 
         /**

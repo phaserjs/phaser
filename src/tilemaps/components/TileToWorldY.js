@@ -32,12 +32,15 @@ var TileToWorldY = function (tileY, camera, layer)
         tileHeight *= tilemapLayer.scaleY;
     }
 
-    if (orientation === "orthogonal") {
-        return layerWorldY + tileY * tileHeight;    
-    } else if (orientation === "isometric") {
+    if (orientation === 'orthogonal')
+    {
+        return layerWorldY + tileY * tileHeight;
+    }
+    else if (orientation === 'isometric')
+    {
         // Not Best Solution ?
         console.warn('With isometric map types you have to use the TileToWorldXY function.');
-        return null; 
+        return null;
     }
 };
 

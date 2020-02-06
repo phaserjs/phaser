@@ -38,10 +38,13 @@ var TileToWorldXY = function (tileX, tileY, point, camera, layer)
 
 
 
-    if (orientation === "orthogonal") {
+    if (orientation === 'orthogonal')
+    {
         point.x = TileToWorldX(tileX, camera, layer, orientation);
         point.y = TileToWorldY(tileY, camera, layer, orientation);
-    } else if (orientation === "isometric") {
+    }
+    else if (orientation === 'isometric')
+    {
 
         var layerWorldX = 0;
         var layerWorldY = 0;
@@ -57,8 +60,8 @@ var TileToWorldXY = function (tileX, tileY, point, camera, layer)
 
 
 
-        point.x =  layerWorldX + (tileX - tileY) * (tileWidth/2);
-        point.y =  layerWorldY + (tileX + tileY) * (tileHeight/2);
+        point.x = layerWorldX + (tileX - tileY) * (tileWidth / 2);
+        point.y = layerWorldY + (tileX + tileY) * (tileHeight / 2);
  
     }
     

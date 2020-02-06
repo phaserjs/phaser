@@ -131,7 +131,6 @@ var ParseTileLayers = function (json, insertNull)
                 orientation: json.orientation
             });
 
-            console.log("layerdata orientation", layerData.orientation)
 
             for (var c = 0; c < curl.height; c++)
             {
@@ -206,7 +205,6 @@ var ParseTileLayers = function (json, insertNull)
                 properties: GetFastValue(curl, 'properties', {}),
                 orientation: json.orientation
             });
-            console.log("layerdata orientation", layerData.orientation)
             var row = [];
 
             //  Loop through the data field in the JSON.

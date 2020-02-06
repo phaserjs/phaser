@@ -57,6 +57,7 @@ var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer)
             layer.data[tileY][tileX].index = index;
         }
     }
+
     // Updating colliding flag on the new tile
     var newTile = layer.data[tileY][tileX];
     var collides = layer.collideIndexes.indexOf(newTile.index) !== -1;
