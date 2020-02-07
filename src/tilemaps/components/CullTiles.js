@@ -71,6 +71,8 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
             {
                 var cullDistances = tilemapLayer.isoCullDistances;
                 var pos = tilemapLayer.tileToWorldXY(x,y,undefined,camera);
+                
+                // we always subtract 1/2 of the tile's height/width to make the culling distance start from the center of the tiles.
                 return pos.x > camera.worldView.x + tilemapLayer.scaleX * layer.tileWidth * (- cullDistances.x - 1 / 2)
                     && pos.x < camera.worldView.right + tilemapLayer.scaleX * layer.tileWidth * (cullDistances.x - 1 / 2)
                     && pos.y > camera.worldView.y + tilemapLayer.scaleY * layer.tileHeight * (- cullDistances.y - 1 / 2)
