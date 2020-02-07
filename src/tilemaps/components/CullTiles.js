@@ -69,8 +69,12 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
         {
             inIsoBounds = function (x,y)
             {
+                var cullDistances = tilemapLayer.isoCullDistances;
                 var pos = tilemapLayer.tileToWorldXY(x,y,undefined,camera);
-                return (pos.x > camera.worldView.x && pos.x < camera.worldView.right - layer.tileWidth) && (pos.y > camera.worldView.y && pos.y < camera.worldView.bottom - layer.tileHeight);
+                return pos.x > camera.worldView.x + tilemapLayer.scaleX * layer.tileWidth * (- cullDistances.x - 1 / 2)
+                    && pos.x < camera.worldView.right + tilemapLayer.scaleX * layer.tileWidth * (cullDistances.x - 1 / 2)
+                    && pos.y > camera.worldView.y + tilemapLayer.scaleY * layer.tileHeight * (- cullDistances.y - 1 / 2)
+                    && pos.y < camera.worldView.bottom + tilemapLayer.scaleY * layer.tileHeight * (cullDistances.y - 1 / 2);
             };
         }
     }
