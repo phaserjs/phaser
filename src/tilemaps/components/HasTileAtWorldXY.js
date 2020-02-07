@@ -24,7 +24,7 @@ var WorldToTileXY = require('./WorldToTileXY');
  */
 var HasTileAtWorldXY = function (worldX, worldY, camera, layer)
 {
-    var point = WorldToTileXY(worldX, worldY, true, camera, layer);
+    var point = WorldToTileXY(worldX, worldY, true, undefined, camera, layer);
     var tileX = point.x;
     var tileY = point.y;
     return HasTileAt(tileX, tileY, layer);

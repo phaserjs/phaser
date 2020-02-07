@@ -117,7 +117,6 @@ var MapData = new Class({
          * @since 3.0.0
          */
         this.orientation = GetFastValue(config, 'orientation', 'orthogonal');
-        console.log('map data orientation : ' + this.orientation);
 
         /**
          * Determines the draw order of tilemap. Default is right-down

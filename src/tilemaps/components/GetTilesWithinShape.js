@@ -49,12 +49,12 @@ var GetTilesWithinShape = function (shape, filteringOptions, camera, layer)
     else if (shape instanceof Geom.Line) { intersectTest = Intersects.LineToRectangle; }
 
     // Top left corner of the shapes's bounding box, rounded down to include partial tiles
-    var pointStart = WorldToTileXY(shape.left, shape.top, true, camera, layer);
+    var pointStart = WorldToTileXY(shape.left, shape.top, true, undefined, camera, layer);
     var xStart = pointStart.x;
     var yStart = pointStart.y;
 
     // Bottom right corner of the shapes's bounding box, rounded up to include partial tiles
-    var pointEnd = WorldToTileXY(shape.right, shape.bottom, true, camera, layer);
+    var pointEnd = WorldToTileXY(shape.right, shape.bottom, true, undefined, camera, layer);
     var xEnd = Math.ceil(pointEnd.x);
     var yEnd = Math.ceil(pointEnd.y);
 
@@ -77,7 +77,7 @@ var GetTilesWithinShape = function (shape, filteringOptions, camera, layer)
     for (var i = 0; i < tiles.length; i++)
     {
         var tile = tiles[i];
-        var point = TileToWorldXY(tile.x, tile.y, camera, layer);
+        var point = TileToWorldXY(tile.x, tile.y, undefined, camera, layer);
         tileRect.x = point.x;
         tileRect.y = point.y;
         if (intersectTest(shape, tileRect))

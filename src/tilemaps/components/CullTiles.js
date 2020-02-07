@@ -70,7 +70,7 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
             inIsoBounds = function (x,y)
             {
                 var pos = tilemapLayer.tileToWorldXY(x,y,undefined,camera);
-                return (pos.x > camera.worldView.x && pos.x < camera.worldView.right) && (pos.y > camera.worldView.y && pos.y < camera.worldView.bottom);
+                return (pos.x > camera.worldView.x && pos.x < camera.worldView.right - layer.tileWidth) && (pos.y > camera.worldView.y && pos.y < camera.worldView.bottom - layer.tileHeight);
             };
         }
     }

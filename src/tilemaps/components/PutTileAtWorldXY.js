@@ -28,7 +28,7 @@ var WorldToTileXY = require('./WorldToTileXY');
  */
 var PutTileAtWorldXY = function (tile, worldX, worldY, recalculateFaces, camera, layer)
 {
-    var point = WorldToTileXY(worldX, worldY, true, camera, layer);
+    var point = WorldToTileXY(worldX, worldY, true, undefined, camera, layer);
     var tileX = point.x;
     var tileY = point.y;
     return PutTileAt(tile, tileX, tileY, recalculateFaces, layer);

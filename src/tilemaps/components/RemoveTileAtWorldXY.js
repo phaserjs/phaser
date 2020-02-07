@@ -26,7 +26,7 @@ var WorldToTileXY = require('./WorldToTileXY');
  */
 var RemoveTileAtWorldXY = function (worldX, worldY, replaceWithNull, recalculateFaces, camera, layer)
 {
-    var point = WorldToTileXY(worldX, worldY, true, camera, layer);
+    var point = WorldToTileXY(worldX, worldY, true, undefined, camera, layer);
     var tileX = point.x;
     var tileY = point.y;
     return RemoveTileAt(tileX, tileY, replaceWithNull, recalculateFaces, layer);
