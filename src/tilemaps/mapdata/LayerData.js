@@ -118,7 +118,6 @@ var LayerData = new Class({
          */
         this.orientation = GetFastValue(config, 'orientation', 'orthogonal');
 
-
         /**
          * The width in pixels of the entire layer.
          *
@@ -217,8 +216,6 @@ var LayerData = new Class({
          * @since 3.0.0
          */
         this.tilemapLayer = GetFastValue(config, 'tilemapLayer', null);
-
-        
     }
 
 });
