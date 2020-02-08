@@ -1124,7 +1124,7 @@ var StaticTilemapLayer = new Class({
      */
     hasTileAtWorldXY: function (worldX, worldY, camera)
     {
-        return TilemapComponents.HasTileAtWorldXY(worldX, worldY, camera);
+        return TilemapComponents.HasTileAtWorldXY(worldX, worldY, camera, this.layer);
     },
 
     /**
