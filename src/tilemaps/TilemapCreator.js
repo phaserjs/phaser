@@ -24,6 +24,7 @@ GameObjectCreator.register('tilemap', function (config)
 {
     // Defaults are applied in ParseToTilemap
     var c = (config !== undefined) ? config : {};
+
     return ParseToTilemap(
         this.scene,
         c.key,
