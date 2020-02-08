@@ -95,7 +95,6 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPer
 
             var tw = frameWidth * 0.5;
             var th = frameHeight * 0.5;
-          
 
             var tint = getTint(tile.tint, alpha * tile.alpha);
 
