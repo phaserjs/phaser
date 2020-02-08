@@ -112,7 +112,7 @@ var Tile = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.baseWidth = (baseWidth !== undefined && !baseWidth.isNaN()) ? baseWidth : width;
+        this.baseWidth = (baseWidth !== undefined) ? baseWidth : width;
 
         /**
          * The map's base height of a tile in pixels. Tiled maps support multiple tileset sizes
@@ -122,7 +122,7 @@ var Tile = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.baseHeight = (baseHeight !== undefined && !baseWidth.isNaN()) ? baseHeight : height;
+        this.baseHeight = (baseHeight !== undefined) ? baseHeight : height;
 
         /**
          * The x coordinate of the top left of this tile in pixels. This is relative to the top left
