@@ -35,11 +35,10 @@ var ParseJSONTiled = function (name, json, insertNull)
     if (json.orientation === 'isometric')
     {
         console.warn('isometric map types are WIP  in this version of Phaser');
-        
     }
     else if (json.orientation !== 'orthogonal')
     {
-        console.warn('Only orthogonal map types are supported in this version of Phaser');
+        console.warn('Only orthogonal and standard isometric map types are supported in this version of Phaser');
         return null;
     }
 
