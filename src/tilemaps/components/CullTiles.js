@@ -22,7 +22,6 @@ var SnapCeil = require('../../math/snap/SnapCeil');
  */
 var CullTiles = function (layer, camera, outputArray, renderOrder)
 {
-    
     if (outputArray === undefined) { outputArray = []; }
     if (renderOrder === undefined) { renderOrder = 0; }
 
@@ -46,7 +45,7 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
     var drawTop = 0;
     var drawBottom = mapHeight;
 
-    // we define it earlier for it to make sense in scope 
+    // we define the isometric culling function as a dummy early on for it to make sense in scope 
     var inIsoBounds = function () { return true; };
     if (!tilemapLayer.skipCull && tilemapLayer.scrollFactorX === 1 && tilemapLayer.scrollFactorY === 1)
     {
