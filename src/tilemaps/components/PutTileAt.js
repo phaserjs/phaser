@@ -37,7 +37,6 @@ var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer)
 
     if (tile instanceof Tile)
     {
-       
         if (layer.data[tileY][tileX] === null)
         {
             layer.data[tileY][tileX] = new Tile(layer, tile.index, tileX, tileY, layer.tileWidth, layer.tileHeight);
@@ -49,7 +48,6 @@ var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer)
         var index = tile;
         if (layer.data[tileY][tileX] === null)
         {
-           
             layer.data[tileY][tileX] = new Tile(layer, index, tileX, tileY, layer.tileWidth, layer.tileHeight);
         }
         else
@@ -68,7 +66,7 @@ var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer)
     {
         CalculateFacesAt(tileX, tileY, layer);
     }
-    
+
     return newTile;
 };
 
