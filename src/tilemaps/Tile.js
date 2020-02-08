@@ -36,7 +36,6 @@ var Rectangle = require('../geom/rectangle');
  * support multiple tileset sizes within one map, but they are still placed at intervals of the
  * base tile height.
  */
-
 var Tile = new Class({
 
     Mixins: [
@@ -275,7 +274,6 @@ var Tile = new Class({
          * @since 3.0.0
          */
         this.physics = {};
-
     },
 
     /**
