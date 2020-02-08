@@ -23,7 +23,7 @@ var Utils = require('../../renderer/webgl/Utils');
  * 
  * Use a Static Tilemap Layer instead of a Dynamic Tilemap Layer when you don't need tile manipulation features.
  *
- * @class StaticTilemapLayers
+ * @class StaticTilemapLayer
  * @extends Phaser.GameObjects.GameObject
  * @memberof Phaser.Tilemaps
  * @constructor
@@ -1124,7 +1124,6 @@ var StaticTilemapLayer = new Class({
      */
     hasTileAtWorldXY: function (worldX, worldY, camera)
     {
-
         return TilemapComponents.HasTileAtWorldXY(worldX, worldY, camera);
     },
 
