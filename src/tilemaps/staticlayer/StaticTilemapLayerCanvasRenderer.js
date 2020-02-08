@@ -22,6 +22,7 @@
 var StaticTilemapLayerCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
     src.cull(camera);
+
     var renderTiles = src.culledTiles;
     var tileCount = renderTiles.length;
 
