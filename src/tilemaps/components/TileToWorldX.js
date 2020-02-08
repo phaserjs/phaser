@@ -34,7 +34,6 @@ var TileToWorldX = function (tileX, camera, layer)
         tileWidth *= tilemapLayer.scaleX;
     }
 
-
     if (orientation === 'orthogonal')
     {
         return layerWorldX + tileX * tileWidth;
