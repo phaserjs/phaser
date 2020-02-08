@@ -504,7 +504,7 @@ var Tilemap = new Class({
             height: height,
             orientation: this.orientation
         });
-        
+
         var row;
 
         for (var tileY = 0; tileY < height; tileY++)
