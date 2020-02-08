@@ -18,6 +18,7 @@
 var TileIntersectsBody = function (tileWorldRect, body)
 {
     // Currently, all bodies are treated as rectangles when colliding with a Tile.
+    
     return !(
         body.right <= tileWorldRect.left ||
         body.bottom <= tileWorldRect.top ||
