@@ -1920,7 +1920,7 @@ var World = new Class({
     {
         var bodyA = sprite.body;
 
-        if (group.length === 0 || !bodyA || !bodyA.enable)
+        if (group.length === 0 || !bodyA || !bodyA.enable || bodyA.checkCollision.none)
         {
             return;
         }
