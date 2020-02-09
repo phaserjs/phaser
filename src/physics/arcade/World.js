@@ -2133,7 +2133,7 @@ var World = new Class({
     {
         var body = sprite.body;
 
-        if (!body.enable)
+        if (!body.enable || body.checkCollision.none)
         {
             return false;
         }
