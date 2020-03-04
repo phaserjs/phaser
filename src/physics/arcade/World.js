@@ -1948,9 +1948,9 @@ var World = new Class({
             {
                 bodyB = results[i];
 
-                if (bodyA === bodyB || !bodyB.enable || !group.contains(bodyB.gameObject))
+                if (bodyA === bodyB || !bodyB.enable || bodyB.checkCollision.none || !group.contains(bodyB.gameObject))
                 {
-                    //  Skip if comparing against itself, or if bodyB isn't actually part of the Group
+                    //  Skip if comparing against itself, or if bodyB isn't collidable, or if bodyB isn't actually part of the Group
                     continue;
                 }
 
