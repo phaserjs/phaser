@@ -768,8 +768,8 @@ var ScaleManager = new Class({
         }
 
         //  The size used for the canvas style, factoring in the scale mode and parent and zoom value
-        //  We just use the w/h here as this is what sets the aspect ratio (which doesn't then change)
-        this.displaySize.setSize(width, height);
+        //  Update the aspect ratio
+        this.displaySize.setAspectRatio(width / height);
 
         this.canvas.width = this.baseSize.width;
         this.canvas.height = this.baseSize.height;
