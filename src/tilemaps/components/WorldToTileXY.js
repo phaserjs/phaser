@@ -88,8 +88,8 @@ var WorldToTileXY = function (worldX, worldY, snapToFloor, point, camera, layer)
                 ? Math.floor((worldY / (tileHeight / 2)))
                 : (worldY / (tileHeight / 2));
             point.x = snapToFloor
-                ? Math.floor((worldX / tileWidth) - (point.y % 2))
-                : (worldX / tileWidth) - (point.y % 2);
+                ? Math.floor((worldX / tileWidth) + (point.y % 2))
+                : (worldX / tileWidth) + (point.y % 2);
             
         }
     }
