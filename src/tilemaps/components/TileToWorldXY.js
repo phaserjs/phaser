@@ -43,7 +43,7 @@ var TileToWorldXY = function (tileX, tileY, point, camera, layer)
         point.x = TileToWorldX(tileX, camera, layer, orientation);
         point.y = TileToWorldY(tileY, camera, layer, orientation);
     }
-    else if (orientation === 'isometric')
+    else if (orientation === 'isometric' || orientation === 'staggered')
     {
 
         var layerWorldX = 0;
@@ -59,9 +59,18 @@ var TileToWorldXY = function (tileX, tileY, point, camera, layer)
         }
 
 
-
-        point.x = layerWorldX + (tileX - tileY) * (tileWidth / 2);
-        point.y = layerWorldY + (tileX + tileY) * (tileHeight / 2);
+        if (orientation === 'isometric')
+        {
+            point.x = layerWorldX + (tileX - tileY) * (tileWidth / 2);
+            point.y = layerWorldY + (tileX + tileY) * (tileHeight / 2);
+        }
+        else if (orientation === 'staggered')
+        {
+            // todo
+            point.x = layerWorldX + tileX * tileWidth + tileY % 2 * (tileWidth / 2);
+            point.y = layerWorldY + tileY * (tileHeight / 2);
+        }
+        
  
     }
     

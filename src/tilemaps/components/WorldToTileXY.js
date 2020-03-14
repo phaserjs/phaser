@@ -36,7 +36,7 @@ var WorldToTileXY = function (worldX, worldY, snapToFloor, point, camera, layer)
         point.x = WorldToTileX(worldX, snapToFloor, camera, layer, orientation);
         point.y = WorldToTileY(worldY, snapToFloor, camera, layer, orientation);
     }
-    else if (orientation === 'isometric')
+    else if (orientation === 'isometric' || orientation === 'staggered')
     {
         
         var tileWidth = layer.baseTileWidth;
@@ -61,17 +61,38 @@ var WorldToTileXY = function (worldX, worldY, snapToFloor, point, camera, layer)
 
             tileWidth *= tilemapLayer.scaleX;
         }
+        
+        if (orientation === 'isometric')
+        {
+            point.x = snapToFloor
+                ? Math.floor((worldX / (tileWidth / 2) + worldY / (tileHeight / 2)) / 2)
+                : ((worldX / (tileWidth / 2) + worldY / (tileHeight / 2)) / 2);
 
-        point.x = snapToFloor
-            ? Math.floor((worldX / (tileWidth / 2) + worldY / (tileHeight / 2)) / 2)
-            : ((worldX / (tileWidth / 2) + worldY / (tileHeight / 2)) / 2);
-
-        point.y = snapToFloor
-            ? Math.floor((worldY / (tileHeight / 2) - worldX / (tileWidth / 2)) / 2)
-            : ((worldY / (tileHeight / 2) - worldX / (tileWidth / 2)) / 2);
+            point.y = snapToFloor
+                ? Math.floor((worldY / (tileHeight / 2) - worldX / (tileWidth / 2)) / 2)
+                : ((worldY / (tileHeight / 2) - worldX / (tileWidth / 2)) / 2);
+        }
+        if (orientation === 'orthogonal')
+        {
+            point.x = snapToFloor
+                ? Math.floor(worldX / tileWidth)
+                : worldX / tileWidth;
+            point.y = snapToFloor
+                ? Math.floor(worldY / tileHeight)
+                : worldY / tileHeight;
+        }
+        else if (orientation === 'staggered')
+        {
+            // implement world to tile staggered
+            point.y = snapToFloor
+                ? Math.floor((worldY / (tileHeight / 2)))
+                : (worldY / (tileHeight / 2));
+            point.x = snapToFloor
+                ? Math.floor((worldX / tileWidth) - (point.y % 2))
+                : (worldX / tileWidth) - (point.y % 2);
+            
+        }
     }
-
-  
 
     return point;
 };

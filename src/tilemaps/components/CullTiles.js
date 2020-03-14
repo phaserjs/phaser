@@ -49,7 +49,7 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
     var inIsoBounds = function () { return true; };
     if (!tilemapLayer.skipCull && tilemapLayer.scrollFactorX === 1 && tilemapLayer.scrollFactorY === 1)
     {
-        if (layer.orientation === 'orthogonal')
+        if (layer.orientation === 'orthogonal' || layer.orientation === 'staggered')
         {
             //  Camera world view bounds, snapped for scaled tile size
             //  Cull Padding values are given in tiles, not pixels
@@ -62,6 +62,7 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
             drawLeft = Math.max(0, boundsLeft);
             drawRight = Math.min(mapWidth, boundsRight);
             drawTop = Math.max(0, boundsTop);
+            
             drawBottom = Math.min(mapHeight, boundsBottom);
         }
         else if (layer.orientation === 'isometric')
@@ -84,7 +85,7 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
     var tile;
 
 
-    if (layer.orientation === 'orthogonal')
+    if (layer.orientation === 'orthogonal' || layer.orientation === 'staggered')
     {
 
         if (renderOrder === 0)

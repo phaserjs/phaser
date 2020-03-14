@@ -714,7 +714,6 @@ var Tile = new Class({
             this.pixelX = this.x * this.baseWidth;
             this.pixelY = this.y * this.baseHeight;
 
-            // console.log("orthopix "+this.pixelX+","+this.pixelY)
         }
         else if (this.layer.orientation === 'isometric')
         {
@@ -723,11 +722,12 @@ var Tile = new Class({
             this.pixelX = (this.x - this.y) * this.baseWidth * 0.5;
             this.pixelY = (this.x + this.y) * this.baseHeight * 0.5;
 
-            // console.log("isopix from",this.x, this.y,"to", this.pixelX+","+this.pixelY)
         }
-        else
+        else if (this.layer.orientation === 'staggered')
         {
-            // console.warn("this map orientation is is.layer.orientation)
+            this.pixelX = this.x * this.baseWidth + this.y % 2 * (this.baseWidth / 2);
+            this.pixelY = this.y * (this.baseHeight / 2);
+
         }
 
         // this.pixelY = this.y * this.baseHeight - (this.height - this.baseHeight);
