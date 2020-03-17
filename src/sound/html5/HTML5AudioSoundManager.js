@@ -23,6 +23,7 @@ var HTML5AudioSound = require('./HTML5AudioSound');
  * ```
  *
  * Not all browsers can play all audio formats.
+ *
  * There is a good guide to what's supported: [Cross-browser audio basics: Audio codec support](https://developer.mozilla.org/en-US/Apps/Fundamentals/Audio_and_video_delivery/Cross-browser_audio_basics#Audio_Codec_Support).
  *
  * @class HTML5AudioSoundManager
