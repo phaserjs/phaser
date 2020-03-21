@@ -53,11 +53,33 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
         {
             //  Camera world view bounds, snapped for scaled tile size
             //  Cull Padding values are given in tiles, not pixels
-
             var boundsLeft = SnapFloor(camera.worldView.x - tilemapLayer.x, tileW, 0, true) - tilemapLayer.cullPaddingX;
             var boundsRight = SnapCeil(camera.worldView.right - tilemapLayer.x, tileW, 0, true) + tilemapLayer.cullPaddingX;
-            var boundsTop = SnapFloor(camera.worldView.y - tilemapLayer.y, tileH, 0, true) - tilemapLayer.cullPaddingY;
-            var boundsBottom = SnapCeil(camera.worldView.bottom - tilemapLayer.y, tileH, 0, true) + tilemapLayer.cullPaddingY;
+
+            var boundsTop;
+            var boundsBottom;
+
+            if (layer.orientation === 'orthogonal')
+            {
+                boundsTop = SnapFloor(camera.worldView.y - tilemapLayer.y, tileH, 0, true) - tilemapLayer.cullPaddingY;
+                boundsBottom = SnapCeil(camera.worldView.bottom - tilemapLayer.y, tileH, 0, true) + tilemapLayer.cullPaddingY;
+            }
+            else if (layer.orientation === 'staggered')
+            {
+                boundsTop = SnapFloor(camera.worldView.y - tilemapLayer.y, tileH / 2, 0, true) - tilemapLayer.cullPaddingY;
+                boundsBottom = SnapCeil(camera.worldView.bottom - tilemapLayer.y, tileH / 2, 0, true) + tilemapLayer.cullPaddingY;
+            }
+            else if (layer.orientation === 'hexagonal')
+            {
+                var sidel = layer.hexSideLength;
+                var rowH = ((tileH - sidel) / 2 + sidel);
+
+                boundsTop = SnapFloor(camera.worldView.y - tilemapLayer.y, rowH, 0, true) - tilemapLayer.cullPaddingY;
+                boundsBottom = SnapCeil(camera.worldView.bottom - tilemapLayer.y, rowH, 0, true) + tilemapLayer.cullPaddingY;
+            }
+            
+            
+            
 
             drawLeft = Math.max(0, boundsLeft);
             drawRight = Math.min(mapWidth, boundsRight);
