@@ -725,13 +725,27 @@ var Tile = new Class({
         }
         else if (this.layer.orientation === 'staggered')
         {
+            var tmap = this.layer.tilemapLayer.tilemap;
             this.pixelX = this.x * this.baseWidth + this.y % 2 * (this.baseWidth / 2);
             this.pixelY = this.y * (this.baseHeight / 2);
 
         }
+        else if (this.layer.orientation === 'hexagonal')
+        {
+
+            // var tmap = this.layer.tilemapLayer.tilemap;
+            console.log(this.layer.hexSideLength);
+            var sidel = this.layer.hexSideLength;
+            
+            var rowHeight = ((this.baseHeight - sidel) / 2 + sidel);
+            this.pixelX = this.x * this.baseWidth + this.y % 2 * (this.baseWidth / 2);
+            this.pixelY = this.y * rowHeight;
+
+            console.log('hexapix', this.pixelX, this.pixelY);
+        }
 
         // this.pixelY = this.y * this.baseHeight - (this.height - this.baseHeight);
-
+        console.log(this.layer);
         return this;
     },
 

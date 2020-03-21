@@ -78,7 +78,7 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPer
             var frameWidth = 0;
             var frameHeight = 0;
 
-            if (src.layer.orientation === 'isometric' || src.layer.orientation === 'staggered')
+            if (src.layer.orientation === 'isometric' || src.layer.orientation === 'staggered' || src.layer.orientation === 'hexagonal')
             {
                 // we use the tileset width and height because in isometric maps the tileset's height is often different from the tilemap's.
                 frameWidth = tileset.tileWidth;

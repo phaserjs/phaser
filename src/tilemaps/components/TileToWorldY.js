@@ -42,6 +42,18 @@ var TileToWorldY = function (tileY, camera, layer)
         console.warn('With isometric map types you have to use the TileToWorldXY function.');
         return null;
     }
+    else if (orientation === 'staggered')
+    {
+        return layerWorldY + tileY * (tileHeight / 2);
+    }
+    else if (orientation === 'hexagonal')
+    {
+        var sidel = layer.tilemapLayer.tilemap.hexSideLength;
+        var rowHeight = ((tileHeight - sidel) / 2 + sidel);
+
+        // same as staggered
+        return layerWorldY + tileY * rowHeight;
+    }
 };
 
 module.exports = TileToWorldY;

@@ -36,7 +36,7 @@ var WorldToTileXY = function (worldX, worldY, snapToFloor, point, camera, layer)
         point.x = WorldToTileX(worldX, snapToFloor, camera, layer, orientation);
         point.y = WorldToTileY(worldY, snapToFloor, camera, layer, orientation);
     }
-    else if (orientation === 'isometric' || orientation === 'staggered')
+    else if (orientation === 'isometric' || orientation === 'staggered' || orientation === 'hexagonal')
     {
         
         var tileWidth = layer.baseTileWidth;
@@ -83,14 +83,26 @@ var WorldToTileXY = function (worldX, worldY, snapToFloor, point, camera, layer)
         }
         else if (orientation === 'staggered')
         {
-            // implement world to tile staggered
             point.y = snapToFloor
                 ? Math.floor((worldY / (tileHeight / 2)))
                 : (worldY / (tileHeight / 2));
             point.x = snapToFloor
                 ? Math.floor((worldX + (point.y % 2) * 0.5 * tileWidth) / tileWidth)
-                : (worldX + (worldY % 2) * 0.5 * tileWidth) / tileWidth;
+                : (worldX + (point.y % 2) * 0.5 * tileWidth) / tileWidth;
             
+        }
+        else if (orientation === 'hexagonal')
+        {
+            var sidel = layer.hexSideLength;
+            var rowHeight = ((tileHeight - sidel) / 2 + sidel);
+
+            // similar to staggered, because Tiled uses the oddr representation.
+            point.y = snapToFloor
+                ? Math.floor((worldY / rowHeight))
+                : (worldY / rowHeight);
+            point.x = snapToFloor
+                ? Math.floor((worldX - (point.y % 2) * 0.5 * tileWidth) / tileWidth)
+                : (worldX - (point.y % 2) * 0.5 * tileWidth) / tileWidth;
         }
     }
 

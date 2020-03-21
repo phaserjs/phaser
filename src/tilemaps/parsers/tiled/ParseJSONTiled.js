@@ -34,11 +34,15 @@ var ParseJSONTiled = function (name, json, insertNull)
 {
     if (json.orientation === 'isometric' || json.orientation === 'staggered')
     {
-        console.warn('isometric map types are WIP  in this version of Phaser');
+        console.warn('Isometric map types are WIP  in this version of Phaser');
+    }
+    else if (json.orientation === 'hexagonal')
+    {
+        console.warn('Hexagonal map types are WIP in this version of Phaser');
     }
     else if (json.orientation !== 'orthogonal')
     {
-        console.warn('Only orthogonal and standard isometric map types are supported in this version of Phaser');
+        console.warn('Only orthogonal, hexagonal and  isometric map types are supported in this version of Phaser');
         return null;
     }
 
@@ -56,6 +60,11 @@ var ParseJSONTiled = function (name, json, insertNull)
         renderOrder: json.renderorder,
         infinite: json.infinite
     });
+
+    if (mapData.orientation === 'hexagonal')
+    {
+        mapData.hexSideLength = json.hexsidelength;
+    }
 
     mapData.layers = ParseTileLayers(json, insertNull);
     mapData.images = ParseImageLayers(json);

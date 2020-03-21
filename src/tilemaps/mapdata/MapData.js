@@ -212,6 +212,15 @@ var MapData = new Class({
          * @since 3.0.0
          */
         this.tiles = GetFastValue(config, 'tiles', []);
+
+        /**
+         * Optional : Only for hexagonal tilemaps.
+         * The length of the horizontal sides of the hexagon.
+         * @name Phaser.Tilemaps.MapData#tiles
+         * @type {integer}
+         * @since 3.0.0
+         */
+        this.hexSideLength = GetFastValue(config, 'hexSideLength', 0);
     }
 
 });

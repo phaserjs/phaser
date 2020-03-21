@@ -43,7 +43,7 @@ var TileToWorldXY = function (tileX, tileY, point, camera, layer)
         point.x = TileToWorldX(tileX, camera, layer, orientation);
         point.y = TileToWorldY(tileY, camera, layer, orientation);
     }
-    else if (orientation === 'isometric' || orientation === 'staggered')
+    else if (orientation === 'isometric' || orientation === 'staggered' || orientation === 'hexagonal')
     {
 
         var layerWorldX = 0;
@@ -66,9 +66,17 @@ var TileToWorldXY = function (tileX, tileY, point, camera, layer)
         }
         else if (orientation === 'staggered')
         {
-            // todo
             point.x = layerWorldX + tileX * tileWidth + tileY % 2 * (tileWidth / 2);
             point.y = layerWorldY + tileY * (tileHeight / 2);
+        }
+        else if (orientation === 'hexagonal')
+        {
+            var sidel = layer.hexSideLength;
+            var rowHeight = ((tileHeight - sidel) / 2 + sidel);
+
+            // similar to staggered, because Tiled uses the oddr representation.
+            point.x = layerWorldX + tileX * tileWidth + tileY % 2 * (tileWidth / 2);
+            point.y = layerWorldY + tileY * rowHeight;
         }
         
  

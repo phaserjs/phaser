@@ -251,6 +251,15 @@ var Tilemap = new Class({
          * @since 3.0.0
          */
         this.currentLayerIndex = 0;
+
+        /**
+         * Optional : Only for hexagonal tilemaps.
+         * The length of the horizontal sides of the hexagon.
+         * @name Phaser.Tilemaps.MapData#tiles
+         * @type {integer}
+         * @since 3.0.0
+         */
+        this.hexSideLength = mapData.hexSideLength;
     },
 
     /**

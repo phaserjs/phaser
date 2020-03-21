@@ -46,9 +46,24 @@ var WorldToTileY = function (worldY, snapToFloor, camera, layer)
     }
     else if (orientation === 'isometric')
     {
-        console.warn('With isometric map types you have to use the WorldToTileXY function.');
+        console.warn('With standard isometric map types you have to use the WorldToTileXY function.');
         return null;
 
+    }
+    else if (orientation === 'staggered')
+    {
+        return snapToFloor
+            ? Math.floor(worldY / (tileHeight / 2))
+            : worldY / (tileHeight / 2);
+    }
+    else if (orientation === 'hexagonal')
+    {
+
+        var sidel = layer.hexSideLength;
+        var rowHeight = ((tileHeight - sidel) / 2 + sidel);
+        return snapToFloor
+            ? Math.floor(worldY / rowHeight)
+            : worldY / rowHeight;
     }
 };
 

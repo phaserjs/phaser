@@ -49,7 +49,7 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
     var inIsoBounds = function () { return true; };
     if (!tilemapLayer.skipCull && tilemapLayer.scrollFactorX === 1 && tilemapLayer.scrollFactorY === 1)
     {
-        if (layer.orientation === 'orthogonal' || layer.orientation === 'staggered')
+        if (layer.orientation === 'orthogonal' || layer.orientation === 'staggered' || layer.orientation === 'hexagonal')
         {
             //  Camera world view bounds, snapped for scaled tile size
             //  Cull Padding values are given in tiles, not pixels
@@ -85,7 +85,7 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
     var tile;
 
 
-    if (layer.orientation === 'orthogonal' || layer.orientation === 'staggered')
+    if (layer.orientation === 'orthogonal' || layer.orientation === 'staggered' || layer.orientation === 'hexagonal')
     {
 
         if (renderOrder === 0)

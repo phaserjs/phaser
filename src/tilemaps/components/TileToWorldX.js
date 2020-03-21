@@ -38,12 +38,13 @@ var TileToWorldX = function (tileX, camera, layer)
     {
         return layerWorldX + tileX * tileWidth;
     }
-    else if (orientation === 'isometric')
+    else if (orientation === 'isometric' || orientation === 'staggered' || orientation === 'hexagonal' )
     {
         // Not Best Solution ?
-        console.warn('With isometric map types you have to use the TileToWorldXY function.');
+        console.warn('With the current map type you have to use the TileToWorldXY function.');
         return null;
     }
+
 
    
 };

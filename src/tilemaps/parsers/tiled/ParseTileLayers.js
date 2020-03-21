@@ -131,6 +131,10 @@ var ParseTileLayers = function (json, insertNull)
                 orientation: json.orientation
             });
 
+            if (layerData.orientation === 'hexagonal')
+            {
+                layerData.hexSideLength = json.hexsidelength;
+            }
 
             for (var c = 0; c < curl.height; c++)
             {
@@ -205,6 +209,11 @@ var ParseTileLayers = function (json, insertNull)
                 properties: GetFastValue(curl, 'properties', {}),
                 orientation: json.orientation
             });
+
+            if (layerData.orientation === 'hexagonal')
+            {
+                layerData.hexSideLength = json.hexsidelength;
+            }
             var row = [];
 
             //  Loop through the data field in the JSON.
