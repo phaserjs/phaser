@@ -21,4 +21,5 @@
  * @property {any} [text] - Only set if a text object. Contains the text objects properties.
  * @property {boolean} [rectangle] - Only set, and set to `true`, if a rectangle object.
  * @property {boolean} [ellipse] - Only set, and set to `true`, if a ellipse object.
+ * @property {boolean} [point] - Only set, and set to `true`, if a ellipse object.
  */
