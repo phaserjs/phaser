@@ -58,6 +58,10 @@ var ParseObject = function (tiledObject, offsetX, offsetY)
     {
         parsedObject.text = tiledObject.text;
     }
+    else if (tiledObject.point)
+    {
+        parsedObject.point = true;
+    }
     else
     {
         // Otherwise, assume it is a rectangle
