@@ -66,7 +66,6 @@ var ParseToTilemap = function (scene, key, tileWidth, tileHeight, width, height,
 
     if (mapData === null)
     {
-        console.log('null mapdata');
         mapData = new MapData({
             tileWidth: tileWidth,
             tileHeight: tileHeight,
