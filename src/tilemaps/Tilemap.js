@@ -671,9 +671,10 @@ var Tilemap = new Class({
                 if (obj.height) { sprite.displayHeight = obj.height; }
 
                 // Origin is (0, 1) in Tiled, so find the offset that matches the Sprite's origin.
+                // Do not offset objects with zero dimensions (e.g. points).
                 var offset = {
-                    x: sprite.originX * sprite.displayWidth,
-                    y: (sprite.originY - 1) * sprite.displayHeight
+                    x: sprite.originX * obj.width,
+                    y: (sprite.originY - 1) * obj.height
                 };
 
                 // If the object is rotated, then the origin offset also needs to be rotated.
