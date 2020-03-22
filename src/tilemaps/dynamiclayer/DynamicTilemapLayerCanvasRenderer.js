@@ -96,7 +96,7 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
             {
                 // we use the tileset width and height because in isometric and hexagonal maps the tileset's height is often different from the tilemap's.
                 width = tileset.tileWidth;
-                width = tileset.tileHeight;
+                height = tileset.tileHeight;
             }
 
             var halfWidth = width / 2;
