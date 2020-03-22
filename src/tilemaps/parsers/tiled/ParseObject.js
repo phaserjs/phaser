@@ -53,21 +53,15 @@ var ParseObject = function (tiledObject, offsetX, offsetY)
     else if (tiledObject.ellipse)
     {
         parsedObject.ellipse = tiledObject.ellipse;
-        parsedObject.width = tiledObject.width;
-        parsedObject.height = tiledObject.height;
     }
     else if (tiledObject.text)
     {
-        parsedObject.width = tiledObject.width;
-        parsedObject.height = tiledObject.height;
         parsedObject.text = tiledObject.text;
     }
     else
     {
         // Otherwise, assume it is a rectangle
         parsedObject.rectangle = true;
-        parsedObject.width = tiledObject.width;
-        parsedObject.height = tiledObject.height;
     }
 
     return parsedObject;
