@@ -112,7 +112,6 @@ var DynamicTilemapLayer = new Class({
 
         // Link the LayerData with this static tilemap layer
         this.layer.tilemapLayer = this;
-        console.log('fug',this.layer);
         
         /**
          * The Tileset/s associated with this layer.

@@ -6,6 +6,7 @@
 
 var SnapFloor = require('../../math/snap/SnapFloor');
 var SnapCeil = require('../../math/snap/SnapCeil');
+var CheckIsoBounds = require('./CheckIsoBounds');
 
 /**
  * Returns the tiles in the given layer that are within the camera's viewport. This is used internally.
@@ -45,8 +46,6 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
     var drawTop = 0;
     var drawBottom = mapHeight;
 
-    // we define the isometric culling function as a dummy early on for it to make sense in scope 
-    var inIsoBounds = function () { return true; };
     if (!tilemapLayer.skipCull && tilemapLayer.scrollFactorX === 1 && tilemapLayer.scrollFactorY === 1)
     {
         if (layer.orientation === 'orthogonal' || layer.orientation === 'staggered' || layer.orientation === 'hexagonal')
@@ -86,20 +85,6 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
             drawTop = Math.max(0, boundsTop);
             
             drawBottom = Math.min(mapHeight, boundsBottom);
-        }
-        else if (layer.orientation === 'isometric')
-        {
-            inIsoBounds = function (x,y)
-            {
-                var cullDistances = tilemapLayer.isoCullDistances;
-                var pos = tilemapLayer.tileToWorldXY(x,y,undefined,camera);
-                
-                // we always subtract 1/2 of the tile's height/width to make the culling distance start from the center of the tiles.
-                return pos.x > camera.worldView.x + tilemapLayer.scaleX * layer.tileWidth * (- cullDistances.x - 1 / 2)
-                    && pos.x < camera.worldView.right + tilemapLayer.scaleX * layer.tileWidth * (cullDistances.x - 1 / 2)
-                    && pos.y > camera.worldView.y + tilemapLayer.scaleY * layer.tileHeight * (- cullDistances.y - 1 / 2)
-                    && pos.y < camera.worldView.bottom + tilemapLayer.scaleY * layer.tileHeight * (cullDistances.y - 1 / 2);
-            };
         }
     }
     var x;
@@ -197,7 +182,7 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
             {
                 for (x = drawLeft; mapData[y] && x < drawRight; x++)
                 {
-                    if (inIsoBounds(x,y))
+                    if (CheckIsoBounds(x,y,layer,camera))
                     {
                         tile = mapData[y][x];
 
@@ -220,7 +205,7 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
             {
                 for (x = drawRight; mapData[y] && x >= drawLeft; x--)
                 {
-                    if (inIsoBounds(x,y))
+                    if (CheckIsoBounds(x,y,layer,camera))
                     {
                         tile = mapData[y][x];
 
@@ -242,7 +227,7 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
             {
                 for (x = drawLeft; mapData[y] && x < drawRight; x++)
                 {
-                    if (inIsoBounds(x,y))
+                    if (CheckIsoBounds(x,y,layer,camera))
                     {
                         tile = mapData[y][x];
 
@@ -264,7 +249,7 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
             {
                 for (x = drawRight; mapData[y] && x >= drawLeft; x--)
                 {
-                    if (inIsoBounds(x,y))
+                    if (CheckIsoBounds(x,y,layer,camera))
                     {
                         tile = mapData[y][x];
 

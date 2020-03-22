@@ -125,8 +125,50 @@ var CONST = {
      * @type {integer}
      * @since 3.0.0
      */
-    RIGHT: 8
+    RIGHT: 8,
 
+
+    /**
+     * Orientation constant.
+     * 
+     * @name Phaser.ORTHOGONAL
+     * @const
+     * @type {integer}
+     * @since 3.2.2
+     */
+    ORTHOGONAL: 0,
+
+
+    /**
+     * Orientation constant.
+     * 
+     * @name Phaser.ISOMETRIC
+     * @const
+     * @type {integer}
+     * @since 3.2.2
+     */
+    ISOMETRIC: 1,
+
+    
+    /**
+     * Orientation constant.
+     * 
+     * @name Phaser.STAGGERED
+     * @const
+     * @type {integer}
+     * @since 3.2.2
+     */
+    STAGGERED: 2,
+    
+    /**
+     * Orientation constant.
+     * 
+     * @name Phaser.HEXAGONAL
+     * @const
+     * @type {integer}
+     * @since 3.2.2
+     */
+    HEXAGONAL: 3
 };
 
 module.exports = CONST;
