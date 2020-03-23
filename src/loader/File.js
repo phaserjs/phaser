@@ -94,7 +94,7 @@ var File = new Class({
         {
             this.url = loader.path + loadKey + '.' + GetFastValue(fileConfig, 'extension', '');
         }
-        else if (typeof(this.url) !== 'function')
+        else if (typeof(this.url) !== 'function' && this.url.indexOf('blob:') !== 0 && this.url.indexOf('data:') !== 0)
         {
             this.url = loader.path + this.url;
         }
