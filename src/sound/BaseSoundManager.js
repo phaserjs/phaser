@@ -265,8 +265,9 @@ var BaseSoundManager = new Class({
     },
 
     /**
-     * Enables playing audio sprite sound on the fly without the need to keep a reference to it.
-     * Sound will auto destroy once its playback ends.
+     * Adds a new audio sprite sound to the sound manager and plays it.
+     * The sprite will be automatically removed (destroyed) once playback ends.
+     * This lets you play a new sound on the fly without the need to keep a reference to it.
      *
      * @method Phaser.Sound.BaseSoundManager#playAudioSprite
      * @listens Phaser.Sound.Events#COMPLETE
