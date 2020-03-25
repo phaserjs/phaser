@@ -8,6 +8,7 @@
 var BaseSound = require('../BaseSound');
 var Class = require('../../utils/Class');
 var Events = require('../events');
+var Clamp = require('../../math/Clamp');
 
 /**
  * @classdesc
@@ -552,7 +553,7 @@ var HTML5AudioSound = new Class({
     {
         if (this.audio)
         {
-            this.audio.volume = this.currentConfig.volume * this.manager.volume;
+            this.audio.volume = Clamp(this.currentConfig.volume * this.manager.volume, 0, 1);
         }
     },
 
