@@ -225,8 +225,8 @@ var Transform = {
     /**
      * The angle of this Game Object in radians.
      *
-     * Phaser uses a right-hand clockwise rotation system, where 0 is right, PI/4 is down, +-PI/2 is left
-     * and -PI/4 is up.
+     * Phaser uses a right-hand clockwise rotation system, where 0 is right, PI/2 is down, +-PI is left
+     * and -PI/2 is up.
      *
      * If you prefer to work in degrees, see the `angle` property instead.
      *
