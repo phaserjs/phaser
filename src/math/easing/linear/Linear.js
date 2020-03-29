@@ -7,7 +7,7 @@
 /**
  * Linear easing (no variation).
  *
- * @function Phaser.Math.Easing.Linear.Linear
+ * @function Phaser.Math.Easing.Linear
  * @since 3.0.0
  *
  * @param {number} v - The value to be tweened.
