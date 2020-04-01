@@ -832,9 +832,12 @@ var Video = new Class({
         video.setAttribute('preload', 'auto');
 
         video.addEventListener('error', this._callbacks.error, true);
-
-        video.src = url;
-
+        if (url.length) {
+            video.src = url;
+        } else {
+            video.srcObject = url;
+        }
+        
         video.load();
 
         this.video = video;
