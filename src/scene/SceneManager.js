@@ -452,6 +452,8 @@ var SceneManager = new Class({
         var sys = scene.sys;
         var settings = sys.settings;
 
+        sys.sceneUpdate = NOOP;
+
         if (scene.init)
         {
             scene.init.call(scene, settings.data);
