@@ -13,7 +13,11 @@ var WebAudioSound = require('./WebAudioSound');
 
 /**
  * @classdesc
- * Web Audio API implementation of the sound manager.
+ * Web Audio API implementation of the Sound Manager.
+ *
+ * Not all browsers can play all audio formats.
+ *
+ * There is a good guide to what's supported: [Cross-browser audio basics: Audio codec support](https://developer.mozilla.org/en-US/Apps/Fundamentals/Audio_and_video_delivery/Cross-browser_audio_basics#Audio_Codec_Support).
  *
  * @class WebAudioSoundManager
  * @extends Phaser.Sound.BaseSoundManager
@@ -117,7 +121,7 @@ var WebAudioSoundManager = new Class({
     /**
      * This method takes a new AudioContext reference and then sets
      * this Sound Manager to use that context for all playback.
-     * 
+     *
      * As part of this call it also disconnects the master mute and volume
      * nodes and then re-creates them on the new given context.
      *
@@ -180,16 +184,16 @@ var WebAudioSoundManager = new Class({
 
     /**
      * Decode audio data into a format ready for playback via Web Audio.
-     * 
+     *
      * The audio data can be a base64 encoded string, an audio media-type data uri, or an ArrayBuffer instance.
-     * 
+     *
      * The `audioKey` is the key that will be used to save the decoded audio to the audio cache.
-     * 
+     *
      * Instead of passing a single entry you can instead pass an array of `Phaser.Types.Sound.DecodeAudioConfig`
      * objects as the first and only argument.
-     * 
+     *
      * Decoding is an async process, so be sure to listen for the events to know when decoding has completed.
-     * 
+     *
      * Once the audio has decoded it can be added to the Sound Manager or played via its key.
      *
      * @method Phaser.Sound.WebAudioSoundManager#decodeAudio
@@ -231,7 +235,7 @@ var WebAudioSoundManager = new Class({
             var success = function (key, audioBuffer)
             {
                 cache.add(key, audioBuffer);
-    
+
                 this.emit(Events.DECODED, key);
 
                 remaining--;
@@ -241,7 +245,7 @@ var WebAudioSoundManager = new Class({
                     this.emit(Events.DECODED_ALL);
                 }
             }.bind(this, key);
-    
+
             var failure = function (key, error)
             {
                 //  eslint-disable-next-line no-console
@@ -283,7 +287,7 @@ var WebAudioSoundManager = new Class({
                     body.removeEventListener('touchend', unlockHandler);
                     body.removeEventListener('click', unlockHandler);
                     body.removeEventListener('keydown', unlockHandler);
-    
+
                     _this.unlocked = true;
                 }, function ()
                 {

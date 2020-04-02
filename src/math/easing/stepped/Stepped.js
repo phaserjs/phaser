@@ -7,7 +7,7 @@
 /**
  * Stepped easing.
  *
- * @function Phaser.Math.Easing.Stepped.Stepped
+ * @function Phaser.Math.Easing.Stepped
  * @since 3.0.0
  *
  * @param {number} v - The value to be tweened.

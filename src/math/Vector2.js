@@ -423,7 +423,7 @@ var Vector2 = new Class({
     },
 
     /**
-     * Right-hand normalize (make unit length) this Vector.
+     * Rotate this Vector to its perpendicular, in the positive direction.
      *
      * @method Phaser.Math.Vector2#normalizeRightHand
      * @since 3.0.0
@@ -560,7 +560,7 @@ var Vector2 = new Class({
 
 /**
  * A static zero Vector2 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -572,7 +572,7 @@ Vector2.ZERO = new Vector2();
 
 /**
  * A static right Vector2 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -584,7 +584,7 @@ Vector2.RIGHT = new Vector2(1, 0);
 
 /**
  * A static left Vector2 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -596,7 +596,7 @@ Vector2.LEFT = new Vector2(-1, 0);
 
 /**
  * A static up Vector2 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -608,7 +608,7 @@ Vector2.UP = new Vector2(0, -1);
 
 /**
  * A static down Vector2 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -620,7 +620,7 @@ Vector2.DOWN = new Vector2(0, 1);
 
 /**
  * A static one Vector2 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
