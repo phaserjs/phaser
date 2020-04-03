@@ -41,6 +41,7 @@ var GameObjects = {
     TileSprite: require('./tilesprite/TileSprite'),
     Zone: require('./zone/Zone'),
     Video: require('./video/Video'),
+    VideoStream: require('./video/VideoStream'),
 
     //  Shapes
 
@@ -78,6 +79,7 @@ var GameObjects = {
         TileSprite: require('./tilesprite/TileSpriteFactory'),
         Zone: require('./zone/ZoneFactory'),
         Video: require('./video/VideoFactory'),
+        VideoStream: require('./video/VideoStreamFactory'),
 
         //  Shapes
         Arc: require('./shape/arc/ArcFactory'),
@@ -108,7 +110,8 @@ var GameObjects = {
         Text: require('./text/static/TextCreator'),
         TileSprite: require('./tilesprite/TileSpriteCreator'),
         Zone: require('./zone/ZoneCreator'),
-        Video: require('./video/VideoCreator')
+        Video: require('./video/VideoCreator'),
+        VideoStream: require('./video/VideoStreamCreator')
     }
 
 };
