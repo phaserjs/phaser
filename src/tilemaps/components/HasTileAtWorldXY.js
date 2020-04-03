@@ -5,7 +5,6 @@
  */
 
 var HasTileAt = require('./HasTileAt');
-var WorldToTileXY = require('./WorldToTileXY');
 
 /**
  * Checks if there is a tile at the given location (in world coordinates) in the given layer. Returns
@@ -24,7 +23,7 @@ var WorldToTileXY = require('./WorldToTileXY');
  */
 var HasTileAtWorldXY = function (worldX, worldY, camera, layer)
 {
-    var point = WorldToTileXY(worldX, worldY, true, undefined, camera, layer);
+    var point = layer.tilemapLayer.worldToTileXY(worldX, worldY, true, undefined, camera);
     var tileX = point.x;
     var tileY = point.y;
     return HasTileAt(tileX, tileY, layer);

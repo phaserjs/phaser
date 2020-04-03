@@ -5,7 +5,6 @@
  */
 
 var GetTilesWithin = require('./GetTilesWithin');
-var WorldToTileXY = require('./WorldToTileXY');
 
 /**
  * Gets the tiles in the given rectangular area (in world coordinates) of the layer.
@@ -31,12 +30,12 @@ var GetTilesWithinWorldXY = function (worldX, worldY, width, height, filteringOp
 {
 
     // Top left corner of the rect, rounded down to include partial tiles
-    var pointStart = WorldToTileXY(worldX, worldY, true, undefined, camera, layer);
+    var pointStart = layer.tilemapLayer.worldToTileXY(worldX, worldY, true, undefined, camera);
     var xStart = pointStart.x;
     var yStart = pointStart.y;
 
     // Bottom right corner of the rect, rounded up to include partial tiles
-    var pointEnd = WorldToTileXY(worldX + width, worldY + height, false, undefined, camera, layer);
+    var pointEnd = layer.tilemapLayer.worldToTileXY(worldX + width, worldY + height, false, undefined, camera);
     var xEnd = Math.ceil(pointEnd.x);
     var yEnd = Math.ceil(pointEnd.y);
 

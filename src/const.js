@@ -168,7 +168,26 @@ var CONST = {
      * @type {integer}
      * @since 3.2.2
      */
-    HEXAGONAL: 3
+    HEXAGONAL: 3,
+
+    fromOrientationString: function (orientation)
+    {
+        var constor = CONST.ORTHOGONAL;
+
+        if (orientation === 'isometric')
+        {
+            constor = CONST.ISOMETRIC;
+        }
+        else if (orientation === 'staggered')
+        {
+            constor = CONST.STAGGERED;
+        }
+        else if (orientation === 'hexagonal')
+        {
+            constor = CONST.HEXAGONAL;
+        }
+        return constor;
+    }
 };
 
 module.exports = CONST;

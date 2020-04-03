@@ -4,7 +4,9 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+ 
 var Utils = require('../../renderer/webgl/Utils');
+var CONST = require('../../const.js');
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -78,7 +80,7 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPer
             var frameWidth = 0;
             var frameHeight = 0;
 
-            if (src.layer.orientation === 'isometric' || src.layer.orientation === 'staggered' || src.layer.orientation === 'hexagonal')
+            if (src.layer.orientation === CONST.ISOMETRIC || src.layer.orientation === CONST.STAGGERED || src.layer.orientation === CONST.HEXAGONAL)
             {
                 // we use the tileset width and height because in isometric maps the tileset's height is often different from the tilemap's.
                 frameWidth = tileset.tileWidth;

@@ -6,6 +6,7 @@
 
 var Class = require('../../utils/Class');
 var GetFastValue = require('../../utils/object/GetFastValue');
+var CONST = require('../../const.js');
 
 /**
  * @classdesc
@@ -116,7 +117,7 @@ var LayerData = new Class({
          * @type {string}
          * @since 3.23beta.PR_svipal
          */
-        this.orientation = GetFastValue(config, 'orientation', 'orthogonal');
+        this.orientation = GetFastValue(config, 'orientation', CONST.ORTHOGONAL);
 
         /**
          * The width in pixels of the entire layer.

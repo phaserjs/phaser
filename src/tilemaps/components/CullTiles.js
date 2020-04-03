@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var CONST = require('../../const.js');
 var SnapFloor = require('../../math/snap/SnapFloor');
 var SnapCeil = require('../../math/snap/SnapCeil');
 var CheckIsoBounds = require('./CheckIsoBounds');
@@ -48,7 +49,7 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
 
     if (!tilemapLayer.skipCull && tilemapLayer.scrollFactorX === 1 && tilemapLayer.scrollFactorY === 1)
     {
-        if (layer.orientation === 'orthogonal' || layer.orientation === 'staggered' || layer.orientation === 'hexagonal')
+        if (layer.orientation === CONST.ORTHOGONAL || layer.orientation === CONST.STAGGERED || layer.orientation === CONST.HEXAGONAL)
         {
             //  Camera world view bounds, snapped for scaled tile size
             //  Cull Padding values are given in tiles, not pixels
@@ -58,17 +59,17 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
             var boundsTop;
             var boundsBottom;
 
-            if (layer.orientation === 'orthogonal')
+            if (layer.orientation === CONST.ORTHOGONAL)
             {
                 boundsTop = SnapFloor(camera.worldView.y - tilemapLayer.y, tileH, 0, true) - tilemapLayer.cullPaddingY;
                 boundsBottom = SnapCeil(camera.worldView.bottom - tilemapLayer.y, tileH, 0, true) + tilemapLayer.cullPaddingY;
             }
-            else if (layer.orientation === 'staggered')
+            else if (layer.orientation === CONST.STAGGERED)
             {
                 boundsTop = SnapFloor(camera.worldView.y - tilemapLayer.y, tileH / 2, 0, true) - tilemapLayer.cullPaddingY;
                 boundsBottom = SnapCeil(camera.worldView.bottom - tilemapLayer.y, tileH / 2, 0, true) + tilemapLayer.cullPaddingY;
             }
-            else if (layer.orientation === 'hexagonal')
+            else if (layer.orientation === CONST.HEXAGONAL)
             {
                 var sidel = layer.hexSideLength;
                 var rowH = ((tileH - sidel) / 2 + sidel);
@@ -92,7 +93,7 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
     var tile;
 
 
-    if (layer.orientation === 'orthogonal' || layer.orientation === 'staggered' || layer.orientation === 'hexagonal')
+    if (layer.orientation === CONST.ORTHOGONAL || layer.orientation === CONST.STAGGERED || layer.orientation === CONST.HEXAGONAL)
     {
 
         if (renderOrder === 0)
@@ -172,7 +173,7 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
             }
         }
     }
-    else if (layer.orientation === 'isometric')
+    else if (layer.orientation === CONST.ISOMETRIC)
     {
         if (renderOrder === 0)
         {

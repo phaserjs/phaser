@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var CONST = require('../../../const.js');
 var Base64Decode = require('./Base64Decode');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var LayerData = require('../../mapdata/LayerData');
@@ -128,10 +129,10 @@ var ParseTileLayers = function (json, insertNull)
                 alpha: (curGroupState.opacity * curl.opacity),
                 visible: (curGroupState.visible && curl.visible),
                 properties: GetFastValue(curl, 'properties', {}),
-                orientation: json.orientation
+                orientation: CONST.fromOrientationString(json.orientation)
             });
 
-            if (layerData.orientation === 'hexagonal')
+            if (layerData.orientation === CONST.HEXAGONAL)
             {
                 layerData.hexSideLength = json.hexsidelength;
             }
@@ -207,10 +208,10 @@ var ParseTileLayers = function (json, insertNull)
                 alpha: (curGroupState.opacity * curl.opacity),
                 visible: (curGroupState.visible && curl.visible),
                 properties: GetFastValue(curl, 'properties', {}),
-                orientation: json.orientation
+                orientation: CONST.fromOrientationString(json.orientation)
             });
 
-            if (layerData.orientation === 'hexagonal')
+            if (layerData.orientation === CONST.HEXAGONAL)
             {
                 layerData.hexSideLength = json.hexsidelength;
             }

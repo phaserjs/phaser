@@ -4,6 +4,8 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var CONST = require('../../const.js');
+
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -92,7 +94,7 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
             var width = tile.width;
             var height = tile.width;
 
-            if (src.layer.orientation === 'isometric' || src.layer.orientation === 'staggered' || src.layer.orientation === 'hexagonal')
+            if (src.layer.orientation === CONST.ISOMETRIC || src.layer.orientation === CONST.STAGGERED || src.layer.orientation === CONST.HEXAGONAL)
             {
                 // we use the tileset width and height because in isometric and hexagonal maps the tileset's height is often different from the tilemap's.
                 width = tileset.tileWidth;

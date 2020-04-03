@@ -5,7 +5,7 @@
  */
 
 var RemoveTileAt = require('./RemoveTileAt');
-var WorldToTileXY = require('./WorldToTileXY');
+
 
 /**
  * Removes the tile at the given world coordinates in the specified layer and updates the layer's
@@ -26,7 +26,7 @@ var WorldToTileXY = require('./WorldToTileXY');
  */
 var RemoveTileAtWorldXY = function (worldX, worldY, replaceWithNull, recalculateFaces, camera, layer)
 {
-    var point = WorldToTileXY(worldX, worldY, true, undefined, camera, layer);
+    var point = layer.tilemapLayer.worldToTileXY(worldX, worldY, true, undefined, camera);
     var tileX = point.x;
     var tileY = point.y;
     return RemoveTileAt(tileX, tileY, replaceWithNull, recalculateFaces, layer);

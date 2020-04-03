@@ -5,7 +5,6 @@
  */
 
 var PutTileAt = require('./PutTileAt');
-var WorldToTileXY = require('./WorldToTileXY');
 
 /**
  * Puts a tile at the given world coordinates (pixels) in the specified layer. You can pass in either
@@ -28,7 +27,7 @@ var WorldToTileXY = require('./WorldToTileXY');
  */
 var PutTileAtWorldXY = function (tile, worldX, worldY, recalculateFaces, camera, layer)
 {
-    var point = WorldToTileXY(worldX, worldY, true, undefined, camera, layer);
+    var point = layer.tilemapLayer.worldToTileXY(worldX, worldY, true, undefined, camera);
     var tileX = point.x;
     var tileY = point.y;
     return PutTileAt(tile, tileX, tileY, recalculateFaces, layer);

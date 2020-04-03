@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var CONST = require('../../../const.js');
 var Formats = require('../../Formats');
 var MapData = require('../../mapdata/MapData');
 var ParseTileLayers = require('./ParseTileLayers');
@@ -46,6 +47,7 @@ var ParseJSONTiled = function (name, json, insertNull)
         return null;
     }
 
+
     //  Map data will consist of: layers, objects, images, tilesets, sizes
     var mapData = new MapData({
         width: json.width,
@@ -53,7 +55,7 @@ var ParseJSONTiled = function (name, json, insertNull)
         name: name,
         tileWidth: json.tilewidth,
         tileHeight: json.tileheight,
-        orientation: json.orientation,
+        orientation: CONST.fromOrientationString(json.orientation),
         format: Formats.TILED_JSON,
         version: json.version,
         properties: json.properties,
@@ -61,7 +63,10 @@ var ParseJSONTiled = function (name, json, insertNull)
         infinite: json.infinite
     });
 
-    if (mapData.orientation === 'hexagonal')
+
+
+
+    if (mapData.orientation === CONST.HEXAGONAL)
     {
         mapData.hexSideLength = json.hexsidelength;
     }

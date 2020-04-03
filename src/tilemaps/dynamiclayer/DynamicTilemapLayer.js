@@ -261,9 +261,6 @@ var DynamicTilemapLayer = new Class({
         this.setSize(tilemap.tileWidth * this.layer.width, tilemap.tileHeight * this.layer.height);
 
         this.initPipeline('TextureTintPipeline');
-
-        console.log('layer sizes');
-        console.log(this.layer.tileWidth,this.layer.tileHeight);
     },
 
     /**
@@ -1194,7 +1191,7 @@ var DynamicTilemapLayer = new Class({
      */
     tileToWorldX: function (tileX, camera)
     {
-        return TilemapComponents.TileToWorldX(tileX, camera, this.layer);
+        return this.tilemap.TileToWorldX(tileX, camera, this.layer);
     },
 
     /**
@@ -1211,7 +1208,7 @@ var DynamicTilemapLayer = new Class({
      */
     tileToWorldY: function (tileY, camera)
     {
-        return TilemapComponents.TileToWorldY(tileY, camera, this.layer);
+        return this.tilemap.TileToWorldY(tileY, camera, this.layer);
     },
 
     /**
@@ -1231,7 +1228,7 @@ var DynamicTilemapLayer = new Class({
      */
     tileToWorldXY: function (tileX, tileY, point, camera)
     {
-        return TilemapComponents.TileToWorldXY(tileX, tileY, point, camera, this.layer);
+        return this.tilemap.TileToWorldXY(tileX, tileY, point, camera, this.layer);
     },
 
     /**
@@ -1284,7 +1281,7 @@ var DynamicTilemapLayer = new Class({
      */
     worldToTileX: function (worldX, snapToFloor, camera)
     {
-        return TilemapComponents.WorldToTileX(worldX, snapToFloor, camera, this.layer);
+        return this.tilemap.WorldToTileX(worldX, snapToFloor, camera, this.layer);
     },
 
     /**
@@ -1302,7 +1299,7 @@ var DynamicTilemapLayer = new Class({
      */
     worldToTileY: function (worldY, snapToFloor, camera)
     {
-        return TilemapComponents.WorldToTileY(worldY, snapToFloor, camera, this.layer);
+        return this.tilemap.WorldToTileY(worldY, snapToFloor, camera, this.layer);
     },
 
     /**
@@ -1323,7 +1320,7 @@ var DynamicTilemapLayer = new Class({
      */
     worldToTileXY: function (worldX, worldY, snapToFloor, point, camera)
     {
-        return TilemapComponents.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, this.layer);
+        return this.tilemap.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, this.layer);
     }
 
 });

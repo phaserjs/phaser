@@ -4,8 +4,10 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var CONST = require('../../const.js');
+
 /**
- * Converts from tile X coordinates (tile units) to world X coordinates (pixels), factoring in the
+ * Converts from orthogonal tile X coordinates (tile units) to world X coordinates (pixels), factoring in the
  * layer's position, scale and scroll.
  *
  * @function Phaser.Tilemaps.Components.TileToWorldX
@@ -18,9 +20,8 @@
  *
  * @return {number}
  */
-var TileToWorldX = function (tileX, camera, layer)
+var OrthoTileToWorldX = function (tileX, camera, layer)
 {
-    var orientation = layer.orientation;
     var tileWidth = layer.baseTileWidth;
     var tilemapLayer = layer.tilemapLayer;
     var layerWorldX = 0;
@@ -34,19 +35,27 @@ var TileToWorldX = function (tileX, camera, layer)
         tileWidth *= tilemapLayer.scaleX;
     }
 
-    if (orientation === 'orthogonal')
-    {
-        return layerWorldX + tileX * tileWidth;
-    }
-    else if (orientation === 'isometric' || orientation === 'staggered' || orientation === 'hexagonal')
-    {
-        // Not Best Solution ?
-        console.warn('With the current map type you have to use the TileToWorldXY function.');
-        return null;
-    }
-
+    return layerWorldX + tileX * tileWidth;
 
    
+};
+
+var nullFunc = function ()
+{
+    console.warn('With the current map type you have to use the TileToWorldXY function.');
+    return null;
+};
+
+var TileToWorldX = function (orientation)
+{
+    switch (orientation)
+    {
+        case CONST.ORTHOGONAL:
+            return OrthoTileToWorldX;
+        default:
+            return nullFunc;
+    }
+
 };
 
 module.exports = TileToWorldX;
