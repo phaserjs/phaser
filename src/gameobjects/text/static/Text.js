@@ -27,20 +27,17 @@ var TextStyle = require('../TextStyle');
  * Because it uses the Canvas API you can take advantage of all the features this offers, such as
  * applying gradient fills to the text, or strokes, shadows and more. You can also use custom fonts
  * loaded externally, such as Google or TypeKit Web fonts.
- * 
- * **Important:** If the font you wish to use has a space or digit in its name, such as
- * 'Press Start 2P' or 'Roboto Condensed', then you _must_ put the font name in quotes, either
- * when creating the Text object, or when setting the font via `setFont` or `setFontFamily`. I.e.:
- * 
+ *
+ * **Important:** The font name must be quoted if it contains certain combinations of digits or
+ * special characters, either when creating the Text object, or when setting the font via `setFont`
+ * or `setFontFamily`, e.g.:
+ *
  * ```javascript
- * this.add.text(0, 0, 'Hello World', { fontFamily: '"Roboto Condensed"' });
+ * this.add.text(0, 0, 'Hello World', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
  * ```
- * 
- * Equally, if you wish to provide a list of fallback fonts, then you should ensure they are all
- * quoted properly, too:
- * 
+ *
  * ```javascript
- * this.add.text(0, 0, 'Hello World', { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif' });
+ * this.add.text(0, 0, 'Hello World', { font: '"Press Start 2P"' });
  * ```
  *
  * You can only display fonts that are currently loaded and available to the browser: therefore fonts must
@@ -82,6 +79,8 @@ var TextStyle = require('../TextStyle');
  * @param {number} y - The vertical position of this Game Object in the world.
  * @param {(string|string[])} text - The text this Text object will display.
  * @param {Phaser.Types.GameObjects.Text.TextStyle} style - The text style configuration object.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/CSS/font-family#Valid_family_names
  */
 var Text = new Class({
 
@@ -643,19 +642,19 @@ var Text = new Class({
      *
      * If an object is given, the `fontFamily`, `fontSize` and `fontStyle`
      * properties of that object are set.
-     * 
-     * **Important:** If the font you wish to use has a space or digit in its name, such as
-     * 'Press Start 2P' or 'Roboto Condensed', then you _must_ put the font name in quotes:
-     * 
+     *
+     * **Important:** The font name must be quoted if it contains certain combinations of digits or
+     * special characters:
+     *
      * ```javascript
-     * Text.setFont('"Roboto Condensed"');
+     * Text.setFont('"Press Start 2P"');
      * ```
-     * 
+     *
      * Equally, if you wish to provide a list of fallback fonts, then you should ensure they are all
      * quoted properly, too:
-     * 
+     *
      * ```javascript
-     * Text.setFont('Verdana, "Times New Roman", Tahoma, serif');
+     * Text.setFont('Georgia, "Goudy Bookletter 1911", Times, serif');
      * ```
      *
      * @method Phaser.GameObjects.Text#setFont
@@ -664,6 +663,8 @@ var Text = new Class({
      * @param {string} font - The font family or font settings to set.
      *
      * @return {this} This Text object.
+     *
+     * @see https://developer.mozilla.org/en-US/docs/Web/CSS/font-family#Valid_family_names
      */
     setFont: function (font)
     {
@@ -672,19 +673,19 @@ var Text = new Class({
 
     /**
      * Set the font family.
-     * 
-     * **Important:** If the font you wish to use has a space or digit in its name, such as
-     * 'Press Start 2P' or 'Roboto Condensed', then you _must_ put the font name in quotes:
-     * 
+     *
+     * **Important:** The font name must be quoted if it contains certain combinations of digits or
+     * special characters:
+     *
      * ```javascript
-     * Text.setFont('"Roboto Condensed"');
+     * Text.setFont('"Press Start 2P"');
      * ```
      * 
      * Equally, if you wish to provide a list of fallback fonts, then you should ensure they are all
      * quoted properly, too:
      * 
      * ```javascript
-     * Text.setFont('Verdana, "Times New Roman", Tahoma, serif');
+     * Text.setFont('Georgia, "Goudy Bookletter 1911", Times, serif');
      * ```
      *
      * @method Phaser.GameObjects.Text#setFontFamily
@@ -693,6 +694,8 @@ var Text = new Class({
      * @param {string} family - The font family.
      *
      * @return {this} This Text object.
+     *
+     * @see https://developer.mozilla.org/en-US/docs/Web/CSS/font-family#Valid_family_names
      */
     setFontFamily: function (family)
     {
