@@ -2468,6 +2468,9 @@ var InputPlugin = new Class({
                 debug.setScrollFactor(gameObject.scrollFactorX, gameObject.scrollFactorY);
             };
 
+            if(gameObject.parentContainer)
+                gameObject.parentContainer.add(debug);
+
             updateList.add(debug);
 
             input.hitAreaDebug = debug;
