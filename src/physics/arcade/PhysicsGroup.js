@@ -15,7 +15,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @classdesc
  * An Arcade Physics Group object.
  *
- * All Game Objects created by this Group will automatically be given dynamic Arcade Physics bodies.
+ * All Game Objects created by or added to this Group will automatically be given dynamic Arcade Physics bodies, if they have no body.
  *
  * Its static counterpart is {@link Phaser.Physics.Arcade.StaticGroup}.
  *
