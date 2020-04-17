@@ -694,6 +694,46 @@ var Path = new Class({
     },
 
     /**
+     * Gets a unit vector tangent at a relative position on the path.
+     *
+     * @method Phaser.Curves.Path#getTangent
+     * @since 3.23.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
+     *
+     * @param {number} t - The relative position on the path, [0..1].
+     * @param {Phaser.Math.Vector2} [out] - A vector to store the result in.
+     *
+     * @return {Phaser.Math.Vector2} Vector approximating the tangent line at the point t (delta +/- 0.0001)
+     */
+    getTangent: function (t, out)
+    {
+        if (out === undefined) { out = new Vector2(); }
+
+        var d = t * this.getLength();
+        var curveLengths = this.getCurveLengths();
+        var i = 0;
+
+        while (i < curveLengths.length)
+        {
+            if (curveLengths[i] >= d)
+            {
+                var diff = curveLengths[i] - d;
+                var curve = this.curves[i];
+
+                var segmentLength = curve.getLength();
+                var u = (segmentLength === 0) ? 0 : 1 - diff / segmentLength;
+
+                return curve.getTangentAt(u, out);
+            }
+
+            i++;
+        }
+
+        return null;
+    },
+
+    /**
      * Creates a line curve from the previous end point to x/y.
      *
      * @method Phaser.Curves.Path#lineTo
