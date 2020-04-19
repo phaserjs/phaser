@@ -1923,6 +1923,8 @@ var WebGLRenderer = new Class({
      */
     postRenderCamera: function (camera)
     {
+        this.setPipeline(this.pipelines.TextureTintPipeline);
+        
         var TextureTintPipeline = this.pipelines.TextureTintPipeline;
 
         camera.flashEffect.postRenderWebGL(TextureTintPipeline, Utils.getTintFromFloats);
