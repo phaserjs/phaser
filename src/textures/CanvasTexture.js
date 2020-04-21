@@ -428,7 +428,7 @@ var CanvasTexture = new Class({
      * @param {integer} [width] - The width of the region to get. Must be an integer. Defaults to the canvas width if not given.
      * @param {integer} [height] - The height of the region to get. Must be an integer. If not given will be set to the `width`.
      * 
-     * @return {Phaser.Types.Textures.PixelConfig[]} An array of Pixel objects.
+     * @return {Phaser.Types.Textures.PixelConfig[][]} A 2d array of Pixel objects.
      */
     getPixels: function (x, y, width, height)
     {
