@@ -1630,6 +1630,8 @@ var World = new Class({
     /**
      * Tests if Game Objects overlap.
      *
+     * See details in {@link Phaser.Physics.Arcade.World#collide}.
+     *
      * @method Phaser.Physics.Arcade.World#overlap
      * @since 3.0.0
      *
@@ -1640,6 +1642,8 @@ var World = new Class({
      * @param {*} [callbackContext] - The context in which to run the callbacks.
      *
      * @return {boolean} True if at least one Game Object overlaps another.
+     *
+     * @see Phaser.Physics.Arcade.World#collide
      */
     overlap: function (object1, object2, overlapCallback, processCallback, callbackContext)
     {
@@ -1654,7 +1658,7 @@ var World = new Class({
      * Performs a collision check and separation between the two physics enabled objects given, which can be single
      * Game Objects, arrays of Game Objects, Physics Groups, arrays of Physics Groups or normal Groups.
      *
-     * If you don't require separation then use {@link #overlap} instead.
+     * If you don't require separation then use {@link Phaser.Physics.Arcade.World#overlap} instead.
      *
      * If two Groups or arrays are passed, each member of one will be tested against each member of the other.
      *
@@ -1662,8 +1666,9 @@ var World = new Class({
      *
      * If **only** one Array is passed, the array is iterated and every element in it is tested against the others.
      *
-     * Two callbacks can be provided. The `collideCallback` is invoked if a collision occurs and the two colliding
-     * objects are passed to it.
+     * Two callbacks can be provided; they receive the colliding game objects as arguments.
+     * If an overlap is detected, the `processCallback` is called first. It can cancel the collision by returning false.
+     * Next the objects are separated and `collideCallback` is invoked.
      *
      * Arcade Physics uses the Projection Method of collision resolution and separation. While it's fast and suitable
      * for 'arcade' style games it lacks stability when multiple objects are in close proximity or resting upon each other.
