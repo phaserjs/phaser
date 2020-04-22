@@ -166,8 +166,6 @@ var NoAudioSound = new Class({
      */
     destroy: function ()
     {
-        this.manager.remove(this);
-
         BaseSound.prototype.destroy.call(this);
     },
 
