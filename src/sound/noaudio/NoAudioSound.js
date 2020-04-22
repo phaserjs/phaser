@@ -35,7 +35,6 @@ var returnThis = function ()
  * breaking on devices that don't support any audio playback technologies.
  *
  * @class NoAudioSound
- * @extends Phaser.Sound.BaseSound
  * @memberof Phaser.Sound
  * @constructor
  * @since 3.0.0
