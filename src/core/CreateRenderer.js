@@ -77,7 +77,7 @@ var CreateRenderer = function (game)
     //  Does the game config provide some canvas css styles to use?
     if (config.canvasStyle)
     {
-        game.canvas.style = config.canvasStyle;
+        game.canvas.style.cssText = config.canvasStyle;
     }
 
     //  Pixel Art mode?
