@@ -31,7 +31,7 @@ Grab the source and join the fun!
 
 This brand new release of Phaser 3 introduces hundreds of updates from the core team and wider community. We've also hit a massive milestone with it: 100% complete JSDoc coverage the entire API! Every single property, function, class and method now has full documentation. We didn't stop at the public API, either, as docs cover every single all private, protected and internal property too. No stone was left unturned.
 
-There are lots of new features in this release including the brand new Rope Game Object. This allows you to create Sprites with long strips of vertices that can be independently colored and manipulated, allowing for some lovely effects! You'll also find updates for Arcade Physics, new Data Manager functions, Tiled import tweaks and lots, lots more. The new docs, combined with great community contributions also mean better TypeScript definitions, too.
+There are lots of new features in this release including the brand new Rope Game Object. This allows you to create Sprites with long strips of vertices that can be independently colored and manipulated, allowing for some lovely effects! You'll also find a new Camera Rotation Effect, updates for Arcade Physics, new Data Manager functions, Tiled import tweaks and lots, lots more. The new docs, combined with great community contributions also mean better TypeScript definitions, too.
 
 So, as usual, please do spend some time digging through the [Change Log](#changelog). I assure you, it's worth while :)
 
