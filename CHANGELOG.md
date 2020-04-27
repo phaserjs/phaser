@@ -4,14 +4,18 @@
 
 ### JSDocs
 
-The following sections now have 100% complete JSDoc coverage:
+The entire Phaser 3 API now has 100% complete JSDoc coverage!
+
+The following sections had their documentation completed in this release:
 
 * Animations
 * Create
+* Curves
 * Geom
 * Math
 * Renderer
 * Textures
+* Tilemaps
 
 ### Removed
 
@@ -24,6 +28,14 @@ The following features have been removed in this version of Phaser:
 The following features are now deprecated and will be removed in a future version of Phaser:
 
 * The Light Pipeline and associated components will be removed. This feature was never properly finished and adds too much redundant, non-optional code into the core API. The ability to load normal maps alongside textures will _remain_, for use in your own lighting shaders, which gives you far more control over the final effect.
+
+### New: Rope Game Object
+
+This version of Phaser contains the brand new Rope Game Object. A Rope is a special kind of Game Object that has a repeating texture that runs in a strip, either horizontally or vertically. Unlike a Sprite, you can define how many vertices the Rope has, and can modify each of them during run-time, allowing for some really lovely effects.
+
+Ropes can be created via the Game Object Factory in the normal way (`this.add.rope()`) and you should look at the examples and documentation for further implementation details.
+
+Note that Ropes are a WebGL only feature.
 
 ### New Features
 
