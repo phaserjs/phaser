@@ -5,7 +5,7 @@
  * @property {string} [baseURL] - A URL used to resolve paths in `files`. Example: 'http://labs.phaser.io/assets/'.
  * @property {string} [defaultType] - The default {@link Phaser.Types.Loader.FileConfig} `type`.
  * @property {string} [path] - A URL path used to resolve relative paths in `files`. Example: 'images/sprites/'.
- * @property {prefix} [prefix] - An optional prefix that is automatically prepended to each file key.
+ * @property {string} [prefix] - An optional prefix that is automatically prepended to each file key.
  *
  * @example
  * var packFileSection = {
