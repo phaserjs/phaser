@@ -40,6 +40,14 @@ The following features are now deprecated and will be removed in a future versio
 * `stopByKey()` is a new method in the HTML and Web Audio Sound Managers that will stop any sound in the manager matching the given key, if any (thanks @samme)
 * `Rectangle.FromXY` is a new function that will create the smallest Rectangle containing two coordinate pairs, handy for marquee style selections (thanks @samme)
 * `PathFollower.pathDelta` is a new property that holds the distance the follower has traveled from the previous point to the current one, at the last update (thanks @samme)
+* `Vector2.fuzzyEquals` is a new method that will check whether the Vector is approximately equal to a given Vector (thanks @samme)
+* `Vector2.setAngle` is a new method that will set the angle of the Vector (thanks @samme)
+* `Vector2.setLength` is a new method that will set the length, or magnitude of the Vector (thanks @samme)
+* `Vector2.normalizeLeftHand` is a new method that will rotate the Vector to its perpendicular, in the negative direction (thanks @samme)
+* `Vector2.limit` is a new method that will limit the length, or magnitude of the Vector (thanks @samme)
+* `Vector2.reflect` is a new method that will reflect the Vector off a line defined by a normal (thanks @samme)
+* `Vector2.mirror` is a new method that will reflect the Vector across another (thanks @samme)
+* `Vector2.rotate` is a new method that will rotate the Vector by an angle amount (thanks @samme)
 
 ### Updates
 
