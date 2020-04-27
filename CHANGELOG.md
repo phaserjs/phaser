@@ -54,6 +54,9 @@ The following features are now deprecated and will be removed in a future versio
 * `Curves.Path.getTangent` is a new method that gets a unit vector tangent at a relative position on the path (thanks @samme)
 * `DataManager.inc` is a new method that will increase a value for the given key. If the key doesn't already exist in the Data Manager then it is increased from 0 (thanks @rexrainbow)
 * `DataManager.toggle` is a new method that will toggle a boolean value for the given key. If the key doesn't already exist in the Data Manager then it is toggled from false (thanks @rexrainbow)
+* The Tiled parser will now recognize Tiled `point objects` and export them with `point: true`. Equally, Sprites generated via `createFromObjects` are now just set to the position of the Point object, using the Sprites dimensions. This is a breaking change, so if you are using Point objects and `createFromObjects` please re-test your maps against this release of Phaser (thanks @samme)
+* You can now use Blob URLs when loading `Audio` objects via the Loader (thanks @aucguy)
+* You can now use Blob URLs when loading `Video` objects via the Loader (thanks @aucguy)
 
 ### Updates
 
@@ -97,7 +100,9 @@ The following features are now deprecated and will be removed in a future versio
 * When running in HEADLESS mode, using a `Text` Game Object would cause a runtime error "Cannot read property gl of null". Fix #4976 (thanks @raimon-segura @samme)
 * The Tilemap `LayerData` class `properties` property has been changed from 'object' to an array of objects, which is what Tiled exports when defining layer properties in the editor. Fix #4983 (thanks @Nightspeller)
 * `AudioFile` and `VideoFile` had their state set to `undefined` instead of `FILE_PROCESSING` (thanks @samme)
-
+* `Container.getBounds` would return incorrect values if it had child Containers within it. Fix #4580 (thanks @Minious @thedrint)
+* The Loader no longer prepends the current path to the URL if it's a Blob object (thanks @aucguy)
+* Spine Atlases can now be loaded correctly via Asset Packs, as they now have the right index applied to them (thanks @jdcook)
 
 ### Examples, Documentation and TypeScript
 
