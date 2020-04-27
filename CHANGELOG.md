@@ -59,6 +59,7 @@ The following features are now deprecated and will be removed in a future versio
 * You can now use Blob URLs when loading `Video` objects via the Loader (thanks @aucguy)
 * Tiled Image Collections now have rudimentary support and will create a single tileset per image. This is useful for prototyping, but should not be used heavily in production. See #4964 (thanks @gogoprog)
 * When loading files using your own XHR Settings you can now use the new property `headers` to define an object containing multiple headers, all of which will be sent with the xhr request (thanks @jorbascrumps)
+* `Camera.rotateTo` is a new Camera effect that allows you to set the rotation of the camera to a given value of the duration specified (thanks @jan1za)
 
 ### Updates
 
