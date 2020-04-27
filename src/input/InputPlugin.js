@@ -2464,7 +2464,7 @@ var InputPlugin = new Class({
                 debug.setDisplayOrigin(gameObject.displayOriginX, gameObject.displayOriginY);
                 debug.setRotation(gameObject.rotation);
                 debug.setScale(gameObject.scaleX, gameObject.scaleY);
-                debug.setPosition(gameObject.x + offsetx, gameObject.y + offsety);
+                debug.setPosition(gameObject.getWorldTransformMatrix().tx + offsetx, gameObject.getWorldTransformMatrix().ty + offsety);
                 debug.setScrollFactor(gameObject.scrollFactorX, gameObject.scrollFactorY);
                 debug.setDepth(gameObject.depth);
             };
