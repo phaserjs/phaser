@@ -6,6 +6,7 @@
 
 var Clamp = require('../../../math/Clamp');
 var Class = require('../../../utils/Class');
+var Events = require('../events');
 var EaseMap = require('../../../math/easing/EaseMap');
 
 /**
@@ -256,17 +257,11 @@ var RotateTo = new Class({
         this._onUpdateScope = context;
 
 
-        if (this.shortestPath === true)
+        if (this.shortestPath)
         {
             // The shortest path is true so calculate the quickest direction
             var cwDist = 0;
             var acwDist = 0;
-
-            if (this.clockwise === false)
-            {
-                target = this.current;
-                current = this.destination;
-            }
 
             if (this.destination > this.source)
             {
@@ -296,7 +291,7 @@ var RotateTo = new Class({
             }
         }
 
-        this.camera.emit('camerarotatestart', this.camera, this, duration, tmpDestination);
+        this.camera.emit(Events.ROTATE_START, this.camera, this, duration, tmpDestination);
 
         return cam;
     },
@@ -394,7 +389,7 @@ var RotateTo = new Class({
 
         this.isRunning = false;
 
-        this.camera.emit('camerarotatecomplete', this.camera, this);
+        this.camera.emit(Events.ROTATE_COMPLETE, this.camera, this);
     },
 
     /**
