@@ -2700,6 +2700,8 @@ var InputPlugin = new Class({
                     return indexB - indexA;
                 }
             }
+
+            return listB.length - listA.length;
         }
 
         //  Technically this shouldn't happen, but ...
