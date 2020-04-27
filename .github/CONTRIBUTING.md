@@ -22,6 +22,20 @@ Before contributing, please read the [code of conduct](https://github.com/photon
 
 We have a very active [Phaser Support Forum][4]. If you need general support, or are struggling to understand how to do something or need your code checked over, then we would urge you to post it to our forum. There are a lot of friendly devs in there who can help, as well as the core Phaser team, so it's a great place to get support. You're welcome to report bugs directly on GitHub, but for general support we'd always recommend using the forum first.
 
+## Contribute with online one-click setup
+
+You can use Gitpod (a free online VS Code-like IDE) for contributing. With a single click, it will launch a workspace and automatically:
+
+- clone the `phaser` repo.
+- install the dependencies.
+- run `npm run build`.
+- run `npm run watch`.
+- clone `phaser-3-examples` and afterwards install dependencies and run `npm start` in there. 
+
+So that anyone interested in contributing can start straight away.
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/photonstorm/phaser)
+
 ## Making Changes
 
 I'm assuming you already have a recent version of [Node](https://nodejs.org) installed locally and can run `npm`. This guide is tested and works on both Windows 10 and OS X.
