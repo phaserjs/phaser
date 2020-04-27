@@ -1,8 +1,15 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @author       @samme
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
 var FloatBetween = require('../FloatBetween');
 var CONST = require('../const');
 
 /**
- * Returns a random angle in the range [0, 2pi].
+ * Returns a random angle in the range [-pi, pi].
  *
  * @function Phaser.Math.Angle.Random
  * @since 3.23.0
@@ -11,7 +18,7 @@ var CONST = require('../const');
  */
 var Random = function ()
 {
-    return FloatBetween(0, CONST.PI2);
+    return FloatBetween(-Math.PI, Math.PI);
 };
 
 module.exports = Random;
