@@ -261,7 +261,10 @@ VideoFile.getVideoURL = function (game, urls)
 
         if (url.indexOf('blob:') === 0)
         {
-            return url;
+            return {
+                url: url,
+                type: ''
+            };
         }
 
         var videoType;

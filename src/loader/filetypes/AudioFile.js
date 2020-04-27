@@ -145,7 +145,10 @@ AudioFile.getAudioURL = function (game, urls)
 
         if (url.indexOf('blob:') === 0 || url.indexOf('data:') === 0)
         {
-            return url;
+            return {
+                url: url,
+                type: ''
+            };
         }
 
         var audioType = url.match(/\.([a-zA-Z0-9]+)($|\?)/);
