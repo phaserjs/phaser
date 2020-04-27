@@ -107,6 +107,7 @@ The following features are now deprecated and will be removed in a future versio
 * The Loader no longer prepends the current path to the URL if it's a Blob object (thanks @aucguy)
 * Spine Atlases can now be loaded correctly via Asset Packs, as they now have the right index applied to them (thanks @jdcook)
 * Input events for children inside nested Containers would incorrectly fire depending on the pointer position (thanks @rexrainbow)
+* Animations with both `yoyo` and `repeatDelay` set will respect the delay after each yoyo runs (thanks @cruzdanilo)
 
 ### Examples, Documentation and TypeScript
 
