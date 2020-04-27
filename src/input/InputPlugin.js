@@ -2705,6 +2705,7 @@ var InputPlugin = new Class({
         }
 
         //  Technically this shouldn't happen, but ...
+        // eslint-disable-next-line no-unreachable
         return 0;
     },
 
