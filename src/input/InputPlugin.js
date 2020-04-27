@@ -2462,9 +2462,27 @@ var InputPlugin = new Class({
                 debug.setStrokeStyle(1 / gameObject.scale, color);
 
                 debug.setDisplayOrigin(gameObject.displayOriginX, gameObject.displayOriginY);
-                debug.setRotation(gameObject.rotation);
-                debug.setScale(gameObject.scaleX, gameObject.scaleY);
-                debug.setPosition(gameObject.getWorldTransformMatrix().tx + offsetx, gameObject.getWorldTransformMatrix().ty + offsety);
+
+                var x = gameObject.x;
+                var y = gameObject.y;
+                var rotation = gameObject.rotation;
+                var scaleX = gameObject.scaleX;
+                var scaleY = gameObject.scaleY;
+
+                if (gameObject.parentContainer)
+                {
+                    var matrix = gameObject.getWorldTransformMatrix();
+
+                    x = matrix.tx;
+                    y = matrix.ty;
+                    rotation = matrix.rotation;
+                    scaleX = matrix.scaleX;
+                    scaleY = matrix.scaleY;
+                }
+
+                debug.setRotation(rotation);
+                debug.setScale(scaleX, scaleY);
+                debug.setPosition(x + offsetx, y + offsety);
                 debug.setScrollFactor(gameObject.scrollFactorX, gameObject.scrollFactorY);
                 debug.setDepth(gameObject.depth);
             };
