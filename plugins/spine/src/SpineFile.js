@@ -30,7 +30,7 @@ var TextFile = require('../../../src/loader/filetypes/TextFile.js');
  * A Spine File suitable for loading by the Loader.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#spine method and are not typically created directly.
- * 
+ *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#spine.
  *
  * @class SpineFile
@@ -166,7 +166,7 @@ var SpineFile = new Class({
                 var currentPrefix = loader.prefix;
 
                 var baseURL = GetFastValue(config, 'baseURL', this.baseURL);
-                var path = GetFastValue(config, 'path', this.path);
+                var path = GetFastValue(config, 'path', file.src.match(/^.*\//))[0];
                 var prefix = GetFastValue(config, 'prefix', this.prefix);
                 var textureXhrSettings = GetFastValue(config, 'textureXhrSettings');
 
@@ -178,7 +178,7 @@ var SpineFile = new Class({
                 {
                     var textureURL = textures[i];
 
-                    var key = 'SP' + this.multiKeyIndex + '_' + textureURL;
+                    var key = this.prefix + textureURL;
 
                     var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
 
@@ -220,7 +220,7 @@ var SpineFile = new Class({
 
                 if (file.type === 'text')
                 {
-                    atlasKey = file.key.substr(0, file.key.length - 2);
+                    atlasKey = file.key.replace(/_[\d]$/, "");
 
                     atlasCache = file.cache;
 
@@ -231,14 +231,14 @@ var SpineFile = new Class({
                     var src = file.key.trim();
                     var pos = src.indexOf('_');
                     var key = src.substr(pos + 1);
-       
+
                     this.loader.textureManager.addImage(key, file.data);
                 }
 
                 file.pendingDestroy();
             }
 
-            atlasCache.add(atlasKey, { preMultipliedAlpha: preMultipliedAlpha, data: combinedAtlasData });
+            atlasCache.add(atlasKey, { preMultipliedAlpha: preMultipliedAlpha, data: combinedAtlasData, prefix: this.prefix });
 
             this.complete = true;
         }
