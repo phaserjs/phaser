@@ -51,6 +51,7 @@ The following features are now deprecated and will be removed in a future versio
 * `Math.Angle.Random` is a new function that will return a random angle in radians between -pi and pi (thanks @samme)
 * `Math.Angle.RandomDegrees` is a new function that will return a random angle in degrees between -180 and 180 (thanks @samme)
 * `Physics.Arcade.World.fixedStep` is a new boolean property that synchronizes the physics fps to the rendering fps when enabled. This can help in some cases where "glitches" can occur in the movement of objects. These glitches are especially noticeable on objects that move at constant speed and the fps are not consistent. Enabling this feature disables the fps and timeScale properties of the Arcade.World class (thanks @jjcapellan)
+* `Curves.Path.getTangent` is a new method that gets a unit vector tangent at a relative position on the path (thanks @samme)
 
 ### Updates
 
@@ -72,12 +73,17 @@ The following features are now deprecated and will be removed in a future versio
 * When using the `No Audio` Sound Manager, calling `destroy()` would cause a Maximum call stack size exceeded error as it was missing 6 setter methods. It will now destroy properly (thanks @samme)
 * When using HTML5 Audio, setting the game or sound volume outside of the range 0-1 would throw an index size error. The value is now clamped before being set (thanks @samme)
 * Sound Managers were still listening to Game BLUR, FOCUS, and PRE_STEP events after being destroyed. These events are now cleared up properly (thanks @samme)
+* In WebGL, the `TextureTintPipeline` is now set before rendering any camera effects. If the pipeline had been changed, the effects would not run (thanks @TroKEMp)
+* When transitioning to a sleeping Scene, the transition `data` wasn't sent to the Scene `wake` method. It's now sent across to both sleeping and waking scenes. Fix #5078 (thanks @MrMadClown)
+* `Scale.lockOrientation('portrait')` would throw a runtime error in Firefox: 'TypeError: 'mozLockOrientation' called on an object that does not implement interface Screen.' It no longer does this. Fix #5069 (thanks @123survesh)
+* The `FILE_COMPLETE` event was being emitted twice for a JSON loaded animation file. It now only fires once. Fix #5059 (thanks @jjcapellan)
+* If you restart or stop / start a scene and then queue at least one new file in `preload`, the scenes `update` function is called before `create`, likely causing an error. Fix #5065 (thanks @samme)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@JasonHK @supertommy @majalon @samme @MartinBlackburn @halilcakar @jcyuan
+@JasonHK @supertommy @majalon @samme @MartinBlackburn @halilcakar @jcyuan @MrMadClown @Dinozor
 
 
 
