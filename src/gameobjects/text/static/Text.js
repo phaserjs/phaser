@@ -1273,7 +1273,7 @@ var Text = new Class({
 
         context.restore();
 
-        if (this.renderer.gl)
+        if (this.renderer && this.renderer.gl)
         {
             this.frame.source.glTexture = this.renderer.canvasToTexture(canvas, this.frame.source.glTexture, true);
 
