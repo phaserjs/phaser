@@ -97,7 +97,7 @@ var Rope = new Class({
          * Should you need to change the _size_ of this array, then you should always use the `setPoints` method.
          *
          * @name Phaser.GameObjects.Rope#points
-         * @type {Phaser.Math.Types.Vector2Like[]}
+         * @type {Phaser.Types.Math.Vector2Like[]}
          * @since 3.23.0
          */
         this.points = points;
