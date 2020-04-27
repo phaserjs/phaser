@@ -17,7 +17,7 @@ var Shader = require('../../display/shader/BaseShader');
  * A single GLSL File suitable for loading by the Loader.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#glsl method and are not typically created directly.
- * 
+ *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#glsl.
  *
  * @class GLSLFile
@@ -159,9 +159,9 @@ var GLSLFile = new Class({
      *
      * @method Phaser.Loader.FileTypes.GLSLFile#getShaderName
      * @since 3.17.0
-     * 
+     *
      * @param {string[]} headerSource - The header data.
-     * 
+     *
      * @return {string} The shader name.
      */
     getShaderName: function (headerSource)
@@ -184,9 +184,9 @@ var GLSLFile = new Class({
      *
      * @method Phaser.Loader.FileTypes.GLSLFile#getShaderType
      * @since 3.17.0
-     * 
+     *
      * @param {string[]} headerSource - The header data.
-     * 
+     *
      * @return {string} The shader type. Either 'fragment' or 'vertex'.
      */
     getShaderType: function (headerSource)
@@ -209,9 +209,9 @@ var GLSLFile = new Class({
      *
      * @method Phaser.Loader.FileTypes.GLSLFile#getShaderUniforms
      * @since 3.17.0
-     * 
+     *
      * @param {string[]} headerSource - The header data.
-     * 
+     *
      * @return {any} The shader uniforms object.
      */
     getShaderUniforms: function (headerSource)
@@ -251,10 +251,10 @@ var GLSLFile = new Class({
      * @method Phaser.Loader.FileTypes.GLSLFile#extractBlock
      * @private
      * @since 3.17.0
-     * 
+     *
      * @param {string[]} data - The array of shader data to process.
      * @param {integer} offset - The offset to start processing from.
-     * 
+     *
      * @return {any} The processed shader block, or null.
      */
     extractBlock: function (data, offset)
@@ -319,7 +319,7 @@ var GLSLFile = new Class({
  * In Phaser 3 GLSL files are just plain Text files at the current moment in time.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
- * 
+ *
  * ```javascript
  * function preload ()
  * {
@@ -334,14 +334,14 @@ var GLSLFile = new Class({
  * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
  * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
  * loaded.
- * 
+ *
  * The key must be a unique String. It is used to add the file to the global Shader Cache upon a successful load.
  * The key should be unique both in terms of files being loaded and files already present in the Shader Cache.
  * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
  * then remove it from the Shader Cache first, before loading a new one.
  *
  * Instead of passing arguments you can pass a configuration object, such as:
- * 
+ *
  * ```javascript
  * this.load.glsl({
  *     key: 'plasma',
@@ -353,7 +353,7 @@ var GLSLFile = new Class({
  * See the documentation for `Phaser.Types.Loader.FileTypes.GLSLFileConfig` for more details.
  *
  * Once the file has finished loading you can access it from its Cache using its key:
- * 
+ *
  * ```javascript
  * this.load.glsl('plasma', 'shaders/Plasma.glsl');
  * // and later in your game ...
@@ -374,7 +374,7 @@ var GLSLFile = new Class({
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#glsl
- * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @fires Phaser.Loader.LoaderPlugin#ADD
  * @since 3.0.0
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.GLSLFileConfig|Phaser.Types.Loader.FileTypes.GLSLFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.

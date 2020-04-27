@@ -16,7 +16,7 @@ var ScriptFile = require('./ScriptFile.js');
  * A Multi Script File suitable for loading by the Loader.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#scripts method and are not typically created directly.
- * 
+ *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#scripts.
  *
  * @class MultiScriptFile
@@ -96,7 +96,7 @@ var MultiScriptFile = new Class({
                 file.data.type = 'text/javascript';
                 file.data.defer = false;
                 file.data.text = file.xhrLoader.responseText;
-        
+
                 document.head.appendChild(file.data);
             }
 
@@ -108,13 +108,13 @@ var MultiScriptFile = new Class({
 
 /**
  * Adds an array of Script files to the current load queue.
- * 
+ *
  * The difference between this and the `ScriptFile` file type is that you give an array of scripts to this method,
  * and the scripts are then processed _exactly_ in that order. This allows you to load a bunch of scripts that
  * may have dependencies on each other without worrying about the async nature of traditional script loading.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
- * 
+ *
  * ```javascript
  * function preload ()
  * {
@@ -128,7 +128,7 @@ var MultiScriptFile = new Class({
  *    ]);
  * }
  * ```
- * 
+ *
  * In the code above the script files will all be loaded in parallel but only processed (i.e. invoked) in the exact
  * order given in the array.
  *
@@ -139,11 +139,11 @@ var MultiScriptFile = new Class({
  * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
  * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
  * loaded.
- * 
+ *
  * The key must be a unique String and not already in-use by another file in the Loader.
  *
  * Instead of passing arguments you can pass a configuration object, such as:
- * 
+ *
  * ```javascript
  * this.load.scripts({
  *     key: 'PostProcess',
@@ -171,7 +171,7 @@ var MultiScriptFile = new Class({
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#scripts
- * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @fires Phaser.Loader.LoaderPlugin#ADD
  * @since 3.17.0
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.MultiScriptFileConfig|Phaser.Types.Loader.FileTypes.MultiScriptFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.

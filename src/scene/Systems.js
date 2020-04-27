@@ -114,7 +114,7 @@ var Systems = new Class({
 
         /**
          * A reference to the global Animations Manager.
-         * 
+         *
          * In the default set-up you can access this from within a Scene via the `this.anims` property.
          *
          * @name Phaser.Scenes.Systems#anims
@@ -126,7 +126,7 @@ var Systems = new Class({
         /**
          * A reference to the global Cache. The Cache stores all files bought in to Phaser via
          * the Loader, with the exception of images. Images are stored in the Texture Manager.
-         * 
+         *
          * In the default set-up you can access this from within a Scene via the `this.cache` property.
          *
          * @name Phaser.Scenes.Systems#cache
@@ -137,7 +137,7 @@ var Systems = new Class({
 
         /**
          * A reference to the global Plugins Manager.
-         * 
+         *
          * In the default set-up you can access this from within a Scene via the `this.plugins` property.
          *
          * @name Phaser.Scenes.Systems#plugins
@@ -149,7 +149,7 @@ var Systems = new Class({
         /**
          * A reference to the global registry. This is a game-wide instance of the Data Manager, allowing
          * you to exchange data between Scenes via a universal and shared point.
-         * 
+         *
          * In the default set-up you can access this from within a Scene via the `this.registry` property.
          *
          * @name Phaser.Scenes.Systems#registry
@@ -160,7 +160,7 @@ var Systems = new Class({
 
         /**
          * A reference to the global Scale Manager.
-         * 
+         *
          * In the default set-up you can access this from within a Scene via the `this.scale` property.
          *
          * @name Phaser.Scenes.Systems#scale
@@ -171,7 +171,7 @@ var Systems = new Class({
 
         /**
          * A reference to the global Sound Manager.
-         * 
+         *
          * In the default set-up you can access this from within a Scene via the `this.sound` property.
          *
          * @name Phaser.Scenes.Systems#sound
@@ -182,7 +182,7 @@ var Systems = new Class({
 
         /**
          * A reference to the global Texture Manager.
-         * 
+         *
          * In the default set-up you can access this from within a Scene via the `this.textures` property.
          *
          * @name Phaser.Scenes.Systems#textures
@@ -195,9 +195,9 @@ var Systems = new Class({
 
         /**
          * A reference to the Scene's Game Object Factory.
-         * 
+         *
          * Use this to quickly and easily create new Game Object's.
-         * 
+         *
          * In the default set-up you can access this from within a Scene via the `this.add` property.
          *
          * @name Phaser.Scenes.Systems#add
@@ -208,9 +208,9 @@ var Systems = new Class({
 
         /**
          * A reference to the Scene's Camera Manager.
-         * 
+         *
          * Use this to manipulate and create Cameras for this specific Scene.
-         * 
+         *
          * In the default set-up you can access this from within a Scene via the `this.cameras` property.
          *
          * @name Phaser.Scenes.Systems#cameras
@@ -221,9 +221,9 @@ var Systems = new Class({
 
         /**
          * A reference to the Scene's Display List.
-         * 
+         *
          * Use this to organize the children contained in the display list.
-         * 
+         *
          * In the default set-up you can access this from within a Scene via the `this.children` property.
          *
          * @name Phaser.Scenes.Systems#displayList
@@ -234,9 +234,9 @@ var Systems = new Class({
 
         /**
          * A reference to the Scene's Event Manager.
-         * 
+         *
          * Use this to listen for Scene specific events, such as `pause` and `shutdown`.
-         * 
+         *
          * In the default set-up you can access this from within a Scene via the `this.events` property.
          *
          * @name Phaser.Scenes.Systems#events
@@ -247,11 +247,11 @@ var Systems = new Class({
 
         /**
          * A reference to the Scene's Game Object Creator.
-         * 
+         *
          * Use this to quickly and easily create new Game Object's. The difference between this and the
          * Game Object Factory, is that the Creator just creates and returns Game Object instances, it
          * doesn't then add them to the Display List or Update List.
-         * 
+         *
          * In the default set-up you can access this from within a Scene via the `this.make` property.
          *
          * @name Phaser.Scenes.Systems#make
@@ -262,10 +262,10 @@ var Systems = new Class({
 
         /**
          * A reference to the Scene Manager Plugin.
-         * 
+         *
          * Use this to manipulate both this and other Scene's in your game, for example to launch a parallel Scene,
          * or pause or resume a Scene, or switch from this Scene to another.
-         * 
+         *
          * In the default set-up you can access this from within a Scene via the `this.scene` property.
          *
          * @name Phaser.Scenes.Systems#scenePlugin
@@ -276,12 +276,12 @@ var Systems = new Class({
 
         /**
          * A reference to the Scene's Update List.
-         * 
+         *
          * Use this to organize the children contained in the update list.
-         * 
+         *
          * The Update List is responsible for managing children that need their `preUpdate` methods called,
          * in order to process so internal components, such as Sprites with Animations.
-         * 
+         *
          * In the default set-up there is no reference to this from within the Scene itself.
          *
          * @name Phaser.Scenes.Systems#updateList
@@ -365,7 +365,7 @@ var Systems = new Class({
      *
      * @method Phaser.Scenes.Systems#step
      * @fires Phaser.Scenes.Events#PRE_UPDATE
-     * @fires Phaser.Scenes.Events#_UPDATE
+     * @fires Phaser.Scenes.Events#UPDATE
      * @fires Phaser.Scenes.Events#POST_UPDATE
      * @since 3.0.0
      *
@@ -433,7 +433,7 @@ var Systems = new Class({
      * @method Phaser.Scenes.Systems#pause
      * @fires Phaser.Scenes.Events#PAUSE
      * @since 3.0.0
-     * 
+     *
      * @param {object} [data] - A data object that will be passed in the 'pause' event.
      *
      * @return {Phaser.Scenes.Systems} This Systems object.
@@ -488,7 +488,7 @@ var Systems = new Class({
      * @method Phaser.Scenes.Systems#sleep
      * @fires Phaser.Scenes.Events#SLEEP
      * @since 3.0.0
-     * 
+     *
      * @param {object} [data] - A data object that will be passed in the 'sleep' event.
      *
      * @return {Phaser.Scenes.Systems} This Systems object.
@@ -537,14 +537,14 @@ var Systems = new Class({
 
     /**
      * Returns any data that was sent to this Scene by another Scene.
-     * 
+     *
      * The data is also passed to `Scene.init` and in various Scene events, but
      * you can access it at any point via this method.
      *
      * @method Phaser.Scenes.Systems#getData
      * @since 3.22.0
      *
-     * @return {any} 
+     * @return {any}
      */
     getData: function ()
     {
@@ -662,7 +662,7 @@ var Systems = new Class({
 
     /**
      * Set the active state of this Scene.
-     * 
+     *
      * An active Scene will run its core update loop.
      *
      * @method Phaser.Scenes.Systems#setActive
@@ -725,7 +725,7 @@ var Systems = new Class({
      * @method Phaser.Scenes.Systems#shutdown
      * @fires Phaser.Scenes.Events#SHUTDOWN
      * @since 3.0.0
-     * 
+     *
      * @param {object} [data] - A data object that will be passed in the 'shutdown' event.
      */
     shutdown: function (data)

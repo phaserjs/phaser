@@ -17,9 +17,9 @@ var MultiFile = require('../MultiFile.js');
  * A single JSON based Texture Atlas File suitable for loading by the Loader.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#atlas method and are not typically created directly.
- * 
+ *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#atlas.
- * 
+ *
  * https://www.codeandweb.com/texturepacker/tutorials/how-to-create-sprite-sheets-for-phaser3?source=photonstorm
  *
  * @class AtlasJSONFile
@@ -112,7 +112,7 @@ var AtlasJSONFile = new Class({
  * Adds a JSON based Texture Atlas, or array of atlases, to the current load queue.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
- * 
+ *
  * ```javascript
  * function preload ()
  * {
@@ -127,7 +127,7 @@ var AtlasJSONFile = new Class({
  * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
  * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
  * loaded.
- * 
+ *
  * If you call this from outside of `preload` then you are responsible for starting the Loader afterwards and monitoring
  * its events to know when it's safe to use the asset. Please see the Phaser.Loader.LoaderPlugin class for more details.
  *
@@ -135,7 +135,7 @@ var AtlasJSONFile = new Class({
  * These files are created by software such as Texture Packer, Shoebox and Adobe Flash / Animate.
  * If you are using Texture Packer and have enabled multi-atlas support, then please use the Phaser Multi Atlas loader
  * instead of this one.
- * 
+ *
  * Phaser can load all common image types: png, jpg, gif and any other format the browser can natively handle.
  *
  * The key must be a unique String. It is used to add the file to the global Texture Manager upon a successful load.
@@ -144,7 +144,7 @@ var AtlasJSONFile = new Class({
  * then remove it from the Texture Manager first, before loading a new one.
  *
  * Instead of passing arguments you can pass a configuration object, such as:
- * 
+ *
  * ```javascript
  * this.load.atlas({
  *     key: 'mainmenu',
@@ -158,7 +158,7 @@ var AtlasJSONFile = new Class({
  * Instead of passing a URL for the atlas JSON data you can also pass in a well formed JSON object instead.
  *
  * Once the atlas has finished loading you can use frames from it as textures for a Game Object by referencing its key:
- * 
+ *
  * ```javascript
  * this.load.atlas('mainmenu', 'images/MainMenu.png', 'images/MainMenu.json');
  * // and later in your game ...
@@ -179,13 +179,13 @@ var AtlasJSONFile = new Class({
  *
  * Phaser also supports the automatic loading of associated normal maps. If you have a normal map to go with this image,
  * then you can specify it by providing an array as the `url` where the second element is the normal map:
- * 
+ *
  * ```javascript
  * this.load.atlas('mainmenu', [ 'images/MainMenu.png', 'images/MainMenu-n.png' ], 'images/MainMenu.json');
  * ```
  *
  * Or, if you are using a config object use the `normalMap` property:
- * 
+ *
  * ```javascript
  * this.load.atlas({
  *     key: 'mainmenu',
@@ -202,7 +202,7 @@ var AtlasJSONFile = new Class({
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#atlas
- * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @fires Phaser.Loader.LoaderPlugin#ADD
  * @since 3.0.0
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.AtlasJSONFileConfig|Phaser.Types.Loader.FileTypes.AtlasJSONFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.

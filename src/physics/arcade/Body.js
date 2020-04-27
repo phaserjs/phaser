@@ -164,7 +164,7 @@ var Body = new Class({
 
         /**
          * The position of this Body during the previous frame.
-         * 
+         *
          * @name Phaser.Physics.Arcade.Body#prevFrame
          * @type {Phaser.Math.Vector2}
          * @since 3.20.0
@@ -394,10 +394,10 @@ var Body = new Class({
 
         /**
          * The rectangle used for world boundary collisions.
-         * 
+         *
          * By default it is set to the world boundary rectangle. Or, if this Body was
          * created by a Physics Group, then whatever rectangle that Group defined.
-         * 
+         *
          * You can also change it by using the `Body.setBoundsRectangle` method.
          *
          * @name Phaser.Physics.Arcade.Body#customBoundsRectangle
@@ -415,7 +415,7 @@ var Body = new Class({
          * @type {boolean}
          * @default false
          * @since 3.0.0
-         * @see Phaser.Physics.Arcade.World#worldboundsEvent
+         * @see Phaser.Physics.Arcade.World#WORLD_BOUNDS
          */
         this.onWorldBounds = false;
 
@@ -426,7 +426,7 @@ var Body = new Class({
          * @type {boolean}
          * @default false
          * @since 3.0.0
-         * @see Phaser.Physics.Arcade.World#collideEvent
+         * @see Phaser.Physics.Arcade.World#COLLIDE
          */
         this.onCollide = false;
 
@@ -437,7 +437,7 @@ var Body = new Class({
          * @type {boolean}
          * @default false
          * @since 3.0.0
-         * @see Phaser.Physics.Arcade.World#overlapEvent
+         * @see Phaser.Physics.Arcade.World#OVERLAP
          */
         this.onOverlap = false;
 
@@ -1109,7 +1109,7 @@ var Body = new Class({
      * @since 3.20
      *
      * @param {?Phaser.Geom.Rectangle} [bounds] - The new boundary rectangle. Pass `null` to use the World bounds.
-     * 
+     *
      * @return {this} This Body object.
      */
     setBoundsRectangle: function (bounds)
@@ -1472,7 +1472,7 @@ var Body = new Class({
     /**
      * The change in this Body's horizontal position from the previous step.
      * This value is set during the Body's update phase.
-     * 
+     *
      * As a Body can update multiple times per step this may not hold the final
      * delta value for the Body. In this case, please see the `deltaXFinal` method.
      *
@@ -1489,7 +1489,7 @@ var Body = new Class({
     /**
      * The change in this Body's vertical position from the previous step.
      * This value is set during the Body's update phase.
-     * 
+     *
      * As a Body can update multiple times per step this may not hold the final
      * delta value for the Body. In this case, please see the `deltaYFinal` method.
      *
@@ -1505,10 +1505,10 @@ var Body = new Class({
 
     /**
      * The change in this Body's horizontal position from the previous game update.
-     * 
+     *
      * This value is set during the `postUpdate` phase and takes into account the
      * `deltaMax` and final position of the Body.
-     * 
+     *
      * Because this value is not calculated until `postUpdate`, you must listen for it
      * during a Scene `POST_UPDATE` or `RENDER` event, and not in `update`, as it will
      * not be calculated by that point. If you _do_ use these values in `update` they
@@ -1526,10 +1526,10 @@ var Body = new Class({
 
     /**
      * The change in this Body's vertical position from the previous game update.
-     * 
+     *
      * This value is set during the `postUpdate` phase and takes into account the
      * `deltaMax` and final position of the Body.
-     * 
+     *
      * Because this value is not calculated until `postUpdate`, you must listen for it
      * during a Scene `POST_UPDATE` or `RENDER` event, and not in `update`, as it will
      * not be calculated by that point. If you _do_ use these values in `update` they
