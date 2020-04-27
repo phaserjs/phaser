@@ -938,7 +938,7 @@ var World = new Class({
         //  Will a step happen this frame?
         var willStep = (this._elapsed >= msPerFrame);
 
-        if(!this.fixedStep)
+        if (!this.fixedStep)
         {
             fixedDelta = delta * 0.001;
             willStep = true;
