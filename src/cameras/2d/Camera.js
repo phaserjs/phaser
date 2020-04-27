@@ -118,6 +118,16 @@ var Camera = new Class({
         this.panEffect = new Effects.Pan(this);
 
         /**
+         * The Camera Rotate To effect handler.
+         * To rotate this camera see the `Camera.rotateTo` method.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#rotateToEffect
+         * @type {Phaser.Cameras.Scene2D.Effects.RotateTo}
+         * @since 3.16.0
+         */
+        this.rotateToEffect = new Effects.RotateTo(this);
+
+        /**
          * The Camera Zoom effect handler.
          * To zoom this camera see the `Camera.zoom` method.
          *
@@ -685,6 +695,30 @@ var Camera = new Class({
     },
 
     /**
+     * This effect will rotate the Camera so that the viewport finishes at the given angle in radians,
+     * over the duration and with the ease specified.
+     *
+     * @method Phaser.Cameras.Scene2D.Camera#rotateTo
+     * @since 3.16.0
+     *
+     * @param {number} radians - The destination angle in radians to rotate the Camera viewport to. If the angle is positive then the rotation is clockwise else anticlockwise
+     * @param {boolean} [shortestPath=false] - If shortest path is set to true the camera will rotate in the quickest direction clockwise or anti-clockwise.
+     * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
+     * @param {(string|function)} [ease='Linear'] - The ease to use for the rotation. Can be any of the Phaser Easing constants or a custom function.
+     * @param {boolean} [force=false] - Force the rotation effect to start immediately, even if already running.
+     * @param {CameraRotateCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
+     * It is sent four arguments: A reference to the camera, a progress amount between 0 and 1 indicating how complete the effect is,
+     * the current camera rotation angle in radians.
+     * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
+     *
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     */
+    rotateTo: function (radians, shortestPath, duration, ease, force, callback, context)
+    {
+        return this.rotateToEffect.start(radians, shortestPath, duration, ease, force, callback, context);
+    },
+
+    /**
      * This effect will zoom the Camera to the given scale, over the duration and with the ease specified.
      *
      * @method Phaser.Cameras.Scene2D.Camera#zoomTo
@@ -954,6 +988,7 @@ var Camera = new Class({
      */
     resetFX: function ()
     {
+        this.rotateToEffect.reset();
         this.panEffect.reset();
         this.shakeEffect.reset();
         this.flashEffect.reset();
@@ -976,6 +1011,7 @@ var Camera = new Class({
     {
         if (this.visible)
         {
+            this.rotateToEffect.update(time, delta);
             this.panEffect.update(time, delta);
             this.zoomEffect.update(time, delta);
             this.shakeEffect.update(time, delta);
