@@ -28,7 +28,7 @@ var Events = require('./events');
  * @since 3.0.0
  *
  * @param {object} parent - The object that this DataManager belongs to.
- * @param {Phaser.Events.EventEmitter} eventEmitter - The DataManager's event emitter.
+ * @param {Phaser.Events.EventEmitter} [eventEmitter] - The DataManager's event emitter.
  */
 var DataManager = new Class({
 
