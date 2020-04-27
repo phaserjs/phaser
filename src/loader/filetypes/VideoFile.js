@@ -5,7 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
-var CONST = require('../../const');
+var CONST = require('../const');
 var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetURL = require('../GetURL');
