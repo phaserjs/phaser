@@ -12,7 +12,7 @@ var GameObjectFactory = require('../GameObjectFactory');
  *
  * Note: This method will only be available if the Rope Game Object and WebGL support have been built into Phaser.
  *
- * @method Phaser.GameObjects.GameObjectFactory#mesh
+ * @method Phaser.GameObjects.GameObjectFactory#rope
  * @webglOnly
  * @since 3.23.0
  *
