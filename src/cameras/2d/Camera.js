@@ -123,7 +123,7 @@ var Camera = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Camera#rotateToEffect
          * @type {Phaser.Cameras.Scene2D.Effects.RotateTo}
-         * @since 3.16.0
+         * @since 3.23.0
          */
         this.rotateToEffect = new Effects.RotateTo(this);
 
@@ -699,7 +699,7 @@ var Camera = new Class({
      * over the duration and with the ease specified.
      *
      * @method Phaser.Cameras.Scene2D.Camera#rotateTo
-     * @since 3.16.0
+     * @since 3.23.0
      *
      * @param {number} radians - The destination angle in radians to rotate the Camera viewport to. If the angle is positive then the rotation is clockwise else anticlockwise
      * @param {boolean} [shortestPath=false] - If shortest path is set to true the camera will rotate in the quickest direction clockwise or anti-clockwise.
