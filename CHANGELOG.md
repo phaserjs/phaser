@@ -34,6 +34,10 @@ The following features are now deprecated and will be removed in a future versio
 * `Camera.renderToGame` is a new property used in conjunction with `renderToTexture`. It controls if the Camera should still render to the Game canvas after rendering to its own texture or not. By default, it will render to both, but you can now toggle this at run-time.
 * `Camera.setRenderToTexture` has a new optional parameter `renderToGame` which sets the `Camera.renderToGame` property, controlling if the Camera should render to both its texture and the Game canvas, or just its texture.
 * The free version of Texture Packer exports a `pivot` property when using JSON Array or Hash, however the Texture Packer Phaser export uses the `anchor` property. This update allows the loaders to work with either property, regardless of which export you use (thanks @veleek)
+* `get()` is a new method in the HTML and Web Audio Sound Managers that will get the first sound in the manager matching the given key, if any (thanks @samme)
+* `getAll()` is a new method in the HTML and Web Audio Sound Managers that will get all sounds in the manager matching the given key, if any (thanks @samme)
+* `removeAll()` is a new method in the HTML and Web Audio Sound Managers that will remove all sounds in the manager, destroying them (thanks @samme)
+* `stopByKey()` is a new method in the HTML and Web Audio Sound Managers that will stop any sound in the manager matching the given key, if any (thanks @samme)
 
 ### Updates
 
@@ -51,6 +55,9 @@ The following features are now deprecated and will be removed in a future versio
 * The `Arcade Physics Static Body` center was incorrect after construction. Probably caused problems with circle collisions. Fix  #4770 (thanks @samme)
 * An Arcade Physics Body `center` and `position` are now correct after construction and before preUpdate(), for any Game Object origin or scale (thanks @samme)
 * When calling `Body.setSize` with the `center` parameter as `true` the calculated offset would be incorrect for scaled Game Objects. The offset now takes scaling into consideration (thanks @samme)
+* `HTML5AudioFile.load` would throw an error in strict mode (thanks @samme)
+* When using the `No Audio` Sound Manager, calling `destroy()` would cause a Maximum call stack size exceeded error as it was missing 6 setter methods. It will now destroy properly (thanks @samme)
+* When using HTML5 Audio, setting the game or sound volume outside of the range 0-1 would throw an index size error. The value is now clamped before being set (thanks @samme)
 
 ### Examples, Documentation and TypeScript
 
