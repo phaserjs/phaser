@@ -2466,6 +2466,7 @@ var InputPlugin = new Class({
                 debug.setScale(gameObject.scaleX, gameObject.scaleY);
                 debug.setPosition(gameObject.x + offsetx, gameObject.y + offsety);
                 debug.setScrollFactor(gameObject.scrollFactorX, gameObject.scrollFactorY);
+                debug.setDepth(gameObject.depth);
             };
 
             updateList.add(debug);
