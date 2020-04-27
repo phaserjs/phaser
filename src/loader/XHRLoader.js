@@ -30,6 +30,14 @@ var XHRLoader = function (file, globalXHRSettings)
     xhr.responseType = file.xhrSettings.responseType;
     xhr.timeout = config.timeout;
 
+    if (config.headers)
+    {
+        for (var key in config.headers)
+        {
+            xhr.setRequestHeader(key, config.headers[key]);
+        }
+    }
+
     if (config.header && config.headerValue)
     {
         xhr.setRequestHeader(config.header, config.headerValue);
