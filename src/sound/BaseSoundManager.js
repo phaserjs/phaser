@@ -148,22 +148,8 @@ var BaseSoundManager = new Class({
          */
         this.unlocked = false;
 
-        game.events.on(GameEvents.BLUR, function ()
-        {
-            if (this.pauseOnBlur)
-            {
-                this.onBlur();
-            }
-        }, this);
-
-        game.events.on(GameEvents.FOCUS, function ()
-        {
-            if (this.pauseOnBlur)
-            {
-                this.onFocus();
-            }
-        }, this);
-
+        game.events.on(GameEvents.BLUR, this.onGameBlur, this);
+        game.events.on(GameEvents.FOCUS, this.onGameFocus, this);
         game.events.on(GameEvents.PRE_STEP, this.update, this);
         game.events.once(GameEvents.DESTROY, this.destroy, this);
     },
@@ -506,6 +492,36 @@ var BaseSoundManager = new Class({
     onFocus: NOOP,
 
     /**
+     * Internal handler for Phaser.Core.Events#BLUR.
+     *
+     * @method Phaser.Sound.BaseSoundManager#onGameBlur
+     * @private
+     * @since 3.23.0
+     */
+    onGameBlur: function ()
+    {
+        if (this.pauseOnBlur)
+        {
+            this.onBlur();
+        }
+    },
+
+    /**
+     * Internal handler for Phaser.Core.Events#FOCUS.
+     *
+     * @method Phaser.Sound.BaseSoundManager#onGameFocus
+     * @private
+     * @since 3.23.0
+     */
+    onGameFocus: function ()
+    {
+        if (this.pauseOnBlur)
+        {
+            this.onFocus();
+        }
+    },    
+
+    /**
      * Update method called on every game step.
      * Removes destroyed sounds and updates every active sound in the game.
      *
@@ -549,6 +565,10 @@ var BaseSoundManager = new Class({
      */
     destroy: function ()
     {
+        this.game.events.off(GameEvents.BLUR, this.onGameBlur, this);
+        this.game.events.off(GameEvents.FOCUS, this.onGameFocus, this);
+        this.game.events.off(GameEvents.PRE_STEP, this.update, this);
+
         this.removeAllListeners();
 
         this.removeAll();
