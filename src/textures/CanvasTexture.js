@@ -595,6 +595,10 @@ var CanvasTexture = new Class({
             //  Update the Frame
             this.frames['__BASE'].setSize(width, height, 0, 0);
 
+            //  Update this
+            this.width = width;
+            this.height = height;
+
             this.refresh();
         }
 
