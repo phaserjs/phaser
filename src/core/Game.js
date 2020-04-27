@@ -444,7 +444,7 @@ var Game = new Class({
      *
      * @method Phaser.Game#step
      * @fires Phaser.Core.Events#PRE_STEP
-     * @fires Phaser.Core.Events#PRE_STEP
+     * @fires Phaser.Core.Events#STEP
      * @fires Phaser.Core.Events#POST_STEP
      * @fires Phaser.Core.Events#PRE_RENDER
      * @fires Phaser.Core.Events#POST_RENDER
