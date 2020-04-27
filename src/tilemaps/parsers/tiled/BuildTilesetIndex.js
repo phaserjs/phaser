@@ -19,26 +19,30 @@ var Tileset = require('../../Tileset');
 
 var BuildTilesetIndex = function (mapData)
 {
+    var i;
+    var set;
     var tiles = [];
 
-    for (var i = 0; i < mapData.imageCollections.length; i++)
+    for (i = 0; i < mapData.imageCollections.length; i++)
     {
         var collection = mapData.imageCollections[i];
         var images = collection.images;
 
-        for (var j = 0; j < images.length; j++) {
+        for (var j = 0; j < images.length; j++)
+        {
             var image = images[j];
 
-            var set = new Tileset(image.image, image.gid, collection.imageWidth, collection.imageHeight, 0, 0);
+            set = new Tileset(image.image, image.gid, collection.imageWidth, collection.imageHeight, 0, 0);
+
             set.updateTileData(collection.imageWidth, collection.imageHeight);
 
             mapData.tilesets.push(set);
         }
     }
 
-    for (var i = 0; i < mapData.tilesets.length; i++)
+    for (i = 0; i < mapData.tilesets.length; i++)
     {
-        var set = mapData.tilesets[i];
+        set = mapData.tilesets[i];
 
         var x = set.tileMargin;
         var y = set.tileMargin;
