@@ -70,8 +70,6 @@ var AnimationJSONFile = new Class({
     onLoadComplete: function ()
     {
         this.loader.systems.anims.fromJSON(this.data);
-
-        this.pendingDestroy();
     }
 
 });
