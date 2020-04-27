@@ -108,6 +108,7 @@ The following features are now deprecated and will be removed in a future versio
 * Spine Atlases can now be loaded correctly via Asset Packs, as they now have the right index applied to them (thanks @jdcook)
 * Input events for children inside nested Containers would incorrectly fire depending on the pointer position (thanks @rexrainbow)
 * Animations with both `yoyo` and `repeatDelay` set will respect the delay after each yoyo runs (thanks @cruzdanilo)
+* `CanvasTexture.setSize` forgot to update the `width` and `height` properties of the Texture itself. These now match the underlying canvas element. Fix #5054 (thanks @sebbernery)
 
 ### Examples, Documentation and TypeScript
 
