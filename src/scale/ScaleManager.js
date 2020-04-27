@@ -697,7 +697,7 @@ var ScaleManager = new Class({
 
         if (lock)
         {
-            return lock(orientation);
+            return lock.call(screen, orientation);
         }
 
         return false;
