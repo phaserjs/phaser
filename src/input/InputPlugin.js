@@ -2487,6 +2487,9 @@ var InputPlugin = new Class({
                 debug.setDepth(gameObject.depth);
             };
 
+            if(gameObject.parentContainer)
+                gameObject.parentContainer.add(debug);
+
             updateList.add(debug);
 
             input.hitAreaDebug = debug;

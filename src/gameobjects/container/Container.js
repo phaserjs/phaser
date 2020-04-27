@@ -384,12 +384,20 @@ var Container = new Class({
 
         output.setTo(this.x, this.y, 0, 0);
 
+        if (this.parentContainer) {
+            var parentMatrix = this.parentContainer.getBoundsTransformMatrix();
+            var transformedPosition = parentMatrix.transformPoint(this.x, this.y);
+            output.setTo(transformedPosition.x, transformedPosition.y, 0, 0);
+        }
+
         if (this.list.length > 0)
         {
             var children = this.list;
             var tempRect = new Rectangle();
 
-            for (var i = 0; i < children.length; i++)
+            var firstChildBounds = children[0].getBounds();
+            output.setTo(firstChildBounds.x, firstChildBounds.y, firstChildBounds.width, firstChildBounds.height);
+            for (var i = 1; i < children.length; i++)
             {
                 var entry = children[i];
 
@@ -468,7 +476,9 @@ var Container = new Class({
 
         if (this.parentContainer)
         {
-            return this.parentContainer.pointToContainer(source, output);
+            this.parentContainer.pointToContainer(source, output);
+        } else {
+            output = new Vector2(source.x, source.y);
         }
 
         var tempMatrix = this.tempTransformMatrix;
