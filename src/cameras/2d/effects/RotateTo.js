@@ -176,30 +176,12 @@ var RotateTo = new Class({
     },
 
     /**
-     * This event is fired when the Rotate effect begins to run on a camera.
-     *
-     * @event CameraRotateStartEvent
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.RotateTo} effect - A reference to the effect instance.
-     * @param {integer} duration - The duration of the effect.
-     * @param {number} angle - The destination angle in radians.
-     */
-
-    /**
-     * This event is fired when the Rotate effect completes.
-     *
-     * @event CameraRotateCompleteEvent
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.RotateTo} effect - A reference to the effect instance.
-     */
-
-    /**
      * This effect will scroll the Camera so that the center of its viewport finishes at the given angle,
      * over the duration and with the ease specified.
      *
      * @method Phaser.Cameras.Scene2D.Effects.RotateTo#start
-     * @fires CameraRotateStartEvent
-     * @fires CameraRotateCompleteEvent
+     * @fires Phaser.Cameras.Scene2D.Events#ROTATE_START
+     * @fires Phaser.Cameras.Scene2D.Events#ROTATE_COMPLETE
      * @since 3.23.0
      *
      * @param {number} radians - The destination angle in radians to rotate the Camera viewport to. If the angle is positive then the rotation is clockwise else anticlockwise
@@ -221,17 +203,24 @@ var RotateTo = new Class({
         if (force === undefined) { force = false; }
         if (callback === undefined) { callback = null; }
         if (context === undefined) { context = this.camera.scene; }
-        if (shortestPath === undefined) {shortestPath = false;}
+        if (shortestPath === undefined) { shortestPath = false; }
+
         this.shortestPath = shortestPath;
 
         var tmpDestination = radians;
-        if (radians < 0) {
+
+        if (radians < 0)
+        {
             tmpDestination = -1 * radians;
             this.clockwise = false;
-        } else {
+        }
+        else
+        {
             this.clockwise = true;
         }
+
         var maxRad = (360 * Math.PI) / 180;
+
         tmpDestination = tmpDestination - (Math.floor(tmpDestination / maxRad) * maxRad);
 
         var cam = this.camera;
@@ -267,27 +256,42 @@ var RotateTo = new Class({
         this._onUpdateScope = context;
 
 
-        if (this.shortestPath === true) {
-            // The shotest path is true so calculate the quickest direction
+        if (this.shortestPath === true)
+        {
+            // The shortest path is true so calculate the quickest direction
             var cwDist = 0;
             var acwDist = 0;
-            if (this.clockwise === false) {
+
+            if (this.clockwise === false)
+            {
                 target = this.current;
                 current = this.destination;
             }
-            if (this.destination > this.source) {
+
+            if (this.destination > this.source)
+            {
                 cwDist = Math.abs(this.destination - this.source);
-            } else {
+            }
+            else
+            {
                 cwDist = (Math.abs(this.destination + maxRad) - this.source);
-            }            
-            if (this.source > this.destination) {
+            }
+
+            if (this.source > this.destination)
+            {
                 acwDist = Math.abs(this.source - this.destination);
-            } else {
+            }
+            else
+            {
                 acwDist = (Math.abs(this.source + maxRad) - this.destination);
-            }        
-            if (cwDist < acwDist) {
+            }
+
+            if (cwDist < acwDist)
+            {
                 this.clockwise = true;
-            } else if (cwDist > acwDist) {
+            }
+            else if (cwDist > acwDist)
+            {
                 this.clockwise = false;
             }
         }
@@ -330,22 +334,33 @@ var RotateTo = new Class({
             var maxRad = (360 * Math.PI) / 180;
             var target = this.destination;
             var current = this.current;
-            if (this.clockwise === false) {
+
+            if (this.clockwise === false)
+            {
                 target = this.current;
                 current = this.destination;
             }
-            if (target >= current) {
+
+            if (target >= current)
+            {
                 distance = Math.abs(target - current);
-            } else {
+            }
+            else
+            {
                 distance = (Math.abs(target + maxRad) - current);
             }
 
             var r = 0;
-            if (this.clockwise) {
+
+            if (this.clockwise)
+            {
                 r = (cam.rotation + (distance * v));
-            } else {
+            }
+            else
+            {
                 r = (cam.rotation - (distance * v));
             }
+
             cam.rotation = r;
 
             if (this._onUpdate)
