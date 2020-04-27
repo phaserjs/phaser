@@ -519,7 +519,7 @@ var BaseSoundManager = new Class({
         {
             this.onFocus();
         }
-    },    
+    },
 
     /**
      * Update method called on every game step.

@@ -6,7 +6,6 @@
  */
 
 var FloatBetween = require('../FloatBetween');
-var CONST = require('../const');
 
 /**
  * Returns a random angle in the range [-pi, pi].
