@@ -29,13 +29,13 @@ Grab the source and join the fun!
 
 > 27th April 2020
 
-This brand new release of Phaser 3 introduces hundreds of updates from the core team and wider community. We've also hit a massive milestone with it: 100% complete JSDoc coverage the entire API! Every single property, function, class and method now has full documentation. We didn't stop at the public API, either, as docs cover every single all private, protected and internal property too. No stone was left unturned.
+This brand new release of Phaser 3 introduces hundreds of updates from the core team and wider community. We've also hit a massive milestone with it: 100% complete JSDoc coverage of the entire API! Every single property, function, class and method now has full documentation. We didn't stop at the public API, either, as docs cover all private, protected and internal properties too. No stone was left unturned.
 
 There are lots of new features in this release including the brand new Rope Game Object. This allows you to create Sprites with long strips of vertices that can be independently colored and manipulated, allowing for some lovely effects! You'll also find a new Camera Rotation Effect, updates for Arcade Physics, new Data Manager functions, Tiled import tweaks and lots, lots more. The new docs, combined with great community contributions also mean better TypeScript definitions, too.
 
 So, as usual, please do spend some time digging through the [Change Log](#changelog). I assure you, it's worth while :)
 
-As usual, I'd like to send a massive thank-you to everyone who supports [Phaser on Patreon](https://www.patreon.com/photonstorm) (and now even GitHub Sponsors, too!) Your continued backing keeps allowing me to work on Phaser full-time and this great new releases is the very real result of that. If you've ever considered becoming a backer, now is the perfect time!
+I'd like to send a massive thank-you to everyone who supports [Phaser on Patreon](https://www.patreon.com/photonstorm) (and now even GitHub Sponsors, too!) Your continued backing keeps allowing me to work on Phaser full-time and this great new releases is the very real result of that. If you've ever considered becoming a backer, now is the perfect time!
 
 As well as all of these updates, development has been progressing rapidly on Phaser 4. If you'd like to stay abreast of developments then I'm now publishing them to the [Phaser Patreon](https://www.patreon.com/photonstorm). Here you can find details about the latest developments and concepts behind Phaser 4.
 
