@@ -76,7 +76,7 @@ The following features are now deprecated and will be removed in a future versio
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@JasonHK @supertommy @majalon @samme @MartinBlackburn
+@JasonHK @supertommy @majalon @samme @MartinBlackburn @halilcakar
 
 
 
