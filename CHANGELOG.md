@@ -70,12 +70,13 @@ The following features are now deprecated and will be removed in a future versio
 * `HTML5AudioFile.load` would throw an error in strict mode (thanks @samme)
 * When using the `No Audio` Sound Manager, calling `destroy()` would cause a Maximum call stack size exceeded error as it was missing 6 setter methods. It will now destroy properly (thanks @samme)
 * When using HTML5 Audio, setting the game or sound volume outside of the range 0-1 would throw an index size error. The value is now clamped before being set (thanks @samme)
+* Sound Managers were still listening to Game BLUR, FOCUS, and PRE_STEP events after being destroyed. These events are now cleared up properly (thanks @samme)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@JasonHK @supertommy @majalon @samme
+@JasonHK @supertommy @majalon @samme @MartinBlackburn
 
 
 
