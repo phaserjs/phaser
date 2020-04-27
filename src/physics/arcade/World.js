@@ -1943,7 +1943,7 @@ var World = new Class({
     {
         var bodyA = sprite.body;
 
-        if (group.length === 0 || !bodyA || !bodyA.enable)
+        if (group.length === 0 || !bodyA || !bodyA.enable || bodyA.checkCollision.none)
         {
             return;
         }
@@ -1971,9 +1971,9 @@ var World = new Class({
             {
                 bodyB = results[i];
 
-                if (bodyA === bodyB || !bodyB.enable || !group.contains(bodyB.gameObject))
+                if (bodyA === bodyB || !bodyB.enable || bodyB.checkCollision.none || !group.contains(bodyB.gameObject))
                 {
-                    //  Skip if comparing against itself, or if bodyB isn't actually part of the Group
+                    //  Skip if comparing against itself, or if bodyB isn't collidable, or if bodyB isn't actually part of the Group
                     continue;
                 }
 
@@ -2156,7 +2156,7 @@ var World = new Class({
     {
         var body = sprite.body;
 
-        if (!body.enable)
+        if (!body.enable || body.checkCollision.none)
         {
             return false;
         }
