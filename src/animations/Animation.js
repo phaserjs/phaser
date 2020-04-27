@@ -591,7 +591,11 @@ var Animation = new Class({
 
         if (component._reverse === !isReverse && component.repeatCounter > 0)
         {
-            component.forward = isReverse;
+            if (!component._repeatDelay || component.pendingRepeat)
+
+            {
+                component.forward = isReverse;
+            }
 
             this.repeatAnimation(component);
 
