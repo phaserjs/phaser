@@ -4,17 +4,17 @@
  *              
  * @property {boolean} [showAxes=false] - Render all of the body axes?
  * @property {boolean} [showAngleIndicator=false] - Render just a single body axis?
- * @property {boolean} [angleColor=0xe81153] - The color of the body angle / axes lines.
+ * @property {number} [angleColor=0xe81153] - The color of the body angle / axes lines.
  * @property {boolean} [showBroadphase=false] - Render the broadphase grid?
- * @property {boolean} [broadphaseColor=0xffb400] - The color of the broadphase grid.
+ * @property {number} [broadphaseColor=0xffb400] - The color of the broadphase grid.
  * @property {boolean} [showBounds=false] - Render the bounds of the bodies in the world?
- * @property {boolean} [boundsColor=0xffffff] - The color of the body bounds.
+ * @property {number} [boundsColor=0xffffff] - The color of the body bounds.
  * @property {boolean} [showVelocity=false] - Render the velocity of the bodies in the world?
- * @property {boolean} [velocityColor=0x00aeef] - The color of the body velocity line.
+ * @property {number} [velocityColor=0x00aeef] - The color of the body velocity line.
  * @property {boolean} [showCollisions=false] - Render the collision points and normals for colliding pairs.
- * @property {boolean} [collisionColor=0xf5950c] - The color of the collision points.
+ * @property {number} [collisionColor=0xf5950c] - The color of the collision points.
  * @property {boolean} [showSeparation=false] - Render lines showing the separation between bodies.
- * @property {boolean} [separationColor=0xffa500] - The color of the body separation line.
+ * @property {number} [separationColor=0xffa500] - The color of the body separation line.
  * @property {boolean} [showBody=true] - Render the dynamic bodies in the world to the Graphics object?
  * @property {boolean} [showStaticBody=true] - Render the static bodies in the world to the Graphics object?
  * @property {boolean} [showInternalEdges=false] - When rendering bodies, render the internal edges as well?
