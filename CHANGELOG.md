@@ -57,6 +57,8 @@ The following features are now deprecated and will be removed in a future versio
 * The Tiled parser will now recognize Tiled `point objects` and export them with `point: true`. Equally, Sprites generated via `createFromObjects` are now just set to the position of the Point object, using the Sprites dimensions. This is a breaking change, so if you are using Point objects and `createFromObjects` please re-test your maps against this release of Phaser (thanks @samme)
 * You can now use Blob URLs when loading `Audio` objects via the Loader (thanks @aucguy)
 * You can now use Blob URLs when loading `Video` objects via the Loader (thanks @aucguy)
+* Tiled Image Collections now have rudimentary support and will create a single tileset per image. This is useful for prototyping, but should not be used heavily in production. See #4964 (thanks @gogoprog)
+* When loading files using your own XHR Settings you can now use the new property `headers` to define an object containing multiple headers, all of which will be sent with the xhr request (thanks @jorbascrumps)
 
 ### Updates
 
@@ -103,6 +105,7 @@ The following features are now deprecated and will be removed in a future versio
 * `Container.getBounds` would return incorrect values if it had child Containers within it. Fix #4580 (thanks @Minious @thedrint)
 * The Loader no longer prepends the current path to the URL if it's a Blob object (thanks @aucguy)
 * Spine Atlases can now be loaded correctly via Asset Packs, as they now have the right index applied to them (thanks @jdcook)
+* Input events for children inside nested Containers would incorrectly fire depending on the pointer position (thanks @rexrainbow)
 
 ### Examples, Documentation and TypeScript
 
