@@ -50,6 +50,7 @@ The following features are now deprecated and will be removed in a future versio
 * `Vector2.rotate` is a new method that will rotate the Vector by an angle amount (thanks @samme)
 * `Math.Angle.Random` is a new function that will return a random angle in radians between -pi and pi (thanks @samme)
 * `Math.Angle.RandomDegrees` is a new function that will return a random angle in degrees between -180 and 180 (thanks @samme)
+* `Physics.Arcade.World.fixedStep` is a new boolean property that synchronizes the physics fps to the rendering fps when enabled. This can help in some cases where "glitches" can occur in the movement of objects. These glitches are especially noticeable on objects that move at constant speed and the fps are not consistent. Enabling this feature disables the fps and timeScale properties of the Arcade.World class (thanks @jjcapellan)
 
 ### Updates
 
@@ -76,7 +77,7 @@ The following features are now deprecated and will be removed in a future versio
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@JasonHK @supertommy @majalon @samme @MartinBlackburn @halilcakar
+@JasonHK @supertommy @majalon @samme @MartinBlackburn @halilcakar @jcyuan
 
 
 
