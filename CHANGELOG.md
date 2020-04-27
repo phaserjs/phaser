@@ -48,6 +48,8 @@ The following features are now deprecated and will be removed in a future versio
 * `Vector2.reflect` is a new method that will reflect the Vector off a line defined by a normal (thanks @samme)
 * `Vector2.mirror` is a new method that will reflect the Vector across another (thanks @samme)
 * `Vector2.rotate` is a new method that will rotate the Vector by an angle amount (thanks @samme)
+* `Math.Angle.Random` is a new function that will return a random angle in radians between -pi and pi (thanks @samme)
+* `Math.Angle.RandomDegrees` is a new function that will return a random angle in degrees between -180 and 180 (thanks @samme)
 
 ### Updates
 
