@@ -71,7 +71,7 @@ var PathFollower = {
     pathVector: null,
 
     /**
-     * The distance the follower has travelled from the previous point to the current one, at the last update.
+     * The distance the follower has traveled from the previous point to the current one, at the last update.
      *
      * @name Phaser.GameObjects.PathFollower#pathDelta
      * @type {Phaser.Math.Vector2}
