@@ -13,6 +13,13 @@ var Vector2 = require('../../math/Vector2');
 /**
  * @classdesc
  * A Rope Game Object.
+ *
+ * The Rope object is WebGL only and does not have a Canvas counterpart.
+ *
+ * A Rope is a special kind of Game Object that has a texture that repeats along its entire length.
+ * Unlike a Sprite, it isn't restricted to using just a quad and can have as many vertices as you define
+ * when creating it. The vertices can be arranged in a horizontal or vertical strip and have their own
+ * color and alpha values as well.
  * 
  * A Ropes origin is always 0.5 x 0.5 and cannot be changed.
  *
