@@ -66,6 +66,7 @@ var JSONHash = function (texture, sourceIndex, json)
         }
 
         var pivot = src.anchor || src.pivot;
+
         if (pivot)
         {
             newFrame.customPivot = true;
