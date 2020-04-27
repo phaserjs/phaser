@@ -160,14 +160,14 @@ var EllipseCurve = new Class({
     },
 
     /**
-     * [description]
+     * Get the resolution of the curve.
      *
      * @method Phaser.Curves.Ellipse#getResolution
      * @since 3.0.0
      *
-     * @param {number} divisions - [description]
+     * @param {number} divisions - Optional divisions value.
      *
-     * @return {number} [description]
+     * @return {number} The curve resolution.
      */
     getResolution: function (divisions)
     {
