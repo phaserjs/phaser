@@ -60,6 +60,10 @@ The following features are now deprecated and will be removed in a future versio
 * `MatterTileBody` now extends `EventEmitter`, meaning you can listen to collision events from Tiles directly and it will no longer throw errors about `gameObject.emit` not working. Fix #4967 (thanks @reinildo)
 * Added `MatterJS.BodyType` to `GameObject.body` type. Fix #4962 (thanks @meisterpeeps)
 * The `JSONHash` loader didn't load custom pivot information, but `JSONArray` did. So that functionality has been duplicated into the `JSONHash` file type (thanks @veleek)
+* When enabling a Game Object for input debug, the debug body's depth was 0. It's now set to be the same depth as the actual Game Object (thanks @mktcode)
+* Spine Files can now be loaded via a manifest, allowing you to specify a prefix in the loader object and providing absolute paths to textures. Fix #4813 (thanks @FostUK @a610569731)
+* `collideSpriteVsGroup` now exits early when the Sprite has `checkCollision.none`, skipping an unnecessary iteration of the group (thanks @samme)
+* `collideSpriteVsGroup` when looping through the tree results now skips bodies with `checkCollision.none` (thanks @samme)
 
 ### Bug Fixes
 
@@ -78,6 +82,17 @@ The following features are now deprecated and will be removed in a future versio
 * `Scale.lockOrientation('portrait')` would throw a runtime error in Firefox: 'TypeError: 'mozLockOrientation' called on an object that does not implement interface Screen.' It no longer does this. Fix #5069 (thanks @123survesh)
 * The `FILE_COMPLETE` event was being emitted twice for a JSON loaded animation file. It now only fires once. Fix #5059 (thanks @jjcapellan)
 * If you restart or stop / start a scene and then queue at least one new file in `preload`, the scenes `update` function is called before `create`, likely causing an error. Fix #5065 (thanks @samme)
+* `Circle.GetPoints` will now check that `stepRate` is > 0 to avoid division by zero errors leading to the quantity becoming infinity (thanks @jdcook)
+* `Ellipse.GetPoints` will now check that `stepRate` is > 0 to avoid division by zero errors leading to the quantity becoming infinity (thanks @jdcook)
+* `Line.GetPoints` will now check that `stepRate` is > 0 to avoid division by zero errors leading to the quantity becoming infinity (thanks @jdcook)
+* `Polygon.GetPoints` will now check that `stepRate` is > 0 to avoid division by zero errors leading to the quantity becoming infinity (thanks @jdcook)
+* `Rectangle.GetPoints` will now check that `stepRate` is > 0 to avoid division by zero errors leading to the quantity becoming infinity (thanks @jdcook)
+* `Triangle.GetPoints` will now check that `stepRate` is > 0 to avoid division by zero errors leading to the quantity becoming infinity (thanks @jdcook)
+* Changing the game size with a scale mode of FIT resulted in a canvas with a incorrect aspect ratio. Fix #4971 (thanks @Kitsee @samme)
+* The Matter Physics `Common.isString` function would cause a 'TypeError: Invalid calling object' in Internet Explorer (thanks @samme)
+* `Arcade.Body.checkCollision.none` did not prevent collisions with Tiles. Now it does (thanks @samme)
+* When running in HEADLESS mode, using a `Text` Game Object would cause a runtime error "Cannot read property gl of null". Fix #4976 (thanks @raimon-segura @samme)
+
 
 ### Examples, Documentation and TypeScript
 
