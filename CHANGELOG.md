@@ -52,6 +52,8 @@ The following features are now deprecated and will be removed in a future versio
 * `Math.Angle.RandomDegrees` is a new function that will return a random angle in degrees between -180 and 180 (thanks @samme)
 * `Physics.Arcade.World.fixedStep` is a new boolean property that synchronizes the physics fps to the rendering fps when enabled. This can help in some cases where "glitches" can occur in the movement of objects. These glitches are especially noticeable on objects that move at constant speed and the fps are not consistent. Enabling this feature disables the fps and timeScale properties of the Arcade.World class (thanks @jjcapellan)
 * `Curves.Path.getTangent` is a new method that gets a unit vector tangent at a relative position on the path (thanks @samme)
+* `DataManager.inc` is a new method that will increase a value for the given key. If the key doesn't already exist in the Data Manager then it is increased from 0 (thanks @rexrainbow)
+* `DataManager.toggle` is a new method that will toggle a boolean value for the given key. If the key doesn't already exist in the Data Manager then it is toggled from false (thanks @rexrainbow)
 
 ### Updates
 
@@ -92,6 +94,7 @@ The following features are now deprecated and will be removed in a future versio
 * The Matter Physics `Common.isString` function would cause a 'TypeError: Invalid calling object' in Internet Explorer (thanks @samme)
 * `Arcade.Body.checkCollision.none` did not prevent collisions with Tiles. Now it does (thanks @samme)
 * When running in HEADLESS mode, using a `Text` Game Object would cause a runtime error "Cannot read property gl of null". Fix #4976 (thanks @raimon-segura @samme)
+* The Tilemap `LayerData` class `properties` property has been changed from 'object' to an array of objects, which is what Tiled exports when defining layer properties in the editor. Fix #4983 (thanks @Nightspeller)
 
 
 ### Examples, Documentation and TypeScript
