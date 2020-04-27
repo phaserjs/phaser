@@ -4,19 +4,18 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Tileset = require('../../Tileset');
+
 /**
  * Master list of tiles -> x, y, index in tileset.
  *
  * @function Phaser.Tilemaps.Parsers.Tiled.BuildTilesetIndex
  * @since 3.0.0
  *
- * @param {Phaser.Tilemaps.MapData} mapData - [description]
+ * @param {Phaser.Tilemaps.MapData} mapData - The Map Data object.
  *
- * @return {array} [description]
+ * @return {array} An array of Tileset objects.
  */
-
-var Tileset = require('../../Tileset');
-
 var BuildTilesetIndex = function (mapData)
 {
     var i;

@@ -12,7 +12,7 @@ var Extend = require('../../../utils/object/Extend');
  * @function Phaser.Tilemaps.Parsers.Tiled.AssignTileProperties
  * @since 3.0.0
  *
- * @param {Phaser.Tilemaps.MapData} mapData - [description]
+ * @param {Phaser.Tilemaps.MapData} mapData - The Map Data object.
  */
 var AssignTileProperties = function (mapData)
 {
