@@ -33,6 +33,7 @@ The following features are now deprecated and will be removed in a future versio
 * `Config.loaderWithCredentials` is the new global setting for `XHRSettings.withCredentials`.
 * `Camera.renderToGame` is a new property used in conjunction with `renderToTexture`. It controls if the Camera should still render to the Game canvas after rendering to its own texture or not. By default, it will render to both, but you can now toggle this at run-time.
 * `Camera.setRenderToTexture` has a new optional parameter `renderToGame` which sets the `Camera.renderToGame` property, controlling if the Camera should render to both its texture and the Game canvas, or just its texture.
+* The free version of Texture Packer exports a `pivot` property when using JSON Array or Hash, however the Texture Packer Phaser export uses the `anchor` property. This update allows the loaders to work with either property, regardless of which export you use (thanks @veleek)
 
 ### Updates
 
@@ -40,6 +41,7 @@ The following features are now deprecated and will be removed in a future versio
 * `Animation.setCurrentFrame` will no longer try to call `setOrigin` or `updateDisplayOrigin` if the Game Object doesn't have the Origin component, preventing unknown function errors.
 * `MatterTileBody` now extends `EventEmitter`, meaning you can listen to collision events from Tiles directly and it will no longer throw errors about `gameObject.emit` not working. Fix #4967 (thanks @reinildo)
 * Added `MatterJS.BodyType` to `GameObject.body` type. Fix #4962 (thanks @meisterpeeps)
+* The `JSONHash` loader didn't load custom pivot information, but `JSONArray` did. So that functionality has been duplicated into the `JSONHash` file type (thanks @veleek)
 
 ### Bug Fixes
 
@@ -55,6 +57,10 @@ The following features are now deprecated and will be removed in a future versio
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
 @JasonHK @supertommy @majalon @samme
+
+
+
+
 
 ## Version 3.22 - Kohaku - January 15th 2020
 
