@@ -66,6 +66,7 @@ The following features are now deprecated and will be removed in a future versio
 * Spine Files can now be loaded via a manifest, allowing you to specify a prefix in the loader object and providing absolute paths to textures. Fix #4813 (thanks @FostUK @a610569731)
 * `collideSpriteVsGroup` now exits early when the Sprite has `checkCollision.none`, skipping an unnecessary iteration of the group (thanks @samme)
 * `collideSpriteVsGroup` when looping through the tree results now skips bodies with `checkCollision.none` (thanks @samme)
+* When enabling a Game Object for Input Debugging the created debug shape will now factor in the position, scale and rotation of the Game Objects parent Container, if it has one (thanks @scott20145)
 
 ### Bug Fixes
 
