@@ -16,6 +16,8 @@ module.exports = {
     BetweenY: require('./BetweenY'),
     CounterClockwise: require('./CounterClockwise'),
     Normalize: require('./Normalize'),
+    Random: require('./Random'),
+    RandomDegrees: require('./RandomDegrees'),
     Reverse: require('./Reverse'),
     RotateTo: require('./RotateTo'),
     ShortestBetween: require('./ShortestBetween'),
