@@ -107,7 +107,7 @@ var Polygon = new Class({
      *
      * @param {array} points - Points defining the perimeter of this polygon. Please check function description above for the different supported formats.
      *
-     * @return {Phaser.Geom.Polygon} This Polygon object.
+     * @return {this} This Polygon object.
      */
     setTo: function (points)
     {

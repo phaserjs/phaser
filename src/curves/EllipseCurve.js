@@ -258,7 +258,7 @@ var EllipseCurve = new Class({
      *
      * @param {number} value - The horizontal radius of this curve.
      *
-     * @return {Phaser.Curves.Ellipse} This curve object.
+     * @return {this} This curve object.
      */
     setXRadius: function (value)
     {
@@ -275,7 +275,7 @@ var EllipseCurve = new Class({
      *
      * @param {number} value - The vertical radius of this curve.
      *
-     * @return {Phaser.Curves.Ellipse} This curve object.
+     * @return {this} This curve object.
      */
     setYRadius: function (value)
     {
@@ -292,7 +292,7 @@ var EllipseCurve = new Class({
      *
      * @param {number} value - The width of this curve.
      *
-     * @return {Phaser.Curves.Ellipse} This curve object.
+     * @return {this} This curve object.
      */
     setWidth: function (value)
     {
@@ -309,7 +309,7 @@ var EllipseCurve = new Class({
      *
      * @param {number} value - The height of this curve.
      *
-     * @return {Phaser.Curves.Ellipse} This curve object.
+     * @return {this} This curve object.
      */
     setHeight: function (value)
     {
@@ -326,7 +326,7 @@ var EllipseCurve = new Class({
      *
      * @param {number} value - The start angle of this curve, in radians.
      *
-     * @return {Phaser.Curves.Ellipse} This curve object.
+     * @return {this} This curve object.
      */
     setStartAngle: function (value)
     {
@@ -343,7 +343,7 @@ var EllipseCurve = new Class({
      *
      * @param {number} value - The end angle of this curve, in radians.
      *
-     * @return {Phaser.Curves.Ellipse} This curve object.
+     * @return {this} This curve object.
      */
     setEndAngle: function (value)
     {
@@ -360,7 +360,7 @@ var EllipseCurve = new Class({
      *
      * @param {boolean} value - The clockwise state of this curve.
      *
-     * @return {Phaser.Curves.Ellipse} This curve object.
+     * @return {this} This curve object.
      */
     setClockwise: function (value)
     {
@@ -377,7 +377,7 @@ var EllipseCurve = new Class({
      *
      * @param {number} value - The rotation of this curve, in radians.
      *
-     * @return {Phaser.Curves.Ellipse} This curve object.
+     * @return {this} This curve object.
      */
     setRotation: function (value)
     {

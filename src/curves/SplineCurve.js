@@ -56,7 +56,7 @@ var SplineCurve = new Class({
      *
      * @param {(Phaser.Math.Vector2[]|number[]|number[][])} points - The points that configure the curve.
      *
-     * @return {Phaser.Curves.Spline} This curve object.
+     * @return {this} This curve object.
      */
     addPoints: function (points)
     {

@@ -173,7 +173,7 @@ var Circle = new Class({
      * @param {number} [y=0] - The y position of the center of the circle.
      * @param {number} [radius=0] - The radius of the circle.
      *
-     * @return {Phaser.Geom.Circle} This Circle object.
+     * @return {this} This Circle object.
      */
     setTo: function (x, y, radius)
     {
@@ -192,7 +192,7 @@ var Circle = new Class({
      * @method Phaser.Geom.Circle#setEmpty
      * @since 3.0.0
      *
-     * @return {Phaser.Geom.Circle} This Circle object.
+     * @return {this} This Circle object.
      */
     setEmpty: function ()
     {
@@ -211,7 +211,7 @@ var Circle = new Class({
      * @param {number} [x=0] - The x position of the center of the circle.
      * @param {number} [y=0] - The y position of the center of the circle.
      *
-     * @return {Phaser.Geom.Circle} This Circle object.
+     * @return {this} This Circle object.
      */
     setPosition: function (x, y)
     {

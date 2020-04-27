@@ -207,7 +207,7 @@ var TouchManager = new Class({
      * @method Phaser.Input.Touch.TouchManager#disableContextMenu
      * @since 3.20.0
      *
-     * @return {Phaser.Input.Touch.TouchManager} This Touch Manager instance.
+     * @return {this} This Touch Manager instance.
      */
     disableContextMenu: function ()
     {

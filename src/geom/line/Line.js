@@ -154,7 +154,7 @@ var Line = new Class({
      * @param {number} [x2=0] - The x coordinate of the lines ending point.
      * @param {number} [y2=0] - The y coordinate of the lines ending point.
      *
-     * @return {Phaser.Geom.Line} This Line object.
+     * @return {this} This Line object.
      */
     setTo: function (x1, y1, x2, y2)
     {

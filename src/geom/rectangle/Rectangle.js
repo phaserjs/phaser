@@ -174,7 +174,7 @@ var Rectangle = new Class({
      * @param {number} width - The width of the Rectangle.
      * @param {number} height - The height of the Rectangle.
      *
-     * @return {Phaser.Geom.Rectangle} This Rectangle object.
+     * @return {this} This Rectangle object.
      */
     setTo: function (x, y, width, height)
     {
@@ -192,7 +192,7 @@ var Rectangle = new Class({
      * @method Phaser.Geom.Rectangle#setEmpty
      * @since 3.0.0
      *
-     * @return {Phaser.Geom.Rectangle} This Rectangle object.
+     * @return {this} This Rectangle object.
      */
     setEmpty: function ()
     {
@@ -208,7 +208,7 @@ var Rectangle = new Class({
      * @param {number} x - The X coordinate of the top left corner of the Rectangle.
      * @param {number} [y=x] - The Y coordinate of the top left corner of the Rectangle.
      *
-     * @return {Phaser.Geom.Rectangle} This Rectangle object.
+     * @return {this} This Rectangle object.
      */
     setPosition: function (x, y)
     {
@@ -229,7 +229,7 @@ var Rectangle = new Class({
      * @param {number} width - The width to set the Rectangle to.
      * @param {number} [height=width] - The height to set the Rectangle to.
      *
-     * @return {Phaser.Geom.Rectangle} This Rectangle object.
+     * @return {this} This Rectangle object.
      */
     setSize: function (width, height)
     {
