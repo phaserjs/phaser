@@ -384,7 +384,8 @@ var Container = new Class({
 
         output.setTo(this.x, this.y, 0, 0);
 
-        if (this.parentContainer) {
+        if (this.parentContainer)
+        {
             var parentMatrix = this.parentContainer.getBoundsTransformMatrix();
             var transformedPosition = parentMatrix.transformPoint(this.x, this.y);
             output.setTo(transformedPosition.x, transformedPosition.y, 0, 0);
@@ -477,7 +478,9 @@ var Container = new Class({
         if (this.parentContainer)
         {
             this.parentContainer.pointToContainer(source, output);
-        } else {
+        }
+        else
+        {
             output = new Vector2(source.x, source.y);
         }
 
