@@ -96,6 +96,7 @@ The following features are now deprecated and will be removed in a future versio
 * `Arcade.Body.checkCollision.none` did not prevent collisions with Tiles. Now it does (thanks @samme)
 * When running in HEADLESS mode, using a `Text` Game Object would cause a runtime error "Cannot read property gl of null". Fix #4976 (thanks @raimon-segura @samme)
 * The Tilemap `LayerData` class `properties` property has been changed from 'object' to an array of objects, which is what Tiled exports when defining layer properties in the editor. Fix #4983 (thanks @Nightspeller)
+* `AudioFile` and `VideoFile` had their state set to `undefined` instead of `FILE_PROCESSING` (thanks @samme)
 
 
 ### Examples, Documentation and TypeScript
