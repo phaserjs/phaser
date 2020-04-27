@@ -1,6 +1,6 @@
 # Change Log
 
-## Version 3.23 - Ginro - in development
+## Version 3.23 - Ginro - 27th April 2020
 
 ### JSDocs
 
@@ -24,7 +24,6 @@ The following features have been removed in this version of Phaser:
 The following features are now deprecated and will be removed in a future version of Phaser:
 
 * The Light Pipeline and associated components will be removed. This feature was never properly finished and adds too much redundant, non-optional code into the core API. The ability to load normal maps alongside textures will _remain_, for use in your own lighting shaders, which gives you far more control over the final effect.
-
 
 ### New Features
 
@@ -115,10 +114,6 @@ The following features are now deprecated and will be removed in a future versio
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
 @JasonHK @supertommy @majalon @samme @MartinBlackburn @halilcakar @jcyuan @MrMadClown @Dinozor @EmilSV @Jazcash
-
-
-
-
 
 ## Version 3.22 - Kohaku - January 15th 2020
 
