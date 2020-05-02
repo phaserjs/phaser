@@ -272,6 +272,8 @@ var File = new Class({
         }
         else
         {
+            this.state = CONST.FILE_LOADING;
+
             this.src = GetURL(this, this.loader.baseURL);
 
             if (this.src.indexOf('data:') === 0)
@@ -312,6 +314,8 @@ var File = new Class({
         {
             success = false;
         }
+
+        this.state = CONST.FILE_LOADED;
 
         this.resetXHR();
 
