@@ -1398,8 +1398,14 @@ var World = new Class({
         var resultX = false;
         var resultY = false;
 
-        //  Do we separate on x or y first?
-        if (this.forceX || Math.abs(this.gravity.y + body1.gravity.y) < Math.abs(this.gravity.x + body1.gravity.x))
+        //  Do we separate on x first or y first or both?
+        if (overlapOnly)
+        {
+            //  No separation but we need to calculate overlapX, overlapY, etc.
+            resultX = SeparateX(body1, body2, overlapOnly, this.OVERLAP_BIAS);
+            resultY = SeparateY(body1, body2, overlapOnly, this.OVERLAP_BIAS);
+        }
+        else if (this.forceX || Math.abs(this.gravity.y + body1.gravity.y) < Math.abs(this.gravity.x + body1.gravity.x))
         {
             resultX = SeparateX(body1, body2, overlapOnly, this.OVERLAP_BIAS);
 
