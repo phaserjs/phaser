@@ -82,7 +82,7 @@ window["SpinePlugin"] =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 32);
+/******/ 	return __webpack_require__(__webpack_require__.s = 34);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -91,7 +91,7 @@ window["SpinePlugin"] =
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -345,7 +345,7 @@ module.exports = Class;
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -404,7 +404,27 @@ var MATH_CONST = {
      * @type {Phaser.Math.RandomDataGenerator}
      * @since 3.0.0
      */
-    RND: null
+    RND: null,
+
+    /**
+     * The minimum safe integer this browser supports.
+     * We use a const for backward compatibility with Internet Explorer.
+     * 
+     * @name Phaser.Math.MIN_SAFE_INTEGER
+     * @type {number}
+     * @since 3.21.0
+     */
+    MIN_SAFE_INTEGER: Number.MIN_SAFE_INTEGER || -9007199254740991,
+
+    /**
+     * The maximum safe integer this browser supports.
+     * We use a const for backward compatibility with Internet Explorer.
+     * 
+     * @name Phaser.Math.MAX_SAFE_INTEGER
+     * @type {number}
+     * @since 3.21.0
+     */
+    MAX_SAFE_INTEGER: Number.MAX_SAFE_INTEGER || 9007199254740991
 
 };
 
@@ -417,7 +437,7 @@ module.exports = MATH_CONST;
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -473,7 +493,7 @@ module.exports = IsPlainObject;
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -516,7 +536,7 @@ module.exports = GetFastValue;
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -548,7 +568,7 @@ module.exports = Wrap;
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -556,6 +576,7 @@ module.exports = Wrap;
 //  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
 
 var Class = __webpack_require__(0);
+var FuzzyEqual = __webpack_require__(20);
 
 /**
  * @classdesc
@@ -736,6 +757,22 @@ var Vector2 = new Class({
     },
 
     /**
+     * Check whether this Vector is approximately equal to a given Vector.
+     *
+     * @method Phaser.Math.Vector2#fuzzyEquals
+     * @since 3.23.0
+     *
+     * @param {Phaser.Math.Vector2} v - The vector to compare with this Vector.
+     * @param {number} [epsilon=0.0001] - The tolerance value.
+     *
+     * @return {boolean} Whether both absolute differences of the x and y components are smaller than `epsilon`.
+     */
+    fuzzyEquals: function (v, epsilon)
+    {
+        return (FuzzyEqual(this.x, v.x, epsilon) && FuzzyEqual(this.y, v.y, epsilon));
+    },
+
+    /**
      * Calculate the angle between this Vector and the positive x-axis, in radians.
      *
      * @method Phaser.Math.Vector2#angle
@@ -755,6 +792,21 @@ var Vector2 = new Class({
         }
 
         return angle;
+    },
+
+    /**
+     * Set the angle of this Vector.
+     *
+     * @method Phaser.Math.Vector2#setAngle
+     * @since 3.23.0
+     *
+     * @param {number} angle - The angle, in radians.
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    setAngle: function (angle)
+    {
+        return this.setToPolar(angle, this.length());
     },
 
     /**
@@ -928,6 +980,21 @@ var Vector2 = new Class({
     },
 
     /**
+     * Set the length (or magnitude) of this Vector.
+     *
+     * @method Phaser.Math.Vector2#setLength
+     * @since 3.23.0
+     *
+     * @param {number} length
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    setLength: function (length)
+    {
+        return this.normalize().scale(length);
+    },
+
+    /**
      * Calculate the length of this Vector squared.
      *
      * @method Phaser.Math.Vector2#lengthSq
@@ -971,7 +1038,7 @@ var Vector2 = new Class({
     },
 
     /**
-     * Right-hand normalize (make unit length) this Vector.
+     * Rotate this Vector to its perpendicular, in the positive direction.
      *
      * @method Phaser.Math.Vector2#normalizeRightHand
      * @since 3.0.0
@@ -984,6 +1051,24 @@ var Vector2 = new Class({
 
         this.x = this.y * -1;
         this.y = x;
+
+        return this;
+    },
+
+    /**
+     * Rotate this Vector to its perpendicular, in the negative direction.
+     *
+     * @method Phaser.Math.Vector2#normalizeLeftHand
+     * @since 3.23.0
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    normalizeLeftHand: function ()
+    {
+        var x = this.x;
+
+        this.x = this.y;
+        this.y = x * -1;
 
         return this;
     },
@@ -1102,13 +1187,85 @@ var Vector2 = new Class({
         this.y = 0;
 
         return this;
+    },
+
+    /**
+     * Limit the length (or magnitude) of this Vector.
+     *
+     * @method Phaser.Math.Vector2#limit
+     * @since 3.23.0
+     *
+     * @param {number} max - The maximum length.
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    limit: function (max)
+    {
+        var len = this.length();
+
+        if (len && len > max)
+        {
+            this.scale(max / len);
+        }
+
+        return this;
+    },
+
+    /**
+     * Reflect this Vector off a line defined by a normal.
+     *
+     * @method Phaser.Math.Vector2#reflect
+     * @since 3.23.0
+     *
+     * @param {Phaser.Math.Vector2} normal - A vector perpendicular to the line.
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    reflect: function (normal)
+    {
+        normal = normal.clone().normalize();
+
+        return this.subtract(normal.scale(2 * this.dot(normal)));
+    },
+
+    /**
+     * Reflect this Vector across another.
+     *
+     * @method Phaser.Math.Vector2#mirror
+     * @since 3.23.0
+     *
+     * @param {Phaser.Math.Vector2} axis - A vector to reflect across.
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    mirror: function (axis)
+    {
+        return this.reflect(axis).negate();
+    },
+
+    /**
+     * Rotate this Vector by an angle amount.
+     *
+     * @method Phaser.Math.Vector2#rotate
+     * @since 3.23.0
+     *
+     * @param {number} delta - The angle to rotate by, in radians.
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    rotate: function (delta)
+    {
+        var cos = Math.cos(delta);
+        var sin = Math.sin(delta);
+
+        return this.set(cos * this.x - sin * this.y, sin * this.x + cos * this.y);
     }
 
 });
 
 /**
  * A static zero Vector2 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -1120,7 +1277,7 @@ Vector2.ZERO = new Vector2();
 
 /**
  * A static right Vector2 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -1132,7 +1289,7 @@ Vector2.RIGHT = new Vector2(1, 0);
 
 /**
  * A static left Vector2 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -1144,7 +1301,7 @@ Vector2.LEFT = new Vector2(-1, 0);
 
 /**
  * A static up Vector2 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -1156,7 +1313,7 @@ Vector2.UP = new Vector2(0, -1);
 
 /**
  * A static down Vector2 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -1168,7 +1325,7 @@ Vector2.DOWN = new Vector2(0, 1);
 
 /**
  * A static one Vector2 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -1187,7 +1344,7 @@ module.exports = Vector2;
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -1339,7 +1496,7 @@ module.exports = FILE_CONST;
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -1384,7 +1541,36 @@ module.exports = CounterClockwise;
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Generate a random floating point number between the two given bounds, minimum inclusive, maximum exclusive.
+ *
+ * @function Phaser.Math.FloatBetween
+ * @since 3.0.0
+ *
+ * @param {number} min - The lower bound for the float, inclusive.
+ * @param {number} max - The upper bound for the float exclusive.
+ *
+ * @return {number} A random float within the given range.
+ */
+var FloatBetween = function (min, max)
+{
+    return Math.random() * (max - min) + min;
+};
+
+module.exports = FloatBetween;
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -1409,12 +1595,12 @@ module.exports = Clamp;
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -1439,12 +1625,12 @@ module.exports = RadToDeg;
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -2249,12 +2435,12 @@ module.exports = Vector3;
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -2320,23 +2506,23 @@ module.exports = GetValue;
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = __webpack_require__(0);
 var CONST = __webpack_require__(6);
-var Events = __webpack_require__(169);
+var Events = __webpack_require__(175);
 var GetFastValue = __webpack_require__(3);
-var GetURL = __webpack_require__(180);
-var MergeXHRSettings = __webpack_require__(29);
-var XHRLoader = __webpack_require__(181);
-var XHRSettings = __webpack_require__(30);
+var GetURL = __webpack_require__(186);
+var MergeXHRSettings = __webpack_require__(31);
+var XHRLoader = __webpack_require__(187);
+var XHRSettings = __webpack_require__(32);
 
 /**
  * @classdesc
@@ -2419,7 +2605,7 @@ var File = new Class({
         {
             this.url = loader.path + loadKey + '.' + GetFastValue(fileConfig, 'extension', '');
         }
-        else if (typeof(this.url) !== 'function')
+        else if (typeof(this.url) !== 'function' && this.url.indexOf('blob:') !== 0 && this.url.indexOf('data:') !== 0)
         {
             this.url = loader.path + this.url;
         }
@@ -2861,12 +3047,12 @@ module.exports = File;
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -2930,12 +3116,12 @@ module.exports = FileTypesManager;
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -2950,6 +3136,8 @@ var IsPlainObject = __webpack_require__(2);
  *
  * @function Phaser.Utils.Objects.Extend
  * @since 3.0.0
+ *
+ * @param {...*} [args] - The objects that will be mixed.
  *
  * @return {object} The extended object.
  */
@@ -3029,12 +3217,12 @@ module.exports = Extend;
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -3060,12 +3248,12 @@ module.exports = Between;
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -3097,12 +3285,12 @@ module.exports = Normalize;
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -3129,12 +3317,12 @@ module.exports = Wrap;
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -3161,27 +3349,61 @@ module.exports = WrapDegrees;
 
 
 /***/ }),
-/* 19 */
+/* 20 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Check whether the given values are fuzzily equal.
+ *
+ * Two numbers are fuzzily equal if their difference is less than `epsilon`.
+ *
+ * @function Phaser.Math.Fuzzy.Equal
+ * @since 3.0.0
+ *
+ * @param {number} a - The first value.
+ * @param {number} b - The second value.
+ * @param {number} [epsilon=0.0001] - The epsilon.
+ *
+ * @return {boolean} `true` if the values are fuzzily equal, otherwise `false`.
+ */
+var Equal = function (a, b, epsilon)
+{
+    if (epsilon === undefined) { epsilon = 0.0001; }
+
+    return Math.abs(a - b) < epsilon;
+};
+
+module.exports = Equal;
+
+
+/***/ }),
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Factorial = __webpack_require__(20);
+var Factorial = __webpack_require__(22);
 
 /**
- * [description]
+ * Calculates the Bernstein basis from the three factorial coefficients.
  *
  * @function Phaser.Math.Bernstein
  * @since 3.0.0
  *
- * @param {number} n - [description]
- * @param {number} i - [description]
+ * @param {number} n - The first value.
+ * @param {number} i - The second value.
  *
- * @return {number} [description]
+ * @return {number} The Bernstein basis of Factorial(n) / Factorial(i) / Factorial(n - i)
  */
 var Bernstein = function (n, i)
 {
@@ -3192,12 +3414,12 @@ module.exports = Bernstein;
 
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -3232,26 +3454,26 @@ module.exports = Factorial;
 
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Calculates a Catmull-Rom value.
+ * Calculates a Catmull-Rom value from the given points, based on an alpha of 0.5.
  *
  * @function Phaser.Math.CatmullRom
  * @since 3.0.0
  *
- * @param {number} t - [description]
- * @param {number} p0 - [description]
- * @param {number} p1 - [description]
- * @param {number} p2 - [description]
- * @param {number} p3 - [description]
+ * @param {number} t - The amount to interpolate by.
+ * @param {number} p0 - The first control point.
+ * @param {number} p1 - The second control point.
+ * @param {number} p2 - The third control point.
+ * @param {number} p3 - The fourth control point.
  *
  * @return {number} The Catmull-Rom value.
  */
@@ -3269,12 +3491,12 @@ module.exports = CatmullRom;
 
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -3299,12 +3521,12 @@ module.exports = Linear;
 
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -3346,12 +3568,12 @@ module.exports = SmoothStep;
 
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -3385,12 +3607,12 @@ module.exports = SmootherStep;
 
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -3415,12 +3637,12 @@ module.exports = DegToRad;
 
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -3928,12 +4150,12 @@ var Matrix3 = new Class({
     },
 
     /**
-     * [description]
+     * Set the values of this Matrix3 to be normalized from the given Matrix4.
      *
      * @method Phaser.Math.Matrix3#normalFromMat4
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix4} m - [description]
+     * @param {Phaser.Math.Matrix4} m - The Matrix4 to normalize the values from.
      *
      * @return {Phaser.Math.Matrix3} This Matrix3.
      */
@@ -4008,12 +4230,12 @@ module.exports = Matrix3;
 
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -4572,12 +4794,12 @@ var Matrix4 = new Class({
     },
 
     /**
-     * [description]
+     * Multiply the values of this Matrix4 by those given in the `src` argument.
      *
      * @method Phaser.Math.Matrix4#multiplyLocal
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix4} src - [description]
+     * @param {Phaser.Math.Matrix4} src - The source Matrix4 that this Matrix4 is multiplied by.
      *
      * @return {Phaser.Math.Matrix4} This Matrix4.
      */
@@ -5369,9 +5591,9 @@ var Matrix4 = new Class({
      * @method Phaser.Math.Matrix4#yawPitchRoll
      * @since 3.0.0
      *
-     * @param {number} yaw - [description]
-     * @param {number} pitch - [description]
-     * @param {number} roll - [description]
+     * @param {number} yaw - The yaw value.
+     * @param {number} pitch - The pitch value.
+     * @param {number} roll - The roll value.
      *
      * @return {Phaser.Math.Matrix4} This Matrix4.
      */
@@ -5470,12 +5692,12 @@ module.exports = Matrix4;
 
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -5483,8 +5705,8 @@ module.exports = Matrix4;
 //  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
 
 var Class = __webpack_require__(0);
-var Vector3 = __webpack_require__(10);
-var Matrix3 = __webpack_require__(26);
+var Vector3 = __webpack_require__(11);
+var Matrix3 = __webpack_require__(28);
 
 var EPSILON = 0.000001;
 
@@ -5792,13 +6014,13 @@ var Quaternion = new Class({
     },
 
     /**
-     * [description]
+     * Rotates this Quaternion based on the two given vectors.
      *
      * @method Phaser.Math.Quaternion#rotationTo
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector3} a - [description]
-     * @param {Phaser.Math.Vector3} b - [description]
+     * @param {Phaser.Math.Vector3} a - The transform rotation vector.
+     * @param {Phaser.Math.Vector3} b - The target rotation vector.
      *
      * @return {Phaser.Math.Quaternion} This Quaternion.
      */
@@ -6242,17 +6464,17 @@ module.exports = Quaternion;
 
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Extend = __webpack_require__(14);
-var XHRSettings = __webpack_require__(30);
+var Extend = __webpack_require__(15);
+var XHRSettings = __webpack_require__(32);
 
 /**
  * Takes two XHRSettings Objects and creates a new XHRSettings object from them.
@@ -6290,12 +6512,12 @@ module.exports = MergeXHRSettings;
 
 
 /***/ }),
-/* 30 */
+/* 32 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -6310,16 +6532,18 @@ module.exports = MergeXHRSettings;
  * @param {string} [user=''] - Optional username for the XHR request.
  * @param {string} [password=''] - Optional password for the XHR request.
  * @param {integer} [timeout=0] - Optional XHR timeout value.
+ * @param {boolean} [withCredentials=false] - Optional XHR withCredentials value.
  *
  * @return {Phaser.Types.Loader.XHRSettingsObject} The XHRSettings object as used by the Loader.
  */
-var XHRSettings = function (responseType, async, user, password, timeout)
+var XHRSettings = function (responseType, async, user, password, timeout, withCredentials)
 {
     if (responseType === undefined) { responseType = ''; }
     if (async === undefined) { async = true; }
     if (user === undefined) { user = ''; }
     if (password === undefined) { password = ''; }
     if (timeout === undefined) { timeout = 0; }
+    if (withCredentials === undefined) { withCredentials = false; }
 
     // Before sending a request, set the xhr.responseType to "text",
     // "arraybuffer", "blob", or "document", depending on your data needs.
@@ -6340,12 +6564,16 @@ var XHRSettings = function (responseType, async, user, password, timeout)
         timeout: timeout,
 
         //  setRequestHeader
+        headers: undefined,
         header: undefined,
         headerValue: undefined,
         requestedWith: false,
 
         //  overrideMimeType
-        overrideMimeType: undefined
+        overrideMimeType: undefined,
+
+        //  withCredentials
+        withCredentials: withCredentials
 
     };
 };
@@ -6354,12 +6582,12 @@ module.exports = XHRSettings;
 
 
 /***/ }),
-/* 31 */
+/* 33 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -6381,7 +6609,7 @@ module.exports = NOOP;
 
 
 /***/ }),
-/* 32 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -6390,34 +6618,36 @@ module.exports = NOOP;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BuildGameObject = __webpack_require__(33);
+var BuildGameObject = __webpack_require__(35);
 var Class = __webpack_require__(0);
-var GetValue = __webpack_require__(11);
-var ResizeEvent = __webpack_require__(143);
-var ScenePlugin = __webpack_require__(144);
-var Spine = __webpack_require__(166);
-var SpineFile = __webpack_require__(167);
-var SpineGameObject = __webpack_require__(185);
+var GetValue = __webpack_require__(12);
+var ResizeEvent = __webpack_require__(149);
+var ScenePlugin = __webpack_require__(150);
+var Spine = __webpack_require__(172);
+var SpineFile = __webpack_require__(173);
+var SpineGameObject = __webpack_require__(191);
 
 /**
  * @classdesc
  * The Spine Plugin is a Scene based plugin that handles the creation and rendering of Spine Game Objects.
- * 
+ *
  * All rendering and object creation is handled via the official Spine Runtimes. This version of the plugin
- * uses the Spine 3.8 runtimes. Files created in a different version of Spine may not work as a result.
- * 
+ * uses the Spine 3.8.72 runtimes. Please note that due to the way the Spine runtimes use semver, you will
+ * get breaking changes in point-releases. Therefore, files created in a different version of Spine may not
+ * work as a result, without you first updating the runtimes and rebuilding the plugin.
+ *
  * You can find more details about Spine at http://esotericsoftware.com/.
- * 
+ *
  * Please note that you require a Spine license in order to use Spine Runtimes in your games.
- * 
+ *
  * You can install this plugin into your Phaser game by either importing it, if you're using ES6:
- * 
+ *
  * ```javascript
  * import * as SpinePlugin from './SpinePlugin.js';
  * ```
- * 
+ *
  * and then adding it to your Phaser Game configuration:
- * 
+ *
  * ```javascript
  * plugins: {
  *     scene: [
@@ -6425,10 +6655,10 @@ var SpineGameObject = __webpack_require__(185);
  *     ]
  * }
  * ```
- * 
+ *
  * If you're using ES5 then you can load the Spine Plugin in a Scene files payload, _within_ your
  * Game Configuration object, like this:
- * 
+ *
  * ```javascript
  * scene: {
  *     preload: preload,
@@ -6440,42 +6670,42 @@ var SpineGameObject = __webpack_require__(185);
  *     }
  * }
  * ```
- * 
+ *
  * Loading it like this allows you to then use commands such as `this.load.spine` from within the
  * same Scene. Alternatively, you can use the method `this.load.plugin` to load the plugin via the normal
  * Phaser Loader. However, doing so will not add it to the current Scene. It will be available from any
  * subsequent Scenes.
- * 
+ *
  * Assuming a default environment you access it from within a Scene by using the `this.spine` reference.
- * 
+ *
  * When this plugin is installed into a Scene it will add a Loader File Type, allowing you to load
  * Spine files directly, i.e.:
- * 
+ *
  * ```javascript
  * this.load.spine('stretchyman', 'stretchyman-pro.json', [ 'stretchyman-pma.atlas' ], true);
  * ```
- * 
- * It also installs a Game Object Factory method, allowin you to create Spine Game Objects:
- * 
+ *
+ * It also installs a Game Object Factory method, allowing you to create Spine Game Objects:
+ *
  * ```javascript
  * this.add.spine(512, 650, 'stretchyman')
  * ```
- * 
+ *
  * The first argument is the key which you used when importing the Spine data. There are lots of
  * things you can specify, such as the animation name, skeleton, slot attachments and more. Please
  * see the respective documentation and examples for further details.
- * 
+ *
  * Phaser expects the Spine data to be exported from the Spine application in a JSON format, not binary.
  * The associated atlas files are scanned for any texture files present in them, which are then loaded.
- * If you have exported your Spine data with preMultipiedAlpha set, then you should enable this in the
+ * If you have exported your Spine data with preMultipliedAlpha set, then you should enable this in the
  * load arguments, or you may see black outlines around skeleton textures.
- * 
+ *
  * The Spine plugin is local to the Scene in which it is installed. This means a change to something,
  * such as the Skeleton Debug Renderer, in this Scene, will not impact the renderer in any other Scene.
  * The only exception to this is with the caches this plugin creates. Spine atlas and texture data are
  * stored in their own caches, which are global, meaning they're accessible from any Scene in your
  * game, regardless if the Scene loaded the Spine data or not.
- * 
+ *
  * For details about the Spine Runtime API see http://esotericsoftware.com/spine-api-reference
  *
  * @class SpinePlugin
@@ -6510,7 +6740,7 @@ var SpinePlugin = new Class({
 
         /**
          * A custom cache that stores the Spine atlas data.
-         * 
+         *
          * This cache is global across your game, allowing you to access Spine data loaded from other Scenes,
          * no matter which Scene you are in.
          *
@@ -6522,7 +6752,7 @@ var SpinePlugin = new Class({
 
         /**
          * A custom cache that stores the Spine Textures.
-         * 
+         *
          * This cache is global across your game, allowing you to access Spine data loaded from other Scenes,
          * no matter which Scene you are in.
          *
@@ -6562,7 +6792,7 @@ var SpinePlugin = new Class({
 
         /**
          * The underlying WebGL context of the Phaser renderer.
-         * 
+         *
          * Only set if running in WebGL mode.
          *
          * @name SpinePlugin#gl
@@ -6582,7 +6812,7 @@ var SpinePlugin = new Class({
 
         /**
          * An instance of the Spine WebGL Scene Renderer.
-         * 
+         *
          * Only set if running in WebGL mode.
          *
          * @name SpinePlugin#sceneRenderer
@@ -6602,7 +6832,7 @@ var SpinePlugin = new Class({
 
         /**
          * An instance of the Spine Skeleton Debug Renderer.
-         * 
+         *
          * Only set if running in WebGL mode.
          *
          * @name SpinePlugin#skeletonDebugRenderer
@@ -6664,46 +6894,46 @@ var SpinePlugin = new Class({
         var add = function (x, y, key, animationName, loop)
         {
             var spineGO = new SpineGameObject(this.scene, _this, x, y, key, animationName, loop);
-    
+
             this.displayList.add(spineGO);
             this.updateList.add(spineGO);
-        
+
             return spineGO;
         };
 
         var make = function (config, addToScene)
         {
             if (config === undefined) { config = {}; }
-    
+
             var key = GetValue(config, 'key', null);
             var animationName = GetValue(config, 'animationName', null);
             var loop = GetValue(config, 'loop', false);
-    
+
             var spineGO = new SpineGameObject(this.scene, _this, 0, 0, key, animationName, loop);
-    
+
             if (addToScene !== undefined)
             {
                 config.add = addToScene;
             }
-    
+
             BuildGameObject(this.scene, spineGO, config);
-    
+
             //  Spine specific
             var skinName = GetValue(config, 'skinName', false);
-    
+
             if (skinName)
             {
                 spineGO.setSkinByName(skinName);
             }
-    
+
             var slotName = GetValue(config, 'slotName', false);
             var attachmentName = GetValue(config, 'attachmentName', null);
-    
+
             if (slotName)
             {
                 spineGO.setAttachment(slotName, attachmentName);
             }
-    
+
             return spineGO.refresh();
         };
 
@@ -6795,9 +7025,9 @@ var SpinePlugin = new Class({
      *
      * @method SpinePlugin#getAtlasCanvas
      * @since 3.19.0
-     * 
+     *
      * @param {string} key - The key of the Spine Atlas to create.
-     * 
+     *
      * @return {spine.TextureAtlas} The Spine Texture Atlas, or undefined if the given key wasn't found.
      */
     getAtlasCanvas: function (key)
@@ -6823,7 +7053,7 @@ var SpinePlugin = new Class({
 
             atlas = new Spine.TextureAtlas(atlasEntry.data, function (path)
             {
-                return new Spine.canvas.CanvasTexture(textures.get(path).getSourceImage());
+                return new Spine.canvas.CanvasTexture(textures.get(atlasEntry.prefix + path).getSourceImage());
             });
         }
 
@@ -6836,9 +7066,9 @@ var SpinePlugin = new Class({
      *
      * @method SpinePlugin#getAtlasWebGL
      * @since 3.19.0
-     * 
+     *
      * @param {string} key - The key of the Spine Atlas to create.
-     * 
+     *
      * @return {spine.TextureAtlas} The Spine Texture Atlas, or undefined if the given key wasn't found.
      */
     getAtlasWebGL: function (key)
@@ -6868,7 +7098,7 @@ var SpinePlugin = new Class({
 
             atlas = new Spine.TextureAtlas(atlasEntry.data, function (path)
             {
-                return new Spine.webgl.GLTexture(gl, textures.get(path).getSourceImage(), false);
+                return new Spine.webgl.GLTexture(gl, textures.get(atlasEntry.prefix + path).getSourceImage(), false);
             });
         }
 
@@ -6879,7 +7109,7 @@ var SpinePlugin = new Class({
      * Adds a Spine Skeleton and Atlas file, or array of files, to the current load queue.
      *
      * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
-     * 
+     *
      * ```javascript
      * function preload ()
      * {
@@ -6894,21 +7124,21 @@ var SpinePlugin = new Class({
      * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
      * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
      * loaded.
-     * 
+     *
      * If you call this from outside of `preload` then you are responsible for starting the Loader afterwards and monitoring
      * its events to know when it's safe to use the asset. Please see the Phaser.Loader.LoaderPlugin class for more details.
-     * 
+     *
      * Phaser expects the Spine data to be exported from the Spine application in a JSON format, not binary. The associated
      * atlas files are scanned for any texture files present in them, which are then loaded. If you have exported
-     * your Spine data with preMultipiedAlpha set, then you should enable this in the arguments, or you may see black
+     * your Spine data with preMultipliedAlpha set, then you should enable this in the arguments, or you may see black
      * outlines around skeleton textures.
-     * 
+     *
      * The key must be a unique String. It is used to add the file to the global Spine cache upon a successful load.
      * The key should be unique both in terms of files being loaded and files already present in the Spine cache.
      * Loading a file using a key that is already taken will result in a warning.
      *
      * Instead of passing arguments you can pass a configuration object, such as:
-     * 
+     *
      * ```javascript
      * this.load.spine({
      *     key: 'mainmenu',
@@ -6917,9 +7147,9 @@ var SpinePlugin = new Class({
      *     preMultipliedAlpha: true
      * });
      * ```
-     * 
+     *
      * If you need to load multiple Spine atlas files, provide them as an array:
-     * 
+     *
      * ```javascript
      * function preload ()
      * {
@@ -6942,13 +7172,13 @@ var SpinePlugin = new Class({
      * Note: The ability to load this type of file will only be available if the Spine Plugin has been built or loaded into Phaser.
      *
      * @method Phaser.Loader.LoaderPlugin#spine
-     * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+     * @fires Phaser.Loader.LoaderPlugin#ADD
      * @since 3.19.0
      *
      * @param {(string|Phaser.Types.Loader.FileTypes.JSONFileConfig|Phaser.Types.Loader.FileTypes.JSONFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
      * @param {string} jsonURL - The absolute or relative URL to load the Spine json file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
      * @param {string|string[]} atlasURL - The absolute or relative URL to load the Spine atlas file from. If undefined or `null` it will be set to `<key>.atlas`, i.e. if `key` was "alien" then the URL will be "alien.atlas".
-     * @param {boolean} [preMultipiedAlpha=false] - Do the texture files include pre-multiplied alpha or not?
+     * @param {boolean} [preMultipliedAlpha=false] - Do the texture files include pre-multiplied alpha or not?
      * @param {Phaser.Types.Loader.XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the Spine json file. Used in replacement of the Loaders default XHR Settings.
      * @param {Phaser.Types.Loader.XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the Spine atlas file. Used in replacement of the Loaders default XHR Settings.
      *
@@ -6957,13 +7187,13 @@ var SpinePlugin = new Class({
     spineFileCallback: function (key, jsonURL, atlasURL, preMultipliedAlpha, jsonXhrSettings, atlasXhrSettings)
     {
         var multifile;
-   
+
         if (Array.isArray(key))
         {
             for (var i = 0; i < key.length; i++)
             {
                 multifile = new SpineFile(this, key[i]);
-    
+
                 this.addFile(multifile.files);
             }
         }
@@ -6973,23 +7203,23 @@ var SpinePlugin = new Class({
 
             this.addFile(multifile.files);
         }
-        
+
         return this;
     },
 
     /**
      * Converts the given x and y screen coordinates into the world space of the given Skeleton.
-     * 
+     *
      * Only works in WebGL.
      *
      * @method SpinePlugin#worldToLocal
      * @since 3.19.0
-     * 
+     *
      * @param {number} x - The screen space x coordinate to convert.
      * @param {number} y - The screen space y coordinate to convert.
      * @param {spine.Skeleton} skeleton - The Spine Skeleton to convert into.
      * @param {spine.Bone} [bone] - Optional bone of the Skeleton to convert into.
-     * 
+     *
      * @return {spine.Vector2} A Vector2 containing the translated point.
      */
     worldToLocal: function (x, y, skeleton, bone)
@@ -7026,10 +7256,10 @@ var SpinePlugin = new Class({
      *
      * @method SpinePlugin#getVector2
      * @since 3.19.0
-     * 
+     *
      * @param {number} x - The Vector x value.
      * @param {number} y - The Vector y value.
-     * 
+     *
      * @return {spine.Vector2} A Spine Vector2 based on the given values.
      */
     getVector2: function (x, y)
@@ -7039,16 +7269,16 @@ var SpinePlugin = new Class({
 
     /**
      * Returns a Spine Vector2 based on the given x, y and z values.
-     * 
+     *
      * Only works in WebGL.
      *
      * @method SpinePlugin#getVector3
      * @since 3.19.0
-     * 
+     *
      * @param {number} x - The Vector x value.
      * @param {number} y - The Vector y value.
      * @param {number} z - The Vector z value.
-     * 
+     *
      * @return {spine.Vector2} A Spine Vector2 based on the given values.
      */
     getVector3: function (x, y, z)
@@ -7058,14 +7288,14 @@ var SpinePlugin = new Class({
 
     /**
      * Sets `drawBones` in the Spine Skeleton Debug Renderer.
-     * 
+     *
      * Only works in WebGL.
      *
      * @method SpinePlugin#setDebugBones
      * @since 3.19.0
-     * 
+     *
      * @param {boolean} [value=true] - The value to set in the debug property.
-     * 
+     *
      * @return {this} This Spine Plugin.
      */
     setDebugBones: function (value)
@@ -7079,14 +7309,14 @@ var SpinePlugin = new Class({
 
     /**
      * Sets `drawRegionAttachments` in the Spine Skeleton Debug Renderer.
-     * 
+     *
      * Only works in WebGL.
      *
      * @method SpinePlugin#setDebugRegionAttachments
      * @since 3.19.0
-     * 
+     *
      * @param {boolean} [value=true] - The value to set in the debug property.
-     * 
+     *
      * @return {this} This Spine Plugin.
      */
     setDebugRegionAttachments: function (value)
@@ -7100,14 +7330,14 @@ var SpinePlugin = new Class({
 
     /**
      * Sets `drawBoundingBoxes` in the Spine Skeleton Debug Renderer.
-     * 
+     *
      * Only works in WebGL.
      *
      * @method SpinePlugin#setDebugBoundingBoxes
      * @since 3.19.0
-     * 
+     *
      * @param {boolean} [value=true] - The value to set in the debug property.
-     * 
+     *
      * @return {this} This Spine Plugin.
      */
     setDebugBoundingBoxes: function (value)
@@ -7121,14 +7351,14 @@ var SpinePlugin = new Class({
 
     /**
      * Sets `drawMeshHull` in the Spine Skeleton Debug Renderer.
-     * 
+     *
      * Only works in WebGL.
      *
      * @method SpinePlugin#setDebugMeshHull
      * @since 3.19.0
-     * 
+     *
      * @param {boolean} [value=true] - The value to set in the debug property.
-     * 
+     *
      * @return {this} This Spine Plugin.
      */
     setDebugMeshHull: function (value)
@@ -7142,14 +7372,14 @@ var SpinePlugin = new Class({
 
     /**
      * Sets `drawMeshTriangles` in the Spine Skeleton Debug Renderer.
-     * 
+     *
      * Only works in WebGL.
      *
      * @method SpinePlugin#setDebugMeshTriangles
      * @since 3.19.0
-     * 
+     *
      * @param {boolean} [value=true] - The value to set in the debug property.
-     * 
+     *
      * @return {this} This Spine Plugin.
      */
     setDebugMeshTriangles: function (value)
@@ -7163,14 +7393,14 @@ var SpinePlugin = new Class({
 
     /**
      * Sets `drawPaths` in the Spine Skeleton Debug Renderer.
-     * 
+     *
      * Only works in WebGL.
      *
      * @method SpinePlugin#setDebugPaths
      * @since 3.19.0
-     * 
+     *
      * @param {boolean} [value=true] - The value to set in the debug property.
-     * 
+     *
      * @return {this} This Spine Plugin.
      */
     setDebugPaths: function (value)
@@ -7184,14 +7414,14 @@ var SpinePlugin = new Class({
 
     /**
      * Sets `drawSkeletonXY` in the Spine Skeleton Debug Renderer.
-     * 
+     *
      * Only works in WebGL.
      *
      * @method SpinePlugin#setDebugSkeletonXY
      * @since 3.19.0
-     * 
+     *
      * @param {boolean} [value=true] - The value to set in the debug property.
-     * 
+     *
      * @return {this} This Spine Plugin.
      */
     setDebugSkeletonXY: function (value)
@@ -7205,14 +7435,14 @@ var SpinePlugin = new Class({
 
     /**
      * Sets `drawClipping` in the Spine Skeleton Debug Renderer.
-     * 
+     *
      * Only works in WebGL.
      *
      * @method SpinePlugin#setDebugClipping
      * @since 3.19.0
-     * 
+     *
      * @param {boolean} [value=true] - The value to set in the debug property.
-     * 
+     *
      * @return {this} This Spine Plugin.
      */
     setDebugClipping: function (value)
@@ -7226,14 +7456,14 @@ var SpinePlugin = new Class({
 
     /**
      * Sets the given vertex effect on the Spine Skeleton Renderer.
-     * 
+     *
      * Only works in WebGL.
      *
      * @method SpinePlugin#setEffect
      * @since 3.19.0
-     * 
+     *
      * @param {spine.VertexEffect} [effect] - The vertex effect to set on the Skeleton Renderer.
-     * 
+     *
      * @return {this} This Spine Plugin.
      */
     setEffect: function (effect)
@@ -7245,15 +7475,15 @@ var SpinePlugin = new Class({
 
     /**
      * Creates a Spine Skeleton based on the given key and optional Skeleton JSON data.
-     * 
+     *
      * The Skeleton data should have already been loaded before calling this method.
      *
      * @method SpinePlugin#createSkeleton
      * @since 3.19.0
-     * 
+     *
      * @param {string} key - The key of the Spine skeleton data, as loaded by the plugin. If the Spine JSON contains multiple skeletons, reference them with a period, i.e. `set.spineBoy`.
      * @param {object} [skeletonJSON] - Optional Skeleton JSON data to use, instead of getting it from the cache.
-     * 
+     *
      * @return {(any|null)} This Spine Skeleton data object, or `null` if the key was invalid.
      */
     createSkeleton: function (key, skeletonJSON)
@@ -7286,7 +7516,7 @@ var SpinePlugin = new Class({
         var preMultipliedAlpha = atlasData.preMultipliedAlpha;
 
         var atlasLoader = new Spine.AtlasAttachmentLoader(atlas);
-        
+
         var skeletonJson = new Spine.SkeletonJson(atlasLoader);
 
         var data;
@@ -7307,7 +7537,7 @@ var SpinePlugin = new Class({
             var skeletonData = skeletonJson.readSkeletonData(data);
 
             var skeleton = new Spine.Skeleton(skeletonData);
-        
+
             return { skeletonData: skeletonData, skeleton: skeleton, preMultipliedAlpha: preMultipliedAlpha };
         }
         else
@@ -7318,14 +7548,14 @@ var SpinePlugin = new Class({
 
     /**
      * Creates a new Animation State and Animation State Data for the given skeleton.
-     * 
+     *
      * The returned object contains two properties: `state` and `stateData` respectively.
      *
      * @method SpinePlugin#createAnimationState
      * @since 3.19.0
-     * 
+     *
      * @param {spine.Skeleton} skeleton - The Skeleton to create the Animation State for.
-     * 
+     *
      * @return {any} An object containing the Animation State and Animation State Data instances.
      */
     createAnimationState: function (skeleton)
@@ -7339,17 +7569,17 @@ var SpinePlugin = new Class({
 
     /**
      * Returns the axis aligned bounding box (AABB) of the region and mesh attachments for the current pose.
-     * 
+     *
      * The returned object contains two properties: `offset` and `size`:
-     * 
+     *
      * `offset` - The distance from the skeleton origin to the bottom left corner of the AABB.
      * `size` - The width and height of the AABB.
      *
      * @method SpinePlugin#getBounds
      * @since 3.19.0
-     * 
+     *
      * @param {spine.Skeleton} skeleton - The Skeleton to get the bounds from.
-     * 
+     *
      * @return {any} The bounds object.
      */
     getBounds: function (skeleton)
@@ -7364,7 +7594,7 @@ var SpinePlugin = new Class({
 
     /**
      * Internal handler for when the renderer resizes.
-     * 
+     *
      * Only called if running in WebGL.
      *
      * @method SpinePlugin#onResize
@@ -7380,14 +7610,14 @@ var SpinePlugin = new Class({
 
         sceneRenderer.camera.position.x = viewportWidth / 2;
         sceneRenderer.camera.position.y = viewportHeight / 2;
-    
+
         sceneRenderer.camera.viewportWidth = viewportWidth;
         sceneRenderer.camera.viewportHeight = viewportHeight;
     },
 
     /**
      * The Scene that owns this plugin is shutting down.
-     * 
+     *
      * We need to kill and reset all internal properties as well as stop listening to Scene events.
      *
      * @method SpinePlugin#shutdown
@@ -7399,11 +7629,16 @@ var SpinePlugin = new Class({
         var eventEmitter = this.systems.events;
 
         eventEmitter.off('shutdown', this.shutdown, this);
+
+        if (this.isWebGL)
+        {
+            this.game.scale.off(ResizeEvent, this.onResize, this);
+        }
     },
 
     /**
      * The Scene that owns this plugin is being destroyed.
-     * 
+     *
      * We need to shutdown and then kill off all external references.
      *
      * @method SpinePlugin#destroy
@@ -7439,30 +7674,30 @@ var SpinePlugin = new Class({
 
 /**
  * Creates a new Spine Game Object and adds it to the Scene.
- * 
+ *
  * The x and y coordinate given is used to set the placement of the root Spine bone, which can vary from
  * skeleton to skeleton. All rotation and scaling happens from the root bone placement. Spine Game Objects
  * do not have a Phaser origin.
- * 
+ *
  * If the Spine JSON file exported multiple Skeletons within it, then you can specify them by using a period
  * character in the key. For example, if you loaded a Spine JSON using the key `monsters` and it contains
  * multiple Skeletons, including one called `goblin` then you would use the key `monsters.goblin` to reference
  * that.
- * 
+ *
  * ```javascript
  * let jelly = this.add.spine(512, 550, 'jelly', 'jelly-think', true);
  * ```
- * 
+ *
  * The key is optional. If not passed here, you need to call `SpineGameObject.setSkeleton()` to use it.
- * 
+ *
  * The animation name is also optional and can be set later via `SpineGameObject.setAnimation`.
- * 
+ *
  * Should you wish for more control over the object creation, such as setting a slot attachment or skin
  * name, then use `SpinePlugin.make` instead.
  *
  * @method SpinePlugin#add
  * @since 3.19.0
- * 
+ *
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
  * @param {string} [key] - The key of the Spine Skeleton this Game Object will use, as stored in the Spine Plugin.
@@ -7474,16 +7709,16 @@ var SpinePlugin = new Class({
 
 /**
  * Creates a new Spine Game Object from the given configuration file and optionally adds it to the Scene.
- * 
+ *
  * The x and y coordinate given is used to set the placement of the root Spine bone, which can vary from
  * skeleton to skeleton. All rotation and scaling happens from the root bone placement. Spine Game Objects
  * do not have a Phaser origin.
- * 
+ *
  * If the Spine JSON file exported multiple Skeletons within it, then you can specify them by using a period
  * character in the key. For example, if you loaded a Spine JSON using the key `monsters` and it contains
  * multiple Skeletons, including one called `goblin` then you would use the key `monsters.goblin` to reference
  * that.
- * 
+ *
  * ```javascript
  * let jelly = this.make.spine({
  *     x: 500, y: 500, key: 'jelly',
@@ -7507,17 +7742,17 @@ module.exports = SpinePlugin;
 
 
 /***/ }),
-/* 33 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var BlendModes = __webpack_require__(34);
-var GetAdvancedValue = __webpack_require__(35);
+var BlendModes = __webpack_require__(36);
+var GetAdvancedValue = __webpack_require__(37);
 
 /**
  * Builds a Game Object using the provided configuration object.
@@ -7635,12 +7870,12 @@ module.exports = BuildGameObject;
 
 
 /***/ }),
-/* 34 */
+/* 36 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -7974,17 +8209,17 @@ module.exports = {
 
 
 /***/ }),
-/* 35 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var MATH = __webpack_require__(36);
-var GetValue = __webpack_require__(11);
+var MATH = __webpack_require__(38);
+var GetValue = __webpack_require__(12);
 
 /**
  * Retrieves a value from an object. Allows for more advanced selection options, including:
@@ -8061,17 +8296,17 @@ module.exports = GetAdvancedValue;
 
 
 /***/ }),
-/* 36 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var CONST = __webpack_require__(1);
-var Extend = __webpack_require__(14);
+var Extend = __webpack_require__(15);
 
 /**
  * @namespace Phaser.Math
@@ -8080,62 +8315,62 @@ var Extend = __webpack_require__(14);
 var PhaserMath = {
 
     //  Collections of functions
-    Angle: __webpack_require__(37),
-    Distance: __webpack_require__(44),
-    Easing: __webpack_require__(48),
-    Fuzzy: __webpack_require__(93),
-    Interpolation: __webpack_require__(99),
-    Pow2: __webpack_require__(107),
-    Snap: __webpack_require__(111),
+    Angle: __webpack_require__(39),
+    Distance: __webpack_require__(48),
+    Easing: __webpack_require__(56),
+    Fuzzy: __webpack_require__(101),
+    Interpolation: __webpack_require__(106),
+    Pow2: __webpack_require__(114),
+    Snap: __webpack_require__(118),
 
     //  Expose the RNG Class
-    RandomDataGenerator: __webpack_require__(115),
+    RandomDataGenerator: __webpack_require__(122),
 
     //  Single functions
-    Average: __webpack_require__(116),
-    Bernstein: __webpack_require__(19),
-    Between: __webpack_require__(117),
-    CatmullRom: __webpack_require__(21),
-    CeilTo: __webpack_require__(118),
-    Clamp: __webpack_require__(8),
-    DegToRad: __webpack_require__(25),
-    Difference: __webpack_require__(119),
-    Factorial: __webpack_require__(20),
-    FloatBetween: __webpack_require__(120),
-    FloorTo: __webpack_require__(121),
-    FromPercent: __webpack_require__(122),
-    GetSpeed: __webpack_require__(123),
-    IsEven: __webpack_require__(124),
-    IsEvenStrict: __webpack_require__(125),
-    Linear: __webpack_require__(22),
-    MaxAdd: __webpack_require__(126),
-    MinSub: __webpack_require__(127),
-    Percent: __webpack_require__(128),
-    RadToDeg: __webpack_require__(9),
-    RandomXY: __webpack_require__(129),
-    RandomXYZ: __webpack_require__(130),
-    RandomXYZW: __webpack_require__(131),
-    Rotate: __webpack_require__(132),
-    RotateAround: __webpack_require__(133),
-    RotateAroundDistance: __webpack_require__(134),
-    RoundAwayFromZero: __webpack_require__(135),
-    RoundTo: __webpack_require__(136),
-    SinCosTableGenerator: __webpack_require__(137),
-    SmootherStep: __webpack_require__(24),
-    SmoothStep: __webpack_require__(23),
-    ToXY: __webpack_require__(138),
-    TransformXY: __webpack_require__(139),
-    Within: __webpack_require__(140),
+    Average: __webpack_require__(123),
+    Bernstein: __webpack_require__(21),
+    Between: __webpack_require__(124),
+    CatmullRom: __webpack_require__(23),
+    CeilTo: __webpack_require__(125),
+    Clamp: __webpack_require__(9),
+    DegToRad: __webpack_require__(27),
+    Difference: __webpack_require__(126),
+    Factorial: __webpack_require__(22),
+    FloatBetween: __webpack_require__(8),
+    FloorTo: __webpack_require__(127),
+    FromPercent: __webpack_require__(128),
+    GetSpeed: __webpack_require__(129),
+    IsEven: __webpack_require__(130),
+    IsEvenStrict: __webpack_require__(131),
+    Linear: __webpack_require__(24),
+    MaxAdd: __webpack_require__(132),
+    MinSub: __webpack_require__(133),
+    Percent: __webpack_require__(134),
+    RadToDeg: __webpack_require__(10),
+    RandomXY: __webpack_require__(135),
+    RandomXYZ: __webpack_require__(136),
+    RandomXYZW: __webpack_require__(137),
+    Rotate: __webpack_require__(138),
+    RotateAround: __webpack_require__(139),
+    RotateAroundDistance: __webpack_require__(140),
+    RoundAwayFromZero: __webpack_require__(141),
+    RoundTo: __webpack_require__(142),
+    SinCosTableGenerator: __webpack_require__(143),
+    SmootherStep: __webpack_require__(26),
+    SmoothStep: __webpack_require__(25),
+    ToXY: __webpack_require__(144),
+    TransformXY: __webpack_require__(145),
+    Within: __webpack_require__(146),
     Wrap: __webpack_require__(4),
 
     //  Vector classes
     Vector2: __webpack_require__(5),
-    Vector3: __webpack_require__(10),
-    Vector4: __webpack_require__(141),
-    Matrix3: __webpack_require__(26),
-    Matrix4: __webpack_require__(27),
-    Quaternion: __webpack_require__(28),
-    RotateVec3: __webpack_require__(142)
+    Vector3: __webpack_require__(11),
+    Vector4: __webpack_require__(147),
+    Matrix3: __webpack_require__(28),
+    Matrix4: __webpack_require__(29),
+    Quaternion: __webpack_require__(30),
+    RotateVec3: __webpack_require__(148)
 
 };
 
@@ -8149,12 +8384,12 @@ module.exports = PhaserMath;
 
 
 /***/ }),
-/* 37 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8164,28 +8399,30 @@ module.exports = PhaserMath;
 
 module.exports = {
 
-    Between: __webpack_require__(15),
-    BetweenPoints: __webpack_require__(38),
-    BetweenPointsY: __webpack_require__(39),
-    BetweenY: __webpack_require__(40),
+    Between: __webpack_require__(16),
+    BetweenPoints: __webpack_require__(40),
+    BetweenPointsY: __webpack_require__(41),
+    BetweenY: __webpack_require__(42),
     CounterClockwise: __webpack_require__(7),
-    Normalize: __webpack_require__(16),
-    Reverse: __webpack_require__(41),
-    RotateTo: __webpack_require__(42),
-    ShortestBetween: __webpack_require__(43),
-    Wrap: __webpack_require__(17),
-    WrapDegrees: __webpack_require__(18)
+    Normalize: __webpack_require__(17),
+    Random: __webpack_require__(43),
+    RandomDegrees: __webpack_require__(44),
+    Reverse: __webpack_require__(45),
+    RotateTo: __webpack_require__(46),
+    ShortestBetween: __webpack_require__(47),
+    Wrap: __webpack_require__(18),
+    WrapDegrees: __webpack_require__(19)
 
 };
 
 
 /***/ }),
-/* 38 */
+/* 40 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8197,8 +8434,8 @@ module.exports = {
  * @function Phaser.Math.Angle.BetweenPoints
  * @since 3.0.0
  *
- * @param {(Phaser.Geom.Point|object)} point1 - The first point.
- * @param {(Phaser.Geom.Point|object)} point2 - The second point.
+ * @param {Phaser.Types.Math.Vector2Like} point1 - The first point.
+ * @param {Phaser.Types.Math.Vector2Like} point2 - The second point.
  *
  * @return {number} The angle in radians.
  */
@@ -8211,12 +8448,12 @@ module.exports = BetweenPoints;
 
 
 /***/ }),
-/* 39 */
+/* 41 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8229,8 +8466,8 @@ module.exports = BetweenPoints;
  * @function Phaser.Math.Angle.BetweenPointsY
  * @since 3.0.0
  *
- * @param {(Phaser.Geom.Point|object)} point1 - The first point.
- * @param {(Phaser.Geom.Point|object)} point2 - The second point.
+ * @param {Phaser.Types.Math.Vector2Like} point1 - The first point.
+ * @param {Phaser.Types.Math.Vector2Like} point2 - The second point.
  *
  * @return {number} The angle in radians.
  */
@@ -8243,12 +8480,12 @@ module.exports = BetweenPointsY;
 
 
 /***/ }),
-/* 40 */
+/* 42 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8277,16 +8514,74 @@ module.exports = BetweenY;
 
 
 /***/ }),
-/* 41 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @author       @samme
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Normalize = __webpack_require__(16);
+var FloatBetween = __webpack_require__(8);
+
+/**
+ * Returns a random angle in the range [-pi, pi].
+ *
+ * @function Phaser.Math.Angle.Random
+ * @since 3.23.0
+ *
+ * @return {number} The angle, in radians.
+ */
+var Random = function ()
+{
+    return FloatBetween(-Math.PI, Math.PI);
+};
+
+module.exports = Random;
+
+
+/***/ }),
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @author       @samme
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var FloatBetween = __webpack_require__(8);
+
+/**
+ * Returns a random angle in the range [-180, 180].
+ *
+ * @function Phaser.Math.Angle.RandomDegrees
+ * @since 3.23.0
+ *
+ * @return {number} The angle, in degrees.
+ */
+var RandomDegrees = function ()
+{
+    return FloatBetween(-180, 180);
+};
+
+module.exports = RandomDegrees;
+
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Normalize = __webpack_require__(17);
 
 /**
  * Reverse the given angle.
@@ -8307,12 +8602,12 @@ module.exports = Reverse;
 
 
 /***/ }),
-/* 42 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8374,12 +8669,12 @@ module.exports = RotateTo;
 
 
 /***/ }),
-/* 43 */
+/* 47 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8423,12 +8718,12 @@ module.exports = ShortestBetween;
 
 
 /***/ }),
-/* 44 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8438,20 +8733,24 @@ module.exports = ShortestBetween;
 
 module.exports = {
 
-    Between: __webpack_require__(45),
-    Power: __webpack_require__(46),
-    Squared: __webpack_require__(47)
+    Between: __webpack_require__(49),
+    BetweenPoints: __webpack_require__(50),
+    BetweenPointsSquared: __webpack_require__(51),
+    Chebyshev: __webpack_require__(52),
+    Power: __webpack_require__(53),
+    Snake: __webpack_require__(54),
+    Squared: __webpack_require__(55)
 
 };
 
 
 /***/ }),
-/* 45 */
+/* 49 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8480,12 +8779,110 @@ module.exports = DistanceBetween;
 
 
 /***/ }),
-/* 46 */
+/* 50 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       samme
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculate the distance between two points.
+ *
+ * @function Phaser.Math.Distance.BetweenPoints
+ * @since 3.22.0
+ *
+ * @param {Phaser.Types.Math.Vector2Like} a - The first point.
+ * @param {Phaser.Types.Math.Vector2Like} b - The second point.
+ *
+ * @return {number} The distance between the points.
+ */
+var DistanceBetweenPoints = function (a, b)
+{
+    var dx = a.x - b.x;
+    var dy = a.y - b.y;
+
+    return Math.sqrt(dx * dx + dy * dy);
+};
+
+module.exports = DistanceBetweenPoints;
+
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       samme
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculate the squared distance between two points.
+ *
+ * @function Phaser.Math.Distance.BetweenPointsSquared
+ * @since 3.22.0
+ *
+ * @param {Phaser.Types.Math.Vector2Like} a - The first point.
+ * @param {Phaser.Types.Math.Vector2Like} b - The second point.
+ *
+ * @return {number} The squared distance between the points.
+ */
+var DistanceBetweenPointsSquared = function (a, b)
+{
+    var dx = a.x - b.x;
+    var dy = a.y - b.y;
+
+    return dx * dx + dy * dy;
+};
+
+module.exports = DistanceBetweenPointsSquared;
+
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       samme
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculate the Chebyshev distance between two sets of coordinates (points).
+ *
+ * Chebyshev distance (or chessboard distance) is the maximum of the horizontal and vertical distances.
+ * It's the effective distance when movement can be horizontal, vertical, or diagonal.
+ *
+ * @function Phaser.Math.Distance.Chebyshev
+ * @since 3.22.0
+ *
+ * @param {number} x1 - The x coordinate of the first point.
+ * @param {number} y1 - The y coordinate of the first point.
+ * @param {number} x2 - The x coordinate of the second point.
+ * @param {number} y2 - The y coordinate of the second point.
+ *
+ * @return {number} The distance between each point.
+ */
+var ChebyshevDistance = function (x1, y1, x2, y2)
+{
+    return Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
+};
+
+module.exports = ChebyshevDistance;
+
+
+/***/ }),
+/* 53 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8514,12 +8911,46 @@ module.exports = DistancePower;
 
 
 /***/ }),
-/* 47 */
+/* 54 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       samme
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculate the snake distance between two sets of coordinates (points).
+ *
+ * Snake distance (rectilinear distance, Manhattan distance) is the sum of the horizontal and vertical distances.
+ * It's the effective distance when movement is allowed only horizontally or vertically (but not both).
+ *
+ * @function Phaser.Math.Distance.Snake
+ * @since 3.22.0
+ *
+ * @param {number} x1 - The x coordinate of the first point.
+ * @param {number} y1 - The y coordinate of the first point.
+ * @param {number} x2 - The x coordinate of the second point.
+ * @param {number} y2 - The y coordinate of the second point.
+ *
+ * @return {number} The distance between each point.
+ */
+var SnakeDistance = function (x1, y1, x2, y2)
+{
+    return Math.abs(x1 - x2) + Math.abs(y1 - y2);
+};
+
+module.exports = SnakeDistance;
+
+
+/***/ }),
+/* 55 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8548,12 +8979,12 @@ module.exports = DistanceSquared;
 
 
 /***/ }),
-/* 48 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8563,29 +8994,29 @@ module.exports = DistanceSquared;
 
 module.exports = {
 
-    Back: __webpack_require__(49),
-    Bounce: __webpack_require__(53),
-    Circular: __webpack_require__(57),
-    Cubic: __webpack_require__(61),
-    Elastic: __webpack_require__(65),
-    Expo: __webpack_require__(69),
-    Linear: __webpack_require__(73),
-    Quadratic: __webpack_require__(75),
-    Quartic: __webpack_require__(79),
-    Quintic: __webpack_require__(83),
-    Sine: __webpack_require__(87),
-    Stepped: __webpack_require__(91)
+    Back: __webpack_require__(57),
+    Bounce: __webpack_require__(61),
+    Circular: __webpack_require__(65),
+    Cubic: __webpack_require__(69),
+    Elastic: __webpack_require__(73),
+    Expo: __webpack_require__(77),
+    Linear: __webpack_require__(81),
+    Quadratic: __webpack_require__(83),
+    Quartic: __webpack_require__(87),
+    Quintic: __webpack_require__(91),
+    Sine: __webpack_require__(95),
+    Stepped: __webpack_require__(99)
 
 };
 
 
 /***/ }),
-/* 49 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8595,20 +9026,20 @@ module.exports = {
 
 module.exports = {
 
-    In: __webpack_require__(50),
-    Out: __webpack_require__(51),
-    InOut: __webpack_require__(52)
+    In: __webpack_require__(58),
+    Out: __webpack_require__(59),
+    InOut: __webpack_require__(60)
 
 };
 
 
 /***/ }),
-/* 50 */
+/* 58 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8634,12 +9065,12 @@ module.exports = In;
 
 
 /***/ }),
-/* 51 */
+/* 59 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8665,12 +9096,12 @@ module.exports = Out;
 
 
 /***/ }),
-/* 52 */
+/* 60 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8705,12 +9136,12 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 53 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8720,20 +9151,20 @@ module.exports = InOut;
 
 module.exports = {
 
-    In: __webpack_require__(54),
-    Out: __webpack_require__(55),
-    InOut: __webpack_require__(56)
+    In: __webpack_require__(62),
+    Out: __webpack_require__(63),
+    InOut: __webpack_require__(64)
 
 };
 
 
 /***/ }),
-/* 54 */
+/* 62 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8773,12 +9204,12 @@ module.exports = In;
 
 
 /***/ }),
-/* 55 */
+/* 63 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8816,12 +9247,12 @@ module.exports = Out;
 
 
 /***/ }),
-/* 56 */
+/* 64 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8880,12 +9311,12 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 57 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8895,20 +9326,20 @@ module.exports = InOut;
 
 module.exports = {
 
-    In: __webpack_require__(58),
-    Out: __webpack_require__(59),
-    InOut: __webpack_require__(60)
+    In: __webpack_require__(66),
+    Out: __webpack_require__(67),
+    InOut: __webpack_require__(68)
 
 };
 
 
 /***/ }),
-/* 58 */
+/* 66 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8931,12 +9362,12 @@ module.exports = In;
 
 
 /***/ }),
-/* 59 */
+/* 67 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8959,12 +9390,12 @@ module.exports = Out;
 
 
 /***/ }),
-/* 60 */
+/* 68 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8994,12 +9425,12 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 61 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9009,20 +9440,20 @@ module.exports = InOut;
 
 module.exports = {
 
-    In: __webpack_require__(62),
-    Out: __webpack_require__(63),
-    InOut: __webpack_require__(64)
+    In: __webpack_require__(70),
+    Out: __webpack_require__(71),
+    InOut: __webpack_require__(72)
 
 };
 
 
 /***/ }),
-/* 62 */
+/* 70 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9045,12 +9476,12 @@ module.exports = In;
 
 
 /***/ }),
-/* 63 */
+/* 71 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9073,12 +9504,12 @@ module.exports = Out;
 
 
 /***/ }),
-/* 64 */
+/* 72 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9108,12 +9539,12 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 65 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9123,20 +9554,20 @@ module.exports = InOut;
 
 module.exports = {
 
-    In: __webpack_require__(66),
-    Out: __webpack_require__(67),
-    InOut: __webpack_require__(68)
+    In: __webpack_require__(74),
+    Out: __webpack_require__(75),
+    InOut: __webpack_require__(76)
 
 };
 
 
 /***/ }),
-/* 66 */
+/* 74 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9186,12 +9617,12 @@ module.exports = In;
 
 
 /***/ }),
-/* 67 */
+/* 75 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9241,12 +9672,12 @@ module.exports = Out;
 
 
 /***/ }),
-/* 68 */
+/* 76 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9303,12 +9734,12 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 69 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9318,20 +9749,20 @@ module.exports = InOut;
 
 module.exports = {
 
-    In: __webpack_require__(70),
-    Out: __webpack_require__(71),
-    InOut: __webpack_require__(72)
+    In: __webpack_require__(78),
+    Out: __webpack_require__(79),
+    InOut: __webpack_require__(80)
 
 };
 
 
 /***/ }),
-/* 70 */
+/* 78 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9354,12 +9785,12 @@ module.exports = In;
 
 
 /***/ }),
-/* 71 */
+/* 79 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9382,12 +9813,12 @@ module.exports = Out;
 
 
 /***/ }),
-/* 72 */
+/* 80 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9417,36 +9848,32 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 73 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-/**
- * @namespace Phaser.Math.Easing.Linear
- */
-
-module.exports = __webpack_require__(74);
+module.exports = __webpack_require__(82);
 
 
 /***/ }),
-/* 74 */
+/* 82 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Linear easing (no variation).
  *
- * @function Phaser.Math.Easing.Linear.Linear
+ * @function Phaser.Math.Easing.Linear
  * @since 3.0.0
  *
  * @param {number} v - The value to be tweened.
@@ -9462,12 +9889,12 @@ module.exports = Linear;
 
 
 /***/ }),
-/* 75 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9477,20 +9904,20 @@ module.exports = Linear;
 
 module.exports = {
 
-    In: __webpack_require__(76),
-    Out: __webpack_require__(77),
-    InOut: __webpack_require__(78)
+    In: __webpack_require__(84),
+    Out: __webpack_require__(85),
+    InOut: __webpack_require__(86)
 
 };
 
 
 /***/ }),
-/* 76 */
+/* 84 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9513,12 +9940,12 @@ module.exports = In;
 
 
 /***/ }),
-/* 77 */
+/* 85 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9541,12 +9968,12 @@ module.exports = Out;
 
 
 /***/ }),
-/* 78 */
+/* 86 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9576,12 +10003,12 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 79 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9591,20 +10018,20 @@ module.exports = InOut;
 
 module.exports = {
 
-    In: __webpack_require__(80),
-    Out: __webpack_require__(81),
-    InOut: __webpack_require__(82)
+    In: __webpack_require__(88),
+    Out: __webpack_require__(89),
+    InOut: __webpack_require__(90)
 
 };
 
 
 /***/ }),
-/* 80 */
+/* 88 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9627,12 +10054,12 @@ module.exports = In;
 
 
 /***/ }),
-/* 81 */
+/* 89 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9655,12 +10082,12 @@ module.exports = Out;
 
 
 /***/ }),
-/* 82 */
+/* 90 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9690,12 +10117,12 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 83 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9705,20 +10132,20 @@ module.exports = InOut;
 
 module.exports = {
 
-    In: __webpack_require__(84),
-    Out: __webpack_require__(85),
-    InOut: __webpack_require__(86)
+    In: __webpack_require__(92),
+    Out: __webpack_require__(93),
+    InOut: __webpack_require__(94)
 
 };
 
 
 /***/ }),
-/* 84 */
+/* 92 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9741,12 +10168,12 @@ module.exports = In;
 
 
 /***/ }),
-/* 85 */
+/* 93 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9769,12 +10196,12 @@ module.exports = Out;
 
 
 /***/ }),
-/* 86 */
+/* 94 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9804,12 +10231,12 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 87 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9819,20 +10246,20 @@ module.exports = InOut;
 
 module.exports = {
 
-    In: __webpack_require__(88),
-    Out: __webpack_require__(89),
-    InOut: __webpack_require__(90)
+    In: __webpack_require__(96),
+    Out: __webpack_require__(97),
+    InOut: __webpack_require__(98)
 
 };
 
 
 /***/ }),
-/* 88 */
+/* 96 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9866,12 +10293,12 @@ module.exports = In;
 
 
 /***/ }),
-/* 89 */
+/* 97 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9905,12 +10332,12 @@ module.exports = Out;
 
 
 /***/ }),
-/* 90 */
+/* 98 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9944,12 +10371,12 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 91 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9957,23 +10384,23 @@ module.exports = InOut;
  * @namespace Phaser.Math.Easing.Stepped
  */
 
-module.exports = __webpack_require__(92);
+module.exports = __webpack_require__(100);
 
 
 /***/ }),
-/* 92 */
+/* 100 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Stepped easing.
  *
- * @function Phaser.Math.Easing.Stepped.Stepped
+ * @function Phaser.Math.Easing.Stepped
  * @since 3.0.0
  *
  * @param {number} v - The value to be tweened.
@@ -10003,12 +10430,12 @@ module.exports = Stepped;
 
 
 /***/ }),
-/* 93 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10018,22 +10445,22 @@ module.exports = Stepped;
 
 module.exports = {
 
-    Ceil: __webpack_require__(94),
-    Equal: __webpack_require__(95),
-    Floor: __webpack_require__(96),
-    GreaterThan: __webpack_require__(97),
-    LessThan: __webpack_require__(98)
+    Ceil: __webpack_require__(102),
+    Equal: __webpack_require__(20),
+    Floor: __webpack_require__(103),
+    GreaterThan: __webpack_require__(104),
+    LessThan: __webpack_require__(105)
 
 };
 
 
 /***/ }),
-/* 94 */
+/* 102 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10059,46 +10486,12 @@ module.exports = Ceil;
 
 
 /***/ }),
-/* 95 */
+/* 103 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * Check whether the given values are fuzzily equal.
- *
- * Two numbers are fuzzily equal if their difference is less than `epsilon`.
- *
- * @function Phaser.Math.Fuzzy.Equal
- * @since 3.0.0
- *
- * @param {number} a - The first value.
- * @param {number} b - The second value.
- * @param {number} [epsilon=0.0001] - The epsilon.
- *
- * @return {boolean} `true` if the values are fuzzily equal, otherwise `false`.
- */
-var Equal = function (a, b, epsilon)
-{
-    if (epsilon === undefined) { epsilon = 0.0001; }
-
-    return Math.abs(a - b) < epsilon;
-};
-
-module.exports = Equal;
-
-
-/***/ }),
-/* 96 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10124,12 +10517,12 @@ module.exports = Floor;
 
 
 /***/ }),
-/* 97 */
+/* 104 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10158,12 +10551,12 @@ module.exports = GreaterThan;
 
 
 /***/ }),
-/* 98 */
+/* 105 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10192,12 +10585,12 @@ module.exports = LessThan;
 
 
 /***/ }),
-/* 99 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10207,28 +10600,28 @@ module.exports = LessThan;
 
 module.exports = {
 
-    Bezier: __webpack_require__(100),
-    CatmullRom: __webpack_require__(101),
-    CubicBezier: __webpack_require__(102),
-    Linear: __webpack_require__(103),
-    QuadraticBezier: __webpack_require__(104),
-    SmoothStep: __webpack_require__(105),
-    SmootherStep: __webpack_require__(106)
+    Bezier: __webpack_require__(107),
+    CatmullRom: __webpack_require__(108),
+    CubicBezier: __webpack_require__(109),
+    Linear: __webpack_require__(110),
+    QuadraticBezier: __webpack_require__(111),
+    SmoothStep: __webpack_require__(112),
+    SmootherStep: __webpack_require__(113)
 
 };
 
 
 /***/ }),
-/* 100 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Bernstein = __webpack_require__(19);
+var Bernstein = __webpack_require__(21);
 
 /**
  * A bezier interpolation method.
@@ -10258,16 +10651,16 @@ module.exports = BezierInterpolation;
 
 
 /***/ }),
-/* 101 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CatmullRom = __webpack_require__(21);
+var CatmullRom = __webpack_require__(23);
 
 /**
  * A Catmull-Rom interpolation method.
@@ -10315,12 +10708,12 @@ module.exports = CatmullRomInterpolation;
 
 
 /***/ }),
-/* 102 */
+/* 109 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10385,16 +10778,16 @@ module.exports = CubicBezierInterpolation;
 
 
 /***/ }),
-/* 103 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Linear = __webpack_require__(22);
+var Linear = __webpack_require__(24);
 
 /**
  * A linear interpolation method.
@@ -10432,12 +10825,12 @@ module.exports = LinearInterpolation;
 
 
 /***/ }),
-/* 104 */
+/* 111 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10491,16 +10884,16 @@ module.exports = QuadraticBezierInterpolation;
 
 
 /***/ }),
-/* 105 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var SmoothStep = __webpack_require__(23);
+var SmoothStep = __webpack_require__(25);
 
 /**
  * A Smooth Step interpolation method.
@@ -10524,16 +10917,16 @@ module.exports = SmoothStepInterpolation;
 
 
 /***/ }),
-/* 106 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var SmootherStep = __webpack_require__(24);
+var SmootherStep = __webpack_require__(26);
 
 /**
  * A Smoother Step interpolation method.
@@ -10557,12 +10950,12 @@ module.exports = SmootherStepInterpolation;
 
 
 /***/ }),
-/* 107 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10572,27 +10965,27 @@ module.exports = SmootherStepInterpolation;
 
 module.exports = {
 
-    GetNext: __webpack_require__(108),
-    IsSize: __webpack_require__(109),
-    IsValue: __webpack_require__(110)
+    GetNext: __webpack_require__(115),
+    IsSize: __webpack_require__(116),
+    IsValue: __webpack_require__(117)
 
 };
 
 
 /***/ }),
-/* 108 */
+/* 115 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Returns the nearest power of 2 to the given `value`.
  *
- * @function Phaser.Math.Pow2.GetPowerOfTwo
+ * @function Phaser.Math.Pow2.GetNext
  * @since 3.0.0
  *
  * @param {number} value - The value.
@@ -10610,12 +11003,12 @@ module.exports = GetPowerOfTwo;
 
 
 /***/ }),
-/* 109 */
+/* 116 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10623,7 +11016,7 @@ module.exports = GetPowerOfTwo;
  * Checks if the given `width` and `height` are a power of two.
  * Useful for checking texture dimensions.
  *
- * @function Phaser.Math.Pow2.IsSizePowerOfTwo
+ * @function Phaser.Math.Pow2.IsSize
  * @since 3.0.0
  *
  * @param {number} width - The width.
@@ -10640,19 +11033,19 @@ module.exports = IsSizePowerOfTwo;
 
 
 /***/ }),
-/* 110 */
+/* 117 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Tests the value and returns `true` if it is a power of two.
  *
- * @function Phaser.Math.Pow2.IsValuePowerOfTwo
+ * @function Phaser.Math.Pow2.IsValue
  * @since 3.0.0
  *
  * @param {number} value - The value to check if it's a power of two.
@@ -10668,12 +11061,12 @@ module.exports = IsValuePowerOfTwo;
 
 
 /***/ }),
-/* 111 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10683,20 +11076,20 @@ module.exports = IsValuePowerOfTwo;
 
 module.exports = {
 
-    Ceil: __webpack_require__(112),
-    Floor: __webpack_require__(113),
-    To: __webpack_require__(114)
+    Ceil: __webpack_require__(119),
+    Floor: __webpack_require__(120),
+    To: __webpack_require__(121)
 
 };
 
 
 /***/ }),
-/* 112 */
+/* 119 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10735,12 +11128,12 @@ module.exports = SnapCeil;
 
 
 /***/ }),
-/* 113 */
+/* 120 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10779,12 +11172,12 @@ module.exports = SnapFloor;
 
 
 /***/ }),
-/* 114 */
+/* 121 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10822,12 +11215,12 @@ module.exports = SnapTo;
 
 
 /***/ }),
-/* 115 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11174,10 +11567,14 @@ var RandomDataGenerator = new Class({
      *
      * @method Phaser.Math.RandomDataGenerator#pick
      * @since 3.0.0
+     * 
+     * @generic T
+     * @genericUse {T[]} - [array]
+     * @genericUse {T} - [$return]
      *
-     * @param {array} array - The array to pick a random element from.
+     * @param {T[]} array - The array to pick a random element from.
      *
-     * @return {*} A random member of the array.
+     * @return {T} A random member of the array.
      */
     pick: function (array)
     {
@@ -11203,9 +11600,13 @@ var RandomDataGenerator = new Class({
      * @method Phaser.Math.RandomDataGenerator#weightedPick
      * @since 3.0.0
      *
-     * @param {array} array - The array to pick a random element from.
+     * @generic T
+     * @genericUse {T[]} - [array]
+     * @genericUse {T} - [$return]
      *
-     * @return {*} A random member of the array.
+     * @param {T[]} array - The array to pick a random element from.
+     *
+     * @return {T} A random member of the array.
      */
     weightedPick: function (array)
     {
@@ -11295,9 +11696,12 @@ var RandomDataGenerator = new Class({
      * @method Phaser.Math.RandomDataGenerator#shuffle
      * @since 3.7.0
      *
-     * @param {array} [array] - The array to be shuffled.
+     * @generic T
+     * @genericUse {T[]} - [array,$return]
      *
-     * @return {array} The shuffled array.
+     * @param {T[]} [array] - The array to be shuffled.
+     *
+     * @return {T[]} The shuffled array.
      */
     shuffle: function (array)
     {
@@ -11321,12 +11725,12 @@ module.exports = RandomDataGenerator;
 
 
 /***/ }),
-/* 116 */
+/* 123 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11356,12 +11760,12 @@ module.exports = Average;
 
 
 /***/ }),
-/* 117 */
+/* 124 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11385,12 +11789,12 @@ module.exports = Between;
 
 
 /***/ }),
-/* 118 */
+/* 125 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11422,12 +11826,12 @@ module.exports = CeilTo;
 
 
 /***/ }),
-/* 119 */
+/* 126 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11451,41 +11855,12 @@ module.exports = Difference;
 
 
 /***/ }),
-/* 120 */
+/* 127 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * Generate a random floating point number between the two given bounds, minimum inclusive, maximum exclusive.
- *
- * @function Phaser.Math.FloatBetween
- * @since 3.0.0
- *
- * @param {number} min - The lower bound for the float, inclusive.
- * @param {number} max - The upper bound for the float exclusive.
- *
- * @return {number} A random float within the given range.
- */
-var FloatBetween = function (min, max)
-{
-    return Math.random() * (max - min) + min;
-};
-
-module.exports = FloatBetween;
-
-
-/***/ }),
-/* 121 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11517,16 +11892,16 @@ module.exports = FloorTo;
 
 
 /***/ }),
-/* 122 */
+/* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Clamp = __webpack_require__(8);
+var Clamp = __webpack_require__(9);
 
 /**
  * Return a value based on the range between `min` and `max` and the percentage given.
@@ -11551,25 +11926,29 @@ module.exports = FromPercent;
 
 
 /***/ }),
-/* 123 */
+/* 129 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Calculate the speed required to cover a distance in the time given.
+ * Calculate a per-ms speed from a distance and time (given in seconds).
  *
  * @function Phaser.Math.GetSpeed
  * @since 3.0.0
  *
- * @param {number} distance - The distance to travel in pixels.
- * @param {integer} time - The time, in ms, to cover the distance in.
+ * @param {number} distance - The distance.
+ * @param {integer} time - The time, in seconds.
  *
- * @return {number} The amount you will need to increment the position by each step in order to cover the distance in the time given.
+ * @return {number} The speed, in distance per ms.
+ *
+ * @example
+ * // 400px over 1 second is 0.4 px/ms
+ * Phaser.Math.GetSpeed(400, 1) // -> 0.4
  */
 var GetSpeed = function (distance, time)
 {
@@ -11580,12 +11959,12 @@ module.exports = GetSpeed;
 
 
 /***/ }),
-/* 124 */
+/* 130 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11611,12 +11990,12 @@ module.exports = IsEven;
 
 
 /***/ }),
-/* 125 */
+/* 131 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11640,12 +12019,12 @@ module.exports = IsEvenStrict;
 
 
 /***/ }),
-/* 126 */
+/* 132 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11670,12 +12049,12 @@ module.exports = MaxAdd;
 
 
 /***/ }),
-/* 127 */
+/* 133 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11700,12 +12079,12 @@ module.exports = MinSub;
 
 
 /***/ }),
-/* 128 */
+/* 134 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11759,12 +12138,12 @@ module.exports = Percent;
 
 
 /***/ }),
-/* 129 */
+/* 135 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11799,12 +12178,12 @@ module.exports = RandomXY;
 
 
 /***/ }),
-/* 130 */
+/* 136 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11838,12 +12217,12 @@ module.exports = RandomXYZ;
 
 
 /***/ }),
-/* 131 */
+/* 137 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11875,12 +12254,12 @@ module.exports = RandomXYZW;
 
 
 /***/ }),
-/* 132 */
+/* 138 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11910,27 +12289,31 @@ module.exports = Rotate;
 
 
 /***/ }),
-/* 133 */
+/* 139 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Rotate a `point` around `x` and `y` by the given `angle`.
+ * Rotate a `point` around `x` and `y` to the given `angle`, at the same distance.
+ *
+ * In polar notation, this maps a point from (r, t) to (r, angle), vs. the origin (x, y).
  *
  * @function Phaser.Math.RotateAround
  * @since 3.0.0
+ *
+ * @generic {Phaser.Types.Math.Vector2Like} T - [point,$return]
  *
  * @param {(Phaser.Geom.Point|object)} point - The point to be rotated.
  * @param {number} x - The horizontal coordinate to rotate around.
  * @param {number} y - The vertical coordinate to rotate around.
  * @param {number} angle - The angle of rotation in radians.
  *
- * @return {Phaser.Geom.Point} The given point, rotated by the given angle around the given coordinates.
+ * @return {Phaser.Types.Math.Vector2Like} The given point.
  */
 var RotateAround = function (point, x, y, angle)
 {
@@ -11950,20 +12333,24 @@ module.exports = RotateAround;
 
 
 /***/ }),
-/* 134 */
+/* 140 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Rotate a `point` around `x` and `y` by the given `angle` and `distance`.
  *
+ * In polar notation, this maps a point from (r, t) to (distance, t + angle), vs. the origin (x, y).
+ *
  * @function Phaser.Math.RotateAroundDistance
  * @since 3.0.0
+ *
+ * @generic {Phaser.Types.Math.Vector2Like} T - [point,$return]
  *
  * @param {(Phaser.Geom.Point|object)} point - The point to be rotated.
  * @param {number} x - The horizontal coordinate to rotate around.
@@ -11971,7 +12358,7 @@ module.exports = RotateAround;
  * @param {number} angle - The angle of rotation in radians.
  * @param {number} distance - The distance from (x, y) to place the point at.
  *
- * @return {Phaser.Geom.Point} The given point.
+ * @return {Phaser.Types.Math.Vector2Like} The given point.
  */
 var RotateAroundDistance = function (point, x, y, angle, distance)
 {
@@ -11987,12 +12374,12 @@ module.exports = RotateAroundDistance;
 
 
 /***/ }),
-/* 135 */
+/* 141 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12016,12 +12403,12 @@ module.exports = RoundAwayFromZero;
 
 
 /***/ }),
-/* 136 */
+/* 142 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12068,12 +12455,12 @@ module.exports = RoundTo;
 
 
 /***/ }),
-/* 137 */
+/* 143 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12121,23 +12508,23 @@ module.exports = SinCosTableGenerator;
 
 
 /***/ }),
-/* 138 */
+/* 144 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Vector2 = __webpack_require__(5);
 
 /**
- * Returns a Vec2 containing the x and y position of the given index in a `width` x `height` sized grid.
+ * Returns a Vector2 containing the x and y position of the given index in a `width` x `height` sized grid.
  * 
  * For example, in a 6 x 4 grid, index 16 would equal x: 4 y: 2.
  * 
- * If the given index is out of range an empty Vec2 is returned.
+ * If the given index is out of range an empty Vector2 is returned.
  *
  * @function Phaser.Math.ToXY
  * @since 3.19.0
@@ -12179,12 +12566,12 @@ module.exports = ToXY;
 
 
 /***/ }),
-/* 139 */
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12234,12 +12621,12 @@ module.exports = TransformXY;
 
 
 /***/ }),
-/* 140 */
+/* 146 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12264,12 +12651,12 @@ module.exports = Within;
 
 
 /***/ }),
-/* 141 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12809,18 +13196,18 @@ module.exports = Vector4;
 
 
 /***/ }),
-/* 142 */
+/* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Vector3 = __webpack_require__(10);
-var Matrix4 = __webpack_require__(27);
-var Quaternion = __webpack_require__(28);
+var Vector3 = __webpack_require__(11);
+var Matrix4 = __webpack_require__(29);
+var Quaternion = __webpack_require__(30);
 
 var tmpMat4 = new Matrix4();
 var tmpQuat = new Quaternion();
@@ -12857,12 +13244,12 @@ module.exports = RotateVec3;
 
 
 /***/ }),
-/* 143 */
+/* 149 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12888,18 +13275,18 @@ module.exports = 'resize';
 
 
 /***/ }),
-/* 144 */
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2019 Photon Storm Ltd.
+* @copyright    2020 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser3-plugin-template/blob/master/LICENSE|MIT License}
 */
 
-var BasePlugin = __webpack_require__(145);
+var BasePlugin = __webpack_require__(151);
 var Class = __webpack_require__(0);
-var SceneEvents = __webpack_require__(146);
+var SceneEvents = __webpack_require__(152);
 
 /**
  * @classdesc
@@ -13016,12 +13403,12 @@ module.exports = ScenePlugin;
 
 
 /***/ }),
-/* 145 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2019 Photon Storm Ltd.
+* @copyright    2020 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser3-plugin-template/blob/master/LICENSE|MIT License}
 */
 
@@ -13146,12 +13533,12 @@ module.exports = BasePlugin;
 
 
 /***/ }),
-/* 146 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13161,36 +13548,36 @@ module.exports = BasePlugin;
 
 module.exports = {
 
-    BOOT: __webpack_require__(147),
-    CREATE: __webpack_require__(148),
-    DESTROY: __webpack_require__(149),
-    PAUSE: __webpack_require__(150),
-    POST_UPDATE: __webpack_require__(151),
-    PRE_UPDATE: __webpack_require__(152),
-    READY: __webpack_require__(153),
-    RENDER: __webpack_require__(154),
-    RESUME: __webpack_require__(155),
-    SHUTDOWN: __webpack_require__(156),
-    SLEEP: __webpack_require__(157),
-    START: __webpack_require__(158),
-    TRANSITION_COMPLETE: __webpack_require__(159),
-    TRANSITION_INIT: __webpack_require__(160),
-    TRANSITION_OUT: __webpack_require__(161),
-    TRANSITION_START: __webpack_require__(162),
-    TRANSITION_WAKE: __webpack_require__(163),
-    UPDATE: __webpack_require__(164),
-    WAKE: __webpack_require__(165)
+    BOOT: __webpack_require__(153),
+    CREATE: __webpack_require__(154),
+    DESTROY: __webpack_require__(155),
+    PAUSE: __webpack_require__(156),
+    POST_UPDATE: __webpack_require__(157),
+    PRE_UPDATE: __webpack_require__(158),
+    READY: __webpack_require__(159),
+    RENDER: __webpack_require__(160),
+    RESUME: __webpack_require__(161),
+    SHUTDOWN: __webpack_require__(162),
+    SLEEP: __webpack_require__(163),
+    START: __webpack_require__(164),
+    TRANSITION_COMPLETE: __webpack_require__(165),
+    TRANSITION_INIT: __webpack_require__(166),
+    TRANSITION_OUT: __webpack_require__(167),
+    TRANSITION_START: __webpack_require__(168),
+    TRANSITION_WAKE: __webpack_require__(169),
+    UPDATE: __webpack_require__(170),
+    WAKE: __webpack_require__(171)
 
 };
 
 
 /***/ }),
-/* 147 */
+/* 153 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13210,12 +13597,12 @@ module.exports = 'boot';
 
 
 /***/ }),
-/* 148 */
+/* 154 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13239,12 +13626,12 @@ module.exports = 'create';
 
 
 /***/ }),
-/* 149 */
+/* 155 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13266,12 +13653,12 @@ module.exports = 'destroy';
 
 
 /***/ }),
-/* 150 */
+/* 156 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13293,12 +13680,12 @@ module.exports = 'pause';
 
 
 /***/ }),
-/* 151 */
+/* 157 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13330,12 +13717,12 @@ module.exports = 'postupdate';
 
 
 /***/ }),
-/* 152 */
+/* 158 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13367,12 +13754,12 @@ module.exports = 'preupdate';
 
 
 /***/ }),
-/* 153 */
+/* 159 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13395,12 +13782,12 @@ module.exports = 'ready';
 
 
 /***/ }),
-/* 154 */
+/* 160 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13431,12 +13818,12 @@ module.exports = 'render';
 
 
 /***/ }),
-/* 155 */
+/* 161 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13458,12 +13845,12 @@ module.exports = 'resume';
 
 
 /***/ }),
-/* 156 */
+/* 162 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13488,12 +13875,12 @@ module.exports = 'shutdown';
 
 
 /***/ }),
-/* 157 */
+/* 163 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13515,12 +13902,12 @@ module.exports = 'sleep';
 
 
 /***/ }),
-/* 158 */
+/* 164 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13540,12 +13927,12 @@ module.exports = 'start';
 
 
 /***/ }),
-/* 159 */
+/* 165 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13576,12 +13963,12 @@ module.exports = 'transitioncomplete';
 
 
 /***/ }),
-/* 160 */
+/* 166 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13613,12 +14000,12 @@ module.exports = 'transitioninit';
 
 
 /***/ }),
-/* 161 */
+/* 167 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13647,12 +14034,12 @@ module.exports = 'transitionout';
 
 
 /***/ }),
-/* 162 */
+/* 168 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13687,12 +14074,12 @@ module.exports = 'transitionstart';
 
 
 /***/ }),
-/* 163 */
+/* 169 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13722,12 +14109,12 @@ module.exports = 'transitionwake';
 
 
 /***/ }),
-/* 164 */
+/* 170 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13759,12 +14146,12 @@ module.exports = 'update';
 
 
 /***/ }),
-/* 165 */
+/* 171 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13786,7 +14173,7 @@ module.exports = 'wake';
 
 
 /***/ }),
-/* 166 */
+/* 172 */
 /***/ (function(module, exports) {
 
 /*** IMPORTS FROM imports-loader ***/
@@ -22203,7 +22590,7 @@ module.exports = spine;
 }.call(window));
 
 /***/ }),
-/* 167 */
+/* 173 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -22214,23 +22601,21 @@ module.exports = spine;
 
 var Class = __webpack_require__(0);
 var GetFastValue = __webpack_require__(3);
-var ImageFile = __webpack_require__(168);
+var ImageFile = __webpack_require__(174);
 var IsPlainObject = __webpack_require__(2);
-var JSONFile = __webpack_require__(182);
-var MultiFile = __webpack_require__(183);
-var TextFile = __webpack_require__(184);
+var JSONFile = __webpack_require__(188);
+var MultiFile = __webpack_require__(189);
+var TextFile = __webpack_require__(190);
 
 /**
  * @typedef {object} Phaser.Loader.FileTypes.SpineFileConfig
  *
  * @property {string} key - The key of the file. Must be unique within both the Loader and the Texture Manager.
- * @property {string} [textureURL] - The absolute or relative URL to load the texture image file from.
- * @property {string} [textureExtension='png'] - The default file extension to use for the image texture if no url is provided.
- * @property {XHRSettingsObject} [textureXhrSettings] - Extra XHR Settings specifically for the texture image file.
- * @property {string} [normalMap] - The filename of an associated normal map. It uses the same path and url to load as the texture image.
- * @property {string} [atlasURL] - The absolute or relative URL to load the atlas data file from.
- * @property {string} [atlasExtension='txt'] - The default file extension to use for the atlas data if no url is provided.
- * @property {XHRSettingsObject} [atlasXhrSettings] - Extra XHR Settings specifically for the atlas data file.
+ * @property {string|string[]} [jsonURL] - The absolute or relative URL to load the JSON file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+ * @property {string} [atlasURL] - The absolute or relative URL to load the texture atlas data file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
+ * @property {boolean} [preMultipliedAlpha=false] - Do the textures contain pre-multiplied alpha or not?
+ * @property {XHRSettingsObject} [jsonXhrSettings] - An XHR Settings configuration object for the json file. Used in replacement of the Loaders default XHR Settings.
+ * @property {XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the atlas data file. Used in replacement of the Loaders default XHR Settings.
  */
 
 /**
@@ -22238,7 +22623,7 @@ var TextFile = __webpack_require__(184);
  * A Spine File suitable for loading by the Loader.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#spine method and are not typically created directly.
- * 
+ *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#spine.
  *
  * @class SpineFile
@@ -22294,7 +22679,7 @@ var SpineFile = new Class({
             for (i = 0; i < atlasURL.length; i++)
             {
                 atlas = new TextFile(loader, {
-                    key: key,
+                    key: key + '_' + i,
                     url: atlasURL[i],
                     extension: GetFastValue(config, 'atlasExtension', 'atlas'),
                     xhrSettings: GetFastValue(config, 'atlasXhrSettings')
@@ -22374,7 +22759,7 @@ var SpineFile = new Class({
                 var currentPrefix = loader.prefix;
 
                 var baseURL = GetFastValue(config, 'baseURL', this.baseURL);
-                var path = GetFastValue(config, 'path', this.path);
+                var path = GetFastValue(config, 'path', file.src.match(/^.*\//))[0];
                 var prefix = GetFastValue(config, 'prefix', this.prefix);
                 var textureXhrSettings = GetFastValue(config, 'textureXhrSettings');
 
@@ -22386,7 +22771,7 @@ var SpineFile = new Class({
                 {
                     var textureURL = textures[i];
 
-                    var key = 'SP' + this.multiKeyIndex + '_' + textureURL;
+                    var key = this.prefix + textureURL;
 
                     var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
 
@@ -22428,7 +22813,7 @@ var SpineFile = new Class({
 
                 if (file.type === 'text')
                 {
-                    atlasKey = file.key.substr(0, file.key.length - 2);
+                    atlasKey = file.key.replace(/_[\d]$/, "");
 
                     atlasCache = file.cache;
 
@@ -22439,14 +22824,14 @@ var SpineFile = new Class({
                     var src = file.key.trim();
                     var pos = src.indexOf('_');
                     var key = src.substr(pos + 1);
-       
+
                     this.loader.textureManager.addImage(key, file.data);
                 }
 
                 file.pendingDestroy();
             }
 
-            atlasCache.add(atlasKey, { preMultipliedAlpha: preMultipliedAlpha, data: combinedAtlasData });
+            atlasCache.add(atlasKey, { preMultipliedAlpha: preMultipliedAlpha, data: combinedAtlasData, prefix: this.prefix });
 
             this.complete = true;
         }
@@ -22458,19 +22843,19 @@ module.exports = SpineFile;
 
 
 /***/ }),
-/* 168 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = __webpack_require__(0);
 var CONST = __webpack_require__(6);
-var File = __webpack_require__(12);
-var FileTypesManager = __webpack_require__(13);
+var File = __webpack_require__(13);
+var FileTypesManager = __webpack_require__(14);
 var GetFastValue = __webpack_require__(3);
 var IsPlainObject = __webpack_require__(2);
 
@@ -22479,7 +22864,7 @@ var IsPlainObject = __webpack_require__(2);
  * A single Image File suitable for loading by the Loader.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#image method and are not typically created directly.
- * 
+ *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#image.
  *
  * @class ImageFile
@@ -22623,7 +23008,7 @@ var ImageFile = new Class({
  * Adds an Image, or array of Images, to the current load queue.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
- * 
+ *
  * ```javascript
  * function preload ()
  * {
@@ -22638,7 +23023,7 @@ var ImageFile = new Class({
  * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
  * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
  * loaded.
- * 
+ *
  * Phaser can load all common image types: png, jpg, gif and any other format the browser can natively handle.
  * If you try to load an animated gif only the first frame will be rendered. Browsers do not natively support playback
  * of animated gifs to Canvas elements.
@@ -22649,7 +23034,7 @@ var ImageFile = new Class({
  * then remove it from the Texture Manager first, before loading a new one.
  *
  * Instead of passing arguments you can pass a configuration object, such as:
- * 
+ *
  * ```javascript
  * this.load.image({
  *     key: 'logo',
@@ -22660,7 +23045,7 @@ var ImageFile = new Class({
  * See the documentation for `Phaser.Types.Loader.FileTypes.ImageFileConfig` for more details.
  *
  * Once the file has finished loading you can use it as a texture for a Game Object by referencing its key:
- * 
+ *
  * ```javascript
  * this.load.image('logo', 'images/AtariLogo.png');
  * // and later in your game ...
@@ -22679,13 +23064,13 @@ var ImageFile = new Class({
  *
  * Phaser also supports the automatic loading of associated normal maps. If you have a normal map to go with this image,
  * then you can specify it by providing an array as the `url` where the second element is the normal map:
- * 
+ *
  * ```javascript
  * this.load.image('logo', [ 'images/AtariLogo.png', 'images/AtariLogo-n.png' ]);
  * ```
  *
  * Or, if you are using a config object use the `normalMap` property:
- * 
+ *
  * ```javascript
  * this.load.image({
  *     key: 'logo',
@@ -22701,14 +23086,14 @@ var ImageFile = new Class({
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#image
- * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @fires Phaser.Loader.LoaderPlugin#ADD
  * @since 3.0.0
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.ImageFileConfig|Phaser.Types.Loader.FileTypes.ImageFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string|string[]} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
- * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
+ * @return {this} The Loader instance.
  */
 FileTypesManager.register('image', function (key, url, xhrSettings)
 {
@@ -22732,12 +23117,12 @@ module.exports = ImageFile;
 
 
 /***/ }),
-/* 169 */
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22747,27 +23132,27 @@ module.exports = ImageFile;
 
 module.exports = {
 
-    ADD: __webpack_require__(170),
-    COMPLETE: __webpack_require__(171),
-    FILE_COMPLETE: __webpack_require__(172),
-    FILE_KEY_COMPLETE: __webpack_require__(173),
-    FILE_LOAD_ERROR: __webpack_require__(174),
-    FILE_LOAD: __webpack_require__(175),
-    FILE_PROGRESS: __webpack_require__(176),
-    POST_PROCESS: __webpack_require__(177),
-    PROGRESS: __webpack_require__(178),
-    START: __webpack_require__(179)
+    ADD: __webpack_require__(176),
+    COMPLETE: __webpack_require__(177),
+    FILE_COMPLETE: __webpack_require__(178),
+    FILE_KEY_COMPLETE: __webpack_require__(179),
+    FILE_LOAD_ERROR: __webpack_require__(180),
+    FILE_LOAD: __webpack_require__(181),
+    FILE_PROGRESS: __webpack_require__(182),
+    POST_PROCESS: __webpack_require__(183),
+    PROGRESS: __webpack_require__(184),
+    START: __webpack_require__(185)
 
 };
 
 
 /***/ }),
-/* 170 */
+/* 176 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22792,12 +23177,12 @@ module.exports = 'addfile';
 
 
 /***/ }),
-/* 171 */
+/* 177 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22820,12 +23205,12 @@ module.exports = 'complete';
 
 
 /***/ }),
-/* 172 */
+/* 178 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22849,12 +23234,12 @@ module.exports = 'filecomplete';
 
 
 /***/ }),
-/* 173 */
+/* 179 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22903,12 +23288,12 @@ module.exports = 'filecomplete-';
 
 
 /***/ }),
-/* 174 */
+/* 180 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22928,12 +23313,12 @@ module.exports = 'loaderror';
 
 
 /***/ }),
-/* 175 */
+/* 181 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22954,12 +23339,12 @@ module.exports = 'load';
 
 
 /***/ }),
-/* 176 */
+/* 182 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22981,12 +23366,12 @@ module.exports = 'fileprogress';
 
 
 /***/ }),
-/* 177 */
+/* 183 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23010,12 +23395,12 @@ module.exports = 'postprocess';
 
 
 /***/ }),
-/* 178 */
+/* 184 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23035,12 +23420,12 @@ module.exports = 'progress';
 
 
 /***/ }),
-/* 179 */
+/* 185 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23062,12 +23447,12 @@ module.exports = 'start';
 
 
 /***/ }),
-/* 180 */
+/* 186 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23103,16 +23488,16 @@ module.exports = GetURL;
 
 
 /***/ }),
-/* 181 */
+/* 187 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var MergeXHRSettings = __webpack_require__(29);
+var MergeXHRSettings = __webpack_require__(31);
 
 /**
  * Creates a new XMLHttpRequest (xhr) object based on the given File and XHRSettings
@@ -23138,6 +23523,14 @@ var XHRLoader = function (file, globalXHRSettings)
     xhr.responseType = file.xhrSettings.responseType;
     xhr.timeout = config.timeout;
 
+    if (config.headers)
+    {
+        for (var key in config.headers)
+        {
+            xhr.setRequestHeader(key, config.headers[key]);
+        }
+    }
+
     if (config.header && config.headerValue)
     {
         xhr.setRequestHeader(config.header, config.headerValue);
@@ -23151,6 +23544,11 @@ var XHRLoader = function (file, globalXHRSettings)
     if (config.overrideMimeType)
     {
         xhr.overrideMimeType(config.overrideMimeType);
+    }
+
+    if (config.withCredentials)
+    {
+        xhr.withCredentials = true;
     }
 
     // After a successful request, the xhr.response property will contain the requested data as a DOMString, ArrayBuffer, Blob, or Document (depending on what was set for responseType.)
@@ -23171,21 +23569,21 @@ module.exports = XHRLoader;
 
 
 /***/ }),
-/* 182 */
+/* 188 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = __webpack_require__(0);
 var CONST = __webpack_require__(6);
-var File = __webpack_require__(12);
-var FileTypesManager = __webpack_require__(13);
+var File = __webpack_require__(13);
+var FileTypesManager = __webpack_require__(14);
 var GetFastValue = __webpack_require__(3);
-var GetValue = __webpack_require__(11);
+var GetValue = __webpack_require__(12);
 var IsPlainObject = __webpack_require__(2);
 
 /**
@@ -23193,7 +23591,7 @@ var IsPlainObject = __webpack_require__(2);
  * A single JSON File suitable for loading by the Loader.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#json method and are not typically created directly.
- * 
+ *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#json.
  *
  * @class JSONFile
@@ -23297,7 +23695,7 @@ var JSONFile = new Class({
  * Adds a JSON file, or array of JSON files, to the current load queue.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
- * 
+ *
  * ```javascript
  * function preload ()
  * {
@@ -23312,14 +23710,14 @@ var JSONFile = new Class({
  * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
  * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
  * loaded.
- * 
+ *
  * The key must be a unique String. It is used to add the file to the global JSON Cache upon a successful load.
  * The key should be unique both in terms of files being loaded and files already present in the JSON Cache.
  * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
  * then remove it from the JSON Cache first, before loading a new one.
  *
  * Instead of passing arguments you can pass a configuration object, such as:
- * 
+ *
  * ```javascript
  * this.load.json({
  *     key: 'wavedata',
@@ -23330,7 +23728,7 @@ var JSONFile = new Class({
  * See the documentation for `Phaser.Types.Loader.FileTypes.JSONFileConfig` for more details.
  *
  * Once the file has finished loading you can access it from its Cache using its key:
- * 
+ *
  * ```javascript
  * this.load.json('wavedata', 'files/AlienWaveData.json');
  * // and later in your game ...
@@ -23349,7 +23747,7 @@ var JSONFile = new Class({
  *
  * You can also optionally provide a `dataKey` to use. This allows you to extract only a part of the JSON and store it in the Cache,
  * rather than the whole file. For example, if your JSON data had a structure like this:
- * 
+ *
  * ```json
  * {
  *     "level1": {
@@ -23369,7 +23767,7 @@ var JSONFile = new Class({
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#json
- * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @fires Phaser.Loader.LoaderPlugin#ADD
  * @since 3.0.0
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.JSONFileConfig|Phaser.Types.Loader.FileTypes.JSONFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
@@ -23377,7 +23775,7 @@ var JSONFile = new Class({
  * @param {string} [dataKey] - When the JSON file loads only this property will be stored in the Cache.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
- * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
+ * @return {this} The Loader instance.
  */
 FileTypesManager.register('json', function (key, url, dataKey, xhrSettings)
 {
@@ -23401,12 +23799,12 @@ module.exports = JSONFile;
 
 
 /***/ }),
-/* 183 */
+/* 189 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23635,19 +24033,19 @@ module.exports = MultiFile;
 
 
 /***/ }),
-/* 184 */
+/* 190 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = __webpack_require__(0);
 var CONST = __webpack_require__(6);
-var File = __webpack_require__(12);
-var FileTypesManager = __webpack_require__(13);
+var File = __webpack_require__(13);
+var FileTypesManager = __webpack_require__(14);
 var GetFastValue = __webpack_require__(3);
 var IsPlainObject = __webpack_require__(2);
 
@@ -23779,14 +24177,14 @@ var TextFile = new Class({
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#text
- * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @fires Phaser.Loader.LoaderPlugin#ADD
  * @since 3.0.0
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.TextFileConfig|Phaser.Types.Loader.FileTypes.TextFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
- * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
+ * @return {this} The Loader instance.
  */
 FileTypesManager.register('text', function (key, url, xhrSettings)
 {
@@ -23810,7 +24208,7 @@ module.exports = TextFile;
 
 
 /***/ }),
-/* 185 */
+/* 191 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -23819,21 +24217,21 @@ module.exports = TextFile;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var AngleBetween = __webpack_require__(15);
-var Clamp = __webpack_require__(8);
+var AngleBetween = __webpack_require__(16);
+var Clamp = __webpack_require__(9);
 var Class = __webpack_require__(0);
-var ComponentsComputedSize = __webpack_require__(186);
-var ComponentsDepth = __webpack_require__(187);
-var ComponentsFlip = __webpack_require__(188);
-var ComponentsScrollFactor = __webpack_require__(189);
-var ComponentsTransform = __webpack_require__(190);
-var ComponentsVisible = __webpack_require__(192);
+var ComponentsComputedSize = __webpack_require__(192);
+var ComponentsDepth = __webpack_require__(193);
+var ComponentsFlip = __webpack_require__(194);
+var ComponentsScrollFactor = __webpack_require__(195);
+var ComponentsTransform = __webpack_require__(196);
+var ComponentsVisible = __webpack_require__(198);
 var CounterClockwise = __webpack_require__(7);
-var DegToRad = __webpack_require__(25);
-var GameObject = __webpack_require__(193);
-var RadToDeg = __webpack_require__(9);
-var SpineEvents = __webpack_require__(214);
-var SpineGameObjectRender = __webpack_require__(221);
+var DegToRad = __webpack_require__(27);
+var GameObject = __webpack_require__(199);
+var RadToDeg = __webpack_require__(10);
+var SpineEvents = __webpack_require__(220);
+var SpineGameObjectRender = __webpack_require__(227);
 
 /**
  * @classdesc
@@ -25402,12 +25800,12 @@ module.exports = SpineGameObject;
 
 
 /***/ }),
-/* 186 */
+/* 192 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25551,12 +25949,12 @@ module.exports = ComputedSize;
 
 
 /***/ }),
-/* 187 */
+/* 193 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25644,12 +26042,12 @@ module.exports = Depth;
 
 
 /***/ }),
-/* 188 */
+/* 194 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25808,12 +26206,12 @@ module.exports = Flip;
 
 
 /***/ }),
-/* 189 */
+/* 195 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25915,19 +26313,19 @@ module.exports = ScrollFactor;
 
 
 /***/ }),
-/* 190 */
+/* 196 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var MATH_CONST = __webpack_require__(1);
-var TransformMatrix = __webpack_require__(191);
-var WrapAngle = __webpack_require__(17);
-var WrapAngleDegrees = __webpack_require__(18);
+var TransformMatrix = __webpack_require__(197);
+var WrapAngle = __webpack_require__(18);
+var WrapAngleDegrees = __webpack_require__(19);
 
 //  global bitmask flag for GameObject.renderMask (used by Scale)
 var _FLAG = 4; // 0100
@@ -25943,7 +26341,7 @@ var Transform = {
 
     /**
      * Private internal value. Holds the horizontal scale value.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Transform#_scaleX
      * @type {number}
      * @private
@@ -25954,7 +26352,7 @@ var Transform = {
 
     /**
      * Private internal value. Holds the vertical scale value.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Transform#_scaleY
      * @type {number}
      * @private
@@ -25965,7 +26363,7 @@ var Transform = {
 
     /**
      * Private internal value. Holds the rotation value in radians.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Transform#_rotation
      * @type {number}
      * @private
@@ -25996,7 +26394,9 @@ var Transform = {
 
     /**
      * The z position of this Game Object.
-     * Note: Do not use this value to set the z-index, instead see the `depth` property.
+     *
+     * Note: The z position does not control the rendering order of 2D Game Objects. Use
+     * {@link Phaser.GameObjects.Components.Depth#depth} instead.
      *
      * @name Phaser.GameObjects.Components.Transform#z
      * @type {number}
@@ -26018,7 +26418,7 @@ var Transform = {
     /**
      * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
      * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
-     * 
+     *
      * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
      * isn't the case, use the `scaleX` or `scaleY` properties instead.
      *
@@ -26115,7 +26515,7 @@ var Transform = {
 
     /**
      * The angle of this Game Object as expressed in degrees.
-     * 
+     *
      * Phaser uses a right-hand clockwise rotation system, where 0 is right, 90 is down, 180/-180 is left
      * and -90 is up.
      *
@@ -26142,9 +26542,9 @@ var Transform = {
 
     /**
      * The angle of this Game Object in radians.
-     * 
-     * Phaser uses a right-hand clockwise rotation system, where 0 is right, 90 is down, 180/-180 is left
-     * and -90 is up.
+     *
+     * Phaser uses a right-hand clockwise rotation system, where 0 is right, PI/2 is down, +-PI is left
+     * and -PI/2 is up.
      *
      * If you prefer to work in degrees, see the `angle` property instead.
      *
@@ -26198,7 +26598,7 @@ var Transform = {
     /**
      * Sets the position of this Game Object to be a random position within the confines of
      * the given area.
-     * 
+     *
      * If no area is specified a random position between 0 x 0 and the game width x height is used instead.
      *
      * The position does not factor in the size of this Game Object, meaning that only the origin is
@@ -26328,6 +26728,9 @@ var Transform = {
     /**
      * Sets the z position of this Game Object.
      *
+     * Note: The z position does not control the rendering order of 2D Game Objects. Use
+     * {@link Phaser.GameObjects.Components.Depth#setDepth} instead.
+     *
      * @method Phaser.GameObjects.Components.Transform#setZ
      * @since 3.0.0
      *
@@ -26419,7 +26822,7 @@ var Transform = {
 
     /**
      * Gets the sum total rotation of all of this Game Objects parent Containers.
-     * 
+     *
      * The returned value is in radians and will be zero if this Game Object has no parent container.
      *
      * @method Phaser.GameObjects.Components.Transform#getParentRotation
@@ -26449,12 +26852,12 @@ module.exports = Transform;
 
 
 /***/ }),
-/* 191 */
+/* 197 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -26892,7 +27295,7 @@ var TransformMatrix = new Class({
      * @param {Phaser.GameObjects.Components.TransformMatrix} rhs - The Matrix to multiply by.
      * @param {Phaser.GameObjects.Components.TransformMatrix} [out] - An optional Matrix to store the results in.
      *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} Either this TransformMatrix, or the `out` Matrix, if given in the arguments.
+     * @return {(this|Phaser.GameObjects.Components.TransformMatrix)} Either this TransformMatrix, or the `out` Matrix, if given in the arguments.
      */
     multiply: function (rhs, out)
     {
@@ -27417,12 +27820,12 @@ module.exports = TransformMatrix;
 
 
 /***/ }),
-/* 192 */
+/* 198 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -27506,20 +27909,20 @@ module.exports = Visible;
 
 
 /***/ }),
-/* 193 */
+/* 199 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = __webpack_require__(0);
-var ComponentsToJSON = __webpack_require__(194);
-var DataManager = __webpack_require__(195);
-var EventEmitter = __webpack_require__(201);
-var Events = __webpack_require__(202);
+var ComponentsToJSON = __webpack_require__(200);
+var DataManager = __webpack_require__(201);
+var EventEmitter = __webpack_require__(207);
+var Events = __webpack_require__(208);
 
 /**
  * @classdesc
@@ -27572,7 +27975,7 @@ var GameObject = new Class({
          * 
          * Phaser itself will never modify this value, although plugins may do so.
          * 
-         * Use this property to track the state of a Game Object during its lifetime. For example, it could move from
+         * Use this property to track the state of a Game Object during its lifetime. For example, it could change from
          * a state of 'moving', to 'attacking', to 'dead'. The state value should be an integer (ideally mapped to a constant
          * in your game code), or a string. These are recommended to keep it light and simple, with fast comparisons.
          * If you need to store complex data about your Game Object, look at using the Data Component instead.
@@ -27677,10 +28080,10 @@ var GameObject = new Class({
         this.input = null;
 
         /**
-         * If this Game Object is enabled for physics then this property will contain a reference to a Physics Body.
+         * If this Game Object is enabled for Arcade or Matter Physics then this property will contain a reference to a Physics Body.
          *
          * @name Phaser.GameObjects.GameObject#body
-         * @type {?(object|Phaser.Physics.Arcade.Body|Phaser.Physics.Impact.Body)}
+         * @type {?(object|Phaser.Physics.Arcade.Body|MatterJS.BodyType)}
          * @default null
          * @since 3.0.0
          */
@@ -27837,6 +28240,65 @@ var GameObject = new Class({
         }
 
         this.data.set(key, value);
+
+        return this;
+    },
+
+    /**
+     * Increase a value for the given key within this Game Objects Data Manager. If the key doesn't already exist in the Data Manager then it is increased from 0.
+     *
+     * If the Game Object has not been enabled for data (via `setDataEnabled`) then it will be enabled
+     * before setting the value.
+     *
+     * If the key doesn't already exist in the Data Manager then it is created.
+     * 
+     * When the value is first set, a `setdata` event is emitted from this Game Object.
+     *
+     * @method Phaser.GameObjects.GameObject#incData
+     * @since 3.23.0
+     *
+     * @param {(string|object)} key - The key to increase the value for.
+     * @param {*} [data] - The value to increase for the given key.
+     *
+     * @return {this} This GameObject.
+     */
+    incData: function (key, value)
+    {
+        if (!this.data)
+        {
+            this.data = new DataManager(this);
+        }
+
+        this.data.inc(key, value);
+
+        return this;
+    },
+
+    /**
+     * Toggle a boolean value for the given key within this Game Objects Data Manager. If the key doesn't already exist in the Data Manager then it is toggled from false.
+     *
+     * If the Game Object has not been enabled for data (via `setDataEnabled`) then it will be enabled
+     * before setting the value.
+     *
+     * If the key doesn't already exist in the Data Manager then it is created.
+     * 
+     * When the value is first set, a `setdata` event is emitted from this Game Object.
+     *
+     * @method Phaser.GameObjects.GameObject#toggleData
+     * @since 3.23.0
+     *
+     * @param {(string|object)} key - The key to toggle the value for.
+     *
+     * @return {this} This GameObject.
+     */
+    toggleData: function (key)
+    {
+        if (!this.data)
+        {
+            this.data = new DataManager(this);
+        }
+
+        this.data.toggle(key);
 
         return this;
     },
@@ -28147,12 +28609,12 @@ module.exports = GameObject;
 
 
 /***/ }),
-/* 194 */
+/* 200 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -28208,17 +28670,17 @@ module.exports = ToJSON;
 
 
 /***/ }),
-/* 195 */
+/* 201 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = __webpack_require__(0);
-var Events = __webpack_require__(196);
+var Events = __webpack_require__(202);
 
 /**
  * @callback DataEachCallback
@@ -28241,7 +28703,7 @@ var Events = __webpack_require__(196);
  * @since 3.0.0
  *
  * @param {object} parent - The object that this DataManager belongs to.
- * @param {Phaser.Events.EventEmitter} eventEmitter - The DataManager's event emitter.
+ * @param {Phaser.Events.EventEmitter} [eventEmitter] - The DataManager's event emitter.
  */
 var DataManager = new Class({
 
@@ -28468,7 +28930,7 @@ var DataManager = new Class({
      * @param {(string|object)} key - The key to set the value for. Or an object or key value pairs. If an object the `data` argument is ignored.
      * @param {*} data - The value to set for the given key. If an object is provided as the key this argument is ignored.
      *
-     * @return {Phaser.Data.DataManager} This DataManager object.
+     * @return {this} This DataManager object.
      */
     set: function (key, data)
     {
@@ -28493,6 +28955,72 @@ var DataManager = new Class({
     },
 
     /**
+     * Increase a value for the given key. If the key doesn't already exist in the Data Manager then it is increased from 0.
+     * 
+     * When the value is first set, a `setdata` event is emitted.
+     * 
+     * @method Phaser.Data.DataManager#inc
+     * @fires Phaser.Data.Events#SET_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA_KEY
+     * @since 3.23.0
+     *
+     * @param {(string|object)} key - The key to increase the value for.
+     * @param {*} [data] - The value to increase for the given key.
+     *
+     * @return {Phaser.Data.DataManager} This DataManager object.
+     */    
+    inc: function (key, data)
+    {
+        if (this._frozen)
+        {
+            return this;
+        }
+
+        if (data === undefined)
+        {
+            data = 1;
+        }
+
+        var value = this.get(key);
+        if (value === undefined)
+        {
+            value = 0;
+        }
+
+        this.set(key, (value + data));
+
+        return this;
+    },
+
+    /**
+     * Toggle a boolean value for the given key. If the key doesn't already exist in the Data Manager then it is toggled from false.
+     * 
+     * When the value is first set, a `setdata` event is emitted.
+     * 
+     * @method Phaser.Data.DataManager#toggle
+     * @fires Phaser.Data.Events#SET_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA_KEY
+     * @since 3.23.0
+     *
+     * @param {(string|object)} key - The key to toggle the value for.
+     *
+     * @return {Phaser.Data.DataManager} This DataManager object.
+     */  
+    toggle: function (key)
+    {
+        if (this._frozen)
+        {
+            return this;
+        }
+
+        this.set(key, !this.get(key));
+
+        return this;
+    },
+
+    /**
      * Internal value setter, called automatically by the `set` method.
      *
      * @method Phaser.Data.DataManager#setValue
@@ -28505,7 +29033,7 @@ var DataManager = new Class({
      * @param {string} key - The key to set the value for.
      * @param {*} data - The value to set.
      *
-     * @return {Phaser.Data.DataManager} This DataManager object.
+     * @return {this} This DataManager object.
      */
     setValue: function (key, data)
     {
@@ -28569,7 +29097,7 @@ var DataManager = new Class({
      * @param {*} [context] - Value to use as `this` when executing callback.
      * @param {...*} [args] - Additional arguments that will be passed to the callback, after the game object, key, and data.
      *
-     * @return {Phaser.Data.DataManager} This DataManager object.
+     * @return {this} This DataManager object.
      */
     each: function (callback, context)
     {
@@ -28606,7 +29134,7 @@ var DataManager = new Class({
      * @param {Object.<string, *>} data - The data to merge.
      * @param {boolean} [overwrite=true] - Whether to overwrite existing data. Defaults to true.
      *
-     * @return {Phaser.Data.DataManager} This DataManager object.
+     * @return {this} This DataManager object.
      */
     merge: function (data, overwrite)
     {
@@ -28642,7 +29170,7 @@ var DataManager = new Class({
      *
      * @param {(string|string[])} key - The key to remove, or an array of keys to remove.
      *
-     * @return {Phaser.Data.DataManager} This DataManager object.
+     * @return {this} This DataManager object.
      */
     remove: function (key)
     {
@@ -28676,7 +29204,7 @@ var DataManager = new Class({
      *
      * @param {string} key - The key to set the value for.
      *
-     * @return {Phaser.Data.DataManager} This DataManager object.
+     * @return {this} This DataManager object.
      */
     removeValue: function (key)
     {
@@ -28748,7 +29276,7 @@ var DataManager = new Class({
      *
      * @param {boolean} value - Whether to freeze or unfreeze the Data Manager.
      *
-     * @return {Phaser.Data.DataManager} This DataManager object.
+     * @return {this} This DataManager object.
      */
     setFreeze: function (value)
     {
@@ -28763,7 +29291,7 @@ var DataManager = new Class({
      * @method Phaser.Data.DataManager#reset
      * @since 3.0.0
      *
-     * @return {Phaser.Data.DataManager} This DataManager object.
+     * @return {this} This DataManager object.
      */
     reset: function ()
     {
@@ -28849,12 +29377,12 @@ module.exports = DataManager;
 
 
 /***/ }),
-/* 196 */
+/* 202 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -28864,21 +29392,21 @@ module.exports = DataManager;
 
 module.exports = {
 
-    CHANGE_DATA: __webpack_require__(197),
-    CHANGE_DATA_KEY: __webpack_require__(198),
-    REMOVE_DATA: __webpack_require__(199),
-    SET_DATA: __webpack_require__(200)
+    CHANGE_DATA: __webpack_require__(203),
+    CHANGE_DATA_KEY: __webpack_require__(204),
+    REMOVE_DATA: __webpack_require__(205),
+    SET_DATA: __webpack_require__(206)
 
 };
 
 
 /***/ }),
-/* 197 */
+/* 203 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -28905,12 +29433,12 @@ module.exports = 'changedata';
 
 
 /***/ }),
-/* 198 */
+/* 204 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -28928,7 +29456,6 @@ module.exports = 'changedata';
  * @since 3.16.1
  * 
  * @param {any} parent - A reference to the object that owns the instance of the Data Manager responsible for this event.
- * @param {string} key - The unique key of the data item within the Data Manager.
  * @param {any} value - The item that was updated in the Data Manager. This can be of any data type, i.e. a string, boolean, number, object or instance.
  * @param {any} previousValue - The previous item that was updated in the Data Manager. This can be of any data type, i.e. a string, boolean, number, object or instance.
  */
@@ -28936,12 +29463,12 @@ module.exports = 'changedata-';
 
 
 /***/ }),
-/* 199 */
+/* 205 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -28964,12 +29491,12 @@ module.exports = 'removedata';
 
 
 /***/ }),
-/* 200 */
+/* 206 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -28992,7 +29519,7 @@ module.exports = 'setdata';
 
 
 /***/ }),
-/* 201 */
+/* 207 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -29335,12 +29862,12 @@ if (true) {
 
 
 /***/ }),
-/* 202 */
+/* 208 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29350,28 +29877,28 @@ if (true) {
 
 module.exports = {
 
-    DESTROY: __webpack_require__(203),
-    VIDEO_COMPLETE: __webpack_require__(204),
-    VIDEO_CREATED: __webpack_require__(205),
-    VIDEO_ERROR: __webpack_require__(206),
-    VIDEO_LOOP: __webpack_require__(207),
-    VIDEO_PLAY: __webpack_require__(208),
-    VIDEO_SEEKED: __webpack_require__(209),
-    VIDEO_SEEKING: __webpack_require__(210),
-    VIDEO_STOP: __webpack_require__(211),
-    VIDEO_TIMEOUT: __webpack_require__(212),
-    VIDEO_UNLOCKED: __webpack_require__(213)
+    DESTROY: __webpack_require__(209),
+    VIDEO_COMPLETE: __webpack_require__(210),
+    VIDEO_CREATED: __webpack_require__(211),
+    VIDEO_ERROR: __webpack_require__(212),
+    VIDEO_LOOP: __webpack_require__(213),
+    VIDEO_PLAY: __webpack_require__(214),
+    VIDEO_SEEKED: __webpack_require__(215),
+    VIDEO_SEEKING: __webpack_require__(216),
+    VIDEO_STOP: __webpack_require__(217),
+    VIDEO_TIMEOUT: __webpack_require__(218),
+    VIDEO_UNLOCKED: __webpack_require__(219)
 
 };
 
 
 /***/ }),
-/* 203 */
+/* 209 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29391,12 +29918,12 @@ module.exports = 'destroy';
 
 
 /***/ }),
-/* 204 */
+/* 210 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29423,12 +29950,12 @@ module.exports = 'complete';
 
 
 /***/ }),
-/* 205 */
+/* 211 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29452,12 +29979,12 @@ module.exports = 'created';
 
 
 /***/ }),
-/* 206 */
+/* 212 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29478,12 +30005,12 @@ module.exports = 'error';
 
 
 /***/ }),
-/* 207 */
+/* 213 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29510,12 +30037,12 @@ module.exports = 'loop';
 
 
 /***/ }),
-/* 208 */
+/* 214 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29538,12 +30065,12 @@ module.exports = 'play';
 
 
 /***/ }),
-/* 209 */
+/* 215 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29563,12 +30090,12 @@ module.exports = 'seeked';
 
 
 /***/ }),
-/* 210 */
+/* 216 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29589,12 +30116,12 @@ module.exports = 'seeking';
 
 
 /***/ }),
-/* 211 */
+/* 217 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29615,12 +30142,12 @@ module.exports = 'stop';
 
 
 /***/ }),
-/* 212 */
+/* 218 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29641,12 +30168,12 @@ module.exports = 'timeout';
 
 
 /***/ }),
-/* 213 */
+/* 219 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29667,7 +30194,7 @@ module.exports = 'unlocked';
 
 
 /***/ }),
-/* 214 */
+/* 220 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29682,18 +30209,18 @@ module.exports = 'unlocked';
 
 module.exports = {
 
-    COMPLETE: __webpack_require__(215),
-    DISPOSE: __webpack_require__(216),
-    END: __webpack_require__(217),
-    EVENT: __webpack_require__(218),
-    INTERRUPTED: __webpack_require__(219),
-    START: __webpack_require__(220)
+    COMPLETE: __webpack_require__(221),
+    DISPOSE: __webpack_require__(222),
+    END: __webpack_require__(223),
+    EVENT: __webpack_require__(224),
+    INTERRUPTED: __webpack_require__(225),
+    START: __webpack_require__(226)
 
 };
 
 
 /***/ }),
-/* 215 */
+/* 221 */
 /***/ (function(module, exports) {
 
 /**
@@ -29712,7 +30239,7 @@ module.exports = 'complete';
 
 
 /***/ }),
-/* 216 */
+/* 222 */
 /***/ (function(module, exports) {
 
 /**
@@ -29731,7 +30258,7 @@ module.exports = 'dispose';
 
 
 /***/ }),
-/* 217 */
+/* 223 */
 /***/ (function(module, exports) {
 
 /**
@@ -29750,7 +30277,7 @@ module.exports = 'end';
 
 
 /***/ }),
-/* 218 */
+/* 224 */
 /***/ (function(module, exports) {
 
 /**
@@ -29769,7 +30296,7 @@ module.exports = 'event';
 
 
 /***/ }),
-/* 219 */
+/* 225 */
 /***/ (function(module, exports) {
 
 /**
@@ -29788,7 +30315,7 @@ module.exports = 'interrupted';
 
 
 /***/ }),
-/* 220 */
+/* 226 */
 /***/ (function(module, exports) {
 
 /**
@@ -29807,7 +30334,7 @@ module.exports = 'start';
 
 
 /***/ }),
-/* 221 */
+/* 227 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29816,15 +30343,15 @@ module.exports = 'start';
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var renderWebGL = __webpack_require__(31);
-var renderCanvas = __webpack_require__(31);
+var renderWebGL = __webpack_require__(33);
+var renderCanvas = __webpack_require__(33);
 
 if (false)
 {}
 
 if (true)
 {
-    renderCanvas = __webpack_require__(222);
+    renderCanvas = __webpack_require__(228);
 }
 
 module.exports = {
@@ -29836,7 +30363,7 @@ module.exports = {
 
 
 /***/ }),
-/* 222 */
+/* 228 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29846,7 +30373,7 @@ module.exports = {
  */
 
 var CounterClockwise = __webpack_require__(7);
-var RadToDeg = __webpack_require__(9);
+var RadToDeg = __webpack_require__(10);
 var Wrap = __webpack_require__(4);
 
 /**
