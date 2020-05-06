@@ -570,11 +570,17 @@ var Body = new Class({
 
         /**
          * The direction of the Body's velocity, as calculated during the last step.
-         * If the Body is moving on both axes (diagonally), this describes motion on the vertical axis only.
+         * This is a numeric constant value (FACING_UP, FACING_DOWN, FACING_LEFT, FACING_RIGHT).
+         * If the Body is moving on both axes, this describes motion on the vertical axis only.
          *
          * @name Phaser.Physics.Arcade.Body#facing
          * @type {integer}
          * @since 3.0.0
+         *
+         * @see Phaser.Physics.Arcade.FACING_UP
+         * @see Phaser.Physics.Arcade.FACING_DOWN
+         * @see Phaser.Physics.Arcade.FACING_LEFT
+         * @see Phaser.Physics.Arcade.FACING_RIGHT
          */
         this.facing = CONST.FACING_NONE;
 
