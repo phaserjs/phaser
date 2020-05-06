@@ -85,7 +85,7 @@ var File = new Class({
          * Automatically has Loader.path prepended to it.
          *
          * @name Phaser.Loader.File#url
-         * @type {string}
+         * @type {(function|object|string)}
          * @since 3.0.0
          */
         this.url = GetFastValue(fileConfig, 'url');
@@ -282,7 +282,7 @@ var File = new Class({
             {
                 //  The creation of this XHRLoader starts the load process going.
                 //  It will automatically call the following, based on the load outcome:
-                //  
+                //
                 // xhr.onload = this.onLoad
                 // xhr.onerror = this.onError
                 // xhr.onprogress = this.onProgress
@@ -487,7 +487,7 @@ var File = new Class({
  * @method Phaser.Loader.File.createObjectURL
  * @static
  * @since 3.7.0
- * 
+ *
  * @param {HTMLImageElement} image - Image object which 'src' attribute should be set to object URL.
  * @param {Blob} blob - A Blob object to create an object URL for.
  * @param {string} defaultType - Default mime type used if blob type is not available.
@@ -521,7 +521,7 @@ File.createObjectURL = function (image, blob, defaultType)
  * @method Phaser.Loader.File.revokeObjectURL
  * @static
  * @since 3.7.0
- * 
+ *
  * @param {HTMLImageElement} image - Image object which 'src' attribute should be revoked.
  */
 File.revokeObjectURL = function (image)
