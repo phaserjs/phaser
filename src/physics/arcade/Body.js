@@ -72,7 +72,7 @@ var Body = new Class({
         };
 
         /**
-         * Whether the Body's boundary is drawn to the debug display.
+         * Whether the Body's is drawn to the debug display.
          *
          * @name Phaser.Physics.Arcade.Body#debugShowBody
          * @type {boolean}
@@ -109,7 +109,7 @@ var Body = new Class({
         this.enable = true;
 
         /**
-         * Whether this Body's boundary is circular (true) or rectangular (false).
+         * Whether this Body's is circular (true) or rectangular (false).
          *
          * @name Phaser.Physics.Arcade.Body#isCircle
          * @type {boolean}
@@ -120,7 +120,7 @@ var Body = new Class({
         this.isCircle = false;
 
         /**
-         * If this Body is circular, this is the unscaled radius of the Body's boundary, as set by setCircle(), in source pixels.
+         * If this Body is circular, this is the unscaled radius of the Body, as set by setCircle(), in source pixels.
          * The true radius is equal to `halfWidth`.
          *
          * @name Phaser.Physics.Arcade.Body#radius
@@ -184,7 +184,7 @@ var Body = new Class({
         /**
          * This body's rotation, in degrees, based on its angular acceleration and angular velocity.
          * The Body's rotation controls the `angle` of its Game Object.
-         * It doesn't rotate the Body's boundary, which is always an axis-aligned rectangle or a circle.
+         * It doesn't rotate the Body's own geometry, which is always an axis-aligned rectangle or a circle.
          *
          * @name Phaser.Physics.Arcade.Body#rotation
          * @type {number}
@@ -202,7 +202,7 @@ var Body = new Class({
         this.preRotation = gameObject.angle;
 
         /**
-         * The width of the Body boundary, in pixels.
+         * The width of the Body, in pixels.
          * If the Body is circular, this is also the diameter.
          * If you wish to change the width use the `Body.setSize` method.
          *
@@ -215,7 +215,7 @@ var Body = new Class({
         this.width = width;
 
         /**
-         * The height of the Body boundary, in pixels.
+         * The height of the Body, in pixels.
          * If the Body is circular, this is also the diameter.
          * If you wish to change the height use the `Body.setSize` method.
          *
@@ -274,7 +274,7 @@ var Body = new Class({
         this.halfHeight = Math.abs(height / 2);
 
         /**
-         * The center of the Body's boundary.
+         * The center of the Body.
          * The midpoint of its `position` (top-left corner) and its bottom-right corner.
          *
          * @name Phaser.Physics.Arcade.Body#center
@@ -1204,7 +1204,7 @@ var Body = new Class({
     },
 
     /**
-     * Sizes and positions this Body's boundary, as a rectangle.
+     * Sizes and positions this Body, as a rectangle.
      * Modifies the Body `offset` if `center` is true (the default).
      * Resets the width and height to match current frame, if no width and height provided and a frame is found.
      *
@@ -1259,7 +1259,7 @@ var Body = new Class({
     },
 
     /**
-     * Sizes and positions this Body's boundary, as a circle.
+     * Sizes and positions this Body, as a circle.
      *
      * @method Phaser.Physics.Arcade.Body#setCircle
      * @since 3.0.0
@@ -1378,7 +1378,7 @@ var Body = new Class({
     },
 
     /**
-     * Tests if the coordinates are within this Body's boundary.
+     * Tests if the coordinates are within this Body.
      *
      * @method Phaser.Physics.Arcade.Body#hitTest
      * @since 3.0.0
@@ -1581,7 +1581,7 @@ var Body = new Class({
     },
 
     /**
-     * Draws this Body's boundary and velocity, if enabled.
+     * Draws this Body and its velocity, if enabled.
      *
      * @method Phaser.Physics.Arcade.Body#drawDebug
      * @since 3.0.0
@@ -2263,7 +2263,7 @@ var Body = new Class({
     },
 
     /**
-     * The left edge of the Body's boundary. Identical to x.
+     * The left edge of the Body. Identical to x.
      *
      * @name Phaser.Physics.Arcade.Body#left
      * @type {number}
@@ -2280,7 +2280,7 @@ var Body = new Class({
     },
 
     /**
-     * The right edge of the Body's boundary.
+     * The right edge of the Body.
      *
      * @name Phaser.Physics.Arcade.Body#right
      * @type {number}
@@ -2297,7 +2297,7 @@ var Body = new Class({
     },
 
     /**
-     * The top edge of the Body's boundary. Identical to y.
+     * The top edge of the Body. Identical to y.
      *
      * @name Phaser.Physics.Arcade.Body#top
      * @type {number}
@@ -2314,7 +2314,7 @@ var Body = new Class({
     },
 
     /**
-     * The bottom edge of this Body's boundary.
+     * The bottom edge of this Body.
      *
      * @name Phaser.Physics.Arcade.Body#bottom
      * @type {number}
