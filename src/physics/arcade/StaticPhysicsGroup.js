@@ -72,6 +72,14 @@ var StaticPhysicsGroup = new Class({
                 singleConfig.classType = GetFastValue(singleConfig, 'classType', ArcadeSprite);
             });
         }
+        else
+        {
+            // config is not defined and children is not a plain object nor an array of plain objects
+            config = {
+                internalCreateCallback: this.createCallbackHandler,
+                internalRemoveCallback: this.removeCallbackHandler
+            };
+        }
 
         /**
          * The physics simulation.
