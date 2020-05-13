@@ -756,6 +756,10 @@ var BaseCamera = new Class({
         var scrollY = this.scrollY;
         var cameraW = this.width;
         var cameraH = this.height;
+        var cullTop = this.y;
+        var cullBottom = cullTop + cameraH;
+        var cullLeft = this.x;
+        var cullRight = cullLeft + cameraW;
         var culledObjects = this.culledObjects;
         var length = renderableObjects.length;
 
@@ -781,10 +785,6 @@ var BaseCamera = new Class({
             var ty = (objectX * mvb + objectY * mvd + mvf);
             var tw = ((objectX + objectW) * mva + (objectY + objectH) * mvc + mve);
             var th = ((objectX + objectW) * mvb + (objectY + objectH) * mvd + mvf);
-            var cullTop = this.y;
-            var cullBottom = cullTop + cameraH;
-            var cullLeft = this.x;
-            var cullRight = cullLeft + cameraW;
 
             if ((tw > cullLeft && tx < cullRight) && (th > cullTop && ty < cullBottom))
             {
