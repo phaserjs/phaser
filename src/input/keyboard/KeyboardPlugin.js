@@ -626,7 +626,7 @@ var KeyboardPlugin = new Class({
      * 
      * @return {boolean} `true` if the Key is down within the duration specified, otherwise `false`.
      */
-    checkDown: function (key, duration)
+    checkDown: function (key, duration = 0)
     {
         if (this.enabled && key.isDown)
         {
