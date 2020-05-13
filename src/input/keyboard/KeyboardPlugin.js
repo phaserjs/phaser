@@ -626,10 +626,15 @@ var KeyboardPlugin = new Class({
      * 
      * @return {boolean} `true` if the Key is down within the duration specified, otherwise `false`.
      */
-    checkDown: function (key, duration = 0)
+    checkDown: function (key, duration)
     {
         if (this.enabled && key.isDown)
         {
+            if (duration === undefined)
+            {
+                duration = 0;
+            }
+
             var t = SnapFloor(this.time - key.timeDown, duration);
 
             if (t > key._tick)
