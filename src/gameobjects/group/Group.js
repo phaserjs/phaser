@@ -136,8 +136,7 @@ var Group = new Class({
         this.name = GetFastValue(config, 'name', '');
 
         /**
-         * Whether this group runs its {@link Phaser.GameObjects.Group#preUpdate} method
-         * (which may update any members).
+         * Whether this group runs its {@link Phaser.GameObjects.Group#preUpdate} method (which may update any members).
          *
          * @name Phaser.GameObjects.Group#active
          * @type {boolean}
