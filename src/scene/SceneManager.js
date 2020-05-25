@@ -695,11 +695,7 @@ var SceneManager = new Class({
     {
         var configKey = newScene.sys.settings.key;
 
-        if (configKey !== '')
-        {
-            key = configKey;
-        }
-        else
+        if (configKey === '')
         {
             newScene.sys.settings.key = key;
         }
