@@ -1103,6 +1103,24 @@ var Group = new Class({
     },
 
     /**
+     * Sets the `active` property of this Group.
+     * When active, this Group runs its `preUpdate` method.
+     *
+     * @method Phaser.GameObjects.Group#setActive
+     * @since 3.24.0
+     *
+     * @param {boolean} value - True if this Group should be set as active, false if not.
+     *
+     * @return {this} This Group object.
+     */
+    setActive: function (value)
+    {
+        this.active = value;
+
+        return this;
+    },
+
+    /**
      * Sets the `name` property of this Group.
      * The `name` property is not populated by Phaser and is presented for your own use.
      *
