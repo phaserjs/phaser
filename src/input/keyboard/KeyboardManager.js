@@ -9,7 +9,7 @@ var Class = require('../../utils/Class');
 var GameEvents = require('../../core/events');
 var InputEvents = require('../events');
 var KeyCodes = require('../../input/keyboard/keys/KeyCodes');
-var NOOP = require('../../utils/Class');
+var NOOP = require('../../utils/NOOP');
 
 /**
  * @classdesc
