@@ -72,7 +72,7 @@ var Body = new Class({
         };
 
         /**
-         * Whether the Body's is drawn to the debug display.
+         * Whether the Body is drawn to the debug display.
          *
          * @name Phaser.Physics.Arcade.Body#debugShowBody
          * @type {boolean}
@@ -109,7 +109,7 @@ var Body = new Class({
         this.enable = true;
 
         /**
-         * Whether this Body's is circular (true) or rectangular (false).
+         * Whether this Body is circular (true) or rectangular (false).
          *
          * @name Phaser.Physics.Arcade.Body#isCircle
          * @type {boolean}
