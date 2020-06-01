@@ -317,7 +317,7 @@ var Tween = new Class({
          * `onStart` When the Tween starts playing after a delayed state. Will happen at the same time as `onActive` if it has no delay.
          * `onYoyo` When a TweenData starts a yoyo. This happens _after_ the `hold` delay expires, if set.
          * `onRepeat` When a TweenData repeats playback. This happens _after_ the `repeatDelay` expires, if set.
-         * `onComplete` When the Tween finishes playback fully or `Tween.stop` is called. Never invoked if tween is set to repeat infinitely.
+         * `onComplete` When the Tween finishes playback fully. Never invoked if tween is set to repeat infinitely.
          * `onUpdate` When a TweenData updates a property on a source target during playback.
          * `onLoop` When a Tween loops. This happens _after_ the `loopDelay` expires, if set.
          *
