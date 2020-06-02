@@ -296,7 +296,7 @@ var EllipseCurve = new Class({
      */
     setWidth: function (value)
     {
-        this.xRadius = value * 2;
+        this.xRadius = value / 2;
 
         return this;
     },
@@ -313,7 +313,7 @@ var EllipseCurve = new Class({
      */
     setHeight: function (value)
     {
-        this.yRadius = value * 2;
+        this.yRadius = value / 2;
 
         return this;
     },
