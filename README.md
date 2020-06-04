@@ -75,10 +75,11 @@ Extra special thanks to the following companies who's support makes Phaser possi
 * [Mozilla](https://www.mozilla.org)
 * [Texture Packer](https://www.codeandweb.com/texturepacker/tutorials/how-to-create-sprite-sheets-for-phaser3?utm_source=ad&utm_medium=banner&utm_campaign=phaser-2018-10-16)
 * [Twilio](https://www.twilio.com)
-* [Y8 Games](https://www.y8.com)
 * [Poki](https://developers.poki.com/)
+* [CrazyGames](https://www.crazygames.com)
+* [Lagged](https://www.lagged.com)
 
-![Sponsors](https://phaser.io/images/github/sponsors-2019-12.png "Awesome  Sponsors")
+![Sponsors](https://phaser.io/images/github/sponsors-2020-06.png "Our Awesome Sponsors")
 
 ![Phaser Newsletter](https://phaser.io/images/github/div-newsletter.png "Phaser Newsletter")
 
