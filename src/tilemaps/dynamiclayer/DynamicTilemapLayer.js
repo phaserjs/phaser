@@ -1032,7 +1032,7 @@ var DynamicTilemapLayer = new Class({
     /**
      * Sets collision on all tiles in the given layer, except for tiles that have an index specified in
      * the given array. The `collides` parameter controls if collision will be enabled (true) or
-     * disabled (false).
+     * disabled (false). Tile indexes not currently in the layer are not affected.
      *
      * @method Phaser.Tilemaps.DynamicTilemapLayer#setCollisionByExclusion
      * @since 3.0.0
