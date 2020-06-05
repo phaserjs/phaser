@@ -80,7 +80,10 @@ var IsoWorldToTileXY = function (worldX, worldY, snapToFloor, point, camera, lay
 
         tileWidth *= tilemapLayer.scaleX;
     }
+    worldX -= tileWidth/2;
     
+
+
     point.x = snapToFloor
         ? Math.floor((worldX / (tileWidth / 2) + worldY / (tileHeight / 2)) / 2)
         : ((worldX / (tileWidth / 2) + worldY / (tileHeight / 2)) / 2);
