@@ -31,48 +31,6 @@ var TimelineBuilder = function (manager, config)
 {
     var timeline = new Timeline(manager);
 
-    var tweens = GetTweens(config);
-
-    if (tweens.length === 0)
-    {
-        timeline.paused = true;
-
-        return timeline;
-    }
-
-    var defaults = Clone(Defaults);
-
-    defaults.targets = GetTargets(config);
-
-    //  totalDuration: If specified each tween in the Timeline is given an equal portion of the totalDuration
-
-    var totalDuration = GetAdvancedValue(config, 'totalDuration', 0);
-
-    if (totalDuration > 0)
-    {
-        defaults.duration = Math.floor(totalDuration / tweens.length);
-    }
-    else
-    {
-        defaults.duration = GetNewValue(config, 'duration', defaults.duration);
-    }
-
-    defaults.delay = GetNewValue(config, 'delay', defaults.delay);
-    defaults.easeParams = GetValue(config, 'easeParams', defaults.easeParams);
-    defaults.ease = GetEaseFunction(GetValue(config, 'ease', defaults.ease), defaults.easeParams);
-    defaults.hold = GetNewValue(config, 'hold', defaults.hold);
-    defaults.repeat = GetNewValue(config, 'repeat', defaults.repeat);
-    defaults.repeatDelay = GetNewValue(config, 'repeatDelay', defaults.repeatDelay);
-    defaults.yoyo = GetBoolean(config, 'yoyo', defaults.yoyo);
-    defaults.flipX = GetBoolean(config, 'flipX', defaults.flipX);
-    defaults.flipY = GetBoolean(config, 'flipY', defaults.flipY);
-
-    //  Create the Tweens
-    for (var i = 0; i < tweens.length; i++)
-    {
-        timeline.queue(TweenBuilder(timeline, tweens[i], defaults));
-    }
-
     timeline.completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
     timeline.loop = Math.round(GetAdvancedValue(config, 'loop', 0));
     timeline.loopDelay = Math.round(GetAdvancedValue(config, 'loopDelay', 0));
@@ -138,6 +96,50 @@ var TimelineBuilder = function (manager, config)
         var onCompleteParams = GetValue(config, 'onCompleteParams', []);
 
         timeline.setCallback('onComplete', onComplete, timelineArray.concat(onCompleteParams), onCompleteScope);
+    }
+
+    // Tweens
+
+    var tweens = GetTweens(config);
+
+    if (tweens.length === 0)
+    {
+        timeline.paused = true;
+
+        return timeline;
+    }
+
+    var defaults = Clone(Defaults);
+
+    defaults.targets = GetTargets(config);
+
+    //  totalDuration: If specified each tween in the Timeline is given an equal portion of the totalDuration
+
+    var totalDuration = GetAdvancedValue(config, 'totalDuration', 0);
+
+    if (totalDuration > 0)
+    {
+        defaults.duration = Math.floor(totalDuration / tweens.length);
+    }
+    else
+    {
+        defaults.duration = GetNewValue(config, 'duration', defaults.duration);
+    }
+
+    defaults.delay = GetNewValue(config, 'delay', defaults.delay);
+    defaults.easeParams = GetValue(config, 'easeParams', defaults.easeParams);
+    defaults.ease = GetEaseFunction(GetValue(config, 'ease', defaults.ease), defaults.easeParams);
+    defaults.hold = GetNewValue(config, 'hold', defaults.hold);
+    defaults.repeat = GetNewValue(config, 'repeat', defaults.repeat);
+    defaults.repeatDelay = GetNewValue(config, 'repeatDelay', defaults.repeatDelay);
+    defaults.yoyo = GetBoolean(config, 'yoyo', defaults.yoyo);
+    defaults.flipX = GetBoolean(config, 'flipX', defaults.flipX);
+    defaults.flipY = GetBoolean(config, 'flipY', defaults.flipY);
+
+    //  Create the Tweens
+    for (var i = 0; i < tweens.length; i++)
+    {
+        timeline.queue(TweenBuilder(timeline, tweens[i], defaults));
     }
 
     return timeline;
