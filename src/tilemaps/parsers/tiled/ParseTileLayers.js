@@ -129,7 +129,7 @@ var ParseTileLayers = function (json, insertNull)
                 alpha: (curGroupState.opacity * curl.opacity),
                 visible: (curGroupState.visible && curl.visible),
                 orientation: CONST.fromOrientationString(json.orientation),
-                properties: GetFastValue(curl, 'properties', {})
+                properties: GetFastValue(curl, 'properties', [])
                 
             });
 
@@ -209,7 +209,7 @@ var ParseTileLayers = function (json, insertNull)
                 alpha: (curGroupState.opacity * curl.opacity),
                 visible: (curGroupState.visible && curl.visible),
                 orientation: CONST.fromOrientationString(json.orientation),
-                properties: GetFastValue(curl, 'properties', {})
+                properties: GetFastValue(curl, 'properties', [])
                 
             });
 
