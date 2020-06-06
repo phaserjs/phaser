@@ -331,6 +331,7 @@ var Tween = new Class({
             onLoop: null,
             onRepeat: null,
             onStart: null,
+            onStop: null,
             onUpdate: null,
             onYoyo: null
         };
@@ -1107,6 +1108,8 @@ var Tween = new Class({
                 }
             }
 
+            this.dispatchTweenEvent(Events.TWEEN_STOP, this.callbacks.onStop);
+
             this.removeAllListeners();
 
             this.state = TWEEN_CONST.PENDING_REMOVE;
@@ -1575,6 +1578,7 @@ var Tween = new Class({
 
 //  onActive = 'active' event = When the Tween is moved from the pending to the active list in the manager, even if playback delayed
 //  onStart = 'start' event = When the Tween starts playing from a delayed state (will happen same time as onActive if no delay)
+//  onStop = 'stop' event = When the Tween is stopped
 //  onYoyo = 'yoyo' event = When the Tween starts a yoyo
 //  onRepeat = 'repeat' event = When a TweenData repeats playback (if any)
 //  onComplete = 'complete' event = When the Tween finishes all playback (can sometimes never happen if repeat -1), also when 'stop' called
@@ -1587,6 +1591,7 @@ Tween.TYPES = [
     'onLoop',
     'onRepeat',
     'onStart',
+    'onStop',
     'onUpdate',
     'onYoyo'
 ];
