@@ -775,8 +775,7 @@ var CanvasRenderer = new Class({
 
 		if (sprite.mask) {
 			sprite.mask.postRenderCanvas(this, sprite, camera);
-		}  
-
+		}
         ctx.restore();
     },
 
