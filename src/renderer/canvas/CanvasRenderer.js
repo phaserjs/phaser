@@ -765,16 +765,16 @@ var CanvasRenderer = new Class({
 
         ctx.globalAlpha = alpha;
 
-		ctx.imageSmoothingEnabled = !(!this.antialias || frame.source.scaleMode);
-		
-	    if (sprite.mask) {
-		    sprite.mask.preRenderCanvas(this, sprite, camera);
-	    }
+        ctx.imageSmoothingEnabled = !(!this.antialias || frame.source.scaleMode);
+        
+        if (sprite.mask) {
+            sprite.mask.preRenderCanvas(this, sprite, camera);
+        }
 
         ctx.drawImage(frame.source.image, frameX, frameY, frameWidth, frameHeight, x, y, frameWidth / res, frameHeight / res);
 
-	    if (sprite.mask) {
-		    sprite.mask.postRenderCanvas(this, sprite, camera);
+        if (sprite.mask) {
+            sprite.mask.postRenderCanvas(this, sprite, camera);
         }
         
         ctx.restore();
