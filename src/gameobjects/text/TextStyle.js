@@ -338,6 +338,7 @@ var TextStyle = new Class({
          * whitespace is trimmed from lines. If false, spaces and whitespace are left as is. Setting
          * this property directly will not re-run the word wrapping algorithm. To change the
          * advanced setting and re-wrap, use {@link Phaser.GameObjects.TextStyle#setWordWrapWidth}.
+         * 
          * @name Phaser.GameObjects.TextStyle#wordWrapUseAdvanced
          * @type {boolean}
          * @default false
