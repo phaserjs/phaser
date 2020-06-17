@@ -53,7 +53,7 @@ var ContainerCanvasRenderer = function (renderer, container, interpolationPercen
     }
 
     var alpha = container._alpha;
-	var scrollFactorX = container.scrollFactorX;
+    var scrollFactorX = container.scrollFactorX;
     var scrollFactorY = container.scrollFactorY;
     
     if (container.mask) {
