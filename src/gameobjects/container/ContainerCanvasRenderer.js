@@ -93,7 +93,8 @@ var ContainerCanvasRenderer = function (renderer, container, interpolationPercen
 	
 	if (container.mask) {
 		container.mask.postRenderCanvas(renderer);
-	}	
+	}
+	
 };
 
 module.exports = ContainerCanvasRenderer;
