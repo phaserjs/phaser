@@ -729,16 +729,18 @@ var Tilemap = new Class({
      * @param {Phaser.Scene} [scene=scene the map is within] - The Scene to create the Sprites within.
      * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
      * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
+     * @param {function} [make] - The Sprite creator. Default is `scene.make.sprite`. See {@link Phaser.GameObjects.GameObjectCreator}.
+     * @param {any} [makeContext] - The Sprite creator context. Default is `scene.make`.
      *
      * @return {?Phaser.GameObjects.Sprite[]} Returns an array of Tiles, or null if the layer given was invalid.
      */
-    createFromTiles: function (indexes, replacements, spriteConfig, scene, camera, layer)
+    createFromTiles: function (indexes, replacements, spriteConfig, scene, camera, layer, make, makeContext)
     {
         layer = this.getLayer(layer);
 
         if (layer === null) { return null; }
 
-        return TilemapComponents.CreateFromTiles(indexes, replacements, spriteConfig, scene, camera, layer);
+        return TilemapComponents.CreateFromTiles(indexes, replacements, spriteConfig, scene, camera, layer, make, makeContext);
     },
 
     /**

@@ -20,14 +20,16 @@ var ReplaceByIndex = require('./ReplaceByIndex');
  *
  * @param {(number|number[])} indexes - The tile index, or array of indexes, to create Sprites from.
  * @param {(number|number[])} replacements - The tile index, or array of indexes, to change a converted tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a one-to-one mapping with the indexes array.
- * @param {Phaser.Types.GameObjects.Sprite.SpriteConfig} spriteConfig - The config object to pass into the Sprite creator (i.e. scene.make.sprite).
+ * @param {Phaser.Types.GameObjects.GameObjectConfig} spriteConfig - The config object to pass into the Sprite creator (i.e. scene.make.sprite).
  * @param {Phaser.Scene} [scene=scene the map is within] - The Scene to create the Sprites within.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when determining the world XY
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
+ * @param {function} [make] - The Sprite creator. Default is `scene.make.sprite`. See {@link Phaser.GameObjects.GameObjectCreator}.
+ * @param {any} [makeContext] - The Sprite creator context. Default is `scene.make`.
  *
  * @return {Phaser.GameObjects.Sprite[]} An array of the Sprites that were created.
  */
-var CreateFromTiles = function (indexes, replacements, spriteConfig, scene, camera, layer)
+var CreateFromTiles = function (indexes, replacements, spriteConfig, scene, camera, layer, make, makeContext)
 {
     if (spriteConfig === undefined) { spriteConfig = {}; }
 
@@ -40,6 +42,8 @@ var CreateFromTiles = function (indexes, replacements, spriteConfig, scene, came
 
     if (scene === undefined) { scene = tilemapLayer.scene; }
     if (camera === undefined) { camera = scene.cameras.main; }
+    if (make === undefined) { make = scene.make.sprite; }
+    if (makeContext === undefined) { makeContext = scene.make; }
 
     var tiles = GetTilesWithin(0, 0, layer.width, layer.height, null, layer);
     var sprites = [];
@@ -54,7 +58,7 @@ var CreateFromTiles = function (indexes, replacements, spriteConfig, scene, came
             spriteConfig.x = TileToWorldX(tile.x, camera, layer);
             spriteConfig.y = TileToWorldY(tile.y, camera, layer);
 
-            sprites.push(scene.make.sprite(spriteConfig));
+            sprites.push(make.call(makeContext, spriteConfig));
         }
     }
 
