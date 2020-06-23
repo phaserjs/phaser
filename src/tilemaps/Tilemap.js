@@ -616,16 +616,20 @@ var Tilemap = new Class({
      * @param {(integer|string)} id - Either the id (object), gid (tile object) or name (object or
      * tile object) from Tiled. Ids are unique in Tiled, but a gid is shared by all tile objects
      * with the same graphic. The same name can be used on multiple objects.
-     * @param {Phaser.Types.GameObjects.Sprite.SpriteConfig} spriteConfig - The config object to pass into the Sprite creator (i.e.
+     * @param {Phaser.Types.GameObjects.GameObjectConfig} spriteConfig - The config object to pass into the Sprite creator (i.e.
      * scene.make.sprite).
      * @param {Phaser.Scene} [scene=the scene the map is within] - The Scene to create the Sprites within.
+     * @param {function} [make] - The Sprite creator. Default is `scene.make.sprite`. See {@link Phaser.GameObjects.GameObjectCreator}.
+     * @param {any} [makeContext] - The Sprite creator context. Default is `scene.make`.
      *
      * @return {Phaser.GameObjects.Sprite[]} An array of the Sprites that were created.
      */
-    createFromObjects: function (name, id, spriteConfig, scene)
+    createFromObjects: function (name, id, spriteConfig, scene, make, makeContext)
     {
         if (spriteConfig === undefined) { spriteConfig = {}; }
         if (scene === undefined) { scene = this.scene; }
+        if (make === undefined) { make = scene.make.sprite; }
+        if (makeContext === undefined) { makeContext = scene.make; }
 
         var objectLayer = this.getObjectLayer(name);
 
@@ -663,7 +667,7 @@ var Tilemap = new Class({
                 config.x = obj.x;
                 config.y = obj.y;
 
-                var sprite = scene.make.sprite(config);
+                var sprite = make.call(makeContext, config);
 
                 sprite.name = obj.name;
 
