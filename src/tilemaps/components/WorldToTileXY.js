@@ -31,8 +31,8 @@ var OrthoWorldToTileXY = function (worldX, worldY, snapToFloor, point, camera, l
 {
     if (point === undefined) { point = new Vector2(0, 0); }
 
-    point.x = WorldToTileX(worldX, snapToFloor, camera, layer);
-    point.y = WorldToTileY(worldY, snapToFloor, camera, layer);
+    point.x = WorldToTileX(CONST.ORTHOGONAL)(worldX, snapToFloor, camera, layer);
+    point.y = WorldToTileY(CONST.ORTHOGONAL)(worldY, snapToFloor, camera, layer);
     return point;
 };
 
