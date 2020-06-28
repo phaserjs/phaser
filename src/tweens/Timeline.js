@@ -218,7 +218,7 @@ var Timeline = new Class({
         /**
          * Time in ms/frames for all Tweens in this Timeline to complete (including looping)
          *
-         * @name Phaser.Tweens.Timeline#totalDuration
+         * @name Phaser.Tweens.Timeline# +=
          * @type {number}
          * @default 0
          * @since 3.0.0
@@ -480,7 +480,7 @@ var Timeline = new Class({
         var totalDuration = 0;
         var offsetDuration = 0;
 
-        var targets:any[] = [];
+        var targets = [];
         for (var i = 0; i < this.totalData; i++)
         {
             var tween = this.data[i];
@@ -511,7 +511,7 @@ var Timeline = new Class({
                     tween.calculatedOffset = this.getRelativeOffset(tween.offset, prevEnd);
                 }
 
-                offsetDuration += tween.totalDuration + tween.duration;
+                offsetDuration += tween.totalDuration + tween.calculatedOffset;
             }
             else
             {
