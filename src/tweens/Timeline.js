@@ -480,11 +480,18 @@ var Timeline = new Class({
         var totalDuration = 0;
         var offsetDuration = 0;
 
+        var targets:any[] = [];
         for (var i = 0; i < this.totalData; i++)
         {
             var tween = this.data[i];
-
             tween.init();
+
+            for(let t of tween.targets) {
+                if(targets.indexOf(t) < 0) {
+                    t.____total_druation____ = 0;
+                    targets.push(t);
+                }
+            }
 
             if (this.hasOffset(tween))
             {
@@ -503,18 +510,29 @@ var Timeline = new Class({
                     //  A relative offset (i.e. '-=1000', so starts at 'offset' ms relative to the PREVIOUS Tweens ending time)
                     tween.calculatedOffset = this.getRelativeOffset(tween.offset, prevEnd);
                 }
+
+                offsetDuration += tween.totalDuration + tween.duration;
             }
             else
             {
                 //  Sequential
                 tween.calculatedOffset = offsetDuration;
+
+                offsetDuration += tween.totalDuration;
             }
 
             prevEnd = tween.totalDuration + tween.calculatedOffset;
 
-            totalDuration += tween.totalDuration;
-            offsetDuration += tween.totalDuration;
+            for(let t of tween.targets) {
+                t.____total_druation____ += tween.totalDuration;
+            }
         }
+
+        totalDuration = targets.reduce((maxvalue, current)=>{
+            let vlaue = Math.max(maxvalue, current.____total_druation____);
+            delete current.____total_druation____;
+            return vlaue;
+        }, 0);
 
         //  Excludes loop values
         this.duration = totalDuration;
