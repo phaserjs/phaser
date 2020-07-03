@@ -160,7 +160,7 @@ var Body = new Class({
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
-        this.prev = new Vector2(gameObject.x, gameObject.y);
+        this.prev = this.position.clone();
 
         /**
          * The position of this Body during the previous frame.
@@ -169,7 +169,7 @@ var Body = new Class({
          * @type {Phaser.Math.Vector2}
          * @since 3.20.0
          */
-        this.prevFrame = new Vector2(gameObject.x, gameObject.y);
+        this.prevFrame = this.position.clone();
 
         /**
          * Whether this Body's `rotation` is affected by its angular acceleration and angular velocity.
