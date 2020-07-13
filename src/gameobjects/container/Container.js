@@ -202,14 +202,14 @@ var Container = new Class({
          *
          * When a camera scrolls it will change the location at which this Container is rendered on-screen.
          * It does not change the Containers actual position values.
-         * 
+         *
          * For a Container, setting this value will only update the Container itself, not its children.
          * If you wish to change the scrollFactor of the children as well, use the `setScrollFactor` method.
          *
          * A value of 1 means it will move exactly in sync with a camera.
          * A value of 0 means it will not move at all, even if the camera moves.
          * Other values control the degree to which the camera movement is mapped to this Container.
-         * 
+         *
          * Please be aware that scroll factor values other than 1 are not taken in to consideration when
          * calculating physics collisions. Bodies always collide based on their world position, but changing
          * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
@@ -229,14 +229,14 @@ var Container = new Class({
          *
          * When a camera scrolls it will change the location at which this Container is rendered on-screen.
          * It does not change the Containers actual position values.
-         * 
+         *
          * For a Container, setting this value will only update the Container itself, not its children.
          * If you wish to change the scrollFactor of the children as well, use the `setScrollFactor` method.
          *
          * A value of 1 means it will move exactly in sync with a camera.
          * A value of 0 means it will not move at all, even if the camera moves.
          * Other values control the degree to which the camera movement is mapped to this Container.
-         * 
+         *
          * Please be aware that scroll factor values other than 1 are not taken in to consideration when
          * calculating physics collisions. Bodies always collide based on their world position, but changing
          * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
@@ -392,6 +392,7 @@ var Container = new Class({
         {
             var parentMatrix = this.parentContainer.getBoundsTransformMatrix();
             var transformedPosition = parentMatrix.transformPoint(this.x, this.y);
+
             output.setTo(transformedPosition.x, transformedPosition.y, 0, 0);
         }
 
@@ -399,10 +400,11 @@ var Container = new Class({
         {
             var children = this.list;
             var tempRect = new Rectangle();
+            var hasSetFirst = false;
 
-            var firstChildBounds = children[0].getBounds();
-            output.setTo(firstChildBounds.x, firstChildBounds.y, firstChildBounds.width, firstChildBounds.height);
-            for (var i = 1; i < children.length; i++)
+            output.setEmpty();
+
+            for (var i = 0; i < children.length; i++)
             {
                 var entry = children[i];
 
@@ -410,7 +412,15 @@ var Container = new Class({
                 {
                     entry.getBounds(tempRect);
 
-                    Union(tempRect, output, output);
+                    if (!hasSetFirst)
+                    {
+                        output.setTo(tempRect.x, tempRect.y, tempRect.width, tempRect.height);
+                        hasSetFirst = true;
+                    }
+                    else
+                    {
+                        Union(tempRect, output, output);
+                    }
                 }
             }
         }
@@ -502,7 +512,7 @@ var Container = new Class({
 
     /**
      * Returns the world transform matrix as used for Bounds checks.
-     * 
+     *
      * The returned matrix is temporal and shouldn't be stored.
      *
      * @method Phaser.GameObjects.Container#getBoundsTransformMatrix
@@ -1152,7 +1162,7 @@ var Container = new Class({
      * A value of 1 means it will move exactly in sync with a camera.
      * A value of 0 means it will not move at all, even if the camera moves.
      * Other values control the degree to which the camera movement is mapped to this Game Object.
-     * 
+     *
      * Please be aware that scroll factor values other than 1 are not taken in to consideration when
      * calculating physics collisions. Bodies always collide based on their world position, but changing
      * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
