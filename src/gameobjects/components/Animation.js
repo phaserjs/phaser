@@ -330,10 +330,13 @@ var Animation = new Class({
             key = key.key;
         }
 
-        if(this.nextAnim === null){
-          this.nextAnim = key;
-        } else {
-          this.nextAnimsQueue.push(key);
+        if (this.nextAnim === null)
+        {
+            this.nextAnim = key;
+        }
+        else
+        {
+            this.nextAnimsQueue.push(key);
         }
 
         return this.parent;
