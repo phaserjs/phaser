@@ -6,7 +6,7 @@
 
 /**
  * Global constants.
- * 
+ *
  * @ignore
  */
 
@@ -14,13 +14,13 @@ var CONST = {
 
     /**
      * Phaser Release Version
-     * 
+     *
      * @name Phaser.VERSION
      * @const
      * @type {string}
      * @since 3.0.0
      */
-    VERSION: '3.23.0',
+    VERSION: '3.24.0',
 
     BlendModes: require('./renderer/BlendModes'),
 
@@ -28,7 +28,7 @@ var CONST = {
 
     /**
      * AUTO Detect Renderer.
-     * 
+     *
      * @name Phaser.AUTO
      * @const
      * @type {integer}
@@ -38,7 +38,7 @@ var CONST = {
 
     /**
      * Canvas Renderer.
-     * 
+     *
      * @name Phaser.CANVAS
      * @const
      * @type {integer}
@@ -48,7 +48,7 @@ var CONST = {
 
     /**
      * WebGL Renderer.
-     * 
+     *
      * @name Phaser.WEBGL
      * @const
      * @type {integer}
@@ -58,7 +58,7 @@ var CONST = {
 
     /**
      * Headless Renderer.
-     * 
+     *
      * @name Phaser.HEADLESS
      * @const
      * @type {integer}
@@ -69,7 +69,7 @@ var CONST = {
     /**
      * In Phaser the value -1 means 'forever' in lots of cases, this const allows you to use it instead
      * to help you remember what the value is doing in your code.
-     * 
+     *
      * @name Phaser.FOREVER
      * @const
      * @type {integer}
@@ -79,7 +79,7 @@ var CONST = {
 
     /**
      * Direction constant.
-     * 
+     *
      * @name Phaser.NONE
      * @const
      * @type {integer}
@@ -89,7 +89,7 @@ var CONST = {
 
     /**
      * Direction constant.
-     * 
+     *
      * @name Phaser.UP
      * @const
      * @type {integer}
@@ -99,7 +99,7 @@ var CONST = {
 
     /**
      * Direction constant.
-     * 
+     *
      * @name Phaser.DOWN
      * @const
      * @type {integer}
@@ -109,7 +109,7 @@ var CONST = {
 
     /**
      * Direction constant.
-     * 
+     *
      * @name Phaser.LEFT
      * @const
      * @type {integer}
@@ -119,7 +119,7 @@ var CONST = {
 
     /**
      * Direction constant.
-     * 
+     *
      * @name Phaser.RIGHT
      * @const
      * @type {integer}
