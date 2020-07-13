@@ -2,10 +2,7 @@
 
 const webpack = require('webpack');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-
-const basePath = __dirname;
-const targetFolder = 'dist';
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
     mode: 'production',
@@ -57,8 +54,6 @@ module.exports = {
             "typeof FEATURE_SOUND": JSON.stringify(true)
         }),
 
-        new CleanWebpackPlugin([targetFolder], {
-            root: basePath + '/../'
-        })
+        new CleanWebpackPlugin()
     ]
 };
