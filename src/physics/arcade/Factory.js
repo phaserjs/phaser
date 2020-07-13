@@ -104,7 +104,7 @@ var Factory = new Class({
      * @param {Phaser.GameObjects.GameObject} gameObject - A Game Object.
      * @param {boolean} [isStatic=false] - Create a Static body (true) or Dynamic body (false).
      *
-     * @return {Phaser.GameObjects.GameObject} The Game Object.
+     * @return {Phaser.Types.Physics.Arcade.GameObjectWithBody} The Game Object.
      */
     existing: function (gameObject, isStatic)
     {
@@ -126,7 +126,7 @@ var Factory = new Class({
      * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
      * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
      *
-     * @return {Phaser.Physics.Arcade.Image} The Image object that was created.
+     * @return {Phaser.Types.Physics.Arcade.ImageWithStaticBody} The Image object that was created.
      */
     staticImage: function (x, y, key, frame)
     {
@@ -150,7 +150,7 @@ var Factory = new Class({
      * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
      * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
      *
-     * @return {Phaser.Physics.Arcade.Image} The Image object that was created.
+     * @return {Phaser.Types.Physics.Arcade.ImageWithDynamicBody} The Image object that was created.
      */
     image: function (x, y, key, frame)
     {
@@ -174,7 +174,7 @@ var Factory = new Class({
      * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
      * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
      *
-     * @return {Phaser.Physics.Arcade.Sprite} The Sprite object that was created.
+     * @return {Phaser.Types.Physics.Arcade.SpriteWithStaticBody} The Sprite object that was created.
      */
     staticSprite: function (x, y, key, frame)
     {
@@ -199,7 +199,7 @@ var Factory = new Class({
      * @param {string} key - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
      * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
      *
-     * @return {Phaser.Physics.Arcade.Sprite} The Sprite object that was created.
+     * @return {Phaser.Types.Physics.Arcade.SpriteWithDynamicBody} The Sprite object that was created.
      */
     sprite: function (x, y, key, frame)
     {
