@@ -13,10 +13,17 @@
 * Sprite vs. Static Group collision tests now always use the static tree (thanks @samme)
 * Fixed a bug where if you added a static body to a sprite with scale ≠ 1, the body position was incorrect (thanks @samme)
 * If you passed in an array of `children` when creating a Physics Group, they didn't receive bodies. Fix #5152 (thanks @samme)
+* New types allow for better docs / TypeScript defs especially in the Factory functions: `ArcadePhysicsCallback`, `GameObjectWithBody`, `GameObjectWithDynamicBody`, `GameObjectWithStaticBody`, `ImageWithDynamicBody`, `ImageWithStaticBody`, `SpriteWithDynamicBody` and `SpriteWithStaticBody`. Fix #4994 (thanks @samme @gnesher)
+* `Body.updateFromGameObject` is a new method that extracts the relevant code from `preUpdate`, allowing you to read the body's new position and center immediately, before the next physics step. It also lets `refreshBody` work for dynamic bodies, where previously it would error (thanks @samme)
 
 ### New Features
 
-
+* The Animation component has a new property `nextAnimsQueue` which allows you to sequence Sprite animations to play in order, i.e: `this.mole.anims.play('digging').anims.chain('lifting').anims.chain('looking').anims.chain('lowering');` (thanks @tgroborsch)
+* `Group.setActive` is a new method that will set the active state of a Group, just like it does on other Game Objects (thanks @samme)
+* `Group.setName` is a new method that will set the name property of a Group, just like it does on other Game Objects (thanks @samme)
+* `TWEEN_STOP` is a new event dispatched by a Tween when it stops playback (thanks @samme @RollinSafary)
+* You can now specify an `onStop` callback when creating a Tween as part of the tween config, which is invoked when a Tween stops playback (thanks @samme @RollinSafary)
+* Previously, if you created a timeline and passed no tweens in the config, the timeline would be created but all config properties were ignored. Now the timeline's own properties (completeDelay, loop, loopDelay, useFrames, onStart, onUpdate, onLoop, onYoyo, onComplete, etc.) are set from the config properly (thanks @samme)
 
 ### Updates
 
@@ -26,6 +33,7 @@
 * `Container.getBounds` will no longer set the temp rect bounds to the first child of the Container by default (which would error if the child had no bounds, like a Graphics object) and instead sets it as it iterates the children (thanks @blopa)
 * `File.state` will now be set to the `FILE_LOADING` state while loading and `FILE_LOADED` after loading (thanks @samme)
 * `BaseCamera.cull` now moves some of its calculations outside of the cull loop to speed it up (thanks @samme)
+* `SceneManager.createSceneFromInstance` had a small refactor to avoid a pointless condition (thanks @samme)
 
 ### Bug Fixes
 
@@ -35,12 +43,17 @@
 * When the Sprite Sheet parser results in zero frames, the warning will now tell you the texture name that caused it (thanks @samme)
 * `KeyboardPlugin.checkDown` didn't set the `duration` to zero if the parameter was omitted, causing it to always return false. Fix #5146 (thanks @lozzajp)
 * If you passed in an array of `children` when creating a Group, they were not added and removed correctly. Fix #5151 (thanks @samme)
+* When using HTML5 Audio with `pauseOnBlur` (the default), if you play a sound, schedule stopping the sound (e.g., timer, tween complete callback), leave the page, and return to the page, the sound `stop()` will error (thanks @samme)
+* Using a Render Texture when you're also using the headless renderer would cause an error (thanks @samme)
+* `Ellipse.setWidth` would incorrectly set the `xRadius` to the diameter (thanks @rexrainbow)
+* `Ellipse.setHeight` would incorrectly set the `yRadius` to the diameter (thanks @rexrainbow)
+* When specifically setting the `parent` property in the Game Config to `null` the canvas was appended to the document body, when it should have been ignored (allowing you to add it to the dom directly). Fix #5191 (thanks @MerganThePirate)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@samme @SanderVanhove @SirJosh3917 @mooreInteractive @A-312 
+@samme @SanderVanhove @SirJosh3917 @mooreInteractive @A-312 @lozzajp @mikewesthad 
 
 
 
