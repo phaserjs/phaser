@@ -904,6 +904,30 @@ var Body = new Class({
     },
 
     /**
+     * Updates the Body's `position`, `width`, `height`, and `center` from its Game Object and `offset`.
+     *
+     * You don't need to call this for Dynamic Bodies, as it happens automatically during the physics step.
+     * But you could use it if you have modified the Body offset or Game Object transform and need to immediately
+     * read the Body's new `position` or `center`.
+     *
+     * To resynchronize the Body with its Game Object, use `reset()` instead.
+     *
+     * @method Phaser.Physics.Arcade.Body#updateFromGameObject
+     * @since 3.24.0
+     */
+    updateFromGameObject: function ()
+    {
+        this.updateBounds();
+
+        var transform = this.transform;
+
+        this.position.x = transform.x + transform.scaleX * (this.offset.x - transform.displayOriginX);
+        this.position.y = transform.y + transform.scaleY * (this.offset.y - transform.displayOriginY);
+
+        this.updateCenter();
+    },
+
+    /**
      * Prepares the Body for a physics step by resetting the `wasTouching`, `touching` and `blocked` states.
      *
      * This method is only called if the physics world is going to run a step this frame.
@@ -961,17 +985,9 @@ var Body = new Class({
             this.resetFlags();
         }
 
-        this.updateBounds();
+        this.updateFromGameObject();
 
-        var sprite = this.transform;
-
-        this.position.x = sprite.x + sprite.scaleX * (this.offset.x - sprite.displayOriginX);
-        this.position.y = sprite.y + sprite.scaleY * (this.offset.y - sprite.displayOriginY);
-
-        this.updateCenter();
-
-        this.rotation = sprite.rotation;
-
+        this.rotation = this.transform.rotation;
         this.preRotation = this.rotation;
 
         if (this.moves)
