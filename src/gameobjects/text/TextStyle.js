@@ -43,7 +43,7 @@ var propertyMap = {
 /**
  * @classdesc
  * A TextStyle class manages all of the style settings for a Text object.
- * 
+ *
  * Text Game Objects create a TextStyle instance automatically, which is
  * accessed via the `Text.style` property. You do not normally need to
  * instantiate one yourself.
@@ -302,7 +302,7 @@ var TextStyle = new Class({
          * @name Phaser.GameObjects.TextStyle#wordWrapWidth
          * @type {number | null}
          * @default null
-         * @since 3.23.0
+         * @since 3.24.0
          */
         this.wordWrapWidth;
 
@@ -313,11 +313,11 @@ var TextStyle = new Class({
          * place to indicate where breaks should happen. Setting this directly will not re-run the
          * word wrapping algorithm. To change the callback and re-wrap, use
          * {@link Phaser.GameObjects.TextStyle#setWordWrapCallback}.
-         * 
+         *
          * @name Phaser.GameObjects.TextStyle#wordWrapCallback
          * @type {TextStyleWordWrapCallback | null}
          * @default null
-         * @since 3.23.0
+         * @since 3.24.0
          */
         this.wordWrapCallback;
 
@@ -325,11 +325,11 @@ var TextStyle = new Class({
          * The scope that will be applied when the wordWrapCallback is invoked. Setting this directly will not re-run the
          * word wrapping algorithm. To change the callback and re-wrap, use
          * {@link Phaser.GameObjects.TextStyle#setWordWrapCallback}.
-         * 
+         *
          * @name Phaser.GameObjects.TextStyle#wordWrapCallbackScope
          * @type {object | null}
          * @default null
-         * @since 3.23.0
+         * @since 3.24.0
          */
         this.wordWrapCallbackScope;
 
@@ -338,11 +338,11 @@ var TextStyle = new Class({
          * whitespace is trimmed from lines. If false, spaces and whitespace are left as is. Setting
          * this property directly will not re-run the word wrapping algorithm. To change the
          * advanced setting and re-wrap, use {@link Phaser.GameObjects.TextStyle#setWordWrapWidth}.
-         * 
+         *
          * @name Phaser.GameObjects.TextStyle#wordWrapUseAdvanced
          * @type {boolean}
          * @default false
-         * @since 3.23.0
+         * @since 3.24.0
          */
         this.wordWrapUseAdvanced;
 
@@ -404,6 +404,7 @@ var TextStyle = new Class({
         if (setDefaults === undefined) { setDefaults = false; }
 
         //  Avoid type mutation
+        // eslint-disable-next-line no-prototype-builtins
         if (style && style.hasOwnProperty('fontSize') && typeof style.fontSize === 'number')
         {
             style.fontSize = style.fontSize.toString() + 'px';
@@ -768,7 +769,7 @@ var TextStyle = new Class({
      * By default it will be set to match the resolution set in the Game Config,
      * but you can override it via this method. It allows for much clearer text on High DPI devices,
      * at the cost of memory because it uses larger internal Canvas textures for the Text.
-     * 
+     *
      * Please use with caution, as the more high res Text you have, the more memory it uses up.
      *
      * @method Phaser.GameObjects.TextStyle#setResolution
@@ -820,7 +821,7 @@ var TextStyle = new Class({
 
     /**
      * Set the shadow settings.
-     * 
+     *
      * Calling this method always re-measures the parent Text object,
      * so only call it when you actually change the shadow settings.
      *
@@ -1002,9 +1003,9 @@ var TextStyle = new Class({
 
     /**
      * Set the alignment of the text in this Text object.
-     * 
+     *
      * The argument can be one of: `left`, `right`, `center` or `justify`.
-     * 
+     *
      * Alignment only works if the Text object has more than one line of text.
      *
      * @method Phaser.GameObjects.TextStyle#setAlign
