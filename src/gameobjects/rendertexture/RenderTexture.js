@@ -12,6 +12,7 @@ var Components = require('../components');
 var CONST = require('../../const');
 var Frame = require('../../textures/Frame');
 var GameObject = require('../GameObject');
+var NOOP = require('../../utils/NOOP');
 var Render = require('./RenderTextureRender');
 var Utils = require('../../renderer/webgl/Utils');
 var UUID = require('../../utils/string/UUID');
@@ -274,7 +275,11 @@ var RenderTexture = new Class({
 
         var renderer = this.renderer;
 
-        if (renderer.type === CONST.WEBGL)
+        if (!renderer)
+        {
+            this.drawGameObject = NOOP;
+        }
+        else if (renderer.type === CONST.WEBGL)
         {
             var gl = renderer.gl;
 
