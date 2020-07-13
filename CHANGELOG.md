@@ -1,5 +1,53 @@
 # Change Log
 
+## Version 3.24 - Rem - 13th July 2020
+
+### Removed
+
+
+
+### Arcade Physics New Features, Updates and Fixes
+
+* When colliding physics groups with the search tree enabled, there was an unnecessary intersection test for each body returned by the search (thanks @samme)
+* When doing an overlap collision, there was an unnecessary intersection test for each pair of overlapping bodies (thanks @samme)
+* Sprite vs. Static Group collision tests now always use the static tree (thanks @samme)
+
+### New Features
+
+
+
+### Updates
+
+* The `Pointer.dragStartX/YGlobal` and `Pointer.dragX/Y` values are now populated from the `worldX/Y`, which means using those values directly in Input Drag callbacks will now work when the Camera is zoomed. Fix #4755 (thanks @braindx)
+* The `browser` field has been added to the Phaser `package.json` pointing to the `dist/phaser.js` umd build (thanks @FredKSchott)
+* Calling `TimeStep.wake()` while the loop is running will now cause nothing to happen, rather than sleeping and then waking again (thanks @samme)
+* `Container.getBounds` will no longer set the temp rect bounds to the first child of the Container by default (which would error if the child had no bounds, like a Graphics object) and instead sets it as it iterates the children (thanks @blopa)
+* `File.state` will now be set to the `FILE_LOADING` state while loading and `FILE_LOADED` after loading (thanks @samme)
+
+### Bug Fixes
+
+* Fixed a TypeError warning when importing JSON objects directly to the `url` argument of any of the Loader filetypes (thanks @samme)
+* The `NOOP` function was incorrectly imported by the Mouse and Keyboard Manager. Fix #5170 (thanks @samme @gregolai)
+* When Audio files failed to decode on loading, they would always show 'undefined' as the key in the error log, now they show the actual key (thanks @samme)
+* When the Sprite Sheet parser results in zero frames, the warning will now tell you the texture name that caused it (thanks @samme)
+* `KeyboardPlugin.checkDown` didn't set the `duration` to zero if the parameter was omitted, causing it to always return false. Fix #5146 (thanks @lozzajp)
+
+### Examples, Documentation and TypeScript
+
+My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
+
+@samme @SanderVanhove @SirJosh3917 @mooreInteractive @A-312 
+
+
+
+
+
+
+
+
+
+
+
 ## Version 3.23 - Ginro - 27th April 2020
 
 ### JSDocs
