@@ -24,6 +24,10 @@
 * `TWEEN_STOP` is a new event dispatched by a Tween when it stops playback (thanks @samme @RollinSafary)
 * You can now specify an `onStop` callback when creating a Tween as part of the tween config, which is invoked when a Tween stops playback (thanks @samme @RollinSafary)
 * Previously, if you created a timeline and passed no tweens in the config, the timeline would be created but all config properties were ignored. Now the timeline's own properties (completeDelay, loop, loopDelay, useFrames, onStart, onUpdate, onLoop, onYoyo, onComplete, etc.) are set from the config properly (thanks @samme)
+* `TextStyle.wordWrapWidth` lets you set the maximum width of a line of text (thanks @mikewesthad)
+* `TextStyle.wordWrapCallback` is a custom function that will is responsible for wrapping the text (thanks @mikewesthad)
+* `TextStyle.wordWrapCallbackScope` is the scope that will be applied when the `wordWrapCallback` is invoked (thanks @mikewesthad)
+* `TextStyle.wordWrapUseAdvanced` controls whether or not to use the advanced wrapping algorithm (thanks @mikewesthad)
 
 ### Updates
 
