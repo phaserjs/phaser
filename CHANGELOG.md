@@ -45,7 +45,7 @@
 
 ### Bug Fixes
 
-* Fixed a TypeError warning when importing JSON objects directly to the `url` argument of any of the Loader filetypes (thanks @samme)
+* Fixed a TypeError warning when importing JSON objects directly to the `url` argument of any of the Loader filetypes. Fix #5189 (thanks @awweather @samme)
 * The `NOOP` function was incorrectly imported by the Mouse and Keyboard Manager. Fix #5170 (thanks @samme @gregolai)
 * When Audio files failed to decode on loading, they would always show 'undefined' as the key in the error log, now they show the actual key (thanks @samme)
 * When the Sprite Sheet parser results in zero frames, the warning will now tell you the texture name that caused it (thanks @samme)
@@ -61,6 +61,7 @@
 * Calling `setCrop` on a Matter Physics Sprite would throw a TypeError, but will now crop correctly. Not that it only crops the texture, the body is unaffected. Fix #5211 (thanks @MatthewRorke @samme)
 * The Static Tilemap Layer would ignore the layer rotation and parent transform when using WebGL (but worked in Canvas). Both modes now work in the same manner (thanks @cruzdanilo)
 * Calling `getTextBounds` on a BitmapText object would return the incorrect values if the origin had been changed, but the text itself had not, as it was using out of date dimensions. Changing the origin now automatically triggers BitmapText to be dirty, forcing the bounds to be refreshed. Fix #5121 (thanks @thenonamezz)
+* The ISO Triangle shape would skip rendering the left side of the first triangle in the batch. It now renders all ISO Triangles correctly. Fix #5164 (thanks @mattjennings)
 
 ### Examples, Documentation and TypeScript
 
