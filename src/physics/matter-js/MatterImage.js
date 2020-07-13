@@ -86,6 +86,16 @@ var MatterImage = new Class({
     {
         GameObject.call(this, world.scene, 'Image');
 
+        /**
+         * The internal crop data object, as used by `setCrop` and passed to the `Frame.setCropUVs` method.
+         *
+         * @name Phaser.Physics.Matter.Image#_crop
+         * @type {object}
+         * @private
+         * @since 3.24.0
+         */
+        this._crop = this.resetCropObject();
+
         this.setTexture(texture, frame);
         this.setSizeToFrame();
         this.setOrigin();
