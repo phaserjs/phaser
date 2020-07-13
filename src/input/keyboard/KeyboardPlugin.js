@@ -20,11 +20,11 @@ var SnapFloor = require('../../math/snap/SnapFloor');
 /**
  * @classdesc
  * The Keyboard Plugin is an input plugin that belongs to the Scene-owned Input system.
- * 
+ *
  * Its role is to listen for native DOM Keyboard Events and then process them.
- * 
+ *
  * You do not need to create this class directly, the Input system will create an instance of it automatically.
- * 
+ *
  * You can access it from within a Scene using `this.input.keyboard`. For example, you can do:
  *
  * ```javascript
@@ -32,7 +32,7 @@ var SnapFloor = require('../../math/snap/SnapFloor');
  * ```
  *
  * Or, to listen for a specific key:
- * 
+ *
  * ```javascript
  * this.input.keyboard.on('keydown-A', callback, context);
  * ```
@@ -42,7 +42,7 @@ var SnapFloor = require('../../math/snap/SnapFloor');
  * ```javascript
  * var spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
  * ```
- * 
+ *
  * If you have multiple parallel Scenes, each trying to get keyboard input, be sure to disable capture on them to stop them from
  * stealing input from another Scene in the list. You can do this with `this.input.keyboard.enabled = false` within the
  * Scene to stop all input, or `this.input.keyboard.preventDefault = false` to stop a Scene halting input on another Scene.
@@ -218,35 +218,35 @@ var KeyboardPlugin = new Class({
      *
      * This `addCapture` method enables consuming keyboard events for specific keys, so they don't bubble up the browser
      * and cause the default behaviors.
-     * 
+     *
      * Please note that keyboard captures are global. This means that if you call this method from within a Scene, to say prevent
      * the SPACE BAR from triggering a page scroll, then it will prevent it for any Scene in your game, not just the calling one.
-     * 
+     *
      * You can pass a single key code value:
-     * 
+     *
      * ```javascript
      * this.input.keyboard.addCapture(62);
      * ```
-     * 
+     *
      * An array of key codes:
-     * 
+     *
      * ```javascript
      * this.input.keyboard.addCapture([ 62, 63, 64 ]);
      * ```
-     * 
+     *
      * Or, a comma-delimited string:
-     * 
+     *
      * ```javascript
      * this.input.keyboard.addCapture('W,S,A,D');
      * ```
-     * 
+     *
      * To use non-alpha numeric keys, use a string, such as 'UP', 'SPACE' or 'LEFT'.
-     * 
+     *
      * You can also provide an array mixing both strings and key code integers.
      *
      * @method Phaser.Input.Keyboard.KeyboardPlugin#addCapture
      * @since 3.16.0
-     * 
+     *
      * @param {(string|integer|integer[]|any[])} keycode - The Key Codes to enable event capture for.
      *
      * @return {this} This KeyboardPlugin object.
@@ -260,35 +260,35 @@ var KeyboardPlugin = new Class({
 
     /**
      * Removes an existing key capture.
-     * 
+     *
      * Please note that keyboard captures are global. This means that if you call this method from within a Scene, to remove
      * the capture of a key, then it will remove it for any Scene in your game, not just the calling one.
-     * 
+     *
      * You can pass a single key code value:
-     * 
+     *
      * ```javascript
      * this.input.keyboard.removeCapture(62);
      * ```
-     * 
+     *
      * An array of key codes:
-     * 
+     *
      * ```javascript
      * this.input.keyboard.removeCapture([ 62, 63, 64 ]);
      * ```
-     * 
+     *
      * Or, a comma-delimited string:
-     * 
+     *
      * ```javascript
      * this.input.keyboard.removeCapture('W,S,A,D');
      * ```
-     * 
+     *
      * To use non-alpha numeric keys, use a string, such as 'UP', 'SPACE' or 'LEFT'.
-     * 
+     *
      * You can also provide an array mixing both strings and key code integers.
      *
      * @method Phaser.Input.Keyboard.KeyboardPlugin#removeCapture
      * @since 3.16.0
-     * 
+     *
      * @param {(string|integer|integer[]|any[])} keycode - The Key Codes to disable event capture for.
      *
      * @return {this} This KeyboardPlugin object.
@@ -305,7 +305,7 @@ var KeyboardPlugin = new Class({
      *
      * @method Phaser.Input.Keyboard.KeyboardPlugin#getCaptures
      * @since 3.16.0
-     * 
+     *
      * @return {integer[]} An array of all the currently capturing key codes.
      */
     getCaptures: function ()
@@ -347,7 +347,7 @@ var KeyboardPlugin = new Class({
 
     /**
      * Removes all keyboard captures.
-     * 
+     *
      * Note that this is a global change. It will clear all event captures across your game, not just for this specific Scene.
      *
      * @method Phaser.Input.Keyboard.KeyboardPlugin#clearCaptures
@@ -390,11 +390,11 @@ var KeyboardPlugin = new Class({
      * ```javascript
      * this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.W, 'down': Phaser.Input.Keyboard.KeyCodes.S });
      * ```
-     * 
+     *
      * would return an object containing the properties (`up` and `down`) mapped to W and S {@link Phaser.Input.Keyboard.Key} objects.
      *
      * You can also pass in a comma-separated string:
-     * 
+     *
      * ```javascript
      * this.input.keyboard.addKeys('W,S,A,D');
      * ```
@@ -568,7 +568,7 @@ var KeyboardPlugin = new Class({
 
     /**
      * Creates a new KeyCombo.
-     * 
+     *
      * A KeyCombo will listen for a specific string of keys from the Keyboard, and when it receives them
      * it will emit a `keycombomatch` event from this Keyboard Plugin.
      *
@@ -610,12 +610,12 @@ var KeyboardPlugin = new Class({
 
     /**
      * Checks if the given Key object is currently being held down.
-     * 
+     *
      * The difference between this method and checking the `Key.isDown` property directly is that you can provide
      * a duration to this method. For example, if you wanted a key press to fire a bullet, but you only wanted
      * it to be able to fire every 100ms, then you can call this method with a `duration` of 100 and it
      * will only return `true` every 100ms.
-     * 
+     *
      * If the Keyboard Plugin has been disabled, this method will always return `false`.
      *
      * @method Phaser.Input.Keyboard.KeyboardPlugin#checkDown
@@ -623,11 +623,13 @@ var KeyboardPlugin = new Class({
      *
      * @param {Phaser.Input.Keyboard.Key} key - A Key object.
      * @param {number} [duration=0] - The duration which must have elapsed before this Key is considered as being down.
-     * 
+     *
      * @return {boolean} `true` if the Key is down within the duration specified, otherwise `false`.
      */
     checkDown: function (key, duration)
     {
+        if (duration === undefined) { duration = 0; }
+
         if (this.enabled && key.isDown)
         {
             var t = SnapFloor(this.time - key.timeDown, duration);
@@ -681,7 +683,7 @@ var KeyboardPlugin = new Class({
                 {
                     event.cancelled = 1;
                 };
-    
+
                 //  Won't reach any more handlers in any Scene further down the Scene list
                 event.stopPropagation = function ()
                 {
@@ -760,7 +762,7 @@ var KeyboardPlugin = new Class({
      * Resets all Key objects created by _this_ Keyboard Plugin back to their default un-pressed states.
      * This can only reset keys created via the `addKey`, `addKeys` or `createCursorKeys` methods.
      * If you have created a Key object directly you'll need to reset it yourself.
-     * 
+     *
      * This method is called automatically when the Keyboard Plugin shuts down, but can be
      * invoked directly at any time you require.
      *
@@ -787,7 +789,7 @@ var KeyboardPlugin = new Class({
 
     /**
      * Shuts this Keyboard Plugin down. This performs the following tasks:
-     * 
+     *
      * 1 - Resets all keys created by this Keyboard plugin.
      * 2 - Stops and removes the keyboard event listeners.
      * 3 - Clears out any pending requests in the queue, without processing them.
