@@ -567,6 +567,38 @@ var KeyboardPlugin = new Class({
     },
 
     /**
+     * Removes all Key objects created by _this_ Keyboard Plugin.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#removeAllKeys
+     * @since 3.24.0
+     *
+     * @param {boolean} [destroy=false] - Call `Key.destroy` on each removed Key object?
+     *
+     * @return {this} This KeyboardPlugin object.
+     */
+    removeAllKeys: function (destroy)
+    {
+        var keys = this.keys;
+
+        for (var i = 0; i < keys.length; i++)
+        {
+            var key = keys[i];
+
+            if (key)
+            {
+                keys[i] = undefined;
+
+                if (destroy)
+                {
+                    key.destroy();
+                }
+            }
+        }
+
+        return this;
+    },
+
+    /**
      * Creates a new KeyCombo.
      *
      * A KeyCombo will listen for a specific string of keys from the Keyboard, and when it receives them
