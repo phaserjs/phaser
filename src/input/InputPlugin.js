@@ -1126,8 +1126,8 @@ var InputPlugin = new Class({
             input.dragStartX = gameObject.x;
             input.dragStartY = gameObject.y;
 
-            input.dragStartXGlobal = pointer.x;
-            input.dragStartYGlobal = pointer.y;
+            input.dragStartXGlobal = pointer.worldX;
+            input.dragStartYGlobal = pointer.worldY;
 
             input.dragX = input.dragStartXGlobal - input.dragStartX;
             input.dragY = input.dragStartYGlobal - input.dragStartY;
@@ -1330,13 +1330,13 @@ var InputPlugin = new Class({
 
             if (!gameObject.parentContainer)
             {
-                dragX = pointer.x - input.dragX;
-                dragY = pointer.y - input.dragY;
+                dragX = pointer.worldX - input.dragX;
+                dragY = pointer.worldY - input.dragY;
             }
             else
             {
-                var dx = pointer.x - input.dragStartXGlobal;
-                var dy = pointer.y - input.dragStartYGlobal;
+                var dx = pointer.worldX - input.dragStartXGlobal;
+                var dy = pointer.worldY - input.dragStartYGlobal;
 
                 var rotation = gameObject.getParentRotation();
 
