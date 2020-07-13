@@ -294,7 +294,7 @@ var DataManager = new Class({
      * @param {*} [data] - The value to increase for the given key.
      *
      * @return {Phaser.Data.DataManager} This DataManager object.
-     */    
+     */
     inc: function (key, data)
     {
         if (this._frozen)
@@ -332,7 +332,7 @@ var DataManager = new Class({
      * @param {(string|object)} key - The key to toggle the value for.
      *
      * @return {Phaser.Data.DataManager} This DataManager object.
-     */  
+     */
     toggle: function (key)
     {
         if (this._frozen)

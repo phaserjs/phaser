@@ -355,7 +355,7 @@ var Tween = new Class({
      * @param {integer} [index=0] - The Tween Data to return the value from.
      *
      * @return {number} The value of the requested Tween Data.
-     */	
+     */
     getValue: function (index)
     {
         if (index === undefined) { index = 0; }
