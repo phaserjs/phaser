@@ -20,8 +20,9 @@
  * @param {Phaser.Tilemaps.StaticTilemapLayer} src - The Game Object being rendered in this call.
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
+var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
     var tilesets = src.tileset;
 
@@ -30,9 +31,43 @@ var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPerc
 
     renderer.setPipeline(pipeline);
 
-    pipeline.modelIdentity();
-    pipeline.modelTranslate(src.x - (camera.scrollX * src.scrollFactorX), src.y - (camera.scrollY * src.scrollFactorY), 0);
-    pipeline.modelScale(src.scaleX, src.scaleY, 1);
+    var camMatrix = renderer._tempMatrix1;
+    var layerMatrix = renderer._tempMatrix2;
+    var calcMatrix = renderer._tempMatrix3;
+
+    layerMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
+
+    camMatrix.copyFrom(camera.matrix);
+
+    if (parentMatrix)
+    {
+        //  Multiply the camera by the parent matrix
+        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
+
+        //  Undo the camera scroll
+        layerMatrix.e = src.x;
+        layerMatrix.f = src.y;
+
+        //  Multiply by the layer matrix, store result in calcMatrix
+        camMatrix.multiply(layerMatrix, calcMatrix);
+    }
+    else
+    {
+        layerMatrix.e -= camera.scrollX * src.scrollFactorX;
+        layerMatrix.f -= camera.scrollY * src.scrollFactorY;
+
+        //  Multiply by the layer matrix, store result in calcMatrix
+        camMatrix.multiply(layerMatrix, calcMatrix);
+    }
+
+    var modelMatrix = pipeline.modelIdentity().modelMatrix;
+    modelMatrix[0] = calcMatrix.a;
+    modelMatrix[1] = calcMatrix.b;
+    modelMatrix[4] = calcMatrix.c;
+    modelMatrix[5] = calcMatrix.d;
+    modelMatrix[12] = calcMatrix.e;
+    modelMatrix[13] = calcMatrix.f;
+
     pipeline.viewLoad2D(camera.matrix.matrix);
 
     for (var i = 0; i < tilesets.length; i++)
