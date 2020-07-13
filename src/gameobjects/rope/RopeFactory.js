@@ -18,7 +18,7 @@ var GameObjectFactory = require('../GameObjectFactory');
  *
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
- * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+ * @param {(string|Phaser.Textures.Texture)} texture - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
  * @param {Phaser.Types.Math.Vector2Like[]} [points] - An array containing the vertices data for this Rope. If none is provided a simple quad is created. See `setPoints` to set this post-creation.
  * @param {boolean} [horizontal=true] - Should the vertices of this Rope be aligned horizontally (`true`), or vertically (`false`)?
