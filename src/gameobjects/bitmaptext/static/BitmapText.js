@@ -383,6 +383,25 @@ var BitmapText = new Class({
     },
 
     /**
+     * Updates the Display Origin cached values internally stored on this Game Object.
+     * You don't usually call this directly, but it is exposed for edge-cases where you may.
+     *
+     * @method Phaser.GameObjects.Components.Origin#updateDisplayOrigin
+     * @since 3.0.0
+     *
+     * @return {this} This Game Object instance.
+     */
+    updateDisplayOrigin: function ()
+    {
+        this._displayOriginX = this.originX * this.width;
+        this._displayOriginY = this.originY * this.height;
+
+        this._dirty = true;
+
+        return this;
+    },
+
+    /**
      * Changes the font this BitmapText is using to render.
      *
      * The new texture is loaded and applied to the BitmapText. The existing test, size and alignment are preserved,
