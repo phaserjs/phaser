@@ -42,7 +42,6 @@
     "lintfix": "eslint --config .eslintrc.json \"src/**/*.js\" --fix",
     "sloc": "node-sloc \"./src\" --include-extensions \"js\"",
     "bundleshaders": "node scripts/bundle-shaders.js",
-    "postinstall": "node scripts/support.js",
     "build-tsgen": "cd scripts/tsgen && tsc",
     "tsgen": "cd scripts/tsgen && jsdoc -c jsdoc-tsd.conf.json",
     "test-ts": "cd scripts/tsgen/test && tsc > output.txt",
