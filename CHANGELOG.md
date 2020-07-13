@@ -11,6 +11,8 @@
 * When colliding physics groups with the search tree enabled, there was an unnecessary intersection test for each body returned by the search (thanks @samme)
 * When doing an overlap collision, there was an unnecessary intersection test for each pair of overlapping bodies (thanks @samme)
 * Sprite vs. Static Group collision tests now always use the static tree (thanks @samme)
+* Fixed a bug where if you added a static body to a sprite with scale ≠ 1, the body position was incorrect (thanks @samme)
+* If you passed in an array of `children` when creating a Physics Group, they didn't receive bodies. Fix #5152 (thanks @samme)
 
 ### New Features
 
@@ -23,6 +25,7 @@
 * Calling `TimeStep.wake()` while the loop is running will now cause nothing to happen, rather than sleeping and then waking again (thanks @samme)
 * `Container.getBounds` will no longer set the temp rect bounds to the first child of the Container by default (which would error if the child had no bounds, like a Graphics object) and instead sets it as it iterates the children (thanks @blopa)
 * `File.state` will now be set to the `FILE_LOADING` state while loading and `FILE_LOADED` after loading (thanks @samme)
+* `BaseCamera.cull` now moves some of its calculations outside of the cull loop to speed it up (thanks @samme)
 
 ### Bug Fixes
 
@@ -31,6 +34,7 @@
 * When Audio files failed to decode on loading, they would always show 'undefined' as the key in the error log, now they show the actual key (thanks @samme)
 * When the Sprite Sheet parser results in zero frames, the warning will now tell you the texture name that caused it (thanks @samme)
 * `KeyboardPlugin.checkDown` didn't set the `duration` to zero if the parameter was omitted, causing it to always return false. Fix #5146 (thanks @lozzajp)
+* If you passed in an array of `children` when creating a Group, they were not added and removed correctly. Fix #5151 (thanks @samme)
 
 ### Examples, Documentation and TypeScript
 
