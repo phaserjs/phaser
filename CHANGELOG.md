@@ -2,10 +2,6 @@
 
 ## Version 3.24 - Rem - 13th July 2020
 
-### Removed
-
-
-
 ### Arcade Physics New Features, Updates and Fixes
 
 * When colliding physics groups with the search tree enabled, there was an unnecessary intersection test for each body returned by the search (thanks @samme)
@@ -15,6 +11,10 @@
 * If you passed in an array of `children` when creating a Physics Group, they didn't receive bodies. Fix #5152 (thanks @samme)
 * New types allow for better docs / TypeScript defs especially in the Factory functions: `ArcadePhysicsCallback`, `GameObjectWithBody`, `GameObjectWithDynamicBody`, `GameObjectWithStaticBody`, `ImageWithDynamicBody`, `ImageWithStaticBody`, `SpriteWithDynamicBody` and `SpriteWithStaticBody`. Fix #4994 (thanks @samme @gnesher)
 * `Body.updateFromGameObject` is a new method that extracts the relevant code from `preUpdate`, allowing you to read the body's new position and center immediately, before the next physics step. It also lets `refreshBody` work for dynamic bodies, where previously it would error (thanks @samme)
+* Momentum exchange wasn't working correctly vs. immovable bodies. The movable body tended to stop. Fix #4770 (thanks @samme)
+* The Body mass was decreasing the inertia instead of increasing it. Fix #4770 (thanks @samme)
+* The separation vector seemed to be incorrect, causing the slip / slide collisions. The separation is now correct for circle–circle collisions (although not fully for circle–rectangle collisions), part fix #4770 (thanks @samme)
+* The Arcade Body delta was incorrectly calculated on bodies created during the `update` step, causing the position to be off. Fix #5204 (thanks @zackexplosion @samme)
 
 ### New Features
 
@@ -28,6 +28,9 @@
 * `TextStyle.wordWrapCallback` is a custom function that will is responsible for wrapping the text (thanks @mikewesthad)
 * `TextStyle.wordWrapCallbackScope` is the scope that will be applied when the `wordWrapCallback` is invoked (thanks @mikewesthad)
 * `TextStyle.wordWrapUseAdvanced` controls whether or not to use the advanced wrapping algorithm (thanks @mikewesthad)
+* `KeyboardPlugin.removeAllKeys` is a new method that allows you to automatically remove all Key instances that the plugin has created, making house-keeping a little easier (thanks @samme)
+* `Math.RotateTo` is a new function that will position a point at the given angle and distance (thanks @samme)
+* `Display.Bounds.GetBounds` is a new function that will return the un-transformed bounds of the given Game Object as a Rectangle (thanks @samme)
 
 ### Updates
 
@@ -53,22 +56,15 @@
 * `Ellipse.setHeight` would incorrectly set the `yRadius` to the diameter (thanks @rexrainbow)
 * When specifically setting the `parent` property in the Game Config to `null` the canvas was appended to the document body, when it should have been ignored (allowing you to add it to the dom directly). Fix #5191 (thanks @MerganThePirate)
 * Containers will now apply nested masks correctly when using the Canvas Renderer specifically (thanks @scott20145)
+* Calling `Scale.startFullScreen` would fail in Safari on Mac OS, throwing a `fullscreenfailed` error. It now triggers fullscreen mode correctly, as on other browsers. Fix #5143 (thanks @samme @novaknole)
+* Calling `setCrop` on a Matter Physics Sprite would throw a TypeError, but will now crop correctly. Not that it only crops the texture, the body is unaffected. Fix #5211 (thanks @MatthewRorke @samme)
+* The Static Tilemap Layer would ignore the layer rotation and parent transform when using WebGL (but worked in Canvas). Both modes now work in the same manner (thanks @cruzdanilo)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
 @samme @SanderVanhove @SirJosh3917 @mooreInteractive @A-312 @lozzajp @mikewesthad 
-
-
-
-
-
-
-
-
-
-
 
 ## Version 3.23 - Ginro - 27th April 2020
 
