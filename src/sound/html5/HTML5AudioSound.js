@@ -382,11 +382,15 @@ var HTML5AudioSound = new Class({
      */
     stopAndReleaseAudioTag: function ()
     {
-        this.audio.pause();
-        this.audio.dataset.used = 'false';
-        this.audio = null;
         this.startTime = 0;
         this.previousTime = 0;
+
+        if (this.audio)
+        {
+            this.audio.pause();
+            this.audio.dataset.used = 'false';
+            this.audio = null;
+        }
     },
 
     /**
