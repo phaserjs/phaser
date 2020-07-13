@@ -15,6 +15,7 @@
 * The Body mass was decreasing the inertia instead of increasing it. Fix #4770 (thanks @samme)
 * The separation vector seemed to be incorrect, causing the slip / slide collisions. The separation is now correct for circle–circle collisions (although not fully for circle–rectangle collisions), part fix #4770 (thanks @samme)
 * The Arcade Body delta was incorrectly calculated on bodies created during the `update` step, causing the position to be off. Fix #5204 (thanks @zackexplosion @samme)
+* `Arcade.Components.Size.setBodySize` is a new method available on Arcade Physics Game Objects that allows you to set the body size. This replaces `setSize` which is now deprecated. Fix #4786 (thanks @wingyplus)
 
 ### New Features
 
