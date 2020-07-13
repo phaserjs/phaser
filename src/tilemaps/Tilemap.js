@@ -2029,7 +2029,7 @@ var Tilemap = new Class({
     /**
      * Sets collision on all tiles in the given layer, except for tiles that have an index specified in
      * the given array. The `collides` parameter controls if collision will be enabled (true) or
-     * disabled (false).
+     * disabled (false). Tile indexes not currently in the layer are not affected.
      *
      * If no layer specified, the map's current layer is used.
      *
