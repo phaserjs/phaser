@@ -48,6 +48,7 @@
 * `Ellipse.setWidth` would incorrectly set the `xRadius` to the diameter (thanks @rexrainbow)
 * `Ellipse.setHeight` would incorrectly set the `yRadius` to the diameter (thanks @rexrainbow)
 * When specifically setting the `parent` property in the Game Config to `null` the canvas was appended to the document body, when it should have been ignored (allowing you to add it to the dom directly). Fix #5191 (thanks @MerganThePirate)
+* Containers will now apply nested masks correctly when using the Canvas Renderer specifically (thanks @scott20145)
 
 ### Examples, Documentation and TypeScript
 
