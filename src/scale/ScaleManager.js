@@ -1229,28 +1229,13 @@ var ScaleManager = new Class({
         {
             var fsTarget = this.getFullscreenTarget();
 
-            var fsPromise;
-            
             if (fullscreen.keyboard)
             {
-                fsPromise = fsTarget[fullscreen.request](Element.ALLOW_KEYBOARD_INPUT);
+                fsTarget[fullscreen.request](Element.ALLOW_KEYBOARD_INPUT);
             }
             else
             {
-                fsPromise = fsTarget[fullscreen.request](fullscreenOptions);
-            }
-
-            if (fsPromise)
-            {
-                fsPromise.then(this.fullscreenSuccessHandler.bind(this)).catch(this.fullscreenErrorHandler.bind(this));
-            }
-            else if (fullscreen.active)
-            {
-                this.fullscreenSuccessHandler();
-            }
-            else
-            {
-                this.fullscreenErrorHandler();
+                fsTarget[fullscreen.request](fullscreenOptions);
             }
         }
     },
@@ -1476,9 +1461,13 @@ var ScaleManager = new Class({
      */
     onFullScreenChange: function ()
     {
-        //  They pressed ESC while in fullscreen mode
-        if (!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement || document.mozFullScreenElement))
+        if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement || document.mozFullScreenElement)
         {
+            this.fullscreenSuccessHandler();
+        }
+        else
+        {
+            //  They pressed ESC while in fullscreen mode
             this.stopFullscreen();
         }
     },
