@@ -33,11 +33,13 @@ var Size = {
     },
 
     /**
-     * Sets the size of this physics body. Setting the size does not adjust the dimensions
-     * of the parent Game Object.
+     * **DEPRECATED**: Please use `setBodySize` instead.
+     *
+     * Sets the size of this physics body. Setting the size does not adjust the dimensions of the parent Game Object.
      *
      * @method Phaser.Physics.Arcade.Components.Size#setSize
      * @since 3.0.0
+     * @deprecated
      *
      * @param {number} width - The new width of the physics body, in pixels.
      * @param {number} height - The new height of the physics body, in pixels.
@@ -46,6 +48,25 @@ var Size = {
      * @return {this} This Game Object.
      */
     setSize: function (width, height, center)
+    {
+        this.body.setSize(width, height, center);
+
+        return this;
+    },
+
+    /**
+     * Sets the size of this physics body. Setting the size does not adjust the dimensions of the parent Game Object.
+     *
+     * @method Phaser.Physics.Arcade.Components.Size#setBodySize
+     * @since 3.24.0
+     *
+     * @param {number} width - The new width of the physics body, in pixels.
+     * @param {number} height - The new height of the physics body, in pixels.
+     * @param {boolean} [center=true] - Should the body be re-positioned so its center aligns with the parent Game Object?
+     *
+     * @return {this} This Game Object.
+     */
+    setBodySize: function (width, height, center)
     {
         this.body.setSize(width, height, center);
 
