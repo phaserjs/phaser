@@ -30,7 +30,7 @@ var ContainerCanvasRenderer = function (renderer, container, interpolationPercen
     }
 
     var transformMatrix = container.localTransform;
-    
+
     if (parentMatrix)
     {
         transformMatrix.loadIdentity();
@@ -55,11 +55,12 @@ var ContainerCanvasRenderer = function (renderer, container, interpolationPercen
     var alpha = container._alpha;
     var scrollFactorX = container.scrollFactorX;
     var scrollFactorY = container.scrollFactorY;
-    
-    if (container.mask) {
+
+    if (container.mask)
+    {
         container.mask.preRenderCanvas(renderer, null, camera);
     }
-    
+
     for (var i = 0; i < children.length; i++)
     {
         var child = children[i];
@@ -90,11 +91,11 @@ var ContainerCanvasRenderer = function (renderer, container, interpolationPercen
         child.setAlpha(childAlpha);
         child.setScrollFactor(childScrollFactorX, childScrollFactorY);
     }
-    
-    if (container.mask) {
+
+    if (container.mask)
+    {
         container.mask.postRenderCanvas(renderer);
     }
-
 };
 
 module.exports = ContainerCanvasRenderer;
