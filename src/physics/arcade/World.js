@@ -155,8 +155,8 @@ var World = new Class({
         this.fps = GetValue(config, 'fps', 60);
 
         /**
-         * Should Physics use a fixed update time-step (true) or sync to the render fps (false)?. 
-         * False value of this property disables fps and timeScale properties. 
+         * Should Physics use a fixed update time-step (true) or sync to the render fps (false)?.
+         * False value of this property disables fps and timeScale properties.
          *
          * @name Phaser.Physics.Arcade.World#fixedStep
          * @type {boolean}
@@ -326,7 +326,7 @@ var World = new Class({
         this.maxEntries = GetValue(config, 'maxEntries', 16);
 
         /**
-         * Should this Arcade Physics World use an RTree for Dynamic and Static Physics bodies?
+         * Should this Arcade Physics World use an RTree for Dynamic bodies?
          *
          * An RTree is a fast way of spatially sorting of all the bodies in the world.
          * However, at certain limits, the cost of clearing and inserting the bodies into the
@@ -1962,7 +1962,7 @@ var World = new Class({
         var len;
         var bodyB;
 
-        if (this.useTree)
+        if (this.useTree || group.physicsType === CONST.STATIC_BODY)
         {
             var minMax = this.treeMinMax;
 
