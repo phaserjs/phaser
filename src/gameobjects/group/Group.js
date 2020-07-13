@@ -91,7 +91,7 @@ var Group = new Class({
          * @type {Phaser.Structs.Set.<Phaser.GameObjects.GameObject>}
          * @since 3.0.0
          */
-        this.children = new Set(children);
+        this.children = new Set();
 
         /**
          * A flag identifying this object as a group.
@@ -235,6 +235,11 @@ var Group = new Class({
          * @since 3.22.0
          */
         this.internalRemoveCallback = GetFastValue(config, 'internalRemoveCallback', null);
+
+        if (children)
+        {
+            this.addMultiple(children);
+        }
 
         if (config)
         {

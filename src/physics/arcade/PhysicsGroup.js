@@ -56,7 +56,7 @@ var PhysicsGroup = new Class({
         }
         else if (Array.isArray(children) && IsPlainObject(children[0]))
         {
-            //  children is an array of plain objects
+            //  children is an array of plain objects (i.e., configs)
             config = children[0];
 
             var _this = this;
@@ -66,6 +66,8 @@ var PhysicsGroup = new Class({
                 singleConfig.internalCreateCallback = _this.createCallbackHandler;
                 singleConfig.internalRemoveCallback = _this.removeCallbackHandler;
             });
+
+            children = null;
         }
         else
         {
@@ -139,11 +141,6 @@ var PhysicsGroup = new Class({
             setMass: GetFastValue(config, 'mass', 1),
             setImmovable: GetFastValue(config, 'immovable', false)
         };
-
-        if (Array.isArray(children))
-        {
-            config = null;
-        }
 
         Group.call(this, scene, children, config);
 
