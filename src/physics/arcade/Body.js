@@ -333,18 +333,19 @@ var Body = new Class({
         this.allowDrag = true;
 
         /**
-         * When `useDamping` is false (the default), this is absolute loss of velocity due to movement, in pixels per second squared (a vector).
-         * The x and y components are applied separately.
+         * When `useDamping` is false (the default), this is absolute loss of velocity due to movement, in pixels per second squared.
          *
-         * When `useDamping` is true, this is 1 minus the damping factor (a number).
+         * When `useDamping` is true, this is 1 minus the damping factor.
          * A value of 1 means the Body loses no velocity.
          * A value of 0.95 means the Body loses 5% of its velocity per step.
          * A value of 0.5 means the Body loses 50% of its velocity per step.
          *
+         * The x and y components are applied separately.
+         *
          * Drag is applied only when `acceleration` is zero.
          *
          * @name Phaser.Physics.Arcade.Body#drag
-         * @type {(Phaser.Math.Vector2|number)}
+         * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
         this.drag = new Vector2();
