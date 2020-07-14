@@ -236,6 +236,15 @@ var WebGLPipeline = new Class({
          * @since 3.10.0
          */
         this.active = false;
+
+        /**
+         * The maximum number of textures the GPU can handle.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#maxGPUTextures
+         * @type {number}
+         * @since 3.25.0
+         */
+        this.maxGPUTextures = 0;
     },
 
     /**
