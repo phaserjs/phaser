@@ -1,5 +1,33 @@
 # Change Log
 
+## Version 3.25.0 - Subaru - in development
+
+### WebGL ModelViewProjection API Changes
+
+The `ModelViewProjection` object contained a lot of functions that Phaser never used internally. To save space,
+these have been moved to external functions. If you used any of them in your code, please update to the new
+function names below.
+
+* `Phaser.Renderer.WebGL.MVP` is a new namespace under which the Model View Projection functions now live.
+* `projIdentity` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ProjectIdentity`
+* `projPersp` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ProjectPerspective`
+* `modelRotateX` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.RotateX`
+* `modelRotateY` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.RotateY`
+* `modelRotateZ` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.RotateZ`
+* `viewLoad` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewLoad`
+* `viewRotateX` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewRotateX`
+* `viewRotateY` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewRotateY`
+* `viewRotateZ` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewRotateZ`
+* `viewScale` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewScale`
+* `viewTranslate` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewTranslate`
+* `modelIdentity` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.Identity`
+* `modelScale` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.Scale`
+* `modelTranslate` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.Translate`
+* `viewIdentity` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewIdentity`
+* `viewLoad2D` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewLoad2D`
+* `projOrtho` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ProjectOrtho`
+* `Phaser.Renderer.WebGL.MVP.SetIdentity` is a new function the others use, to save on space.
+
 ## Version 3.24.1 - Rem - 14th July 2020
 
 * Reverted the PR that added the parent transform to a Static Tilemap Layer as it broke tilemap rendering when the camera was zoomed (thanks @kainage)
