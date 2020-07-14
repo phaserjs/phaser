@@ -8,6 +8,7 @@
 var Class = require('../../../utils/Class');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var ModelViewProjection = require('./components/ModelViewProjection');
+var ProjectOrtho = require('../mvp/ProjectOrtho');
 var ShaderSourceFS = require('../shaders/TextureTint-frag.js');
 var ShaderSourceVS = require('../shaders/TextureTint-vert.js');
 var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
@@ -193,7 +194,7 @@ var TextureTintStripPipeline = new Class({
     {
         WebGLPipeline.prototype.resize.call(this, width, height, resolution);
 
-        this.projOrtho(0, this.width, this.height, 0, -1000.0, 1000.0);
+        ProjectOrtho(this, 0, this.width, this.height, 0, -1000.0, 1000.0);
 
         return this;
     },
@@ -251,13 +252,13 @@ var TextureTintStripPipeline = new Class({
 
     /**
      * Creates a new batch object and pushes it to a batch array.
-     * The batch object contains information relevant to the current 
-     * vertex batch like the offset in the vertex buffer, vertex count and 
+     * The batch object contains information relevant to the current
+     * vertex batch like the offset in the vertex buffer, vertex count and
      * the textures used by that batch.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintStripPipeline#pushBatch
      * @since 3.23.0
-     * 
+     *
      * @param {WebGLTexture} texture - Optional WebGLTexture that will be assigned to the created batch.
      * @param {integer} unit - Texture unit to which the texture needs to be bound.
      */

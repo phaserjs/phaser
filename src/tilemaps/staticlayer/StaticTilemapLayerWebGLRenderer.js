@@ -4,6 +4,12 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Identity = require('../../renderer/webgl/mvp/Identity');
+var Scale = require('../../renderer/webgl/mvp/Scale');
+var Translate = require('../../renderer/webgl/mvp/Translate');
+var ViewIdentity = require('../../renderer/webgl/mvp/ViewIdentity');
+var ViewLoad2D = require('../../renderer/webgl/mvp/ViewLoad2D');
+
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
  *
@@ -30,11 +36,10 @@ var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPerc
 
     renderer.setPipeline(pipeline);
 
-    pipeline.modelIdentity();
-    pipeline.modelTranslate(src.x - (camera.scrollX * src.scrollFactorX), src.y - (camera.scrollY * src.scrollFactorY), 0);
-    pipeline.modelScale(src.scaleX, src.scaleY, 1);
-
-    pipeline.viewLoad2D(camera.matrix.matrix);
+    Identity(pipeline);
+    Translate(pipeline, src.x - (camera.scrollX * src.scrollFactorX), src.y - (camera.scrollY * src.scrollFactorY), 0);
+    Scale(pipeline, src.scaleX, src.scaleY, 1);
+    ViewLoad2D(pipeline, camera.matrix.matrix);
 
     for (var i = 0; i < tilesets.length; i++)
     {
@@ -60,8 +65,8 @@ var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPerc
     //  Restore the pipeline
     pipeline.vertexBuffer = pipelineVertexBuffer;
 
-    pipeline.viewIdentity();
-    pipeline.modelIdentity();
+    ViewIdentity(pipeline);
+    Identity(pipeline);
 };
 
 module.exports = StaticTilemapLayerWebGLRenderer;

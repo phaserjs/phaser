@@ -9,6 +9,7 @@ var Class = require('../../../utils/Class');
 var Earcut = require('../../../geom/polygon/Earcut');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var ModelViewProjection = require('./components/ModelViewProjection');
+var ProjectOrtho = require('../mvp/ProjectOrtho');
 var ShaderSourceFS = require('../shaders/TextureTint-frag.js');
 var ShaderSourceVS = require('../shaders/TextureTint-vert.js');
 var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
@@ -187,7 +188,7 @@ var TextureTintPipeline = new Class({
 
         /**
          * The tint effect to be applied by the shader in the next geometry draw:
-         * 
+         *
          * 0 = texture multiplied by color
          * 1 = solid color + texture alpha
          * 2 = solid color, no texture
@@ -297,7 +298,7 @@ var TextureTintPipeline = new Class({
     {
         WebGLPipeline.prototype.resize.call(this, width, height, resolution);
 
-        this.projOrtho(0, this.width, this.height, 0, -1000.0, 1000.0);
+        ProjectOrtho(this, 0, this.width, this.height, 0, -1000.0, 1000.0);
 
         return this;
     },
@@ -355,13 +356,13 @@ var TextureTintPipeline = new Class({
 
     /**
      * Creates a new batch object and pushes it to a batch array.
-     * The batch object contains information relevant to the current 
-     * vertex batch like the offset in the vertex buffer, vertex count and 
+     * The batch object contains information relevant to the current
+     * vertex batch like the offset in the vertex buffer, vertex count and
      * the textures used by that batch.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#pushBatch
      * @since 3.1.0
-     * 
+     *
      * @param {WebGLTexture} texture - Optional WebGLTexture that will be assigned to the created batch.
      * @param {integer} unit - Texture unit to which the texture needs to be bound.
      */
@@ -609,7 +610,7 @@ var TextureTintPipeline = new Class({
         {
             spriteMatrix.e -= camera.scrollX * sprite.scrollFactorX;
             spriteMatrix.f -= camera.scrollY * sprite.scrollFactorY;
-    
+
             //  Multiply by the Sprite matrix, store result in calcMatrix
             camMatrix.multiply(spriteMatrix, calcMatrix);
         }
@@ -658,9 +659,9 @@ var TextureTintPipeline = new Class({
 
     /**
      * Adds the vertices data into the batch and flushes if full.
-     * 
+     *
      * Assumes 6 vertices in the following arrangement:
-     * 
+     *
      * ```
      * 0----3
      * |\  B|
@@ -670,7 +671,7 @@ var TextureTintPipeline = new Class({
      * |    \
      * 1----2
      * ```
-     * 
+     *
      * Where tx0/ty0 = 0, tx1/ty1 = 1, tx2/ty2 = 2 and tx3/ty3 = 3
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchQuad
@@ -695,7 +696,7 @@ var TextureTintPipeline = new Class({
      * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
      * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch if a flush occurs.
      * @param {integer} [unit=0] - Texture unit to which the texture needs to be bound.
-     * 
+     *
      * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
      */
     batchQuad: function (x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, unit)
@@ -715,7 +716,7 @@ var TextureTintPipeline = new Class({
         var vertexViewU32 = this.vertexViewU32;
 
         var vertexOffset = (this.vertexCount * this.vertexComponentCount) - 1;
-            
+
         vertexViewF32[++vertexOffset] = x0;
         vertexViewF32[++vertexOffset] = y0;
         vertexViewF32[++vertexOffset] = u0;
@@ -765,9 +766,9 @@ var TextureTintPipeline = new Class({
 
     /**
      * Adds the vertices data into the batch and flushes if full.
-     * 
+     *
      * Assumes 3 vertices in the following arrangement:
-     * 
+     *
      * ```
      * 0
      * |\
@@ -797,7 +798,7 @@ var TextureTintPipeline = new Class({
      * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
      * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch if a flush occurs.
      * @param {integer} [unit=0] - Texture unit to which the texture needs to be bound.
-     * 
+     *
      * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
      */
     batchTri: function (x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintEffect, texture, unit)
@@ -937,7 +938,7 @@ var TextureTintPipeline = new Class({
             {
                 ox = (frameWidth - crop.x - crop.width);
             }
-    
+
             if (flipY && !texture.isRenderTexture)
             {
                 oy = (frameHeight - crop.y - crop.height);
@@ -990,7 +991,7 @@ var TextureTintPipeline = new Class({
         {
             spriteMatrix.e -= camera.scrollX * scrollFactorX;
             spriteMatrix.f -= camera.scrollY * scrollFactorY;
-    
+
             //  Multiply by the Sprite matrix, store result in calcMatrix
             camMatrix.multiply(spriteMatrix, calcMatrix);
         }
@@ -1137,7 +1138,7 @@ var TextureTintPipeline = new Class({
         {
             parentMatrix.multiply(currentMatrix, calcMatrix);
         }
-        
+
         var xw = x + width;
         var yh = y + height;
 
@@ -1190,7 +1191,7 @@ var TextureTintPipeline = new Class({
         {
             parentMatrix.multiply(currentMatrix, calcMatrix);
         }
-        
+
         var tx0 = calcMatrix.getX(x0, y0);
         var ty0 = calcMatrix.getY(x0, y0);
 
@@ -1253,10 +1254,10 @@ var TextureTintPipeline = new Class({
 
     /**
      * Adds the given path to the vertex batch for rendering.
-     * 
+     *
      * It works by taking the array of path data and then passing it through Earcut, which
      * creates a list of polygons. Each polygon is then added to the batch.
-     * 
+     *
      * The path is always automatically closed because it's filled.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchFillPath
@@ -1314,10 +1315,10 @@ var TextureTintPipeline = new Class({
 
             var tx0 = calcMatrix.getX(x0, y0);
             var ty0 = calcMatrix.getY(x0, y0);
-    
+
             var tx1 = calcMatrix.getX(x1, y1);
             var ty1 = calcMatrix.getY(x1, y1);
-    
+
             var tx2 = calcMatrix.getX(x2, y2);
             var ty2 = calcMatrix.getY(x2, y2);
 
@@ -1325,7 +1326,7 @@ var TextureTintPipeline = new Class({
             var v0 = frame.v0;
             var u1 = frame.u1;
             var v1 = frame.v1;
-        
+
             this.batchTri(tx0, ty0, tx1, ty1, tx2, ty2, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintEffect);
         }
 
@@ -1334,10 +1335,10 @@ var TextureTintPipeline = new Class({
 
     /**
      * Adds the given path to the vertex batch for rendering.
-     * 
+     *
      * It works by taking the array of path data and calling `batchLine` for each section
      * of the path.
-     * 
+     *
      * The path is optionally closed at the end.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchStrokePath
