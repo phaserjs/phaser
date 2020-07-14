@@ -386,7 +386,7 @@ var BitmapText = new Class({
      * Updates the Display Origin cached values internally stored on this Game Object.
      * You don't usually call this directly, but it is exposed for edge-cases where you may.
      *
-     * @method Phaser.GameObjects.Components.Origin#updateDisplayOrigin
+     * @method Phaser.GameObjects.BitmapText#updateDisplayOrigin
      * @since 3.0.0
      *
      * @return {this} This Game Object instance.
