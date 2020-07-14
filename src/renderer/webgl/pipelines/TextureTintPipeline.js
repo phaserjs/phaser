@@ -53,6 +53,32 @@ var TextureTintPipeline = new Class({
         var rendererConfig = config.renderer.config;
 
         //  Vertex Size = attribute size added together (2 + 2 + 1 + 4)
+        //  Vertex Size = attribute size added together (2 + 2 + 1 + 1 + 4) inc maxGPU
+
+        var maxGPUTextures = GetFastValue(config, 'maxGPUTextures', 0);
+
+        var src = '';
+
+        for (var i = 0; i < maxGPUTextures; i++)
+        {
+            if (i > 0)
+            {
+                src += '\n\telse ';
+            }
+
+            if (i < maxGPUTextures - 1)
+            {
+                src += 'if (outTexId < ' + i + '.5)';
+            }
+
+            src += '\n\t{';
+            src += '\n\t\ttexture = texture2D(uMainSampler[' + i + '], outTexCoord);';
+            src += '\n\t}';
+        }
+
+        var fragmentShaderSource = ShaderSourceFS.replace(/%count%/gi, maxGPUTextures.toString());
+
+        fragmentShaderSource = fragmentShaderSource.replace(/%forloop%/gi, src);
 
         WebGLPipeline.call(this, {
             game: config.game,
@@ -60,9 +86,10 @@ var TextureTintPipeline = new Class({
             gl: config.renderer.gl,
             topology: GetFastValue(config, 'topology', config.renderer.gl.TRIANGLES),
             vertShader: GetFastValue(config, 'vertShader', ShaderSourceVS),
-            fragShader: GetFastValue(config, 'fragShader', ShaderSourceFS),
-            vertexCapacity: GetFastValue(config, 'vertexCapacity', 6 * rendererConfig.batchSize),
-            vertexSize: GetFastValue(config, 'vertexSize', Float32Array.BYTES_PER_ELEMENT * 5 + Uint8Array.BYTES_PER_ELEMENT * 4),
+            fragShader: GetFastValue(config, 'fragShader', fragmentShaderSource),
+            vertexCapacity: GetFastValue(config, 'vertexCapacity', 7 * rendererConfig.batchSize),
+            vertexSize: GetFastValue(config, 'vertexSize', Float32Array.BYTES_PER_ELEMENT * 6 + Uint8Array.BYTES_PER_ELEMENT * 4),
+            maxGPUTextures: maxGPUTextures,
             attributes: [
                 {
                     name: 'inPosition',
@@ -76,21 +103,28 @@ var TextureTintPipeline = new Class({
                     size: 2,
                     type: config.renderer.gl.FLOAT,
                     normalized: false,
-                    offset: Float32Array.BYTES_PER_ELEMENT * 2
+                    offset: 4 * 2
+                },
+                {
+                    name: 'inTexID',
+                    size: 1,
+                    type: config.renderer.gl.FLOAT,
+                    normalized: false,
+                    offset: 4 * 4
                 },
                 {
                     name: 'inTintEffect',
                     size: 1,
                     type: config.renderer.gl.FLOAT,
                     normalized: false,
-                    offset: Float32Array.BYTES_PER_ELEMENT * 4
+                    offset: 4 * 5
                 },
                 {
                     name: 'inTint',
                     size: 4,
                     type: config.renderer.gl.UNSIGNED_BYTE,
                     normalized: true,
-                    offset: Float32Array.BYTES_PER_ELEMENT * 5
+                    offset: 4 * 6
                 }
             ]
         });
@@ -298,7 +332,7 @@ var TextureTintPipeline = new Class({
     {
         WebGLPipeline.prototype.resize.call(this, width, height, resolution);
 
-        ProjectOrtho(this, 0, this.width, this.height, 0, -1000.0, 1000.0);
+        ProjectOrtho(this, 0, this.width, this.height, 0, -1000, 1000);
 
         return this;
     },
@@ -721,6 +755,7 @@ var TextureTintPipeline = new Class({
         vertexViewF32[++vertexOffset] = y0;
         vertexViewF32[++vertexOffset] = u0;
         vertexViewF32[++vertexOffset] = v0;
+        vertexViewF32[++vertexOffset] = unit;
         vertexViewF32[++vertexOffset] = tintEffect;
         vertexViewU32[++vertexOffset] = tintTL;
 
@@ -728,6 +763,7 @@ var TextureTintPipeline = new Class({
         vertexViewF32[++vertexOffset] = y1;
         vertexViewF32[++vertexOffset] = u0;
         vertexViewF32[++vertexOffset] = v1;
+        vertexViewF32[++vertexOffset] = unit;
         vertexViewF32[++vertexOffset] = tintEffect;
         vertexViewU32[++vertexOffset] = tintBL;
 
@@ -735,6 +771,7 @@ var TextureTintPipeline = new Class({
         vertexViewF32[++vertexOffset] = y2;
         vertexViewF32[++vertexOffset] = u1;
         vertexViewF32[++vertexOffset] = v1;
+        vertexViewF32[++vertexOffset] = unit;
         vertexViewF32[++vertexOffset] = tintEffect;
         vertexViewU32[++vertexOffset] = tintBR;
 
@@ -742,6 +779,7 @@ var TextureTintPipeline = new Class({
         vertexViewF32[++vertexOffset] = y0;
         vertexViewF32[++vertexOffset] = u0;
         vertexViewF32[++vertexOffset] = v0;
+        vertexViewF32[++vertexOffset] = unit;
         vertexViewF32[++vertexOffset] = tintEffect;
         vertexViewU32[++vertexOffset] = tintTL;
 
@@ -749,6 +787,7 @@ var TextureTintPipeline = new Class({
         vertexViewF32[++vertexOffset] = y2;
         vertexViewF32[++vertexOffset] = u1;
         vertexViewF32[++vertexOffset] = v1;
+        vertexViewF32[++vertexOffset] = unit;
         vertexViewF32[++vertexOffset] = tintEffect;
         vertexViewU32[++vertexOffset] = tintBR;
 
@@ -756,6 +795,7 @@ var TextureTintPipeline = new Class({
         vertexViewF32[++vertexOffset] = y3;
         vertexViewF32[++vertexOffset] = u1;
         vertexViewF32[++vertexOffset] = v0;
+        vertexViewF32[++vertexOffset] = unit;
         vertexViewF32[++vertexOffset] = tintEffect;
         vertexViewU32[++vertexOffset] = tintTR;
 
@@ -823,6 +863,7 @@ var TextureTintPipeline = new Class({
         vertexViewF32[++vertexOffset] = y1;
         vertexViewF32[++vertexOffset] = u0;
         vertexViewF32[++vertexOffset] = v0;
+        vertexViewF32[++vertexOffset] = unit;
         vertexViewF32[++vertexOffset] = tintEffect;
         vertexViewU32[++vertexOffset] = tintTL;
 
@@ -830,6 +871,7 @@ var TextureTintPipeline = new Class({
         vertexViewF32[++vertexOffset] = y2;
         vertexViewF32[++vertexOffset] = u0;
         vertexViewF32[++vertexOffset] = v1;
+        vertexViewF32[++vertexOffset] = unit;
         vertexViewF32[++vertexOffset] = tintEffect;
         vertexViewU32[++vertexOffset] = tintTR;
 
@@ -837,6 +879,7 @@ var TextureTintPipeline = new Class({
         vertexViewF32[++vertexOffset] = y3;
         vertexViewF32[++vertexOffset] = u1;
         vertexViewF32[++vertexOffset] = v1;
+        vertexViewF32[++vertexOffset] = unit;
         vertexViewF32[++vertexOffset] = tintEffect;
         vertexViewU32[++vertexOffset] = tintBL;
 
