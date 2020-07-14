@@ -44,7 +44,7 @@
     "bundleshaders": "node scripts/bundle-shaders.js",
     "build-tsgen": "cd scripts/tsgen && tsc",
     "tsgen": "cd scripts/tsgen && jsdoc -c jsdoc-tsd.conf.json",
-    "test-ts": "cd scripts/tsgen/test && tsc > output.txt",
+    "test-ts": "cd scripts/tsgen/test && tsc --build tsconfig.json > output.txt",
     "ts": "npm run tsgen && npm run test-ts",
     "tsdev": "npm run build-tsgen && npm run tsgen && npm run test-ts"
   },
