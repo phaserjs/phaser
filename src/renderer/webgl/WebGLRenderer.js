@@ -7,6 +7,7 @@
 
 var BaseCamera = require('../../cameras/2d/BaseCamera');
 var CameraEvents = require('../../cameras/2d/events');
+var CheckShaderMax = require('./CheckShaderMax');
 var Class = require('../../utils/Class');
 var CONST = require('../../const');
 var GameEvents = require('../../core/events');
@@ -709,13 +710,19 @@ var WebGLRenderer = new Class({
             this.currentTextures[index] = null;
         }
 
+        //  Check maximum shader if statements
+        var maxGPUTextures = CheckShaderMax(gl, gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS));
+
+        console.log('maxGPUTextures', maxGPUTextures);
+
         // Clear previous pipelines and reload default ones
         this.pipelines = {};
 
-        this.addPipeline('TextureTintPipeline', new TextureTintPipeline({ game: game, renderer: this }));
-        this.addPipeline('TextureTintStripPipeline', new TextureTintStripPipeline({ game: game, renderer: this }));
-        this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline({ game: game, renderer: this }));
-        this.addPipeline('Light2D', new ForwardDiffuseLightPipeline({ game: game, renderer: this, maxLights: config.maxLights }));
+        this.addPipeline('TextureTintPipeline', new TextureTintPipeline({ game: game, renderer: this, maxGPUTextures: maxGPUTextures }));
+
+        // this.addPipeline('TextureTintStripPipeline', new TextureTintStripPipeline({ game: game, renderer: this }));
+        // this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline({ game: game, renderer: this }));
+        // this.addPipeline('Light2D', new ForwardDiffuseLightPipeline({ game: game, renderer: this, maxLights: config.maxLights }));
 
         this.setBlendMode(CONST.BlendModes.NORMAL);
 
