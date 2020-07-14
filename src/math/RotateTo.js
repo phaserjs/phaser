@@ -10,15 +10,15 @@
  * @function Phaser.Math.RotateTo
  * @since 3.24.0
  *
- * @generic {Phaser.Math.Vector2Like} T - [point,$return]
+ * @generic {Phaser.Types.Math.Vector2Like} T - [point,$return]
  *
- * @param {Phaser.Math.Vector2Like} point - The point to be positioned.
+ * @param {Phaser.Types.Math.Vector2Like} point - The point to be positioned.
  * @param {number} x - The horizontal coordinate to position from.
  * @param {number} y - The vertical coordinate to position from.
  * @param {number} angle - The angle of rotation in radians.
  * @param {number} distance - The distance from (x, y) to place the point at.
  *
- * @return {Phaser.Math.Vector2Like} The given point.
+ * @return {Phaser.Types.Math.Vector2Like} The given point.
  */
 var RotateTo = function (point, x, y, angle, distance)
 {
