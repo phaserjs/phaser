@@ -45,7 +45,7 @@ var GetPoints = function (line, quantity, stepRate, out)
 
     for (var i = 0; i < quantity; i++)
     {
-        var position = i / quantity;
+        var position = quantity > 1 ? i / (quantity-1) : 0;
 
         var x = x1 + (x2 - x1) * position;
         var y = y1 + (y2 - y1) * position;
