@@ -85,7 +85,7 @@ var File = new Class({
          * Automatically has Loader.path prepended to it.
          *
          * @name Phaser.Loader.File#url
-         * @type {(function|object|string)}
+         * @type {string}
          * @since 3.0.0
          */
         this.url = GetFastValue(fileConfig, 'url');
