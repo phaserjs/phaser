@@ -8,6 +8,7 @@
         "preserveConstEnums": true,
         "outFile": "./bin/game.js",
         "sourceMap": true,
+        "moduleResolution": "node",
         "lib": [
             "dom",
             "scripthost",
@@ -19,6 +20,7 @@
         "../../../types/phaser.d.ts"
     ],
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "../../../node_modules/@types"
     ]
 }
