@@ -7,7 +7,6 @@
 
 var BaseCamera = require('../../cameras/2d/BaseCamera');
 var CameraEvents = require('../../cameras/2d/events');
-var CheckShaderMax = require('./CheckShaderMax');
 var Class = require('../../utils/Class');
 var CONST = require('../../const');
 var GameEvents = require('../../core/events');
@@ -150,7 +149,7 @@ var WebGLRenderer = new Class({
         this.blendModes = [];
 
         /**
-         * Keeps track of any WebGLTexture created with the current WebGLRenderingContext
+         * Keeps track of any WebGLTexture created with the current WebGLRenderingContext.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#nativeTextures
          * @type {array}
@@ -205,22 +204,55 @@ var WebGLRenderer = new Class({
         // Internal Renderer State (Textures, Framebuffers, Pipelines, Buffers, etc)
 
         /**
-         * Cached value for the last texture unit that was used
+         * Cached value for the last texture unit that was used.
          *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentActiveTextureUnit
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentActiveTexture
          * @type {integer}
          * @since 3.1.0
          */
-        this.currentActiveTextureUnit = 0;
+        this.currentActiveTexture = 0;
 
         /**
-         * An array of the last texture handles that were bound to the WebGLRenderingContext
+         * Contains the current starting active texture unit.
+         * This value is constantly updated and should be treated as read-only by your code.
          *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentTextures
-         * @type {array}
-         * @since 3.0.0
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#startActiveTexture
+         * @type {integer}
+         * @since 3.25.0
          */
-        this.currentTextures = new Array(16);
+        this.startActiveTexture = 0;
+
+        /**
+         * The maximum number of textures the GPU can handle. The minimum under the WebGL1 spec is 8.
+         * This is set via the Game Config `maxTextures` property and should never be changed after boot.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#maxTextures
+         * @type {integer}
+         * @since 3.25.0
+         */
+        this.maxTextures = 0;
+
+        /**
+         * An array of the available WebGL texture units, used to populate the uSampler uniforms.
+         *
+         * This array is populated during the init phase and should never be changed after boot.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#textureIndexes
+         * @type {array}
+         * @since 3.25.0
+         */
+        this.textureIndexes;
+
+        /**
+         * An array of default temporary WebGL Textures.
+         *
+         * This array is populated during the init phase and should never be changed after boot.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#tempTextures
+         * @type {array}
+         * @since 3.25.0
+         */
+        this.tempTextures;
 
         /**
          * Current framebuffer in use
@@ -674,14 +706,9 @@ var WebGLRenderer = new Class({
         // Load supported extensions
         var exts = gl.getSupportedExtensions();
 
-        if (!config.maxTextures)
+        if (!config.maxTextures || config.maxTextures === -1)
         {
             config.maxTextures = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
-        }
-
-        if (!config.maxTextureSize)
-        {
-            config.maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
         }
 
         var extString = 'WEBGL_compressed_texture_';
@@ -704,21 +731,53 @@ var WebGLRenderer = new Class({
         //  Mipmaps
         this.mipmapFilter = gl[config.mipmapFilter];
 
-        // Initialize all textures to null
-        for (var index = 0; index < this.currentTextures.length; ++index)
+        //  Check maximum supported textures
+        this.maxTextures = Utils.checkShaderMax(gl, config.maxTextures);
+
+        this.textureIndexes = [];
+
+        //  Create temporary WebGL textures
+        var tempTextures = this.tempTextures;
+
+        if (Array.isArray(tempTextures))
         {
-            this.currentTextures[index] = null;
+            for (var t = 0; i < this.maxTextures; t++)
+            {
+                gl.deleteTexture(tempTextures[t]);
+            }
+        }
+        else
+        {
+            tempTextures = new Array(this.maxTextures);
         }
 
-        //  Check maximum shader if statements
-        var maxGPUTextures = CheckShaderMax(gl, gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS));
+        //  Create temp textures to stop WebGL errors on mac os
+        for (var index = 0; index < this.maxTextures; index++)
+        {
+            var tempTexture = gl.createTexture();
 
-        console.log('maxGPUTextures', maxGPUTextures);
+            gl.activeTexture(gl.TEXTURE0 + index);
+
+            gl.bindTexture(gl.TEXTURE_2D, tempTexture);
+
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([ 0, 0, 255, 255 ]));
+
+            tempTextures[index] = tempTexture;
+
+            this.textureIndexes.push(index);
+        }
+
+        this.tempTextures = tempTextures;
+
+        //  Reset to texture 1 (texture zero is reserved for framebuffers)
+        this.currentActiveTexture = 1;
+        this.startActiveTexture++;
+        gl.activeTexture(gl.TEXTURE1);
 
         // Clear previous pipelines and reload default ones
         this.pipelines = {};
 
-        this.addPipeline('TextureTintPipeline', new TextureTintPipeline({ game: game, renderer: this, maxGPUTextures: maxGPUTextures }));
+        this.addPipeline('TextureTintPipeline', new TextureTintPipeline({ game: game, renderer: this }));
 
         // this.addPipeline('TextureTintStripPipeline', new TextureTintStripPipeline({ game: game, renderer: this }));
         // this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline({ game: game, renderer: this }));
@@ -1060,9 +1119,9 @@ var WebGLRenderer = new Class({
      */
     setPipeline: function (pipelineInstance, gameObject)
     {
-        if (this.currentPipeline !== pipelineInstance ||
-            this.currentPipeline.vertexBuffer !== this.currentVertexBuffer ||
-            this.currentPipeline.program !== this.currentProgram)
+        var current = this.currentPipeline;
+
+        if (current !== pipelineInstance || current.vertexBuffer !== this.currentVertexBuffer || current.program !== this.currentProgram)
         {
             this.flush();
             this.currentPipeline = pipelineInstance;
@@ -1131,11 +1190,11 @@ var WebGLRenderer = new Class({
 
         this.setBlendMode(0, true);
 
-        gl.activeTexture(gl.TEXTURE0);
+        gl.activeTexture(gl.TEXTURE1);
         gl.bindTexture(gl.TEXTURE_2D, this.blankTexture.glTexture);
 
-        this.currentActiveTextureUnit = 0;
-        this.currentTextures[0] = this.blankTexture.glTexture;
+        this.currentActiveTexture = 1;
+        this.startActiveTexture++;
 
         this.currentPipeline = pipelineInstance;
         this.currentPipeline.bind();
@@ -1283,17 +1342,60 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setBlankTexture
      * @private
      * @since 3.12.0
-     *
-     * @param {boolean} [force=false] - Force a blank texture set, regardless of what's already bound?
      */
-    setBlankTexture: function (force)
+    setBlankTexture: function ()
     {
-        if (force === undefined) { force = false; }
+        this.setTexture2D(this.blankTexture.glTexture);
+    },
 
-        if (force || this.currentActiveTextureUnit !== 0 || !this.currentTextures[0])
+    /**
+     * Activates the Texture Source and assigns it the next available texture unit.
+     * If none are available, it will flush the current pipeline first.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#setTextureSource
+     * @since 3.25.0
+     *
+     * @param {Phaser.Textures.TextureSource} textureSource - The Texture Source to be assigned the texture unit.
+     *
+     * @return {number} The texture unit that was assigned to the Texture Source.
+     */
+    setTextureSource: function (textureSource)
+    {
+        var gl = this.gl;
+        var currentActiveTexture = this.currentActiveTexture;
+
+        if (textureSource.glIndexCounter < this.startActiveTexture)
         {
-            this.setTexture2D(this.blankTexture.glTexture, 0);
+            textureSource.glIndexCounter = this.startActiveTexture;
+
+            if (currentActiveTexture < this.maxTextures)
+            {
+                textureSource.glIndex = currentActiveTexture;
+
+                gl.activeTexture(gl.TEXTURE0 + currentActiveTexture);
+                gl.bindTexture(gl.TEXTURE_2D, textureSource.glTexture);
+
+                this.currentActiveTexture++;
+            }
+            else
+            {
+                //  We're out of textures, so flush the batch and reset back to 0
+                this.flush();
+
+                this.startActiveTexture++;
+
+                textureSource.glIndexCounter = this.startActiveTexture;
+
+                textureSource.glIndex = 0;
+
+                gl.activeTexture(gl.TEXTURE0);
+                gl.bindTexture(gl.TEXTURE_2D, textureSource.glTexture);
+
+                this.currentActiveTexture = 1;
+            }
         }
+
+        return textureSource.glIndex;
     },
 
     /**
@@ -1302,39 +1404,49 @@ var WebGLRenderer = new Class({
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setTexture2D
      * @since 3.0.0
+     * @version 2.0 - Updated in 3.25.0 to remove the `textureUnit` and `flush` parameters.
      *
      * @param {WebGLTexture} texture - The WebGL texture that needs to be bound.
-     * @param {integer} textureUnit - The texture unit to which the texture will be bound.
-     * @param {boolean} [flush=true] - Will the current pipeline be flushed if this is a new texture, or not?
      *
-     * @return {this} This WebGLRenderer instance.
+     * @return {number} The texture unit that was assigned to the Texture Source.
      */
-    setTexture2D: function (texture, textureUnit, flush)
+    setTexture2D: function (texture)
     {
-        if (flush === undefined) { flush = true; }
-
         var gl = this.gl;
+        var currentActiveTexture = this.currentActiveTexture;
 
-        if (texture !== this.currentTextures[textureUnit])
+        if (texture.glIndexCounter < this.startActiveTexture)
         {
-            if (flush)
+            texture.glIndexCounter = this.startActiveTexture;
+
+            if (currentActiveTexture < this.maxTextures)
             {
+                texture.glIndex = currentActiveTexture;
+
+                gl.activeTexture(gl.TEXTURE0 + currentActiveTexture);
+                gl.bindTexture(gl.TEXTURE_2D, texture);
+
+                this.currentActiveTexture++;
+            }
+            else
+            {
+                //  We're out of textures, so flush the batch and reset back to 1 (0 is reserved for fbos)
                 this.flush();
+
+                this.startActiveTexture++;
+
+                texture.glIndexCounter = this.startActiveTexture;
+
+                texture.glIndex = 1;
+
+                gl.activeTexture(gl.TEXTURE1);
+                gl.bindTexture(gl.TEXTURE_2D, texture);
+
+                this.currentActiveTexture = 2;
             }
-
-            if (this.currentActiveTextureUnit !== textureUnit)
-            {
-                gl.activeTexture(gl.TEXTURE0 + textureUnit);
-
-                this.currentActiveTextureUnit = textureUnit;
-            }
-
-            gl.bindTexture(gl.TEXTURE_2D, texture);
-
-            this.currentTextures[textureUnit] = texture;
         }
 
-        return this;
+        return texture.glIndex;
     },
 
     /**
@@ -1552,7 +1664,11 @@ var WebGLRenderer = new Class({
         var gl = this.gl;
         var texture = gl.createTexture();
 
-        this.setTexture2D(texture, 0);
+        gl.activeTexture(gl.TEXTURE0);
+
+        var currentTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
+
+        gl.bindTexture(gl.TEXTURE_2D, texture);
 
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, minFilter);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, magFilter);
@@ -1582,12 +1698,17 @@ var WebGLRenderer = new Class({
             gl.generateMipmap(gl.TEXTURE_2D);
         }
 
-        this.setTexture2D(null, 0);
+        if (currentTexture)
+        {
+            gl.bindTexture(gl.TEXTURE_2D, currentTexture);
+        }
 
         texture.isAlphaPremultiplied = pma;
         texture.isRenderTexture = false;
         texture.width = width;
         texture.height = height;
+        texture.glIndex = 0;
+        texture.glIndexCounter = -1;
 
         this.nativeTextures.push(texture);
 
@@ -1764,11 +1885,13 @@ var WebGLRenderer = new Class({
 
         this.gl.deleteTexture(texture);
 
-        if (this.currentTextures[0] === texture && !this.game.pendingDestroy)
+        /*
+        if (!this.game.pendingDestroy)
         {
             //  texture we just deleted is in use, so bind a blank texture
             this.setBlankTexture(true);
         }
+        */
 
         return this;
     },
@@ -2435,7 +2558,10 @@ var WebGLRenderer = new Class({
 
         if (width > 0 && height > 0)
         {
-            this.setTexture2D(dstTexture, 0);
+            // this.setTexture2D(dstTexture, 0);
+            gl.activeTexture(gl.TEXTURE0);
+            var currentTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
+            gl.bindTexture(gl.TEXTURE_2D, dstTexture);
 
             gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
 
@@ -2444,7 +2570,11 @@ var WebGLRenderer = new Class({
             dstTexture.width = width;
             dstTexture.height = height;
 
-            this.setTexture2D(null, 0);
+            // this.setTexture2D(null, 0);
+            if (currentTexture)
+            {
+                gl.bindTexture(gl.TEXTURE_2D, currentTexture);
+            }
         }
 
         return dstTexture;
@@ -2546,12 +2676,21 @@ var WebGLRenderer = new Class({
         var gl = this.gl;
         var glFilter = [ gl.LINEAR, gl.NEAREST ][filter];
 
-        this.setTexture2D(texture, 0);
+        // this.setTexture2D(texture, 0);
+        gl.activeTexture(gl.TEXTURE0);
+
+        var currentTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
+
+        gl.bindTexture(gl.TEXTURE_2D, texture);
 
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, glFilter);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, glFilter);
 
-        this.setTexture2D(null, 0);
+        // this.setTexture2D(null, 0);
+        if (currentTexture)
+        {
+            gl.bindTexture(gl.TEXTURE_2D, currentTexture);
+        }
 
         return this;
     },
@@ -2743,6 +2882,29 @@ var WebGLRenderer = new Class({
         this.setProgram(program);
 
         this.gl.uniform4fv(this.gl.getUniformLocation(program, name), arr);
+
+        return this;
+    },
+
+    /**
+     * Sets a 1iv uniform value on the given shader.
+     *
+     * If the shader is not currently active, it is made active first.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#setInt1iv
+     * @since 3.25.0
+     *
+     * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
+     * @param {string} name - The name of the uniform to look-up and modify.
+     * @param {Int32List} arr - The 1iv value to set on the named uniform.
+     *
+     * @return {this} This WebGL Renderer instance.
+     */
+    setInt1iv: function (program, name, arr)
+    {
+        this.setProgram(program);
+
+        this.gl.uniform1iv(this.gl.getUniformLocation(program, name), arr);
 
         return this;
     },
@@ -2955,11 +3117,23 @@ var WebGLRenderer = new Class({
     {
         //  Clear-up anything that should be cleared :)
 
-        for (var i = 0; i < this.nativeTextures.length; i++)
+        var i;
+        var gl = this.gl;
+
+        var temp = this.tempTextures;
+        var native = this.nativeTextures;
+
+        for (i = 0; i < temp.length; i++)
         {
-            this.gl.deleteTexture(this.nativeTextures[i]);
+            gl.deleteTexture(temp[i]);
         }
 
+        for (i = 0; i < native.length; i++)
+        {
+            gl.deleteTexture(native[i]);
+        }
+
+        this.textureIndexes = [];
         this.nativeTextures = [];
 
         for (var key in this.pipelines)
