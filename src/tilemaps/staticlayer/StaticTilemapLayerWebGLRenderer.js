@@ -47,16 +47,13 @@ var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPerc
 
         if (src.vertexCount[i] > 0)
         {
-            if (renderer.currentPipeline && renderer.currentPipeline.vertexCount > 0)
-            {
-                renderer.flush();
-            }
+            renderer.flush();
 
             pipeline.vertexBuffer = src.vertexBuffer[i];
 
             renderer.setPipeline(pipeline);
 
-            renderer.setTexture2D(tilesets[i].glTexture, 0);
+            renderer.setTextureZero(tilesets[i].glTexture);
 
             renderer.gl.drawArrays(pipeline.topology, 0, src.vertexCount[i]);
         }
@@ -64,6 +61,8 @@ var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPerc
 
     //  Restore the pipeline
     pipeline.vertexBuffer = pipelineVertexBuffer;
+
+    renderer.clearTextureZero();
 
     ViewIdentity(pipeline);
     Identity(pipeline);
