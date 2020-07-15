@@ -24,6 +24,7 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * The Blitter Game Object WebGL Renderer function has been updated to support multi-texture units.
 * The Bitmap Text Game Object WebGL Renderer function has been updated to support multi-texture units.
 * The Dynamic Bitmap Text Game Object WebGL Renderer function has been updated to support multi-texture units.
+* The Particle Emitter Game Object WebGL Renderer function has been updated to support multi-texture units.
 * The Texture Tint vertex and fragment shaders have been updated to support the `inTexId` float attribute and dynamic generation.
 * The Texture Tint Pipeline has a new attribute, `inTexId` which is a `gl.FLOAT`.
 * `TextureTintPipeline.bind` is a new method that sets the `uMainSampler` uniform.
@@ -36,6 +37,9 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `TextureTintPipeline.currentUnit` is a new property that holds the most recently assigned texture unit. Treat as read-only.
 * `WebGLRenderer.setTextureSource` is a new method, used by pipelines and Game Objects, that will assign a texture unit to the given Texture Source.
 * The `WebGLRenderer.setTexture2D` method has been updated to use the new texture unit assignment. It no longer takes the `textureUnit` or `flush` parameters and these have been removed from its method signature.
+* `WebGLRenderer.setTextureZero` is a new method that activates texture zero and binds the given texture to it. Useful for fbo backed game objects.
+* `WebGLRenderer.clearTextureZero` is a new method that clears the texture tha was bound to unit zero.
+* `WebGLRenderer.textureZero` is a new property that holds the currently bound unit zero texture.
 
 ### WebGL ModelViewProjection API Changes
 
