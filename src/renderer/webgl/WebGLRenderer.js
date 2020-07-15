@@ -255,6 +255,15 @@ var WebGLRenderer = new Class({
         this.tempTextures;
 
         /**
+         * The currently bound texture at texture unit zero, if any.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#textureZero
+         * @type {?WebGLTexture}
+         * @since 3.25.0
+         */
+        this.textureZero;
+
+        /**
          * Current framebuffer in use
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentFramebuffer
@@ -1396,6 +1405,40 @@ var WebGLRenderer = new Class({
         }
 
         return textureSource.glIndex;
+    },
+
+    /**
+     * Binds a texture directly to texture unit zero then activates it.
+     * If the texture is already at unit zero, it skips the bind.
+     * Make sure to call `clearTextureZero` after using this method.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#setTextureZero
+     * @since 3.25.0
+     *
+     * @param {WebGLTexture} texture - The WebGL texture that needs to be bound.
+     */
+    setTextureZero: function (texture)
+    {
+        if (this.textureZero !== texture)
+        {
+            var gl = this.gl;
+
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+
+            this.textureZero = texture;
+        }
+    },
+
+    /**
+     * Clears the texture that was directly bound to texture unit zero.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#clearTextureZero
+     * @since 3.25.0
+     */
+    clearTextureZero: function ()
+    {
+        this.textureZero = null;
     },
 
     /**
