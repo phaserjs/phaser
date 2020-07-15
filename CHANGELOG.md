@@ -2,11 +2,45 @@
 
 ## Version 3.25.0 - Subaru - in development
 
+### WebGL Multi-Texture Rendering
+
+The Texture Tint Pipeline has had its core flow rewritten to eliminate the need for constantly creating `batch` objects. Instead, it now supports the new multi-texture shader, vastly increasing rendering performance, especially on drawcall-bound systems.
+
+All of the internal functions, such as `batchQuad` and `batchSprite` have been updated to use the new method of texture setting. The method signatures all remain the same, unless indicated below.
+
+* `Config.render.maxTextures` is a new game config setting that allows you to control how many texture units will be used in WebGL.
+* `WebGL.Utils.checkShaderMax` is a new function, used internally by the renderer, to determine the maximum number of texture units the GPU + browser supports.
+* The property `WebGLRenderer.currentActiveTextureUnit` has been renamed to `currentActiveTexture`.
+* `WebGLRenderer.startActiveTexture` is a new read-only property contains the current starting active texture unit.
+* `WebGLRenderer.maxTextures` is a new read-only property that contains the maximum number of texture units WebGL can use.
+* `WebGLRenderer.textureIndexes` is a new read-only array that contains all of the available WebGL texture units.
+* `WebGLRenderer.tempTextures` is a new read-only array that contains temporary WebGL textures.
+* The `WebGLRenderer.currentTextures` property has been removed, as it's no longer used.
+* `TextureSource.glIndex` is a new property that holds the currently assigned texture unit for the Texture Source.
+* `TextureSource.glIndexCounter` is a new property that holds the time the index was assigned to the Texture Source.
+* `WebGLRenderer.currentTextures` has been removed, as it's no longer used internally.
+* `WebGLRenderer.setBlankTexture` no longer has a `force` parameter, as it's set by default.
+* The Mesh Game Object WebGL Renderer function has been updated to support multi-texture units.
+* The Blitter Game Object WebGL Renderer function has been updated to support multi-texture units.
+* The Bitmap Text Game Object WebGL Renderer function has been updated to support multi-texture units.
+* The Dynamic Bitmap Text Game Object WebGL Renderer function has been updated to support multi-texture units.
+* The Texture Tint vertex and fragment shaders have been updated to support the `inTexId` float attribute and dynamic generation.
+* The Texture Tint Pipeline has a new attribute, `inTexId` which is a `gl.FLOAT`.
+* `TextureTintPipeline.bind` is a new method that sets the `uMainSampler` uniform.
+* The `TextureTintPipeline.requireTextureBatch` method has been removed, as it's no longer required.
+* The `TextureTintPipeline.pushBatch` method has been removed, as it's no longer required.
+* The `TextureTintPipeline.maxQuads` property has been removed, as it's no longer required.
+* The `TextureTintPipeline.batches` property has been removed, as it's no longer required.
+* `TextureTintPipeline.flush` has been rewritten to support multi-textures.
+* `TextureTintPipeline.flush` no longer creates a sub-array if the batch is full, but instead uses `bufferData` for speed.
+* `TextureTintPipeline.currentUnit` is a new property that holds the most recently assigned texture unit. Treat as read-only.
+
 ### WebGL ModelViewProjection API Changes
 
-The `ModelViewProjection` object contained a lot of functions that Phaser never used internally. To save space,
-these have been moved to external functions. If you used any of them in your code, please update to the new
-function names below.
+The `ModelViewProjection` object contained a lot of functions that Phaser never used internally. These have now been
+moved to external functions, which can be easily excluded from Custom builds to save space.
+
+If you used any of them in your code, please update to the new function names below:
 
 * `Phaser.Renderer.WebGL.MVP` is a new namespace under which the Model View Projection functions now live.
 * `projIdentity` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ProjectIdentity`
@@ -27,6 +61,29 @@ function names below.
 * `viewLoad2D` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewLoad2D`
 * `projOrtho` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ProjectOrtho`
 * `Phaser.Renderer.WebGL.MVP.SetIdentity` is a new function the others use, to save on space.
+
+
+### New Features
+
+* `WebGLRenderer.setInt1iv` will allow you to look-up and set a 1iv uniform on the given shader.
+
+### Updates and API Changes
+
+* `Config.batchSize` has been increased from 2000 to 4096.
+
+### Bug Fixes
+
+### Examples, Documentation and TypeScript
+
+My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
+
+
+
+
+
+
+
+
 
 ## Version 3.24.1 - Rem - 14th July 2020
 
