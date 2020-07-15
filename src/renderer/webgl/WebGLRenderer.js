@@ -2601,7 +2601,6 @@ var WebGLRenderer = new Class({
 
         if (width > 0 && height > 0)
         {
-            // this.setTexture2D(dstTexture, 0);
             gl.activeTexture(gl.TEXTURE0);
             var currentTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
             gl.bindTexture(gl.TEXTURE_2D, dstTexture);
@@ -2613,7 +2612,6 @@ var WebGLRenderer = new Class({
             dstTexture.width = width;
             dstTexture.height = height;
 
-            // this.setTexture2D(null, 0);
             if (currentTexture)
             {
                 gl.bindTexture(gl.TEXTURE_2D, currentTexture);
@@ -2688,7 +2686,9 @@ var WebGLRenderer = new Class({
 
         if (width > 0 && height > 0)
         {
-            this.setTexture2D(dstTexture, 0);
+            gl.activeTexture(gl.TEXTURE0);
+            var currentTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
+            gl.bindTexture(gl.TEXTURE_2D, dstTexture);
 
             gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
 
@@ -2697,7 +2697,10 @@ var WebGLRenderer = new Class({
             dstTexture.width = width;
             dstTexture.height = height;
 
-            this.setTexture2D(null, 0);
+            if (currentTexture)
+            {
+                gl.bindTexture(gl.TEXTURE_2D, currentTexture);
+            }
         }
 
         return dstTexture;
