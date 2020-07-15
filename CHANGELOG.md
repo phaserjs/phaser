@@ -68,7 +68,6 @@ If you used any of them in your code, please update to the new function names be
 * `projOrtho` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ProjectOrtho`
 * `Phaser.Renderer.WebGL.MVP.SetIdentity` is a new function the others use, to save on space.
 
-
 ### New Features
 
 * `WebGLRenderer.setInt1iv` will allow you to look-up and set a 1iv uniform on the given shader.
@@ -76,6 +75,7 @@ If you used any of them in your code, please update to the new function names be
 ### Updates and API Changes
 
 * `Config.batchSize` has been increased from 2000 to 4096.
+* Removed the Deferred Diffuse fragment and vertex shaders from the project, as they're not used.
 
 ### Bug Fixes
 
