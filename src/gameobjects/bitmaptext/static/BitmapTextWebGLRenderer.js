@@ -30,7 +30,7 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
     {
         return;
     }
- 
+
     var pipeline = this.pipeline;
 
     renderer.setPipeline(pipeline, src);
@@ -77,7 +77,7 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
     var tintBL = Utils.getTintAppendFloatAlpha(src._tintBL, camera.alpha * src._alphaBL);
     var tintBR = Utils.getTintAppendFloatAlpha(src._tintBR, camera.alpha * src._alphaBR);
 
-    pipeline.setTexture2D(texture, 0);
+    var textureUnit = renderer.setTextureSource(frame.source);
 
     var xAdvance = 0;
     var yAdvance = 0;
@@ -140,11 +140,11 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
             {
                 lineOffsetX = (lineData.longest - lineData.lengths[currentLine]);
             }
-        
+
             xAdvance = 0;
             yAdvance += lineHeight;
             lastGlyph = null;
-        
+
             continue;
         }
 
@@ -223,7 +223,7 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
             ty3 = Math.round(ty3);
         }
 
-        pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, 0);
+        pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
     }
 };
 
