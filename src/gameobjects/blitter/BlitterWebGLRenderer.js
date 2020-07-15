@@ -99,7 +99,7 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage, cam
         //  Bind texture only if the Texture Source is different from before
         if (frame.sourceIndex !== prevTextureSourceIndex)
         {
-            pipeline.setTexture2D(frame.glTexture, 0);
+            var textureUnit = renderer.setTextureSource(frame.source);
 
             prevTextureSourceIndex = frame.sourceIndex;
         }
@@ -114,7 +114,7 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage, cam
         }
 
         //  TL x/y, BL x/y, BR x/y, TR x/y
-        if (pipeline.batchQuad(tx0, ty0, tx0, ty1, tx1, ty1, tx1, ty0, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect, frame.glTexture, 0))
+        if (pipeline.batchQuad(tx0, ty0, tx0, ty1, tx1, ty1, tx1, ty0, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect, frame.glTexture, textureUnit))
         {
             prevTextureSourceIndex = -1;
         }
