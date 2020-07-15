@@ -57,7 +57,6 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     }
 
     var frame = src.frame;
-    var texture = frame.glTexture;
 
     var vertices = src.vertices;
     var uvs = src.uv;
@@ -72,7 +71,7 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
         pipeline.flush();
     }
 
-    pipeline.setTexture2D(texture, 0);
+    var textureUnit = renderer.setTextureSource(frame.source);
 
     var vertexViewF32 = pipeline.vertexViewF32;
     var vertexViewU32 = pipeline.vertexViewU32;
@@ -100,6 +99,7 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
         vertexViewF32[++vertexOffset] = ty;
         vertexViewF32[++vertexOffset] = uvs[i + 0];
         vertexViewF32[++vertexOffset] = uvs[i + 1];
+        vertexViewF32[++vertexOffset] = textureUnit;
         vertexViewF32[++vertexOffset] = tintEffect;
         vertexViewU32[++vertexOffset] = Utils.getTintAppendFloatAlpha(colors[colorIndex], camera.alpha * alphas[colorIndex]);
 
