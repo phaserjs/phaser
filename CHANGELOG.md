@@ -34,6 +34,8 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `TextureTintPipeline.flush` has been rewritten to support multi-textures.
 * `TextureTintPipeline.flush` no longer creates a sub-array if the batch is full, but instead uses `bufferData` for speed.
 * `TextureTintPipeline.currentUnit` is a new property that holds the most recently assigned texture unit. Treat as read-only.
+* `WebGLRenderer.setTextureSource` is a new method, used by pipelines and Game Objects, that will assign a texture unit to the given Texture Source.
+* The `WebGLRenderer.setTexture2D` method has been updated to use the new texture unit assignment. It no longer takes the `textureUnit` or `flush` parameters and these have been removed from its method signature.
 
 ### WebGL ModelViewProjection API Changes
 
