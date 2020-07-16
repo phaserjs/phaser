@@ -49,12 +49,15 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPer
 
     var tilesets = src.tileset;
 
+    renderer.setPipeline(pipeline);
+
     //  Loop through each tileset in this layer, drawing just the tiles that are in that set each time
     //  Doing it this way around allows us to batch tiles using the same tileset
     for (var c = 0; c < tilesets.length; c++)
     {
         var currentSet = tilesets[c];
         var texture = currentSet.glTexture;
+        var textureUnit = pipeline.setTexture2D(texture, src);
 
         for (var i = 0; i < tileCount; i++)
         {
@@ -67,7 +70,7 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPer
                 //  Skip tiles that aren't in this set
                 continue;
             }
-       
+
             var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
 
             if (tileTexCoords === null)
@@ -102,7 +105,8 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPer
                 0, 0,
                 camera,
                 null,
-                true
+                true,
+                textureUnit
             );
         }
     }
