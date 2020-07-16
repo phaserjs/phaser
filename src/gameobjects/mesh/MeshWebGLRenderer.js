@@ -56,8 +56,6 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
         camMatrix.multiply(spriteMatrix, calcMatrix);
     }
 
-    var frame = src.frame;
-
     var vertices = src.vertices;
     var uvs = src.uv;
     var colors = src.colors;
@@ -71,7 +69,7 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
         pipeline.flush();
     }
 
-    var textureUnit = renderer.setTextureSource(frame.source);
+    var textureUnit = pipeline.setGameObject(src);
 
     var vertexViewF32 = pipeline.vertexViewF32;
     var vertexViewU32 = pipeline.vertexViewU32;
