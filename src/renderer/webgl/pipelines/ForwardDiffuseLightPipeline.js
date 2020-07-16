@@ -188,19 +188,18 @@ var ForwardDiffuseLightPipeline = new Class({
         for (i = 0; i < lightCount; i++)
         {
             var light = lights[i];
+            var lightName = 'uLights[' + i + '].';
+
+            cameraMatrix.transformPoint(light.x, light.y, point);
+
+            //  TODO - Cache the uniform locations!!!
+            renderer.setFloat2(program, lightName + 'position', point.x - (camera.scrollX * light.scrollFactorX * camera.zoom), height - (point.y - (camera.scrollY * light.scrollFactorY) * camera.zoom));
 
             if (light.dirty)
             {
-                var lightName = 'uLights[' + i + '].';
-
-                cameraMatrix.transformPoint(light.x, light.y, point);
-
-                //  TODO - Cache the uniform locations!!!
-                renderer.setFloat2(program, lightName + 'position', point.x - (camera.scrollX * light.scrollFactorX * camera.zoom), height - (point.y - (camera.scrollY * light.scrollFactorY) * camera.zoom));
                 renderer.setFloat3(program, lightName + 'color', light.r, light.g, light.b);
                 renderer.setFloat1(program, lightName + 'intensity', light.intensity);
                 renderer.setFloat1(program, lightName + 'radius', light.radius);
-
                 light.dirty = false;
             }
         }
@@ -308,9 +307,105 @@ var ForwardDiffuseLightPipeline = new Class({
         parentTransformMatrix,
         skipFlip)
     {
+
+        var normalTexture = this.getNormalMap(gameObject);
+
+        TextureTintPipeline.prototype.batchTexture.call(this, gameObject, texture, textureWidth, textureHeight, srcX, srcY, srcWidth, srcHeight, scaleX, scaleY, rotation, flipX, flipY, scrollFactorX, scrollFactorY, displayOriginX, displayOriginY, frameX, frameY, frameWidth, frameHeight, tintTL, tintTR, tintBL, tintBR, tintEffect, uOffset, vOffset, camera, parentTransformMatrix, skipFlip, true);
+
+        this.renderer.setNormalMap(normalTexture.glTexture);
+
+        this.setNormalMapRotation(rotation);
+    },
+
+    /**
+     * Assigns a texture to the current batch. If a different texture is already set it creates a new batch object.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#setTexture2D
+     * @since 3.25.0
+     *
+     * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch. If not given uses blankTexture.
+     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object being rendered or added to the batch.
+     */
+    setTexture2D: function (texture, gameObject)
+    {
+        if (texture === undefined) { texture = this.renderer.blankTexture.glTexture; }
+
+        var renderer = this.renderer;
+        var normalTexture = this.getNormalMap(gameObject);
+
+        if (renderer.isNewNormalMap())
+        {
+            this.flush();
+
+            renderer.setTextureZero(texture);
+            renderer.setNormalMap(normalTexture);
+        }
+
+        if (gameObject)
+        {
+            this.setNormalMapRotation(gameObject.rotation);
+        }
+
+        this.currentUnit = 0;
+
+        return 0;
+    },
+
+    /**
+     * Custom pipelines can use this method in order to perform any required pre-batch tasks
+     * for the given Game Object. It must return the texture unit the Game Object was assigned.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#setGameObject
+     * @since 3.25.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object being rendered or added to the batch.
+     * @param {Phaser.Textures.Frame} [frame] - Optional frame to use. Can override that of the Game Object.
+     *
+     * @return {number} The texture unit the Game Object has been assigned.
+     */
+    setGameObject: function (gameObject, frame)
+    {
+        if (frame === undefined) { frame = gameObject.frame; }
+
+        var renderer = this.renderer;
+        var texture = frame.glTexture;
+        var normalTexture = this.getNormalMap(gameObject);
+
+        if (renderer.isNewNormalMap())
+        {
+            this.flush();
+
+            renderer.setTextureZero(texture);
+            renderer.setNormalMap(normalTexture);
+        }
+
+        this.setNormalMapRotation(gameObject.rotation);
+
+        this.currentUnit = 0;
+
+        return 0;
+    },
+
+    /**
+     * Returns the normal map WebGLTexture from the given Game Object.
+     * If the Game Object doesn't have one, it returns the default normal map from this pipeline instead.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#getNormalMap
+     * @since 3.25.0
+     *
+     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object to get the normal map from.
+     *
+     * @return {WebGLTexture} The normal map texture.
+     */
+    getNormalMap: function (gameObject)
+    {
         var normalTexture;
 
-        if (gameObject.displayTexture)
+        if (!gameObject)
+        {
+            normalTexture = this.defaultNormalMap;
+        }
+        else if (gameObject.displayTexture)
         {
             normalTexture = gameObject.displayTexture.dataSource[gameObject.displayFrame.sourceIndex];
         }
@@ -335,42 +430,7 @@ var ForwardDiffuseLightPipeline = new Class({
             normalTexture = this.defaultNormalMap;
         }
 
-        TextureTintPipeline.prototype.batchTexture.call(this, gameObject, texture, textureWidth, textureHeight, srcX, srcY, srcWidth, srcHeight, scaleX, scaleY, rotation, flipX, flipY, scrollFactorX, scrollFactorY, displayOriginX, displayOriginY, frameX, frameY, frameWidth, frameHeight, tintTL, tintTR, tintBL, tintBR, tintEffect, uOffset, vOffset, camera, parentTransformMatrix, skipFlip, true);
-
-        this.renderer.setNormalMap(normalTexture.glTexture);
-
-        this.setNormalMapRotation(rotation);
-    },
-
-    /**
-     * Takes a Sprite Game Object, or any object that extends it, which has a normal texture and adds it to the batch.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchSprite
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Sprite} sprite - The texture-based Game Object to add to the batch.
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use for the rendering transform.
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - The transform matrix of the parent container, if set.
-     */
-    batchSprite: function (sprite, camera, parentTransformMatrix)
-    {
-        if (!this.active)
-        {
-            return;
-        }
-
-        var normalTexture = sprite.texture.dataSource[sprite.frame.sourceIndex];
-
-        if (!normalTexture)
-        {
-            normalTexture = this.defaultNormalMap;
-        }
-
-        TextureTintPipeline.prototype.batchSprite.call(this, sprite, camera, parentTransformMatrix, true);
-
-        this.renderer.setNormalMap(normalTexture.glTexture);
-
-        this.setNormalMapRotation(sprite.rotation);
+        return normalTexture.glTexture;
     }
 
 });
