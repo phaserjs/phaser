@@ -1487,7 +1487,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Flushes the current pipeline, then resets all of the textures
+     * Flushes the current pipeline, then resets the first two textures
      * back to the default temporary textures, resets the start active
      * counter and sets texture unit 1 as being active.
      *
@@ -1501,20 +1501,17 @@ var WebGLRenderer = new Class({
         var gl = this.gl;
         var temp = this.tempTextures;
 
-        for (var i = 0; i < temp.length; i++)
-        {
-            gl.activeTexture(gl.TEXTURE0 + i);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, temp[0]);
 
-            gl.bindTexture(gl.TEXTURE_2D, temp[i]);
-        }
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, temp[1]);
 
         this.normalTexture = null;
         this.textureZero = null;
 
         this.currentActiveTexture = 1;
         this.startActiveTexture++;
-
-        gl.activeTexture(gl.TEXTURE1);
     },
 
     /**
