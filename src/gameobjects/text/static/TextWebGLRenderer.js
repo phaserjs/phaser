@@ -23,7 +23,7 @@ var Utils = require('../../../renderer/webgl/Utils');
  */
 var TextWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    if ((src.width === 0) || (src.height === 0))
+    if (src.width === 0 || src.height === 0)
     {
         return;
     }
@@ -33,6 +33,8 @@ var TextWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     var height = frame.height;
     var getTint = Utils.getTintAppendFloatAlpha;
     var pipeline = this.pipeline;
+
+    renderer.setPipeline(pipeline, src);
 
     var textureUnit = pipeline.setTexture2D(frame.glTexture, src);
 
