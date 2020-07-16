@@ -52,33 +52,40 @@ var TextureTintPipeline = new Class({
     {
         var rendererConfig = config.renderer.config;
 
-        //  Vertex Size = attribute size added together (2 + 2 + 1 + 4)
-        //  Vertex Size = attribute size added together (2 + 2 + 1 + 1 + 4) inc maxTextures
-
         var maxTextures = config.renderer.maxTextures;
 
-        var src = '';
-
-        for (var i = 0; i < maxTextures; i++)
+        if (!config.fragShader)
         {
-            if (i > 0)
+            var src = '';
+
+            for (var i = 0; i < maxTextures; i++)
             {
-                src += '\n\telse ';
+                if (i > 0)
+                {
+                    src += '\n\telse ';
+                }
+
+                if (i < maxTextures - 1)
+                {
+                    src += 'if (outTexId < ' + i + '.5)';
+                }
+
+                src += '\n\t{';
+                src += '\n\t\ttexture = texture2D(uMainSampler[' + i + '], outTexCoord);';
+                src += '\n\t}';
             }
 
-            if (i < maxTextures - 1)
-            {
-                src += 'if (outTexId < ' + i + '.5)';
-            }
+            var fragmentShaderSource = ShaderSourceFS.replace(/%count%/gi, maxTextures.toString());
 
-            src += '\n\t{';
-            src += '\n\t\ttexture = texture2D(uMainSampler[' + i + '], outTexCoord);';
-            src += '\n\t}';
+            fragmentShaderSource = fragmentShaderSource.replace(/%forloop%/gi, src);
+        }
+        else
+        {
+            fragmentShaderSource = config.fragShader;
         }
 
-        var fragmentShaderSource = ShaderSourceFS.replace(/%count%/gi, maxTextures.toString());
-
-        fragmentShaderSource = fragmentShaderSource.replace(/%forloop%/gi, src);
+        //  Vertex Size = attribute size added together (2 + 2 + 1 + 4)
+        //  Vertex Size = attribute size added together (2 + 2 + 1 + 1 + 4) inc maxTextures
 
         WebGLPipeline.call(this, {
             game: config.game,
@@ -406,9 +413,12 @@ var TextureTintPipeline = new Class({
      * @param {(Phaser.GameObjects.Image|Phaser.GameObjects.Sprite)} sprite - The texture based Game Object to add to the batch.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use for the rendering transform.
      * @param {Phaser.GameObjects.Components.TransformMatrix} [parentTransformMatrix] - The transform matrix of the parent container, if set.
+     * @param {boolean} [forceZero=false] - Force this Sprite to use texture unit zero?
      */
-    batchSprite: function (sprite, camera, parentTransformMatrix)
+    batchSprite: function (sprite, camera, parentTransformMatrix, forceZero)
     {
+        if (forceZero === undefined) { forceZero = false; }
+
         //  Will cause a flush if this isn't the current pipeline, vertexbuffer or program
         this.renderer.setPipeline(this);
 
@@ -550,7 +560,16 @@ var TextureTintPipeline = new Class({
             this.flush();
         }
 
-        var unit = this.renderer.setTextureSource(textureSource);
+        var unit = 0;
+
+        if (forceZero)
+        {
+            this.renderer.setTextureZero(textureSource.glTexture);
+        }
+        else
+        {
+            unit = this.renderer.setTextureSource(textureSource);
+        }
 
         var tintEffect = (sprite._isTinted && sprite.tintFill);
 
@@ -795,6 +814,7 @@ var TextureTintPipeline = new Class({
      * @param {Phaser.Cameras.Scene2D.Camera} camera - Current used camera.
      * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - Parent container.
      * @param {boolean} [skipFlip=false] - Skip the renderTexture check.
+     * @param {boolean} [forceZero=false] - Force this Sprite to use texture unit zero?
      */
     batchTexture: function (
         gameObject,
@@ -812,8 +832,11 @@ var TextureTintPipeline = new Class({
         uOffset, vOffset,
         camera,
         parentTransformMatrix,
-        skipFlip)
+        skipFlip,
+        forceZero)
     {
+        if (forceZero === undefined) { forceZero = false; }
+
         this.renderer.setPipeline(this, gameObject);
 
         var camMatrix = this._tempMatrix1;
@@ -936,8 +959,16 @@ var TextureTintPipeline = new Class({
             ty3 = Math.round(ty3);
         }
 
-        // this.setTexture2D(texture, 0);
-        var unit = this.renderer.setTexture2D(texture);
+        var unit = 0;
+
+        if (forceZero)
+        {
+            this.renderer.setTextureZero(texture);
+        }
+        else
+        {
+            unit = this.renderer.setTexture2D(texture);
+        }
 
         this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, unit);
     },
