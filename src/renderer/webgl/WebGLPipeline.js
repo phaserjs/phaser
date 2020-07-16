@@ -163,7 +163,7 @@ var WebGLPipeline = new Class({
         this.vertexBuffer = this.renderer.createVertexBuffer((config.vertices ? config.vertices : this.vertexData.byteLength), this.gl.STREAM_DRAW);
 
         /**
-         * The handle to a WebGL program
+         * The handle to a WebGL program.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#program
          * @type {WebGLProgram}
@@ -172,7 +172,7 @@ var WebGLPipeline = new Class({
         this.program = this.renderer.createProgram(config.vertShader, config.fragShader);
 
         /**
-         * Array of objects that describe the vertex attributes
+         * Array of objects that describe the vertex attributes.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#attributes
          * @type {object}
@@ -181,7 +181,7 @@ var WebGLPipeline = new Class({
         this.attributes = config.attributes;
 
         /**
-         * The size in bytes of the vertex
+         * The size in bytes of the vertex.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexSize
          * @type {integer}
@@ -190,7 +190,7 @@ var WebGLPipeline = new Class({
         this.vertexSize = config.vertexSize;
 
         /**
-         * The primitive topology which the pipeline will use to submit draw calls
+         * The primitive topology which the pipeline will use to submit draw calls.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#topology
          * @type {integer}
@@ -199,8 +199,7 @@ var WebGLPipeline = new Class({
         this.topology = config.topology;
 
         /**
-         * Uint8 view to the vertex raw buffer. Used for uploading vertex buffer resources
-         * to the GPU.
+         * Uint8 view to the vertex raw buffer. Used for uploading vertex buffer resources to the GPU.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#bytes
          * @type {Uint8Array}
@@ -209,7 +208,7 @@ var WebGLPipeline = new Class({
         this.bytes = new Uint8Array(this.vertexData);
 
         /**
-         * This will store the amount of components of 32 bit length
+         * This will store the amount of components of 32 bit length.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexComponentCount
          * @type {integer}
@@ -249,6 +248,35 @@ var WebGLPipeline = new Class({
      */
     boot: function ()
     {
+        var gl = this.gl;
+        var vertexBuffer = this.vertexBuffer;
+        var attributes = this.attributes;
+        var program = this.program;
+        var renderer = this.renderer;
+        var vertexSize = this.vertexSize;
+
+        renderer.setProgram(program);
+        renderer.setVertexBuffer(vertexBuffer);
+
+        for (var i = 0; i < attributes.length; i++)
+        {
+            var element = attributes[i];
+            var location = gl.getAttribLocation(program, element.name);
+
+            if (location >= 0)
+            {
+                gl.enableVertexAttribArray(location);
+                gl.vertexAttribPointer(location, element.size, element.type, element.normalized, vertexSize, element.offset);
+                element.enabled = true;
+                element.location = location;
+            }
+            else if (location !== -1)
+            {
+                gl.disableVertexAttribArray(location);
+            }
+        }
+
+        return this;
     },
 
     /**
@@ -272,7 +300,9 @@ var WebGLPipeline = new Class({
             size: size,
             type: this.renderer.glFormats[type],
             normalized: normalized,
-            offset: offset
+            offset: offset,
+            enabled: false,
+            location: -1
         });
 
         this.vertexComponentCount = Utils.getComponentCount(
@@ -317,7 +347,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * Binds the pipeline resources, including programs, vertex buffers and binds attributes
+     * Binds the pipeline resources, including the program, vertex buffer and attribute pointers.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#bind
      * @since 3.0.0
@@ -336,19 +366,18 @@ var WebGLPipeline = new Class({
         renderer.setProgram(program);
         renderer.setVertexBuffer(vertexBuffer);
 
-        for (var index = 0; index < attributes.length; ++index)
+        for (var i = 0; i < attributes.length; i++)
         {
-            var element = attributes[index];
-            var location = gl.getAttribLocation(program, element.name);
+            var element = attributes[i];
 
-            if (location >= 0)
+            if (element.enabled)
             {
-                gl.enableVertexAttribArray(location);
-                gl.vertexAttribPointer(location, element.size, element.type, element.normalized, vertexSize, element.offset);
+                gl.vertexAttribPointer(element.location, element.size, element.type, element.normalized, vertexSize, element.offset);
             }
-            else if (location !== -1)
+            else if (!element.enabled && element.location > -1)
             {
-                gl.disableVertexAttribArray(location);
+                gl.disableVertexAttribArray(element.location);
+                element.location = -1;
             }
         }
 
