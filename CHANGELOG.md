@@ -55,7 +55,11 @@ This Light2D pipeline, which is responsible for rendering lights under WebGL, ha
 * The pipeline now works with Game Objects that do not have a normal map. They will be rendered using the new default normal map, which allows for a flat light effect to pass over them and merge with their diffuse map colors.
 * Fixed a bug in the way lights were handled that caused Tilemaps to render one tile at a time, causing massive slow down. They're now batched properly, making a combination of lights and tilemaps possible again.
 * The Bitmap Text (Static and Dynamic) Game Objects now support rendering with normal maps.
+* Mesh and Quad Game Objects now support rendering with normal maps.
 * The Graphics Game Objects now support rendering in Light2d. You can even use normal map textures for the texture fills.
+* Particle Emitter Game Object now supports rendering in Light2d.
+* All Shape Game Objects (Rectangle, IsoBox, Star, Polygon, etc) now support rendering in Light2d.
+* The Text Game Object now supports rendering in Light2d, no matter which font, stroke or style it is using.
 * The pipeline will no longer look-up and set all of the light uniforms unless the `Light` is dirty.
 * The pipeline will no longer reset all of the lights unless the quantity of lights has changed.
 * The `ForwardDiffuseLightPipeline.defaultNormalMap` property has changed, it's now an object with a `glTexture` property that maps to the pipelines default normal map.
