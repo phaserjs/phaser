@@ -41,6 +41,9 @@ var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPerc
     Scale(pipeline, src.scaleX, src.scaleY, 1);
     ViewLoad2D(pipeline, camera.matrix.matrix);
 
+    renderer.clearTextureZero();
+    renderer.clearNormalMap();
+
     for (var i = 0; i < tilesets.length; i++)
     {
         src.upload(camera, i);
@@ -51,9 +54,24 @@ var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPerc
 
             pipeline.vertexBuffer = src.vertexBuffer[i];
 
-            renderer.setPipeline(pipeline);
-
             renderer.setTextureZero(tilesets[i].glTexture);
+
+            var normalTexture = null;
+
+            if (Array.isArray(tilesets))
+            {
+                normalTexture = tilesets[0].image.dataSource[0];
+            }
+            else
+            {
+                normalTexture = tilesets.image.dataSource[0];
+            }
+
+            if (normalTexture)
+            {
+                // renderer.setNormalMap(pipeline.defaultNormalMap.glTexture);
+                // renderer.setNormalMap(normalTexture.glTexture);
+            }
 
             renderer.gl.drawArrays(pipeline.topology, 0, src.vertexCount[i]);
         }
@@ -63,6 +81,7 @@ var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPerc
     pipeline.vertexBuffer = pipelineVertexBuffer;
 
     renderer.clearTextureZero();
+    renderer.clearNormalMap();
 
     ViewIdentity(pipeline);
     Identity(pipeline);
