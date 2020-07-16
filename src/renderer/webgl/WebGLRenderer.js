@@ -1505,6 +1505,7 @@ var WebGLRenderer = new Class({
     {
         this.normalTexture = null;
         this.startActiveTexture++;
+        this.currentActiveTexture = 1;
     },
 
     /**
