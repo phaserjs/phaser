@@ -52,11 +52,12 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 
 This Light2D pipeline, which is responsible for rendering lights under WebGL, has been rewritten to work with the new Texture Tint Pipeline functions. Lots of redundant code has been removed and the following changes and improvements took place:
 
+* The pipeline now works with Game Objects that do not have a normal map. They will be rendered using the new default normal map, which allows for a flat light effect to pass over them and merge with their diffuse map colors.
 * Fixed a bug in the way lights were handled that caused Tilemaps to render one tile at a time, causing massive slow down. They're now batched properly, making a combination of lights and tilemaps possible again.
 * The pipeline will no longer look-up and set all of the light uniforms unless the `Light` is dirty.
 * The pipeline will no longer reset all of the lights unless the quantity of lights has changed.
-* The `ForwardDiffuseLightPipeline.defaultNormalMap` property has been removed as it's no longer required.
-* The `ForwardDiffuseLightPipeline.boot` method has been removed as it's no longer required.
+* The `ForwardDiffuseLightPipeline.defaultNormalMap` property has changed, it's now an object with a `glTexture` property that maps to the pipelines default normal map.
+* The `ForwardDiffuseLightPipeline.boot` method has been changed to now generate a default normal map.
 * The `ForwardDiffuseLightPipeline.onBind` method has been removed as it's no longer required.
 * The `ForwardDiffuseLightPipeline.setNormalMap` method has been removed as it's no longer required.
 * The `ForwardDiffuseLightPipeline.bind` is a new method that handles setting-up the shader uniforms.
