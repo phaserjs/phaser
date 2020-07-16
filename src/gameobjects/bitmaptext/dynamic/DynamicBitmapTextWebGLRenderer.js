@@ -92,7 +92,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
     var tintBL = Utils.getTintAppendFloatAlpha(src._tintBL, camera.alpha * src._alphaBL);
     var tintBR = Utils.getTintAppendFloatAlpha(src._tintBR, camera.alpha * src._alphaBR);
 
-    var textureUnit = renderer.setTextureSource(frame.source);
+    var textureUnit = pipeline.setGameObject(src);
 
     var xAdvance = 0;
     var yAdvance = 0;
