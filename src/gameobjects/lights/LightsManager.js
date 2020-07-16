@@ -153,7 +153,7 @@ var LightsManager = new Class({
         var cameraRadius = (camera.width + camera.height) / 2.0;
         var point = { x: 0, y: 0 };
         var cameraMatrix = camera.matrix;
-        var viewportHeight = this.systems.game.config.height;
+        var viewportHeight = this.systems.game.renderer.height;
 
         culledLights.length = 0;
 
