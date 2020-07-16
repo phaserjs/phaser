@@ -8,6 +8,7 @@
 var Class = require('../../../utils/Class');
 var ShaderSourceFS = require('../shaders/ForwardDiffuse-frag.js');
 var TextureTintPipeline = require('./TextureTintPipeline');
+var WebGLPipeline = require('../WebGLPipeline');
 
 var LIGHT_COUNT = 10;
 
@@ -40,16 +41,6 @@ var ForwardDiffuseLightPipeline = new Class({
         TextureTintPipeline.call(this, config);
 
         /**
-         * Default normal map texture to use.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#defaultNormalMap
-         * @type {Phaser.Texture.Frame}
-         * @private
-         * @since 3.11.0
-         */
-        this.defaultNormalMap;
-
-        /**
          * Inverse rotation matrix for normal map rotations.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#inverseRotationMatrix
@@ -65,47 +56,25 @@ var ForwardDiffuseLightPipeline = new Class({
     },
 
     /**
-     * Called when the Game has fully booted and the Renderer has finished setting up.
-     * 
-     * By this stage all Game level systems are now in place and you can perform any final
-     * tasks that the pipeline may need that relied on game systems such as the Texture Manager.
+     * Called every time the pipeline is bound by the renderer.
+     * Sets the shader program, vertex buffer and other resources.
+     * Should only be called when changing pipeline.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#boot
-     * @override
-     * @since 3.11.0
-     */
-    boot: function ()
-    {
-        this.defaultNormalMap = this.game.textures.getFrame('__DEFAULT');
-    },
-
-    /**
-     * This function binds its base class resources and this lights 2D resources.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#onBind
-     * @override
-     * @since 3.0.0
-     * 
-     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#bind
+     * @since 3.25.0
      *
      * @return {this} This WebGLPipeline instance.
      */
-    onBind: function (gameObject)
+    bind: function ()
     {
-        TextureTintPipeline.prototype.onBind.call(this);
+        WebGLPipeline.prototype.bind.call(this);
 
         var renderer = this.renderer;
         var program = this.program;
 
-        this.mvpUpdate();
-
+        renderer.setInt1(program, 'uMainSampler', 0);
         renderer.setInt1(program, 'uNormSampler', 1);
         renderer.setFloat2(program, 'uResolution', this.width, this.height);
-
-        if (gameObject)
-        {
-            this.setNormalMap(gameObject);
-        }
 
         return this;
     },
@@ -178,7 +147,49 @@ var ForwardDiffuseLightPipeline = new Class({
     },
 
     /**
-     * Generic function for batching a textured quad
+     * Rotates the normal map vectors inversely by the given angle.
+     * Only works in 2D space.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#setNormalMapRotation
+     * @since 3.16.0
+     *
+     * @param {number} rotation - The angle of rotation in radians.
+     */
+    setNormalMapRotation: function (rotation)
+    {
+        if (rotation !== this.currentNormalMapRotation || this.vertexCount === 0)
+        {
+            if (this.vertexCount > 0)
+            {
+                this.flush();
+            }
+
+            var inverseRotationMatrix = this.inverseRotationMatrix;
+
+            if (rotation)
+            {
+                var rot = -rotation;
+                var c = Math.cos(rot);
+                var s = Math.sin(rot);
+
+                inverseRotationMatrix[1] = s;
+                inverseRotationMatrix[3] = -s;
+                inverseRotationMatrix[0] = inverseRotationMatrix[4] = c;
+            }
+            else
+            {
+                inverseRotationMatrix[0] = inverseRotationMatrix[4] = 1;
+                inverseRotationMatrix[1] = inverseRotationMatrix[3] = 0;
+            }
+
+            this.renderer.setMatrix3(this.program, 'uInverseRotationMatrix', false, inverseRotationMatrix);
+
+            this.currentNormalMapRotation = rotation;
+        }
+    },
+
+    /**
+     * Generic function for batching a textured quad with a normal map.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchTexture
      * @since 3.0.0
@@ -213,6 +224,7 @@ var ForwardDiffuseLightPipeline = new Class({
      * @param {number} vOffset - Vertical offset on texture coordinate
      * @param {Phaser.Cameras.Scene2D.Camera} camera - Current used camera
      * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - Parent container
+     * @param {boolean} [skipFlip=false] - Skip the renderTexture check.
      */
     batchTexture: function (
         gameObject,
@@ -229,15 +241,9 @@ var ForwardDiffuseLightPipeline = new Class({
         tintTL, tintTR, tintBL, tintBR, tintEffect,
         uOffset, vOffset,
         camera,
-        parentTransformMatrix)
+        parentTransformMatrix,
+        skipFlip)
     {
-        if (!this.active)
-        {
-            return;
-        }
-
-        this.renderer.setPipeline(this);
-
         var normalTexture;
 
         if (gameObject.displayTexture)
@@ -260,221 +266,13 @@ var ForwardDiffuseLightPipeline = new Class({
             }
         }
 
-        if (!normalTexture)
+        if (normalTexture)
         {
-            console.warn('Normal map missing or invalid');
-            return;
-        }
+            TextureTintPipeline.prototype.batchTexture.call(this, gameObject, texture, textureWidth, textureHeight, srcX, srcY, srcWidth, srcHeight, scaleX, scaleY, rotation, flipX, flipY, scrollFactorX, scrollFactorY, displayOriginX, displayOriginY, frameX, frameY, frameWidth, frameHeight, tintTL, tintTR, tintBL, tintBR, tintEffect, uOffset, vOffset, camera, parentTransformMatrix, skipFlip, true);
 
-        this.setTexture2D(normalTexture.glTexture, 1);
-        this.setNormalMapRotation(rotation);
+            this.renderer.setNormalMap(normalTexture.glTexture);
 
-        var camMatrix = this._tempMatrix1;
-        var spriteMatrix = this._tempMatrix2;
-        var calcMatrix = this._tempMatrix3;
-
-        var u0 = (frameX / textureWidth) + uOffset;
-        var v0 = (frameY / textureHeight) + vOffset;
-        var u1 = (frameX + frameWidth) / textureWidth + uOffset;
-        var v1 = (frameY + frameHeight) / textureHeight + vOffset;
-
-        var width = srcWidth;
-        var height = srcHeight;
-
-        // var x = -displayOriginX + frameX;
-        // var y = -displayOriginY + frameY;
-
-        var x = -displayOriginX;
-        var y = -displayOriginY;
-
-        if (gameObject.isCropped)
-        {
-            var crop = gameObject._crop;
-
-            width = crop.width;
-            height = crop.height;
-
-            srcWidth = crop.width;
-            srcHeight = crop.height;
-
-            frameX = crop.x;
-            frameY = crop.y;
-
-            var ox = frameX;
-            var oy = frameY;
-
-            if (flipX)
-            {
-                ox = (frameWidth - crop.x - crop.width);
-            }
-    
-            if (flipY && !texture.isRenderTexture)
-            {
-                oy = (frameHeight - crop.y - crop.height);
-            }
-
-            u0 = (ox / textureWidth) + uOffset;
-            v0 = (oy / textureHeight) + vOffset;
-            u1 = (ox + crop.width) / textureWidth + uOffset;
-            v1 = (oy + crop.height) / textureHeight + vOffset;
-
-            x = -displayOriginX + frameX;
-            y = -displayOriginY + frameY;
-        }
-
-        //  Invert the flipY if this is a RenderTexture
-        flipY = flipY ^ (texture.isRenderTexture ? 1 : 0);
-
-        if (flipX)
-        {
-            width *= -1;
-            x += srcWidth;
-        }
-
-        if (flipY)
-        {
-            height *= -1;
-            y += srcHeight;
-        }
-
-        //  Do we need this? (doubt it)
-        // if (camera.roundPixels)
-        // {
-        //     x |= 0;
-        //     y |= 0;
-        // }
-
-        var xw = x + width;
-        var yh = y + height;
-
-        spriteMatrix.applyITRS(srcX, srcY, rotation, scaleX, scaleY);
-
-        camMatrix.copyFrom(camera.matrix);
-
-        if (parentTransformMatrix)
-        {
-            //  Multiply the camera by the parent matrix
-            camMatrix.multiplyWithOffset(parentTransformMatrix, -camera.scrollX * scrollFactorX, -camera.scrollY * scrollFactorY);
-
-            //  Undo the camera scroll
-            spriteMatrix.e = srcX;
-            spriteMatrix.f = srcY;
-
-            //  Multiply by the Sprite matrix, store result in calcMatrix
-            camMatrix.multiply(spriteMatrix, calcMatrix);
-        }
-        else
-        {
-            spriteMatrix.e -= camera.scrollX * scrollFactorX;
-            spriteMatrix.f -= camera.scrollY * scrollFactorY;
-    
-            //  Multiply by the Sprite matrix, store result in calcMatrix
-            camMatrix.multiply(spriteMatrix, calcMatrix);
-        }
-
-        var tx0 = calcMatrix.getX(x, y);
-        var ty0 = calcMatrix.getY(x, y);
-
-        var tx1 = calcMatrix.getX(x, yh);
-        var ty1 = calcMatrix.getY(x, yh);
-
-        var tx2 = calcMatrix.getX(xw, yh);
-        var ty2 = calcMatrix.getY(xw, yh);
-
-        var tx3 = calcMatrix.getX(xw, y);
-        var ty3 = calcMatrix.getY(xw, y);
-
-        if (camera.roundPixels)
-        {
-            tx0 = Math.round(tx0);
-            ty0 = Math.round(ty0);
-
-            tx1 = Math.round(tx1);
-            ty1 = Math.round(ty1);
-
-            tx2 = Math.round(tx2);
-            ty2 = Math.round(ty2);
-
-            tx3 = Math.round(tx3);
-            ty3 = Math.round(ty3);
-        }
-
-        this.setTexture2D(texture, 0);
-
-        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, 0);
-    },
-
-    /**
-     * Sets the Game Objects normal map as the active texture.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#setNormalMap
-     * @since 3.11.0
-     *
-     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to update.
-     */
-    setNormalMap: function (gameObject)
-    {
-        if (!this.active || !gameObject)
-        {
-            return;
-        }
-
-        var normalTexture;
-
-        if (gameObject.texture)
-        {
-            normalTexture = gameObject.texture.dataSource[gameObject.frame.sourceIndex];
-        }
-
-        if (!normalTexture)
-        {
-            normalTexture = this.defaultNormalMap;
-        }
-
-        this.setTexture2D(normalTexture.glTexture, 1);
-
-        this.renderer.setPipeline(gameObject.defaultPipeline);
-    },
-
-    /**
-     * Rotates the normal map vectors inversely by the given angle.
-     * Only works in 2D space.
-     * 
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#setNormalMapRotation
-     * @since 3.16.0
-     * 
-     * @param {number} rotation - The angle of rotation in radians.
-     */
-    setNormalMapRotation: function (rotation)
-    {
-        if (rotation !== this.currentNormalMapRotation || this.batches.length === 0)
-        {
-            if (this.batches.length > 0)
-            {
-                this.flush();
-            }
-
-            var inverseRotationMatrix = this.inverseRotationMatrix;
-
-            if (rotation)
-            {
-                var rot = -rotation;
-                var c = Math.cos(rot);
-                var s = Math.sin(rot);
-
-                inverseRotationMatrix[1] = s;
-                inverseRotationMatrix[3] = -s;
-                inverseRotationMatrix[0] = inverseRotationMatrix[4] = c;
-            }
-            else
-            {
-                inverseRotationMatrix[0] = inverseRotationMatrix[4] = 1;
-                inverseRotationMatrix[1] = inverseRotationMatrix[3] = 0;
-            }
-
-            this.renderer.setMatrix3(this.program, 'uInverseRotationMatrix', false, inverseRotationMatrix);
-
-            this.currentNormalMapRotation = rotation;
+            this.setNormalMapRotation(rotation);
         }
     },
 
@@ -499,12 +297,11 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (normalTexture)
         {
-            this.renderer.setPipeline(this);
+            TextureTintPipeline.prototype.batchSprite.call(this, sprite, camera, parentTransformMatrix, true);
 
-            this.setTexture2D(normalTexture.glTexture, 1);
+            this.renderer.setNormalMap(normalTexture.glTexture);
+
             this.setNormalMapRotation(sprite.rotation);
-
-            TextureTintPipeline.prototype.batchSprite.call(this, sprite, camera, parentTransformMatrix);
         }
     }
 
