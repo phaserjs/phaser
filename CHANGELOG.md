@@ -78,6 +78,7 @@ This Light2D pipeline, which is responsible for rendering lights under WebGL, ha
 * `Light.dirty` is a new property that controls if the light is dirty, or not, and needs its uniforms updating.
 * `Light` has been recoded so that all of its properties are now setters that activate its `dirty` flag.
 * `LightsManager.destroy` will now clear the `lightPool` array when destroyed, where-as previously it didn't.
+* `LightsManager.cull` now takes the viewport height from the renderer instead of the game config (thanks zenwaichi)
 
 ### WebGL ModelViewProjection API Changes
 
