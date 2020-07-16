@@ -264,6 +264,15 @@ var WebGLRenderer = new Class({
         this.textureZero;
 
         /**
+         * The currently bound normal map texture at texture unit one, if any.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#normalTexture
+         * @type {?WebGLTexture}
+         * @since 3.25.0
+         */
+        this.normalTexture;
+
+        /**
          * Current framebuffer in use
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentFramebuffer
@@ -790,7 +799,7 @@ var WebGLRenderer = new Class({
 
         // this.addPipeline('TextureTintStripPipeline', new TextureTintStripPipeline({ game: game, renderer: this }));
         // this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline({ game: game, renderer: this }));
-        // this.addPipeline('Light2D', new ForwardDiffuseLightPipeline({ game: game, renderer: this, maxLights: config.maxLights }));
+        this.addPipeline('Light2D', new ForwardDiffuseLightPipeline({ game: game, renderer: this, maxLights: config.maxLights }));
 
         this.setBlendMode(CONST.BlendModes.NORMAL);
 
@@ -1132,7 +1141,7 @@ var WebGLRenderer = new Class({
 
         if (current !== pipelineInstance || current.vertexBuffer !== this.currentVertexBuffer || current.program !== this.currentProgram)
         {
-            this.flush();
+            this.resetTextures();
             this.currentPipeline = pipelineInstance;
             this.currentPipeline.bind();
         }
@@ -1439,6 +1448,73 @@ var WebGLRenderer = new Class({
     clearTextureZero: function ()
     {
         this.textureZero = null;
+    },
+
+    /**
+     * Binds a texture directly to texture unit one then activates it.
+     * If the texture is already at unit one, it skips the bind.
+     * Make sure to call `clearNormalMap` after using this method.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#setNormalMap
+     * @since 3.25.0
+     *
+     * @param {WebGLTexture} texture - The WebGL texture that needs to be bound.
+     */
+    setNormalMap: function (texture)
+    {
+        if (this.normalTexture !== texture)
+        {
+            var gl = this.gl;
+
+            gl.activeTexture(gl.TEXTURE1);
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+
+            this.normalTexture = texture;
+        }
+    },
+
+    /**
+     * Clears the texture that was directly bound to texture unit one and
+     * increases the start active texture counter.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#clearNormalMap
+     * @since 3.25.0
+     */
+    clearNormalMap: function ()
+    {
+        this.normalTexture = null;
+        this.startActiveTexture++;
+    },
+
+    /**
+     * Flushes the current pipeline, then resets all of the textures
+     * back to the default temporary textures, resets the start active
+     * counter and sets texture unit 1 as being active.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#resetTextures
+     * @since 3.25.0
+     */
+    resetTextures: function ()
+    {
+        this.flush();
+
+        var gl = this.gl;
+        var temp = this.tempTextures;
+
+        for (var i = 0; i < temp.length; i++)
+        {
+            gl.activeTexture(gl.TEXTURE0 + i);
+
+            gl.bindTexture(gl.TEXTURE_2D, temp[i]);
+        }
+
+        this.normalTexture = null;
+        this.textureZero = null;
+
+        this.currentActiveTexture = 1;
+        this.startActiveTexture++;
+
+        gl.activeTexture(gl.TEXTURE1);
     },
 
     /**
