@@ -40,6 +40,23 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `WebGLRenderer.setTextureZero` is a new method that activates texture zero and binds the given texture to it. Useful for fbo backed game objects.
 * `WebGLRenderer.clearTextureZero` is a new method that clears the texture tha was bound to unit zero.
 * `WebGLRenderer.textureZero` is a new property that holds the currently bound unit zero texture.
+* `TextureTintPipeline.batchSprite` and `batchTexture` has new parameters `forceZero` which forces use of texture unit zero.
+* `WebGLRenderer.normalTexture` is a new property that holds the currently bound normal map (texture unit one).
+* `WebGLRenderer.setNormalMap` is a new method that sets the current normal map texture.
+* `WebGLRenderer.clearNormalMap` is a new method that clears the current normal map texture.
+* `WebGLRenderer.resetTextures` is a new method that flushes the pipeline, resets all textures back to the temporary ones and resets the active texture counter.
+
+### Forward Diffuse Light Pipeline API Changes
+
+This Light2D pipeline, which is responsible for rendering lights under WebGL, has been rewritten to work with the new Texture Tint Pipeline functions. Lots of redundant code has been removed and the following changes and improvements took place:
+
+* The `ForwardDiffuseLightPipeline.defaultNormalMap` property has been removed as it's no longer required.
+* The `ForwardDiffuseLightPipeline.boot` method has been removed as it's no longer required.
+* The `ForwardDiffuseLightPipeline.onBind` method has been removed as it's no longer required.
+* The `ForwardDiffuseLightPipeline.setNormalMap` method has been removed as it's no longer required.
+* The `ForwardDiffuseLightPipeline.bind` is a new method that handles setting-up the shader uniforms.
+* The `ForwardDiffuseLightPipeline.batchTexture` method has been rewritten to use the Texture Tint Pipeline function instead.
+* The `ForwardDiffuseLightPipeline.batchSprite` method has been rewritten to use the Texture Tint Pipeline function instead.
 
 ### WebGL ModelViewProjection API Changes
 
