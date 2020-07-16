@@ -798,7 +798,7 @@ var TextureTintPipeline = new Class({
      * @param {Phaser.Cameras.Scene2D.Camera} camera - Current used camera.
      * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - Parent container.
      * @param {boolean} [skipFlip=false] - Skip the renderTexture check.
-     * @param {boolean} [forceZero=false] - Force this Sprite to use texture unit zero?
+     * @param {number} [textureUnit] - Use the currently bound texture unit?
      */
     batchTexture: function (
         gameObject,
@@ -817,11 +817,11 @@ var TextureTintPipeline = new Class({
         camera,
         parentTransformMatrix,
         skipFlip,
-        forceZero)
+        textureUnit)
     {
-        if (forceZero === undefined) { forceZero = false; }
+        var renderer = this.renderer;
 
-        this.renderer.setPipeline(this, gameObject);
+        renderer.setPipeline(this, gameObject);
 
         var camMatrix = this._tempMatrix1;
         var spriteMatrix = this._tempMatrix2;
@@ -943,18 +943,12 @@ var TextureTintPipeline = new Class({
             ty3 = Math.round(ty3);
         }
 
-        var unit = 0;
-
-        if (forceZero)
+        if (textureUnit === undefined)
         {
-            this.renderer.setTextureZero(texture);
-        }
-        else
-        {
-            unit = this.renderer.setTexture2D(texture);
+            textureUnit = this.renderer.setTexture2D(texture);
         }
 
-        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, unit);
+        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
     },
 
     /**
