@@ -53,6 +53,15 @@ var ForwardDiffuseLightPipeline = new Class({
             0, 1, 0,
             0, 0, 1
         ]);
+
+        /**
+         * Stores the previous number of lights rendered.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#lightCount
+         * @type {number}
+         * @since 3.25.0
+         */
+        this.lightCount = 0;
     },
 
     /**
@@ -117,28 +126,45 @@ var ForwardDiffuseLightPipeline = new Class({
         var cameraMatrix = camera.matrix;
         var point = {x: 0, y: 0};
         var height = renderer.height;
-        var index;
+        var i;
 
-        for (index = 0; index < LIGHT_COUNT; ++index)
+        if (lightCount !== this.lightCount)
         {
-            //  Reset lights
-            renderer.setFloat1(program, 'uLights[' + index + '].radius', 0);
+            for (i = 0; i < LIGHT_COUNT; i++)
+            {
+                //  Reset lights
+                renderer.setFloat1(program, 'uLights[' + i + '].radius', 0);
+            }
+
+            this.lightCount = lightCount;
         }
 
-        renderer.setFloat4(program, 'uCamera', camera.x, camera.y, camera.rotation, camera.zoom);
+        if (camera.dirty)
+        {
+            renderer.setFloat4(program, 'uCamera', camera.x, camera.y, camera.rotation, camera.zoom);
+        }
+
+        //  TODO - Only if dirty! and cache the location
         renderer.setFloat3(program, 'uAmbientLightColor', lightManager.ambientColor.r, lightManager.ambientColor.g, lightManager.ambientColor.b);
 
-        for (index = 0; index < lightCount; ++index)
+        for (i = 0; i < lightCount; i++)
         {
-            var light = lights[index];
-            var lightName = 'uLights[' + index + '].';
+            var light = lights[i];
 
-            cameraMatrix.transformPoint(light.x, light.y, point);
+            if (light.dirty)
+            {
+                var lightName = 'uLights[' + i + '].';
 
-            renderer.setFloat2(program, lightName + 'position', point.x - (camera.scrollX * light.scrollFactorX * camera.zoom), height - (point.y - (camera.scrollY * light.scrollFactorY) * camera.zoom));
-            renderer.setFloat3(program, lightName + 'color', light.r, light.g, light.b);
-            renderer.setFloat1(program, lightName + 'intensity', light.intensity);
-            renderer.setFloat1(program, lightName + 'radius', light.radius);
+                cameraMatrix.transformPoint(light.x, light.y, point);
+
+                //  TODO - Cache the uniform locations!!!
+                renderer.setFloat2(program, lightName + 'position', point.x - (camera.scrollX * light.scrollFactorX * camera.zoom), height - (point.y - (camera.scrollY * light.scrollFactorY) * camera.zoom));
+                renderer.setFloat3(program, lightName + 'color', light.r, light.g, light.b);
+                renderer.setFloat1(program, lightName + 'intensity', light.intensity);
+                renderer.setFloat1(program, lightName + 'radius', light.radius);
+
+                light.dirty = false;
+            }
         }
 
         this.currentNormalMapRotation = null;
