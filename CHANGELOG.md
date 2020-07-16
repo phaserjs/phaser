@@ -55,6 +55,7 @@ This Light2D pipeline, which is responsible for rendering lights under WebGL, ha
 * The pipeline now works with Game Objects that do not have a normal map. They will be rendered using the new default normal map, which allows for a flat light effect to pass over them and merge with their diffuse map colors.
 * Fixed a bug in the way lights were handled that caused Tilemaps to render one tile at a time, causing massive slow down. They're now batched properly, making a combination of lights and tilemaps possible again.
 * The Bitmap Text (Static and Dynamic) Game Objects now support rendering with normal maps.
+* The TileSprite Game Objects now support rendering with normal maps.
 * Mesh and Quad Game Objects now support rendering with normal maps.
 * The Graphics Game Objects now support rendering in Light2d. You can even use normal map textures for the texture fills.
 * Particle Emitter Game Object now supports rendering in Light2d.
