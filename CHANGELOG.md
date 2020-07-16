@@ -34,19 +34,19 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * The `TextureTintPipeline.batches` property has been removed, as it's no longer required.
 * `TextureTintPipeline.flush` has been rewritten to support multi-textures.
 * `TextureTintPipeline.flush` no longer creates a sub-array if the batch is full, but instead uses `bufferData` for speed.
-* `TextureTintPipeline.currentUnit` is a new property that holds the most recently assigned texture unit. Treat as read-only.
+* `WebGLPipeline.currentUnit` is a new property that holds the most recently assigned texture unit. Treat as read-only.
 * `WebGLRenderer.setTextureSource` is a new method, used by pipelines and Game Objects, that will assign a texture unit to the given Texture Source.
 * The `WebGLRenderer.setTexture2D` method has been updated to use the new texture unit assignment. It no longer takes the `textureUnit` or `flush` parameters and these have been removed from its method signature.
 * `WebGLRenderer.setTextureZero` is a new method that activates texture zero and binds the given texture to it. Useful for fbo backed game objects.
 * `WebGLRenderer.clearTextureZero` is a new method that clears the texture tha was bound to unit zero.
 * `WebGLRenderer.textureZero` is a new property that holds the currently bound unit zero texture.
-* `TextureTintPipeline.batchSprite` and `batchTexture` has new parameters `forceZero` which forces use of texture unit zero.
 * `WebGLRenderer.normalTexture` is a new property that holds the currently bound normal map (texture unit one).
 * `WebGLRenderer.setNormalMap` is a new method that sets the current normal map texture.
 * `WebGLRenderer.clearNormalMap` is a new method that clears the current normal map texture.
 * `WebGLRenderer.resetTextures` is a new method that flushes the pipeline, resets all textures back to the temporary ones and resets the active texture counter.
 * `WebGLPipeline.boot` will now check all of the attributes and store the pointer location within the attribute entry.
 * `WebGLPipeline.bind` no longer looks-up and enables every attribute, every frame. Instead it uses the cached pointer location stored in the attribute entry, cutting down on redundant WebGL operations.
+* `WebGLRenderer.isNewNormalMap` is a new method that returns a boolean if the given parameters are not currently used.
 
 ### Forward Diffuse Light Pipeline API Changes
 
@@ -54,16 +54,19 @@ This Light2D pipeline, which is responsible for rendering lights under WebGL, ha
 
 * The pipeline now works with Game Objects that do not have a normal map. They will be rendered using the new default normal map, which allows for a flat light effect to pass over them and merge with their diffuse map colors.
 * Fixed a bug in the way lights were handled that caused Tilemaps to render one tile at a time, causing massive slow down. They're now batched properly, making a combination of lights and tilemaps possible again.
+* The Bitmap Text (Static and Dynamic) Game Objects now support rendering with normal maps.
+* The Graphics Game Objects now support rendering in Light2d. You can even use normal map textures for the texture fills.
 * The pipeline will no longer look-up and set all of the light uniforms unless the `Light` is dirty.
 * The pipeline will no longer reset all of the lights unless the quantity of lights has changed.
 * The `ForwardDiffuseLightPipeline.defaultNormalMap` property has changed, it's now an object with a `glTexture` property that maps to the pipelines default normal map.
 * The `ForwardDiffuseLightPipeline.boot` method has been changed to now generate a default normal map.
 * The `ForwardDiffuseLightPipeline.onBind` method has been removed as it's no longer required.
 * The `ForwardDiffuseLightPipeline.setNormalMap` method has been removed as it's no longer required.
-* The `ForwardDiffuseLightPipeline.bind` is a new method that handles setting-up the shader uniforms.
+* `ForwardDiffuseLightPipeline.bind` is a new method that handles setting-up the shader uniforms.
 * The `ForwardDiffuseLightPipeline.batchTexture` method has been rewritten to use the Texture Tint Pipeline function instead.
 * The `ForwardDiffuseLightPipeline.batchSprite` method has been rewritten to use the Texture Tint Pipeline function instead.
-* The `ForwardDiffuseLightPipeline.lightCount` is a new property that stores the previous number of lights rendered.
+* `ForwardDiffuseLightPipeline.lightCount` is a new property that stores the previous number of lights rendered.
+* `ForwardDiffuseLightPipeline.getNormalMap` is a new method that will look-up and return a normal map for the given object.
 
 ### Lights
 
