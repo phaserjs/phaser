@@ -2141,6 +2141,13 @@ var WebGLRenderer = new Class({
         }
     },
 
+    /**
+     * Return the current stencil mask.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#getCurrentStencilMask
+     * @private
+     * @since 3.25.0
+     */
     getCurrentStencilMask: function ()
     {
         var prev = null;
