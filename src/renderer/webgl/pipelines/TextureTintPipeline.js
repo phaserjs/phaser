@@ -102,35 +102,45 @@ var TextureTintPipeline = new Class({
                     size: 2,
                     type: config.renderer.gl.FLOAT,
                     normalized: false,
-                    offset: 0
+                    offset: 0,
+                    enabled: false,
+                    location: -1
                 },
                 {
                     name: 'inTexCoord',
                     size: 2,
                     type: config.renderer.gl.FLOAT,
                     normalized: false,
-                    offset: 4 * 2
+                    offset: 4 * 2,
+                    enabled: false,
+                    location: -1
                 },
                 {
                     name: 'inTexId',
                     size: 1,
                     type: config.renderer.gl.FLOAT,
                     normalized: false,
-                    offset: 4 * 4
+                    offset: 4 * 4,
+                    enabled: false,
+                    location: -1
                 },
                 {
                     name: 'inTintEffect',
                     size: 1,
                     type: config.renderer.gl.FLOAT,
                     normalized: false,
-                    offset: 4 * 5
+                    offset: 4 * 5,
+                    enabled: false,
+                    location: -1
                 },
                 {
                     name: 'inTint',
                     size: 4,
                     type: config.renderer.gl.UNSIGNED_BYTE,
                     normalized: true,
-                    offset: 4 * 6
+                    offset: 4 * 6,
+                    enabled: false,
+                    location: -1
                 }
             ]
         });
