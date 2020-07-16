@@ -45,11 +45,16 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `WebGLRenderer.setNormalMap` is a new method that sets the current normal map texture.
 * `WebGLRenderer.clearNormalMap` is a new method that clears the current normal map texture.
 * `WebGLRenderer.resetTextures` is a new method that flushes the pipeline, resets all textures back to the temporary ones and resets the active texture counter.
+* `WebGLPipeline.boot` will now check all of the attributes and store the pointer location within the attribute entry.
+* `WebGLPipeline.bind` no longer looks-up and enables every attribute, every frame. Instead it uses the cached pointer location stored in the attribute entry, cutting down on redundant WebGL operations.
 
 ### Forward Diffuse Light Pipeline API Changes
 
 This Light2D pipeline, which is responsible for rendering lights under WebGL, has been rewritten to work with the new Texture Tint Pipeline functions. Lots of redundant code has been removed and the following changes and improvements took place:
 
+* Fixed a bug in the way lights were handled that caused Tilemaps to render one tile at a time, causing massive slow down. They're now batched properly, making a combination of lights and tilemaps possible again.
+* The pipeline will no longer look-up and set all of the light uniforms unless the `Light` is dirty.
+* The pipeline will no longer reset all of the lights unless the quantity of lights has changed.
 * The `ForwardDiffuseLightPipeline.defaultNormalMap` property has been removed as it's no longer required.
 * The `ForwardDiffuseLightPipeline.boot` method has been removed as it's no longer required.
 * The `ForwardDiffuseLightPipeline.onBind` method has been removed as it's no longer required.
@@ -57,6 +62,13 @@ This Light2D pipeline, which is responsible for rendering lights under WebGL, ha
 * The `ForwardDiffuseLightPipeline.bind` is a new method that handles setting-up the shader uniforms.
 * The `ForwardDiffuseLightPipeline.batchTexture` method has been rewritten to use the Texture Tint Pipeline function instead.
 * The `ForwardDiffuseLightPipeline.batchSprite` method has been rewritten to use the Texture Tint Pipeline function instead.
+* The `ForwardDiffuseLightPipeline.lightCount` is a new property that stores the previous number of lights rendered.
+
+### Lights
+
+* `Light.dirty` is a new property that controls if the light is dirty, or not, and needs its uniforms updating.
+* `Light` has been recoded so that all of its properties are now setters that activate its `dirty` flag.
+* `LightsManager.destroy` will now clear the `lightPool` array when destroyed, where-as previously it didn't.
 
 ### WebGL ModelViewProjection API Changes
 
