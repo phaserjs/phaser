@@ -99,7 +99,7 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage, cam
         //  Bind texture only if the Texture Source is different from before
         if (frame.sourceIndex !== prevTextureSourceIndex)
         {
-            var textureUnit = renderer.setTextureSource(frame.source);
+            var textureUnit = pipeline.setGameObject(src, frame);
 
             prevTextureSourceIndex = frame.sourceIndex;
         }
