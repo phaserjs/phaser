@@ -293,16 +293,6 @@ var TextureTintPipeline = new Class({
          */
         this.polygonCache = [];
 
-        /**
-         * Holds the most recently assigned texture unit.
-         * Treat this value as read-only.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#currentUnit
-         * @type {number}
-         * @since 3.25.0
-         */
-        this.currentUnit = 0;
-
         this.mvpInit();
     },
 
@@ -370,9 +360,6 @@ var TextureTintPipeline = new Class({
      * @since 3.1.0
      *
      * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch. If not given uses blankTexture.
-     * @param {integer} [unit=0] - Texture unit to which the texture needs to be bound.
-     *
-     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} This pipeline instance.
      */
     setTexture2D: function (texture)
     {
@@ -423,12 +410,9 @@ var TextureTintPipeline = new Class({
      * @param {(Phaser.GameObjects.Image|Phaser.GameObjects.Sprite)} sprite - The texture based Game Object to add to the batch.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use for the rendering transform.
      * @param {Phaser.GameObjects.Components.TransformMatrix} [parentTransformMatrix] - The transform matrix of the parent container, if set.
-     * @param {boolean} [forceZero=false] - Force this Sprite to use texture unit zero?
      */
-    batchSprite: function (sprite, camera, parentTransformMatrix, forceZero)
+    batchSprite: function (sprite, camera, parentTransformMatrix)
     {
-        if (forceZero === undefined) { forceZero = false; }
-
         //  Will cause a flush if this isn't the current pipeline, vertexbuffer or program
         this.renderer.setPipeline(this);
 
@@ -438,7 +422,6 @@ var TextureTintPipeline = new Class({
 
         var frame = sprite.frame;
         var texture = frame.glTexture;
-        var textureSource = frame.source;
 
         var u0 = frame.u0;
         var v0 = frame.v0;
@@ -570,16 +553,7 @@ var TextureTintPipeline = new Class({
             this.flush();
         }
 
-        var unit = 0;
-
-        if (forceZero)
-        {
-            this.renderer.setTextureZero(textureSource.glTexture);
-        }
-        else
-        {
-            unit = this.renderer.setTextureSource(textureSource);
-        }
+        var unit = this.setGameObject(sprite);
 
         var tintEffect = (sprite._isTinted && sprite.tintFill);
 
@@ -1119,7 +1093,9 @@ var TextureTintPipeline = new Class({
         var u1 = frame.u1;
         var v1 = frame.v1;
 
-        this.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, this.fillTint.TL, this.fillTint.TR, this.fillTint.BL, this.fillTint.BR, this.tintEffect);
+        var tint = this.fillTint;
+
+        this.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tint.TL, tint.TR, tint.BL, tint.BR, this.tintEffect);
     },
 
     /**
