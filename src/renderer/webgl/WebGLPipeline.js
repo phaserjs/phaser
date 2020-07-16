@@ -235,6 +235,16 @@ var WebGLPipeline = new Class({
          * @since 3.10.0
          */
         this.active = false;
+
+        /**
+         * Holds the most recently assigned texture unit.
+         * Treat this value as read-only.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.WebGLPipeline#currentUnit
+         * @type {number}
+         * @since 3.25.0
+         */
+        this.currentUnit = 0;
     },
 
     /**
@@ -277,6 +287,27 @@ var WebGLPipeline = new Class({
         }
 
         return this;
+    },
+
+    /**
+     * Custom pipelines can use this method in order to perform any required pre-batch tasks
+     * for the given Game Object. It must return the texture unit the Game Object was assigned.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.WebGLPipeline#setGameObject
+     * @since 3.25.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object being rendered or added to the batch.
+     * @param {Phaser.Textures.Frame} [frame] - Optional frame to use. Can override that of the Game Object.
+     *
+     * @return {number} The texture unit the Game Object has been assigned.
+     */
+    setGameObject: function (gameObject, frame)
+    {
+        if (frame === undefined) { frame = gameObject.frame; }
+
+        this.currentUnit = this.renderer.setTextureSource(frame.source);
+
+        return this.currentUnit;
     },
 
     /**
