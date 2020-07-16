@@ -328,9 +328,10 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     setTexture2D: function (texture, gameObject)
     {
-        if (texture === undefined) { texture = this.renderer.blankTexture.glTexture; }
-
         var renderer = this.renderer;
+
+        if (texture === undefined) { texture = renderer.tempTextures[0]; }
+
         var normalTexture = this.getNormalMap(gameObject);
 
         if (renderer.isNewNormalMap())
