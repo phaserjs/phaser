@@ -55,6 +55,16 @@ var ForwardDiffuseLightPipeline = new Class({
         ]);
 
         /**
+         * Stores a default normal map, which is an object with a `glTexture` property that
+         * maps to a 1x1 texture of the color #7f7fff created in the `boot` method.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#defaultNormalMap
+         * @type {object}
+         * @since 3.25.0
+         */
+        this.defaultNormalMap;
+
+        /**
          * Stores the previous number of lights rendered.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#lightCount
@@ -62,6 +72,34 @@ var ForwardDiffuseLightPipeline = new Class({
          * @since 3.25.0
          */
         this.lightCount = 0;
+    },
+
+    /**
+     * Called when the Game has fully booted and the Renderer has finished setting up.
+     *
+     * By this stage all Game level systems are now in place and you can perform any final
+     * tasks that the pipeline may need that relied on game systems such as the Texture Manager.
+     *
+     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#boot
+     * @since 3.11.0
+     */
+    boot: function ()
+    {
+        WebGLPipeline.prototype.boot.call(this);
+
+        var gl = this.gl;
+
+        var tempTexture = gl.createTexture();
+
+        gl.activeTexture(gl.TEXTURE0);
+
+        gl.bindTexture(gl.TEXTURE_2D, tempTexture);
+
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([ 127, 127, 255, 255 ]));
+
+        this.defaultNormalMap = { glTexture: tempTexture };
+
+        return this;
     },
 
     /**
@@ -292,14 +330,16 @@ var ForwardDiffuseLightPipeline = new Class({
             }
         }
 
-        if (normalTexture)
+        if (!normalTexture)
         {
-            TextureTintPipeline.prototype.batchTexture.call(this, gameObject, texture, textureWidth, textureHeight, srcX, srcY, srcWidth, srcHeight, scaleX, scaleY, rotation, flipX, flipY, scrollFactorX, scrollFactorY, displayOriginX, displayOriginY, frameX, frameY, frameWidth, frameHeight, tintTL, tintTR, tintBL, tintBR, tintEffect, uOffset, vOffset, camera, parentTransformMatrix, skipFlip, true);
-
-            this.renderer.setNormalMap(normalTexture.glTexture);
-
-            this.setNormalMapRotation(rotation);
+            normalTexture = this.defaultNormalMap;
         }
+
+        TextureTintPipeline.prototype.batchTexture.call(this, gameObject, texture, textureWidth, textureHeight, srcX, srcY, srcWidth, srcHeight, scaleX, scaleY, rotation, flipX, flipY, scrollFactorX, scrollFactorY, displayOriginX, displayOriginY, frameX, frameY, frameWidth, frameHeight, tintTL, tintTR, tintBL, tintBR, tintEffect, uOffset, vOffset, camera, parentTransformMatrix, skipFlip, true);
+
+        this.renderer.setNormalMap(normalTexture.glTexture);
+
+        this.setNormalMapRotation(rotation);
     },
 
     /**
@@ -321,14 +361,16 @@ var ForwardDiffuseLightPipeline = new Class({
 
         var normalTexture = sprite.texture.dataSource[sprite.frame.sourceIndex];
 
-        if (normalTexture)
+        if (!normalTexture)
         {
-            TextureTintPipeline.prototype.batchSprite.call(this, sprite, camera, parentTransformMatrix, true);
-
-            this.renderer.setNormalMap(normalTexture.glTexture);
-
-            this.setNormalMapRotation(sprite.rotation);
+            normalTexture = this.defaultNormalMap;
         }
+
+        TextureTintPipeline.prototype.batchSprite.call(this, sprite, camera, parentTransformMatrix, true);
+
+        this.renderer.setNormalMap(normalTexture.glTexture);
+
+        this.setNormalMapRotation(sprite.rotation);
     }
 
 });
