@@ -1486,6 +1486,11 @@ var WebGLRenderer = new Class({
             gl.bindTexture(gl.TEXTURE_2D, texture);
 
             this.normalTexture = texture;
+
+            if (this.currentActiveTexture === 1)
+            {
+                this.currentActiveTexture = 2;
+            }
         }
     },
 
