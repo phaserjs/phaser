@@ -72,6 +72,8 @@ var ForwardDiffuseLightPipeline = new Class({
          * @since 3.25.0
          */
         this.lightCount = 0;
+
+        this.forceZero = true;
     },
 
     /**
@@ -276,10 +278,9 @@ var ForwardDiffuseLightPipeline = new Class({
             renderer.setNormalMap(normalTexture);
         }
 
-        if (gameObject)
-        {
-            this.setNormalMapRotation(gameObject.rotation);
-        }
+        var rotation = (gameObject) ? gameObject.rotation : 0;
+
+        this.setNormalMapRotation(rotation);
 
         this.currentUnit = 0;
 
