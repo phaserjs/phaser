@@ -805,9 +805,8 @@ var WebGLRenderer = new Class({
         this.pipelines = {};
 
         this.addPipeline('TextureTintPipeline', new TextureTintPipeline({ game: game, renderer: this }));
-
-        // this.addPipeline('TextureTintStripPipeline', new TextureTintStripPipeline({ game: game, renderer: this }));
-        // this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline({ game: game, renderer: this }));
+        this.addPipeline('TextureTintStripPipeline', new TextureTintStripPipeline({ game: game, renderer: this }));
+        this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline({ game: game, renderer: this }));
         this.addPipeline('Light2D', new ForwardDiffuseLightPipeline({ game: game, renderer: this, maxLights: config.maxLights }));
 
         this.setBlendMode(CONST.BlendModes.NORMAL);
