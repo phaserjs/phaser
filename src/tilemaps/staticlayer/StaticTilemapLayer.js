@@ -436,7 +436,12 @@ var StaticTilemapLayer = new Class({
     },
 
     /**
-     * Upload the tile data to a VBO.
+     * If the given tileset is dirty, or hasn't been rendered before, this will create a new
+     * ArrayBuffer object and iterate through all of the tiles, generating batch data for
+     * each one, storing the final results into a STATIC vertex buffer.
+     *
+     * If the tileset isn't dirty, this method simply returns after setting the vertex buffer
+     * and buffering the data.
      *
      * @method Phaser.Tilemaps.StaticTilemapLayer#upload
      * @since 3.0.0
@@ -448,135 +453,145 @@ var StaticTilemapLayer = new Class({
      */
     upload: function (camera, tilesetIndex)
     {
+        var pipeline = this.pipeline;
+
         var renderer = this.renderer;
+
         var gl = renderer.gl;
 
-        var pipeline = renderer.pipelines.TextureTintPipeline;
+        var vertexBuffer = this.vertexBuffer[tilesetIndex];
+        var bufferData = this.bufferData[tilesetIndex];
 
-        if (this.dirty[tilesetIndex])
+        if (!this.dirty[tilesetIndex] && vertexBuffer)
         {
-            var tileset = this.tileset[tilesetIndex];
-            var mapWidth = this.layer.width;
-            var mapHeight = this.layer.height;
-            var width = tileset.image.source[0].width;
-            var height = tileset.image.source[0].height;
-            var mapData = this.layer.data;
-            var tile;
-            var row;
-            var col;
-            var renderOrder = this._renderOrder;
-            var minTileIndex = tileset.firstgid;
-            var maxTileIndex = tileset.firstgid + tileset.total;
+            renderer.setVertexBuffer(vertexBuffer);
 
-            var vertexBuffer = this.vertexBuffer[tilesetIndex];
-            var bufferData = this.bufferData[tilesetIndex];
-            var vOffset = -1;
-            var bufferSize = (mapWidth * mapHeight) * pipeline.vertexSize * 6;
+            pipeline.setAttribPointers();
 
-            this.vertexCount[tilesetIndex] = 0;
+            gl.bufferSubData(gl.ARRAY_BUFFER, 0, bufferData);
 
-            if (bufferData === null)
+            return this;
+        }
+
+        var layer = this.layer;
+        var tileset = this.tileset[tilesetIndex];
+        var mapWidth = layer.width;
+        var mapHeight = layer.height;
+        var width = tileset.image.source[0].width;
+        var height = tileset.image.source[0].height;
+        var mapData = layer.data;
+        var tile;
+        var row;
+        var col;
+        var renderOrder = this._renderOrder;
+        var minTileIndex = tileset.firstgid;
+        var maxTileIndex = tileset.firstgid + tileset.total;
+        var vOffset = -1;
+        var bufferSize = (mapWidth * mapHeight) * pipeline.vertexSize * 6;
+
+        this.vertexCount[tilesetIndex] = 0;
+
+        if (bufferData === null)
+        {
+            bufferData = new ArrayBuffer(bufferSize);
+
+            this.bufferData[tilesetIndex] = bufferData;
+
+            this.vertexViewF32[tilesetIndex] = new Float32Array(bufferData);
+            this.vertexViewU32[tilesetIndex] = new Uint32Array(bufferData);
+        }
+
+        if (renderOrder === 0)
+        {
+            //  right-down
+
+            for (row = 0; row < mapHeight; row++)
             {
-                bufferData = new ArrayBuffer(bufferSize);
-
-                this.bufferData[tilesetIndex] = bufferData;
-
-                this.vertexViewF32[tilesetIndex] = new Float32Array(bufferData);
-                this.vertexViewU32[tilesetIndex] = new Uint32Array(bufferData);
-            }
-
-            if (renderOrder === 0)
-            {
-                //  right-down
-
-                for (row = 0; row < mapHeight; row++)
+                for (col = 0; col < mapWidth; col++)
                 {
-                    for (col = 0; col < mapWidth; col++)
+                    tile = mapData[row][col];
+
+                    if (!tile || tile.index < minTileIndex || tile.index > maxTileIndex || !tile.visible)
                     {
-                        tile = mapData[row][col];
-
-                        if (!tile || tile.index < minTileIndex || tile.index > maxTileIndex || !tile.visible)
-                        {
-                            continue;
-                        }
-
-                        vOffset = this.batchTile(vOffset, tile, tileset, width, height, camera, tilesetIndex);
+                        continue;
                     }
+
+                    vOffset = this.batchTile(vOffset, tile, tileset, width, height, camera, tilesetIndex);
                 }
-            }
-            else if (renderOrder === 1)
-            {
-                //  left-down
-
-                for (row = 0; row < mapHeight; row++)
-                {
-                    for (col = mapWidth - 1; col >= 0; col--)
-                    {
-                        tile = mapData[row][col];
-
-                        if (!tile || tile.index < minTileIndex || tile.index > maxTileIndex || !tile.visible)
-                        {
-                            continue;
-                        }
-
-                        vOffset = this.batchTile(vOffset, tile, tileset, width, height, camera, tilesetIndex);
-                    }
-                }
-            }
-            else if (renderOrder === 2)
-            {
-                //  right-up
-
-                for (row = mapHeight - 1; row >= 0; row--)
-                {
-                    for (col = 0; col < mapWidth; col++)
-                    {
-                        tile = mapData[row][col];
-
-                        if (!tile || tile.index < minTileIndex || tile.index > maxTileIndex || !tile.visible)
-                        {
-                            continue;
-                        }
-
-                        vOffset = this.batchTile(vOffset, tile, tileset, width, height, camera, tilesetIndex);
-                    }
-                }
-            }
-            else if (renderOrder === 3)
-            {
-                //  left-up
-
-                for (row = mapHeight - 1; row >= 0; row--)
-                {
-                    for (col = mapWidth - 1; col >= 0; col--)
-                    {
-                        tile = mapData[row][col];
-
-                        if (!tile || tile.index < minTileIndex || tile.index > maxTileIndex || !tile.visible)
-                        {
-                            continue;
-                        }
-
-                        vOffset = this.batchTile(vOffset, tile, tileset, width, height, camera, tilesetIndex);
-                    }
-                }
-            }
-
-            this.dirty[tilesetIndex] = false;
-
-            if (vertexBuffer === null)
-            {
-                vertexBuffer = renderer.createVertexBuffer(bufferData, gl.STATIC_DRAW);
-
-                this.vertexBuffer[tilesetIndex] = vertexBuffer;
-            }
-            else
-            {
-                renderer.setVertexBuffer(vertexBuffer);
-
-                gl.bufferSubData(gl.ARRAY_BUFFER, 0, bufferData);
             }
         }
+        else if (renderOrder === 1)
+        {
+            //  left-down
+
+            for (row = 0; row < mapHeight; row++)
+            {
+                for (col = mapWidth - 1; col >= 0; col--)
+                {
+                    tile = mapData[row][col];
+
+                    if (!tile || tile.index < minTileIndex || tile.index > maxTileIndex || !tile.visible)
+                    {
+                        continue;
+                    }
+
+                    vOffset = this.batchTile(vOffset, tile, tileset, width, height, camera, tilesetIndex);
+                }
+            }
+        }
+        else if (renderOrder === 2)
+        {
+            //  right-up
+
+            for (row = mapHeight - 1; row >= 0; row--)
+            {
+                for (col = 0; col < mapWidth; col++)
+                {
+                    tile = mapData[row][col];
+
+                    if (!tile || tile.index < minTileIndex || tile.index > maxTileIndex || !tile.visible)
+                    {
+                        continue;
+                    }
+
+                    vOffset = this.batchTile(vOffset, tile, tileset, width, height, camera, tilesetIndex);
+                }
+            }
+        }
+        else if (renderOrder === 3)
+        {
+            //  left-up
+
+            for (row = mapHeight - 1; row >= 0; row--)
+            {
+                for (col = mapWidth - 1; col >= 0; col--)
+                {
+                    tile = mapData[row][col];
+
+                    if (!tile || tile.index < minTileIndex || tile.index > maxTileIndex || !tile.visible)
+                    {
+                        continue;
+                    }
+
+                    vOffset = this.batchTile(vOffset, tile, tileset, width, height, camera, tilesetIndex);
+                }
+            }
+        }
+
+        this.dirty[tilesetIndex] = false;
+
+        if (vertexBuffer === null)
+        {
+            vertexBuffer = renderer.createVertexBuffer(bufferData, gl.STATIC_DRAW);
+
+            this.vertexBuffer[tilesetIndex] = vertexBuffer;
+        }
+
+        renderer.setVertexBuffer(vertexBuffer);
+
+        pipeline.setAttribPointers();
+
+        gl.bufferSubData(gl.ARRAY_BUFFER, 0, bufferData);
 
         return this;
     },
