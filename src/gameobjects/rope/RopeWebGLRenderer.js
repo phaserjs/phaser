@@ -57,7 +57,8 @@ var RopeWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     }
 
     var frame = src.frame;
-    var texture = frame.glTexture;
+
+    // var texture = frame.glTexture;
 
     var vertices = src.vertices;
     var uvs = src.uv;
@@ -73,7 +74,7 @@ var RopeWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     //  Because it's a triangle strip and we don't want lots of degenerate triangles joining things up
     pipeline.flush();
 
-    pipeline.setTexture2D(texture, 0);
+    var textureUnit = pipeline.setGameObject(src);
 
     var vertexViewF32 = pipeline.vertexViewF32;
     var vertexViewU32 = pipeline.vertexViewU32;
@@ -110,6 +111,7 @@ var RopeWebGLRenderer = function (renderer, src, interpolationPercentage, camera
         vertexViewF32[++vertexOffset] = ty;
         vertexViewF32[++vertexOffset] = uvs[i + 0];
         vertexViewF32[++vertexOffset] = uvs[i + 1];
+        vertexViewF32[++vertexOffset] = textureUnit;
         vertexViewF32[++vertexOffset] = tintEffect;
         vertexViewU32[++vertexOffset] = getTint(colors[colorIndex], camera.alpha * (alphas[colorIndex] * alpha));
 
