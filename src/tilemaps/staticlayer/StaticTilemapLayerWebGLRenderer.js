@@ -29,59 +29,45 @@ var ViewLoad2D = require('../../renderer/webgl/mvp/ViewLoad2D');
  */
 var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
 {
-    var tilesets = src.tileset;
-
+    var gl = renderer.gl;
     var pipeline = src.pipeline;
-    var pipelineVertexBuffer = pipeline.vertexBuffer;
 
-    renderer.setPipeline(pipeline);
+    //  Restore when we're done
+    var pipelineVertexBuffer = pipeline.vertexBuffer;
 
     Identity(pipeline);
     Translate(pipeline, src.x - (camera.scrollX * src.scrollFactorX), src.y - (camera.scrollY * src.scrollFactorY), 0);
     Scale(pipeline, src.scaleX, src.scaleY, 1);
     ViewLoad2D(pipeline, camera.matrix.matrix);
 
-    renderer.clearTextureZero();
-    renderer.clearNormalMap();
+    //  This calls mvpUpdate during pipeline.bind, so make sure we call it _after_ setting the MVP stuff above
+    renderer.setPipeline(pipeline);
 
-    for (var i = 0; i < tilesets.length; i++)
+    for (var i = 0; i < src.tileset.length; i++)
     {
+        var tileset = src.tileset[i];
+        var vertexCount = src.vertexCount[i];
+
         src.upload(camera, i);
 
-        if (src.vertexCount[i] > 0)
+        if (vertexCount > 0)
         {
-            renderer.flush();
-
-            pipeline.vertexBuffer = src.vertexBuffer[i];
-
-            renderer.setTextureZero(tilesets[i].glTexture);
-
-            var normalTexture = null;
-
-            if (Array.isArray(tilesets))
+            if (pipeline.forceZero)
             {
-                normalTexture = tilesets[0].image.dataSource[0];
+                //  Light Pipeline, or similar
+                pipeline.setGameObject(src, tileset);
             }
             else
             {
-                normalTexture = tilesets.image.dataSource[0];
+                renderer.setTextureZero(tileset.glTexture);
             }
 
-            if (normalTexture)
-            {
-                // renderer.setNormalMap(pipeline.defaultNormalMap.glTexture);
-                // renderer.setNormalMap(normalTexture.glTexture);
-            }
-
-            renderer.gl.drawArrays(pipeline.topology, 0, src.vertexCount[i]);
+            gl.drawArrays(gl.TRIANGLES, 0, vertexCount);
         }
     }
 
     //  Restore the pipeline
     pipeline.vertexBuffer = pipelineVertexBuffer;
-
-    renderer.clearTextureZero();
-    renderer.clearNormalMap();
 
     ViewIdentity(pipeline);
     Identity(pipeline);
