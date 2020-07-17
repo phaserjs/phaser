@@ -7,7 +7,6 @@
 var Identity = require('../../renderer/webgl/mvp/Identity');
 var Scale = require('../../renderer/webgl/mvp/Scale');
 var Translate = require('../../renderer/webgl/mvp/Translate');
-var ViewIdentity = require('../../renderer/webgl/mvp/ViewIdentity');
 var ViewLoad2D = require('../../renderer/webgl/mvp/ViewLoad2D');
 
 /**
@@ -32,16 +31,22 @@ var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPerc
     var gl = renderer.gl;
     var pipeline = src.pipeline;
 
+    renderer.flush();
+
     //  Restore when we're done
     var pipelineVertexBuffer = pipeline.vertexBuffer;
 
-    Identity(pipeline);
-    Translate(pipeline, src.x - (camera.scrollX * src.scrollFactorX), src.y - (camera.scrollY * src.scrollFactorY), 0);
-    Scale(pipeline, src.scaleX, src.scaleY, 1);
-    ViewLoad2D(pipeline, camera.matrix.matrix);
+    Identity(src);
+    Translate(src, src.x - (camera.scrollX * src.scrollFactorX), src.y - (camera.scrollY * src.scrollFactorY), 0);
+    Scale(src, src.scaleX, src.scaleY, 1);
+    ViewLoad2D(src, camera.matrix.matrix);
 
-    //  This calls mvpUpdate during pipeline.bind, so make sure we call it _after_ setting the MVP stuff above
     renderer.setPipeline(pipeline);
+
+    //  The above alters the uniforms, so make sure we call it _after_ setting the MVP stuff above
+    renderer.setMatrix4(pipeline.program, 'uModelMatrix', false, src.modelMatrix);
+    renderer.setMatrix4(pipeline.program, 'uViewMatrix', false, src.viewMatrix);
+    renderer.setMatrix4(pipeline.program, 'uProjectionMatrix', false, pipeline.projectionMatrix);
 
     for (var i = 0; i < src.tileset.length; i++)
     {
@@ -66,11 +71,19 @@ var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPerc
         }
     }
 
-    //  Restore the pipeline
+    renderer.resetTextures();
+
+    //  Restore the pipeline buffer
     pipeline.vertexBuffer = pipelineVertexBuffer;
 
-    ViewIdentity(pipeline);
-    Identity(pipeline);
+    renderer.currentVertexBuffer = pipelineVertexBuffer;
+
+    pipeline.setAttribPointers();
+
+    //  Reset the uniforms
+    renderer.setMatrix4(pipeline.program, 'uModelMatrix', false, pipeline.modelMatrix);
+    renderer.setMatrix4(pipeline.program, 'uViewMatrix', false, pipeline.viewMatrix);
+    renderer.setMatrix4(pipeline.program, 'uProjectionMatrix', false, pipeline.projectionMatrix);
 };
 
 module.exports = StaticTilemapLayerWebGLRenderer;
