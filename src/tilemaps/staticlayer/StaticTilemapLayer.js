@@ -8,6 +8,7 @@ var Class = require('../../utils/Class');
 var Components = require('../../gameobjects/components');
 var GameEvents = require('../../core/events');
 var GameObject = require('../../gameobjects/GameObject');
+var ModelViewProjection = require('../../renderer/webgl/pipelines/components/ModelViewProjection');
 var StaticTilemapLayerRender = require('./StaticTilemapLayerRender');
 var TilemapComponents = require('../components');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
@@ -40,6 +41,7 @@ var Utils = require('../../renderer/webgl/Utils');
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  * @extends Phaser.GameObjects.Components.ScrollFactor
+ * @extends Phaser.Renderer.WebGL.Pipelines.ModelViewProjection
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs.
  * @param {Phaser.Tilemaps.Tilemap} tilemap - The Tilemap this layer is a part of.
@@ -64,7 +66,8 @@ var StaticTilemapLayer = new Class({
         Components.Transform,
         Components.Visible,
         Components.ScrollFactor,
-        StaticTilemapLayerRender
+        StaticTilemapLayerRender,
+        ModelViewProjection
     ],
 
     initialize:
@@ -358,6 +361,8 @@ var StaticTilemapLayer = new Class({
         this.updateVBOData();
 
         this.initPipeline('TextureTintPipeline');
+
+        this.mvpInit();
 
         scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, function ()
         {
