@@ -56,10 +56,6 @@ var RopeWebGLRenderer = function (renderer, src, interpolationPercentage, camera
         camMatrix.multiply(spriteMatrix, calcMatrix);
     }
 
-    var frame = src.frame;
-
-    // var texture = frame.glTexture;
-
     var vertices = src.vertices;
     var uvs = src.uv;
     var colors = src.colors;
