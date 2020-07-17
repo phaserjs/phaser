@@ -360,12 +360,16 @@ var TextureTintPipeline = new Class({
      * @since 3.1.0
      *
      * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch. If not given uses blankTexture.
+     *
+     * @return {number} The assigned texture unit.
      */
     setTexture2D: function (texture)
     {
         if (texture === undefined) { texture = this.renderer.blankTexture.glTexture; }
 
         this.currentUnit = this.renderer.setTexture2D(texture);
+
+        return this.currentUnit;
     },
 
     /**
