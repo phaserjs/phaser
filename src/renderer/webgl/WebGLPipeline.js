@@ -245,6 +245,16 @@ var WebGLPipeline = new Class({
          * @since 3.25.0
          */
         this.currentUnit = 0;
+
+        /**
+         * Some pipelines require the forced use of texture zero (like the light pipeline).
+         * This boolean should be set when that is the case.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#forceZero
+         * @type {boolean}
+         * @since 3.25.0
+         */
+        this.forceZero = false;
     },
 
     /**
@@ -387,15 +397,32 @@ var WebGLPipeline = new Class({
      */
     bind: function ()
     {
-        var gl = this.gl;
         var vertexBuffer = this.vertexBuffer;
-        var attributes = this.attributes;
         var program = this.program;
         var renderer = this.renderer;
-        var vertexSize = this.vertexSize;
 
         renderer.setProgram(program);
         renderer.setVertexBuffer(vertexBuffer);
+
+        this.setAttribPointers();
+
+        return this;
+    },
+
+    /**
+     * Sets the vertex attribute pointers.
+     * This should only be called after the vertex buffer has been bound.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setAttribPointers
+     * @since 3.25.0
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    setAttribPointers: function ()
+    {
+        var gl = this.gl;
+        var attributes = this.attributes;
+        var vertexSize = this.vertexSize;
 
         for (var i = 0; i < attributes.length; i++)
         {
@@ -411,8 +438,6 @@ var WebGLPipeline = new Class({
                 element.location = -1;
             }
         }
-
-        return this;
     },
 
     /**
