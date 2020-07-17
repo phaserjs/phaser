@@ -604,6 +604,15 @@ var WebGLRenderer = new Class({
          */
         this.mipmapFilter = null;
 
+        /**
+         * The number of times the renderer had to flush this frame, due to running out of texture units.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#textureFlush
+         * @type {number}
+         * @since 3.25.0
+         */
+        this.textureFlush = 0;
+
         this.init(this.config);
     },
 
@@ -1402,14 +1411,16 @@ var WebGLRenderer = new Class({
 
                 this.startActiveTexture++;
 
+                this.textureFlush++;
+
                 textureSource.glIndexCounter = this.startActiveTexture;
 
-                textureSource.glIndex = 0;
+                textureSource.glIndex = 1;
 
-                gl.activeTexture(gl.TEXTURE0);
+                gl.activeTexture(gl.TEXTURE1);
                 gl.bindTexture(gl.TEXTURE_2D, textureSource.glTexture);
 
-                this.currentActiveTexture = 1;
+                this.currentActiveTexture = 2;
             }
         }
 
@@ -1506,6 +1517,8 @@ var WebGLRenderer = new Class({
         this.normalTexture = null;
         this.startActiveTexture++;
         this.currentActiveTexture = 1;
+
+        this.textureFlush++;
     },
 
     /**
@@ -1534,6 +1547,8 @@ var WebGLRenderer = new Class({
 
         this.currentActiveTexture = 1;
         this.startActiveTexture++;
+
+        this.textureFlush++;
     },
 
     /**
@@ -1572,6 +1587,8 @@ var WebGLRenderer = new Class({
                 this.flush();
 
                 this.startActiveTexture++;
+
+                this.textureFlush++;
 
                 texture.glIndexCounter = this.startActiveTexture;
 
@@ -2308,6 +2325,8 @@ var WebGLRenderer = new Class({
         this.currentCameraMask.mask = null;
         this.maskStack.length = 0;
 
+        this.textureFlush = 0;
+
         this.setPipeline(this.pipelines.TextureTintPipeline);
     },
 
@@ -2447,6 +2466,12 @@ var WebGLRenderer = new Class({
         for (var key in pipelines)
         {
             pipelines[key].onPostRender();
+        }
+
+        if (this.textureFlush > 0)
+        {
+            this.startActiveTexture++;
+            this.currentActiveTexture = 1;
         }
     },
 
