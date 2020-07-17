@@ -47,6 +47,8 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `WebGLPipeline.boot` will now check all of the attributes and store the pointer location within the attribute entry.
 * `WebGLPipeline.bind` no longer looks-up and enables every attribute, every frame. Instead it uses the cached pointer location stored in the attribute entry, cutting down on redundant WebGL operations.
 * `WebGLRenderer.isNewNormalMap` is a new method that returns a boolean if the given parameters are not currently used.
+* `WebGLPipeline.forceZero` is a new property that informs Game Objects if the pipeline requires a zero bound texture unit.
+* `WebGLPipeline.setAttribPointers` is a new method that will set the vertex attribute pointers for the pipeline.
 
 ### Forward Diffuse Light Pipeline API Changes
 
@@ -61,6 +63,7 @@ This Light2D pipeline, which is responsible for rendering lights under WebGL, ha
 * Particle Emitter Game Object now supports rendering in Light2d.
 * All Shape Game Objects (Rectangle, IsoBox, Star, Polygon, etc) now support rendering in Light2d.
 * The Text Game Object now supports rendering in Light2d, no matter which font, stroke or style it is using.
+* Both Static and Dynamic Tilemap Layer Game Objects now support the Light2d pipeline, with or without normal maps.
 * The pipeline will no longer look-up and set all of the light uniforms unless the `Light` is dirty.
 * The pipeline will no longer reset all of the lights unless the quantity of lights has changed.
 * The `ForwardDiffuseLightPipeline.defaultNormalMap` property has changed, it's now an object with a `glTexture` property that maps to the pipelines default normal map.
@@ -115,6 +118,7 @@ If you used any of them in your code, please update to the new function names be
 
 * `Config.batchSize` has been increased from 2000 to 4096.
 * Removed the Deferred Diffuse fragment and vertex shaders from the project, as they're not used.
+* `StaticTilemapLayer.upload` will now set the vertex attributes and buffer the data, and handles internal checks more efficiently.
 
 ### Bug Fixes
 
