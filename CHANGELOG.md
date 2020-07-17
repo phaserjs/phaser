@@ -119,6 +119,7 @@ If you used any of them in your code, please update to the new function names be
 * `Config.batchSize` has been increased from 2000 to 4096.
 * Removed the Deferred Diffuse fragment and vertex shaders from the project, as they're not used.
 * `StaticTilemapLayer.upload` will now set the vertex attributes and buffer the data, and handles internal checks more efficiently.
+* `StaticTilemapLayer` now includes the `ModelViewProjection` mixin, so it doesn't need to modify the pipeline during rendering.
 
 ### Bug Fixes
 
