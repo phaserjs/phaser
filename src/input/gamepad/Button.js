@@ -64,7 +64,7 @@ var Button = new Class({
         this.value = 0;
 
         /**
-         * Can be set for analogue buttons to enable a 'pressure' threshold,
+         * Can be set for analog buttons to enable a 'pressure' threshold,
          * before a button is considered as being 'pressed'.
          *
          * @name Phaser.Input.Gamepad.Button#threshold

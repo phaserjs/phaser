@@ -1058,7 +1058,7 @@ declare namespace MatterJS {
 
         /**
          * A `Boolean` that specifies if the runner should use a fixed timestep (otherwise it is variable).
-         * If timing is fixed, then the apparent simulation speed will change depending on the frame rate (but behaviour will be deterministic).
+         * If timing is fixed, then the apparent simulation speed will change depending on the frame rate (but behavior will be deterministic).
          * If the timing is variable, then the apparent simulation speed will be constant (approximately, but at the cost of determininism).
          *
          * @property isFixed
@@ -2287,7 +2287,7 @@ declare namespace MatterJS {
 
         /**
          * Sets the body's vertices and updates body properties accordingly, including inertia, area and mass (with respect to `body.density`).
-         * Vertices will be automatically transformed to be orientated around their centre of mass as the origin.
+         * Vertices will be automatically transformed to be orientated around their center of mass as the origin.
          * They are then automatically translated to world space based on `body.position`.
          *
          * The `vertices` argument should be passed as an array of `Matter.Vector` points (or a `Matter.Vertices` array).
@@ -2352,7 +2352,7 @@ declare namespace MatterJS {
         static setStatic (body: BodyType, isStatic: boolean): void;
 
         /**
-         * Scales the body, including updating physical properties (mass, area, axes, inertia), from a world-space point (default is body centre).
+         * Scales the body, including updating physical properties (mass, area, axes, inertia), from a world-space point (default is body center).
          * @method scale
          * @param {body} body
          * @param {number} scaleX
@@ -2465,7 +2465,7 @@ declare namespace MatterJS {
 
         /**
          * Sets the body's vertices and updates body properties accordingly, including inertia, area and mass (with respect to `body.density`).
-         * Vertices will be automatically transformed to be orientated around their centre of mass as the origin.
+         * Vertices will be automatically transformed to be orientated around their center of mass as the origin.
          * They are then automatically translated to world space based on `body.position`.
          *
          * The `vertices` argument should be passed as an array of `Matter.Vector` points (or a `Matter.Vertices` array).
@@ -2530,7 +2530,7 @@ declare namespace MatterJS {
         setStatic (body: BodyType, isStatic: boolean): void;
 
         /**
-         * Scales the body, including updating physical properties (mass, area, axes, inertia), from a world-space point (default is body centre).
+         * Scales the body, including updating physical properties (mass, area, axes, inertia), from a world-space point (default is body center).
          * @method scale
          * @param {body} body
          * @param {number} scaleX
@@ -2732,7 +2732,7 @@ declare namespace MatterJS {
 
         /**
          * Creates a new composite. The options parameter is an object that specifies any properties you wish to override the defaults.
-         * See the properites section below for detailed information on what you can pass via the `options` object.
+         * See the properties section below for detailed information on what you can pass via the `options` object.
          * @method create
          * @param {} [options]
          * @return {composite} A new composite
@@ -2872,7 +2872,7 @@ declare namespace MatterJS {
 
         /**
          * Creates a new composite. The options parameter is an object that specifies any properties you wish to override the defaults.
-         * See the properites section below for detailed information on what you can pass via the `options` object.
+         * See the properties section below for detailed information on what you can pass via the `options` object.
          * @method create
          * @param {} [options]
          * @return {composite} A new composite
@@ -3917,7 +3917,7 @@ declare namespace MatterJS {
 
         /**
          * A `Boolean` that specifies if the runner should use a fixed timestep (otherwise it is variable).
-         * If timing is fixed, then the apparent simulation speed will change depending on the frame rate (but behaviour will be deterministic).
+         * If timing is fixed, then the apparent simulation speed will change depending on the frame rate (but behavior will be deterministic).
          * If the timing is variable, then the apparent simulation speed will be constant (approximately, but at the cost of determininism).
          *
          * @property isFixed
@@ -4374,12 +4374,12 @@ declare namespace MatterJS {
         static area (vertices: Array<Vector>, signed: boolean): number;
 
         /**
-         * Returns the centre (centroid) of the set of vertices.
-         * @method centre
+         * Returns the center (centroid) of the set of vertices.
+         * @method center
          * @param {vertices} vertices
-         * @return {vector} The centre point
+         * @return {vector} The center point
          */
-        static centre (vertices: Array<Vector>): Vector;
+        static center (vertices: Array<Vector>): Vector;
 
         /**
          * Chamfers a set of vertices by giving them rounded corners, returns a new set of vertices.
@@ -4449,7 +4449,7 @@ declare namespace MatterJS {
         static rotate (vertices: Array<Vector>, angle: number, point: Vector): void;
 
         /**
-         * Scales the vertices from a point (default is centre) in-place.
+         * Scales the vertices from a point (default is center) in-place.
          * @method scale
          * @param {vertices} vertices
          * @param {number} scaleX
@@ -4513,12 +4513,12 @@ declare namespace MatterJS {
         area (vertices: Array<Vector>, signed: boolean): number;
 
         /**
-         * Returns the centre (centroid) of the set of vertices.
-         * @method centre
+         * Returns the center (centroid) of the set of vertices.
+         * @method center
          * @param {vertices} vertices
-         * @return {vector} The centre point
+         * @return {vector} The center point
          */
-        centre (vertices: Array<Vector>): Vector;
+        center (vertices: Array<Vector>): Vector;
 
         /**
          * Chamfers a set of vertices by giving them rounded corners, returns a new set of vertices.
@@ -4588,7 +4588,7 @@ declare namespace MatterJS {
         rotate (vertices: Array<Vector>, angle: number, point: Vector): void;
 
         /**
-         * Scales the vertices from a point (default is centre) in-place.
+         * Scales the vertices from a point (default is center) in-place.
          * @method scale
          * @param {vertices} vertices
          * @param {number} scaleX

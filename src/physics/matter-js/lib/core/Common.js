@@ -289,7 +289,7 @@ module.exports = Common;
     };
 
     /**
-     * Converts a CSS hex colour string into an integer.
+     * Converts a CSS hex color string into an integer.
      * @method colorToNumber
      * @param {string} colorString
      * @return {number} An integer representing the CSS hex string

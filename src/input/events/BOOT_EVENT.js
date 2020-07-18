@@ -7,7 +7,7 @@
 /**
  * The Input Plugin Boot Event.
  * 
- * This internal event is dispatched by the Input Plugin when it boots, signalling to all of its systems to create themselves.
+ * This internal event is dispatched by the Input Plugin when it boots, signaling to all of its systems to create themselves.
  *
  * @event Phaser.Input.Events#BOOT
  * @since 3.0.0

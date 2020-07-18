@@ -1058,7 +1058,7 @@ var Video = new Class({
     /**
      * Internal method that is called when enough video data has been received in order to create a texture
      * from it. The texture is assigned to the `Video.videoTexture` property and given a base frame that
-     * encompases the whole video size.
+     * encompasses the whole video size.
      *
      * @method Phaser.GameObjects.Video#updateTexture
      * @since 3.20.0

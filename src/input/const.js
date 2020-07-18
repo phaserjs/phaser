@@ -70,7 +70,7 @@ var INPUT_CONST = {
     POINTER_LOCK_CHANGE: 6,
 
     /**
-     * A touch pointer has been been cancelled by the browser.
+     * A touch pointer has been been canceled by the browser.
      * 
      * @name Phaser.Input.TOUCH_CANCEL
      * @type {integer}

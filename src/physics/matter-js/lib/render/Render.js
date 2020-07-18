@@ -1,5 +1,5 @@
 /**
-* The `Matter.Render` module is a simple HTML5 canvas based renderer for visualising instances of `Matter.Engine`.
+* The `Matter.Render` module is a simple HTML5 canvas based renderer for visualizing instances of `Matter.Engine`.
 * It is intended for development and debugging purposes, but may also be suitable for simple games.
 * It includes a number of drawing options including wireframe, vector with support for sprites and viewports.
 *
@@ -366,7 +366,7 @@ var Vector = require('../geometry/Vector');
             if (options.showConvexHulls)
                 Render.bodyConvexHulls(render, bodies, context);
 
-            // optimised method for wireframes only
+            // optimized method for wireframes only
             Render.bodyWireframes(render, bodies, context);
         }
 
@@ -709,7 +709,7 @@ var Vector = require('../geometry/Vector');
     };
 
     /**
-     * Optimised method for drawing body wireframes in one pass
+     * Optimized method for drawing body wireframes in one pass
      * @private
      * @method bodyWireframes
      * @param {render} render
@@ -762,7 +762,7 @@ var Vector = require('../geometry/Vector');
     };
 
     /**
-     * Optimised method for drawing body convex hull wireframes in one pass
+     * Optimized method for drawing body convex hull wireframes in one pass
      * @private
      * @method bodyConvexHulls
      * @param {render} render

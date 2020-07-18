@@ -26,7 +26,7 @@ var MatterAttractors = {
 
   Body: {
     /**
-     * Initialises the `body` to support attractors.
+     * Initializes the `body` to support attractors.
      * This is called automatically by the plugin.
      * @function MatterAttractors.Body.init
      * @param {Matter.Body} body The body to init.

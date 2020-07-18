@@ -210,7 +210,7 @@ var InputPlugin = new Class({
          */
         this._pollTimer = 0;
 
-        var _eventData = { cancelled: false };
+        var _eventData = { canceled: false };
 
         /**
          * Internal event propagation callback container.

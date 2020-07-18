@@ -22,7 +22,7 @@ var Body = require('./Body');
 
     /**
      * Creates a new composite. The options parameter is an object that specifies any properties you wish to override the defaults.
-     * See the properites section below for detailed information on what you can pass via the `options` object.
+     * See the properties section below for detailed information on what you can pass via the `options` object.
      * @method create
      * @param {} [options]
      * @return {composite} A new composite

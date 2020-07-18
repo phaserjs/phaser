@@ -82,14 +82,14 @@ var Common = require('../core/Common');
     };
 
     /**
-     * Returns the centre (centroid) of the set of vertices.
-     * @method centre
+     * Returns the center (centroid) of the set of vertices.
+     * @method center
      * @param {vertices} vertices
-     * @return {vector} The centre point
+     * @return {vector} The center point
      */
     Vertices.centre = function(vertices) {
         var area = Vertices.area(vertices, true),
-            centre = { x: 0, y: 0 },
+            center = { x: 0, y: 0 },
             cross,
             temp,
             j;
@@ -98,10 +98,10 @@ var Common = require('../core/Common');
             j = (i + 1) % vertices.length;
             cross = Vector.cross(vertices[i], vertices[j]);
             temp = Vector.mult(Vector.add(vertices[i], vertices[j]), cross);
-            centre = Vector.add(centre, temp);
+            center = Vector.add(center, temp);
         }
 
-        return Vector.div(centre, 6 * area);
+        return Vector.div(center, 6 * area);
     };
 
     /**
@@ -239,7 +239,7 @@ var Common = require('../core/Common');
     };
 
     /**
-     * Scales the vertices from a point (default is centre) in-place.
+     * Scales the vertices from a point (default is center) in-place.
      * @method scale
      * @param {vertices} vertices
      * @param {number} scaleX
@@ -346,10 +346,10 @@ var Common = require('../core/Common');
      * @return {vertices} vertices
      */
     Vertices.clockwiseSort = function(vertices) {
-        var centre = Vertices.mean(vertices);
+        var center = Vertices.mean(vertices);
 
         vertices.sort(function(vertexA, vertexB) {
-            return Vector.angle(centre, vertexA) - Vector.angle(centre, vertexB);
+            return Vector.angle(center, vertexA) - Vector.angle(center, vertexB);
         });
 
         return vertices;

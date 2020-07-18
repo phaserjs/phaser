@@ -169,7 +169,7 @@ var Axes = require('../geometry/Axes');
     };
 
     /**
-     * Initialises body properties.
+     * Initializes body properties.
      * @method _initProperties
      * @private
      * @param {body} body
@@ -375,7 +375,7 @@ var Axes = require('../geometry/Axes');
 
     /**
      * Sets the body's vertices and updates body properties accordingly, including inertia, area and mass (with respect to `body.density`).
-     * Vertices will be automatically transformed to be orientated around their centre of mass as the origin.
+     * Vertices will be automatically transformed to be orientated around their center of mass as the origin.
      * They are then automatically translated to world space based on `body.position`.
      *
      * The `vertices` argument should be passed as an array of `Matter.Vector` points (or a `Matter.Vertices` array).
@@ -398,9 +398,9 @@ var Axes = require('../geometry/Axes');
         body.area = Vertices.area(body.vertices);
         Body.setMass(body, body.density * body.area);
 
-        // orient vertices around the centre of mass at origin (0, 0)
-        var centre = Vertices.centre(body.vertices);
-        Vertices.translate(body.vertices, centre, -1);
+        // orient vertices around the center of mass at origin (0, 0)
+        var center = Vertices.centre(body.vertices);
+        Vertices.translate(body.vertices, center, -1);
 
         // update inertia while vertices are at origin (0, 0)
         Body.setInertia(body, Body._inertiaScale * Vertices.inertia(body.vertices, body.mass));
@@ -491,17 +491,17 @@ var Axes = require('../geometry/Axes');
     };
 
     /**
-     * Set the centre of mass of the body. 
-     * The `centre` is a vector in world-space unless `relative` is set, in which case it is a translation.
-     * The centre of mass is the point the body rotates about and can be used to simulate non-uniform density.
+     * Set the center of mass of the body. 
+     * The `center` is a vector in world-space unless `relative` is set, in which case it is a translation.
+     * The center of mass is the point the body rotates about and can be used to simulate non-uniform density.
      * This is equal to moving `body.position` but not the `body.vertices`.
-     * Invalid if the `centre` falls outside the body's convex hull.
+     * Invalid if the `center` falls outside the body's convex hull.
      * @method setCentre
      * @param {body} body
-     * @param {vector} centre
+     * @param {vector} center
      * @param {bool} relative
      */
-    Body.setCentre = function(body, centre, relative) {
+    Body.setCentre = function(body, center, relative) {
         if (!relative) {
             body.positionPrev.x = centre.x - (body.position.x - body.positionPrev.x);
             body.positionPrev.y = centre.y - (body.position.y - body.positionPrev.y);
@@ -619,7 +619,7 @@ var Axes = require('../geometry/Axes');
     };
 
     /**
-     * Scales the body, including updating physical properties (mass, area, axes, inertia), from a world-space point (default is body centre).
+     * Scales the body, including updating physical properties (mass, area, axes, inertia), from a world-space point (default is body center).
      * @method scale
      * @param {body} body
      * @param {number} scaleX
@@ -772,7 +772,7 @@ var Axes = require('../geometry/Axes');
             mass: 0,
             area: 0,
             inertia: 0,
-            centre: { x: 0, y: 0 }
+            center: { x: 0, y: 0 }
         };
 
         // sum the properties of all compound parts of the parent body

@@ -163,7 +163,7 @@ var ParseTileLayers = function (json, insertNull)
                             json.tileheight);
 
                         // Turning Tiled's FlippedHorizontal, FlippedVertical and FlippedAntiDiagonal
-                        // propeties into flipX, flipY and rotation
+                        // properties into flipX, flipY and rotation
                         tile.rotation = gidInfo.rotation;
                         tile.flipX = gidInfo.flipped;
 
@@ -217,7 +217,7 @@ var ParseTileLayers = function (json, insertNull)
                         json.tileheight);
 
                     // Turning Tiled's FlippedHorizontal, FlippedVertical and FlippedAntiDiagonal
-                    // propeties into flipX, flipY and rotation
+                    // properties into flipX, flipY and rotation
                     tile.rotation = gidInfo.rotation;
                     tile.flipX = gidInfo.flipped;
 

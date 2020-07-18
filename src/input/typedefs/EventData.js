@@ -12,6 +12,6 @@
  * @typedef {object} Phaser.Types.Input.EventData
  * @since 3.15.1
  * 
- * @property {boolean} [cancelled=false] - The cancelled state of this Event.
+ * @property {boolean} [canceled=false] - The canceled state of this Event.
  * @property {function} stopPropagation - Call this method to stop this event from passing any further down the event chain.
  */

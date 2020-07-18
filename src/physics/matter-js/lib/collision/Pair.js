@@ -71,7 +71,7 @@ module.exports = Pair;
                 activeContacts[i] = supports[i].contact;
             }
 
-            // optimise array size
+            // optimize array size
             var supportCount = supports.length;
             if (supportCount < activeContacts.length) {
                 activeContacts.length = supportCount;

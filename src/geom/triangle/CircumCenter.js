@@ -28,7 +28,7 @@ function det (m00, m01, m10, m11)
 }
 
 /**
- * Computes the circumcentre of a triangle. The circumcentre is the centre of
+ * Computes the circumcentre of a triangle. The circumcentre is the center of
  * the circumcircle, the smallest circle which encloses the triangle. It is also
  * the common intersection point of the perpendicular bisectors of the sides of
  * the triangle, and is the only point which has equal distance to all three

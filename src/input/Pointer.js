@@ -211,7 +211,7 @@ var Pointer = new Class({
          * This property is updated whenever the Pointer moves, regardless of any button states. In other words,
          * it changes based on movement alone - a button doesn't have to be pressed first.
          * 
-         * If you need the total distance travelled since the primary buttons was pressed down,
+         * If you need the total distance traveled since the primary buttons was pressed down,
          * then use the `Pointer.getDistance` method.
          *
          * @name Phaser.Input.Pointer#distance
@@ -386,7 +386,7 @@ var Pointer = new Class({
         /**
          * Did this Pointer get canceled by a touchcancel event?
          * 
-         * Note: "canceled" is the American-English spelling of "cancelled". Please don't submit PRs correcting it!
+         * Note: "canceled" is the American-English spelling of "canceled". Please don't submit PRs correcting it!
          *
          * @name Phaser.Input.Pointer#wasCanceled
          * @type {boolean}
@@ -1017,7 +1017,7 @@ var Pointer = new Class({
      * If no button is held down, it will return the last recorded distance, based on where
      * the Pointer was when the button was released.
      * 
-     * If you wish to get the distance being travelled currently, based on the velocity of the Pointer,
+     * If you wish to get the distance being traveled currently, based on the velocity of the Pointer,
      * then see the `Pointer.distance` property.
      *
      * @method Phaser.Input.Pointer#getDistance

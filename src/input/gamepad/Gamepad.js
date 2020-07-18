@@ -379,7 +379,7 @@ var Gamepad = new Class({
      * Gets the value of a button based on the given index.
      * The index must be valid within the range of buttons supported by this Gamepad.
      *
-     * The return value will be either 0 or 1 for an analogue button, or a float between 0 and 1
+     * The return value will be either 0 or 1 for an analog button, or a float between 0 and 1
      * for a pressure-sensitive digital button, such as the shoulder buttons on a Dual Shock.
      *
      * @method Phaser.Input.Gamepad.Gamepad#getButtonValue

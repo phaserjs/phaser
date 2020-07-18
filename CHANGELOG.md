@@ -565,7 +565,7 @@ All of the following are specific to the Matter Physics implementation used by P
 
 ### Bug Fixes
 
-* BitmapText with a `maxWidth` set wouldn't update the text correctly if it was modified post-creation. You can now update the text and/or width independantly and it'll update correctly. Fix #4881 (thanks @oxguy3)
+* BitmapText with a `maxWidth` set wouldn't update the text correctly if it was modified post-creation. You can now update the text and/or width independently and it'll update correctly. Fix #4881 (thanks @oxguy3)
 * Text objects will no longer add any white-space when word-wrapping if the last line is only one word long. Fix #4867 (thanks @gaamoo @rexrainbow)
 * When `Game.destroy` is running, Scenes are now destroyed _before_ plugins, avoiding bugs when closing down plugins and deleting Render Textures. Fix #4849 #4876 (thanks @rexrainbow @siyuanqiao)
 * The `Mesh` and `Quad` Game Objects have had the `GetBounds` component removed as it cannot operate on a Mesh as they don't have origins. Fix #4902 (thanks @samme)
@@ -1001,7 +1001,7 @@ The Spine Plugin is now 100% complete. It has been updated to use the Spine 3.7 
 * `Pointer.getDuration` would return a negative / static value on desktop, or NaN on mobile, because the base time wasn't being pulled in from the Input Manager properly. Fix #4612 (thanks @BobtheUltimateProgrammer)
 * `Pointer.downTime`, `Pointer.upTime` and `Pointer.moveTime` would be set to NaN on mobile browsers where Touch.timeStamp didn't exist. Fix #4612 (thanks @BobtheUltimateProgrammer)
 * `WebGLRenderer.setScissor` will default the `drawingBufferHeight` if no argument is provided, stopping NaN scissor heights.
-* If you called `Scene.destroy` within a Game Object `pointerdown` or `pointerup` handler, it would cause the error "Cannot read property 'game' of null" if the event wasn't cancelled in your handler. It now checks if the manager is still there before accessing its property. Fix #4436 (thanks @jcyuan)
+* If you called `Scene.destroy` within a Game Object `pointerdown` or `pointerup` handler, it would cause the error "Cannot read property 'game' of null" if the event wasn't canceled in your handler. It now checks if the manager is still there before accessing its property. Fix #4436 (thanks @jcyuan)
 * The `Arc / Circle` Game Object wasn't rendering centered correctly in WebGL due to an issue in a previous size related commit, it would be half a radius off. Fix #4620 (thanks @CipSoft-Components @rexrainbow)
 * Destroying a Scene in HEADLESS mode would throw an error as it tried to access the gl renderer in the Camera class. Fix #4467 (thanks @AndreaBoeAbrahamsen @samme)
 * `Tilemap.createFromObjects` would ignore the `scene` argument passed in to the method. It's now used (thanks @samme)
@@ -1694,7 +1694,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `Pointer.middleButtonDown` will now return an actual boolean, rather than the result of the bitwise op (which still evaluated as a boolean, but this is cleaner).
 * `Pointer.backButtonDown` will now return an actual boolean, rather than the result of the bitwise op (which still evaluated as a boolean, but this is cleaner).
 * `Pointer.forwardButtonDown` will now return an actual boolean, rather than the result of the bitwise op (which still evaluated as a boolean, but this is cleaner).
-* `Pointer.up`, `Pointer.move` and `Pointer.down` now use `in` to check for the existance of the `buttons` property on the event, causing it to be set even if equal to zero, which it is when there are no buttons down. This also fixes an issue where the buttons didn't update during a move event (thanks @SonnyCampbell @rexrainbow)
+* `Pointer.up`, `Pointer.move` and `Pointer.down` now use `in` to check for the existence of the `buttons` property on the event, causing it to be set even if equal to zero, which it is when there are no buttons down. This also fixes an issue where the buttons didn't update during a move event (thanks @SonnyCampbell @rexrainbow)
 
 ### Changes as a result of the new Scale Manager
 
@@ -1927,7 +1927,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `List.sort` was missing the scope required for the sort handler, this is now correctly provided internally. Fix #4241 (thanks @jcyuan)
 * `Container.sort` was missing the scope required for the sort handler, this is now correctly provided internally. Fix #4241 (thanks @jcyuan)
 * `DataManager.pop` would emit the DataManager instance, instead of the parent, as the first event argument. It now emits the parent as it should do. Fix #4186 (thanks @gadelan)
-* The `GetValue` function wasn't checking for the existance of '.' in the config property name correctly, causing the branch to always be taken (thanks @kyranet)
+* The `GetValue` function wasn't checking for the existence of '.' in the config property name correctly, causing the branch to always be taken (thanks @kyranet)
 * Safari had permission problems playing HTML5 Audio files on Mac OS. Due to the changes in the input event system audio now plays properly based on user interactions. You still can't play it automatically, though, it will always require a user gesture to begin. Fix #4217 (thanks @increpare)
 
 ### Examples and TypeScript
@@ -2820,7 +2820,7 @@ Also, a special mention to @andygroff for his excellent work enhancing the searc
 
 * Internally, the Loader has changed slightly. Rather than have each file cause the new batch to load, an `update` method is polled every frame, which does the same job instead. This avoids load-time race conditions where pre-populated files would trigger loads part way during an existing load, fixing #3705 in the process (thanks @the-simian)
 * The Scene Manager has been updated so that it will call Scene.Systems.step during the `init`, `preload` and `create` phase of your Scene. This means that any plugins, or custom code, written to use the Scene Systems `preupdate`, `update` or `postupdate` events will need to be aware that these are now fired from `init` onwards, not just once `create` has finished.
-* As a result of these two changes, there is a new Systems property called `sceneUpdate`, which is a reference that maps to your `Scene.update` function. During `init`, `preload` and `create` this is always mapped to NOOP. Once `create` has finished it gets re-mapped to your Scene's update function. If your Scene doesn't have one, it remains mapped to NOOP. In practise, this means nothing has changed from before. `Scene.update` never ran until `create` was completed, and it still doesn't. However, because the internal Scene systems are now updating right from `init`, it means that things like the update list and physics systems are fully operational _during_ your Preloader. This allows you to create far more elaborate preloaders than ever before. Although, with great power comes great responsibility, as the onus is now on you to be careful which events you consume (especially input events) during your preloader.
+* As a result of these two changes, there is a new Systems property called `sceneUpdate`, which is a reference that maps to your `Scene.update` function. During `init`, `preload` and `create` this is always mapped to NOOP. Once `create` has finished it gets re-mapped to your Scene's update function. If your Scene doesn't have one, it remains mapped to NOOP. In practice, this means nothing has changed from before. `Scene.update` never ran until `create` was completed, and it still doesn't. However, because the internal Scene systems are now updating right from `init`, it means that things like the update list and physics systems are fully operational _during_ your Preloader. This allows you to create far more elaborate preloaders than ever before. Although, with great power comes great responsibility, as the onus is now on you to be careful which events you consume (especially input events) during your preloader.
 * Another side-effect of these changes is that Scenes no longer need an 'update' function at all. Previously, if they were missing one, the Scene Manager would inject one into them automatically. It no longer does this.
 
 ### New Features

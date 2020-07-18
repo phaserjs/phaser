@@ -240,7 +240,7 @@ var decomp = require('../../poly-decomp');
                     vertices: vertices
                 });
             } else {
-                // initialise a decomposition
+                // initialize a decomposition
                 var concave = vertices.map(function(vertex) {
                     return [vertex.x, vertex.y];
                 });

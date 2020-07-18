@@ -39,7 +39,7 @@ var Common = require('../core/Common');
     Constraint.create = function(options) {
         var constraint = options;
 
-        // if bodies defined but no points, use body centre
+        // if bodies defined but no points, use body center
         if (constraint.bodyA && !constraint.pointA)
             constraint.pointA = { x: 0, y: 0 };
         if (constraint.bodyB && !constraint.pointB)
@@ -390,7 +390,7 @@ var Common = require('../core/Common');
      *
      * @property render.strokeStyle
      * @type string
-     * @default a random colour
+     * @default a random color
      */
 
     /**
