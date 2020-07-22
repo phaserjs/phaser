@@ -1457,6 +1457,7 @@ var ScaleManager = new Class({
      * Triggered when a fullscreenchange event is dispatched by the DOM.
      *
      * @method Phaser.Scale.ScaleManager#onFullScreenChange
+     * @protected
      * @since 3.16.0
      */
     onFullScreenChange: function ()
