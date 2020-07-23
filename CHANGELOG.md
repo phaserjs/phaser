@@ -49,6 +49,7 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `WebGLRenderer.isNewNormalMap` is a new method that returns a boolean if the given parameters are not currently used.
 * `WebGLPipeline.forceZero` is a new property that informs Game Objects if the pipeline requires a zero bound texture unit.
 * `WebGLPipeline.setAttribPointers` is a new method that will set the vertex attribute pointers for the pipeline.
+* `WebGLRenderer.unbindTextures` is a new method that will activate and then null bind all WebGL textures.
 
 ### Forward Diffuse Light Pipeline API Changes
 
@@ -124,6 +125,8 @@ If you used any of them in your code, please update to the new function names be
 * The `TextureTintStripPipeline` now extends `TextureTintPipeline` and just changes the topolgy, vastly reducing the filesize.
 
 ### Bug Fixes
+
+* `RenderTexture.resize` (which is called from `setSize`) wouldn't correctly set the `TextureSource.glTexture` property, leading to `bindTexture: attempt to use a deleted object` errors under WebGL.
 
 ### Examples, Documentation and TypeScript
 
