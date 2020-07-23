@@ -132,7 +132,7 @@ If you used any of them in your code, please update to the new function names be
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-
+@samme
 
 
 
