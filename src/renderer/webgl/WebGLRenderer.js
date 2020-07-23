@@ -1521,25 +1521,65 @@ var WebGLRenderer = new Class({
     },
 
     /**
+     * Activates each texture, in turn, then binds them all to `null`.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#unbindTextures
+     * @since 3.25.0
+     *
+     * @param {boolean} [all=false] - Reset all textures, or just the first two?
+     */
+    unbindTextures: function ()
+    {
+        var gl = this.gl;
+        var temp = this.tempTextures;
+
+        for (var i = 0; i < temp.length; i++)
+        {
+            gl.activeTexture(gl.TEXTURE0 + i);
+            gl.bindTexture(gl.TEXTURE_2D, null);
+        }
+
+        this.normalTexture = null;
+        this.textureZero = null;
+
+        this.currentActiveTexture = 1;
+        this.startActiveTexture++;
+
+        this.textureFlush++;
+    },
+
+    /**
      * Flushes the current pipeline, then resets the first two textures
      * back to the default temporary textures, resets the start active
      * counter and sets texture unit 1 as being active.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#resetTextures
      * @since 3.25.0
+     *
+     * @param {boolean} [all=false] - Reset all textures, or just the first two?
      */
-    resetTextures: function ()
+    resetTextures: function (all)
     {
+        if (all === undefined) { all = false; }
+
         this.flush();
 
         var gl = this.gl;
         var temp = this.tempTextures;
 
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, temp[0]);
+        var total = (all) ? temp.length : 2;
 
-        gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, temp[1]);
+        for (var i = 0; i < total; i++)
+        {
+            gl.activeTexture(gl.TEXTURE0 + i);
+            gl.bindTexture(gl.TEXTURE_2D, temp[i]);
+        }
+
+        if (all)
+        {
+            gl.activeTexture(gl.TEXTURE1);
+            gl.bindTexture(gl.TEXTURE_2D, temp[1]);
+        }
 
         this.normalTexture = null;
         this.textureZero = null;
@@ -1921,6 +1961,8 @@ var WebGLRenderer = new Class({
 
         this.setFramebuffer(null);
 
+        this.resetTextures(true);
+
         return framebuffer;
     },
 
@@ -2038,6 +2080,8 @@ var WebGLRenderer = new Class({
         }
 
         this.gl.deleteTexture(texture);
+
+        this.resetTextures();
 
         /*
         if (!this.game.pendingDestroy)
