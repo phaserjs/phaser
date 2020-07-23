@@ -201,7 +201,7 @@ var RenderTexture = new Class({
         {
             this.canvas = CanvasPool.create2D(this, width, height);
 
-            //  Create a new Texture for this Text object
+            //  Create a new Texture for this RenderTexture object
             this.texture = scene.sys.textures.addCanvas(UUID(), this.canvas);
 
             //  Get the frame
@@ -348,9 +348,12 @@ var RenderTexture = new Class({
     {
         if (height === undefined) { height = width; }
 
+        var frame = this.frame;
+        var renderer = this.renderer;
+
         if (width !== this.width || height !== this.height)
         {
-            if (this.frame.name === '__BASE')
+            if (frame.name === '__BASE')
             {
                 //  Resize the texture
 
@@ -364,25 +367,28 @@ var RenderTexture = new Class({
                 {
                     var gl = this.gl;
 
-                    this.renderer.deleteTexture(this.frame.source.glTexture);
-                    this.renderer.deleteFramebuffer(this.framebuffer);
+                    renderer.deleteTexture(frame.source.glTexture);
+                    renderer.deleteFramebuffer(this.framebuffer);
 
-                    var glTexture = this.renderer.createTexture2D(0, gl.NEAREST, gl.NEAREST, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, null, width, height, false);
+                    var glTexture = renderer.createTexture2D(0, gl.NEAREST, gl.NEAREST, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, null, width, height, false);
 
-                    this.framebuffer = this.renderer.createFramebuffer(width, height, glTexture, false);
+                    this.framebuffer = renderer.createFramebuffer(width, height, glTexture, false);
 
-                    this.frame.source.isRenderTexture = true;
+                    frame.source.isRenderTexture = true;
 
-                    this.frame.glTexture = glTexture;
+                    frame.source.glTexture = glTexture;
+
+                    frame.glTexture = glTexture;
+
                     this.glTexture = glTexture;
                 }
 
-                this.frame.source.width = width;
-                this.frame.source.height = height;
+                frame.source.width = width;
+                frame.source.height = height;
 
                 this.camera.setSize(width, height);
 
-                this.frame.setSize(width, height);
+                frame.setSize(width, height);
 
                 this.width = width;
                 this.height = height;
@@ -394,17 +400,17 @@ var RenderTexture = new Class({
 
             var baseFrame = this.texture.getSourceImage();
 
-            if (this.frame.cutX + width > baseFrame.width)
+            if (frame.cutX + width > baseFrame.width)
             {
-                width = baseFrame.width - this.frame.cutX;
+                width = baseFrame.width - frame.cutX;
             }
 
-            if (this.frame.cutY + height > baseFrame.height)
+            if (frame.cutY + height > baseFrame.height)
             {
-                height = baseFrame.height - this.frame.cutY;
+                height = baseFrame.height - frame.cutY;
             }
 
-            this.frame.setSize(width, height, this.frame.cutX, this.frame.cutY);
+            frame.setSize(width, height, frame.cutX, frame.cutY);
         }
 
         this.updateDisplayOrigin();
@@ -523,19 +529,23 @@ var RenderTexture = new Class({
 
         var gl = this.gl;
         var frame = this.frame;
+        var camera = this.camera;
+        var renderer = this.renderer;
 
-        this.camera.preRender(1, 1);
+        camera.preRender(1, 1);
 
         if (gl)
         {
-            var cx = this.camera._cx;
-            var cy = this.camera._cy;
-            var cw = this.camera._cw;
-            var ch = this.camera._ch;
+            var cx = camera._cx;
+            var cy = camera._cy;
+            var cw = camera._cw;
+            var ch = camera._ch;
 
-            this.renderer.setFramebuffer(this.framebuffer, false);
+            renderer.resetTextures(true);
 
-            this.renderer.pushScissor(cx, cy, cw, ch, ch);
+            renderer.setFramebuffer(this.framebuffer, false);
+
+            renderer.pushScissor(cx, cy, cw, ch, ch);
 
             var pipeline = this.pipeline;
 
@@ -547,20 +557,22 @@ var RenderTexture = new Class({
                 alpha
             );
 
-            this.renderer.setFramebuffer(null, false);
+            pipeline.flush();
 
-            this.renderer.popScissor();
+            renderer.setFramebuffer(null, false);
+
+            renderer.popScissor();
 
             ProjectOrtho(pipeline, 0, pipeline.width, pipeline.height, 0, -1000.0, 1000.0);
         }
         else
         {
-            this.renderer.setContext(this.context);
+            renderer.setContext(this.context);
 
             this.context.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
             this.context.fillRect(x + frame.cutX, y + frame.cutY, width, height);
 
-            this.renderer.setContext();
+            renderer.setContext();
         }
 
         this.dirty = true;
@@ -749,19 +761,23 @@ var RenderTexture = new Class({
         }
 
         var gl = this.gl;
+        var camera = this.camera;
+        var renderer = this.renderer;
 
-        this.camera.preRender(1, 1);
+        camera.preRender(1, 1);
 
         if (gl)
         {
-            var cx = this.camera._cx;
-            var cy = this.camera._cy;
-            var cw = this.camera._cw;
-            var ch = this.camera._ch;
+            var cx = camera._cx;
+            var cy = camera._cy;
+            var cw = camera._cw;
+            var ch = camera._ch;
 
-            this.renderer.setFramebuffer(this.framebuffer, false);
+            renderer.resetTextures(true);
 
-            this.renderer.pushScissor(cx, cy, cw, ch, ch);
+            renderer.setFramebuffer(this.framebuffer, false);
+
+            renderer.pushScissor(cx, cy, cw, ch, ch);
 
             var pipeline = this.pipeline;
 
@@ -769,21 +785,23 @@ var RenderTexture = new Class({
 
             this.batchList(entries, x, y, alpha, tint);
 
-            pipeline.flush();
+            //  Causes a flush + popScissor
+            renderer.setFramebuffer(null, true);
 
-            this.renderer.setFramebuffer(null, false);
+            // renderer.unbindTextures();
+            // renderer.popScissor();
 
-            this.renderer.popScissor();
+            renderer.resetTextures(true);
 
             ProjectOrtho(pipeline, 0, pipeline.width, pipeline.height, 0, -1000.0, 1000.0);
         }
         else
         {
-            this.renderer.setContext(this.context);
+            renderer.setContext(this.context);
 
             this.batchList(entries, x, y, alpha, tint);
 
-            this.renderer.setContext();
+            renderer.setContext();
         }
 
         this.dirty = true;
@@ -837,34 +855,38 @@ var RenderTexture = new Class({
         }
 
         var gl = this.gl;
+        var camera = this.camera;
+        var renderer = this.renderer;
         var textureFrame = this.textureManager.getFrame(key, frame);
 
         if (textureFrame)
         {
-            this.camera.preRender(1, 1);
+            camera.preRender(1, 1);
 
             if (gl)
             {
-                var cx = this.camera._cx;
-                var cy = this.camera._cy;
-                var cw = this.camera._cw;
-                var ch = this.camera._ch;
+                var cx = camera._cx;
+                var cy = camera._cy;
+                var cw = camera._cw;
+                var ch = camera._ch;
 
-                this.renderer.setFramebuffer(this.framebuffer, false);
+                renderer.resetTextures(true);
 
-                this.renderer.pushScissor(cx, cy, cw, ch, ch);
+                renderer.setFramebuffer(this.framebuffer, false);
+
+                renderer.pushScissor(cx, cy, cw, ch, ch);
 
                 var pipeline = this.pipeline;
 
                 ProjectOrtho(pipeline, 0, this.texture.width, 0, this.texture.height, -1000.0, 1000.0);
 
-                pipeline.batchTextureFrame(textureFrame, x + this.frame.cutX, y + this.frame.cutY, tint, alpha, this.camera.matrix, null);
+                pipeline.batchTextureFrame(textureFrame, x + this.frame.cutX, y + this.frame.cutY, tint, alpha, camera.matrix, null);
 
                 pipeline.flush();
 
-                this.renderer.setFramebuffer(null, false);
+                renderer.setFramebuffer(null, false);
 
-                this.renderer.popScissor();
+                renderer.popScissor();
 
                 ProjectOrtho(pipeline, 0, pipeline.width, pipeline.height, 0, -1000.0, 1000.0);
             }
