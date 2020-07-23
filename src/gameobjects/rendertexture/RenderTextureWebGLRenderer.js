@@ -29,8 +29,6 @@ var RenderTextureWebGLRenderer = function (renderer, src, interpolationPercentag
     var getTint = Utils.getTintAppendFloatAlpha;
     var pipeline = src.pipeline;
 
-    // var textureUnit = pipeline.setTexture2D(frame.glTexture);
-
     pipeline.batchTexture(
         src,
         frame.glTexture,
