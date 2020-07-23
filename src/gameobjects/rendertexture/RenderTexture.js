@@ -788,9 +788,6 @@ var RenderTexture = new Class({
             //  Causes a flush + popScissor
             renderer.setFramebuffer(null, true);
 
-            // renderer.unbindTextures();
-            // renderer.popScissor();
-
             renderer.resetTextures(true);
 
             ProjectOrtho(pipeline, 0, pipeline.width, pipeline.height, 0, -1000.0, 1000.0);
