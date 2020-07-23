@@ -15,8 +15,11 @@ var LIGHT_COUNT = 10;
 /**
  * @classdesc
  * ForwardDiffuseLightPipeline implements a forward rendering approach for 2D lights.
- * This pipeline extends TextureTintPipeline so it implements all it's rendering functions
- * and batching system.
+ *
+ * It works by using a custom shader, combined with Light Game Objects, that provides an ambient
+ * illumination effect in your games.
+ *
+ * This pipeline extends TextureTintPipeline so it implements all of its rendering functions and batching system.
  *
  * @class ForwardDiffuseLightPipeline
  * @extends Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline
