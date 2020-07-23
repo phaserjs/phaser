@@ -15,7 +15,8 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @classdesc
  * An Arcade Physics Group object.
  *
- * All Game Objects created by or added to this Group will automatically be given dynamic Arcade Physics bodies, if they have no body.
+ * All Game Objects created by or added to this Group will automatically be given dynamic Arcade Physics bodies (if they have no body)
+ * and the bodies will receive the Group's {@link Phaser.Physics.Arcade.Group#defaults default values}.
  *
  * Its static counterpart is {@link Phaser.Physics.Arcade.StaticGroup}.
  *
@@ -111,6 +112,8 @@ var PhysicsGroup = new Class({
 
         /**
          * Default physics properties applied to Game Objects added to the Group or created by the Group. Derived from the `config` argument.
+         *
+         * You can remove the default values by setting this property to `{}`.
          *
          * @name Phaser.Physics.Arcade.Group#defaults
          * @type {Phaser.Types.Physics.Arcade.PhysicsGroupDefaults}
