@@ -228,23 +228,25 @@ var TextureSource = new Class({
      */
     init: function (game)
     {
-        if (this.renderer)
+        var renderer = this.renderer;
+
+        if (renderer)
         {
-            if (this.renderer.gl)
+            if (renderer.gl)
             {
                 if (this.isCanvas)
                 {
-                    this.glTexture = this.renderer.createCanvasTexture(this.image, false, this.flipY);
+                    this.glTexture = renderer.createCanvasTexture(this.image, false, this.flipY);
                 }
                 else if (this.isVideo)
                 {
-                    this.glTexture = this.renderer.createVideoTexture(this.image, false, this.flipY);
+                    this.glTexture = renderer.createVideoTexture(this.image, false, this.flipY);
                 }
                 else if (this.isRenderTexture)
                 {
                     this.image = this.source.canvas;
 
-                    this.glTexture = this.renderer.createTextureFromSource(null, this.width, this.height, this.scaleMode);
+                    this.glTexture = renderer.createTextureFromSource(null, this.width, this.height, this.scaleMode);
                 }
                 else if (this.isGLTexture)
                 {
@@ -252,7 +254,7 @@ var TextureSource = new Class({
                 }
                 else
                 {
-                    this.glTexture = this.renderer.createTextureFromSource(this.image, this.width, this.height, this.scaleMode);
+                    this.glTexture = renderer.createTextureFromSource(this.image, this.width, this.height, this.scaleMode);
                 }
             }
             else if (this.isRenderTexture)
