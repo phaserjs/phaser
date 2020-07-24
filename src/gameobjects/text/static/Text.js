@@ -1022,9 +1022,9 @@ var Text = new Class({
      * @since 3.0.0
      *
      * @param {(number|Phaser.Types.GameObjects.Text.TextPadding)} left - The left padding value, or a padding config object.
-     * @param {number} top - The top padding value.
-     * @param {number} right - The right padding value.
-     * @param {number} bottom - The bottom padding value.
+     * @param {[number]} top - The top padding value.
+     * @param {[number]} right - The right padding value.
+     * @param {[number]} bottom - The bottom padding value.
      *
      * @return {this} This Text object.
      */
