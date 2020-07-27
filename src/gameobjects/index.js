@@ -108,7 +108,20 @@ var GameObjects = {
         Text: require('./text/static/TextCreator'),
         TileSprite: require('./tilesprite/TileSpriteCreator'),
         Zone: require('./zone/ZoneCreator'),
-        Video: require('./video/VideoCreator')
+        Video: require('./video/VideoCreator'),
+
+        //  Shapes
+        Arc: require('./shape/arc/ArcCreator'),
+        Curve: require('./shape/curve/CurveCreator'),
+        Ellipse: require('./shape/ellipse/EllipseCreator'),
+        Grid: require('./shape/grid/GridCreator'),
+        IsoBox: require('./shape/isobox/IsoBoxCreator'),
+        IsoTriangle: require('./shape/isotriangle/IsoTriangleCreator'),
+        Line: require('./shape/line/LineCreator'),
+        Polygon: require('./shape/polygon/PolygonCreator'),
+        Rectangle: require('./shape/rectangle/RectangleCreator'),
+        Star: require('./shape/star/StarCreator'),
+        Triangle: require('./shape/triangle/TriangleCreator')
     }
 
 };
