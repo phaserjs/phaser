@@ -114,6 +114,7 @@ If you used any of them in your code, please update to the new function names be
 ### New Features
 
 * `WebGLRenderer.setInt1iv` will allow you to look-up and set a 1iv uniform on the given shader.
+* `Geom.Intersects.GetLineToLine` is a new function that will return a Vector3 containing the point of intersection between 2 line segments, with the `z` property holding the distance value.
 
 ### Updates and API Changes
 
