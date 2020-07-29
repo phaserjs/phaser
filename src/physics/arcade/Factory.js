@@ -101,6 +101,8 @@ var Factory = new Class({
      * @method Phaser.Physics.Arcade.Factory#existing
      * @since 3.0.0
      *
+     * @generic {Phaser.GameObjects.GameObject} G - [gameObject,$return]
+     *
      * @param {Phaser.GameObjects.GameObject} gameObject - A Game Object.
      * @param {boolean} [isStatic=false] - Create a Static body (true) or Dynamic body (false).
      *
