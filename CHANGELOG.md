@@ -133,6 +133,8 @@ If you used any of them in your code, please update to the new function names be
 
 * `RenderTexture.resize` (which is called from `setSize`) wouldn't correctly set the `TextureSource.glTexture` property, leading to `bindTexture: attempt to use a deleted object` errors under WebGL.
 * The `MatterAttractors` plugin, which enables attractors between bodies, has been fixed. The original plugin only worked if the body with the attractor was _first_ in the world bodies list. It can now attract any body, no matter where in the world list it is. Fix #5160 (thanks @strahius)
+* The `BitmapText.getTextBounds` method was being called every frame, even if the bounds didn't change, potentially costing a lot of CPU depending on the text length and quantity of them. It now only updates the bounds if they change.
+* The `GetBitmapTextSize` function used `Math.round` on the values, if the `round` parameter was `true`, which didn't create integers. It now uses `Math.ceil` instead to give integer results.
 
 ### Examples, Documentation and TypeScript
 
