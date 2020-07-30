@@ -223,6 +223,10 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
             ty3 = Math.round(ty3);
         }
 
+        //  Debug test if the characters are in the correct place when rendered:
+
+        // pipeline.drawFillRect(tx0, ty0, tx2 - tx0, ty2 - ty0, 0x00ff00, 0.5);
+
         pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
     }
 };
