@@ -79,6 +79,8 @@ var GetBitmapTextSize = function (src, round, includeChars, out)
 
     var glyph = null;
 
+    var align = src._align;
+
     var x = 0;
     var y = 0;
 
@@ -381,10 +383,12 @@ var GetBitmapTextSize = function (src, round, includeChars, out)
             characters.push({
                 char: text[i],
                 code: charCode,
-                x: xAdvance * sx,
-                y: yAdvance * sy,
-                w: charWidth * sx,
-                h: lineHeight * sy
+                x: (glyph.xOffset + xAdvance) * sx,
+                y: (glyph.yOffset + yAdvance) * sy,
+                w: glyph.width * sx,
+                h: glyph.height * sy,
+                line: currentLine,
+                glyph: glyph
             });
         }
 
@@ -417,6 +421,24 @@ var GetBitmapTextSize = function (src, round, includeChars, out)
     if (currentLineWidth < shortestLine)
     {
         shortestLine = currentLineWidth;
+    }
+
+    //  Adjust all of the character positions based on alignment
+    if (align > 0)
+    {
+        for (var c = 0; c < characters.length; c++)
+        {
+            var currentChar = characters[c];
+
+            if (align === 1)
+            {
+                currentChar.x += ((longestLine - lineWidths[currentChar.line]) / 2);
+            }
+            else if (align === 2)
+            {
+                currentChar.x += (longestLine - lineWidths[currentChar.line]);
+            }
+        }
     }
 
     var local = out.local;
