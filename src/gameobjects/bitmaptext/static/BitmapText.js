@@ -358,7 +358,7 @@ var BitmapText = new Class({
      * @method Phaser.GameObjects.BitmapText#getTextBounds
      * @since 3.0.0
      *
-     * @param {boolean} [round] - Whether to round the results to the nearest integer.
+     * @param {boolean} [round=false] - Whether to round the results up to the nearest integer.
      *
      * @return {Phaser.Types.GameObjects.BitmapText.BitmapTextSize} An object that describes the size of this Bitmap Text.
      */
@@ -372,9 +372,9 @@ var BitmapText = new Class({
 
         if (this._dirty || this.scaleX !== bounds.scaleX || this.scaleY !== bounds.scaleY)
         {
-            GetBitmapTextSize(this, round, bounds);
-
             this._dirty = false;
+
+            GetBitmapTextSize(this, round, bounds);
 
             this.updateDisplayOrigin();
         }
@@ -395,8 +395,6 @@ var BitmapText = new Class({
     {
         this._displayOriginX = this.originX * this.width;
         this._displayOriginY = this.originY * this.height;
-
-        this._dirty = true;
 
         return this;
     },
