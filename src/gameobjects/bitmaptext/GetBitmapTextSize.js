@@ -18,14 +18,13 @@
  * @since 3.0.0
  * @private
  *
- * @param {(Phaser.GameObjects.DynamicBitmapText|Phaser.GameObjects.BitmapText)} src - The BitmapText to calculate the position, width, height and bounds values for.
- * @param {boolean} [round] - Whether to round the results to the nearest integer.
- * @param {boolean} [includeChars] - Should the results include the locations of each character in the `characters` array?
- * @param {object} [out] - Optional object to store the results in, to save constant object creation.
+ * @param {(Phaser.GameObjects.DynamicBitmapText|Phaser.GameObjects.BitmapText)} src - The BitmapText to calculate the bounds values for.
+ * @param {boolean} [round] - Whether to round the positions to the nearest integer.
+ * @param {object} [out] - Object to store the results in, to save constant object creation. If not provided an empty object is returned.
  *
- * @return {Phaser.Types.GameObjects.BitmapText.BitmapTextSize} The calculated bounds values of BitmapText.
+ * @return {Phaser.Types.GameObjects.BitmapText.BitmapTextSize} The calculated bounds values of the BitmapText.
  */
-var GetBitmapTextSize = function (src, round, includeChars, out)
+var GetBitmapTextSize = function (src, round, out)
 {
     if (out === undefined)
     {
@@ -378,19 +377,16 @@ var GetBitmapTextSize = function (src, round, includeChars, out)
             current.w += charWidth;
         }
 
-        if (includeChars)
-        {
-            characters.push({
-                char: text[i],
-                code: charCode,
-                x: (glyph.xOffset + xAdvance) * sx,
-                y: (glyph.yOffset + yAdvance) * sy,
-                w: glyph.width * sx,
-                h: glyph.height * sy,
-                line: currentLine,
-                glyph: glyph
-            });
-        }
+        characters.push({
+            char: text[i],
+            code: charCode,
+            x: (glyph.xOffset + xAdvance) * sx,
+            y: (glyph.yOffset + yAdvance) * sy,
+            w: glyph.width * sx,
+            h: glyph.height * sy,
+            line: currentLine,
+            glyph: glyph
+        });
 
         xAdvance += glyph.xAdvance + letterSpacing;
         lastGlyph = glyph;
@@ -474,8 +470,6 @@ var GetBitmapTextSize = function (src, round, includeChars, out)
         lines.shortest = Math.ceil(shortestLine);
         lines.longest = Math.ceil(longestLine);
     }
-
-    // console.log(round, local);
 
     out.words = words;
     out.characters = characters;
