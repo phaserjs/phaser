@@ -10,6 +10,7 @@ var GameObject = require('../../GameObject');
 var GetBitmapTextSize = require('../GetBitmapTextSize');
 var ParseFromAtlas = require('../ParseFromAtlas');
 var ParseXMLBitmapFont = require('../ParseXMLBitmapFont');
+var Rectangle = require('../../../geom/rectangle/Rectangle');
 var Render = require('./BitmapTextRender');
 
 /**
@@ -380,6 +381,61 @@ var BitmapText = new Class({
         }
 
         return bounds;
+    },
+
+    /**
+     * Gets the character located at the given x/y coordinate within this Bitmap Text.
+     *
+     * The coordinates you pass in are translated into the local space of the
+     * Bitmap Text, however, it is up to you to first translate the input coordinates.
+     *
+     * If you wish to use this in combination with an input event, be sure
+     * to pass in `Pointer.worldX` and `worldY` so they are transformed into
+     * camera space.
+     *
+     * In some cases, based on kerning, characters can overlap. When this happens,
+     * the first character in the word is returned.
+     *
+     * @method Phaser.GameObjects.BitmapText#getCharacterAt
+     * @since 3.25.0
+     *
+     * @param {number} x - The x position to check.
+     * @param {number} y - The y position to check.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera which is being tested against. If not given will use the Scene default camera.
+     *
+     * @return {Phaser.Types.GameObjects.BitmapText.BitmapTextCharacter} The character at the given position, or `null`.
+     */
+    getCharacterAt: function (x, y, camera)
+    {
+        if (camera === undefined) { camera = this.scene.sys.cameras.main; }
+
+        var csx = camera.scrollX;
+        var csy = camera.scrollY;
+
+        var px = x + (csx * this.scrollFactorX) - csx;
+        var py = y + (csy * this.scrollFactorY) - csy;
+
+        var point = this.getWorldTransformMatrix().applyInverse(px, py);
+
+        var bounds = this.getTextBounds(true);
+
+        var chars = bounds.characters;
+
+        var tempRect = new Rectangle();
+
+        for (var i = 0; i < chars.length; i++)
+        {
+            var char = chars[i];
+
+            tempRect.setTo(char.x, char.y, char.w, char.h);
+
+            if (tempRect.contains(point.x, point.y))
+            {
+                return char;
+            }
+        }
+
+        return null;
     },
 
     /**
