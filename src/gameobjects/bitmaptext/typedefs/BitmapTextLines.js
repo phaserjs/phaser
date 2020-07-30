@@ -1,5 +1,5 @@
 /**
- * The position and size of the Bitmap Text in local space, taking just the font size into account.
+ * Details about the line data in the `BitmapTextSize` object.
  *
  * @typedef {object} Phaser.Types.GameObjects.BitmapText.BitmapTextLines
  * @since 3.25.0

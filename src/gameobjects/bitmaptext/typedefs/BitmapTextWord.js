@@ -1,5 +1,5 @@
 /**
- * The position and size of the Bitmap Text in local space, taking just the font size into account.
+ * Details about a single world entry in the `BitmapTextSize` object words array.
  *
  * @typedef {object} Phaser.Types.GameObjects.BitmapText.BitmapTextWord
  * @since 3.25.0
