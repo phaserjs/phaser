@@ -152,7 +152,7 @@ var GetBitmapTextSize = function (src, round, out)
                         h: current.h * sy,
                         cr: false
                     });
-    
+
                     current = null;
                 }
             }
@@ -355,7 +355,7 @@ var GetBitmapTextSize = function (src, round, out)
                     w: current.w * sx,
                     h: current.h * sy
                 });
-    
+
                 current = null;
             }
         }
@@ -422,19 +422,21 @@ var GetBitmapTextSize = function (src, round, out)
 
     if (round)
     {
-        local.x = Math.round(local.x);
-        local.y = Math.round(local.y);
-        local.width = Math.round(local.width);
-        local.height = Math.round(local.height);
+        local.x = Math.ceil(local.x);
+        local.y = Math.ceil(local.y);
+        local.width = Math.ceil(local.width);
+        local.height = Math.ceil(local.height);
 
-        global.x = Math.round(global.x);
-        global.y = Math.round(global.y);
-        global.width = Math.round(global.width);
-        global.height = Math.round(global.height);
+        global.x = Math.ceil(global.x);
+        global.y = Math.ceil(global.y);
+        global.width = Math.ceil(global.width);
+        global.height = Math.ceil(global.height);
 
-        lines.shortest = Math.round(shortestLine);
-        lines.longest = Math.round(longestLine);
+        lines.shortest = Math.ceil(shortestLine);
+        lines.longest = Math.ceil(longestLine);
     }
+
+    // console.log(round, local);
 
     out.words = words;
     out.lines.height = lineHeight;
