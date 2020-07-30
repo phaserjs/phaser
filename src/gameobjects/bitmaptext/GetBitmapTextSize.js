@@ -5,10 +5,10 @@
  */
 
 /**
- * Calculate the position, width and height of a BitmapText Game Object.
+ * Calculate the full bounds, in local and world space, of a BitmapText Game Object.
  *
  * Returns a BitmapTextSize object that contains global and local variants of the Game Objects x and y coordinates and
- * its width and height.
+ * its width and height. Also includes an array of the line lengths and all word positions.
  *
  * The global position and size take into account the Game Object's position and scale.
  *
@@ -18,13 +18,14 @@
  * @since 3.0.0
  * @private
  *
- * @param {(Phaser.GameObjects.DynamicBitmapText|Phaser.GameObjects.BitmapText)} src - The BitmapText to calculate the position, width and height of.
+ * @param {(Phaser.GameObjects.DynamicBitmapText|Phaser.GameObjects.BitmapText)} src - The BitmapText to calculate the position, width, height and bounds values for.
  * @param {boolean} [round] - Whether to round the results to the nearest integer.
+ * @param {boolean} [includeChars] - Should the results include the locations of each character in the `characters` array?
  * @param {object} [out] - Optional object to store the results in, to save constant object creation.
  *
- * @return {Phaser.Types.GameObjects.BitmapText.BitmapTextSize} The calculated position, width and height of the BitmapText.
+ * @return {Phaser.Types.GameObjects.BitmapText.BitmapTextSize} The calculated bounds values of BitmapText.
  */
-var GetBitmapTextSize = function (src, round, out)
+var GetBitmapTextSize = function (src, round, includeChars, out)
 {
     if (out === undefined)
     {
@@ -49,6 +50,7 @@ var GetBitmapTextSize = function (src, round, out)
             },
             wrappedText: '',
             words: [],
+            characters: [],
             scaleX: 0,
             scaleY: 0
         };
@@ -94,6 +96,7 @@ var GetBitmapTextSize = function (src, round, out)
 
     var i;
     var words = [];
+    var characters = [];
     var current = null;
 
     //  Scan for breach of maxWidth and insert carriage-returns
@@ -343,6 +346,8 @@ var GetBitmapTextSize = function (src, round, out)
             bh = gh;
         }
 
+        var charWidth = glyph.xOffset + glyph.xAdvance + ((kerningOffset !== undefined) ? kerningOffset : 0);
+
         if (charCode === wordWrapCharCode)
         {
             if (current !== null)
@@ -368,7 +373,19 @@ var GetBitmapTextSize = function (src, round, out)
             }
 
             current.word = current.word.concat(text[i]);
-            current.w += glyph.xOffset + glyph.xAdvance + ((kerningOffset !== undefined) ? kerningOffset : 0);
+            current.w += charWidth;
+        }
+
+        if (includeChars)
+        {
+            characters.push({
+                char: text[i],
+                code: charCode,
+                x: xAdvance * sx,
+                y: yAdvance * sy,
+                w: charWidth * sx,
+                h: lineHeight * sy
+            });
         }
 
         xAdvance += glyph.xAdvance + letterSpacing;
@@ -439,6 +456,7 @@ var GetBitmapTextSize = function (src, round, out)
     // console.log(round, local);
 
     out.words = words;
+    out.characters = characters;
     out.lines.height = lineHeight;
     out.scaleX = src.scaleX;
     out.scaleY = src.scaleY;
