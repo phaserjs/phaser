@@ -433,7 +433,7 @@ var BitmapText = new Class({
 
                 this.setTexture(entry.texture, entry.frame);
 
-                GetBitmapTextSize(this, false, this._bounds);
+                GetBitmapTextSize(this, false, false, this._bounds);
             }
         }
 
