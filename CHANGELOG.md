@@ -119,6 +119,7 @@ If you used any of them in your code, please update to the new function names be
 * `Geom.Polygon.Translate` is a new function that allows you to translate all the points of a polygon by the given values.
 * `Phaser.Types.Math.Vector3Like` is a new data type representing as Vector 3 like object.
 * `Phaser.Types.Math.Vector4Like` is a new data type representing as Vector 4 like object.
+* The `GetBitmapTextSize` and `BitmapText.getTextBounds` functions have a new boolean parameter `includeChars`. When set to `true` it will include a `characters` array in the returned bounds object that contains the scaled position coordinates of each character in the BitmapText, which you could use for tasks such as determining which character of the object was clicked.
 
 ### Updates and API Changes
 
@@ -128,6 +129,7 @@ If you used any of them in your code, please update to the new function names be
 * `StaticTilemapLayer` now includes the `ModelViewProjection` mixin, so it doesn't need to modify the pipeline during rendering.
 * `WebGLRenderer.textureFlush` is a new property that keeps track of the total texture flushes per frame.
 * The `TextureTintStripPipeline` now extends `TextureTintPipeline` and just changes the topolgy, vastly reducing the filesize.
+* `BitmapTextWord`, `BitmapTextCharacter` and `BitmapTextLines` are three new type defs that are now part of the `BitmapTextSize` config object, as returned by `getTextBounds`. This improves the TypeScript defs and JS Docs for this object.
 
 ### Bug Fixes
 
