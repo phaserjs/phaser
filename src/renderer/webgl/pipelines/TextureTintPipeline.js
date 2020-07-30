@@ -1016,7 +1016,11 @@ var TextureTintPipeline = new Class({
 
     /**
      * Pushes a filled rectangle into the vertex batch.
+     *
+     * The dimensions are run through `Math.floor` before the quad is generated.
+     *
      * Rectangle has no transform values and isn't transformed into the local space.
+     *
      * Used for directly batching untransformed rectangles, such as Camera background colors.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawFillRect
@@ -1031,8 +1035,11 @@ var TextureTintPipeline = new Class({
      */
     drawFillRect: function (x, y, width, height, color, alpha)
     {
-        var xw = x + width;
-        var yh = y + height;
+        x = Math.floor(x);
+        y = Math.floor(y);
+
+        var xw = Math.floor(x + width);
+        var yh = Math.floor(y + height);
 
         var blank = this.renderer.blankTexture.glTexture;
 
