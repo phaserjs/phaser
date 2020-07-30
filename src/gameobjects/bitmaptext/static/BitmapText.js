@@ -359,11 +359,10 @@ var BitmapText = new Class({
      * @since 3.0.0
      *
      * @param {boolean} [round=false] - Whether to round the results up to the nearest integer.
-     * @param {boolean} [includeChars=false] - Should the results include the locations of each character in the `characters` array?
      *
      * @return {Phaser.Types.GameObjects.BitmapText.BitmapTextSize} An object that describes the size of this Bitmap Text.
      */
-    getTextBounds: function (round, includeChars)
+    getTextBounds: function (round)
     {
         //  local = The BitmapText based on fontSize and 0x0 coords
         //  global = The BitmapText, taking into account scale and world position
@@ -375,7 +374,7 @@ var BitmapText = new Class({
         {
             this._dirty = false;
 
-            GetBitmapTextSize(this, round, includeChars, bounds);
+            GetBitmapTextSize(this, round, bounds);
 
             this.updateDisplayOrigin();
         }
@@ -433,7 +432,7 @@ var BitmapText = new Class({
 
                 this.setTexture(entry.texture, entry.frame);
 
-                GetBitmapTextSize(this, false, false, this._bounds);
+                GetBitmapTextSize(this, false, this._bounds);
             }
         }
 
