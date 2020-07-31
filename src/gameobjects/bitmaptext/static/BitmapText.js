@@ -113,6 +113,11 @@ var BitmapText = new Class({
 
         var entry = this.scene.sys.cache.bitmapFont.get(font);
 
+        if (!entry)
+        {
+            console.warn('Invalid BitmapText key: ' + font);
+        }
+
         /**
          * The data of the Bitmap Font used by this Bitmap Text.
          *
@@ -623,7 +628,7 @@ var BitmapText = new Class({
     {
         var point = this.getLocalPoint(x, y, null, camera);
 
-        var bounds = this.getTextBounds(true);
+        var bounds = this.getTextBounds();
 
         var chars = bounds.characters;
 
