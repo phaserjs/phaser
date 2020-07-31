@@ -412,7 +412,7 @@ var BitmapText = new Class({
     /**
      * Sets a drop shadow effect on this Bitmap Text.
      * 
-     * This is a WebGL only feature.
+     * This is a WebGL only feature and only works with Static Bitmap Text, not Dynamic.
      * 
      * You can set the vertical and horizontal offset of the shadow, as well as the color and alpha.
      * 
@@ -459,7 +459,7 @@ var BitmapText = new Class({
 
      * Remember that spaces and punctuation count as characters.
      * 
-     * This is a WebGL only feature.
+     * This is a WebGL only feature and only works with Static Bitmap Text, not Dynamic.
      * 
      * The tint works by taking the pixel color values from the Bitmap Text texture, and then
      * multiplying it by the color value of the tint. You can provide either one color value,
