@@ -225,6 +225,50 @@ var BitmapText = new Class({
          */
         this.charColors = [];
 
+        /**
+         * The horizontal offset of the drop shadow.
+         * 
+         * You can set this directly, or use `Phaser.GameObjects.BitmapText#setDropShadow`.
+         *
+         * @name Phaser.GameObjects.BitmapText#dropShadowX
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.dropShadowX = 0;
+
+        /**
+         * The vertical offset of the drop shadow.
+         * 
+         * You can set this directly, or use `Phaser.GameObjects.BitmapText#setDropShadow`.
+         *
+         * @name Phaser.GameObjects.BitmapText#dropShadowY
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.dropShadowY = 0;
+
+        /**
+         * The color of the drop shadow.
+         * 
+         * Set this via `Phaser.GameObjects.BitmapText#setDropShadow`.
+         *
+         * @name Phaser.GameObjects.BitmapText#dropShadowColor
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.dropShadowColor = 0x000000;
+
+        /**
+         * The alpha value of the drop shadow.
+         * 
+         * You can set this directly, or use `Phaser.GameObjects.BitmapText#setDropShadow`.
+         *
+         * @name Phaser.GameObjects.BitmapText#dropShadowAlpha
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.dropShadowAlpha = 0.5;
+
         this.setTexture(entry.texture, entry.frame);
         this.setPosition(x, y);
         this.setOrigin(0, 0);
@@ -365,7 +409,43 @@ var BitmapText = new Class({
         return this;
     },
 
+    /**
+     * Sets a drop shadow effect on this Bitmap Text.
+     * 
+     * This is a WebGL only feature.
+     * 
+     * You can set the vertical and horizontal offset of the shadow, as well as the color and alpha.
+     * 
+     * Once a shadow has been enabled you can modify the `dropShadowX` and `dropShadowY` properties of this
+     * Bitmap Text directly to adjust the position of the shadow in real-time.
+     * 
+     * If you wish to clear the shadow, call this method with no parameters specified.
+     *
+     * @method Phaser.GameObjects.BitmapText#setDropShadow
+     * @webglOnly
+     * @since 3.50.0
+     *
+     * @param {number} [x=0] - The horizontal offset of the drop shadow.
+     * @param {number} [y=0] - The vertical offset of the drop shadow.
+     * @param {number} [color=0xffffff] - The color of the drop shadow, given as a hex value, i.e. `0x000000` for black.
+     * @param {number} [alpha=0.5] - The alpha of the drop shadow, given as a float between 0 and 1. This is combined with the Bitmap Text alpha as well.
+     *
+     * @return {this} This BitmapText Object.
+     */
+    setDropShadow: function (x, y, color, alpha)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (color === undefined) { color = 0x000000; }
+        if (alpha === undefined) { alpha = 0.5; }
 
+        this.dropShadowX = x;
+        this.dropShadowY = y;
+        this.dropShadowColor = GetColor(color);
+        this.dropShadowAlpha = alpha;
+
+        return this;
+    },
 
     /**
      * Sets a tint on a range of characters in this Bitmap Text, starting from the `start` parameter index
