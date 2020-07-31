@@ -215,6 +215,14 @@ var BitmapText = new Class({
          */
         this.wordWrapCharCode = 32;
 
+        /**
+         * Internal array holding the character tint color data.
+         *
+         * @name Phaser.GameObjects.BitmapText#charColors
+         * @type {array}
+         * @private
+         * @since 3.50.0
+         */
         this.charColors = [];
 
         this.setTexture(entry.texture, entry.frame);
@@ -356,6 +364,8 @@ var BitmapText = new Class({
 
         return this;
     },
+
+
 
     /**
      * Sets a tint on a range of characters in this Bitmap Text, starting from the `start` parameter index
@@ -844,6 +854,20 @@ var BitmapText = new Class({
         out.data = data;
 
         return out;
+    },
+
+    /**
+     * Internal destroy handler, called as part of the destroy process.
+     *
+     * @method Phaser.GameObjects.BitmapText#preDestroy
+     * @protected
+     * @since 3.50.0
+     */
+    preDestroy: function ()
+    {
+        this.charColors.length = 0;
+        this._bounds = null;
+        this.fontData = null;
     }
 
 });
