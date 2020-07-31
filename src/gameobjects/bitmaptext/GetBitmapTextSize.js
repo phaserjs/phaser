@@ -19,13 +19,16 @@
  * @private
  *
  * @param {(Phaser.GameObjects.DynamicBitmapText|Phaser.GameObjects.BitmapText)} src - The BitmapText to calculate the bounds values for.
- * @param {boolean} [round] - Whether to round the positions to the nearest integer.
+ * @param {boolean} [round=false] - Whether to round the positions to the nearest integer.
+ * @param {boolean} [updateOrigin=false] - Whether to update the origin of the BitmapText after bounds calculations?
  * @param {object} [out] - Object to store the results in, to save constant object creation. If not provided an empty object is returned.
  *
  * @return {Phaser.Types.GameObjects.BitmapText.BitmapTextSize} The calculated bounds values of the BitmapText.
  */
-var GetBitmapTextSize = function (src, round, out)
+var GetBitmapTextSize = function (src, round, updateOrigin, out)
 {
+    if (updateOrigin === undefined) { updateOrigin = false; }
+
     if (out === undefined)
     {
         out = {
@@ -385,6 +388,16 @@ var GetBitmapTextSize = function (src, round, out)
             w: glyph.width * scale,
             h: glyph.height * scale,
             line: currentLine,
+            isTinted: false,
+            tintEffect: 0,
+            tintTL: 0,
+            tintTR: 0,
+            tintBL: 0,
+            tintBR: 0,
+            alphaTL: 1,
+            alphaTR: 1,
+            alphaBL: 1,
+            alphaBR: 1,
             glyph: glyph
         });
 
@@ -446,8 +459,9 @@ var GetBitmapTextSize = function (src, round, out)
     local.width = bw * scale;
     local.height = bh * scale;
 
-    global.x = (src.x - src.displayOriginX) + (bx * sx);
-    global.y = (src.y - src.displayOriginY) + (by * sy);
+    global.x = (src.x - src._displayOriginX) + (bx * sx);
+    global.y = (src.y - src._displayOriginY) + (by * sy);
+
     global.width = bw * sx;
     global.height = bh * sy;
 
@@ -469,6 +483,21 @@ var GetBitmapTextSize = function (src, round, out)
 
         lines.shortest = Math.ceil(shortestLine);
         lines.longest = Math.ceil(longestLine);
+    }
+
+    if (updateOrigin)
+    {
+        src._displayOriginX = src.originX * global.width;
+        src._displayOriginY = src.originY * global.height;
+
+        global.x = (src.x - src._displayOriginX) + (bx * sx);
+        global.y = (src.y - src._displayOriginY) + (by * sy);
+
+        if (round)
+        {
+            global.x = Math.ceil(global.x);
+            global.y = Math.ceil(global.y);
+        }
     }
 
     out.words = words;

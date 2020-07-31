@@ -373,11 +373,9 @@ var BitmapText = new Class({
 
         if (this._dirty || round || this.scaleX !== bounds.scaleX || this.scaleY !== bounds.scaleY)
         {
+            GetBitmapTextSize(this, round, true, bounds);
+
             this._dirty = false;
-
-            GetBitmapTextSize(this, round, bounds);
-
-            this.updateDisplayOrigin();
         }
 
         return bounds;
@@ -443,8 +441,12 @@ var BitmapText = new Class({
      */
     updateDisplayOrigin: function ()
     {
-        this._displayOriginX = this.originX * this.width;
-        this._displayOriginY = this.originY * this.height;
+        this._dirty = true;
+
+        this.getTextBounds(false);
+
+        // this._displayOriginX = this.originX * this.width;
+        // this._displayOriginY = this.originY * this.height;
 
         return this;
     },
@@ -482,7 +484,7 @@ var BitmapText = new Class({
 
                 this.setTexture(entry.texture, entry.frame);
 
-                GetBitmapTextSize(this, false, this._bounds);
+                GetBitmapTextSize(this, false, true, this._bounds);
             }
         }
 
