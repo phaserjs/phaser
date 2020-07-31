@@ -302,7 +302,7 @@ var TextureTintPipeline = new Class({
      * Should only be called when changing pipeline.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#bind
-     * @since 3.25.0
+     * @since 3.50.0
      *
      * @return {this} This WebGLPipeline instance.
      */

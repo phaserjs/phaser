@@ -63,7 +63,7 @@ var ForwardDiffuseLightPipeline = new Class({
          *
          * @name Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#defaultNormalMap
          * @type {object}
-         * @since 3.25.0
+         * @since 3.50.0
          */
         this.defaultNormalMap;
 
@@ -72,7 +72,7 @@ var ForwardDiffuseLightPipeline = new Class({
          *
          * @name Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#lightCount
          * @type {number}
-         * @since 3.25.0
+         * @since 3.50.0
          */
         this.lightCount = 0;
 
@@ -113,7 +113,7 @@ var ForwardDiffuseLightPipeline = new Class({
      * Should only be called when changing pipeline.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#bind
-     * @since 3.25.0
+     * @since 3.50.0
      *
      * @return {this} This WebGLPipeline instance.
      */
@@ -260,7 +260,7 @@ var ForwardDiffuseLightPipeline = new Class({
      * Assigns a texture to the current batch. If a different texture is already set it creates a new batch object.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#setTexture2D
-     * @since 3.25.0
+     * @since 3.50.0
      *
      * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch. If not given uses blankTexture.
      * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object being rendered or added to the batch.
@@ -295,7 +295,7 @@ var ForwardDiffuseLightPipeline = new Class({
      * for the given Game Object. It must return the texture unit the Game Object was assigned.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#setGameObject
-     * @since 3.25.0
+     * @since 3.50.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object being rendered or added to the batch.
      * @param {Phaser.Textures.Frame} [frame] - Optional frame to use. Can override that of the Game Object.
@@ -330,7 +330,7 @@ var ForwardDiffuseLightPipeline = new Class({
      * If the Game Object doesn't have one, it returns the default normal map from this pipeline instead.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#getNormalMap
-     * @since 3.25.0
+     * @since 3.50.0
      *
      * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object to get the normal map from.
      *

@@ -191,7 +191,7 @@ var TextureSource = new Class({
          * @name Phaser.Textures.TextureSource#glIndex
          * @type {number}
          * @default 0
-         * @since 3.25.0
+         * @since 3.50.0
          */
         this.glIndex = 0;
 
@@ -202,7 +202,7 @@ var TextureSource = new Class({
          * @name Phaser.Textures.TextureSource#glIndexCounter
          * @type {number}
          * @default -1
-         * @since 3.25.0
+         * @since 3.50.0
          */
         this.glIndexCounter = -1;
 

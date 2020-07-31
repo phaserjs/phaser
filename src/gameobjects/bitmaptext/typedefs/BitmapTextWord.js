@@ -2,7 +2,7 @@
  * Details about a single world entry in the `BitmapTextSize` object words array.
  *
  * @typedef {object} Phaser.Types.GameObjects.BitmapText.BitmapTextWord
- * @since 3.25.0
+ * @since 3.50.0
  *
  * @property {number} x - The x position of the word in the BitmapText.
  * @property {number} y - The y position of the word in the BitmapText.

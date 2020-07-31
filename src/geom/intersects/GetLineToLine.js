@@ -14,7 +14,7 @@ var Vector3 = require('../../math/Vector3');
  * the closest intersecting point from a group of line segments.
  *
  * @function Phaser.Geom.Intersects.GetLineToLine
- * @since 3.25.0
+ * @since 3.50.0
  *
  * @param {Phaser.Geom.Line} line1 - The first line segment to check.
  * @param {Phaser.Geom.Line} line2 - The second line segment to check.

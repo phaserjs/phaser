@@ -8,7 +8,7 @@
  * Loads an identity matrix into the model matrix.
  *
  * @method Phaser.Renderer.WebGL.MVP.SetIdentity
- * @since 3.25.0
+ * @since 3.50.0
  *
  * @param {Float32Array} array - The array to set to be an identity matrix.
  */

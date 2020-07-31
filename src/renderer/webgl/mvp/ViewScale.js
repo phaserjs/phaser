@@ -8,7 +8,7 @@
  * Scales the view matrix.
  *
  * @method Phaser.Renderer.WebGL.MVP.ViewScale
- * @since 3.25.0
+ * @since 3.50.0
  *
  * @param {Phaser.Renderer.WebGL.Pipelines.ModelViewProjection} model - The Model View Projection object.
  * @param {number} x - The x component.

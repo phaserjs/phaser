@@ -131,7 +131,7 @@ var Light = new Class({
          *
          * @name Phaser.GameObjects.Light#dirty
          * @type {boolean}
-         * @since 3.25.0
+         * @since 3.50.0
          */
         this.dirty = true;
     },

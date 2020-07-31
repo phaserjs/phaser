@@ -8,7 +8,7 @@
  * Translates the model matrix by the given values.
  *
  * @method Phaser.Renderer.WebGL.MVP.ProjectOrtho
- * @since 3.25.0
+ * @since 3.50.0
  *
  * @param {Phaser.Renderer.WebGL.Pipelines.ModelViewProjection} model - The Model View Projection object.
  * @param {number} left - The left value.

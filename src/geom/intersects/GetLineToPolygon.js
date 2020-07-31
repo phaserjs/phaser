@@ -27,7 +27,7 @@ var tempIntersect = new Vector3();
  * The `w` component contains the index of the polygon, in the given array, that triggered the intersection.
  *
  * @function Phaser.Geom.Intersects.GetLineToPolygon
- * @since 3.25.0
+ * @since 3.50.0
  *
  * @param {Phaser.Geom.Line} line - The line segment to check.
  * @param {Phaser.Geom.Polygon | Phaser.Geom.Polygon[]} polygons - A single polygon, or array of polygons, to check.

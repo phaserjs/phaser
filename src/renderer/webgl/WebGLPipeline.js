@@ -242,7 +242,7 @@ var WebGLPipeline = new Class({
          *
          * @name Phaser.Renderer.WebGL.Pipelines.WebGLPipeline#currentUnit
          * @type {number}
-         * @since 3.25.0
+         * @since 3.50.0
          */
         this.currentUnit = 0;
 
@@ -252,7 +252,7 @@ var WebGLPipeline = new Class({
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#forceZero
          * @type {boolean}
-         * @since 3.25.0
+         * @since 3.50.0
          */
         this.forceZero = false;
     },
@@ -304,7 +304,7 @@ var WebGLPipeline = new Class({
      * for the given Game Object. It must return the texture unit the Game Object was assigned.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.WebGLPipeline#setGameObject
-     * @since 3.25.0
+     * @since 3.50.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object being rendered or added to the batch.
      * @param {Phaser.Textures.Frame} [frame] - Optional frame to use. Can override that of the Game Object.
@@ -414,7 +414,7 @@ var WebGLPipeline = new Class({
      * This should only be called after the vertex buffer has been bound.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setAttribPointers
-     * @since 3.25.0
+     * @since 3.50.0
      *
      * @return {this} This WebGLPipeline instance.
      */

@@ -218,7 +218,7 @@ var WebGLRenderer = new Class({
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#startActiveTexture
          * @type {integer}
-         * @since 3.25.0
+         * @since 3.50.0
          */
         this.startActiveTexture = 0;
 
@@ -228,7 +228,7 @@ var WebGLRenderer = new Class({
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#maxTextures
          * @type {integer}
-         * @since 3.25.0
+         * @since 3.50.0
          */
         this.maxTextures = 0;
 
@@ -239,7 +239,7 @@ var WebGLRenderer = new Class({
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#textureIndexes
          * @type {array}
-         * @since 3.25.0
+         * @since 3.50.0
          */
         this.textureIndexes;
 
@@ -250,7 +250,7 @@ var WebGLRenderer = new Class({
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#tempTextures
          * @type {array}
-         * @since 3.25.0
+         * @since 3.50.0
          */
         this.tempTextures;
 
@@ -259,7 +259,7 @@ var WebGLRenderer = new Class({
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#textureZero
          * @type {?WebGLTexture}
-         * @since 3.25.0
+         * @since 3.50.0
          */
         this.textureZero;
 
@@ -268,7 +268,7 @@ var WebGLRenderer = new Class({
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#normalTexture
          * @type {?WebGLTexture}
-         * @since 3.25.0
+         * @since 3.50.0
          */
         this.normalTexture;
 
@@ -609,7 +609,7 @@ var WebGLRenderer = new Class({
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#textureFlush
          * @type {number}
-         * @since 3.25.0
+         * @since 3.50.0
          */
         this.textureFlush = 0;
 
@@ -1379,7 +1379,7 @@ var WebGLRenderer = new Class({
      * If none are available, it will flush the current pipeline first.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setTextureSource
-     * @since 3.25.0
+     * @since 3.50.0
      *
      * @param {Phaser.Textures.TextureSource} textureSource - The Texture Source to be assigned the texture unit.
      *
@@ -1430,7 +1430,7 @@ var WebGLRenderer = new Class({
      * Checks to see if the given diffuse and normal map textures are already bound, or not.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#isNewNormalMap
-     * @since 3.25.0
+     * @since 3.50.0
      *
      * @param {WebGLTexture} texture - The WebGL diffuse texture.
      * @param {WebGLTexture} normalMap - The WebGL normal map texture.
@@ -1448,7 +1448,7 @@ var WebGLRenderer = new Class({
      * Make sure to call `clearTextureZero` after using this method.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setTextureZero
-     * @since 3.25.0
+     * @since 3.50.0
      *
      * @param {WebGLTexture} texture - The WebGL texture that needs to be bound.
      */
@@ -1469,7 +1469,7 @@ var WebGLRenderer = new Class({
      * Clears the texture that was directly bound to texture unit zero.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#clearTextureZero
-     * @since 3.25.0
+     * @since 3.50.0
      */
     clearTextureZero: function ()
     {
@@ -1482,7 +1482,7 @@ var WebGLRenderer = new Class({
      * Make sure to call `clearNormalMap` after using this method.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setNormalMap
-     * @since 3.25.0
+     * @since 3.50.0
      *
      * @param {WebGLTexture} texture - The WebGL texture that needs to be bound.
      */
@@ -1509,7 +1509,7 @@ var WebGLRenderer = new Class({
      * increases the start active texture counter.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#clearNormalMap
-     * @since 3.25.0
+     * @since 3.50.0
      */
     clearNormalMap: function ()
     {
@@ -1524,7 +1524,7 @@ var WebGLRenderer = new Class({
      * Activates each texture, in turn, then binds them all to `null`.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#unbindTextures
-     * @since 3.25.0
+     * @since 3.50.0
      *
      * @param {boolean} [all=false] - Reset all textures, or just the first two?
      */
@@ -1554,7 +1554,7 @@ var WebGLRenderer = new Class({
      * counter and sets texture unit 1 as being active.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#resetTextures
-     * @since 3.25.0
+     * @since 3.50.0
      *
      * @param {boolean} [all=false] - Reset all textures, or just the first two?
      */
@@ -1596,7 +1596,7 @@ var WebGLRenderer = new Class({
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setTexture2D
      * @since 3.0.0
-     * @version 2.0 - Updated in 3.25.0 to remove the `textureUnit` and `flush` parameters.
+     * @version 2.0 - Updated in 3.50.0 to remove the `textureUnit` and `flush` parameters.
      *
      * @param {WebGLTexture} texture - The WebGL texture that needs to be bound.
      *
@@ -2228,7 +2228,7 @@ var WebGLRenderer = new Class({
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#getCurrentStencilMask
      * @private
-     * @since 3.25.0
+     * @since 3.50.0
      */
     getCurrentStencilMask: function ()
     {
@@ -3108,7 +3108,7 @@ var WebGLRenderer = new Class({
      * If the shader is not currently active, it is made active first.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setInt1iv
-     * @since 3.25.0
+     * @since 3.50.0
      *
      * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
      * @param {string} name - The name of the uniform to look-up and modify.

@@ -10,7 +10,7 @@ var SetIdentity = require('./SetIdentity');
  * Loads an identity matrix into the projection matrix.
  *
  * @method Phaser.Renderer.WebGL.MVP.ProjectIdentity
- * @since 3.25.0
+ * @since 3.50.0
  *
  * @param {Phaser.Renderer.WebGL.Pipelines.ModelViewProjection} model - The Model View Projection object.
  *

@@ -1,6 +1,6 @@
 /**
  * @typedef {object} Phaser.Types.Math.Vector4Like
- * @since 3.25.0
+ * @since 3.50.0
  *
  * @property {number} [x] - The x component.
  * @property {number} [y] - The y component.

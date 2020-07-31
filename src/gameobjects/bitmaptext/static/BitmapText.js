@@ -397,7 +397,7 @@ var BitmapText = new Class({
      * character positions during render. It will only scan characters in their un-translated state.
      *
      * @method Phaser.GameObjects.BitmapText#getCharacterAt
-     * @since 3.25.0
+     * @since 3.50.0
      *
      * @param {number} x - The x position to check.
      * @param {number} y - The y position to check.

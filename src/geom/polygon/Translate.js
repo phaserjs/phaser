@@ -8,7 +8,7 @@
  * Tranlates the points of the given Polygon.
  *
  * @function Phaser.Geom.Polygon.Translate
- * @since 3.25.0
+ * @since 3.50.0
  *
  * @generic {Phaser.Geom.Polygon} O - [polygon,$return]
  *
