@@ -6,6 +6,29 @@
 
 var Utils = require('../../../renderer/webgl/Utils');
 
+function BatchChar (pipeline, src, char, glyph, offsetX, offsetY, calcMatrix, roundPixels, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit)
+{
+    var x = (char.x - src.displayOriginX) + offsetX;
+    var y = (char.y - src.displayOriginY) + offsetY;
+
+    var xw = x + char.w;
+    var yh = y + char.h;
+
+    var tx0 = calcMatrix.getXRound(x, y, roundPixels);
+    var ty0 = calcMatrix.getYRound(x, y, roundPixels);
+
+    var tx1 = calcMatrix.getXRound(x, yh, roundPixels);
+    var ty1 = calcMatrix.getYRound(x, yh, roundPixels);
+
+    var tx2 = calcMatrix.getXRound(xw, yh, roundPixels);
+    var ty2 = calcMatrix.getYRound(xw, yh, roundPixels);
+
+    var tx3 = calcMatrix.getXRound(xw, y, roundPixels);
+    var ty3 = calcMatrix.getYRound(xw, y, roundPixels);
+
+    pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, glyph.u0, glyph.v0, glyph.u1, glyph.v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
+}
+
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -68,12 +91,27 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
 
     var cameraAlpha = camera.alpha;
 
+    var charColors = src.charColors;
+
     var tintEffect = (src._isTinted && src.tintFill);
 
     var tintTL = Utils.getTintAppendFloatAlpha(src._tintTL, cameraAlpha * src._alphaTL);
     var tintTR = Utils.getTintAppendFloatAlpha(src._tintTR, cameraAlpha * src._alphaTR);
     var tintBL = Utils.getTintAppendFloatAlpha(src._tintBL, cameraAlpha * src._alphaBL);
     var tintBR = Utils.getTintAppendFloatAlpha(src._tintBR, cameraAlpha * src._alphaBR);
+
+    var dropShadowX = src.dropShadowX;
+    var dropShadowY = src.dropShadowY;
+
+    var dropShadow = (dropShadowX !== 0 || dropShadowY !== 0);
+
+    if (dropShadow)
+    {
+        var blackTL = Utils.getTintAppendFloatAlpha(src.dropShadowColor, cameraAlpha * src.dropShadowAlpha * src._alphaTL);
+        var blackTR = Utils.getTintAppendFloatAlpha(src.dropShadowColor, cameraAlpha * src.dropShadowAlpha * src._alphaTR);
+        var blackBL = Utils.getTintAppendFloatAlpha(src.dropShadowColor, cameraAlpha * src.dropShadowAlpha * src._alphaBL);
+        var blackBR = Utils.getTintAppendFloatAlpha(src.dropShadowColor, cameraAlpha * src.dropShadowAlpha * src._alphaBR);
+    }
 
     var texture = src.frame.glTexture;
     var textureUnit = pipeline.setGameObject(src);
@@ -93,56 +131,29 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
             continue;
         }
 
-        var x = char.x - src.displayOriginX;
-        var y = char.y - src.displayOriginY;
-
-        var xw = x + char.w;
-        var yh = y + char.h;
-
-        var tx0 = calcMatrix.getX(x, y);
-        var ty0 = calcMatrix.getY(x, y);
-
-        var tx1 = calcMatrix.getX(x, yh);
-        var ty1 = calcMatrix.getY(x, yh);
-
-        var tx2 = calcMatrix.getX(xw, yh);
-        var ty2 = calcMatrix.getY(xw, yh);
-
-        var tx3 = calcMatrix.getX(xw, y);
-        var ty3 = calcMatrix.getY(xw, y);
-
-        if (roundPixels)
+        if (dropShadow)
         {
-            tx0 = Math.round(tx0);
-            ty0 = Math.round(ty0);
-
-            tx1 = Math.round(tx1);
-            ty1 = Math.round(ty1);
-
-            tx2 = Math.round(tx2);
-            ty2 = Math.round(ty2);
-
-            tx3 = Math.round(tx3);
-            ty3 = Math.round(ty3);
+            BatchChar(pipeline, src, char, glyph, dropShadowX, dropShadowY, calcMatrix, roundPixels, blackTL, blackTR, blackBL, blackBR, 0, texture, textureUnit);
         }
 
-        if (char.isTinted)
+        if (charColors[char.i])
         {
-            var ctintEffect = char.tintEffect;
-            var ctintTL = Utils.getTintAppendFloatAlpha(char.tintTL, cameraAlpha * char.alphaTL);
-            var ctintTR = Utils.getTintAppendFloatAlpha(char.tintTR, cameraAlpha * char.alphaTR);
-            var ctintBL = Utils.getTintAppendFloatAlpha(char.tintBL, cameraAlpha * char.alphaBL);
-            var ctintBR = Utils.getTintAppendFloatAlpha(char.tintBR, cameraAlpha * char.alphaBR);
+            var color = charColors[char.i];
 
-            pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, glyph.u0, glyph.v0, glyph.u1, glyph.v1, ctintTL, ctintTR, ctintBL, ctintBR, ctintEffect, texture, textureUnit);
+            var ctintEffect = color.tintEffect;
+            var ctintTL = Utils.getTintAppendFloatAlpha(color.tintTL, cameraAlpha * src._alphaTL);
+            var ctintTR = Utils.getTintAppendFloatAlpha(color.tintTR, cameraAlpha * src._alphaTR);
+            var ctintBL = Utils.getTintAppendFloatAlpha(color.tintBL, cameraAlpha * src._alphaBL);
+            var ctintBR = Utils.getTintAppendFloatAlpha(color.tintBR, cameraAlpha * src._alphaBR);
+
+            BatchChar(pipeline, src, char, glyph, 0, 0, calcMatrix, roundPixels, ctintTL, ctintTR, ctintBL, ctintBR, ctintEffect, texture, textureUnit);
         }
         else
         {
-            pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, glyph.u0, glyph.v0, glyph.u1, glyph.v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
+            BatchChar(pipeline, src, char, glyph, 0, 0, calcMatrix, roundPixels, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
         }
 
         //  Debug test if the characters are in the correct place when rendered:
-
         // pipeline.drawFillRect(tx0, ty0, tx2 - tx0, ty2 - ty0, 0x00ff00, 0.5);
     }
 };
