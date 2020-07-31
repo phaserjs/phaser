@@ -387,14 +387,16 @@ var BitmapText = new Class({
      * Gets the character located at the given x/y coordinate within this Bitmap Text.
      *
      * The coordinates you pass in are translated into the local space of the
-     * Bitmap Text, however, it is up to you to first translate the input coordinates.
+     * Bitmap Text, however, it is up to you to first translate the input coordinates to world space.
      *
      * If you wish to use this in combination with an input event, be sure
-     * to pass in `Pointer.worldX` and `worldY` so they are transformed into
-     * camera space.
+     * to pass in `Pointer.worldX` and `worldY` so they are in world space.
      *
      * In some cases, based on kerning, characters can overlap. When this happens,
      * the first character in the word is returned.
+     *
+     * Note that this does not work for DynamicBitmapText if you have changed the
+     * character positions during render. It will only scan characters in their un-translated state.
      *
      * @method Phaser.GameObjects.BitmapText#getCharacterAt
      * @since 3.25.0
@@ -403,19 +405,11 @@ var BitmapText = new Class({
      * @param {number} y - The y position to check.
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera which is being tested against. If not given will use the Scene default camera.
      *
-     * @return {Phaser.Types.GameObjects.BitmapText.BitmapTextCharacter} The character at the given position, or `null`.
+     * @return {Phaser.Types.GameObjects.BitmapText.BitmapTextCharacter} The character object at the given position, or `null`.
      */
     getCharacterAt: function (x, y, camera)
     {
-        if (camera === undefined) { camera = this.scene.sys.cameras.main; }
-
-        var csx = camera.scrollX;
-        var csy = camera.scrollY;
-
-        var px = x + (csx * this.scrollFactorX) - csx;
-        var py = y + (csy * this.scrollFactorY) - csy;
-
-        var point = this.getWorldTransformMatrix().applyInverse(px, py);
+        var point = this.getLocalPoint(x, y, null, camera);
 
         var bounds = this.getTextBounds(true);
 
@@ -785,9 +779,9 @@ BitmapText.ParseFromAtlas = ParseFromAtlas;
  * @since 3.17.0
  *
  * @param {XMLDocument} xml - The XML Document to parse the font from.
+ * @param {Phaser.Textures.Frame} frame - The texture frame to take into account when creating the uv data.
  * @param {integer} [xSpacing=0] - The x-axis spacing to add between each letter.
  * @param {integer} [ySpacing=0] - The y-axis spacing to add to the line height.
- * @param {Phaser.Textures.Frame} [frame] - The texture frame to take into account while parsing.
  *
  * @return {Phaser.Types.GameObjects.BitmapText.BitmapFontData} The parsed Bitmap Font data.
  */
