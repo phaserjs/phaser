@@ -475,6 +475,8 @@ var BitmapText = new Class({
      * 
      * To modify the tint color once set, call this method again with new color values.
      * 
+     * Using `setWordTint` can override tints set by this function, and vice versa.
+     * 
      * To remove a tint call this method with just the `start`, and optionally, the `length` parameters defined.
      *
      * @method Phaser.GameObjects.BitmapText#setCharacterTint
@@ -556,6 +558,79 @@ var BitmapText = new Class({
                         tintBL: tintBL,
                         tintBR: tintBR
                     };
+                }
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Sets a tint on a matching word within this Bitmap Text.
+     * 
+     * The `word` parameter can be either a string or a number.
+     * 
+     * If a string, it will run a string comparison against the text contents, and if matching,
+     * it will tint the whole word.
+     * 
+     * If a number, if till that word, based on its offset within the text contents.
+     * 
+     * The `count` parameter controls how many words are replaced. Pass in -1 to replace them all.
+     * 
+     * This parameter is ignored if you pass a number as the `word` to be searched for.
+     * 
+     * This is a WebGL only feature and only works with Static Bitmap Text, not Dynamic.
+     * 
+     * The tint works by taking the pixel color values from the Bitmap Text texture, and then
+     * multiplying it by the color value of the tint. You can provide either one color value,
+     * in which case the whole character will be tinted in that color. Or you can provide a color
+     * per corner. The colors are blended together across the extent of the character range.
+     * 
+     * To swap this from being an additive tint to a fill based tint, set the `tintFill` parameter to `true`.
+     * 
+     * To modify the tint color once set, call this method again with new color values.
+     * 
+     * Using `setCharacterTint` can override tints set by this function, and vice versa.
+     *
+     * @method Phaser.GameObjects.BitmapText#setWordTint
+     * @webglOnly
+     * @since 3.50.0
+     *
+     * @param {(string|number)} word - The word to search for. Either a string, or an index of the word in the words array.
+     * @param {number} [count=1] - The number of matching words to tint. Pass -1 to tint all matching words.
+     * @param {boolean} [tintFill=false] - Use a fill-based tint (true), or an additive tint (false)
+     * @param {integer} [topLeft=0xffffff] - The tint being applied to the top-left of the word. If not other values are given this value is applied evenly, tinting the whole word.
+     * @param {integer} [topRight] - The tint being applied to the top-right of the word.
+     * @param {integer} [bottomLeft] - The tint being applied to the bottom-left of the word.
+     * @param {integer} [bottomRight] - The tint being applied to the bottom-right of the word.
+     *
+     * @return {this} This BitmapText Object.
+     */
+    setWordTint: function (word, count, tintFill, topLeft, topRight, bottomLeft, bottomRight)
+    {
+        if (count === undefined) { count = 1; }
+
+        var bounds = this.getTextBounds();
+
+        var words = bounds.words;
+
+        var wordIsNumber = (typeof(word) === 'number');
+
+        var total = 0;
+
+        for (var i = 0; i < words.length; i++)
+        {
+            var lineword = words[i];
+
+            if ((wordIsNumber && i === word) || (!wordIsNumber && lineword.word === word))
+            {
+                this.setCharacterTint(lineword.i, lineword.word.length, tintFill, topLeft, topRight, bottomLeft, bottomRight);
+
+                total++;
+
+                if (total === count)
+                {
+                    return this;
                 }
             }
         }
