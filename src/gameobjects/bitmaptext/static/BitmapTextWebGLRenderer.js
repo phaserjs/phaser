@@ -4,30 +4,8 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var BatchChar = require('../BatchChar');
 var Utils = require('../../../renderer/webgl/Utils');
-
-function BatchChar (pipeline, src, char, glyph, offsetX, offsetY, calcMatrix, roundPixels, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit)
-{
-    var x = (char.x - src.displayOriginX) + offsetX;
-    var y = (char.y - src.displayOriginY) + offsetY;
-
-    var xw = x + char.w;
-    var yh = y + char.h;
-
-    var tx0 = calcMatrix.getXRound(x, y, roundPixels);
-    var ty0 = calcMatrix.getYRound(x, y, roundPixels);
-
-    var tx1 = calcMatrix.getXRound(x, yh, roundPixels);
-    var ty1 = calcMatrix.getYRound(x, yh, roundPixels);
-
-    var tx2 = calcMatrix.getXRound(xw, yh, roundPixels);
-    var ty2 = calcMatrix.getYRound(xw, yh, roundPixels);
-
-    var tx3 = calcMatrix.getXRound(xw, y, roundPixels);
-    var ty3 = calcMatrix.getYRound(xw, y, roundPixels);
-
-    pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, glyph.u0, glyph.v0, glyph.u1, glyph.v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
-}
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
