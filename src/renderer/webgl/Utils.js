@@ -158,7 +158,7 @@ module.exports = {
      * Then tests this against the maximum number of iterations GLSL can support.
      *
      * @function Phaser.Renderer.WebGL.Utils.checkShaderMax
-     * @since 3.25.0
+     * @since 3.50.0
      *
      * @param {WebGLRenderingContext} gl - The WebGLContext used to create the shaders.
      * @param {number} maxTextures - The Game Config maxTextures value.

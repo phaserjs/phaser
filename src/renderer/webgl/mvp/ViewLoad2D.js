@@ -8,7 +8,7 @@
  * Loads a 2D view matrix (3x2 matrix) into a 4x4 view matrix.
  *
  * @method Phaser.Renderer.WebGL.MVP.ViewLoad2D
- * @since 3.25.0
+ * @since 3.50.0
  *
  * @param {Phaser.Renderer.WebGL.Pipelines.ModelViewProjection} model - The Model View Projection object.
  * @param {Float32Array} matrix2D - The Matrix2D.

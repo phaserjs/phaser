@@ -8,7 +8,7 @@
  * Rotates the model matrix around the Y axis.
  *
  * @method Phaser.Renderer.WebGL.MVP.RotateY
- * @since 3.25.0
+ * @since 3.50.0
  *
  * @param {Phaser.Renderer.WebGL.Pipelines.ModelViewProjection} model - The Model View Projection object.
  * @param {number} radians - The amount to rotate by.
