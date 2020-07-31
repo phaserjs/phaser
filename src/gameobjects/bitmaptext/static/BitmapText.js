@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../../utils/Class');
+var Clamp = require('../../../math/Clamp');
 var Components = require('../../components');
 var GameObject = require('../../GameObject');
 var GetBitmapTextSize = require('../GetBitmapTextSize');
@@ -12,6 +13,16 @@ var ParseFromAtlas = require('../ParseFromAtlas');
 var ParseXMLBitmapFont = require('../ParseXMLBitmapFont');
 var Rectangle = require('../../../geom/rectangle/Rectangle');
 var Render = require('./BitmapTextRender');
+
+/**
+ * @function GetColor
+ * @since 3.0.0
+ * @private
+ */
+var GetColor = function (value)
+{
+    return (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
+};
 
 /**
  * @classdesc
@@ -204,6 +215,8 @@ var BitmapText = new Class({
          */
         this.wordWrapCharCode = 32;
 
+        this.charColors = [];
+
         this.setTexture(entry.texture, entry.frame);
         this.setPosition(x, y);
         this.setOrigin(0, 0);
@@ -339,6 +352,117 @@ var BitmapText = new Class({
             this._dirty = true;
 
             this.updateDisplayOrigin();
+        }
+
+        return this;
+    },
+
+    /**
+     * Sets a tint on a range of characters in this Bitmap Text, starting from the `start` parameter index
+     * and running for `length` quantity of characters.
+     * 
+     * The `start` parameter can be negative. In this case, it starts at the end of the text and counts
+     * backwards `start` places.
+     * 
+     * You can also pass in -1 as the `length` and it will tint all characters from `start`
+     * up until the end of the string.
+
+     * Remember that spaces and punctuation count as characters.
+     * 
+     * This is a WebGL only feature.
+     * 
+     * The tint works by taking the pixel color values from the Bitmap Text texture, and then
+     * multiplying it by the color value of the tint. You can provide either one color value,
+     * in which case the whole character will be tinted in that color. Or you can provide a color
+     * per corner. The colors are blended together across the extent of the character range.
+     * 
+     * To swap this from being an additive tint to a fill based tint, set the `tintFill` parameter to `true`.
+     * 
+     * To modify the tint color once set, call this method again with new color values.
+     * 
+     * To remove a tint call this method with just the `start`, and optionally, the `length` parameters defined.
+     *
+     * @method Phaser.GameObjects.BitmapText#setCharacterTint
+     * @webglOnly
+     * @since 3.50.0
+     *
+     * @param {number} [start=0] - The starting character to begin the tint at. If negative, it counts back from the end of the text.
+     * @param {number} [length=1] - The number of characters to tint. Remember that spaces count as a character too. Pass -1 to tint all characters from `start` onwards.
+     * @param {boolean} [tintFill=false] - Use a fill-based tint (true), or an additive tint (false)
+     * @param {integer} [topLeft=0xffffff] - The tint being applied to the top-left of the character. If not other values are given this value is applied evenly, tinting the whole character.
+     * @param {integer} [topRight] - The tint being applied to the top-right of the character.
+     * @param {integer} [bottomLeft] - The tint being applied to the bottom-left of the character.
+     * @param {integer} [bottomRight] - The tint being applied to the bottom-right of the character.
+     *
+     * @return {this} This BitmapText Object.
+     */
+    setCharacterTint: function (start, length, tintFill, topLeft, topRight, bottomLeft, bottomRight)
+    {
+        if (start === undefined) { start = 0; }
+        if (length === undefined) { length = 1; }
+        if (tintFill === undefined) { tintFill = false; }
+        if (topLeft === undefined) { topLeft = -1; }
+
+        if (topRight === undefined)
+        {
+            topRight = topLeft;
+            bottomLeft = topLeft;
+            bottomRight = topLeft;
+        }
+
+        var len = this.text.length;
+
+        if (length === -1)
+        {
+            length = len;
+        }
+
+        if (start < 0)
+        {
+            start = len + start;
+        }
+
+        start = Clamp(start, 0, len - 1);
+
+        var end = Clamp(start + length, start, len);
+
+        var charColors = this.charColors;
+
+        for (var i = start; i < end; i++)
+        {
+            var color = charColors[i];
+
+            if (topLeft === -1)
+            {
+                charColors[i] = null;
+            }
+            else
+            {
+                var tintEffect = (tintFill) ? 1 : 0;
+                var tintTL = GetColor(topLeft);
+                var tintTR = GetColor(topRight);
+                var tintBL = GetColor(bottomLeft);
+                var tintBR = GetColor(bottomRight);
+
+                if (color)
+                {
+                    color.tintEffect = tintEffect;
+                    color.tintTL = tintTL;
+                    color.tintTR = tintTR;
+                    color.tintBL = tintBL;
+                    color.tintBR = tintBR;
+                }
+                else
+                {
+                    charColors[i] = {
+                        tintEffect: tintEffect,
+                        tintTL: tintTL,
+                        tintTR: tintTR,
+                        tintBL: tintBL,
+                        tintBR: tintBR
+                    };
+                }
+            }
         }
 
         return this;
