@@ -487,11 +487,11 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
 
     if (updateOrigin)
     {
-        src._displayOriginX = src.originX * global.width;
-        src._displayOriginY = src.originY * global.height;
+        src._displayOriginX = (src.originX * local.width);
+        src._displayOriginY = (src.originY * local.height);
 
-        global.x = (src.x - src._displayOriginX) + (bx * sx);
-        global.y = (src.y - src._displayOriginY) + (by * sy);
+        global.x = src.x - (src._displayOriginX * src.scaleX);
+        global.y = src.y - (src._displayOriginY * src.scaleY);
 
         if (round)
         {
