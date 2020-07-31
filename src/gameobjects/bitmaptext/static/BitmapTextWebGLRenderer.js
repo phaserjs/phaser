@@ -64,137 +64,40 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
         camMatrix.multiply(spriteMatrix, calcMatrix);
     }
 
-    var frame = src.frame;
-    var texture = frame.glTexture;
-    var textureX = frame.cutX;
-    var textureY = frame.cutY;
-    var textureWidth = texture.width;
-    var textureHeight = texture.height;
+    var roundPixels = camera.roundPixels;
+
+    var cameraAlpha = camera.alpha;
 
     var tintEffect = (src._isTinted && src.tintFill);
-    var tintTL = Utils.getTintAppendFloatAlpha(src._tintTL, camera.alpha * src._alphaTL);
-    var tintTR = Utils.getTintAppendFloatAlpha(src._tintTR, camera.alpha * src._alphaTR);
-    var tintBL = Utils.getTintAppendFloatAlpha(src._tintBL, camera.alpha * src._alphaBL);
-    var tintBR = Utils.getTintAppendFloatAlpha(src._tintBR, camera.alpha * src._alphaBR);
 
+    var tintTL = Utils.getTintAppendFloatAlpha(src._tintTL, cameraAlpha * src._alphaTL);
+    var tintTR = Utils.getTintAppendFloatAlpha(src._tintTR, cameraAlpha * src._alphaTR);
+    var tintBL = Utils.getTintAppendFloatAlpha(src._tintBL, cameraAlpha * src._alphaBL);
+    var tintBR = Utils.getTintAppendFloatAlpha(src._tintBR, cameraAlpha * src._alphaBR);
+
+    var texture = src.frame.glTexture;
     var textureUnit = pipeline.setGameObject(src);
-
-    var xAdvance = 0;
-    var yAdvance = 0;
-    var charCode = 0;
-    var lastCharCode = 0;
-    var letterSpacing = src._letterSpacing;
-    var glyph;
-    var glyphX = 0;
-    var glyphY = 0;
-    var glyphW = 0;
-    var glyphH = 0;
-    var lastGlyph;
-
-    var fontData = src.fontData;
-    var chars = fontData.chars;
-    var lineHeight = fontData.lineHeight;
-    var scale = (src._fontSize / fontData.size);
-
-    var align = src._align;
-    var currentLine = 0;
-    var lineOffsetX = 0;
 
     //  Update the bounds - skipped internally if not dirty
     var bounds = src.getTextBounds(false);
 
-    //  In case the method above changed it (word wrapping)
-    if (src.maxWidth > 0)
+    var characters = bounds.characters;
+
+    for (var i = 0; i < characters.length; i++)
     {
-        text = bounds.wrappedText;
-        textLength = text.length;
-    }
+        var char = characters[i];
+        var glyph = char.glyph;
 
-    var lineData = src._bounds.lines;
-
-    if (align === 1)
-    {
-        lineOffsetX = (lineData.longest - lineData.lengths[0]) / 2;
-    }
-    else if (align === 2)
-    {
-        lineOffsetX = (lineData.longest - lineData.lengths[0]);
-    }
-
-    var roundPixels = camera.roundPixels;
-
-    for (var i = 0; i < textLength; i++)
-    {
-        charCode = text.charCodeAt(i);
-
-        //  Carriage-return
-        if (charCode === 10)
-        {
-            currentLine++;
-
-            if (align === 1)
-            {
-                lineOffsetX = (lineData.longest - lineData.lengths[currentLine]) / 2;
-            }
-            else if (align === 2)
-            {
-                lineOffsetX = (lineData.longest - lineData.lengths[currentLine]);
-            }
-
-            xAdvance = 0;
-            yAdvance += lineHeight;
-            lastGlyph = null;
-
-            continue;
-        }
-
-        glyph = chars[charCode];
-
-        if (!glyph)
+        if (char.code === 32 || glyph.width === 0 || glyph.height === 0)
         {
             continue;
         }
 
-        glyphX = textureX + glyph.x;
-        glyphY = textureY + glyph.y;
+        var x = char.x - src.displayOriginX;
+        var y = char.y - src.displayOriginY;
 
-        glyphW = glyph.width;
-        glyphH = glyph.height;
-
-        var x = glyph.xOffset + xAdvance;
-        var y = glyph.yOffset + yAdvance;
-
-        if (lastGlyph !== null)
-        {
-            var kerningOffset = glyph.kerning[lastCharCode];
-            x += (kerningOffset !== undefined) ? kerningOffset : 0;
-        }
-
-        xAdvance += glyph.xAdvance + letterSpacing;
-        lastGlyph = glyph;
-        lastCharCode = charCode;
-
-        //  Nothing to render or a space? Then skip to the next glyph
-        if (glyphW === 0 || glyphH === 0 || charCode === 32)
-        {
-            continue;
-        }
-
-        x *= scale;
-        y *= scale;
-
-        x -= src.displayOriginX;
-        y -= src.displayOriginY;
-
-        x += lineOffsetX;
-
-        var u0 = glyphX / textureWidth;
-        var v0 = glyphY / textureHeight;
-        var u1 = (glyphX + glyphW) / textureWidth;
-        var v1 = (glyphY + glyphH) / textureHeight;
-
-        var xw = x + (glyphW * scale);
-        var yh = y + (glyphH * scale);
+        var xw = x + char.w;
+        var yh = y + char.h;
 
         var tx0 = calcMatrix.getX(x, y);
         var ty0 = calcMatrix.getY(x, y);
@@ -223,11 +126,24 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
             ty3 = Math.round(ty3);
         }
 
+        if (char.isTinted)
+        {
+            var ctintEffect = char.tintEffect;
+            var ctintTL = Utils.getTintAppendFloatAlpha(char.tintTL, cameraAlpha * char.alphaTL);
+            var ctintTR = Utils.getTintAppendFloatAlpha(char.tintTR, cameraAlpha * char.alphaTR);
+            var ctintBL = Utils.getTintAppendFloatAlpha(char.tintBL, cameraAlpha * char.alphaBL);
+            var ctintBR = Utils.getTintAppendFloatAlpha(char.tintBR, cameraAlpha * char.alphaBR);
+
+            pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, glyph.u0, glyph.v0, glyph.u1, glyph.v1, ctintTL, ctintTR, ctintBL, ctintBR, ctintEffect, texture, textureUnit);
+        }
+        else
+        {
+            pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, glyph.u0, glyph.v0, glyph.u1, glyph.v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
+        }
+
         //  Debug test if the characters are in the correct place when rendered:
 
         // pipeline.drawFillRect(tx0, ty0, tx2 - tx0, ty2 - ty0, 0x00ff00, 0.5);
-
-        pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
     }
 };
 
