@@ -445,9 +445,6 @@ var BitmapText = new Class({
 
         this.getTextBounds(false);
 
-        // this._displayOriginX = this.originX * this.width;
-        // this._displayOriginY = this.originY * this.height;
-
         return this;
     },
 
