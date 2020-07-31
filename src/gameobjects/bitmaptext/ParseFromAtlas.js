@@ -32,7 +32,7 @@ var ParseFromAtlas = function (scene, fontName, textureKey, frameKey, xmlKey, xS
 
     if (frame && xml)
     {
-        var data = ParseXMLBitmapFont(xml, xSpacing, ySpacing, frame);
+        var data = ParseXMLBitmapFont(xml, frame, xSpacing, ySpacing);
 
         scene.sys.cache.bitmapFont.add(fontName, { data: data, texture: textureKey, frame: frameKey });
 

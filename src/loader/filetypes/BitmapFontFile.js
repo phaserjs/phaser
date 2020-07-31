@@ -99,7 +99,9 @@ var BitmapFontFile = new Class({
             image.addToCache();
             xml.addToCache();
 
-            this.loader.cacheManager.bitmapFont.add(image.key, { data: ParseXMLBitmapFont(xml.data), texture: image.key, frame: null });
+            var data = ParseXMLBitmapFont(xml.data, image.cache.getFrame(image.key));
+
+            this.loader.cacheManager.bitmapFont.add(image.key, { data: data, texture: image.key, frame: null });
 
             this.complete = true;
         }
