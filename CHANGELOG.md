@@ -136,6 +136,7 @@ If you used any of them in your code, please update to the new function names be
 * `BitmapText.dropShadowColor` is a new property that sets the color of the Bitmap Text drop shadow.
 * `BitmapText.dropShadowAlpha` is a new property that sets the alpha of the Bitmap Text drop shadow.
 * `BatchChar` is a new internal private function for batching a single character of a Bitmap Text to the pipeline.
+* If you give an invalid Bitmap Font key, the Bitmap Text object will now issue a `console.warn`.
 
 ### New Features
 
