@@ -692,7 +692,7 @@ var Tilemap = new Class({
                 sprite.x += offset.x;
                 sprite.y += offset.y;
 
-                if (obj.flippedHorizontal !== undefined || obj.flippedVertical !== undefined)
+                if (sprite.setFlip && (obj.flippedHorizontal !== undefined || obj.flippedVertical !== undefined))
                 {
                     sprite.setFlip(obj.flippedHorizontal, obj.flippedVertical);
                 }
