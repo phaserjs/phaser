@@ -381,6 +381,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
         }
 
         characters.push({
+            i: i,
             char: text[i],
             code: charCode,
             x: (glyph.xOffset + xAdvance) * scale,
@@ -388,16 +389,6 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
             w: glyph.width * scale,
             h: glyph.height * scale,
             line: currentLine,
-            isTinted: false,
-            tintEffect: 0,
-            tintTL: 0,
-            tintTR: 0,
-            tintBL: 0,
-            tintBR: 0,
-            alphaTL: 1,
-            alphaTR: 1,
-            alphaBL: 1,
-            alphaBR: 1,
             glyph: glyph
         });
 
