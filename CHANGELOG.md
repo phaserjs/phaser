@@ -135,6 +135,7 @@ If you used any of them in your code, please update to the new function names be
 * `BitmapText.dropShadowY` is a new property that controls the vertical offset of the drop shadow on the Bitmap Text.
 * `BitmapText.dropShadowColor` is a new property that sets the color of the Bitmap Text drop shadow.
 * `BitmapText.dropShadowAlpha` is a new property that sets the alpha of the Bitmap Text drop shadow.
+* `BatchChar` is a new internal private function for batching a single character of a Bitmap Text to the pipeline.
 
 ### New Features
 
