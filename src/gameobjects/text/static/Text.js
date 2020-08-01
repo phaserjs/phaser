@@ -19,11 +19,11 @@ var TextStyle = require('../TextStyle');
 /**
  * @classdesc
  * A Text Game Object.
- * 
+ *
  * Text objects work by creating their own internal hidden Canvas and then renders text to it using
  * the standard Canvas `fillText` API. It then creates a texture from this canvas which is rendered
  * to your game during the render pass.
- * 
+ *
  * Because it uses the Canvas API you can take advantage of all the features this offers, such as
  * applying gradient fills to the text, or strokes, shadows and more. You can also use custom fonts
  * loaded externally, such as Google or TypeKit Web fonts.
@@ -33,25 +33,28 @@ var TextStyle = require('../TextStyle');
  * or `setFontFamily`, e.g.:
  *
  * ```javascript
- * this.add.text(0, 0, 'Hello World', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
+ * this.add.text(0, 0, 'Hello World', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times,
+ *     serif' });
  * ```
  *
  * ```javascript
  * this.add.text(0, 0, 'Hello World', { font: '"Press Start 2P"' });
  * ```
  *
- * You can only display fonts that are currently loaded and available to the browser: therefore fonts must
- * be pre-loaded. Phaser does not do ths for you, so you will require the use of a 3rd party font loader,
- * or have the fonts ready available in the CSS on the page in which your Phaser game resides.
+ * You can only display fonts that are currently loaded and available to the browser: therefore
+ *     fonts must be pre-loaded. Phaser does not do ths for you, so you will require the use of a
+ *     3rd party font loader, or have the fonts ready available in the CSS on the page in which
+ *     your Phaser game resides.
  *
- * See {@link http://www.jordanm.co.uk/tinytype this compatibility table} for the available default fonts
- * across mobile browsers.
- * 
- * A note on performance: Every time the contents of a Text object changes, i.e. changing the text being
- * displayed, or the style of the text, it needs to remake the Text canvas, and if on WebGL, re-upload the
- * new texture to the GPU. This can be an expensive operation if used often, or with large quantities of
- * Text objects in your game. If you run into performance issues you would be better off using Bitmap Text
- * instead, as it benefits from batching and avoids expensive Canvas API calls.
+ * See {@link http://www.jordanm.co.uk/tinytype this compatibility table} for the available default
+ *     fonts across mobile browsers.
+ *
+ * A note on performance: Every time the contents of a Text object changes, i.e. changing the text
+ *     being displayed, or the style of the text, it needs to remake the Text canvas, and if on
+ *     WebGL, re-upload the new texture to the GPU. This can be an expensive operation if used
+ *     often, or with large quantities of Text objects in your game. If you run into performance
+ *     issues you would be better off using Bitmap Text instead, as it benefits from batching and
+ *     avoids expensive Canvas API calls.
  *
  * @class Text
  * @extends Phaser.GameObjects.GameObject
@@ -74,7 +77,8 @@ var TextStyle = require('../TextStyle');
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  *
- * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
+ * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can
+ *     only belong to one Scene at a time.
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
  * @param {(string|string[])} text - The text this Text object will display.
@@ -187,8 +191,9 @@ var Text = new Class({
         this._text = undefined;
 
         /**
-         * Specify a padding value which is added to the line width and height when calculating the Text size.
-         * Allows you to add extra spacing if the browser is unable to accurately determine the true font dimensions.
+         * Specify a padding value which is added to the line width and height when calculating the
+         * Text size. Allows you to add extra spacing if the browser is unable to accurately
+         * determine the true font dimensions.
          *
          * @name Phaser.GameObjects.Text#padding
          * @type {{left:number,right:number,top:number,bottom:number}}
@@ -220,9 +225,10 @@ var Text = new Class({
          * The line spacing value.
          * This value is added to the font height to calculate the overall line height.
          * Only has an effect if this Text object contains multiple lines of text.
-         * 
+         *
          * If you update this property directly, instead of using the `setLineSpacing` method, then
-         * be sure to call `updateText` after, or you won't see the change reflected in the Text object.
+         * be sure to call `updateText` after, or you won't see the change reflected in the Text
+         * object.
          *
          * @name Phaser.GameObjects.Text#lineSpacing
          * @type {number}
@@ -247,7 +253,8 @@ var Text = new Class({
         }
 
         /**
-         * The internal crop data object, as used by `setCrop` and passed to the `Frame.setCropUVs` method.
+         * The internal crop data object, as used by `setCrop` and passed to the `Frame.setCropUVs`
+         * method.
          *
          * @name Phaser.GameObjects.Text#_crop
          * @type {object}
@@ -450,9 +457,7 @@ var Text = new Class({
                         }
 
                         // Replace current word in array with remainder
-                        var secondPart = word.substr(newWord.length);
-
-                        words[j] = secondPart;
+                        words[j] = word.substr(newWord.length);
 
                         // Append first piece to output
                         out += newWord;
@@ -562,7 +567,8 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#getWrappedText
      * @since 3.0.0
      *
-     * @param {string} text - The text for which the wrapping will be calculated. If unspecified, the Text objects current text will be used.
+     * @param {string} text - The text for which the wrapping will be calculated. If unspecified,
+     *     the Text objects current text will be used.
      *
      * @return {string[]} An array of strings with the pieces of wrapped text.
      */
@@ -585,7 +591,8 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setText
      * @since 3.0.0
      *
-     * @param {(string|string[])} value - The string, or array of strings, to be set as the content of this Text object.
+     * @param {(string|string[])} value - The string, or array of strings, to be set as the content
+     *     of this Text object.
      *
      * @return {this} This Text object.
      */
@@ -680,10 +687,10 @@ var Text = new Class({
      * ```javascript
      * Text.setFont('"Press Start 2P"');
      * ```
-     * 
+     *
      * Equally, if you wish to provide a list of fallback fonts, then you should ensure they are all
      * quoted properly, too:
-     * 
+     *
      * ```javascript
      * Text.setFont('Georgia, "Goudy Bookletter 1911", Times, serif');
      * ```
@@ -771,12 +778,15 @@ var Text = new Class({
      * This can be any valid CanvasRenderingContext2D fillStyle value, such as
      * a color (in hex, rgb, rgba, hsl or named values), a gradient or a pattern.
      *
-     * See the [MDN fillStyle docs](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillStyle) for more details.
+     * See the [MDN fillStyle
+     * docs](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillStyle)
+     * for more details.
      *
      * @method Phaser.GameObjects.Text#setFill
      * @since 3.0.0
      *
-     * @param {(string|any)} color - The text fill style. Can be any valid CanvasRenderingContext `fillStyle` value.
+     * @param {(string|any)} fillStyle - The text fill style. Can be any valid
+     *     CanvasRenderingContext `fillStyle` value.
      *
      * @return {this} This Text object.
      */
@@ -913,12 +923,14 @@ var Text = new Class({
     },
 
     /**
-     * Set the width (in pixels) to use for wrapping lines. Pass in null to remove wrapping by width.
+     * Set the width (in pixels) to use for wrapping lines. Pass in null to remove wrapping by
+     * width.
      *
      * @method Phaser.GameObjects.Text#setWordWrapWidth
      * @since 3.0.0
      *
-     * @param {?number} width - The maximum width of a line in pixels. Set to null to remove wrapping.
+     * @param {?number} width - The maximum width of a line in pixels. Set to null to remove
+     *     wrapping.
      * @param {boolean} [useAdvancedWrap=false] - Whether or not to use the advanced wrapping
      * algorithm. If true, spaces are collapsed and whitespace is trimmed from lines. If false,
      * spaces and whitespace are left as is.
@@ -936,10 +948,10 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setWordWrapCallback
      * @since 3.0.0
      *
-     * @param {TextStyleWordWrapCallback} callback - A custom function that will be responsible for wrapping the
-     * text. It will receive two arguments: text (the string to wrap), textObject (this Text
-     * instance). It should return the wrapped lines either as an array of lines or as a string with
-     * newline characters in place to indicate where breaks should happen.
+     * @param {TextStyleWordWrapCallback} callback - A custom function that will be responsible for
+     *     wrapping the text. It will receive two arguments: text (the string to wrap), textObject
+     *     (this Text instance). It should return the wrapped lines either as an array of lines or
+     *     as a string with newline characters in place to indicate where breaks should happen.
      * @param {object} [scope=null] - The scope that will be applied when the callback is invoked.
      *
      * @return {this} This Text object.
@@ -951,9 +963,9 @@ var Text = new Class({
 
     /**
      * Set the alignment of the text in this Text object.
-     * 
+     *
      * The argument can be one of: `left`, `right`, `center` or `justify`.
-     * 
+     *
      * Alignment only works if the Text object has more than one line of text.
      *
      * @method Phaser.GameObjects.Text#setAlign
@@ -972,12 +984,14 @@ var Text = new Class({
      * Set the resolution used by this Text object.
      *
      * By default it will be set to match the resolution set in the Game Config,
-     * but you can override it via this method, or by specifying it in the Text style configuration object.
-     * 
-     * It allows for much clearer text on High DPI devices, at the cost of memory because it uses larger
-     * internal Canvas textures for the Text.
-     * 
-     * Therefore, please use with caution, as the more high res Text you have, the more memory it uses.
+     * but you can override it via this method, or by specifying it in the Text style configuration
+     * object.
+     *
+     * It allows for much clearer text on High DPI devices, at the cost of memory because it uses
+     * larger internal Canvas textures for the Text.
+     *
+     * Therefore, please use with caution, as the more high res Text you have, the more memory it
+     * uses.
      *
      * @method Phaser.GameObjects.Text#setResolution
      * @since 3.12.0
@@ -1000,7 +1014,8 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setLineSpacing
      * @since 3.13.0
      *
-     * @param {number} value - The amount to add to the font height to achieve the overall line height.
+     * @param {number} value - The amount to add to the font height to achieve the overall line
+     *     height.
      *
      * @return {this} This Text object.
      */
@@ -1021,7 +1036,8 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setPadding
      * @since 3.0.0
      *
-     * @param {(number|Phaser.Types.GameObjects.Text.TextPadding)} left - The left padding value, or a padding config object.
+     * @param {(number|Phaser.Types.GameObjects.Text.TextPadding)} left - The left padding value,
+     *     or a padding config object.
      * @param {number} top - The top padding value.
      * @param {number} right - The right padding value.
      * @param {number} bottom - The bottom padding value.
@@ -1233,9 +1249,9 @@ var Text = new Class({
                     var spaceSize = context.measureText(' ').width;
                     var trimmedLine = lines[i].trim();
                     var array = trimmedLine.split(' ');
-            
+
                     extraSpace += (lines[i].length - trimmedLine.length) * spaceSize;
-            
+
                     var extraSpaceCharacters = Math.floor(extraSpace / spaceSize);
                     var idx = 0;
 
@@ -1245,7 +1261,7 @@ var Text = new Class({
                         idx = (idx + 1) % (array.length - 1 || 1);
                         --extraSpaceCharacters;
                     }
-            
+
                     lines[i] = array.join(' ');
                 }
             }
@@ -1341,7 +1357,7 @@ var Text = new Class({
 
         //  Extra Text data is added here
 
-        var data = {
+        out.data = {
             autoRound: this.autoRound,
             text: this._text,
             style: this.style.toJSON(),
@@ -1352,8 +1368,6 @@ var Text = new Class({
                 bottom: this.padding.bottom
             }
         };
-
-        out.data = data;
 
         return out;
     },
