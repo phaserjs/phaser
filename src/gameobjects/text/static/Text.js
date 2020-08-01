@@ -785,8 +785,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setFill
      * @since 3.0.0
      *
-     * @param {(string|any)} fillStyle - The text fill style. Can be any valid
-     *     CanvasRenderingContext `fillStyle` value.
+     * @param {(string|any)} fillStyle - The text fill style. Can be any valid CanvasRenderingContext `fillStyle` value.
      *
      * @return {this} This Text object.
      */
