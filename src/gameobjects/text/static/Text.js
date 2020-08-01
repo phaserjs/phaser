@@ -191,7 +191,7 @@ var Text = new Class({
          * Allows you to add extra spacing if the browser is unable to accurately determine the true font dimensions.
          *
          * @name Phaser.GameObjects.Text#padding
-         * @type {{left:number,right:number,top:number,bottom:number}}
+         * @type {Phaser.Types.GameObjects.Text.TextPadding}
          * @since 3.0.0
          */
         this.padding = { left: 0, right: 0, top: 0, bottom: 0 };
