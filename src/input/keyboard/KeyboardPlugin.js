@@ -744,10 +744,6 @@ var KeyboardPlugin = new Class({
                     if (KeyMap[code])
                     {
                         this.emit(Events.KEY_DOWN + KeyMap[code], event);
-
-                        //  Deprecated, kept in for compatibility with 3.15
-                        //  To be removed by 3.20.
-                        this.emit('keydown_' + KeyMap[code], event);
                     }
 
                     if (!event.cancelled)
@@ -769,10 +765,6 @@ var KeyboardPlugin = new Class({
                     if (KeyMap[code])
                     {
                         this.emit(Events.KEY_UP + KeyMap[code], event);
-
-                        //  Deprecated, kept in for compatibility with 3.15
-                        //  To be removed by 3.20.
-                        this.emit('keyup_' + KeyMap[code], event);
                     }
 
                     if (!event.cancelled)
