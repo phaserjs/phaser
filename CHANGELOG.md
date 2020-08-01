@@ -111,12 +111,6 @@ If you used any of them in your code, please update to the new function names be
 * `projOrtho` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ProjectOrtho`
 * `Phaser.Renderer.WebGL.MVP.SetIdentity` is a new function the others use, to save on space.
 
-
-
-
-
-
-
 ### BitmapText New Features, Updates and API Changes
 
 * `BitmapText.setCharacterTint` is a new method that allows you to set a tint color (either additive, or fill) on a specific range of characters within a static Bitmap Text. You can specify the start and length offsets and a per-corner tint color.
@@ -148,6 +142,7 @@ If you used any of them in your code, please update to the new function names be
 * `Phaser.Types.Math.Vector3Like` is a new data type representing as Vector 3 like object.
 * `Phaser.Types.Math.Vector4Like` is a new data type representing as Vector 4 like object.
 * `Transform.getLocalPoint` is a new method, available on all Game Objects, that takes an `x` / `y` pair and translates them into the local space of the Game Object, factoring in parent transforms and display origins.
+* The `KeyboardPlugin` will now track the key code and timestamp of the previous key pressed and compare it to the current event. If they match, it will skip the event. On some systems if you were to type quickly, you would sometimes get duplicate key events firing (the exact same event firing more than once). This is now prevented from happening.
 
 ### Updates and API Changes
 
@@ -159,11 +154,14 @@ If you used any of them in your code, please update to the new function names be
 * The `TextureTintStripPipeline` now extends `TextureTintPipeline` and just changes the topolgy, vastly reducing the filesize.
 * `TransformMatrix.getXRound` is a new method that will return the X component, optionally passed via `Math.round`.
 * `TransformMatrix.getYRound` is a new method that will return the Y component, optionally passed via `Math.round`.
+* The `KeyboardPlugin` no longer emits `keydown_` events. These were replaced with `keydown-` events in v3.15. The previous event string was deprecated in v3.20.
+* The `KeyboardPlugin` no longer emits `keyup_` events. These were replaced with `keyup-` events in v3.15. The previous event string was deprecated in v3.20.
 
 ### Bug Fixes
 
 * `RenderTexture.resize` (which is called from `setSize`) wouldn't correctly set the `TextureSource.glTexture` property, leading to `bindTexture: attempt to use a deleted object` errors under WebGL.
 * The `MatterAttractors` plugin, which enables attractors between bodies, has been fixed. The original plugin only worked if the body with the attractor was _first_ in the world bodies list. It can now attract any body, no matter where in the world list it is. Fix #5160 (thanks @strahius)
+* The `KeyboardManager` and `KeyboardPlugin` were both still checking for the `InputManager.useQueue` property, which was removed several versions ago.
 
 ### Examples, Documentation and TypeScript
 

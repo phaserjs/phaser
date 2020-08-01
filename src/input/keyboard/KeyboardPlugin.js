@@ -146,6 +146,26 @@ var KeyboardPlugin = new Class({
          */
         this.combos = [];
 
+        /**
+         * Internal repeat key flag.
+         *
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#prevCode
+         * @type {string}
+         * @private
+         * @since 3.50.0
+         */
+        this.prevCode = null;
+
+        /**
+         * Internal repeat key flag.
+         *
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#prevTime
+         * @type {number}
+         * @private
+         * @since 3.50.0
+         */
+        this.prevTime = 0;
+
         sceneInputPlugin.pluginEvents.once(InputEvents.BOOT, this.boot, this);
         sceneInputPlugin.pluginEvents.on(InputEvents.START, this.start, this);
     },
@@ -185,14 +205,7 @@ var KeyboardPlugin = new Class({
      */
     start: function ()
     {
-        if (this.sceneInputPlugin.manager.useQueue)
-        {
-            this.sceneInputPlugin.pluginEvents.on(InputEvents.UPDATE, this.update, this);
-        }
-        else
-        {
-            this.sceneInputPlugin.manager.events.on(InputEvents.MANAGER_PROCESS, this.update, this);
-        }
+        this.sceneInputPlugin.manager.events.on(InputEvents.MANAGER_PROCESS, this.update, this);
 
         this.sceneInputPlugin.pluginEvents.once(InputEvents.SHUTDOWN, this.shutdown, this);
 
@@ -729,6 +742,16 @@ var KeyboardPlugin = new Class({
                 continue;
             }
 
+            //  Duplicate event bailout
+            if (code === this.prevCode && event.timeStamp === this.prevTime)
+            {
+                //  On some systems, the exact same event will fire multiple times. This prevents it.
+                continue;
+            }
+
+            this.prevCode = code;
+            this.prevTime = event.timeStamp;
+
             if (event.type === 'keydown')
             {
                 //  Key specific callback first
@@ -744,10 +767,6 @@ var KeyboardPlugin = new Class({
                     if (KeyMap[code])
                     {
                         this.emit(Events.KEY_DOWN + KeyMap[code], event);
-
-                        //  Deprecated, kept in for compatibility with 3.15
-                        //  To be removed by 3.20.
-                        this.emit('keydown_' + KeyMap[code], event);
                     }
 
                     if (!event.cancelled)
@@ -769,10 +788,6 @@ var KeyboardPlugin = new Class({
                     if (KeyMap[code])
                     {
                         this.emit(Events.KEY_UP + KeyMap[code], event);
-
-                        //  Deprecated, kept in for compatibility with 3.15
-                        //  To be removed by 3.20.
-                        this.emit('keyup_' + KeyMap[code], event);
                     }
 
                     if (!event.cancelled)
@@ -834,14 +849,7 @@ var KeyboardPlugin = new Class({
     {
         this.resetKeys();
 
-        if (this.sceneInputPlugin.manager.useQueue)
-        {
-            this.sceneInputPlugin.pluginEvents.off(InputEvents.UPDATE, this.update, this);
-        }
-        else
-        {
-            this.sceneInputPlugin.manager.events.off(InputEvents.MANAGER_PROCESS, this.update, this);
-        }
+        this.sceneInputPlugin.manager.events.off(InputEvents.MANAGER_PROCESS, this.update, this);
 
         this.game.events.off(GameEvents.BLUR, this.resetKeys);
 
