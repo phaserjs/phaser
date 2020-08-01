@@ -111,12 +111,6 @@ If you used any of them in your code, please update to the new function names be
 * `projOrtho` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ProjectOrtho`
 * `Phaser.Renderer.WebGL.MVP.SetIdentity` is a new function the others use, to save on space.
 
-
-
-
-
-
-
 ### BitmapText New Features, Updates and API Changes
 
 * `BitmapText.setCharacterTint` is a new method that allows you to set a tint color (either additive, or fill) on a specific range of characters within a static Bitmap Text. You can specify the start and length offsets and a per-corner tint color.
@@ -159,6 +153,8 @@ If you used any of them in your code, please update to the new function names be
 * The `TextureTintStripPipeline` now extends `TextureTintPipeline` and just changes the topolgy, vastly reducing the filesize.
 * `TransformMatrix.getXRound` is a new method that will return the X component, optionally passed via `Math.round`.
 * `TransformMatrix.getYRound` is a new method that will return the Y component, optionally passed via `Math.round`.
+* The `KeyboardPlugin` no longer emits `keydown_` events. These were replaced with `keydown-` events in v3.15. The previous event string was deprecated in v3.20.
+* The `KeyboardPlugin` no longer emits `keyup_` events. These were replaced with `keyup-` events in v3.15. The previous event string was deprecated in v3.20.
 
 ### Bug Fixes
 
