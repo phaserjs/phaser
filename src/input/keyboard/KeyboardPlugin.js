@@ -146,7 +146,24 @@ var KeyboardPlugin = new Class({
          */
         this.combos = [];
 
-        this.prevCode = 0;
+        /**
+         * Internal repeat key flag.
+         *
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#prevCode
+         * @type {string}
+         * @private
+         * @since 3.50.0
+         */
+        this.prevCode = null;
+
+        /**
+         * Internal repeat key flag.
+         *
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#prevTime
+         * @type {number}
+         * @private
+         * @since 3.50.0
+         */
         this.prevTime = 0;
 
         sceneInputPlugin.pluginEvents.once(InputEvents.BOOT, this.boot, this);
@@ -724,6 +741,16 @@ var KeyboardPlugin = new Class({
                 //  This event has been stopped from broadcasting to any other Scene, so abort.
                 continue;
             }
+
+            //  Duplicate event bailout
+            if (code === this.prevCode && event.timeStamp === this.prevTime)
+            {
+                //  On some systems, the exact same event will fire multiple times. This prevents it.
+                continue;
+            }
+
+            this.prevCode = code;
+            this.prevTime = event.timeStamp;
 
             if (event.type === 'keydown')
             {
