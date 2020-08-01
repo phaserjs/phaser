@@ -78,6 +78,18 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
     var tintBL = Utils.getTintAppendFloatAlpha(src._tintBL, cameraAlpha * src._alphaBL);
     var tintBR = Utils.getTintAppendFloatAlpha(src._tintBR, cameraAlpha * src._alphaBR);
 
+    var texture = src.frame.glTexture;
+    var textureUnit = pipeline.setGameObject(src);
+
+    //  Update the bounds - skipped internally if not dirty
+    var bounds = src.getTextBounds(false);
+
+    var i;
+    var char;
+    var glyph;
+
+    var characters = bounds.characters;
+
     var dropShadowX = src.dropShadowX;
     var dropShadowY = src.dropShadowY;
 
@@ -85,33 +97,33 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
 
     if (dropShadow)
     {
-        var blackTL = Utils.getTintAppendFloatAlpha(src.dropShadowColor, cameraAlpha * src.dropShadowAlpha * src._alphaTL);
-        var blackTR = Utils.getTintAppendFloatAlpha(src.dropShadowColor, cameraAlpha * src.dropShadowAlpha * src._alphaTR);
-        var blackBL = Utils.getTintAppendFloatAlpha(src.dropShadowColor, cameraAlpha * src.dropShadowAlpha * src._alphaBL);
-        var blackBR = Utils.getTintAppendFloatAlpha(src.dropShadowColor, cameraAlpha * src.dropShadowAlpha * src._alphaBR);
+        var blackTL = Utils.getTintAppendFloatAlpha(src._dropShadowColorGL, cameraAlpha * src.dropShadowAlpha * src._alphaTL);
+        var blackTR = Utils.getTintAppendFloatAlpha(src._dropShadowColorGL, cameraAlpha * src.dropShadowAlpha * src._alphaTR);
+        var blackBL = Utils.getTintAppendFloatAlpha(src._dropShadowColorGL, cameraAlpha * src.dropShadowAlpha * src._alphaBL);
+        var blackBR = Utils.getTintAppendFloatAlpha(src._dropShadowColorGL, cameraAlpha * src.dropShadowAlpha * src._alphaBR);
+
+        for (i = 0; i < characters.length; i++)
+        {
+            char = characters[i];
+            glyph = char.glyph;
+
+            if (char.code === 32 || glyph.width === 0 || glyph.height === 0)
+            {
+                continue;
+            }
+
+            BatchChar(pipeline, src, char, glyph, dropShadowX, dropShadowY, calcMatrix, roundPixels, blackTL, blackTR, blackBL, blackBR, 0, texture, textureUnit);
+        }
     }
 
-    var texture = src.frame.glTexture;
-    var textureUnit = pipeline.setGameObject(src);
-
-    //  Update the bounds - skipped internally if not dirty
-    var bounds = src.getTextBounds(false);
-
-    var characters = bounds.characters;
-
-    for (var i = 0; i < characters.length; i++)
+    for (i = 0; i < characters.length; i++)
     {
-        var char = characters[i];
-        var glyph = char.glyph;
+        char = characters[i];
+        glyph = char.glyph;
 
         if (char.code === 32 || glyph.width === 0 || glyph.height === 0)
         {
             continue;
-        }
-
-        if (dropShadow)
-        {
-            BatchChar(pipeline, src, char, glyph, dropShadowX, dropShadowY, calcMatrix, roundPixels, blackTL, blackTR, blackBL, blackBR, 0, texture, textureUnit);
         }
 
         if (charColors[char.i])
