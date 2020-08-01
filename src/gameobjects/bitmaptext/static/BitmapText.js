@@ -232,7 +232,7 @@ var BitmapText = new Class({
 
         /**
          * The horizontal offset of the drop shadow.
-         * 
+         *
          * You can set this directly, or use `Phaser.GameObjects.BitmapText#setDropShadow`.
          *
          * @name Phaser.GameObjects.BitmapText#dropShadowX
@@ -243,7 +243,7 @@ var BitmapText = new Class({
 
         /**
          * The vertical offset of the drop shadow.
-         * 
+         *
          * You can set this directly, or use `Phaser.GameObjects.BitmapText#setDropShadow`.
          *
          * @name Phaser.GameObjects.BitmapText#dropShadowY
@@ -254,18 +254,27 @@ var BitmapText = new Class({
 
         /**
          * The color of the drop shadow.
-         * 
-         * Set this via `Phaser.GameObjects.BitmapText#setDropShadow`.
          *
-         * @name Phaser.GameObjects.BitmapText#dropShadowColor
+         * @name Phaser.GameObjects.BitmapText#_dropShadowColor
          * @type {number}
+         * @private
          * @since 3.50.0
          */
-        this.dropShadowColor = 0x000000;
+        this._dropShadowColor = 0x000000;
+
+        /**
+         * The GL encoded color of the drop shadow.
+         *
+         * @name Phaser.GameObjects.BitmapText#_dropShadowColorGL
+         * @type {number}
+         * @private
+         * @since 3.50.0
+         */
+        this._dropShadowColorGL = 0x000000;
 
         /**
          * The alpha value of the drop shadow.
-         * 
+         *
          * You can set this directly, or use `Phaser.GameObjects.BitmapText#setDropShadow`.
          *
          * @name Phaser.GameObjects.BitmapText#dropShadowAlpha
@@ -416,14 +425,14 @@ var BitmapText = new Class({
 
     /**
      * Sets a drop shadow effect on this Bitmap Text.
-     * 
+     *
      * This is a WebGL only feature and only works with Static Bitmap Text, not Dynamic.
-     * 
+     *
      * You can set the vertical and horizontal offset of the shadow, as well as the color and alpha.
-     * 
+     *
      * Once a shadow has been enabled you can modify the `dropShadowX` and `dropShadowY` properties of this
      * Bitmap Text directly to adjust the position of the shadow in real-time.
-     * 
+     *
      * If you wish to clear the shadow, call this method with no parameters specified.
      *
      * @method Phaser.GameObjects.BitmapText#setDropShadow
@@ -446,8 +455,8 @@ var BitmapText = new Class({
 
         this.dropShadowX = x;
         this.dropShadowY = y;
-        this.dropShadowColor = GetColor(color);
         this.dropShadowAlpha = alpha;
+        this.dropShadowColor = color;
 
         return this;
     },
@@ -455,28 +464,28 @@ var BitmapText = new Class({
     /**
      * Sets a tint on a range of characters in this Bitmap Text, starting from the `start` parameter index
      * and running for `length` quantity of characters.
-     * 
+     *
      * The `start` parameter can be negative. In this case, it starts at the end of the text and counts
      * backwards `start` places.
-     * 
+     *
      * You can also pass in -1 as the `length` and it will tint all characters from `start`
      * up until the end of the string.
 
      * Remember that spaces and punctuation count as characters.
-     * 
+     *
      * This is a WebGL only feature and only works with Static Bitmap Text, not Dynamic.
-     * 
+     *
      * The tint works by taking the pixel color values from the Bitmap Text texture, and then
      * multiplying it by the color value of the tint. You can provide either one color value,
      * in which case the whole character will be tinted in that color. Or you can provide a color
      * per corner. The colors are blended together across the extent of the character range.
-     * 
+     *
      * To swap this from being an additive tint to a fill based tint, set the `tintFill` parameter to `true`.
-     * 
+     *
      * To modify the tint color once set, call this method again with new color values.
-     * 
+     *
      * Using `setWordTint` can override tints set by this function, and vice versa.
-     * 
+     *
      * To remove a tint call this method with just the `start`, and optionally, the `length` parameters defined.
      *
      * @method Phaser.GameObjects.BitmapText#setCharacterTint
@@ -567,29 +576,29 @@ var BitmapText = new Class({
 
     /**
      * Sets a tint on a matching word within this Bitmap Text.
-     * 
+     *
      * The `word` parameter can be either a string or a number.
-     * 
+     *
      * If a string, it will run a string comparison against the text contents, and if matching,
      * it will tint the whole word.
-     * 
+     *
      * If a number, if till that word, based on its offset within the text contents.
-     * 
+     *
      * The `count` parameter controls how many words are replaced. Pass in -1 to replace them all.
-     * 
+     *
      * This parameter is ignored if you pass a number as the `word` to be searched for.
-     * 
+     *
      * This is a WebGL only feature and only works with Static Bitmap Text, not Dynamic.
-     * 
+     *
      * The tint works by taking the pixel color values from the Bitmap Text texture, and then
      * multiplying it by the color value of the tint. You can provide either one color value,
      * in which case the whole character will be tinted in that color. Or you can provide a color
      * per corner. The colors are blended together across the extent of the character range.
-     * 
+     *
      * To swap this from being an additive tint to a fill based tint, set the `tintFill` parameter to `true`.
-     * 
+     *
      * To modify the tint color once set, call this method again with new color values.
-     * 
+     *
      * Using `setCharacterTint` can override tints set by this function, and vice versa.
      *
      * @method Phaser.GameObjects.BitmapText#setWordTint
@@ -985,6 +994,31 @@ var BitmapText = new Class({
             this.getTextBounds(false);
 
             return this._bounds.global.height;
+        }
+
+    },
+
+    /**
+     * The color of the drop shadow.
+     *
+     * You can also set this via `Phaser.GameObjects.BitmapText#setDropShadow`.
+     *
+     * @name Phaser.GameObjects.BitmapText#dropShadowColor
+     * @type {number}
+     * @since 3.50.0
+     */
+    dropShadowColor: {
+
+        get: function ()
+        {
+            return this._dropShadowColor;
+        },
+
+        set: function (value)
+        {
+            this._dropShadowColor = value;
+
+            this._dropShadowColorGL = GetColor(value);
         }
 
     },
