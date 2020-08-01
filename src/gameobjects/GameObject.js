@@ -58,9 +58,9 @@ var GameObject = new Class({
 
         /**
          * The current state of this Game Object.
-         * 
+         *
          * Phaser itself will never modify this value, although plugins may do so.
-         * 
+         *
          * Use this property to track the state of a Game Object during its lifetime. For example, it could change from
          * a state of 'moving', to 'attacking', to 'dead'. The state value should be an integer (ideally mapped to a constant
          * in your game code), or a string. These are recommended to keep it light and simple, with fast comparisons.
@@ -230,9 +230,9 @@ var GameObject = new Class({
 
     /**
      * Sets the current state of this Game Object.
-     * 
+     *
      * Phaser itself will never modify the State of a Game Object, although plugins may do so.
-     * 
+     *
      * For example, a Game Object could change from a state of 'moving', to 'attacking', to 'dead'.
      * The state value should typically be an integer (ideally mapped to a constant
      * in your game code), but could also be a string. It is recommended to keep it light and simple.
@@ -337,7 +337,7 @@ var GameObject = new Class({
      * before setting the value.
      *
      * If the key doesn't already exist in the Data Manager then it is created.
-     * 
+     *
      * When the value is first set, a `setdata` event is emitted from this Game Object.
      *
      * @method Phaser.GameObjects.GameObject#incData
@@ -367,7 +367,7 @@ var GameObject = new Class({
      * before setting the value.
      *
      * If the key doesn't already exist in the Data Manager then it is created.
-     * 
+     *
      * When the value is first set, a `setdata` event is emitted from this Game Object.
      *
      * @method Phaser.GameObjects.GameObject#toggleData
@@ -496,7 +496,7 @@ var GameObject = new Class({
      * If you wish to only temporarily stop an object from receiving input then use
      * `disableInteractive` instead, as that toggles the interactive state, where-as
      * this erases it completely.
-     * 
+     *
      * If you wish to resize a hit area, don't remove and then set it as being
      * interactive. Instead, access the hitarea object directly and resize the shape
      * being used. I.e.: `sprite.input.hitArea.setSize(width, height)` (assuming the
@@ -662,6 +662,12 @@ var GameObject = new Class({
         {
             this.body.destroy();
             this.body = undefined;
+        }
+
+        if (this.mask)
+        {
+            this.mask.destroy();
+            this.mask = undefined;
         }
 
         //  Tell the Scene to re-sort the children
