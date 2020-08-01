@@ -146,6 +146,9 @@ var KeyboardPlugin = new Class({
          */
         this.combos = [];
 
+        this.prevCode = 0;
+        this.prevTime = 0;
+
         sceneInputPlugin.pluginEvents.once(InputEvents.BOOT, this.boot, this);
         sceneInputPlugin.pluginEvents.on(InputEvents.START, this.start, this);
     },
@@ -185,14 +188,7 @@ var KeyboardPlugin = new Class({
      */
     start: function ()
     {
-        if (this.sceneInputPlugin.manager.useQueue)
-        {
-            this.sceneInputPlugin.pluginEvents.on(InputEvents.UPDATE, this.update, this);
-        }
-        else
-        {
-            this.sceneInputPlugin.manager.events.on(InputEvents.MANAGER_PROCESS, this.update, this);
-        }
+        this.sceneInputPlugin.manager.events.on(InputEvents.MANAGER_PROCESS, this.update, this);
 
         this.sceneInputPlugin.pluginEvents.once(InputEvents.SHUTDOWN, this.shutdown, this);
 
@@ -826,14 +822,7 @@ var KeyboardPlugin = new Class({
     {
         this.resetKeys();
 
-        if (this.sceneInputPlugin.manager.useQueue)
-        {
-            this.sceneInputPlugin.pluginEvents.off(InputEvents.UPDATE, this.update, this);
-        }
-        else
-        {
-            this.sceneInputPlugin.manager.events.off(InputEvents.MANAGER_PROCESS, this.update, this);
-        }
+        this.sceneInputPlugin.manager.events.off(InputEvents.MANAGER_PROCESS, this.update, this);
 
         this.game.events.off(GameEvents.BLUR, this.resetKeys);
 
