@@ -48,12 +48,6 @@ var GridAlign = function (items, options)
     var w = (width * cellWidth);
     var h = (height * cellHeight);
 
-    console.log(widthSet, heightSet);
-    console.log(width, height);
-    console.log(cellWidth, cellHeight);
-    console.log(position, x, y);
-    console.log(w, h);
-
     tempZone.setPosition(x, y);
     tempZone.setSize(cellWidth, cellHeight);
 
