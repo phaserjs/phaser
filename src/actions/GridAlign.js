@@ -48,6 +48,12 @@ var GridAlign = function (items, options)
     var w = (width * cellWidth);
     var h = (height * cellHeight);
 
+    console.log(widthSet, heightSet);
+    console.log(width, height);
+    console.log(cellWidth, cellHeight);
+    console.log(position, x, y);
+    console.log(w, h);
+
     tempZone.setPosition(x, y);
     tempZone.setSize(cellWidth, cellHeight);
 
@@ -65,9 +71,8 @@ var GridAlign = function (items, options)
             //  We keep laying them out vertically until we've done them all
             tempZone.y += cellHeight;
         }
-        else
+        else if (widthSet)
         {
-            //  We keep laying them out until we hit the column limit
             cx += cellWidth;
             tempZone.x += cellWidth;
 
@@ -79,6 +84,25 @@ var GridAlign = function (items, options)
                 tempZone.y += cellHeight;
 
                 if (cy === h)
+                {
+                    //  We've hit the column limit, so return, even if there are items left
+                    break;
+                }
+            }
+        }
+        else if (heightSet)
+        {
+            cy += cellHeight;
+            tempZone.y += cellHeight;
+
+            if (cy === h)
+            {
+                cy = 0;
+                cx += cellWidth;
+                tempZone.y = y;
+                tempZone.x += cellWidth;
+
+                if (cx === w)
                 {
                     //  We've hit the column limit, so return, even if there are items left
                     break;
