@@ -442,18 +442,27 @@ var GameObject = new Class({
      *
      * You can also provide an Input Configuration Object as the only argument to this method.
      *
+     * @example
+     * sprite.setInteractive();
+     *
+     * @example
+     * sprite.setInteractive(new Phaser.Geom.Circle(45, 46, 45), Phaser.Geom.Circle.Contains);
+     *
+     * @example
+     * graphics.setInteractive(new Phaser.Geom.Rectangle(0, 0, 128, 128), Phaser.Geom.Rectangle.Contains);
+     *
      * @method Phaser.GameObjects.GameObject#setInteractive
      * @since 3.0.0
      *
-     * @param {(Phaser.Types.Input.InputConfiguration|any)} [shape] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
-     * @param {Phaser.Types.Input.HitAreaCallback} [callback] - A callback to be invoked when the Game Object is interacted with. If you provide a shape you must also provide a callback.
+     * @param {(Phaser.Types.Input.InputConfiguration|any)} [hitArea] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not given it will try to create a Rectangle based on the texture frame.
+     * @param {Phaser.Types.Input.HitAreaCallback} [callback] - The callback that determines if the pointer is within the Hit Area shape or not. If you provide a shape you must also provide a callback.
      * @param {boolean} [dropZone=false] - Should this Game Object be treated as a drop zone target?
      *
      * @return {this} This GameObject.
      */
-    setInteractive: function (shape, callback, dropZone)
+    setInteractive: function (hitArea, hitAreaCallback, dropZone)
     {
-        this.scene.sys.input.enable(this, shape, callback, dropZone);
+        this.scene.sys.input.enable(this, hitArea, hitAreaCallback, dropZone);
 
         return this;
     },
