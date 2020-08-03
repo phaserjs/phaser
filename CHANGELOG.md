@@ -162,12 +162,13 @@ If you used any of them in your code, please update to the new function names be
 * `RenderTexture.resize` (which is called from `setSize`) wouldn't correctly set the `TextureSource.glTexture` property, leading to `bindTexture: attempt to use a deleted object` errors under WebGL.
 * The `MatterAttractors` plugin, which enables attractors between bodies, has been fixed. The original plugin only worked if the body with the attractor was _first_ in the world bodies list. It can now attract any body, no matter where in the world list it is. Fix #5160 (thanks @strahius)
 * The `KeyboardManager` and `KeyboardPlugin` were both still checking for the `InputManager.useQueue` property, which was removed several versions ago.
+* In Arcade Physics, Dynamic bodies would no longer hit walls when riding on horizontally moving platforms. The horizontal (and vertical) friction is now re-applied correctly in these edge-cases. Fix #5210 (thanks @Dercetech @samme)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@samme
+@samme @16patsle
 
 
 
