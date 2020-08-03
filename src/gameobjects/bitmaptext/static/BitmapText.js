@@ -8,21 +8,12 @@ var Class = require('../../../utils/Class');
 var Clamp = require('../../../math/Clamp');
 var Components = require('../../components');
 var GameObject = require('../../GameObject');
+var GetColorFromValue = require('../../../display/color/GetColorFromValue');
 var GetBitmapTextSize = require('../GetBitmapTextSize');
 var ParseFromAtlas = require('../ParseFromAtlas');
 var ParseXMLBitmapFont = require('../ParseXMLBitmapFont');
 var Rectangle = require('../../../geom/rectangle/Rectangle');
 var Render = require('./BitmapTextRender');
-
-/**
- * @function GetColor
- * @since 3.0.0
- * @private
- */
-var GetColor = function (value)
-{
-    return (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
-};
 
 /**
  * @classdesc
@@ -545,10 +536,10 @@ var BitmapText = new Class({
             else
             {
                 var tintEffect = (tintFill) ? 1 : 0;
-                var tintTL = GetColor(topLeft);
-                var tintTR = GetColor(topRight);
-                var tintBL = GetColor(bottomLeft);
-                var tintBR = GetColor(bottomRight);
+                var tintTL = GetColorFromValue(topLeft);
+                var tintTR = GetColorFromValue(topRight);
+                var tintBL = GetColorFromValue(bottomLeft);
+                var tintBR = GetColorFromValue(bottomRight);
 
                 if (color)
                 {
@@ -1018,7 +1009,7 @@ var BitmapText = new Class({
         {
             this._dropShadowColor = value;
 
-            this._dropShadowColorGL = GetColor(value);
+            this._dropShadowColorGL = GetColorFromValue(value);
         }
 
     },
