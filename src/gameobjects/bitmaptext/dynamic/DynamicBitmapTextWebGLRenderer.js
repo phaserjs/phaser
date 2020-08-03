@@ -5,6 +5,7 @@
  */
 
 var Utils = require('../../../renderer/webgl/Utils');
+var GetColorFromValue = require('../../../display/color/GetColorFromValue');
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -233,10 +234,10 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
                 tintBR = output.tint.bottomRight;
             }
 
-            tintTL = Utils.getTintAppendFloatAlpha(tintTL, camera.alpha * src._alphaTL);
-            tintTR = Utils.getTintAppendFloatAlpha(tintTR, camera.alpha * src._alphaTR);
-            tintBL = Utils.getTintAppendFloatAlpha(tintBL, camera.alpha * src._alphaBL);
-            tintBR = Utils.getTintAppendFloatAlpha(tintBR, camera.alpha * src._alphaBR);
+            tintTL = Utils.getTintAppendFloatAlpha(GetColorFromValue(tintTL), camera.alpha * src._alphaTL);
+            tintTR = Utils.getTintAppendFloatAlpha(GetColorFromValue(tintTR), camera.alpha * src._alphaTR);
+            tintBL = Utils.getTintAppendFloatAlpha(GetColorFromValue(tintBL), camera.alpha * src._alphaBL);
+            tintBR = Utils.getTintAppendFloatAlpha(GetColorFromValue(tintBR), camera.alpha * src._alphaBR);
         }
 
         x *= scale;
