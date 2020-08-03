@@ -36,20 +36,6 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
 
     renderer.setPipeline(pipeline, src);
 
-    var crop = (src.cropWidth > 0 || src.cropHeight > 0);
-
-    if (crop)
-    {
-        pipeline.flush();
-
-        renderer.pushScissor(
-            src.x,
-            src.y,
-            src.cropWidth * src.scaleX,
-            src.cropHeight * src.scaleY
-        );
-    }
-
     var camMatrix = pipeline._tempMatrix1;
     var spriteMatrix = pipeline._tempMatrix2;
     var calcMatrix = pipeline._tempMatrix3;
@@ -78,6 +64,20 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
 
         //  Multiply by the Sprite matrix, store result in calcMatrix
         camMatrix.multiply(spriteMatrix, calcMatrix);
+    }
+
+    var crop = (src.cropWidth > 0 || src.cropHeight > 0);
+
+    if (crop)
+    {
+        pipeline.flush();
+
+        renderer.pushScissor(
+            calcMatrix.tx,
+            calcMatrix.ty,
+            src.cropWidth * calcMatrix.scaleX,
+            src.cropHeight * calcMatrix.scaleY
+        );
     }
 
     var frame = src.frame;
