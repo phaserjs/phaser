@@ -56,6 +56,13 @@ var TriangleContains = require('../geom/triangle/Contains');
  *
  * Please also see the Input examples and tutorials for further information.
  *
+ * **Incorrect input coordinates with Angular**
+ *
+ * If you are using Phaser within Angular, and use nglf or the router, to make the component in which the Phaser game resides
+ * change state (i.e. appear or disappear) then you'll need to notify the Scale Manager about this, as Angular will mess with
+ * the DOM in a way in which Phaser can't detect directly. Call `this.scale.updateBounds()` as part of your game init in order
+ * to refresh the canvas DOM bounds values, which Phaser uses for input point position calculations.
+ *
  * @class InputPlugin
  * @extends Phaser.Events.EventEmitter
  * @memberof Phaser.Input
