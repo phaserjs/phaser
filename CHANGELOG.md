@@ -143,6 +143,8 @@ If you used any of them in your code, please update to the new function names be
 * `Phaser.Types.Math.Vector4Like` is a new data type representing as Vector 4 like object.
 * `Transform.getLocalPoint` is a new method, available on all Game Objects, that takes an `x` / `y` pair and translates them into the local space of the Game Object, factoring in parent transforms and display origins.
 * The `KeyboardPlugin` will now track the key code and timestamp of the previous key pressed and compare it to the current event. If they match, it will skip the event. On some systems if you were to type quickly, you would sometimes get duplicate key events firing (the exact same event firing more than once). This is now prevented from happening.
+* `Display.Color.GetColorFromValue` is a new function that will take a hex color value and return it as an integer, for use in WebGL. This is now used internally by the Tint component and other classes.
+* `Utils.String.RemoveAt` is a new function that will remove a character from the given index in a string and return the new string.
 
 ### Updates and API Changes
 
@@ -168,7 +170,7 @@ If you used any of them in your code, please update to the new function names be
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@samme @16patsle
+@samme @16patsle @scott20145 
 
 
 
