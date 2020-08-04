@@ -21,7 +21,7 @@ var Vector2 = require('../math/Vector2');
 /**
  * @classdesc
  * The Scale Manager handles the scaling, resizing and alignment of the game canvas.
- * 
+ *
  * The way scaling is handled is by setting the game canvas to a fixed size, which is defined in the
  * game configuration. You also define the parent container in the game config. If no parent is given,
  * it will default to using the document body. The Scale Manager will then look at the available space
@@ -30,13 +30,13 @@ var Vector2 = require('../math/Vector2');
  * Scaling is therefore achieved by keeping the core canvas the same size and 'stretching'
  * it via its CSS properties. This gives the same result and speed as using the `transform-scale` CSS
  * property, without the need for browser prefix handling.
- * 
+ *
  * The calculations for the scale are heavily influenced by the bounding parent size, which is the computed
  * dimensions of the canvas's parent. The CSS rules of the parent element play an important role in the
  * operation of the Scale Manager. For example, if the parent has no defined width or height, then actions
  * like auto-centering will fail to achieve the required result. The Scale Manager works in tandem with the
  * CSS you set-up on the page hosting your game, rather than taking control of it.
- * 
+ *
  * #### Parent and Display canvas containment guidelines:
  *
  * - Style the Parent element (of the game canvas) to control the Parent size and thus the games size and layout.
@@ -52,15 +52,15 @@ var Vector2 = require('../math/Vector2');
  *   they may be updated by the Scale Manager.
  *
  * #### Scale Modes
- * 
+ *
  * The way the scaling is handled is determined by the `scaleMode` property. The default is `NONE`,
  * which prevents Phaser from scaling or touching the canvas, or its parent, at all. In this mode, you are
  * responsible for all scaling. The other scaling modes afford you automatic scaling.
- * 
+ *
  * If you wish to scale your game so that it always fits into the available space within the parent, you
  * should use the scale mode `FIT`. Look at the documentation for other scale modes to see what options are
  * available. Here is a basic config showing how to set this scale mode:
- * 
+ *
  * ```javascript
  * scale: {
  *     parent: 'yourgamediv',
@@ -69,33 +69,33 @@ var Vector2 = require('../math/Vector2');
  *     height: 600
  * }
  * ```
- * 
+ *
  * Place the `scale` config object within your game config.
- * 
+ *
  * If you wish for the canvas to be resized directly, so that the canvas itself fills the available space
  * (i.e. it isn't scaled, it's resized) then use the `RESIZE` scale mode. This will give you a 1:1 mapping
  * of canvas pixels to game size. In this mode CSS isn't used to scale the canvas, it's literally adjusted
  * to fill all available space within the parent. You should be extremely careful about the size of the
  * canvas you're creating when doing this, as the larger the area, the more work the GPU has to do and it's
  * very easy to hit fill-rate limits quickly.
- * 
+ *
  * For complex, custom-scaling requirements, you should probably consider using the `RESIZE` scale mode,
  * with your own limitations in place re: canvas dimensions and managing the scaling with the game scenes
  * yourself. For the vast majority of games, however, the `FIT` mode is likely to be the most used.
- * 
+ *
  * Please appreciate that the Scale Manager cannot perform miracles. All it does is scale your game canvas
  * as best it can, based on what it can infer from its surrounding area. There are all kinds of environments
  * where it's up to you to guide and help the canvas position itself, especially when built into rendering
  * frameworks like React and Vue. If your page requires meta tags to prevent user scaling gestures, or such
  * like, then it's up to you to ensure they are present in the html.
- * 
+ *
  * #### Centering
- * 
+ *
  * You can also have the game canvas automatically centered. Again, this relies heavily on the parent being
  * properly configured and styled, as the centering offsets are based entirely on the available space
  * within the parent element. Centering is disabled by default, or can be applied horizontally, vertically,
  * or both. Here's an example:
- * 
+ *
  * ```javascript
  * scale: {
  *     parent: 'yourgamediv',
@@ -104,9 +104,9 @@ var Vector2 = require('../math/Vector2');
  *     height: 600
  * }
  * ```
- * 
+ *
  * #### Fullscreen API
- * 
+ *
  * If the browser supports it, you can send your game into fullscreen mode. In this mode, the game will fill
  * the entire display, removing all browser UI and anything else present on the screen. It will remain in this
  * mode until your game either disables it, or until the user tabs out or presses ESCape if on desktop. It's a
@@ -161,7 +161,7 @@ var ScaleManager = new Class({
 
         /**
          * The parent object of the Canvas. Often a div, or the browser window, or nothing in non-browser environments.
-         * 
+         *
          * This is set in the Game Config as the `parent` property. If undefined (or just not present), it will default
          * to use the document body. If specifically set to `null` Phaser will ignore all parent operations.
          *
@@ -191,7 +191,7 @@ var ScaleManager = new Class({
 
         /**
          * The Game Size component.
-         * 
+         *
          * The un-modified game size, as requested in the game config (the raw width / height),
          * as used for world bounds, cameras, etc
          *
@@ -203,7 +203,7 @@ var ScaleManager = new Class({
 
         /**
          * The Base Size component.
-         * 
+         *
          * The modified game size, which is the gameSize * resolution, used to set the canvas width and height
          * (but not the CSS style)
          *
@@ -215,7 +215,7 @@ var ScaleManager = new Class({
 
         /**
          * The Display Size component.
-         * 
+         *
          * The size used for the canvas style, factoring in the scale mode, parent and other values.
          *
          * @name Phaser.Scale.ScaleManager#displaySize
@@ -235,7 +235,7 @@ var ScaleManager = new Class({
 
         /**
          * The canvas resolution.
-         * 
+         *
          * This is hard-coded to a value of 1 in the 3.16 release of Phaser and will be enabled at a later date.
          *
          * @name Phaser.Scale.ScaleManager#resolution
@@ -246,11 +246,11 @@ var ScaleManager = new Class({
 
         /**
          * The game zoom factor.
-         * 
+         *
          * This value allows you to multiply your games base size by the given zoom factor.
          * This is then used when calculating the display size, even in `NONE` situations.
          * If you don't want Phaser to touch the canvas style at all, this value should be 1.
-         * 
+         *
          * Can also be set to `MAX_ZOOM` in which case the zoom value will be derived based
          * on the game size and available space within the parent.
          *
@@ -292,12 +292,12 @@ var ScaleManager = new Class({
 
         /**
          * Automatically center the canvas within the parent? The different centering modes are:
-         * 
+         *
          * 1. No centering.
          * 2. Center both horizontally and vertically.
          * 3. Center horizontally.
          * 4. Center vertically.
-         * 
+         *
          * Please be aware that in order to center the game canvas, you must have specified a parent
          * that has a size set, or the canvas parent is the document.body.
          *
@@ -309,7 +309,7 @@ var ScaleManager = new Class({
 
         /**
          * The current device orientation.
-         * 
+         *
          * Orientation events are dispatched via the Device Orientation API, typically only on mobile browsers.
          *
          * @name Phaser.Scale.ScaleManager#orientation
@@ -358,7 +358,7 @@ var ScaleManager = new Class({
 
         /**
          * How many milliseconds should elapse before checking if the browser size has changed?
-         * 
+         *
          * Most modern browsers dispatch a 'resize' event, which the Scale Manager will listen for.
          * However, older browsers fail to do this, or do it consistently, so we fall back to a
          * more traditional 'size check' based on a time interval. You can control how often it is
@@ -475,14 +475,14 @@ var ScaleManager = new Class({
      * @method Phaser.Scale.ScaleManager#parseConfig
      * @protected
      * @since 3.16.0
-     * 
+     *
      * @param {Phaser.Types.Core.GameConfig} config - The Game configuration object.
      */
     parseConfig: function (config)
     {
         //  Get the parent element, if any
         this.getParent(config);
-        
+
         //  Get the size of the parent element
         //  This can often set a height of zero (especially for un-styled divs)
         this.getParentBounds();
@@ -591,7 +591,7 @@ var ScaleManager = new Class({
      *
      * @method Phaser.Scale.ScaleManager#getParent
      * @since 3.16.0
-     * 
+     *
      * @param {Phaser.Types.Core.GameConfig} config - The Game configuration object.
      */
     getParent: function (config)
@@ -641,7 +641,7 @@ var ScaleManager = new Class({
      *
      * @method Phaser.Scale.ScaleManager#getParentBounds
      * @since 3.16.0
-     * 
+     *
      * @return {boolean} `true` if the parent bounds have changed size, otherwise `false`.
      */
     getParentBounds: function ()
@@ -680,15 +680,15 @@ var ScaleManager = new Class({
 
     /**
      * Attempts to lock the orientation of the web browser using the Screen Orientation API.
-     * 
+     *
      * This API is only available on modern mobile browsers.
      * See https://developer.mozilla.org/en-US/docs/Web/API/Screen/lockOrientation for details.
      *
      * @method Phaser.Scale.ScaleManager#lockOrientation
      * @since 3.16.0
-     * 
+     *
      * @param {string} orientation - The orientation you'd like to lock the browser in. Should be an API string such as 'landscape', 'landscape-primary', 'portrait', etc.
-     * 
+     *
      * @return {boolean} `true` if the orientation was successfully locked, otherwise `false`.
      */
     lockOrientation: function (orientation)
@@ -712,10 +712,10 @@ var ScaleManager = new Class({
      * @method Phaser.Scale.ScaleManager#setParentSize
      * @fires Phaser.Scale.Events#RESIZE
      * @since 3.16.0
-     * 
+     *
      * @param {number} width - The new width of the parent.
      * @param {number} height - The new height of the parent.
-     * 
+     *
      * @return {this} The Scale Manager instance.
      */
     setParentSize: function (width, height)
@@ -727,7 +727,7 @@ var ScaleManager = new Class({
 
     /**
      * This method will set a new size for your game.
-     * 
+     *
      * It should only be used if you're looking to change the base size of your game and are using
      * one of the Scale Manager scaling modes, i.e. `FIT`. If you're using `NONE` and wish to
      * change the game and canvas size directly, then please use the `resize` method instead.
@@ -735,10 +735,10 @@ var ScaleManager = new Class({
      * @method Phaser.Scale.ScaleManager#setGameSize
      * @fires Phaser.Scale.Events#RESIZE
      * @since 3.16.0
-     * 
+     *
      * @param {number} width - The new width of the game.
      * @param {number} height - The new height of the game.
-     * 
+     *
      * @return {this} The Scale Manager instance.
      */
     setGameSize: function (width, height)
@@ -781,18 +781,18 @@ var ScaleManager = new Class({
      * Call this to modify the size of the Phaser canvas element directly.
      * You should only use this if you are using the `NONE` scale mode,
      * it will update all internal components completely.
-     * 
+     *
      * If all you want to do is change the size of the parent, see the `setParentSize` method.
-     * 
+     *
      * If all you want is to change the base size of the game, but still have the Scale Manager
      * manage all the scaling (i.e. you're **not** using `NONE`), then see the `setGameSize` method.
-     * 
+     *
      * This method will set the `gameSize`, `baseSize` and `displaySize` components to the given
      * dimensions. It will then resize the canvas width and height to the values given, by
      * directly setting the properties. Finally, if you have set the Scale Manager zoom value
      * to anything other than 1 (the default), it will set the canvas CSS width and height to
      * be the given size multiplied by the zoom factor (the canvas pixel size remains untouched).
-     * 
+     *
      * If you have enabled `autoCenter`, it is then passed to the `updateCenter` method and
      * the margins are set, allowing the canvas to be centered based on its parent element
      * alone. Finally, the `displayScale` is adjusted and the RESIZE event dispatched.
@@ -800,10 +800,10 @@ var ScaleManager = new Class({
      * @method Phaser.Scale.ScaleManager#resize
      * @fires Phaser.Scale.Events#RESIZE
      * @since 3.16.0
-     * 
+     *
      * @param {number} width - The new width of the game.
      * @param {number} height - The new height of the game.
-     * 
+     *
      * @return {this} The Scale Manager instance.
      */
     resize: function (width, height)
@@ -866,9 +866,9 @@ var ScaleManager = new Class({
      * @method Phaser.Scale.ScaleManager#setZoom
      * @fires Phaser.Scale.Events#RESIZE
      * @since 3.16.0
-     * 
+     *
      * @param {integer} value - The new zoom value of the game.
-     * 
+     *
      * @return {this} The Scale Manager instance.
      */
     setZoom: function (value)
@@ -885,7 +885,7 @@ var ScaleManager = new Class({
      * @method Phaser.Scale.ScaleManager#setMaxZoom
      * @fires Phaser.Scale.Events#RESIZE
      * @since 3.16.0
-     * 
+     *
      * @return {this} The Scale Manager instance.
      */
     setMaxZoom: function ()
@@ -898,19 +898,19 @@ var ScaleManager = new Class({
 
     /**
      * Refreshes the internal scale values, bounds sizes and orientation checks.
-     * 
+     *
      * Once finished, dispatches the resize event.
-     * 
+     *
      * This is called automatically by the Scale Manager when the browser window size changes,
      * as long as it is using a Scale Mode other than 'NONE'.
      *
      * @method Phaser.Scale.ScaleManager#refresh
      * @fires Phaser.Scale.Events#RESIZE
      * @since 3.16.0
-     * 
+     *
      * @param {number} [previousWidth] - The previous width of the game. Only set if the gameSize has changed.
      * @param {number} [previousHeight] - The previous height of the game. Only set if the gameSize has changed.
-     * 
+     *
      * @return {this} The Scale Manager instance.
      */
     refresh: function (previousWidth, previousHeight)
@@ -946,7 +946,7 @@ var ScaleManager = new Class({
 
     /**
      * Internal method that checks the current screen orientation, only if the internal check flag is set.
-     * 
+     *
      * If the orientation has changed it updates the orientation property and then dispatches the orientation change event.
      *
      * @method Phaser.Scale.ScaleManager#updateOrientation
@@ -964,7 +964,7 @@ var ScaleManager = new Class({
             if (newOrientation !== this.orientation)
             {
                 this.orientation = newOrientation;
-    
+
                 this.emit(Events.ORIENTATION_CHANGE, newOrientation);
             }
         }
@@ -1067,14 +1067,14 @@ var ScaleManager = new Class({
      *
      * @method Phaser.Scale.ScaleManager#getMaxZoom
      * @since 3.16.0
-     * 
+     *
      * @return {integer} The maximum possible zoom factor. At a minimum this value is always at least 1.
      */
     getMaxZoom: function ()
     {
         var zoomH = SnapFloor(this.parentSize.width, this.gameSize.width, 0, true);
         var zoomV = SnapFloor(this.parentSize.height, this.gameSize.height, 0, true);
-    
+
         return Math.max(Math.min(zoomH, zoomV), 1);
     },
 
@@ -1083,11 +1083,11 @@ var ScaleManager = new Class({
      * bounds of its parent. If you have explicitly set parent to be `null` in your
      * game config then this method will likely give incorrect results unless you have called the
      * `setParentSize` method first.
-     * 
+     *
      * It works by modifying the canvas CSS `marginLeft` and `marginTop` properties.
-     * 
+     *
      * If they have already been set by your own style sheet, or code, this will overwrite them.
-     * 
+     *
      * To prevent the Scale Manager from centering the canvas, either do not set the
      * `autoCenter` property in your game config, or make sure it is set to `NO_CENTER`.
      *
@@ -1181,22 +1181,22 @@ var ScaleManager = new Class({
 
     /**
      * Sends a request to the browser to ask it to go in to full screen mode, using the {@link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API Fullscreen API}.
-     * 
+     *
      * If the browser does not support this, a `FULLSCREEN_UNSUPPORTED` event will be emitted.
-     * 
+     *
      * This method _must_ be called from a user-input gesture, such as `pointerup`. You cannot launch
      * games fullscreen without this, as most browsers block it. Games within an iframe will also be blocked
      * from fullscreen unless the iframe has the `allowfullscreen` attribute.
-     * 
+     *
      * On touch devices, such as Android and iOS Safari, you should always use `pointerup` and NOT `pointerdown`,
      * otherwise the request will fail unless the document in which your game is embedded has already received
      * some form of touch input, which you cannot guarantee. Activating fullscreen via `pointerup` circumvents
      * this issue.
-     * 
+     *
      * Performing an action that navigates to another page, or opens another tab, will automatically cancel
      * fullscreen mode, as will the user pressing the ESC key. To cancel fullscreen mode directly from your game,
      * i.e. by clicking an icon, call the `stopFullscreen` method.
-     * 
+     *
      * A browser can only send one DOM element into fullscreen. You can control which element this is by
      * setting the `fullscreenTarget` property in your game config, or changing the property in the Scale Manager.
      * Note that the game canvas _must_ be a child of the target. If you do not give a target, Phaser will
@@ -1209,7 +1209,7 @@ var ScaleManager = new Class({
      * @fires Phaser.Scale.Events#FULLSCREEN_UNSUPPORTED
      * @fires Phaser.Scale.Events#RESIZE
      * @since 3.16.0
-     * 
+     *
      * @param {object} [fullscreenOptions] - The FullscreenOptions dictionary is used to provide configuration options when entering full screen.
      */
     startFullscreen: function (fullscreenOptions)
@@ -1266,7 +1266,7 @@ var ScaleManager = new Class({
      * @fires Phaser.Scale.Events#FULLSCREEN_FAILED
      * @fires Phaser.Scale.Events#RESIZE
      * @since 3.17.0
-     * 
+     *
      * @param {any} error - The DOM error event.
      */
     fullscreenErrorHandler: function (error)
@@ -1281,7 +1281,7 @@ var ScaleManager = new Class({
      *
      * @method Phaser.Scale.ScaleManager#getFullscreenTarget
      * @since 3.16.0
-     * 
+     *
      * @return {object} The fullscreen target element.
      */
     getFullscreenTarget: function ()
@@ -1372,9 +1372,9 @@ var ScaleManager = new Class({
     /**
      * Toggles the fullscreen mode. If already in fullscreen, calling this will cancel it.
      * If not in fullscreen, this will request the browser to enter fullscreen mode.
-     * 
+     *
      * If the browser does not support this, a `FULLSCREEN_UNSUPPORTED` event will be emitted.
-     * 
+     *
      * This method _must_ be called from a user-input gesture, such as `pointerdown`. You cannot launch
      * games fullscreen without this, as most browsers block it. Games within an iframe will also be blocked
      * from fullscreen unless the iframe has the `allowfullscreen` attribute.
@@ -1385,7 +1385,7 @@ var ScaleManager = new Class({
      * @fires Phaser.Scale.Events#FULLSCREEN_UNSUPPORTED
      * @fires Phaser.Scale.Events#RESIZE
      * @since 3.16.0
-     * 
+     *
      * @param {object} [fullscreenOptions] - The FullscreenOptions dictionary is used to provide configuration options when entering full screen.
      */
     toggleFullscreen: function (fullscreenOptions)
@@ -1413,12 +1413,16 @@ var ScaleManager = new Class({
 
         listeners.orientationChange = function ()
         {
+            _this.updateBounds();
+
             _this._checkOrientation = true;
             _this.dirty = true;
         };
 
         listeners.windowResize = function ()
         {
+            _this.updateBounds();
+
             _this.dirty = true;
         };
 
@@ -1581,12 +1585,12 @@ var ScaleManager = new Class({
         {
             return this.fullscreen.active;
         }
-    
+
     },
 
     /**
      * The game width.
-     * 
+     *
      * This is typically the size given in the game configuration.
      *
      * @name Phaser.Scale.ScaleManager#width
@@ -1600,12 +1604,12 @@ var ScaleManager = new Class({
         {
             return this.gameSize.width;
         }
-    
+
     },
 
     /**
      * The game height.
-     * 
+     *
      * This is typically the size given in the game configuration.
      *
      * @name Phaser.Scale.ScaleManager#height
@@ -1619,7 +1623,7 @@ var ScaleManager = new Class({
         {
             return this.gameSize.height;
         }
-    
+
     },
 
     /**
@@ -1637,7 +1641,7 @@ var ScaleManager = new Class({
         {
             return (this.orientation === CONST.ORIENTATION.PORTRAIT);
         }
-    
+
     },
 
     /**
@@ -1655,12 +1659,12 @@ var ScaleManager = new Class({
         {
             return (this.orientation === CONST.ORIENTATION.LANDSCAPE);
         }
-    
+
     },
 
     /**
      * Are the game dimensions portrait? (i.e. taller than they are wide)
-     * 
+     *
      * This is different to the device itself being in a portrait orientation.
      *
      * @name Phaser.Scale.ScaleManager#isGamePortrait
@@ -1674,12 +1678,12 @@ var ScaleManager = new Class({
         {
             return (this.height > this.width);
         }
-    
+
     },
 
     /**
      * Are the game dimensions landscape? (i.e. wider than they are tall)
-     * 
+     *
      * This is different to the device itself being in a landscape orientation.
      *
      * @name Phaser.Scale.ScaleManager#isGameLandscape
@@ -1693,7 +1697,7 @@ var ScaleManager = new Class({
         {
             return (this.width > this.height);
         }
-    
+
     }
 
 });
