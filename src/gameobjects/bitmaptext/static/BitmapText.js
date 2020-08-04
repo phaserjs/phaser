@@ -713,7 +713,7 @@ var BitmapText = new Class({
         {
             var char = chars[i];
 
-            tempRect.setTo(char.x, char.y, char.w, char.h);
+            tempRect.setTo(char.x, char.t, char.r - char.x, char.b);
 
             if (tempRect.contains(point.x, point.y))
             {
