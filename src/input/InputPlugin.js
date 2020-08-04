@@ -862,13 +862,13 @@ var InputPlugin = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to be enabled for input.
-     * @param {(Phaser.Types.Input.InputConfiguration|any)} [shape] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
-     * @param {Phaser.Types.Input.HitAreaCallback} [callback] - The 'contains' function to invoke to check if the pointer is within the hit area.
+     * @param {(Phaser.Types.Input.InputConfiguration|any)} [hitArea] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
+     * @param {Phaser.Types.Input.HitAreaCallback} [hitAreaCallback] - The 'contains' function to invoke to check if the pointer is within the hit area.
      * @param {boolean} [dropZone=false] - Is this Game Object a drop zone or not?
      *
      * @return {this} This Input Plugin.
      */
-    enable: function (gameObject, shape, callback, dropZone)
+    enable: function (gameObject, hitArea, hitAreaCallback, dropZone)
     {
         if (dropZone === undefined) { dropZone = false; }
 
@@ -880,7 +880,7 @@ var InputPlugin = new Class({
         else
         {
             //  Create an InteractiveObject and enable it
-            this.setHitArea(gameObject, shape, callback);
+            this.setHitArea(gameObject, hitArea, hitAreaCallback);
         }
 
         if (gameObject.input && dropZone && !gameObject.input.dropZone)
@@ -2120,14 +2120,14 @@ var InputPlugin = new Class({
      * @since 3.0.0
      *
      * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjects - An array of Game Objects to set the hit area on.
-     * @param {(Phaser.Types.Input.InputConfiguration|any)} [shape] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
-     * @param {Phaser.Types.Input.HitAreaCallback} [callback] - The 'contains' function to invoke to check if the pointer is within the hit area.
+     * @param {(Phaser.Types.Input.InputConfiguration|any)} [hitArea] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
+     * @param {Phaser.Types.Input.HitAreaCallback} [hitAreaCallback] - The 'contains' function to invoke to check if the pointer is within the hit area.
      *
      * @return {this} This InputPlugin object.
      */
-    setHitArea: function (gameObjects, shape, callback)
+    setHitArea: function (gameObjects, hitArea, hitAreaCallback)
     {
-        if (shape === undefined)
+        if (hitArea === undefined)
         {
             return this.setHitAreaFromTexture(gameObjects);
         }
@@ -2145,12 +2145,12 @@ var InputPlugin = new Class({
         var customHitArea = true;
 
         //  Config object?
-        if (IsPlainObject(shape))
+        if (IsPlainObject(hitArea))
         {
-            var config = shape;
+            var config = hitArea;
 
-            shape = GetFastValue(config, 'hitArea', null);
-            callback = GetFastValue(config, 'hitAreaCallback', null);
+            hitArea = GetFastValue(config, 'hitArea', null);
+            hitAreaCallback = GetFastValue(config, 'hitAreaCallback', null);
             draggable = GetFastValue(config, 'draggable', false);
             dropZone = GetFastValue(config, 'dropZone', false);
             cursor = GetFastValue(config, 'cursor', false);
@@ -2161,21 +2161,21 @@ var InputPlugin = new Class({
 
             if (pixelPerfect)
             {
-                shape = {};
-                callback = this.makePixelPerfect(alphaTolerance);
+                hitArea = {};
+                hitAreaCallback = this.makePixelPerfect(alphaTolerance);
             }
 
             //  Still no hitArea or callback?
-            if (!shape || !callback)
+            if (!hitArea || !hitAreaCallback)
             {
                 this.setHitAreaFromTexture(gameObjects);
                 customHitArea = false;
             }
         }
-        else if (typeof shape === 'function' && !callback)
+        else if (typeof hitArea === 'function' && !hitAreaCallback)
         {
-            callback = shape;
-            shape = {};
+            hitAreaCallback = hitArea;
+            hitArea = {};
         }
 
         for (var i = 0; i < gameObjects.length; i++)
@@ -2188,7 +2188,7 @@ var InputPlugin = new Class({
                 continue;
             }
 
-            var io = (!gameObject.input) ? CreateInteractiveObject(gameObject, shape, callback) : gameObject.input;
+            var io = (!gameObject.input) ? CreateInteractiveObject(gameObject, hitArea, hitAreaCallback) : gameObject.input;
 
             io.customHitArea = customHitArea;
             io.dropZone = dropZone;
