@@ -97,10 +97,13 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
 
     if (dropShadow)
     {
-        var blackTL = Utils.getTintAppendFloatAlpha(src._dropShadowColorGL, cameraAlpha * src.dropShadowAlpha * src._alphaTL);
-        var blackTR = Utils.getTintAppendFloatAlpha(src._dropShadowColorGL, cameraAlpha * src.dropShadowAlpha * src._alphaTR);
-        var blackBL = Utils.getTintAppendFloatAlpha(src._dropShadowColorGL, cameraAlpha * src.dropShadowAlpha * src._alphaBL);
-        var blackBR = Utils.getTintAppendFloatAlpha(src._dropShadowColorGL, cameraAlpha * src.dropShadowAlpha * src._alphaBR);
+        var srcShadowColor = src._dropShadowColorGL;
+        var srcShadowAlpha = src.dropShadowAlpha;
+
+        var blackTL = Utils.getTintAppendFloatAlpha(srcShadowColor, cameraAlpha * srcShadowAlpha * src._alphaTL);
+        var blackTR = Utils.getTintAppendFloatAlpha(srcShadowColor, cameraAlpha * srcShadowAlpha * src._alphaTR);
+        var blackBL = Utils.getTintAppendFloatAlpha(srcShadowColor, cameraAlpha * srcShadowAlpha * src._alphaBL);
+        var blackBR = Utils.getTintAppendFloatAlpha(srcShadowColor, cameraAlpha * srcShadowAlpha * src._alphaBR);
 
         for (i = 0; i < characters.length; i++)
         {
