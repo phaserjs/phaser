@@ -388,6 +388,9 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
             y: (glyph.yOffset + yAdvance) * scale,
             w: glyph.width * scale,
             h: glyph.height * scale,
+            t: yAdvance * scale,
+            r: gw * scale,
+            b: lineHeight * scale,
             line: currentLine,
             glyph: glyph
         });
@@ -494,6 +497,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
     out.words = words;
     out.characters = characters;
     out.lines.height = lineHeight;
+    out.scale = scale;
     out.scaleX = src.scaleX;
     out.scaleY = src.scaleY;
 
