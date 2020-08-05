@@ -120,6 +120,7 @@ If you used any of them in your code, please update to the new function names be
 * `BitmapText.getCharacterAt` is a new method that will return the character data from the BitmapText at the given `x` and `y` corodinates. The character data includes the code, position, dimensions and glyph information.
 * The `BitmapTextSize` object returned by `BitmapText.getTextBounds` has a new property called `characters` which is an array that contains the scaled position coordinates of each character in the BitmapText, which you could use for tasks such as determining which character in the BitmapText was clicked.
 * `ParseXMLBitmapFont` will now calculate the WebGL uv data for the glyphs during parsing. This avoids it having to be done during rendering, saving CPU cycles on an operation that never changes.
+* `ParseXMLBitmapFont` will now create a Frame object for each glyph. This means you could, for example, create a Sprite using the BitmapText texture and the glyph as the frame key, i.e.: `this.add.sprite(x, y, fontName, 'A')`.
 * `BitmapTextWord`, `BitmapTextCharacter` and `BitmapTextLines` are three new type defs that are now part of the `BitmapTextSize` config object, as returned by `getTextBounds`. This improves the TypeScript defs and JS Docs for this object.
 * The signature of the `ParseXMLBitmapFont` function has changed. The `frame` parameter is no longer optional, and is now the second parameter in the list, instead of being the 4th. If you call this function directly, please update your code.
 * The `BitmapText.getTextBounds` method was being called every frame, even if the bounds didn't change, potentially costing a lot of CPU time depending on the text length and quantity of them. It now only updates the bounds if they change.
@@ -134,6 +135,7 @@ If you used any of them in your code, please update to the new function names be
 * If you give an invalid Bitmap Font key, the Bitmap Text object will now issue a `console.warn`.
 * Setting the `color` value in the `DynamicBitmapText.setDisplayCallback` would inverse the red and blue channels if the color was not properly encoded for WebGL. It is now encoded automatically, meaning you can pass normal hex values as the colors in the display callback. Fix #5225 (thanks @teebarjunk)
 * If you apply `setSize` to the Dynamic BitmapText the scissor is now calculated based on the parent transforms, not just the local ones, meaning you can crop Bitmap Text objects that exist within Containers. Fix #4653 (thanks @lgibson02)
+* `ParseXMLBitmapFont` has a new optional parameter `texture`. If defined, this Texture is populated with Frame data, one frame per glyph. This happens automatically when loading Bitmap Text data in Phaser.
 
 ### New Features
 
@@ -147,6 +149,7 @@ If you used any of them in your code, please update to the new function names be
 * The `KeyboardPlugin` will now track the key code and timestamp of the previous key pressed and compare it to the current event. If they match, it will skip the event. On some systems if you were to type quickly, you would sometimes get duplicate key events firing (the exact same event firing more than once). This is now prevented from happening.
 * `Display.Color.GetColorFromValue` is a new function that will take a hex color value and return it as an integer, for use in WebGL. This is now used internally by the Tint component and other classes.
 * `Utils.String.RemoveAt` is a new function that will remove a character from the given index in a string and return the new string.
+* `Frame.setUVs` is a new method that allows you to directly set the canvas and UV data for a frame. Use this if you need to override the values set automatically during frame creation.
 
 ### Updates and API Changes
 
