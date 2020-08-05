@@ -125,11 +125,14 @@ var ParseXMLBitmapFont = function (xml, frame, xSpacing, ySpacing, texture)
             v1: v1
         };
 
-        if (texture)
+        if (texture && gw !== 0 && gh !== 0)
         {
             var charFrame = texture.add(letter, sourceIndex, gx, gy, gw, gh);
 
-            charFrame.setUVs(gw, gh, u0, v0, u1, v1);
+            if (charFrame)
+            {
+                charFrame.setUVs(gw, gh, u0, v0, u1, v1);
+            }
         }
     }
 
