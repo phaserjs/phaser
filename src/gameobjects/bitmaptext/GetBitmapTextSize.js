@@ -435,11 +435,17 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
 
             if (align === 1)
             {
-                currentChar.x += ((longestLine - lineWidths[currentChar.line]) / 2);
+                var ax1 = ((longestLine - lineWidths[currentChar.line]) / 2);
+
+                currentChar.x += ax1;
+                currentChar.r += ax1;
             }
             else if (align === 2)
             {
-                currentChar.x += (longestLine - lineWidths[currentChar.line]);
+                var ax2 = (longestLine - lineWidths[currentChar.line]);
+
+                currentChar.x += ax2;
+                currentChar.r += ax2;
             }
         }
     }
