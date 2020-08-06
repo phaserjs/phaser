@@ -268,6 +268,8 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
         current = null;
     }
 
+    var charIndex = 0;
+
     for (i = 0; i < textLength; i++)
     {
         charCode = text.charCodeAt(i);
@@ -373,7 +375,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
             if (current === null)
             {
                 //  We're starting a new word, recording the starting index, etc
-                current = { word: '', i: i, x: xAdvance, y: yAdvance, w: 0, h: lineHeight };
+                current = { word: '', i: charIndex, x: xAdvance, y: yAdvance, w: 0, h: lineHeight };
             }
 
             current.word = current.word.concat(text[i]);
@@ -381,7 +383,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
         }
 
         characters.push({
-            i: i,
+            i: charIndex,
             char: text[i],
             code: charCode,
             x: (glyph.xOffset + xAdvance) * scale,
@@ -399,6 +401,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
         lastGlyph = glyph;
         lastCharCode = charCode;
         currentLineWidth = gw * scale;
+        charIndex++;
     }
 
     //  Last word
