@@ -71,6 +71,15 @@ var PathFollower = {
     pathVector: null,
 
     /**
+     * The distance the follower has traveled from the previous point to the current one, at the last update.
+     *
+     * @name Phaser.GameObjects.PathFollower#pathDelta
+     * @type {Phaser.Math.Vector2}
+     * @since 3.23.0
+     */
+    pathDelta: null,
+
+    /**
      * The Tween used for following the Path.
      *
      * @name Phaser.GameObjects.PathFollower#pathTween
@@ -235,6 +244,13 @@ var PathFollower = {
             this.pathVector = new Vector2();
         }
 
+        if (!this.pathDelta)
+        {
+            this.pathDelta = new Vector2();
+        }
+
+        this.pathDelta.reset();
+
         this.pathTween = this.scene.sys.tweens.addCounter(config);
 
         //  The starting point of the path, relative to this follower
@@ -344,14 +360,18 @@ var PathFollower = {
         if (tween)
         {
             var tweenData = tween.data[0];
+            var pathDelta = this.pathDelta;
             var pathVector = this.pathVector;
+
+            pathDelta.copy(pathVector).negate();
 
             if (tweenData.state === TWEEN_CONST.COMPLETE)
             {
                 this.path.getPoint(1, pathVector);
 
+                pathDelta.add(pathVector);
                 pathVector.add(this.pathOffset);
-   
+
                 this.setPosition(pathVector.x, pathVector.y);
 
                 return;
@@ -364,6 +384,7 @@ var PathFollower = {
 
             this.path.getPoint(tween.getValue(), pathVector);
 
+            pathDelta.add(pathVector);
             pathVector.add(this.pathOffset);
 
             var oldX = this.x;

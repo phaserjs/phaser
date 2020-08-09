@@ -17,7 +17,7 @@ var XMLFile = require('./XMLFile.js');
  * A single XML based Texture Atlas File suitable for loading by the Loader.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#atlasXML method and are not typically created directly.
- * 
+ *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#atlasXML.
  *
  * @class AtlasXMLFile
@@ -110,7 +110,7 @@ var AtlasXMLFile = new Class({
  * Adds an XML based Texture Atlas, or array of atlases, to the current load queue.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
- * 
+ *
  * ```javascript
  * function preload ()
  * {
@@ -125,13 +125,13 @@ var AtlasXMLFile = new Class({
  * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
  * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
  * loaded.
- * 
+ *
  * If you call this from outside of `preload` then you are responsible for starting the Loader afterwards and monitoring
  * its events to know when it's safe to use the asset. Please see the Phaser.Loader.LoaderPlugin class for more details.
  *
  * Phaser expects the atlas data to be provided in an XML file format.
  * These files are created by software such as Shoebox and Adobe Flash / Animate.
- * 
+ *
  * Phaser can load all common image types: png, jpg, gif and any other format the browser can natively handle.
  *
  * The key must be a unique String. It is used to add the file to the global Texture Manager upon a successful load.
@@ -140,7 +140,7 @@ var AtlasXMLFile = new Class({
  * then remove it from the Texture Manager first, before loading a new one.
  *
  * Instead of passing arguments you can pass a configuration object, such as:
- * 
+ *
  * ```javascript
  * this.load.atlasXML({
  *     key: 'mainmenu',
@@ -152,7 +152,7 @@ var AtlasXMLFile = new Class({
  * See the documentation for `Phaser.Types.Loader.FileTypes.AtlasXMLFileConfig` for more details.
  *
  * Once the atlas has finished loading you can use frames from it as textures for a Game Object by referencing its key:
- * 
+ *
  * ```javascript
  * this.load.atlasXML('mainmenu', 'images/MainMenu.png', 'images/MainMenu.xml');
  * // and later in your game ...
@@ -173,13 +173,13 @@ var AtlasXMLFile = new Class({
  *
  * Phaser also supports the automatic loading of associated normal maps. If you have a normal map to go with this image,
  * then you can specify it by providing an array as the `url` where the second element is the normal map:
- * 
+ *
  * ```javascript
  * this.load.atlasXML('mainmenu', [ 'images/MainMenu.png', 'images/MainMenu-n.png' ], 'images/MainMenu.xml');
  * ```
  *
  * Or, if you are using a config object use the `normalMap` property:
- * 
+ *
  * ```javascript
  * this.load.atlasXML({
  *     key: 'mainmenu',
@@ -196,7 +196,7 @@ var AtlasXMLFile = new Class({
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#atlasXML
- * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @fires Phaser.Loader.LoaderPlugin#ADD
  * @since 3.7.0
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.AtlasXMLFileConfig|Phaser.Types.Loader.FileTypes.AtlasXMLFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.

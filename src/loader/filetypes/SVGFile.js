@@ -248,21 +248,21 @@ var SVGFile = new Class({
  * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
  * and no URL is given then the Loader will set the URL to be "alien.html". It will always add `.html` as the extension, although
  * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
- * 
+ *
  * You can optionally pass an SVG Resize Configuration object when you load an SVG file. By default the SVG will be rendered to a texture
  * at the same size defined in the SVG file attributes. However, this isn't always desirable. You may wish to resize the SVG (either down
  * or up) to improve texture clarity, or reduce texture memory consumption. You can either specify an exact width and height to resize
  * the SVG to:
- * 
+ *
  * ```javascript
  * function preload ()
  * {
  *     this.load.svg('morty', 'images/Morty.svg', { width: 300, height: 600 });
  * }
  * ```
- * 
+ *
  * Or when using a configuration object:
- * 
+ *
  * ```javascript
  * this.load.svg({
  *     key: 'morty',
@@ -273,18 +273,18 @@ var SVGFile = new Class({
  *     }
  * });
  * ```
- * 
+ *
  * Alternatively, you can just provide a scale factor instead:
- * 
+ *
  * ```javascript
  * function preload ()
  * {
  *     this.load.svg('morty', 'images/Morty.svg', { scale: 2.5 });
  * }
  * ```
- * 
+ *
  * Or when using a configuration object:
- * 
+ *
  * ```javascript
  * this.load.svg({
  *     key: 'morty',
@@ -294,14 +294,14 @@ var SVGFile = new Class({
  *     }
  * });
  * ```
- * 
+ *
  * If scale, width and height values are all given, the scale has priority and the width and height values are ignored.
  *
  * Note: The ability to load this type of file will only be available if the SVG File type has been built into Phaser.
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#svg
- * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @fires Phaser.Loader.LoaderPlugin#ADD
  * @since 3.0.0
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.SVGFileConfig|Phaser.Types.Loader.FileTypes.SVGFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.

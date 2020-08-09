@@ -9,14 +9,14 @@ var Class = require('../../utils/Class');
 var GameEvents = require('../../core/events');
 var InputEvents = require('../events');
 var KeyCodes = require('../../input/keyboard/keys/KeyCodes');
-var NOOP = require('../../utils/Class');
+var NOOP = require('../../utils/NOOP');
 
 /**
  * @classdesc
  * The Keyboard Manager is a helper class that belongs to the global Input Manager.
- * 
+ *
  * Its role is to listen for native DOM Keyboard Events and then store them for further processing by the Keyboard Plugin.
- * 
+ *
  * You do not need to create this class directly, the Input Manager will create an instance of it automatically if keyboard
  * input has been enabled in the Game Config.
  *
@@ -55,12 +55,12 @@ var KeyboardManager = new Class({
         /**
          * A flag that controls if the non-modified keys, matching those stored in the `captures` array,
          * have `preventDefault` called on them or not.
-         * 
+         *
          * A non-modified key is one that doesn't have a modifier key held down with it. The modifier keys are
          * shift, control, alt and the meta key (Command on a Mac, the Windows Key on Windows).
          * Therefore, if the user presses shift + r, it won't prevent this combination, because of the modifier.
          * However, if the user presses just the r key on its own, it will have its event prevented.
-         * 
+         *
          * If you wish to stop capturing the keys, for example switching out to a DOM based element, then
          * you can toggle this property at run-time.
          *
@@ -73,21 +73,21 @@ var KeyboardManager = new Class({
         /**
          * An array of Key Code values that will automatically have `preventDefault` called on them,
          * as long as the `KeyboardManager.preventDefault` boolean is set to `true`.
-         * 
+         *
          * By default the array is empty.
-         * 
+         *
          * The key must be non-modified when pressed in order to be captured.
-         * 
+         *
          * A non-modified key is one that doesn't have a modifier key held down with it. The modifier keys are
          * shift, control, alt and the meta key (Command on a Mac, the Windows Key on Windows).
          * Therefore, if the user presses shift + r, it won't prevent this combination, because of the modifier.
          * However, if the user presses just the r key on its own, it will have its event prevented.
-         * 
+         *
          * If you wish to stop capturing the keys, for example switching out to a DOM based element, then
          * you can toggle the `KeyboardManager.preventDefault` boolean at run-time.
-         * 
+         *
          * If you need more specific control, you can create Key objects and set the flag on each of those instead.
-         * 
+         *
          * This array can be populated via the Game Config by setting the `input.keyboard.capture` array, or you
          * can call the `addCapture` method. See also `removeCapture` and `clearCaptures`.
          *
@@ -193,11 +193,8 @@ var KeyboardManager = new Class({
 
             _this.queue.push(event);
 
-            if (!_this.manager.useQueue)
-            {
-                _this.manager.events.emit(InputEvents.MANAGER_PROCESS);
-            }
-    
+            _this.manager.events.emit(InputEvents.MANAGER_PROCESS);
+
             var modified = (event.altKey || event.ctrlKey || event.shiftKey || event.metaKey);
 
             if (_this.preventDefault && !modified && _this.captures.indexOf(event.keyCode) > -1)
@@ -216,11 +213,8 @@ var KeyboardManager = new Class({
 
             _this.queue.push(event);
 
-            if (!_this.manager.useQueue)
-            {
-                _this.manager.events.emit(InputEvents.MANAGER_PROCESS);
-            }
-    
+            _this.manager.events.emit(InputEvents.MANAGER_PROCESS);
+
             var modified = (event.altKey || event.ctrlKey || event.shiftKey || event.metaKey);
 
             if (_this.preventDefault && !modified && _this.captures.indexOf(event.keyCode) > -1)
@@ -276,37 +270,37 @@ var KeyboardManager = new Class({
      *
      * This `addCapture` method enables consuming keyboard event for specific keys so it doesn't bubble up to the the browser
      * and cause the default browser behavior.
-     * 
+     *
      * Please note that keyboard captures are global. This means that if you call this method from within a Scene, to say prevent
      * the SPACE BAR from triggering a page scroll, then it will prevent it for any Scene in your game, not just the calling one.
-     * 
+     *
      * You can pass in a single key code value, or an array of key codes, or a string:
-     * 
+     *
      * ```javascript
      * this.input.keyboard.addCapture(62);
      * ```
-     * 
+     *
      * An array of key codes:
-     * 
+     *
      * ```javascript
      * this.input.keyboard.addCapture([ 62, 63, 64 ]);
      * ```
-     * 
+     *
      * Or a string:
-     * 
+     *
      * ```javascript
      * this.input.keyboard.addCapture('W,S,A,D');
      * ```
-     * 
+     *
      * To use non-alpha numeric keys, use a string, such as 'UP', 'SPACE' or 'LEFT'.
-     * 
+     *
      * You can also provide an array mixing both strings and key code integers.
-     * 
+     *
      * If there are active captures after calling this method, the `preventDefault` property is set to `true`.
      *
      * @method Phaser.Input.Keyboard.KeyboardManager#addCapture
      * @since 3.16.0
-     * 
+     *
      * @param {(string|integer|integer[]|any[])} keycode - The Key Codes to enable capture for, preventing them reaching the browser.
      */
     addCapture: function (keycode)
@@ -343,37 +337,37 @@ var KeyboardManager = new Class({
 
     /**
      * Removes an existing key capture.
-     * 
+     *
      * Please note that keyboard captures are global. This means that if you call this method from within a Scene, to remove
      * the capture of a key, then it will remove it for any Scene in your game, not just the calling one.
-     * 
+     *
      * You can pass in a single key code value, or an array of key codes, or a string:
-     * 
+     *
      * ```javascript
      * this.input.keyboard.removeCapture(62);
      * ```
-     * 
+     *
      * An array of key codes:
-     * 
+     *
      * ```javascript
      * this.input.keyboard.removeCapture([ 62, 63, 64 ]);
      * ```
-     * 
+     *
      * Or a string:
-     * 
+     *
      * ```javascript
      * this.input.keyboard.removeCapture('W,S,A,D');
      * ```
-     * 
+     *
      * To use non-alpha numeric keys, use a string, such as 'UP', 'SPACE' or 'LEFT'.
-     * 
+     *
      * You can also provide an array mixing both strings and key code integers.
-     * 
+     *
      * If there are no captures left after calling this method, the `preventDefault` property is set to `false`.
      *
      * @method Phaser.Input.Keyboard.KeyboardManager#removeCapture
      * @since 3.16.0
-     * 
+     *
      * @param {(string|integer|integer[]|any[])} keycode - The Key Codes to disable capture for, allowing them reaching the browser again.
      */
     removeCapture: function (keycode)

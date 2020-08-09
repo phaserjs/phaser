@@ -79,6 +79,8 @@ var IsoBoxWebGLRenderer = function (renderer, src, interpolationPercentage, came
     var x3;
     var y3;
 
+    pipeline.setTexture2D();
+
     //  Top Face
 
     if (src.showTop)
@@ -87,18 +89,16 @@ var IsoBoxWebGLRenderer = function (renderer, src, interpolationPercentage, came
 
         x0 = calcMatrix.getX(-sizeA, -height);
         y0 = calcMatrix.getY(-sizeA, -height);
-    
+
         x1 = calcMatrix.getX(0, -sizeB - height);
         y1 = calcMatrix.getY(0, -sizeB - height);
-    
+
         x2 = calcMatrix.getX(sizeA, -height);
         y2 = calcMatrix.getY(sizeA, -height);
-    
+
         x3 = calcMatrix.getX(0, sizeB - height);
         y3 = calcMatrix.getY(0, sizeB - height);
 
-        pipeline.setTexture2D();
-    
         pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 2);
     }
 
@@ -110,18 +110,16 @@ var IsoBoxWebGLRenderer = function (renderer, src, interpolationPercentage, came
 
         x0 = calcMatrix.getX(-sizeA, 0);
         y0 = calcMatrix.getY(-sizeA, 0);
-    
+
         x1 = calcMatrix.getX(0, sizeB);
         y1 = calcMatrix.getY(0, sizeB);
-    
+
         x2 = calcMatrix.getX(0, sizeB - height);
         y2 = calcMatrix.getY(0, sizeB - height);
-    
+
         x3 = calcMatrix.getX(-sizeA, -height);
         y3 = calcMatrix.getY(-sizeA, -height);
 
-        pipeline.setTexture2D();
-    
         pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 2);
     }
 
@@ -133,18 +131,16 @@ var IsoBoxWebGLRenderer = function (renderer, src, interpolationPercentage, came
 
         x0 = calcMatrix.getX(sizeA, 0);
         y0 = calcMatrix.getY(sizeA, 0);
-    
+
         x1 = calcMatrix.getX(0, sizeB);
         y1 = calcMatrix.getY(0, sizeB);
-    
+
         x2 = calcMatrix.getX(0, sizeB - height);
         y2 = calcMatrix.getY(0, sizeB - height);
-    
+
         x3 = calcMatrix.getX(sizeA, -height);
         y3 = calcMatrix.getY(sizeA, -height);
 
-        pipeline.setTexture2D();
-    
         pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 2);
     }
 };

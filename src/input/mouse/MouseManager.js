@@ -7,7 +7,7 @@
 var Class = require('../../utils/Class');
 var Features = require('../../device/Features');
 var InputEvents = require('../events');
-var NOOP = require('../../utils/Class');
+var NOOP = require('../../utils/NOOP');
 
 //  https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent
 //  https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
@@ -231,7 +231,7 @@ var MouseManager = new Class({
      * @method Phaser.Input.Mouse.MouseManager#disableContextMenu
      * @since 3.0.0
      *
-     * @return {Phaser.Input.Mouse.MouseManager} This Mouse Manager instance.
+     * @return {this} This Mouse Manager instance.
      */
     disableContextMenu: function ()
     {

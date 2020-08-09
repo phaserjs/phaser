@@ -27,8 +27,13 @@ var RenderTextureWebGLRenderer = function (renderer, src, interpolationPercentag
     var width = frame.width;
     var height = frame.height;
     var getTint = Utils.getTintAppendFloatAlpha;
+    var pipeline = src.pipeline;
 
-    this.pipeline.batchTexture(
+    renderer.setPipeline(pipeline, src);
+
+    var textureUnit = pipeline.setTexture2D(frame.glTexture, src);
+
+    pipeline.batchTexture(
         src,
         frame.glTexture,
         width, height,
@@ -47,11 +52,10 @@ var RenderTextureWebGLRenderer = function (renderer, src, interpolationPercentag
         (src._isTinted && src.tintFill),
         0, 0,
         camera,
-        parentMatrix
+        parentMatrix,
+        false,
+        textureUnit
     );
-
-    //  Force clear the current texture so that items next in the batch (like Graphics) don't try and use it
-    renderer.setBlankTexture(true);
 };
 
 module.exports = RenderTextureWebGLRenderer;

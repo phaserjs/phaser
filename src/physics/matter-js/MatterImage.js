@@ -15,7 +15,7 @@ var Vector2 = require('../../math/Vector2');
 /**
  * @classdesc
  * A Matter Physics Image Game Object.
- * 
+ *
  * An Image is a light-weight Game Object useful for the display of static images in your game,
  * such as logos, backgrounds, scenery or other non-animated elements. Images can have input
  * events and physics bodies, or be tweened, tinted or scrolled. The main difference between an
@@ -56,7 +56,7 @@ var Vector2 = require('../../math/Vector2');
  * @param {Phaser.Physics.Matter.World} world - A reference to the Matter.World instance that this body belongs to.
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
- * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+ * @param {(string|Phaser.Textures.Texture)} texture - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
  * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
  */
@@ -85,6 +85,16 @@ var MatterImage = new Class({
     function MatterImage (world, x, y, texture, frame, options)
     {
         GameObject.call(this, world.scene, 'Image');
+
+        /**
+         * The internal crop data object, as used by `setCrop` and passed to the `Frame.setCropUVs` method.
+         *
+         * @name Phaser.Physics.Matter.Image#_crop
+         * @type {object}
+         * @private
+         * @since 3.24.0
+         */
+        this._crop = this.resetCropObject();
 
         this.setTexture(texture, frame);
         this.setSizeToFrame();

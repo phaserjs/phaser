@@ -30,7 +30,7 @@ var GetPoints = function (ellipse, quantity, stepRate, out)
     if (out === undefined) { out = []; }
 
     //  If quantity is a falsey value (false, null, 0, undefined, etc) then we calculate it based on the stepRate instead.
-    if (!quantity)
+    if (!quantity && stepRate > 0)
     {
         quantity = Circumference(ellipse) / stepRate;
     }

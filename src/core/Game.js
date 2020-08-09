@@ -389,7 +389,7 @@ var Game = new Class({
      *
      * @method Phaser.Game#texturesReady
      * @private
-     * @fires Phaser.Game#ready
+     * @fires Phaser.Game#READY
      * @since 3.12.0
      */
     texturesReady: function ()
@@ -443,11 +443,11 @@ var Game = new Class({
      * It will then render each Scene in turn, via the Renderer. This process emits `prerender` and `postrender` events.
      *
      * @method Phaser.Game#step
-     * @fires Phaser.Core.Events#PRE_STEP_EVENT
-     * @fires Phaser.Core.Events#STEP_EVENT
-     * @fires Phaser.Core.Events#POST_STEP_EVENT
-     * @fires Phaser.Core.Events#PRE_RENDER_EVENT
-     * @fires Phaser.Core.Events#POST_RENDER_EVENT
+     * @fires Phaser.Core.Events#PRE_STEP
+     * @fires Phaser.Core.Events#STEP
+     * @fires Phaser.Core.Events#POST_STEP
+     * @fires Phaser.Core.Events#PRE_RENDER
+     * @fires Phaser.Core.Events#POST_RENDER
      * @since 3.0.0
      *
      * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
@@ -510,8 +510,8 @@ var Game = new Class({
      * This process emits `prerender` and `postrender` events, even though nothing actually displays.
      *
      * @method Phaser.Game#headlessStep
-     * @fires Phaser.Game#prerenderEvent
-     * @fires Phaser.Game#postrenderEvent
+     * @fires Phaser.Game#PRE_RENDER
+     * @fires Phaser.Game#POST_RENDER
      * @since 3.2.0
      *
      * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
@@ -672,7 +672,7 @@ var Game = new Class({
     runDestroy: function ()
     {
         this.scene.destroy();
-        
+
         this.events.emit(Events.DESTROY);
 
         this.events.removeAllListeners();

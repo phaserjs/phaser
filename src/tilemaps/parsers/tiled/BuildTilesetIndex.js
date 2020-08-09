@@ -4,23 +4,44 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Tileset = require('../../Tileset');
+
 /**
  * Master list of tiles -> x, y, index in tileset.
  *
  * @function Phaser.Tilemaps.Parsers.Tiled.BuildTilesetIndex
  * @since 3.0.0
  *
- * @param {Phaser.Tilemaps.MapData} mapData - [description]
+ * @param {Phaser.Tilemaps.MapData} mapData - The Map Data object.
  *
- * @return {array} [description]
+ * @return {array} An array of Tileset objects.
  */
 var BuildTilesetIndex = function (mapData)
 {
+    var i;
+    var set;
     var tiles = [];
 
-    for (var i = 0; i < mapData.tilesets.length; i++)
+    for (i = 0; i < mapData.imageCollections.length; i++)
     {
-        var set = mapData.tilesets[i];
+        var collection = mapData.imageCollections[i];
+        var images = collection.images;
+
+        for (var j = 0; j < images.length; j++)
+        {
+            var image = images[j];
+
+            set = new Tileset(image.image, image.gid, collection.imageWidth, collection.imageHeight, 0, 0);
+
+            set.updateTileData(collection.imageWidth, collection.imageHeight);
+
+            mapData.tilesets.push(set);
+        }
+    }
+
+    for (i = 0; i < mapData.tilesets.length; i++)
+    {
+        set = mapData.tilesets[i];
 
         var x = set.tileMargin;
         var y = set.tileMargin;

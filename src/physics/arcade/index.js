@@ -8,13 +8,6 @@ var CONST = require('./const');
 var Extend = require('../../utils/object/Extend');
 
 /**
- * @callback ArcadePhysicsCallback
- *
- * @param {Phaser.GameObjects.GameObject} object1 - The first Body to separate.
- * @param {Phaser.GameObjects.GameObject} object2 - The second Body to separate.
- */
-
-/**
  * @namespace Phaser.Physics.Arcade
  */
 

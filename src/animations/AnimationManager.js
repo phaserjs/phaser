@@ -131,7 +131,7 @@ var AnimationManager = new Class({
      * @param {string} key - The key under which the Animation should be added. The Animation will be updated with it. Must be unique.
      * @param {Phaser.Animations.Animation} animation - The Animation which should be added to the Animation Manager.
      *
-     * @return {Phaser.Animations.AnimationManager} This Animation Manager.
+     * @return {this} This Animation Manager.
      */
     add: function (key, animation)
     {
@@ -139,7 +139,7 @@ var AnimationManager = new Class({
         {
             console.warn('Animation key exists: ' + key);
 
-            return;
+            return this;
         }
 
         animation.key = key;
@@ -486,7 +486,7 @@ var AnimationManager = new Class({
      * @fires Phaser.Animations.Events#PAUSE_ALL
      * @since 3.0.0
      *
-     * @return {Phaser.Animations.AnimationManager} This Animation Manager.
+     * @return {this} This Animation Manager.
      */
     pauseAll: function ()
     {
@@ -509,7 +509,7 @@ var AnimationManager = new Class({
      * @param {string} key - The key of the animation to play on the Game Object.
      * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} child - The Game Objects to play the animation on.
      *
-     * @return {Phaser.Animations.AnimationManager} This Animation Manager.
+     * @return {this} This Animation Manager.
      */
     play: function (key, child)
     {
@@ -522,7 +522,7 @@ var AnimationManager = new Class({
 
         if (!anim)
         {
-            return;
+            return this;
         }
 
         for (var i = 0; i < child.length; i++)
@@ -568,7 +568,7 @@ var AnimationManager = new Class({
      * @fires Phaser.Animations.Events#RESUME_ALL
      * @since 3.0.0
      *
-     * @return {Phaser.Animations.AnimationManager} This Animation Manager.
+     * @return {this} This Animation Manager.
      */
     resumeAll: function ()
     {
@@ -596,7 +596,7 @@ var AnimationManager = new Class({
      * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} children - An array of Game Objects to play the animation on. They must have an Animation Component.
      * @param {number} [stagger=0] - The amount of time, in milliseconds, to offset each play time by.
      *
-     * @return {Phaser.Animations.AnimationManager} This Animation Manager.
+     * @return {this} This Animation Manager.
      */
     staggerPlay: function (key, children, stagger)
     {
@@ -611,7 +611,7 @@ var AnimationManager = new Class({
 
         if (!anim)
         {
-            return;
+            return this;
         }
 
         for (var i = 0; i < children.length; i++)

@@ -14,7 +14,7 @@ var LoaderEvents = require('../events');
  * A single Animation JSON File suitable for loading by the Loader.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#animation method and are not typically created directly.
- * 
+ *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#animation.
  *
  * @class AnimationJSONFile
@@ -70,8 +70,6 @@ var AnimationJSONFile = new Class({
     onLoadComplete: function ()
     {
         this.loader.systems.anims.fromJSON(this.data);
-
-        this.pendingDestroy();
     }
 
 });
@@ -80,7 +78,7 @@ var AnimationJSONFile = new Class({
  * Adds an Animation JSON Data file, or array of Animation JSON files, to the current load queue.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
- * 
+ *
  * ```javascript
  * function preload ()
  * {
@@ -95,17 +93,17 @@ var AnimationJSONFile = new Class({
  * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
  * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
  * loaded.
- * 
+ *
  * If you call this from outside of `preload` then you are responsible for starting the Loader afterwards and monitoring
  * its events to know when it's safe to use the asset. Please see the Phaser.Loader.LoaderPlugin class for more details.
- * 
+ *
  * The key must be a unique String. It is used to add the file to the global JSON Cache upon a successful load.
  * The key should be unique both in terms of files being loaded and files already present in the JSON Cache.
  * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
  * then remove it from the JSON Cache first, before loading a new one.
  *
  * Instead of passing arguments you can pass a configuration object, such as:
- * 
+ *
  * ```javascript
  * this.load.animation({
  *     key: 'baddieAnims',
@@ -122,9 +120,9 @@ var AnimationJSONFile = new Class({
  *
  * Once the animation data has been parsed you will be able to play animations using that data.
  * Please see the Animation Manager `fromJSON` method for more details about the format and playback.
- * 
+ *
  * You can also access the raw animation data from its Cache using its key:
- * 
+ *
  * ```javascript
  * this.load.animation('baddieAnims', 'files/BaddieAnims.json');
  * // and later in your game ...
@@ -143,7 +141,7 @@ var AnimationJSONFile = new Class({
  *
  * You can also optionally provide a `dataKey` to use. This allows you to extract only a part of the JSON and store it in the Cache,
  * rather than the whole file. For example, if your JSON data had a structure like this:
- * 
+ *
  * ```json
  * {
  *     "level1": {
@@ -163,7 +161,7 @@ var AnimationJSONFile = new Class({
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#animation
- * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @fires Phaser.Loader.LoaderPlugin#ADD
  * @since 3.0.0
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.JSONFileConfig|Phaser.Types.Loader.FileTypes.JSONFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.

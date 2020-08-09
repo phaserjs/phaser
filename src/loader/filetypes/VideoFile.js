@@ -5,7 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
-var CONST = require('../../const');
+var CONST = require('../const');
 var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetURL = require('../GetURL');
@@ -17,7 +17,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * A single Video File suitable for loading by the Loader.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#video method and are not typically created directly.
- * 
+ *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#video.
  *
  * @class VideoFile
@@ -122,13 +122,13 @@ var VideoFile = new Class({
      * @method Phaser.Loader.FileTypes.VideoFile#createVideoElement
      * @private
      * @since 3.20.0
-     * 
+     *
      * @return {HTMLVideoElement} The newly created Video element.
      */
     createVideoElement: function ()
     {
         var video = document.createElement('video');
-    
+
         video.controls = false;
         video.crossOrigin = this.loader.crossOrigin;
 
@@ -261,7 +261,10 @@ VideoFile.getVideoURL = function (game, urls)
 
         if (url.indexOf('blob:') === 0)
         {
-            return url;
+            return {
+                url: url,
+                type: ''
+            };
         }
 
         var videoType;
@@ -293,7 +296,7 @@ VideoFile.getVideoURL = function (game, urls)
  * Adds a Video file, or array of video files, to the current load queue.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
- * 
+ *
  * ```javascript
  * function preload ()
  * {
@@ -308,14 +311,14 @@ VideoFile.getVideoURL = function (game, urls)
  * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
  * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
  * loaded.
- * 
+ *
  * The key must be a unique String. It is used to add the file to the global Video Cache upon a successful load.
  * The key should be unique both in terms of files being loaded and files already present in the Video Cache.
  * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
  * then remove it from the Video Cache first, before loading a new one.
   *
  * Instead of passing arguments you can pass a configuration object, such as:
- * 
+ *
  * ```javascript
  * this.load.video({
  *     key: 'intro',
@@ -332,7 +335,7 @@ VideoFile.getVideoURL = function (game, urls)
  * Due to different browsers supporting different video file types you should usually provide your video files in a variety of formats.
  * mp4, mov and webm are the most common. If you provide an array of URLs then the Loader will determine which _one_ file to load based on
  * browser support, starting with the first in the array and progressing to the end.
- * 
+ *
  * Unlike most asset-types, videos do not _need_ to be preloaded. You can create a Video Game Object and then call its `loadURL` method,
  * to load a video at run-time, rather than in advance.
  *
@@ -340,7 +343,7 @@ VideoFile.getVideoURL = function (game, urls)
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#video
- * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @fires Phaser.Loader.LoaderPlugin#ADD
  * @since 3.20.0
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.VideoFileConfig|Phaser.Types.Loader.FileTypes.VideoFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.

@@ -82,10 +82,13 @@ var File = new Class({
 
         /**
          * The URL of the file, not including baseURL.
-         * Automatically has Loader.path prepended to it.
+         *
+         * Automatically has Loader.path prepended to it if a string.
+         *
+         * Can also be a JavaScript Object, such as the results of parsing JSON data.
          *
          * @name Phaser.Loader.File#url
-         * @type {string}
+         * @type {object|string}
          * @since 3.0.0
          */
         this.url = GetFastValue(fileConfig, 'url');
@@ -94,7 +97,7 @@ var File = new Class({
         {
             this.url = loader.path + loadKey + '.' + GetFastValue(fileConfig, 'extension', '');
         }
-        else if (typeof(this.url) !== 'function')
+        else if (typeof this.url === 'string' && this.url.indexOf('blob:') !== 0 && this.url.indexOf('data:') !== 0)
         {
             this.url = loader.path + this.url;
         }
@@ -272,6 +275,8 @@ var File = new Class({
         }
         else
         {
+            this.state = CONST.FILE_LOADING;
+
             this.src = GetURL(this, this.loader.baseURL);
 
             if (this.src.indexOf('data:') === 0)
@@ -282,7 +287,7 @@ var File = new Class({
             {
                 //  The creation of this XHRLoader starts the load process going.
                 //  It will automatically call the following, based on the load outcome:
-                //  
+                //
                 // xhr.onload = this.onLoad
                 // xhr.onerror = this.onError
                 // xhr.onprogress = this.onProgress
@@ -312,6 +317,8 @@ var File = new Class({
         {
             success = false;
         }
+
+        this.state = CONST.FILE_LOADED;
 
         this.resetXHR();
 
@@ -487,7 +494,7 @@ var File = new Class({
  * @method Phaser.Loader.File.createObjectURL
  * @static
  * @since 3.7.0
- * 
+ *
  * @param {HTMLImageElement} image - Image object which 'src' attribute should be set to object URL.
  * @param {Blob} blob - A Blob object to create an object URL for.
  * @param {string} defaultType - Default mime type used if blob type is not available.
@@ -521,7 +528,7 @@ File.createObjectURL = function (image, blob, defaultType)
  * @method Phaser.Loader.File.revokeObjectURL
  * @static
  * @since 3.7.0
- * 
+ *
  * @param {HTMLImageElement} image - Image object which 'src' attribute should be revoked.
  */
 File.revokeObjectURL = function (image)

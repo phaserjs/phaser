@@ -5,6 +5,7 @@
  */
 
 var Utils = require('../../../renderer/webgl/Utils');
+var GetColorFromValue = require('../../../display/color/GetColorFromValue');
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -34,20 +35,6 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
     var pipeline = this.pipeline;
 
     renderer.setPipeline(pipeline, src);
-
-    var crop = (src.cropWidth > 0 || src.cropHeight > 0);
-
-    if (crop)
-    {
-        pipeline.flush();
-
-        renderer.pushScissor(
-            src.x,
-            src.y,
-            src.cropWidth * src.scaleX,
-            src.cropHeight * src.scaleY
-        );
-    }
 
     var camMatrix = pipeline._tempMatrix1;
     var spriteMatrix = pipeline._tempMatrix2;
@@ -79,6 +66,20 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
         camMatrix.multiply(spriteMatrix, calcMatrix);
     }
 
+    var crop = (src.cropWidth > 0 || src.cropHeight > 0);
+
+    if (crop)
+    {
+        pipeline.flush();
+
+        renderer.pushScissor(
+            calcMatrix.tx,
+            calcMatrix.ty,
+            src.cropWidth * calcMatrix.scaleX,
+            src.cropHeight * calcMatrix.scaleY
+        );
+    }
+
     var frame = src.frame;
     var texture = frame.glTexture;
     var textureX = frame.cutX;
@@ -92,7 +93,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
     var tintBL = Utils.getTintAppendFloatAlpha(src._tintBL, camera.alpha * src._alphaBL);
     var tintBR = Utils.getTintAppendFloatAlpha(src._tintBR, camera.alpha * src._alphaBR);
 
-    pipeline.setTexture2D(texture, 0);
+    var textureUnit = pipeline.setGameObject(src);
 
     var xAdvance = 0;
     var yAdvance = 0;
@@ -233,10 +234,10 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
                 tintBR = output.tint.bottomRight;
             }
 
-            tintTL = Utils.getTintAppendFloatAlpha(tintTL, camera.alpha * src._alphaTL);
-            tintTR = Utils.getTintAppendFloatAlpha(tintTR, camera.alpha * src._alphaTR);
-            tintBL = Utils.getTintAppendFloatAlpha(tintBL, camera.alpha * src._alphaBL);
-            tintBR = Utils.getTintAppendFloatAlpha(tintBR, camera.alpha * src._alphaBR);
+            tintTL = Utils.getTintAppendFloatAlpha(GetColorFromValue(tintTL), camera.alpha * src._alphaTL);
+            tintTR = Utils.getTintAppendFloatAlpha(GetColorFromValue(tintTR), camera.alpha * src._alphaTR);
+            tintBL = Utils.getTintAppendFloatAlpha(GetColorFromValue(tintBL), camera.alpha * src._alphaBL);
+            tintBR = Utils.getTintAppendFloatAlpha(GetColorFromValue(tintBR), camera.alpha * src._alphaBR);
         }
 
         x *= scale;
@@ -286,7 +287,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
             ty3 = Math.round(ty3);
         }
 
-        pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, 0);
+        pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
     }
 
     if (crop)

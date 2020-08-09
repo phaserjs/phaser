@@ -273,7 +273,7 @@ var SmoothedKeyControl = new Class({
      * @method Phaser.Cameras.Controls.SmoothedKeyControl#start
      * @since 3.0.0
      *
-     * @return {Phaser.Cameras.Controls.SmoothedKeyControl} This Key Control instance.
+     * @return {this} This Key Control instance.
      */
     start: function ()
     {
@@ -288,7 +288,7 @@ var SmoothedKeyControl = new Class({
      * @method Phaser.Cameras.Controls.SmoothedKeyControl#stop
      * @since 3.0.0
      *
-     * @return {Phaser.Cameras.Controls.SmoothedKeyControl} This Key Control instance.
+     * @return {this} This Key Control instance.
      */
     stop: function ()
     {
@@ -305,7 +305,7 @@ var SmoothedKeyControl = new Class({
      *
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera to bind this Key Control to.
      *
-     * @return {Phaser.Cameras.Controls.SmoothedKeyControl} This Key Control instance.
+     * @return {this} This Key Control instance.
      */
     setCamera: function (camera)
     {

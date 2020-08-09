@@ -340,7 +340,7 @@ var Frame = new Class({
 
     /**
      * Sets the width, height, x and y of this Frame.
-     * 
+     *
      * This is called automatically by the constructor
      * and should rarely be changed on-the-fly.
      *
@@ -454,13 +454,13 @@ var Frame = new Class({
     /**
      * Takes a crop data object and, based on the rectangular region given, calculates the
      * required UV coordinates in order to crop this Frame for WebGL and Canvas rendering.
-     * 
+     *
      * This is called directly by the Game Object Texture Components `setCrop` method.
      * Please use that method to crop a Game Object.
      *
      * @method Phaser.Textures.Frame#setCropUVs
      * @since 3.11.0
-     * 
+     *
      * @param {object} crop - The crop data object. This is the `GameObject._crop` property.
      * @param {number} x - The x coordinate to start the crop from. Cannot be negative or exceed the Frame width.
      * @param {number} y - The y coordinate to start the crop from. Cannot be negative or exceed the Frame height.
@@ -504,7 +504,7 @@ var Frame = new Class({
 
             width = Clamp(width, 0, cw - x);
             height = Clamp(height, 0, ch - y);
-    
+
             var cropRight = x + width;
             var cropBottom = y + height;
 
@@ -519,7 +519,7 @@ var Frame = new Class({
 
                 ow = iw;
                 oh = ih;
-    
+
                 if (flipX)
                 {
                     ox = cx + (cw - (ix - ss.x) - iw);
@@ -528,7 +528,7 @@ var Frame = new Class({
                 {
                     ox = cx + (ix - ss.x);
                 }
-        
+
                 if (flipY)
                 {
                     oy = cy + (ch - (iy - ss.y) - ih);
@@ -558,7 +558,7 @@ var Frame = new Class({
             {
                 ox = cx + (cw - x - width);
             }
-    
+
             if (flipY)
             {
                 oy = cy + (ch - y - height);
@@ -598,7 +598,7 @@ var Frame = new Class({
      *
      * @method Phaser.Textures.Frame#updateCropUVs
      * @since 3.11.0
-     * 
+     *
      * @param {object} crop - The crop data object. This is the `GameObject._crop` property.
      * @param {boolean} flipX - Does the parent Game Object have flipX set?
      * @param {boolean} flipY - Does the parent Game Object have flipY set?
@@ -608,6 +608,44 @@ var Frame = new Class({
     updateCropUVs: function (crop, flipX, flipY)
     {
         return this.setCropUVs(crop, crop.x, crop.y, crop.width, crop.height, flipX, flipY);
+    },
+
+    /**
+     * Directly sets the canvas and WebGL UV data for this frame.
+     *
+     * Use this if you need to override the values that are generated automatically
+     * when the Frame is created.
+     *
+     * @method Phaser.Textures.Frame#setUVs
+     * @since 3.50.0
+     *
+     * @param {number} width - Width of this frame for the Canvas data.
+     * @param {number} height - Height of this frame for the Canvas data.
+     * @param {number} u0 - UV u0 value.
+     * @param {number} v0 - UV v0 value.
+     * @param {number} u1 - UV u1 value.
+     * @param {number} v1 - UV v1 value.
+     *
+     * @return {Phaser.Textures.Frame} This Frame object.
+     */
+    setUVs: function (width, height, u0, v0, u1, v1)
+    {
+        //  Canvas data
+
+        var cd = this.data.drawImage;
+
+        cd.width = width;
+        cd.height = height;
+
+        //  WebGL data
+
+        this.u0 = u0;
+        this.v0 = v0;
+
+        this.u1 = u1;
+        this.v1 = v1;
+
+        return this;
     },
 
     /**

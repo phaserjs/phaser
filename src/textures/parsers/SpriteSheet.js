@@ -8,7 +8,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 
 /**
  * Parses a Sprite Sheet and adds the Frames to the Texture.
- * 
+ *
  * In Phaser terminology a Sprite Sheet is a texture containing different frames, but each frame is the exact
  * same size and cannot be trimmed or rotated.
  *
@@ -60,7 +60,7 @@ var SpriteSheet = function (texture, sourceIndex, x, y, width, height, config)
 
     if (total === 0)
     {
-        console.warn('SpriteSheet frame dimensions will result in zero frames.');
+        console.warn('SpriteSheet frame dimensions will result in zero frames for texture:', texture.key);
     }
 
     if (startFrame > total || startFrame < -total)

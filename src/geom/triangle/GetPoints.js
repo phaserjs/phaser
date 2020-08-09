@@ -37,7 +37,7 @@ var GetPoints = function (triangle, quantity, stepRate, out)
     var perimeter = length1 + length2 + length3;
 
     //  If quantity is a falsey value (false, null, 0, undefined, etc) then we calculate it based on the stepRate instead.
-    if (!quantity)
+    if (!quantity && stepRate > 0)
     {
         quantity = perimeter / stepRate;
     }

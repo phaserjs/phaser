@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Parser = void 0;
 const dom = require("dts-dom");
 const regexEndLine = /^(.*)\r\n|\n|\r/gm;
 class Parser {

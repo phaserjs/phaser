@@ -27,7 +27,7 @@
  * @function Phaser.Utils.String.Pad
  * @since 3.0.0
  *
- * @param {string} str - The target string. `toString()` will be called on the string, which means you can also pass in common data types like numbers.
+ * @param {string|number|object} str - The target string. `toString()` will be called on the string, which means you can also pass in common data types like numbers.
  * @param {integer} [len=0] - The number of characters to be added.
  * @param {string} [pad=" "] - The string to pad it out with (defaults to a space).
  * @param {integer} [dir=3] - The direction dir = 1 (left), 2 (right), 3 (both).

@@ -13,6 +13,13 @@ var Vector2 = require('../../math/Vector2');
 /**
  * @classdesc
  * A Rope Game Object.
+ *
+ * The Rope object is WebGL only and does not have a Canvas counterpart.
+ *
+ * A Rope is a special kind of Game Object that has a texture that repeats along its entire length.
+ * Unlike a Sprite, it isn't restricted to using just a quad and can have as many vertices as you define
+ * when creating it. The vertices can be arranged in a horizontal or vertical strip and have their own
+ * color and alpha values as well.
  * 
  * A Ropes origin is always 0.5 x 0.5 and cannot be changed.
  *
@@ -97,7 +104,7 @@ var Rope = new Class({
          * Should you need to change the _size_ of this array, then you should always use the `setPoints` method.
          *
          * @name Phaser.GameObjects.Rope#points
-         * @type {Phaser.Math.Types.Vector2Like[]}
+         * @type {Phaser.Types.Math.Vector2Like[]}
          * @since 3.23.0
          */
         this.points = points;

@@ -176,7 +176,7 @@ var Ellipse = new Class({
      * @param {number} width - The width of the ellipse.
      * @param {number} height - The height of the ellipse.
      *
-     * @return {Phaser.Geom.Ellipse} This Ellipse object.
+     * @return {this} This Ellipse object.
      */
     setTo: function (x, y, width, height)
     {
@@ -195,7 +195,7 @@ var Ellipse = new Class({
      * @method Phaser.Geom.Ellipse#setEmpty
      * @since 3.0.0
      *
-     * @return {Phaser.Geom.Ellipse} This Ellipse object.
+     * @return {this} This Ellipse object.
      */
     setEmpty: function ()
     {
@@ -214,7 +214,7 @@ var Ellipse = new Class({
      * @param {number} x - The x position of the center of the ellipse.
      * @param {number} y - The y position of the center of the ellipse.
      *
-     * @return {Phaser.Geom.Ellipse} This Ellipse object.
+     * @return {this} This Ellipse object.
      */
     setPosition: function (x, y)
     {
@@ -236,7 +236,7 @@ var Ellipse = new Class({
      * @param {number} width - The width of the ellipse.
      * @param {number} [height=width] - The height of the ellipse.
      *
-     * @return {Phaser.Geom.Ellipse} This Ellipse object.
+     * @return {this} This Ellipse object.
      */
     setSize: function (width, height)
     {

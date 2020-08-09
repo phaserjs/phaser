@@ -53,7 +53,7 @@ function init ()
 {
     var ua = navigator.userAgent;
 
-    if (/Edge\/\d+/.test(ua))
+    if ((/Edge\/\d+/).test(ua))
     {
         Browser.edge = true;
     }

@@ -221,7 +221,7 @@ module.exports = Common;
      * @return {boolean} True if the object is a string, otherwise false
      */
     Common.isString = function(obj) {
-        return toString.call(obj) === '[object String]';
+        return Object.prototype.toString.call(obj) === '[object String]';
     };
     
     /**

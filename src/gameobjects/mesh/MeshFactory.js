@@ -22,7 +22,7 @@ var GameObjectFactory = require('../GameObjectFactory');
  * @param {number[]} uv - An array containing the uv data for this Mesh.
  * @param {number[]} colors - An array containing the color data for this Mesh.
  * @param {number[]} alphas - An array containing the alpha data for this Mesh.
- * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+ * @param {(string|Phaser.Textures.Texture)} texture - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
  *
  * @return {Phaser.GameObjects.Mesh} The Game Object that was created.

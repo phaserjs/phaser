@@ -63,23 +63,23 @@ function init ()
 {
     var ua = navigator.userAgent;
 
-    if (/Windows/.test(ua))
+    if ((/Windows/).test(ua))
     {
         OS.windows = true;
     }
-    else if (/Mac OS/.test(ua) && !(/like Mac OS/.test(ua)))
+    else if ((/Mac OS/).test(ua) && !((/like Mac OS/).test(ua)))
     {
         OS.macOS = true;
     }
-    else if (/Android/.test(ua))
+    else if ((/Android/).test(ua))
     {
         OS.android = true;
     }
-    else if (/Linux/.test(ua))
+    else if ((/Linux/).test(ua))
     {
         OS.linux = true;
     }
-    else if (/iP[ao]d|iPhone/i.test(ua))
+    else if ((/iP[ao]d|iPhone/i).test(ua))
     {
         OS.iOS = true;
 
@@ -90,19 +90,19 @@ function init ()
         OS.iPhone = ua.toLowerCase().indexOf('iphone') !== -1;
         OS.iPad = ua.toLowerCase().indexOf('ipad') !== -1;
     }
-    else if (/Kindle/.test(ua) || (/\bKF[A-Z][A-Z]+/).test(ua) || (/Silk.*Mobile Safari/).test(ua))
+    else if ((/Kindle/).test(ua) || (/\bKF[A-Z][A-Z]+/).test(ua) || (/Silk.*Mobile Safari/).test(ua))
     {
         OS.kindle = true;
 
         // This will NOT detect early generations of Kindle Fire, I think there is no reliable way...
         // E.g. "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_3; en-us; Silk/1.1.0-80) AppleWebKit/533.16 (KHTML, like Gecko) Version/5.0 Safari/533.16 Silk-Accelerated=true"
     }
-    else if (/CrOS/.test(ua))
+    else if ((/CrOS/).test(ua))
     {
         OS.chromeOS = true;
     }
 
-    if (/Windows Phone/i.test(ua) || (/IEMobile/i).test(ua))
+    if ((/Windows Phone/i).test(ua) || (/IEMobile/i).test(ua))
     {
         OS.android = false;
         OS.iOS = false;
@@ -119,7 +119,7 @@ function init ()
     }
 
     //  Windows Phone / Table reset
-    if (OS.windowsPhone || ((/Windows NT/i.test(ua)) && (/Touch/i.test(ua))))
+    if (OS.windowsPhone || (((/Windows NT/i).test(ua)) && ((/Touch/i).test(ua))))
     {
         OS.desktop = false;
     }
