@@ -11,7 +11,7 @@ var Vector2 = require('../math/Vector2');
 
 /**
  * @classdesc
- * A quadratic Bézier curve constructed from two control points.
+ * [description]
  *
  * @class QuadraticBezier
  * @extends Phaser.Curves.Curve
@@ -41,7 +41,7 @@ var QuadraticBezier = new Class({
         }
 
         /**
-         * The start point.
+         * [description]
          *
          * @name Phaser.Curves.QuadraticBezier#p0
          * @type {Phaser.Math.Vector2}
@@ -50,7 +50,7 @@ var QuadraticBezier = new Class({
         this.p0 = p0;
 
         /**
-         * The first control point.
+         * [description]
          *
          * @name Phaser.Curves.QuadraticBezier#p1
          * @type {Phaser.Math.Vector2}
@@ -59,7 +59,7 @@ var QuadraticBezier = new Class({
         this.p1 = p1;
 
         /**
-         * The second control point.
+         * [description]
          *
          * @name Phaser.Curves.QuadraticBezier#p2
          * @type {Phaser.Math.Vector2}
@@ -88,14 +88,14 @@ var QuadraticBezier = new Class({
     },
 
     /**
-     * Get the resolution of the curve.
+     * [description]
      *
      * @method Phaser.Curves.QuadraticBezier#getResolution
      * @since 3.2.0
      *
-     * @param {number} divisions - Optional divisions value.
+     * @param {number} divisions - [description]
      *
-     * @return {number} The curve resolution.
+     * @return {number} [description]
      */
     getResolution: function (divisions)
     {
@@ -130,10 +130,7 @@ var QuadraticBezier = new Class({
     },
 
     /**
-     * Draws this curve on the given Graphics object.
-     *
-     * The curve is drawn using `Graphics.strokePoints` so will be drawn at whatever the present Graphics stroke color is.
-     * The Graphics object is not cleared before the draw, so the curve will appear on-top of anything else already rendered to it.
+     * [description]
      *
      * @method Phaser.Curves.QuadraticBezier#draw
      * @since 3.2.0

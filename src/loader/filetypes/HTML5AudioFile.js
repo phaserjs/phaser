@@ -148,12 +148,7 @@ var HTML5AudioFile = new Class({
         for (var i = 0; i < instances; i++)
         {
             var audio = new Audio();
-
-            if (!audio.dataset)
-            {
-                audio.dataset = {};
-            }
-
+            audio.dataset = {};
             audio.dataset.name = this.key + ('0' + i).slice(-2);
             audio.dataset.used = 'false';
 

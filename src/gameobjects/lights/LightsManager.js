@@ -153,13 +153,13 @@ var LightsManager = new Class({
         var cameraRadius = (camera.width + camera.height) / 2.0;
         var point = { x: 0, y: 0 };
         var cameraMatrix = camera.matrix;
-        var viewportHeight = this.systems.game.renderer.height;
+        var viewportHeight = this.systems.game.config.height;
 
         culledLights.length = 0;
 
-        for (var i = 0; i < length && culledLights.length < this.maxLights; i++)
+        for (var index = 0; index < length && culledLights.length < this.maxLights; index++)
         {
-            var light = lights[i];
+            var light = lights[index];
 
             cameraMatrix.transformPoint(light.x, light.y, point);
 
@@ -170,7 +170,7 @@ var LightsManager = new Class({
 
             if (distance < light.radius + cameraRadius)
             {
-                culledLights.push(lights[i]);
+                culledLights.push(lights[index]);
             }
         }
 
@@ -197,9 +197,9 @@ var LightsManager = new Class({
         var lights = this.lights;
         var length = lights.length;
 
-        for (var i = 0; i < length; i++)
+        for (var index = 0; index < length; ++index)
         {
-            callback(lights[i]);
+            callback(lights[index]);
         }
 
         return this;
@@ -268,25 +268,21 @@ var LightsManager = new Class({
      */
     addLight: function (x, y, radius, rgb, intensity)
     {
-        if (x === undefined) { x = 0; }
-        if (y === undefined) { y = 0; }
-        if (radius === undefined) { radius = 100; }
-        if (rgb === undefined) { rgb = 0xffffff; }
-        if (intensity === undefined) { intensity = 1; }
-
         var color = null;
         var light = null;
 
-        color = Utils.getFloatsFromUintRGB(rgb);
+        x = (x === undefined) ? 0.0 : x;
+        y = (y === undefined) ? 0.0 : y;
+        rgb = (rgb === undefined) ? 0xffffff : rgb;
+        radius = (radius === undefined) ? 100.0 : radius;
+        intensity = (intensity === undefined) ? 1.0 : intensity;
 
+        color = Utils.getFloatsFromUintRGB(rgb);
         light = null;
 
-        var pool = this.lightPool;
-
-        if (pool.length > 0)
+        if (this.lightPool.length > 0)
         {
-            light = pool.pop();
-
+            light = this.lightPool.pop();
             light.set(x, y, radius, color[0], color[1], color[2], intensity);
         }
         else
@@ -354,8 +350,6 @@ var LightsManager = new Class({
     destroy: function ()
     {
         this.shutdown();
-
-        this.lightPool.length = 0;
     }
 
 });

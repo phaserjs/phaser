@@ -88,15 +88,6 @@ var Animation = new Class({
         this.nextAnim = null;
 
         /**
-         * A queue of keys of the next Animations to be loaded into this Animation Controller when the current animation completes.
-         *
-         * @name Phaser.GameObjects.Components.Animation#nextAnimsQueue
-         * @type {string[]}
-         * @since 3.24.0
-         */
-        this.nextAnimsQueue = [];
-
-        /**
          * Time scale factor.
          *
          * @name Phaser.GameObjects.Components.Animation#_timeScale
@@ -306,14 +297,14 @@ var Animation = new Class({
 
     /**
      * Sets an animation to be played immediately after the current one completes.
-     *
+     * 
      * The current animation must enter a 'completed' state for this to happen, i.e. finish all of its repeats, delays, etc, or have the `stop` method called directly on it.
-     *
+     * 
      * An animation set to repeat forever will never enter a completed state.
-     *
+     * 
      * You can chain a new animation at any point, including before the current one starts playing, during it, or when it ends (via its `animationcomplete` callback).
      * Chained animations are specific to a Game Object, meaning different Game Objects can have different chained animations without impacting the global animation they're playing.
-     *
+     * 
      * Call this method with no arguments to reset the chained animation.
      *
      * @method Phaser.GameObjects.Components.Animation#chain
@@ -330,14 +321,7 @@ var Animation = new Class({
             key = key.key;
         }
 
-        if (this.nextAnim === null)
-        {
-            this.nextAnim = key;
-        }
-        else
-        {
-            this.nextAnimsQueue.push(key);
-        }
+        this.nextAnim = key;
 
         return this.parent;
     },
@@ -512,7 +496,7 @@ var Animation = new Class({
 
     /**
      * Plays an Animation on a Game Object that has the Animation component, such as a Sprite.
-     *
+     * 
      * Animations are stored in the global Animation Manager and are referenced by a unique string-based key.
      *
      * @method Phaser.GameObjects.Components.Animation#play
@@ -586,9 +570,9 @@ var Animation = new Class({
      * Load an Animation and fires 'onStartEvent' event, extracted from 'play' method.
      *
      * @method Phaser.GameObjects.Components.Animation#_startAnimation
-     * @fires Phaser.Animations.Events#ANIMATION_START
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_START
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
+     * @fires Phaser.Animations.Events#START_ANIMATION_EVENT
+     * @fires Phaser.Animations.Events#SPRITE_START_ANIMATION_EVENT
+     * @fires Phaser.Animations.Events#SPRITE_START_KEY_ANIMATION_EVENT
      * @since 3.12.0
      *
      * @param {string} key - The string-based key of the animation to play, as defined previously in the Animation Manager.
@@ -793,9 +777,9 @@ var Animation = new Class({
      * Restarts the current animation from its beginning, optionally including its delay value.
      *
      * @method Phaser.GameObjects.Components.Animation#restart
-     * @fires Phaser.Animations.Events#ANIMATION_RESTART
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_RESTART
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_RESTART
+     * @fires Phaser.Animations.Events#RESTART_ANIMATION_EVENT
+     * @fires Phaser.Animations.Events#SPRITE_RESTART_ANIMATION_EVENT
+     * @fires Phaser.Animations.Events#SPRITE_RESTART_KEY_ANIMATION_EVENT
      * @since 3.0.0
      *
      * @param {boolean} [includeDelay=false] - Whether to include the delay value of the animation when restarting.
@@ -832,9 +816,9 @@ var Animation = new Class({
 
     /**
      * Immediately stops the current animation from playing and dispatches the `animationcomplete` event.
-     *
+     * 
      * If no animation is set, no event will be dispatched.
-     *
+     * 
      * If there is another animation queued (via the `chain` method) then it will start playing immediately.
      *
      * @method Phaser.GameObjects.Components.Animation#stop
@@ -858,7 +842,7 @@ var Animation = new Class({
             anim.emit(Events.ANIMATION_COMPLETE, anim, frame, gameObject);
 
             gameObject.emit(Events.SPRITE_ANIMATION_KEY_COMPLETE + anim.key, anim, frame, gameObject);
-
+    
             gameObject.emit(Events.SPRITE_ANIMATION_COMPLETE, anim, frame, gameObject);
         }
 
@@ -866,7 +850,7 @@ var Animation = new Class({
         {
             var key = this.nextAnim;
 
-            this.nextAnim = (this.nextAnimsQueue.length > 0) ? this.nextAnimsQueue.shift() : null;
+            this.nextAnim = null;
 
             this.play(key);
         }
@@ -1055,8 +1039,8 @@ var Animation = new Class({
      * Internal frame change handler.
      *
      * @method Phaser.GameObjects.Components.Animation#updateFrame
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_UPDATE
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_UPDATE
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_UPDATE_EVENT
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_UPDATE_EVENT
      * @private
      * @since 3.0.0
      *
@@ -1089,7 +1073,7 @@ var Animation = new Class({
     /**
      * Advances the animation to the next frame, regardless of the time or animation state.
      * If the animation is set to repeat, or yoyo, this will still take effect.
-     *
+     * 
      * Calling this does not change the direction of the animation. I.e. if it was currently
      * playing in reverse, calling this method doesn't then change the direction to forwards.
      *
@@ -1111,7 +1095,7 @@ var Animation = new Class({
     /**
      * Advances the animation to the previous frame, regardless of the time or animation state.
      * If the animation is set to repeat, or yoyo, this will still take effect.
-     *
+     * 
      * Calling this does not change the direction of the animation. I.e. if it was currently
      * playing in forwards, calling this method doesn't then change the direction to backwards.
      *
@@ -1178,7 +1162,6 @@ var Animation = new Class({
 
         this.animationManager = null;
         this.parent = null;
-        this.nextAnimsQueue.length = 0;
 
         this.currentAnim = null;
         this.currentFrame = null;

@@ -442,7 +442,7 @@ var Tile = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use to perform the check.
-     * @param {Phaser.Geom.Rectangle} [output] - Optional Rectangle object to store the results in.
+     * @param {object} [output] - [description]
      *
      * @return {(Phaser.Geom.Rectangle|object)}
      */

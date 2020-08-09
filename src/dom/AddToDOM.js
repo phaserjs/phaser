@@ -33,7 +33,7 @@ var AddToDOM = function (element, parent)
             target = parent;
         }
     }
-    else if (element.parentElement || parent === null)
+    else if (element.parentElement)
     {
         return element;
     }

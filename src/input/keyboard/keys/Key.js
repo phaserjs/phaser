@@ -237,7 +237,7 @@ var Key = new Class({
      * 
      * @param {boolean} value - Emit `down` events on repeated key down actions, or just once?
      * 
-     * @return {this} This Key instance.
+     * @return {Phaser.Input.Keyboard.Key} This Key instance.
      */
     setEmitOnRepeat: function (value)
     {
@@ -328,7 +328,7 @@ var Key = new Class({
      * @method Phaser.Input.Keyboard.Key#reset
      * @since 3.6.0
      * 
-     * @return {this} This Key instance.
+     * @return {Phaser.Input.Keyboard.Key} This Key instance.
      */
     reset: function ()
     {

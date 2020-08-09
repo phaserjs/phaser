@@ -47,7 +47,6 @@ var XHRSettings = function (responseType, async, user, password, timeout, withCr
         timeout: timeout,
 
         //  setRequestHeader
-        headers: undefined,
         header: undefined,
         headerValue: undefined,
         requestedWith: false,

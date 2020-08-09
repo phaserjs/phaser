@@ -29,23 +29,16 @@ function getValue (node, attribute)
  * @private
  *
  * @param {XMLDocument} xml - The XML Document to parse the font from.
- * @param {Phaser.Textures.Frame} frame - The texture frame to take into account when creating the uv data.
  * @param {integer} [xSpacing=0] - The x-axis spacing to add between each letter.
  * @param {integer} [ySpacing=0] - The y-axis spacing to add to the line height.
- * @param {Phaser.Textures.Texture} [texture] - If provided, each glyph in the Bitmap Font will be added to this texture as a frame.
+ * @param {Phaser.Textures.Frame} [frame] - The texture frame to take into account while parsing.
  *
  * @return {Phaser.Types.GameObjects.BitmapText.BitmapFontData} The parsed Bitmap Font data.
  */
-var ParseXMLBitmapFont = function (xml, frame, xSpacing, ySpacing, texture)
+var ParseXMLBitmapFont = function (xml, xSpacing, ySpacing, frame)
 {
     if (xSpacing === undefined) { xSpacing = 0; }
     if (ySpacing === undefined) { ySpacing = 0; }
-
-    var textureX = frame.cutX;
-    var textureY = frame.cutY;
-    var textureWidth = frame.source.width;
-    var textureHeight = frame.source.height;
-    var sourceIndex = frame.sourceIndex;
 
     var data = {};
     var info = xml.getElementsByTagName('info')[0];
@@ -71,7 +64,6 @@ var ParseXMLBitmapFont = function (xml, frame, xSpacing, ySpacing, texture)
         var node = letters[i];
 
         var charCode = getValue(node, 'id');
-        var letter = String.fromCharCode(charCode);
         var gx = getValue(node, 'x');
         var gy = getValue(node, 'y');
         var gw = getValue(node, 'width');
@@ -92,20 +84,6 @@ var ParseXMLBitmapFont = function (xml, frame, xSpacing, ySpacing, texture)
             }
         }
 
-        if (adjustForTrim && top !== 0 && left !== 0)
-        {
-            //  Now we know the top and left coordinates of the glyphs in the original data
-            //  so we can work out how much to adjust the glyphs by
-
-            gx -= frame.x;
-            gy -= frame.y;
-        }
-
-        var u0 = (textureX + gx) / textureWidth;
-        var v0 = (textureY + gy) / textureHeight;
-        var u1 = (textureX + gx + gw) / textureWidth;
-        var v1 = (textureY + gy + gh) / textureHeight;
-
         data.chars[charCode] =
         {
             x: gx,
@@ -118,21 +96,21 @@ var ParseXMLBitmapFont = function (xml, frame, xSpacing, ySpacing, texture)
             yOffset: getValue(node, 'yoffset'),
             xAdvance: getValue(node, 'xadvance') + xSpacing,
             data: {},
-            kerning: {},
-            u0: u0,
-            v0: v0,
-            u1: u1,
-            v1: v1
+            kerning: {}
         };
+    }
 
-        if (texture && gw !== 0 && gh !== 0)
+    if (adjustForTrim && top !== 0 && left !== 0)
+    {
+        //  Now we know the top and left coordinates of the glyphs in the original data
+        //  so we can work out how much to adjust the glyphs by
+
+        for (var code in data.chars)
         {
-            var charFrame = texture.add(letter, sourceIndex, gx, gy, gw, gh);
+            var glyph = data.chars[code];
 
-            if (charFrame)
-            {
-                charFrame.setUVs(gw, gh, u0, v0, u1, v1);
-            }
+            glyph.x -= frame.x;
+            glyph.y -= frame.y;
         }
     }
 

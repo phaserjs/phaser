@@ -169,7 +169,7 @@ var GameObject = new Class({
          * If this Game Object is enabled for Arcade or Matter Physics then this property will contain a reference to a Physics Body.
          *
          * @name Phaser.GameObjects.GameObject#body
-         * @type {?(Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody|MatterJS.BodyType)}
+         * @type {?(object|Phaser.Physics.Arcade.Body|MatterJS.BodyType)}
          * @default null
          * @since 3.0.0
          */
@@ -331,65 +331,6 @@ var GameObject = new Class({
     },
 
     /**
-     * Increase a value for the given key within this Game Objects Data Manager. If the key doesn't already exist in the Data Manager then it is increased from 0.
-     *
-     * If the Game Object has not been enabled for data (via `setDataEnabled`) then it will be enabled
-     * before setting the value.
-     *
-     * If the key doesn't already exist in the Data Manager then it is created.
-     * 
-     * When the value is first set, a `setdata` event is emitted from this Game Object.
-     *
-     * @method Phaser.GameObjects.GameObject#incData
-     * @since 3.23.0
-     *
-     * @param {(string|object)} key - The key to increase the value for.
-     * @param {*} [data] - The value to increase for the given key.
-     *
-     * @return {this} This GameObject.
-     */
-    incData: function (key, value)
-    {
-        if (!this.data)
-        {
-            this.data = new DataManager(this);
-        }
-
-        this.data.inc(key, value);
-
-        return this;
-    },
-
-    /**
-     * Toggle a boolean value for the given key within this Game Objects Data Manager. If the key doesn't already exist in the Data Manager then it is toggled from false.
-     *
-     * If the Game Object has not been enabled for data (via `setDataEnabled`) then it will be enabled
-     * before setting the value.
-     *
-     * If the key doesn't already exist in the Data Manager then it is created.
-     * 
-     * When the value is first set, a `setdata` event is emitted from this Game Object.
-     *
-     * @method Phaser.GameObjects.GameObject#toggleData
-     * @since 3.23.0
-     *
-     * @param {(string|object)} key - The key to toggle the value for.
-     *
-     * @return {this} This GameObject.
-     */
-    toggleData: function (key)
-    {
-        if (!this.data)
-        {
-            this.data = new DataManager(this);
-        }
-
-        this.data.toggle(key);
-
-        return this;
-    },
-
-    /**
      * Retrieves the value for the given key in this Game Objects Data Manager, or undefined if it doesn't exist.
      *
      * You can also access values via the `values` object. For example, if you had a key called `gold` you can do either:
@@ -442,27 +383,18 @@ var GameObject = new Class({
      *
      * You can also provide an Input Configuration Object as the only argument to this method.
      *
-     * @example
-     * sprite.setInteractive();
-     *
-     * @example
-     * sprite.setInteractive(new Phaser.Geom.Circle(45, 46, 45), Phaser.Geom.Circle.Contains);
-     *
-     * @example
-     * graphics.setInteractive(new Phaser.Geom.Rectangle(0, 0, 128, 128), Phaser.Geom.Rectangle.Contains);
-     *
      * @method Phaser.GameObjects.GameObject#setInteractive
      * @since 3.0.0
      *
-     * @param {(Phaser.Types.Input.InputConfiguration|any)} [hitArea] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not given it will try to create a Rectangle based on the texture frame.
-     * @param {Phaser.Types.Input.HitAreaCallback} [callback] - The callback that determines if the pointer is within the Hit Area shape or not. If you provide a shape you must also provide a callback.
+     * @param {(Phaser.Types.Input.InputConfiguration|any)} [shape] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
+     * @param {Phaser.Types.Input.HitAreaCallback} [callback] - A callback to be invoked when the Game Object is interacted with. If you provide a shape you must also provide a callback.
      * @param {boolean} [dropZone=false] - Should this Game Object be treated as a drop zone target?
      *
      * @return {this} This GameObject.
      */
-    setInteractive: function (hitArea, hitAreaCallback, dropZone)
+    setInteractive: function (shape, callback, dropZone)
     {
-        this.scene.sys.input.enable(this, hitArea, hitAreaCallback, dropZone);
+        this.scene.sys.input.enable(this, shape, callback, dropZone);
 
         return this;
     },

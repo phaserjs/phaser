@@ -314,7 +314,7 @@ var SceneManager = new Class({
      * @param {string} key - A unique key used to reference the Scene, i.e. `MainMenu` or `Level1`.
      * @param {(Phaser.Scene|Phaser.Types.Scenes.SettingsConfig|Phaser.Types.Scenes.CreateSceneFromObjectConfig|function)} sceneConfig - The config for the Scene
      * @param {boolean} [autoStart=false] - If `true` the Scene will be started immediately after being added.
-     * @param {object} [data] - Optional data object. This will be set as `Scene.settings.data` and passed to `Scene.init`, and `Scene.create`.
+     * @param {object} [data] - Optional data object. This will be set as Scene.settings.data and passed to `Scene.init`.
      *
      * @return {?Phaser.Scene} The added Scene, if it was added immediately, otherwise `null`.
      */
@@ -451,8 +451,6 @@ var SceneManager = new Class({
     {
         var sys = scene.sys;
         var settings = sys.settings;
-
-        sys.sceneUpdate = NOOP;
 
         if (scene.init)
         {
@@ -695,7 +693,11 @@ var SceneManager = new Class({
     {
         var configKey = newScene.sys.settings.key;
 
-        if (configKey === '')
+        if (configKey !== '')
+        {
+            key = configKey;
+        }
+        else
         {
             newScene.sys.settings.key = key;
         }
@@ -1135,7 +1137,7 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The Scene to start.
-     * @param {object} [data] - Optional data object to pass to `Scene.Settings` and `Scene.init`, and `Scene.create`.
+     * @param {object} [data] - Optional data object to pass to Scene.Settings and Scene.init.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */

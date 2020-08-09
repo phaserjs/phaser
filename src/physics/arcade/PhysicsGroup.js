@@ -15,8 +15,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @classdesc
  * An Arcade Physics Group object.
  *
- * All Game Objects created by or added to this Group will automatically be given dynamic Arcade Physics bodies (if they have no body)
- * and the bodies will receive the Group's {@link Phaser.Physics.Arcade.Group#defaults default values}.
+ * All Game Objects created by or added to this Group will automatically be given dynamic Arcade Physics bodies, if they have no body.
  *
  * Its static counterpart is {@link Phaser.Physics.Arcade.StaticGroup}.
  *
@@ -57,7 +56,7 @@ var PhysicsGroup = new Class({
         }
         else if (Array.isArray(children) && IsPlainObject(children[0]))
         {
-            //  children is an array of plain objects (i.e., configs)
+            //  children is an array of plain objects
             config = children[0];
 
             var _this = this;
@@ -67,8 +66,6 @@ var PhysicsGroup = new Class({
                 singleConfig.internalCreateCallback = _this.createCallbackHandler;
                 singleConfig.internalRemoveCallback = _this.removeCallbackHandler;
             });
-
-            children = null;
         }
         else
         {
@@ -113,8 +110,6 @@ var PhysicsGroup = new Class({
         /**
          * Default physics properties applied to Game Objects added to the Group or created by the Group. Derived from the `config` argument.
          *
-         * You can remove the default values by setting this property to `{}`.
-         *
          * @name Phaser.Physics.Arcade.Group#defaults
          * @type {Phaser.Types.Physics.Arcade.PhysicsGroupDefaults}
          * @since 3.0.0
@@ -144,6 +139,11 @@ var PhysicsGroup = new Class({
             setMass: GetFastValue(config, 'mass', 1),
             setImmovable: GetFastValue(config, 'immovable', false)
         };
+
+        if (Array.isArray(children))
+        {
+            config = null;
+        }
 
         Group.call(this, scene, children, config);
 

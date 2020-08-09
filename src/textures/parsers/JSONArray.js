@@ -66,13 +66,11 @@ var JSONArray = function (texture, sourceIndex, json)
             newFrame.updateUVsInverted();
         }
 
-        var pivot = src.anchor || src.pivot;
-
-        if (pivot)
+        if (src.anchor)
         {
             newFrame.customPivot = true;
-            newFrame.pivotX = pivot.x;
-            newFrame.pivotY = pivot.y;
+            newFrame.pivotX = src.anchor.x;
+            newFrame.pivotY = src.anchor.y;
         }
 
         //  Copy over any extra data

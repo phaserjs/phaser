@@ -6,10 +6,8 @@
 
 var MATH_CONST = require('../../math/const');
 var TransformMatrix = require('./TransformMatrix');
-var TransformXY = require('../../math/TransformXY');
 var WrapAngle = require('../../math/angle/Wrap');
 var WrapAngleDegrees = require('../../math/angle/WrapDegrees');
-var Vector2 = require('../../math/Vector2');
 
 //  global bitmask flag for GameObject.renderMask (used by Scale)
 var _FLAG = 4; // 0100
@@ -502,56 +500,6 @@ var Transform = {
         }
 
         return tempMatrix;
-    },
-
-    /**
-     * Takes the given `x` and `y` coordinates and converts them into local space for this
-     * Game Object, taking into account parent and local transforms, and the Display Origin.
-     *
-     * The returned Vector2 contains the translated point in its properties.
-     *
-     * A Camera needs to be provided in order to handle modified scroll factors. If no
-     * camera is specified, it will use the `main` camera from the Scene to which this
-     * Game Object belongs.
-     *
-     * @method Phaser.GameObjects.Components.Transform#getLocalPoint
-     * @since 3.50.0
-     *
-     * @param {number} x - The x position to translate.
-     * @param {number} y - The y position to translate.
-     * @param {Phaser.Math.Vector2} [point] - A Vector2, or point-like object, to store the results in.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera which is being tested against. If not given will use the Scene default camera.
-     *
-     * @return {Phaser.Math.Vector2} The translated point.
-     */
-    getLocalPoint: function (x, y, point, camera)
-    {
-        if (!point) { point = new Vector2(); }
-        if (!camera) { camera = this.scene.sys.cameras.main; }
-
-        var csx = camera.scrollX;
-        var csy = camera.scrollY;
-
-        var px = x + (csx * this.scrollFactorX) - csx;
-        var py = y + (csy * this.scrollFactorY) - csy;
-
-        if (this.parentContainer)
-        {
-            this.getWorldTransformMatrix().applyInverse(px, py, point);
-        }
-        else
-        {
-            TransformXY(px, py, this.x, this.y, this.rotation, this.scaleX, this.scaleY, point);
-        }
-
-        //  Normalize origin
-        if (this._originComponent)
-        {
-            point.x += this._displayOriginX;
-            point.y += this._displayOriginY;
-        }
-
-        return point;
     },
 
     /**

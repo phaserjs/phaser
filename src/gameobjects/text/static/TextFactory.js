@@ -41,7 +41,7 @@ var GameObjectFactory = require('../../GameObjectFactory');
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
  * @param {(string|string[])} text - The text this Text object will display.
- * @param {Phaser.Types.GameObjects.Text.TextStyle} [style] - The Text style configuration object.
+ * @param {object} [style] - The Text style configuration object.
  *
  * @return {Phaser.GameObjects.Text} The Game Object that was created.
  */

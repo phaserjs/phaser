@@ -66,7 +66,7 @@ var Shape = new Class({
          * The source Shape data. Typically a geometry object.
          * You should not manipulate this directly.
          *
-         * @name Phaser.GameObjects.Shape#geom
+         * @name Phaser.GameObjects.Shape#data
          * @type {any}
          * @readonly
          * @since 3.13.0

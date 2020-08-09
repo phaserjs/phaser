@@ -7,14 +7,14 @@
 var Tileset = require('../../Tileset');
 
 /**
- * Tilesets and Image Collections
+ * [description]
  *
  * @function Phaser.Tilemaps.Parsers.Impact.ParseTilesets
  * @since 3.0.0
  *
- * @param {object} json - The Impact JSON data.
+ * @param {object} json - [description]
  *
- * @return {array} An array of Tilesets.
+ * @return {array} [description]
  */
 var ParseTilesets = function (json)
 {

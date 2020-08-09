@@ -25,7 +25,7 @@ var TILEMAP_FORMATS = require('../../tilemaps/Formats');
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {(string|Phaser.Types.Loader.FileTypes.TilemapJSONFileConfig)} key - The key to use for this file, or a file configuration object.
- * @param {object|string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json". Or, a well formed JSON object.
+ * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var TilemapJSONFile = new Class({
@@ -120,11 +120,11 @@ var TilemapJSONFile = new Class({
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#tilemapTiledJSON
- * @fires Phaser.Loader.LoaderPlugin#ADD
+ * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.0.0
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.TilemapJSONFileConfig|Phaser.Types.Loader.FileTypes.TilemapJSONFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
- * @param {object|string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json". Or, a well formed JSON object.
+ * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {this} The Loader instance.

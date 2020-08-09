@@ -5,10 +5,10 @@
  */
 
 /**
- * Calculate the full bounds, in local and world space, of a BitmapText Game Object.
+ * Calculate the position, width and height of a BitmapText Game Object.
  *
  * Returns a BitmapTextSize object that contains global and local variants of the Game Objects x and y coordinates and
- * its width and height. Also includes an array of the line lengths and all word positions.
+ * its width and height.
  *
  * The global position and size take into account the Game Object's position and scale.
  *
@@ -18,17 +18,14 @@
  * @since 3.0.0
  * @private
  *
- * @param {(Phaser.GameObjects.DynamicBitmapText|Phaser.GameObjects.BitmapText)} src - The BitmapText to calculate the bounds values for.
- * @param {boolean} [round=false] - Whether to round the positions to the nearest integer.
- * @param {boolean} [updateOrigin=false] - Whether to update the origin of the BitmapText after bounds calculations?
- * @param {object} [out] - Object to store the results in, to save constant object creation. If not provided an empty object is returned.
+ * @param {(Phaser.GameObjects.DynamicBitmapText|Phaser.GameObjects.BitmapText)} src - The BitmapText to calculate the position, width and height of.
+ * @param {boolean} [round] - Whether to round the results to the nearest integer.
+ * @param {object} [out] - Optional object to store the results in, to save constant object creation.
  *
- * @return {Phaser.Types.GameObjects.BitmapText.BitmapTextSize} The calculated bounds values of the BitmapText.
+ * @return {Phaser.Types.GameObjects.BitmapText.BitmapTextSize} The calculated position, width and height of the BitmapText.
  */
-var GetBitmapTextSize = function (src, round, updateOrigin, out)
+var GetBitmapTextSize = function (src, round, out)
 {
-    if (updateOrigin === undefined) { updateOrigin = false; }
-
     if (out === undefined)
     {
         out = {
@@ -52,7 +49,6 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
             },
             wrappedText: '',
             words: [],
-            characters: [],
             scaleX: 0,
             scaleY: 0
         };
@@ -81,8 +77,6 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
 
     var glyph = null;
 
-    var align = src._align;
-
     var x = 0;
     var y = 0;
 
@@ -100,7 +94,6 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
 
     var i;
     var words = [];
-    var characters = [];
     var current = null;
 
     //  Scan for breach of maxWidth and insert carriage-returns
@@ -159,7 +152,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
                         h: current.h * sy,
                         cr: false
                     });
-
+    
                     current = null;
                 }
             }
@@ -268,8 +261,6 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
         current = null;
     }
 
-    var charIndex = 0;
-
     for (i = 0; i < textLength; i++)
     {
         charCode = text.charCodeAt(i);
@@ -352,8 +343,6 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
             bh = gh;
         }
 
-        var charWidth = glyph.xOffset + glyph.xAdvance + ((kerningOffset !== undefined) ? kerningOffset : 0);
-
         if (charCode === wordWrapCharCode)
         {
             if (current !== null)
@@ -366,7 +355,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
                     w: current.w * sx,
                     h: current.h * sy
                 });
-
+    
                 current = null;
             }
         }
@@ -375,33 +364,17 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
             if (current === null)
             {
                 //  We're starting a new word, recording the starting index, etc
-                current = { word: '', i: charIndex, x: xAdvance, y: yAdvance, w: 0, h: lineHeight };
+                current = { word: '', i: i, x: xAdvance, y: yAdvance, w: 0, h: lineHeight };
             }
 
             current.word = current.word.concat(text[i]);
-            current.w += charWidth;
+            current.w += glyph.xOffset + glyph.xAdvance + ((kerningOffset !== undefined) ? kerningOffset : 0);
         }
-
-        characters.push({
-            i: charIndex,
-            char: text[i],
-            code: charCode,
-            x: (glyph.xOffset + xAdvance) * scale,
-            y: (glyph.yOffset + yAdvance) * scale,
-            w: glyph.width * scale,
-            h: glyph.height * scale,
-            t: yAdvance * scale,
-            r: gw * scale,
-            b: lineHeight * scale,
-            line: currentLine,
-            glyph: glyph
-        });
 
         xAdvance += glyph.xAdvance + letterSpacing;
         lastGlyph = glyph;
         lastCharCode = charCode;
         currentLineWidth = gw * scale;
-        charIndex++;
     }
 
     //  Last word
@@ -429,30 +402,6 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
         shortestLine = currentLineWidth;
     }
 
-    //  Adjust all of the character positions based on alignment
-    if (align > 0)
-    {
-        for (var c = 0; c < characters.length; c++)
-        {
-            var currentChar = characters[c];
-
-            if (align === 1)
-            {
-                var ax1 = ((longestLine - lineWidths[currentChar.line]) / 2);
-
-                currentChar.x += ax1;
-                currentChar.r += ax1;
-            }
-            else if (align === 2)
-            {
-                var ax2 = (longestLine - lineWidths[currentChar.line]);
-
-                currentChar.x += ax2;
-                currentChar.r += ax2;
-            }
-        }
-    }
-
     var local = out.local;
     var global = out.global;
     var lines = out.lines;
@@ -462,9 +411,8 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
     local.width = bw * scale;
     local.height = bh * scale;
 
-    global.x = (src.x - src._displayOriginX) + (bx * sx);
-    global.y = (src.y - src._displayOriginY) + (by * sy);
-
+    global.x = (src.x - src.displayOriginX) + (bx * sx);
+    global.y = (src.y - src.displayOriginY) + (by * sy);
     global.width = bw * sx;
     global.height = bh * sy;
 
@@ -474,39 +422,22 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
 
     if (round)
     {
-        local.x = Math.ceil(local.x);
-        local.y = Math.ceil(local.y);
-        local.width = Math.ceil(local.width);
-        local.height = Math.ceil(local.height);
+        local.x = Math.round(local.x);
+        local.y = Math.round(local.y);
+        local.width = Math.round(local.width);
+        local.height = Math.round(local.height);
 
-        global.x = Math.ceil(global.x);
-        global.y = Math.ceil(global.y);
-        global.width = Math.ceil(global.width);
-        global.height = Math.ceil(global.height);
+        global.x = Math.round(global.x);
+        global.y = Math.round(global.y);
+        global.width = Math.round(global.width);
+        global.height = Math.round(global.height);
 
-        lines.shortest = Math.ceil(shortestLine);
-        lines.longest = Math.ceil(longestLine);
-    }
-
-    if (updateOrigin)
-    {
-        src._displayOriginX = (src.originX * local.width);
-        src._displayOriginY = (src.originY * local.height);
-
-        global.x = src.x - (src._displayOriginX * src.scaleX);
-        global.y = src.y - (src._displayOriginY * src.scaleY);
-
-        if (round)
-        {
-            global.x = Math.ceil(global.x);
-            global.y = Math.ceil(global.y);
-        }
+        lines.shortest = Math.round(shortestLine);
+        lines.longest = Math.round(longestLine);
     }
 
     out.words = words;
-    out.characters = characters;
     out.lines.height = lineHeight;
-    out.scale = scale;
     out.scaleX = src.scaleX;
     out.scaleY = src.scaleY;
 

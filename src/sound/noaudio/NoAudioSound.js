@@ -10,21 +10,6 @@ var Class = require('../../utils/Class');
 var EventEmitter = require('eventemitter3');
 var Extend = require('../../utils/object/Extend');
 
-var returnFalse = function ()
-{
-    return false;
-};
-
-var returnNull = function ()
-{
-    return null;
-};
-
-var returnThis = function ()
-{
-    return this;
-};
-
 /**
  * @classdesc
  * No audio implementation of the sound. It is used if audio has been
@@ -35,6 +20,7 @@ var returnThis = function ()
  * breaking on devices that don't support any audio playback technologies.
  *
  * @class NoAudioSound
+ * @extends Phaser.Sound.BaseSound
  * @memberof Phaser.Sound
  * @constructor
  * @since 3.0.0
@@ -85,101 +71,51 @@ var NoAudioSound = new Class({
         this.pendingRemove = false;
     },
 
-    /**
-     * @method Phaser.Sound.NoAudioSound#addMarker
-     * @since 3.0.0
-     *
-     * @param {Phaser.Types.Sound.SoundMarker} marker - Marker object.
-     *
-     * @return {boolean} false
-     */
     // eslint-disable-next-line no-unused-vars
-    addMarker: returnFalse,
-
-    /**
-     * @method Phaser.Sound.NoAudioSound#updateMarker
-     * @since 3.0.0
-     *
-     * @param {Phaser.Types.Sound.SoundMarker} marker - Marker object with updated values.
-     *
-     * @return {boolean} false
-     */
-    // eslint-disable-next-line no-unused-vars
-    updateMarker: returnFalse,
-
-    /**
-     * @method Phaser.Sound.NoAudioSound#removeMarker
-     * @since 3.0.0
-     *
-     * @param {string} markerName - The name of the marker to remove.
-     *
-     * @return {null} null
-     */
-    removeMarker: returnNull,
-
-    /**
-     * @method Phaser.Sound.NoAudioSound#play
-     * @since 3.0.0
-     *
-     * @param {(string|Phaser.Types.Sound.SoundConfig)} [markerName=''] - If you want to play a marker then provide the marker name here. Alternatively, this parameter can be a SoundConfig object.
-     * @param {Phaser.Types.Sound.SoundConfig} [config] - Optional sound config object to be applied to this marker or entire sound if no marker name is provided. It gets memorized for future plays of current section of the sound.
-     *
-     * @return {boolean} false
-     */
-    play: returnFalse,
-
-    /**
-     * @method Phaser.Sound.NoAudioSound#pause
-     * @since 3.0.0
-     *
-     * @return {boolean} false
-     */
-    pause: returnFalse,
-
-    /**
-     * Resumes the sound.
-     *
-     * @method Phaser.Sound.NoAudioSound#resume
-     * @since 3.0.0
-     *
-     * @return {boolean} false
-     */
-    resume: returnFalse,
-
-    /**
-     * Stop playing this sound.
-     *
-     * @method Phaser.Sound.NoAudioSound#stop
-     * @since 3.0.0
-     *
-     * @return {boolean} false
-     */
-    stop: returnFalse,
-
-    /**
-     * Destroys this sound and all associated events and marks it for removal from the sound manager.
-     *
-     * @method Phaser.Sound.NoAudioSound#destroy
-     * @fires Phaser.Sound.Events#DESTROY
-     * @since 3.0.0
-     */
-    destroy: function ()
+    addMarker: function (marker)
     {
-        BaseSound.prototype.destroy.call(this);
+        return false;
     },
 
-    setMute: returnThis,
+    // eslint-disable-next-line no-unused-vars
+    updateMarker: function (marker)
+    {
+        return false;
+    },
 
-    setVolume: returnThis,
+    // eslint-disable-next-line no-unused-vars
+    removeMarker: function (markerName)
+    {
+        return null;
+    },
 
-    setRate: returnThis,
+    // eslint-disable-next-line no-unused-vars
+    play: function (markerName, config)
+    {
+        return false;
+    },
 
-    setDetune: returnThis,
+    pause: function ()
+    {
+        return false;
+    },
 
-    setSeek: returnThis,
+    resume: function ()
+    {
+        return false;
+    },
 
-    setLoop: returnThis
+    stop: function ()
+    {
+        return false;
+    },
 
+    destroy: function ()
+    {
+        this.manager.remove(this);
+
+        BaseSound.prototype.destroy.call(this);
+    }
 });
 
 module.exports = NoAudioSound;

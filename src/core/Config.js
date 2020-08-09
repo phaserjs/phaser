@@ -396,12 +396,7 @@ var Config = new Class({
         /**
          * @const {integer} Phaser.Core.Config#batchSize - The default WebGL Batch size.
          */
-        this.batchSize = GetValue(renderConfig, 'batchSize', 4096);
-
-        /**
-         * @const {integer} Phaser.Core.Config#maxTextures - When in WebGL mode, this sets the maximum number of GPU Textures to use. The default, -1, will use all available units. The WebGL1 spec says all browsers should provide a minimum of 8.
-         */
-        this.maxTextures = GetValue(renderConfig, 'maxTextures', -1);
+        this.batchSize = GetValue(renderConfig, 'batchSize', 2000);
 
         /**
          * @const {integer} Phaser.Core.Config#maxLights - The maximum number of lights allowed to be visible within range of a single Camera in the LightManager.

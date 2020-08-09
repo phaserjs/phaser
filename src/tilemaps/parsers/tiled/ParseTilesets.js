@@ -14,9 +14,9 @@ var ParseObject = require('./ParseObject');
  * @function Phaser.Tilemaps.Parsers.Tiled.ParseTilesets
  * @since 3.0.0
  *
- * @param {object} json - The Tiled JSON data.
+ * @param {object} json - [description]
  *
- * @return {object} An object containing the tileset and image collection data.
+ * @return {object} [description]
  */
 var ParseTilesets = function (json)
 {

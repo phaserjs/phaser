@@ -644,7 +644,7 @@ var TimeStep = new Class({
     {
         if (this.running)
         {
-            return;
+            this.sleep();
         }
         else if (seamless)
         {

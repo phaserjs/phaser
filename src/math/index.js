@@ -52,7 +52,6 @@ var PhaserMath = {
     Rotate: require('./Rotate'),
     RotateAround: require('./RotateAround'),
     RotateAroundDistance: require('./RotateAroundDistance'),
-    RotateTo: require('./RotateTo'),
     RoundAwayFromZero: require('./RoundAwayFromZero'),
     RoundTo: require('./RoundTo'),
     SinCosTableGenerator: require('./SinCosTableGenerator'),

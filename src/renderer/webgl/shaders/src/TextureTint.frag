@@ -2,19 +2,15 @@
 
 precision mediump float;
 
-uniform sampler2D uMainSampler[%count%];
+uniform sampler2D uMainSampler;
 
 varying vec2 outTexCoord;
-varying float outTexId;
 varying float outTintEffect;
 varying vec4 outTint;
 
 void main()
 {
-    vec4 texture;
-
-    %forloop%
-
+    vec4 texture = texture2D(uMainSampler, outTexCoord);
     vec4 texel = vec4(outTint.rgb * outTint.a, outTint.a);
     vec4 color = texture;
 

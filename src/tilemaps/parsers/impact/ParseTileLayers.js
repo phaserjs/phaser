@@ -8,17 +8,15 @@ var LayerData = require('../../mapdata/LayerData');
 var Tile = require('../../Tile');
 
 /**
- * Parses all tilemap layers in an Impact JSON object into new LayerData objects.
+ * [description]
  *
  * @function Phaser.Tilemaps.Parsers.Impact.ParseTileLayers
  * @since 3.0.0
  *
- * @param {object} json - The Impact JSON object.
- * @param {boolean} insertNull - Controls how empty tiles, tiles with an index of -1, in the map
- * data are handled (see {@link Phaser.Tilemaps.Parsers.Tiled.ParseJSONTiled}).
+ * @param {object} json - [description]
+ * @param {boolean} insertNull - [description]
  *
- * @return {Phaser.Tilemaps.LayerData[]} - An array of LayerData objects, one for each entry in
- * json.layers with the type 'tilelayer'.
+ * @return {array} [description]
  */
 var ParseTileLayers = function (json, insertNull)
 {

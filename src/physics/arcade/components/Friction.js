@@ -5,30 +5,24 @@
  */
 
 /**
- * Methods for setting the friction of an Arcade Physics Body.
- *
- * In Arcade Physics, friction is a special case of motion transfer from an "immovable" body to a riding body.
+ * Sets the friction (e.g. the amount of velocity reduced over time) of the physics body when moving horizontally in the X axis. The higher than friction, the faster the body will slow down once force stops being applied to it.
  *
  * @namespace Phaser.Physics.Arcade.Components.Friction
  * @since 3.0.0
- *
- * @see Phaser.Physics.Arcade.Body#friction
  */
 var Friction = {
 
     /**
-     * Sets the friction of this game object's physics body.
-     * In Arcade Physics, friction is a special case of motion transfer from an "immovable" body to a riding body.
+     * Sets the friction (e.g. the amount of velocity reduced over time) of the physics body when moving.
+     * The higher than friction, the faster the body will slow down once force stops being applied to it.
      *
      * @method Phaser.Physics.Arcade.Components.Friction#setFriction
      * @since 3.0.0
      *
-     * @param {number} x - The amount of horizontal friction to apply, [0, 1].
-     * @param {number} [y=x] - The amount of vertical friction to apply, [0, 1].
+     * @param {number} x - The amount of horizontal friction to apply.
+     * @param {number} [y=x] - The amount of vertical friction to apply.
      *
      * @return {this} This Game Object.
-     *
-     * @see Phaser.Physics.Arcade.Body#friction
      */
     setFriction: function (x, y)
     {
@@ -38,17 +32,15 @@ var Friction = {
     },
 
     /**
-     * Sets the horizontal friction of this game object's physics body.
-     * This can move a riding body horizontally when it collides with this one on the vertical axis.
+     * Sets the friction (e.g. the amount of velocity reduced over time) of the physics body when moving horizontally in the X axis.
+     * The higher than friction, the faster the body will slow down once force stops being applied to it.
      *
      * @method Phaser.Physics.Arcade.Components.Friction#setFrictionX
      * @since 3.0.0
      *
-     * @param {number} x - The amount of friction to apply, [0, 1].
+     * @param {number} x - The amount of friction to apply.
      *
      * @return {this} This Game Object.
-     *
-     * @see Phaser.Physics.Arcade.Body#friction
      */
     setFrictionX: function (x)
     {
@@ -58,17 +50,15 @@ var Friction = {
     },
 
     /**
-     * Sets the vertical friction of this game object's physics body.
-     * This can move a riding body vertically when it collides with this one on the horizontal axis.
+     * Sets the friction (e.g. the amount of velocity reduced over time) of the physics body when moving vertically in the Y axis.
+     * The higher than friction, the faster the body will slow down once force stops being applied to it.
      *
      * @method Phaser.Physics.Arcade.Components.Friction#setFrictionY
      * @since 3.0.0
      *
-     * @param {number} y - The amount of friction to apply, [0, 1].
+     * @param {number} x - The amount of friction to apply.
      *
      * @return {this} This Game Object.
-     *
-     * @see Phaser.Physics.Arcade.Body#friction
      */
     setFrictionY: function (y)
     {

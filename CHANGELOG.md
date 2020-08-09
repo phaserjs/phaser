@@ -1,280 +1,17 @@
 # Change Log
 
-## Version 3.50.0 - Subaru - in development
-
-### WebGL Multi-Texture Rendering
-
-The Texture Tint Pipeline has had its core flow rewritten to eliminate the need for constantly creating `batch` objects. Instead, it now supports the new multi-texture shader, vastly increasing rendering performance, especially on drawcall-bound systems.
-
-All of the internal functions, such as `batchQuad` and `batchSprite` have been updated to use the new method of texture setting. The method signatures all remain the same, unless indicated below.
-
-* `Config.render.maxTextures` is a new game config setting that allows you to control how many texture units will be used in WebGL.
-* `WebGL.Utils.checkShaderMax` is a new function, used internally by the renderer, to determine the maximum number of texture units the GPU + browser supports.
-* The property `WebGLRenderer.currentActiveTextureUnit` has been renamed to `currentActiveTexture`.
-* `WebGLRenderer.startActiveTexture` is a new read-only property contains the current starting active texture unit.
-* `WebGLRenderer.maxTextures` is a new read-only property that contains the maximum number of texture units WebGL can use.
-* `WebGLRenderer.textureIndexes` is a new read-only array that contains all of the available WebGL texture units.
-* `WebGLRenderer.tempTextures` is a new read-only array that contains temporary WebGL textures.
-* The `WebGLRenderer.currentTextures` property has been removed, as it's no longer used.
-* `TextureSource.glIndex` is a new property that holds the currently assigned texture unit for the Texture Source.
-* `TextureSource.glIndexCounter` is a new property that holds the time the index was assigned to the Texture Source.
-* `WebGLRenderer.currentTextures` has been removed, as it's no longer used internally.
-* `WebGLRenderer.setBlankTexture` no longer has a `force` parameter, as it's set by default.
-* The Mesh Game Object WebGL Renderer function has been updated to support multi-texture units.
-* The Blitter Game Object WebGL Renderer function has been updated to support multi-texture units.
-* The Bitmap Text Game Object WebGL Renderer function has been updated to support multi-texture units.
-* The Dynamic Bitmap Text Game Object WebGL Renderer function has been updated to support multi-texture units.
-* The Particle Emitter Game Object WebGL Renderer function has been updated to support multi-texture units.
-* The Texture Tint vertex and fragment shaders have been updated to support the `inTexId` float attribute and dynamic generation.
-* The Texture Tint Pipeline has a new attribute, `inTexId` which is a `gl.FLOAT`.
-* `TextureTintPipeline.bind` is a new method that sets the `uMainSampler` uniform.
-* The `TextureTintPipeline.requireTextureBatch` method has been removed, as it's no longer required.
-* The `TextureTintPipeline.pushBatch` method has been removed, as it's no longer required.
-* The `TextureTintPipeline.maxQuads` property has been removed, as it's no longer required.
-* The `TextureTintPipeline.batches` property has been removed, as it's no longer required.
-* `TextureTintPipeline.flush` has been rewritten to support multi-textures.
-* `TextureTintPipeline.flush` no longer creates a sub-array if the batch is full, but instead uses `bufferData` for speed.
-* `WebGLPipeline.currentUnit` is a new property that holds the most recently assigned texture unit. Treat as read-only.
-* `WebGLRenderer.setTextureSource` is a new method, used by pipelines and Game Objects, that will assign a texture unit to the given Texture Source.
-* The `WebGLRenderer.setTexture2D` method has been updated to use the new texture unit assignment. It no longer takes the `textureUnit` or `flush` parameters and these have been removed from its method signature.
-* `WebGLRenderer.setTextureZero` is a new method that activates texture zero and binds the given texture to it. Useful for fbo backed game objects.
-* `WebGLRenderer.clearTextureZero` is a new method that clears the texture tha was bound to unit zero.
-* `WebGLRenderer.textureZero` is a new property that holds the currently bound unit zero texture.
-* `WebGLRenderer.normalTexture` is a new property that holds the currently bound normal map (texture unit one).
-* `WebGLRenderer.setNormalMap` is a new method that sets the current normal map texture.
-* `WebGLRenderer.clearNormalMap` is a new method that clears the current normal map texture.
-* `WebGLRenderer.resetTextures` is a new method that flushes the pipeline, resets all textures back to the temporary ones and resets the active texture counter.
-* `WebGLPipeline.boot` will now check all of the attributes and store the pointer location within the attribute entry.
-* `WebGLPipeline.bind` no longer looks-up and enables every attribute, every frame. Instead it uses the cached pointer location stored in the attribute entry, cutting down on redundant WebGL operations.
-* `WebGLRenderer.isNewNormalMap` is a new method that returns a boolean if the given parameters are not currently used.
-* `WebGLPipeline.forceZero` is a new property that informs Game Objects if the pipeline requires a zero bound texture unit.
-* `WebGLPipeline.setAttribPointers` is a new method that will set the vertex attribute pointers for the pipeline.
-* `WebGLRenderer.unbindTextures` is a new method that will activate and then null bind all WebGL textures.
-
-### Forward Diffuse Light Pipeline API Changes
-
-This Light2D pipeline, which is responsible for rendering lights under WebGL, has been rewritten to work with the new Texture Tint Pipeline functions. Lots of redundant code has been removed and the following changes and improvements took place:
-
-* The pipeline now works with Game Objects that do not have a normal map. They will be rendered using the new default normal map, which allows for a flat light effect to pass over them and merge with their diffuse map colors.
-* Fixed a bug in the way lights were handled that caused Tilemaps to render one tile at a time, causing massive slow down. They're now batched properly, making a combination of lights and tilemaps possible again.
-* The Bitmap Text (Static and Dynamic) Game Objects now support rendering with normal maps.
-* The TileSprite Game Objects now support rendering with normal maps.
-* Mesh and Quad Game Objects now support rendering with normal maps.
-* The Graphics Game Objects now support rendering in Light2d. You can even use normal map textures for the texture fills.
-* Particle Emitter Game Object now supports rendering in Light2d.
-* All Shape Game Objects (Rectangle, IsoBox, Star, Polygon, etc) now support rendering in Light2d.
-* The Text Game Object now supports rendering in Light2d, no matter which font, stroke or style it is using.
-* Both Static and Dynamic Tilemap Layer Game Objects now support the Light2d pipeline, with or without normal maps.
-* The pipeline will no longer look-up and set all of the light uniforms unless the `Light` is dirty.
-* The pipeline will no longer reset all of the lights unless the quantity of lights has changed.
-* The `ForwardDiffuseLightPipeline.defaultNormalMap` property has changed, it's now an object with a `glTexture` property that maps to the pipelines default normal map.
-* The `ForwardDiffuseLightPipeline.boot` method has been changed to now generate a default normal map.
-* The `ForwardDiffuseLightPipeline.onBind` method has been removed as it's no longer required.
-* The `ForwardDiffuseLightPipeline.setNormalMap` method has been removed as it's no longer required.
-* `ForwardDiffuseLightPipeline.bind` is a new method that handles setting-up the shader uniforms.
-* The `ForwardDiffuseLightPipeline.batchTexture` method has been rewritten to use the Texture Tint Pipeline function instead.
-* The `ForwardDiffuseLightPipeline.batchSprite` method has been rewritten to use the Texture Tint Pipeline function instead.
-* `ForwardDiffuseLightPipeline.lightCount` is a new property that stores the previous number of lights rendered.
-* `ForwardDiffuseLightPipeline.getNormalMap` is a new method that will look-up and return a normal map for the given object.
-
-### Lights
-
-* `Light.dirty` is a new property that controls if the light is dirty, or not, and needs its uniforms updating.
-* `Light` has been recoded so that all of its properties are now setters that activate its `dirty` flag.
-* `LightsManager.destroy` will now clear the `lightPool` array when destroyed, where-as previously it didn't.
-* `LightsManager.cull` now takes the viewport height from the renderer instead of the game config (thanks zenwaichi)
-
-### WebGL ModelViewProjection API Changes
-
-The `ModelViewProjection` object contained a lot of functions that Phaser never used internally. These have now been
-moved to external functions, which can be easily excluded from Custom builds to save space.
-
-If you used any of them in your code, please update to the new function names below:
-
-* `Phaser.Renderer.WebGL.MVP` is a new namespace under which the Model View Projection functions now live.
-* `projIdentity` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ProjectIdentity`
-* `projPersp` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ProjectPerspective`
-* `modelRotateX` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.RotateX`
-* `modelRotateY` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.RotateY`
-* `modelRotateZ` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.RotateZ`
-* `viewLoad` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewLoad`
-* `viewRotateX` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewRotateX`
-* `viewRotateY` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewRotateY`
-* `viewRotateZ` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewRotateZ`
-* `viewScale` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewScale`
-* `viewTranslate` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewTranslate`
-* `modelIdentity` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.Identity`
-* `modelScale` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.Scale`
-* `modelTranslate` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.Translate`
-* `viewIdentity` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewIdentity`
-* `viewLoad2D` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewLoad2D`
-* `projOrtho` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ProjectOrtho`
-* `Phaser.Renderer.WebGL.MVP.SetIdentity` is a new function the others use, to save on space.
-
-### BitmapText New Features, Updates and API Changes
-
-* `BitmapText.setCharacterTint` is a new method that allows you to set a tint color (either additive, or fill) on a specific range of characters within a static Bitmap Text. You can specify the start and length offsets and a per-corner tint color.
-* `BitmapText.setWordTint` is a new method that allows you to set a tint color (either additive, or fill) on all matching words within a static Bitmap Text. You can specify the word by string, or numeric offset, and the number of replacements to tint.
-* `BitmapText.setDropShadow` is a new method that allows you to apply a drop shadow effect to a Bitmap Text object. You can set the horizontal and vertical offset of the shadow, as well as the color and alpha levels. Call this method with no parameters to clear a shadow.
-* `BitmapTextWebGLRenderer` has been rewritten from scratch to make use of the new pre-cached WebGL uv texture and character location data generated by `GetBitmapTextSize`. This has reduced the number of calculations made in the function dramatically, as it no longer has work out glyph advancing or offsets during render, but only when the text content updates.
-* `BitmapText.getCharacterAt` is a new method that will return the character data from the BitmapText at the given `x` and `y` corodinates. The character data includes the code, position, dimensions and glyph information.
-* The `BitmapTextSize` object returned by `BitmapText.getTextBounds` has a new property called `characters` which is an array that contains the scaled position coordinates of each character in the BitmapText, which you could use for tasks such as determining which character in the BitmapText was clicked.
-* `ParseXMLBitmapFont` will now calculate the WebGL uv data for the glyphs during parsing. This avoids it having to be done during rendering, saving CPU cycles on an operation that never changes.
-* `ParseXMLBitmapFont` will now create a Frame object for each glyph. This means you could, for example, create a Sprite using the BitmapText texture and the glyph as the frame key, i.e.: `this.add.sprite(x, y, fontName, 'A')`.
-* `BitmapTextWord`, `BitmapTextCharacter` and `BitmapTextLines` are three new type defs that are now part of the `BitmapTextSize` config object, as returned by `getTextBounds`. This improves the TypeScript defs and JS Docs for this object.
-* The signature of the `ParseXMLBitmapFont` function has changed. The `frame` parameter is no longer optional, and is now the second parameter in the list, instead of being the 4th. If you call this function directly, please update your code.
-* The `BitmapText.getTextBounds` method was being called every frame, even if the bounds didn't change, potentially costing a lot of CPU time depending on the text length and quantity of them. It now only updates the bounds if they change.
-* The `GetBitmapTextSize` function used `Math.round` on the values, if the `round` parameter was `true`, which didn't create integers. It now uses `Math.ceil` instead to give integer results.
-* The `GetBitmapTextSize` function has a new boolean parameter `updateOrigin`, which will adjust the origin of the parent BitmapText if set, based on the new bounds calculations.
-* `BitmapText.preDestroy` is a new method that will tidy-up all of the BitmapText data during object destruction.
-* `BitmapText.dropShadowX` is a new property that controls the horizontal offset of the drop shadow on the Bitmap Text.
-* `BitmapText.dropShadowY` is a new property that controls the vertical offset of the drop shadow on the Bitmap Text.
-* `BitmapText.dropShadowColor` is a new property that sets the color of the Bitmap Text drop shadow.
-* `BitmapText.dropShadowAlpha` is a new property that sets the alpha of the Bitmap Text drop shadow.
-* `BatchChar` is a new internal private function for batching a single character of a Bitmap Text to the pipeline.
-* If you give an invalid Bitmap Font key, the Bitmap Text object will now issue a `console.warn`.
-* Setting the `color` value in the `DynamicBitmapText.setDisplayCallback` would inverse the red and blue channels if the color was not properly encoded for WebGL. It is now encoded automatically, meaning you can pass normal hex values as the colors in the display callback. Fix #5225 (thanks @teebarjunk)
-* If you apply `setSize` to the Dynamic BitmapText the scissor is now calculated based on the parent transforms, not just the local ones, meaning you can crop Bitmap Text objects that exist within Containers. Fix #4653 (thanks @lgibson02)
-* `ParseXMLBitmapFont` has a new optional parameter `texture`. If defined, this Texture is populated with Frame data, one frame per glyph. This happens automatically when loading Bitmap Text data in Phaser.
-
-### New Features
-
-* `WebGLRenderer.setInt1iv` will allow you to look-up and set a 1iv uniform on the given shader.
-* `Geom.Intersects.GetLineToLine` is a new function that will return a Vector3 containing the point of intersection between 2 line segments, with the `z` property holding the distance value.
-* `Geom.Intersects.GetLineToPolygon` is a new function that checks for the closest point of intersection between a line segment and an array of polygons.
-* `Geom.Polygon.Translate` is a new function that allows you to translate all the points of a polygon by the given values.
-* `Phaser.Types.Math.Vector3Like` is a new data type representing as Vector 3 like object.
-* `Phaser.Types.Math.Vector4Like` is a new data type representing as Vector 4 like object.
-* `Transform.getLocalPoint` is a new method, available on all Game Objects, that takes an `x` / `y` pair and translates them into the local space of the Game Object, factoring in parent transforms and display origins.
-* The `KeyboardPlugin` will now track the key code and timestamp of the previous key pressed and compare it to the current event. If they match, it will skip the event. On some systems if you were to type quickly, you would sometimes get duplicate key events firing (the exact same event firing more than once). This is now prevented from happening.
-* `Display.Color.GetColorFromValue` is a new function that will take a hex color value and return it as an integer, for use in WebGL. This is now used internally by the Tint component and other classes.
-* `Utils.String.RemoveAt` is a new function that will remove a character from the given index in a string and return the new string.
-* `Frame.setUVs` is a new method that allows you to directly set the canvas and UV data for a frame. Use this if you need to override the values set automatically during frame creation.
-
-### Updates and API Changes
-
-* `Config.batchSize` has been increased from 2000 to 4096.
-* Removed the Deferred Diffuse fragment and vertex shaders from the project, as they're not used.
-* `StaticTilemapLayer.upload` will now set the vertex attributes and buffer the data, and handles internal checks more efficiently.
-* `StaticTilemapLayer` now includes the `ModelViewProjection` mixin, so it doesn't need to modify the pipeline during rendering.
-* `WebGLRenderer.textureFlush` is a new property that keeps track of the total texture flushes per frame.
-* The `TextureTintStripPipeline` now extends `TextureTintPipeline` and just changes the topolgy, vastly reducing the filesize.
-* `TransformMatrix.getXRound` is a new method that will return the X component, optionally passed via `Math.round`.
-* `TransformMatrix.getYRound` is a new method that will return the Y component, optionally passed via `Math.round`.
-* The `KeyboardPlugin` no longer emits `keydown_` events. These were replaced with `keydown-` events in v3.15. The previous event string was deprecated in v3.20.
-* The `KeyboardPlugin` no longer emits `keyup_` events. These were replaced with `keyup-` events in v3.15. The previous event string was deprecated in v3.20.
-* The `ScaleManager.updateBounds` method is now called every time the browser fires a 'resize' or 'orientationchange' event. This will update the offset of the canvas element Phaser is rendering to, which is responsible for keeping input positions correct. However, if you change the canvas position, or visibility, via any other method (i.e. via an Angular route) you should call the `updateBounds` method directly, yourself.
-
-### Bug Fixes
-
-* `RenderTexture.resize` (which is called from `setSize`) wouldn't correctly set the `TextureSource.glTexture` property, leading to `bindTexture: attempt to use a deleted object` errors under WebGL.
-* The `MatterAttractors` plugin, which enables attractors between bodies, has been fixed. The original plugin only worked if the body with the attractor was _first_ in the world bodies list. It can now attract any body, no matter where in the world list it is. Fix #5160 (thanks @strahius)
-* The `KeyboardManager` and `KeyboardPlugin` were both still checking for the `InputManager.useQueue` property, which was removed several versions ago.
-* In Arcade Physics, Dynamic bodies would no longer hit walls when riding on horizontally moving platforms. The horizontal (and vertical) friction is now re-applied correctly in these edge-cases. Fix #5210 (thanks @Dercetech @samme)
-* Calling `Rectangle.setSize()` wouldn't change the underlying geometry of the Shape Game Object, causing any stroke to be incorrectly rendered after a size change.
-
-### Examples, Documentation and TypeScript
-
-My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
-
-@samme @16patsle @scott20145 
-
-
-
-
-
-
-
-## Version 3.24.1 - Rem - 14th July 2020
-
-* Reverted the PR that added the parent transform to a Static Tilemap Layer as it broke tilemap rendering when the camera was zoomed (thanks @kainage)
-* Fixed an error with the use of the Vector2Like type in the `Math.RotateTo` function that caused a TypeScript error on compilation
-
-## Version 3.24.0 - Rem - 13th July 2020
-
-### Arcade Physics New Features, Updates and Fixes
-
-* When colliding physics groups with the search tree enabled, there was an unnecessary intersection test for each body returned by the search (thanks @samme)
-* When doing an overlap collision, there was an unnecessary intersection test for each pair of overlapping bodies (thanks @samme)
-* Sprite vs. Static Group collision tests now always use the static tree (thanks @samme)
-* Fixed a bug where if you added a static body to a sprite with scale ≠ 1, the body position was incorrect (thanks @samme)
-* If you passed in an array of `children` when creating a Physics Group, they didn't receive bodies. Fix #5152 (thanks @samme)
-* New types allow for better docs / TypeScript defs especially in the Factory functions: `ArcadePhysicsCallback`, `GameObjectWithBody`, `GameObjectWithDynamicBody`, `GameObjectWithStaticBody`, `ImageWithDynamicBody`, `ImageWithStaticBody`, `SpriteWithDynamicBody` and `SpriteWithStaticBody`. Fix #4994 (thanks @samme @gnesher)
-* `Body.updateFromGameObject` is a new method that extracts the relevant code from `preUpdate`, allowing you to read the body's new position and center immediately, before the next physics step. It also lets `refreshBody` work for dynamic bodies, where previously it would error (thanks @samme)
-* Momentum exchange wasn't working correctly vs. immovable bodies. The movable body tended to stop. Fix #4770 (thanks @samme)
-* The Body mass was decreasing the inertia instead of increasing it. Fix #4770 (thanks @samme)
-* The separation vector seemed to be incorrect, causing the slip / slide collisions. The separation is now correct for circle–circle collisions (although not fully for circle–rectangle collisions), part fix #4770 (thanks @samme)
-* The Arcade Body delta was incorrectly calculated on bodies created during the `update` step, causing the position to be off. Fix #5204 (thanks @zackexplosion @samme)
-* `Arcade.Components.Size.setBodySize` is a new method available on Arcade Physics Game Objects that allows you to set the body size. This replaces `setSize` which is now deprecated. Fix #4786 (thanks @wingyplus)
-
-### New Features
-
-* The Animation component has a new property `nextAnimsQueue` which allows you to sequence Sprite animations to play in order, i.e: `this.mole.anims.play('digging').anims.chain('lifting').anims.chain('looking').anims.chain('lowering');` (thanks @tgroborsch)
-* `Group.setActive` is a new method that will set the active state of a Group, just like it does on other Game Objects (thanks @samme)
-* `Group.setName` is a new method that will set the name property of a Group, just like it does on other Game Objects (thanks @samme)
-* `TWEEN_STOP` is a new event dispatched by a Tween when it stops playback (thanks @samme @RollinSafary)
-* You can now specify an `onStop` callback when creating a Tween as part of the tween config, which is invoked when a Tween stops playback (thanks @samme @RollinSafary)
-* Previously, if you created a timeline and passed no tweens in the config, the timeline would be created but all config properties were ignored. Now the timeline's own properties (completeDelay, loop, loopDelay, useFrames, onStart, onUpdate, onLoop, onYoyo, onComplete, etc.) are set from the config properly (thanks @samme)
-* `TextStyle.wordWrapWidth` lets you set the maximum width of a line of text (thanks @mikewesthad)
-* `TextStyle.wordWrapCallback` is a custom function that will is responsible for wrapping the text (thanks @mikewesthad)
-* `TextStyle.wordWrapCallbackScope` is the scope that will be applied when the `wordWrapCallback` is invoked (thanks @mikewesthad)
-* `TextStyle.wordWrapUseAdvanced` controls whether or not to use the advanced wrapping algorithm (thanks @mikewesthad)
-* `KeyboardPlugin.removeAllKeys` is a new method that allows you to automatically remove all Key instances that the plugin has created, making house-keeping a little easier (thanks @samme)
-* `Math.RotateTo` is a new function that will position a point at the given angle and distance (thanks @samme)
-* `Display.Bounds.GetBounds` is a new function that will return the un-transformed bounds of the given Game Object as a Rectangle (thanks @samme)
-
-### Updates
-
-* The `Pointer.dragStartX/YGlobal` and `Pointer.dragX/Y` values are now populated from the `worldX/Y`, which means using those values directly in Input Drag callbacks will now work when the Camera is zoomed. Fix #4755 (thanks @braindx)
-* The `browser` field has been added to the Phaser `package.json` pointing to the `dist/phaser.js` umd build (thanks @FredKSchott)
-* Calling `TimeStep.wake()` while the loop is running will now cause nothing to happen, rather than sleeping and then waking again (thanks @samme)
-* `Container.getBounds` will no longer set the temp rect bounds to the first child of the Container by default (which would error if the child had no bounds, like a Graphics object) and instead sets it as it iterates the children (thanks @blopa)
-* `File.state` will now be set to the `FILE_LOADING` state while loading and `FILE_LOADED` after loading (thanks @samme)
-* `BaseCamera.cull` now moves some of its calculations outside of the cull loop to speed it up (thanks @samme)
-* `SceneManager.createSceneFromInstance` had a small refactor to avoid a pointless condition (thanks @samme)
-
-### Bug Fixes
-
-* Fixed a TypeError warning when importing JSON objects directly to the `url` argument of any of the Loader filetypes. Fix #5189 (thanks @awweather @samme)
-* The `NOOP` function was incorrectly imported by the Mouse and Keyboard Manager. Fix #5170 (thanks @samme @gregolai)
-* When Audio files failed to decode on loading, they would always show 'undefined' as the key in the error log, now they show the actual key (thanks @samme)
-* When the Sprite Sheet parser results in zero frames, the warning will now tell you the texture name that caused it (thanks @samme)
-* `KeyboardPlugin.checkDown` didn't set the `duration` to zero if the parameter was omitted, causing it to always return false. Fix #5146 (thanks @lozzajp)
-* If you passed in an array of `children` when creating a Group, they were not added and removed correctly. Fix #5151 (thanks @samme)
-* When using HTML5 Audio with `pauseOnBlur` (the default), if you play a sound, schedule stopping the sound (e.g., timer, tween complete callback), leave the page, and return to the page, the sound `stop()` will error (thanks @samme)
-* Using a Render Texture when you're also using the headless renderer would cause an error (thanks @samme)
-* `Ellipse.setWidth` would incorrectly set the `xRadius` to the diameter (thanks @rexrainbow)
-* `Ellipse.setHeight` would incorrectly set the `yRadius` to the diameter (thanks @rexrainbow)
-* When specifically setting the `parent` property in the Game Config to `null` the canvas was appended to the document body, when it should have been ignored (allowing you to add it to the dom directly). Fix #5191 (thanks @MerganThePirate)
-* Containers will now apply nested masks correctly when using the Canvas Renderer specifically (thanks @scott20145)
-* Calling `Scale.startFullScreen` would fail in Safari on Mac OS, throwing a `fullscreenfailed` error. It now triggers fullscreen mode correctly, as on other browsers. Fix #5143 (thanks @samme @novaknole)
-* Calling `setCrop` on a Matter Physics Sprite would throw a TypeError, but will now crop correctly. Not that it only crops the texture, the body is unaffected. Fix #5211 (thanks @MatthewRorke @samme)
-* The Static Tilemap Layer would ignore the layer rotation and parent transform when using WebGL (but worked in Canvas). Both modes now work in the same manner (thanks @cruzdanilo)
-* Calling `getTextBounds` on a BitmapText object would return the incorrect values if the origin had been changed, but the text itself had not, as it was using out of date dimensions. Changing the origin now automatically triggers BitmapText to be dirty, forcing the bounds to be refreshed. Fix #5121 (thanks @thenonamezz)
-* The ISO Triangle shape would skip rendering the left side of the first triangle in the batch. It now renders all ISO Triangles correctly. Fix #5164 (thanks @mattjennings)
-
-### Examples, Documentation and TypeScript
-
-My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
-
-@samme @SanderVanhove @SirJosh3917 @mooreInteractive @A-312 @lozzajp @mikewesthad @j-waters @futuremarc 
-
-## Version 3.23 - Ginro - 27th April 2020
+## Version 3.23 - Ginro - in development
 
 ### JSDocs
 
-The entire Phaser 3 API now has 100% complete JSDoc coverage!
-
-The following sections had their documentation completed in this release:
+The following sections now have 100% complete JSDoc coverage:
 
 * Animations
 * Create
-* Curves
 * Geom
 * Math
 * Renderer
 * Textures
-* Tilemaps
 
 ### Removed
 
@@ -288,13 +25,6 @@ The following features are now deprecated and will be removed in a future versio
 
 * The Light Pipeline and associated components will be removed. This feature was never properly finished and adds too much redundant, non-optional code into the core API. The ability to load normal maps alongside textures will _remain_, for use in your own lighting shaders, which gives you far more control over the final effect.
 
-### New: Rope Game Object
-
-This version of Phaser contains the brand new Rope Game Object. A Rope is a special kind of Game Object that has a repeating texture that runs in a strip, either horizontally or vertically. Unlike a Sprite, you can define how many vertices the Rope has, and can modify each of them during run-time, allowing for some really lovely effects.
-
-Ropes can be created via the Game Object Factory in the normal way (`this.add.rope()`) and you should look at the examples and documentation for further implementation details.
-
-Note that Ropes are a WebGL only feature.
 
 ### New Features
 
@@ -303,33 +33,6 @@ Note that Ropes are a WebGL only feature.
 * `Config.loaderWithCredentials` is the new global setting for `XHRSettings.withCredentials`.
 * `Camera.renderToGame` is a new property used in conjunction with `renderToTexture`. It controls if the Camera should still render to the Game canvas after rendering to its own texture or not. By default, it will render to both, but you can now toggle this at run-time.
 * `Camera.setRenderToTexture` has a new optional parameter `renderToGame` which sets the `Camera.renderToGame` property, controlling if the Camera should render to both its texture and the Game canvas, or just its texture.
-* The free version of Texture Packer exports a `pivot` property when using JSON Array or Hash, however the Texture Packer Phaser export uses the `anchor` property. This update allows the loaders to work with either property, regardless of which export you use (thanks @veleek)
-* `get()` is a new method in the HTML and Web Audio Sound Managers that will get the first sound in the manager matching the given key, if any (thanks @samme)
-* `getAll()` is a new method in the HTML and Web Audio Sound Managers that will get all sounds in the manager matching the given key, if any (thanks @samme)
-* `removeAll()` is a new method in the HTML and Web Audio Sound Managers that will remove all sounds in the manager, destroying them (thanks @samme)
-* `stopByKey()` is a new method in the HTML and Web Audio Sound Managers that will stop any sound in the manager matching the given key, if any (thanks @samme)
-* `Rectangle.FromXY` is a new function that will create the smallest Rectangle containing two coordinate pairs, handy for marquee style selections (thanks @samme)
-* `PathFollower.pathDelta` is a new property that holds the distance the follower has traveled from the previous point to the current one, at the last update (thanks @samme)
-* `Vector2.fuzzyEquals` is a new method that will check whether the Vector is approximately equal to a given Vector (thanks @samme)
-* `Vector2.setAngle` is a new method that will set the angle of the Vector (thanks @samme)
-* `Vector2.setLength` is a new method that will set the length, or magnitude of the Vector (thanks @samme)
-* `Vector2.normalizeLeftHand` is a new method that will rotate the Vector to its perpendicular, in the negative direction (thanks @samme)
-* `Vector2.limit` is a new method that will limit the length, or magnitude of the Vector (thanks @samme)
-* `Vector2.reflect` is a new method that will reflect the Vector off a line defined by a normal (thanks @samme)
-* `Vector2.mirror` is a new method that will reflect the Vector across another (thanks @samme)
-* `Vector2.rotate` is a new method that will rotate the Vector by an angle amount (thanks @samme)
-* `Math.Angle.Random` is a new function that will return a random angle in radians between -pi and pi (thanks @samme)
-* `Math.Angle.RandomDegrees` is a new function that will return a random angle in degrees between -180 and 180 (thanks @samme)
-* `Physics.Arcade.World.fixedStep` is a new boolean property that synchronizes the physics fps to the rendering fps when enabled. This can help in some cases where "glitches" can occur in the movement of objects. These glitches are especially noticeable on objects that move at constant speed and the fps are not consistent. Enabling this feature disables the fps and timeScale properties of the Arcade.World class (thanks @jjcapellan)
-* `Curves.Path.getTangent` is a new method that gets a unit vector tangent at a relative position on the path (thanks @samme)
-* `DataManager.inc` is a new method that will increase a value for the given key. If the key doesn't already exist in the Data Manager then it is increased from 0 (thanks @rexrainbow)
-* `DataManager.toggle` is a new method that will toggle a boolean value for the given key. If the key doesn't already exist in the Data Manager then it is toggled from false (thanks @rexrainbow)
-* The Tiled parser will now recognize Tiled `point objects` and export them with `point: true`. Equally, Sprites generated via `createFromObjects` are now just set to the position of the Point object, using the Sprites dimensions. This is a breaking change, so if you are using Point objects and `createFromObjects` please re-test your maps against this release of Phaser (thanks @samme)
-* You can now use Blob URLs when loading `Audio` objects via the Loader (thanks @aucguy)
-* You can now use Blob URLs when loading `Video` objects via the Loader (thanks @aucguy)
-* Tiled Image Collections now have rudimentary support and will create a single tileset per image. This is useful for prototyping, but should not be used heavily in production. See #4964 (thanks @gogoprog)
-* When loading files using your own XHR Settings you can now use the new property `headers` to define an object containing multiple headers, all of which will be sent with the xhr request (thanks @jorbascrumps)
-* `Camera.rotateTo` is a new Camera effect that allows you to set the rotation of the camera to a given value of the duration specified (thanks @jan1za)
 
 ### Updates
 
@@ -337,12 +40,6 @@ Note that Ropes are a WebGL only feature.
 * `Animation.setCurrentFrame` will no longer try to call `setOrigin` or `updateDisplayOrigin` if the Game Object doesn't have the Origin component, preventing unknown function errors.
 * `MatterTileBody` now extends `EventEmitter`, meaning you can listen to collision events from Tiles directly and it will no longer throw errors about `gameObject.emit` not working. Fix #4967 (thanks @reinildo)
 * Added `MatterJS.BodyType` to `GameObject.body` type. Fix #4962 (thanks @meisterpeeps)
-* The `JSONHash` loader didn't load custom pivot information, but `JSONArray` did. So that functionality has been duplicated into the `JSONHash` file type (thanks @veleek)
-* When enabling a Game Object for input debug, the debug body's depth was 0. It's now set to be the same depth as the actual Game Object (thanks @mktcode)
-* Spine Files can now be loaded via a manifest, allowing you to specify a prefix in the loader object and providing absolute paths to textures. Fix #4813 (thanks @FostUK @a610569731)
-* `collideSpriteVsGroup` now exits early when the Sprite has `checkCollision.none`, skipping an unnecessary iteration of the group (thanks @samme)
-* `collideSpriteVsGroup` when looping through the tree results now skips bodies with `checkCollision.none` (thanks @samme)
-* When enabling a Game Object for Input Debugging the created debug shape will now factor in the position, scale and rotation of the Game Objects parent Container, if it has one (thanks @scott20145)
 
 ### Bug Fixes
 
@@ -352,39 +49,12 @@ Note that Ropes are a WebGL only feature.
 * The `Arcade Physics Static Body` center was incorrect after construction. Probably caused problems with circle collisions. Fix  #4770 (thanks @samme)
 * An Arcade Physics Body `center` and `position` are now correct after construction and before preUpdate(), for any Game Object origin or scale (thanks @samme)
 * When calling `Body.setSize` with the `center` parameter as `true` the calculated offset would be incorrect for scaled Game Objects. The offset now takes scaling into consideration (thanks @samme)
-* `HTML5AudioFile.load` would throw an error in strict mode (thanks @samme)
-* When using the `No Audio` Sound Manager, calling `destroy()` would cause a Maximum call stack size exceeded error as it was missing 6 setter methods. It will now destroy properly (thanks @samme)
-* When using HTML5 Audio, setting the game or sound volume outside of the range 0-1 would throw an index size error. The value is now clamped before being set (thanks @samme)
-* Sound Managers were still listening to Game BLUR, FOCUS, and PRE_STEP events after being destroyed. These events are now cleared up properly (thanks @samme)
-* In WebGL, the `TextureTintPipeline` is now set before rendering any camera effects. If the pipeline had been changed, the effects would not run (thanks @TroKEMp)
-* When transitioning to a sleeping Scene, the transition `data` wasn't sent to the Scene `wake` method. It's now sent across to both sleeping and waking scenes. Fix #5078 (thanks @MrMadClown)
-* `Scale.lockOrientation('portrait')` would throw a runtime error in Firefox: 'TypeError: 'mozLockOrientation' called on an object that does not implement interface Screen.' It no longer does this. Fix #5069 (thanks @123survesh)
-* The `FILE_COMPLETE` event was being emitted twice for a JSON loaded animation file. It now only fires once. Fix #5059 (thanks @jjcapellan)
-* If you restart or stop / start a scene and then queue at least one new file in `preload`, the scenes `update` function is called before `create`, likely causing an error. Fix #5065 (thanks @samme)
-* `Circle.GetPoints` will now check that `stepRate` is > 0 to avoid division by zero errors leading to the quantity becoming infinity (thanks @jdcook)
-* `Ellipse.GetPoints` will now check that `stepRate` is > 0 to avoid division by zero errors leading to the quantity becoming infinity (thanks @jdcook)
-* `Line.GetPoints` will now check that `stepRate` is > 0 to avoid division by zero errors leading to the quantity becoming infinity (thanks @jdcook)
-* `Polygon.GetPoints` will now check that `stepRate` is > 0 to avoid division by zero errors leading to the quantity becoming infinity (thanks @jdcook)
-* `Rectangle.GetPoints` will now check that `stepRate` is > 0 to avoid division by zero errors leading to the quantity becoming infinity (thanks @jdcook)
-* `Triangle.GetPoints` will now check that `stepRate` is > 0 to avoid division by zero errors leading to the quantity becoming infinity (thanks @jdcook)
-* Changing the game size with a scale mode of FIT resulted in a canvas with a incorrect aspect ratio. Fix #4971 (thanks @Kitsee @samme)
-* The Matter Physics `Common.isString` function would cause a 'TypeError: Invalid calling object' in Internet Explorer (thanks @samme)
-* `Arcade.Body.checkCollision.none` did not prevent collisions with Tiles. Now it does (thanks @samme)
-* When running in HEADLESS mode, using a `Text` Game Object would cause a runtime error "Cannot read property gl of null". Fix #4976 (thanks @raimon-segura @samme)
-* The Tilemap `LayerData` class `properties` property has been changed from 'object' to an array of objects, which is what Tiled exports when defining layer properties in the editor. Fix #4983 (thanks @Nightspeller)
-* `AudioFile` and `VideoFile` had their state set to `undefined` instead of `FILE_PROCESSING` (thanks @samme)
-* `Container.getBounds` would return incorrect values if it had child Containers within it. Fix #4580 (thanks @Minious @thedrint)
-* The Loader no longer prepends the current path to the URL if it's a Blob object (thanks @aucguy)
-* Spine Atlases can now be loaded correctly via Asset Packs, as they now have the right index applied to them (thanks @jdcook)
-* Input events for children inside nested Containers would incorrectly fire depending on the pointer position (thanks @rexrainbow)
-* Animations with both `yoyo` and `repeatDelay` set will respect the delay after each yoyo runs (thanks @cruzdanilo)
-* `CanvasTexture.setSize` forgot to update the `width` and `height` properties of the Texture itself. These now match the underlying canvas element. Fix #5054 (thanks @sebbernery)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@JasonHK @supertommy @majalon @samme @MartinBlackburn @halilcakar @jcyuan @MrMadClown @Dinozor @EmilSV @Jazcash
+@JasonHK @supertommy @majalon @samme
 
 ## Version 3.22 - Kohaku - January 15th 2020
 

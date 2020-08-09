@@ -191,7 +191,7 @@ var Text = new Class({
          * Allows you to add extra spacing if the browser is unable to accurately determine the true font dimensions.
          *
          * @name Phaser.GameObjects.Text#padding
-         * @type {Phaser.Types.GameObjects.Text.TextPadding}
+         * @type {{left:number,right:number,top:number,bottom:number}}
          * @since 3.0.0
          */
         this.padding = { left: 0, right: 0, top: 0, bottom: 0 };
@@ -1273,7 +1273,7 @@ var Text = new Class({
 
         context.restore();
 
-        if (this.renderer && this.renderer.gl)
+        if (this.renderer.gl)
         {
             this.frame.source.glTexture = this.renderer.canvasToTexture(canvas, this.frame.source.glTexture, true);
 
@@ -1299,7 +1299,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#getTextMetrics
      * @since 3.0.0
      *
-     * @return {Phaser.Types.GameObjects.Text.TextMetrics} The text metrics.
+     * @return {object} The text metrics.
      */
     getTextMetrics: function ()
     {

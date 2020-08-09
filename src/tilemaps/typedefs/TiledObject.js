@@ -1,7 +1,7 @@
 /**
  * @typedef {object} Phaser.Types.Tilemaps.TiledObject
  * @since 3.0.0
- *
+ * 
  * @property {integer} id - The unique object ID.
  * @property {string} name - The name this object was assigned in Tiled.
  * @property {string} type - The type, as assigned in Tiled.
@@ -21,5 +21,4 @@
  * @property {any} [text] - Only set if a text object. Contains the text objects properties.
  * @property {boolean} [rectangle] - Only set, and set to `true`, if a rectangle object.
  * @property {boolean} [ellipse] - Only set, and set to `true`, if a ellipse object.
- * @property {boolean} [point] - Only set, and set to `true`, if a point object.
  */

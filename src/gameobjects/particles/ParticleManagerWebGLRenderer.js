@@ -46,7 +46,7 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
     var texture = emitterManager.defaultFrame.glTexture;
     var getTint = Utils.getTintAppendFloatAlphaAndSwap;
 
-    var textureUnit = pipeline.setGameObject(emitterManager, emitterManager.defaultFrame);
+    pipeline.setTexture2D(texture, 0);
 
     for (var e = 0; e < emittersLength; e++)
     {
@@ -74,16 +74,15 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
         if (renderer.setBlendMode(emitter.blendMode))
         {
             //  Rebind the texture if we've flushed
-            // pipeline.setTexture2D(texture, 0);
+            pipeline.setTexture2D(texture, 0);
         }
 
         if (emitter.mask)
         {
             emitter.mask.preRenderWebGL(renderer, emitter, camera);
-
-            // pipeline.setTexture2D(texture, 0);
+            pipeline.setTexture2D(texture, 0);
         }
-
+    
         var tintEffect = 0;
 
         for (var i = 0; i < particleCount; i++)
@@ -113,13 +112,13 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
 
             var tx0 = calcMatrix.getX(x, y);
             var ty0 = calcMatrix.getY(x, y);
-
+    
             var tx1 = calcMatrix.getX(x, yh);
             var ty1 = calcMatrix.getY(x, yh);
-
+    
             var tx2 = calcMatrix.getX(xw, yh);
             var ty2 = calcMatrix.getY(xw, yh);
-
+    
             var tx3 = calcMatrix.getX(xw, y);
             var ty3 = calcMatrix.getY(xw, y);
 
@@ -127,27 +126,26 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
             {
                 tx0 = Math.round(tx0);
                 ty0 = Math.round(ty0);
-
+    
                 tx1 = Math.round(tx1);
                 ty1 = Math.round(ty1);
-
+    
                 tx2 = Math.round(tx2);
                 ty2 = Math.round(ty2);
-
+    
                 tx3 = Math.round(tx3);
                 ty3 = Math.round(ty3);
             }
 
             var tint = getTint(particle.tint, alpha);
 
-            pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect, texture, textureUnit);
+            pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect, texture, 0);
         }
 
         if (emitter.mask)
         {
             emitter.mask.postRenderWebGL(renderer, camera);
-
-            // pipeline.setTexture2D(texture, 0);
+            pipeline.setTexture2D(texture, 0);
         }
     }
 };

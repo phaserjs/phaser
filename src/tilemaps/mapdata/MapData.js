@@ -102,7 +102,7 @@ var MapData = new Class({
         this.heightInPixels = GetFastValue(config, 'heightInPixels', this.height * this.tileHeight);
 
         /**
-         * The format of the map data.
+         * [description]
          * 
          * @name Phaser.Tilemaps.MapData#format
          * @type {integer}
@@ -206,7 +206,7 @@ var MapData = new Class({
         this.imageCollections = GetFastValue(config, 'imageCollections', []);
 
         /**
-         * An array of tile instances.
+         * [description]
          * 
          * @name Phaser.Tilemaps.MapData#tiles
          * @type {array}

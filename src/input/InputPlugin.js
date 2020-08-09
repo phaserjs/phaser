@@ -56,13 +56,6 @@ var TriangleContains = require('../geom/triangle/Contains');
  *
  * Please also see the Input examples and tutorials for further information.
  *
- * **Incorrect input coordinates with Angular**
- *
- * If you are using Phaser within Angular, and use nglf or the router, to make the component in which the Phaser game resides
- * change state (i.e. appear or disappear) then you'll need to notify the Scale Manager about this, as Angular will mess with
- * the DOM in a way in which Phaser can't detect directly. Call `this.scale.updateBounds()` as part of your game init in order
- * to refresh the canvas DOM bounds values, which Phaser uses for input point position calculations.
- *
  * @class InputPlugin
  * @extends Phaser.Events.EventEmitter
  * @memberof Phaser.Input
@@ -862,13 +855,13 @@ var InputPlugin = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to be enabled for input.
-     * @param {(Phaser.Types.Input.InputConfiguration|any)} [hitArea] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
-     * @param {Phaser.Types.Input.HitAreaCallback} [hitAreaCallback] - The 'contains' function to invoke to check if the pointer is within the hit area.
+     * @param {(Phaser.Types.Input.InputConfiguration|any)} [shape] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
+     * @param {Phaser.Types.Input.HitAreaCallback} [callback] - The 'contains' function to invoke to check if the pointer is within the hit area.
      * @param {boolean} [dropZone=false] - Is this Game Object a drop zone or not?
      *
-     * @return {this} This Input Plugin.
+     * @return {Phaser.Input.InputPlugin} This Input Plugin.
      */
-    enable: function (gameObject, hitArea, hitAreaCallback, dropZone)
+    enable: function (gameObject, shape, callback, dropZone)
     {
         if (dropZone === undefined) { dropZone = false; }
 
@@ -880,7 +873,7 @@ var InputPlugin = new Class({
         else
         {
             //  Create an InteractiveObject and enable it
-            this.setHitArea(gameObject, hitArea, hitAreaCallback);
+            this.setHitArea(gameObject, shape, callback);
         }
 
         if (gameObject.input && dropZone && !gameObject.input.dropZone)
@@ -1133,8 +1126,8 @@ var InputPlugin = new Class({
             input.dragStartX = gameObject.x;
             input.dragStartY = gameObject.y;
 
-            input.dragStartXGlobal = pointer.worldX;
-            input.dragStartYGlobal = pointer.worldY;
+            input.dragStartXGlobal = pointer.x;
+            input.dragStartYGlobal = pointer.y;
 
             input.dragX = input.dragStartXGlobal - input.dragStartX;
             input.dragY = input.dragStartYGlobal - input.dragStartY;
@@ -1337,13 +1330,13 @@ var InputPlugin = new Class({
 
             if (!gameObject.parentContainer)
             {
-                dragX = pointer.worldX - input.dragX;
-                dragY = pointer.worldY - input.dragY;
+                dragX = pointer.x - input.dragX;
+                dragY = pointer.y - input.dragY;
             }
             else
             {
-                var dx = pointer.worldX - input.dragStartXGlobal;
-                var dy = pointer.worldY - input.dragStartYGlobal;
+                var dx = pointer.x - input.dragStartXGlobal;
+                var dy = pointer.y - input.dragStartYGlobal;
 
                 var rotation = gameObject.getParentRotation();
 
@@ -1986,7 +1979,7 @@ var InputPlugin = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to add.
      *
-     * @return {this} This InputPlugin object.
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     queueForInsertion: function (child)
     {
@@ -2007,7 +2000,7 @@ var InputPlugin = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to remove.
      *
-     * @return {this} This InputPlugin object.
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     queueForRemoval: function (child)
     {
@@ -2029,7 +2022,7 @@ var InputPlugin = new Class({
      * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjects - An array of Game Objects to change the draggable state on.
      * @param {boolean} [value=true] - Set to `true` if the Game Objects should be made draggable, `false` if they should be unset.
      *
-     * @return {this} This InputPlugin object.
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setDraggable: function (gameObjects, value)
     {
@@ -2120,14 +2113,14 @@ var InputPlugin = new Class({
      * @since 3.0.0
      *
      * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjects - An array of Game Objects to set the hit area on.
-     * @param {(Phaser.Types.Input.InputConfiguration|any)} [hitArea] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
-     * @param {Phaser.Types.Input.HitAreaCallback} [hitAreaCallback] - The 'contains' function to invoke to check if the pointer is within the hit area.
+     * @param {(Phaser.Types.Input.InputConfiguration|any)} [shape] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
+     * @param {Phaser.Types.Input.HitAreaCallback} [callback] - The 'contains' function to invoke to check if the pointer is within the hit area.
      *
-     * @return {this} This InputPlugin object.
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
-    setHitArea: function (gameObjects, hitArea, hitAreaCallback)
+    setHitArea: function (gameObjects, shape, callback)
     {
-        if (hitArea === undefined)
+        if (shape === undefined)
         {
             return this.setHitAreaFromTexture(gameObjects);
         }
@@ -2145,12 +2138,12 @@ var InputPlugin = new Class({
         var customHitArea = true;
 
         //  Config object?
-        if (IsPlainObject(hitArea))
+        if (IsPlainObject(shape))
         {
-            var config = hitArea;
+            var config = shape;
 
-            hitArea = GetFastValue(config, 'hitArea', null);
-            hitAreaCallback = GetFastValue(config, 'hitAreaCallback', null);
+            shape = GetFastValue(config, 'hitArea', null);
+            callback = GetFastValue(config, 'hitAreaCallback', null);
             draggable = GetFastValue(config, 'draggable', false);
             dropZone = GetFastValue(config, 'dropZone', false);
             cursor = GetFastValue(config, 'cursor', false);
@@ -2161,21 +2154,21 @@ var InputPlugin = new Class({
 
             if (pixelPerfect)
             {
-                hitArea = {};
-                hitAreaCallback = this.makePixelPerfect(alphaTolerance);
+                shape = {};
+                callback = this.makePixelPerfect(alphaTolerance);
             }
 
             //  Still no hitArea or callback?
-            if (!hitArea || !hitAreaCallback)
+            if (!shape || !callback)
             {
                 this.setHitAreaFromTexture(gameObjects);
                 customHitArea = false;
             }
         }
-        else if (typeof hitArea === 'function' && !hitAreaCallback)
+        else if (typeof shape === 'function' && !callback)
         {
-            hitAreaCallback = hitArea;
-            hitArea = {};
+            callback = shape;
+            shape = {};
         }
 
         for (var i = 0; i < gameObjects.length; i++)
@@ -2188,7 +2181,7 @@ var InputPlugin = new Class({
                 continue;
             }
 
-            var io = (!gameObject.input) ? CreateInteractiveObject(gameObject, hitArea, hitAreaCallback) : gameObject.input;
+            var io = (!gameObject.input) ? CreateInteractiveObject(gameObject, shape, callback) : gameObject.input;
 
             io.customHitArea = customHitArea;
             io.dropZone = dropZone;
@@ -2220,7 +2213,7 @@ var InputPlugin = new Class({
      * @param {number} radius - The radius of the circle.
      * @param {Phaser.Types.Input.HitAreaCallback} [callback] - The hit area callback. If undefined it uses Circle.Contains.
      *
-     * @return {this} This InputPlugin object.
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setHitAreaCircle: function (gameObjects, x, y, radius, callback)
     {
@@ -2245,7 +2238,7 @@ var InputPlugin = new Class({
      * @param {number} height - The height of the ellipse.
      * @param {Phaser.Types.Input.HitAreaCallback} [callback] - The hit area callback. If undefined it uses Ellipse.Contains.
      *
-     * @return {this} This InputPlugin object.
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setHitAreaEllipse: function (gameObjects, x, y, width, height, callback)
     {
@@ -2266,7 +2259,7 @@ var InputPlugin = new Class({
      * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjects - An array of Game Objects to set as having an ellipse hit area.
      * @param {Phaser.Types.Input.HitAreaCallback} [callback] - The hit area callback. If undefined it uses Rectangle.Contains.
      *
-     * @return {this} This InputPlugin object.
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setHitAreaFromTexture: function (gameObjects, callback)
     {
@@ -2328,7 +2321,7 @@ var InputPlugin = new Class({
      * @param {number} height - The height of the rectangle.
      * @param {Phaser.Types.Input.HitAreaCallback} [callback] - The hit area callback. If undefined it uses Rectangle.Contains.
      *
-     * @return {this} This InputPlugin object.
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setHitAreaRectangle: function (gameObjects, x, y, width, height, callback)
     {
@@ -2355,7 +2348,7 @@ var InputPlugin = new Class({
      * @param {number} y3 - The y coordinate of the third point of the triangle.
      * @param {Phaser.Types.Input.HitAreaCallback} [callback] - The hit area callback. If undefined it uses Triangle.Contains.
      *
-     * @return {this} This InputPlugin object.
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setHitAreaTriangle: function (gameObjects, x1, y1, x2, y2, x3, y3, callback)
     {
@@ -2397,7 +2390,7 @@ var InputPlugin = new Class({
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to create the input debug shape for.
      * @param {number} [color=0x00ff00] - The outline color of the debug shape.
      *
-     * @return {this} This Input Plugin.
+     * @return {Phaser.Input.InputPlugin} This Input Plugin.
      */
     enableDebug: function (gameObject, color)
     {
@@ -2469,29 +2462,10 @@ var InputPlugin = new Class({
                 debug.setStrokeStyle(1 / gameObject.scale, color);
 
                 debug.setDisplayOrigin(gameObject.displayOriginX, gameObject.displayOriginY);
-
-                var x = gameObject.x;
-                var y = gameObject.y;
-                var rotation = gameObject.rotation;
-                var scaleX = gameObject.scaleX;
-                var scaleY = gameObject.scaleY;
-
-                if (gameObject.parentContainer)
-                {
-                    var matrix = gameObject.getWorldTransformMatrix();
-
-                    x = matrix.tx;
-                    y = matrix.ty;
-                    rotation = matrix.rotation;
-                    scaleX = matrix.scaleX;
-                    scaleY = matrix.scaleY;
-                }
-
-                debug.setRotation(rotation);
-                debug.setScale(scaleX, scaleY);
-                debug.setPosition(x + offsetx, y + offsety);
+                debug.setRotation(gameObject.rotation);
+                debug.setScale(gameObject.scaleX, gameObject.scaleY);
+                debug.setPosition(gameObject.x + offsetx, gameObject.y + offsety);
                 debug.setScrollFactor(gameObject.scrollFactorX, gameObject.scrollFactorY);
-                debug.setDepth(gameObject.depth);
             };
 
             updateList.add(debug);
@@ -2512,7 +2486,7 @@ var InputPlugin = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to remove the input debug shape from.
      *
-     * @return {this} This Input Plugin.
+     * @return {Phaser.Input.InputPlugin} This Input Plugin.
      */
     removeDebug: function (gameObject)
     {
@@ -2545,7 +2519,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setPollAlways
      * @since 3.0.0
      *
-     * @return {this} This InputPlugin object.
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setPollAlways: function ()
     {
@@ -2561,7 +2535,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setPollOnMove
      * @since 3.0.0
      *
-     * @return {this} This InputPlugin object.
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setPollOnMove: function ()
     {
@@ -2577,7 +2551,7 @@ var InputPlugin = new Class({
      *
      * @param {number} value - The amount of time, in ms, that should elapsed before re-polling the pointers.
      *
-     * @return {this} This InputPlugin object.
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setPollRate: function (value)
     {
@@ -2597,7 +2571,7 @@ var InputPlugin = new Class({
      *
      * @param {boolean} value - Set to `true` to stop processing input events on the Scene that receives it, or `false` to let the event continue down the Scene list.
      *
-     * @return {this} This InputPlugin object.
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setGlobalTopOnly: function (value)
     {
@@ -2617,7 +2591,7 @@ var InputPlugin = new Class({
      *
      * @param {boolean} value - `true` to only include the top-most Game Object, or `false` to include all Game Objects in a hit test.
      *
-     * @return {this} This InputPlugin object.
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     setTopOnly: function (value)
     {
@@ -2707,12 +2681,9 @@ var InputPlugin = new Class({
                     return indexB - indexA;
                 }
             }
-
-            return listB.length - listA.length;
         }
 
         //  Technically this shouldn't happen, but ...
-        // eslint-disable-next-line no-unreachable
         return 0;
     },
 
@@ -2725,7 +2696,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#stopPropagation
      * @since 3.0.0
      *
-     * @return {this} This InputPlugin object.
+     * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
     stopPropagation: function ()
     {
@@ -2782,7 +2753,7 @@ var InputPlugin = new Class({
      *
      * @param {string} cursor - The CSS to be used when setting the default cursor.
      *
-     * @return {this} This Input instance.
+     * @return {Phaser.Input.InputPlugin} This Input instance.
      */
     setDefaultCursor: function (cursor)
     {

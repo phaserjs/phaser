@@ -28,7 +28,7 @@ var Events = require('./events');
  * @since 3.0.0
  *
  * @param {object} parent - The object that this DataManager belongs to.
- * @param {Phaser.Events.EventEmitter} [eventEmitter] - The DataManager's event emitter.
+ * @param {Phaser.Events.EventEmitter} eventEmitter - The DataManager's event emitter.
  */
 var DataManager = new Class({
 
@@ -255,7 +255,7 @@ var DataManager = new Class({
      * @param {(string|object)} key - The key to set the value for. Or an object or key value pairs. If an object the `data` argument is ignored.
      * @param {*} data - The value to set for the given key. If an object is provided as the key this argument is ignored.
      *
-     * @return {this} This DataManager object.
+     * @return {Phaser.Data.DataManager} This DataManager object.
      */
     set: function (key, data)
     {
@@ -280,72 +280,6 @@ var DataManager = new Class({
     },
 
     /**
-     * Increase a value for the given key. If the key doesn't already exist in the Data Manager then it is increased from 0.
-     * 
-     * When the value is first set, a `setdata` event is emitted.
-     * 
-     * @method Phaser.Data.DataManager#inc
-     * @fires Phaser.Data.Events#SET_DATA
-     * @fires Phaser.Data.Events#CHANGE_DATA
-     * @fires Phaser.Data.Events#CHANGE_DATA_KEY
-     * @since 3.23.0
-     *
-     * @param {(string|object)} key - The key to increase the value for.
-     * @param {*} [data] - The value to increase for the given key.
-     *
-     * @return {Phaser.Data.DataManager} This DataManager object.
-     */
-    inc: function (key, data)
-    {
-        if (this._frozen)
-        {
-            return this;
-        }
-
-        if (data === undefined)
-        {
-            data = 1;
-        }
-
-        var value = this.get(key);
-        if (value === undefined)
-        {
-            value = 0;
-        }
-
-        this.set(key, (value + data));
-
-        return this;
-    },
-
-    /**
-     * Toggle a boolean value for the given key. If the key doesn't already exist in the Data Manager then it is toggled from false.
-     * 
-     * When the value is first set, a `setdata` event is emitted.
-     * 
-     * @method Phaser.Data.DataManager#toggle
-     * @fires Phaser.Data.Events#SET_DATA
-     * @fires Phaser.Data.Events#CHANGE_DATA
-     * @fires Phaser.Data.Events#CHANGE_DATA_KEY
-     * @since 3.23.0
-     *
-     * @param {(string|object)} key - The key to toggle the value for.
-     *
-     * @return {Phaser.Data.DataManager} This DataManager object.
-     */
-    toggle: function (key)
-    {
-        if (this._frozen)
-        {
-            return this;
-        }
-
-        this.set(key, !this.get(key));
-
-        return this;
-    },
-
-    /**
      * Internal value setter, called automatically by the `set` method.
      *
      * @method Phaser.Data.DataManager#setValue
@@ -358,7 +292,7 @@ var DataManager = new Class({
      * @param {string} key - The key to set the value for.
      * @param {*} data - The value to set.
      *
-     * @return {this} This DataManager object.
+     * @return {Phaser.Data.DataManager} This DataManager object.
      */
     setValue: function (key, data)
     {
@@ -422,7 +356,7 @@ var DataManager = new Class({
      * @param {*} [context] - Value to use as `this` when executing callback.
      * @param {...*} [args] - Additional arguments that will be passed to the callback, after the game object, key, and data.
      *
-     * @return {this} This DataManager object.
+     * @return {Phaser.Data.DataManager} This DataManager object.
      */
     each: function (callback, context)
     {
@@ -459,7 +393,7 @@ var DataManager = new Class({
      * @param {Object.<string, *>} data - The data to merge.
      * @param {boolean} [overwrite=true] - Whether to overwrite existing data. Defaults to true.
      *
-     * @return {this} This DataManager object.
+     * @return {Phaser.Data.DataManager} This DataManager object.
      */
     merge: function (data, overwrite)
     {
@@ -495,7 +429,7 @@ var DataManager = new Class({
      *
      * @param {(string|string[])} key - The key to remove, or an array of keys to remove.
      *
-     * @return {this} This DataManager object.
+     * @return {Phaser.Data.DataManager} This DataManager object.
      */
     remove: function (key)
     {
@@ -529,7 +463,7 @@ var DataManager = new Class({
      *
      * @param {string} key - The key to set the value for.
      *
-     * @return {this} This DataManager object.
+     * @return {Phaser.Data.DataManager} This DataManager object.
      */
     removeValue: function (key)
     {
@@ -601,7 +535,7 @@ var DataManager = new Class({
      *
      * @param {boolean} value - Whether to freeze or unfreeze the Data Manager.
      *
-     * @return {this} This DataManager object.
+     * @return {Phaser.Data.DataManager} This DataManager object.
      */
     setFreeze: function (value)
     {
@@ -616,7 +550,7 @@ var DataManager = new Class({
      * @method Phaser.Data.DataManager#reset
      * @since 3.0.0
      *
-     * @return {this} This DataManager object.
+     * @return {Phaser.Data.DataManager} This DataManager object.
      */
     reset: function ()
     {

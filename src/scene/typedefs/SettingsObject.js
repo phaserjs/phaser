@@ -12,7 +12,7 @@
  * @property {integer} transitionDuration - The duration of the transition, if set.
  * @property {boolean} transitionAllowInput - Is this Scene allowed to receive input during transitions?
  * @property {object} data - a data bundle passed to this Scene from the Scene Manager.
- * @property {(false|Phaser.Types.Loader.FileTypes.PackFileSection)} pack - Files to be loaded before the Scene begins.
+ * @property {(false|Phaser.Types.Loader.FileTypes.PackFileConfig)} pack - The Loader Packfile to be loaded before the Scene begins.
  * @property {?(Phaser.Types.Cameras.Scene2D.JSONCamera|Phaser.Types.Cameras.Scene2D.JSONCamera[])} cameras - The Camera configuration object.
  * @property {Object.<string, string>} map - The Scene's Injection Map.
  * @property {Phaser.Types.Core.PhysicsConfig} physics - The physics configuration object for the Scene.

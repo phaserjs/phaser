@@ -46,8 +46,8 @@ module.exports = [
     '    }',
     '',
     '    vec4 colorOutput = vec4(uAmbientLightColor + finalColor, 1.0);',
-    '',
     '    gl_FragColor = color * vec4(colorOutput.rgb * colorOutput.a, colorOutput.a);',
+    '',
     '}',
     ''
 ].join('\n');

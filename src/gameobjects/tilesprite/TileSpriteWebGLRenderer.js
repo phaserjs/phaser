@@ -25,32 +25,20 @@ var TileSpriteWebGLRenderer = function (renderer, src, interpolationPercentage, 
 {
     src.updateCanvas();
 
-    var width = src.width;
-    var height = src.height;
     var getTint = Utils.getTintAppendFloatAlpha;
-    var pipeline = this.pipeline;
 
-    if (width === 0 || height === 0)
-    {
-        return;
-    }
-
-    renderer.setPipeline(pipeline, src);
-
-    var textureUnit = pipeline.setTexture2D(src.fillPattern, src);
-
-    pipeline.batchTexture(
+    this.pipeline.batchTexture(
         src,
         src.fillPattern,
         src.displayFrame.width * src.tileScaleX, src.displayFrame.height * src.tileScaleY,
         src.x, src.y,
-        width, height,
+        src.width, src.height,
         src.scaleX, src.scaleY,
         src.rotation,
         src.flipX, src.flipY,
         src.scrollFactorX, src.scrollFactorY,
-        src.originX * width, src.originY * height,
-        0, 0, width, height,
+        src.originX * src.width, src.originY * src.height,
+        0, 0, src.width, src.height,
         getTint(src._tintTL, camera.alpha * src._alphaTL),
         getTint(src._tintTR, camera.alpha * src._alphaTR),
         getTint(src._tintBL, camera.alpha * src._alphaBL),
@@ -59,9 +47,7 @@ var TileSpriteWebGLRenderer = function (renderer, src, interpolationPercentage, 
         (src.tilePositionX % src.displayFrame.width) / src.displayFrame.width,
         (src.tilePositionY % src.displayFrame.height) / src.displayFrame.height,
         camera,
-        parentMatrix,
-        false,
-        textureUnit
+        parentMatrix
     );
 };
 

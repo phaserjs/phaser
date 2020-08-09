@@ -8,7 +8,6 @@
 var BaseSound = require('../BaseSound');
 var Class = require('../../utils/Class');
 var Events = require('../events');
-var Clamp = require('../../math/Clamp');
 
 /**
  * @classdesc
@@ -382,15 +381,11 @@ var HTML5AudioSound = new Class({
      */
     stopAndReleaseAudioTag: function ()
     {
+        this.audio.pause();
+        this.audio.dataset.used = 'false';
+        this.audio = null;
         this.startTime = 0;
         this.previousTime = 0;
-
-        if (this.audio)
-        {
-            this.audio.pause();
-            this.audio.dataset.used = 'false';
-            this.audio = null;
-        }
     },
 
     /**
@@ -557,7 +552,7 @@ var HTML5AudioSound = new Class({
     {
         if (this.audio)
         {
-            this.audio.volume = Clamp(this.currentConfig.volume * this.manager.volume, 0, 1);
+            this.audio.volume = this.currentConfig.volume * this.manager.volume;
         }
     },
 

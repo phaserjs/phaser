@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.publish = void 0;
 const fs = require("fs-extra");
 const path = require("path");
 const Parser_1 = require("./Parser");

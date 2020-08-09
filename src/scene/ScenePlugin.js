@@ -319,7 +319,7 @@ var ScenePlugin = new Class({
 
         if (target.sys.isSleeping())
         {
-            target.sys.wake(GetFastValue(config, 'data'));
+            target.sys.wake();
         }
         else
         {

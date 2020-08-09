@@ -22,7 +22,6 @@ Rectangle.FitOutside = require('./FitOutside');
 Rectangle.Floor = require('./Floor');
 Rectangle.FloorAll = require('./FloorAll');
 Rectangle.FromPoints = require('./FromPoints');
-Rectangle.FromXY = require('./FromXY');
 Rectangle.GetAspectRatio = require('./GetAspectRatio');
 Rectangle.GetCenter = require('./GetCenter');
 Rectangle.GetPoint = require('./GetPoint');

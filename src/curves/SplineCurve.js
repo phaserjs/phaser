@@ -56,7 +56,7 @@ var SplineCurve = new Class({
      *
      * @param {(Phaser.Math.Vector2[]|number[]|number[][])} points - The points that configure the curve.
      *
-     * @return {this} This curve object.
+     * @return {Phaser.Curves.Spline} This curve object.
      */
     addPoints: function (points)
     {
@@ -128,14 +128,14 @@ var SplineCurve = new Class({
     },
 
     /**
-     * Get the resolution of the curve.
+     * [description]
      *
      * @method Phaser.Curves.Spline#getResolution
      * @since 3.0.0
      *
-     * @param {number} divisions - Optional divisions value.
+     * @param {number} divisions - [description]
      *
-     * @return {number} The curve resolution.
+     * @return {number} [description]
      */
     getResolution: function (divisions)
     {

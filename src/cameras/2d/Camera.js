@@ -118,16 +118,6 @@ var Camera = new Class({
         this.panEffect = new Effects.Pan(this);
 
         /**
-         * The Camera Rotate To effect handler.
-         * To rotate this camera see the `Camera.rotateTo` method.
-         *
-         * @name Phaser.Cameras.Scene2D.Camera#rotateToEffect
-         * @type {Phaser.Cameras.Scene2D.Effects.RotateTo}
-         * @since 3.23.0
-         */
-        this.rotateToEffect = new Effects.RotateTo(this);
-
-        /**
          * The Camera Zoom effect handler.
          * To zoom this camera see the `Camera.zoom` method.
          *
@@ -347,7 +337,7 @@ var Camera = new Class({
      * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} [pipeline] - An optional WebGL Pipeline to render with, can be either a string which is the name of the pipeline, or a pipeline reference.
      * @param {boolean} [renderToGame=true] - If you do not need the Camera to still render to the Game, set this parameter to `false`.
      *
-     * @return {this} This Camera instance.
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
     setRenderToTexture: function (pipeline, renderToGame)
     {
@@ -389,7 +379,7 @@ var Camera = new Class({
      *
      * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} [pipeline] - The WebGL Pipeline to render with, can be either a string which is the name of the pipeline, or a pipeline reference. Or if left empty it will clear the pipeline.
      *
-     * @return {this} This Camera instance.
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
     setPipeline: function (pipeline)
     {
@@ -420,7 +410,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#clearRenderToTexture
      * @since 3.13.0
      *
-     * @return {this} This Camera instance.
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
     clearRenderToTexture: function ()
     {
@@ -487,7 +477,7 @@ var Camera = new Class({
      * @param {number} [width] - The width of the deadzone rectangle in pixels. If not specified the deadzone is removed.
      * @param {number} [height] - The height of the deadzone rectangle in pixels.
      *
-     * @return {this} This Camera instance.
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
     setDeadzone: function (width, height)
     {
@@ -543,7 +533,7 @@ var Camera = new Class({
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
-     * @return {this} This Camera instance.
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
     fadeIn: function (duration, red, green, blue, callback, context)
     {
@@ -567,7 +557,7 @@ var Camera = new Class({
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
-     * @return {this} This Camera instance.
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
     fadeOut: function (duration, red, green, blue, callback, context)
     {
@@ -591,7 +581,7 @@ var Camera = new Class({
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
-     * @return {this} This Camera instance.
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
     fadeFrom: function (duration, red, green, blue, force, callback, context)
     {
@@ -615,7 +605,7 @@ var Camera = new Class({
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
-     * @return {this} This Camera instance.
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
     fade: function (duration, red, green, blue, force, callback, context)
     {
@@ -639,7 +629,7 @@ var Camera = new Class({
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
-     * @return {this} This Camera instance.
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
     flash: function (duration, red, green, blue, force, callback, context)
     {
@@ -661,7 +651,7 @@ var Camera = new Class({
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
-     * @return {this} This Camera instance.
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
     shake: function (duration, intensity, force, callback, context)
     {
@@ -687,35 +677,11 @@ var Camera = new Class({
      * the current camera scroll x coordinate and the current camera scroll y coordinate.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
-     * @return {this} This Camera instance.
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
     pan: function (x, y, duration, ease, force, callback, context)
     {
         return this.panEffect.start(x, y, duration, ease, force, callback, context);
-    },
-
-    /**
-     * This effect will rotate the Camera so that the viewport finishes at the given angle in radians,
-     * over the duration and with the ease specified.
-     *
-     * @method Phaser.Cameras.Scene2D.Camera#rotateTo
-     * @since 3.23.0
-     *
-     * @param {number} radians - The destination angle in radians to rotate the Camera viewport to. If the angle is positive then the rotation is clockwise else anticlockwise
-     * @param {boolean} [shortestPath=false] - If shortest path is set to true the camera will rotate in the quickest direction clockwise or anti-clockwise.
-     * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
-     * @param {(string|function)} [ease='Linear'] - The ease to use for the rotation. Can be any of the Phaser Easing constants or a custom function.
-     * @param {boolean} [force=false] - Force the rotation effect to start immediately, even if already running.
-     * @param {CameraRotateCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
-     * It is sent four arguments: A reference to the camera, a progress amount between 0 and 1 indicating how complete the effect is,
-     * the current camera rotation angle in radians.
-     * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
-     *
-     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
-     */
-    rotateTo: function (radians, shortestPath, duration, ease, force, callback, context)
-    {
-        return this.rotateToEffect.start(radians, shortestPath, duration, ease, force, callback, context);
     },
 
     /**
@@ -735,7 +701,7 @@ var Camera = new Class({
      * the current camera scroll x coordinate and the current camera scroll y coordinate.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
-     * @return {this} This Camera instance.
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
     zoomTo: function (zoom, duration, ease, force, callback, context)
     {
@@ -968,7 +934,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#stopFollow
      * @since 3.0.0
      *
-     * @return {this} This Camera instance.
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
     stopFollow: function ()
     {
@@ -984,11 +950,10 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#resetFX
      * @since 3.0.0
      *
-     * @return {this} This Camera instance.
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
     resetFX: function ()
     {
-        this.rotateToEffect.reset();
         this.panEffect.reset();
         this.shakeEffect.reset();
         this.flashEffect.reset();
@@ -1011,7 +976,6 @@ var Camera = new Class({
     {
         if (this.visible)
         {
-            this.rotateToEffect.update(time, delta);
             this.panEffect.update(time, delta);
             this.zoomEffect.update(time, delta);
             this.shakeEffect.update(time, delta);

@@ -194,17 +194,19 @@ var LineCurve = new Class({
         return tangent.normalize();
     },
 
+    //  Override default Curve.getUtoTmapping
+
     /**
-     * Given u ( 0 .. 1 ), get a t to find p. This gives you points which are equidistant.
+     * [description]
      *
      * @method Phaser.Curves.Line#getUtoTmapping
      * @since 3.0.0
      *
-     * @param {number} u - A float between 0 and 1.
-     * @param {integer} distance - The distance, in pixels.
-     * @param {integer} [divisions] - Optional amount of divisions.
+     * @param {number} u - [description]
+     * @param {integer} distance - [description]
+     * @param {integer} [divisions] - [description]
      *
-     * @return {number} The equidistant value.
+     * @return {number} [description]
      */
     getUtoTmapping: function (u, distance, divisions)
     {

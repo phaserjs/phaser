@@ -9,6 +9,6 @@
  * @property {*} [callbackScope] - The scope (`this` object) with which to invoke the `callback`.
  * @property {Array.<*>} [args] - Additional arguments to be passed to the `callback`.
  * @property {number} [timeScale=1] - The scale of the elapsed time.
- * @property {number} [startAt=0] - The initial elapsed time in milliseconds. Useful if you want a long duration with repeat, but for the first loop to fire quickly.
+ * @property {number} [startAt=1] - The initial elapsed time in milliseconds. Useful if you want a long duration with repeat, but for the first loop to fire quickly.
  * @property {boolean} [paused=false] - `true` if the Timer Event should be paused.
  */

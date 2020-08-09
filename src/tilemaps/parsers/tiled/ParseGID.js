@@ -15,9 +15,9 @@ var FLIPPED_ANTI_DIAGONAL = 0x20000000; // Top-right is swapped with bottom-left
  * @function Phaser.Tilemaps.Parsers.Tiled.ParseGID
  * @since 3.0.0
  *
- * @param {number} gid - A Tiled GID.
+ * @param {number} gid - [description]
  *
- * @return {Phaser.Types.Tilemaps.GIDData} The GID Data.
+ * @return {object} [description]
  */
 var ParseGID = function (gid)
 {

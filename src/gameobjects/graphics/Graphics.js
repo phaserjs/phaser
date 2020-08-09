@@ -502,7 +502,7 @@ var Graphics = new Class({
 
     /**
      * Fill the current path.
-     *
+     * 
      * This is an alias for `Graphics.fillPath` and does the same thing.
      * It was added to match the CanvasRenderingContext 2D API.
      *
@@ -539,7 +539,7 @@ var Graphics = new Class({
 
     /**
      * Stroke the current path.
-     *
+     * 
      * This is an alias for `Graphics.strokePath` and does the same thing.
      * It was added to match the CanvasRenderingContext 2D API.
      *
@@ -1034,7 +1034,7 @@ var Graphics = new Class({
      * Stroke the shape represented by the given array of points.
      *
      * Pass `closeShape` to automatically close the shape by joining the last to the first point.
-     *
+     * 
      * Pass `closePath` to automatically close the path before it is stroked.
      *
      * @method Phaser.GameObjects.Graphics#strokePoints
@@ -1081,7 +1081,7 @@ var Graphics = new Class({
      * Fill the shape represented by the given array of points.
      *
      * Pass `closeShape` to automatically close the shape by joining the last to the first point.
-     *
+     * 
      * Pass `closePath` to automatically close the path before it is filled.
      *
      * @method Phaser.GameObjects.Graphics#fillPoints
@@ -1218,7 +1218,7 @@ var Graphics = new Class({
      * Draw an arc.
      *
      * This method can be used to create circles, or parts of circles.
-     *
+     * 
      * Make sure you call `beginPath` before starting the arc unless you wish for the arc to automatically
      * close when filled or stroked.
      *
@@ -1336,10 +1336,10 @@ var Graphics = new Class({
 
     /**
      * Inserts a translation command into this Graphics objects command buffer.
-     *
+     * 
      * All objects drawn _after_ calling this method will be translated
      * by the given amount.
-     *
+     * 
      * This does not change the position of the Graphics object itself,
      * only of the objects drawn by it after calling this method.
      *
@@ -1363,10 +1363,10 @@ var Graphics = new Class({
 
     /**
      * Inserts a scale command into this Graphics objects command buffer.
-     *
+     * 
      * All objects drawn _after_ calling this method will be scaled
      * by the given amount.
-     *
+     * 
      * This does not change the scale of the Graphics object itself,
      * only of the objects drawn by it after calling this method.
      *
@@ -1390,10 +1390,10 @@ var Graphics = new Class({
 
     /**
      * Inserts a rotation command into this Graphics objects command buffer.
-     *
+     * 
      * All objects drawn _after_ calling this method will be rotated
      * by the given amount.
-     *
+     * 
      * This does not change the rotation of the Graphics object itself,
      * only of the objects drawn by it after calling this method.
      *
@@ -1447,10 +1447,6 @@ var Graphics = new Class({
      *
      * If `key` is a Canvas it will draw the texture to that canvas context. Note that it will NOT
      * automatically upload it to the GPU in WebGL mode.
-     *
-     * Please understand that the texture is created via the Canvas API of the browser, therefore some
-     * Graphics features, such as `fillGradientStyle`, will not appear on the resulting texture,
-     * as they're unsupported by the Canvas API.
      *
      * @method Phaser.GameObjects.Graphics#generateTexture
      * @since 3.0.0

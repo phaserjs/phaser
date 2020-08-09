@@ -12,7 +12,7 @@ var ScaleModes = require('../renderer/ScaleModes');
 /**
  * @classdesc
  * A Texture Source is the encapsulation of the actual source data for a Texture.
- *
+ * 
  * This is typically an Image Element, loaded from the file system or network, a Canvas Element or a Video Element.
  *
  * A Texture can contain multiple Texture Sources, which only happens when a multi-atlas is loaded.
@@ -58,7 +58,7 @@ var TextureSource = new Class({
 
         /**
          * The source of the image data.
-         *
+         * 
          * This is either an Image Element, a Canvas Element, a Video Element, a RenderTexture or a WebGLTexture.
          *
          * @name Phaser.Textures.TextureSource#source
@@ -69,7 +69,7 @@ var TextureSource = new Class({
 
         /**
          * The image data.
-         *
+         * 
          * This is either an Image element, Canvas element or a Video Element.
          *
          * @name Phaser.Textures.TextureSource#image
@@ -185,28 +185,6 @@ var TextureSource = new Class({
         this.glTexture = null;
 
         /**
-         * The current texture unit index as assigned by the WebGL Renderer.
-         * Un-used in canvas. Should be treated as read-only.
-         *
-         * @name Phaser.Textures.TextureSource#glIndex
-         * @type {number}
-         * @default 0
-         * @since 3.50.0
-         */
-        this.glIndex = 0;
-
-        /**
-         * The counter value when this texture was last assigned an index by the WebGL Renderer.
-         * Un-used in canvas. Should be treated as read-only.
-         *
-         * @name Phaser.Textures.TextureSource#glIndexCounter
-         * @type {number}
-         * @default -1
-         * @since 3.50.0
-         */
-        this.glIndexCounter = -1;
-
-        /**
          * Sets the `UNPACK_FLIP_Y_WEBGL` flag the WebGL Texture uses during upload.
          *
          * @name Phaser.Textures.TextureSource#flipY
@@ -228,25 +206,23 @@ var TextureSource = new Class({
      */
     init: function (game)
     {
-        var renderer = this.renderer;
-
-        if (renderer)
+        if (this.renderer)
         {
-            if (renderer.gl)
+            if (this.renderer.gl)
             {
                 if (this.isCanvas)
                 {
-                    this.glTexture = renderer.createCanvasTexture(this.image, false, this.flipY);
+                    this.glTexture = this.renderer.createCanvasTexture(this.image, false, this.flipY);
                 }
                 else if (this.isVideo)
                 {
-                    this.glTexture = renderer.createVideoTexture(this.image, false, this.flipY);
+                    this.glTexture = this.renderer.createVideoTexture(this.image, false, this.flipY);
                 }
                 else if (this.isRenderTexture)
                 {
                     this.image = this.source.canvas;
-
-                    this.glTexture = renderer.createTextureFromSource(null, this.width, this.height, this.scaleMode);
+                 
+                    this.glTexture = this.renderer.createTextureFromSource(null, this.width, this.height, this.scaleMode);
                 }
                 else if (this.isGLTexture)
                 {
@@ -254,7 +230,7 @@ var TextureSource = new Class({
                 }
                 else
                 {
-                    this.glTexture = renderer.createTextureFromSource(this.image, this.width, this.height, this.scaleMode);
+                    this.glTexture = this.renderer.createTextureFromSource(this.image, this.width, this.height, this.scaleMode);
                 }
             }
             else if (this.isRenderTexture)
