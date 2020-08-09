@@ -128,13 +128,9 @@ var ParseTileLayers = function (json, insertNull)
                 tileHeight: json.tileheight,
                 alpha: (curGroupState.opacity * curl.opacity),
                 visible: (curGroupState.visible && curl.visible),
-<<<<<<< HEAD
                 properties: GetFastValue(curl, 'properties', []),
                 orientation: CONST.fromOrientationString(json.orientation)
                 
-=======
-                properties: GetFastValue(curl, 'properties', [])
->>>>>>> 0cca0018451ad141795ed0c8153193dabeb62ef6
             });
 
             if (layerData.orientation === CONST.HEXAGONAL)
@@ -212,13 +208,9 @@ var ParseTileLayers = function (json, insertNull)
                 tileHeight: json.tileheight,
                 alpha: (curGroupState.opacity * curl.opacity),
                 visible: (curGroupState.visible && curl.visible),
-<<<<<<< HEAD
                 properties: GetFastValue(curl, 'properties', []),
                 orientation: CONST.fromOrientationString(json.orientation)
                 
-=======
-                properties: GetFastValue(curl, 'properties', [])
->>>>>>> 0cca0018451ad141795ed0c8153193dabeb62ef6
             });
 
             if (layerData.orientation === CONST.HEXAGONAL)
