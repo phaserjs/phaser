@@ -317,7 +317,7 @@ var Tween = new Class({
          * `onStart` When the Tween starts playing after a delayed state. Will happen at the same time as `onActive` if it has no delay.
          * `onYoyo` When a TweenData starts a yoyo. This happens _after_ the `hold` delay expires, if set.
          * `onRepeat` When a TweenData repeats playback. This happens _after_ the `repeatDelay` expires, if set.
-         * `onComplete` When the Tween finishes playback fully or `Tween.stop` is called. Never invoked if tween is set to repeat infinitely.
+         * `onComplete` When the Tween finishes playback fully. Never invoked if tween is set to repeat infinitely.
          * `onUpdate` When a TweenData updates a property on a source target during playback.
          * `onLoop` When a Tween loops. This happens _after_ the `loopDelay` expires, if set.
          *
@@ -331,6 +331,7 @@ var Tween = new Class({
             onLoop: null,
             onRepeat: null,
             onStart: null,
+            onStop: null,
             onUpdate: null,
             onYoyo: null
         };
@@ -354,7 +355,7 @@ var Tween = new Class({
      * @param {integer} [index=0] - The Tween Data to return the value from.
      *
      * @return {number} The value of the requested Tween Data.
-     */	
+     */
     getValue: function (index)
     {
         if (index === undefined) { index = 0; }
@@ -1107,6 +1108,8 @@ var Tween = new Class({
                 }
             }
 
+            this.dispatchTweenEvent(Events.TWEEN_STOP, this.callbacks.onStop);
+
             this.removeAllListeners();
 
             this.state = TWEEN_CONST.PENDING_REMOVE;
@@ -1575,6 +1578,7 @@ var Tween = new Class({
 
 //  onActive = 'active' event = When the Tween is moved from the pending to the active list in the manager, even if playback delayed
 //  onStart = 'start' event = When the Tween starts playing from a delayed state (will happen same time as onActive if no delay)
+//  onStop = 'stop' event = When the Tween is stopped
 //  onYoyo = 'yoyo' event = When the Tween starts a yoyo
 //  onRepeat = 'repeat' event = When a TweenData repeats playback (if any)
 //  onComplete = 'complete' event = When the Tween finishes all playback (can sometimes never happen if repeat -1), also when 'stop' called
@@ -1587,6 +1591,7 @@ Tween.TYPES = [
     'onLoop',
     'onRepeat',
     'onStart',
+    'onStop',
     'onUpdate',
     'onYoyo'
 ];

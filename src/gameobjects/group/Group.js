@@ -91,7 +91,7 @@ var Group = new Class({
          * @type {Phaser.Structs.Set.<Phaser.GameObjects.GameObject>}
          * @since 3.0.0
          */
-        this.children = new Set(children);
+        this.children = new Set();
 
         /**
          * A flag identifying this object as a group.
@@ -136,8 +136,7 @@ var Group = new Class({
         this.name = GetFastValue(config, 'name', '');
 
         /**
-         * Whether this group runs its {@link Phaser.GameObjects.Group#preUpdate} method
-         * (which may update any members).
+         * Whether this group runs its {@link Phaser.GameObjects.Group#preUpdate} method (which may update any members).
          *
          * @name Phaser.GameObjects.Group#active
          * @type {boolean}
@@ -235,6 +234,11 @@ var Group = new Class({
          * @since 3.22.0
          */
         this.internalRemoveCallback = GetFastValue(config, 'internalRemoveCallback', null);
+
+        if (children)
+        {
+            this.addMultiple(children);
+        }
 
         if (config)
         {
@@ -1104,6 +1108,42 @@ var Group = new Class({
     },
 
     /**
+     * Sets the `active` property of this Group.
+     * When active, this Group runs its `preUpdate` method.
+     *
+     * @method Phaser.GameObjects.Group#setActive
+     * @since 3.24.0
+     *
+     * @param {boolean} value - True if this Group should be set as active, false if not.
+     *
+     * @return {this} This Group object.
+     */
+    setActive: function (value)
+    {
+        this.active = value;
+
+        return this;
+    },
+
+    /**
+     * Sets the `name` property of this Group.
+     * The `name` property is not populated by Phaser and is presented for your own use.
+     *
+     * @method Phaser.GameObjects.Group#setName
+     * @since 3.24.0
+     *
+     * @param {string} value - The name to be given to this Group.
+     *
+     * @return {this} This Group object.
+     */
+    setName: function (value)
+    {
+        this.name = value;
+
+        return this;
+    },
+
+    /**
      * Sets the property as defined in `key` of each group member to the given value.
      *
      * @method Phaser.GameObjects.Group#propertyValueSet
@@ -1260,7 +1300,7 @@ var Group = new Class({
     /**
      * Iterate through the group members changing the position of each element to be that of the element that came before
      * it in the array (or after it if direction = 1)
-     * 
+     *
      * The first group member position is set to x/y.
      *
      * @method Phaser.GameObjects.Group#shiftPosition

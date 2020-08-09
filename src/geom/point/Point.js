@@ -69,7 +69,7 @@ var Point = new Class({
      * @param {number} [x=0] - The x coordinate of this Point.
      * @param {number} [y=x] - The y coordinate of this Point.
      *
-     * @return {Phaser.Geom.Point} This Point object.
+     * @return {this} This Point object.
      */
     setTo: function (x, y)
     {

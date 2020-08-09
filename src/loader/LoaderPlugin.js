@@ -151,9 +151,9 @@ var LoaderPlugin = new Class({
 
         /**
          * If you want to append a URL before the path of any asset you can set this here.
-         * 
+         *
          * Useful if allowing the asset base url to be configured outside of the game code.
-         * 
+         *
          * If you set this property directly then it _must_ end with a "/". Alternatively, call `setBaseURL()` and it'll do it for you.
          *
          * @name Phaser.Loader.LoaderPlugin#baseURL
@@ -232,7 +232,7 @@ var LoaderPlugin = new Class({
 
         /**
          * Files are placed in this Set when they're added to the Loader via `addFile`.
-         * 
+         *
          * They are moved to the `inflight` Set when they start loading, and assuming a successful
          * load, to the `queue` Set for further processing.
          *
@@ -246,9 +246,9 @@ var LoaderPlugin = new Class({
 
         /**
          * Files are stored in this Set while they're in the process of being loaded.
-         * 
+         *
          * Upon a successful load they are moved to the `queue` Set.
-         * 
+         *
          * By the end of the load process this Set will be empty.
          *
          * @name Phaser.Loader.LoaderPlugin#inflight
@@ -259,10 +259,10 @@ var LoaderPlugin = new Class({
 
         /**
          * Files are stored in this Set while they're being processed.
-         * 
+         *
          * If the process is successful they are moved to their final destination, which could be
          * a Cache or the Texture Manager.
-         * 
+         *
          * At the end of the load process this Set will be empty.
          *
          * @name Phaser.Loader.LoaderPlugin#queue
@@ -357,9 +357,9 @@ var LoaderPlugin = new Class({
 
     /**
      * If you want to append a URL before the path of any asset you can set this here.
-     * 
+     *
      * Useful if allowing the asset base url to be configured outside of the game code.
-     * 
+     *
      * Once a base URL is set it will affect every file loaded by the Loader from that point on. It does _not_ change any
      * file _already_ being loaded. To reset it, call this method with no arguments.
      *
@@ -399,7 +399,7 @@ var LoaderPlugin = new Class({
      * given as it's an absolute URL.
      *
      * Please note that the path is added before the filename but *after* the baseURL (if set.)
-     * 
+     *
      * Once a path is set it will then affect every file added to the Loader from that point on. It does _not_ change any
      * file _already_ in the load queue. To reset it, call this method with no arguments.
      *
@@ -426,9 +426,9 @@ var LoaderPlugin = new Class({
 
     /**
      * An optional prefix that is automatically prepended to the start of every file key.
-     * 
+     *
      * If prefix was `MENU.` and you load an image with the key 'Background' the resulting key would be `MENU.Background`.
-     * 
+     *
      * Once a prefix is set it will then affect every file added to the Loader from that point on. It does _not_ change any
      * file _already_ in the load queue. To reset it, call this method with no arguments.
      *
@@ -450,9 +450,9 @@ var LoaderPlugin = new Class({
 
     /**
      * Sets the Cross Origin Resource Sharing value used when loading files.
-     * 
+     *
      * Files can override this value on a per-file basis by specifying an alternative `crossOrigin` value in their file config.
-     * 
+     *
      * Once CORs is set it will then affect every file loaded by the Loader from that point on, as long as they don't have
      * their own CORs setting. To reset it, call this method with no arguments.
      *
@@ -586,7 +586,7 @@ var LoaderPlugin = new Class({
      * @method Phaser.Loader.LoaderPlugin#addPack
      * @since 3.7.0
      *
-     * @param {any} data - The Pack File data to be parsed and each entry of it to added to the load queue.
+     * @param {any} pack - The Pack File data to be parsed and each entry of it to added to the load queue.
      * @param {string} [packKey] - An optional key to use from the pack file data.
      *
      * @return {boolean} `true` if any files were added to the queue, otherwise `false`.
@@ -609,6 +609,11 @@ var LoaderPlugin = new Class({
         //  Here we go ...
         for (var key in pack)
         {
+            if (!Object.prototype.hasOwnProperty.call(pack, key))
+            {
+                continue;
+            }
+
             var config = pack[key];
 
             //  Any meta data to process?
@@ -753,10 +758,10 @@ var LoaderPlugin = new Class({
 
     /**
      * An internal method called by the Loader.
-     * 
+     *
      * It will check to see if there are any more files in the pending list that need loading, and if so it will move
      * them from the list Set into the inflight Set, set their CORs flag and start them loading.
-     * 
+     *
      * It will carrying on doing this for each file in the pending list until it runs out, or hits the max allowed parallel downloads.
      *
      * @method Phaser.Loader.LoaderPlugin#checkLoadQueue
@@ -793,7 +798,7 @@ var LoaderPlugin = new Class({
 
     /**
      * An internal method called automatically by the XHRLoader belong to a File.
-     * 
+     *
      * This method will remove the given file from the inflight Set and update the load progress.
      * If the file was successful its `onProcess` method is called, otherwise it is added to the delete queue.
      *
@@ -933,7 +938,7 @@ var LoaderPlugin = new Class({
      *
      * @method Phaser.Loader.LoaderPlugin#flagForRemoval
      * @since 3.7.0
-     * 
+     *
      * @param {Phaser.Loader.File} file - The File to be queued for deletion when the Loader completes.
      */
     flagForRemoval: function (file)
@@ -961,7 +966,7 @@ var LoaderPlugin = new Class({
 
     /**
      * Causes the browser to save the given data as a file to its default Downloads folder.
-     * 
+     *
      * Creates a DOM level anchor link, assigns it as being a `download` anchor, sets the href
      * to be an ObjectURL based on the given data, and then invokes a click event.
      *

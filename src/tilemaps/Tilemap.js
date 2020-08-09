@@ -694,9 +694,10 @@ var Tilemap = new Class({
                 if (obj.height) { sprite.displayHeight = obj.height; }
 
                 // Origin is (0, 1) in Tiled, so find the offset that matches the Sprite's origin.
+                // Do not offset objects with zero dimensions (e.g. points).
                 var offset = {
-                    x: sprite.originX * sprite.displayWidth,
-                    y: (sprite.originY - 1) * sprite.displayHeight
+                    x: sprite.originX * obj.width,
+                    y: (sprite.originY - 1) * obj.height
                 };
 
                 // If the object is rotated, then the origin offset also needs to be rotated.
@@ -1907,7 +1908,6 @@ var Tilemap = new Class({
      *
      * @param {Phaser.GameObjects.Graphics} graphics - The target Graphics object to draw upon.
      * @param {Phaser.Types.Tilemaps.StyleConfig} styleConfig - An object specifying the colors to use for the debug drawing.
-     * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Return this Tilemap object, or null if the layer given was invalid.
      */
@@ -2052,7 +2052,7 @@ var Tilemap = new Class({
     /**
      * Sets collision on all tiles in the given layer, except for tiles that have an index specified in
      * the given array. The `collides` parameter controls if collision will be enabled (true) or
-     * disabled (false).
+     * disabled (false). Tile indexes not currently in the layer are not affected.
      *
      * If no layer specified, the map's current layer is used.
      *

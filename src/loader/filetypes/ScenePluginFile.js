@@ -16,7 +16,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * A single Scene Plugin Script File suitable for loading by the Loader.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#scenePlugin method and are not typically created directly.
- * 
+ *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#scenePlugin.
  *
  * @class ScenePluginFile
@@ -124,7 +124,7 @@ var ScenePluginFile = new Class({
  * Adds a Scene Plugin Script file, or array of plugin files, to the current load queue.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
- * 
+ *
  * ```javascript
  * function preload ()
  * {
@@ -139,11 +139,11 @@ var ScenePluginFile = new Class({
  * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
  * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
  * loaded.
- * 
+ *
  * The key must be a unique String and not already in-use by another file in the Loader.
  *
  * Instead of passing arguments you can pass a configuration object, such as:
- * 
+ *
  * ```javascript
  * this.load.scenePlugin({
  *     key: 'modplayer',
@@ -168,7 +168,7 @@ var ScenePluginFile = new Class({
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#scenePlugin
- * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @fires Phaser.Loader.LoaderPlugin#ADD
  * @since 3.8.0
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.ScenePluginFileConfig|Phaser.Types.Loader.FileTypes.ScenePluginFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.

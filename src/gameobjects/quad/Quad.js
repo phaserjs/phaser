@@ -27,7 +27,7 @@ var Mesh = require('../mesh/Mesh');
  * @param {Phaser.Scene} scene - The Scene to which this Quad belongs.
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
- * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+ * @param {(string|Phaser.Textures.Texture)} texture - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
  */
 var Quad = new Class({

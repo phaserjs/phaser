@@ -13,10 +13,10 @@
  * @property {boolean} [yoyo=false] - Should the tween complete, then reverse the values incrementally to get back to the starting tween values? The reverse tweening will also take `duration` milliseconds to complete.
  * @property {boolean} [flipX=false] - Horizontally flip the target of the Tween when it completes (before it yoyos, if set to do so). Only works for targets that support the `flipX` property.
  * @property {boolean} [flipY=false] - Vertically flip the target of the Tween when it completes (before it yoyos, if set to do so). Only works for targets that support the `flipY` property.
- * @property {number|function|object|array} [offset=null] - Used when the Tween is part of a Timeline.
- * @property {number|function|object|array} [completeDelay=0] - The time the tween will wait before the onComplete event is dispatched once it has completed, in ms.
- * @property {number|function|object|array} [loop=0] - The number of times the tween will repeat. (A value of 1 means the tween will play twice, as it repeated once.) The first loop starts after every property tween has completed once.
- * @property {number|function|object|array} [loopDelay=0] - The time the tween will pause before starting either a yoyo or returning to the start for a repeat.
+ * @property {string|number|function|object|array} [offset=null] - Used when the Tween is part of a Timeline.
+ * @property {string|number|function|object|array} [completeDelay=0] - The time the tween will wait before the onComplete event is dispatched once it has completed, in ms.
+ * @property {string|number|function|object|array} [loop=0] - The number of times the tween will repeat. (A value of 1 means the tween will play twice, as it repeated once.) The first loop starts after every property tween has completed once.
+ * @property {string|number|function|object|array} [loopDelay=0] - The time the tween will pause before starting either a yoyo or returning to the start for a repeat.
  * @property {boolean} [paused=false] - Does the tween start in a paused state (true) or playing (false)?
  * @property {Object.<string,(number|string|Phaser.Types.Tweens.GetEndCallback|Phaser.Types.Tweens.TweenPropConfig)>} [props] - The properties to tween.
  * @property {boolean} [useFrames=false] - Use frames or milliseconds?
@@ -33,6 +33,9 @@
  * @property {Phaser.Types.Tweens.TweenOnStartCallback} [onStart] - A function to call when the tween starts playback, after any delays have expired.
  * @property {array} [onStartParams] - Additional parameters to pass to `onStart`.
  * @property {any} [onStartScope] - Scope (this) for `onStart`.
+ * @property {Phaser.Types.Tweens.TweenOnStopCallback} [onStop] - A function to call when the tween is stopped.
+ * @property {array} [onStopParams] - Additional parameters to pass to `onStop`.
+ * @property {any} [onStopScope] - Scope (this) for `onStop`.
  * @property {Phaser.Types.Tweens.TweenOnUpdateCallback} [onUpdate] - A function to call each time the tween steps. Called once per property per target.
  * @property {array} [onUpdateParams] - Additional parameters to pass to `onUpdate`.
  * @property {any} [onUpdateScope] - Scope (this) for `onUpdate`.

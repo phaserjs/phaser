@@ -489,17 +489,16 @@ var Curve = new Class({
         return this.getTangent(t, out);
     },
 
-    //  Given a distance in pixels, get a t to find p.
     /**
-     * [description]
+     * Given a distance in pixels, get a t to find p.
      *
      * @method Phaser.Curves.Curve#getTFromDistance
      * @since 3.0.0
      *
-     * @param {integer} distance - [description]
-     * @param {integer} [divisions] - [description]
+     * @param {integer} distance - The distance, in pixels.
+     * @param {integer} [divisions] - Optional amount of divisions.
      *
-     * @return {number} [description]
+     * @return {number} The distance.
      */
     getTFromDistance: function (distance, divisions)
     {
@@ -511,19 +510,17 @@ var Curve = new Class({
         return this.getUtoTmapping(0, distance, divisions);
     },
 
-    // Given u ( 0 .. 1 ), get a t to find p. This gives you points which are equidistant
-
     /**
-     * [description]
+     * Given u ( 0 .. 1 ), get a t to find p. This gives you points which are equidistant.
      *
      * @method Phaser.Curves.Curve#getUtoTmapping
      * @since 3.0.0
      *
-     * @param {number} u - [description]
-     * @param {integer} distance - [description]
-     * @param {integer} [divisions] - [description]
+     * @param {number} u - A float between 0 and 1.
+     * @param {integer} distance - The distance, in pixels.
+     * @param {integer} [divisions] - Optional amount of divisions.
      *
-     * @return {number} [description]
+     * @return {number} The equidistant value.
      */
     getUtoTmapping: function (u, distance, divisions)
     {

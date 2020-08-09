@@ -179,7 +179,7 @@ var FixedKeyControl = new Class({
      * @method Phaser.Cameras.Controls.FixedKeyControl#start
      * @since 3.0.0
      *
-     * @return {Phaser.Cameras.Controls.FixedKeyControl} This Key Control instance.
+     * @return {this} This Key Control instance.
      */
     start: function ()
     {
@@ -194,7 +194,7 @@ var FixedKeyControl = new Class({
      * @method Phaser.Cameras.Controls.FixedKeyControl#stop
      * @since 3.0.0
      *
-     * @return {Phaser.Cameras.Controls.FixedKeyControl} This Key Control instance.
+     * @return {this} This Key Control instance.
      */
     stop: function ()
     {
@@ -211,7 +211,7 @@ var FixedKeyControl = new Class({
      *
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera to bind this Key Control to.
      *
-     * @return {Phaser.Cameras.Controls.FixedKeyControl} This Key Control instance.
+     * @return {this} This Key Control instance.
      */
     setCamera: function (camera)
     {

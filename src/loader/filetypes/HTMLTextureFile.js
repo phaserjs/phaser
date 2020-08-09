@@ -16,7 +16,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * A single HTML File suitable for loading by the Loader.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#htmlTexture method and are not typically created directly.
- * 
+ *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#htmlTexture.
  *
  * @class HTMLTextureFile
@@ -155,7 +155,7 @@ var HTMLTextureFile = new Class({
  * will be rendered to textures and stored in the Texture Manager.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
- * 
+ *
  * ```javascript
  * function preload ()
  * {
@@ -177,7 +177,7 @@ var HTMLTextureFile = new Class({
  * then remove it from the Texture Manager first, before loading a new one.
  *
  * Instead of passing arguments you can pass a configuration object, such as:
- * 
+ *
  * ```javascript
  * this.load.htmlTexture({
  *     key: 'instructions',
@@ -190,7 +190,7 @@ var HTMLTextureFile = new Class({
  * See the documentation for `Phaser.Types.Loader.FileTypes.HTMLTextureFileConfig` for more details.
  *
  * Once the file has finished loading you can use it as a texture for a Game Object by referencing its key:
- * 
+ *
  * ```javascript
  * this.load.htmlTexture('instructions', 'content/intro.html', 256, 512);
  * // and later in your game ...
@@ -220,7 +220,7 @@ var HTMLTextureFile = new Class({
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#htmlTexture
- * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @fires Phaser.Loader.LoaderPlugin#ADD
  * @since 3.12.0
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.HTMLTextureFileConfig|Phaser.Types.Loader.FileTypes.HTMLTextureFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.

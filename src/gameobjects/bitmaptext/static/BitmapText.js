@@ -5,11 +5,14 @@
  */
 
 var Class = require('../../../utils/Class');
+var Clamp = require('../../../math/Clamp');
 var Components = require('../../components');
 var GameObject = require('../../GameObject');
+var GetColorFromValue = require('../../../display/color/GetColorFromValue');
 var GetBitmapTextSize = require('../GetBitmapTextSize');
 var ParseFromAtlas = require('../ParseFromAtlas');
 var ParseXMLBitmapFont = require('../ParseXMLBitmapFont');
+var Rectangle = require('../../../geom/rectangle/Rectangle');
 var Render = require('./BitmapTextRender');
 
 /**
@@ -100,6 +103,11 @@ var BitmapText = new Class({
         this.font = font;
 
         var entry = this.scene.sys.cache.bitmapFont.get(font);
+
+        if (!entry)
+        {
+            console.warn('Invalid BitmapText key: ' + font);
+        }
 
         /**
          * The data of the Bitmap Font used by this Bitmap Text.
@@ -202,6 +210,69 @@ var BitmapText = new Class({
          * @since 3.21.0
          */
         this.wordWrapCharCode = 32;
+
+        /**
+         * Internal array holding the character tint color data.
+         *
+         * @name Phaser.GameObjects.BitmapText#charColors
+         * @type {array}
+         * @private
+         * @since 3.50.0
+         */
+        this.charColors = [];
+
+        /**
+         * The horizontal offset of the drop shadow.
+         *
+         * You can set this directly, or use `Phaser.GameObjects.BitmapText#setDropShadow`.
+         *
+         * @name Phaser.GameObjects.BitmapText#dropShadowX
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.dropShadowX = 0;
+
+        /**
+         * The vertical offset of the drop shadow.
+         *
+         * You can set this directly, or use `Phaser.GameObjects.BitmapText#setDropShadow`.
+         *
+         * @name Phaser.GameObjects.BitmapText#dropShadowY
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.dropShadowY = 0;
+
+        /**
+         * The color of the drop shadow.
+         *
+         * @name Phaser.GameObjects.BitmapText#_dropShadowColor
+         * @type {number}
+         * @private
+         * @since 3.50.0
+         */
+        this._dropShadowColor = 0x000000;
+
+        /**
+         * The GL encoded color of the drop shadow.
+         *
+         * @name Phaser.GameObjects.BitmapText#_dropShadowColorGL
+         * @type {number}
+         * @private
+         * @since 3.50.0
+         */
+        this._dropShadowColorGL = 0x000000;
+
+        /**
+         * The alpha value of the drop shadow.
+         *
+         * You can set this directly, or use `Phaser.GameObjects.BitmapText#setDropShadow`.
+         *
+         * @name Phaser.GameObjects.BitmapText#dropShadowAlpha
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.dropShadowAlpha = 0.5;
 
         this.setTexture(entry.texture, entry.frame);
         this.setPosition(x, y);
@@ -344,6 +415,230 @@ var BitmapText = new Class({
     },
 
     /**
+     * Sets a drop shadow effect on this Bitmap Text.
+     *
+     * This is a WebGL only feature and only works with Static Bitmap Text, not Dynamic.
+     *
+     * You can set the vertical and horizontal offset of the shadow, as well as the color and alpha.
+     *
+     * Once a shadow has been enabled you can modify the `dropShadowX` and `dropShadowY` properties of this
+     * Bitmap Text directly to adjust the position of the shadow in real-time.
+     *
+     * If you wish to clear the shadow, call this method with no parameters specified.
+     *
+     * @method Phaser.GameObjects.BitmapText#setDropShadow
+     * @webglOnly
+     * @since 3.50.0
+     *
+     * @param {number} [x=0] - The horizontal offset of the drop shadow.
+     * @param {number} [y=0] - The vertical offset of the drop shadow.
+     * @param {number} [color=0xffffff] - The color of the drop shadow, given as a hex value, i.e. `0x000000` for black.
+     * @param {number} [alpha=0.5] - The alpha of the drop shadow, given as a float between 0 and 1. This is combined with the Bitmap Text alpha as well.
+     *
+     * @return {this} This BitmapText Object.
+     */
+    setDropShadow: function (x, y, color, alpha)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (color === undefined) { color = 0x000000; }
+        if (alpha === undefined) { alpha = 0.5; }
+
+        this.dropShadowX = x;
+        this.dropShadowY = y;
+        this.dropShadowAlpha = alpha;
+        this.dropShadowColor = color;
+
+        return this;
+    },
+
+    /**
+     * Sets a tint on a range of characters in this Bitmap Text, starting from the `start` parameter index
+     * and running for `length` quantity of characters.
+     *
+     * The `start` parameter can be negative. In this case, it starts at the end of the text and counts
+     * backwards `start` places.
+     *
+     * You can also pass in -1 as the `length` and it will tint all characters from `start`
+     * up until the end of the string.
+
+     * Remember that spaces and punctuation count as characters.
+     *
+     * This is a WebGL only feature and only works with Static Bitmap Text, not Dynamic.
+     *
+     * The tint works by taking the pixel color values from the Bitmap Text texture, and then
+     * multiplying it by the color value of the tint. You can provide either one color value,
+     * in which case the whole character will be tinted in that color. Or you can provide a color
+     * per corner. The colors are blended together across the extent of the character range.
+     *
+     * To swap this from being an additive tint to a fill based tint, set the `tintFill` parameter to `true`.
+     *
+     * To modify the tint color once set, call this method again with new color values.
+     *
+     * Using `setWordTint` can override tints set by this function, and vice versa.
+     *
+     * To remove a tint call this method with just the `start`, and optionally, the `length` parameters defined.
+     *
+     * @method Phaser.GameObjects.BitmapText#setCharacterTint
+     * @webglOnly
+     * @since 3.50.0
+     *
+     * @param {number} [start=0] - The starting character to begin the tint at. If negative, it counts back from the end of the text.
+     * @param {number} [length=1] - The number of characters to tint. Remember that spaces count as a character too. Pass -1 to tint all characters from `start` onwards.
+     * @param {boolean} [tintFill=false] - Use a fill-based tint (true), or an additive tint (false)
+     * @param {integer} [topLeft=0xffffff] - The tint being applied to the top-left of the character. If not other values are given this value is applied evenly, tinting the whole character.
+     * @param {integer} [topRight] - The tint being applied to the top-right of the character.
+     * @param {integer} [bottomLeft] - The tint being applied to the bottom-left of the character.
+     * @param {integer} [bottomRight] - The tint being applied to the bottom-right of the character.
+     *
+     * @return {this} This BitmapText Object.
+     */
+    setCharacterTint: function (start, length, tintFill, topLeft, topRight, bottomLeft, bottomRight)
+    {
+        if (start === undefined) { start = 0; }
+        if (length === undefined) { length = 1; }
+        if (tintFill === undefined) { tintFill = false; }
+        if (topLeft === undefined) { topLeft = -1; }
+
+        if (topRight === undefined)
+        {
+            topRight = topLeft;
+            bottomLeft = topLeft;
+            bottomRight = topLeft;
+        }
+
+        var len = this.text.length;
+
+        if (length === -1)
+        {
+            length = len;
+        }
+
+        if (start < 0)
+        {
+            start = len + start;
+        }
+
+        start = Clamp(start, 0, len - 1);
+
+        var end = Clamp(start + length, start, len);
+
+        var charColors = this.charColors;
+
+        for (var i = start; i < end; i++)
+        {
+            var color = charColors[i];
+
+            if (topLeft === -1)
+            {
+                charColors[i] = null;
+            }
+            else
+            {
+                var tintEffect = (tintFill) ? 1 : 0;
+                var tintTL = GetColorFromValue(topLeft);
+                var tintTR = GetColorFromValue(topRight);
+                var tintBL = GetColorFromValue(bottomLeft);
+                var tintBR = GetColorFromValue(bottomRight);
+
+                if (color)
+                {
+                    color.tintEffect = tintEffect;
+                    color.tintTL = tintTL;
+                    color.tintTR = tintTR;
+                    color.tintBL = tintBL;
+                    color.tintBR = tintBR;
+                }
+                else
+                {
+                    charColors[i] = {
+                        tintEffect: tintEffect,
+                        tintTL: tintTL,
+                        tintTR: tintTR,
+                        tintBL: tintBL,
+                        tintBR: tintBR
+                    };
+                }
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Sets a tint on a matching word within this Bitmap Text.
+     *
+     * The `word` parameter can be either a string or a number.
+     *
+     * If a string, it will run a string comparison against the text contents, and if matching,
+     * it will tint the whole word.
+     *
+     * If a number, if till that word, based on its offset within the text contents.
+     *
+     * The `count` parameter controls how many words are replaced. Pass in -1 to replace them all.
+     *
+     * This parameter is ignored if you pass a number as the `word` to be searched for.
+     *
+     * This is a WebGL only feature and only works with Static Bitmap Text, not Dynamic.
+     *
+     * The tint works by taking the pixel color values from the Bitmap Text texture, and then
+     * multiplying it by the color value of the tint. You can provide either one color value,
+     * in which case the whole character will be tinted in that color. Or you can provide a color
+     * per corner. The colors are blended together across the extent of the character range.
+     *
+     * To swap this from being an additive tint to a fill based tint, set the `tintFill` parameter to `true`.
+     *
+     * To modify the tint color once set, call this method again with new color values.
+     *
+     * Using `setCharacterTint` can override tints set by this function, and vice versa.
+     *
+     * @method Phaser.GameObjects.BitmapText#setWordTint
+     * @webglOnly
+     * @since 3.50.0
+     *
+     * @param {(string|number)} word - The word to search for. Either a string, or an index of the word in the words array.
+     * @param {number} [count=1] - The number of matching words to tint. Pass -1 to tint all matching words.
+     * @param {boolean} [tintFill=false] - Use a fill-based tint (true), or an additive tint (false)
+     * @param {integer} [topLeft=0xffffff] - The tint being applied to the top-left of the word. If not other values are given this value is applied evenly, tinting the whole word.
+     * @param {integer} [topRight] - The tint being applied to the top-right of the word.
+     * @param {integer} [bottomLeft] - The tint being applied to the bottom-left of the word.
+     * @param {integer} [bottomRight] - The tint being applied to the bottom-right of the word.
+     *
+     * @return {this} This BitmapText Object.
+     */
+    setWordTint: function (word, count, tintFill, topLeft, topRight, bottomLeft, bottomRight)
+    {
+        if (count === undefined) { count = 1; }
+
+        var bounds = this.getTextBounds();
+
+        var words = bounds.words;
+
+        var wordIsNumber = (typeof(word) === 'number');
+
+        var total = 0;
+
+        for (var i = 0; i < words.length; i++)
+        {
+            var lineword = words[i];
+
+            if ((wordIsNumber && i === word) || (!wordIsNumber && lineword.word === word))
+            {
+                this.setCharacterTint(lineword.i, lineword.word.length, tintFill, topLeft, topRight, bottomLeft, bottomRight);
+
+                total++;
+
+                if (total === count)
+                {
+                    return this;
+                }
+            }
+        }
+
+        return this;
+    },
+
+    /**
      * Calculate the bounds of this Bitmap Text.
      *
      * An object is returned that contains the position, width and height of the Bitmap Text in local and global
@@ -358,7 +653,7 @@ var BitmapText = new Class({
      * @method Phaser.GameObjects.BitmapText#getTextBounds
      * @since 3.0.0
      *
-     * @param {boolean} [round] - Whether to round the results to the nearest integer.
+     * @param {boolean} [round=false] - Whether to round the results up to the nearest integer.
      *
      * @return {Phaser.Types.GameObjects.BitmapText.BitmapTextSize} An object that describes the size of this Bitmap Text.
      */
@@ -370,16 +665,81 @@ var BitmapText = new Class({
 
         var bounds = this._bounds;
 
-        if (this._dirty || this.scaleX !== bounds.scaleX || this.scaleY !== bounds.scaleY)
+        if (this._dirty || round || this.scaleX !== bounds.scaleX || this.scaleY !== bounds.scaleY)
         {
-            GetBitmapTextSize(this, round, bounds);
+            GetBitmapTextSize(this, round, true, bounds);
 
             this._dirty = false;
-
-            this.updateDisplayOrigin();
         }
 
         return bounds;
+    },
+
+    /**
+     * Gets the character located at the given x/y coordinate within this Bitmap Text.
+     *
+     * The coordinates you pass in are translated into the local space of the
+     * Bitmap Text, however, it is up to you to first translate the input coordinates to world space.
+     *
+     * If you wish to use this in combination with an input event, be sure
+     * to pass in `Pointer.worldX` and `worldY` so they are in world space.
+     *
+     * In some cases, based on kerning, characters can overlap. When this happens,
+     * the first character in the word is returned.
+     *
+     * Note that this does not work for DynamicBitmapText if you have changed the
+     * character positions during render. It will only scan characters in their un-translated state.
+     *
+     * @method Phaser.GameObjects.BitmapText#getCharacterAt
+     * @since 3.50.0
+     *
+     * @param {number} x - The x position to check.
+     * @param {number} y - The y position to check.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera which is being tested against. If not given will use the Scene default camera.
+     *
+     * @return {Phaser.Types.GameObjects.BitmapText.BitmapTextCharacter} The character object at the given position, or `null`.
+     */
+    getCharacterAt: function (x, y, camera)
+    {
+        var point = this.getLocalPoint(x, y, null, camera);
+
+        var bounds = this.getTextBounds();
+
+        var chars = bounds.characters;
+
+        var tempRect = new Rectangle();
+
+        for (var i = 0; i < chars.length; i++)
+        {
+            var char = chars[i];
+
+            tempRect.setTo(char.x, char.t, char.r - char.x, char.b);
+
+            if (tempRect.contains(point.x, point.y))
+            {
+                return char;
+            }
+        }
+
+        return null;
+    },
+
+    /**
+     * Updates the Display Origin cached values internally stored on this Game Object.
+     * You don't usually call this directly, but it is exposed for edge-cases where you may.
+     *
+     * @method Phaser.GameObjects.BitmapText#updateDisplayOrigin
+     * @since 3.0.0
+     *
+     * @return {this} This Game Object instance.
+     */
+    updateDisplayOrigin: function ()
+    {
+        this._dirty = true;
+
+        this.getTextBounds(false);
+
+        return this;
     },
 
     /**
@@ -415,7 +775,7 @@ var BitmapText = new Class({
 
                 this.setTexture(entry.texture, entry.frame);
 
-                GetBitmapTextSize(this, false, this._bounds);
+                GetBitmapTextSize(this, false, true, this._bounds);
             }
         }
 
@@ -630,6 +990,31 @@ var BitmapText = new Class({
     },
 
     /**
+     * The color of the drop shadow.
+     *
+     * You can also set this via `Phaser.GameObjects.BitmapText#setDropShadow`.
+     *
+     * @name Phaser.GameObjects.BitmapText#dropShadowColor
+     * @type {number}
+     * @since 3.50.0
+     */
+    dropShadowColor: {
+
+        get: function ()
+        {
+            return this._dropShadowColor;
+        },
+
+        set: function (value)
+        {
+            this._dropShadowColor = value;
+
+            this._dropShadowColorGL = GetColorFromValue(value);
+        }
+
+    },
+
+    /**
      * Build a JSON representation of this Bitmap Text.
      *
      * @method Phaser.GameObjects.BitmapText#toJSON
@@ -654,6 +1039,20 @@ var BitmapText = new Class({
         out.data = data;
 
         return out;
+    },
+
+    /**
+     * Internal destroy handler, called as part of the destroy process.
+     *
+     * @method Phaser.GameObjects.BitmapText#preDestroy
+     * @protected
+     * @since 3.50.0
+     */
+    preDestroy: function ()
+    {
+        this.charColors.length = 0;
+        this._bounds = null;
+        this.fontData = null;
     }
 
 });
@@ -712,9 +1111,9 @@ BitmapText.ParseFromAtlas = ParseFromAtlas;
  * @since 3.17.0
  *
  * @param {XMLDocument} xml - The XML Document to parse the font from.
+ * @param {Phaser.Textures.Frame} frame - The texture frame to take into account when creating the uv data.
  * @param {integer} [xSpacing=0] - The x-axis spacing to add between each letter.
  * @param {integer} [ySpacing=0] - The y-axis spacing to add to the line height.
- * @param {Phaser.Textures.Frame} [frame] - The texture frame to take into account while parsing.
  *
  * @return {Phaser.Types.GameObjects.BitmapText.BitmapFontData} The parsed Bitmap Font data.
  */

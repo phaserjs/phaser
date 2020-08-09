@@ -1,0 +1,13 @@
+tasks:
+  - init: >
+            npm install &&
+            npm run build
+    command: npm run watch
+  - init: >
+            cd ../ &&
+            git clone https://github.com/photonstorm/phaser3-examples.git &&
+            cd phaser3-examples &&
+            npm install && npm start
+ports:
+  - port: 8080
+    onOpen: open-preview

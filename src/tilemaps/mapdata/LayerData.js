@@ -19,7 +19,7 @@ var CONST = require('../../const.js');
  * @constructor
  * @since 3.0.0
  *
- * @param {object} [config] - [description]
+ * @param {Phaser.Types.Tilemaps.LayerDataConfig} [config] - The Layer Data configuration object.
  */
 var LayerData = new Class({
 
@@ -39,7 +39,7 @@ var LayerData = new Class({
         this.name = GetFastValue(config, 'name', 'layer');
 
         /**
-         * The x offset of where to draw from the top left
+         * The x offset of where to draw from the top left.
          *
          * @name Phaser.Tilemaps.LayerData#x
          * @type {number}
@@ -48,7 +48,7 @@ var LayerData = new Class({
         this.x = GetFastValue(config, 'x', 0);
 
         /**
-         * The y offset of where to draw from the top left
+         * The y offset of where to draw from the top left.
          *
          * @name Phaser.Tilemaps.LayerData#y
          * @type {number}
@@ -57,7 +57,7 @@ var LayerData = new Class({
         this.y = GetFastValue(config, 'y', 0);
 
         /**
-         * The width in tile of the layer.
+         * The width of the layer in tiles.
          *
          * @name Phaser.Tilemaps.LayerData#width
          * @type {number}
@@ -66,7 +66,7 @@ var LayerData = new Class({
         this.width = GetFastValue(config, 'width', 0);
 
         /**
-         * The height in tiles of the layer.
+         * The height of the layer in tiles.
          *
          * @name Phaser.Tilemaps.LayerData#height
          * @type {number}
@@ -93,7 +93,7 @@ var LayerData = new Class({
         this.tileHeight = GetFastValue(config, 'tileHeight', 0);
 
         /**
-         * [description]
+         * The base tile width.
          *
          * @name Phaser.Tilemaps.LayerData#baseTileWidth
          * @type {number}
@@ -102,7 +102,7 @@ var LayerData = new Class({
         this.baseTileWidth = GetFastValue(config, 'baseTileWidth', this.tileWidth);
 
         /**
-         * [description]
+         * The base tile height.
          *
          * @name Phaser.Tilemaps.LayerData#baseTileHeight
          * @type {number}
@@ -138,7 +138,7 @@ var LayerData = new Class({
         this.heightInPixels = GetFastValue(config, 'heightInPixels', this.height * this.baseTileHeight);
 
         /**
-         * [description]
+         * The alpha value of the layer.
          *
          * @name Phaser.Tilemaps.LayerData#alpha
          * @type {number}
@@ -147,7 +147,7 @@ var LayerData = new Class({
         this.alpha = GetFastValue(config, 'alpha', 1);
 
         /**
-         * [description]
+         * Is the layer visible or not?
          *
          * @name Phaser.Tilemaps.LayerData#visible
          * @type {boolean}
@@ -159,13 +159,13 @@ var LayerData = new Class({
          * Layer specific properties (can be specified in Tiled)
          *
          * @name Phaser.Tilemaps.LayerData#properties
-         * @type {object}
+         * @type {object[]}
          * @since 3.0.0
          */
-        this.properties = GetFastValue(config, 'properties', {});
+        this.properties = GetFastValue(config, 'properties', []);
 
         /**
-         * [description]
+         * Tile ID index map.
          *
          * @name Phaser.Tilemaps.LayerData#indexes
          * @type {array}
@@ -174,7 +174,7 @@ var LayerData = new Class({
         this.indexes = GetFastValue(config, 'indexes', []);
 
         /**
-         * [description]
+         * Tile Collision ID index map.
          *
          * @name Phaser.Tilemaps.LayerData#collideIndexes
          * @type {array}
@@ -183,7 +183,7 @@ var LayerData = new Class({
         this.collideIndexes = GetFastValue(config, 'collideIndexes', []);
 
         /**
-         * [description]
+         * An array of callbacks.
          *
          * @name Phaser.Tilemaps.LayerData#callbacks
          * @type {array}
@@ -192,7 +192,7 @@ var LayerData = new Class({
         this.callbacks = GetFastValue(config, 'callbacks', []);
 
         /**
-         * [description]
+         * An array of physics bodies.
          *
          * @name Phaser.Tilemaps.LayerData#bodies
          * @type {array}
@@ -201,7 +201,7 @@ var LayerData = new Class({
         this.bodies = GetFastValue(config, 'bodies', []);
 
         /**
-         * An array of the tile indexes
+         * An array of the tile data indexes.
          *
          * @name Phaser.Tilemaps.LayerData#data
          * @type {Phaser.Tilemaps.Tile[][]}
@@ -210,7 +210,7 @@ var LayerData = new Class({
         this.data = GetFastValue(config, 'data', []);
 
         /**
-         * [description]
+         * A reference to the Tilemap layer that owns this data.
          *
          * @name Phaser.Tilemaps.LayerData#tilemapLayer
          * @type {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)}

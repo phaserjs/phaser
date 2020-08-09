@@ -26,6 +26,10 @@ var Vector2 = require('../../math/Vector2');
  *
  * The position of the Game Object automatically becomes relative to the position of the Container.
  *
+ * The origin of a Container is 0x0 (in local space) and that cannot be changed. The children you add to the
+ * Container should be positioned with this value in mind. I.e. you should treat 0x0 as being the center of
+ * the Container, and position children positively and negative around it as required.
+ *
  * When the Container is rendered, all of its children are rendered as well, in the order in which they exist
  * within the Container. Container children can be repositioned using methods such as `MoveUp`, `MoveDown` and `SendToBack`.
  *
@@ -198,14 +202,14 @@ var Container = new Class({
          *
          * When a camera scrolls it will change the location at which this Container is rendered on-screen.
          * It does not change the Containers actual position values.
-         * 
+         *
          * For a Container, setting this value will only update the Container itself, not its children.
          * If you wish to change the scrollFactor of the children as well, use the `setScrollFactor` method.
          *
          * A value of 1 means it will move exactly in sync with a camera.
          * A value of 0 means it will not move at all, even if the camera moves.
          * Other values control the degree to which the camera movement is mapped to this Container.
-         * 
+         *
          * Please be aware that scroll factor values other than 1 are not taken in to consideration when
          * calculating physics collisions. Bodies always collide based on their world position, but changing
          * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
@@ -225,14 +229,14 @@ var Container = new Class({
          *
          * When a camera scrolls it will change the location at which this Container is rendered on-screen.
          * It does not change the Containers actual position values.
-         * 
+         *
          * For a Container, setting this value will only update the Container itself, not its children.
          * If you wish to change the scrollFactor of the children as well, use the `setScrollFactor` method.
          *
          * A value of 1 means it will move exactly in sync with a camera.
          * A value of 0 means it will not move at all, even if the camera moves.
          * Other values control the degree to which the camera movement is mapped to this Container.
-         * 
+         *
          * Please be aware that scroll factor values other than 1 are not taken in to consideration when
          * calculating physics collisions. Bodies always collide based on their world position, but changing
          * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
@@ -384,10 +388,21 @@ var Container = new Class({
 
         output.setTo(this.x, this.y, 0, 0);
 
+        if (this.parentContainer)
+        {
+            var parentMatrix = this.parentContainer.getBoundsTransformMatrix();
+            var transformedPosition = parentMatrix.transformPoint(this.x, this.y);
+
+            output.setTo(transformedPosition.x, transformedPosition.y, 0, 0);
+        }
+
         if (this.list.length > 0)
         {
             var children = this.list;
             var tempRect = new Rectangle();
+            var hasSetFirst = false;
+
+            output.setEmpty();
 
             for (var i = 0; i < children.length; i++)
             {
@@ -397,7 +412,15 @@ var Container = new Class({
                 {
                     entry.getBounds(tempRect);
 
-                    Union(tempRect, output, output);
+                    if (!hasSetFirst)
+                    {
+                        output.setTo(tempRect.x, tempRect.y, tempRect.width, tempRect.height);
+                        hasSetFirst = true;
+                    }
+                    else
+                    {
+                        Union(tempRect, output, output);
+                    }
                 }
             }
         }
@@ -468,7 +491,11 @@ var Container = new Class({
 
         if (this.parentContainer)
         {
-            return this.parentContainer.pointToContainer(source, output);
+            this.parentContainer.pointToContainer(source, output);
+        }
+        else
+        {
+            output = new Vector2(source.x, source.y);
         }
 
         var tempMatrix = this.tempTransformMatrix;
@@ -485,7 +512,7 @@ var Container = new Class({
 
     /**
      * Returns the world transform matrix as used for Bounds checks.
-     * 
+     *
      * The returned matrix is temporal and shouldn't be stored.
      *
      * @method Phaser.GameObjects.Container#getBoundsTransformMatrix
@@ -1135,7 +1162,7 @@ var Container = new Class({
      * A value of 1 means it will move exactly in sync with a camera.
      * A value of 0 means it will not move at all, even if the camera moves.
      * Other values control the degree to which the camera movement is mapped to this Game Object.
-     * 
+     *
      * Please be aware that scroll factor values other than 1 are not taken in to consideration when
      * calculating physics collisions. Bodies always collide based on their world position, but changing
      * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
