@@ -1676,10 +1676,11 @@ var Body = new Class({
      * @param {boolean} [value=true] - `true` if this body should collide with the world bounds, otherwise `false`.
      * @param {number} [bounceX] - If given this will be replace the `worldBounce.x` value.
      * @param {number} [bounceY] - If given this will be replace the `worldBounce.y` value.
+     * @param {boolean} [onCollide] - If given this will replace the `onCollide` value.
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setCollideWorldBounds: function (value, bounceX, bounceY)
+    setCollideWorldBounds: function (value, bounceX, bounceY, onCollide)
     {
         if (value === undefined) { value = true; }
 
@@ -1704,6 +1705,11 @@ var Body = new Class({
             {
                 this.worldBounce.y = bounceY;
             }
+        }
+
+        if (onCollide !== undefined)
+        {
+            this.onCollide = onCollide;
         }
 
         return this;
