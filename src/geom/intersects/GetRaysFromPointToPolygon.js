@@ -61,6 +61,7 @@ var GetRaysFromPointToPolygon = function (x, y, polygons)
     }
 
     var intersects = [];
+    var angles = [];
 
     for (var i = 0; i < polygons.length; i++)
     {
@@ -70,10 +71,16 @@ var GetRaysFromPointToPolygon = function (x, y, polygons)
         {
             var angle = Math.atan2(points[p].y - y, points[p].x - x);
 
-            //  +- 0.00001 rads to catch lines behind segment corners
-            CheckIntersects(angle, x, y, polygons, intersects);
-            CheckIntersects(angle - 0.00001, x, y, polygons, intersects);
-            CheckIntersects(angle + 0.00001, x, y, polygons, intersects);
+            if (angles.indexOf(angle) === -1)
+            {
+                //  +- 0.00001 rads to catch lines behind segment corners
+
+                CheckIntersects(angle, x, y, polygons, intersects);
+                CheckIntersects(angle - 0.00001, x, y, polygons, intersects);
+                CheckIntersects(angle + 0.00001, x, y, polygons, intersects);
+
+                angles.push(angle);
+            }
         }
     }
 
