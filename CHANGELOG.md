@@ -139,11 +139,12 @@ If you used any of them in your code, please update to the new function names be
 
 ### New Features
 
-* `WebGLRenderer.setInt1iv` will allow you to look-up and set a 1iv uniform on the given shader.
 * `Geom.Intersects.GetLineToLine` is a new function that will return a Vector3 containing the point of intersection between 2 line segments, with the `z` property holding the distance value.
 * `Geom.Intersects.GetLineToPolygon` is a new function that checks for the closest point of intersection between a line segment and an array of polygons.
+* `Geom.Intersects.GetLineToPoints` is a new function that checks for the closest point of intersection between a line segment and an array of points, where each pair of points form a line segment.
 * `Geom.Intersects.GetRaysFromPointToPolygon` is a new function that emits rays out from the given point and detects for intersection against all given polygons, returning the points of intersection in the results array.
 * `Geom.Polygon.Translate` is a new function that allows you to translate all the points of a polygon by the given values.
+* `WebGLRenderer.setInt1iv` will allow you to look-up and set a 1iv uniform on the given shader.
 * `Phaser.Types.Math.Vector3Like` is a new data type representing as Vector 3 like object.
 * `Phaser.Types.Math.Vector4Like` is a new data type representing as Vector 4 like object.
 * `Transform.getLocalPoint` is a new method, available on all Game Objects, that takes an `x` / `y` pair and translates them into the local space of the Game Object, factoring in parent transforms and display origins.
