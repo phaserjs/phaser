@@ -144,6 +144,7 @@ If you used any of them in your code, please update to the new function names be
 * `Geom.Intersects.GetLineToPoints` is a new function that checks for the closest point of intersection between a line segment and an array of points, where each pair of points form a line segment.
 * `Geom.Intersects.GetRaysFromPointToPolygon` is a new function that emits rays out from the given point and detects for intersection against all given polygons, returning the points of intersection in the results array.
 * `Geom.Polygon.Translate` is a new function that allows you to translate all the points of a polygon by the given values.
+* `Geom.Polygon.Simplify` is a new function that takes a polygon and simplifies the points by running them through a combination of Douglas-Peucker and Radial Distance algorithms, potentially dramatically reducing the number of points while retaining its shape.
 * `WebGLRenderer.setInt1iv` will allow you to look-up and set a 1iv uniform on the given shader.
 * `Phaser.Types.Math.Vector3Like` is a new data type representing as Vector 3 like object.
 * `Phaser.Types.Math.Vector4Like` is a new data type representing as Vector 4 like object.
