@@ -6,11 +6,7 @@
 
 var Vector3 = require('../../math/Vector3');
 var Vector4 = require('../../math/Vector4');
-var GetLineToLine = require('./GetLineToLine');
-var Line = require('../line/Line');
-
-//  Temp calculation segment
-var segment = new Line();
+var GetLineToPoints = require('./GetLineToPoints');
 
 //  Temp vec3
 var tempIntersect = new Vector3();
@@ -37,10 +33,7 @@ var tempIntersect = new Vector3();
  */
 var GetLineToPolygon = function (line, polygons, out)
 {
-    if (out === undefined)
-    {
-        out = new Vector4();
-    }
+    if (out === undefined) { out = new Vector4(); }
 
     if (!Array.isArray(polygons))
     {
@@ -49,32 +42,17 @@ var GetLineToPolygon = function (line, polygons, out)
 
     var closestIntersect = false;
 
-    //  Reset our temporary vec4
+    //  Reset our vec4s
+    out.set();
     tempIntersect.set();
 
-    for (var p = 0; p < polygons.length; p++)
+    for (var i = 0; i < polygons.length; i++)
     {
-        var points = polygons[p].points;
-
-        var prev = points[0];
-
-        for (var i = 1; i < points.length; i++)
+        if (GetLineToPoints(line, polygons[i].points, tempIntersect))
         {
-            var current = points[i];
-
-            segment.setTo(prev.x, prev.y, current.x, current.y);
-
-            prev = current;
-
-            if (!GetLineToLine(line, segment, tempIntersect))
-            {
-                //  No intersection? Carry on ...
-                continue;
-            }
-
             if (!closestIntersect || tempIntersect.z < out.z)
             {
-                out.set(tempIntersect.x, tempIntersect.y, tempIntersect.z, p);
+                out.set(tempIntersect.x, tempIntersect.y, tempIntersect.z, i);
 
                 closestIntersect = true;
             }
