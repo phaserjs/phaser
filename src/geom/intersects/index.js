@@ -16,6 +16,7 @@ module.exports = {
     GetCircleToRectangle: require('./GetCircleToRectangle'),
     GetLineToCircle: require('./GetLineToCircle'),
     GetLineToLine: require('./GetLineToLine'),
+    GetLineToPoints: require('./GetLineToPoints'),
     GetLineToPolygon: require('./GetLineToPolygon'),
     GetLineToRectangle: require('./GetLineToRectangle'),
     GetRaysFromPointToPolygon: require('./GetRaysFromPointToPolygon'),
