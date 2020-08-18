@@ -14,6 +14,7 @@ Polygon.GetNumberArray = require('./GetNumberArray');
 Polygon.GetPoints = require('./GetPoints');
 Polygon.Perimeter = require('./Perimeter');
 Polygon.Reverse = require('./Reverse');
+Polygon.Simplify = require('./Simplify');
 Polygon.Smooth = require('./Smooth');
 Polygon.Translate = require('./Translate');
 
