@@ -11,6 +11,9 @@ var Line = require('../line/Line');
 //  Temp calculation segment
 var segment = new Line();
 
+/**
+ * @ignore
+ */
 function CheckIntersects (angle, x, y, polygons, intersects)
 {
     var dx = Math.cos(angle);
@@ -26,6 +29,9 @@ function CheckIntersects (angle, x, y, polygons, intersects)
     }
 }
 
+/**
+ * @ignore
+ */
 function SortIntersects (a, b)
 {
     return a.z - b.z;
