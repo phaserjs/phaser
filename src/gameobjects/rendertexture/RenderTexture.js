@@ -17,7 +17,6 @@ var ProjectOrtho = require('../../renderer/webgl/mvp/ProjectOrtho');
 var Render = require('./RenderTextureRender');
 var Utils = require('../../renderer/webgl/Utils');
 var UUID = require('../../utils/string/UUID');
-const Clamp = require('../../math/Clamp');
 
 /**
  * @classdesc
