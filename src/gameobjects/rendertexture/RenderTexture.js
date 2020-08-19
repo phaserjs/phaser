@@ -17,6 +17,7 @@ var ProjectOrtho = require('../../renderer/webgl/mvp/ProjectOrtho');
 var Render = require('./RenderTextureRender');
 var Utils = require('../../renderer/webgl/Utils');
 var UUID = require('../../utils/string/UUID');
+const Clamp = require('../../math/Clamp');
 
 /**
  * @classdesc
@@ -517,20 +518,21 @@ var RenderTexture = new Class({
      */
     fill: function (rgb, alpha, x, y, width, height)
     {
+        var gl = this.gl;
+        var frame = this.frame;
+        var texture = this.texture;
+        var camera = this.camera;
+        var renderer = this.renderer;
+
         if (alpha === undefined) { alpha = 1; }
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
-        if (width === undefined) { width = this.frame.cutWidth; }
-        if (height === undefined) { height = this.frame.cutHeight; }
+        if (width === undefined) { width = frame.cutWidth; }
+        if (height === undefined) { height = frame.cutHeight; }
 
         var r = ((rgb >> 16) | 0) & 0xff;
         var g = ((rgb >> 8) | 0) & 0xff;
         var b = (rgb | 0) & 0xff;
-
-        var gl = this.gl;
-        var frame = this.frame;
-        var camera = this.camera;
-        var renderer = this.renderer;
 
         camera.preRender(1, 1);
 
@@ -543,16 +545,23 @@ var RenderTexture = new Class({
 
             renderer.resetTextures(true);
 
-            renderer.setFramebuffer(this.framebuffer, false);
+            renderer.pushScissor(cx, cy, cw, -ch);
 
-            renderer.pushScissor(cx, cy, cw, ch, ch);
+            renderer.setFramebuffer(this.framebuffer, false);
 
             var pipeline = this.pipeline;
 
-            ProjectOrtho(pipeline, 0, this.texture.width, 0, this.texture.height, -1000.0, 1000.0);
+            var tw = texture.width;
+            var th = texture.height;
+
+            var rw = pipeline.width;
+            var rh = pipeline.height;
+
+            var sx = rw / tw;
+            var sy = rh / th;
 
             pipeline.drawFillRect(
-                x, y, width, height,
+                x * sx, (th - height - y) * sy, width * sx, height * sy,
                 Utils.getTintFromFloats(r / 255, g / 255, b / 255, 1),
                 alpha
             );
@@ -562,15 +571,15 @@ var RenderTexture = new Class({
             renderer.setFramebuffer(null, false);
 
             renderer.popScissor();
-
-            ProjectOrtho(pipeline, 0, pipeline.width, pipeline.height, 0, -1000.0, 1000.0);
         }
         else
         {
-            renderer.setContext(this.context);
+            var ctx = this.context;
 
-            this.context.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
-            this.context.fillRect(x + frame.cutX, y + frame.cutY, width, height);
+            renderer.setContext(ctx);
+
+            ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+            ctx.fillRect(x + frame.cutX, y + frame.cutY, width, height);
 
             renderer.setContext();
         }
