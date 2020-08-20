@@ -67,7 +67,6 @@ var GridAlign = function (items, options)
         }
         else if (heightSet && !widthSet)
         {
-            console.log('heighta göre set!');
             //  We keep laying them out until we hit the column limit
             cy += cellHeight;
             tempZone.y += cellHeight;
