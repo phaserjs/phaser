@@ -153,6 +153,7 @@ If you used any of them in your code, please update to the new function names be
 * `Display.Color.GetColorFromValue` is a new function that will take a hex color value and return it as an integer, for use in WebGL. This is now used internally by the Tint component and other classes.
 * `Utils.String.RemoveAt` is a new function that will remove a character from the given index in a string and return the new string.
 * `Frame.setUVs` is a new method that allows you to directly set the canvas and UV data for a frame. Use this if you need to override the values set automatically during frame creation.
+* `TweenManager.getTweensOf` has a new parameter `includePending`. If set, it will also check the pending tweens for the given targets and return those in the results as well. Fix #5260 (thanks @pcharest2000)
 
 ### Updates and API Changes
 
@@ -177,12 +178,13 @@ If you used any of them in your code, please update to the new function names be
 * The `KeyboardManager` and `KeyboardPlugin` were both still checking for the `InputManager.useQueue` property, which was removed several versions ago.
 * In Arcade Physics, Dynamic bodies would no longer hit walls when riding on horizontally moving platforms. The horizontal (and vertical) friction is now re-applied correctly in these edge-cases. Fix #5210 (thanks @Dercetech @samme)
 * Calling `Rectangle.setSize()` wouldn't change the underlying geometry of the Shape Game Object, causing any stroke to be incorrectly rendered after a size change.
+* The `ProcessQueue` was emiting the wrong events internally. It now emits 'add' and 'remove' correctly (thanks @halilcakar)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@samme @16patsle @scott20145 
+@samme @16patsle @scott20145 @khasanovbi @mk360 
 
 
 
