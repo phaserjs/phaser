@@ -266,14 +266,14 @@ var TweenManager = new Class({
 
     /**
      * Creates a Stagger function to be used by a Tween property.
-     * 
+     *
      * The stagger function will allow you to stagger changes to the value of the property across all targets of the tween.
-     * 
+     *
      * This is only worth using if the tween has multiple targets.
-     * 
+     *
      * The following will stagger the delay by 100ms across all targets of the tween, causing them to scale down to 0.2
      * over the duration specified:
-     * 
+     *
      * ```javascript
      * this.tweens.add({
      *     targets: [ ... ],
@@ -283,10 +283,10 @@ var TweenManager = new Class({
      *     delay: this.tweens.stagger(100)
      * });
      * ```
-     * 
+     *
      * The following will stagger the delay by 500ms across all targets of the tween using a 10 x 6 grid, staggering
      * from the center out, using a cubic ease.
-     * 
+     *
      * ```javascript
      * this.tweens.add({
      *     targets: [ ... ],
@@ -541,44 +541,61 @@ var TweenManager = new Class({
     /**
      * Returns an array of all Tweens or Timelines in the Tween Manager which affect the given target or array of targets.
      *
+     * Only the currently active tweens are tested. A tween that has completed and is
+     * awaiting removal will not be included in the results.
+     *
+     * If you wish to also search pending tweens, use the `includePending` flag.
+     *
      * @method Phaser.Tweens.TweenManager#getTweensOf
      * @since 3.0.0
      *
      * @param {(object|array)} target - The target to look for. Provide an array to look for multiple targets.
+     * @param {boolean} [includePending=false] - Also check for pending tweens, not just active ones?
      *
      * @return {Phaser.Tweens.Tween[]} A new array containing all Tweens and Timelines which affect the given target(s).
      */
-    getTweensOf: function (target)
+    getTweensOf: function (target, includePending)
     {
+        if (includePending === undefined) { includePending = false; }
+
         var list = this._active;
         var tween;
         var output = [];
         var i;
+        var t;
 
-        if (Array.isArray(target))
+        if (!Array.isArray(target))
         {
+            target = [ target ];
+        }
+
+        for (i = 0; i < list.length; i++)
+        {
+            tween = list[i];
+
+            for (t = 0; t < target.length; t++)
+            {
+                if (tween.hasTarget(target[t]))
+                {
+                    output.push(tween);
+                }
+            }
+        }
+
+        if (includePending)
+        {
+            list = this._pending;
+
             for (i = 0; i < list.length; i++)
             {
                 tween = list[i];
 
-                for (var t = 0; t < target.length; t++)
+                for (t = 0; t < target.length; t++)
                 {
                     if (tween.hasTarget(target[t]))
                     {
                         output.push(tween);
                     }
-                }
-            }
-        }
-        else
-        {
-            for (i = 0; i < list.length; i++)
-            {
-                tween = list[i];
-
-                if (tween.hasTarget(target))
-                {
-                    output.push(tween);
                 }
             }
         }
