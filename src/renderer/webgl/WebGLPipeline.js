@@ -255,6 +255,16 @@ var WebGLPipeline = new Class({
          * @since 3.50.0
          */
         this.forceZero = false;
+
+        /**
+         * Indicates if the current pipeline has booted or not.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#hasBooted
+         * @type {boolean}
+         * @readonly
+         * @since 3.50.0
+         */
+        this.hasBooted = false;
     },
 
     /**
@@ -295,6 +305,8 @@ var WebGLPipeline = new Class({
                 gl.disableVertexAttribArray(location);
             }
         }
+
+        this.hasBooted = true;
 
         return this;
     },
