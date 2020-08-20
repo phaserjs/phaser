@@ -154,6 +154,8 @@ If you used any of them in your code, please update to the new function names be
 * `Utils.String.RemoveAt` is a new function that will remove a character from the given index in a string and return the new string.
 * `Frame.setUVs` is a new method that allows you to directly set the canvas and UV data for a frame. Use this if you need to override the values set automatically during frame creation.
 * `TweenManager.getTweensOf` has a new parameter `includePending`. If set, it will also check the pending tweens for the given targets and return those in the results as well. Fix #5260 (thanks @pcharest2000)
+* `WebGLPipeline.hasBooted` is a new boolean property that tracks if the pipeline has been booted or not, which is now far more important in 3.5 than in previous versions. This is checked in the `WebGLRenderer.addPipeline` method, and if not set, the pipeline is booted. Fix #5251 #5255 (thanks @telinc1 @rexrainbow)
+* The WebGL Renderer will now add the pipelines during the `boot` method, instead of `init`.
 
 ### Updates and API Changes
 
