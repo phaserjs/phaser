@@ -804,11 +804,6 @@ var WebGLRenderer = new Class({
         // Clear previous pipelines and reload default ones
         this.pipelines = {};
 
-        this.addPipeline('TextureTintPipeline', new TextureTintPipeline({ game: game, renderer: this }));
-        this.addPipeline('TextureTintStripPipeline', new TextureTintStripPipeline({ game: game, renderer: this }));
-        this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline({ game: game, renderer: this }));
-        this.addPipeline('Light2D', new ForwardDiffuseLightPipeline({ game: game, renderer: this, maxLights: config.maxLights }));
-
         this.setBlendMode(CONST.BlendModes.NORMAL);
 
         game.textures.once(TextureEvents.READY, this.boot, this);
@@ -825,14 +820,16 @@ var WebGLRenderer = new Class({
      */
     boot: function ()
     {
-        for (var pipelineName in this.pipelines)
-        {
-            this.pipelines[pipelineName].boot();
-        }
+        var game = this.game;
 
-        var blank = this.game.textures.getFrame('__DEFAULT');
+        var ttp = this.addPipeline('TextureTintPipeline', new TextureTintPipeline({ game: game, renderer: this }));
+        this.addPipeline('TextureTintStripPipeline', new TextureTintStripPipeline({ game: game, renderer: this }));
+        this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline({ game: game, renderer: this }));
+        this.addPipeline('Light2D', new ForwardDiffuseLightPipeline({ game: game, renderer: this, maxLights: this.config.maxLights }));
 
-        this.pipelines.TextureTintPipeline.currentFrame = blank;
+        var blank = game.textures.getFrame('__DEFAULT');
+
+        ttp.currentFrame = blank;
 
         this.blankTexture = blank;
 
@@ -842,13 +839,13 @@ var WebGLRenderer = new Class({
 
         gl.enable(gl.SCISSOR_TEST);
 
-        this.setPipeline(this.pipelines.TextureTintPipeline);
+        this.setPipeline(ttp);
 
-        this.game.scale.on(ScaleEvents.RESIZE, this.onResize, this);
+        game.scale.on(ScaleEvents.RESIZE, this.onResize, this);
 
-        var baseSize = this.game.scale.baseSize;
+        var baseSize = game.scale.baseSize;
 
-        this.resize(baseSize.width, baseSize.height, this.game.scale.resolution);
+        this.resize(baseSize.width, baseSize.height, game.scale.resolution);
     },
 
     /**
@@ -1030,6 +1027,11 @@ var WebGLRenderer = new Class({
         }
 
         pipelineInstance.name = pipelineName;
+
+        if (!pipelineInstance.hasBooted)
+        {
+            pipelineInstance.boot();
+        }
 
         this.pipelines[pipelineName].resize(this.width, this.height, this.config.resolution);
 
