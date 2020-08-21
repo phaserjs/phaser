@@ -6,23 +6,18 @@
  */
 
 var Class = require('../../../utils/Class');
+var GetFastValue = require('../../../utils/object/GetFastValue');
 var ShaderSourceFS = require('../shaders/BitmapMask-frag.js');
 var ShaderSourceVS = require('../shaders/BitmapMask-vert.js');
 var WebGLPipeline = require('../WebGLPipeline');
 
 /**
  * @classdesc
- * BitmapMaskPipeline handles all bitmap masking rendering in WebGL. It works by using 
+ *
+ *
+ *
+ * BitmapMaskPipeline handles all bitmap masking rendering in WebGL. It works by using
  * sampling two texture on the fragment shader and using the fragment's alpha to clip the region.
- * The config properties are:
- * - game: Current game instance.
- * - renderer: Current WebGL renderer.
- * - topology: This indicates how the primitives are rendered. The default value is GL_TRIANGLES.
- *              Here is the full list of rendering primitives (https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Constants).
- * - vertShader: Source for vertex shader as a string.
- * - fragShader: Source for fragment shader as a string.
- * - vertexCapacity: The amount of vertices that shall be allocated
- * - vertexSize: The size of a single vertex in bytes.
  *
  * @class BitmapMaskPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
@@ -30,42 +25,34 @@ var WebGLPipeline = require('../WebGLPipeline');
  * @constructor
  * @since 3.0.0
  *
- * @param {object} config - Used for overriding shader an pipeline properties if extending this pipeline.
+ * @param {Phaser.Types.Renderer.WebGL.WebGLPipelineConfig} config - The configuration options for this pipeline.
  */
 var BitmapMaskPipeline = new Class({
 
     Extends: WebGLPipeline,
-    
+
     initialize:
 
     function BitmapMaskPipeline (config)
     {
-        WebGLPipeline.call(this, {
-            game: config.game,
-            renderer: config.renderer,
-            gl: config.renderer.gl,
-            topology: (config.topology ? config.topology : config.renderer.gl.TRIANGLES),
-            vertShader: (config.vertShader ? config.vertShader : ShaderSourceVS),
-            fragShader: (config.fragShader ? config.fragShader : ShaderSourceFS),
-            vertexCapacity: (config.vertexCapacity ? config.vertexCapacity : 3),
+        config.fragShader = GetFastValue(config, 'fragShader', ShaderSourceFS),
+        config.vertShader = GetFastValue(config, 'vertShader', ShaderSourceVS),
+        config.vertexSize = GetFastValue(config, 'vertexSize', 8),
+        config.vertexCapacity = GetFastValue(config, 'vertexCapacity', 3),
+        config.vertices = GetFastValue(config, 'vertices', new Float32Array([ -1, 1, -1, -7, 7, 1 ]).buffer),
+        config.attributes = GetFastValue(config, 'attributes', [
+            {
+                name: 'inPosition',
+                size: 2,
+                type: config.game.renderer.gl.FLOAT,
+                normalized: false,
+                offset: 0,
+                enabled: false,
+                location: -1
+            }
+        ]);
 
-            vertexSize: (config.vertexSize ? config.vertexSize :
-                Float32Array.BYTES_PER_ELEMENT * 2),
-
-            vertices: new Float32Array([
-                -1, +1, -1, -7, +7, +1
-            ]).buffer,
-
-            attributes: [
-                {
-                    name: 'inPosition',
-                    size: 2,
-                    type: config.renderer.gl.FLOAT,
-                    normalized: false,
-                    offset: 0
-                }
-            ]
-        });
+        WebGLPipeline.call(this, config);
 
         /**
          * Float32 view of the array buffer containing the pipeline's vertices.
@@ -74,20 +61,10 @@ var BitmapMaskPipeline = new Class({
          * @type {Float32Array}
          * @since 3.0.0
          */
-        this.vertexViewF32 = new Float32Array(this.vertexData);
+        // this.vertexViewF32 = new Float32Array(this.vertexData);
 
         /**
-         * Size of the batch.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#maxQuads
-         * @type {number}
-         * @default 1
-         * @since 3.0.0
-         */
-        this.maxQuads = 1;
-
-        /**
-         * Dirty flag to check if resolution properties need to be updated on the 
+         * Dirty flag to check if resolution properties need to be updated on the
          * masking shader.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#resolutionDirty
@@ -95,7 +72,7 @@ var BitmapMaskPipeline = new Class({
          * @default true
          * @since 3.0.0
          */
-        this.resolutionDirty = true;
+        // this.resolutionDirty = true;
     },
 
     /**
@@ -106,14 +83,13 @@ var BitmapMaskPipeline = new Class({
      * @since 3.0.0
      *
      * @return {this} This WebGLPipeline instance.
-     */
     onBind: function ()
     {
         WebGLPipeline.prototype.onBind.call(this);
 
         var renderer = this.renderer;
         var program = this.program;
-        
+
         if (this.resolutionDirty)
         {
             renderer.setFloat2(program, 'uResolution', this.width, this.height);
@@ -121,6 +97,31 @@ var BitmapMaskPipeline = new Class({
             renderer.setInt1(program, 'uMaskSampler', 1);
             this.resolutionDirty = false;
         }
+
+        return this;
+    },
+    */
+
+    /**
+     * Called every time the pipeline is bound by the renderer.
+     * Sets the shader program, vertex buffer and other resources.
+     * Should only be called when changing pipeline.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#bind
+     * @since 3.50.0
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    bind: function ()
+    {
+        WebGLPipeline.prototype.bind.call(this);
+
+        var renderer = this.renderer;
+        var program = this.program;
+
+        renderer.setFloat2(program, 'uResolution', this.width, this.height);
+        renderer.setInt1(program, 'uMainSampler', 0);
+        renderer.setInt1(program, 'uMaskSampler', 1);
 
         return this;
     },
@@ -188,10 +189,10 @@ var BitmapMaskPipeline = new Class({
     },
 
     /**
-     * The masked game objects framebuffer is unbound and its texture 
-     * is bound together with the mask texture and the mask shader and 
+     * The masked game objects framebuffer is unbound and its texture
+     * is bound together with the mask texture and the mask shader and
      * a draw call with a single quad is processed. Here is where the
-     * masking effect is applied.  
+     * masking effect is applied.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#endMask
      * @since 3.0.0
