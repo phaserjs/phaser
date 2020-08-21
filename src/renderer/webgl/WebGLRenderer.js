@@ -22,9 +22,10 @@ var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
 
 //  Default Pipelines
 var BitmapMaskPipeline = require('./pipelines/BitmapMaskPipeline');
-var ForwardDiffuseLightPipeline = require('./pipelines/ForwardDiffuseLightPipeline');
-var TextureTintPipeline = require('./pipelines/TextureTintPipeline');
-var TextureTintStripPipeline = require('./pipelines/TextureTintStripPipeline');
+var LightPipeline = require('./pipelines/LightPipeline');
+var MultiPipeline = require('./pipelines/MultiPipeline');
+var RopePipeline = require('./pipelines/RopePipeline');
+var SinglePipeline = require('./pipelines/SinglePipeline');
 
 /**
  * @callback WebGLContextCallback
@@ -822,14 +823,16 @@ var WebGLRenderer = new Class({
     {
         var game = this.game;
 
-        var ttp = this.addPipeline('TextureTintPipeline', new TextureTintPipeline({ game: game, renderer: this }));
-        this.addPipeline('TextureTintStripPipeline', new TextureTintStripPipeline({ game: game, renderer: this }));
-        this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline({ game: game, renderer: this }));
-        this.addPipeline('Light2D', new ForwardDiffuseLightPipeline({ game: game, renderer: this, maxLights: this.config.maxLights }));
+        var multi = this.addPipeline('MultiPipeline', new MultiPipeline({ game: game }));
+
+        this.addPipeline('SinglePipeline', new SinglePipeline({ game: game }));
+        this.addPipeline('RopePipeline', new RopePipeline({ game: game }));
+        this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline({ game: game }));
+        this.addPipeline('Light2D', new LightPipeline({ game: game }));
 
         var blank = game.textures.getFrame('__DEFAULT');
 
-        ttp.currentFrame = blank;
+        multi.currentFrame = blank;
 
         this.blankTexture = blank;
 
@@ -839,7 +842,7 @@ var WebGLRenderer = new Class({
 
         gl.enable(gl.SCISSOR_TEST);
 
-        this.setPipeline(ttp);
+        this.setPipeline(multi);
 
         game.scale.on(ScaleEvents.RESIZE, this.onResize, this);
 
@@ -1391,6 +1394,13 @@ var WebGLRenderer = new Class({
      */
     setTextureSource: function (textureSource)
     {
+        if (this.currentPipeline.forceZero)
+        {
+            this.setTextureZero(textureSource.glTexture, true);
+
+            return 0;
+        }
+
         var gl = this.gl;
         var currentActiveTexture = this.currentActiveTexture;
 
@@ -1455,11 +1465,17 @@ var WebGLRenderer = new Class({
      * @since 3.50.0
      *
      * @param {WebGLTexture} texture - The WebGL texture that needs to be bound.
+     * @param {boolean} [flush=false] - Flush the pipeline if the texture is different?
      */
-    setTextureZero: function (texture)
+    setTextureZero: function (texture, flush)
     {
         if (this.textureZero !== texture)
         {
+            if (flush)
+            {
+                this.flush();
+            }
+
             var gl = this.gl;
 
             gl.activeTexture(gl.TEXTURE0);
@@ -1608,6 +1624,13 @@ var WebGLRenderer = new Class({
      */
     setTexture2D: function (texture)
     {
+        if (this.currentPipeline.forceZero)
+        {
+            this.setTextureZero(texture, true);
+
+            return 0;
+        }
+
         var gl = this.gl;
         var currentActiveTexture = this.currentActiveTexture;
 
