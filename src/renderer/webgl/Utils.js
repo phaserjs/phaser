@@ -240,8 +240,6 @@ module.exports = {
 
         fragmentShaderSource = fragmentShaderSource.replace(/%count%/gi, maxTextures.toString());
 
-        fragmentShaderSource = fragmentShaderSource.replace(/%forloop%/gi, src);
-
-        return fragmentShaderSource;
+        return fragmentShaderSource.replace(/%forloop%/gi, src);
     }
 };
