@@ -59,6 +59,8 @@ var SinglePipeline = new Class({
 
     function SinglePipeline (config)
     {
+        var gl = config.game.renderer.gl;
+
         config.fragShader = GetFastValue(config, 'fragShader', ShaderSourceFS),
         config.vertShader = GetFastValue(config, 'vertShader', ShaderSourceVS),
         config.vertexSize = GetFastValue(config, 'vertexSize', 24),
@@ -66,7 +68,7 @@ var SinglePipeline = new Class({
             {
                 name: 'inPosition',
                 size: 2,
-                type: config.renderer.gl.FLOAT,
+                type: gl.FLOAT,
                 normalized: false,
                 offset: 0,
                 enabled: false,
@@ -75,7 +77,7 @@ var SinglePipeline = new Class({
             {
                 name: 'inTexCoord',
                 size: 2,
-                type: config.renderer.gl.FLOAT,
+                type: gl.FLOAT,
                 normalized: false,
                 offset: 8,
                 enabled: false,
@@ -84,7 +86,7 @@ var SinglePipeline = new Class({
             {
                 name: 'inTintEffect',
                 size: 1,
-                type: config.renderer.gl.FLOAT,
+                type: gl.FLOAT,
                 normalized: false,
                 offset: 16,
                 enabled: false,
@@ -93,7 +95,7 @@ var SinglePipeline = new Class({
             {
                 name: 'inTint',
                 size: 4,
-                type: config.renderer.gl.UNSIGNED_BYTE,
+                type: gl.UNSIGNED_BYTE,
                 normalized: true,
                 offset: 20,
                 enabled: false,

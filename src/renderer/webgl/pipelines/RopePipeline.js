@@ -57,7 +57,7 @@ var RopePipeline = new Class({
 
     function RopePipeline (config)
     {
-        config.topology = config.renderer.gl.TRIANGLE_STRIP;
+        config.topology = config.game.renderer.gl.TRIANGLE_STRIP;
 
         MultiPipeline.call(this, config);
     }
