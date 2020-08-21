@@ -2,9 +2,42 @@
 
 ## Version 3.50.0 - Subaru - in development
 
+### WebGL Pipeline Updates
+
+If you use a custom WebGL Pipeline in your game, you must update in order to use Phaser 3.50.
+
+Due to the huge amount of work that has taken place in this area, all of the pipelines have been renamed. If you extend any of these pipelines, or use them in your game code (referenced by name), then please update accordingly. The name changes are:
+
+* `TextureTintPipeline` is now called the `MultiPipeline`.
+* `TextureTintStripPipeline` is now called the `RopePipeline`.
+* `ForwardDiffuseLightPipeline` is now called the `LightPipeline`.
+
+To match the new pipeline names, the shader source code has also been renamed.
+
+* `ForwardDiffuse.frag` is now called `Light.frag`.
+* `TextureTint.frag` is now called `Multi.frag`.
+* `TextureTint.vert` is now called `Multi.vert`.
+
+Other pipeline changes are as follows:
+
+* `Types.Renderer.WebGL.WebGLPipelineConfig` is a new TypeDef that helps you easily configure your own Custom Pipeline when using TypeScript and also provides better JSDocs.
+* `Types.Renderer.WebGL.WebGLPipelineAttributesConfig` is a new TypeDef that helps you easily configure the attributes for your own Custom Pipelines when using TypeScript and also provides better JSDocs.
+* All piplines will now work out the `renderer` property automatically, so it's no longer required in the config.
+* All piplines will now work out the `gl` property automatically, so it's no longer required in the config.
+* All piplines will now extract the `name` property from the config, allowing you to set it externally.
+* All piplines will now extract the `vertexCapacity` property from the config, allowing you to set it externally.
+* All piplines will now extract the `vertexSize` property from the config, allowing you to set it externally.
+* All piplines will now extract the `vertexData` property from the config, allowing you to set it externally.
+* All piplines will now extract the `attributes` property from the config, allowing you to set it externally.
+* All piplines will now extract the `topology` property from the config, allowing you to set it externally.
+
+#### Single Pipeline
+
+There is also a new pipeline called `SinglePipeline`, created to emulate the old `TextureTintPipeline`. This special pipeline uses just a single texture and makes things a lot easier if you wish to create a custom pipeline, but not have to recode your shaders to work with multiple textures. Instead, just extend `SinglePipeline`, where-as before you extended the `TextureTintPipeline` and you won't have to change any of your shader code. However, if you can, you should update it to make it perform faster, but that choice is left up to you.
+
 ### WebGL Multi-Texture Rendering
 
-The Texture Tint Pipeline has had its core flow rewritten to eliminate the need for constantly creating `batch` objects. Instead, it now supports the new multi-texture shader, vastly increasing rendering performance, especially on drawcall-bound systems.
+The Multi Pipeline (previously the Texture Tint Pipeline) has had its core flow rewritten to eliminate the need for constantly creating `batch` objects. Instead, it now supports the new multi-texture shader, vastly increasing rendering performance, especially on drawcall-bound systems.
 
 All of the internal functions, such as `batchQuad` and `batchSprite` have been updated to use the new method of texture setting. The method signatures all remain the same, unless indicated below.
 
@@ -52,9 +85,9 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `WebGLRenderer.unbindTextures` is a new method that will activate and then null bind all WebGL textures.
 * `Renderer.WebGL.Utils.parseFragmentShaderMaxTextures` is a new function that will take fragment shader source and search it for `%count%` and `%forloop%` declarations, replacing them with the required GLSL for multi-texture support, returning the modified source.
 
-### Forward Diffuse Light Pipeline API Changes
+### Light Pipeline Changes
 
-This Light2D pipeline, which is responsible for rendering lights under WebGL, has been rewritten to work with the new Texture Tint Pipeline functions. Lots of redundant code has been removed and the following changes and improvements took place:
+The Light Pipeline (previously called the Forward Diffuse Light Pipeline), which is responsible for rendering lights under WebGL, has been rewritten to work with the new Multi Pipeline features. Lots of redundant code has been removed and the following changes and improvements took place:
 
 * The pipeline now works with Game Objects that do not have a normal map. They will be rendered using the new default normal map, which allows for a flat light effect to pass over them and merge with their diffuse map colors.
 * Fixed a bug in the way lights were handled that caused Tilemaps to render one tile at a time, causing massive slow down. They're now batched properly, making a combination of lights and tilemaps possible again.
@@ -172,6 +205,11 @@ If you used any of them in your code, please update to the new function names be
 * The `KeyboardPlugin` no longer emits `keydown_` events. These were replaced with `keydown-` events in v3.15. The previous event string was deprecated in v3.20.
 * The `KeyboardPlugin` no longer emits `keyup_` events. These were replaced with `keyup-` events in v3.15. The previous event string was deprecated in v3.20.
 * The `ScaleManager.updateBounds` method is now called every time the browser fires a 'resize' or 'orientationchange' event. This will update the offset of the canvas element Phaser is rendering to, which is responsible for keeping input positions correct. However, if you change the canvas position, or visibility, via any other method (i.e. via an Angular route) you should call the `updateBounds` method directly, yourself.
+* The constant `Phaser.Renderer.WebGL.BYTE` value has been removed as it wasn't used internally.
+* The constant `Phaser.Renderer.WebGL.SHORT` value has been removed as it wasn't used internally.
+* The constant `Phaser.Renderer.WebGL.UNSIGNED_BYTE` value has been removed as it wasn't used internally.
+* The constant `Phaser.Renderer.WebGL.UNSIGNED_SHORT` value has been removed as it wasn't used internally.
+* The constant `Phaser.Renderer.WebGL.FLOAT` value has been removed as it wasn't used internally.
 
 ### Bug Fixes
 
