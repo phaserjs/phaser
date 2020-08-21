@@ -1223,9 +1223,6 @@ var WebGLRenderer = new Class({
 
         this.resetTextures(true);
 
-        // gl.activeTexture(gl.TEXTURE1);
-        // gl.bindTexture(gl.TEXTURE_2D, this.blankTexture.glTexture);
-
         this.currentActiveTexture = 1;
         this.startActiveTexture++;
 
