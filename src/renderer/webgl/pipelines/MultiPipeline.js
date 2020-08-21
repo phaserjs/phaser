@@ -10,35 +10,65 @@ var Earcut = require('../../../geom/polygon/Earcut');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var ModelViewProjection = require('./components/ModelViewProjection');
 var ProjectOrtho = require('../mvp/ProjectOrtho');
-var ShaderSourceFS = require('../shaders/TextureTint-frag.js');
-var ShaderSourceVS = require('../shaders/TextureTint-vert.js');
+var ShaderSourceFS = require('../shaders/Multi-frag.js');
+var ShaderSourceVS = require('../shaders/Multi-vert.js');
 var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
 var Utils = require('../Utils');
 var WebGLPipeline = require('../WebGLPipeline');
 
 /**
  * @classdesc
- * TextureTintPipeline implements the rendering infrastructure
- * for displaying textured objects
- * The config properties are:
- * - game: Current game instance.
- * - renderer: Current WebGL renderer.
- * - topology: This indicates how the primitives are rendered. The default value is GL_TRIANGLES.
- *              Here is the full list of rendering primitives (https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Constants).
- * - vertShader: Source for vertex shader as a string.
- * - fragShader: Source for fragment shader as a string.
- * - vertexCapacity: The amount of vertices that shall be allocated
- * - vertexSize: The size of a single vertex in bytes.
  *
- * @class TextureTintPipeline
+ * The Multi Pipeline is the core 2D texture rendering pipeline used by Phaser in WebGL.
+ * Virtually all Game Objects use this pipeline by default, including Sprites, Graphics
+ * and Tilemaps. It handles the batching of quads and tris, as well as methods for
+ * drawing and batching geometry data.
+ *
+ * Prior to Phaser v3.50 this pipeline was called the `TextureTintPipeline`.
+ *
+ * In previous versions of Phaser only one single texture unit was supported at any one time.
+ * The Multi Pipeline is an evolution of the old Texture Tint Pipeline, updated to support
+ * multi-textures for increased performance.
+ *
+ * The fragment shader it uses can be found in `shaders/src/Multi.frag`.
+ * The vertex shader it uses can be found in `shaders/src/Multi.vert`.
+ *
+ * The default shader attributes for this pipeline are:
+ *
+ * `inPosition` (vec2, offset 0)
+ * `inTexCoord` (vec2, offset 8)
+ * `inTexId` (float, offset 16)
+ * `inTintEffect` (float, offset 20)
+ * `inTint` (vec4, offset 24, normalized)
+ *
+ * The default shader uniforms for this pipeline are:
+ *
+ * `uProjectionMatrix` (mat4)
+ * `uViewMatrix` (mat4)
+ * `uModelMatrix` (mat4)
+ * `uMainSampler` (sampler2D array)
+ *
+ * If you wish to create a custom pipeline extending from this one, you can use two string
+ * declarations in your fragment shader source: `%count%` and `%forloop%`, where `count` is
+ * used to set the number of `sampler2Ds` available, and `forloop` is a block of GLSL code
+ * that will get the currently bound texture unit.
+ *
+ * This pipeline will automatically inject that code for you, should those values exist
+ * in your shader source. If you wish to handle this yourself, you can also use the
+ * function `Utils.parseFragmentShaderMaxTextures`.
+ *
+ * If you wish to create a pipeline that works from a single texture, or that doesn't have
+ * internal texture iteration, please see the `SinglePipeline` instead.
+ *
+ * @class MultiPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
  * @memberof Phaser.Renderer.WebGL.Pipelines
  * @constructor
- * @since 3.0.0
+ * @since 3.50.0
  *
- * @param {object} config - The configuration options for this Texture Tint Pipeline, as described above.
+ * @param {Phaser.Types.Renderer.WebGL.WebGLPipelineConfig} config - The configuration options for this pipeline.
  */
-var TextureTintPipeline = new Class({
+var MultiPipeline = new Class({
 
     Extends: WebGLPipeline,
 
@@ -48,87 +78,71 @@ var TextureTintPipeline = new Class({
 
     initialize:
 
-    function TextureTintPipeline (config)
+    function MultiPipeline (config)
     {
-        var rendererConfig = config.renderer.config;
+        var renderer = config.game.renderer;
+        var gl = renderer.gl;
 
-        var fragmentShaderSource;
-        var maxTextures = config.renderer.maxTextures;
+        var fragmentShaderSource = GetFastValue(config, 'fragShader', ShaderSourceFS);
 
-        if (!config.fragShader)
-        {
-            fragmentShaderSource = Utils.parseFragmentShaderMaxTextures(ShaderSourceFS, maxTextures);
-        }
-        else
-        {
-            fragmentShaderSource = config.fragShader;
-        }
-
-        //  Vertex Size = attribute size added together (2 + 2 + 1 + 4)
         //  Vertex Size = attribute size added together (2 + 2 + 1 + 1 + 4) inc maxTextures
 
-        WebGLPipeline.call(this, {
-            game: config.game,
-            renderer: config.renderer,
-            gl: config.renderer.gl,
-            topology: GetFastValue(config, 'topology', config.renderer.gl.TRIANGLES),
-            vertShader: GetFastValue(config, 'vertShader', ShaderSourceVS),
-            fragShader: GetFastValue(config, 'fragShader', fragmentShaderSource),
-            vertexCapacity: GetFastValue(config, 'vertexCapacity', 6 * rendererConfig.batchSize),
-            vertexSize: GetFastValue(config, 'vertexSize', Float32Array.BYTES_PER_ELEMENT * 6 + Uint8Array.BYTES_PER_ELEMENT * 4),
-            attributes: [
-                {
-                    name: 'inPosition',
-                    size: 2,
-                    type: config.renderer.gl.FLOAT,
-                    normalized: false,
-                    offset: 0,
-                    enabled: false,
-                    location: -1
-                },
-                {
-                    name: 'inTexCoord',
-                    size: 2,
-                    type: config.renderer.gl.FLOAT,
-                    normalized: false,
-                    offset: 4 * 2,
-                    enabled: false,
-                    location: -1
-                },
-                {
-                    name: 'inTexId',
-                    size: 1,
-                    type: config.renderer.gl.FLOAT,
-                    normalized: false,
-                    offset: 4 * 4,
-                    enabled: false,
-                    location: -1
-                },
-                {
-                    name: 'inTintEffect',
-                    size: 1,
-                    type: config.renderer.gl.FLOAT,
-                    normalized: false,
-                    offset: 4 * 5,
-                    enabled: false,
-                    location: -1
-                },
-                {
-                    name: 'inTint',
-                    size: 4,
-                    type: config.renderer.gl.UNSIGNED_BYTE,
-                    normalized: true,
-                    offset: 4 * 6,
-                    enabled: false,
-                    location: -1
-                }
-            ]
-        });
+        config.fragShader = Utils.parseFragmentShaderMaxTextures(fragmentShaderSource, renderer.maxTextures);
+        config.vertShader = GetFastValue(config, 'vertShader', ShaderSourceVS);
+        config.attributes = GetFastValue(config, 'attributes', [
+            {
+                name: 'inPosition',
+                size: 2,
+                type: gl.FLOAT,
+                normalized: false,
+                offset: 0,
+                enabled: false,
+                location: -1
+            },
+            {
+                name: 'inTexCoord',
+                size: 2,
+                type: gl.FLOAT,
+                normalized: false,
+                offset: 8,
+                enabled: false,
+                location: -1
+            },
+            {
+                name: 'inTexId',
+                size: 1,
+                type: gl.FLOAT,
+                normalized: false,
+                offset: 16,
+                enabled: false,
+                location: -1
+            },
+            {
+                name: 'inTintEffect',
+                size: 1,
+                type: gl.FLOAT,
+                normalized: false,
+                offset: 20,
+                enabled: false,
+                location: -1
+            },
+            {
+                name: 'inTint',
+                size: 4,
+                type: gl.UNSIGNED_BYTE,
+                normalized: true,
+                offset: 24,
+                enabled: false,
+                location: -1
+            }
+        ]);
+
+        WebGLPipeline.call(this, config);
 
         /**
          * Float32 view of the array buffer containing the pipeline's vertices.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#vertexViewF32
+         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#vertexViewF32
          * @type {Float32Array}
          * @since 3.0.0
          */
@@ -137,7 +151,7 @@ var TextureTintPipeline = new Class({
         /**
          * Uint32 view of the array buffer containing the pipeline's vertices.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#vertexViewU32
+         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#vertexViewU32
          * @type {Uint32Array}
          * @since 3.0.0
          */
@@ -146,7 +160,7 @@ var TextureTintPipeline = new Class({
         /**
          * A temporary Transform Matrix, re-used internally during batching.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#_tempMatrix1
+         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#_tempMatrix1
          * @private
          * @type {Phaser.GameObjects.Components.TransformMatrix}
          * @since 3.11.0
@@ -156,7 +170,7 @@ var TextureTintPipeline = new Class({
         /**
          * A temporary Transform Matrix, re-used internally during batching.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#_tempMatrix2
+         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#_tempMatrix2
          * @private
          * @type {Phaser.GameObjects.Components.TransformMatrix}
          * @since 3.11.0
@@ -166,7 +180,7 @@ var TextureTintPipeline = new Class({
         /**
          * A temporary Transform Matrix, re-used internally during batching.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#_tempMatrix3
+         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#_tempMatrix3
          * @private
          * @type {Phaser.GameObjects.Components.TransformMatrix}
          * @since 3.11.0
@@ -176,7 +190,7 @@ var TextureTintPipeline = new Class({
         /**
          * A temporary Transform Matrix, re-used internally during batching.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#_tempMatrix4
+         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#_tempMatrix4
          * @private
          * @type {Phaser.GameObjects.Components.TransformMatrix}
          * @since 3.11.0
@@ -186,7 +200,7 @@ var TextureTintPipeline = new Class({
         /**
          * Used internally to draw stroked triangles.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#tempTriangle
+         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#tempTriangle
          * @type {array}
          * @private
          * @since 3.12.0
@@ -206,7 +220,7 @@ var TextureTintPipeline = new Class({
          * 2 = solid color, no texture
          * 3 = solid texture, no color
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#tintEffect
+         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#tintEffect
          * @type {number}
          * @private
          * @since 3.12.0
@@ -216,7 +230,7 @@ var TextureTintPipeline = new Class({
         /**
          * Cached stroke tint.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#strokeTint
+         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#strokeTint
          * @type {object}
          * @private
          * @since 3.12.0
@@ -226,7 +240,7 @@ var TextureTintPipeline = new Class({
         /**
          * Cached fill tint.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#fillTint
+         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#fillTint
          * @type {object}
          * @private
          * @since 3.12.0
@@ -236,7 +250,7 @@ var TextureTintPipeline = new Class({
         /**
          * Internal texture frame reference.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#currentFrame
+         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#currentFrame
          * @type {Phaser.Textures.Frame}
          * @private
          * @since 3.12.0
@@ -246,7 +260,7 @@ var TextureTintPipeline = new Class({
         /**
          * Internal path quad cache.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#firstQuad
+         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#firstQuad
          * @type {array}
          * @private
          * @since 3.12.0
@@ -256,7 +270,7 @@ var TextureTintPipeline = new Class({
         /**
          * Internal path quad cache.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#prevQuad
+         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#prevQuad
          * @type {array}
          * @private
          * @since 3.12.0
@@ -266,7 +280,7 @@ var TextureTintPipeline = new Class({
         /**
          * Used internally for triangulating a polygon.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#polygonCache
+         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#polygonCache
          * @type {array}
          * @private
          * @since 3.12.0
@@ -281,7 +295,7 @@ var TextureTintPipeline = new Class({
      * Sets the shader program, vertex buffer and other resources.
      * Should only be called when changing pipeline.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#bind
+     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#bind
      * @since 3.50.0
      *
      * @return {this} This WebGLPipeline instance.
@@ -298,7 +312,7 @@ var TextureTintPipeline = new Class({
     /**
      * Called every time a Game Object needs to use this pipeline.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#onBind
+     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#onBind
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
@@ -315,7 +329,7 @@ var TextureTintPipeline = new Class({
     /**
      * Resizes this pipeline and updates the projection.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#resize
+     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#resize
      * @since 3.0.0
      *
      * @param {number} width - The new width.
@@ -336,7 +350,7 @@ var TextureTintPipeline = new Class({
     /**
      * Assigns a texture to the current batch. If a different texture is already set it creates a new batch object.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#setTexture2D
+     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#setTexture2D
      * @since 3.1.0
      *
      * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch. If not given uses blankTexture.
@@ -355,7 +369,7 @@ var TextureTintPipeline = new Class({
     /**
      * Uploads the vertex data and emits a draw call for the current batch of vertices.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#flush
+     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#flush
      * @since 3.0.0
      *
      * @return {this} This WebGLPipeline instance.
@@ -388,7 +402,7 @@ var TextureTintPipeline = new Class({
     /**
      * Takes a Sprite Game Object, or any object that extends it, and adds it to the batch.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchSprite
+     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#batchSprite
      * @since 3.0.0
      *
      * @param {(Phaser.GameObjects.Image|Phaser.GameObjects.Sprite)} sprite - The texture based Game Object to add to the batch.
@@ -561,7 +575,7 @@ var TextureTintPipeline = new Class({
      *
      * Where tx0/ty0 = 0, tx1/ty1 = 1, tx2/ty2 = 2 and tx3/ty3 = 3
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchQuad
+     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#batchQuad
      * @since 3.12.0
      *
      * @param {number} x0 - The top-left x position.
@@ -674,7 +688,7 @@ var TextureTintPipeline = new Class({
      * 1-----2
      * ```
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTri
+     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#batchTri
      * @since 3.12.0
      *
      * @param {number} x1 - The bottom-left x position.
@@ -748,7 +762,7 @@ var TextureTintPipeline = new Class({
     /**
      * Generic function for batching a textured quad using argument values instead of a Game Object.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTexture
+     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#batchTexture
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - Source GameObject.
@@ -938,7 +952,7 @@ var TextureTintPipeline = new Class({
     /**
      * Adds a Texture Frame into the batch for rendering.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTextureFrame
+     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#batchTextureFrame
      * @since 3.12.0
      *
      * @param {Phaser.Textures.Frame} frame - The Texture Frame to be rendered.
@@ -1003,7 +1017,7 @@ var TextureTintPipeline = new Class({
      *
      * Used for directly batching untransformed rectangles, such as Camera background colors.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawFillRect
+     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#drawFillRect
      * @since 3.12.0
      *
      * @param {number} x - Horizontal top left coordinate of the rectangle.
@@ -1034,7 +1048,7 @@ var TextureTintPipeline = new Class({
      * Pushes a filled rectangle into the vertex batch.
      * Rectangle factors in the given transform matrices before adding to the batch.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchFillRect
+     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#batchFillRect
      * @since 3.12.0
      *
      * @param {number} x - Horizontal top left coordinate of the rectangle.
@@ -1087,7 +1101,7 @@ var TextureTintPipeline = new Class({
      * Pushes a filled triangle into the vertex batch.
      * Triangle factors in the given transform matrices before adding to the batch.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchFillTriangle
+     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#batchFillTriangle
      * @since 3.12.0
      *
      * @param {number} x0 - Point 0 x coordinate.
@@ -1135,7 +1149,7 @@ var TextureTintPipeline = new Class({
      * Triangle factors in the given transform matrices before adding to the batch.
      * The triangle is created from 3 lines and drawn using the `batchStrokePath` method.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchStrokeTriangle
+     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#batchStrokeTriangle
      * @since 3.12.0
      *
      * @param {number} x0 - Point 0 x coordinate.
@@ -1179,7 +1193,7 @@ var TextureTintPipeline = new Class({
      *
      * The path is always automatically closed because it's filled.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchFillPath
+     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#batchFillPath
      * @since 3.12.0
      *
      * @param {array} path - Collection of points that represent the path.
@@ -1260,7 +1274,7 @@ var TextureTintPipeline = new Class({
      *
      * The path is optionally closed at the end.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchStrokePath
+     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#batchStrokePath
      * @since 3.12.0
      *
      * @param {array} path - Collection of points that represent the path.
@@ -1304,7 +1318,7 @@ var TextureTintPipeline = new Class({
      * Creates a line out of 4 quads and adds it to the vertex batch based on the given line values.
      * Assumes a texture has already been set, prior to calling this function.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchLine
+     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#batchLine
      * @since 3.12.0
      *
      * @param {number} ax - X coordinate to the start of the line
@@ -1420,4 +1434,4 @@ var TextureTintPipeline = new Class({
 
 });
 
-module.exports = TextureTintPipeline;
+module.exports = MultiPipeline;

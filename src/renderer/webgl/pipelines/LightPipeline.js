@@ -6,47 +6,81 @@
  */
 
 var Class = require('../../../utils/Class');
-var ShaderSourceFS = require('../shaders/ForwardDiffuse-frag.js');
-var TextureTintPipeline = require('./TextureTintPipeline');
+var GetFastValue = require('../../../utils/object/GetFastValue');
+var ShaderSourceFS = require('../shaders/Light-frag.js');
+var MultiPipeline = require('./MultiPipeline');
 var WebGLPipeline = require('../WebGLPipeline');
 
 var LIGHT_COUNT = 10;
 
 /**
  * @classdesc
- * ForwardDiffuseLightPipeline implements a forward rendering approach for 2D lights.
  *
- * It works by using a custom shader, combined with Light Game Objects, that provides an ambient
- * illumination effect in your games.
+ * The Light Pipeline is an extension of the Multi Pipeline and uses a custom shader
+ * designed to handle forward diffused rendering of 2D lights in a Scene.
  *
- * This pipeline extends TextureTintPipeline so it implements all of its rendering functions and batching system.
+ * The shader works in tandem with Light Game Objects, and optionally texture normal maps,
+ * to provide an ambient illumination effect.
  *
- * @class ForwardDiffuseLightPipeline
- * @extends Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline
+ * If you wish to provide your own shader, you can use the `%LIGHT_COUNT%` declaration in the source,
+ * and it will be automatically replaced at run-time with the total number of configured lights.
+ *
+ * The maximum number of lights can be set in the Render Config `maxLights` property and defaults to 10.
+ *
+ * Prior to Phaser v3.50 this pipeline was called the `ForwardDiffuseLightPipeline`.
+ *
+ * The fragment shader it uses can be found in `shaders/src/Light.frag`.
+ * The vertex shader it uses can be found in `shaders/src/Multi.vert`.
+ *
+ * The default shader attributes for this pipeline are:
+ *
+ * `inPosition` (vec2, offset 0)
+ * `inTexCoord` (vec2, offset 8)
+ * `inTexId` (float, offset 16)
+ * `inTintEffect` (float, offset 20)
+ * `inTint` (vec4, offset 24, normalized)
+ *
+ * The default shader uniforms for this pipeline are:
+ *
+ * `uProjectionMatrix` (mat4)
+ * `uViewMatrix` (mat4)
+ * `uModelMatrix` (mat4)
+ * `uMainSampler` (sampler2D)
+ * `uNormSampler` (sampler2D)
+ * `uCamera` (vec4)
+ * `uResolution` (vec2)
+ * `uAmbientLightColor` (vec3)
+ * `uInverseRotationMatrix` (mat3)
+ * `uLights` (Light struct)
+ *
+ * @class LightPipeline
+ * @extends Phaser.Renderer.WebGL.Pipelines.MultiPipeline
  * @memberof Phaser.Renderer.WebGL.Pipelines
  * @constructor
- * @since 3.0.0
+ * @since 3.50.0
  *
- * @param {object} config - The configuration of the pipeline, same as the {@link Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline}. The fragment shader will be replaced with the lighting shader.
+ * @param {Phaser.Types.Renderer.WebGL.WebGLPipelineConfig} config - The configuration options for this pipeline.
  */
-var ForwardDiffuseLightPipeline = new Class({
+var LightPipeline = new Class({
 
-    Extends: TextureTintPipeline,
+    Extends: MultiPipeline,
 
     initialize:
 
-    function ForwardDiffuseLightPipeline (config)
+    function LightPipeline (config)
     {
-        LIGHT_COUNT = config.maxLights;
+        LIGHT_COUNT = config.game.renderer.config.maxLights;
 
-        config.fragShader = ShaderSourceFS.replace('%LIGHT_COUNT%', LIGHT_COUNT.toString());
+        var fragmentShaderSource = GetFastValue(config, 'fragShader', ShaderSourceFS);
 
-        TextureTintPipeline.call(this, config);
+        config.fragShader = fragmentShaderSource.replace('%LIGHT_COUNT%', LIGHT_COUNT.toString());
+
+        MultiPipeline.call(this, config);
 
         /**
          * Inverse rotation matrix for normal map rotations.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#inverseRotationMatrix
+         * @name Phaser.Renderer.WebGL.Pipelines.LightPipeline#inverseRotationMatrix
          * @type {Float32Array}
          * @private
          * @since 3.16.0
@@ -61,7 +95,7 @@ var ForwardDiffuseLightPipeline = new Class({
          * Stores a default normal map, which is an object with a `glTexture` property that
          * maps to a 1x1 texture of the color #7f7fff created in the `boot` method.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#defaultNormalMap
+         * @name Phaser.Renderer.WebGL.Pipelines.LightPipeline#defaultNormalMap
          * @type {object}
          * @since 3.50.0
          */
@@ -70,7 +104,7 @@ var ForwardDiffuseLightPipeline = new Class({
         /**
          * Stores the previous number of lights rendered.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#lightCount
+         * @name Phaser.Renderer.WebGL.Pipelines.LightPipeline#lightCount
          * @type {number}
          * @since 3.50.0
          */
@@ -85,7 +119,7 @@ var ForwardDiffuseLightPipeline = new Class({
      * By this stage all Game level systems are now in place and you can perform any final
      * tasks that the pipeline may need that relied on game systems such as the Texture Manager.
      *
-     * @method Phaser.Renderer.WebGL.ForwardDiffuseLightPipeline#boot
+     * @method Phaser.Renderer.WebGL.LightPipeline#boot
      * @since 3.11.0
      */
     boot: function ()
@@ -112,7 +146,7 @@ var ForwardDiffuseLightPipeline = new Class({
      * Sets the shader program, vertex buffer and other resources.
      * Should only be called when changing pipeline.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#bind
+     * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#bind
      * @since 3.50.0
      *
      * @return {this} This WebGLPipeline instance.
@@ -134,7 +168,7 @@ var ForwardDiffuseLightPipeline = new Class({
     /**
      * This function sets all the needed resources for each camera pass.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#onRender
+     * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#onRender
      * @since 3.0.0
      *
      * @param {Phaser.Scene} scene - The Scene being rendered.
@@ -218,7 +252,7 @@ var ForwardDiffuseLightPipeline = new Class({
      * Rotates the normal map vectors inversely by the given angle.
      * Only works in 2D space.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#setNormalMapRotation
+     * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#setNormalMapRotation
      * @since 3.16.0
      *
      * @param {number} rotation - The angle of rotation in radians.
@@ -259,7 +293,7 @@ var ForwardDiffuseLightPipeline = new Class({
     /**
      * Assigns a texture to the current batch. If a different texture is already set it creates a new batch object.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#setTexture2D
+     * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#setTexture2D
      * @since 3.50.0
      *
      * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch. If not given uses blankTexture.
@@ -294,7 +328,7 @@ var ForwardDiffuseLightPipeline = new Class({
      * Custom pipelines can use this method in order to perform any required pre-batch tasks
      * for the given Game Object. It must return the texture unit the Game Object was assigned.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#setGameObject
+     * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#setGameObject
      * @since 3.50.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object being rendered or added to the batch.
@@ -329,7 +363,7 @@ var ForwardDiffuseLightPipeline = new Class({
      * Returns the normal map WebGLTexture from the given Game Object.
      * If the Game Object doesn't have one, it returns the default normal map from this pipeline instead.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#getNormalMap
+     * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#getNormalMap
      * @since 3.50.0
      *
      * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object to get the normal map from.
@@ -374,6 +408,6 @@ var ForwardDiffuseLightPipeline = new Class({
 
 });
 
-ForwardDiffuseLightPipeline.LIGHT_COUNT = LIGHT_COUNT;
+LightPipeline.LIGHT_COUNT = LIGHT_COUNT;
 
-module.exports = ForwardDiffuseLightPipeline;
+module.exports = LightPipeline;
