@@ -52,32 +52,12 @@ var TextureTintPipeline = new Class({
     {
         var rendererConfig = config.renderer.config;
 
+        var fragmentShaderSource;
         var maxTextures = config.renderer.maxTextures;
 
         if (!config.fragShader)
         {
-            var src = '';
-
-            for (var i = 0; i < maxTextures; i++)
-            {
-                if (i > 0)
-                {
-                    src += '\n\telse ';
-                }
-
-                if (i < maxTextures - 1)
-                {
-                    src += 'if (outTexId < ' + i + '.5)';
-                }
-
-                src += '\n\t{';
-                src += '\n\t\ttexture = texture2D(uMainSampler[' + i + '], outTexCoord);';
-                src += '\n\t}';
-            }
-
-            var fragmentShaderSource = ShaderSourceFS.replace(/%count%/gi, maxTextures.toString());
-
-            fragmentShaderSource = fragmentShaderSource.replace(/%forloop%/gi, src);
+            fragmentShaderSource = Utils.parseFragmentShaderMaxTextures(ShaderSourceFS, maxTextures);
         }
         else
         {
