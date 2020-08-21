@@ -50,6 +50,7 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `WebGLPipeline.forceZero` is a new property that informs Game Objects if the pipeline requires a zero bound texture unit.
 * `WebGLPipeline.setAttribPointers` is a new method that will set the vertex attribute pointers for the pipeline.
 * `WebGLRenderer.unbindTextures` is a new method that will activate and then null bind all WebGL textures.
+* `Renderer.WebGL.Utils.parseFragmentShaderMaxTextures` is a new function that will take fragment shader source and search it for `%count%` and `%forloop%` declarations, replacing them with the required GLSL for multi-texture support, returning the modified source.
 
 ### Forward Diffuse Light Pipeline API Changes
 
