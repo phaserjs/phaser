@@ -107,7 +107,7 @@ var BitmapMaskPipeline = new Class({
      * Sets the shader program, vertex buffer and other resources.
      * Should only be called when changing pipeline.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#bind
+     * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#bind
      * @since 3.50.0
      *
      * @return {this} This WebGLPipeline instance.
