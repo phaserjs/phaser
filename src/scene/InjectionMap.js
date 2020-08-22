@@ -17,6 +17,7 @@
 var InjectionMap = {
 
     game: 'game',
+    renderer: 'renderer',
 
     anims: 'anims',
     cache: 'cache',

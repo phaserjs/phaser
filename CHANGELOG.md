@@ -2,11 +2,44 @@
 
 ## Version 3.50.0 - Subaru - in development
 
+### WebGL Pipeline Updates
+
+If you use a custom WebGL Pipeline in your game, you must update in order to use Phaser 3.50.
+
+Due to the huge amount of work that has taken place in this area, all of the pipelines have been renamed. If you extend any of these pipelines or use them in your game code (referenced by name), then please update accordingly. The name changes are:
+
+* `TextureTintPipeline` is now called the `MultiPipeline`.
+* `TextureTintStripPipeline` is now called the `RopePipeline`.
+* `ForwardDiffuseLightPipeline` is now called the `LightPipeline`.
+
+To match the new pipeline names, the shader source code has also been renamed.
+
+* `ForwardDiffuse.frag` is now called `Light.frag`.
+* `TextureTint.frag` is now called `Multi.frag`.
+* `TextureTint.vert` is now called `Multi.vert`.
+
+Other pipeline changes are as follows:
+
+* `Types.Renderer.WebGL.WebGLPipelineConfig` is a new TypeDef that helps you easily configure your own Custom Pipeline when using TypeScript and also provides better JSDocs.
+* `Types.Renderer.WebGL.WebGLPipelineAttributesConfig` is a new TypeDef that helps you easily configure the attributes for your own Custom Pipelines when using TypeScript and also provides better JSDocs.
+* All pipelines will now work out the `renderer` property automatically, so it's no longer required in the config.
+* All pipelines will now work out the `gl` property automatically, so it's no longer required in the config.
+* All pipelines will now extract the `name` property from the config, allowing you to set it externally.
+* All pipelines will now extract the `vertexCapacity` property from the config, allowing you to set it externally.
+* All pipelines will now extract the `vertexSize` property from the config, allowing you to set it externally.
+* All pipelines will now extract the `vertexData` property from the config, allowing you to set it externally.
+* All pipelines will now extract the `attributes` property from the config, allowing you to set it externally.
+* All pipelines will now extract the `topology` property from the config, allowing you to set it externally.
+
+#### Single Pipeline
+
+There is also a new pipeline called `SinglePipeline`, created to emulate the old `TextureTintPipeline`. This special pipeline uses just a single texture and makes things a lot easier if you wish to create a custom pipeline, but not have to recode your shaders to work with multiple textures. Instead, just extend `SinglePipeline`, where-as before you extended the `TextureTintPipeline` and you won't have to change any of your shader code. However, if you can, you should update it to make it perform faster, but that choice is left up to you.
+
 ### WebGL Multi-Texture Rendering
 
-The Texture Tint Pipeline has had its core flow rewritten to eliminate the need for constantly creating `batch` objects. Instead, it now supports the new multi-texture shader, vastly increasing rendering performance, especially on drawcall-bound systems.
+The Multi Pipeline (previously the Texture Tint Pipeline) has had its core flow rewritten to eliminate the need for constantly creating `batch` objects. Instead, it now supports the new multi-texture shader, vastly increasing rendering performance, especially on draw call-bound systems.
 
-All of the internal functions, such as `batchQuad` and `batchSprite` have been updated to use the new method of texture setting. The method signatures all remain the same, unless indicated below.
+All of the internal functions, such as `batchQuad` and `batchSprite` have been updated to use the new method of texture setting. The method signatures all remain the same unless indicated below.
 
 * `Config.render.maxTextures` is a new game config setting that allows you to control how many texture units will be used in WebGL.
 * `WebGL.Utils.checkShaderMax` is a new function, used internally by the renderer, to determine the maximum number of texture units the GPU + browser supports.
@@ -38,22 +71,23 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `WebGLRenderer.setTextureSource` is a new method, used by pipelines and Game Objects, that will assign a texture unit to the given Texture Source.
 * The `WebGLRenderer.setTexture2D` method has been updated to use the new texture unit assignment. It no longer takes the `textureUnit` or `flush` parameters and these have been removed from its method signature.
 * `WebGLRenderer.setTextureZero` is a new method that activates texture zero and binds the given texture to it. Useful for fbo backed game objects.
-* `WebGLRenderer.clearTextureZero` is a new method that clears the texture tha was bound to unit zero.
+* `WebGLRenderer.clearTextureZero` is a new method that clears the texture that was bound to unit zero.
 * `WebGLRenderer.textureZero` is a new property that holds the currently bound unit zero texture.
 * `WebGLRenderer.normalTexture` is a new property that holds the currently bound normal map (texture unit one).
 * `WebGLRenderer.setNormalMap` is a new method that sets the current normal map texture.
 * `WebGLRenderer.clearNormalMap` is a new method that clears the current normal map texture.
-* `WebGLRenderer.resetTextures` is a new method that flushes the pipeline, resets all textures back to the temporary ones and resets the active texture counter.
+* `WebGLRenderer.resetTextures` is a new method that flushes the pipeline, resets all textures back to the temporary ones, and resets the active texture counter.
 * `WebGLPipeline.boot` will now check all of the attributes and store the pointer location within the attribute entry.
-* `WebGLPipeline.bind` no longer looks-up and enables every attribute, every frame. Instead it uses the cached pointer location stored in the attribute entry, cutting down on redundant WebGL operations.
+* `WebGLPipeline.bind` no longer looks-up and enables every attribute, every frame. Instead, it uses the cached pointer location stored in the attribute entry, cutting down on redundant WebGL operations.
 * `WebGLRenderer.isNewNormalMap` is a new method that returns a boolean if the given parameters are not currently used.
 * `WebGLPipeline.forceZero` is a new property that informs Game Objects if the pipeline requires a zero bound texture unit.
 * `WebGLPipeline.setAttribPointers` is a new method that will set the vertex attribute pointers for the pipeline.
 * `WebGLRenderer.unbindTextures` is a new method that will activate and then null bind all WebGL textures.
+* `Renderer.WebGL.Utils.parseFragmentShaderMaxTextures` is a new function that will take fragment shader source and search it for `%count%` and `%forloop%` declarations, replacing them with the required GLSL for multi-texture support, returning the modified source.
 
-### Forward Diffuse Light Pipeline API Changes
+### Light Pipeline Changes
 
-This Light2D pipeline, which is responsible for rendering lights under WebGL, has been rewritten to work with the new Texture Tint Pipeline functions. Lots of redundant code has been removed and the following changes and improvements took place:
+The Light Pipeline (previously called the Forward Diffuse Light Pipeline), which is responsible for rendering lights under WebGL, has been rewritten to work with the new Multi Pipeline features. Lots of redundant code has been removed and the following changes and improvements took place:
 
 * The pipeline now works with Game Objects that do not have a normal map. They will be rendered using the new default normal map, which allows for a flat light effect to pass over them and merge with their diffuse map colors.
 * Fixed a bug in the way lights were handled that caused Tilemaps to render one tile at a time, causing massive slow down. They're now batched properly, making a combination of lights and tilemaps possible again.
@@ -113,11 +147,11 @@ If you used any of them in your code, please update to the new function names be
 
 ### BitmapText New Features, Updates and API Changes
 
-* `BitmapText.setCharacterTint` is a new method that allows you to set a tint color (either additive, or fill) on a specific range of characters within a static Bitmap Text. You can specify the start and length offsets and a per-corner tint color.
-* `BitmapText.setWordTint` is a new method that allows you to set a tint color (either additive, or fill) on all matching words within a static Bitmap Text. You can specify the word by string, or numeric offset, and the number of replacements to tint.
+* `BitmapText.setCharacterTint` is a new method that allows you to set a tint color (either additive or fill) on a specific range of characters within a static Bitmap Text. You can specify the start and length offsets and per-corner tint colors.
+* `BitmapText.setWordTint` is a new method that allows you to set a tint color (either additive or fill) on all matching words within a static Bitmap Text. You can specify the word by string, or numeric offset, and the number of replacements to tint.
 * `BitmapText.setDropShadow` is a new method that allows you to apply a drop shadow effect to a Bitmap Text object. You can set the horizontal and vertical offset of the shadow, as well as the color and alpha levels. Call this method with no parameters to clear a shadow.
 * `BitmapTextWebGLRenderer` has been rewritten from scratch to make use of the new pre-cached WebGL uv texture and character location data generated by `GetBitmapTextSize`. This has reduced the number of calculations made in the function dramatically, as it no longer has work out glyph advancing or offsets during render, but only when the text content updates.
-* `BitmapText.getCharacterAt` is a new method that will return the character data from the BitmapText at the given `x` and `y` corodinates. The character data includes the code, position, dimensions and glyph information.
+* `BitmapText.getCharacterAt` is a new method that will return the character data from the BitmapText at the given `x` and `y` coordinates. The character data includes the code, position, dimensions, and glyph information.
 * The `BitmapTextSize` object returned by `BitmapText.getTextBounds` has a new property called `characters` which is an array that contains the scaled position coordinates of each character in the BitmapText, which you could use for tasks such as determining which character in the BitmapText was clicked.
 * `ParseXMLBitmapFont` will now calculate the WebGL uv data for the glyphs during parsing. This avoids it having to be done during rendering, saving CPU cycles on an operation that never changes.
 * `ParseXMLBitmapFont` will now create a Frame object for each glyph. This means you could, for example, create a Sprite using the BitmapText texture and the glyph as the frame key, i.e.: `this.add.sprite(x, y, fontName, 'A')`.
@@ -149,13 +183,14 @@ If you used any of them in your code, please update to the new function names be
 * `Phaser.Types.Math.Vector3Like` is a new data type representing as Vector 3 like object.
 * `Phaser.Types.Math.Vector4Like` is a new data type representing as Vector 4 like object.
 * `Transform.getLocalPoint` is a new method, available on all Game Objects, that takes an `x` / `y` pair and translates them into the local space of the Game Object, factoring in parent transforms and display origins.
-* The `KeyboardPlugin` will now track the key code and timestamp of the previous key pressed and compare it to the current event. If they match, it will skip the event. On some systems if you were to type quickly, you would sometimes get duplicate key events firing (the exact same event firing more than once). This is now prevented from happening.
+* The `KeyboardPlugin` will now track the key code and timestamp of the previous key pressed and compare it to the current event. If they match, it will skip the event. On some systems, if you were to type quickly, you would sometimes get duplicate key events firing (the exact same event firing more than once). This is now prevented from happening.
 * `Display.Color.GetColorFromValue` is a new function that will take a hex color value and return it as an integer, for use in WebGL. This is now used internally by the Tint component and other classes.
 * `Utils.String.RemoveAt` is a new function that will remove a character from the given index in a string and return the new string.
 * `Frame.setUVs` is a new method that allows you to directly set the canvas and UV data for a frame. Use this if you need to override the values set automatically during frame creation.
 * `TweenManager.getTweensOf` has a new parameter `includePending`. If set, it will also check the pending tweens for the given targets and return those in the results as well. Fix #5260 (thanks @pcharest2000)
 * `WebGLPipeline.hasBooted` is a new boolean property that tracks if the pipeline has been booted or not, which is now far more important in 3.5 than in previous versions. This is checked in the `WebGLRenderer.addPipeline` method, and if not set, the pipeline is booted. Fix #5251 #5255 (thanks @telinc1 @rexrainbow)
 * The WebGL Renderer will now add the pipelines during the `boot` method, instead of `init`.
+* You can now use `this.renderer` from within a Scene, as it's now a Scene-level property and part of the Injection Map.
 
 ### Updates and API Changes
 
@@ -171,6 +206,11 @@ If you used any of them in your code, please update to the new function names be
 * The `KeyboardPlugin` no longer emits `keydown_` events. These were replaced with `keydown-` events in v3.15. The previous event string was deprecated in v3.20.
 * The `KeyboardPlugin` no longer emits `keyup_` events. These were replaced with `keyup-` events in v3.15. The previous event string was deprecated in v3.20.
 * The `ScaleManager.updateBounds` method is now called every time the browser fires a 'resize' or 'orientationchange' event. This will update the offset of the canvas element Phaser is rendering to, which is responsible for keeping input positions correct. However, if you change the canvas position, or visibility, via any other method (i.e. via an Angular route) you should call the `updateBounds` method directly, yourself.
+* The constant `Phaser.Renderer.WebGL.BYTE` value has been removed as it wasn't used internally.
+* The constant `Phaser.Renderer.WebGL.SHORT` value has been removed as it wasn't used internally.
+* The constant `Phaser.Renderer.WebGL.UNSIGNED_BYTE` value has been removed as it wasn't used internally.
+* The constant `Phaser.Renderer.WebGL.UNSIGNED_SHORT` value has been removed as it wasn't used internally.
+* The constant `Phaser.Renderer.WebGL.FLOAT` value has been removed as it wasn't used internally.
 
 ### Bug Fixes
 
@@ -180,11 +220,11 @@ If you used any of them in your code, please update to the new function names be
 * The `KeyboardManager` and `KeyboardPlugin` were both still checking for the `InputManager.useQueue` property, which was removed several versions ago.
 * In Arcade Physics, Dynamic bodies would no longer hit walls when riding on horizontally moving platforms. The horizontal (and vertical) friction is now re-applied correctly in these edge-cases. Fix #5210 (thanks @Dercetech @samme)
 * Calling `Rectangle.setSize()` wouldn't change the underlying geometry of the Shape Game Object, causing any stroke to be incorrectly rendered after a size change.
-* The `ProcessQueue` was emiting the wrong events internally. It now emits 'add' and 'remove' correctly (thanks @halilcakar)
+* The `ProcessQueue` was emitting the wrong events internally. It now emits 'add' and 'remove' correctly (thanks @halilcakar)
 
 ### Examples, Documentation and TypeScript
 
-My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
+My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
 @samme @16patsle @scott20145 @khasanovbi @mk360 
 

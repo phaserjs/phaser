@@ -38,19 +38,20 @@ var Pipeline = {
 
     /**
      * Sets the initial WebGL Pipeline of this Game Object.
+     *
      * This should only be called during the instantiation of the Game Object.
      *
      * @method Phaser.GameObjects.Components.Pipeline#initPipeline
      * @webglOnly
      * @since 3.0.0
      *
-     * @param {string} [pipelineName=TextureTintPipeline] - The name of the pipeline to set on this Game Object. Defaults to the Texture Tint Pipeline.
+     * @param {string} [pipelineName=MultiPipeline] - The name of the pipeline to set on this Game Object. Defaults to the Multi Pipeline.
      *
      * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
      */
     initPipeline: function (pipelineName)
     {
-        if (pipelineName === undefined) { pipelineName = 'TextureTintPipeline'; }
+        if (pipelineName === undefined) { pipelineName = 'MultiPipeline'; }
 
         var renderer = this.scene.sys.game.renderer;
 

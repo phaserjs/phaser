@@ -22,9 +22,10 @@ var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
 
 //  Default Pipelines
 var BitmapMaskPipeline = require('./pipelines/BitmapMaskPipeline');
-var ForwardDiffuseLightPipeline = require('./pipelines/ForwardDiffuseLightPipeline');
-var TextureTintPipeline = require('./pipelines/TextureTintPipeline');
-var TextureTintStripPipeline = require('./pipelines/TextureTintStripPipeline');
+var LightPipeline = require('./pipelines/LightPipeline');
+var MultiPipeline = require('./pipelines/MultiPipeline');
+var RopePipeline = require('./pipelines/RopePipeline');
+var SinglePipeline = require('./pipelines/SinglePipeline');
 
 /**
  * @callback WebGLContextCallback
@@ -822,14 +823,16 @@ var WebGLRenderer = new Class({
     {
         var game = this.game;
 
-        var ttp = this.addPipeline('TextureTintPipeline', new TextureTintPipeline({ game: game, renderer: this }));
-        this.addPipeline('TextureTintStripPipeline', new TextureTintStripPipeline({ game: game, renderer: this }));
-        this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline({ game: game, renderer: this }));
-        this.addPipeline('Light2D', new ForwardDiffuseLightPipeline({ game: game, renderer: this, maxLights: this.config.maxLights }));
+        var multi = this.addPipeline('MultiPipeline', new MultiPipeline({ game: game }));
+
+        this.addPipeline('SinglePipeline', new SinglePipeline({ game: game }));
+        this.addPipeline('RopePipeline', new RopePipeline({ game: game }));
+        this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline({ game: game }));
+        this.addPipeline('Light2D', new LightPipeline({ game: game }));
 
         var blank = game.textures.getFrame('__DEFAULT');
 
-        ttp.currentFrame = blank;
+        multi.currentFrame = blank;
 
         this.blankTexture = blank;
 
@@ -839,7 +842,7 @@ var WebGLRenderer = new Class({
 
         gl.enable(gl.SCISSOR_TEST);
 
-        this.setPipeline(ttp);
+        this.setPipeline(multi);
 
         game.scale.on(ScaleEvents.RESIZE, this.onResize, this);
 
@@ -1220,9 +1223,6 @@ var WebGLRenderer = new Class({
 
         this.resetTextures(true);
 
-        // gl.activeTexture(gl.TEXTURE1);
-        // gl.bindTexture(gl.TEXTURE_2D, this.blankTexture.glTexture);
-
         this.currentActiveTexture = 1;
         this.startActiveTexture++;
 
@@ -1391,6 +1391,13 @@ var WebGLRenderer = new Class({
      */
     setTextureSource: function (textureSource)
     {
+        if (this.currentPipeline.forceZero)
+        {
+            this.setTextureZero(textureSource.glTexture, true);
+
+            return 0;
+        }
+
         var gl = this.gl;
         var currentActiveTexture = this.currentActiveTexture;
 
@@ -1455,11 +1462,17 @@ var WebGLRenderer = new Class({
      * @since 3.50.0
      *
      * @param {WebGLTexture} texture - The WebGL texture that needs to be bound.
+     * @param {boolean} [flush=false] - Flush the pipeline if the texture is different?
      */
-    setTextureZero: function (texture)
+    setTextureZero: function (texture, flush)
     {
         if (this.textureZero !== texture)
         {
+            if (flush)
+            {
+                this.flush();
+            }
+
             var gl = this.gl;
 
             gl.activeTexture(gl.TEXTURE0);
@@ -1608,6 +1621,13 @@ var WebGLRenderer = new Class({
      */
     setTexture2D: function (texture)
     {
+        if (this.currentPipeline.forceZero)
+        {
+            this.setTextureZero(texture, true);
+
+            return 0;
+        }
+
         var gl = this.gl;
         var currentActiveTexture = this.currentActiveTexture;
 
@@ -2165,7 +2185,7 @@ var WebGLRenderer = new Class({
         var cw = camera._cw;
         var ch = camera._ch;
 
-        var TextureTintPipeline = this.pipelines.TextureTintPipeline;
+        var MultiPipeline = this.pipelines.MultiPipeline;
 
         var color = camera.backgroundColor;
 
@@ -2183,7 +2203,7 @@ var WebGLRenderer = new Class({
 
             gl.clear(gl.COLOR_BUFFER_BIT);
 
-            ProjectOrtho(TextureTintPipeline, cx, cw + cx, cy, ch + cy, -1000, 1000);
+            ProjectOrtho(MultiPipeline, cx, cw + cx, cy, ch + cy, -1000, 1000);
 
             if (camera.mask)
             {
@@ -2195,7 +2215,7 @@ var WebGLRenderer = new Class({
 
             if (color.alphaGL > 0)
             {
-                TextureTintPipeline.drawFillRect(
+                MultiPipeline.drawFillRect(
                     cx, cy, cw + cx, ch + cy,
                     Utils.getTintFromFloats(color.redGL, color.greenGL, color.blueGL, 1),
                     color.alphaGL
@@ -2218,7 +2238,7 @@ var WebGLRenderer = new Class({
 
             if (color.alphaGL > 0)
             {
-                TextureTintPipeline.drawFillRect(
+                MultiPipeline.drawFillRect(
                     cx, cy, cw , ch,
                     Utils.getTintFromFloats(color.redGL, color.greenGL, color.blueGL, 1),
                     color.alphaGL
@@ -2263,12 +2283,12 @@ var WebGLRenderer = new Class({
      */
     postRenderCamera: function (camera)
     {
-        this.setPipeline(this.pipelines.TextureTintPipeline);
+        this.setPipeline(this.pipelines.MultiPipeline);
 
-        var TextureTintPipeline = this.pipelines.TextureTintPipeline;
+        var MultiPipeline = this.pipelines.MultiPipeline;
 
-        camera.flashEffect.postRenderWebGL(TextureTintPipeline, Utils.getTintFromFloats);
-        camera.fadeEffect.postRenderWebGL(TextureTintPipeline, Utils.getTintFromFloats);
+        camera.flashEffect.postRenderWebGL(MultiPipeline, Utils.getTintFromFloats);
+        camera.fadeEffect.postRenderWebGL(MultiPipeline, Utils.getTintFromFloats);
 
         camera.dirty = false;
 
@@ -2276,7 +2296,7 @@ var WebGLRenderer = new Class({
 
         if (camera.renderToTexture)
         {
-            TextureTintPipeline.flush();
+            MultiPipeline.flush();
 
             this.setFramebuffer(null);
 
@@ -2284,11 +2304,11 @@ var WebGLRenderer = new Class({
 
             if (camera.renderToGame)
             {
-                ProjectOrtho(TextureTintPipeline, 0, TextureTintPipeline.width, TextureTintPipeline.height, 0, -1000.0, 1000.0);
+                ProjectOrtho(MultiPipeline, 0, MultiPipeline.width, MultiPipeline.height, 0, -1000.0, 1000.0);
 
                 var getTint = Utils.getTintAppendFloatAlpha;
 
-                var pipeline = (camera.pipeline) ? camera.pipeline : TextureTintPipeline;
+                var pipeline = (camera.pipeline) ? camera.pipeline : MultiPipeline;
 
                 pipeline.batchTexture(
                     camera,
@@ -2374,7 +2394,7 @@ var WebGLRenderer = new Class({
 
         this.textureFlush = 0;
 
-        this.setPipeline(this.pipelines.TextureTintPipeline);
+        this.setPipeline(this.pipelines.MultiPipeline);
     },
 
     /**

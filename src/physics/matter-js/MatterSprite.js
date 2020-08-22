@@ -138,7 +138,7 @@ var MatterSprite = new Class({
 
         this.setPosition(x, y);
 
-        this.initPipeline('TextureTintPipeline');
+        this.initPipeline('MultiPipeline');
     }
 
 });
