@@ -190,6 +190,7 @@ If you used any of them in your code, please update to the new function names be
 * `TweenManager.getTweensOf` has a new parameter `includePending`. If set, it will also check the pending tweens for the given targets and return those in the results as well. Fix #5260 (thanks @pcharest2000)
 * `WebGLPipeline.hasBooted` is a new boolean property that tracks if the pipeline has been booted or not, which is now far more important in 3.5 than in previous versions. This is checked in the `WebGLRenderer.addPipeline` method, and if not set, the pipeline is booted. Fix #5251 #5255 (thanks @telinc1 @rexrainbow)
 * The WebGL Renderer will now add the pipelines during the `boot` method, instead of `init`.
+* You can now use `this.renderer` from within a Scene, as it's now a Scene-level property and part of the Injection Map.
 
 ### Updates and API Changes
 
