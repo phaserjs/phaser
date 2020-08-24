@@ -211,6 +211,7 @@ If you used any of them in your code, please update to the new function names be
 * The constant `Phaser.Renderer.WebGL.UNSIGNED_BYTE` value has been removed as it wasn't used internally.
 * The constant `Phaser.Renderer.WebGL.UNSIGNED_SHORT` value has been removed as it wasn't used internally.
 * The constant `Phaser.Renderer.WebGL.FLOAT` value has been removed as it wasn't used internally.
+* `global.Phaser = Phaser` has been removed, as it's no longer required by the UMD loader, which should make importing in Angular 10 easier. Fix #5212 (thanks @blackyale)
 
 ### Bug Fixes
 
