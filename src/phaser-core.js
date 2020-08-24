@@ -15,7 +15,7 @@ var Extend = require('./utils/object/Extend');
 
 /**
  * The root types namespace.
- * 
+ *
  * @namespace Phaser.Types
  * @since 3.17.0
  */
@@ -113,8 +113,6 @@ if (typeof FEATURE_SOUND)
 }
 
 module.exports = Phaser;
-
-global.Phaser = Phaser;
 
 /*
  * "Documentation is like pizza: when it is good, it is very, very good;
