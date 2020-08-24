@@ -11,6 +11,7 @@ var Class = require('../../utils/Class');
 var Components = require('../components');
 var Events = require('../events');
 var GameObject = require('../GameObject');
+var GameObjectEvents = require('../events');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var Render = require('./ContainerRender');
 var Union = require('../../geom/rectangle/Union');
@@ -452,6 +453,12 @@ var Container = new Class({
 
             gameObject.parentContainer = this;
         }
+
+        //  Is only on the Display List via this Container
+        if (!this.scene.sys.displayList.exists(gameObject))
+        {
+            gameObject.emit(GameObjectEvents.ADDED_TO_SCENE, gameObject, this.scene);
+        }
     },
 
     /**
@@ -470,6 +477,12 @@ var Container = new Class({
         if (this.exclusive)
         {
             gameObject.parentContainer = null;
+        }
+
+        //  Is only on the Display List via this Container
+        if (!this.scene.sys.displayList.exists(gameObject))
+        {
+            gameObject.emit(GameObjectEvents.REMOVED_FROM_SCENE, gameObject, this.scene);
         }
     },
 
