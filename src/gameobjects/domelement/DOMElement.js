@@ -30,6 +30,9 @@ var Vector4 = require('../../math/Vector4');
  * of the game canvas. This div is sized to match the canvas, and if the canvas size changes, as a result of
  * settings within the Scale Manager, the dom container is resized accordingly.
  *
+ * If you have not already done so, you have to provide a `parent` in the Game Configuration, or the DOM
+ * Container will fail to be created.
+ *
  * You can create a DOM Element by either passing in DOMStrings, or by passing in a reference to an existing
  * Element that you wish to be placed under the control of Phaser. For example:
  *
