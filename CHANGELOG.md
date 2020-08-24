@@ -237,6 +237,7 @@ The way in which Game Objects add themselves to the Scene Update List has change
 * `Pointer.downTime` now stores the event timestamp of when the first button on the input device was pressed down, not just when button 1 was pressed down.
 * `Pointer.upTime` now stores the event timestamp of when the final depressed button on the input device was released, not just when button 1 was released.
 * The `Pointer.getDuration` method now uses the new Pointer `downTime` and `upTime` values, meaning it will accurately report the duration of when any button is being held down, not just the primary one. Fix #5112 (thanks @veleek)
+* The `BaseShader` default vertex shader now includes the `outTexCoord` vec2 varying, mapped to be the same as that found in the pipeline shaders. Fix #5120 (@pavel-shirobok)
 
 ### Bug Fixes
 
