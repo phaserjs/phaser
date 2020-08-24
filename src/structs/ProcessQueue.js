@@ -88,6 +88,15 @@ var ProcessQueue = new Class({
          * @since 3.0.0
          */
         this._toProcess = 0;
+
+        /**
+         * If `true` only unique objects will be allowed in the queue.
+         *
+         * @name Phaser.Structs.ProcessQueue#checkQueue
+         * @type {boolean}
+         * @since 3.50.0
+         */
+        this.checkQueue = false;
     },
 
     /**
@@ -217,9 +226,12 @@ var ProcessQueue = new Class({
         {
             item = list[i];
 
-            this._active.push(item);
+            if (!this.checkQueue || (this.checkQueue && active.indexOf(item) === -1))
+            {
+                active.push(item);
 
-            this.emit(Events.PROCESS_QUEUE_ADD, item);
+                this.emit(Events.PROCESS_QUEUE_ADD, item);
+            }
         }
 
         list.length = 0;
@@ -227,7 +239,7 @@ var ProcessQueue = new Class({
         this._toProcess = 0;
 
         //  The owner of this queue can now safely do whatever it needs to with the active list
-        return this._active;
+        return active;
     },
 
     /**
