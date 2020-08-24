@@ -187,7 +187,7 @@ var AnimationManager = new Class({
      *
      * @param {Phaser.Types.Animations.Animation} config - The configuration settings for the Animation.
      *
-     * @return {(Phaser.Animations.Animation|false)} The Animation that was created, or `false` is the key is already in use.
+     * @return {(Phaser.Animations.Animation|false)} The Animation that was created, or `false` if the key is already in use.
      */
     create: function (config)
     {
