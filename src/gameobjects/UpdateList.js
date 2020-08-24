@@ -35,6 +35,9 @@ var UpdateList = new Class({
     {
         ProcessQueue.call(this);
 
+        //  No duplicates in this list
+        this.checkQueue = true;
+
         /**
          * The Scene that the Update List belongs to.
          *
@@ -157,7 +160,7 @@ var UpdateList = new Class({
 
     /**
      * The Scene that owns this plugin is shutting down.
-     * 
+     *
      * We need to kill and reset all internal properties as well as stop listening to Scene events.
      *
      * @method Phaser.GameObjects.UpdateList#shutdown
@@ -203,7 +206,7 @@ var UpdateList = new Class({
 
     /**
      * The Scene that owns this plugin is being destroyed.
-     * 
+     *
      * We need to shutdown and then kill off all external references.
      *
      * @method Phaser.GameObjects.UpdateList#destroy
@@ -221,7 +224,7 @@ var UpdateList = new Class({
 
     /**
      * Adds a new item to the Update List.
-     * 
+     *
      * The item is added to the pending list and made active in the next update.
      *
      * @method Phaser.GameObjects.UpdateList#add
@@ -234,7 +237,7 @@ var UpdateList = new Class({
 
     /**
      * Removes an item from the Update List.
-     * 
+     *
      * The item is added to the pending destroy and fully removed in the next update.
      *
      * @method Phaser.GameObjects.UpdateList#remove
@@ -247,7 +250,7 @@ var UpdateList = new Class({
 
     /**
      * Removes all active items from this Update List.
-     * 
+     *
      * All the items are marked as 'pending destroy' and fully removed in the next update.
      *
      * @method Phaser.GameObjects.UpdateList#removeAll
@@ -258,7 +261,7 @@ var UpdateList = new Class({
 
     /**
      * Update this queue. First it will process any items awaiting destruction, and remove them.
-     * 
+     *
      * Then it will check to see if there are any items pending insertion, and move them to an
      * active state. Finally, it will return a list of active items for further processing.
      *
@@ -270,7 +273,7 @@ var UpdateList = new Class({
 
     /**
      * Returns the current list of active items.
-     * 
+     *
      * This method returns a reference to the active list array, not a copy of it.
      * Therefore, be careful to not modify this array outside of the ProcessQueue.
      *
