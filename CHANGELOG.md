@@ -221,6 +221,7 @@ If you used any of them in your code, please update to the new function names be
 * In Arcade Physics, Dynamic bodies would no longer hit walls when riding on horizontally moving platforms. The horizontal (and vertical) friction is now re-applied correctly in these edge-cases. Fix #5210 (thanks @Dercetech @samme)
 * Calling `Rectangle.setSize()` wouldn't change the underlying geometry of the Shape Game Object, causing any stroke to be incorrectly rendered after a size change.
 * The `ProcessQueue` was emitting the wrong events internally. It now emits 'add' and 'remove' correctly (thanks @halilcakar)
+* The `GridAlign` action didn't work if only the `height` parameter was set. Fix #5019 (thanks @halilcakar)
 
 ### Examples, Documentation and TypeScript
 
