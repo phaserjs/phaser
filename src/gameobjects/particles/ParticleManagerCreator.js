@@ -45,7 +45,5 @@ GameObjectCreator.register('particles', function (config, addToScene)
         this.displayList.add(manager);
     }
 
-    this.updateList.add(manager);
-
     return manager;
 });
