@@ -171,6 +171,28 @@ If you used any of them in your code, please update to the new function names be
 * If you apply `setSize` to the Dynamic BitmapText the scissor is now calculated based on the parent transforms, not just the local ones, meaning you can crop Bitmap Text objects that exist within Containers. Fix #4653 (thanks @lgibson02)
 * `ParseXMLBitmapFont` has a new optional parameter `texture`. If defined, this Texture is populated with Frame data, one frame per glyph. This happens automatically when loading Bitmap Text data in Phaser.
 
+### Update List Changes
+
+The way in which Game Objects add themselves to the Scene Update List has changed. Instead of being added by the Factory methods, they will now add and remove themselves based on the new `ADDED_TO_SCENE` and `REMOVED_FROM_SCENE` events. This means, you can now add Sprites directly to a Container, or Group, and they'll animate properly without first having to be part of the Display List. The full set of changes and new features relating to this follow:
+
+* `GameObjects.Events.ADDED_TO_SCENE` is a new event, emitted by a Game Object, when it is added to a Scene, or a Container that is part of the Scene.
+* `GameObjects.Events.REMOVED_FROM_SCENE` is a new event, emitted by a Game Object, when it is removed from a Scene, or a Container that is part of the Scene.
+* `Scenes.Events.ADDED_TO_SCENE` is a new event, emitted by a Scene, when a new Game Object is added to the display list in the Scene, or a Container that is on the display list.
+* `Scenes.Events.REMOVED_FROM_SCENE` is a new event, emitted by a Scene, when it a Game Object is removed from the display list in the Scene, or a Container that is on the display list.
+* `GameObject.addedToScene` is a new method that custom Game Objects can use to perform additional set-up when a Game Object is added to a Scene. For example, Sprite uses this to add itself to the Update List.
+* `GameObject.removedFromScene` is a new method that custom Game Objects can use to perform additional tear-down when a Game Object is removed from a Scene. For example, Sprite uses this to remove themselves from the Update List.
+* Game Objects no longer automatically remove themselves from the Update List during `preDestroy`. This should be handled directly in the `removedFromScene` method now.
+* The `Container` will now test to see if any Game Object added to it is already on the display list, or not, and emit its ADDED and REMOVED events accordingly. Fix #5267 #3876 (thanks @halgorithm @mbpictures)
+* `DisplayList.events` is a new property that references the Scene's Event Emitter. This is now used internally.
+* `DisplayList.addChildCallback` is a new method that overrides the List callback and fires the new ADDED events.
+* `DisplayList.removeChildCallback` is a new method that overrides the List callback and fires the new REMOVED events.
+* `GameObjectCreator.events` is a new property that references the Scene's Event Emitter. This is now used internally.
+* `GameObjectFactory.events` is a new property that references the Scene's Event Emitter. This is now used internally.
+* `ProcessQueue.checkQueue` is a new boolean property that will make sure only unique objects are added to the Process Queue.
+* The `Update List` now uses the new `checkQueue` property to ensure no duplicate objects are on the active list.
+* `DOMElementFactory`, `ExternFactory`, `ParticleManagerFactor`, `RopeFactory` and `SpriteFactory` all no longer add the objects to the Update List, this is now handled by the ADDED events instead.
+* `Sprite`, `Rope`, `ParticleEmitterManager`, `Extern` and `DOMElement` now all override the `addedToScene` and `removedFromScene` callbacks to handle further set-up tasks.
+
 ### New Features
 
 * `Geom.Intersects.GetLineToLine` is a new function that will return a Vector3 containing the point of intersection between 2 line segments, with the `z` property holding the distance value.
