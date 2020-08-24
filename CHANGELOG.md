@@ -212,6 +212,9 @@ If you used any of them in your code, please update to the new function names be
 * The constant `Phaser.Renderer.WebGL.UNSIGNED_SHORT` value has been removed as it wasn't used internally.
 * The constant `Phaser.Renderer.WebGL.FLOAT` value has been removed as it wasn't used internally.
 * `global.Phaser = Phaser` has been removed, as it's no longer required by the UMD loader, which should make importing in Angular 10 easier. Fix #5212 (thanks @blackyale)
+* `Pointer.downTime` now stores the event timestamp of when the first button on the input device was pressed down, not just when button 1 was pressed down.
+* `Pointer.upTime` now stores the event timestamp of when the final depressed button on the input device was released, not just when button 1 was released.
+* The `Pointer.getDuration` method now uses the new Pointer `downTime` and `upTime` values, meaning it will accurately report the duration of when any button is being held down, not just the primary one. Fix #5112 (thanks @veleek)
 
 ### Bug Fixes
 
