@@ -8,6 +8,7 @@ var Class = require('../../utils/Class');
 var Components = require('../components');
 var DOMElementRender = require('./DOMElementRender');
 var GameObject = require('../GameObject');
+var GameObjectEvents = require('../events');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
 var RemoveFromDOM = require('../../dom/RemoveFromDOM');
 var SCENE_EVENTS = require('../../scene/events');
@@ -290,6 +291,21 @@ var DOMElement = new Class({
 
         scene.sys.events.on(SCENE_EVENTS.SLEEP, this.handleSceneEvent, this);
         scene.sys.events.on(SCENE_EVENTS.WAKE, this.handleSceneEvent, this);
+
+        this.on(GameObjectEvents.ADDED_TO_SCENE, this.addedToScene, this);
+        this.on(GameObjectEvents.REMOVED_FROM_SCENE, this.removedFromScene, this);
+    },
+
+    //  Overrides Game Object method
+    addedToScene: function ()
+    {
+        this.scene.sys.updateList.add(this);
+    },
+
+    //  Overrides Game Object method
+    removedFromScene: function ()
+    {
+        this.scene.sys.updateList.remove(this);
     },
 
     /**

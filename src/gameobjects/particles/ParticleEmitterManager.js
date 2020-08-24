@@ -7,6 +7,7 @@
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
+var GameObjectEvents = require('../events');
 var GravityWell = require('./GravityWell');
 var List = require('../../structs/List');
 var ParticleEmitter = require('./ParticleEmitter');
@@ -147,6 +148,21 @@ var ParticleEmitterManager = new Class({
                 this.createEmitter(emitters[i]);
             }
         }
+
+        this.on(GameObjectEvents.ADDED_TO_SCENE, this.addedToScene, this);
+        this.on(GameObjectEvents.REMOVED_FROM_SCENE, this.removedFromScene, this);
+    },
+
+    //  Overrides Game Object method
+    addedToScene: function ()
+    {
+        this.scene.sys.updateList.add(this);
+    },
+
+    //  Overrides Game Object method
+    removedFromScene: function ()
+    {
+        this.scene.sys.updateList.remove(this);
     },
 
     /**
