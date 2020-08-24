@@ -10,6 +10,7 @@
 
 module.exports = {
 
+    ADDED_TO_SCENE: require('./ADDED_TO_SCENE_EVENT'),
     BOOT: require('./BOOT_EVENT'),
     CREATE: require('./CREATE_EVENT'),
     DESTROY: require('./DESTROY_EVENT'),
@@ -17,6 +18,7 @@ module.exports = {
     POST_UPDATE: require('./POST_UPDATE_EVENT'),
     PRE_UPDATE: require('./PRE_UPDATE_EVENT'),
     READY: require('./READY_EVENT'),
+    REMOVED_FROM_SCENE: require('./REMOVED_FROM_SCENE_EVENT'),
     RENDER: require('./RENDER_EVENT'),
     RESUME: require('./RESUME_EVENT'),
     SHUTDOWN: require('./SHUTDOWN_EVENT'),
