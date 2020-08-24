@@ -7,6 +7,7 @@
 var Class = require('../utils/Class');
 var List = require('../structs/List');
 var PluginCache = require('../plugins/PluginCache');
+var GameObjectEvents = require('./events');
 var SceneEvents = require('../scene/events');
 var StableSort = require('../utils/array/StableSort');
 
@@ -64,8 +65,21 @@ var DisplayList = new Class({
          */
         this.systems = scene.sys;
 
-        scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
-        scene.sys.events.on(SceneEvents.START, this.start, this);
+        /**
+         * The Scene's Event Emitter.
+         *
+         * @name Phaser.GameObjects.DisplayList#events
+         * @type {Phaser.Events.EventEmitter}
+         * @since 3.50.0
+         */
+        this.events = scene.sys.events;
+
+        //  Set the List callbacks
+        this.addCallback = this.addChildCallback;
+        this.removeCallback = this.removeChildCallback;
+
+        this.events.once(SceneEvents.BOOT, this.boot, this);
+        this.events.on(SceneEvents.START, this.start, this);
     },
 
     /**
@@ -78,7 +92,43 @@ var DisplayList = new Class({
      */
     boot: function ()
     {
-        this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
+        this.events.once(SceneEvents.DESTROY, this.destroy, this);
+    },
+
+    /**
+     * Internal method called from `List.addCallback`.
+     *
+     * @method Phaser.GameObjects.DisplayList#addChildCallback
+     * @private
+     * @fires Phaser.Scenes.Events#ADDED_TO_SCENE
+     * @fires Phaser.GameObjects.Events#ADDED_TO_SCENE
+     * @since 3.50.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was added to the list.
+     */
+    addChildCallback: function (gameObject)
+    {
+        gameObject.emit(GameObjectEvents.ADDED_TO_SCENE, gameObject, this.scene);
+
+        this.events.emit(SceneEvents.ADDED_TO_SCENE, gameObject, this.scene);
+    },
+
+    /**
+     * Internal method called from `List.removeCallback`.
+     *
+     * @method Phaser.GameObjects.DisplayList#removeChildCallback
+     * @private
+     * @fires Phaser.Scenes.Events#REMOVED_FROM_SCENE
+     * @fires Phaser.GameObjects.Events#REMOVED_FROM_SCENE
+     * @since 3.50.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was removed from the list.
+     */
+    removeChildCallback: function (gameObject)
+    {
+        gameObject.emit(GameObjectEvents.REMOVED_FROM_SCENE, gameObject, this.scene);
+
+        this.events.emit(SceneEvents.REMOVED_FROM_SCENE, gameObject, this.scene);
     },
 
     /**
@@ -92,7 +142,7 @@ var DisplayList = new Class({
      */
     start: function ()
     {
-        this.systems.events.once(SceneEvents.SHUTDOWN, this.shutdown, this);
+        this.events.once(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -162,16 +212,18 @@ var DisplayList = new Class({
      */
     shutdown: function ()
     {
-        var i = this.list.length;
+        var list = this.list;
+
+        var i = list.length;
 
         while (i--)
         {
-            this.list[i].destroy(true);
+            list[i].destroy(true);
         }
 
-        this.list.length = 0;
+        list.length = 0;
 
-        this.systems.events.off(SceneEvents.SHUTDOWN, this.shutdown, this);
+        this.events.off(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -186,10 +238,11 @@ var DisplayList = new Class({
     {
         this.shutdown();
 
-        this.scene.sys.events.off(SceneEvents.START, this.start, this);
+        this.events.off(SceneEvents.START, this.start, this);
 
         this.scene = null;
         this.systems = null;
+        this.events = null;
     }
 
 });
