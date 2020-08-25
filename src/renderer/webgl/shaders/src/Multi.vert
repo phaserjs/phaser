@@ -1,4 +1,4 @@
-#define SHADER_NAME PHASER_TEXTURE_TINT_VS
+#define SHADER_NAME PHASER_MULTI_VS
 
 precision mediump float;
 

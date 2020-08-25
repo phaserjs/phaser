@@ -1,4 +1,4 @@
-#define SHADER_NAME PHASER_FORWARD_DIFFUSE_FS
+#define SHADER_NAME PHASER_LIGHT_FS
 
 precision mediump float;
 

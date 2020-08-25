@@ -1,5 +1,5 @@
 module.exports = [
-    '#define SHADER_NAME PHASER_TEXTURE_TINT_FS',
+    '#define SHADER_NAME PHASER_MULTI_FS',
     '',
     'precision mediump float;',
     '',
