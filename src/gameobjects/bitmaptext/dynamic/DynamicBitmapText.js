@@ -11,10 +11,10 @@ var Render = require('./DynamicBitmapTextRender');
 /**
  * @classdesc
  * BitmapText objects work by taking a texture file and an XML or JSON file that describes the font structure.
- * 
+ *
  * During rendering for each letter of the text is rendered to the display, proportionally spaced out and aligned to
  * match the font structure.
- * 
+ *
  * Dynamic Bitmap Text objects are different from Static Bitmap Text in that they invoke a callback for each
  * letter being rendered during the render pass. This callback allows you to manipulate the properties of
  * each letter being rendered, such as its position, scale or tint, allowing you to create interesting effects
@@ -29,12 +29,12 @@ var Render = require('./DynamicBitmapTextRender');
  *
  * To create a BitmapText data files you need a 3rd party app such as:
  *
- * BMFont (Windows, free): http://www.angelcode.com/products/bmfont/
- * Glyph Designer (OS X, commercial): http://www.71squared.com/en/glyphdesigner
- * Littera (Web-based, free): http://kvazars.com/littera/
+ * BMFont (Windows, free): {@link http://www.angelcode.com/products/bmfont/|http://www.angelcode.com/products/bmfont/}
+ * Glyph Designer (OS X, commercial): {@link http://www.71squared.com/en/glyphdesigner|http://www.71squared.com/en/glyphdesigner}
+ * Littera (Web-based, free): {@link http://kvazars.com/littera/|http://kvazars.com/littera/}
  *
  * For most use cases it is recommended to use XML. If you wish to use JSON, the formatting should be equal to the result of
- * converting a valid XML file through the popular X2JS library. An online tool for conversion can be found here: http://codebeautify.org/xmltojson
+ * converting a valid XML file through the popular X2JS library. An online tool for conversion can be found here: {@link http://codebeautify.org/xmltojson|http://codebeautify.org/xmltojson}
  *
  * @class DynamicBitmapText
  * @extends Phaser.GameObjects.BitmapText
@@ -119,7 +119,7 @@ var DynamicBitmapText = new Class({
          * The data object that is populated during rendering, then passed to the displayCallback.
          * You should modify this object then return it back from the callback. It's updated values
          * will be used to render the specific glyph.
-         * 
+         *
          * Please note that if you need a reference to this object locally in your game code then you
          * should shallow copy it, as it's updated and re-used for every glyph in the text.
          *
