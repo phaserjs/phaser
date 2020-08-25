@@ -76,10 +76,15 @@ var NOOP = require('../../../src/utils/NOOP');
  * this.load.spine('stretchyman', 'stretchyman-pro.json', [ 'stretchyman-pma.atlas' ], true);
  * ```
  *
- * It also installs a Game Object Factory method, allowing you to create Spine Game Objects:
+ * It also installs two Game Object Factory methods, allowing you to create Spine Game Objects
+ * and Spine Containers:
  *
  * ```javascript
- * this.add.spine(512, 650, 'stretchyman')
+ * const man = this.add.spine(512, 650, 'stretchyman');
+ *
+ * const container = this.add.spineContainer();
+ *
+ * container.add(man);
  * ```
  *
  * The first argument is the key which you used when importing the Spine data. There are lots of
@@ -379,7 +384,7 @@ var SpinePlugin = new Class({
 
         pluginManager.registerFileType('spine', this.spineFileCallback, scene);
         pluginManager.registerGameObject('spine', add, make);
-        pluginManager.registerGameObject('spinecontainer', addContainer, makeContainer);
+        pluginManager.registerGameObject('spineContainer', addContainer, makeContainer);
     },
 
     /**
@@ -1096,6 +1101,7 @@ var SpinePlugin = new Class({
         }
 
         this.pluginManager.removeGameObject('spine', true, true);
+        this.pluginManager.removeGameObject('spineContainer', true, true);
 
         this.pluginManager = null;
         this.game = null;
@@ -1114,6 +1120,7 @@ var SpinePlugin = new Class({
 });
 
 SpinePlugin.SpineGameObject = SpineGameObject;
+SpinePlugin.SpineContainer = SpineContainer;
 
 /**
  * Creates a new Spine Game Object and adds it to the Scene.

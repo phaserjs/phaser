@@ -13,8 +13,8 @@ var SpineContainerRender = require('./SpineContainerRender');
  * A Spine Container is a special kind of Container created specifically for Spine Game Objects.
  *
  * You have all of the same features of a standard Container, but the rendering functions are optimized specifically
- * for Spine Game Objects. You cannot mix and match Spine Game Objects with regular Game Objects inside of this
- * type of Container, however.
+ * for Spine Game Objects. You must only add ever Spine Game Objects to this type of Container. Although Phaser will
+ * not prevent you from adding other types, they will not render and are likely to throw runtime errors.
  *
  * To create one in a Scene, use the factory methods:
  *
@@ -28,7 +28,7 @@ var SpineContainerRender = require('./SpineContainerRender');
  * this.make.spinecontainer();
  * ```
  *
- * See the Container documentation for further details.
+ * See the Container documentation for further details about what Containers can do.
  *
  * @class SpineContainer
  * @extends Phaser.GameObjects.Container
@@ -61,11 +61,30 @@ var SpineContainer = new Class({
         /**
          * A reference to the Spine Plugin.
          *
-         * @name SpineGameObject#plugin
+         * @name SpineContainer#plugin
          * @type {SpinePlugin}
-         * @since 3.19.0
+         * @since 3.50.0
          */
         this.plugin = plugin;
+    },
+
+    /**
+     * Internal destroy handler, called as part of the destroy process.
+     *
+     * @method SpineContainer#preDestroy
+     * @protected
+     * @since 3.50.0
+     */
+    preDestroy: function ()
+    {
+        this.removeAll(!!this.exclusive);
+
+        this.localTransform.destroy();
+        this.tempTransformMatrix.destroy();
+
+        this.list = [];
+        this._displayList = null;
+        this.plugin = null;
     }
 
 });
