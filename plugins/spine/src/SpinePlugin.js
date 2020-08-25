@@ -96,6 +96,13 @@ var NOOP = require('../../../src/utils/NOOP');
  * stored in their own caches, which are global, meaning they're accessible from any Scene in your
  * game, regardless if the Scene loaded the Spine data or not.
  *
+ * When destroying a Phaser Game instance, if you need to re-create it again on the same page without
+ * reloading, you must remember to remove the Spine Plugin as part of your tear-down process:
+ *
+ * ```javascript
+ * this.plugins.removeScenePlugin('SpinePlugin');
+ * ```
+ *
  * For details about the Spine Runtime API see http://esotericsoftware.com/spine-api-reference
  *
  * @class SpinePlugin
