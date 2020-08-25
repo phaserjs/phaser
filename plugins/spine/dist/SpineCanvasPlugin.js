@@ -82,7 +82,7 @@ window["SpinePlugin"] =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 35);
+/******/ 	return __webpack_require__(__webpack_require__.s = 62);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -341,154 +341,6 @@ module.exports = Class;
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-var MATH_CONST = {
-
-    /**
-     * The value of PI * 2.
-     * 
-     * @name Phaser.Math.PI2
-     * @type {number}
-     * @since 3.0.0
-     */
-    PI2: Math.PI * 2,
-
-    /**
-     * The value of PI * 0.5.
-     * 
-     * @name Phaser.Math.TAU
-     * @type {number}
-     * @since 3.0.0
-     */
-    TAU: Math.PI * 0.5,
-
-    /**
-     * An epsilon value (1.0e-6)
-     * 
-     * @name Phaser.Math.EPSILON
-     * @type {number}
-     * @since 3.0.0
-     */
-    EPSILON: 1.0e-6,
-
-    /**
-     * For converting degrees to radians (PI / 180)
-     * 
-     * @name Phaser.Math.DEG_TO_RAD
-     * @type {number}
-     * @since 3.0.0
-     */
-    DEG_TO_RAD: Math.PI / 180,
-
-    /**
-     * For converting radians to degrees (180 / PI)
-     * 
-     * @name Phaser.Math.RAD_TO_DEG
-     * @type {number}
-     * @since 3.0.0
-     */
-    RAD_TO_DEG: 180 / Math.PI,
-
-    /**
-     * An instance of the Random Number Generator.
-     * This is not set until the Game boots.
-     * 
-     * @name Phaser.Math.RND
-     * @type {Phaser.Math.RandomDataGenerator}
-     * @since 3.0.0
-     */
-    RND: null,
-
-    /**
-     * The minimum safe integer this browser supports.
-     * We use a const for backward compatibility with Internet Explorer.
-     * 
-     * @name Phaser.Math.MIN_SAFE_INTEGER
-     * @type {number}
-     * @since 3.21.0
-     */
-    MIN_SAFE_INTEGER: Number.MIN_SAFE_INTEGER || -9007199254740991,
-
-    /**
-     * The maximum safe integer this browser supports.
-     * We use a const for backward compatibility with Internet Explorer.
-     * 
-     * @name Phaser.Math.MAX_SAFE_INTEGER
-     * @type {number}
-     * @since 3.21.0
-     */
-    MAX_SAFE_INTEGER: Number.MAX_SAFE_INTEGER || 9007199254740991
-
-};
-
-module.exports = MATH_CONST;
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * This is a slightly modified version of jQuery.isPlainObject.
- * A plain object is an object whose internal class property is [object Object].
- *
- * @function Phaser.Utils.Objects.IsPlainObject
- * @since 3.0.0
- *
- * @param {object} obj - The object to inspect.
- *
- * @return {boolean} `true` if the object is plain, otherwise `false`.
- */
-var IsPlainObject = function (obj)
-{
-    // Not plain objects:
-    // - Any object or value whose internal [[Class]] property is not "[object Object]"
-    // - DOM nodes
-    // - window
-    if (typeof(obj) !== 'object' || obj.nodeType || obj === obj.window)
-    {
-        return false;
-    }
-
-    // Support: Firefox <20
-    // The try/catch suppresses exceptions thrown when attempting to access
-    // the "constructor" property of certain host objects, ie. |window.location|
-    // https://bugzilla.mozilla.org/show_bug.cgi?id=814622
-    try
-    {
-        if (obj.constructor && !({}).hasOwnProperty.call(obj.constructor.prototype, 'isPrototypeOf'))
-        {
-            return false;
-        }
-    }
-    catch (e)
-    {
-        return false;
-    }
-
-    // If the function hasn't returned already, we're confident that
-    // |obj| is a plain object, created by {} or constructed with new Object
-    return true;
-};
-
-module.exports = IsPlainObject;
-
-
-/***/ }),
-/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -501,7 +353,7 @@ module.exports = IsPlainObject;
 //  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
 
 var Class = __webpack_require__(0);
-var FuzzyEqual = __webpack_require__(20);
+var FuzzyEqual = __webpack_require__(31);
 
 /**
  * @classdesc
@@ -1264,7 +1116,332 @@ module.exports = Vector2;
 
 
 /***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var MATH_CONST = {
+
+    /**
+     * The value of PI * 2.
+     * 
+     * @name Phaser.Math.PI2
+     * @type {number}
+     * @since 3.0.0
+     */
+    PI2: Math.PI * 2,
+
+    /**
+     * The value of PI * 0.5.
+     * 
+     * @name Phaser.Math.TAU
+     * @type {number}
+     * @since 3.0.0
+     */
+    TAU: Math.PI * 0.5,
+
+    /**
+     * An epsilon value (1.0e-6)
+     * 
+     * @name Phaser.Math.EPSILON
+     * @type {number}
+     * @since 3.0.0
+     */
+    EPSILON: 1.0e-6,
+
+    /**
+     * For converting degrees to radians (PI / 180)
+     * 
+     * @name Phaser.Math.DEG_TO_RAD
+     * @type {number}
+     * @since 3.0.0
+     */
+    DEG_TO_RAD: Math.PI / 180,
+
+    /**
+     * For converting radians to degrees (180 / PI)
+     * 
+     * @name Phaser.Math.RAD_TO_DEG
+     * @type {number}
+     * @since 3.0.0
+     */
+    RAD_TO_DEG: 180 / Math.PI,
+
+    /**
+     * An instance of the Random Number Generator.
+     * This is not set until the Game boots.
+     * 
+     * @name Phaser.Math.RND
+     * @type {Phaser.Math.RandomDataGenerator}
+     * @since 3.0.0
+     */
+    RND: null,
+
+    /**
+     * The minimum safe integer this browser supports.
+     * We use a const for backward compatibility with Internet Explorer.
+     * 
+     * @name Phaser.Math.MIN_SAFE_INTEGER
+     * @type {number}
+     * @since 3.21.0
+     */
+    MIN_SAFE_INTEGER: Number.MIN_SAFE_INTEGER || -9007199254740991,
+
+    /**
+     * The maximum safe integer this browser supports.
+     * We use a const for backward compatibility with Internet Explorer.
+     * 
+     * @name Phaser.Math.MAX_SAFE_INTEGER
+     * @type {number}
+     * @since 3.21.0
+     */
+    MAX_SAFE_INTEGER: Number.MAX_SAFE_INTEGER || 9007199254740991
+
+};
+
+module.exports = MATH_CONST;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * A NOOP (No Operation) callback function.
+ *
+ * Used internally by Phaser when it's more expensive to determine if a callback exists
+ * than it is to just invoke an empty function.
+ *
+ * @function Phaser.Utils.NOOP
+ * @since 3.0.0
+ */
+var NOOP = function ()
+{
+    //  NOOP
+};
+
+module.exports = NOOP;
+
+
+/***/ }),
 /* 4 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Tests if the start and end indexes are a safe range for the given array.
+ * 
+ * @function Phaser.Utils.Array.SafeRange
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to check.
+ * @param {integer} startIndex - The start index.
+ * @param {integer} endIndex - The end index.
+ * @param {boolean} [throwError=true] - Throw an error if the range is out of bounds.
+ *
+ * @return {boolean} True if the range is safe, otherwise false.
+ */
+var SafeRange = function (array, startIndex, endIndex, throwError)
+{
+    var len = array.length;
+
+    if (startIndex < 0 ||
+        startIndex > len ||
+        startIndex >= endIndex ||
+        endIndex > len ||
+        startIndex + endIndex > len)
+    {
+        if (throwError)
+        {
+            throw new Error('Range Error: Values outside acceptable range');
+        }
+
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+};
+
+module.exports = SafeRange;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Force a value within the boundaries by clamping it to the range `min`, `max`.
+ *
+ * @function Phaser.Math.Clamp
+ * @since 3.0.0
+ *
+ * @param {number} value - The value to be clamped.
+ * @param {number} min - The minimum bounds.
+ * @param {number} max - The maximum bounds.
+ *
+ * @return {number} The clamped value.
+ */
+var Clamp = function (value, min, max)
+{
+    return Math.max(min, Math.min(max, value));
+};
+
+module.exports = Clamp;
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+//  Source object
+//  The key as a string, or an array of keys, i.e. 'banner', or 'banner.hideBanner'
+//  The default value to use if the key doesn't exist
+
+/**
+ * Retrieves a value from an object.
+ *
+ * @function Phaser.Utils.Objects.GetValue
+ * @since 3.0.0
+ *
+ * @param {object} source - The object to retrieve the value from.
+ * @param {string} key - The name of the property to retrieve from the object. If a property is nested, the names of its preceding properties should be separated by a dot (`.`) - `banner.hideBanner` would return the value of the `hideBanner` property from the object stored in the `banner` property of the `source` object.
+ * @param {*} defaultValue - The value to return if the `key` isn't found in the `source` object.
+ *
+ * @return {*} The value of the requested key.
+ */
+var GetValue = function (source, key, defaultValue)
+{
+    if (!source || typeof source === 'number')
+    {
+        return defaultValue;
+    }
+    else if (source.hasOwnProperty(key))
+    {
+        return source[key];
+    }
+    else if (key.indexOf('.') !== -1)
+    {
+        var keys = key.split('.');
+        var parent = source;
+        var value = defaultValue;
+
+        //  Use for loop here so we can break early
+        for (var i = 0; i < keys.length; i++)
+        {
+            if (parent.hasOwnProperty(keys[i]))
+            {
+                //  Yes it has a key property, let's carry on down
+                value = parent[keys[i]];
+
+                parent = parent[keys[i]];
+            }
+            else
+            {
+                //  Can't go any further, so reset to default
+                value = defaultValue;
+                break;
+            }
+        }
+
+        return value;
+    }
+    else
+    {
+        return defaultValue;
+    }
+};
+
+module.exports = GetValue;
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * This is a slightly modified version of jQuery.isPlainObject.
+ * A plain object is an object whose internal class property is [object Object].
+ *
+ * @function Phaser.Utils.Objects.IsPlainObject
+ * @since 3.0.0
+ *
+ * @param {object} obj - The object to inspect.
+ *
+ * @return {boolean} `true` if the object is plain, otherwise `false`.
+ */
+var IsPlainObject = function (obj)
+{
+    // Not plain objects:
+    // - Any object or value whose internal [[Class]] property is not "[object Object]"
+    // - DOM nodes
+    // - window
+    if (typeof(obj) !== 'object' || obj.nodeType || obj === obj.window)
+    {
+        return false;
+    }
+
+    // Support: Firefox <20
+    // The try/catch suppresses exceptions thrown when attempting to access
+    // the "constructor" property of certain host objects, ie. |window.location|
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=814622
+    try
+    {
+        if (obj.constructor && !({}).hasOwnProperty.call(obj.constructor.prototype, 'isPrototypeOf'))
+        {
+            return false;
+        }
+    }
+    catch (e)
+    {
+        return false;
+    }
+
+    // If the function hasn't returned already, we're confident that
+    // |obj| is a plain object, created by {} or constructed with new Object
+    return true;
+};
+
+module.exports = IsPlainObject;
+
+
+/***/ }),
+/* 8 */
 /***/ (function(module, exports) {
 
 /**
@@ -1307,7 +1484,100 @@ module.exports = GetFastValue;
 
 
 /***/ }),
-/* 5 */
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+var GEOM_CONST = __webpack_require__(25);
+
+/**
+ * @classdesc
+ * Defines a Point in 2D space, with an x and y component.
+ *
+ * @class Point
+ * @memberof Phaser.Geom
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [x=0] - The x coordinate of this Point.
+ * @param {number} [y=x] - The y coordinate of this Point.
+ */
+var Point = new Class({
+
+    initialize:
+
+    function Point (x, y)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = x; }
+
+        /**
+         * The geometry constant type of this object: `GEOM_CONST.POINT`.
+         * Used for fast type comparisons.
+         *
+         * @name Phaser.Geom.Point#type
+         * @type {integer}
+         * @readonly
+         * @since 3.19.0
+         */
+        this.type = GEOM_CONST.POINT;
+
+        /**
+         * The x coordinate of this Point.
+         *
+         * @name Phaser.Geom.Point#x
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.x = x;
+
+        /**
+         * The y coordinate of this Point.
+         *
+         * @name Phaser.Geom.Point#y
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.y = y;
+    },
+
+    /**
+     * Set the x and y coordinates of the point to the given values.
+     *
+     * @method Phaser.Geom.Point#setTo
+     * @since 3.0.0
+     *
+     * @param {number} [x=0] - The x coordinate of this Point.
+     * @param {number} [y=x] - The y coordinate of this Point.
+     *
+     * @return {this} This Point object.
+     */
+    setTo: function (x, y)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = x; }
+
+        this.x = x;
+        this.y = y;
+
+        return this;
+    }
+
+});
+
+module.exports = Point;
+
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports) {
 
 /**
@@ -1339,7 +1609,7 @@ module.exports = Wrap;
 
 
 /***/ }),
-/* 6 */
+/* 11 */
 /***/ (function(module, exports) {
 
 /**
@@ -1491,7 +1761,7 @@ module.exports = FILE_CONST;
 
 
 /***/ }),
-/* 7 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -1500,7 +1770,464 @@ module.exports = FILE_CONST;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CONST = __webpack_require__(1);
+var CheckMatrix = __webpack_require__(23);
+var TransposeMatrix = __webpack_require__(56);
+
+/**
+ * Rotates the array matrix based on the given rotation value.
+ *
+ * The value can be given in degrees: 90, -90, 270, -270 or 180,
+ * or a string command: `rotateLeft`, `rotateRight` or `rotate180`.
+ *
+ * Based on the routine from {@link http://jsfiddle.net/MrPolywhirl/NH42z/}.
+ *
+ * @function Phaser.Utils.Array.Matrix.RotateMatrix
+ * @since 3.0.0
+ *
+ * @generic T
+ * @genericUse {T[][]} - [matrix,$return]
+ *
+ * @param {T[][]} [matrix] - The array to rotate.
+ * @param {(number|string)} [direction=90] - The amount to rotate the matrix by.
+ *
+ * @return {T[][]} The rotated matrix array. The source matrix should be discard for the returned matrix.
+ */
+var RotateMatrix = function (matrix, direction)
+{
+    if (direction === undefined) { direction = 90; }
+
+    if (!CheckMatrix(matrix))
+    {
+        return null;
+    }
+
+    if (typeof direction !== 'string')
+    {
+        direction = ((direction % 360) + 360) % 360;
+    }
+
+    if (direction === 90 || direction === -270 || direction === 'rotateLeft')
+    {
+        matrix = TransposeMatrix(matrix);
+        matrix.reverse();
+    }
+    else if (direction === -90 || direction === 270 || direction === 'rotateRight')
+    {
+        matrix.reverse();
+        matrix = TransposeMatrix(matrix);
+    }
+    else if (Math.abs(direction) === 180 || direction === 'rotate180')
+    {
+        for (var i = 0; i < matrix.length; i++)
+        {
+            matrix[i].reverse();
+        }
+
+        matrix.reverse();
+    }
+
+    return matrix;
+};
+
+module.exports = RotateMatrix;
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Removes a single item from an array and returns it without creating gc, like the native splice does.
+ * Based on code by Mike Reinstein.
+ *
+ * @function Phaser.Utils.Array.SpliceOne
+ * @since 3.0.0
+ *
+ * @param {array} array - The array to splice from.
+ * @param {integer} index - The index of the item which should be spliced.
+ *
+ * @return {*} The item which was spliced (removed).
+ */
+var SpliceOne = function (array, index)
+{
+    if (index >= array.length)
+    {
+        return;
+    }
+
+    var len = array.length - 1;
+
+    var item = array[index];
+
+    for (var i = index; i < len; i++)
+    {
+        array[i] = array[i + 1];
+    }
+
+    array.length = len;
+
+    return item;
+};
+
+module.exports = SpliceOne;
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Phaser Blend Modes.
+ * 
+ * @namespace Phaser.BlendModes
+ * @since 3.0.0
+ */
+
+module.exports = {
+
+    /**
+     * Skips the Blend Mode check in the renderer.
+     * 
+     * @name Phaser.BlendModes.SKIP_CHECK
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    SKIP_CHECK: -1,
+
+    /**
+     * Normal blend mode. For Canvas and WebGL.
+     * This is the default setting and draws new shapes on top of the existing canvas content.
+     * 
+     * @name Phaser.BlendModes.NORMAL
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    NORMAL: 0,
+
+    /**
+     * Add blend mode. For Canvas and WebGL.
+     * Where both shapes overlap the color is determined by adding color values.
+     * 
+     * @name Phaser.BlendModes.ADD
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    ADD: 1,
+
+    /**
+     * Multiply blend mode. For Canvas and WebGL.
+     * The pixels are of the top layer are multiplied with the corresponding pixel of the bottom layer. A darker picture is the result.
+     * 
+     * @name Phaser.BlendModes.MULTIPLY
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    MULTIPLY: 2,
+
+    /**
+     * Screen blend mode. For Canvas and WebGL.
+     * The pixels are inverted, multiplied, and inverted again. A lighter picture is the result (opposite of multiply)
+     * 
+     * @name Phaser.BlendModes.SCREEN
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    SCREEN: 3,
+
+    /**
+     * Overlay blend mode. For Canvas only.
+     * A combination of multiply and screen. Dark parts on the base layer become darker, and light parts become lighter.
+     * 
+     * @name Phaser.BlendModes.OVERLAY
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    OVERLAY: 4,
+
+    /**
+     * Darken blend mode. For Canvas only.
+     * Retains the darkest pixels of both layers.
+     * 
+     * @name Phaser.BlendModes.DARKEN
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    DARKEN: 5,
+
+    /**
+     * Lighten blend mode. For Canvas only.
+     * Retains the lightest pixels of both layers.
+     * 
+     * @name Phaser.BlendModes.LIGHTEN
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    LIGHTEN: 6,
+
+    /**
+     * Color Dodge blend mode. For Canvas only.
+     * Divides the bottom layer by the inverted top layer.
+     * 
+     * @name Phaser.BlendModes.COLOR_DODGE
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    COLOR_DODGE: 7,
+
+    /**
+     * Color Burn blend mode. For Canvas only.
+     * Divides the inverted bottom layer by the top layer, and then inverts the result.
+     * 
+     * @name Phaser.BlendModes.COLOR_BURN
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    COLOR_BURN: 8,
+
+    /**
+     * Hard Light blend mode. For Canvas only.
+     * A combination of multiply and screen like overlay, but with top and bottom layer swapped.
+     * 
+     * @name Phaser.BlendModes.HARD_LIGHT
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    HARD_LIGHT: 9,
+
+    /**
+     * Soft Light blend mode. For Canvas only.
+     * A softer version of hard-light. Pure black or white does not result in pure black or white.
+     * 
+     * @name Phaser.BlendModes.SOFT_LIGHT
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    SOFT_LIGHT: 10,
+
+    /**
+     * Difference blend mode. For Canvas only.
+     * Subtracts the bottom layer from the top layer or the other way round to always get a positive value.
+     * 
+     * @name Phaser.BlendModes.DIFFERENCE
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    DIFFERENCE: 11,
+
+    /**
+     * Exclusion blend mode. For Canvas only.
+     * Like difference, but with lower contrast.
+     * 
+     * @name Phaser.BlendModes.EXCLUSION
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    EXCLUSION: 12,
+
+    /**
+     * Hue blend mode. For Canvas only.
+     * Preserves the luma and chroma of the bottom layer, while adopting the hue of the top layer.
+     * 
+     * @name Phaser.BlendModes.HUE
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    HUE: 13,
+
+    /**
+     * Saturation blend mode. For Canvas only.
+     * Preserves the luma and hue of the bottom layer, while adopting the chroma of the top layer.
+     * 
+     * @name Phaser.BlendModes.SATURATION
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    SATURATION: 14,
+
+    /**
+     * Color blend mode. For Canvas only.
+     * Preserves the luma of the bottom layer, while adopting the hue and chroma of the top layer.
+     * 
+     * @name Phaser.BlendModes.COLOR
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    COLOR: 15,
+
+    /**
+     * Luminosity blend mode. For Canvas only.
+     * Preserves the hue and chroma of the bottom layer, while adopting the luma of the top layer.
+     * 
+     * @name Phaser.BlendModes.LUMINOSITY
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    LUMINOSITY: 16,
+
+    /**
+     * Alpha erase blend mode. For Canvas and WebGL.
+     * 
+     * @name Phaser.BlendModes.ERASE
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    ERASE: 17,
+
+    /**
+     * Source-in blend mode. For Canvas only.
+     * The new shape is drawn only where both the new shape and the destination canvas overlap. Everything else is made transparent.
+     * 
+     * @name Phaser.BlendModes.SOURCE_IN
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    SOURCE_IN: 18,
+
+    /**
+     * Source-out blend mode. For Canvas only.
+     * The new shape is drawn where it doesn't overlap the existing canvas content.
+     * 
+     * @name Phaser.BlendModes.SOURCE_OUT
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    SOURCE_OUT: 19,
+
+    /**
+     * Source-out blend mode. For Canvas only.
+     * The new shape is only drawn where it overlaps the existing canvas content.
+     * 
+     * @name Phaser.BlendModes.SOURCE_ATOP
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    SOURCE_ATOP: 20,
+
+    /**
+     * Destination-over blend mode. For Canvas only.
+     * New shapes are drawn behind the existing canvas content.
+     * 
+     * @name Phaser.BlendModes.DESTINATION_OVER
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    DESTINATION_OVER: 21,
+
+    /**
+     * Destination-in blend mode. For Canvas only.
+     * The existing canvas content is kept where both the new shape and existing canvas content overlap. Everything else is made transparent.
+     * 
+     * @name Phaser.BlendModes.DESTINATION_IN
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    DESTINATION_IN: 22,
+
+    /**
+     * Destination-out blend mode. For Canvas only.
+     * The existing content is kept where it doesn't overlap the new shape.
+     * 
+     * @name Phaser.BlendModes.DESTINATION_OUT
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    DESTINATION_OUT: 23,
+
+    /**
+     * Destination-out blend mode. For Canvas only.
+     * The existing canvas is only kept where it overlaps the new shape. The new shape is drawn behind the canvas content.
+     * 
+     * @name Phaser.BlendModes.DESTINATION_ATOP
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    DESTINATION_ATOP: 24,
+
+    /**
+     * Lighten blend mode. For Canvas only.
+     * Where both shapes overlap the color is determined by adding color values.
+     * 
+     * @name Phaser.BlendModes.LIGHTER
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    LIGHTER: 25,
+
+    /**
+     * Copy blend mode. For Canvas only.
+     * Only the new shape is shown.
+     * 
+     * @name Phaser.BlendModes.COPY
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    COPY: 26,
+
+    /**
+     * Xor blend mode. For Canvas only.
+     * Shapes are made transparent where both overlap and drawn normal everywhere else.
+     * 
+     * @name Phaser.BlendModes.XOR
+     * @type {integer}
+     * @const
+     * @since 3.0.0
+     */
+    XOR: 27
+
+};
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var CONST = __webpack_require__(2);
 
 /**
  * Takes an angle in Phasers default clockwise format and converts it so that
@@ -1536,7 +2263,7 @@ module.exports = CounterClockwise;
 
 
 /***/ }),
-/* 8 */
+/* 16 */
 /***/ (function(module, exports) {
 
 /**
@@ -1565,37 +2292,7 @@ module.exports = FloatBetween;
 
 
 /***/ }),
-/* 9 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * Force a value within the boundaries by clamping it to the range `min`, `max`.
- *
- * @function Phaser.Math.Clamp
- * @since 3.0.0
- *
- * @param {number} value - The value to be clamped.
- * @param {number} min - The minimum bounds.
- * @param {number} max - The maximum bounds.
- *
- * @return {number} The clamped value.
- */
-var Clamp = function (value, min, max)
-{
-    return Math.max(min, Math.min(max, value));
-};
-
-module.exports = Clamp;
-
-
-/***/ }),
-/* 10 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -1604,7 +2301,37 @@ module.exports = Clamp;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CONST = __webpack_require__(1);
+var CONST = __webpack_require__(2);
+
+/**
+ * Convert the given angle from degrees, to the equivalent angle in radians.
+ *
+ * @function Phaser.Math.DegToRad
+ * @since 3.0.0
+ *
+ * @param {integer} degrees - The angle (in degrees) to convert to radians.
+ *
+ * @return {number} The given angle converted to radians.
+ */
+var DegToRad = function (degrees)
+{
+    return degrees * CONST.DEG_TO_RAD;
+};
+
+module.exports = DegToRad;
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var CONST = __webpack_require__(2);
 
 /**
  * Convert the given angle in radians, to the equivalent angle in degrees.
@@ -1625,7 +2352,7 @@ module.exports = RadToDeg;
 
 
 /***/ }),
-/* 11 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -2435,78 +3162,7 @@ module.exports = Vector3;
 
 
 /***/ }),
-/* 12 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-//  Source object
-//  The key as a string, or an array of keys, i.e. 'banner', or 'banner.hideBanner'
-//  The default value to use if the key doesn't exist
-
-/**
- * Retrieves a value from an object.
- *
- * @function Phaser.Utils.Objects.GetValue
- * @since 3.0.0
- *
- * @param {object} source - The object to retrieve the value from.
- * @param {string} key - The name of the property to retrieve from the object. If a property is nested, the names of its preceding properties should be separated by a dot (`.`) - `banner.hideBanner` would return the value of the `hideBanner` property from the object stored in the `banner` property of the `source` object.
- * @param {*} defaultValue - The value to return if the `key` isn't found in the `source` object.
- *
- * @return {*} The value of the requested key.
- */
-var GetValue = function (source, key, defaultValue)
-{
-    if (!source || typeof source === 'number')
-    {
-        return defaultValue;
-    }
-    else if (source.hasOwnProperty(key))
-    {
-        return source[key];
-    }
-    else if (key.indexOf('.') !== -1)
-    {
-        var keys = key.split('.');
-        var parent = source;
-        var value = defaultValue;
-
-        //  Use for loop here so we can break early
-        for (var i = 0; i < keys.length; i++)
-        {
-            if (parent.hasOwnProperty(keys[i]))
-            {
-                //  Yes it has a key property, let's carry on down
-                value = parent[keys[i]];
-
-                parent = parent[keys[i]];
-            }
-            else
-            {
-                //  Can't go any further, so reset to default
-                value = defaultValue;
-                break;
-            }
-        }
-
-        return value;
-    }
-    else
-    {
-        return defaultValue;
-    }
-};
-
-module.exports = GetValue;
-
-
-/***/ }),
-/* 13 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -2516,13 +3172,13 @@ module.exports = GetValue;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(6);
-var Events = __webpack_require__(178);
-var GetFastValue = __webpack_require__(4);
-var GetURL = __webpack_require__(189);
-var MergeXHRSettings = __webpack_require__(32);
-var XHRLoader = __webpack_require__(190);
-var XHRSettings = __webpack_require__(33);
+var CONST = __webpack_require__(11);
+var Events = __webpack_require__(202);
+var GetFastValue = __webpack_require__(8);
+var GetURL = __webpack_require__(213);
+var MergeXHRSettings = __webpack_require__(44);
+var XHRLoader = __webpack_require__(214);
+var XHRSettings = __webpack_require__(45);
 
 /**
  * @classdesc
@@ -3054,7 +3710,7 @@ module.exports = File;
 
 
 /***/ }),
-/* 14 */
+/* 21 */
 /***/ (function(module, exports) {
 
 /**
@@ -3123,7 +3779,7 @@ module.exports = FileTypesManager;
 
 
 /***/ }),
-/* 15 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -3132,7 +3788,692 @@ module.exports = FileTypesManager;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var IsPlainObject = __webpack_require__(2);
+/**
+ * @namespace Phaser.GameObjects.Events
+ */
+
+module.exports = {
+
+    ADDED_TO_SCENE: __webpack_require__(225),
+    DESTROY: __webpack_require__(226),
+    REMOVED_FROM_SCENE: __webpack_require__(227),
+    VIDEO_COMPLETE: __webpack_require__(228),
+    VIDEO_CREATED: __webpack_require__(229),
+    VIDEO_ERROR: __webpack_require__(230),
+    VIDEO_LOOP: __webpack_require__(231),
+    VIDEO_PLAY: __webpack_require__(232),
+    VIDEO_SEEKED: __webpack_require__(233),
+    VIDEO_SEEKING: __webpack_require__(234),
+    VIDEO_STOP: __webpack_require__(235),
+    VIDEO_TIMEOUT: __webpack_require__(236),
+    VIDEO_UNLOCKED: __webpack_require__(237)
+
+};
+
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Checks if an array can be used as a matrix.
+ *
+ * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows) have the same length. There must be at least two rows:
+ *
+ * ```
+ *    [
+ *        [ 1, 1, 1, 1, 1, 1 ],
+ *        [ 2, 0, 0, 0, 0, 4 ],
+ *        [ 2, 0, 1, 2, 0, 4 ],
+ *        [ 2, 0, 3, 4, 0, 4 ],
+ *        [ 2, 0, 0, 0, 0, 4 ],
+ *        [ 3, 3, 3, 3, 3, 3 ]
+ *    ]
+ * ```
+ *
+ * @function Phaser.Utils.Array.Matrix.CheckMatrix
+ * @since 3.0.0
+ * 
+ * @generic T
+ * @genericUse {T[][]} - [matrix]
+ *
+ * @param {T[][]} [matrix] - The array to check.
+ *
+ * @return {boolean} `true` if the given `matrix` array is a valid matrix.
+ */
+var CheckMatrix = function (matrix)
+{
+    if (!Array.isArray(matrix) || matrix.length < 2 || !Array.isArray(matrix[0]))
+    {
+        return false;
+    }
+
+    //  How long is the first row?
+    var size = matrix[0].length;
+
+    //  Validate the rest of the rows are the same length
+    for (var i = 1; i < matrix.length; i++)
+    {
+        if (matrix[i].length !== size)
+        {
+            return false;
+        }
+    }
+
+    return true;
+};
+
+module.exports = CheckMatrix;
+
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+var Contains = __webpack_require__(312);
+var GetPoint = __webpack_require__(60);
+var GetPoints = __webpack_require__(313);
+var GEOM_CONST = __webpack_require__(25);
+var Line = __webpack_require__(314);
+var Random = __webpack_require__(319);
+
+/**
+ * @classdesc
+ * Encapsulates a 2D rectangle defined by its corner point in the top-left and its extends in x (width) and y (height)
+ *
+ * @class Rectangle
+ * @memberof Phaser.Geom
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [x=0] - The X coordinate of the top left corner of the Rectangle.
+ * @param {number} [y=0] - The Y coordinate of the top left corner of the Rectangle.
+ * @param {number} [width=0] - The width of the Rectangle.
+ * @param {number} [height=0] - The height of the Rectangle.
+ */
+var Rectangle = new Class({
+
+    initialize:
+
+    function Rectangle (x, y, width, height)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = 0; }
+        if (height === undefined) { height = 0; }
+
+        /**
+         * The geometry constant type of this object: `GEOM_CONST.RECTANGLE`.
+         * Used for fast type comparisons.
+         *
+         * @name Phaser.Geom.Rectangle#type
+         * @type {integer}
+         * @readonly
+         * @since 3.19.0
+         */
+        this.type = GEOM_CONST.RECTANGLE;
+
+        /**
+         * The X coordinate of the top left corner of the Rectangle.
+         *
+         * @name Phaser.Geom.Rectangle#x
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.x = x;
+
+        /**
+         * The Y coordinate of the top left corner of the Rectangle.
+         *
+         * @name Phaser.Geom.Rectangle#y
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.y = y;
+
+        /**
+         * The width of the Rectangle, i.e. the distance between its left side (defined by `x`) and its right side.
+         *
+         * @name Phaser.Geom.Rectangle#width
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.width = width;
+
+        /**
+         * The height of the Rectangle, i.e. the distance between its top side (defined by `y`) and its bottom side.
+         *
+         * @name Phaser.Geom.Rectangle#height
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.height = height;
+    },
+
+    /**
+     * Checks if the given point is inside the Rectangle's bounds.
+     *
+     * @method Phaser.Geom.Rectangle#contains
+     * @since 3.0.0
+     *
+     * @param {number} x - The X coordinate of the point to check.
+     * @param {number} y - The Y coordinate of the point to check.
+     *
+     * @return {boolean} `true` if the point is within the Rectangle's bounds, otherwise `false`.
+     */
+    contains: function (x, y)
+    {
+        return Contains(this, x, y);
+    },
+
+    /**
+     * Calculates the coordinates of a point at a certain `position` on the Rectangle's perimeter.
+     * 
+     * The `position` is a fraction between 0 and 1 which defines how far into the perimeter the point is.
+     * 
+     * A value of 0 or 1 returns the point at the top left corner of the rectangle, while a value of 0.5 returns the point at the bottom right corner of the rectangle. Values between 0 and 0.5 are on the top or the right side and values between 0.5 and 1 are on the bottom or the left side.
+     *
+     * @method Phaser.Geom.Rectangle#getPoint
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Point} O - [output,$return]
+     *
+     * @param {number} position - The normalized distance into the Rectangle's perimeter to return.
+     * @param {(Phaser.Geom.Point|object)} [output] - An object to update with the `x` and `y` coordinates of the point.
+     *
+     * @return {(Phaser.Geom.Point|object)} The updated `output` object, or a new Point if no `output` object was given.
+     */
+    getPoint: function (position, output)
+    {
+        return GetPoint(this, position, output);
+    },
+
+    /**
+     * Returns an array of points from the perimeter of the Rectangle, each spaced out based on the quantity or step required.
+     *
+     * @method Phaser.Geom.Rectangle#getPoints
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Point[]} O - [output,$return]
+     *
+     * @param {integer} quantity - The number of points to return. Set to `false` or 0 to return an arbitrary number of points (`perimeter / stepRate`) evenly spaced around the Rectangle based on the `stepRate`.
+     * @param {number} [stepRate] - If `quantity` is 0, determines the normalized distance between each returned point.
+     * @param {(array|Phaser.Geom.Point[])} [output] - An array to which to append the points.
+     *
+     * @return {(array|Phaser.Geom.Point[])} The modified `output` array, or a new array if none was provided.
+     */
+    getPoints: function (quantity, stepRate, output)
+    {
+        return GetPoints(this, quantity, stepRate, output);
+    },
+
+    /**
+     * Returns a random point within the Rectangle's bounds.
+     *
+     * @method Phaser.Geom.Rectangle#getRandomPoint
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Point} O - [point,$return]
+     *
+     * @param {Phaser.Geom.Point} [point] - The object in which to store the `x` and `y` coordinates of the point.
+     *
+     * @return {Phaser.Geom.Point} The updated `point`, or a new Point if none was provided.
+     */
+    getRandomPoint: function (point)
+    {
+        return Random(this, point);
+    },
+
+    /**
+     * Sets the position, width, and height of the Rectangle.
+     *
+     * @method Phaser.Geom.Rectangle#setTo
+     * @since 3.0.0
+     *
+     * @param {number} x - The X coordinate of the top left corner of the Rectangle.
+     * @param {number} y - The Y coordinate of the top left corner of the Rectangle.
+     * @param {number} width - The width of the Rectangle.
+     * @param {number} height - The height of the Rectangle.
+     *
+     * @return {this} This Rectangle object.
+     */
+    setTo: function (x, y, width, height)
+    {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+
+        return this;
+    },
+
+    /**
+     * Resets the position, width, and height of the Rectangle to 0.
+     *
+     * @method Phaser.Geom.Rectangle#setEmpty
+     * @since 3.0.0
+     *
+     * @return {this} This Rectangle object.
+     */
+    setEmpty: function ()
+    {
+        return this.setTo(0, 0, 0, 0);
+    },
+
+    /**
+     * Sets the position of the Rectangle.
+     *
+     * @method Phaser.Geom.Rectangle#setPosition
+     * @since 3.0.0
+     *
+     * @param {number} x - The X coordinate of the top left corner of the Rectangle.
+     * @param {number} [y=x] - The Y coordinate of the top left corner of the Rectangle.
+     *
+     * @return {this} This Rectangle object.
+     */
+    setPosition: function (x, y)
+    {
+        if (y === undefined) { y = x; }
+
+        this.x = x;
+        this.y = y;
+
+        return this;
+    },
+
+    /**
+     * Sets the width and height of the Rectangle.
+     *
+     * @method Phaser.Geom.Rectangle#setSize
+     * @since 3.0.0
+     *
+     * @param {number} width - The width to set the Rectangle to.
+     * @param {number} [height=width] - The height to set the Rectangle to.
+     *
+     * @return {this} This Rectangle object.
+     */
+    setSize: function (width, height)
+    {
+        if (height === undefined) { height = width; }
+
+        this.width = width;
+        this.height = height;
+
+        return this;
+    },
+
+    /**
+     * Determines if the Rectangle is empty. A Rectangle is empty if its width or height is less than or equal to 0.
+     *
+     * @method Phaser.Geom.Rectangle#isEmpty
+     * @since 3.0.0
+     *
+     * @return {boolean} `true` if the Rectangle is empty. A Rectangle object is empty if its width or height is less than or equal to 0.
+     */
+    isEmpty: function ()
+    {
+        return (this.width <= 0 || this.height <= 0);
+    },
+
+    /**
+     * Returns a Line object that corresponds to the top of this Rectangle.
+     *
+     * @method Phaser.Geom.Rectangle#getLineA
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Line} O - [line,$return]
+     *
+     * @param {Phaser.Geom.Line} [line] - A Line object to set the results in. If `undefined` a new Line will be created.
+     *
+     * @return {Phaser.Geom.Line} A Line object that corresponds to the top of this Rectangle.
+     */
+    getLineA: function (line)
+    {
+        if (line === undefined) { line = new Line(); }
+
+        line.setTo(this.x, this.y, this.right, this.y);
+
+        return line;
+    },
+
+    /**
+     * Returns a Line object that corresponds to the right of this Rectangle.
+     *
+     * @method Phaser.Geom.Rectangle#getLineB
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Line} O - [line,$return]
+     *
+     * @param {Phaser.Geom.Line} [line] - A Line object to set the results in. If `undefined` a new Line will be created.
+     *
+     * @return {Phaser.Geom.Line} A Line object that corresponds to the right of this Rectangle.
+     */
+    getLineB: function (line)
+    {
+        if (line === undefined) { line = new Line(); }
+
+        line.setTo(this.right, this.y, this.right, this.bottom);
+
+        return line;
+    },
+
+    /**
+     * Returns a Line object that corresponds to the bottom of this Rectangle.
+     *
+     * @method Phaser.Geom.Rectangle#getLineC
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Line} O - [line,$return]
+     *
+     * @param {Phaser.Geom.Line} [line] - A Line object to set the results in. If `undefined` a new Line will be created.
+     *
+     * @return {Phaser.Geom.Line} A Line object that corresponds to the bottom of this Rectangle.
+     */
+    getLineC: function (line)
+    {
+        if (line === undefined) { line = new Line(); }
+
+        line.setTo(this.right, this.bottom, this.x, this.bottom);
+
+        return line;
+    },
+
+    /**
+     * Returns a Line object that corresponds to the left of this Rectangle.
+     *
+     * @method Phaser.Geom.Rectangle#getLineD
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Line} O - [line,$return]
+     *
+     * @param {Phaser.Geom.Line} [line] - A Line object to set the results in. If `undefined` a new Line will be created.
+     *
+     * @return {Phaser.Geom.Line} A Line object that corresponds to the left of this Rectangle.
+     */
+    getLineD: function (line)
+    {
+        if (line === undefined) { line = new Line(); }
+
+        line.setTo(this.x, this.bottom, this.x, this.y);
+
+        return line;
+    },
+
+    /**
+     * The x coordinate of the left of the Rectangle.
+     * Changing the left property of a Rectangle object has no effect on the y and height properties. However it does affect the width property, whereas changing the x value does not affect the width property.
+     *
+     * @name Phaser.Geom.Rectangle#left
+     * @type {number}
+     * @since 3.0.0
+     */
+    left: {
+
+        get: function ()
+        {
+            return this.x;
+        },
+
+        set: function (value)
+        {
+            if (value >= this.right)
+            {
+                this.width = 0;
+            }
+            else
+            {
+                this.width = this.right - value;
+            }
+
+            this.x = value;
+        }
+
+    },
+
+    /**
+     * The sum of the x and width properties.
+     * Changing the right property of a Rectangle object has no effect on the x, y and height properties, however it does affect the width property.
+     *
+     * @name Phaser.Geom.Rectangle#right
+     * @type {number}
+     * @since 3.0.0
+     */
+    right: {
+
+        get: function ()
+        {
+            return this.x + this.width;
+        },
+
+        set: function (value)
+        {
+            if (value <= this.x)
+            {
+                this.width = 0;
+            }
+            else
+            {
+                this.width = value - this.x;
+            }
+        }
+
+    },
+
+    /**
+     * The y coordinate of the top of the Rectangle. Changing the top property of a Rectangle object has no effect on the x and width properties.
+     * However it does affect the height property, whereas changing the y value does not affect the height property.
+     *
+     * @name Phaser.Geom.Rectangle#top
+     * @type {number}
+     * @since 3.0.0
+     */
+    top: {
+
+        get: function ()
+        {
+            return this.y;
+        },
+
+        set: function (value)
+        {
+            if (value >= this.bottom)
+            {
+                this.height = 0;
+            }
+            else
+            {
+                this.height = (this.bottom - value);
+            }
+
+            this.y = value;
+        }
+
+    },
+
+    /**
+     * The sum of the y and height properties.
+     * Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
+     *
+     * @name Phaser.Geom.Rectangle#bottom
+     * @type {number}
+     * @since 3.0.0
+     */
+    bottom: {
+
+        get: function ()
+        {
+            return this.y + this.height;
+        },
+
+        set: function (value)
+        {
+            if (value <= this.y)
+            {
+                this.height = 0;
+            }
+            else
+            {
+                this.height = value - this.y;
+            }
+        }
+
+    },
+
+    /**
+     * The x coordinate of the center of the Rectangle.
+     *
+     * @name Phaser.Geom.Rectangle#centerX
+     * @type {number}
+     * @since 3.0.0
+     */
+    centerX: {
+
+        get: function ()
+        {
+            return this.x + (this.width / 2);
+        },
+
+        set: function (value)
+        {
+            this.x = value - (this.width / 2);
+        }
+
+    },
+
+    /**
+     * The y coordinate of the center of the Rectangle.
+     *
+     * @name Phaser.Geom.Rectangle#centerY
+     * @type {number}
+     * @since 3.0.0
+     */
+    centerY: {
+
+        get: function ()
+        {
+            return this.y + (this.height / 2);
+        },
+
+        set: function (value)
+        {
+            this.y = value - (this.height / 2);
+        }
+
+    }
+
+});
+
+module.exports = Rectangle;
+
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var GEOM_CONST = {
+
+    /**
+     * A Circle Geometry object type.
+     * 
+     * @name Phaser.Geom.CIRCLE
+     * @type {integer}
+     * @since 3.19.0
+     */
+    CIRCLE: 0,
+
+    /**
+     * An Ellipse Geometry object type.
+     * 
+     * @name Phaser.Geom.ELLIPSE
+     * @type {integer}
+     * @since 3.19.0
+     */
+    ELLIPSE: 1,
+
+    /**
+     * A Line Geometry object type.
+     * 
+     * @name Phaser.Geom.LINE
+     * @type {integer}
+     * @since 3.19.0
+     */
+    LINE: 2,
+
+    /**
+     * A Point Geometry object type.
+     * 
+     * @name Phaser.Geom.POINT
+     * @type {integer}
+     * @since 3.19.0
+     */
+    POINT: 3,
+
+    /**
+     * A Polygon Geometry object type.
+     * 
+     * @name Phaser.Geom.POLYGON
+     * @type {integer}
+     * @since 3.19.0
+     */
+    POLYGON: 4,
+
+    /**
+     * A Rectangle Geometry object type.
+     * 
+     * @name Phaser.Geom.RECTANGLE
+     * @type {integer}
+     * @since 3.19.0
+     */
+    RECTANGLE: 5,
+
+    /**
+     * A Triangle Geometry object type.
+     * 
+     * @name Phaser.Geom.TRIANGLE
+     * @type {integer}
+     * @since 3.19.0
+     */
+    TRIANGLE: 6
+
+};
+
+module.exports = GEOM_CONST;
+
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var IsPlainObject = __webpack_require__(7);
 
 // @param {boolean} deep - Perform a deep copy?
 // @param {object} target - The target object to copy to.
@@ -3224,7 +4565,7 @@ module.exports = Extend;
 
 
 /***/ }),
-/* 16 */
+/* 27 */
 /***/ (function(module, exports) {
 
 /**
@@ -3255,7 +4596,7 @@ module.exports = Between;
 
 
 /***/ }),
-/* 17 */
+/* 28 */
 /***/ (function(module, exports) {
 
 /**
@@ -3292,7 +4633,7 @@ module.exports = Normalize;
 
 
 /***/ }),
-/* 18 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -3301,7 +4642,7 @@ module.exports = Normalize;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var MathWrap = __webpack_require__(5);
+var MathWrap = __webpack_require__(10);
 
 /**
  * Wrap an angle.
@@ -3324,7 +4665,7 @@ module.exports = Wrap;
 
 
 /***/ }),
-/* 19 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -3333,7 +4674,7 @@ module.exports = Wrap;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Wrap = __webpack_require__(5);
+var Wrap = __webpack_require__(10);
 
 /**
  * Wrap an angle in degrees.
@@ -3356,7 +4697,7 @@ module.exports = WrapDegrees;
 
 
 /***/ }),
-/* 20 */
+/* 31 */
 /***/ (function(module, exports) {
 
 /**
@@ -3390,7 +4731,7 @@ module.exports = Equal;
 
 
 /***/ }),
-/* 21 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -3399,7 +4740,7 @@ module.exports = Equal;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Factorial = __webpack_require__(22);
+var Factorial = __webpack_require__(33);
 
 /**
  * Calculates the Bernstein basis from the three factorial coefficients.
@@ -3421,7 +4762,7 @@ module.exports = Bernstein;
 
 
 /***/ }),
-/* 22 */
+/* 33 */
 /***/ (function(module, exports) {
 
 /**
@@ -3461,7 +4802,7 @@ module.exports = Factorial;
 
 
 /***/ }),
-/* 23 */
+/* 34 */
 /***/ (function(module, exports) {
 
 /**
@@ -3498,7 +4839,7 @@ module.exports = CatmullRom;
 
 
 /***/ }),
-/* 24 */
+/* 35 */
 /***/ (function(module, exports) {
 
 /**
@@ -3528,7 +4869,7 @@ module.exports = Linear;
 
 
 /***/ }),
-/* 25 */
+/* 36 */
 /***/ (function(module, exports) {
 
 /**
@@ -3575,7 +4916,7 @@ module.exports = SmoothStep;
 
 
 /***/ }),
-/* 26 */
+/* 37 */
 /***/ (function(module, exports) {
 
 /**
@@ -3614,8 +4955,8 @@ module.exports = SmootherStep;
 
 
 /***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 38 */
+/***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
@@ -3623,28 +4964,71 @@ module.exports = SmootherStep;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CONST = __webpack_require__(1);
-
 /**
- * Convert the given angle from degrees, to the equivalent angle in radians.
+ * Rotate a `point` around `x` and `y` to the given `angle`, at the same distance.
  *
- * @function Phaser.Math.DegToRad
+ * In polar notation, this maps a point from (r, t) to (r, angle), vs. the origin (x, y).
+ *
+ * @function Phaser.Math.RotateAround
  * @since 3.0.0
  *
- * @param {integer} degrees - The angle (in degrees) to convert to radians.
+ * @generic {Phaser.Types.Math.Vector2Like} T - [point,$return]
  *
- * @return {number} The given angle converted to radians.
+ * @param {(Phaser.Geom.Point|object)} point - The point to be rotated.
+ * @param {number} x - The horizontal coordinate to rotate around.
+ * @param {number} y - The vertical coordinate to rotate around.
+ * @param {number} angle - The angle of rotation in radians.
+ *
+ * @return {Phaser.Types.Math.Vector2Like} The given point.
  */
-var DegToRad = function (degrees)
+var RotateAround = function (point, x, y, angle)
 {
-    return degrees * CONST.DEG_TO_RAD;
+    var c = Math.cos(angle);
+    var s = Math.sin(angle);
+
+    var tx = point.x - x;
+    var ty = point.y - y;
+
+    point.x = tx * c - ty * s + x;
+    point.y = tx * s + ty * c + y;
+
+    return point;
 };
 
-module.exports = DegToRad;
+module.exports = RotateAround;
 
 
 /***/ }),
-/* 28 */
+/* 39 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Round a given number so it is further away from zero. That is, positive numbers are rounded up, and negative numbers are rounded down.
+ *
+ * @function Phaser.Math.RoundAwayFromZero
+ * @since 3.0.0
+ *
+ * @param {number} value - The number to round.
+ *
+ * @return {number} The rounded number, rounded away from zero.
+ */
+var RoundAwayFromZero = function (value)
+{
+    // "Opposite" of truncate.
+    return (value > 0) ? Math.ceil(value) : Math.floor(value);
+};
+
+module.exports = RoundAwayFromZero;
+
+
+/***/ }),
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -3653,7 +5037,7 @@ module.exports = DegToRad;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Vector2 = __webpack_require__(3);
+var Vector2 = __webpack_require__(1);
 
 /**
  * Takes the `x` and `y` coordinates and transforms them into the same space as
@@ -3699,7 +5083,7 @@ module.exports = TransformXY;
 
 
 /***/ }),
-/* 29 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -4292,7 +5676,7 @@ module.exports = Matrix3;
 
 
 /***/ }),
-/* 30 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -5754,7 +7138,7 @@ module.exports = Matrix4;
 
 
 /***/ }),
-/* 31 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -5767,8 +7151,8 @@ module.exports = Matrix4;
 //  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
 
 var Class = __webpack_require__(0);
-var Vector3 = __webpack_require__(11);
-var Matrix3 = __webpack_require__(29);
+var Vector3 = __webpack_require__(19);
+var Matrix3 = __webpack_require__(41);
 
 var EPSILON = 0.000001;
 
@@ -6526,7 +7910,7 @@ module.exports = Quaternion;
 
 
 /***/ }),
-/* 32 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -6535,8 +7919,8 @@ module.exports = Quaternion;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Extend = __webpack_require__(15);
-var XHRSettings = __webpack_require__(33);
+var Extend = __webpack_require__(26);
+var XHRSettings = __webpack_require__(45);
 
 /**
  * Takes two XHRSettings Objects and creates a new XHRSettings object from them.
@@ -6574,7 +7958,7 @@ module.exports = MergeXHRSettings;
 
 
 /***/ }),
-/* 33 */
+/* 45 */
 /***/ (function(module, exports) {
 
 /**
@@ -6644,7 +8028,7 @@ module.exports = XHRSettings;
 
 
 /***/ }),
-/* 34 */
+/* 46 */
 /***/ (function(module, exports) {
 
 /**
@@ -6654,40 +8038,3690 @@ module.exports = XHRSettings;
  */
 
 /**
- * A NOOP (No Operation) callback function.
- *
- * Used internally by Phaser when it's more expensive to determine if a callback exists
- * than it is to just invoke an empty function.
- *
- * @function Phaser.Utils.NOOP
+ * Provides methods used for calculating and setting the size of a non-Frame based Game Object.
+ * Should be applied as a mixin and not used directly.
+ * 
+ * @namespace Phaser.GameObjects.Components.ComputedSize
  * @since 3.0.0
  */
-var NOOP = function ()
-{
-    //  NOOP
+
+var ComputedSize = {
+
+    /**
+     * The native (un-scaled) width of this Game Object.
+     * 
+     * Changing this value will not change the size that the Game Object is rendered in-game.
+     * For that you need to either set the scale of the Game Object (`setScale`) or use
+     * the `displayWidth` property.
+     * 
+     * @name Phaser.GameObjects.Components.ComputedSize#width
+     * @type {number}
+     * @since 3.0.0
+     */
+    width: 0,
+
+    /**
+     * The native (un-scaled) height of this Game Object.
+     * 
+     * Changing this value will not change the size that the Game Object is rendered in-game.
+     * For that you need to either set the scale of the Game Object (`setScale`) or use
+     * the `displayHeight` property.
+     * 
+     * @name Phaser.GameObjects.Components.ComputedSize#height
+     * @type {number}
+     * @since 3.0.0
+     */
+    height: 0,
+
+    /**
+     * The displayed width of this Game Object.
+     * 
+     * This value takes into account the scale factor.
+     * 
+     * Setting this value will adjust the Game Object's scale property.
+     * 
+     * @name Phaser.GameObjects.Components.ComputedSize#displayWidth
+     * @type {number}
+     * @since 3.0.0
+     */
+    displayWidth: {
+
+        get: function ()
+        {
+            return this.scaleX * this.width;
+        },
+
+        set: function (value)
+        {
+            this.scaleX = value / this.width;
+        }
+
+    },
+
+    /**
+     * The displayed height of this Game Object.
+     * 
+     * This value takes into account the scale factor.
+     * 
+     * Setting this value will adjust the Game Object's scale property.
+     * 
+     * @name Phaser.GameObjects.Components.ComputedSize#displayHeight
+     * @type {number}
+     * @since 3.0.0
+     */
+    displayHeight: {
+
+        get: function ()
+        {
+            return this.scaleY * this.height;
+        },
+
+        set: function (value)
+        {
+            this.scaleY = value / this.height;
+        }
+
+    },
+
+    /**
+     * Sets the internal size of this Game Object, as used for frame or physics body creation.
+     * 
+     * This will not change the size that the Game Object is rendered in-game.
+     * For that you need to either set the scale of the Game Object (`setScale`) or call the
+     * `setDisplaySize` method, which is the same thing as changing the scale but allows you
+     * to do so by giving pixel values.
+     * 
+     * If you have enabled this Game Object for input, changing the size will _not_ change the
+     * size of the hit area. To do this you should adjust the `input.hitArea` object directly.
+     * 
+     * @method Phaser.GameObjects.Components.ComputedSize#setSize
+     * @since 3.4.0
+     *
+     * @param {number} width - The width of this Game Object.
+     * @param {number} height - The height of this Game Object.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setSize: function (width, height)
+    {
+        this.width = width;
+        this.height = height;
+
+        return this;
+    },
+
+    /**
+     * Sets the display size of this Game Object.
+     * 
+     * Calling this will adjust the scale.
+     * 
+     * @method Phaser.GameObjects.Components.ComputedSize#setDisplaySize
+     * @since 3.4.0
+     *
+     * @param {number} width - The width of this Game Object.
+     * @param {number} height - The height of this Game Object.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setDisplaySize: function (width, height)
+    {
+        this.displayWidth = width;
+        this.displayHeight = height;
+
+        return this;
+    }
+
 };
 
-module.exports = NOOP;
+module.exports = ComputedSize;
 
 
 /***/ }),
-/* 35 */
+/* 47 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Provides methods used for setting the depth of a Game Object.
+ * Should be applied as a mixin and not used directly.
+ * 
+ * @namespace Phaser.GameObjects.Components.Depth
+ * @since 3.0.0
+ */
+
+var Depth = {
+
+    /**
+     * Private internal value. Holds the depth of the Game Object.
+     * 
+     * @name Phaser.GameObjects.Components.Depth#_depth
+     * @type {integer}
+     * @private
+     * @default 0
+     * @since 3.0.0
+     */
+    _depth: 0,
+
+    /**
+     * The depth of this Game Object within the Scene.
+     * 
+     * The depth is also known as the 'z-index' in some environments, and allows you to change the rendering order
+     * of Game Objects, without actually moving their position in the display list.
+     *
+     * The default depth is zero. A Game Object with a higher depth
+     * value will always render in front of one with a lower value.
+     *
+     * Setting the depth will queue a depth sort event within the Scene.
+     * 
+     * @name Phaser.GameObjects.Components.Depth#depth
+     * @type {number}
+     * @since 3.0.0
+     */
+    depth: {
+
+        get: function ()
+        {
+            return this._depth;
+        },
+
+        set: function (value)
+        {
+            this.scene.sys.queueDepthSort();
+            this._depth = value;
+        }
+
+    },
+
+    /**
+     * The depth of this Game Object within the Scene.
+     * 
+     * The depth is also known as the 'z-index' in some environments, and allows you to change the rendering order
+     * of Game Objects, without actually moving their position in the display list.
+     *
+     * The default depth is zero. A Game Object with a higher depth
+     * value will always render in front of one with a lower value.
+     *
+     * Setting the depth will queue a depth sort event within the Scene.
+     * 
+     * @method Phaser.GameObjects.Components.Depth#setDepth
+     * @since 3.0.0
+     *
+     * @param {integer} value - The depth of this Game Object.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setDepth: function (value)
+    {
+        if (value === undefined) { value = 0; }
+
+        this.depth = value;
+
+        return this;
+    }
+
+};
+
+module.exports = Depth;
+
+
+/***/ }),
+/* 48 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Provides methods used for visually flipping a Game Object.
+ * Should be applied as a mixin and not used directly.
+ * 
+ * @namespace Phaser.GameObjects.Components.Flip
+ * @since 3.0.0
+ */
+
+var Flip = {
+
+    /**
+     * The horizontally flipped state of the Game Object.
+     * 
+     * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+     * Flipping always takes place from the middle of the texture and does not impact the scale value.
+     * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
+     * 
+     * @name Phaser.GameObjects.Components.Flip#flipX
+     * @type {boolean}
+     * @default false
+     * @since 3.0.0
+     */
+    flipX: false,
+
+    /**
+     * The vertically flipped state of the Game Object.
+     * 
+     * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
+     * Flipping always takes place from the middle of the texture and does not impact the scale value.
+     * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
+     * 
+     * @name Phaser.GameObjects.Components.Flip#flipY
+     * @type {boolean}
+     * @default false
+     * @since 3.0.0
+     */
+    flipY: false,
+
+    /**
+     * Toggles the horizontal flipped state of this Game Object.
+     * 
+     * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+     * Flipping always takes place from the middle of the texture and does not impact the scale value.
+     * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
+     * 
+     * @method Phaser.GameObjects.Components.Flip#toggleFlipX
+     * @since 3.0.0
+     * 
+     * @return {this} This Game Object instance.
+     */
+    toggleFlipX: function ()
+    {
+        this.flipX = !this.flipX;
+
+        return this;
+    },
+
+    /**
+     * Toggles the vertical flipped state of this Game Object.
+     * 
+     * @method Phaser.GameObjects.Components.Flip#toggleFlipY
+     * @since 3.0.0
+     * 
+     * @return {this} This Game Object instance.
+     */
+    toggleFlipY: function ()
+    {
+        this.flipY = !this.flipY;
+
+        return this;
+    },
+
+    /**
+     * Sets the horizontal flipped state of this Game Object.
+     * 
+     * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+     * Flipping always takes place from the middle of the texture and does not impact the scale value.
+     * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
+     * 
+     * @method Phaser.GameObjects.Components.Flip#setFlipX
+     * @since 3.0.0
+     *
+     * @param {boolean} value - The flipped state. `false` for no flip, or `true` to be flipped.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setFlipX: function (value)
+    {
+        this.flipX = value;
+
+        return this;
+    },
+
+    /**
+     * Sets the vertical flipped state of this Game Object.
+     * 
+     * @method Phaser.GameObjects.Components.Flip#setFlipY
+     * @since 3.0.0
+     *
+     * @param {boolean} value - The flipped state. `false` for no flip, or `true` to be flipped.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setFlipY: function (value)
+    {
+        this.flipY = value;
+
+        return this;
+    },
+
+    /**
+     * Sets the horizontal and vertical flipped state of this Game Object.
+     * 
+     * A Game Object that is flipped will render inversed on the flipped axis.
+     * Flipping always takes place from the middle of the texture and does not impact the scale value.
+     * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
+     * 
+     * @method Phaser.GameObjects.Components.Flip#setFlip
+     * @since 3.0.0
+     *
+     * @param {boolean} x - The horizontal flipped state. `false` for no flip, or `true` to be flipped.
+     * @param {boolean} y - The horizontal flipped state. `false` for no flip, or `true` to be flipped.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setFlip: function (x, y)
+    {
+        this.flipX = x;
+        this.flipY = y;
+
+        return this;
+    },
+
+    /**
+     * Resets the horizontal and vertical flipped state of this Game Object back to their default un-flipped state.
+     * 
+     * @method Phaser.GameObjects.Components.Flip#resetFlip
+     * @since 3.0.0
+     *
+     * @return {this} This Game Object instance.
+     */
+    resetFlip: function ()
+    {
+        this.flipX = false;
+        this.flipY = false;
+
+        return this;
+    }
+
+};
+
+module.exports = Flip;
+
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Provides methods used for getting and setting the Scroll Factor of a Game Object.
+ *
+ * @namespace Phaser.GameObjects.Components.ScrollFactor
+ * @since 3.0.0
+ */
+
+var ScrollFactor = {
+
+    /**
+     * The horizontal scroll factor of this Game Object.
+     *
+     * The scroll factor controls the influence of the movement of a Camera upon this Game Object.
+     *
+     * When a camera scrolls it will change the location at which this Game Object is rendered on-screen.
+     * It does not change the Game Objects actual position values.
+     *
+     * A value of 1 means it will move exactly in sync with a camera.
+     * A value of 0 means it will not move at all, even if the camera moves.
+     * Other values control the degree to which the camera movement is mapped to this Game Object.
+     * 
+     * Please be aware that scroll factor values other than 1 are not taken in to consideration when
+     * calculating physics collisions. Bodies always collide based on their world position, but changing
+     * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
+     * them from physics bodies if not accounted for in your code.
+     *
+     * @name Phaser.GameObjects.Components.ScrollFactor#scrollFactorX
+     * @type {number}
+     * @default 1
+     * @since 3.0.0
+     */
+    scrollFactorX: 1,
+
+    /**
+     * The vertical scroll factor of this Game Object.
+     *
+     * The scroll factor controls the influence of the movement of a Camera upon this Game Object.
+     *
+     * When a camera scrolls it will change the location at which this Game Object is rendered on-screen.
+     * It does not change the Game Objects actual position values.
+     *
+     * A value of 1 means it will move exactly in sync with a camera.
+     * A value of 0 means it will not move at all, even if the camera moves.
+     * Other values control the degree to which the camera movement is mapped to this Game Object.
+     * 
+     * Please be aware that scroll factor values other than 1 are not taken in to consideration when
+     * calculating physics collisions. Bodies always collide based on their world position, but changing
+     * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
+     * them from physics bodies if not accounted for in your code.
+     *
+     * @name Phaser.GameObjects.Components.ScrollFactor#scrollFactorY
+     * @type {number}
+     * @default 1
+     * @since 3.0.0
+     */
+    scrollFactorY: 1,
+
+    /**
+     * Sets the scroll factor of this Game Object.
+     *
+     * The scroll factor controls the influence of the movement of a Camera upon this Game Object.
+     *
+     * When a camera scrolls it will change the location at which this Game Object is rendered on-screen.
+     * It does not change the Game Objects actual position values.
+     *
+     * A value of 1 means it will move exactly in sync with a camera.
+     * A value of 0 means it will not move at all, even if the camera moves.
+     * Other values control the degree to which the camera movement is mapped to this Game Object.
+     * 
+     * Please be aware that scroll factor values other than 1 are not taken in to consideration when
+     * calculating physics collisions. Bodies always collide based on their world position, but changing
+     * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
+     * them from physics bodies if not accounted for in your code.
+     *
+     * @method Phaser.GameObjects.Components.ScrollFactor#setScrollFactor
+     * @since 3.0.0
+     *
+     * @param {number} x - The horizontal scroll factor of this Game Object.
+     * @param {number} [y=x] - The vertical scroll factor of this Game Object. If not set it will use the `x` value.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setScrollFactor: function (x, y)
+    {
+        if (y === undefined) { y = x; }
+
+        this.scrollFactorX = x;
+        this.scrollFactorY = y;
+
+        return this;
+    }
+
+};
+
+module.exports = ScrollFactor;
+
+
+/***/ }),
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var MATH_CONST = __webpack_require__(2);
+var TransformMatrix = __webpack_require__(51);
+var TransformXY = __webpack_require__(40);
+var WrapAngle = __webpack_require__(29);
+var WrapAngleDegrees = __webpack_require__(30);
+var Vector2 = __webpack_require__(1);
+
+//  global bitmask flag for GameObject.renderMask (used by Scale)
+var _FLAG = 4; // 0100
+
+/**
+ * Provides methods used for getting and setting the position, scale and rotation of a Game Object.
+ *
+ * @namespace Phaser.GameObjects.Components.Transform
+ * @since 3.0.0
+ */
+
+var Transform = {
+
+    /**
+     * Private internal value. Holds the horizontal scale value.
+     *
+     * @name Phaser.GameObjects.Components.Transform#_scaleX
+     * @type {number}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
+    _scaleX: 1,
+
+    /**
+     * Private internal value. Holds the vertical scale value.
+     *
+     * @name Phaser.GameObjects.Components.Transform#_scaleY
+     * @type {number}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
+    _scaleY: 1,
+
+    /**
+     * Private internal value. Holds the rotation value in radians.
+     *
+     * @name Phaser.GameObjects.Components.Transform#_rotation
+     * @type {number}
+     * @private
+     * @default 0
+     * @since 3.0.0
+     */
+    _rotation: 0,
+
+    /**
+     * The x position of this Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Transform#x
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    x: 0,
+
+    /**
+     * The y position of this Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Transform#y
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    y: 0,
+
+    /**
+     * The z position of this Game Object.
+     *
+     * Note: The z position does not control the rendering order of 2D Game Objects. Use
+     * {@link Phaser.GameObjects.Components.Depth#depth} instead.
+     *
+     * @name Phaser.GameObjects.Components.Transform#z
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    z: 0,
+
+    /**
+     * The w position of this Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Transform#w
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    w: 0,
+
+    /**
+     * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+     * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+     *
+     * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+     * isn't the case, use the `scaleX` or `scaleY` properties instead.
+     *
+     * @name Phaser.GameObjects.Components.Transform#scale
+     * @type {number}
+     * @default 1
+     * @since 3.18.0
+     */
+    scale: {
+
+        get: function ()
+        {
+            return (this._scaleX + this._scaleY) / 2;
+        },
+
+        set: function (value)
+        {
+            this._scaleX = value;
+            this._scaleY = value;
+
+            if (value === 0)
+            {
+                this.renderFlags &= ~_FLAG;
+            }
+            else
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    },
+
+    /**
+     * The horizontal scale of this Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Transform#scaleX
+     * @type {number}
+     * @default 1
+     * @since 3.0.0
+     */
+    scaleX: {
+
+        get: function ()
+        {
+            return this._scaleX;
+        },
+
+        set: function (value)
+        {
+            this._scaleX = value;
+
+            if (value === 0)
+            {
+                this.renderFlags &= ~_FLAG;
+            }
+            else
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    },
+
+    /**
+     * The vertical scale of this Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Transform#scaleY
+     * @type {number}
+     * @default 1
+     * @since 3.0.0
+     */
+    scaleY: {
+
+        get: function ()
+        {
+            return this._scaleY;
+        },
+
+        set: function (value)
+        {
+            this._scaleY = value;
+
+            if (value === 0)
+            {
+                this.renderFlags &= ~_FLAG;
+            }
+            else
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    },
+
+    /**
+     * The angle of this Game Object as expressed in degrees.
+     *
+     * Phaser uses a right-hand clockwise rotation system, where 0 is right, 90 is down, 180/-180 is left
+     * and -90 is up.
+     *
+     * If you prefer to work in radians, see the `rotation` property instead.
+     *
+     * @name Phaser.GameObjects.Components.Transform#angle
+     * @type {integer}
+     * @default 0
+     * @since 3.0.0
+     */
+    angle: {
+
+        get: function ()
+        {
+            return WrapAngleDegrees(this._rotation * MATH_CONST.RAD_TO_DEG);
+        },
+
+        set: function (value)
+        {
+            //  value is in degrees
+            this.rotation = WrapAngleDegrees(value) * MATH_CONST.DEG_TO_RAD;
+        }
+    },
+
+    /**
+     * The angle of this Game Object in radians.
+     *
+     * Phaser uses a right-hand clockwise rotation system, where 0 is right, PI/2 is down, +-PI is left
+     * and -PI/2 is up.
+     *
+     * If you prefer to work in degrees, see the `angle` property instead.
+     *
+     * @name Phaser.GameObjects.Components.Transform#rotation
+     * @type {number}
+     * @default 1
+     * @since 3.0.0
+     */
+    rotation: {
+
+        get: function ()
+        {
+            return this._rotation;
+        },
+
+        set: function (value)
+        {
+            //  value is in radians
+            this._rotation = WrapAngle(value);
+        }
+    },
+
+    /**
+     * Sets the position of this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Transform#setPosition
+     * @since 3.0.0
+     *
+     * @param {number} [x=0] - The x position of this Game Object.
+     * @param {number} [y=x] - The y position of this Game Object. If not set it will use the `x` value.
+     * @param {number} [z=0] - The z position of this Game Object.
+     * @param {number} [w=0] - The w position of this Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setPosition: function (x, y, z, w)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = x; }
+        if (z === undefined) { z = 0; }
+        if (w === undefined) { w = 0; }
+
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
+
+        return this;
+    },
+
+    /**
+     * Sets the position of this Game Object to be a random position within the confines of
+     * the given area.
+     *
+     * If no area is specified a random position between 0 x 0 and the game width x height is used instead.
+     *
+     * The position does not factor in the size of this Game Object, meaning that only the origin is
+     * guaranteed to be within the area.
+     *
+     * @method Phaser.GameObjects.Components.Transform#setRandomPosition
+     * @since 3.8.0
+     *
+     * @param {number} [x=0] - The x position of the top-left of the random area.
+     * @param {number} [y=0] - The y position of the top-left of the random area.
+     * @param {number} [width] - The width of the random area.
+     * @param {number} [height] - The height of the random area.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setRandomPosition: function (x, y, width, height)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = this.scene.sys.scale.width; }
+        if (height === undefined) { height = this.scene.sys.scale.height; }
+
+        this.x = x + (Math.random() * width);
+        this.y = y + (Math.random() * height);
+
+        return this;
+    },
+
+    /**
+     * Sets the rotation of this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Transform#setRotation
+     * @since 3.0.0
+     *
+     * @param {number} [radians=0] - The rotation of this Game Object, in radians.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setRotation: function (radians)
+    {
+        if (radians === undefined) { radians = 0; }
+
+        this.rotation = radians;
+
+        return this;
+    },
+
+    /**
+     * Sets the angle of this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Transform#setAngle
+     * @since 3.0.0
+     *
+     * @param {number} [degrees=0] - The rotation of this Game Object, in degrees.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setAngle: function (degrees)
+    {
+        if (degrees === undefined) { degrees = 0; }
+
+        this.angle = degrees;
+
+        return this;
+    },
+
+    /**
+     * Sets the scale of this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Transform#setScale
+     * @since 3.0.0
+     *
+     * @param {number} x - The horizontal scale of this Game Object.
+     * @param {number} [y=x] - The vertical scale of this Game Object. If not set it will use the `x` value.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setScale: function (x, y)
+    {
+        if (x === undefined) { x = 1; }
+        if (y === undefined) { y = x; }
+
+        this.scaleX = x;
+        this.scaleY = y;
+
+        return this;
+    },
+
+    /**
+     * Sets the x position of this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Transform#setX
+     * @since 3.0.0
+     *
+     * @param {number} [value=0] - The x position of this Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setX: function (value)
+    {
+        if (value === undefined) { value = 0; }
+
+        this.x = value;
+
+        return this;
+    },
+
+    /**
+     * Sets the y position of this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Transform#setY
+     * @since 3.0.0
+     *
+     * @param {number} [value=0] - The y position of this Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setY: function (value)
+    {
+        if (value === undefined) { value = 0; }
+
+        this.y = value;
+
+        return this;
+    },
+
+    /**
+     * Sets the z position of this Game Object.
+     *
+     * Note: The z position does not control the rendering order of 2D Game Objects. Use
+     * {@link Phaser.GameObjects.Components.Depth#setDepth} instead.
+     *
+     * @method Phaser.GameObjects.Components.Transform#setZ
+     * @since 3.0.0
+     *
+     * @param {number} [value=0] - The z position of this Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setZ: function (value)
+    {
+        if (value === undefined) { value = 0; }
+
+        this.z = value;
+
+        return this;
+    },
+
+    /**
+     * Sets the w position of this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Transform#setW
+     * @since 3.0.0
+     *
+     * @param {number} [value=0] - The w position of this Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setW: function (value)
+    {
+        if (value === undefined) { value = 0; }
+
+        this.w = value;
+
+        return this;
+    },
+
+    /**
+     * Gets the local transform matrix for this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Transform#getLocalTransformMatrix
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [tempMatrix] - The matrix to populate with the values from this Game Object.
+     *
+     * @return {Phaser.GameObjects.Components.TransformMatrix} The populated Transform Matrix.
+     */
+    getLocalTransformMatrix: function (tempMatrix)
+    {
+        if (tempMatrix === undefined) { tempMatrix = new TransformMatrix(); }
+
+        return tempMatrix.applyITRS(this.x, this.y, this._rotation, this._scaleX, this._scaleY);
+    },
+
+    /**
+     * Gets the world transform matrix for this Game Object, factoring in any parent Containers.
+     *
+     * @method Phaser.GameObjects.Components.Transform#getWorldTransformMatrix
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [tempMatrix] - The matrix to populate with the values from this Game Object.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - A temporary matrix to hold parent values during the calculations.
+     *
+     * @return {Phaser.GameObjects.Components.TransformMatrix} The populated Transform Matrix.
+     */
+    getWorldTransformMatrix: function (tempMatrix, parentMatrix)
+    {
+        if (tempMatrix === undefined) { tempMatrix = new TransformMatrix(); }
+        if (parentMatrix === undefined) { parentMatrix = new TransformMatrix(); }
+
+        var parent = this.parentContainer;
+
+        if (!parent)
+        {
+            return this.getLocalTransformMatrix(tempMatrix);
+        }
+
+        tempMatrix.applyITRS(this.x, this.y, this._rotation, this._scaleX, this._scaleY);
+
+        while (parent)
+        {
+            parentMatrix.applyITRS(parent.x, parent.y, parent._rotation, parent._scaleX, parent._scaleY);
+
+            parentMatrix.multiply(tempMatrix, tempMatrix);
+
+            parent = parent.parentContainer;
+        }
+
+        return tempMatrix;
+    },
+
+    /**
+     * Takes the given `x` and `y` coordinates and converts them into local space for this
+     * Game Object, taking into account parent and local transforms, and the Display Origin.
+     *
+     * The returned Vector2 contains the translated point in its properties.
+     *
+     * A Camera needs to be provided in order to handle modified scroll factors. If no
+     * camera is specified, it will use the `main` camera from the Scene to which this
+     * Game Object belongs.
+     *
+     * @method Phaser.GameObjects.Components.Transform#getLocalPoint
+     * @since 3.50.0
+     *
+     * @param {number} x - The x position to translate.
+     * @param {number} y - The y position to translate.
+     * @param {Phaser.Math.Vector2} [point] - A Vector2, or point-like object, to store the results in.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera which is being tested against. If not given will use the Scene default camera.
+     *
+     * @return {Phaser.Math.Vector2} The translated point.
+     */
+    getLocalPoint: function (x, y, point, camera)
+    {
+        if (!point) { point = new Vector2(); }
+        if (!camera) { camera = this.scene.sys.cameras.main; }
+
+        var csx = camera.scrollX;
+        var csy = camera.scrollY;
+
+        var px = x + (csx * this.scrollFactorX) - csx;
+        var py = y + (csy * this.scrollFactorY) - csy;
+
+        if (this.parentContainer)
+        {
+            this.getWorldTransformMatrix().applyInverse(px, py, point);
+        }
+        else
+        {
+            TransformXY(px, py, this.x, this.y, this.rotation, this.scaleX, this.scaleY, point);
+        }
+
+        //  Normalize origin
+        if (this._originComponent)
+        {
+            point.x += this._displayOriginX;
+            point.y += this._displayOriginY;
+        }
+
+        return point;
+    },
+
+    /**
+     * Gets the sum total rotation of all of this Game Objects parent Containers.
+     *
+     * The returned value is in radians and will be zero if this Game Object has no parent container.
+     *
+     * @method Phaser.GameObjects.Components.Transform#getParentRotation
+     * @since 3.18.0
+     *
+     * @return {number} The sum total rotation, in radians, of all parent containers of this Game Object.
+     */
+    getParentRotation: function ()
+    {
+        var rotation = 0;
+
+        var parent = this.parentContainer;
+
+        while (parent)
+        {
+            rotation += parent.rotation;
+
+            parent = parent.parentContainer;
+        }
+
+        return rotation;
+    }
+
+};
+
+module.exports = Transform;
+
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+var MATH_CONST = __webpack_require__(2);
+var Vector2 = __webpack_require__(1);
+
+/**
+ * @classdesc
+ * A Matrix used for display transformations for rendering.
+ *
+ * It is represented like so:
+ *
+ * ```
+ * | a | c | tx |
+ * | b | d | ty |
+ * | 0 | 0 | 1  |
+ * ```
+ *
+ * @class TransformMatrix
+ * @memberof Phaser.GameObjects.Components
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [a=1] - The Scale X value.
+ * @param {number} [b=0] - The Skew Y value.
+ * @param {number} [c=0] - The Skew X value.
+ * @param {number} [d=1] - The Scale Y value.
+ * @param {number} [tx=0] - The Translate X value.
+ * @param {number} [ty=0] - The Translate Y value.
+ */
+var TransformMatrix = new Class({
+
+    initialize:
+
+    function TransformMatrix (a, b, c, d, tx, ty)
+    {
+        if (a === undefined) { a = 1; }
+        if (b === undefined) { b = 0; }
+        if (c === undefined) { c = 0; }
+        if (d === undefined) { d = 1; }
+        if (tx === undefined) { tx = 0; }
+        if (ty === undefined) { ty = 0; }
+
+        /**
+         * The matrix values.
+         *
+         * @name Phaser.GameObjects.Components.TransformMatrix#matrix
+         * @type {Float32Array}
+         * @since 3.0.0
+         */
+        this.matrix = new Float32Array([ a, b, c, d, tx, ty, 0, 0, 1 ]);
+
+        /**
+         * The decomposed matrix.
+         *
+         * @name Phaser.GameObjects.Components.TransformMatrix#decomposedMatrix
+         * @type {object}
+         * @since 3.0.0
+         */
+        this.decomposedMatrix = {
+            translateX: 0,
+            translateY: 0,
+            scaleX: 1,
+            scaleY: 1,
+            rotation: 0
+        };
+    },
+
+    /**
+     * The Scale X value.
+     *
+     * @name Phaser.GameObjects.Components.TransformMatrix#a
+     * @type {number}
+     * @since 3.4.0
+     */
+    a: {
+
+        get: function ()
+        {
+            return this.matrix[0];
+        },
+
+        set: function (value)
+        {
+            this.matrix[0] = value;
+        }
+
+    },
+
+    /**
+     * The Skew Y value.
+     *
+     * @name Phaser.GameObjects.Components.TransformMatrix#b
+     * @type {number}
+     * @since 3.4.0
+     */
+    b: {
+
+        get: function ()
+        {
+            return this.matrix[1];
+        },
+
+        set: function (value)
+        {
+            this.matrix[1] = value;
+        }
+
+    },
+
+    /**
+     * The Skew X value.
+     *
+     * @name Phaser.GameObjects.Components.TransformMatrix#c
+     * @type {number}
+     * @since 3.4.0
+     */
+    c: {
+
+        get: function ()
+        {
+            return this.matrix[2];
+        },
+
+        set: function (value)
+        {
+            this.matrix[2] = value;
+        }
+
+    },
+
+    /**
+     * The Scale Y value.
+     *
+     * @name Phaser.GameObjects.Components.TransformMatrix#d
+     * @type {number}
+     * @since 3.4.0
+     */
+    d: {
+
+        get: function ()
+        {
+            return this.matrix[3];
+        },
+
+        set: function (value)
+        {
+            this.matrix[3] = value;
+        }
+
+    },
+
+    /**
+     * The Translate X value.
+     *
+     * @name Phaser.GameObjects.Components.TransformMatrix#e
+     * @type {number}
+     * @since 3.11.0
+     */
+    e: {
+
+        get: function ()
+        {
+            return this.matrix[4];
+        },
+
+        set: function (value)
+        {
+            this.matrix[4] = value;
+        }
+
+    },
+
+    /**
+     * The Translate Y value.
+     *
+     * @name Phaser.GameObjects.Components.TransformMatrix#f
+     * @type {number}
+     * @since 3.11.0
+     */
+    f: {
+
+        get: function ()
+        {
+            return this.matrix[5];
+        },
+
+        set: function (value)
+        {
+            this.matrix[5] = value;
+        }
+
+    },
+
+    /**
+     * The Translate X value.
+     *
+     * @name Phaser.GameObjects.Components.TransformMatrix#tx
+     * @type {number}
+     * @since 3.4.0
+     */
+    tx: {
+
+        get: function ()
+        {
+            return this.matrix[4];
+        },
+
+        set: function (value)
+        {
+            this.matrix[4] = value;
+        }
+
+    },
+
+    /**
+     * The Translate Y value.
+     *
+     * @name Phaser.GameObjects.Components.TransformMatrix#ty
+     * @type {number}
+     * @since 3.4.0
+     */
+    ty: {
+
+        get: function ()
+        {
+            return this.matrix[5];
+        },
+
+        set: function (value)
+        {
+            this.matrix[5] = value;
+        }
+
+    },
+
+    /**
+     * The rotation of the Matrix. Value is in radians.
+     *
+     * @name Phaser.GameObjects.Components.TransformMatrix#rotation
+     * @type {number}
+     * @readonly
+     * @since 3.4.0
+     */
+    rotation: {
+
+        get: function ()
+        {
+            return Math.acos(this.a / this.scaleX) * ((Math.atan(-this.c / this.a) < 0) ? -1 : 1);
+        }
+
+    },
+
+    /**
+     * The rotation of the Matrix, normalized to be within the Phaser right-handed
+     * clockwise rotation space. Value is in radians.
+     *
+     * @name Phaser.GameObjects.Components.TransformMatrix#rotationNormalized
+     * @type {number}
+     * @readonly
+     * @since 3.19.0
+     */
+    rotationNormalized: {
+
+        get: function ()
+        {
+            var matrix = this.matrix;
+
+            var a = matrix[0];
+            var b = matrix[1];
+            var c = matrix[2];
+            var d = matrix[3];
+
+            if (a || b)
+            {
+                // var r = Math.sqrt(a * a + b * b);
+    
+                return (b > 0) ? Math.acos(a / this.scaleX) : -Math.acos(a / this.scaleX);
+            }
+            else if (c || d)
+            {
+                // var s = Math.sqrt(c * c + d * d);
+    
+                return MATH_CONST.TAU - ((d > 0) ? Math.acos(-c / this.scaleY) : -Math.acos(c / this.scaleY));
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+    },
+
+    /**
+     * The decomposed horizontal scale of the Matrix. This value is always positive.
+     *
+     * @name Phaser.GameObjects.Components.TransformMatrix#scaleX
+     * @type {number}
+     * @readonly
+     * @since 3.4.0
+     */
+    scaleX: {
+
+        get: function ()
+        {
+            return Math.sqrt((this.a * this.a) + (this.b * this.b));
+        }
+
+    },
+
+    /**
+     * The decomposed vertical scale of the Matrix. This value is always positive.
+     *
+     * @name Phaser.GameObjects.Components.TransformMatrix#scaleY
+     * @type {number}
+     * @readonly
+     * @since 3.4.0
+     */
+    scaleY: {
+
+        get: function ()
+        {
+            return Math.sqrt((this.c * this.c) + (this.d * this.d));
+        }
+
+    },
+
+    /**
+     * Reset the Matrix to an identity matrix.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#loadIdentity
+     * @since 3.0.0
+     *
+     * @return {this} This TransformMatrix.
+     */
+    loadIdentity: function ()
+    {
+        var matrix = this.matrix;
+
+        matrix[0] = 1;
+        matrix[1] = 0;
+        matrix[2] = 0;
+        matrix[3] = 1;
+        matrix[4] = 0;
+        matrix[5] = 0;
+
+        return this;
+    },
+
+    /**
+     * Translate the Matrix.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#translate
+     * @since 3.0.0
+     *
+     * @param {number} x - The horizontal translation value.
+     * @param {number} y - The vertical translation value.
+     *
+     * @return {this} This TransformMatrix.
+     */
+    translate: function (x, y)
+    {
+        var matrix = this.matrix;
+
+        matrix[4] = matrix[0] * x + matrix[2] * y + matrix[4];
+        matrix[5] = matrix[1] * x + matrix[3] * y + matrix[5];
+
+        return this;
+    },
+
+    /**
+     * Scale the Matrix.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#scale
+     * @since 3.0.0
+     *
+     * @param {number} x - The horizontal scale value.
+     * @param {number} y - The vertical scale value.
+     *
+     * @return {this} This TransformMatrix.
+     */
+    scale: function (x, y)
+    {
+        var matrix = this.matrix;
+
+        matrix[0] *= x;
+        matrix[1] *= x;
+        matrix[2] *= y;
+        matrix[3] *= y;
+
+        return this;
+    },
+
+    /**
+     * Rotate the Matrix.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#rotate
+     * @since 3.0.0
+     *
+     * @param {number} angle - The angle of rotation in radians.
+     *
+     * @return {this} This TransformMatrix.
+     */
+    rotate: function (angle)
+    {
+        var sin = Math.sin(angle);
+        var cos = Math.cos(angle);
+
+        var matrix = this.matrix;
+
+        var a = matrix[0];
+        var b = matrix[1];
+        var c = matrix[2];
+        var d = matrix[3];
+
+        matrix[0] = a * cos + c * sin;
+        matrix[1] = b * cos + d * sin;
+        matrix[2] = a * -sin + c * cos;
+        matrix[3] = b * -sin + d * cos;
+
+        return this;
+    },
+
+    /**
+     * Multiply this Matrix by the given Matrix.
+     * 
+     * If an `out` Matrix is given then the results will be stored in it.
+     * If it is not given, this matrix will be updated in place instead.
+     * Use an `out` Matrix if you do not wish to mutate this matrix.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#multiply
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Components.TransformMatrix} rhs - The Matrix to multiply by.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [out] - An optional Matrix to store the results in.
+     *
+     * @return {(this|Phaser.GameObjects.Components.TransformMatrix)} Either this TransformMatrix, or the `out` Matrix, if given in the arguments.
+     */
+    multiply: function (rhs, out)
+    {
+        var matrix = this.matrix;
+        var source = rhs.matrix;
+
+        var localA = matrix[0];
+        var localB = matrix[1];
+        var localC = matrix[2];
+        var localD = matrix[3];
+        var localE = matrix[4];
+        var localF = matrix[5];
+
+        var sourceA = source[0];
+        var sourceB = source[1];
+        var sourceC = source[2];
+        var sourceD = source[3];
+        var sourceE = source[4];
+        var sourceF = source[5];
+
+        var destinationMatrix = (out === undefined) ? this : out;
+
+        destinationMatrix.a = (sourceA * localA) + (sourceB * localC);
+        destinationMatrix.b = (sourceA * localB) + (sourceB * localD);
+        destinationMatrix.c = (sourceC * localA) + (sourceD * localC);
+        destinationMatrix.d = (sourceC * localB) + (sourceD * localD);
+        destinationMatrix.e = (sourceE * localA) + (sourceF * localC) + localE;
+        destinationMatrix.f = (sourceE * localB) + (sourceF * localD) + localF;
+
+        return destinationMatrix;
+    },
+
+    /**
+     * Multiply this Matrix by the matrix given, including the offset.
+     * 
+     * The offsetX is added to the tx value: `offsetX * a + offsetY * c + tx`.
+     * The offsetY is added to the ty value: `offsetY * b + offsetY * d + ty`.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#multiplyWithOffset
+     * @since 3.11.0
+     *
+     * @param {Phaser.GameObjects.Components.TransformMatrix} src - The source Matrix to copy from.
+     * @param {number} offsetX - Horizontal offset to factor in to the multiplication.
+     * @param {number} offsetY - Vertical offset to factor in to the multiplication.
+     *
+     * @return {this} This TransformMatrix.
+     */
+    multiplyWithOffset: function (src, offsetX, offsetY)
+    {
+        var matrix = this.matrix;
+        var otherMatrix = src.matrix;
+
+        var a0 = matrix[0];
+        var b0 = matrix[1];
+        var c0 = matrix[2];
+        var d0 = matrix[3];
+        var tx0 = matrix[4];
+        var ty0 = matrix[5];
+
+        var pse = offsetX * a0 + offsetY * c0 + tx0;
+        var psf = offsetX * b0 + offsetY * d0 + ty0;
+
+        var a1 = otherMatrix[0];
+        var b1 = otherMatrix[1];
+        var c1 = otherMatrix[2];
+        var d1 = otherMatrix[3];
+        var tx1 = otherMatrix[4];
+        var ty1 = otherMatrix[5];
+
+        matrix[0] = a1 * a0 + b1 * c0;
+        matrix[1] = a1 * b0 + b1 * d0;
+        matrix[2] = c1 * a0 + d1 * c0;
+        matrix[3] = c1 * b0 + d1 * d0;
+        matrix[4] = tx1 * a0 + ty1 * c0 + pse;
+        matrix[5] = tx1 * b0 + ty1 * d0 + psf;
+
+        return this;
+    },
+
+    /**
+     * Transform the Matrix.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#transform
+     * @since 3.0.0
+     *
+     * @param {number} a - The Scale X value.
+     * @param {number} b - The Shear Y value.
+     * @param {number} c - The Shear X value.
+     * @param {number} d - The Scale Y value.
+     * @param {number} tx - The Translate X value.
+     * @param {number} ty - The Translate Y value.
+     *
+     * @return {this} This TransformMatrix.
+     */
+    transform: function (a, b, c, d, tx, ty)
+    {
+        var matrix = this.matrix;
+
+        var a0 = matrix[0];
+        var b0 = matrix[1];
+        var c0 = matrix[2];
+        var d0 = matrix[3];
+        var tx0 = matrix[4];
+        var ty0 = matrix[5];
+
+        matrix[0] = a * a0 + b * c0;
+        matrix[1] = a * b0 + b * d0;
+        matrix[2] = c * a0 + d * c0;
+        matrix[3] = c * b0 + d * d0;
+        matrix[4] = tx * a0 + ty * c0 + tx0;
+        matrix[5] = tx * b0 + ty * d0 + ty0;
+
+        return this;
+    },
+
+    /**
+     * Transform a point using this Matrix.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#transformPoint
+     * @since 3.0.0
+     *
+     * @param {number} x - The x coordinate of the point to transform.
+     * @param {number} y - The y coordinate of the point to transform.
+     * @param {(Phaser.Geom.Point|Phaser.Math.Vector2|object)} point - The Point object to store the transformed coordinates.
+     *
+     * @return {(Phaser.Geom.Point|Phaser.Math.Vector2|object)} The Point containing the transformed coordinates.
+     */
+    transformPoint: function (x, y, point)
+    {
+        if (point === undefined) { point = { x: 0, y: 0 }; }
+
+        var matrix = this.matrix;
+
+        var a = matrix[0];
+        var b = matrix[1];
+        var c = matrix[2];
+        var d = matrix[3];
+        var tx = matrix[4];
+        var ty = matrix[5];
+
+        point.x = x * a + y * c + tx;
+        point.y = x * b + y * d + ty;
+
+        return point;
+    },
+
+    /**
+     * Invert the Matrix.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#invert
+     * @since 3.0.0
+     *
+     * @return {this} This TransformMatrix.
+     */
+    invert: function ()
+    {
+        var matrix = this.matrix;
+
+        var a = matrix[0];
+        var b = matrix[1];
+        var c = matrix[2];
+        var d = matrix[3];
+        var tx = matrix[4];
+        var ty = matrix[5];
+
+        var n = a * d - b * c;
+
+        matrix[0] = d / n;
+        matrix[1] = -b / n;
+        matrix[2] = -c / n;
+        matrix[3] = a / n;
+        matrix[4] = (c * ty - d * tx) / n;
+        matrix[5] = -(a * ty - b * tx) / n;
+
+        return this;
+    },
+
+    /**
+     * Set the values of this Matrix to copy those of the matrix given.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#copyFrom
+     * @since 3.11.0
+     *
+     * @param {Phaser.GameObjects.Components.TransformMatrix} src - The source Matrix to copy from.
+     *
+     * @return {this} This TransformMatrix.
+     */
+    copyFrom: function (src)
+    {
+        var matrix = this.matrix;
+
+        matrix[0] = src.a;
+        matrix[1] = src.b;
+        matrix[2] = src.c;
+        matrix[3] = src.d;
+        matrix[4] = src.e;
+        matrix[5] = src.f;
+
+        return this;
+    },
+
+    /**
+     * Set the values of this Matrix to copy those of the array given.
+     * Where array indexes 0, 1, 2, 3, 4 and 5 are mapped to a, b, c, d, e and f.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#copyFromArray
+     * @since 3.11.0
+     *
+     * @param {array} src - The array of values to set into this matrix.
+     *
+     * @return {this} This TransformMatrix.
+     */
+    copyFromArray: function (src)
+    {
+        var matrix = this.matrix;
+
+        matrix[0] = src[0];
+        matrix[1] = src[1];
+        matrix[2] = src[2];
+        matrix[3] = src[3];
+        matrix[4] = src[4];
+        matrix[5] = src[5];
+
+        return this;
+    },
+
+    /**
+     * Copy the values from this Matrix to the given Canvas Rendering Context.
+     * This will use the Context.transform method.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#copyToContext
+     * @since 3.12.0
+     *
+     * @param {CanvasRenderingContext2D} ctx - The Canvas Rendering Context to copy the matrix values to.
+     *
+     * @return {CanvasRenderingContext2D} The Canvas Rendering Context.
+     */
+    copyToContext: function (ctx)
+    {
+        var matrix = this.matrix;
+
+        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+
+        return ctx;
+    },
+
+    /**
+     * Copy the values from this Matrix to the given Canvas Rendering Context.
+     * This will use the Context.setTransform method.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#setToContext
+     * @since 3.12.0
+     *
+     * @param {CanvasRenderingContext2D} ctx - The Canvas Rendering Context to copy the matrix values to.
+     *
+     * @return {CanvasRenderingContext2D} The Canvas Rendering Context.
+     */
+    setToContext: function (ctx)
+    {
+        var matrix = this.matrix;
+
+        ctx.setTransform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+
+        return ctx;
+    },
+
+    /**
+     * Copy the values in this Matrix to the array given.
+     * 
+     * Where array indexes 0, 1, 2, 3, 4 and 5 are mapped to a, b, c, d, e and f.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#copyToArray
+     * @since 3.12.0
+     *
+     * @param {array} [out] - The array to copy the matrix values in to.
+     *
+     * @return {array} An array where elements 0 to 5 contain the values from this matrix.
+     */
+    copyToArray: function (out)
+    {
+        var matrix = this.matrix;
+
+        if (out === undefined)
+        {
+            out = [ matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5] ];
+        }
+        else
+        {
+            out[0] = matrix[0];
+            out[1] = matrix[1];
+            out[2] = matrix[2];
+            out[3] = matrix[3];
+            out[4] = matrix[4];
+            out[5] = matrix[5];
+        }
+
+        return out;
+    },
+
+    /**
+     * Set the values of this Matrix.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#setTransform
+     * @since 3.0.0
+     *
+     * @param {number} a - The Scale X value.
+     * @param {number} b - The Shear Y value.
+     * @param {number} c - The Shear X value.
+     * @param {number} d - The Scale Y value.
+     * @param {number} tx - The Translate X value.
+     * @param {number} ty - The Translate Y value.
+     *
+     * @return {this} This TransformMatrix.
+     */
+    setTransform: function (a, b, c, d, tx, ty)
+    {
+        var matrix = this.matrix;
+
+        matrix[0] = a;
+        matrix[1] = b;
+        matrix[2] = c;
+        matrix[3] = d;
+        matrix[4] = tx;
+        matrix[5] = ty;
+
+        return this;
+    },
+
+    /**
+     * Decompose this Matrix into its translation, scale and rotation values using QR decomposition.
+     * 
+     * The result must be applied in the following order to reproduce the current matrix:
+     * 
+     * translate -> rotate -> scale
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#decomposeMatrix
+     * @since 3.0.0
+     *
+     * @return {object} The decomposed Matrix.
+     */
+    decomposeMatrix: function ()
+    {
+        var decomposedMatrix = this.decomposedMatrix;
+
+        var matrix = this.matrix;
+
+        //  a = scale X (1)
+        //  b = shear Y (0)
+        //  c = shear X (0)
+        //  d = scale Y (1)
+
+        var a = matrix[0];
+        var b = matrix[1];
+        var c = matrix[2];
+        var d = matrix[3];
+
+        var determ = a * d - b * c;
+
+        decomposedMatrix.translateX = matrix[4];
+        decomposedMatrix.translateY = matrix[5];
+
+        if (a || b)
+        {
+            var r = Math.sqrt(a * a + b * b);
+
+            decomposedMatrix.rotation = (b > 0) ? Math.acos(a / r) : -Math.acos(a / r);
+            decomposedMatrix.scaleX = r;
+            decomposedMatrix.scaleY = determ / r;
+        }
+        else if (c || d)
+        {
+            var s = Math.sqrt(c * c + d * d);
+
+            decomposedMatrix.rotation = Math.PI * 0.5 - (d > 0 ? Math.acos(-c / s) : -Math.acos(c / s));
+            decomposedMatrix.scaleX = determ / s;
+            decomposedMatrix.scaleY = s;
+        }
+        else
+        {
+            decomposedMatrix.rotation = 0;
+            decomposedMatrix.scaleX = 0;
+            decomposedMatrix.scaleY = 0;
+        }
+
+        return decomposedMatrix;
+    },
+
+    /**
+     * Apply the identity, translate, rotate and scale operations on the Matrix.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#applyITRS
+     * @since 3.0.0
+     *
+     * @param {number} x - The horizontal translation.
+     * @param {number} y - The vertical translation.
+     * @param {number} rotation - The angle of rotation in radians.
+     * @param {number} scaleX - The horizontal scale.
+     * @param {number} scaleY - The vertical scale.
+     *
+     * @return {this} This TransformMatrix.
+     */
+    applyITRS: function (x, y, rotation, scaleX, scaleY)
+    {
+        var matrix = this.matrix;
+
+        var radianSin = Math.sin(rotation);
+        var radianCos = Math.cos(rotation);
+
+        // Translate
+        matrix[4] = x;
+        matrix[5] = y;
+
+        // Rotate and Scale
+        matrix[0] = radianCos * scaleX;
+        matrix[1] = radianSin * scaleX;
+        matrix[2] = -radianSin * scaleY;
+        matrix[3] = radianCos * scaleY;
+
+        return this;
+    },
+
+    /**
+     * Takes the `x` and `y` values and returns a new position in the `output` vector that is the inverse of
+     * the current matrix with its transformation applied.
+     * 
+     * Can be used to translate points from world to local space.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#applyInverse
+     * @since 3.12.0
+     *
+     * @param {number} x - The x position to translate.
+     * @param {number} y - The y position to translate.
+     * @param {Phaser.Math.Vector2} [output] - A Vector2, or point-like object, to store the results in.
+     *
+     * @return {Phaser.Math.Vector2} The coordinates, inverse-transformed through this matrix.
+     */
+    applyInverse: function (x, y, output)
+    {
+        if (output === undefined) { output = new Vector2(); }
+
+        var matrix = this.matrix;
+
+        var a = matrix[0];
+        var b = matrix[1];
+        var c = matrix[2];
+        var d = matrix[3];
+        var tx = matrix[4];
+        var ty = matrix[5];
+
+        var id = 1 / ((a * d) + (c * -b));
+
+        output.x = (d * id * x) + (-c * id * y) + (((ty * c) - (tx * d)) * id);
+        output.y = (a * id * y) + (-b * id * x) + (((-ty * a) + (tx * b)) * id);
+
+        return output;
+    },
+
+    /**
+     * Returns the X component of this matrix multiplied by the given values.
+     * This is the same as `x * a + y * c + e`.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#getX
+     * @since 3.12.0
+     * 
+     * @param {number} x - The x value.
+     * @param {number} y - The y value.
+     *
+     * @return {number} The calculated x value.
+     */
+    getX: function (x, y)
+    {
+        return x * this.a + y * this.c + this.e;
+    },
+
+    /**
+     * Returns the Y component of this matrix multiplied by the given values.
+     * This is the same as `x * b + y * d + f`.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#getY
+     * @since 3.12.0
+     * 
+     * @param {number} x - The x value.
+     * @param {number} y - The y value.
+     *
+     * @return {number} The calculated y value.
+     */
+    getY: function (x, y)
+    {
+        return x * this.b + y * this.d + this.f;
+    },
+
+    /**
+     * Returns the X component of this matrix multiplied by the given values.
+     * 
+     * This is the same as `x * a + y * c + e`, optionally passing via `Math.round`.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#getXRound
+     * @since 3.50.0
+     * 
+     * @param {number} x - The x value.
+     * @param {number} y - The y value.
+     * @param {boolean} [round=false] - Math.round the resulting value?
+     *
+     * @return {number} The calculated x value.
+     */
+    getXRound: function (x, y, round)
+    {
+        var v = this.getX(x, y);
+
+        if (round)
+        {
+            v = Math.round(v);
+        }
+
+        return v;
+    },
+
+    /**
+     * Returns the Y component of this matrix multiplied by the given values.
+     * 
+     * This is the same as `x * b + y * d + f`, optionally passing via `Math.round`.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#getYRound
+     * @since 3.50.0
+     * 
+     * @param {number} x - The x value.
+     * @param {number} y - The y value.
+     * @param {boolean} [round=false] - Math.round the resulting value?
+     *
+     * @return {number} The calculated y value.
+     */
+    getYRound: function (x, y, round)
+    {
+        var v = this.getY(x, y);
+
+        if (round)
+        {
+            v = Math.round(v);
+        }
+
+        return v;
+    },
+
+    /**
+     * Returns a string that can be used in a CSS Transform call as a `matrix` property.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#getCSSMatrix
+     * @since 3.12.0
+     *
+     * @return {string} A string containing the CSS Transform matrix values.
+     */
+    getCSSMatrix: function ()
+    {
+        var m = this.matrix;
+
+        return 'matrix(' + m[0] + ',' + m[1] + ',' + m[2] + ',' + m[3] + ',' + m[4] + ',' + m[5] + ')';
+    },
+
+    /**
+     * Destroys this Transform Matrix.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#destroy
+     * @since 3.4.0
+     */
+    destroy: function ()
+    {
+        this.matrix = null;
+        this.decomposedMatrix = null;
+    }
+
+});
+
+module.exports = TransformMatrix;
+
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+//  bitmask flag for GameObject.renderMask
+var _FLAG = 1; // 0001
+
+/**
+ * Provides methods used for setting the visibility of a Game Object.
+ * Should be applied as a mixin and not used directly.
+ * 
+ * @namespace Phaser.GameObjects.Components.Visible
+ * @since 3.0.0
+ */
+
+var Visible = {
+
+    /**
+     * Private internal value. Holds the visible value.
+     * 
+     * @name Phaser.GameObjects.Components.Visible#_visible
+     * @type {boolean}
+     * @private
+     * @default true
+     * @since 3.0.0
+     */
+    _visible: true,
+
+    /**
+     * The visible state of the Game Object.
+     * 
+     * An invisible Game Object will skip rendering, but will still process update logic.
+     * 
+     * @name Phaser.GameObjects.Components.Visible#visible
+     * @type {boolean}
+     * @since 3.0.0
+     */
+    visible: {
+
+        get: function ()
+        {
+            return this._visible;
+        },
+
+        set: function (value)
+        {
+            if (value)
+            {
+                this._visible = true;
+                this.renderFlags |= _FLAG;
+            }
+            else
+            {
+                this._visible = false;
+                this.renderFlags &= ~_FLAG;
+            }
+        }
+
+    },
+
+    /**
+     * Sets the visibility of this Game Object.
+     * 
+     * An invisible Game Object will skip rendering, but will still process update logic.
+     *
+     * @method Phaser.GameObjects.Components.Visible#setVisible
+     * @since 3.0.0
+     *
+     * @param {boolean} value - The visible state of the Game Object.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setVisible: function (value)
+    {
+        this.visible = value;
+
+        return this;
+    }
+};
+
+module.exports = Visible;
+
+
+/***/ }),
+/* 53 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+var ComponentsToJSON = __webpack_require__(54);
+var DataManager = __webpack_require__(219);
+var EventEmitter = __webpack_require__(55);
+var Events = __webpack_require__(22);
+
+/**
+ * @classdesc
+ * The base class that all Game Objects extend.
+ * You don't create GameObjects directly and they cannot be added to the display list.
+ * Instead, use them as the base for your own custom classes.
+ *
+ * @class GameObject
+ * @memberof Phaser.GameObjects
+ * @extends Phaser.Events.EventEmitter
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs.
+ * @param {string} type - A textual representation of the type of Game Object, i.e. `sprite`.
+ */
+var GameObject = new Class({
+
+    Extends: EventEmitter,
+
+    initialize:
+
+    function GameObject (scene, type)
+    {
+        EventEmitter.call(this);
+
+        /**
+         * The Scene to which this Game Object belongs.
+         * Game Objects can only belong to one Scene.
+         *
+         * @name Phaser.GameObjects.GameObject#scene
+         * @type {Phaser.Scene}
+         * @protected
+         * @since 3.0.0
+         */
+        this.scene = scene;
+
+        /**
+         * A textual representation of this Game Object, i.e. `sprite`.
+         * Used internally by Phaser but is available for your own custom classes to populate.
+         *
+         * @name Phaser.GameObjects.GameObject#type
+         * @type {string}
+         * @since 3.0.0
+         */
+        this.type = type;
+
+        /**
+         * The current state of this Game Object.
+         *
+         * Phaser itself will never modify this value, although plugins may do so.
+         *
+         * Use this property to track the state of a Game Object during its lifetime. For example, it could change from
+         * a state of 'moving', to 'attacking', to 'dead'. The state value should be an integer (ideally mapped to a constant
+         * in your game code), or a string. These are recommended to keep it light and simple, with fast comparisons.
+         * If you need to store complex data about your Game Object, look at using the Data Component instead.
+         *
+         * @name Phaser.GameObjects.GameObject#state
+         * @type {(integer|string)}
+         * @since 3.16.0
+         */
+        this.state = 0;
+
+        /**
+         * The parent Container of this Game Object, if it has one.
+         *
+         * @name Phaser.GameObjects.GameObject#parentContainer
+         * @type {Phaser.GameObjects.Container}
+         * @since 3.4.0
+         */
+        this.parentContainer = null;
+
+        /**
+         * The name of this Game Object.
+         * Empty by default and never populated by Phaser, this is left for developers to use.
+         *
+         * @name Phaser.GameObjects.GameObject#name
+         * @type {string}
+         * @default ''
+         * @since 3.0.0
+         */
+        this.name = '';
+
+        /**
+         * The active state of this Game Object.
+         * A Game Object with an active state of `true` is processed by the Scenes UpdateList, if added to it.
+         * An active object is one which is having its logic and internal systems updated.
+         *
+         * @name Phaser.GameObjects.GameObject#active
+         * @type {boolean}
+         * @default true
+         * @since 3.0.0
+         */
+        this.active = true;
+
+        /**
+         * The Tab Index of the Game Object.
+         * Reserved for future use by plugins and the Input Manager.
+         *
+         * @name Phaser.GameObjects.GameObject#tabIndex
+         * @type {integer}
+         * @default -1
+         * @since 3.0.0
+         */
+        this.tabIndex = -1;
+
+        /**
+         * A Data Manager.
+         * It allows you to store, query and get key/value paired information specific to this Game Object.
+         * `null` by default. Automatically created if you use `getData` or `setData` or `setDataEnabled`.
+         *
+         * @name Phaser.GameObjects.GameObject#data
+         * @type {Phaser.Data.DataManager}
+         * @default null
+         * @since 3.0.0
+         */
+        this.data = null;
+
+        /**
+         * The flags that are compared against `RENDER_MASK` to determine if this Game Object will render or not.
+         * The bits are 0001 | 0010 | 0100 | 1000 set by the components Visible, Alpha, Transform and Texture respectively.
+         * If those components are not used by your custom class then you can use this bitmask as you wish.
+         *
+         * @name Phaser.GameObjects.GameObject#renderFlags
+         * @type {integer}
+         * @default 15
+         * @since 3.0.0
+         */
+        this.renderFlags = 15;
+
+        /**
+         * A bitmask that controls if this Game Object is drawn by a Camera or not.
+         * Not usually set directly, instead call `Camera.ignore`, however you can
+         * set this property directly using the Camera.id property:
+         *
+         * @example
+         * this.cameraFilter |= camera.id
+         *
+         * @name Phaser.GameObjects.GameObject#cameraFilter
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.cameraFilter = 0;
+
+        /**
+         * If this Game Object is enabled for input then this property will contain an InteractiveObject instance.
+         * Not usually set directly. Instead call `GameObject.setInteractive()`.
+         *
+         * @name Phaser.GameObjects.GameObject#input
+         * @type {?Phaser.Types.Input.InteractiveObject}
+         * @default null
+         * @since 3.0.0
+         */
+        this.input = null;
+
+        /**
+         * If this Game Object is enabled for Arcade or Matter Physics then this property will contain a reference to a Physics Body.
+         *
+         * @name Phaser.GameObjects.GameObject#body
+         * @type {?(Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody|MatterJS.BodyType)}
+         * @default null
+         * @since 3.0.0
+         */
+        this.body = null;
+
+        /**
+         * This Game Object will ignore all calls made to its destroy method if this flag is set to `true`.
+         * This includes calls that may come from a Group, Container or the Scene itself.
+         * While it allows you to persist a Game Object across Scenes, please understand you are entirely
+         * responsible for managing references to and from this Game Object.
+         *
+         * @name Phaser.GameObjects.GameObject#ignoreDestroy
+         * @type {boolean}
+         * @default false
+         * @since 3.5.0
+         */
+        this.ignoreDestroy = false;
+
+        //  Tell the Scene to re-sort the children
+        scene.sys.queueDepthSort();
+    },
+
+    /**
+     * Sets the `active` property of this Game Object and returns this Game Object for further chaining.
+     * A Game Object with its `active` property set to `true` will be updated by the Scenes UpdateList.
+     *
+     * @method Phaser.GameObjects.GameObject#setActive
+     * @since 3.0.0
+     *
+     * @param {boolean} value - True if this Game Object should be set as active, false if not.
+     *
+     * @return {this} This GameObject.
+     */
+    setActive: function (value)
+    {
+        this.active = value;
+
+        return this;
+    },
+
+    /**
+     * Sets the `name` property of this Game Object and returns this Game Object for further chaining.
+     * The `name` property is not populated by Phaser and is presented for your own use.
+     *
+     * @method Phaser.GameObjects.GameObject#setName
+     * @since 3.0.0
+     *
+     * @param {string} value - The name to be given to this Game Object.
+     *
+     * @return {this} This GameObject.
+     */
+    setName: function (value)
+    {
+        this.name = value;
+
+        return this;
+    },
+
+    /**
+     * Sets the current state of this Game Object.
+     *
+     * Phaser itself will never modify the State of a Game Object, although plugins may do so.
+     *
+     * For example, a Game Object could change from a state of 'moving', to 'attacking', to 'dead'.
+     * The state value should typically be an integer (ideally mapped to a constant
+     * in your game code), but could also be a string. It is recommended to keep it light and simple.
+     * If you need to store complex data about your Game Object, look at using the Data Component instead.
+     *
+     * @method Phaser.GameObjects.GameObject#setState
+     * @since 3.16.0
+     *
+     * @param {(integer|string)} value - The state of the Game Object.
+     *
+     * @return {this} This GameObject.
+     */
+    setState: function (value)
+    {
+        this.state = value;
+
+        return this;
+    },
+
+    /**
+     * Adds a Data Manager component to this Game Object.
+     *
+     * @method Phaser.GameObjects.GameObject#setDataEnabled
+     * @since 3.0.0
+     * @see Phaser.Data.DataManager
+     *
+     * @return {this} This GameObject.
+     */
+    setDataEnabled: function ()
+    {
+        if (!this.data)
+        {
+            this.data = new DataManager(this);
+        }
+
+        return this;
+    },
+
+    /**
+     * Allows you to store a key value pair within this Game Objects Data Manager.
+     *
+     * If the Game Object has not been enabled for data (via `setDataEnabled`) then it will be enabled
+     * before setting the value.
+     *
+     * If the key doesn't already exist in the Data Manager then it is created.
+     *
+     * ```javascript
+     * sprite.setData('name', 'Red Gem Stone');
+     * ```
+     *
+     * You can also pass in an object of key value pairs as the first argument:
+     *
+     * ```javascript
+     * sprite.setData({ name: 'Red Gem Stone', level: 2, owner: 'Link', gold: 50 });
+     * ```
+     *
+     * To get a value back again you can call `getData`:
+     *
+     * ```javascript
+     * sprite.getData('gold');
+     * ```
+     *
+     * Or you can access the value directly via the `values` property, where it works like any other variable:
+     *
+     * ```javascript
+     * sprite.data.values.gold += 50;
+     * ```
+     *
+     * When the value is first set, a `setdata` event is emitted from this Game Object.
+     *
+     * If the key already exists, a `changedata` event is emitted instead, along an event named after the key.
+     * For example, if you updated an existing key called `PlayerLives` then it would emit the event `changedata-PlayerLives`.
+     * These events will be emitted regardless if you use this method to set the value, or the direct `values` setter.
+     *
+     * Please note that the data keys are case-sensitive and must be valid JavaScript Object property strings.
+     * This means the keys `gold` and `Gold` are treated as two unique values within the Data Manager.
+     *
+     * @method Phaser.GameObjects.GameObject#setData
+     * @since 3.0.0
+     *
+     * @param {(string|object)} key - The key to set the value for. Or an object of key value pairs. If an object the `data` argument is ignored.
+     * @param {*} [data] - The value to set for the given key. If an object is provided as the key this argument is ignored.
+     *
+     * @return {this} This GameObject.
+     */
+    setData: function (key, value)
+    {
+        if (!this.data)
+        {
+            this.data = new DataManager(this);
+        }
+
+        this.data.set(key, value);
+
+        return this;
+    },
+
+    /**
+     * Increase a value for the given key within this Game Objects Data Manager. If the key doesn't already exist in the Data Manager then it is increased from 0.
+     *
+     * If the Game Object has not been enabled for data (via `setDataEnabled`) then it will be enabled
+     * before setting the value.
+     *
+     * If the key doesn't already exist in the Data Manager then it is created.
+     *
+     * When the value is first set, a `setdata` event is emitted from this Game Object.
+     *
+     * @method Phaser.GameObjects.GameObject#incData
+     * @since 3.23.0
+     *
+     * @param {(string|object)} key - The key to increase the value for.
+     * @param {*} [data] - The value to increase for the given key.
+     *
+     * @return {this} This GameObject.
+     */
+    incData: function (key, value)
+    {
+        if (!this.data)
+        {
+            this.data = new DataManager(this);
+        }
+
+        this.data.inc(key, value);
+
+        return this;
+    },
+
+    /**
+     * Toggle a boolean value for the given key within this Game Objects Data Manager. If the key doesn't already exist in the Data Manager then it is toggled from false.
+     *
+     * If the Game Object has not been enabled for data (via `setDataEnabled`) then it will be enabled
+     * before setting the value.
+     *
+     * If the key doesn't already exist in the Data Manager then it is created.
+     *
+     * When the value is first set, a `setdata` event is emitted from this Game Object.
+     *
+     * @method Phaser.GameObjects.GameObject#toggleData
+     * @since 3.23.0
+     *
+     * @param {(string|object)} key - The key to toggle the value for.
+     *
+     * @return {this} This GameObject.
+     */
+    toggleData: function (key)
+    {
+        if (!this.data)
+        {
+            this.data = new DataManager(this);
+        }
+
+        this.data.toggle(key);
+
+        return this;
+    },
+
+    /**
+     * Retrieves the value for the given key in this Game Objects Data Manager, or undefined if it doesn't exist.
+     *
+     * You can also access values via the `values` object. For example, if you had a key called `gold` you can do either:
+     *
+     * ```javascript
+     * sprite.getData('gold');
+     * ```
+     *
+     * Or access the value directly:
+     *
+     * ```javascript
+     * sprite.data.values.gold;
+     * ```
+     *
+     * You can also pass in an array of keys, in which case an array of values will be returned:
+     *
+     * ```javascript
+     * sprite.getData([ 'gold', 'armor', 'health' ]);
+     * ```
+     *
+     * This approach is useful for destructuring arrays in ES6.
+     *
+     * @method Phaser.GameObjects.GameObject#getData
+     * @since 3.0.0
+     *
+     * @param {(string|string[])} key - The key of the value to retrieve, or an array of keys.
+     *
+     * @return {*} The value belonging to the given key, or an array of values, the order of which will match the input array.
+     */
+    getData: function (key)
+    {
+        if (!this.data)
+        {
+            this.data = new DataManager(this);
+        }
+
+        return this.data.get(key);
+    },
+
+    /**
+     * Pass this Game Object to the Input Manager to enable it for Input.
+     *
+     * Input works by using hit areas, these are nearly always geometric shapes, such as rectangles or circles, that act as the hit area
+     * for the Game Object. However, you can provide your own hit area shape and callback, should you wish to handle some more advanced
+     * input detection.
+     *
+     * If no arguments are provided it will try and create a rectangle hit area based on the texture frame the Game Object is using. If
+     * this isn't a texture-bound object, such as a Graphics or BitmapText object, this will fail, and you'll need to provide a specific
+     * shape for it to use.
+     *
+     * You can also provide an Input Configuration Object as the only argument to this method.
+     *
+     * @example
+     * sprite.setInteractive();
+     *
+     * @example
+     * sprite.setInteractive(new Phaser.Geom.Circle(45, 46, 45), Phaser.Geom.Circle.Contains);
+     *
+     * @example
+     * graphics.setInteractive(new Phaser.Geom.Rectangle(0, 0, 128, 128), Phaser.Geom.Rectangle.Contains);
+     *
+     * @method Phaser.GameObjects.GameObject#setInteractive
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Types.Input.InputConfiguration|any)} [hitArea] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not given it will try to create a Rectangle based on the texture frame.
+     * @param {Phaser.Types.Input.HitAreaCallback} [callback] - The callback that determines if the pointer is within the Hit Area shape or not. If you provide a shape you must also provide a callback.
+     * @param {boolean} [dropZone=false] - Should this Game Object be treated as a drop zone target?
+     *
+     * @return {this} This GameObject.
+     */
+    setInteractive: function (hitArea, hitAreaCallback, dropZone)
+    {
+        this.scene.sys.input.enable(this, hitArea, hitAreaCallback, dropZone);
+
+        return this;
+    },
+
+    /**
+     * If this Game Object has previously been enabled for input, this will disable it.
+     *
+     * An object that is disabled for input stops processing or being considered for
+     * input events, but can be turned back on again at any time by simply calling
+     * `setInteractive()` with no arguments provided.
+     *
+     * If want to completely remove interaction from this Game Object then use `removeInteractive` instead.
+     *
+     * @method Phaser.GameObjects.GameObject#disableInteractive
+     * @since 3.7.0
+     *
+     * @return {this} This GameObject.
+     */
+    disableInteractive: function ()
+    {
+        if (this.input)
+        {
+            this.input.enabled = false;
+        }
+
+        return this;
+    },
+
+    /**
+     * If this Game Object has previously been enabled for input, this will queue it
+     * for removal, causing it to no longer be interactive. The removal happens on
+     * the next game step, it is not immediate.
+     *
+     * The Interactive Object that was assigned to this Game Object will be destroyed,
+     * removed from the Input Manager and cleared from this Game Object.
+     *
+     * If you wish to re-enable this Game Object at a later date you will need to
+     * re-create its InteractiveObject by calling `setInteractive` again.
+     *
+     * If you wish to only temporarily stop an object from receiving input then use
+     * `disableInteractive` instead, as that toggles the interactive state, where-as
+     * this erases it completely.
+     *
+     * If you wish to resize a hit area, don't remove and then set it as being
+     * interactive. Instead, access the hitarea object directly and resize the shape
+     * being used. I.e.: `sprite.input.hitArea.setSize(width, height)` (assuming the
+     * shape is a Rectangle, which it is by default.)
+     *
+     * @method Phaser.GameObjects.GameObject#removeInteractive
+     * @since 3.7.0
+     *
+     * @return {this} This GameObject.
+     */
+    removeInteractive: function ()
+    {
+        this.scene.sys.input.clear(this);
+
+        this.input = undefined;
+
+        return this;
+    },
+
+    /**
+     * This callback is invoked when this Game Object is added to a Scene.
+     *
+     * Can be overriden by custom Game Objects, but be aware of some Game Objects that
+     * will use this, such as Sprites, to add themselves into the Update List.
+     *
+     * You can also listen for the `ADDED_TO_SCENE` event from this Game Object.
+     *
+     * @method Phaser.GameObjects.GameObject#addedToScene
+     * @since 3.50.0
+     */
+    addedToScene: function ()
+    {
+    },
+
+    /**
+     * This callback is invoked when this Game Object is removed from a Scene.
+     *
+     * Can be overriden by custom Game Objects, but be aware of some Game Objects that
+     * will use this, such as Sprites, to removed themselves from the Update List.
+     *
+     * You can also listen for the `REMOVED_FROM_SCENE` event from this Game Object.
+     *
+     * @method Phaser.GameObjects.GameObject#removedFromScene
+     * @since 3.50.0
+     */
+    removedFromScene: function ()
+    {
+    },
+
+    /**
+     * To be overridden by custom GameObjects. Allows base objects to be used in a Pool.
+     *
+     * @method Phaser.GameObjects.GameObject#update
+     * @since 3.0.0
+     *
+     * @param {...*} [args] - args
+     */
+    update: function ()
+    {
+    },
+
+    /**
+     * Returns a JSON representation of the Game Object.
+     *
+     * @method Phaser.GameObjects.GameObject#toJSON
+     * @since 3.0.0
+     *
+     * @return {Phaser.Types.GameObjects.JSONGameObject} A JSON representation of the Game Object.
+     */
+    toJSON: function ()
+    {
+        return ComponentsToJSON(this);
+    },
+
+    /**
+     * Compares the renderMask with the renderFlags to see if this Game Object will render or not.
+     * Also checks the Game Object against the given Cameras exclusion list.
+     *
+     * @method Phaser.GameObjects.GameObject#willRender
+     * @since 3.0.0
+     *
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to check against this Game Object.
+     *
+     * @return {boolean} True if the Game Object should be rendered, otherwise false.
+     */
+    willRender: function (camera)
+    {
+        return !(GameObject.RENDER_MASK !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)));
+    },
+
+    /**
+     * Returns an array containing the display list index of either this Game Object, or if it has one,
+     * its parent Container. It then iterates up through all of the parent containers until it hits the
+     * root of the display list (which is index 0 in the returned array).
+     *
+     * Used internally by the InputPlugin but also useful if you wish to find out the display depth of
+     * this Game Object and all of its ancestors.
+     *
+     * @method Phaser.GameObjects.GameObject#getIndexList
+     * @since 3.4.0
+     *
+     * @return {integer[]} An array of display list position indexes.
+     */
+    getIndexList: function ()
+    {
+        // eslint-disable-next-line consistent-this
+        var child = this;
+        var parent = this.parentContainer;
+
+        var indexes = [];
+
+        while (parent)
+        {
+            // indexes.unshift([parent.getIndex(child), parent.name]);
+            indexes.unshift(parent.getIndex(child));
+
+            child = parent;
+
+            if (!parent.parentContainer)
+            {
+                break;
+            }
+            else
+            {
+                parent = parent.parentContainer;
+            }
+        }
+
+        // indexes.unshift([this.scene.sys.displayList.getIndex(child), 'root']);
+        indexes.unshift(this.scene.sys.displayList.getIndex(child));
+
+        return indexes;
+    },
+
+    /**
+     * Destroys this Game Object removing it from the Display List and Update List and
+     * severing all ties to parent resources.
+     *
+     * Also removes itself from the Input Manager and Physics Manager if previously enabled.
+     *
+     * Use this to remove a Game Object from your game if you don't ever plan to use it again.
+     * As long as no reference to it exists within your own code it should become free for
+     * garbage collection by the browser.
+     *
+     * If you just want to temporarily disable an object then look at using the
+     * Game Object Pool instead of destroying it, as destroyed objects cannot be resurrected.
+     *
+     * @method Phaser.GameObjects.GameObject#destroy
+     * @fires Phaser.GameObjects.Events#DESTROY
+     * @since 3.0.0
+     *
+     * @param {boolean} [fromScene=false] - Is this Game Object being destroyed as the result of a Scene shutdown?
+     */
+    destroy: function (fromScene)
+    {
+        if (fromScene === undefined) { fromScene = false; }
+
+        //  This Game Object has already been destroyed
+        if (!this.scene || this.ignoreDestroy)
+        {
+            return;
+        }
+
+        if (this.preDestroy)
+        {
+            this.preDestroy.call(this);
+        }
+
+        this.emit(Events.DESTROY, this);
+
+        var sys = this.scene.sys;
+
+        if (!fromScene)
+        {
+            sys.displayList.remove(this);
+        }
+
+        if (this.input)
+        {
+            sys.input.clear(this);
+            this.input = undefined;
+        }
+
+        if (this.data)
+        {
+            this.data.destroy();
+
+            this.data = undefined;
+        }
+
+        if (this.body)
+        {
+            this.body.destroy();
+            this.body = undefined;
+        }
+
+        //  Tell the Scene to re-sort the children
+        if (!fromScene)
+        {
+            sys.queueDepthSort();
+        }
+
+        this.active = false;
+        this.visible = false;
+
+        this.scene = undefined;
+
+        this.parentContainer = undefined;
+
+        this.removeAllListeners();
+    }
+
+});
+
+/**
+ * The bitmask that `GameObject.renderFlags` is compared against to determine if the Game Object will render or not.
+ *
+ * @constant {integer} RENDER_MASK
+ * @memberof Phaser.GameObjects.GameObject
+ * @default
+ */
+GameObject.RENDER_MASK = 15;
+
+module.exports = GameObject;
+
+
+/***/ }),
+/* 54 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Build a JSON representation of the given Game Object.
+ *
+ * This is typically extended further by Game Object specific implementations.
+ *
+ * @method Phaser.GameObjects.Components.ToJSON
+ * @since 3.0.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to export as JSON.
+ *
+ * @return {Phaser.Types.GameObjects.JSONGameObject} A JSON representation of the Game Object.
+ */
+var ToJSON = function (gameObject)
+{
+    var out = {
+        name: gameObject.name,
+        type: gameObject.type,
+        x: gameObject.x,
+        y: gameObject.y,
+        depth: gameObject.depth,
+        scale: {
+            x: gameObject.scaleX,
+            y: gameObject.scaleY
+        },
+        origin: {
+            x: gameObject.originX,
+            y: gameObject.originY
+        },
+        flipX: gameObject.flipX,
+        flipY: gameObject.flipY,
+        rotation: gameObject.rotation,
+        alpha: gameObject.alpha,
+        visible: gameObject.visible,
+        blendMode: gameObject.blendMode,
+        textureKey: '',
+        frameKey: '',
+        data: {}
+    };
+
+    if (gameObject.texture)
+    {
+        out.textureKey = gameObject.texture.key;
+        out.frameKey = gameObject.frame.name;
+    }
+
+    return out;
+};
+
+module.exports = ToJSON;
+
+
+/***/ }),
+/* 55 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var has = Object.prototype.hasOwnProperty
+  , prefix = '~';
+
+/**
+ * Constructor to create a storage for our `EE` objects.
+ * An `Events` instance is a plain object whose properties are event names.
+ *
+ * @constructor
+ * @private
+ */
+function Events() {}
+
+//
+// We try to not inherit from `Object.prototype`. In some engines creating an
+// instance in this way is faster than calling `Object.create(null)` directly.
+// If `Object.create(null)` is not supported we prefix the event names with a
+// character to make sure that the built-in object properties are not
+// overridden or used as an attack vector.
+//
+if (Object.create) {
+  Events.prototype = Object.create(null);
+
+  //
+  // This hack is needed because the `__proto__` property is still inherited in
+  // some old browsers like Android 4, iPhone 5.1, Opera 11 and Safari 5.
+  //
+  if (!new Events().__proto__) prefix = false;
+}
+
+/**
+ * Representation of a single event listener.
+ *
+ * @param {Function} fn The listener function.
+ * @param {*} context The context to invoke the listener with.
+ * @param {Boolean} [once=false] Specify if the listener is a one-time listener.
+ * @constructor
+ * @private
+ */
+function EE(fn, context, once) {
+  this.fn = fn;
+  this.context = context;
+  this.once = once || false;
+}
+
+/**
+ * Add a listener for a given event.
+ *
+ * @param {EventEmitter} emitter Reference to the `EventEmitter` instance.
+ * @param {(String|Symbol)} event The event name.
+ * @param {Function} fn The listener function.
+ * @param {*} context The context to invoke the listener with.
+ * @param {Boolean} once Specify if the listener is a one-time listener.
+ * @returns {EventEmitter}
+ * @private
+ */
+function addListener(emitter, event, fn, context, once) {
+  if (typeof fn !== 'function') {
+    throw new TypeError('The listener must be a function');
+  }
+
+  var listener = new EE(fn, context || emitter, once)
+    , evt = prefix ? prefix + event : event;
+
+  if (!emitter._events[evt]) emitter._events[evt] = listener, emitter._eventsCount++;
+  else if (!emitter._events[evt].fn) emitter._events[evt].push(listener);
+  else emitter._events[evt] = [emitter._events[evt], listener];
+
+  return emitter;
+}
+
+/**
+ * Clear event by name.
+ *
+ * @param {EventEmitter} emitter Reference to the `EventEmitter` instance.
+ * @param {(String|Symbol)} evt The Event name.
+ * @private
+ */
+function clearEvent(emitter, evt) {
+  if (--emitter._eventsCount === 0) emitter._events = new Events();
+  else delete emitter._events[evt];
+}
+
+/**
+ * Minimal `EventEmitter` interface that is molded against the Node.js
+ * `EventEmitter` interface.
+ *
+ * @constructor
+ * @public
+ */
+function EventEmitter() {
+  this._events = new Events();
+  this._eventsCount = 0;
+}
+
+/**
+ * Return an array listing the events for which the emitter has registered
+ * listeners.
+ *
+ * @returns {Array}
+ * @public
+ */
+EventEmitter.prototype.eventNames = function eventNames() {
+  var names = []
+    , events
+    , name;
+
+  if (this._eventsCount === 0) return names;
+
+  for (name in (events = this._events)) {
+    if (has.call(events, name)) names.push(prefix ? name.slice(1) : name);
+  }
+
+  if (Object.getOwnPropertySymbols) {
+    return names.concat(Object.getOwnPropertySymbols(events));
+  }
+
+  return names;
+};
+
+/**
+ * Return the listeners registered for a given event.
+ *
+ * @param {(String|Symbol)} event The event name.
+ * @returns {Array} The registered listeners.
+ * @public
+ */
+EventEmitter.prototype.listeners = function listeners(event) {
+  var evt = prefix ? prefix + event : event
+    , handlers = this._events[evt];
+
+  if (!handlers) return [];
+  if (handlers.fn) return [handlers.fn];
+
+  for (var i = 0, l = handlers.length, ee = new Array(l); i < l; i++) {
+    ee[i] = handlers[i].fn;
+  }
+
+  return ee;
+};
+
+/**
+ * Return the number of listeners listening to a given event.
+ *
+ * @param {(String|Symbol)} event The event name.
+ * @returns {Number} The number of listeners.
+ * @public
+ */
+EventEmitter.prototype.listenerCount = function listenerCount(event) {
+  var evt = prefix ? prefix + event : event
+    , listeners = this._events[evt];
+
+  if (!listeners) return 0;
+  if (listeners.fn) return 1;
+  return listeners.length;
+};
+
+/**
+ * Calls each of the listeners registered for a given event.
+ *
+ * @param {(String|Symbol)} event The event name.
+ * @returns {Boolean} `true` if the event had listeners, else `false`.
+ * @public
+ */
+EventEmitter.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
+  var evt = prefix ? prefix + event : event;
+
+  if (!this._events[evt]) return false;
+
+  var listeners = this._events[evt]
+    , len = arguments.length
+    , args
+    , i;
+
+  if (listeners.fn) {
+    if (listeners.once) this.removeListener(event, listeners.fn, undefined, true);
+
+    switch (len) {
+      case 1: return listeners.fn.call(listeners.context), true;
+      case 2: return listeners.fn.call(listeners.context, a1), true;
+      case 3: return listeners.fn.call(listeners.context, a1, a2), true;
+      case 4: return listeners.fn.call(listeners.context, a1, a2, a3), true;
+      case 5: return listeners.fn.call(listeners.context, a1, a2, a3, a4), true;
+      case 6: return listeners.fn.call(listeners.context, a1, a2, a3, a4, a5), true;
+    }
+
+    for (i = 1, args = new Array(len -1); i < len; i++) {
+      args[i - 1] = arguments[i];
+    }
+
+    listeners.fn.apply(listeners.context, args);
+  } else {
+    var length = listeners.length
+      , j;
+
+    for (i = 0; i < length; i++) {
+      if (listeners[i].once) this.removeListener(event, listeners[i].fn, undefined, true);
+
+      switch (len) {
+        case 1: listeners[i].fn.call(listeners[i].context); break;
+        case 2: listeners[i].fn.call(listeners[i].context, a1); break;
+        case 3: listeners[i].fn.call(listeners[i].context, a1, a2); break;
+        case 4: listeners[i].fn.call(listeners[i].context, a1, a2, a3); break;
+        default:
+          if (!args) for (j = 1, args = new Array(len -1); j < len; j++) {
+            args[j - 1] = arguments[j];
+          }
+
+          listeners[i].fn.apply(listeners[i].context, args);
+      }
+    }
+  }
+
+  return true;
+};
+
+/**
+ * Add a listener for a given event.
+ *
+ * @param {(String|Symbol)} event The event name.
+ * @param {Function} fn The listener function.
+ * @param {*} [context=this] The context to invoke the listener with.
+ * @returns {EventEmitter} `this`.
+ * @public
+ */
+EventEmitter.prototype.on = function on(event, fn, context) {
+  return addListener(this, event, fn, context, false);
+};
+
+/**
+ * Add a one-time listener for a given event.
+ *
+ * @param {(String|Symbol)} event The event name.
+ * @param {Function} fn The listener function.
+ * @param {*} [context=this] The context to invoke the listener with.
+ * @returns {EventEmitter} `this`.
+ * @public
+ */
+EventEmitter.prototype.once = function once(event, fn, context) {
+  return addListener(this, event, fn, context, true);
+};
+
+/**
+ * Remove the listeners of a given event.
+ *
+ * @param {(String|Symbol)} event The event name.
+ * @param {Function} fn Only remove the listeners that match this function.
+ * @param {*} context Only remove the listeners that have this context.
+ * @param {Boolean} once Only remove one-time listeners.
+ * @returns {EventEmitter} `this`.
+ * @public
+ */
+EventEmitter.prototype.removeListener = function removeListener(event, fn, context, once) {
+  var evt = prefix ? prefix + event : event;
+
+  if (!this._events[evt]) return this;
+  if (!fn) {
+    clearEvent(this, evt);
+    return this;
+  }
+
+  var listeners = this._events[evt];
+
+  if (listeners.fn) {
+    if (
+      listeners.fn === fn &&
+      (!once || listeners.once) &&
+      (!context || listeners.context === context)
+    ) {
+      clearEvent(this, evt);
+    }
+  } else {
+    for (var i = 0, events = [], length = listeners.length; i < length; i++) {
+      if (
+        listeners[i].fn !== fn ||
+        (once && !listeners[i].once) ||
+        (context && listeners[i].context !== context)
+      ) {
+        events.push(listeners[i]);
+      }
+    }
+
+    //
+    // Reset the array, or remove it completely if we have no more listeners.
+    //
+    if (events.length) this._events[evt] = events.length === 1 ? events[0] : events;
+    else clearEvent(this, evt);
+  }
+
+  return this;
+};
+
+/**
+ * Remove all listeners, or those of the specified event.
+ *
+ * @param {(String|Symbol)} [event] The event name.
+ * @returns {EventEmitter} `this`.
+ * @public
+ */
+EventEmitter.prototype.removeAllListeners = function removeAllListeners(event) {
+  var evt;
+
+  if (event) {
+    evt = prefix ? prefix + event : event;
+    if (this._events[evt]) clearEvent(this, evt);
+  } else {
+    this._events = new Events();
+    this._eventsCount = 0;
+  }
+
+  return this;
+};
+
+//
+// Alias methods names because people roll like that.
+//
+EventEmitter.prototype.off = EventEmitter.prototype.removeListener;
+EventEmitter.prototype.addListener = EventEmitter.prototype.on;
+
+//
+// Expose the prefix.
+//
+EventEmitter.prefixed = prefix;
+
+//
+// Allow `EventEmitter` to be imported as module namespace.
+//
+EventEmitter.EventEmitter = EventEmitter;
+
+//
+// Expose the module.
+//
+if (true) {
+  module.exports = EventEmitter;
+}
+
+
+/***/ }),
+/* 56 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Transposes the elements of the given matrix (array of arrays).
+ *
+ * The transpose of a matrix is a new matrix whose rows are the columns of the original.
+ *
+ * @function Phaser.Utils.Array.Matrix.TransposeMatrix
+ * @since 3.0.0
+ * 
+ * @generic T
+ * @genericUse {T[][]} - [array,$return]
+ * 
+ * @param {T[][]} [array] - The array matrix to transpose.
+ *
+ * @return {T[][]} A new array matrix which is a transposed version of the given array.
+ */
+var TransposeMatrix = function (array)
+{
+    var sourceRowCount = array.length;
+    var sourceColCount = array[0].length;
+
+    var result = new Array(sourceColCount);
+
+    for (var i = 0; i < sourceColCount; i++)
+    {
+        result[i] = new Array(sourceRowCount);
+
+        for (var j = sourceRowCount - 1; j > -1; j--)
+        {
+            result[i][j] = array[j][i];
+        }
+    }
+
+    return result;
+};
+
+module.exports = TransposeMatrix;
+
+
+/***/ }),
+/* 57 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Searches a pre-sorted array for the closet value to the given number.
+ *
+ * If the `key` argument is given it will assume the array contains objects that all have the required `key` property name,
+ * and will check for the closest value of those to the given number.
+ *
+ * @function Phaser.Utils.Array.FindClosestInSorted
+ * @since 3.0.0
+ *
+ * @param {number} value - The value to search for in the array.
+ * @param {array} array - The array to search, which must be sorted.
+ * @param {string} [key] - An optional property key. If specified the array elements property will be checked against value.
+ *
+ * @return {(number|any)} The nearest value found in the array, or if a `key` was given, the nearest object with the matching property value.
+ */
+var FindClosestInSorted = function (value, array, key)
+{
+    if (!array.length)
+    {
+        return NaN;
+    }
+    else if (array.length === 1)
+    {
+        return array[0];
+    }
+
+    var i = 1;
+    var low;
+    var high;
+
+    if (key)
+    {
+        if (value < array[0][key])
+        {
+            return array[0];
+        }
+
+        while (array[i][key] < value)
+        {
+            i++;
+        }
+    }
+    else
+    {
+        while (array[i] < value)
+        {
+            i++;
+        }
+    }
+
+    if (i > array.length)
+    {
+        i = array.length;
+    }
+
+    if (key)
+    {
+        low = array[i - 1][key];
+        high = array[i][key];
+
+        return ((high - value) <= (value - low)) ? array[i] : array[i - 1];
+    }
+    else
+    {
+        low = array[i - 1];
+        high = array[i];
+
+        return ((high - value) <= (value - low)) ? high : low;
+    }
+};
+
+module.exports = FindClosestInSorted;
+
+
+/***/ }),
+/* 58 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Shuffles the contents of the given array using the Fisher-Yates implementation.
+ *
+ * The original array is modified directly and returned.
+ *
+ * @function Phaser.Utils.Array.Shuffle
+ * @since 3.0.0
+ *
+ * @generic T
+ * @genericUse {T[]} - [array,$return]
+ *
+ * @param {T[]} array - The array to shuffle. This array is modified in place.
+ *
+ * @return {T[]} The shuffled array.
+ */
+var Shuffle = function (array)
+{
+    for (var i = array.length - 1; i > 0; i--)
+    {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+
+    return array;
+};
+
+module.exports = Shuffle;
+
+
+/***/ }),
+/* 59 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Animations.Events
+ */
+
+module.exports = {
+
+    ADD_ANIMATION: __webpack_require__(290),
+    ANIMATION_COMPLETE: __webpack_require__(291),
+    ANIMATION_REPEAT: __webpack_require__(292),
+    ANIMATION_RESTART: __webpack_require__(293),
+    ANIMATION_START: __webpack_require__(294),
+    PAUSE_ALL: __webpack_require__(295),
+    REMOVE_ANIMATION: __webpack_require__(296),
+    RESUME_ALL: __webpack_require__(297),
+    SPRITE_ANIMATION_COMPLETE: __webpack_require__(298),
+    SPRITE_ANIMATION_KEY_COMPLETE: __webpack_require__(299),
+    SPRITE_ANIMATION_KEY_REPEAT: __webpack_require__(300),
+    SPRITE_ANIMATION_KEY_RESTART: __webpack_require__(301),
+    SPRITE_ANIMATION_KEY_START: __webpack_require__(302),
+    SPRITE_ANIMATION_KEY_UPDATE: __webpack_require__(303),
+    SPRITE_ANIMATION_REPEAT: __webpack_require__(304),
+    SPRITE_ANIMATION_RESTART: __webpack_require__(305),
+    SPRITE_ANIMATION_START: __webpack_require__(306),
+    SPRITE_ANIMATION_UPDATE: __webpack_require__(307)
+
+};
+
+
+/***/ }),
+/* 60 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Perimeter = __webpack_require__(61);
+var Point = __webpack_require__(9);
+
+/**
+ * Calculates the coordinates of a point at a certain `position` on the Rectangle's perimeter.
+ * 
+ * The `position` is a fraction between 0 and 1 which defines how far into the perimeter the point is.
+ * 
+ * A value of 0 or 1 returns the point at the top left corner of the rectangle, while a value of 0.5 returns the point at the bottom right corner of the rectangle. Values between 0 and 0.5 are on the top or the right side and values between 0.5 and 1 are on the bottom or the left side.
+ *
+ * @function Phaser.Geom.Rectangle.GetPoint
+ * @since 3.0.0
+ *
+ * @generic {Phaser.Geom.Point} O - [out,$return]
+ *
+ * @param {Phaser.Geom.Rectangle} rectangle - The Rectangle to get the perimeter point from.
+ * @param {number} position - The normalized distance into the Rectangle's perimeter to return.
+ * @param {(Phaser.Geom.Point|object)} [out] - An object to update with the `x` and `y` coordinates of the point.
+ *
+ * @return {Phaser.Geom.Point} The updated `output` object, or a new Point if no `output` object was given.
+ */
+var GetPoint = function (rectangle, position, out)
+{
+    if (out === undefined) { out = new Point(); }
+
+    if (position <= 0 || position >= 1)
+    {
+        out.x = rectangle.x;
+        out.y = rectangle.y;
+
+        return out;
+    }
+
+    var p = Perimeter(rectangle) * position;
+
+    if (position > 0.5)
+    {
+        p -= (rectangle.width + rectangle.height);
+
+        if (p <= rectangle.width)
+        {
+            //  Face 3
+            out.x = rectangle.right - p;
+            out.y = rectangle.bottom;
+        }
+        else
+        {
+            //  Face 4
+            out.x = rectangle.x;
+            out.y = rectangle.bottom - (p - rectangle.width);
+        }
+    }
+    else if (p <= rectangle.width)
+    {
+        //  Face 1
+        out.x = rectangle.x + p;
+        out.y = rectangle.y;
+    }
+    else
+    {
+        //  Face 2
+        out.x = rectangle.right;
+        out.y = rectangle.y + (p - rectangle.width);
+    }
+
+    return out;
+};
+
+module.exports = GetPoint;
+
+
+/***/ }),
+/* 61 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculates the perimeter of a Rectangle.
+ *
+ * @function Phaser.Geom.Rectangle.Perimeter
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Rectangle} rect - The Rectangle to use.
+ *
+ * @return {number} The perimeter of the Rectangle, equal to `(width * 2) + (height * 2)`.
+ */
+var Perimeter = function (rect)
+{
+    return 2 * (rect.width + rect.height);
+};
+
+module.exports = Perimeter;
+
+
+/***/ }),
+/* 62 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BuildGameObject = __webpack_require__(36);
+var BuildGameObject = __webpack_require__(63);
 var Class = __webpack_require__(0);
-var GetValue = __webpack_require__(12);
-var ResizeEvent = __webpack_require__(150);
-var ScenePlugin = __webpack_require__(151);
-var Spine = __webpack_require__(175);
-var SpineFile = __webpack_require__(176);
-var SpineGameObject = __webpack_require__(194);
+var GetValue = __webpack_require__(6);
+var ResizeEvent = __webpack_require__(174);
+var ScenePlugin = __webpack_require__(175);
+var Spine = __webpack_require__(199);
+var SpineFile = __webpack_require__(200);
+var SpineGameObject = __webpack_require__(218);
+var SpineContainer = __webpack_require__(247);
+var NOOP = __webpack_require__(3);
 
 /**
  * @classdesc
@@ -6770,6 +11804,13 @@ var SpineGameObject = __webpack_require__(194);
  * The only exception to this is with the caches this plugin creates. Spine atlas and texture data are
  * stored in their own caches, which are global, meaning they're accessible from any Scene in your
  * game, regardless if the Scene loaded the Spine data or not.
+ *
+ * When destroying a Phaser Game instance, if you need to re-create it again on the same page without
+ * reloading, you must remember to remove the Spine Plugin as part of your tear-down process:
+ *
+ * ```javascript
+ * this.plugins.removeScenePlugin('SpinePlugin');
+ * ```
  *
  * For details about the Spine Runtime API see http://esotericsoftware.com/spine-api-reference
  *
@@ -6954,6 +11995,19 @@ var SpinePlugin = new Class({
             this.getAtlas = this.getAtlasCanvas;
         }
 
+        //  Headless mode?
+        if (!this.renderer)
+        {
+            this.renderer = {
+                width: game.scale.width,
+                height: game.scale.height,
+                preRender: NOOP,
+                postRender: NOOP,
+                render: NOOP,
+                destroy: NOOP
+            };
+        }
+
         var _this = this;
 
         var add = function (x, y, key, animationName, loop)
@@ -7002,8 +12056,38 @@ var SpinePlugin = new Class({
             return spineGO.refresh();
         };
 
+        var addContainer = function (x, y, children)
+        {
+            var spineGO = new SpineContainer(this.scene, _this, x, y, children);
+
+            this.displayList.add(spineGO);
+
+            return spineGO;
+        };
+
+        var makeContainer = function (config, addToScene)
+        {
+            if (config === undefined) { config = {}; }
+
+            var x = GetValue(config, 'x', 0);
+            var y = GetValue(config, 'y', 0);
+            var children = GetValue(config, 'children', null);
+
+            var container = new SpineContainer(this.scene, _this, x, y, children);
+
+            if (addToScene !== undefined)
+            {
+                config.add = addToScene;
+            }
+
+            BuildGameObject(this.scene, container, config);
+
+            return container;
+        };
+
         pluginManager.registerFileType('spine', this.spineFileCallback, scene);
         pluginManager.registerGameObject('spine', add, make);
+        pluginManager.registerGameObject('spinecontainer', addContainer, makeContainer);
     },
 
     /**
@@ -7737,6 +12821,8 @@ var SpinePlugin = new Class({
 
 });
 
+SpinePlugin.SpineGameObject = SpineGameObject;
+
 /**
  * Creates a new Spine Game Object and adds it to the Scene.
  *
@@ -7807,7 +12893,7 @@ module.exports = SpinePlugin;
 
 
 /***/ }),
-/* 36 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -7816,8 +12902,8 @@ module.exports = SpinePlugin;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var BlendModes = __webpack_require__(37);
-var GetAdvancedValue = __webpack_require__(38);
+var BlendModes = __webpack_require__(14);
+var GetAdvancedValue = __webpack_require__(64);
 
 /**
  * Builds a Game Object using the provided configuration object.
@@ -7935,346 +13021,7 @@ module.exports = BuildGameObject;
 
 
 /***/ }),
-/* 37 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * Phaser Blend Modes.
- * 
- * @namespace Phaser.BlendModes
- * @since 3.0.0
- */
-
-module.exports = {
-
-    /**
-     * Skips the Blend Mode check in the renderer.
-     * 
-     * @name Phaser.BlendModes.SKIP_CHECK
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    SKIP_CHECK: -1,
-
-    /**
-     * Normal blend mode. For Canvas and WebGL.
-     * This is the default setting and draws new shapes on top of the existing canvas content.
-     * 
-     * @name Phaser.BlendModes.NORMAL
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    NORMAL: 0,
-
-    /**
-     * Add blend mode. For Canvas and WebGL.
-     * Where both shapes overlap the color is determined by adding color values.
-     * 
-     * @name Phaser.BlendModes.ADD
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    ADD: 1,
-
-    /**
-     * Multiply blend mode. For Canvas and WebGL.
-     * The pixels are of the top layer are multiplied with the corresponding pixel of the bottom layer. A darker picture is the result.
-     * 
-     * @name Phaser.BlendModes.MULTIPLY
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    MULTIPLY: 2,
-
-    /**
-     * Screen blend mode. For Canvas and WebGL.
-     * The pixels are inverted, multiplied, and inverted again. A lighter picture is the result (opposite of multiply)
-     * 
-     * @name Phaser.BlendModes.SCREEN
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    SCREEN: 3,
-
-    /**
-     * Overlay blend mode. For Canvas only.
-     * A combination of multiply and screen. Dark parts on the base layer become darker, and light parts become lighter.
-     * 
-     * @name Phaser.BlendModes.OVERLAY
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    OVERLAY: 4,
-
-    /**
-     * Darken blend mode. For Canvas only.
-     * Retains the darkest pixels of both layers.
-     * 
-     * @name Phaser.BlendModes.DARKEN
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    DARKEN: 5,
-
-    /**
-     * Lighten blend mode. For Canvas only.
-     * Retains the lightest pixels of both layers.
-     * 
-     * @name Phaser.BlendModes.LIGHTEN
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    LIGHTEN: 6,
-
-    /**
-     * Color Dodge blend mode. For Canvas only.
-     * Divides the bottom layer by the inverted top layer.
-     * 
-     * @name Phaser.BlendModes.COLOR_DODGE
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    COLOR_DODGE: 7,
-
-    /**
-     * Color Burn blend mode. For Canvas only.
-     * Divides the inverted bottom layer by the top layer, and then inverts the result.
-     * 
-     * @name Phaser.BlendModes.COLOR_BURN
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    COLOR_BURN: 8,
-
-    /**
-     * Hard Light blend mode. For Canvas only.
-     * A combination of multiply and screen like overlay, but with top and bottom layer swapped.
-     * 
-     * @name Phaser.BlendModes.HARD_LIGHT
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    HARD_LIGHT: 9,
-
-    /**
-     * Soft Light blend mode. For Canvas only.
-     * A softer version of hard-light. Pure black or white does not result in pure black or white.
-     * 
-     * @name Phaser.BlendModes.SOFT_LIGHT
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    SOFT_LIGHT: 10,
-
-    /**
-     * Difference blend mode. For Canvas only.
-     * Subtracts the bottom layer from the top layer or the other way round to always get a positive value.
-     * 
-     * @name Phaser.BlendModes.DIFFERENCE
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    DIFFERENCE: 11,
-
-    /**
-     * Exclusion blend mode. For Canvas only.
-     * Like difference, but with lower contrast.
-     * 
-     * @name Phaser.BlendModes.EXCLUSION
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    EXCLUSION: 12,
-
-    /**
-     * Hue blend mode. For Canvas only.
-     * Preserves the luma and chroma of the bottom layer, while adopting the hue of the top layer.
-     * 
-     * @name Phaser.BlendModes.HUE
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    HUE: 13,
-
-    /**
-     * Saturation blend mode. For Canvas only.
-     * Preserves the luma and hue of the bottom layer, while adopting the chroma of the top layer.
-     * 
-     * @name Phaser.BlendModes.SATURATION
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    SATURATION: 14,
-
-    /**
-     * Color blend mode. For Canvas only.
-     * Preserves the luma of the bottom layer, while adopting the hue and chroma of the top layer.
-     * 
-     * @name Phaser.BlendModes.COLOR
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    COLOR: 15,
-
-    /**
-     * Luminosity blend mode. For Canvas only.
-     * Preserves the hue and chroma of the bottom layer, while adopting the luma of the top layer.
-     * 
-     * @name Phaser.BlendModes.LUMINOSITY
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    LUMINOSITY: 16,
-
-    /**
-     * Alpha erase blend mode. For Canvas and WebGL.
-     * 
-     * @name Phaser.BlendModes.ERASE
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    ERASE: 17,
-
-    /**
-     * Source-in blend mode. For Canvas only.
-     * The new shape is drawn only where both the new shape and the destination canvas overlap. Everything else is made transparent.
-     * 
-     * @name Phaser.BlendModes.SOURCE_IN
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    SOURCE_IN: 18,
-
-    /**
-     * Source-out blend mode. For Canvas only.
-     * The new shape is drawn where it doesn't overlap the existing canvas content.
-     * 
-     * @name Phaser.BlendModes.SOURCE_OUT
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    SOURCE_OUT: 19,
-
-    /**
-     * Source-out blend mode. For Canvas only.
-     * The new shape is only drawn where it overlaps the existing canvas content.
-     * 
-     * @name Phaser.BlendModes.SOURCE_ATOP
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    SOURCE_ATOP: 20,
-
-    /**
-     * Destination-over blend mode. For Canvas only.
-     * New shapes are drawn behind the existing canvas content.
-     * 
-     * @name Phaser.BlendModes.DESTINATION_OVER
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    DESTINATION_OVER: 21,
-
-    /**
-     * Destination-in blend mode. For Canvas only.
-     * The existing canvas content is kept where both the new shape and existing canvas content overlap. Everything else is made transparent.
-     * 
-     * @name Phaser.BlendModes.DESTINATION_IN
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    DESTINATION_IN: 22,
-
-    /**
-     * Destination-out blend mode. For Canvas only.
-     * The existing content is kept where it doesn't overlap the new shape.
-     * 
-     * @name Phaser.BlendModes.DESTINATION_OUT
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    DESTINATION_OUT: 23,
-
-    /**
-     * Destination-out blend mode. For Canvas only.
-     * The existing canvas is only kept where it overlaps the new shape. The new shape is drawn behind the canvas content.
-     * 
-     * @name Phaser.BlendModes.DESTINATION_ATOP
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    DESTINATION_ATOP: 24,
-
-    /**
-     * Lighten blend mode. For Canvas only.
-     * Where both shapes overlap the color is determined by adding color values.
-     * 
-     * @name Phaser.BlendModes.LIGHTER
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    LIGHTER: 25,
-
-    /**
-     * Copy blend mode. For Canvas only.
-     * Only the new shape is shown.
-     * 
-     * @name Phaser.BlendModes.COPY
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    COPY: 26,
-
-    /**
-     * Xor blend mode. For Canvas only.
-     * Shapes are made transparent where both overlap and drawn normal everywhere else.
-     * 
-     * @name Phaser.BlendModes.XOR
-     * @type {integer}
-     * @const
-     * @since 3.0.0
-     */
-    XOR: 27
-
-};
-
-
-/***/ }),
-/* 38 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -8283,8 +13030,8 @@ module.exports = {
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var MATH = __webpack_require__(39);
-var GetValue = __webpack_require__(12);
+var MATH = __webpack_require__(65);
+var GetValue = __webpack_require__(6);
 
 /**
  * Retrieves a value from an object. Allows for more advanced selection options, including:
@@ -8361,7 +13108,7 @@ module.exports = GetAdvancedValue;
 
 
 /***/ }),
-/* 39 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -8370,8 +13117,8 @@ module.exports = GetAdvancedValue;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CONST = __webpack_require__(1);
-var Extend = __webpack_require__(15);
+var CONST = __webpack_require__(2);
+var Extend = __webpack_require__(26);
 
 /**
  * @namespace Phaser.Math
@@ -8380,63 +13127,63 @@ var Extend = __webpack_require__(15);
 var PhaserMath = {
 
     //  Collections of functions
-    Angle: __webpack_require__(40),
-    Distance: __webpack_require__(49),
-    Easing: __webpack_require__(57),
-    Fuzzy: __webpack_require__(102),
-    Interpolation: __webpack_require__(107),
-    Pow2: __webpack_require__(115),
-    Snap: __webpack_require__(119),
+    Angle: __webpack_require__(66),
+    Distance: __webpack_require__(75),
+    Easing: __webpack_require__(83),
+    Fuzzy: __webpack_require__(128),
+    Interpolation: __webpack_require__(133),
+    Pow2: __webpack_require__(141),
+    Snap: __webpack_require__(145),
 
     //  Expose the RNG Class
-    RandomDataGenerator: __webpack_require__(123),
+    RandomDataGenerator: __webpack_require__(149),
 
     //  Single functions
-    Average: __webpack_require__(124),
-    Bernstein: __webpack_require__(21),
-    Between: __webpack_require__(125),
-    CatmullRom: __webpack_require__(23),
-    CeilTo: __webpack_require__(126),
-    Clamp: __webpack_require__(9),
-    DegToRad: __webpack_require__(27),
-    Difference: __webpack_require__(127),
-    Factorial: __webpack_require__(22),
-    FloatBetween: __webpack_require__(8),
-    FloorTo: __webpack_require__(128),
-    FromPercent: __webpack_require__(129),
-    GetSpeed: __webpack_require__(130),
-    IsEven: __webpack_require__(131),
-    IsEvenStrict: __webpack_require__(132),
-    Linear: __webpack_require__(24),
-    MaxAdd: __webpack_require__(133),
-    MinSub: __webpack_require__(134),
-    Percent: __webpack_require__(135),
-    RadToDeg: __webpack_require__(10),
-    RandomXY: __webpack_require__(136),
-    RandomXYZ: __webpack_require__(137),
-    RandomXYZW: __webpack_require__(138),
-    Rotate: __webpack_require__(139),
-    RotateAround: __webpack_require__(140),
-    RotateAroundDistance: __webpack_require__(141),
-    RotateTo: __webpack_require__(142),
-    RoundAwayFromZero: __webpack_require__(143),
-    RoundTo: __webpack_require__(144),
-    SinCosTableGenerator: __webpack_require__(145),
-    SmootherStep: __webpack_require__(26),
-    SmoothStep: __webpack_require__(25),
-    ToXY: __webpack_require__(146),
-    TransformXY: __webpack_require__(28),
-    Within: __webpack_require__(147),
-    Wrap: __webpack_require__(5),
+    Average: __webpack_require__(150),
+    Bernstein: __webpack_require__(32),
+    Between: __webpack_require__(151),
+    CatmullRom: __webpack_require__(34),
+    CeilTo: __webpack_require__(152),
+    Clamp: __webpack_require__(5),
+    DegToRad: __webpack_require__(17),
+    Difference: __webpack_require__(153),
+    Factorial: __webpack_require__(33),
+    FloatBetween: __webpack_require__(16),
+    FloorTo: __webpack_require__(154),
+    FromPercent: __webpack_require__(155),
+    GetSpeed: __webpack_require__(156),
+    IsEven: __webpack_require__(157),
+    IsEvenStrict: __webpack_require__(158),
+    Linear: __webpack_require__(35),
+    MaxAdd: __webpack_require__(159),
+    MinSub: __webpack_require__(160),
+    Percent: __webpack_require__(161),
+    RadToDeg: __webpack_require__(18),
+    RandomXY: __webpack_require__(162),
+    RandomXYZ: __webpack_require__(163),
+    RandomXYZW: __webpack_require__(164),
+    Rotate: __webpack_require__(165),
+    RotateAround: __webpack_require__(38),
+    RotateAroundDistance: __webpack_require__(166),
+    RotateTo: __webpack_require__(167),
+    RoundAwayFromZero: __webpack_require__(39),
+    RoundTo: __webpack_require__(168),
+    SinCosTableGenerator: __webpack_require__(169),
+    SmootherStep: __webpack_require__(37),
+    SmoothStep: __webpack_require__(36),
+    ToXY: __webpack_require__(170),
+    TransformXY: __webpack_require__(40),
+    Within: __webpack_require__(171),
+    Wrap: __webpack_require__(10),
 
     //  Vector classes
-    Vector2: __webpack_require__(3),
-    Vector3: __webpack_require__(11),
-    Vector4: __webpack_require__(148),
-    Matrix3: __webpack_require__(29),
-    Matrix4: __webpack_require__(30),
-    Quaternion: __webpack_require__(31),
-    RotateVec3: __webpack_require__(149)
+    Vector2: __webpack_require__(1),
+    Vector3: __webpack_require__(19),
+    Vector4: __webpack_require__(172),
+    Matrix3: __webpack_require__(41),
+    Matrix4: __webpack_require__(42),
+    Quaternion: __webpack_require__(43),
+    RotateVec3: __webpack_require__(173)
 
 };
 
@@ -8450,7 +13197,7 @@ module.exports = PhaserMath;
 
 
 /***/ }),
-/* 40 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -8465,25 +13212,25 @@ module.exports = PhaserMath;
 
 module.exports = {
 
-    Between: __webpack_require__(16),
-    BetweenPoints: __webpack_require__(41),
-    BetweenPointsY: __webpack_require__(42),
-    BetweenY: __webpack_require__(43),
-    CounterClockwise: __webpack_require__(7),
-    Normalize: __webpack_require__(17),
-    Random: __webpack_require__(44),
-    RandomDegrees: __webpack_require__(45),
-    Reverse: __webpack_require__(46),
-    RotateTo: __webpack_require__(47),
-    ShortestBetween: __webpack_require__(48),
-    Wrap: __webpack_require__(18),
-    WrapDegrees: __webpack_require__(19)
+    Between: __webpack_require__(27),
+    BetweenPoints: __webpack_require__(67),
+    BetweenPointsY: __webpack_require__(68),
+    BetweenY: __webpack_require__(69),
+    CounterClockwise: __webpack_require__(15),
+    Normalize: __webpack_require__(28),
+    Random: __webpack_require__(70),
+    RandomDegrees: __webpack_require__(71),
+    Reverse: __webpack_require__(72),
+    RotateTo: __webpack_require__(73),
+    ShortestBetween: __webpack_require__(74),
+    Wrap: __webpack_require__(29),
+    WrapDegrees: __webpack_require__(30)
 
 };
 
 
 /***/ }),
-/* 41 */
+/* 67 */
 /***/ (function(module, exports) {
 
 /**
@@ -8514,7 +13261,7 @@ module.exports = BetweenPoints;
 
 
 /***/ }),
-/* 42 */
+/* 68 */
 /***/ (function(module, exports) {
 
 /**
@@ -8546,7 +13293,7 @@ module.exports = BetweenPointsY;
 
 
 /***/ }),
-/* 43 */
+/* 69 */
 /***/ (function(module, exports) {
 
 /**
@@ -8580,7 +13327,7 @@ module.exports = BetweenY;
 
 
 /***/ }),
-/* 44 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -8590,7 +13337,7 @@ module.exports = BetweenY;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var FloatBetween = __webpack_require__(8);
+var FloatBetween = __webpack_require__(16);
 
 /**
  * Returns a random angle in the range [-pi, pi].
@@ -8609,7 +13356,7 @@ module.exports = Random;
 
 
 /***/ }),
-/* 45 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -8619,7 +13366,7 @@ module.exports = Random;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var FloatBetween = __webpack_require__(8);
+var FloatBetween = __webpack_require__(16);
 
 /**
  * Returns a random angle in the range [-180, 180].
@@ -8638,7 +13385,7 @@ module.exports = RandomDegrees;
 
 
 /***/ }),
-/* 46 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -8647,7 +13394,7 @@ module.exports = RandomDegrees;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Normalize = __webpack_require__(17);
+var Normalize = __webpack_require__(28);
 
 /**
  * Reverse the given angle.
@@ -8668,7 +13415,7 @@ module.exports = Reverse;
 
 
 /***/ }),
-/* 47 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -8677,7 +13424,7 @@ module.exports = Reverse;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var MATH_CONST = __webpack_require__(1);
+var MATH_CONST = __webpack_require__(2);
 
 /**
  * Rotates `currentAngle` towards `targetAngle`, taking the shortest rotation distance. The `lerp` argument is the amount to rotate by in this call.
@@ -8735,7 +13482,7 @@ module.exports = RotateTo;
 
 
 /***/ }),
-/* 48 */
+/* 74 */
 /***/ (function(module, exports) {
 
 /**
@@ -8784,7 +13531,7 @@ module.exports = ShortestBetween;
 
 
 /***/ }),
-/* 49 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -8799,19 +13546,19 @@ module.exports = ShortestBetween;
 
 module.exports = {
 
-    Between: __webpack_require__(50),
-    BetweenPoints: __webpack_require__(51),
-    BetweenPointsSquared: __webpack_require__(52),
-    Chebyshev: __webpack_require__(53),
-    Power: __webpack_require__(54),
-    Snake: __webpack_require__(55),
-    Squared: __webpack_require__(56)
+    Between: __webpack_require__(76),
+    BetweenPoints: __webpack_require__(77),
+    BetweenPointsSquared: __webpack_require__(78),
+    Chebyshev: __webpack_require__(79),
+    Power: __webpack_require__(80),
+    Snake: __webpack_require__(81),
+    Squared: __webpack_require__(82)
 
 };
 
 
 /***/ }),
-/* 50 */
+/* 76 */
 /***/ (function(module, exports) {
 
 /**
@@ -8845,7 +13592,7 @@ module.exports = DistanceBetween;
 
 
 /***/ }),
-/* 51 */
+/* 77 */
 /***/ (function(module, exports) {
 
 /**
@@ -8877,7 +13624,7 @@ module.exports = DistanceBetweenPoints;
 
 
 /***/ }),
-/* 52 */
+/* 78 */
 /***/ (function(module, exports) {
 
 /**
@@ -8909,7 +13656,7 @@ module.exports = DistanceBetweenPointsSquared;
 
 
 /***/ }),
-/* 53 */
+/* 79 */
 /***/ (function(module, exports) {
 
 /**
@@ -8943,7 +13690,7 @@ module.exports = ChebyshevDistance;
 
 
 /***/ }),
-/* 54 */
+/* 80 */
 /***/ (function(module, exports) {
 
 /**
@@ -8977,7 +13724,7 @@ module.exports = DistancePower;
 
 
 /***/ }),
-/* 55 */
+/* 81 */
 /***/ (function(module, exports) {
 
 /**
@@ -9011,7 +13758,7 @@ module.exports = SnakeDistance;
 
 
 /***/ }),
-/* 56 */
+/* 82 */
 /***/ (function(module, exports) {
 
 /**
@@ -9045,7 +13792,7 @@ module.exports = DistanceSquared;
 
 
 /***/ }),
-/* 57 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -9060,24 +13807,24 @@ module.exports = DistanceSquared;
 
 module.exports = {
 
-    Back: __webpack_require__(58),
-    Bounce: __webpack_require__(62),
-    Circular: __webpack_require__(66),
-    Cubic: __webpack_require__(70),
-    Elastic: __webpack_require__(74),
-    Expo: __webpack_require__(78),
-    Linear: __webpack_require__(82),
-    Quadratic: __webpack_require__(84),
-    Quartic: __webpack_require__(88),
-    Quintic: __webpack_require__(92),
-    Sine: __webpack_require__(96),
-    Stepped: __webpack_require__(100)
+    Back: __webpack_require__(84),
+    Bounce: __webpack_require__(88),
+    Circular: __webpack_require__(92),
+    Cubic: __webpack_require__(96),
+    Elastic: __webpack_require__(100),
+    Expo: __webpack_require__(104),
+    Linear: __webpack_require__(108),
+    Quadratic: __webpack_require__(110),
+    Quartic: __webpack_require__(114),
+    Quintic: __webpack_require__(118),
+    Sine: __webpack_require__(122),
+    Stepped: __webpack_require__(126)
 
 };
 
 
 /***/ }),
-/* 58 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -9092,15 +13839,15 @@ module.exports = {
 
 module.exports = {
 
-    In: __webpack_require__(59),
-    Out: __webpack_require__(60),
-    InOut: __webpack_require__(61)
+    In: __webpack_require__(85),
+    Out: __webpack_require__(86),
+    InOut: __webpack_require__(87)
 
 };
 
 
 /***/ }),
-/* 59 */
+/* 85 */
 /***/ (function(module, exports) {
 
 /**
@@ -9131,7 +13878,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 60 */
+/* 86 */
 /***/ (function(module, exports) {
 
 /**
@@ -9162,7 +13909,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 61 */
+/* 87 */
 /***/ (function(module, exports) {
 
 /**
@@ -9202,7 +13949,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 62 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -9217,15 +13964,15 @@ module.exports = InOut;
 
 module.exports = {
 
-    In: __webpack_require__(63),
-    Out: __webpack_require__(64),
-    InOut: __webpack_require__(65)
+    In: __webpack_require__(89),
+    Out: __webpack_require__(90),
+    InOut: __webpack_require__(91)
 
 };
 
 
 /***/ }),
-/* 63 */
+/* 89 */
 /***/ (function(module, exports) {
 
 /**
@@ -9270,7 +14017,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 64 */
+/* 90 */
 /***/ (function(module, exports) {
 
 /**
@@ -9313,7 +14060,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 65 */
+/* 91 */
 /***/ (function(module, exports) {
 
 /**
@@ -9377,7 +14124,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 66 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -9392,15 +14139,15 @@ module.exports = InOut;
 
 module.exports = {
 
-    In: __webpack_require__(67),
-    Out: __webpack_require__(68),
-    InOut: __webpack_require__(69)
+    In: __webpack_require__(93),
+    Out: __webpack_require__(94),
+    InOut: __webpack_require__(95)
 
 };
 
 
 /***/ }),
-/* 67 */
+/* 93 */
 /***/ (function(module, exports) {
 
 /**
@@ -9428,7 +14175,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 68 */
+/* 94 */
 /***/ (function(module, exports) {
 
 /**
@@ -9456,7 +14203,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 69 */
+/* 95 */
 /***/ (function(module, exports) {
 
 /**
@@ -9491,7 +14238,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 70 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -9506,15 +14253,15 @@ module.exports = InOut;
 
 module.exports = {
 
-    In: __webpack_require__(71),
-    Out: __webpack_require__(72),
-    InOut: __webpack_require__(73)
+    In: __webpack_require__(97),
+    Out: __webpack_require__(98),
+    InOut: __webpack_require__(99)
 
 };
 
 
 /***/ }),
-/* 71 */
+/* 97 */
 /***/ (function(module, exports) {
 
 /**
@@ -9542,7 +14289,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 72 */
+/* 98 */
 /***/ (function(module, exports) {
 
 /**
@@ -9570,7 +14317,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 73 */
+/* 99 */
 /***/ (function(module, exports) {
 
 /**
@@ -9605,7 +14352,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 74 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -9620,15 +14367,15 @@ module.exports = InOut;
 
 module.exports = {
 
-    In: __webpack_require__(75),
-    Out: __webpack_require__(76),
-    InOut: __webpack_require__(77)
+    In: __webpack_require__(101),
+    Out: __webpack_require__(102),
+    InOut: __webpack_require__(103)
 
 };
 
 
 /***/ }),
-/* 75 */
+/* 101 */
 /***/ (function(module, exports) {
 
 /**
@@ -9683,7 +14430,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 76 */
+/* 102 */
 /***/ (function(module, exports) {
 
 /**
@@ -9738,7 +14485,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 77 */
+/* 103 */
 /***/ (function(module, exports) {
 
 /**
@@ -9800,7 +14547,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 78 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -9815,15 +14562,15 @@ module.exports = InOut;
 
 module.exports = {
 
-    In: __webpack_require__(79),
-    Out: __webpack_require__(80),
-    InOut: __webpack_require__(81)
+    In: __webpack_require__(105),
+    Out: __webpack_require__(106),
+    InOut: __webpack_require__(107)
 
 };
 
 
 /***/ }),
-/* 79 */
+/* 105 */
 /***/ (function(module, exports) {
 
 /**
@@ -9851,7 +14598,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 80 */
+/* 106 */
 /***/ (function(module, exports) {
 
 /**
@@ -9879,7 +14626,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 81 */
+/* 107 */
 /***/ (function(module, exports) {
 
 /**
@@ -9914,7 +14661,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 82 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -9923,11 +14670,11 @@ module.exports = InOut;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-module.exports = __webpack_require__(83);
+module.exports = __webpack_require__(109);
 
 
 /***/ }),
-/* 83 */
+/* 109 */
 /***/ (function(module, exports) {
 
 /**
@@ -9955,7 +14702,7 @@ module.exports = Linear;
 
 
 /***/ }),
-/* 84 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -9970,15 +14717,15 @@ module.exports = Linear;
 
 module.exports = {
 
-    In: __webpack_require__(85),
-    Out: __webpack_require__(86),
-    InOut: __webpack_require__(87)
+    In: __webpack_require__(111),
+    Out: __webpack_require__(112),
+    InOut: __webpack_require__(113)
 
 };
 
 
 /***/ }),
-/* 85 */
+/* 111 */
 /***/ (function(module, exports) {
 
 /**
@@ -10006,7 +14753,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 86 */
+/* 112 */
 /***/ (function(module, exports) {
 
 /**
@@ -10034,7 +14781,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 87 */
+/* 113 */
 /***/ (function(module, exports) {
 
 /**
@@ -10069,7 +14816,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 88 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -10084,15 +14831,15 @@ module.exports = InOut;
 
 module.exports = {
 
-    In: __webpack_require__(89),
-    Out: __webpack_require__(90),
-    InOut: __webpack_require__(91)
+    In: __webpack_require__(115),
+    Out: __webpack_require__(116),
+    InOut: __webpack_require__(117)
 
 };
 
 
 /***/ }),
-/* 89 */
+/* 115 */
 /***/ (function(module, exports) {
 
 /**
@@ -10120,7 +14867,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 90 */
+/* 116 */
 /***/ (function(module, exports) {
 
 /**
@@ -10148,7 +14895,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 91 */
+/* 117 */
 /***/ (function(module, exports) {
 
 /**
@@ -10183,7 +14930,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 92 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -10198,15 +14945,15 @@ module.exports = InOut;
 
 module.exports = {
 
-    In: __webpack_require__(93),
-    Out: __webpack_require__(94),
-    InOut: __webpack_require__(95)
+    In: __webpack_require__(119),
+    Out: __webpack_require__(120),
+    InOut: __webpack_require__(121)
 
 };
 
 
 /***/ }),
-/* 93 */
+/* 119 */
 /***/ (function(module, exports) {
 
 /**
@@ -10234,7 +14981,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 94 */
+/* 120 */
 /***/ (function(module, exports) {
 
 /**
@@ -10262,7 +15009,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 95 */
+/* 121 */
 /***/ (function(module, exports) {
 
 /**
@@ -10297,7 +15044,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 96 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -10312,15 +15059,15 @@ module.exports = InOut;
 
 module.exports = {
 
-    In: __webpack_require__(97),
-    Out: __webpack_require__(98),
-    InOut: __webpack_require__(99)
+    In: __webpack_require__(123),
+    Out: __webpack_require__(124),
+    InOut: __webpack_require__(125)
 
 };
 
 
 /***/ }),
-/* 97 */
+/* 123 */
 /***/ (function(module, exports) {
 
 /**
@@ -10359,7 +15106,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 98 */
+/* 124 */
 /***/ (function(module, exports) {
 
 /**
@@ -10398,7 +15145,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 99 */
+/* 125 */
 /***/ (function(module, exports) {
 
 /**
@@ -10437,7 +15184,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 100 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -10450,11 +15197,11 @@ module.exports = InOut;
  * @namespace Phaser.Math.Easing.Stepped
  */
 
-module.exports = __webpack_require__(101);
+module.exports = __webpack_require__(127);
 
 
 /***/ }),
-/* 101 */
+/* 127 */
 /***/ (function(module, exports) {
 
 /**
@@ -10496,7 +15243,7 @@ module.exports = Stepped;
 
 
 /***/ }),
-/* 102 */
+/* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -10511,17 +15258,17 @@ module.exports = Stepped;
 
 module.exports = {
 
-    Ceil: __webpack_require__(103),
-    Equal: __webpack_require__(20),
-    Floor: __webpack_require__(104),
-    GreaterThan: __webpack_require__(105),
-    LessThan: __webpack_require__(106)
+    Ceil: __webpack_require__(129),
+    Equal: __webpack_require__(31),
+    Floor: __webpack_require__(130),
+    GreaterThan: __webpack_require__(131),
+    LessThan: __webpack_require__(132)
 
 };
 
 
 /***/ }),
-/* 103 */
+/* 129 */
 /***/ (function(module, exports) {
 
 /**
@@ -10552,7 +15299,7 @@ module.exports = Ceil;
 
 
 /***/ }),
-/* 104 */
+/* 130 */
 /***/ (function(module, exports) {
 
 /**
@@ -10583,7 +15330,7 @@ module.exports = Floor;
 
 
 /***/ }),
-/* 105 */
+/* 131 */
 /***/ (function(module, exports) {
 
 /**
@@ -10617,7 +15364,7 @@ module.exports = GreaterThan;
 
 
 /***/ }),
-/* 106 */
+/* 132 */
 /***/ (function(module, exports) {
 
 /**
@@ -10651,7 +15398,7 @@ module.exports = LessThan;
 
 
 /***/ }),
-/* 107 */
+/* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -10666,19 +15413,19 @@ module.exports = LessThan;
 
 module.exports = {
 
-    Bezier: __webpack_require__(108),
-    CatmullRom: __webpack_require__(109),
-    CubicBezier: __webpack_require__(110),
-    Linear: __webpack_require__(111),
-    QuadraticBezier: __webpack_require__(112),
-    SmoothStep: __webpack_require__(113),
-    SmootherStep: __webpack_require__(114)
+    Bezier: __webpack_require__(134),
+    CatmullRom: __webpack_require__(135),
+    CubicBezier: __webpack_require__(136),
+    Linear: __webpack_require__(137),
+    QuadraticBezier: __webpack_require__(138),
+    SmoothStep: __webpack_require__(139),
+    SmootherStep: __webpack_require__(140)
 
 };
 
 
 /***/ }),
-/* 108 */
+/* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -10687,7 +15434,7 @@ module.exports = {
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Bernstein = __webpack_require__(21);
+var Bernstein = __webpack_require__(32);
 
 /**
  * A bezier interpolation method.
@@ -10717,7 +15464,7 @@ module.exports = BezierInterpolation;
 
 
 /***/ }),
-/* 109 */
+/* 135 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -10726,7 +15473,7 @@ module.exports = BezierInterpolation;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CatmullRom = __webpack_require__(23);
+var CatmullRom = __webpack_require__(34);
 
 /**
  * A Catmull-Rom interpolation method.
@@ -10774,7 +15521,7 @@ module.exports = CatmullRomInterpolation;
 
 
 /***/ }),
-/* 110 */
+/* 136 */
 /***/ (function(module, exports) {
 
 /**
@@ -10844,7 +15591,7 @@ module.exports = CubicBezierInterpolation;
 
 
 /***/ }),
-/* 111 */
+/* 137 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -10853,7 +15600,7 @@ module.exports = CubicBezierInterpolation;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Linear = __webpack_require__(24);
+var Linear = __webpack_require__(35);
 
 /**
  * A linear interpolation method.
@@ -10891,7 +15638,7 @@ module.exports = LinearInterpolation;
 
 
 /***/ }),
-/* 112 */
+/* 138 */
 /***/ (function(module, exports) {
 
 /**
@@ -10950,7 +15697,7 @@ module.exports = QuadraticBezierInterpolation;
 
 
 /***/ }),
-/* 113 */
+/* 139 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -10959,7 +15706,7 @@ module.exports = QuadraticBezierInterpolation;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var SmoothStep = __webpack_require__(25);
+var SmoothStep = __webpack_require__(36);
 
 /**
  * A Smooth Step interpolation method.
@@ -10983,7 +15730,7 @@ module.exports = SmoothStepInterpolation;
 
 
 /***/ }),
-/* 114 */
+/* 140 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -10992,7 +15739,7 @@ module.exports = SmoothStepInterpolation;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var SmootherStep = __webpack_require__(26);
+var SmootherStep = __webpack_require__(37);
 
 /**
  * A Smoother Step interpolation method.
@@ -11016,7 +15763,7 @@ module.exports = SmootherStepInterpolation;
 
 
 /***/ }),
-/* 115 */
+/* 141 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -11031,15 +15778,15 @@ module.exports = SmootherStepInterpolation;
 
 module.exports = {
 
-    GetNext: __webpack_require__(116),
-    IsSize: __webpack_require__(117),
-    IsValue: __webpack_require__(118)
+    GetNext: __webpack_require__(142),
+    IsSize: __webpack_require__(143),
+    IsValue: __webpack_require__(144)
 
 };
 
 
 /***/ }),
-/* 116 */
+/* 142 */
 /***/ (function(module, exports) {
 
 /**
@@ -11069,7 +15816,7 @@ module.exports = GetPowerOfTwo;
 
 
 /***/ }),
-/* 117 */
+/* 143 */
 /***/ (function(module, exports) {
 
 /**
@@ -11099,7 +15846,7 @@ module.exports = IsSizePowerOfTwo;
 
 
 /***/ }),
-/* 118 */
+/* 144 */
 /***/ (function(module, exports) {
 
 /**
@@ -11127,7 +15874,7 @@ module.exports = IsValuePowerOfTwo;
 
 
 /***/ }),
-/* 119 */
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -11142,15 +15889,15 @@ module.exports = IsValuePowerOfTwo;
 
 module.exports = {
 
-    Ceil: __webpack_require__(120),
-    Floor: __webpack_require__(121),
-    To: __webpack_require__(122)
+    Ceil: __webpack_require__(146),
+    Floor: __webpack_require__(147),
+    To: __webpack_require__(148)
 
 };
 
 
 /***/ }),
-/* 120 */
+/* 146 */
 /***/ (function(module, exports) {
 
 /**
@@ -11194,7 +15941,7 @@ module.exports = SnapCeil;
 
 
 /***/ }),
-/* 121 */
+/* 147 */
 /***/ (function(module, exports) {
 
 /**
@@ -11238,7 +15985,7 @@ module.exports = SnapFloor;
 
 
 /***/ }),
-/* 122 */
+/* 148 */
 /***/ (function(module, exports) {
 
 /**
@@ -11281,7 +16028,7 @@ module.exports = SnapTo;
 
 
 /***/ }),
-/* 123 */
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -11791,7 +16538,7 @@ module.exports = RandomDataGenerator;
 
 
 /***/ }),
-/* 124 */
+/* 150 */
 /***/ (function(module, exports) {
 
 /**
@@ -11826,7 +16573,7 @@ module.exports = Average;
 
 
 /***/ }),
-/* 125 */
+/* 151 */
 /***/ (function(module, exports) {
 
 /**
@@ -11855,7 +16602,7 @@ module.exports = Between;
 
 
 /***/ }),
-/* 126 */
+/* 152 */
 /***/ (function(module, exports) {
 
 /**
@@ -11892,7 +16639,7 @@ module.exports = CeilTo;
 
 
 /***/ }),
-/* 127 */
+/* 153 */
 /***/ (function(module, exports) {
 
 /**
@@ -11921,7 +16668,7 @@ module.exports = Difference;
 
 
 /***/ }),
-/* 128 */
+/* 154 */
 /***/ (function(module, exports) {
 
 /**
@@ -11958,7 +16705,7 @@ module.exports = FloorTo;
 
 
 /***/ }),
-/* 129 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -11967,7 +16714,7 @@ module.exports = FloorTo;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Clamp = __webpack_require__(9);
+var Clamp = __webpack_require__(5);
 
 /**
  * Return a value based on the range between `min` and `max` and the percentage given.
@@ -11992,7 +16739,7 @@ module.exports = FromPercent;
 
 
 /***/ }),
-/* 130 */
+/* 156 */
 /***/ (function(module, exports) {
 
 /**
@@ -12025,7 +16772,7 @@ module.exports = GetSpeed;
 
 
 /***/ }),
-/* 131 */
+/* 157 */
 /***/ (function(module, exports) {
 
 /**
@@ -12056,7 +16803,7 @@ module.exports = IsEven;
 
 
 /***/ }),
-/* 132 */
+/* 158 */
 /***/ (function(module, exports) {
 
 /**
@@ -12085,7 +16832,7 @@ module.exports = IsEvenStrict;
 
 
 /***/ }),
-/* 133 */
+/* 159 */
 /***/ (function(module, exports) {
 
 /**
@@ -12115,7 +16862,7 @@ module.exports = MaxAdd;
 
 
 /***/ }),
-/* 134 */
+/* 160 */
 /***/ (function(module, exports) {
 
 /**
@@ -12145,7 +16892,7 @@ module.exports = MinSub;
 
 
 /***/ }),
-/* 135 */
+/* 161 */
 /***/ (function(module, exports) {
 
 /**
@@ -12204,7 +16951,7 @@ module.exports = Percent;
 
 
 /***/ }),
-/* 136 */
+/* 162 */
 /***/ (function(module, exports) {
 
 /**
@@ -12244,7 +16991,7 @@ module.exports = RandomXY;
 
 
 /***/ }),
-/* 137 */
+/* 163 */
 /***/ (function(module, exports) {
 
 /**
@@ -12283,7 +17030,7 @@ module.exports = RandomXYZ;
 
 
 /***/ }),
-/* 138 */
+/* 164 */
 /***/ (function(module, exports) {
 
 /**
@@ -12320,7 +17067,7 @@ module.exports = RandomXYZW;
 
 
 /***/ }),
-/* 139 */
+/* 165 */
 /***/ (function(module, exports) {
 
 /**
@@ -12355,51 +17102,7 @@ module.exports = Rotate;
 
 
 /***/ }),
-/* 140 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * Rotate a `point` around `x` and `y` to the given `angle`, at the same distance.
- *
- * In polar notation, this maps a point from (r, t) to (r, angle), vs. the origin (x, y).
- *
- * @function Phaser.Math.RotateAround
- * @since 3.0.0
- *
- * @generic {Phaser.Types.Math.Vector2Like} T - [point,$return]
- *
- * @param {(Phaser.Geom.Point|object)} point - The point to be rotated.
- * @param {number} x - The horizontal coordinate to rotate around.
- * @param {number} y - The vertical coordinate to rotate around.
- * @param {number} angle - The angle of rotation in radians.
- *
- * @return {Phaser.Types.Math.Vector2Like} The given point.
- */
-var RotateAround = function (point, x, y, angle)
-{
-    var c = Math.cos(angle);
-    var s = Math.sin(angle);
-
-    var tx = point.x - x;
-    var ty = point.y - y;
-
-    point.x = tx * c - ty * s + x;
-    point.y = tx * s + ty * c + y;
-
-    return point;
-};
-
-module.exports = RotateAround;
-
-
-/***/ }),
-/* 141 */
+/* 166 */
 /***/ (function(module, exports) {
 
 /**
@@ -12440,7 +17143,7 @@ module.exports = RotateAroundDistance;
 
 
 /***/ }),
-/* 142 */
+/* 167 */
 /***/ (function(module, exports) {
 
 /**
@@ -12477,36 +17180,7 @@ module.exports = RotateTo;
 
 
 /***/ }),
-/* 143 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * Round a given number so it is further away from zero. That is, positive numbers are rounded up, and negative numbers are rounded down.
- *
- * @function Phaser.Math.RoundAwayFromZero
- * @since 3.0.0
- *
- * @param {number} value - The number to round.
- *
- * @return {number} The rounded number, rounded away from zero.
- */
-var RoundAwayFromZero = function (value)
-{
-    // "Opposite" of truncate.
-    return (value > 0) ? Math.ceil(value) : Math.floor(value);
-};
-
-module.exports = RoundAwayFromZero;
-
-
-/***/ }),
-/* 144 */
+/* 168 */
 /***/ (function(module, exports) {
 
 /**
@@ -12558,7 +17232,7 @@ module.exports = RoundTo;
 
 
 /***/ }),
-/* 145 */
+/* 169 */
 /***/ (function(module, exports) {
 
 /**
@@ -12611,7 +17285,7 @@ module.exports = SinCosTableGenerator;
 
 
 /***/ }),
-/* 146 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -12620,7 +17294,7 @@ module.exports = SinCosTableGenerator;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Vector2 = __webpack_require__(3);
+var Vector2 = __webpack_require__(1);
 
 /**
  * Returns a Vector2 containing the x and y position of the given index in a `width` x `height` sized grid.
@@ -12669,7 +17343,7 @@ module.exports = ToXY;
 
 
 /***/ }),
-/* 147 */
+/* 171 */
 /***/ (function(module, exports) {
 
 /**
@@ -12699,7 +17373,7 @@ module.exports = Within;
 
 
 /***/ }),
-/* 148 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -13244,7 +17918,7 @@ module.exports = Vector4;
 
 
 /***/ }),
-/* 149 */
+/* 173 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -13253,9 +17927,9 @@ module.exports = Vector4;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Vector3 = __webpack_require__(11);
-var Matrix4 = __webpack_require__(30);
-var Quaternion = __webpack_require__(31);
+var Vector3 = __webpack_require__(19);
+var Matrix4 = __webpack_require__(42);
+var Quaternion = __webpack_require__(43);
 
 var tmpMat4 = new Matrix4();
 var tmpQuat = new Quaternion();
@@ -13292,7 +17966,7 @@ module.exports = RotateVec3;
 
 
 /***/ }),
-/* 150 */
+/* 174 */
 /***/ (function(module, exports) {
 
 /**
@@ -13323,7 +17997,7 @@ module.exports = 'resize';
 
 
 /***/ }),
-/* 151 */
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -13332,9 +18006,9 @@ module.exports = 'resize';
 * @license      {@link https://github.com/photonstorm/phaser3-plugin-template/blob/master/LICENSE|MIT License}
 */
 
-var BasePlugin = __webpack_require__(152);
+var BasePlugin = __webpack_require__(176);
 var Class = __webpack_require__(0);
-var SceneEvents = __webpack_require__(153);
+var SceneEvents = __webpack_require__(177);
 
 /**
  * @classdesc
@@ -13451,7 +18125,7 @@ module.exports = ScenePlugin;
 
 
 /***/ }),
-/* 152 */
+/* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -13581,7 +18255,7 @@ module.exports = BasePlugin;
 
 
 /***/ }),
-/* 153 */
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -13596,33 +18270,33 @@ module.exports = BasePlugin;
 
 module.exports = {
 
-    ADDED_TO_SCENE: __webpack_require__(154),
-    BOOT: __webpack_require__(155),
-    CREATE: __webpack_require__(156),
-    DESTROY: __webpack_require__(157),
-    PAUSE: __webpack_require__(158),
-    POST_UPDATE: __webpack_require__(159),
-    PRE_UPDATE: __webpack_require__(160),
-    READY: __webpack_require__(161),
-    REMOVED_FROM_SCENE: __webpack_require__(162),
-    RENDER: __webpack_require__(163),
-    RESUME: __webpack_require__(164),
-    SHUTDOWN: __webpack_require__(165),
-    SLEEP: __webpack_require__(166),
-    START: __webpack_require__(167),
-    TRANSITION_COMPLETE: __webpack_require__(168),
-    TRANSITION_INIT: __webpack_require__(169),
-    TRANSITION_OUT: __webpack_require__(170),
-    TRANSITION_START: __webpack_require__(171),
-    TRANSITION_WAKE: __webpack_require__(172),
-    UPDATE: __webpack_require__(173),
-    WAKE: __webpack_require__(174)
+    ADDED_TO_SCENE: __webpack_require__(178),
+    BOOT: __webpack_require__(179),
+    CREATE: __webpack_require__(180),
+    DESTROY: __webpack_require__(181),
+    PAUSE: __webpack_require__(182),
+    POST_UPDATE: __webpack_require__(183),
+    PRE_UPDATE: __webpack_require__(184),
+    READY: __webpack_require__(185),
+    REMOVED_FROM_SCENE: __webpack_require__(186),
+    RENDER: __webpack_require__(187),
+    RESUME: __webpack_require__(188),
+    SHUTDOWN: __webpack_require__(189),
+    SLEEP: __webpack_require__(190),
+    START: __webpack_require__(191),
+    TRANSITION_COMPLETE: __webpack_require__(192),
+    TRANSITION_INIT: __webpack_require__(193),
+    TRANSITION_OUT: __webpack_require__(194),
+    TRANSITION_START: __webpack_require__(195),
+    TRANSITION_WAKE: __webpack_require__(196),
+    UPDATE: __webpack_require__(197),
+    WAKE: __webpack_require__(198)
 
 };
 
 
 /***/ }),
-/* 154 */
+/* 178 */
 /***/ (function(module, exports) {
 
 /**
@@ -13648,7 +18322,7 @@ module.exports = 'addedtoscene';
 
 
 /***/ }),
-/* 155 */
+/* 179 */
 /***/ (function(module, exports) {
 
 /**
@@ -13673,7 +18347,7 @@ module.exports = 'boot';
 
 
 /***/ }),
-/* 156 */
+/* 180 */
 /***/ (function(module, exports) {
 
 /**
@@ -13702,7 +18376,7 @@ module.exports = 'create';
 
 
 /***/ }),
-/* 157 */
+/* 181 */
 /***/ (function(module, exports) {
 
 /**
@@ -13729,7 +18403,7 @@ module.exports = 'destroy';
 
 
 /***/ }),
-/* 158 */
+/* 182 */
 /***/ (function(module, exports) {
 
 /**
@@ -13756,7 +18430,7 @@ module.exports = 'pause';
 
 
 /***/ }),
-/* 159 */
+/* 183 */
 /***/ (function(module, exports) {
 
 /**
@@ -13793,7 +18467,7 @@ module.exports = 'postupdate';
 
 
 /***/ }),
-/* 160 */
+/* 184 */
 /***/ (function(module, exports) {
 
 /**
@@ -13830,7 +18504,7 @@ module.exports = 'preupdate';
 
 
 /***/ }),
-/* 161 */
+/* 185 */
 /***/ (function(module, exports) {
 
 /**
@@ -13858,7 +18532,7 @@ module.exports = 'ready';
 
 
 /***/ }),
-/* 162 */
+/* 186 */
 /***/ (function(module, exports) {
 
 /**
@@ -13884,7 +18558,7 @@ module.exports = 'removedfromscene';
 
 
 /***/ }),
-/* 163 */
+/* 187 */
 /***/ (function(module, exports) {
 
 /**
@@ -13920,7 +18594,7 @@ module.exports = 'render';
 
 
 /***/ }),
-/* 164 */
+/* 188 */
 /***/ (function(module, exports) {
 
 /**
@@ -13947,7 +18621,7 @@ module.exports = 'resume';
 
 
 /***/ }),
-/* 165 */
+/* 189 */
 /***/ (function(module, exports) {
 
 /**
@@ -13977,7 +18651,7 @@ module.exports = 'shutdown';
 
 
 /***/ }),
-/* 166 */
+/* 190 */
 /***/ (function(module, exports) {
 
 /**
@@ -14004,7 +18678,7 @@ module.exports = 'sleep';
 
 
 /***/ }),
-/* 167 */
+/* 191 */
 /***/ (function(module, exports) {
 
 /**
@@ -14029,7 +18703,7 @@ module.exports = 'start';
 
 
 /***/ }),
-/* 168 */
+/* 192 */
 /***/ (function(module, exports) {
 
 /**
@@ -14065,7 +18739,7 @@ module.exports = 'transitioncomplete';
 
 
 /***/ }),
-/* 169 */
+/* 193 */
 /***/ (function(module, exports) {
 
 /**
@@ -14102,7 +18776,7 @@ module.exports = 'transitioninit';
 
 
 /***/ }),
-/* 170 */
+/* 194 */
 /***/ (function(module, exports) {
 
 /**
@@ -14136,7 +18810,7 @@ module.exports = 'transitionout';
 
 
 /***/ }),
-/* 171 */
+/* 195 */
 /***/ (function(module, exports) {
 
 /**
@@ -14176,7 +18850,7 @@ module.exports = 'transitionstart';
 
 
 /***/ }),
-/* 172 */
+/* 196 */
 /***/ (function(module, exports) {
 
 /**
@@ -14211,7 +18885,7 @@ module.exports = 'transitionwake';
 
 
 /***/ }),
-/* 173 */
+/* 197 */
 /***/ (function(module, exports) {
 
 /**
@@ -14248,7 +18922,7 @@ module.exports = 'update';
 
 
 /***/ }),
-/* 174 */
+/* 198 */
 /***/ (function(module, exports) {
 
 /**
@@ -14275,7 +18949,7 @@ module.exports = 'wake';
 
 
 /***/ }),
-/* 175 */
+/* 199 */
 /***/ (function(module, exports) {
 
 /*** IMPORTS FROM imports-loader ***/
@@ -22730,7 +27404,7 @@ module.exports = spine;
 
 
 /***/ }),
-/* 176 */
+/* 200 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -22740,12 +27414,12 @@ module.exports = spine;
  */
 
 var Class = __webpack_require__(0);
-var GetFastValue = __webpack_require__(4);
-var ImageFile = __webpack_require__(177);
-var IsPlainObject = __webpack_require__(2);
-var JSONFile = __webpack_require__(191);
-var MultiFile = __webpack_require__(192);
-var TextFile = __webpack_require__(193);
+var GetFastValue = __webpack_require__(8);
+var ImageFile = __webpack_require__(201);
+var IsPlainObject = __webpack_require__(7);
+var JSONFile = __webpack_require__(215);
+var MultiFile = __webpack_require__(216);
+var TextFile = __webpack_require__(217);
 
 /**
  * @typedef {object} Phaser.Loader.FileTypes.SpineFileConfig
@@ -22983,7 +27657,7 @@ module.exports = SpineFile;
 
 
 /***/ }),
-/* 177 */
+/* 201 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -22993,11 +27667,11 @@ module.exports = SpineFile;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(6);
-var File = __webpack_require__(13);
-var FileTypesManager = __webpack_require__(14);
-var GetFastValue = __webpack_require__(4);
-var IsPlainObject = __webpack_require__(2);
+var CONST = __webpack_require__(11);
+var File = __webpack_require__(20);
+var FileTypesManager = __webpack_require__(21);
+var GetFastValue = __webpack_require__(8);
+var IsPlainObject = __webpack_require__(7);
 
 /**
  * @classdesc
@@ -23257,7 +27931,7 @@ module.exports = ImageFile;
 
 
 /***/ }),
-/* 178 */
+/* 202 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -23272,22 +27946,22 @@ module.exports = ImageFile;
 
 module.exports = {
 
-    ADD: __webpack_require__(179),
-    COMPLETE: __webpack_require__(180),
-    FILE_COMPLETE: __webpack_require__(181),
-    FILE_KEY_COMPLETE: __webpack_require__(182),
-    FILE_LOAD_ERROR: __webpack_require__(183),
-    FILE_LOAD: __webpack_require__(184),
-    FILE_PROGRESS: __webpack_require__(185),
-    POST_PROCESS: __webpack_require__(186),
-    PROGRESS: __webpack_require__(187),
-    START: __webpack_require__(188)
+    ADD: __webpack_require__(203),
+    COMPLETE: __webpack_require__(204),
+    FILE_COMPLETE: __webpack_require__(205),
+    FILE_KEY_COMPLETE: __webpack_require__(206),
+    FILE_LOAD_ERROR: __webpack_require__(207),
+    FILE_LOAD: __webpack_require__(208),
+    FILE_PROGRESS: __webpack_require__(209),
+    POST_PROCESS: __webpack_require__(210),
+    PROGRESS: __webpack_require__(211),
+    START: __webpack_require__(212)
 
 };
 
 
 /***/ }),
-/* 179 */
+/* 203 */
 /***/ (function(module, exports) {
 
 /**
@@ -23317,7 +27991,7 @@ module.exports = 'addfile';
 
 
 /***/ }),
-/* 180 */
+/* 204 */
 /***/ (function(module, exports) {
 
 /**
@@ -23345,7 +28019,7 @@ module.exports = 'complete';
 
 
 /***/ }),
-/* 181 */
+/* 205 */
 /***/ (function(module, exports) {
 
 /**
@@ -23374,7 +28048,7 @@ module.exports = 'filecomplete';
 
 
 /***/ }),
-/* 182 */
+/* 206 */
 /***/ (function(module, exports) {
 
 /**
@@ -23428,7 +28102,7 @@ module.exports = 'filecomplete-';
 
 
 /***/ }),
-/* 183 */
+/* 207 */
 /***/ (function(module, exports) {
 
 /**
@@ -23453,7 +28127,7 @@ module.exports = 'loaderror';
 
 
 /***/ }),
-/* 184 */
+/* 208 */
 /***/ (function(module, exports) {
 
 /**
@@ -23479,7 +28153,7 @@ module.exports = 'load';
 
 
 /***/ }),
-/* 185 */
+/* 209 */
 /***/ (function(module, exports) {
 
 /**
@@ -23506,7 +28180,7 @@ module.exports = 'fileprogress';
 
 
 /***/ }),
-/* 186 */
+/* 210 */
 /***/ (function(module, exports) {
 
 /**
@@ -23535,7 +28209,7 @@ module.exports = 'postprocess';
 
 
 /***/ }),
-/* 187 */
+/* 211 */
 /***/ (function(module, exports) {
 
 /**
@@ -23560,7 +28234,7 @@ module.exports = 'progress';
 
 
 /***/ }),
-/* 188 */
+/* 212 */
 /***/ (function(module, exports) {
 
 /**
@@ -23587,7 +28261,7 @@ module.exports = 'start';
 
 
 /***/ }),
-/* 189 */
+/* 213 */
 /***/ (function(module, exports) {
 
 /**
@@ -23628,7 +28302,7 @@ module.exports = GetURL;
 
 
 /***/ }),
-/* 190 */
+/* 214 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -23637,7 +28311,7 @@ module.exports = GetURL;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var MergeXHRSettings = __webpack_require__(32);
+var MergeXHRSettings = __webpack_require__(44);
 
 /**
  * Creates a new XMLHttpRequest (xhr) object based on the given File and XHRSettings
@@ -23709,7 +28383,7 @@ module.exports = XHRLoader;
 
 
 /***/ }),
-/* 191 */
+/* 215 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -23719,12 +28393,12 @@ module.exports = XHRLoader;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(6);
-var File = __webpack_require__(13);
-var FileTypesManager = __webpack_require__(14);
-var GetFastValue = __webpack_require__(4);
-var GetValue = __webpack_require__(12);
-var IsPlainObject = __webpack_require__(2);
+var CONST = __webpack_require__(11);
+var File = __webpack_require__(20);
+var FileTypesManager = __webpack_require__(21);
+var GetFastValue = __webpack_require__(8);
+var GetValue = __webpack_require__(6);
+var IsPlainObject = __webpack_require__(7);
 
 /**
  * @classdesc
@@ -23939,7 +28613,7 @@ module.exports = JSONFile;
 
 
 /***/ }),
-/* 192 */
+/* 216 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -24173,7 +28847,7 @@ module.exports = MultiFile;
 
 
 /***/ }),
-/* 193 */
+/* 217 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -24183,11 +28857,11 @@ module.exports = MultiFile;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(6);
-var File = __webpack_require__(13);
-var FileTypesManager = __webpack_require__(14);
-var GetFastValue = __webpack_require__(4);
-var IsPlainObject = __webpack_require__(2);
+var CONST = __webpack_require__(11);
+var File = __webpack_require__(20);
+var FileTypesManager = __webpack_require__(21);
+var GetFastValue = __webpack_require__(8);
+var IsPlainObject = __webpack_require__(7);
 
 /**
  * @classdesc
@@ -24348,54 +29022,54 @@ module.exports = TextFile;
 
 
 /***/ }),
-/* 194 */
+/* 218 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var AngleBetween = __webpack_require__(16);
-var Clamp = __webpack_require__(9);
+var AngleBetween = __webpack_require__(27);
+var Clamp = __webpack_require__(5);
 var Class = __webpack_require__(0);
-var ComponentsComputedSize = __webpack_require__(195);
-var ComponentsDepth = __webpack_require__(196);
-var ComponentsFlip = __webpack_require__(197);
-var ComponentsScrollFactor = __webpack_require__(198);
-var ComponentsTransform = __webpack_require__(199);
-var ComponentsVisible = __webpack_require__(201);
-var CounterClockwise = __webpack_require__(7);
-var DegToRad = __webpack_require__(27);
-var GameObject = __webpack_require__(202);
-var RadToDeg = __webpack_require__(10);
-var SpineEvents = __webpack_require__(225);
-var SpineGameObjectRender = __webpack_require__(232);
+var ComponentsComputedSize = __webpack_require__(46);
+var ComponentsDepth = __webpack_require__(47);
+var ComponentsFlip = __webpack_require__(48);
+var ComponentsScrollFactor = __webpack_require__(49);
+var ComponentsTransform = __webpack_require__(50);
+var ComponentsVisible = __webpack_require__(52);
+var CounterClockwise = __webpack_require__(15);
+var DegToRad = __webpack_require__(17);
+var GameObject = __webpack_require__(53);
+var RadToDeg = __webpack_require__(18);
+var SpineEvents = __webpack_require__(238);
+var SpineGameObjectRender = __webpack_require__(245);
 
 /**
  * @classdesc
  * A Spine Game Object is a Phaser level object that can be added to your Phaser Scenes. It encapsulates
  * a Spine Skeleton with Spine Animation Data and Animation State, with helper methods to allow you to
  * easily change the skin, slot attachment, bone positions and more.
- * 
+ *
  * Spine Game Objects can be created via the Game Object Factory, Game Object Creator, or directly.
  * You can only create them if the Spine plugin has been loaded into Phaser.
- * 
+ *
  * The quickest way is the Game Object Factory:
- * 
+ *
  * ```javascript
  * let jelly = this.add.spine(512, 550, 'jelly', 'jelly-think', true);
  * ```
- * 
+ *
  * Here we are creating a new Spine Game Object positioned at 512 x 550. It's using the `jelly`
  * Spine data, which has previously been loaded into your Scene. The `jelly-think` argument is
  * an optional animation to start playing on the skeleton. The final argument `true` sets the
  * animation to loop. Look at the documentation for further details on each of these options.
- * 
+ *
  * For more control, you can use the Game Object Creator, passing in a Spine Game Object
  * Configuration object:
- * 
+ *
  * ```javascript
  * let jelly = this.make.spine({
  *     x: 512, y: 550, key: 'jelly',
@@ -24405,28 +29079,28 @@ var SpineGameObjectRender = __webpack_require__(232);
  *     slotName: 'hat', attachmentName: 'images/La_14'
  * });
  * ```
- * 
+ *
  * Here, you've got the ability to specify extra details, such as the slot name, attachments or
  * overall scale.
- * 
+ *
  * If you wish to instantiate a Spine Game Object directly you can do so, but in order for it to
  * update and render, it must be added to the display and update lists of your Scene:
- * 
+ *
  * ```javascript
  * let jelly = new SpineGameObject(this, this.spine, 512, 550, 'jelly', 'jelly-think', true);
  * this.sys.displayList.add(jelly);
  * this.sys.updateList.add(jelly);
  * ```
- * 
+ *
  * It's possible to enable Spine Game Objects for input, but you should be aware that it will use
  * the bounds of the skeletons current pose to create the hit area from. Sometimes this is ok, but
  * often not. Make use of the `InputPlugin.enableDebug` method to view the input shape being created.
  * If it's not suitable, provide your own shape to the `setInteractive` method.
- * 
+ *
  * Due to the way Spine handles scaling, it's not recommended to enable a Spine Game Object for
  * physics directly. Instead, you should look at creating a proxy body and syncing the Spine Game
  * Object position with it. See the examples for further details.
- * 
+ *
  * If your Spine Game Object has black outlines around the different parts of the texture when it
  * renders then you have exported the files from Spine with pre-multiplied alpha enabled, but have
  * forgotten to set that flag when loading the Spine data. Please see the loader docs for more details.
@@ -24526,7 +29200,7 @@ var SpineGameObject = new Class({
          * @since 3.19.0
          */
         this.bounds = null;
-        
+
         /**
          * A Game Object level flag that allows you to enable debug drawing
          * to the Skeleton Debug Renderer by toggling it.
@@ -24584,7 +29258,7 @@ var SpineGameObject = new Class({
          * @readonly
          * @since 3.19.0
          */
-        this.blendMode = 0;
+        this.blendMode = -1;
 
         this.setPosition(x, y);
 
@@ -24610,9 +29284,9 @@ var SpineGameObject = new Class({
 
     /**
      * Set the Alpha level for the whole Skeleton of this Game Object.
-     * 
+     *
      * The alpha controls the opacity of the Game Object as it renders.
-     * 
+     *
      * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
      *
      * @method SpineGameObject#setAlpha
@@ -24645,7 +29319,7 @@ var SpineGameObject = new Class({
 
     /**
      * The alpha value of the Skeleton.
-     * 
+     *
      * A value between 0 and 1.
      *
      * This is a global value, impacting the entire Skeleton, not just a region of it.
@@ -24684,7 +29358,7 @@ var SpineGameObject = new Class({
 
     /**
      * The amount of red used when rendering the Skeleton.
-     * 
+     *
      * A value between 0 and 1.
      *
      * This is a global value, impacting the entire Skeleton, not just a region of it.
@@ -24714,7 +29388,7 @@ var SpineGameObject = new Class({
 
     /**
      * The amount of green used when rendering the Skeleton.
-     * 
+     *
      * A value between 0 and 1.
      *
      * This is a global value, impacting the entire Skeleton, not just a region of it.
@@ -24744,7 +29418,7 @@ var SpineGameObject = new Class({
 
     /**
      * The amount of blue used when rendering the Skeleton.
-     * 
+     *
      * A value between 0 and 1.
      *
      * This is a global value, impacting the entire Skeleton, not just a region of it.
@@ -24780,7 +29454,7 @@ var SpineGameObject = new Class({
      *
      * @param {integer} [color=0xffffff] - The color being applied to the Skeleton or named Slot. Set to white to disable any previously set color.
      * @param {string} [slotName] - The name of the slot to set the color on. If not give, will be set on the whole skeleton.
-     * 
+     *
      * @return {this} This Game Object instance.
      */
     setColor: function (color, slotName)
@@ -24822,7 +29496,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#setSkeletonFromJSON
      * @since 3.19.0
-     * 
+     *
      * @param {string} atlasDataKey - The key of the Spine data to use for this Skeleton.
      * @param {object} skeletonJSON - The JSON data for the Skeleton.
      * @param {string} [animationName] - Optional name of the animation to set on the Skeleton.
@@ -24837,13 +29511,13 @@ var SpineGameObject = new Class({
 
     /**
      * Sets this Game Object to use the given Skeleton based on its cache key.
-     * 
+     *
      * Typically, once set, the Skeleton doesn't change. Instead, you change the skin,
      * or slot attachment, or any other property to adjust it.
      *
      * @method SpineGameObject#setSkeleton
      * @since 3.19.0
-     * 
+     *
      * @param {string} atlasDataKey - The key of the Spine data to use for this Skeleton.
      * @param {object} skeletonJSON - The JSON data for the Skeleton.
      * @param {string} [animationName] - Optional name of the animation to set on the Skeleton.
@@ -24920,7 +29594,7 @@ var SpineGameObject = new Class({
      * @fires SpinePluginEvents#COMPLETE
      * @private
      * @since 3.19.0
-     * 
+     *
      * @param {any} entry - The event data from Spine.
      */
     onComplete: function (entry)
@@ -24935,7 +29609,7 @@ var SpineGameObject = new Class({
      * @fires SpinePluginEvents#DISPOSE
      * @private
      * @since 3.19.0
-     * 
+     *
      * @param {any} entry - The event data from Spine.
      */
     onDispose: function (entry)
@@ -24950,7 +29624,7 @@ var SpineGameObject = new Class({
      * @fires SpinePluginEvents#END
      * @private
      * @since 3.19.0
-     * 
+     *
      * @param {any} entry - The event data from Spine.
      */
     onEnd: function (entry)
@@ -24965,7 +29639,7 @@ var SpineGameObject = new Class({
      * @fires SpinePluginEvents#EVENT
      * @private
      * @since 3.19.0
-     * 
+     *
      * @param {any} entry - The event data from Spine.
      * @param {spine.Event} event - The Spine event.
      */
@@ -24981,7 +29655,7 @@ var SpineGameObject = new Class({
      * @fires SpinePluginEvents#INTERRUPTED
      * @private
      * @since 3.19.0
-     * 
+     *
      * @param {any} entry - The event data from Spine.
      */
     onInterrupted: function (entry)
@@ -24996,7 +29670,7 @@ var SpineGameObject = new Class({
      * @fires SpinePluginEvents#START
      * @private
      * @since 3.19.0
-     * 
+     *
      * @param {any} entry - The event data from Spine.
      */
     onStart: function (entry)
@@ -25006,15 +29680,15 @@ var SpineGameObject = new Class({
 
     /**
      * Refreshes the data about the current Skeleton.
-     * 
+     *
      * This will reset the rotation, position and size of the Skeleton to match this Game Object.
-     * 
+     *
      * Call this method if you need to access the Skeleton data directly, and it may have changed
      * recently.
      *
      * @method SpineGameObject#refresh
      * @since 3.19.0
-     * 
+     *
      * @return {this} This Game Object.
      */
     refresh: function ()
@@ -25034,20 +29708,20 @@ var SpineGameObject = new Class({
 
     /**
      * Sets the size of this Game Object.
-     * 
+     *
      * If no arguments are given it uses the current skeleton data dimensions.
-     * 
+     *
      * You can use this method to set a fixed size of this Game Object, such as for input detection,
      * when the skeleton data doesn't match what is required in-game.
      *
      * @method SpineGameObject#setSize
      * @since 3.19.0
-     * 
+     *
      * @param {number} [width] - The width of the Skeleton. If not given it defaults to the Skeleton Data width.
      * @param {number} [height] - The height of the Skeleton. If not given it defaults to the Skeleton Data height.
      * @param {number} [offsetX=0] - The horizontal offset of the Skeleton from its x and y coordinate.
      * @param {number} [offsetY=0] - The vertical offset of the Skeleton from its x and y coordinate.
-     * 
+     *
      * @return {this} This Game Object.
      */
     setSize: function (width, height, offsetX, offsetY)
@@ -25070,15 +29744,15 @@ var SpineGameObject = new Class({
 
     /**
      * Sets the offset of this Game Object from the Skeleton position.
-     * 
+     *
      * You can use this method to adjust how the position of this Game Object relates to the Skeleton it is using.
      *
      * @method SpineGameObject#setOffset
      * @since 3.19.0
-     * 
+     *
      * @param {number} [offsetX=0] - The horizontal offset of the Skeleton from its x and y coordinate.
      * @param {number} [offsetY=0] - The vertical offset of the Skeleton from its x and y coordinate.
-     * 
+     *
      * @return {this} This Game Object.
      */
     setOffset: function (offsetX, offsetY)
@@ -25097,13 +29771,13 @@ var SpineGameObject = new Class({
     /**
      * Internal method that syncs all of the Game Object position and scale data to the Skeleton.
      * It then syncs the skeleton bounds back to this Game Object.
-     * 
+     *
      * This method is called automatically as needed internally, however, it's also exposed should
      * you require overriding the size settings.
      *
      * @method SpineGameObject#updateSize
      * @since 3.19.0
-     * 
+     *
      * @return {this} This Game Object.
      */
     updateSize: function ()
@@ -25192,7 +29866,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#getBoneList
      * @since 3.19.0
-     * 
+     *
      * @return {string[]} An array containing the names of all the bones in the Skeleton Data.
      */
     getBoneList: function ()
@@ -25217,7 +29891,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#getSkinList
      * @since 3.19.0
-     * 
+     *
      * @return {string[]} An array containing the names of all the skins in the Skeleton Data.
      */
     getSkinList: function ()
@@ -25242,7 +29916,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#getSlotList
      * @since 3.19.0
-     * 
+     *
      * @return {string[]} An array containing the names of all the slots in the Skeleton.
      */
     getSlotList: function ()
@@ -25264,7 +29938,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#getAnimationList
      * @since 3.19.0
-     * 
+     *
      * @return {string[]} An array containing the names of all the animations in the Skeleton Data.
      */
     getAnimationList: function ()
@@ -25289,9 +29963,9 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#getCurrentAnimation
      * @since 3.19.0
-     * 
+     *
      * @param {integer} [trackIndex=0] - The track to return the current animation on.
-     * 
+     *
      * @return {?spine.Animation} The current Animation on the given track, or `undefined` if there is no current animation.
      */
     getCurrentAnimation: function (trackIndex)
@@ -25309,7 +29983,7 @@ var SpineGameObject = new Class({
     /**
      * Sets the current animation for a track, discarding any queued animations.
      * If the formerly current track entry was never applied to a skeleton, it is replaced (not mixed from).
-     * 
+     *
      * Animations are referenced by a unique string-based key, as defined in the Spine software.
      *
      * @method SpineGameObject#play
@@ -25332,7 +30006,7 @@ var SpineGameObject = new Class({
     /**
      * Sets the current animation for a track, discarding any queued animations.
      * If the formerly current track entry was never applied to a skeleton, it is replaced (not mixed from).
-     * 
+     *
      * Animations are referenced by a unique string-based key, as defined in the Spine software.
      *
      * @method SpineGameObject#setAnimation
@@ -25354,7 +30028,7 @@ var SpineGameObject = new Class({
         if (ignoreIfPlaying && this.state)
         {
             var currentTrack = this.state.getCurrent(0);
- 
+
             if (currentTrack && currentTrack.animation.name === animationName && !currentTrack.isComplete())
             {
                 return;
@@ -25370,9 +30044,9 @@ var SpineGameObject = new Class({
     /**
      * Adds an animation to be played after the current or last queued animation for a track.
      * If the track is empty, it is equivalent to calling setAnimation.
-     * 
+     *
      * Animations are referenced by a unique string-based key, as defined in the Spine software.
-     * 
+     *
      * The delay is a float. If > 0, sets delay. If <= 0, the delay set is the duration of the previous
      * track entry minus any mix duration (from the AnimationStateData) plus the specified delay
      * (ie the mix ends at (delay = 0) or before (delay < 0) the previous track entry duration).
@@ -25396,13 +30070,13 @@ var SpineGameObject = new Class({
     /**
      * Sets an empty animation for a track, discarding any queued animations, and sets the track
      * entry's mixDuration. An empty animation has no timelines and serves as a placeholder for mixing in or out.
-     * 
+     *
      * Mixing out is done by setting an empty animation with a mix duration using either setEmptyAnimation,
      * setEmptyAnimations, or addEmptyAnimation. Mixing to an empty animation causes the previous animation to be
      * applied less and less over the mix duration. Properties keyed in the previous animation transition to
      * the value from lower tracks or to the setup pose value if no lower tracks key the property.
      * A mix duration of 0 still mixes out over one frame.
-     * 
+     *
      * Mixing in is done by first setting an empty animation, then adding an animation using addAnimation
      * and on the returned track entry, set the mixDuration. Mixing from an empty animation causes the new
      * animation to be applied more and more over the mix duration. Properties keyed in the new animation
@@ -25424,7 +30098,7 @@ var SpineGameObject = new Class({
 
     /**
      * Removes all animations from the track, leaving skeletons in their current pose.
-     * 
+     *
      * It may be desired to use setEmptyAnimation to mix the skeletons back to the setup pose,
      * rather than leaving them in their current pose.
      *
@@ -25441,10 +30115,10 @@ var SpineGameObject = new Class({
 
         return this;
     },
-     
+
     /**
      * Removes all animations from all tracks, leaving skeletons in their current pose.
-     * 
+     *
      * It may be desired to use setEmptyAnimation to mix the skeletons back to the setup pose,
      * rather than leaving them in their current pose.
      *
@@ -25462,11 +30136,11 @@ var SpineGameObject = new Class({
 
     /**
      * Sets the skin used to look up attachments before looking in the defaultSkin.
-     * 
+     *
      * Attachments from the new skin are attached if the corresponding attachment from the
      * old skin was attached. If there was no old skin, each slot's setup mode attachment is
      * attached from the new skin.
-     * 
+     *
      * After changing the skin, the visible attachments can be reset to those attached in the
      * setup pose by calling setSlotsToSetupPose. Also, often apply is called before the next time
      * the skeleton is rendered to allow any attachment keys in the current animation(s) to hide
@@ -25474,7 +30148,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#setSkinByName
      * @since 3.19.0
-     * 
+     *
      * @param {string} skinName - The name of the skin to set.
      *
      * @return {this} This Game Object.
@@ -25494,11 +30168,11 @@ var SpineGameObject = new Class({
 
     /**
      * Sets the skin used to look up attachments before looking in the defaultSkin.
-     * 
+     *
      * Attachments from the new skin are attached if the corresponding attachment from the
      * old skin was attached. If there was no old skin, each slot's setup mode attachment is
      * attached from the new skin.
-     * 
+     *
      * After changing the skin, the visible attachments can be reset to those attached in the
      * setup pose by calling setSlotsToSetupPose. Also, often apply is called before the next time
      * the skeleton is rendered to allow any attachment keys in the current animation(s) to hide
@@ -25506,7 +30180,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#setSkin
      * @since 3.19.0
-     * 
+     *
      * @param {?spine.Skin} newSkin - The Skin to set. May be `null`.
      *
      * @return {this} This Game Object.
@@ -25529,7 +30203,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#setMix
      * @since 3.19.0
-     * 
+     *
      * @param {string} fromName - The animation to mix from.
      * @param {string} toName - The animation to mix to.
      * @param {number} [duration] - Seconds for mixing from the previous animation to this animation. Defaults to the value provided by AnimationStateData getMix based on the animation before this animation (if any).
@@ -25550,7 +30224,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#getAttachment
      * @since 3.19.0
-     * 
+     *
      * @param {integer} slotIndex - The slot index to search.
      * @param {string} attachmentName - The attachment name to look for.
      *
@@ -25566,7 +30240,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#getAttachmentByName
      * @since 3.19.0
-     * 
+     *
      * @param {string} slotName - The slot name to search.
      * @param {string} attachmentName - The attachment name to look for.
      *
@@ -25583,7 +30257,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#setAttachment
      * @since 3.19.0
-     * 
+     *
      * @param {string} slotName - The slot name to add the attachment to.
      * @param {string} attachmentName - The attachment name to add.
      *
@@ -25671,7 +30345,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#angleBoneToXY
      * @since 3.19.0
-     * 
+     *
      * @param {spine.Bone} bone - The bone to rotate towards the world position.
      * @param {number} worldX - The world x coordinate to rotate the bone towards.
      * @param {number} worldY - The world y coordinate to rotate the bone towards.
@@ -25703,7 +30377,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findBone
      * @since 3.19.0
-     * 
+     *
      * @param {string} boneName - The name of the bone to find.
      *
      * @return {spine.Bone} The bone, or null.
@@ -25719,7 +30393,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findBoneIndex
      * @since 3.19.0
-     * 
+     *
      * @param {string} boneName - The name of the bone to find.
      *
      * @return {integer} The bone index. Or -1 if the bone was not found.
@@ -25735,7 +30409,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findSlot
      * @since 3.19.0
-     * 
+     *
      * @param {string} slotName - The name of the slot to find.
      *
      * @return {spine.Slot} The Slot. May be null.
@@ -25751,7 +30425,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findSlotIndex
      * @since 3.19.0
-     * 
+     *
      * @param {string} slotName - The name of the slot to find.
      *
      * @return {integer} The slot index. Or -1 if the Slot was not found.
@@ -25767,7 +30441,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findSkin
      * @since 3.19.0
-     * 
+     *
      * @param {string} skinName - The name of the skin to find.
      *
      * @return {spine.Skin} The Skin. May be null.
@@ -25783,7 +30457,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findEvent
      * @since 3.19.0
-     * 
+     *
      * @param {string} eventDataName - The name of the event to find.
      *
      * @return {spine.EventData} The Event Data. May be null.
@@ -25799,7 +30473,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findAnimation
      * @since 3.19.0
-     * 
+     *
      * @param {string} animationName - The name of the animation to find.
      *
      * @return {spine.Animation} The Animation. May be null.
@@ -25815,7 +30489,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findIkConstraint
      * @since 3.19.0
-     * 
+     *
      * @param {string} constraintName - The name of the constraint to find.
      *
      * @return {spine.IkConstraintData} The IK constraint. May be null.
@@ -25831,7 +30505,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findTransformConstraint
      * @since 3.19.0
-     * 
+     *
      * @param {string} constraintName - The name of the constraint to find.
      *
      * @return {spine.TransformConstraintData} The transform constraint. May be null.
@@ -25847,7 +30521,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findPathConstraint
      * @since 3.19.0
-     * 
+     *
      * @param {string} constraintName - The name of the constraint to find.
      *
      * @return {spine.PathConstraintData} The path constraint. May be null.
@@ -25863,7 +30537,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findPathConstraintIndex
      * @since 3.19.0
-     * 
+     *
      * @param {string} constraintName - The name of the constraint to find.
      *
      * @return {integer} The constraint index. Or -1 if the constraint was not found.
@@ -25875,15 +30549,15 @@ var SpineGameObject = new Class({
 
     /**
      * Returns the axis aligned bounding box (AABB) of the region and mesh attachments for the current pose.
-     * 
+     *
      * The returned object contains two properties: `offset` and `size`:
-     * 
+     *
      * `offset` - The distance from the skeleton origin to the bottom left corner of the AABB.
      * `size` - The width and height of the AABB.
      *
      * @method SpineGameObject#getBounds
      * @since 3.19.0
-     * 
+     *
      * @return {any} The bounds object.
      */
     getBounds: function ()
@@ -25897,7 +30571,7 @@ var SpineGameObject = new Class({
      * @method SpineGameObject#preUpdate
      * @protected
      * @since 3.19.0
-     * 
+     *
      * @param {number} time - The current timestamp.
      * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
@@ -25940,1111 +30614,7 @@ module.exports = SpineGameObject;
 
 
 /***/ }),
-/* 195 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * Provides methods used for calculating and setting the size of a non-Frame based Game Object.
- * Should be applied as a mixin and not used directly.
- * 
- * @namespace Phaser.GameObjects.Components.ComputedSize
- * @since 3.0.0
- */
-
-var ComputedSize = {
-
-    /**
-     * The native (un-scaled) width of this Game Object.
-     * 
-     * Changing this value will not change the size that the Game Object is rendered in-game.
-     * For that you need to either set the scale of the Game Object (`setScale`) or use
-     * the `displayWidth` property.
-     * 
-     * @name Phaser.GameObjects.Components.ComputedSize#width
-     * @type {number}
-     * @since 3.0.0
-     */
-    width: 0,
-
-    /**
-     * The native (un-scaled) height of this Game Object.
-     * 
-     * Changing this value will not change the size that the Game Object is rendered in-game.
-     * For that you need to either set the scale of the Game Object (`setScale`) or use
-     * the `displayHeight` property.
-     * 
-     * @name Phaser.GameObjects.Components.ComputedSize#height
-     * @type {number}
-     * @since 3.0.0
-     */
-    height: 0,
-
-    /**
-     * The displayed width of this Game Object.
-     * 
-     * This value takes into account the scale factor.
-     * 
-     * Setting this value will adjust the Game Object's scale property.
-     * 
-     * @name Phaser.GameObjects.Components.ComputedSize#displayWidth
-     * @type {number}
-     * @since 3.0.0
-     */
-    displayWidth: {
-
-        get: function ()
-        {
-            return this.scaleX * this.width;
-        },
-
-        set: function (value)
-        {
-            this.scaleX = value / this.width;
-        }
-
-    },
-
-    /**
-     * The displayed height of this Game Object.
-     * 
-     * This value takes into account the scale factor.
-     * 
-     * Setting this value will adjust the Game Object's scale property.
-     * 
-     * @name Phaser.GameObjects.Components.ComputedSize#displayHeight
-     * @type {number}
-     * @since 3.0.0
-     */
-    displayHeight: {
-
-        get: function ()
-        {
-            return this.scaleY * this.height;
-        },
-
-        set: function (value)
-        {
-            this.scaleY = value / this.height;
-        }
-
-    },
-
-    /**
-     * Sets the internal size of this Game Object, as used for frame or physics body creation.
-     * 
-     * This will not change the size that the Game Object is rendered in-game.
-     * For that you need to either set the scale of the Game Object (`setScale`) or call the
-     * `setDisplaySize` method, which is the same thing as changing the scale but allows you
-     * to do so by giving pixel values.
-     * 
-     * If you have enabled this Game Object for input, changing the size will _not_ change the
-     * size of the hit area. To do this you should adjust the `input.hitArea` object directly.
-     * 
-     * @method Phaser.GameObjects.Components.ComputedSize#setSize
-     * @since 3.4.0
-     *
-     * @param {number} width - The width of this Game Object.
-     * @param {number} height - The height of this Game Object.
-     * 
-     * @return {this} This Game Object instance.
-     */
-    setSize: function (width, height)
-    {
-        this.width = width;
-        this.height = height;
-
-        return this;
-    },
-
-    /**
-     * Sets the display size of this Game Object.
-     * 
-     * Calling this will adjust the scale.
-     * 
-     * @method Phaser.GameObjects.Components.ComputedSize#setDisplaySize
-     * @since 3.4.0
-     *
-     * @param {number} width - The width of this Game Object.
-     * @param {number} height - The height of this Game Object.
-     * 
-     * @return {this} This Game Object instance.
-     */
-    setDisplaySize: function (width, height)
-    {
-        this.displayWidth = width;
-        this.displayHeight = height;
-
-        return this;
-    }
-
-};
-
-module.exports = ComputedSize;
-
-
-/***/ }),
-/* 196 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * Provides methods used for setting the depth of a Game Object.
- * Should be applied as a mixin and not used directly.
- * 
- * @namespace Phaser.GameObjects.Components.Depth
- * @since 3.0.0
- */
-
-var Depth = {
-
-    /**
-     * Private internal value. Holds the depth of the Game Object.
-     * 
-     * @name Phaser.GameObjects.Components.Depth#_depth
-     * @type {integer}
-     * @private
-     * @default 0
-     * @since 3.0.0
-     */
-    _depth: 0,
-
-    /**
-     * The depth of this Game Object within the Scene.
-     * 
-     * The depth is also known as the 'z-index' in some environments, and allows you to change the rendering order
-     * of Game Objects, without actually moving their position in the display list.
-     *
-     * The default depth is zero. A Game Object with a higher depth
-     * value will always render in front of one with a lower value.
-     *
-     * Setting the depth will queue a depth sort event within the Scene.
-     * 
-     * @name Phaser.GameObjects.Components.Depth#depth
-     * @type {number}
-     * @since 3.0.0
-     */
-    depth: {
-
-        get: function ()
-        {
-            return this._depth;
-        },
-
-        set: function (value)
-        {
-            this.scene.sys.queueDepthSort();
-            this._depth = value;
-        }
-
-    },
-
-    /**
-     * The depth of this Game Object within the Scene.
-     * 
-     * The depth is also known as the 'z-index' in some environments, and allows you to change the rendering order
-     * of Game Objects, without actually moving their position in the display list.
-     *
-     * The default depth is zero. A Game Object with a higher depth
-     * value will always render in front of one with a lower value.
-     *
-     * Setting the depth will queue a depth sort event within the Scene.
-     * 
-     * @method Phaser.GameObjects.Components.Depth#setDepth
-     * @since 3.0.0
-     *
-     * @param {integer} value - The depth of this Game Object.
-     * 
-     * @return {this} This Game Object instance.
-     */
-    setDepth: function (value)
-    {
-        if (value === undefined) { value = 0; }
-
-        this.depth = value;
-
-        return this;
-    }
-
-};
-
-module.exports = Depth;
-
-
-/***/ }),
-/* 197 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * Provides methods used for visually flipping a Game Object.
- * Should be applied as a mixin and not used directly.
- * 
- * @namespace Phaser.GameObjects.Components.Flip
- * @since 3.0.0
- */
-
-var Flip = {
-
-    /**
-     * The horizontally flipped state of the Game Object.
-     * 
-     * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
-     * Flipping always takes place from the middle of the texture and does not impact the scale value.
-     * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
-     * 
-     * @name Phaser.GameObjects.Components.Flip#flipX
-     * @type {boolean}
-     * @default false
-     * @since 3.0.0
-     */
-    flipX: false,
-
-    /**
-     * The vertically flipped state of the Game Object.
-     * 
-     * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
-     * Flipping always takes place from the middle of the texture and does not impact the scale value.
-     * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
-     * 
-     * @name Phaser.GameObjects.Components.Flip#flipY
-     * @type {boolean}
-     * @default false
-     * @since 3.0.0
-     */
-    flipY: false,
-
-    /**
-     * Toggles the horizontal flipped state of this Game Object.
-     * 
-     * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
-     * Flipping always takes place from the middle of the texture and does not impact the scale value.
-     * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
-     * 
-     * @method Phaser.GameObjects.Components.Flip#toggleFlipX
-     * @since 3.0.0
-     * 
-     * @return {this} This Game Object instance.
-     */
-    toggleFlipX: function ()
-    {
-        this.flipX = !this.flipX;
-
-        return this;
-    },
-
-    /**
-     * Toggles the vertical flipped state of this Game Object.
-     * 
-     * @method Phaser.GameObjects.Components.Flip#toggleFlipY
-     * @since 3.0.0
-     * 
-     * @return {this} This Game Object instance.
-     */
-    toggleFlipY: function ()
-    {
-        this.flipY = !this.flipY;
-
-        return this;
-    },
-
-    /**
-     * Sets the horizontal flipped state of this Game Object.
-     * 
-     * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
-     * Flipping always takes place from the middle of the texture and does not impact the scale value.
-     * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
-     * 
-     * @method Phaser.GameObjects.Components.Flip#setFlipX
-     * @since 3.0.0
-     *
-     * @param {boolean} value - The flipped state. `false` for no flip, or `true` to be flipped.
-     * 
-     * @return {this} This Game Object instance.
-     */
-    setFlipX: function (value)
-    {
-        this.flipX = value;
-
-        return this;
-    },
-
-    /**
-     * Sets the vertical flipped state of this Game Object.
-     * 
-     * @method Phaser.GameObjects.Components.Flip#setFlipY
-     * @since 3.0.0
-     *
-     * @param {boolean} value - The flipped state. `false` for no flip, or `true` to be flipped.
-     * 
-     * @return {this} This Game Object instance.
-     */
-    setFlipY: function (value)
-    {
-        this.flipY = value;
-
-        return this;
-    },
-
-    /**
-     * Sets the horizontal and vertical flipped state of this Game Object.
-     * 
-     * A Game Object that is flipped will render inversed on the flipped axis.
-     * Flipping always takes place from the middle of the texture and does not impact the scale value.
-     * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
-     * 
-     * @method Phaser.GameObjects.Components.Flip#setFlip
-     * @since 3.0.0
-     *
-     * @param {boolean} x - The horizontal flipped state. `false` for no flip, or `true` to be flipped.
-     * @param {boolean} y - The horizontal flipped state. `false` for no flip, or `true` to be flipped.
-     * 
-     * @return {this} This Game Object instance.
-     */
-    setFlip: function (x, y)
-    {
-        this.flipX = x;
-        this.flipY = y;
-
-        return this;
-    },
-
-    /**
-     * Resets the horizontal and vertical flipped state of this Game Object back to their default un-flipped state.
-     * 
-     * @method Phaser.GameObjects.Components.Flip#resetFlip
-     * @since 3.0.0
-     *
-     * @return {this} This Game Object instance.
-     */
-    resetFlip: function ()
-    {
-        this.flipX = false;
-        this.flipY = false;
-
-        return this;
-    }
-
-};
-
-module.exports = Flip;
-
-
-/***/ }),
-/* 198 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * Provides methods used for getting and setting the Scroll Factor of a Game Object.
- *
- * @namespace Phaser.GameObjects.Components.ScrollFactor
- * @since 3.0.0
- */
-
-var ScrollFactor = {
-
-    /**
-     * The horizontal scroll factor of this Game Object.
-     *
-     * The scroll factor controls the influence of the movement of a Camera upon this Game Object.
-     *
-     * When a camera scrolls it will change the location at which this Game Object is rendered on-screen.
-     * It does not change the Game Objects actual position values.
-     *
-     * A value of 1 means it will move exactly in sync with a camera.
-     * A value of 0 means it will not move at all, even if the camera moves.
-     * Other values control the degree to which the camera movement is mapped to this Game Object.
-     * 
-     * Please be aware that scroll factor values other than 1 are not taken in to consideration when
-     * calculating physics collisions. Bodies always collide based on their world position, but changing
-     * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
-     * them from physics bodies if not accounted for in your code.
-     *
-     * @name Phaser.GameObjects.Components.ScrollFactor#scrollFactorX
-     * @type {number}
-     * @default 1
-     * @since 3.0.0
-     */
-    scrollFactorX: 1,
-
-    /**
-     * The vertical scroll factor of this Game Object.
-     *
-     * The scroll factor controls the influence of the movement of a Camera upon this Game Object.
-     *
-     * When a camera scrolls it will change the location at which this Game Object is rendered on-screen.
-     * It does not change the Game Objects actual position values.
-     *
-     * A value of 1 means it will move exactly in sync with a camera.
-     * A value of 0 means it will not move at all, even if the camera moves.
-     * Other values control the degree to which the camera movement is mapped to this Game Object.
-     * 
-     * Please be aware that scroll factor values other than 1 are not taken in to consideration when
-     * calculating physics collisions. Bodies always collide based on their world position, but changing
-     * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
-     * them from physics bodies if not accounted for in your code.
-     *
-     * @name Phaser.GameObjects.Components.ScrollFactor#scrollFactorY
-     * @type {number}
-     * @default 1
-     * @since 3.0.0
-     */
-    scrollFactorY: 1,
-
-    /**
-     * Sets the scroll factor of this Game Object.
-     *
-     * The scroll factor controls the influence of the movement of a Camera upon this Game Object.
-     *
-     * When a camera scrolls it will change the location at which this Game Object is rendered on-screen.
-     * It does not change the Game Objects actual position values.
-     *
-     * A value of 1 means it will move exactly in sync with a camera.
-     * A value of 0 means it will not move at all, even if the camera moves.
-     * Other values control the degree to which the camera movement is mapped to this Game Object.
-     * 
-     * Please be aware that scroll factor values other than 1 are not taken in to consideration when
-     * calculating physics collisions. Bodies always collide based on their world position, but changing
-     * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
-     * them from physics bodies if not accounted for in your code.
-     *
-     * @method Phaser.GameObjects.Components.ScrollFactor#setScrollFactor
-     * @since 3.0.0
-     *
-     * @param {number} x - The horizontal scroll factor of this Game Object.
-     * @param {number} [y=x] - The vertical scroll factor of this Game Object. If not set it will use the `x` value.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setScrollFactor: function (x, y)
-    {
-        if (y === undefined) { y = x; }
-
-        this.scrollFactorX = x;
-        this.scrollFactorY = y;
-
-        return this;
-    }
-
-};
-
-module.exports = ScrollFactor;
-
-
-/***/ }),
-/* 199 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-var MATH_CONST = __webpack_require__(1);
-var TransformMatrix = __webpack_require__(200);
-var TransformXY = __webpack_require__(28);
-var WrapAngle = __webpack_require__(18);
-var WrapAngleDegrees = __webpack_require__(19);
-var Vector2 = __webpack_require__(3);
-
-//  global bitmask flag for GameObject.renderMask (used by Scale)
-var _FLAG = 4; // 0100
-
-/**
- * Provides methods used for getting and setting the position, scale and rotation of a Game Object.
- *
- * @namespace Phaser.GameObjects.Components.Transform
- * @since 3.0.0
- */
-
-var Transform = {
-
-    /**
-     * Private internal value. Holds the horizontal scale value.
-     *
-     * @name Phaser.GameObjects.Components.Transform#_scaleX
-     * @type {number}
-     * @private
-     * @default 1
-     * @since 3.0.0
-     */
-    _scaleX: 1,
-
-    /**
-     * Private internal value. Holds the vertical scale value.
-     *
-     * @name Phaser.GameObjects.Components.Transform#_scaleY
-     * @type {number}
-     * @private
-     * @default 1
-     * @since 3.0.0
-     */
-    _scaleY: 1,
-
-    /**
-     * Private internal value. Holds the rotation value in radians.
-     *
-     * @name Phaser.GameObjects.Components.Transform#_rotation
-     * @type {number}
-     * @private
-     * @default 0
-     * @since 3.0.0
-     */
-    _rotation: 0,
-
-    /**
-     * The x position of this Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Transform#x
-     * @type {number}
-     * @default 0
-     * @since 3.0.0
-     */
-    x: 0,
-
-    /**
-     * The y position of this Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Transform#y
-     * @type {number}
-     * @default 0
-     * @since 3.0.0
-     */
-    y: 0,
-
-    /**
-     * The z position of this Game Object.
-     *
-     * Note: The z position does not control the rendering order of 2D Game Objects. Use
-     * {@link Phaser.GameObjects.Components.Depth#depth} instead.
-     *
-     * @name Phaser.GameObjects.Components.Transform#z
-     * @type {number}
-     * @default 0
-     * @since 3.0.0
-     */
-    z: 0,
-
-    /**
-     * The w position of this Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Transform#w
-     * @type {number}
-     * @default 0
-     * @since 3.0.0
-     */
-    w: 0,
-
-    /**
-     * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
-     * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
-     *
-     * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
-     * isn't the case, use the `scaleX` or `scaleY` properties instead.
-     *
-     * @name Phaser.GameObjects.Components.Transform#scale
-     * @type {number}
-     * @default 1
-     * @since 3.18.0
-     */
-    scale: {
-
-        get: function ()
-        {
-            return (this._scaleX + this._scaleY) / 2;
-        },
-
-        set: function (value)
-        {
-            this._scaleX = value;
-            this._scaleY = value;
-
-            if (value === 0)
-            {
-                this.renderFlags &= ~_FLAG;
-            }
-            else
-            {
-                this.renderFlags |= _FLAG;
-            }
-        }
-
-    },
-
-    /**
-     * The horizontal scale of this Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Transform#scaleX
-     * @type {number}
-     * @default 1
-     * @since 3.0.0
-     */
-    scaleX: {
-
-        get: function ()
-        {
-            return this._scaleX;
-        },
-
-        set: function (value)
-        {
-            this._scaleX = value;
-
-            if (value === 0)
-            {
-                this.renderFlags &= ~_FLAG;
-            }
-            else
-            {
-                this.renderFlags |= _FLAG;
-            }
-        }
-
-    },
-
-    /**
-     * The vertical scale of this Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Transform#scaleY
-     * @type {number}
-     * @default 1
-     * @since 3.0.0
-     */
-    scaleY: {
-
-        get: function ()
-        {
-            return this._scaleY;
-        },
-
-        set: function (value)
-        {
-            this._scaleY = value;
-
-            if (value === 0)
-            {
-                this.renderFlags &= ~_FLAG;
-            }
-            else
-            {
-                this.renderFlags |= _FLAG;
-            }
-        }
-
-    },
-
-    /**
-     * The angle of this Game Object as expressed in degrees.
-     *
-     * Phaser uses a right-hand clockwise rotation system, where 0 is right, 90 is down, 180/-180 is left
-     * and -90 is up.
-     *
-     * If you prefer to work in radians, see the `rotation` property instead.
-     *
-     * @name Phaser.GameObjects.Components.Transform#angle
-     * @type {integer}
-     * @default 0
-     * @since 3.0.0
-     */
-    angle: {
-
-        get: function ()
-        {
-            return WrapAngleDegrees(this._rotation * MATH_CONST.RAD_TO_DEG);
-        },
-
-        set: function (value)
-        {
-            //  value is in degrees
-            this.rotation = WrapAngleDegrees(value) * MATH_CONST.DEG_TO_RAD;
-        }
-    },
-
-    /**
-     * The angle of this Game Object in radians.
-     *
-     * Phaser uses a right-hand clockwise rotation system, where 0 is right, PI/2 is down, +-PI is left
-     * and -PI/2 is up.
-     *
-     * If you prefer to work in degrees, see the `angle` property instead.
-     *
-     * @name Phaser.GameObjects.Components.Transform#rotation
-     * @type {number}
-     * @default 1
-     * @since 3.0.0
-     */
-    rotation: {
-
-        get: function ()
-        {
-            return this._rotation;
-        },
-
-        set: function (value)
-        {
-            //  value is in radians
-            this._rotation = WrapAngle(value);
-        }
-    },
-
-    /**
-     * Sets the position of this Game Object.
-     *
-     * @method Phaser.GameObjects.Components.Transform#setPosition
-     * @since 3.0.0
-     *
-     * @param {number} [x=0] - The x position of this Game Object.
-     * @param {number} [y=x] - The y position of this Game Object. If not set it will use the `x` value.
-     * @param {number} [z=0] - The z position of this Game Object.
-     * @param {number} [w=0] - The w position of this Game Object.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setPosition: function (x, y, z, w)
-    {
-        if (x === undefined) { x = 0; }
-        if (y === undefined) { y = x; }
-        if (z === undefined) { z = 0; }
-        if (w === undefined) { w = 0; }
-
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.w = w;
-
-        return this;
-    },
-
-    /**
-     * Sets the position of this Game Object to be a random position within the confines of
-     * the given area.
-     *
-     * If no area is specified a random position between 0 x 0 and the game width x height is used instead.
-     *
-     * The position does not factor in the size of this Game Object, meaning that only the origin is
-     * guaranteed to be within the area.
-     *
-     * @method Phaser.GameObjects.Components.Transform#setRandomPosition
-     * @since 3.8.0
-     *
-     * @param {number} [x=0] - The x position of the top-left of the random area.
-     * @param {number} [y=0] - The y position of the top-left of the random area.
-     * @param {number} [width] - The width of the random area.
-     * @param {number} [height] - The height of the random area.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setRandomPosition: function (x, y, width, height)
-    {
-        if (x === undefined) { x = 0; }
-        if (y === undefined) { y = 0; }
-        if (width === undefined) { width = this.scene.sys.scale.width; }
-        if (height === undefined) { height = this.scene.sys.scale.height; }
-
-        this.x = x + (Math.random() * width);
-        this.y = y + (Math.random() * height);
-
-        return this;
-    },
-
-    /**
-     * Sets the rotation of this Game Object.
-     *
-     * @method Phaser.GameObjects.Components.Transform#setRotation
-     * @since 3.0.0
-     *
-     * @param {number} [radians=0] - The rotation of this Game Object, in radians.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setRotation: function (radians)
-    {
-        if (radians === undefined) { radians = 0; }
-
-        this.rotation = radians;
-
-        return this;
-    },
-
-    /**
-     * Sets the angle of this Game Object.
-     *
-     * @method Phaser.GameObjects.Components.Transform#setAngle
-     * @since 3.0.0
-     *
-     * @param {number} [degrees=0] - The rotation of this Game Object, in degrees.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setAngle: function (degrees)
-    {
-        if (degrees === undefined) { degrees = 0; }
-
-        this.angle = degrees;
-
-        return this;
-    },
-
-    /**
-     * Sets the scale of this Game Object.
-     *
-     * @method Phaser.GameObjects.Components.Transform#setScale
-     * @since 3.0.0
-     *
-     * @param {number} x - The horizontal scale of this Game Object.
-     * @param {number} [y=x] - The vertical scale of this Game Object. If not set it will use the `x` value.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setScale: function (x, y)
-    {
-        if (x === undefined) { x = 1; }
-        if (y === undefined) { y = x; }
-
-        this.scaleX = x;
-        this.scaleY = y;
-
-        return this;
-    },
-
-    /**
-     * Sets the x position of this Game Object.
-     *
-     * @method Phaser.GameObjects.Components.Transform#setX
-     * @since 3.0.0
-     *
-     * @param {number} [value=0] - The x position of this Game Object.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setX: function (value)
-    {
-        if (value === undefined) { value = 0; }
-
-        this.x = value;
-
-        return this;
-    },
-
-    /**
-     * Sets the y position of this Game Object.
-     *
-     * @method Phaser.GameObjects.Components.Transform#setY
-     * @since 3.0.0
-     *
-     * @param {number} [value=0] - The y position of this Game Object.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setY: function (value)
-    {
-        if (value === undefined) { value = 0; }
-
-        this.y = value;
-
-        return this;
-    },
-
-    /**
-     * Sets the z position of this Game Object.
-     *
-     * Note: The z position does not control the rendering order of 2D Game Objects. Use
-     * {@link Phaser.GameObjects.Components.Depth#setDepth} instead.
-     *
-     * @method Phaser.GameObjects.Components.Transform#setZ
-     * @since 3.0.0
-     *
-     * @param {number} [value=0] - The z position of this Game Object.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setZ: function (value)
-    {
-        if (value === undefined) { value = 0; }
-
-        this.z = value;
-
-        return this;
-    },
-
-    /**
-     * Sets the w position of this Game Object.
-     *
-     * @method Phaser.GameObjects.Components.Transform#setW
-     * @since 3.0.0
-     *
-     * @param {number} [value=0] - The w position of this Game Object.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setW: function (value)
-    {
-        if (value === undefined) { value = 0; }
-
-        this.w = value;
-
-        return this;
-    },
-
-    /**
-     * Gets the local transform matrix for this Game Object.
-     *
-     * @method Phaser.GameObjects.Components.Transform#getLocalTransformMatrix
-     * @since 3.4.0
-     *
-     * @param {Phaser.GameObjects.Components.TransformMatrix} [tempMatrix] - The matrix to populate with the values from this Game Object.
-     *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} The populated Transform Matrix.
-     */
-    getLocalTransformMatrix: function (tempMatrix)
-    {
-        if (tempMatrix === undefined) { tempMatrix = new TransformMatrix(); }
-
-        return tempMatrix.applyITRS(this.x, this.y, this._rotation, this._scaleX, this._scaleY);
-    },
-
-    /**
-     * Gets the world transform matrix for this Game Object, factoring in any parent Containers.
-     *
-     * @method Phaser.GameObjects.Components.Transform#getWorldTransformMatrix
-     * @since 3.4.0
-     *
-     * @param {Phaser.GameObjects.Components.TransformMatrix} [tempMatrix] - The matrix to populate with the values from this Game Object.
-     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - A temporary matrix to hold parent values during the calculations.
-     *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} The populated Transform Matrix.
-     */
-    getWorldTransformMatrix: function (tempMatrix, parentMatrix)
-    {
-        if (tempMatrix === undefined) { tempMatrix = new TransformMatrix(); }
-        if (parentMatrix === undefined) { parentMatrix = new TransformMatrix(); }
-
-        var parent = this.parentContainer;
-
-        if (!parent)
-        {
-            return this.getLocalTransformMatrix(tempMatrix);
-        }
-
-        tempMatrix.applyITRS(this.x, this.y, this._rotation, this._scaleX, this._scaleY);
-
-        while (parent)
-        {
-            parentMatrix.applyITRS(parent.x, parent.y, parent._rotation, parent._scaleX, parent._scaleY);
-
-            parentMatrix.multiply(tempMatrix, tempMatrix);
-
-            parent = parent.parentContainer;
-        }
-
-        return tempMatrix;
-    },
-
-    /**
-     * Takes the given `x` and `y` coordinates and converts them into local space for this
-     * Game Object, taking into account parent and local transforms, and the Display Origin.
-     *
-     * The returned Vector2 contains the translated point in its properties.
-     *
-     * A Camera needs to be provided in order to handle modified scroll factors. If no
-     * camera is specified, it will use the `main` camera from the Scene to which this
-     * Game Object belongs.
-     *
-     * @method Phaser.GameObjects.Components.Transform#getLocalPoint
-     * @since 3.50.0
-     *
-     * @param {number} x - The x position to translate.
-     * @param {number} y - The y position to translate.
-     * @param {Phaser.Math.Vector2} [point] - A Vector2, or point-like object, to store the results in.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera which is being tested against. If not given will use the Scene default camera.
-     *
-     * @return {Phaser.Math.Vector2} The translated point.
-     */
-    getLocalPoint: function (x, y, point, camera)
-    {
-        if (!point) { point = new Vector2(); }
-        if (!camera) { camera = this.scene.sys.cameras.main; }
-
-        var csx = camera.scrollX;
-        var csy = camera.scrollY;
-
-        var px = x + (csx * this.scrollFactorX) - csx;
-        var py = y + (csy * this.scrollFactorY) - csy;
-
-        if (this.parentContainer)
-        {
-            this.getWorldTransformMatrix().applyInverse(px, py, point);
-        }
-        else
-        {
-            TransformXY(px, py, this.x, this.y, this.rotation, this.scaleX, this.scaleY, point);
-        }
-
-        //  Normalize origin
-        if (this._originComponent)
-        {
-            point.x += this._displayOriginX;
-            point.y += this._displayOriginY;
-        }
-
-        return point;
-    },
-
-    /**
-     * Gets the sum total rotation of all of this Game Objects parent Containers.
-     *
-     * The returned value is in radians and will be zero if this Game Object has no parent container.
-     *
-     * @method Phaser.GameObjects.Components.Transform#getParentRotation
-     * @since 3.18.0
-     *
-     * @return {number} The sum total rotation, in radians, of all parent containers of this Game Object.
-     */
-    getParentRotation: function ()
-    {
-        var rotation = 0;
-
-        var parent = this.parentContainer;
-
-        while (parent)
-        {
-            rotation += parent.rotation;
-
-            parent = parent.parentContainer;
-        }
-
-        return rotation;
-    }
-
-};
-
-module.exports = Transform;
-
-
-/***/ }),
-/* 200 */
+/* 219 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -27054,1915 +30624,7 @@ module.exports = Transform;
  */
 
 var Class = __webpack_require__(0);
-var MATH_CONST = __webpack_require__(1);
-var Vector2 = __webpack_require__(3);
-
-/**
- * @classdesc
- * A Matrix used for display transformations for rendering.
- *
- * It is represented like so:
- *
- * ```
- * | a | c | tx |
- * | b | d | ty |
- * | 0 | 0 | 1  |
- * ```
- *
- * @class TransformMatrix
- * @memberof Phaser.GameObjects.Components
- * @constructor
- * @since 3.0.0
- *
- * @param {number} [a=1] - The Scale X value.
- * @param {number} [b=0] - The Skew Y value.
- * @param {number} [c=0] - The Skew X value.
- * @param {number} [d=1] - The Scale Y value.
- * @param {number} [tx=0] - The Translate X value.
- * @param {number} [ty=0] - The Translate Y value.
- */
-var TransformMatrix = new Class({
-
-    initialize:
-
-    function TransformMatrix (a, b, c, d, tx, ty)
-    {
-        if (a === undefined) { a = 1; }
-        if (b === undefined) { b = 0; }
-        if (c === undefined) { c = 0; }
-        if (d === undefined) { d = 1; }
-        if (tx === undefined) { tx = 0; }
-        if (ty === undefined) { ty = 0; }
-
-        /**
-         * The matrix values.
-         *
-         * @name Phaser.GameObjects.Components.TransformMatrix#matrix
-         * @type {Float32Array}
-         * @since 3.0.0
-         */
-        this.matrix = new Float32Array([ a, b, c, d, tx, ty, 0, 0, 1 ]);
-
-        /**
-         * The decomposed matrix.
-         *
-         * @name Phaser.GameObjects.Components.TransformMatrix#decomposedMatrix
-         * @type {object}
-         * @since 3.0.0
-         */
-        this.decomposedMatrix = {
-            translateX: 0,
-            translateY: 0,
-            scaleX: 1,
-            scaleY: 1,
-            rotation: 0
-        };
-    },
-
-    /**
-     * The Scale X value.
-     *
-     * @name Phaser.GameObjects.Components.TransformMatrix#a
-     * @type {number}
-     * @since 3.4.0
-     */
-    a: {
-
-        get: function ()
-        {
-            return this.matrix[0];
-        },
-
-        set: function (value)
-        {
-            this.matrix[0] = value;
-        }
-
-    },
-
-    /**
-     * The Skew Y value.
-     *
-     * @name Phaser.GameObjects.Components.TransformMatrix#b
-     * @type {number}
-     * @since 3.4.0
-     */
-    b: {
-
-        get: function ()
-        {
-            return this.matrix[1];
-        },
-
-        set: function (value)
-        {
-            this.matrix[1] = value;
-        }
-
-    },
-
-    /**
-     * The Skew X value.
-     *
-     * @name Phaser.GameObjects.Components.TransformMatrix#c
-     * @type {number}
-     * @since 3.4.0
-     */
-    c: {
-
-        get: function ()
-        {
-            return this.matrix[2];
-        },
-
-        set: function (value)
-        {
-            this.matrix[2] = value;
-        }
-
-    },
-
-    /**
-     * The Scale Y value.
-     *
-     * @name Phaser.GameObjects.Components.TransformMatrix#d
-     * @type {number}
-     * @since 3.4.0
-     */
-    d: {
-
-        get: function ()
-        {
-            return this.matrix[3];
-        },
-
-        set: function (value)
-        {
-            this.matrix[3] = value;
-        }
-
-    },
-
-    /**
-     * The Translate X value.
-     *
-     * @name Phaser.GameObjects.Components.TransformMatrix#e
-     * @type {number}
-     * @since 3.11.0
-     */
-    e: {
-
-        get: function ()
-        {
-            return this.matrix[4];
-        },
-
-        set: function (value)
-        {
-            this.matrix[4] = value;
-        }
-
-    },
-
-    /**
-     * The Translate Y value.
-     *
-     * @name Phaser.GameObjects.Components.TransformMatrix#f
-     * @type {number}
-     * @since 3.11.0
-     */
-    f: {
-
-        get: function ()
-        {
-            return this.matrix[5];
-        },
-
-        set: function (value)
-        {
-            this.matrix[5] = value;
-        }
-
-    },
-
-    /**
-     * The Translate X value.
-     *
-     * @name Phaser.GameObjects.Components.TransformMatrix#tx
-     * @type {number}
-     * @since 3.4.0
-     */
-    tx: {
-
-        get: function ()
-        {
-            return this.matrix[4];
-        },
-
-        set: function (value)
-        {
-            this.matrix[4] = value;
-        }
-
-    },
-
-    /**
-     * The Translate Y value.
-     *
-     * @name Phaser.GameObjects.Components.TransformMatrix#ty
-     * @type {number}
-     * @since 3.4.0
-     */
-    ty: {
-
-        get: function ()
-        {
-            return this.matrix[5];
-        },
-
-        set: function (value)
-        {
-            this.matrix[5] = value;
-        }
-
-    },
-
-    /**
-     * The rotation of the Matrix. Value is in radians.
-     *
-     * @name Phaser.GameObjects.Components.TransformMatrix#rotation
-     * @type {number}
-     * @readonly
-     * @since 3.4.0
-     */
-    rotation: {
-
-        get: function ()
-        {
-            return Math.acos(this.a / this.scaleX) * ((Math.atan(-this.c / this.a) < 0) ? -1 : 1);
-        }
-
-    },
-
-    /**
-     * The rotation of the Matrix, normalized to be within the Phaser right-handed
-     * clockwise rotation space. Value is in radians.
-     *
-     * @name Phaser.GameObjects.Components.TransformMatrix#rotationNormalized
-     * @type {number}
-     * @readonly
-     * @since 3.19.0
-     */
-    rotationNormalized: {
-
-        get: function ()
-        {
-            var matrix = this.matrix;
-
-            var a = matrix[0];
-            var b = matrix[1];
-            var c = matrix[2];
-            var d = matrix[3];
-
-            if (a || b)
-            {
-                // var r = Math.sqrt(a * a + b * b);
-    
-                return (b > 0) ? Math.acos(a / this.scaleX) : -Math.acos(a / this.scaleX);
-            }
-            else if (c || d)
-            {
-                // var s = Math.sqrt(c * c + d * d);
-    
-                return MATH_CONST.TAU - ((d > 0) ? Math.acos(-c / this.scaleY) : -Math.acos(c / this.scaleY));
-            }
-            else
-            {
-                return 0;
-            }
-        }
-
-    },
-
-    /**
-     * The decomposed horizontal scale of the Matrix. This value is always positive.
-     *
-     * @name Phaser.GameObjects.Components.TransformMatrix#scaleX
-     * @type {number}
-     * @readonly
-     * @since 3.4.0
-     */
-    scaleX: {
-
-        get: function ()
-        {
-            return Math.sqrt((this.a * this.a) + (this.b * this.b));
-        }
-
-    },
-
-    /**
-     * The decomposed vertical scale of the Matrix. This value is always positive.
-     *
-     * @name Phaser.GameObjects.Components.TransformMatrix#scaleY
-     * @type {number}
-     * @readonly
-     * @since 3.4.0
-     */
-    scaleY: {
-
-        get: function ()
-        {
-            return Math.sqrt((this.c * this.c) + (this.d * this.d));
-        }
-
-    },
-
-    /**
-     * Reset the Matrix to an identity matrix.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#loadIdentity
-     * @since 3.0.0
-     *
-     * @return {this} This TransformMatrix.
-     */
-    loadIdentity: function ()
-    {
-        var matrix = this.matrix;
-
-        matrix[0] = 1;
-        matrix[1] = 0;
-        matrix[2] = 0;
-        matrix[3] = 1;
-        matrix[4] = 0;
-        matrix[5] = 0;
-
-        return this;
-    },
-
-    /**
-     * Translate the Matrix.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#translate
-     * @since 3.0.0
-     *
-     * @param {number} x - The horizontal translation value.
-     * @param {number} y - The vertical translation value.
-     *
-     * @return {this} This TransformMatrix.
-     */
-    translate: function (x, y)
-    {
-        var matrix = this.matrix;
-
-        matrix[4] = matrix[0] * x + matrix[2] * y + matrix[4];
-        matrix[5] = matrix[1] * x + matrix[3] * y + matrix[5];
-
-        return this;
-    },
-
-    /**
-     * Scale the Matrix.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#scale
-     * @since 3.0.0
-     *
-     * @param {number} x - The horizontal scale value.
-     * @param {number} y - The vertical scale value.
-     *
-     * @return {this} This TransformMatrix.
-     */
-    scale: function (x, y)
-    {
-        var matrix = this.matrix;
-
-        matrix[0] *= x;
-        matrix[1] *= x;
-        matrix[2] *= y;
-        matrix[3] *= y;
-
-        return this;
-    },
-
-    /**
-     * Rotate the Matrix.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#rotate
-     * @since 3.0.0
-     *
-     * @param {number} angle - The angle of rotation in radians.
-     *
-     * @return {this} This TransformMatrix.
-     */
-    rotate: function (angle)
-    {
-        var sin = Math.sin(angle);
-        var cos = Math.cos(angle);
-
-        var matrix = this.matrix;
-
-        var a = matrix[0];
-        var b = matrix[1];
-        var c = matrix[2];
-        var d = matrix[3];
-
-        matrix[0] = a * cos + c * sin;
-        matrix[1] = b * cos + d * sin;
-        matrix[2] = a * -sin + c * cos;
-        matrix[3] = b * -sin + d * cos;
-
-        return this;
-    },
-
-    /**
-     * Multiply this Matrix by the given Matrix.
-     * 
-     * If an `out` Matrix is given then the results will be stored in it.
-     * If it is not given, this matrix will be updated in place instead.
-     * Use an `out` Matrix if you do not wish to mutate this matrix.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#multiply
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Components.TransformMatrix} rhs - The Matrix to multiply by.
-     * @param {Phaser.GameObjects.Components.TransformMatrix} [out] - An optional Matrix to store the results in.
-     *
-     * @return {(this|Phaser.GameObjects.Components.TransformMatrix)} Either this TransformMatrix, or the `out` Matrix, if given in the arguments.
-     */
-    multiply: function (rhs, out)
-    {
-        var matrix = this.matrix;
-        var source = rhs.matrix;
-
-        var localA = matrix[0];
-        var localB = matrix[1];
-        var localC = matrix[2];
-        var localD = matrix[3];
-        var localE = matrix[4];
-        var localF = matrix[5];
-
-        var sourceA = source[0];
-        var sourceB = source[1];
-        var sourceC = source[2];
-        var sourceD = source[3];
-        var sourceE = source[4];
-        var sourceF = source[5];
-
-        var destinationMatrix = (out === undefined) ? this : out;
-
-        destinationMatrix.a = (sourceA * localA) + (sourceB * localC);
-        destinationMatrix.b = (sourceA * localB) + (sourceB * localD);
-        destinationMatrix.c = (sourceC * localA) + (sourceD * localC);
-        destinationMatrix.d = (sourceC * localB) + (sourceD * localD);
-        destinationMatrix.e = (sourceE * localA) + (sourceF * localC) + localE;
-        destinationMatrix.f = (sourceE * localB) + (sourceF * localD) + localF;
-
-        return destinationMatrix;
-    },
-
-    /**
-     * Multiply this Matrix by the matrix given, including the offset.
-     * 
-     * The offsetX is added to the tx value: `offsetX * a + offsetY * c + tx`.
-     * The offsetY is added to the ty value: `offsetY * b + offsetY * d + ty`.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#multiplyWithOffset
-     * @since 3.11.0
-     *
-     * @param {Phaser.GameObjects.Components.TransformMatrix} src - The source Matrix to copy from.
-     * @param {number} offsetX - Horizontal offset to factor in to the multiplication.
-     * @param {number} offsetY - Vertical offset to factor in to the multiplication.
-     *
-     * @return {this} This TransformMatrix.
-     */
-    multiplyWithOffset: function (src, offsetX, offsetY)
-    {
-        var matrix = this.matrix;
-        var otherMatrix = src.matrix;
-
-        var a0 = matrix[0];
-        var b0 = matrix[1];
-        var c0 = matrix[2];
-        var d0 = matrix[3];
-        var tx0 = matrix[4];
-        var ty0 = matrix[5];
-
-        var pse = offsetX * a0 + offsetY * c0 + tx0;
-        var psf = offsetX * b0 + offsetY * d0 + ty0;
-
-        var a1 = otherMatrix[0];
-        var b1 = otherMatrix[1];
-        var c1 = otherMatrix[2];
-        var d1 = otherMatrix[3];
-        var tx1 = otherMatrix[4];
-        var ty1 = otherMatrix[5];
-
-        matrix[0] = a1 * a0 + b1 * c0;
-        matrix[1] = a1 * b0 + b1 * d0;
-        matrix[2] = c1 * a0 + d1 * c0;
-        matrix[3] = c1 * b0 + d1 * d0;
-        matrix[4] = tx1 * a0 + ty1 * c0 + pse;
-        matrix[5] = tx1 * b0 + ty1 * d0 + psf;
-
-        return this;
-    },
-
-    /**
-     * Transform the Matrix.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#transform
-     * @since 3.0.0
-     *
-     * @param {number} a - The Scale X value.
-     * @param {number} b - The Shear Y value.
-     * @param {number} c - The Shear X value.
-     * @param {number} d - The Scale Y value.
-     * @param {number} tx - The Translate X value.
-     * @param {number} ty - The Translate Y value.
-     *
-     * @return {this} This TransformMatrix.
-     */
-    transform: function (a, b, c, d, tx, ty)
-    {
-        var matrix = this.matrix;
-
-        var a0 = matrix[0];
-        var b0 = matrix[1];
-        var c0 = matrix[2];
-        var d0 = matrix[3];
-        var tx0 = matrix[4];
-        var ty0 = matrix[5];
-
-        matrix[0] = a * a0 + b * c0;
-        matrix[1] = a * b0 + b * d0;
-        matrix[2] = c * a0 + d * c0;
-        matrix[3] = c * b0 + d * d0;
-        matrix[4] = tx * a0 + ty * c0 + tx0;
-        matrix[5] = tx * b0 + ty * d0 + ty0;
-
-        return this;
-    },
-
-    /**
-     * Transform a point using this Matrix.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#transformPoint
-     * @since 3.0.0
-     *
-     * @param {number} x - The x coordinate of the point to transform.
-     * @param {number} y - The y coordinate of the point to transform.
-     * @param {(Phaser.Geom.Point|Phaser.Math.Vector2|object)} point - The Point object to store the transformed coordinates.
-     *
-     * @return {(Phaser.Geom.Point|Phaser.Math.Vector2|object)} The Point containing the transformed coordinates.
-     */
-    transformPoint: function (x, y, point)
-    {
-        if (point === undefined) { point = { x: 0, y: 0 }; }
-
-        var matrix = this.matrix;
-
-        var a = matrix[0];
-        var b = matrix[1];
-        var c = matrix[2];
-        var d = matrix[3];
-        var tx = matrix[4];
-        var ty = matrix[5];
-
-        point.x = x * a + y * c + tx;
-        point.y = x * b + y * d + ty;
-
-        return point;
-    },
-
-    /**
-     * Invert the Matrix.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#invert
-     * @since 3.0.0
-     *
-     * @return {this} This TransformMatrix.
-     */
-    invert: function ()
-    {
-        var matrix = this.matrix;
-
-        var a = matrix[0];
-        var b = matrix[1];
-        var c = matrix[2];
-        var d = matrix[3];
-        var tx = matrix[4];
-        var ty = matrix[5];
-
-        var n = a * d - b * c;
-
-        matrix[0] = d / n;
-        matrix[1] = -b / n;
-        matrix[2] = -c / n;
-        matrix[3] = a / n;
-        matrix[4] = (c * ty - d * tx) / n;
-        matrix[5] = -(a * ty - b * tx) / n;
-
-        return this;
-    },
-
-    /**
-     * Set the values of this Matrix to copy those of the matrix given.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#copyFrom
-     * @since 3.11.0
-     *
-     * @param {Phaser.GameObjects.Components.TransformMatrix} src - The source Matrix to copy from.
-     *
-     * @return {this} This TransformMatrix.
-     */
-    copyFrom: function (src)
-    {
-        var matrix = this.matrix;
-
-        matrix[0] = src.a;
-        matrix[1] = src.b;
-        matrix[2] = src.c;
-        matrix[3] = src.d;
-        matrix[4] = src.e;
-        matrix[5] = src.f;
-
-        return this;
-    },
-
-    /**
-     * Set the values of this Matrix to copy those of the array given.
-     * Where array indexes 0, 1, 2, 3, 4 and 5 are mapped to a, b, c, d, e and f.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#copyFromArray
-     * @since 3.11.0
-     *
-     * @param {array} src - The array of values to set into this matrix.
-     *
-     * @return {this} This TransformMatrix.
-     */
-    copyFromArray: function (src)
-    {
-        var matrix = this.matrix;
-
-        matrix[0] = src[0];
-        matrix[1] = src[1];
-        matrix[2] = src[2];
-        matrix[3] = src[3];
-        matrix[4] = src[4];
-        matrix[5] = src[5];
-
-        return this;
-    },
-
-    /**
-     * Copy the values from this Matrix to the given Canvas Rendering Context.
-     * This will use the Context.transform method.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#copyToContext
-     * @since 3.12.0
-     *
-     * @param {CanvasRenderingContext2D} ctx - The Canvas Rendering Context to copy the matrix values to.
-     *
-     * @return {CanvasRenderingContext2D} The Canvas Rendering Context.
-     */
-    copyToContext: function (ctx)
-    {
-        var matrix = this.matrix;
-
-        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
-
-        return ctx;
-    },
-
-    /**
-     * Copy the values from this Matrix to the given Canvas Rendering Context.
-     * This will use the Context.setTransform method.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#setToContext
-     * @since 3.12.0
-     *
-     * @param {CanvasRenderingContext2D} ctx - The Canvas Rendering Context to copy the matrix values to.
-     *
-     * @return {CanvasRenderingContext2D} The Canvas Rendering Context.
-     */
-    setToContext: function (ctx)
-    {
-        var matrix = this.matrix;
-
-        ctx.setTransform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
-
-        return ctx;
-    },
-
-    /**
-     * Copy the values in this Matrix to the array given.
-     * 
-     * Where array indexes 0, 1, 2, 3, 4 and 5 are mapped to a, b, c, d, e and f.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#copyToArray
-     * @since 3.12.0
-     *
-     * @param {array} [out] - The array to copy the matrix values in to.
-     *
-     * @return {array} An array where elements 0 to 5 contain the values from this matrix.
-     */
-    copyToArray: function (out)
-    {
-        var matrix = this.matrix;
-
-        if (out === undefined)
-        {
-            out = [ matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5] ];
-        }
-        else
-        {
-            out[0] = matrix[0];
-            out[1] = matrix[1];
-            out[2] = matrix[2];
-            out[3] = matrix[3];
-            out[4] = matrix[4];
-            out[5] = matrix[5];
-        }
-
-        return out;
-    },
-
-    /**
-     * Set the values of this Matrix.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#setTransform
-     * @since 3.0.0
-     *
-     * @param {number} a - The Scale X value.
-     * @param {number} b - The Shear Y value.
-     * @param {number} c - The Shear X value.
-     * @param {number} d - The Scale Y value.
-     * @param {number} tx - The Translate X value.
-     * @param {number} ty - The Translate Y value.
-     *
-     * @return {this} This TransformMatrix.
-     */
-    setTransform: function (a, b, c, d, tx, ty)
-    {
-        var matrix = this.matrix;
-
-        matrix[0] = a;
-        matrix[1] = b;
-        matrix[2] = c;
-        matrix[3] = d;
-        matrix[4] = tx;
-        matrix[5] = ty;
-
-        return this;
-    },
-
-    /**
-     * Decompose this Matrix into its translation, scale and rotation values using QR decomposition.
-     * 
-     * The result must be applied in the following order to reproduce the current matrix:
-     * 
-     * translate -> rotate -> scale
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#decomposeMatrix
-     * @since 3.0.0
-     *
-     * @return {object} The decomposed Matrix.
-     */
-    decomposeMatrix: function ()
-    {
-        var decomposedMatrix = this.decomposedMatrix;
-
-        var matrix = this.matrix;
-
-        //  a = scale X (1)
-        //  b = shear Y (0)
-        //  c = shear X (0)
-        //  d = scale Y (1)
-
-        var a = matrix[0];
-        var b = matrix[1];
-        var c = matrix[2];
-        var d = matrix[3];
-
-        var determ = a * d - b * c;
-
-        decomposedMatrix.translateX = matrix[4];
-        decomposedMatrix.translateY = matrix[5];
-
-        if (a || b)
-        {
-            var r = Math.sqrt(a * a + b * b);
-
-            decomposedMatrix.rotation = (b > 0) ? Math.acos(a / r) : -Math.acos(a / r);
-            decomposedMatrix.scaleX = r;
-            decomposedMatrix.scaleY = determ / r;
-        }
-        else if (c || d)
-        {
-            var s = Math.sqrt(c * c + d * d);
-
-            decomposedMatrix.rotation = Math.PI * 0.5 - (d > 0 ? Math.acos(-c / s) : -Math.acos(c / s));
-            decomposedMatrix.scaleX = determ / s;
-            decomposedMatrix.scaleY = s;
-        }
-        else
-        {
-            decomposedMatrix.rotation = 0;
-            decomposedMatrix.scaleX = 0;
-            decomposedMatrix.scaleY = 0;
-        }
-
-        return decomposedMatrix;
-    },
-
-    /**
-     * Apply the identity, translate, rotate and scale operations on the Matrix.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#applyITRS
-     * @since 3.0.0
-     *
-     * @param {number} x - The horizontal translation.
-     * @param {number} y - The vertical translation.
-     * @param {number} rotation - The angle of rotation in radians.
-     * @param {number} scaleX - The horizontal scale.
-     * @param {number} scaleY - The vertical scale.
-     *
-     * @return {this} This TransformMatrix.
-     */
-    applyITRS: function (x, y, rotation, scaleX, scaleY)
-    {
-        var matrix = this.matrix;
-
-        var radianSin = Math.sin(rotation);
-        var radianCos = Math.cos(rotation);
-
-        // Translate
-        matrix[4] = x;
-        matrix[5] = y;
-
-        // Rotate and Scale
-        matrix[0] = radianCos * scaleX;
-        matrix[1] = radianSin * scaleX;
-        matrix[2] = -radianSin * scaleY;
-        matrix[3] = radianCos * scaleY;
-
-        return this;
-    },
-
-    /**
-     * Takes the `x` and `y` values and returns a new position in the `output` vector that is the inverse of
-     * the current matrix with its transformation applied.
-     * 
-     * Can be used to translate points from world to local space.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#applyInverse
-     * @since 3.12.0
-     *
-     * @param {number} x - The x position to translate.
-     * @param {number} y - The y position to translate.
-     * @param {Phaser.Math.Vector2} [output] - A Vector2, or point-like object, to store the results in.
-     *
-     * @return {Phaser.Math.Vector2} The coordinates, inverse-transformed through this matrix.
-     */
-    applyInverse: function (x, y, output)
-    {
-        if (output === undefined) { output = new Vector2(); }
-
-        var matrix = this.matrix;
-
-        var a = matrix[0];
-        var b = matrix[1];
-        var c = matrix[2];
-        var d = matrix[3];
-        var tx = matrix[4];
-        var ty = matrix[5];
-
-        var id = 1 / ((a * d) + (c * -b));
-
-        output.x = (d * id * x) + (-c * id * y) + (((ty * c) - (tx * d)) * id);
-        output.y = (a * id * y) + (-b * id * x) + (((-ty * a) + (tx * b)) * id);
-
-        return output;
-    },
-
-    /**
-     * Returns the X component of this matrix multiplied by the given values.
-     * This is the same as `x * a + y * c + e`.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#getX
-     * @since 3.12.0
-     * 
-     * @param {number} x - The x value.
-     * @param {number} y - The y value.
-     *
-     * @return {number} The calculated x value.
-     */
-    getX: function (x, y)
-    {
-        return x * this.a + y * this.c + this.e;
-    },
-
-    /**
-     * Returns the Y component of this matrix multiplied by the given values.
-     * This is the same as `x * b + y * d + f`.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#getY
-     * @since 3.12.0
-     * 
-     * @param {number} x - The x value.
-     * @param {number} y - The y value.
-     *
-     * @return {number} The calculated y value.
-     */
-    getY: function (x, y)
-    {
-        return x * this.b + y * this.d + this.f;
-    },
-
-    /**
-     * Returns the X component of this matrix multiplied by the given values.
-     * 
-     * This is the same as `x * a + y * c + e`, optionally passing via `Math.round`.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#getXRound
-     * @since 3.50.0
-     * 
-     * @param {number} x - The x value.
-     * @param {number} y - The y value.
-     * @param {boolean} [round=false] - Math.round the resulting value?
-     *
-     * @return {number} The calculated x value.
-     */
-    getXRound: function (x, y, round)
-    {
-        var v = this.getX(x, y);
-
-        if (round)
-        {
-            v = Math.round(v);
-        }
-
-        return v;
-    },
-
-    /**
-     * Returns the Y component of this matrix multiplied by the given values.
-     * 
-     * This is the same as `x * b + y * d + f`, optionally passing via `Math.round`.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#getYRound
-     * @since 3.50.0
-     * 
-     * @param {number} x - The x value.
-     * @param {number} y - The y value.
-     * @param {boolean} [round=false] - Math.round the resulting value?
-     *
-     * @return {number} The calculated y value.
-     */
-    getYRound: function (x, y, round)
-    {
-        var v = this.getY(x, y);
-
-        if (round)
-        {
-            v = Math.round(v);
-        }
-
-        return v;
-    },
-
-    /**
-     * Returns a string that can be used in a CSS Transform call as a `matrix` property.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#getCSSMatrix
-     * @since 3.12.0
-     *
-     * @return {string} A string containing the CSS Transform matrix values.
-     */
-    getCSSMatrix: function ()
-    {
-        var m = this.matrix;
-
-        return 'matrix(' + m[0] + ',' + m[1] + ',' + m[2] + ',' + m[3] + ',' + m[4] + ',' + m[5] + ')';
-    },
-
-    /**
-     * Destroys this Transform Matrix.
-     *
-     * @method Phaser.GameObjects.Components.TransformMatrix#destroy
-     * @since 3.4.0
-     */
-    destroy: function ()
-    {
-        this.matrix = null;
-        this.decomposedMatrix = null;
-    }
-
-});
-
-module.exports = TransformMatrix;
-
-
-/***/ }),
-/* 201 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-//  bitmask flag for GameObject.renderMask
-var _FLAG = 1; // 0001
-
-/**
- * Provides methods used for setting the visibility of a Game Object.
- * Should be applied as a mixin and not used directly.
- * 
- * @namespace Phaser.GameObjects.Components.Visible
- * @since 3.0.0
- */
-
-var Visible = {
-
-    /**
-     * Private internal value. Holds the visible value.
-     * 
-     * @name Phaser.GameObjects.Components.Visible#_visible
-     * @type {boolean}
-     * @private
-     * @default true
-     * @since 3.0.0
-     */
-    _visible: true,
-
-    /**
-     * The visible state of the Game Object.
-     * 
-     * An invisible Game Object will skip rendering, but will still process update logic.
-     * 
-     * @name Phaser.GameObjects.Components.Visible#visible
-     * @type {boolean}
-     * @since 3.0.0
-     */
-    visible: {
-
-        get: function ()
-        {
-            return this._visible;
-        },
-
-        set: function (value)
-        {
-            if (value)
-            {
-                this._visible = true;
-                this.renderFlags |= _FLAG;
-            }
-            else
-            {
-                this._visible = false;
-                this.renderFlags &= ~_FLAG;
-            }
-        }
-
-    },
-
-    /**
-     * Sets the visibility of this Game Object.
-     * 
-     * An invisible Game Object will skip rendering, but will still process update logic.
-     *
-     * @method Phaser.GameObjects.Components.Visible#setVisible
-     * @since 3.0.0
-     *
-     * @param {boolean} value - The visible state of the Game Object.
-     * 
-     * @return {this} This Game Object instance.
-     */
-    setVisible: function (value)
-    {
-        this.visible = value;
-
-        return this;
-    }
-};
-
-module.exports = Visible;
-
-
-/***/ }),
-/* 202 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-var Class = __webpack_require__(0);
-var ComponentsToJSON = __webpack_require__(203);
-var DataManager = __webpack_require__(204);
-var EventEmitter = __webpack_require__(210);
-var Events = __webpack_require__(211);
-
-/**
- * @classdesc
- * The base class that all Game Objects extend.
- * You don't create GameObjects directly and they cannot be added to the display list.
- * Instead, use them as the base for your own custom classes.
- *
- * @class GameObject
- * @memberof Phaser.GameObjects
- * @extends Phaser.Events.EventEmitter
- * @constructor
- * @since 3.0.0
- *
- * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs.
- * @param {string} type - A textual representation of the type of Game Object, i.e. `sprite`.
- */
-var GameObject = new Class({
-
-    Extends: EventEmitter,
-
-    initialize:
-
-    function GameObject (scene, type)
-    {
-        EventEmitter.call(this);
-
-        /**
-         * The Scene to which this Game Object belongs.
-         * Game Objects can only belong to one Scene.
-         *
-         * @name Phaser.GameObjects.GameObject#scene
-         * @type {Phaser.Scene}
-         * @protected
-         * @since 3.0.0
-         */
-        this.scene = scene;
-
-        /**
-         * A textual representation of this Game Object, i.e. `sprite`.
-         * Used internally by Phaser but is available for your own custom classes to populate.
-         *
-         * @name Phaser.GameObjects.GameObject#type
-         * @type {string}
-         * @since 3.0.0
-         */
-        this.type = type;
-
-        /**
-         * The current state of this Game Object.
-         *
-         * Phaser itself will never modify this value, although plugins may do so.
-         *
-         * Use this property to track the state of a Game Object during its lifetime. For example, it could change from
-         * a state of 'moving', to 'attacking', to 'dead'. The state value should be an integer (ideally mapped to a constant
-         * in your game code), or a string. These are recommended to keep it light and simple, with fast comparisons.
-         * If you need to store complex data about your Game Object, look at using the Data Component instead.
-         *
-         * @name Phaser.GameObjects.GameObject#state
-         * @type {(integer|string)}
-         * @since 3.16.0
-         */
-        this.state = 0;
-
-        /**
-         * The parent Container of this Game Object, if it has one.
-         *
-         * @name Phaser.GameObjects.GameObject#parentContainer
-         * @type {Phaser.GameObjects.Container}
-         * @since 3.4.0
-         */
-        this.parentContainer = null;
-
-        /**
-         * The name of this Game Object.
-         * Empty by default and never populated by Phaser, this is left for developers to use.
-         *
-         * @name Phaser.GameObjects.GameObject#name
-         * @type {string}
-         * @default ''
-         * @since 3.0.0
-         */
-        this.name = '';
-
-        /**
-         * The active state of this Game Object.
-         * A Game Object with an active state of `true` is processed by the Scenes UpdateList, if added to it.
-         * An active object is one which is having its logic and internal systems updated.
-         *
-         * @name Phaser.GameObjects.GameObject#active
-         * @type {boolean}
-         * @default true
-         * @since 3.0.0
-         */
-        this.active = true;
-
-        /**
-         * The Tab Index of the Game Object.
-         * Reserved for future use by plugins and the Input Manager.
-         *
-         * @name Phaser.GameObjects.GameObject#tabIndex
-         * @type {integer}
-         * @default -1
-         * @since 3.0.0
-         */
-        this.tabIndex = -1;
-
-        /**
-         * A Data Manager.
-         * It allows you to store, query and get key/value paired information specific to this Game Object.
-         * `null` by default. Automatically created if you use `getData` or `setData` or `setDataEnabled`.
-         *
-         * @name Phaser.GameObjects.GameObject#data
-         * @type {Phaser.Data.DataManager}
-         * @default null
-         * @since 3.0.0
-         */
-        this.data = null;
-
-        /**
-         * The flags that are compared against `RENDER_MASK` to determine if this Game Object will render or not.
-         * The bits are 0001 | 0010 | 0100 | 1000 set by the components Visible, Alpha, Transform and Texture respectively.
-         * If those components are not used by your custom class then you can use this bitmask as you wish.
-         *
-         * @name Phaser.GameObjects.GameObject#renderFlags
-         * @type {integer}
-         * @default 15
-         * @since 3.0.0
-         */
-        this.renderFlags = 15;
-
-        /**
-         * A bitmask that controls if this Game Object is drawn by a Camera or not.
-         * Not usually set directly, instead call `Camera.ignore`, however you can
-         * set this property directly using the Camera.id property:
-         *
-         * @example
-         * this.cameraFilter |= camera.id
-         *
-         * @name Phaser.GameObjects.GameObject#cameraFilter
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.cameraFilter = 0;
-
-        /**
-         * If this Game Object is enabled for input then this property will contain an InteractiveObject instance.
-         * Not usually set directly. Instead call `GameObject.setInteractive()`.
-         *
-         * @name Phaser.GameObjects.GameObject#input
-         * @type {?Phaser.Types.Input.InteractiveObject}
-         * @default null
-         * @since 3.0.0
-         */
-        this.input = null;
-
-        /**
-         * If this Game Object is enabled for Arcade or Matter Physics then this property will contain a reference to a Physics Body.
-         *
-         * @name Phaser.GameObjects.GameObject#body
-         * @type {?(Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody|MatterJS.BodyType)}
-         * @default null
-         * @since 3.0.0
-         */
-        this.body = null;
-
-        /**
-         * This Game Object will ignore all calls made to its destroy method if this flag is set to `true`.
-         * This includes calls that may come from a Group, Container or the Scene itself.
-         * While it allows you to persist a Game Object across Scenes, please understand you are entirely
-         * responsible for managing references to and from this Game Object.
-         *
-         * @name Phaser.GameObjects.GameObject#ignoreDestroy
-         * @type {boolean}
-         * @default false
-         * @since 3.5.0
-         */
-        this.ignoreDestroy = false;
-
-        //  Tell the Scene to re-sort the children
-        scene.sys.queueDepthSort();
-    },
-
-    /**
-     * Sets the `active` property of this Game Object and returns this Game Object for further chaining.
-     * A Game Object with its `active` property set to `true` will be updated by the Scenes UpdateList.
-     *
-     * @method Phaser.GameObjects.GameObject#setActive
-     * @since 3.0.0
-     *
-     * @param {boolean} value - True if this Game Object should be set as active, false if not.
-     *
-     * @return {this} This GameObject.
-     */
-    setActive: function (value)
-    {
-        this.active = value;
-
-        return this;
-    },
-
-    /**
-     * Sets the `name` property of this Game Object and returns this Game Object for further chaining.
-     * The `name` property is not populated by Phaser and is presented for your own use.
-     *
-     * @method Phaser.GameObjects.GameObject#setName
-     * @since 3.0.0
-     *
-     * @param {string} value - The name to be given to this Game Object.
-     *
-     * @return {this} This GameObject.
-     */
-    setName: function (value)
-    {
-        this.name = value;
-
-        return this;
-    },
-
-    /**
-     * Sets the current state of this Game Object.
-     *
-     * Phaser itself will never modify the State of a Game Object, although plugins may do so.
-     *
-     * For example, a Game Object could change from a state of 'moving', to 'attacking', to 'dead'.
-     * The state value should typically be an integer (ideally mapped to a constant
-     * in your game code), but could also be a string. It is recommended to keep it light and simple.
-     * If you need to store complex data about your Game Object, look at using the Data Component instead.
-     *
-     * @method Phaser.GameObjects.GameObject#setState
-     * @since 3.16.0
-     *
-     * @param {(integer|string)} value - The state of the Game Object.
-     *
-     * @return {this} This GameObject.
-     */
-    setState: function (value)
-    {
-        this.state = value;
-
-        return this;
-    },
-
-    /**
-     * Adds a Data Manager component to this Game Object.
-     *
-     * @method Phaser.GameObjects.GameObject#setDataEnabled
-     * @since 3.0.0
-     * @see Phaser.Data.DataManager
-     *
-     * @return {this} This GameObject.
-     */
-    setDataEnabled: function ()
-    {
-        if (!this.data)
-        {
-            this.data = new DataManager(this);
-        }
-
-        return this;
-    },
-
-    /**
-     * Allows you to store a key value pair within this Game Objects Data Manager.
-     *
-     * If the Game Object has not been enabled for data (via `setDataEnabled`) then it will be enabled
-     * before setting the value.
-     *
-     * If the key doesn't already exist in the Data Manager then it is created.
-     *
-     * ```javascript
-     * sprite.setData('name', 'Red Gem Stone');
-     * ```
-     *
-     * You can also pass in an object of key value pairs as the first argument:
-     *
-     * ```javascript
-     * sprite.setData({ name: 'Red Gem Stone', level: 2, owner: 'Link', gold: 50 });
-     * ```
-     *
-     * To get a value back again you can call `getData`:
-     *
-     * ```javascript
-     * sprite.getData('gold');
-     * ```
-     *
-     * Or you can access the value directly via the `values` property, where it works like any other variable:
-     *
-     * ```javascript
-     * sprite.data.values.gold += 50;
-     * ```
-     *
-     * When the value is first set, a `setdata` event is emitted from this Game Object.
-     *
-     * If the key already exists, a `changedata` event is emitted instead, along an event named after the key.
-     * For example, if you updated an existing key called `PlayerLives` then it would emit the event `changedata-PlayerLives`.
-     * These events will be emitted regardless if you use this method to set the value, or the direct `values` setter.
-     *
-     * Please note that the data keys are case-sensitive and must be valid JavaScript Object property strings.
-     * This means the keys `gold` and `Gold` are treated as two unique values within the Data Manager.
-     *
-     * @method Phaser.GameObjects.GameObject#setData
-     * @since 3.0.0
-     *
-     * @param {(string|object)} key - The key to set the value for. Or an object of key value pairs. If an object the `data` argument is ignored.
-     * @param {*} [data] - The value to set for the given key. If an object is provided as the key this argument is ignored.
-     *
-     * @return {this} This GameObject.
-     */
-    setData: function (key, value)
-    {
-        if (!this.data)
-        {
-            this.data = new DataManager(this);
-        }
-
-        this.data.set(key, value);
-
-        return this;
-    },
-
-    /**
-     * Increase a value for the given key within this Game Objects Data Manager. If the key doesn't already exist in the Data Manager then it is increased from 0.
-     *
-     * If the Game Object has not been enabled for data (via `setDataEnabled`) then it will be enabled
-     * before setting the value.
-     *
-     * If the key doesn't already exist in the Data Manager then it is created.
-     *
-     * When the value is first set, a `setdata` event is emitted from this Game Object.
-     *
-     * @method Phaser.GameObjects.GameObject#incData
-     * @since 3.23.0
-     *
-     * @param {(string|object)} key - The key to increase the value for.
-     * @param {*} [data] - The value to increase for the given key.
-     *
-     * @return {this} This GameObject.
-     */
-    incData: function (key, value)
-    {
-        if (!this.data)
-        {
-            this.data = new DataManager(this);
-        }
-
-        this.data.inc(key, value);
-
-        return this;
-    },
-
-    /**
-     * Toggle a boolean value for the given key within this Game Objects Data Manager. If the key doesn't already exist in the Data Manager then it is toggled from false.
-     *
-     * If the Game Object has not been enabled for data (via `setDataEnabled`) then it will be enabled
-     * before setting the value.
-     *
-     * If the key doesn't already exist in the Data Manager then it is created.
-     *
-     * When the value is first set, a `setdata` event is emitted from this Game Object.
-     *
-     * @method Phaser.GameObjects.GameObject#toggleData
-     * @since 3.23.0
-     *
-     * @param {(string|object)} key - The key to toggle the value for.
-     *
-     * @return {this} This GameObject.
-     */
-    toggleData: function (key)
-    {
-        if (!this.data)
-        {
-            this.data = new DataManager(this);
-        }
-
-        this.data.toggle(key);
-
-        return this;
-    },
-
-    /**
-     * Retrieves the value for the given key in this Game Objects Data Manager, or undefined if it doesn't exist.
-     *
-     * You can also access values via the `values` object. For example, if you had a key called `gold` you can do either:
-     *
-     * ```javascript
-     * sprite.getData('gold');
-     * ```
-     *
-     * Or access the value directly:
-     *
-     * ```javascript
-     * sprite.data.values.gold;
-     * ```
-     *
-     * You can also pass in an array of keys, in which case an array of values will be returned:
-     *
-     * ```javascript
-     * sprite.getData([ 'gold', 'armor', 'health' ]);
-     * ```
-     *
-     * This approach is useful for destructuring arrays in ES6.
-     *
-     * @method Phaser.GameObjects.GameObject#getData
-     * @since 3.0.0
-     *
-     * @param {(string|string[])} key - The key of the value to retrieve, or an array of keys.
-     *
-     * @return {*} The value belonging to the given key, or an array of values, the order of which will match the input array.
-     */
-    getData: function (key)
-    {
-        if (!this.data)
-        {
-            this.data = new DataManager(this);
-        }
-
-        return this.data.get(key);
-    },
-
-    /**
-     * Pass this Game Object to the Input Manager to enable it for Input.
-     *
-     * Input works by using hit areas, these are nearly always geometric shapes, such as rectangles or circles, that act as the hit area
-     * for the Game Object. However, you can provide your own hit area shape and callback, should you wish to handle some more advanced
-     * input detection.
-     *
-     * If no arguments are provided it will try and create a rectangle hit area based on the texture frame the Game Object is using. If
-     * this isn't a texture-bound object, such as a Graphics or BitmapText object, this will fail, and you'll need to provide a specific
-     * shape for it to use.
-     *
-     * You can also provide an Input Configuration Object as the only argument to this method.
-     *
-     * @example
-     * sprite.setInteractive();
-     *
-     * @example
-     * sprite.setInteractive(new Phaser.Geom.Circle(45, 46, 45), Phaser.Geom.Circle.Contains);
-     *
-     * @example
-     * graphics.setInteractive(new Phaser.Geom.Rectangle(0, 0, 128, 128), Phaser.Geom.Rectangle.Contains);
-     *
-     * @method Phaser.GameObjects.GameObject#setInteractive
-     * @since 3.0.0
-     *
-     * @param {(Phaser.Types.Input.InputConfiguration|any)} [hitArea] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not given it will try to create a Rectangle based on the texture frame.
-     * @param {Phaser.Types.Input.HitAreaCallback} [callback] - The callback that determines if the pointer is within the Hit Area shape or not. If you provide a shape you must also provide a callback.
-     * @param {boolean} [dropZone=false] - Should this Game Object be treated as a drop zone target?
-     *
-     * @return {this} This GameObject.
-     */
-    setInteractive: function (hitArea, hitAreaCallback, dropZone)
-    {
-        this.scene.sys.input.enable(this, hitArea, hitAreaCallback, dropZone);
-
-        return this;
-    },
-
-    /**
-     * If this Game Object has previously been enabled for input, this will disable it.
-     *
-     * An object that is disabled for input stops processing or being considered for
-     * input events, but can be turned back on again at any time by simply calling
-     * `setInteractive()` with no arguments provided.
-     *
-     * If want to completely remove interaction from this Game Object then use `removeInteractive` instead.
-     *
-     * @method Phaser.GameObjects.GameObject#disableInteractive
-     * @since 3.7.0
-     *
-     * @return {this} This GameObject.
-     */
-    disableInteractive: function ()
-    {
-        if (this.input)
-        {
-            this.input.enabled = false;
-        }
-
-        return this;
-    },
-
-    /**
-     * If this Game Object has previously been enabled for input, this will queue it
-     * for removal, causing it to no longer be interactive. The removal happens on
-     * the next game step, it is not immediate.
-     *
-     * The Interactive Object that was assigned to this Game Object will be destroyed,
-     * removed from the Input Manager and cleared from this Game Object.
-     *
-     * If you wish to re-enable this Game Object at a later date you will need to
-     * re-create its InteractiveObject by calling `setInteractive` again.
-     *
-     * If you wish to only temporarily stop an object from receiving input then use
-     * `disableInteractive` instead, as that toggles the interactive state, where-as
-     * this erases it completely.
-     *
-     * If you wish to resize a hit area, don't remove and then set it as being
-     * interactive. Instead, access the hitarea object directly and resize the shape
-     * being used. I.e.: `sprite.input.hitArea.setSize(width, height)` (assuming the
-     * shape is a Rectangle, which it is by default.)
-     *
-     * @method Phaser.GameObjects.GameObject#removeInteractive
-     * @since 3.7.0
-     *
-     * @return {this} This GameObject.
-     */
-    removeInteractive: function ()
-    {
-        this.scene.sys.input.clear(this);
-
-        this.input = undefined;
-
-        return this;
-    },
-
-    /**
-     * This callback is invoked when this Game Object is added to a Scene.
-     *
-     * Can be overriden by custom Game Objects, but be aware of some Game Objects that
-     * will use this, such as Sprites, to add themselves into the Update List.
-     *
-     * You can also listen for the `ADDED_TO_SCENE` event from this Game Object.
-     *
-     * @method Phaser.GameObjects.GameObject#addedToScene
-     * @since 3.50.0
-     */
-    addedToScene: function ()
-    {
-    },
-
-    /**
-     * This callback is invoked when this Game Object is removed from a Scene.
-     *
-     * Can be overriden by custom Game Objects, but be aware of some Game Objects that
-     * will use this, such as Sprites, to removed themselves from the Update List.
-     *
-     * You can also listen for the `REMOVED_FROM_SCENE` event from this Game Object.
-     *
-     * @method Phaser.GameObjects.GameObject#removedFromScene
-     * @since 3.50.0
-     */
-    removedFromScene: function ()
-    {
-    },
-
-    /**
-     * To be overridden by custom GameObjects. Allows base objects to be used in a Pool.
-     *
-     * @method Phaser.GameObjects.GameObject#update
-     * @since 3.0.0
-     *
-     * @param {...*} [args] - args
-     */
-    update: function ()
-    {
-    },
-
-    /**
-     * Returns a JSON representation of the Game Object.
-     *
-     * @method Phaser.GameObjects.GameObject#toJSON
-     * @since 3.0.0
-     *
-     * @return {Phaser.Types.GameObjects.JSONGameObject} A JSON representation of the Game Object.
-     */
-    toJSON: function ()
-    {
-        return ComponentsToJSON(this);
-    },
-
-    /**
-     * Compares the renderMask with the renderFlags to see if this Game Object will render or not.
-     * Also checks the Game Object against the given Cameras exclusion list.
-     *
-     * @method Phaser.GameObjects.GameObject#willRender
-     * @since 3.0.0
-     *
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to check against this Game Object.
-     *
-     * @return {boolean} True if the Game Object should be rendered, otherwise false.
-     */
-    willRender: function (camera)
-    {
-        return !(GameObject.RENDER_MASK !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)));
-    },
-
-    /**
-     * Returns an array containing the display list index of either this Game Object, or if it has one,
-     * its parent Container. It then iterates up through all of the parent containers until it hits the
-     * root of the display list (which is index 0 in the returned array).
-     *
-     * Used internally by the InputPlugin but also useful if you wish to find out the display depth of
-     * this Game Object and all of its ancestors.
-     *
-     * @method Phaser.GameObjects.GameObject#getIndexList
-     * @since 3.4.0
-     *
-     * @return {integer[]} An array of display list position indexes.
-     */
-    getIndexList: function ()
-    {
-        // eslint-disable-next-line consistent-this
-        var child = this;
-        var parent = this.parentContainer;
-
-        var indexes = [];
-
-        while (parent)
-        {
-            // indexes.unshift([parent.getIndex(child), parent.name]);
-            indexes.unshift(parent.getIndex(child));
-
-            child = parent;
-
-            if (!parent.parentContainer)
-            {
-                break;
-            }
-            else
-            {
-                parent = parent.parentContainer;
-            }
-        }
-
-        // indexes.unshift([this.scene.sys.displayList.getIndex(child), 'root']);
-        indexes.unshift(this.scene.sys.displayList.getIndex(child));
-
-        return indexes;
-    },
-
-    /**
-     * Destroys this Game Object removing it from the Display List and Update List and
-     * severing all ties to parent resources.
-     *
-     * Also removes itself from the Input Manager and Physics Manager if previously enabled.
-     *
-     * Use this to remove a Game Object from your game if you don't ever plan to use it again.
-     * As long as no reference to it exists within your own code it should become free for
-     * garbage collection by the browser.
-     *
-     * If you just want to temporarily disable an object then look at using the
-     * Game Object Pool instead of destroying it, as destroyed objects cannot be resurrected.
-     *
-     * @method Phaser.GameObjects.GameObject#destroy
-     * @fires Phaser.GameObjects.Events#DESTROY
-     * @since 3.0.0
-     *
-     * @param {boolean} [fromScene=false] - Is this Game Object being destroyed as the result of a Scene shutdown?
-     */
-    destroy: function (fromScene)
-    {
-        if (fromScene === undefined) { fromScene = false; }
-
-        //  This Game Object has already been destroyed
-        if (!this.scene || this.ignoreDestroy)
-        {
-            return;
-        }
-
-        if (this.preDestroy)
-        {
-            this.preDestroy.call(this);
-        }
-
-        this.emit(Events.DESTROY, this);
-
-        var sys = this.scene.sys;
-
-        if (!fromScene)
-        {
-            sys.displayList.remove(this);
-        }
-
-        if (this.input)
-        {
-            sys.input.clear(this);
-            this.input = undefined;
-        }
-
-        if (this.data)
-        {
-            this.data.destroy();
-
-            this.data = undefined;
-        }
-
-        if (this.body)
-        {
-            this.body.destroy();
-            this.body = undefined;
-        }
-
-        //  Tell the Scene to re-sort the children
-        if (!fromScene)
-        {
-            sys.queueDepthSort();
-        }
-
-        this.active = false;
-        this.visible = false;
-
-        this.scene = undefined;
-
-        this.parentContainer = undefined;
-
-        this.removeAllListeners();
-    }
-
-});
-
-/**
- * The bitmask that `GameObject.renderFlags` is compared against to determine if the Game Object will render or not.
- *
- * @constant {integer} RENDER_MASK
- * @memberof Phaser.GameObjects.GameObject
- * @default
- */
-GameObject.RENDER_MASK = 15;
-
-module.exports = GameObject;
-
-
-/***/ }),
-/* 203 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * Build a JSON representation of the given Game Object.
- *
- * This is typically extended further by Game Object specific implementations.
- *
- * @method Phaser.GameObjects.Components.ToJSON
- * @since 3.0.0
- *
- * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to export as JSON.
- *
- * @return {Phaser.Types.GameObjects.JSONGameObject} A JSON representation of the Game Object.
- */
-var ToJSON = function (gameObject)
-{
-    var out = {
-        name: gameObject.name,
-        type: gameObject.type,
-        x: gameObject.x,
-        y: gameObject.y,
-        depth: gameObject.depth,
-        scale: {
-            x: gameObject.scaleX,
-            y: gameObject.scaleY
-        },
-        origin: {
-            x: gameObject.originX,
-            y: gameObject.originY
-        },
-        flipX: gameObject.flipX,
-        flipY: gameObject.flipY,
-        rotation: gameObject.rotation,
-        alpha: gameObject.alpha,
-        visible: gameObject.visible,
-        blendMode: gameObject.blendMode,
-        textureKey: '',
-        frameKey: '',
-        data: {}
-    };
-
-    if (gameObject.texture)
-    {
-        out.textureKey = gameObject.texture.key;
-        out.frameKey = gameObject.frame.name;
-    }
-
-    return out;
-};
-
-module.exports = ToJSON;
-
-
-/***/ }),
-/* 204 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-var Class = __webpack_require__(0);
-var Events = __webpack_require__(205);
+var Events = __webpack_require__(220);
 
 /**
  * @callback DataEachCallback
@@ -29659,7 +31321,7 @@ module.exports = DataManager;
 
 
 /***/ }),
-/* 205 */
+/* 220 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29674,16 +31336,16 @@ module.exports = DataManager;
 
 module.exports = {
 
-    CHANGE_DATA: __webpack_require__(206),
-    CHANGE_DATA_KEY: __webpack_require__(207),
-    REMOVE_DATA: __webpack_require__(208),
-    SET_DATA: __webpack_require__(209)
+    CHANGE_DATA: __webpack_require__(221),
+    CHANGE_DATA_KEY: __webpack_require__(222),
+    REMOVE_DATA: __webpack_require__(223),
+    SET_DATA: __webpack_require__(224)
 
 };
 
 
 /***/ }),
-/* 206 */
+/* 221 */
 /***/ (function(module, exports) {
 
 /**
@@ -29715,7 +31377,7 @@ module.exports = 'changedata';
 
 
 /***/ }),
-/* 207 */
+/* 222 */
 /***/ (function(module, exports) {
 
 /**
@@ -29745,7 +31407,7 @@ module.exports = 'changedata-';
 
 
 /***/ }),
-/* 208 */
+/* 223 */
 /***/ (function(module, exports) {
 
 /**
@@ -29773,7 +31435,7 @@ module.exports = 'removedata';
 
 
 /***/ }),
-/* 209 */
+/* 224 */
 /***/ (function(module, exports) {
 
 /**
@@ -29801,383 +31463,7 @@ module.exports = 'setdata';
 
 
 /***/ }),
-/* 210 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var has = Object.prototype.hasOwnProperty
-  , prefix = '~';
-
-/**
- * Constructor to create a storage for our `EE` objects.
- * An `Events` instance is a plain object whose properties are event names.
- *
- * @constructor
- * @private
- */
-function Events() {}
-
-//
-// We try to not inherit from `Object.prototype`. In some engines creating an
-// instance in this way is faster than calling `Object.create(null)` directly.
-// If `Object.create(null)` is not supported we prefix the event names with a
-// character to make sure that the built-in object properties are not
-// overridden or used as an attack vector.
-//
-if (Object.create) {
-  Events.prototype = Object.create(null);
-
-  //
-  // This hack is needed because the `__proto__` property is still inherited in
-  // some old browsers like Android 4, iPhone 5.1, Opera 11 and Safari 5.
-  //
-  if (!new Events().__proto__) prefix = false;
-}
-
-/**
- * Representation of a single event listener.
- *
- * @param {Function} fn The listener function.
- * @param {*} context The context to invoke the listener with.
- * @param {Boolean} [once=false] Specify if the listener is a one-time listener.
- * @constructor
- * @private
- */
-function EE(fn, context, once) {
-  this.fn = fn;
-  this.context = context;
-  this.once = once || false;
-}
-
-/**
- * Add a listener for a given event.
- *
- * @param {EventEmitter} emitter Reference to the `EventEmitter` instance.
- * @param {(String|Symbol)} event The event name.
- * @param {Function} fn The listener function.
- * @param {*} context The context to invoke the listener with.
- * @param {Boolean} once Specify if the listener is a one-time listener.
- * @returns {EventEmitter}
- * @private
- */
-function addListener(emitter, event, fn, context, once) {
-  if (typeof fn !== 'function') {
-    throw new TypeError('The listener must be a function');
-  }
-
-  var listener = new EE(fn, context || emitter, once)
-    , evt = prefix ? prefix + event : event;
-
-  if (!emitter._events[evt]) emitter._events[evt] = listener, emitter._eventsCount++;
-  else if (!emitter._events[evt].fn) emitter._events[evt].push(listener);
-  else emitter._events[evt] = [emitter._events[evt], listener];
-
-  return emitter;
-}
-
-/**
- * Clear event by name.
- *
- * @param {EventEmitter} emitter Reference to the `EventEmitter` instance.
- * @param {(String|Symbol)} evt The Event name.
- * @private
- */
-function clearEvent(emitter, evt) {
-  if (--emitter._eventsCount === 0) emitter._events = new Events();
-  else delete emitter._events[evt];
-}
-
-/**
- * Minimal `EventEmitter` interface that is molded against the Node.js
- * `EventEmitter` interface.
- *
- * @constructor
- * @public
- */
-function EventEmitter() {
-  this._events = new Events();
-  this._eventsCount = 0;
-}
-
-/**
- * Return an array listing the events for which the emitter has registered
- * listeners.
- *
- * @returns {Array}
- * @public
- */
-EventEmitter.prototype.eventNames = function eventNames() {
-  var names = []
-    , events
-    , name;
-
-  if (this._eventsCount === 0) return names;
-
-  for (name in (events = this._events)) {
-    if (has.call(events, name)) names.push(prefix ? name.slice(1) : name);
-  }
-
-  if (Object.getOwnPropertySymbols) {
-    return names.concat(Object.getOwnPropertySymbols(events));
-  }
-
-  return names;
-};
-
-/**
- * Return the listeners registered for a given event.
- *
- * @param {(String|Symbol)} event The event name.
- * @returns {Array} The registered listeners.
- * @public
- */
-EventEmitter.prototype.listeners = function listeners(event) {
-  var evt = prefix ? prefix + event : event
-    , handlers = this._events[evt];
-
-  if (!handlers) return [];
-  if (handlers.fn) return [handlers.fn];
-
-  for (var i = 0, l = handlers.length, ee = new Array(l); i < l; i++) {
-    ee[i] = handlers[i].fn;
-  }
-
-  return ee;
-};
-
-/**
- * Return the number of listeners listening to a given event.
- *
- * @param {(String|Symbol)} event The event name.
- * @returns {Number} The number of listeners.
- * @public
- */
-EventEmitter.prototype.listenerCount = function listenerCount(event) {
-  var evt = prefix ? prefix + event : event
-    , listeners = this._events[evt];
-
-  if (!listeners) return 0;
-  if (listeners.fn) return 1;
-  return listeners.length;
-};
-
-/**
- * Calls each of the listeners registered for a given event.
- *
- * @param {(String|Symbol)} event The event name.
- * @returns {Boolean} `true` if the event had listeners, else `false`.
- * @public
- */
-EventEmitter.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
-  var evt = prefix ? prefix + event : event;
-
-  if (!this._events[evt]) return false;
-
-  var listeners = this._events[evt]
-    , len = arguments.length
-    , args
-    , i;
-
-  if (listeners.fn) {
-    if (listeners.once) this.removeListener(event, listeners.fn, undefined, true);
-
-    switch (len) {
-      case 1: return listeners.fn.call(listeners.context), true;
-      case 2: return listeners.fn.call(listeners.context, a1), true;
-      case 3: return listeners.fn.call(listeners.context, a1, a2), true;
-      case 4: return listeners.fn.call(listeners.context, a1, a2, a3), true;
-      case 5: return listeners.fn.call(listeners.context, a1, a2, a3, a4), true;
-      case 6: return listeners.fn.call(listeners.context, a1, a2, a3, a4, a5), true;
-    }
-
-    for (i = 1, args = new Array(len -1); i < len; i++) {
-      args[i - 1] = arguments[i];
-    }
-
-    listeners.fn.apply(listeners.context, args);
-  } else {
-    var length = listeners.length
-      , j;
-
-    for (i = 0; i < length; i++) {
-      if (listeners[i].once) this.removeListener(event, listeners[i].fn, undefined, true);
-
-      switch (len) {
-        case 1: listeners[i].fn.call(listeners[i].context); break;
-        case 2: listeners[i].fn.call(listeners[i].context, a1); break;
-        case 3: listeners[i].fn.call(listeners[i].context, a1, a2); break;
-        case 4: listeners[i].fn.call(listeners[i].context, a1, a2, a3); break;
-        default:
-          if (!args) for (j = 1, args = new Array(len -1); j < len; j++) {
-            args[j - 1] = arguments[j];
-          }
-
-          listeners[i].fn.apply(listeners[i].context, args);
-      }
-    }
-  }
-
-  return true;
-};
-
-/**
- * Add a listener for a given event.
- *
- * @param {(String|Symbol)} event The event name.
- * @param {Function} fn The listener function.
- * @param {*} [context=this] The context to invoke the listener with.
- * @returns {EventEmitter} `this`.
- * @public
- */
-EventEmitter.prototype.on = function on(event, fn, context) {
-  return addListener(this, event, fn, context, false);
-};
-
-/**
- * Add a one-time listener for a given event.
- *
- * @param {(String|Symbol)} event The event name.
- * @param {Function} fn The listener function.
- * @param {*} [context=this] The context to invoke the listener with.
- * @returns {EventEmitter} `this`.
- * @public
- */
-EventEmitter.prototype.once = function once(event, fn, context) {
-  return addListener(this, event, fn, context, true);
-};
-
-/**
- * Remove the listeners of a given event.
- *
- * @param {(String|Symbol)} event The event name.
- * @param {Function} fn Only remove the listeners that match this function.
- * @param {*} context Only remove the listeners that have this context.
- * @param {Boolean} once Only remove one-time listeners.
- * @returns {EventEmitter} `this`.
- * @public
- */
-EventEmitter.prototype.removeListener = function removeListener(event, fn, context, once) {
-  var evt = prefix ? prefix + event : event;
-
-  if (!this._events[evt]) return this;
-  if (!fn) {
-    clearEvent(this, evt);
-    return this;
-  }
-
-  var listeners = this._events[evt];
-
-  if (listeners.fn) {
-    if (
-      listeners.fn === fn &&
-      (!once || listeners.once) &&
-      (!context || listeners.context === context)
-    ) {
-      clearEvent(this, evt);
-    }
-  } else {
-    for (var i = 0, events = [], length = listeners.length; i < length; i++) {
-      if (
-        listeners[i].fn !== fn ||
-        (once && !listeners[i].once) ||
-        (context && listeners[i].context !== context)
-      ) {
-        events.push(listeners[i]);
-      }
-    }
-
-    //
-    // Reset the array, or remove it completely if we have no more listeners.
-    //
-    if (events.length) this._events[evt] = events.length === 1 ? events[0] : events;
-    else clearEvent(this, evt);
-  }
-
-  return this;
-};
-
-/**
- * Remove all listeners, or those of the specified event.
- *
- * @param {(String|Symbol)} [event] The event name.
- * @returns {EventEmitter} `this`.
- * @public
- */
-EventEmitter.prototype.removeAllListeners = function removeAllListeners(event) {
-  var evt;
-
-  if (event) {
-    evt = prefix ? prefix + event : event;
-    if (this._events[evt]) clearEvent(this, evt);
-  } else {
-    this._events = new Events();
-    this._eventsCount = 0;
-  }
-
-  return this;
-};
-
-//
-// Alias methods names because people roll like that.
-//
-EventEmitter.prototype.off = EventEmitter.prototype.removeListener;
-EventEmitter.prototype.addListener = EventEmitter.prototype.on;
-
-//
-// Expose the prefix.
-//
-EventEmitter.prefixed = prefix;
-
-//
-// Allow `EventEmitter` to be imported as module namespace.
-//
-EventEmitter.EventEmitter = EventEmitter;
-
-//
-// Expose the module.
-//
-if (true) {
-  module.exports = EventEmitter;
-}
-
-
-/***/ }),
-/* 211 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * @namespace Phaser.GameObjects.Events
- */
-
-module.exports = {
-
-    ADDED_TO_SCENE: __webpack_require__(212),
-    DESTROY: __webpack_require__(213),
-    REMOVED_FROM_SCENE: __webpack_require__(214),
-    VIDEO_COMPLETE: __webpack_require__(215),
-    VIDEO_CREATED: __webpack_require__(216),
-    VIDEO_ERROR: __webpack_require__(217),
-    VIDEO_LOOP: __webpack_require__(218),
-    VIDEO_PLAY: __webpack_require__(219),
-    VIDEO_SEEKED: __webpack_require__(220),
-    VIDEO_SEEKING: __webpack_require__(221),
-    VIDEO_STOP: __webpack_require__(222),
-    VIDEO_TIMEOUT: __webpack_require__(223),
-    VIDEO_UNLOCKED: __webpack_require__(224)
-
-};
-
-
-/***/ }),
-/* 212 */
+/* 225 */
 /***/ (function(module, exports) {
 
 /**
@@ -30203,7 +31489,7 @@ module.exports = 'addedtoscene';
 
 
 /***/ }),
-/* 213 */
+/* 226 */
 /***/ (function(module, exports) {
 
 /**
@@ -30228,7 +31514,7 @@ module.exports = 'destroy';
 
 
 /***/ }),
-/* 214 */
+/* 227 */
 /***/ (function(module, exports) {
 
 /**
@@ -30254,7 +31540,7 @@ module.exports = 'removedfromscene';
 
 
 /***/ }),
-/* 215 */
+/* 228 */
 /***/ (function(module, exports) {
 
 /**
@@ -30286,7 +31572,7 @@ module.exports = 'complete';
 
 
 /***/ }),
-/* 216 */
+/* 229 */
 /***/ (function(module, exports) {
 
 /**
@@ -30315,7 +31601,7 @@ module.exports = 'created';
 
 
 /***/ }),
-/* 217 */
+/* 230 */
 /***/ (function(module, exports) {
 
 /**
@@ -30341,7 +31627,7 @@ module.exports = 'error';
 
 
 /***/ }),
-/* 218 */
+/* 231 */
 /***/ (function(module, exports) {
 
 /**
@@ -30373,7 +31659,7 @@ module.exports = 'loop';
 
 
 /***/ }),
-/* 219 */
+/* 232 */
 /***/ (function(module, exports) {
 
 /**
@@ -30401,7 +31687,7 @@ module.exports = 'play';
 
 
 /***/ }),
-/* 220 */
+/* 233 */
 /***/ (function(module, exports) {
 
 /**
@@ -30426,7 +31712,7 @@ module.exports = 'seeked';
 
 
 /***/ }),
-/* 221 */
+/* 234 */
 /***/ (function(module, exports) {
 
 /**
@@ -30452,7 +31738,7 @@ module.exports = 'seeking';
 
 
 /***/ }),
-/* 222 */
+/* 235 */
 /***/ (function(module, exports) {
 
 /**
@@ -30478,7 +31764,7 @@ module.exports = 'stop';
 
 
 /***/ }),
-/* 223 */
+/* 236 */
 /***/ (function(module, exports) {
 
 /**
@@ -30504,7 +31790,7 @@ module.exports = 'timeout';
 
 
 /***/ }),
-/* 224 */
+/* 237 */
 /***/ (function(module, exports) {
 
 /**
@@ -30530,12 +31816,12 @@ module.exports = 'unlocked';
 
 
 /***/ }),
-/* 225 */
+/* 238 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -30545,23 +31831,23 @@ module.exports = 'unlocked';
 
 module.exports = {
 
-    COMPLETE: __webpack_require__(226),
-    DISPOSE: __webpack_require__(227),
-    END: __webpack_require__(228),
-    EVENT: __webpack_require__(229),
-    INTERRUPTED: __webpack_require__(230),
-    START: __webpack_require__(231)
+    COMPLETE: __webpack_require__(239),
+    DISPOSE: __webpack_require__(240),
+    END: __webpack_require__(241),
+    EVENT: __webpack_require__(242),
+    INTERRUPTED: __webpack_require__(243),
+    START: __webpack_require__(244)
 
 };
 
 
 /***/ }),
-/* 226 */
+/* 239 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -30575,12 +31861,12 @@ module.exports = 'complete';
 
 
 /***/ }),
-/* 227 */
+/* 240 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -30594,12 +31880,12 @@ module.exports = 'dispose';
 
 
 /***/ }),
-/* 228 */
+/* 241 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -30613,12 +31899,12 @@ module.exports = 'end';
 
 
 /***/ }),
-/* 229 */
+/* 242 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -30632,12 +31918,12 @@ module.exports = 'event';
 
 
 /***/ }),
-/* 230 */
+/* 243 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -30651,12 +31937,12 @@ module.exports = 'interrupted';
 
 
 /***/ }),
-/* 231 */
+/* 244 */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -30670,24 +31956,24 @@ module.exports = 'start';
 
 
 /***/ }),
-/* 232 */
+/* 245 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var renderWebGL = __webpack_require__(34);
-var renderCanvas = __webpack_require__(34);
+var renderWebGL = __webpack_require__(3);
+var renderCanvas = __webpack_require__(3);
 
 if (false)
 {}
 
 if (true)
 {
-    renderCanvas = __webpack_require__(233);
+    renderCanvas = __webpack_require__(246);
 }
 
 module.exports = {
@@ -30699,18 +31985,18 @@ module.exports = {
 
 
 /***/ }),
-/* 233 */
+/* 246 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CounterClockwise = __webpack_require__(7);
-var RadToDeg = __webpack_require__(10);
-var Wrap = __webpack_require__(5);
+var CounterClockwise = __webpack_require__(15);
+var RadToDeg = __webpack_require__(18);
+var Wrap = __webpack_require__(10);
 
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
@@ -30827,6 +32113,11487 @@ var SpineGameObjectCanvasRenderer = function (renderer, src, interpolationPercen
 };
 
 module.exports = SpineGameObjectCanvasRenderer;
+
+
+/***/ }),
+/* 247 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+var Container = __webpack_require__(248);
+var SpineContainerRender = __webpack_require__(353);
+
+/**
+ * @classdesc
+ * A Spine Container is a special kind of Container created specifically for Spine Game Objects.
+ *
+ * You have all of the same features of a standard Container, but the rendering functions are optimized specifically
+ * for Spine Game Objects. You cannot mix and match Spine Game Objects with regular Game Objects inside of this
+ * type of Container, however.
+ *
+ * To create one in a Scene, use the factory methods:
+ *
+ * ```javascript
+ * this.add.spinecontainer();
+ * ```
+ *
+ * or
+ *
+ * ```javascript
+ * this.make.spinecontainer();
+ * ```
+ *
+ * See the Container documentation for further details.
+ *
+ * @class SpineContainer
+ * @extends Phaser.GameObjects.Container
+ * @constructor
+ * @since 3.50.0
+ *
+ * @param {Phaser.Scene} scene - A reference to the Scene that this Game Object belongs to.
+ * @param {SpinePlugin} pluginManager - A reference to the Phaser Spine Plugin.
+ * @param {number} x - The horizontal position of this Game Object in the world.
+ * @param {number} y - The vertical position of this Game Object in the world.
+ * @param {SpineGameObject[]} [children] - An optional array of Spine Game Objects to add to this Container.
+ */
+var SpineContainer = new Class({
+
+    Extends: Container,
+
+    Mixins: [
+        SpineContainerRender
+    ],
+
+    initialize:
+
+    function SpineContainer (scene, plugin, x, y, children)
+    {
+        Container.call(this, scene, x, y, children);
+
+        //  Same as SpineGameObject, to prevent the renderer from mis-typing it when batching
+        this.type = 'Spine';
+
+        /**
+         * A reference to the Spine Plugin.
+         *
+         * @name SpineGameObject#plugin
+         * @type {SpinePlugin}
+         * @since 3.19.0
+         */
+        this.plugin = plugin;
+    }
+
+});
+
+module.exports = SpineContainer;
+
+
+/***/ }),
+/* 248 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Felipe Alfonso <@bitnenfer>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var ArrayUtils = __webpack_require__(249);
+var BlendModes = __webpack_require__(14);
+var Class = __webpack_require__(0);
+var Components = __webpack_require__(285);
+var Events = __webpack_require__(22);
+var GameObject = __webpack_require__(53);
+var GameObjectEvents = __webpack_require__(22);
+var Rectangle = __webpack_require__(24);
+var Render = __webpack_require__(350);
+var Union = __webpack_require__(352);
+var Vector2 = __webpack_require__(1);
+
+/**
+ * @classdesc
+ * A Container Game Object.
+ *
+ * A Container, as the name implies, can 'contain' other types of Game Object.
+ * When a Game Object is added to a Container, the Container becomes responsible for the rendering of it.
+ * By default it will be removed from the Display List and instead added to the Containers own internal list.
+ *
+ * The position of the Game Object automatically becomes relative to the position of the Container.
+ *
+ * The origin of a Container is 0x0 (in local space) and that cannot be changed. The children you add to the
+ * Container should be positioned with this value in mind. I.e. you should treat 0x0 as being the center of
+ * the Container, and position children positively and negative around it as required.
+ *
+ * When the Container is rendered, all of its children are rendered as well, in the order in which they exist
+ * within the Container. Container children can be repositioned using methods such as `MoveUp`, `MoveDown` and `SendToBack`.
+ *
+ * If you modify a transform property of the Container, such as `Container.x` or `Container.rotation` then it will
+ * automatically influence all children as well.
+ *
+ * Containers can include other Containers for deeply nested transforms.
+ *
+ * Containers can have masks set on them and can be used as a mask too. However, Container children cannot be masked.
+ * The masks do not 'stack up'. Only a Container on the root of the display list will use its mask.
+ *
+ * Containers can be enabled for input. Because they do not have a texture you need to provide a shape for them
+ * to use as their hit area. Container children can also be enabled for input, independent of the Container.
+ *
+ * Containers can be given a physics body for either Arcade Physics, Impact Physics or Matter Physics. However,
+ * if Container _children_ are enabled for physics you may get unexpected results, such as offset bodies,
+ * if the Container itself, or any of its ancestors, is positioned anywhere other than at 0 x 0. Container children
+ * with physics do not factor in the Container due to the excessive extra calculations needed. Please structure
+ * your game to work around this.
+ *
+ * It's important to understand the impact of using Containers. They add additional processing overhead into
+ * every one of their children. The deeper you nest them, the more the cost escalates. This is especially true
+ * for input events. You also loose the ability to set the display depth of Container children in the same
+ * flexible manner as those not within them. In short, don't use them for the sake of it. You pay a small cost
+ * every time you create one, try to structure your game around avoiding that where possible.
+ *
+ * @class Container
+ * @extends Phaser.GameObjects.GameObject
+ * @memberof Phaser.GameObjects
+ * @constructor
+ * @since 3.4.0
+ *
+ * @extends Phaser.GameObjects.Components.AlphaSingle
+ * @extends Phaser.GameObjects.Components.BlendMode
+ * @extends Phaser.GameObjects.Components.ComputedSize
+ * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.Mask
+ * @extends Phaser.GameObjects.Components.Transform
+ * @extends Phaser.GameObjects.Components.Visible
+ *
+ * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
+ * @param {number} [x=0] - The horizontal position of this Game Object in the world.
+ * @param {number} [y=0] - The vertical position of this Game Object in the world.
+ * @param {Phaser.GameObjects.GameObject[]} [children] - An optional array of Game Objects to add to this Container.
+ */
+var Container = new Class({
+
+    Extends: GameObject,
+
+    Mixins: [
+        Components.AlphaSingle,
+        Components.BlendMode,
+        Components.ComputedSize,
+        Components.Depth,
+        Components.Mask,
+        Components.Transform,
+        Components.Visible,
+        Render
+    ],
+
+    initialize:
+
+    function Container (scene, x, y, children)
+    {
+        GameObject.call(this, scene, 'Container');
+
+        /**
+         * An array holding the children of this Container.
+         *
+         * @name Phaser.GameObjects.Container#list
+         * @type {Phaser.GameObjects.GameObject[]}
+         * @since 3.4.0
+         */
+        this.list = [];
+
+        /**
+         * Does this Container exclusively manage its children?
+         *
+         * The default is `true` which means a child added to this Container cannot
+         * belong in another Container, which includes the Scene display list.
+         *
+         * If you disable this then this Container will no longer exclusively manage its children.
+         * This allows you to create all kinds of interesting graphical effects, such as replicating
+         * Game Objects without reparenting them all over the Scene.
+         * However, doing so will prevent children from receiving any kind of input event or have
+         * their physics bodies work by default, as they're no longer a single entity on the
+         * display list, but are being replicated where-ever this Container is.
+         *
+         * @name Phaser.GameObjects.Container#exclusive
+         * @type {boolean}
+         * @default true
+         * @since 3.4.0
+         */
+        this.exclusive = true;
+
+        /**
+         * Containers can have an optional maximum size. If set to anything above 0 it
+         * will constrict the addition of new Game Objects into the Container, capping off
+         * the maximum limit the Container can grow in size to.
+         *
+         * @name Phaser.GameObjects.Container#maxSize
+         * @type {integer}
+         * @default -1
+         * @since 3.4.0
+         */
+        this.maxSize = -1;
+
+        /**
+         * The cursor position.
+         *
+         * @name Phaser.GameObjects.Container#position
+         * @type {integer}
+         * @since 3.4.0
+         */
+        this.position = 0;
+
+        /**
+         * Internal Transform Matrix used for local space conversion.
+         *
+         * @name Phaser.GameObjects.Container#localTransform
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.4.0
+         */
+        this.localTransform = new Components.TransformMatrix();
+
+        /**
+         * Internal temporary Transform Matrix used to avoid object creation.
+         *
+         * @name Phaser.GameObjects.Container#tempTransformMatrix
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @private
+         * @since 3.4.0
+         */
+        this.tempTransformMatrix = new Components.TransformMatrix();
+
+        /**
+         * A reference to the Scene Display List.
+         *
+         * @name Phaser.GameObjects.Container#_displayList
+         * @type {Phaser.GameObjects.DisplayList}
+         * @private
+         * @since 3.4.0
+         */
+        this._displayList = scene.sys.displayList;
+
+        /**
+         * The property key to sort by.
+         *
+         * @name Phaser.GameObjects.Container#_sortKey
+         * @type {string}
+         * @private
+         * @since 3.4.0
+         */
+        this._sortKey = '';
+
+        /**
+         * A reference to the Scene Systems Event Emitter.
+         *
+         * @name Phaser.GameObjects.Container#_sysEvents
+         * @type {Phaser.Events.EventEmitter}
+         * @private
+         * @since 3.9.0
+         */
+        this._sysEvents = scene.sys.events;
+
+        /**
+         * The horizontal scroll factor of this Container.
+         *
+         * The scroll factor controls the influence of the movement of a Camera upon this Container.
+         *
+         * When a camera scrolls it will change the location at which this Container is rendered on-screen.
+         * It does not change the Containers actual position values.
+         *
+         * For a Container, setting this value will only update the Container itself, not its children.
+         * If you wish to change the scrollFactor of the children as well, use the `setScrollFactor` method.
+         *
+         * A value of 1 means it will move exactly in sync with a camera.
+         * A value of 0 means it will not move at all, even if the camera moves.
+         * Other values control the degree to which the camera movement is mapped to this Container.
+         *
+         * Please be aware that scroll factor values other than 1 are not taken in to consideration when
+         * calculating physics collisions. Bodies always collide based on their world position, but changing
+         * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
+         * them from physics bodies if not accounted for in your code.
+         *
+         * @name Phaser.GameObjects.Container#scrollFactorX
+         * @type {number}
+         * @default 1
+         * @since 3.0.0
+         */
+        this.scrollFactorX = 1;
+
+        /**
+         * The vertical scroll factor of this Container.
+         *
+         * The scroll factor controls the influence of the movement of a Camera upon this Container.
+         *
+         * When a camera scrolls it will change the location at which this Container is rendered on-screen.
+         * It does not change the Containers actual position values.
+         *
+         * For a Container, setting this value will only update the Container itself, not its children.
+         * If you wish to change the scrollFactor of the children as well, use the `setScrollFactor` method.
+         *
+         * A value of 1 means it will move exactly in sync with a camera.
+         * A value of 0 means it will not move at all, even if the camera moves.
+         * Other values control the degree to which the camera movement is mapped to this Container.
+         *
+         * Please be aware that scroll factor values other than 1 are not taken in to consideration when
+         * calculating physics collisions. Bodies always collide based on their world position, but changing
+         * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
+         * them from physics bodies if not accounted for in your code.
+         *
+         * @name Phaser.GameObjects.Container#scrollFactorY
+         * @type {number}
+         * @default 1
+         * @since 3.0.0
+         */
+        this.scrollFactorY = 1;
+
+        this.setPosition(x, y);
+
+        this.clearAlpha();
+
+        this.setBlendMode(BlendModes.SKIP_CHECK);
+
+        if (children)
+        {
+            this.add(children);
+        }
+    },
+
+    /**
+     * Internal value to allow Containers to be used for input and physics.
+     * Do not change this value. It has no effect other than to break things.
+     *
+     * @name Phaser.GameObjects.Container#originX
+     * @type {number}
+     * @readonly
+     * @since 3.4.0
+     */
+    originX: {
+
+        get: function ()
+        {
+            return 0.5;
+        }
+
+    },
+
+    /**
+     * Internal value to allow Containers to be used for input and physics.
+     * Do not change this value. It has no effect other than to break things.
+     *
+     * @name Phaser.GameObjects.Container#originY
+     * @type {number}
+     * @readonly
+     * @since 3.4.0
+     */
+    originY: {
+
+        get: function ()
+        {
+            return 0.5;
+        }
+
+    },
+
+    /**
+     * Internal value to allow Containers to be used for input and physics.
+     * Do not change this value. It has no effect other than to break things.
+     *
+     * @name Phaser.GameObjects.Container#displayOriginX
+     * @type {number}
+     * @readonly
+     * @since 3.4.0
+     */
+    displayOriginX: {
+
+        get: function ()
+        {
+            return this.width * 0.5;
+        }
+
+    },
+
+    /**
+     * Internal value to allow Containers to be used for input and physics.
+     * Do not change this value. It has no effect other than to break things.
+     *
+     * @name Phaser.GameObjects.Container#displayOriginY
+     * @type {number}
+     * @readonly
+     * @since 3.4.0
+     */
+    displayOriginY: {
+
+        get: function ()
+        {
+            return this.height * 0.5;
+        }
+
+    },
+
+    /**
+     * Does this Container exclusively manage its children?
+     *
+     * The default is `true` which means a child added to this Container cannot
+     * belong in another Container, which includes the Scene display list.
+     *
+     * If you disable this then this Container will no longer exclusively manage its children.
+     * This allows you to create all kinds of interesting graphical effects, such as replicating
+     * Game Objects without reparenting them all over the Scene.
+     * However, doing so will prevent children from receiving any kind of input event or have
+     * their physics bodies work by default, as they're no longer a single entity on the
+     * display list, but are being replicated where-ever this Container is.
+     *
+     * @method Phaser.GameObjects.Container#setExclusive
+     * @since 3.4.0
+     *
+     * @param {boolean} [value=true] - The exclusive state of this Container.
+     *
+     * @return {this} This Container.
+     */
+    setExclusive: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.exclusive = value;
+
+        return this;
+    },
+
+    /**
+     * Gets the bounds of this Container. It works by iterating all children of the Container,
+     * getting their respective bounds, and then working out a min-max rectangle from that.
+     * It does not factor in if the children render or not, all are included.
+     *
+     * Some children are unable to return their bounds, such as Graphics objects, in which case
+     * they are skipped.
+     *
+     * Depending on the quantity of children in this Container it could be a really expensive call,
+     * so cache it and only poll it as needed.
+     *
+     * The values are stored and returned in a Rectangle object.
+     *
+     * @method Phaser.GameObjects.Container#getBounds
+     * @since 3.4.0
+     *
+     * @param {Phaser.Geom.Rectangle} [output] - A Geom.Rectangle object to store the values in. If not provided a new Rectangle will be created.
+     *
+     * @return {Phaser.Geom.Rectangle} The values stored in the output object.
+     */
+    getBounds: function (output)
+    {
+        if (output === undefined) { output = new Rectangle(); }
+
+        output.setTo(this.x, this.y, 0, 0);
+
+        if (this.parentContainer)
+        {
+            var parentMatrix = this.parentContainer.getBoundsTransformMatrix();
+            var transformedPosition = parentMatrix.transformPoint(this.x, this.y);
+
+            output.setTo(transformedPosition.x, transformedPosition.y, 0, 0);
+        }
+
+        if (this.list.length > 0)
+        {
+            var children = this.list;
+            var tempRect = new Rectangle();
+            var hasSetFirst = false;
+
+            output.setEmpty();
+
+            for (var i = 0; i < children.length; i++)
+            {
+                var entry = children[i];
+
+                if (entry.getBounds)
+                {
+                    entry.getBounds(tempRect);
+
+                    if (!hasSetFirst)
+                    {
+                        output.setTo(tempRect.x, tempRect.y, tempRect.width, tempRect.height);
+                        hasSetFirst = true;
+                    }
+                    else
+                    {
+                        Union(tempRect, output, output);
+                    }
+                }
+            }
+        }
+
+        return output;
+    },
+
+    /**
+     * Internal add handler.
+     *
+     * @method Phaser.GameObjects.Container#addHandler
+     * @private
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was just added to this Container.
+     */
+    addHandler: function (gameObject)
+    {
+        gameObject.once(Events.DESTROY, this.remove, this);
+
+        if (this.exclusive)
+        {
+            this._displayList.remove(gameObject);
+
+            if (gameObject.parentContainer)
+            {
+                gameObject.parentContainer.remove(gameObject);
+            }
+
+            gameObject.parentContainer = this;
+        }
+
+        //  Is only on the Display List via this Container
+        if (!this.scene.sys.displayList.exists(gameObject))
+        {
+            gameObject.emit(GameObjectEvents.ADDED_TO_SCENE, gameObject, this.scene);
+        }
+    },
+
+    /**
+     * Internal remove handler.
+     *
+     * @method Phaser.GameObjects.Container#removeHandler
+     * @private
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was just removed from this Container.
+     */
+    removeHandler: function (gameObject)
+    {
+        gameObject.off(Events.DESTROY, this.remove);
+
+        if (this.exclusive)
+        {
+            gameObject.parentContainer = null;
+        }
+
+        //  Is only on the Display List via this Container
+        if (!this.scene.sys.displayList.exists(gameObject))
+        {
+            gameObject.emit(GameObjectEvents.REMOVED_FROM_SCENE, gameObject, this.scene);
+        }
+    },
+
+    /**
+     * Takes a Point-like object, such as a Vector2, Geom.Point or object with public x and y properties,
+     * and transforms it into the space of this Container, then returns it in the output object.
+     *
+     * @method Phaser.GameObjects.Container#pointToContainer
+     * @since 3.4.0
+     *
+     * @param {(object|Phaser.Geom.Point|Phaser.Math.Vector2)} source - The Source Point to be transformed.
+     * @param {(object|Phaser.Geom.Point|Phaser.Math.Vector2)} [output] - A destination object to store the transformed point in. If none given a Vector2 will be created and returned.
+     *
+     * @return {(object|Phaser.Geom.Point|Phaser.Math.Vector2)} The transformed point.
+     */
+    pointToContainer: function (source, output)
+    {
+        if (output === undefined) { output = new Vector2(); }
+
+        if (this.parentContainer)
+        {
+            this.parentContainer.pointToContainer(source, output);
+        }
+        else
+        {
+            output = new Vector2(source.x, source.y);
+        }
+
+        var tempMatrix = this.tempTransformMatrix;
+
+        //  No need to loadIdentity because applyITRS overwrites every value anyway
+        tempMatrix.applyITRS(this.x, this.y, this.rotation, this.scaleX, this.scaleY);
+
+        tempMatrix.invert();
+
+        tempMatrix.transformPoint(source.x, source.y, output);
+
+        return output;
+    },
+
+    /**
+     * Returns the world transform matrix as used for Bounds checks.
+     *
+     * The returned matrix is temporal and shouldn't be stored.
+     *
+     * @method Phaser.GameObjects.Container#getBoundsTransformMatrix
+     * @since 3.4.0
+     *
+     * @return {Phaser.GameObjects.Components.TransformMatrix} The world transform matrix.
+     */
+    getBoundsTransformMatrix: function ()
+    {
+        return this.getWorldTransformMatrix(this.tempTransformMatrix, this.localTransform);
+    },
+
+    /**
+     * Adds the given Game Object, or array of Game Objects, to this Container.
+     *
+     * Each Game Object must be unique within the Container.
+     *
+     * @method Phaser.GameObjects.Container#add
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} child - The Game Object, or array of Game Objects, to add to the Container.
+     *
+     * @return {this} This Container instance.
+     */
+    add: function (child)
+    {
+        ArrayUtils.Add(this.list, child, this.maxSize, this.addHandler, this);
+
+        return this;
+    },
+
+    /**
+     * Adds the given Game Object, or array of Game Objects, to this Container at the specified position.
+     *
+     * Existing Game Objects in the Container are shifted up.
+     *
+     * Each Game Object must be unique within the Container.
+     *
+     * @method Phaser.GameObjects.Container#addAt
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} child - The Game Object, or array of Game Objects, to add to the Container.
+     * @param {integer} [index=0] - The position to insert the Game Object/s at.
+     *
+     * @return {this} This Container instance.
+     */
+    addAt: function (child, index)
+    {
+        ArrayUtils.AddAt(this.list, child, index, this.maxSize, this.addHandler, this);
+
+        return this;
+    },
+
+    /**
+     * Returns the Game Object at the given position in this Container.
+     *
+     * @method Phaser.GameObjects.Container#getAt
+     * @since 3.4.0
+     *
+     * @param {integer} index - The position to get the Game Object from.
+     *
+     * @return {?Phaser.GameObjects.GameObject} The Game Object at the specified index, or `null` if none found.
+     */
+    getAt: function (index)
+    {
+        return this.list[index];
+    },
+
+    /**
+     * Returns the index of the given Game Object in this Container.
+     *
+     * @method Phaser.GameObjects.Container#getIndex
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object to search for in this Container.
+     *
+     * @return {integer} The index of the Game Object in this Container, or -1 if not found.
+     */
+    getIndex: function (child)
+    {
+        return this.list.indexOf(child);
+    },
+
+    /**
+     * Sort the contents of this Container so the items are in order based on the given property.
+     * For example: `sort('alpha')` would sort the elements based on the value of their `alpha` property.
+     *
+     * @method Phaser.GameObjects.Container#sort
+     * @since 3.4.0
+     *
+     * @param {string} property - The property to lexically sort by.
+     * @param {function} [handler] - Provide your own custom handler function. Will receive 2 children which it should compare and return a boolean.
+     *
+     * @return {this} This Container instance.
+     */
+    sort: function (property, handler)
+    {
+        if (!property)
+        {
+            return this;
+        }
+
+        if (handler === undefined)
+        {
+            handler = function (childA, childB)
+            {
+                return childA[property] - childB[property];
+            };
+        }
+
+        ArrayUtils.StableSort.inplace(this.list, handler);
+
+        return this;
+    },
+
+    /**
+     * Searches for the first instance of a child with its `name` property matching the given argument.
+     * Should more than one child have the same name only the first is returned.
+     *
+     * @method Phaser.GameObjects.Container#getByName
+     * @since 3.4.0
+     *
+     * @param {string} name - The name to search for.
+     *
+     * @return {?Phaser.GameObjects.GameObject} The first child with a matching name, or `null` if none were found.
+     */
+    getByName: function (name)
+    {
+        return ArrayUtils.GetFirst(this.list, 'name', name);
+    },
+
+    /**
+     * Returns a random Game Object from this Container.
+     *
+     * @method Phaser.GameObjects.Container#getRandom
+     * @since 3.4.0
+     *
+     * @param {integer} [startIndex=0] - An optional start index.
+     * @param {integer} [length] - An optional length, the total number of elements (from the startIndex) to choose from.
+     *
+     * @return {?Phaser.GameObjects.GameObject} A random child from the Container, or `null` if the Container is empty.
+     */
+    getRandom: function (startIndex, length)
+    {
+        return ArrayUtils.GetRandom(this.list, startIndex, length);
+    },
+
+    /**
+     * Gets the first Game Object in this Container.
+     *
+     * You can also specify a property and value to search for, in which case it will return the first
+     * Game Object in this Container with a matching property and / or value.
+     *
+     * For example: `getFirst('visible', true)` would return the first Game Object that had its `visible` property set.
+     *
+     * You can limit the search to the `startIndex` - `endIndex` range.
+     *
+     * @method Phaser.GameObjects.Container#getFirst
+     * @since 3.4.0
+     *
+     * @param {string} property - The property to test on each Game Object in the Container.
+     * @param {*} value - The value to test the property against. Must pass a strict (`===`) comparison check.
+     * @param {integer} [startIndex=0] - An optional start index to search from.
+     * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
+     *
+     * @return {?Phaser.GameObjects.GameObject} The first matching Game Object, or `null` if none was found.
+     */
+    getFirst: function (property, value, startIndex, endIndex)
+    {
+        return ArrayUtils.GetFirst(this.list, property, value, startIndex, endIndex);
+    },
+
+    /**
+     * Returns all Game Objects in this Container.
+     *
+     * You can optionally specify a matching criteria using the `property` and `value` arguments.
+     *
+     * For example: `getAll('body')` would return only Game Objects that have a body property.
+     *
+     * You can also specify a value to compare the property to:
+     *
+     * `getAll('visible', true)` would return only Game Objects that have their visible property set to `true`.
+     *
+     * Optionally you can specify a start and end index. For example if this Container had 100 Game Objects,
+     * and you set `startIndex` to 0 and `endIndex` to 50, it would return matches from only
+     * the first 50 Game Objects.
+     *
+     * @method Phaser.GameObjects.Container#getAll
+     * @since 3.4.0
+     *
+     * @param {string} [property] - The property to test on each Game Object in the Container.
+     * @param {any} [value] - If property is set then the `property` must strictly equal this value to be included in the results.
+     * @param {integer} [startIndex=0] - An optional start index to search from.
+     * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
+     *
+     * @return {Phaser.GameObjects.GameObject[]} An array of matching Game Objects from this Container.
+     */
+    getAll: function (property, value, startIndex, endIndex)
+    {
+        return ArrayUtils.GetAll(this.list, property, value, startIndex, endIndex);
+    },
+
+    /**
+     * Returns the total number of Game Objects in this Container that have a property
+     * matching the given value.
+     *
+     * For example: `count('visible', true)` would count all the elements that have their visible property set.
+     *
+     * You can optionally limit the operation to the `startIndex` - `endIndex` range.
+     *
+     * @method Phaser.GameObjects.Container#count
+     * @since 3.4.0
+     *
+     * @param {string} property - The property to check.
+     * @param {any} value - The value to check.
+     * @param {integer} [startIndex=0] - An optional start index to search from.
+     * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
+     *
+     * @return {integer} The total number of Game Objects in this Container with a property matching the given value.
+     */
+    count: function (property, value, startIndex, endIndex)
+    {
+        return ArrayUtils.CountAllMatching(this.list, property, value, startIndex, endIndex);
+    },
+
+    /**
+     * Swaps the position of two Game Objects in this Container.
+     * Both Game Objects must belong to this Container.
+     *
+     * @method Phaser.GameObjects.Container#swap
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child1 - The first Game Object to swap.
+     * @param {Phaser.GameObjects.GameObject} child2 - The second Game Object to swap.
+     *
+     * @return {this} This Container instance.
+     */
+    swap: function (child1, child2)
+    {
+        ArrayUtils.Swap(this.list, child1, child2);
+
+        return this;
+    },
+
+    /**
+     * Moves a Game Object to a new position within this Container.
+     *
+     * The Game Object must already be a child of this Container.
+     *
+     * The Game Object is removed from its old position and inserted into the new one.
+     * Therefore the Container size does not change. Other children will change position accordingly.
+     *
+     * @method Phaser.GameObjects.Container#moveTo
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object to move.
+     * @param {integer} index - The new position of the Game Object in this Container.
+     *
+     * @return {this} This Container instance.
+     */
+    moveTo: function (child, index)
+    {
+        ArrayUtils.MoveTo(this.list, child, index);
+
+        return this;
+    },
+
+    /**
+     * Removes the given Game Object, or array of Game Objects, from this Container.
+     *
+     * The Game Objects must already be children of this Container.
+     *
+     * You can also optionally call `destroy` on each Game Object that is removed from the Container.
+     *
+     * @method Phaser.GameObjects.Container#remove
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} child - The Game Object, or array of Game Objects, to be removed from the Container.
+     * @param {boolean} [destroyChild=false] - Optionally call `destroy` on each child successfully removed from this Container.
+     *
+     * @return {this} This Container instance.
+     */
+    remove: function (child, destroyChild)
+    {
+        var removed = ArrayUtils.Remove(this.list, child, this.removeHandler, this);
+
+        if (destroyChild && removed)
+        {
+            if (!Array.isArray(removed))
+            {
+                removed = [ removed ];
+            }
+
+            for (var i = 0; i < removed.length; i++)
+            {
+                removed[i].destroy();
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Removes the Game Object at the given position in this Container.
+     *
+     * You can also optionally call `destroy` on the Game Object, if one is found.
+     *
+     * @method Phaser.GameObjects.Container#removeAt
+     * @since 3.4.0
+     *
+     * @param {integer} index - The index of the Game Object to be removed.
+     * @param {boolean} [destroyChild=false] - Optionally call `destroy` on the Game Object if successfully removed from this Container.
+     *
+     * @return {this} This Container instance.
+     */
+    removeAt: function (index, destroyChild)
+    {
+        var removed = ArrayUtils.RemoveAt(this.list, index, this.removeHandler, this);
+
+        if (destroyChild && removed)
+        {
+            removed.destroy();
+        }
+
+        return this;
+    },
+
+    /**
+     * Removes the Game Objects between the given positions in this Container.
+     *
+     * You can also optionally call `destroy` on each Game Object that is removed from the Container.
+     *
+     * @method Phaser.GameObjects.Container#removeBetween
+     * @since 3.4.0
+     *
+     * @param {integer} [startIndex=0] - An optional start index to search from.
+     * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
+     * @param {boolean} [destroyChild=false] - Optionally call `destroy` on each Game Object successfully removed from this Container.
+     *
+     * @return {this} This Container instance.
+     */
+    removeBetween: function (startIndex, endIndex, destroyChild)
+    {
+        var removed = ArrayUtils.RemoveBetween(this.list, startIndex, endIndex, this.removeHandler, this);
+
+        if (destroyChild)
+        {
+            for (var i = 0; i < removed.length; i++)
+            {
+                removed[i].destroy();
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Removes all Game Objects from this Container.
+     *
+     * You can also optionally call `destroy` on each Game Object that is removed from the Container.
+     *
+     * @method Phaser.GameObjects.Container#removeAll
+     * @since 3.4.0
+     *
+     * @param {boolean} [destroyChild=false] - Optionally call `destroy` on each Game Object successfully removed from this Container.
+     *
+     * @return {this} This Container instance.
+     */
+    removeAll: function (destroyChild)
+    {
+        var removed = ArrayUtils.RemoveBetween(this.list, 0, this.list.length, this.removeHandler, this);
+
+        if (destroyChild)
+        {
+            for (var i = 0; i < removed.length; i++)
+            {
+                removed[i].destroy();
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Brings the given Game Object to the top of this Container.
+     * This will cause it to render on-top of any other objects in the Container.
+     *
+     * @method Phaser.GameObjects.Container#bringToTop
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object to bring to the top of the Container.
+     *
+     * @return {this} This Container instance.
+     */
+    bringToTop: function (child)
+    {
+        ArrayUtils.BringToTop(this.list, child);
+
+        return this;
+    },
+
+    /**
+     * Sends the given Game Object to the bottom of this Container.
+     * This will cause it to render below any other objects in the Container.
+     *
+     * @method Phaser.GameObjects.Container#sendToBack
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object to send to the bottom of the Container.
+     *
+     * @return {this} This Container instance.
+     */
+    sendToBack: function (child)
+    {
+        ArrayUtils.SendToBack(this.list, child);
+
+        return this;
+    },
+
+    /**
+     * Moves the given Game Object up one place in this Container, unless it's already at the top.
+     *
+     * @method Phaser.GameObjects.Container#moveUp
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object to be moved in the Container.
+     *
+     * @return {this} This Container instance.
+     */
+    moveUp: function (child)
+    {
+        ArrayUtils.MoveUp(this.list, child);
+
+        return this;
+    },
+
+    /**
+     * Moves the given Game Object down one place in this Container, unless it's already at the bottom.
+     *
+     * @method Phaser.GameObjects.Container#moveDown
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object to be moved in the Container.
+     *
+     * @return {this} This Container instance.
+     */
+    moveDown: function (child)
+    {
+        ArrayUtils.MoveDown(this.list, child);
+
+        return this;
+    },
+
+    /**
+     * Reverses the order of all Game Objects in this Container.
+     *
+     * @method Phaser.GameObjects.Container#reverse
+     * @since 3.4.0
+     *
+     * @return {this} This Container instance.
+     */
+    reverse: function ()
+    {
+        this.list.reverse();
+
+        return this;
+    },
+
+    /**
+     * Shuffles the all Game Objects in this Container using the Fisher-Yates implementation.
+     *
+     * @method Phaser.GameObjects.Container#shuffle
+     * @since 3.4.0
+     *
+     * @return {this} This Container instance.
+     */
+    shuffle: function ()
+    {
+        ArrayUtils.Shuffle(this.list);
+
+        return this;
+    },
+
+    /**
+     * Replaces a Game Object in this Container with the new Game Object.
+     * The new Game Object cannot already be a child of this Container.
+     *
+     * @method Phaser.GameObjects.Container#replace
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject} oldChild - The Game Object in this Container that will be replaced.
+     * @param {Phaser.GameObjects.GameObject} newChild - The Game Object to be added to this Container.
+     * @param {boolean} [destroyChild=false] - Optionally call `destroy` on the Game Object if successfully removed from this Container.
+     *
+     * @return {this} This Container instance.
+     */
+    replace: function (oldChild, newChild, destroyChild)
+    {
+        var moved = ArrayUtils.Replace(this.list, oldChild, newChild);
+
+        if (moved)
+        {
+            this.addHandler(newChild);
+            this.removeHandler(oldChild);
+
+            if (destroyChild)
+            {
+                oldChild.destroy();
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Returns `true` if the given Game Object is a direct child of this Container.
+     *
+     * This check does not scan nested Containers.
+     *
+     * @method Phaser.GameObjects.Container#exists
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object to check for within this Container.
+     *
+     * @return {boolean} True if the Game Object is an immediate child of this Container, otherwise false.
+     */
+    exists: function (child)
+    {
+        return (this.list.indexOf(child) > -1);
+    },
+
+    /**
+     * Sets the property to the given value on all Game Objects in this Container.
+     *
+     * Optionally you can specify a start and end index. For example if this Container had 100 Game Objects,
+     * and you set `startIndex` to 0 and `endIndex` to 50, it would return matches from only
+     * the first 50 Game Objects.
+     *
+     * @method Phaser.GameObjects.Container#setAll
+     * @since 3.4.0
+     *
+     * @param {string} property - The property that must exist on the Game Object.
+     * @param {any} value - The value to get the property to.
+     * @param {integer} [startIndex=0] - An optional start index to search from.
+     * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
+     *
+     * @return {this} This Container instance.
+     */
+    setAll: function (property, value, startIndex, endIndex)
+    {
+        ArrayUtils.SetAll(this.list, property, value, startIndex, endIndex);
+
+        return this;
+    },
+
+    /**
+     * @callback EachContainerCallback
+     * @generic I - [item]
+     *
+     * @param {*} item - The child Game Object of the Container.
+     * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
+     */
+
+    /**
+     * Passes all Game Objects in this Container to the given callback.
+     *
+     * A copy of the Container is made before passing each entry to your callback.
+     * This protects against the callback itself modifying the Container.
+     *
+     * If you know for sure that the callback will not change the size of this Container
+     * then you can use the more performant `Container.iterate` method instead.
+     *
+     * @method Phaser.GameObjects.Container#each
+     * @since 3.4.0
+     *
+     * @param {function} callback - The function to call.
+     * @param {object} [context] - Value to use as `this` when executing callback.
+     * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
+     *
+     * @return {this} This Container instance.
+     */
+    each: function (callback, context)
+    {
+        var args = [ null ];
+        var i;
+        var temp = this.list.slice();
+        var len = temp.length;
+
+        for (i = 2; i < arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
+
+        for (i = 0; i < len; i++)
+        {
+            args[0] = temp[i];
+
+            callback.apply(context, args);
+        }
+
+        return this;
+    },
+
+    /**
+     * Passes all Game Objects in this Container to the given callback.
+     *
+     * Only use this method when you absolutely know that the Container will not be modified during
+     * the iteration, i.e. by removing or adding to its contents.
+     *
+     * @method Phaser.GameObjects.Container#iterate
+     * @since 3.4.0
+     *
+     * @param {function} callback - The function to call.
+     * @param {object} [context] - Value to use as `this` when executing callback.
+     * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
+     *
+     * @return {this} This Container instance.
+     */
+    iterate: function (callback, context)
+    {
+        var args = [ null ];
+        var i;
+
+        for (i = 2; i < arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
+
+        for (i = 0; i < this.list.length; i++)
+        {
+            args[0] = this.list[i];
+
+            callback.apply(context, args);
+        }
+
+        return this;
+    },
+
+    /**
+     * Sets the scroll factor of this Container and optionally all of its children.
+     *
+     * The scroll factor controls the influence of the movement of a Camera upon this Game Object.
+     *
+     * When a camera scrolls it will change the location at which this Game Object is rendered on-screen.
+     * It does not change the Game Objects actual position values.
+     *
+     * A value of 1 means it will move exactly in sync with a camera.
+     * A value of 0 means it will not move at all, even if the camera moves.
+     * Other values control the degree to which the camera movement is mapped to this Game Object.
+     *
+     * Please be aware that scroll factor values other than 1 are not taken in to consideration when
+     * calculating physics collisions. Bodies always collide based on their world position, but changing
+     * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
+     * them from physics bodies if not accounted for in your code.
+     *
+     * @method Phaser.GameObjects.Container#setScrollFactor
+     * @since 3.0.0
+     *
+     * @param {number} x - The horizontal scroll factor of this Game Object.
+     * @param {number} [y=x] - The vertical scroll factor of this Game Object. If not set it will use the `x` value.
+     * @param {boolean} [updateChildren=false] - Apply this scrollFactor to all Container children as well?
+     *
+     * @return {this} This Game Object instance.
+     */
+    setScrollFactor: function (x, y, updateChildren)
+    {
+        if (y === undefined) { y = x; }
+        if (updateChildren === undefined) { updateChildren = false; }
+
+        this.scrollFactorX = x;
+        this.scrollFactorY = y;
+
+        if (updateChildren)
+        {
+            ArrayUtils.SetAll(this.list, 'scrollFactorX', x);
+            ArrayUtils.SetAll(this.list, 'scrollFactorY', y);
+        }
+
+        return this;
+    },
+
+    /**
+     * The number of Game Objects inside this Container.
+     *
+     * @name Phaser.GameObjects.Container#length
+     * @type {integer}
+     * @readonly
+     * @since 3.4.0
+     */
+    length: {
+
+        get: function ()
+        {
+            return this.list.length;
+        }
+
+    },
+
+    /**
+     * Returns the first Game Object within the Container, or `null` if it is empty.
+     *
+     * You can move the cursor by calling `Container.next` and `Container.previous`.
+     *
+     * @name Phaser.GameObjects.Container#first
+     * @type {?Phaser.GameObjects.GameObject}
+     * @readonly
+     * @since 3.4.0
+     */
+    first: {
+
+        get: function ()
+        {
+            this.position = 0;
+
+            if (this.list.length > 0)
+            {
+                return this.list[0];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+    },
+
+    /**
+     * Returns the last Game Object within the Container, or `null` if it is empty.
+     *
+     * You can move the cursor by calling `Container.next` and `Container.previous`.
+     *
+     * @name Phaser.GameObjects.Container#last
+     * @type {?Phaser.GameObjects.GameObject}
+     * @readonly
+     * @since 3.4.0
+     */
+    last: {
+
+        get: function ()
+        {
+            if (this.list.length > 0)
+            {
+                this.position = this.list.length - 1;
+
+                return this.list[this.position];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+    },
+
+    /**
+     * Returns the next Game Object within the Container, or `null` if it is empty.
+     *
+     * You can move the cursor by calling `Container.next` and `Container.previous`.
+     *
+     * @name Phaser.GameObjects.Container#next
+     * @type {?Phaser.GameObjects.GameObject}
+     * @readonly
+     * @since 3.4.0
+     */
+    next: {
+
+        get: function ()
+        {
+            if (this.position < this.list.length)
+            {
+                this.position++;
+
+                return this.list[this.position];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+    },
+
+    /**
+     * Returns the previous Game Object within the Container, or `null` if it is empty.
+     *
+     * You can move the cursor by calling `Container.next` and `Container.previous`.
+     *
+     * @name Phaser.GameObjects.Container#previous
+     * @type {?Phaser.GameObjects.GameObject}
+     * @readonly
+     * @since 3.4.0
+     */
+    previous: {
+
+        get: function ()
+        {
+            if (this.position > 0)
+            {
+                this.position--;
+
+                return this.list[this.position];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+    },
+
+    /**
+     * Internal destroy handler, called as part of the destroy process.
+     *
+     * @method Phaser.GameObjects.Container#preDestroy
+     * @protected
+     * @since 3.9.0
+     */
+    preDestroy: function ()
+    {
+        this.removeAll(!!this.exclusive);
+
+        this.localTransform.destroy();
+        this.tempTransformMatrix.destroy();
+
+        this.list = [];
+        this._displayList = null;
+    }
+
+});
+
+module.exports = Container;
+
+
+/***/ }),
+/* 249 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Utils.Array
+ */
+
+module.exports = {
+
+    Matrix: __webpack_require__(250),
+
+    Add: __webpack_require__(258),
+    AddAt: __webpack_require__(259),
+    BringToTop: __webpack_require__(260),
+    CountAllMatching: __webpack_require__(261),
+    Each: __webpack_require__(262),
+    EachInRange: __webpack_require__(263),
+    FindClosestInSorted: __webpack_require__(57),
+    GetAll: __webpack_require__(264),
+    GetFirst: __webpack_require__(265),
+    GetRandom: __webpack_require__(266),
+    MoveDown: __webpack_require__(267),
+    MoveTo: __webpack_require__(268),
+    MoveUp: __webpack_require__(269),
+    NumberArray: __webpack_require__(270),
+    NumberArrayStep: __webpack_require__(271),
+    QuickSelect: __webpack_require__(272),
+    Range: __webpack_require__(273),
+    Remove: __webpack_require__(274),
+    RemoveAt: __webpack_require__(275),
+    RemoveBetween: __webpack_require__(276),
+    RemoveRandomElement: __webpack_require__(277),
+    Replace: __webpack_require__(278),
+    RotateLeft: __webpack_require__(279),
+    RotateRight: __webpack_require__(280),
+    SafeRange: __webpack_require__(4),
+    SendToBack: __webpack_require__(281),
+    SetAll: __webpack_require__(282),
+    Shuffle: __webpack_require__(58),
+    SpliceOne: __webpack_require__(13),
+    StableSort: __webpack_require__(283),
+    Swap: __webpack_require__(284)
+
+};
+
+
+/***/ }),
+/* 250 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Utils.Array.Matrix
+ */
+
+module.exports = {
+
+    CheckMatrix: __webpack_require__(23),
+    MatrixToString: __webpack_require__(251),
+    ReverseColumns: __webpack_require__(253),
+    ReverseRows: __webpack_require__(254),
+    Rotate180: __webpack_require__(255),
+    RotateLeft: __webpack_require__(256),
+    RotateMatrix: __webpack_require__(12),
+    RotateRight: __webpack_require__(257),
+    TransposeMatrix: __webpack_require__(56)
+
+};
+
+
+/***/ }),
+/* 251 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Pad = __webpack_require__(252);
+var CheckMatrix = __webpack_require__(23);
+
+/**
+ * Generates a string (which you can pass to console.log) from the given Array Matrix.
+ *
+ * @function Phaser.Utils.Array.Matrix.MatrixToString
+ * @since 3.0.0
+ *
+ * @generic T
+ * @genericUse {T[][]} - [matrix]
+ *
+ * @param {T[][]} [matrix] - A 2-dimensional array.
+ *
+ * @return {string} A string representing the matrix.
+ */
+var MatrixToString = function (matrix)
+{
+    var str = '';
+
+    if (!CheckMatrix(matrix))
+    {
+        return str;
+    }
+
+    for (var r = 0; r < matrix.length; r++)
+    {
+        for (var c = 0; c < matrix[r].length; c++)
+        {
+            var cell = matrix[r][c].toString();
+
+            if (cell !== 'undefined')
+            {
+                str += Pad(cell, 2);
+            }
+            else
+            {
+                str += '?';
+            }
+
+            if (c < matrix[r].length - 1)
+            {
+                str += ' |';
+            }
+        }
+
+        if (r < matrix.length - 1)
+        {
+            str += '\n';
+
+            for (var i = 0; i < matrix[r].length; i++)
+            {
+                str += '---';
+
+                if (i < matrix[r].length - 1)
+                {
+                    str += '+';
+                }
+            }
+
+            str += '\n';
+        }
+
+    }
+
+    return str;
+};
+
+module.exports = MatrixToString;
+
+
+/***/ }),
+/* 252 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Takes the given string and pads it out, to the length required, using the character
+ * specified. For example if you need a string to be 6 characters long, you can call:
+ *
+ * `pad('bob', 6, '-', 2)`
+ *
+ * This would return: `bob---` as it has padded it out to 6 characters, using the `-` on the right.
+ *
+ * You can also use it to pad numbers (they are always returned as strings):
+ * 
+ * `pad(512, 6, '0', 1)`
+ *
+ * Would return: `000512` with the string padded to the left.
+ *
+ * If you don't specify a direction it'll pad to both sides:
+ * 
+ * `pad('c64', 7, '*')`
+ *
+ * Would return: `**c64**`
+ *
+ * @function Phaser.Utils.String.Pad
+ * @since 3.0.0
+ *
+ * @param {string|number|object} str - The target string. `toString()` will be called on the string, which means you can also pass in common data types like numbers.
+ * @param {integer} [len=0] - The number of characters to be added.
+ * @param {string} [pad=" "] - The string to pad it out with (defaults to a space).
+ * @param {integer} [dir=3] - The direction dir = 1 (left), 2 (right), 3 (both).
+ * 
+ * @return {string} The padded string.
+ */
+var Pad = function (str, len, pad, dir)
+{
+    if (len === undefined) { len = 0; }
+    if (pad === undefined) { pad = ' '; }
+    if (dir === undefined) { dir = 3; }
+
+    str = str.toString();
+
+    var padlen = 0;
+
+    if (len + 1 >= str.length)
+    {
+        switch (dir)
+        {
+            case 1:
+                str = new Array(len + 1 - str.length).join(pad) + str;
+                break;
+
+            case 3:
+                var right = Math.ceil((padlen = len - str.length) / 2);
+                var left = padlen - right;
+                str = new Array(left + 1).join(pad) + str + new Array(right + 1).join(pad);
+                break;
+
+            default:
+                str = str + new Array(len + 1 - str.length).join(pad);
+                break;
+        }
+    }
+
+    return str;
+};
+
+module.exports = Pad;
+
+
+/***/ }),
+/* 253 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Reverses the columns in the given Array Matrix.
+ *
+ * @function Phaser.Utils.Array.Matrix.ReverseColumns
+ * @since 3.0.0
+ *
+ * @generic T
+ * @genericUse {T[][]} - [matrix,$return]
+ *
+ * @param {T[][]} [matrix] - The array matrix to reverse the columns for.
+ *
+ * @return {T[][]} The column reversed matrix.
+ */
+var ReverseColumns = function (matrix)
+{
+    return matrix.reverse();
+};
+
+module.exports = ReverseColumns;
+
+
+/***/ }),
+/* 254 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Reverses the rows in the given Array Matrix.
+ *
+ * @function Phaser.Utils.Array.Matrix.ReverseRows
+ * @since 3.0.0
+ *
+ * @generic T
+ * @genericUse {T[][]} - [matrix,$return]
+ *
+ * @param {T[][]} [matrix] - The array matrix to reverse the rows for.
+ *
+ * @return {T[][]} The column reversed matrix.
+ */
+var ReverseRows = function (matrix)
+{
+    for (var i = 0; i < matrix.length; i++)
+    {
+        matrix[i].reverse();
+    }
+
+    return matrix;
+};
+
+module.exports = ReverseRows;
+
+
+/***/ }),
+/* 255 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var RotateMatrix = __webpack_require__(12);
+
+/**
+ * Rotates the array matrix 180 degrees.
+ *
+ * @function Phaser.Utils.Array.Matrix.Rotate180
+ * @since 3.0.0
+ *
+ * @generic T
+ * @genericUse {T[][]} - [matrix,$return]
+ *
+ * @param {T[][]} [matrix] - The array to rotate.
+ *
+ * @return {T[][]} The rotated matrix array. The source matrix should be discard for the returned matrix.
+ */
+var Rotate180 = function (matrix)
+{
+    return RotateMatrix(matrix, 180);
+};
+
+module.exports = Rotate180;
+
+
+/***/ }),
+/* 256 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var RotateMatrix = __webpack_require__(12);
+
+/**
+ * Rotates the array matrix to the left (or 90 degrees)
+ *
+ * @function Phaser.Utils.Array.Matrix.RotateLeft
+ * @since 3.0.0
+ *
+ * @generic T
+ * @genericUse {T[][]} - [matrix,$return]
+ *
+ * @param {T[][]} [matrix] - The array to rotate.
+ *
+ * @return {T[][]} The rotated matrix array. The source matrix should be discard for the returned matrix.
+ */
+var RotateLeft = function (matrix)
+{
+    return RotateMatrix(matrix, 90);
+};
+
+module.exports = RotateLeft;
+
+
+/***/ }),
+/* 257 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var RotateMatrix = __webpack_require__(12);
+
+/**
+ * Rotates the array matrix to the left (or -90 degrees)
+ *
+ * @function Phaser.Utils.Array.Matrix.RotateRight
+ * @since 3.0.0
+ *
+ * @generic T
+ * @genericUse {T[][]} - [matrix,$return]
+ *
+ * @param {T[][]} [matrix] - The array to rotate.
+ *
+ * @return {T[][]} The rotated matrix array. The source matrix should be discard for the returned matrix.
+ */
+var RotateRight = function (matrix)
+{
+    return RotateMatrix(matrix, -90);
+};
+
+module.exports = RotateRight;
+
+
+/***/ }),
+/* 258 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Adds the given item, or array of items, to the array.
+ *
+ * Each item must be unique within the array.
+ *
+ * The array is modified in-place and returned.
+ *
+ * You can optionally specify a limit to the maximum size of the array. If the quantity of items being
+ * added will take the array length over this limit, it will stop adding once the limit is reached.
+ *
+ * You can optionally specify a callback to be invoked for each item successfully added to the array.
+ *
+ * @function Phaser.Utils.Array.Add
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to be added to.
+ * @param {any|any[]} item - The item, or array of items, to add to the array. Each item must be unique within the array.
+ * @param {integer} [limit] - Optional limit which caps the size of the array.
+ * @param {function} [callback] - A callback to be invoked for each item successfully added to the array.
+ * @param {object} [context] - The context in which the callback is invoked.
+ *
+ * @return {array} The input array.
+ */
+var Add = function (array, item, limit, callback, context)
+{
+    if (context === undefined) { context = array; }
+
+    if (limit > 0)
+    {
+        var remaining = limit - array.length;
+
+        //  There's nothing more we can do here, the array is full
+        if (remaining <= 0)
+        {
+            return null;
+        }
+    }
+
+    //  Fast path to avoid array mutation and iteration
+    if (!Array.isArray(item))
+    {
+        if (array.indexOf(item) === -1)
+        {
+            array.push(item);
+
+            if (callback)
+            {
+                callback.call(context, item);
+            }
+
+            return item;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    //  If we got this far, we have an array of items to insert
+
+    //  Ensure all the items are unique
+    var itemLength = item.length - 1;
+
+    while (itemLength >= 0)
+    {
+        if (array.indexOf(item[itemLength]) !== -1)
+        {
+            //  Already exists in array, so remove it
+            item.splice(itemLength, 1);
+        }
+
+        itemLength--;
+    }
+
+    //  Anything left?
+    itemLength = item.length;
+
+    if (itemLength === 0)
+    {
+        return null;
+    }
+
+    if (limit > 0 && itemLength > remaining)
+    {
+        item.splice(remaining);
+
+        itemLength = remaining;
+    }
+
+    for (var i = 0; i < itemLength; i++)
+    {
+        var entry = item[i];
+
+        array.push(entry);
+
+        if (callback)
+        {
+            callback.call(context, entry);
+        }
+    }
+
+    return item;
+};
+
+module.exports = Add;
+
+
+/***/ }),
+/* 259 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Adds the given item, or array of items, to the array starting at the index specified.
+ * 
+ * Each item must be unique within the array.
+ * 
+ * Existing elements in the array are shifted up.
+ * 
+ * The array is modified in-place and returned.
+ * 
+ * You can optionally specify a limit to the maximum size of the array. If the quantity of items being
+ * added will take the array length over this limit, it will stop adding once the limit is reached.
+ * 
+ * You can optionally specify a callback to be invoked for each item successfully added to the array.
+ *
+ * @function Phaser.Utils.Array.AddAt
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to be added to.
+ * @param {any|any[]} item - The item, or array of items, to add to the array.
+ * @param {integer} [index=0] - The index in the array where the item will be inserted.
+ * @param {integer} [limit] - Optional limit which caps the size of the array.
+ * @param {function} [callback] - A callback to be invoked for each item successfully added to the array.
+ * @param {object} [context] - The context in which the callback is invoked.
+ *
+ * @return {array} The input array.
+ */
+var AddAt = function (array, item, index, limit, callback, context)
+{
+    if (index === undefined) { index = 0; }
+    if (context === undefined) { context = array; }
+
+    if (limit > 0)
+    {
+        var remaining = limit - array.length;
+
+        //  There's nothing more we can do here, the array is full
+        if (remaining <= 0)
+        {
+            return null;
+        }
+    }
+
+    //  Fast path to avoid array mutation and iteration
+    if (!Array.isArray(item))
+    {
+        if (array.indexOf(item) === -1)
+        {
+            array.splice(index, 0, item);
+
+            if (callback)
+            {
+                callback.call(context, item);
+            }
+
+            return item;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    //  If we got this far, we have an array of items to insert
+
+    //  Ensure all the items are unique
+    var itemLength = item.length - 1;
+
+    while (itemLength >= 0)
+    {
+        if (array.indexOf(item[itemLength]) !== -1)
+        {
+            //  Already exists in array, so remove it
+            item.pop();
+        }
+
+        itemLength--;
+    }
+
+    //  Anything left?
+    itemLength = item.length;
+
+    if (itemLength === 0)
+    {
+        return null;
+    }
+
+    //  Truncate to the limit
+    if (limit > 0 && itemLength > remaining)
+    {
+        item.splice(remaining);
+
+        itemLength = remaining;
+    }
+
+    for (var i = itemLength - 1; i >= 0; i--)
+    {
+        var entry = item[i];
+
+        array.splice(index, 0, entry);
+
+        if (callback)
+        {
+            callback.call(context, entry);
+        }
+    }
+
+    return item;
+};
+
+module.exports = AddAt;
+
+
+/***/ }),
+/* 260 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Moves the given element to the top of the array.
+ * The array is modified in-place.
+ *
+ * @function Phaser.Utils.Array.BringToTop
+ * @since 3.4.0
+ *
+ * @param {array} array - The array.
+ * @param {*} item - The element to move.
+ *
+ * @return {*} The element that was moved.
+ */
+var BringToTop = function (array, item)
+{
+    var currentIndex = array.indexOf(item);
+
+    if (currentIndex !== -1 && currentIndex < array.length)
+    {
+        array.splice(currentIndex, 1);
+        array.push(item);
+    }
+
+    return item;
+};
+
+module.exports = BringToTop;
+
+
+/***/ }),
+/* 261 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var SafeRange = __webpack_require__(4);
+
+/**
+ * Returns the total number of elements in the array which have a property matching the given value.
+ *
+ * @function Phaser.Utils.Array.CountAllMatching
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to search.
+ * @param {string} property - The property to test on each array element.
+ * @param {*} value - The value to test the property against. Must pass a strict (`===`) comparison check.
+ * @param {integer} [startIndex] - An optional start index to search from.
+ * @param {integer} [endIndex] - An optional end index to search to.
+ *
+ * @return {integer} The total number of elements with properties matching the given value.
+ */
+var CountAllMatching = function (array, property, value, startIndex, endIndex)
+{
+    if (startIndex === undefined) { startIndex = 0; }
+    if (endIndex === undefined) { endIndex = array.length; }
+
+    var total = 0;
+
+    if (SafeRange(array, startIndex, endIndex))
+    {
+        for (var i = startIndex; i < endIndex; i++)
+        {
+            var child = array[i];
+
+            if (child[property] === value)
+            {
+                total++;
+            }
+        }
+    }
+
+    return total;
+};
+
+module.exports = CountAllMatching;
+
+
+/***/ }),
+/* 262 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Passes each element in the array to the given callback.
+ *
+ * @function Phaser.Utils.Array.Each
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to search.
+ * @param {function} callback - A callback to be invoked for each item in the array.
+ * @param {object} context - The context in which the callback is invoked.
+ * @param {...*} [args] - Additional arguments that will be passed to the callback, after the current array item.
+ *
+ * @return {array} The input array.
+ */
+var Each = function (array, callback, context)
+{
+    var i;
+    var args = [ null ];
+
+    for (i = 3; i < arguments.length; i++)
+    {
+        args.push(arguments[i]);
+    }
+
+    for (i = 0; i < array.length; i++)
+    {
+        args[0] = array[i];
+
+        callback.apply(context, args);
+    }
+
+    return array;
+};
+
+module.exports = Each;
+
+
+/***/ }),
+/* 263 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var SafeRange = __webpack_require__(4);
+
+/**
+ * Passes each element in the array, between the start and end indexes, to the given callback.
+ *
+ * @function Phaser.Utils.Array.EachInRange
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to search.
+ * @param {function} callback - A callback to be invoked for each item in the array.
+ * @param {object} context - The context in which the callback is invoked.
+ * @param {integer} startIndex - The start index to search from.
+ * @param {integer} endIndex - The end index to search to.
+ * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
+ *
+ * @return {array} The input array.
+ */
+var EachInRange = function (array, callback, context, startIndex, endIndex)
+{
+    if (startIndex === undefined) { startIndex = 0; }
+    if (endIndex === undefined) { endIndex = array.length; }
+
+    if (SafeRange(array, startIndex, endIndex))
+    {
+        var i;
+        var args = [ null ];
+
+        for (i = 5; i < arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
+
+        for (i = startIndex; i < endIndex; i++)
+        {
+            args[0] = array[i];
+
+            callback.apply(context, args);
+        }
+    }
+
+    return array;
+};
+
+module.exports = EachInRange;
+
+
+/***/ }),
+/* 264 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var SafeRange = __webpack_require__(4);
+
+/**
+ * Returns all elements in the array.
+ *
+ * You can optionally specify a matching criteria using the `property` and `value` arguments.
+ *
+ * For example: `getAll('visible', true)` would return only elements that have their visible property set.
+ *
+ * Optionally you can specify a start and end index. For example if the array had 100 elements,
+ * and you set `startIndex` to 0 and `endIndex` to 50, it would return matches from only
+ * the first 50 elements.
+ *
+ * @function Phaser.Utils.Array.GetAll
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to search.
+ * @param {string} [property] - The property to test on each array element.
+ * @param {*} [value] - The value to test the property against. Must pass a strict (`===`) comparison check.
+ * @param {integer} [startIndex] - An optional start index to search from.
+ * @param {integer} [endIndex] - An optional end index to search to.
+ *
+ * @return {array} All matching elements from the array.
+ */
+var GetAll = function (array, property, value, startIndex, endIndex)
+{
+    if (startIndex === undefined) { startIndex = 0; }
+    if (endIndex === undefined) { endIndex = array.length; }
+
+    var output = [];
+
+    if (SafeRange(array, startIndex, endIndex))
+    {
+        for (var i = startIndex; i < endIndex; i++)
+        {
+            var child = array[i];
+
+            if (!property ||
+                (property && value === undefined && child.hasOwnProperty(property)) ||
+                (property && value !== undefined && child[property] === value))
+            {
+                output.push(child);
+            }
+        }
+    }
+
+    return output;
+};
+
+module.exports = GetAll;
+
+
+/***/ }),
+/* 265 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var SafeRange = __webpack_require__(4);
+
+/**
+ * Returns the first element in the array.
+ *
+ * You can optionally specify a matching criteria using the `property` and `value` arguments.
+ *
+ * For example: `getAll('visible', true)` would return the first element that had its `visible` property set.
+ *
+ * Optionally you can specify a start and end index. For example if the array had 100 elements,
+ * and you set `startIndex` to 0 and `endIndex` to 50, it would search only the first 50 elements.
+ *
+ * @function Phaser.Utils.Array.GetFirst
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to search.
+ * @param {string} [property] - The property to test on each array element.
+ * @param {*} [value] - The value to test the property against. Must pass a strict (`===`) comparison check.
+ * @param {integer} [startIndex=0] - An optional start index to search from.
+ * @param {integer} [endIndex=array.length] - An optional end index to search up to (but not included)
+ *
+ * @return {object} The first matching element from the array, or `null` if no element could be found in the range given.
+ */
+var GetFirst = function (array, property, value, startIndex, endIndex)
+{
+    if (startIndex === undefined) { startIndex = 0; }
+    if (endIndex === undefined) { endIndex = array.length; }
+
+    if (SafeRange(array, startIndex, endIndex))
+    {
+        for (var i = startIndex; i < endIndex; i++)
+        {
+            var child = array[i];
+
+            if (!property ||
+                (property && value === undefined && child.hasOwnProperty(property)) ||
+                (property && value !== undefined && child[property] === value))
+            {
+                return child;
+            }
+        }
+    }
+
+    return null;
+};
+
+module.exports = GetFirst;
+
+
+/***/ }),
+/* 266 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Returns a Random element from the array.
+ *
+ * @function Phaser.Utils.Array.GetRandom
+ * @since 3.0.0
+ *
+ * @param {array} array - The array to select the random entry from.
+ * @param {integer} [startIndex=0] - An optional start index.
+ * @param {integer} [length=array.length] - An optional length, the total number of elements (from the startIndex) to choose from.
+ *
+ * @return {*} A random element from the array, or `null` if no element could be found in the range given.
+ */
+var GetRandom = function (array, startIndex, length)
+{
+    if (startIndex === undefined) { startIndex = 0; }
+    if (length === undefined) { length = array.length; }
+
+    var randomIndex = startIndex + Math.floor(Math.random() * length);
+
+    return (array[randomIndex] === undefined) ? null : array[randomIndex];
+};
+
+module.exports = GetRandom;
+
+
+/***/ }),
+/* 267 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Moves the given array element down one place in the array.
+ * The array is modified in-place.
+ *
+ * @function Phaser.Utils.Array.MoveDown
+ * @since 3.4.0
+ *
+ * @param {array} array - The input array.
+ * @param {*} item - The element to move down the array.
+ *
+ * @return {array} The input array.
+ */
+var MoveDown = function (array, item)
+{
+    var currentIndex = array.indexOf(item);
+
+    if (currentIndex > 0)
+    {
+        var item2 = array[currentIndex - 1];
+
+        var index2 = array.indexOf(item2);
+
+        array[currentIndex] = item2;
+        array[index2] = item;
+    }
+
+    return array;
+};
+
+module.exports = MoveDown;
+
+
+/***/ }),
+/* 268 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Moves an element in an array to a new position within the same array.
+ * The array is modified in-place.
+ *
+ * @function Phaser.Utils.Array.MoveTo
+ * @since 3.4.0
+ *
+ * @param {array} array - The array.
+ * @param {*} item - The element to move.
+ * @param {integer} index - The new index that the element will be moved to.
+ *
+ * @return {*} The element that was moved.
+ */
+var MoveTo = function (array, item, index)
+{
+    var currentIndex = array.indexOf(item);
+
+    if (currentIndex === -1 || index < 0 || index >= array.length)
+    {
+        throw new Error('Supplied index out of bounds');
+    }
+
+    if (currentIndex !== index)
+    {
+        //  Remove
+        array.splice(currentIndex, 1);
+
+        //  Add in new location
+        array.splice(index, 0, item);
+    }
+
+    return item;
+};
+
+module.exports = MoveTo;
+
+
+/***/ }),
+/* 269 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Moves the given array element up one place in the array.
+ * The array is modified in-place.
+ *
+ * @function Phaser.Utils.Array.MoveUp
+ * @since 3.4.0
+ *
+ * @param {array} array - The input array.
+ * @param {*} item - The element to move up the array.
+ *
+ * @return {array} The input array.
+ */
+var MoveUp = function (array, item)
+{
+    var currentIndex = array.indexOf(item);
+
+    if (currentIndex !== -1 && currentIndex < array.length - 1)
+    {
+        //  The element one above `item` in the array
+        var item2 = array[currentIndex + 1];
+        var index2 = array.indexOf(item2);
+
+        array[currentIndex] = item2;
+        array[index2] = item;
+    }
+
+    return array;
+};
+
+module.exports = MoveUp;
+
+
+/***/ }),
+/* 270 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Create an array representing the range of numbers (usually integers), between, and inclusive of,
+ * the given `start` and `end` arguments. For example:
+ *
+ * `var array = numberArray(2, 4); // array = [2, 3, 4]`
+ * `var array = numberArray(0, 9); // array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]`
+ *
+ * This is equivalent to `numberArrayStep(start, end, 1)`.
+ *
+ * You can optionally provide a prefix and / or suffix string. If given the array will contain
+ * strings, not integers. For example:
+ *
+ * `var array = numberArray(1, 4, 'Level '); // array = ["Level 1", "Level 2", "Level 3", "Level 4"]`
+ * `var array = numberArray(5, 7, 'HD-', '.png'); // array = ["HD-5.png", "HD-6.png", "HD-7.png"]`
+ *
+ * @function Phaser.Utils.Array.NumberArray
+ * @since 3.0.0
+ *
+ * @param {number} start - The minimum value the array starts with.
+ * @param {number} end - The maximum value the array contains.
+ * @param {string} [prefix] - Optional prefix to place before the number. If provided the array will contain strings, not integers.
+ * @param {string} [suffix] - Optional suffix to place after the number. If provided the array will contain strings, not integers.
+ *
+ * @return {(number[]|string[])} The array of number values, or strings if a prefix or suffix was provided.
+ */
+var NumberArray = function (start, end, prefix, suffix)
+{
+    var result = [];
+
+    for (var i = start; i <= end; i++)
+    {
+        if (prefix || suffix)
+        {
+            var key = (prefix) ? prefix + i.toString() : i.toString();
+
+            if (suffix)
+            {
+                key = key.concat(suffix);
+            }
+
+            result.push(key);
+        }
+        else
+        {
+            result.push(i);
+        }
+    }
+
+    return result;
+};
+
+module.exports = NumberArray;
+
+
+/***/ }),
+/* 271 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var RoundAwayFromZero = __webpack_require__(39);
+
+/**
+ * Create an array of numbers (positive and/or negative) progressing from `start`
+ * up to but not including `end` by advancing by `step`.
+ *
+ * If `start` is less than `end` a zero-length range is created unless a negative `step` is specified.
+ *
+ * Certain values for `start` and `end` (eg. NaN/undefined/null) are currently coerced to 0;
+ * for forward compatibility make sure to pass in actual numbers.
+ * 
+ * @example
+ * NumberArrayStep(4);
+ * // => [0, 1, 2, 3]
+ *
+ * NumberArrayStep(1, 5);
+ * // => [1, 2, 3, 4]
+ *
+ * NumberArrayStep(0, 20, 5);
+ * // => [0, 5, 10, 15]
+ *
+ * NumberArrayStep(0, -4, -1);
+ * // => [0, -1, -2, -3]
+ *
+ * NumberArrayStep(1, 4, 0);
+ * // => [1, 1, 1]
+ *
+ * NumberArrayStep(0);
+ * // => []
+ *
+ * @function Phaser.Utils.Array.NumberArrayStep
+ * @since 3.0.0
+ *
+ * @param {number} [start=0] - The start of the range.
+ * @param {number} [end=null] - The end of the range.
+ * @param {number} [step=1] - The value to increment or decrement by.
+ *
+ * @return {number[]} The array of number values.
+ */
+var NumberArrayStep = function (start, end, step)
+{
+    if (start === undefined) { start = 0; }
+    if (end === undefined) { end = null; }
+    if (step === undefined) { step = 1; }
+
+    if (end === null)
+    {
+        end = start;
+        start = 0;
+    }
+
+    var result = [];
+
+    var total = Math.max(RoundAwayFromZero((end - start) / (step || 1)), 0);
+
+    for (var i = 0; i < total; i++)
+    {
+        result.push(start);
+        start += step;
+    }
+
+    return result;
+};
+
+module.exports = NumberArrayStep;
+
+
+/***/ }),
+/* 272 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @ignore
+ */
+function swap (arr, i, j)
+{
+    var tmp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = tmp;
+}
+
+/**
+ * @ignore
+ */
+function defaultCompare (a, b)
+{
+    return a < b ? -1 : a > b ? 1 : 0;
+}
+
+/**
+ * A [Floyd-Rivest](https://en.wikipedia.org/wiki/Floyd%E2%80%93Rivest_algorithm) quick selection algorithm.
+ *
+ * Rearranges the array items so that all items in the [left, k] range are smaller than all items in [k, right];
+ * The k-th element will have the (k - left + 1)th smallest value in [left, right].
+ *
+ * The array is modified in-place.
+ *
+ * Based on code by [Vladimir Agafonkin](https://www.npmjs.com/~mourner)
+ *
+ * @function Phaser.Utils.Array.QuickSelect
+ * @since 3.0.0
+ *
+ * @param {array} arr - The array to sort.
+ * @param {integer} k - The k-th element index.
+ * @param {integer} [left=0] - The index of the left part of the range.
+ * @param {integer} [right] - The index of the right part of the range.
+ * @param {function} [compare] - An optional comparison function. Is passed two elements and should return 0, 1 or -1.
+ */
+var QuickSelect = function (arr, k, left, right, compare)
+{
+    if (left === undefined) { left = 0; }
+    if (right === undefined) { right = arr.length - 1; }
+    if (compare === undefined) { compare = defaultCompare; }
+
+    while (right > left)
+    {
+        if (right - left > 600)
+        {
+            var n = right - left + 1;
+            var m = k - left + 1;
+            var z = Math.log(n);
+            var s = 0.5 * Math.exp(2 * z / 3);
+            var sd = 0.5 * Math.sqrt(z * s * (n - s) / n) * (m - n / 2 < 0 ? -1 : 1);
+            var newLeft = Math.max(left, Math.floor(k - m * s / n + sd));
+            var newRight = Math.min(right, Math.floor(k + (n - m) * s / n + sd));
+
+            QuickSelect(arr, k, newLeft, newRight, compare);
+        }
+
+        var t = arr[k];
+        var i = left;
+        var j = right;
+
+        swap(arr, left, k);
+
+        if (compare(arr[right], t) > 0)
+        {
+            swap(arr, left, right);
+        }
+
+        while (i < j)
+        {
+            swap(arr, i, j);
+
+            i++;
+            j--;
+
+            while (compare(arr[i], t) < 0)
+            {
+                i++;
+            }
+
+            while (compare(arr[j], t) > 0)
+            {
+                j--;
+            }
+        }
+
+        if (compare(arr[left], t) === 0)
+        {
+            swap(arr, left, j);
+        }
+        else
+        {
+            j++;
+            swap(arr, j, right);
+        }
+
+        if (j <= k)
+        {
+            left = j + 1;
+        }
+
+        if (k <= j)
+        {
+            right = j - 1;
+        }
+    }
+};
+
+module.exports = QuickSelect;
+
+
+/***/ }),
+/* 273 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var GetValue = __webpack_require__(6);
+var Shuffle = __webpack_require__(58);
+
+var BuildChunk = function (a, b, qty)
+{
+    var out = [];
+
+    for (var aIndex = 0; aIndex < a.length; aIndex++)
+    {
+        for (var bIndex = 0; bIndex < b.length; bIndex++)
+        {
+            for (var i = 0; i < qty; i++)
+            {
+                out.push({ a: a[aIndex], b: b[bIndex] });
+            }
+        }
+    }
+
+    return out;
+};
+
+/**
+ * Creates an array populated with a range of values, based on the given arguments and configuration object.
+ *
+ * Range ([a,b,c], [1,2,3]) =
+ * a1, a2, a3, b1, b2, b3, c1, c2, c3
+ * 
+ * Range ([a,b], [1,2,3], qty = 3) =
+ * a1, a1, a1, a2, a2, a2, a3, a3, a3, b1, b1, b1, b2, b2, b2, b3, b3, b3
+ * 
+ * Range ([a,b,c], [1,2,3], repeat x1) =
+ * a1, a2, a3, b1, b2, b3, c1, c2, c3, a1, a2, a3, b1, b2, b3, c1, c2, c3
+ * 
+ * Range ([a,b], [1,2], repeat -1 = endless, max = 14) =
+ * Maybe if max is set then repeat goes to -1 automatically?
+ * a1, a2, b1, b2, a1, a2, b1, b2, a1, a2, b1, b2, a1, a2 (capped at 14 elements)
+ * 
+ * Range ([a], [1,2,3,4,5], random = true) =
+ * a4, a1, a5, a2, a3
+ * 
+ * Range ([a, b], [1,2,3], random = true) =
+ * b3, a2, a1, b1, a3, b2
+ * 
+ * Range ([a, b, c], [1,2,3], randomB = true) =
+ * a3, a1, a2, b2, b3, b1, c1, c3, c2
+ * 
+ * Range ([a], [1,2,3,4,5], yoyo = true) =
+ * a1, a2, a3, a4, a5, a5, a4, a3, a2, a1
+ * 
+ * Range ([a, b], [1,2,3], yoyo = true) =
+ * a1, a2, a3, b1, b2, b3, b3, b2, b1, a3, a2, a1
+ *
+ * @function Phaser.Utils.Array.Range
+ * @since 3.0.0
+ *
+ * @param {array} a - The first array of range elements.
+ * @param {array} b - The second array of range elements.
+ * @param {object} [options] - A range configuration object. Can contain: repeat, random, randomB, yoyo, max, qty.
+ *
+ * @return {array} An array of arranged elements.
+ */
+var Range = function (a, b, options)
+{
+    var max = GetValue(options, 'max', 0);
+    var qty = GetValue(options, 'qty', 1);
+    var random = GetValue(options, 'random', false);
+    var randomB = GetValue(options, 'randomB', false);
+    var repeat = GetValue(options, 'repeat', 0);
+    var yoyo = GetValue(options, 'yoyo', false);
+
+    var out = [];
+
+    if (randomB)
+    {
+        Shuffle(b);
+    }
+
+    //  Endless repeat, so limit by max
+    if (repeat === -1)
+    {
+        if (max === 0)
+        {
+            repeat = 0;
+        }
+        else
+        {
+            //  Work out how many repeats we need
+            var total = (a.length * b.length) * qty;
+
+            if (yoyo)
+            {
+                total *= 2;
+            }
+
+            repeat = Math.ceil(max / total);
+        }
+    }
+
+    for (var i = 0; i <= repeat; i++)
+    {
+        var chunk = BuildChunk(a, b, qty);
+
+        if (random)
+        {
+            Shuffle(chunk);
+        }
+
+        out = out.concat(chunk);
+
+        if (yoyo)
+        {
+            chunk.reverse();
+
+            out = out.concat(chunk);
+        }
+    }
+
+    if (max)
+    {
+        out.splice(max);
+    }
+
+    return out;
+};
+
+module.exports = Range;
+
+
+/***/ }),
+/* 274 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var SpliceOne = __webpack_require__(13);
+
+/**
+ * Removes the given item, or array of items, from the array.
+ * 
+ * The array is modified in-place.
+ * 
+ * You can optionally specify a callback to be invoked for each item successfully removed from the array.
+ *
+ * @function Phaser.Utils.Array.Remove
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to be modified.
+ * @param {*|Array.<*>} item - The item, or array of items, to be removed from the array.
+ * @param {function} [callback] - A callback to be invoked for each item successfully removed from the array.
+ * @param {object} [context] - The context in which the callback is invoked.
+ *
+ * @return {*|Array.<*>} The item, or array of items, that were successfully removed from the array.
+ */
+var Remove = function (array, item, callback, context)
+{
+    if (context === undefined) { context = array; }
+
+    var index;
+
+    //  Fast path to avoid array mutation and iteration
+    if (!Array.isArray(item))
+    {
+        index = array.indexOf(item);
+
+        if (index !== -1)
+        {
+            SpliceOne(array, index);
+
+            if (callback)
+            {
+                callback.call(context, item);
+            }
+
+            return item;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    //  If we got this far, we have an array of items to remove
+
+    var itemLength = item.length - 1;
+
+    while (itemLength >= 0)
+    {
+        var entry = item[itemLength];
+
+        index = array.indexOf(entry);
+
+        if (index !== -1)
+        {
+            SpliceOne(array, index);
+
+            if (callback)
+            {
+                callback.call(context, entry);
+            }
+        }
+        else
+        {
+            //  Item wasn't found in the array, so remove it from our return results
+            item.pop();
+        }
+
+        itemLength--;
+    }
+
+    return item;
+};
+
+module.exports = Remove;
+
+
+/***/ }),
+/* 275 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var SpliceOne = __webpack_require__(13);
+
+/**
+ * Removes the item from the given position in the array.
+ * 
+ * The array is modified in-place.
+ * 
+ * You can optionally specify a callback to be invoked for the item if it is successfully removed from the array.
+ *
+ * @function Phaser.Utils.Array.RemoveAt
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to be modified.
+ * @param {integer} index - The array index to remove the item from. The index must be in bounds or it will throw an error.
+ * @param {function} [callback] - A callback to be invoked for the item removed from the array.
+ * @param {object} [context] - The context in which the callback is invoked.
+ *
+ * @return {*} The item that was removed.
+ */
+var RemoveAt = function (array, index, callback, context)
+{
+    if (context === undefined) { context = array; }
+
+    if (index < 0 || index > array.length - 1)
+    {
+        throw new Error('Index out of bounds');
+    }
+
+    var item = SpliceOne(array, index);
+
+    if (callback)
+    {
+        callback.call(context, item);
+    }
+
+    return item;
+};
+
+module.exports = RemoveAt;
+
+
+/***/ }),
+/* 276 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var SafeRange = __webpack_require__(4);
+
+/**
+ * Removes the item within the given range in the array.
+ * 
+ * The array is modified in-place.
+ * 
+ * You can optionally specify a callback to be invoked for the item/s successfully removed from the array.
+ *
+ * @function Phaser.Utils.Array.RemoveBetween
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to be modified.
+ * @param {integer} startIndex - The start index to remove from.
+ * @param {integer} endIndex - The end index to remove to.
+ * @param {function} [callback] - A callback to be invoked for the item removed from the array.
+ * @param {object} [context] - The context in which the callback is invoked.
+ *
+ * @return {Array.<*>} An array of items that were removed.
+ */
+var RemoveBetween = function (array, startIndex, endIndex, callback, context)
+{
+    if (startIndex === undefined) { startIndex = 0; }
+    if (endIndex === undefined) { endIndex = array.length; }
+    if (context === undefined) { context = array; }
+
+    if (SafeRange(array, startIndex, endIndex))
+    {
+        var size = endIndex - startIndex;
+
+        var removed = array.splice(startIndex, size);
+
+        if (callback)
+        {
+            for (var i = 0; i < removed.length; i++)
+            {
+                var entry = removed[i];
+
+                callback.call(context, entry);
+            }
+        }
+
+        return removed;
+    }
+    else
+    {
+        return [];
+    }
+};
+
+module.exports = RemoveBetween;
+
+
+/***/ }),
+/* 277 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var SpliceOne = __webpack_require__(13);
+
+/**
+ * Removes a random object from the given array and returns it.
+ * Will return null if there are no array items that fall within the specified range or if there is no item for the randomly chosen index.
+ *
+ * @function Phaser.Utils.Array.RemoveRandomElement
+ * @since 3.0.0
+ *
+ * @param {array} array - The array to removed a random element from.
+ * @param {integer} [start=0] - The array index to start the search from.
+ * @param {integer} [length=array.length] - Optional restriction on the number of elements to randomly select from.
+ *
+ * @return {object} The random element that was removed, or `null` if there were no array elements that fell within the given range.
+ */
+var RemoveRandomElement = function (array, start, length)
+{
+    if (start === undefined) { start = 0; }
+    if (length === undefined) { length = array.length; }
+
+    var randomIndex = start + Math.floor(Math.random() * length);
+
+    return SpliceOne(array, randomIndex);
+};
+
+module.exports = RemoveRandomElement;
+
+
+/***/ }),
+/* 278 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Replaces an element of the array with the new element.
+ * The new element cannot already be a member of the array.
+ * The array is modified in-place.
+ *
+ * @function Phaser.Utils.Array.Replace
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to search within.
+ * @param {*} oldChild - The element in the array that will be replaced.
+ * @param {*} newChild - The element to be inserted into the array at the position of `oldChild`.
+ *
+ * @return {boolean} Returns true if the oldChild was successfully replaced, otherwise returns false.
+ */
+var Replace = function (array, oldChild, newChild)
+{
+    var index1 = array.indexOf(oldChild);
+    var index2 = array.indexOf(newChild);
+
+    if (index1 !== -1 && index2 === -1)
+    {
+        array[index1] = newChild;
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+};
+
+module.exports = Replace;
+
+
+/***/ }),
+/* 279 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Moves the element at the start of the array to the end, shifting all items in the process.
+ * The "rotation" happens to the left.
+ *
+ * @function Phaser.Utils.Array.RotateLeft
+ * @since 3.0.0
+ *
+ * @param {array} array - The array to shift to the left. This array is modified in place.
+ * @param {integer} [total=1] - The number of times to shift the array.
+ *
+ * @return {*} The most recently shifted element.
+ */
+var RotateLeft = function (array, total)
+{
+    if (total === undefined) { total = 1; }
+
+    var element = null;
+
+    for (var i = 0; i < total; i++)
+    {
+        element = array.shift();
+        array.push(element);
+    }
+
+    return element;
+};
+
+module.exports = RotateLeft;
+
+
+/***/ }),
+/* 280 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Moves the element at the end of the array to the start, shifting all items in the process.
+ * The "rotation" happens to the right.
+ *
+ * @function Phaser.Utils.Array.RotateRight
+ * @since 3.0.0
+ *
+ * @param {array} array - The array to shift to the right. This array is modified in place.
+ * @param {integer} [total=1] - The number of times to shift the array.
+ *
+ * @return {*} The most recently shifted element.
+ */
+var RotateRight = function (array, total)
+{
+    if (total === undefined) { total = 1; }
+
+    var element = null;
+
+    for (var i = 0; i < total; i++)
+    {
+        element = array.pop();
+        array.unshift(element);
+    }
+
+    return element;
+};
+
+module.exports = RotateRight;
+
+
+/***/ }),
+/* 281 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Moves the given element to the bottom of the array.
+ * The array is modified in-place.
+ *
+ * @function Phaser.Utils.Array.SendToBack
+ * @since 3.4.0
+ *
+ * @param {array} array - The array.
+ * @param {*} item - The element to move.
+ *
+ * @return {*} The element that was moved.
+ */
+var SendToBack = function (array, item)
+{
+    var currentIndex = array.indexOf(item);
+
+    if (currentIndex !== -1 && currentIndex > 0)
+    {
+        array.splice(currentIndex, 1);
+        array.unshift(item);
+    }
+
+    return item;
+};
+
+module.exports = SendToBack;
+
+
+/***/ }),
+/* 282 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var SafeRange = __webpack_require__(4);
+
+/**
+ * Scans the array for elements with the given property. If found, the property is set to the `value`.
+ *
+ * For example: `SetAll('visible', true)` would set all elements that have a `visible` property to `false`.
+ *
+ * Optionally you can specify a start and end index. For example if the array had 100 elements,
+ * and you set `startIndex` to 0 and `endIndex` to 50, it would update only the first 50 elements.
+ *
+ * @function Phaser.Utils.Array.SetAll
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to search.
+ * @param {string} property - The property to test for on each array element.
+ * @param {*} value - The value to set the property to.
+ * @param {integer} [startIndex] - An optional start index to search from.
+ * @param {integer} [endIndex] - An optional end index to search to.
+ *
+ * @return {array} The input array.
+ */
+var SetAll = function (array, property, value, startIndex, endIndex)
+{
+    if (startIndex === undefined) { startIndex = 0; }
+    if (endIndex === undefined) { endIndex = array.length; }
+
+    if (SafeRange(array, startIndex, endIndex))
+    {
+        for (var i = startIndex; i < endIndex; i++)
+        {
+            var entry = array[i];
+
+            if (entry.hasOwnProperty(property))
+            {
+                entry[property] = value;
+            }
+        }
+    }
+
+    return array;
+};
+
+module.exports = SetAll;
+
+
+/***/ }),
+/* 283 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+//! stable.js 0.1.6, https://github.com/Two-Screen/stable
+//! © 2017 Angry Bytes and contributors. MIT licensed.
+
+/**
+ * @namespace Phaser.Utils.Array.StableSortFunctions
+ */
+
+(function() {
+
+ /**
+ * A stable array sort, because `Array#sort()` is not guaranteed stable.
+ * This is an implementation of merge sort, without recursion.
+ *
+ * @function Phaser.Utils.Array.StableSort
+ * @since 3.0.0
+ *
+ * @param {array} arr - The input array to be sorted.
+ * @param {function} comp - The comparison handler.
+ *
+ * @return {array} The sorted result.
+ */
+var stable = function(arr, comp) {
+    return exec(arr.slice(), comp);
+};
+
+ /**
+ * Sort the input array and simply copy it back if the result isn't in the original array, which happens on an odd number of passes.
+ *
+ * @function Phaser.Utils.Array.StableSortFunctions.inplace
+ * @memberof Phaser.Utils.Array.StableSortFunctions
+ * @since 3.0.0
+ *
+ * @param {array} arr - The input array.
+ * @param {function} comp - The comparison handler.
+ *
+ * @return {array} The sorted array.
+ */
+stable.inplace = function(arr, comp) {
+    var result = exec(arr, comp);
+
+    // This simply copies back if the result isn't in the original array,
+    // which happens on an odd number of passes.
+    if (result !== arr) {
+        pass(result, null, arr.length, arr);
+    }
+
+    return arr;
+};
+
+// Execute the sort using the input array and a second buffer as work space.
+// Returns one of those two, containing the final result.
+function exec(arr, comp) {
+    if (typeof(comp) !== 'function') {
+        comp = function(a, b) {
+            return String(a).localeCompare(b);
+        };
+    }
+
+    // Short-circuit when there's nothing to sort.
+    var len = arr.length;
+    if (len <= 1) {
+        return arr;
+    }
+
+    // Rather than dividing input, simply iterate chunks of 1, 2, 4, 8, etc.
+    // Chunks are the size of the left or right hand in merge sort.
+    // Stop when the left-hand covers all of the array.
+    var buffer = new Array(len);
+    for (var chk = 1; chk < len; chk *= 2) {
+        pass(arr, comp, chk, buffer);
+
+        var tmp = arr;
+        arr = buffer;
+        buffer = tmp;
+    }
+
+    return arr;
+}
+
+// Run a single pass with the given chunk size.
+var pass = function(arr, comp, chk, result) {
+    var len = arr.length;
+    var i = 0;
+    // Step size / double chunk size.
+    var dbl = chk * 2;
+    // Bounds of the left and right chunks.
+    var l, r, e;
+    // Iterators over the left and right chunk.
+    var li, ri;
+
+    // Iterate over pairs of chunks.
+    for (l = 0; l < len; l += dbl) {
+        r = l + chk;
+        e = r + chk;
+        if (r > len) r = len;
+        if (e > len) e = len;
+
+        // Iterate both chunks in parallel.
+        li = l;
+        ri = r;
+        while (true) {
+            // Compare the chunks.
+            if (li < r && ri < e) {
+                // This works for a regular `sort()` compatible comparator,
+                // but also for a simple comparator like: `a > b`
+                if (comp(arr[li], arr[ri]) <= 0) {
+                    result[i++] = arr[li++];
+                }
+                else {
+                    result[i++] = arr[ri++];
+                }
+            }
+            // Nothing to compare, just flush what's left.
+            else if (li < r) {
+                result[i++] = arr[li++];
+            }
+            else if (ri < e) {
+                result[i++] = arr[ri++];
+            }
+            // Both iterators are at the chunk ends.
+            else {
+                break;
+            }
+        }
+    }
+};
+
+// Export using CommonJS or to the window.
+if (true) {
+    module.exports = stable;
+}
+else {}
+
+})();
+
+/***/ }),
+/* 284 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Swaps the position of two elements in the given array.
+ * The elements must exist in the same array.
+ * The array is modified in-place.
+ *
+ * @function Phaser.Utils.Array.Swap
+ * @since 3.4.0
+ *
+ * @param {array} array - The input array.
+ * @param {*} item1 - The first element to swap.
+ * @param {*} item2 - The second element to swap.
+ *
+ * @return {array} The input array.
+ */
+var Swap = function (array, item1, item2)
+{
+    if (item1 === item2)
+    {
+        return;
+    }
+
+    var index1 = array.indexOf(item1);
+    var index2 = array.indexOf(item2);
+
+    if (index1 < 0 || index2 < 0)
+    {
+        throw new Error('Supplied items must be elements of the same array');
+    }
+
+    array[index1] = item2;
+    array[index2] = item1;
+
+    return array;
+};
+
+module.exports = Swap;
+
+
+/***/ }),
+/* 285 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.GameObjects.Components
+ */
+
+module.exports = {
+
+    Alpha: __webpack_require__(286),
+    AlphaSingle: __webpack_require__(287),
+    Animation: __webpack_require__(288),
+    BlendMode: __webpack_require__(309),
+    ComputedSize: __webpack_require__(46),
+    Crop: __webpack_require__(310),
+    Depth: __webpack_require__(47),
+    Flip: __webpack_require__(48),
+    GetBounds: __webpack_require__(311),
+    Mask: __webpack_require__(320),
+    Origin: __webpack_require__(340),
+    PathFollower: __webpack_require__(341),
+    Pipeline: __webpack_require__(344),
+    ScrollFactor: __webpack_require__(49),
+    Size: __webpack_require__(345),
+    Texture: __webpack_require__(346),
+    TextureCrop: __webpack_require__(347),
+    Tint: __webpack_require__(348),
+    ToJSON: __webpack_require__(54),
+    Transform: __webpack_require__(50),
+    TransformMatrix: __webpack_require__(51),
+    Visible: __webpack_require__(52)
+
+};
+
+
+/***/ }),
+/* 286 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Clamp = __webpack_require__(5);
+
+//  bitmask flag for GameObject.renderMask
+var _FLAG = 2; // 0010
+
+/**
+ * Provides methods used for setting the alpha properties of a Game Object.
+ * Should be applied as a mixin and not used directly.
+ *
+ * @namespace Phaser.GameObjects.Components.Alpha
+ * @since 3.0.0
+ */
+
+var Alpha = {
+
+    /**
+     * Private internal value. Holds the global alpha value.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#_alpha
+     * @type {number}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
+    _alpha: 1,
+
+    /**
+     * Private internal value. Holds the top-left alpha value.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#_alphaTL
+     * @type {number}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
+    _alphaTL: 1,
+
+    /**
+     * Private internal value. Holds the top-right alpha value.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#_alphaTR
+     * @type {number}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
+    _alphaTR: 1,
+
+    /**
+     * Private internal value. Holds the bottom-left alpha value.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#_alphaBL
+     * @type {number}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
+    _alphaBL: 1,
+
+    /**
+     * Private internal value. Holds the bottom-right alpha value.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#_alphaBR
+     * @type {number}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
+    _alphaBR: 1,
+
+    /**
+     * Clears all alpha values associated with this Game Object.
+     *
+     * Immediately sets the alpha levels back to 1 (fully opaque).
+     *
+     * @method Phaser.GameObjects.Components.Alpha#clearAlpha
+     * @since 3.0.0
+     *
+     * @return {this} This Game Object instance.
+     */
+    clearAlpha: function ()
+    {
+        return this.setAlpha(1);
+    },
+
+    /**
+     * Set the Alpha level of this Game Object. The alpha controls the opacity of the Game Object as it renders.
+     * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
+     *
+     * If your game is running under WebGL you can optionally specify four different alpha values, each of which
+     * correspond to the four corners of the Game Object. Under Canvas only the `topLeft` value given is used.
+     *
+     * @method Phaser.GameObjects.Components.Alpha#setAlpha
+     * @since 3.0.0
+     *
+     * @param {number} [topLeft=1] - The alpha value used for the top-left of the Game Object. If this is the only value given it's applied across the whole Game Object.
+     * @param {number} [topRight] - The alpha value used for the top-right of the Game Object. WebGL only.
+     * @param {number} [bottomLeft] - The alpha value used for the bottom-left of the Game Object. WebGL only.
+     * @param {number} [bottomRight] - The alpha value used for the bottom-right of the Game Object. WebGL only.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setAlpha: function (topLeft, topRight, bottomLeft, bottomRight)
+    {
+        if (topLeft === undefined) { topLeft = 1; }
+
+        //  Treat as if there is only one alpha value for the whole Game Object
+        if (topRight === undefined)
+        {
+            this.alpha = topLeft;
+        }
+        else
+        {
+            this._alphaTL = Clamp(topLeft, 0, 1);
+            this._alphaTR = Clamp(topRight, 0, 1);
+            this._alphaBL = Clamp(bottomLeft, 0, 1);
+            this._alphaBR = Clamp(bottomRight, 0, 1);
+        }
+
+        return this;
+    },
+
+    /**
+     * The alpha value of the Game Object.
+     *
+     * This is a global value, impacting the entire Game Object, not just a region of it.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#alpha
+     * @type {number}
+     * @since 3.0.0
+     */
+    alpha: {
+
+        get: function ()
+        {
+            return this._alpha;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            this._alpha = v;
+            this._alphaTL = v;
+            this._alphaTR = v;
+            this._alphaBL = v;
+            this._alphaBR = v;
+
+            if (v === 0)
+            {
+                this.renderFlags &= ~_FLAG;
+            }
+            else
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    },
+
+    /**
+     * The alpha value starting from the top-left of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#alphaTopLeft
+     * @type {number}
+     * @webglOnly
+     * @since 3.0.0
+     */
+    alphaTopLeft: {
+
+        get: function ()
+        {
+            return this._alphaTL;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            this._alphaTL = v;
+
+            if (v !== 0)
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    },
+
+    /**
+     * The alpha value starting from the top-right of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#alphaTopRight
+     * @type {number}
+     * @webglOnly
+     * @since 3.0.0
+     */
+    alphaTopRight: {
+
+        get: function ()
+        {
+            return this._alphaTR;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            this._alphaTR = v;
+
+            if (v !== 0)
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    },
+
+    /**
+     * The alpha value starting from the bottom-left of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#alphaBottomLeft
+     * @type {number}
+     * @webglOnly
+     * @since 3.0.0
+     */
+    alphaBottomLeft: {
+
+        get: function ()
+        {
+            return this._alphaBL;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            this._alphaBL = v;
+
+            if (v !== 0)
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    },
+
+    /**
+     * The alpha value starting from the bottom-right of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#alphaBottomRight
+     * @type {number}
+     * @webglOnly
+     * @since 3.0.0
+     */
+    alphaBottomRight: {
+
+        get: function ()
+        {
+            return this._alphaBR;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            this._alphaBR = v;
+
+            if (v !== 0)
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    }
+
+};
+
+module.exports = Alpha;
+
+
+/***/ }),
+/* 287 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Clamp = __webpack_require__(5);
+
+//  bitmask flag for GameObject.renderMask
+var _FLAG = 2; // 0010
+
+/**
+ * Provides methods used for setting the alpha property of a Game Object.
+ * Should be applied as a mixin and not used directly.
+ *
+ * @namespace Phaser.GameObjects.Components.AlphaSingle
+ * @since 3.22.0
+ */
+
+var AlphaSingle = {
+
+    /**
+     * Private internal value. Holds the global alpha value.
+     *
+     * @name Phaser.GameObjects.Components.AlphaSingle#_alpha
+     * @type {number}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
+    _alpha: 1,
+
+    /**
+     * Clears all alpha values associated with this Game Object.
+     *
+     * Immediately sets the alpha levels back to 1 (fully opaque).
+     *
+     * @method Phaser.GameObjects.Components.AlphaSingle#clearAlpha
+     * @since 3.0.0
+     *
+     * @return {this} This Game Object instance.
+     */
+    clearAlpha: function ()
+    {
+        return this.setAlpha(1);
+    },
+
+    /**
+     * Set the Alpha level of this Game Object. The alpha controls the opacity of the Game Object as it renders.
+     * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
+     *
+     * @method Phaser.GameObjects.Components.AlphaSingle#setAlpha
+     * @since 3.0.0
+     *
+     * @param {number} [value=1] - The alpha value applied across the whole Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setAlpha: function (value)
+    {
+        if (value === undefined) { value = 1; }
+
+        this.alpha = value;
+
+        return this;
+    },
+
+    /**
+     * The alpha value of the Game Object.
+     *
+     * This is a global value, impacting the entire Game Object, not just a region of it.
+     *
+     * @name Phaser.GameObjects.Components.AlphaSingle#alpha
+     * @type {number}
+     * @since 3.0.0
+     */
+    alpha: {
+
+        get: function ()
+        {
+            return this._alpha;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            this._alpha = v;
+
+            if (v === 0)
+            {
+                this.renderFlags &= ~_FLAG;
+            }
+            else
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    }
+
+};
+
+module.exports = AlphaSingle;
+
+
+/***/ }),
+/* 288 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var BaseAnimation = __webpack_require__(289);
+var Class = __webpack_require__(0);
+var Events = __webpack_require__(59);
+
+/**
+ * @classdesc
+ * A Game Object Animation Controller.
+ *
+ * This controller lives as an instance within a Game Object, accessible as `sprite.anims`.
+ *
+ * @class Animation
+ * @memberof Phaser.GameObjects.Components
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.GameObjects.GameObject} parent - The Game Object to which this animation controller belongs.
+ */
+var Animation = new Class({
+
+    initialize:
+
+    function Animation (parent)
+    {
+        /**
+         * The Game Object to which this animation controller belongs.
+         *
+         * @name Phaser.GameObjects.Components.Animation#parent
+         * @type {Phaser.GameObjects.GameObject}
+         * @since 3.0.0
+         */
+        this.parent = parent;
+
+        /**
+         * A reference to the global Animation Manager.
+         *
+         * @name Phaser.GameObjects.Components.Animation#animationManager
+         * @type {Phaser.Animations.AnimationManager}
+         * @since 3.0.0
+         */
+        this.animationManager = parent.scene.sys.anims;
+
+        this.animationManager.once(Events.REMOVE_ANIMATION, this.remove, this);
+
+        /**
+         * Is an animation currently playing or not?
+         *
+         * @name Phaser.GameObjects.Components.Animation#isPlaying
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.isPlaying = false;
+
+        /**
+         * The current Animation loaded into this Animation Controller.
+         *
+         * @name Phaser.GameObjects.Components.Animation#currentAnim
+         * @type {?Phaser.Animations.Animation}
+         * @default null
+         * @since 3.0.0
+         */
+        this.currentAnim = null;
+
+        /**
+         * The current AnimationFrame being displayed by this Animation Controller.
+         *
+         * @name Phaser.GameObjects.Components.Animation#currentFrame
+         * @type {?Phaser.Animations.AnimationFrame}
+         * @default null
+         * @since 3.0.0
+         */
+        this.currentFrame = null;
+
+        /**
+         * The key of the next Animation to be loaded into this Animation Controller when the current animation completes.
+         *
+         * @name Phaser.GameObjects.Components.Animation#nextAnim
+         * @type {?string}
+         * @default null
+         * @since 3.16.0
+         */
+        this.nextAnim = null;
+
+        /**
+         * A queue of keys of the next Animations to be loaded into this Animation Controller when the current animation completes.
+         *
+         * @name Phaser.GameObjects.Components.Animation#nextAnimsQueue
+         * @type {string[]}
+         * @since 3.24.0
+         */
+        this.nextAnimsQueue = [];
+
+        /**
+         * Time scale factor.
+         *
+         * @name Phaser.GameObjects.Components.Animation#_timeScale
+         * @type {number}
+         * @private
+         * @default 1
+         * @since 3.0.0
+         */
+        this._timeScale = 1;
+
+        /**
+         * The frame rate of playback in frames per second.
+         * The default is 24 if the `duration` property is `null`.
+         *
+         * @name Phaser.GameObjects.Components.Animation#frameRate
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.frameRate = 0;
+
+        /**
+         * How long the animation should play for, in milliseconds.
+         * If the `frameRate` property has been set then it overrides this value,
+         * otherwise the `frameRate` is derived from `duration`.
+         *
+         * @name Phaser.GameObjects.Components.Animation#duration
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.duration = 0;
+
+        /**
+         * ms per frame, not including frame specific modifiers that may be present in the Animation data.
+         *
+         * @name Phaser.GameObjects.Components.Animation#msPerFrame
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.msPerFrame = 0;
+
+        /**
+         * Skip frames if the time lags, or always advanced anyway?
+         *
+         * @name Phaser.GameObjects.Components.Animation#skipMissedFrames
+         * @type {boolean}
+         * @default true
+         * @since 3.0.0
+         */
+        this.skipMissedFrames = true;
+
+        /**
+         * A delay before starting playback, in milliseconds.
+         *
+         * @name Phaser.GameObjects.Components.Animation#_delay
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.0.0
+         */
+        this._delay = 0;
+
+        /**
+         * Number of times to repeat the animation (-1 for infinity)
+         *
+         * @name Phaser.GameObjects.Components.Animation#_repeat
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.0.0
+         */
+        this._repeat = 0;
+
+        /**
+         * Delay before the repeat starts, in milliseconds.
+         *
+         * @name Phaser.GameObjects.Components.Animation#_repeatDelay
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.0.0
+         */
+        this._repeatDelay = 0;
+
+        /**
+         * Should the animation yoyo? (reverse back down to the start) before repeating?
+         *
+         * @name Phaser.GameObjects.Components.Animation#_yoyo
+         * @type {boolean}
+         * @private
+         * @default false
+         * @since 3.0.0
+         */
+        this._yoyo = false;
+
+        /**
+         * Will the playhead move forwards (`true`) or in reverse (`false`).
+         *
+         * @name Phaser.GameObjects.Components.Animation#forward
+         * @type {boolean}
+         * @default true
+         * @since 3.0.0
+         */
+        this.forward = true;
+
+        /**
+         * An Internal trigger that's play the animation in reverse mode ('true') or not ('false'),
+         * needed because forward can be changed by yoyo feature.
+         *
+         * @name Phaser.GameObjects.Components.Animation#_reverse
+         * @type {boolean}
+         * @default false
+         * @private
+         * @since 3.12.0
+         */
+        this._reverse = false;
+
+        /**
+         * Internal time overflow accumulator.
+         *
+         * @name Phaser.GameObjects.Components.Animation#accumulator
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.accumulator = 0;
+
+        /**
+         * The time point at which the next animation frame will change.
+         *
+         * @name Phaser.GameObjects.Components.Animation#nextTick
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.nextTick = 0;
+
+        /**
+         * An internal counter keeping track of how many repeats are left to play.
+         *
+         * @name Phaser.GameObjects.Components.Animation#repeatCounter
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.repeatCounter = 0;
+
+        /**
+         * An internal flag keeping track of pending repeats.
+         *
+         * @name Phaser.GameObjects.Components.Animation#pendingRepeat
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.pendingRepeat = false;
+
+        /**
+         * Is the Animation paused?
+         *
+         * @name Phaser.GameObjects.Components.Animation#_paused
+         * @type {boolean}
+         * @private
+         * @default false
+         * @since 3.0.0
+         */
+        this._paused = false;
+
+        /**
+         * Was the animation previously playing before being paused?
+         *
+         * @name Phaser.GameObjects.Components.Animation#_wasPlaying
+         * @type {boolean}
+         * @private
+         * @default false
+         * @since 3.0.0
+         */
+        this._wasPlaying = false;
+
+        /**
+         * Internal property tracking if this Animation is waiting to stop.
+         *
+         * 0 = No
+         * 1 = Waiting for ms to pass
+         * 2 = Waiting for repeat
+         * 3 = Waiting for specific frame
+         *
+         * @name Phaser.GameObjects.Components.Animation#_pendingStop
+         * @type {integer}
+         * @private
+         * @since 3.4.0
+         */
+        this._pendingStop = 0;
+
+        /**
+         * Internal property used by _pendingStop.
+         *
+         * @name Phaser.GameObjects.Components.Animation#_pendingStopValue
+         * @type {any}
+         * @private
+         * @since 3.4.0
+         */
+        this._pendingStopValue;
+    },
+
+    /**
+     * Sets an animation to be played immediately after the current one completes.
+     *
+     * The current animation must enter a 'completed' state for this to happen, i.e. finish all of its repeats, delays, etc, or have the `stop` method called directly on it.
+     *
+     * An animation set to repeat forever will never enter a completed state.
+     *
+     * You can chain a new animation at any point, including before the current one starts playing, during it, or when it ends (via its `animationcomplete` callback).
+     * Chained animations are specific to a Game Object, meaning different Game Objects can have different chained animations without impacting the global animation they're playing.
+     *
+     * Call this method with no arguments to reset the chained animation.
+     *
+     * @method Phaser.GameObjects.Components.Animation#chain
+     * @since 3.16.0
+     *
+     * @param {(string|Phaser.Animations.Animation)} [key] - The string-based key of the animation to play next, as defined previously in the Animation Manager. Or an Animation instance.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    chain: function (key)
+    {
+        if (key instanceof BaseAnimation)
+        {
+            key = key.key;
+        }
+
+        if (this.nextAnim === null)
+        {
+            this.nextAnim = key;
+        }
+        else
+        {
+            this.nextAnimsQueue.push(key);
+        }
+
+        return this.parent;
+    },
+
+    /**
+     * Sets the amount of time, in milliseconds, that the animation will be delayed before starting playback.
+     *
+     * @method Phaser.GameObjects.Components.Animation#setDelay
+     * @since 3.4.0
+     *
+     * @param {integer} [value=0] - The amount of time, in milliseconds, to wait before starting playback.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    setDelay: function (value)
+    {
+        if (value === undefined) { value = 0; }
+
+        this._delay = value;
+
+        return this.parent;
+    },
+
+    /**
+     * Gets the amount of time, in milliseconds that the animation will be delayed before starting playback.
+     *
+     * @method Phaser.GameObjects.Components.Animation#getDelay
+     * @since 3.4.0
+     *
+     * @return {integer} The amount of time, in milliseconds, the Animation will wait before starting playback.
+     */
+    getDelay: function ()
+    {
+        return this._delay;
+    },
+
+    /**
+     * Waits for the specified delay, in milliseconds, then starts playback of the requested animation.
+     *
+     * @method Phaser.GameObjects.Components.Animation#delayedPlay
+     * @since 3.0.0
+     *
+     * @param {integer} delay - The delay, in milliseconds, to wait before starting the animation playing.
+     * @param {string} key - The key of the animation to play.
+     * @param {integer} [startFrame=0] - The frame of the animation to start from.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    delayedPlay: function (delay, key, startFrame)
+    {
+        this.play(key, true, startFrame);
+
+        this.nextTick += delay;
+
+        return this.parent;
+    },
+
+    /**
+     * Returns the key of the animation currently loaded into this component.
+     *
+     * @method Phaser.GameObjects.Components.Animation#getCurrentKey
+     * @since 3.0.0
+     *
+     * @return {string} The key of the Animation loaded into this component.
+     */
+    getCurrentKey: function ()
+    {
+        if (this.currentAnim)
+        {
+            return this.currentAnim.key;
+        }
+    },
+
+    /**
+     * Internal method used to load an animation into this component.
+     *
+     * @method Phaser.GameObjects.Components.Animation#load
+     * @protected
+     * @since 3.0.0
+     *
+     * @param {string} key - The key of the animation to load.
+     * @param {integer} [startFrame=0] - The start frame of the animation to load.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    load: function (key, startFrame)
+    {
+        if (startFrame === undefined) { startFrame = 0; }
+
+        if (this.isPlaying)
+        {
+            this.stop();
+        }
+
+        //  Load the new animation in
+        this.animationManager.load(this, key, startFrame);
+
+        return this.parent;
+    },
+
+    /**
+     * Pause the current animation and set the `isPlaying` property to `false`.
+     * You can optionally pause it at a specific frame.
+     *
+     * @method Phaser.GameObjects.Components.Animation#pause
+     * @since 3.0.0
+     *
+     * @param {Phaser.Animations.AnimationFrame} [atFrame] - An optional frame to set after pausing the animation.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    pause: function (atFrame)
+    {
+        if (!this._paused)
+        {
+            this._paused = true;
+            this._wasPlaying = this.isPlaying;
+            this.isPlaying = false;
+        }
+
+        if (atFrame !== undefined)
+        {
+            this.updateFrame(atFrame);
+        }
+
+        return this.parent;
+    },
+
+    /**
+     * Resumes playback of a paused animation and sets the `isPlaying` property to `true`.
+     * You can optionally tell it to start playback from a specific frame.
+     *
+     * @method Phaser.GameObjects.Components.Animation#resume
+     * @since 3.0.0
+     *
+     * @param {Phaser.Animations.AnimationFrame} [fromFrame] - An optional frame to set before restarting playback.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    resume: function (fromFrame)
+    {
+        if (this._paused)
+        {
+            this._paused = false;
+            this.isPlaying = this._wasPlaying;
+        }
+
+        if (fromFrame !== undefined)
+        {
+            this.updateFrame(fromFrame);
+        }
+
+        return this.parent;
+    },
+
+    /**
+     * `true` if the current animation is paused, otherwise `false`.
+     *
+     * @name Phaser.GameObjects.Components.Animation#isPaused
+     * @readonly
+     * @type {boolean}
+     * @since 3.4.0
+     */
+    isPaused: {
+
+        get: function ()
+        {
+            return this._paused;
+        }
+
+    },
+
+    /**
+     * Plays an Animation on a Game Object that has the Animation component, such as a Sprite.
+     *
+     * Animations are stored in the global Animation Manager and are referenced by a unique string-based key.
+     *
+     * @method Phaser.GameObjects.Components.Animation#play
+     * @fires Phaser.GameObjects.Components.Animation#onStartEvent
+     * @since 3.0.0
+     *
+     * @param {(string|Phaser.Animations.Animation)} key - The string-based key of the animation to play, as defined previously in the Animation Manager. Or an Animation instance.
+     * @param {boolean} [ignoreIfPlaying=false] - If this animation is already playing then ignore this call.
+     * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    play: function (key, ignoreIfPlaying, startFrame)
+    {
+        if (ignoreIfPlaying === undefined) { ignoreIfPlaying = false; }
+        if (startFrame === undefined) { startFrame = 0; }
+
+        if (key instanceof BaseAnimation)
+        {
+            key = key.key;
+        }
+
+        if (ignoreIfPlaying && this.isPlaying && this.currentAnim.key === key)
+        {
+            return this.parent;
+        }
+
+        this.forward = true;
+        this._reverse = false;
+        this._paused = false;
+        this._wasPlaying = true;
+
+        return this._startAnimation(key, startFrame);
+    },
+
+    /**
+     * Plays an Animation (in reverse mode) on the Game Object that owns this Animation Component.
+     *
+     * @method Phaser.GameObjects.Components.Animation#playReverse
+     * @fires Phaser.GameObjects.Components.Animation#onStartEvent
+     * @since 3.12.0
+     *
+     * @param {(string|Phaser.Animations.Animation)} key - The string-based key of the animation to play, as defined previously in the Animation Manager. Or an Animation instance.
+     * @param {boolean} [ignoreIfPlaying=false] - If an animation is already playing then ignore this call.
+     * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    playReverse: function (key, ignoreIfPlaying, startFrame)
+    {
+        if (ignoreIfPlaying === undefined) { ignoreIfPlaying = false; }
+        if (startFrame === undefined) { startFrame = 0; }
+
+        if (key instanceof BaseAnimation)
+        {
+            key = key.key;
+        }
+
+        if (ignoreIfPlaying && this.isPlaying && this.currentAnim.key === key)
+        {
+            return this.parent;
+        }
+
+        this.forward = false;
+        this._reverse = true;
+
+        return this._startAnimation(key, startFrame);
+    },
+
+    /**
+     * Load an Animation and fires 'onStartEvent' event, extracted from 'play' method.
+     *
+     * @method Phaser.GameObjects.Components.Animation#_startAnimation
+     * @fires Phaser.Animations.Events#ANIMATION_START
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_START
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
+     * @since 3.12.0
+     *
+     * @param {string} key - The string-based key of the animation to play, as defined previously in the Animation Manager.
+     * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    _startAnimation: function (key, startFrame)
+    {
+        this.load(key, startFrame);
+
+        var anim = this.currentAnim;
+        var gameObject = this.parent;
+
+        if (!anim)
+        {
+            return gameObject;
+        }
+
+        //  Should give us 9,007,199,254,740,991 safe repeats
+        this.repeatCounter = (this._repeat === -1) ? Number.MAX_VALUE : this._repeat;
+
+        anim.getFirstTick(this);
+
+        this.isPlaying = true;
+        this.pendingRepeat = false;
+
+        if (anim.showOnStart)
+        {
+            gameObject.visible = true;
+        }
+
+        var frame = this.currentFrame;
+
+        anim.emit(Events.ANIMATION_START, anim, frame, gameObject);
+
+        gameObject.emit(Events.SPRITE_ANIMATION_KEY_START + key, anim, frame, gameObject);
+
+        gameObject.emit(Events.SPRITE_ANIMATION_START, anim, frame, gameObject);
+
+        return gameObject;
+    },
+
+    /**
+     * Reverse the Animation that is already playing on the Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Animation#reverse
+     * @since 3.12.0
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    reverse: function ()
+    {
+        if (this.isPlaying)
+        {
+            this._reverse = !this._reverse;
+
+            this.forward = !this.forward;
+        }
+
+        return this.parent;
+    },
+
+    /**
+     * Returns a value between 0 and 1 indicating how far this animation is through, ignoring repeats and yoyos.
+     * If the animation has a non-zero repeat defined, `getProgress` and `getTotalProgress` will be different
+     * because `getProgress` doesn't include any repeats or repeat delays, whereas `getTotalProgress` does.
+     *
+     * @method Phaser.GameObjects.Components.Animation#getProgress
+     * @since 3.4.0
+     *
+     * @return {number} The progress of the current animation, between 0 and 1.
+     */
+    getProgress: function ()
+    {
+        var p = this.currentFrame.progress;
+
+        if (!this.forward)
+        {
+            p = 1 - p;
+        }
+
+        return p;
+    },
+
+    /**
+     * Takes a value between 0 and 1 and uses it to set how far this animation is through playback.
+     * Does not factor in repeats or yoyos, but does handle playing forwards or backwards.
+     *
+     * @method Phaser.GameObjects.Components.Animation#setProgress
+     * @since 3.4.0
+     *
+     * @param {number} [value=0] - The progress value, between 0 and 1.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    setProgress: function (value)
+    {
+        if (!this.forward)
+        {
+            value = 1 - value;
+        }
+
+        this.setCurrentFrame(this.currentAnim.getFrameByProgress(value));
+
+        return this.parent;
+    },
+
+    /**
+     * Handle the removal of an animation from the Animation Manager.
+     *
+     * @method Phaser.GameObjects.Components.Animation#remove
+     * @since 3.0.0
+     *
+     * @param {string} [key] - The key of the removed Animation.
+     * @param {Phaser.Animations.Animation} [animation] - The removed Animation.
+     */
+    remove: function (key, animation)
+    {
+        if (animation === undefined) { animation = this.currentAnim; }
+
+        if (this.isPlaying && animation.key === this.currentAnim.key)
+        {
+            this.stop();
+
+            this.setCurrentFrame(this.currentAnim.frames[0]);
+        }
+    },
+
+    /**
+     * Gets the number of times that the animation will repeat
+     * after its first iteration. For example, if returns 1, the animation will
+     * play a total of twice (the initial play plus 1 repeat).
+     * A value of -1 means the animation will repeat indefinitely.
+     *
+     * @method Phaser.GameObjects.Components.Animation#getRepeat
+     * @since 3.4.0
+     *
+     * @return {integer} The number of times that the animation will repeat.
+     */
+    getRepeat: function ()
+    {
+        return this._repeat;
+    },
+
+    /**
+     * Sets the number of times that the animation should repeat
+     * after its first iteration. For example, if repeat is 1, the animation will
+     * play a total of twice (the initial play plus 1 repeat).
+     * To repeat indefinitely, use -1. repeat should always be an integer.
+     *
+     * @method Phaser.GameObjects.Components.Animation#setRepeat
+     * @since 3.4.0
+     *
+     * @param {integer} value - The number of times that the animation should repeat.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    setRepeat: function (value)
+    {
+        this._repeat = value;
+
+        this.repeatCounter = (value === -1) ? Number.MAX_VALUE : value;
+
+        return this.parent;
+    },
+
+    /**
+     * Gets the amount of delay between repeats, if any.
+     *
+     * @method Phaser.GameObjects.Components.Animation#getRepeatDelay
+     * @since 3.4.0
+     *
+     * @return {number} The delay between repeats.
+     */
+    getRepeatDelay: function ()
+    {
+        return this._repeatDelay;
+    },
+
+    /**
+     * Sets the amount of time in seconds between repeats.
+     * For example, if `repeat` is 2 and `repeatDelay` is 10, the animation will play initially,
+     * then wait for 10 seconds before repeating, then play again, then wait another 10 seconds
+     * before doing its final repeat.
+     *
+     * @method Phaser.GameObjects.Components.Animation#setRepeatDelay
+     * @since 3.4.0
+     *
+     * @param {number} value - The delay to wait between repeats, in seconds.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    setRepeatDelay: function (value)
+    {
+        this._repeatDelay = value;
+
+        return this.parent;
+    },
+
+    /**
+     * Restarts the current animation from its beginning, optionally including its delay value.
+     *
+     * @method Phaser.GameObjects.Components.Animation#restart
+     * @fires Phaser.Animations.Events#ANIMATION_RESTART
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_RESTART
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_RESTART
+     * @since 3.0.0
+     *
+     * @param {boolean} [includeDelay=false] - Whether to include the delay value of the animation when restarting.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    restart: function (includeDelay)
+    {
+        if (includeDelay === undefined) { includeDelay = false; }
+
+        var anim = this.currentAnim;
+
+        anim.getFirstTick(this, includeDelay);
+
+        this.forward = true;
+        this.isPlaying = true;
+        this.pendingRepeat = false;
+        this._paused = false;
+
+        //  Set frame
+        this.updateFrame(anim.frames[0]);
+
+        var gameObject = this.parent;
+        var frame = this.currentFrame;
+
+        anim.emit(Events.ANIMATION_RESTART, anim, frame, gameObject);
+
+        gameObject.emit(Events.SPRITE_ANIMATION_KEY_RESTART + anim.key, anim, frame, gameObject);
+
+        gameObject.emit(Events.SPRITE_ANIMATION_RESTART, anim, frame, gameObject);
+
+        return this.parent;
+    },
+
+    /**
+     * Immediately stops the current animation from playing and dispatches the `animationcomplete` event.
+     *
+     * If no animation is set, no event will be dispatched.
+     *
+     * If there is another animation queued (via the `chain` method) then it will start playing immediately.
+     *
+     * @method Phaser.GameObjects.Components.Animation#stop
+     * @fires Phaser.GameObjects.Components.Animation#onCompleteEvent
+     * @since 3.0.0
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    stop: function ()
+    {
+        this._pendingStop = 0;
+
+        this.isPlaying = false;
+
+        var gameObject = this.parent;
+        var anim = this.currentAnim;
+        var frame = this.currentFrame;
+
+        if (anim)
+        {
+            anim.emit(Events.ANIMATION_COMPLETE, anim, frame, gameObject);
+
+            gameObject.emit(Events.SPRITE_ANIMATION_KEY_COMPLETE + anim.key, anim, frame, gameObject);
+
+            gameObject.emit(Events.SPRITE_ANIMATION_COMPLETE, anim, frame, gameObject);
+        }
+
+        if (this.nextAnim)
+        {
+            var key = this.nextAnim;
+
+            this.nextAnim = (this.nextAnimsQueue.length > 0) ? this.nextAnimsQueue.shift() : null;
+
+            this.play(key);
+        }
+
+        return gameObject;
+    },
+
+    /**
+     * Stops the current animation from playing after the specified time delay, given in milliseconds.
+     *
+     * @method Phaser.GameObjects.Components.Animation#stopAfterDelay
+     * @fires Phaser.GameObjects.Components.Animation#onCompleteEvent
+     * @since 3.4.0
+     *
+     * @param {integer} delay - The number of milliseconds to wait before stopping this animation.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    stopAfterDelay: function (delay)
+    {
+        this._pendingStop = 1;
+        this._pendingStopValue = delay;
+
+        return this.parent;
+    },
+
+    /**
+     * Stops the current animation from playing when it next repeats.
+     *
+     * @method Phaser.GameObjects.Components.Animation#stopOnRepeat
+     * @fires Phaser.GameObjects.Components.Animation#onCompleteEvent
+     * @since 3.4.0
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    stopOnRepeat: function ()
+    {
+        this._pendingStop = 2;
+
+        return this.parent;
+    },
+
+    /**
+     * Stops the current animation from playing when it next sets the given frame.
+     * If this frame doesn't exist within the animation it will not stop it from playing.
+     *
+     * @method Phaser.GameObjects.Components.Animation#stopOnFrame
+     * @fires Phaser.GameObjects.Components.Animation#onCompleteEvent
+     * @since 3.4.0
+     *
+     * @param {Phaser.Animations.AnimationFrame} frame - The frame to check before stopping this animation.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    stopOnFrame: function (frame)
+    {
+        this._pendingStop = 3;
+        this._pendingStopValue = frame;
+
+        return this.parent;
+    },
+
+    /**
+     * Sets the Time Scale factor, allowing you to make the animation go go faster or slower than default.
+     * Where 1 = normal speed (the default), 0.5 = half speed, 2 = double speed, etc.
+     *
+     * @method Phaser.GameObjects.Components.Animation#setTimeScale
+     * @since 3.4.0
+     *
+     * @param {number} [value=1] - The time scale factor, where 1 is no change, 0.5 is half speed, etc.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    setTimeScale: function (value)
+    {
+        if (value === undefined) { value = 1; }
+
+        this._timeScale = value;
+
+        return this.parent;
+    },
+
+    /**
+     * Gets the Time Scale factor.
+     *
+     * @method Phaser.GameObjects.Components.Animation#getTimeScale
+     * @since 3.4.0
+     *
+     * @return {number} The Time Scale value.
+     */
+    getTimeScale: function ()
+    {
+        return this._timeScale;
+    },
+
+    /**
+     * Returns the total number of frames in this animation.
+     *
+     * @method Phaser.GameObjects.Components.Animation#getTotalFrames
+     * @since 3.4.0
+     *
+     * @return {integer} The total number of frames in this animation.
+     */
+    getTotalFrames: function ()
+    {
+        return this.currentAnim.frames.length;
+    },
+
+    /**
+     * The internal update loop for the Animation Component.
+     *
+     * @method Phaser.GameObjects.Components.Animation#update
+     * @since 3.0.0
+     *
+     * @param {number} time - The current timestamp.
+     * @param {number} delta - The delta time, in ms, elapsed since the last frame.
+     */
+    update: function (time, delta)
+    {
+        if (!this.currentAnim || !this.isPlaying || this.currentAnim.paused)
+        {
+            return;
+        }
+
+        this.accumulator += delta * this._timeScale;
+
+        if (this._pendingStop === 1)
+        {
+            this._pendingStopValue -= delta;
+
+            if (this._pendingStopValue <= 0)
+            {
+                return this.currentAnim.completeAnimation(this);
+            }
+        }
+
+        if (this.accumulator >= this.nextTick)
+        {
+            this.currentAnim.setFrame(this);
+        }
+    },
+
+    /**
+     * Sets the given Animation Frame as being the current frame
+     * and applies it to the parent Game Object, adjusting its size and origin as needed.
+     *
+     * @method Phaser.GameObjects.Components.Animation#setCurrentFrame
+     * @since 3.4.0
+     *
+     * @param {Phaser.Animations.AnimationFrame} animationFrame - The Animation Frame to set as being current.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object this Animation Component belongs to.
+     */
+    setCurrentFrame: function (animationFrame)
+    {
+        var gameObject = this.parent;
+
+        this.currentFrame = animationFrame;
+
+        gameObject.texture = animationFrame.frame.texture;
+        gameObject.frame = animationFrame.frame;
+
+        if (gameObject.isCropped)
+        {
+            gameObject.frame.updateCropUVs(gameObject._crop, gameObject.flipX, gameObject.flipY);
+        }
+
+        gameObject.setSizeToFrame();
+
+        if (gameObject._originComponent)
+        {
+            if (animationFrame.frame.customPivot)
+            {
+                gameObject.setOrigin(animationFrame.frame.pivotX, animationFrame.frame.pivotY);
+            }
+            else
+            {
+                gameObject.updateDisplayOrigin();
+            }
+        }
+
+        return gameObject;
+    },
+
+    /**
+     * Internal frame change handler.
+     *
+     * @method Phaser.GameObjects.Components.Animation#updateFrame
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_UPDATE
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_UPDATE
+     * @private
+     * @since 3.0.0
+     *
+     * @param {Phaser.Animations.AnimationFrame} animationFrame - The animation frame to change to.
+     */
+    updateFrame: function (animationFrame)
+    {
+        var gameObject = this.setCurrentFrame(animationFrame);
+
+        if (this.isPlaying)
+        {
+            if (animationFrame.setAlpha)
+            {
+                gameObject.alpha = animationFrame.alpha;
+            }
+
+            var anim = this.currentAnim;
+
+            gameObject.emit(Events.SPRITE_ANIMATION_KEY_UPDATE + anim.key, anim, animationFrame, gameObject);
+
+            gameObject.emit(Events.SPRITE_ANIMATION_UPDATE, anim, animationFrame, gameObject);
+
+            if (this._pendingStop === 3 && this._pendingStopValue === animationFrame)
+            {
+                this.currentAnim.completeAnimation(this);
+            }
+        }
+    },
+
+    /**
+     * Advances the animation to the next frame, regardless of the time or animation state.
+     * If the animation is set to repeat, or yoyo, this will still take effect.
+     *
+     * Calling this does not change the direction of the animation. I.e. if it was currently
+     * playing in reverse, calling this method doesn't then change the direction to forwards.
+     *
+     * @method Phaser.GameObjects.Components.Animation#nextFrame
+     * @since 3.16.0
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object this Animation Component belongs to.
+     */
+    nextFrame: function ()
+    {
+        if (this.currentAnim)
+        {
+            this.currentAnim.nextFrame(this);
+        }
+
+        return this.parent;
+    },
+
+    /**
+     * Advances the animation to the previous frame, regardless of the time or animation state.
+     * If the animation is set to repeat, or yoyo, this will still take effect.
+     *
+     * Calling this does not change the direction of the animation. I.e. if it was currently
+     * playing in forwards, calling this method doesn't then change the direction to backwards.
+     *
+     * @method Phaser.GameObjects.Components.Animation#previousFrame
+     * @since 3.16.0
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object this Animation Component belongs to.
+     */
+    previousFrame: function ()
+    {
+        if (this.currentAnim)
+        {
+            this.currentAnim.previousFrame(this);
+        }
+
+        return this.parent;
+    },
+
+    /**
+     * Sets if the current Animation will yoyo when it reaches the end.
+     * A yoyo'ing animation will play through consecutively, and then reverse-play back to the start again.
+     *
+     * @method Phaser.GameObjects.Components.Animation#setYoyo
+     * @since 3.4.0
+     *
+     * @param {boolean} [value=false] - `true` if the animation should yoyo, `false` to not.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object this Animation Component belongs to.
+     */
+    setYoyo: function (value)
+    {
+        if (value === undefined) { value = false; }
+
+        this._yoyo = value;
+
+        return this.parent;
+    },
+
+    /**
+     * Gets if the current Animation will yoyo when it reaches the end.
+     * A yoyo'ing animation will play through consecutively, and then reverse-play back to the start again.
+     *
+     * @method Phaser.GameObjects.Components.Animation#getYoyo
+     * @since 3.4.0
+     *
+     * @return {boolean} `true` if the animation is set to yoyo, `false` if not.
+     */
+    getYoyo: function ()
+    {
+        return this._yoyo;
+    },
+
+    /**
+     * Destroy this Animation component.
+     *
+     * Unregisters event listeners and cleans up its references.
+     *
+     * @method Phaser.GameObjects.Components.Animation#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.animationManager.off(Events.REMOVE_ANIMATION, this.remove, this);
+
+        this.animationManager = null;
+        this.parent = null;
+        this.nextAnimsQueue.length = 0;
+
+        this.currentAnim = null;
+        this.currentFrame = null;
+    }
+
+});
+
+module.exports = Animation;
+
+
+/***/ }),
+/* 289 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Clamp = __webpack_require__(5);
+var Class = __webpack_require__(0);
+var EventEmitter = __webpack_require__(55);
+var Events = __webpack_require__(59);
+var FindClosestInSorted = __webpack_require__(57);
+var Frame = __webpack_require__(308);
+var GetValue = __webpack_require__(6);
+
+/**
+ * @classdesc
+ * A Frame based Animation.
+ *
+ * This consists of a key, some default values (like the frame rate) and a bunch of Frame objects.
+ *
+ * The Animation Manager creates these. Game Objects don't own an instance of these directly.
+ * Game Objects have the Animation Component, which are like playheads to global Animations (these objects)
+ * So multiple Game Objects can have playheads all pointing to this one Animation instance.
+ *
+ * @class Animation
+ * @memberof Phaser.Animations
+ * @extends Phaser.Events.EventEmitter
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Animations.AnimationManager} manager - A reference to the global Animation Manager
+ * @param {string} key - The unique identifying string for this animation.
+ * @param {Phaser.Types.Animations.Animation} config - The Animation configuration.
+ */
+var Animation = new Class({
+
+    Extends: EventEmitter,
+
+    initialize:
+
+    function Animation (manager, key, config)
+    {
+        EventEmitter.call(this);
+
+        /**
+         * A reference to the global Animation Manager.
+         *
+         * @name Phaser.Animations.Animation#manager
+         * @type {Phaser.Animations.AnimationManager}
+         * @since 3.0.0
+         */
+        this.manager = manager;
+
+        /**
+         * The unique identifying string for this animation.
+         *
+         * @name Phaser.Animations.Animation#key
+         * @type {string}
+         * @since 3.0.0
+         */
+        this.key = key;
+
+        /**
+         * A frame based animation (as opposed to a bone based animation)
+         *
+         * @name Phaser.Animations.Animation#type
+         * @type {string}
+         * @default frame
+         * @since 3.0.0
+         */
+        this.type = 'frame';
+
+        /**
+         * Extract all the frame data into the frames array.
+         *
+         * @name Phaser.Animations.Animation#frames
+         * @type {Phaser.Animations.AnimationFrame[]}
+         * @since 3.0.0
+         */
+        this.frames = this.getFrames(
+            manager.textureManager,
+            GetValue(config, 'frames', []),
+            GetValue(config, 'defaultTextureKey', null)
+        );
+
+        /**
+         * The frame rate of playback in frames per second (default 24 if duration is null)
+         *
+         * @name Phaser.Animations.Animation#frameRate
+         * @type {integer}
+         * @default 24
+         * @since 3.0.0
+         */
+        this.frameRate = GetValue(config, 'frameRate', null);
+
+        /**
+         * How long the animation should play for, in milliseconds.
+         * If the `frameRate` property has been set then it overrides this value,
+         * otherwise the `frameRate` is derived from `duration`.
+         *
+         * @name Phaser.Animations.Animation#duration
+         * @type {integer}
+         * @since 3.0.0
+         */
+        this.duration = GetValue(config, 'duration', null);
+
+        if (this.duration === null && this.frameRate === null)
+        {
+            //  No duration or frameRate given, use default frameRate of 24fps
+            this.frameRate = 24;
+            this.duration = (this.frameRate / this.frames.length) * 1000;
+        }
+        else if (this.duration && this.frameRate === null)
+        {
+            //  Duration given but no frameRate, so set the frameRate based on duration
+            //  I.e. 12 frames in the animation, duration = 4000 ms
+            //  So frameRate is 12 / (4000 / 1000) = 3 fps
+            this.frameRate = this.frames.length / (this.duration / 1000);
+        }
+        else
+        {
+            //  frameRate given, derive duration from it (even if duration also specified)
+            //  I.e. 15 frames in the animation, frameRate = 30 fps
+            //  So duration is 15 / 30 = 0.5 * 1000 (half a second, or 500ms)
+            this.duration = (this.frames.length / this.frameRate) * 1000;
+        }
+
+        /**
+         * How many ms per frame, not including frame specific modifiers.
+         *
+         * @name Phaser.Animations.Animation#msPerFrame
+         * @type {integer}
+         * @since 3.0.0
+         */
+        this.msPerFrame = 1000 / this.frameRate;
+
+        /**
+         * Skip frames if the time lags, or always advanced anyway?
+         *
+         * @name Phaser.Animations.Animation#skipMissedFrames
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.skipMissedFrames = GetValue(config, 'skipMissedFrames', true);
+
+        /**
+         * The delay in ms before the playback will begin.
+         *
+         * @name Phaser.Animations.Animation#delay
+         * @type {integer}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.delay = GetValue(config, 'delay', 0);
+
+        /**
+         * Number of times to repeat the animation. Set to -1 to repeat forever.
+         *
+         * @name Phaser.Animations.Animation#repeat
+         * @type {integer}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.repeat = GetValue(config, 'repeat', 0);
+
+        /**
+         * The delay in ms before the a repeat play starts.
+         *
+         * @name Phaser.Animations.Animation#repeatDelay
+         * @type {integer}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.repeatDelay = GetValue(config, 'repeatDelay', 0);
+
+        /**
+         * Should the animation yoyo (reverse back down to the start) before repeating?
+         *
+         * @name Phaser.Animations.Animation#yoyo
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.yoyo = GetValue(config, 'yoyo', false);
+
+        /**
+         * Should the GameObject's `visible` property be set to `true` when the animation starts to play?
+         *
+         * @name Phaser.Animations.Animation#showOnStart
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.showOnStart = GetValue(config, 'showOnStart', false);
+
+        /**
+         * Should the GameObject's `visible` property be set to `false` when the animation finishes?
+         *
+         * @name Phaser.Animations.Animation#hideOnComplete
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.hideOnComplete = GetValue(config, 'hideOnComplete', false);
+
+        /**
+         * Global pause. All Game Objects using this Animation instance are impacted by this property.
+         *
+         * @name Phaser.Animations.Animation#paused
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.paused = false;
+
+        this.manager.on(Events.PAUSE_ALL, this.pause, this);
+        this.manager.on(Events.RESUME_ALL, this.resume, this);
+    },
+
+    /**
+     * Add frames to the end of the animation.
+     *
+     * @method Phaser.Animations.Animation#addFrame
+     * @since 3.0.0
+     *
+     * @param {(string|Phaser.Types.Animations.AnimationFrame[])} config - Either a string, in which case it will use all frames from a texture with the matching key, or an array of Animation Frame configuration objects.
+     *
+     * @return {this} This Animation object.
+     */
+    addFrame: function (config)
+    {
+        return this.addFrameAt(this.frames.length, config);
+    },
+
+    /**
+     * Add frame/s into the animation.
+     *
+     * @method Phaser.Animations.Animation#addFrameAt
+     * @since 3.0.0
+     *
+     * @param {integer} index - The index to insert the frame at within the animation.
+     * @param {(string|Phaser.Types.Animations.AnimationFrame[])} config - Either a string, in which case it will use all frames from a texture with the matching key, or an array of Animation Frame configuration objects.
+     *
+     * @return {this} This Animation object.
+     */
+    addFrameAt: function (index, config)
+    {
+        var newFrames = this.getFrames(this.manager.textureManager, config);
+
+        if (newFrames.length > 0)
+        {
+            if (index === 0)
+            {
+                this.frames = newFrames.concat(this.frames);
+            }
+            else if (index === this.frames.length)
+            {
+                this.frames = this.frames.concat(newFrames);
+            }
+            else
+            {
+                var pre = this.frames.slice(0, index);
+                var post = this.frames.slice(index);
+
+                this.frames = pre.concat(newFrames, post);
+            }
+
+            this.updateFrameSequence();
+        }
+
+        return this;
+    },
+
+    /**
+     * Check if the given frame index is valid.
+     *
+     * @method Phaser.Animations.Animation#checkFrame
+     * @since 3.0.0
+     *
+     * @param {integer} index - The index to be checked.
+     *
+     * @return {boolean} `true` if the index is valid, otherwise `false`.
+     */
+    checkFrame: function (index)
+    {
+        return (index >= 0 && index < this.frames.length);
+    },
+
+    /**
+     * Called internally when this Animation completes playback.
+     * Optionally, hides the parent Game Object, then stops playback.
+     *
+     * @method Phaser.Animations.Animation#completeAnimation
+     * @protected
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
+     */
+    completeAnimation: function (component)
+    {
+        if (this.hideOnComplete)
+        {
+            component.parent.visible = false;
+        }
+
+        component.stop();
+    },
+
+    /**
+     * Called internally when this Animation first starts to play.
+     * Sets the accumulator and nextTick properties.
+     *
+     * @method Phaser.Animations.Animation#getFirstTick
+     * @protected
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
+     * @param {boolean} [includeDelay=true] - If `true` the Animation Components delay value will be added to the `nextTick` total.
+     */
+    getFirstTick: function (component, includeDelay)
+    {
+        if (includeDelay === undefined) { includeDelay = true; }
+
+        //  When is the first update due?
+        component.accumulator = 0;
+        component.nextTick = component.msPerFrame + component.currentFrame.duration;
+
+        if (includeDelay)
+        {
+            component.nextTick += component._delay;
+        }
+    },
+
+    /**
+     * Returns the AnimationFrame at the provided index
+     *
+     * @method Phaser.Animations.Animation#getFrameAt
+     * @protected
+     * @since 3.0.0
+     *
+     * @param {integer} index - The index in the AnimationFrame array
+     *
+     * @return {Phaser.Animations.AnimationFrame} The frame at the index provided from the animation sequence
+     */
+    getFrameAt: function (index)
+    {
+        return this.frames[index];
+    },
+
+    /**
+     * Creates AnimationFrame instances based on the given frame data.
+     *
+     * @method Phaser.Animations.Animation#getFrames
+     * @since 3.0.0
+     *
+     * @param {Phaser.Textures.TextureManager} textureManager - A reference to the global Texture Manager.
+     * @param {(string|Phaser.Types.Animations.AnimationFrame[])} frames - Either a string, in which case it will use all frames from a texture with the matching key, or an array of Animation Frame configuration objects.
+     * @param {string} [defaultTextureKey] - The key to use if no key is set in the frame configuration object.
+     *
+     * @return {Phaser.Animations.AnimationFrame[]} An array of newly created AnimationFrame instances.
+     */
+    getFrames: function (textureManager, frames, defaultTextureKey)
+    {
+        var out = [];
+        var prev;
+        var animationFrame;
+        var index = 1;
+        var i;
+        var textureKey;
+
+        //  if frames is a string, we'll get all the frames from the texture manager as if it's a sprite sheet
+        if (typeof frames === 'string')
+        {
+            textureKey = frames;
+
+            var texture = textureManager.get(textureKey);
+            var frameKeys = texture.getFrameNames();
+
+            frames = [];
+
+            frameKeys.forEach(function (idx, value)
+            {
+                frames.push({ key: textureKey, frame: value });
+            });
+        }
+
+        if (!Array.isArray(frames) || frames.length === 0)
+        {
+            return out;
+        }
+
+        for (i = 0; i < frames.length; i++)
+        {
+            var item = frames[i];
+
+            var key = GetValue(item, 'key', defaultTextureKey);
+
+            if (!key)
+            {
+                continue;
+            }
+
+            //  Could be an integer or a string
+            var frame = GetValue(item, 'frame', 0);
+
+            //  The actual texture frame
+            var textureFrame = textureManager.getFrame(key, frame);
+
+            animationFrame = new Frame(key, frame, index, textureFrame);
+
+            animationFrame.duration = GetValue(item, 'duration', 0);
+
+            animationFrame.isFirst = (!prev);
+
+            //  The previously created animationFrame
+            if (prev)
+            {
+                prev.nextFrame = animationFrame;
+
+                animationFrame.prevFrame = prev;
+            }
+
+            out.push(animationFrame);
+
+            prev = animationFrame;
+
+            index++;
+        }
+
+        if (out.length > 0)
+        {
+            animationFrame.isLast = true;
+
+            //  Link them end-to-end, so they loop
+            animationFrame.nextFrame = out[0];
+
+            out[0].prevFrame = animationFrame;
+
+            //  Generate the progress data
+
+            var slice = 1 / (out.length - 1);
+
+            for (i = 0; i < out.length; i++)
+            {
+                out[i].progress = i * slice;
+            }
+        }
+
+        return out;
+    },
+
+    /**
+     * Called internally. Sets the accumulator and nextTick values of the current Animation.
+     *
+     * @method Phaser.Animations.Animation#getNextTick
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
+     */
+    getNextTick: function (component)
+    {
+        // accumulator += delta * _timeScale
+        // after a large delta surge (perf issue for example) we need to adjust for it here
+
+        //  When is the next update due?
+        component.accumulator -= component.nextTick;
+
+        component.nextTick = component.msPerFrame + component.currentFrame.duration;
+    },
+
+    /**
+     * Loads the Animation values into the Animation Component.
+     *
+     * @method Phaser.Animations.Animation#load
+     * @private
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component to load values into.
+     * @param {integer} startFrame - The start frame of the animation to load.
+     */
+    load: function (component, startFrame)
+    {
+        if (startFrame >= this.frames.length)
+        {
+            startFrame = 0;
+        }
+
+        if (component.currentAnim !== this)
+        {
+            component.currentAnim = this;
+
+            component.frameRate = this.frameRate;
+            component.duration = this.duration;
+            component.msPerFrame = this.msPerFrame;
+            component.skipMissedFrames = this.skipMissedFrames;
+
+            component._delay = this.delay;
+            component._repeat = this.repeat;
+            component._repeatDelay = this.repeatDelay;
+            component._yoyo = this.yoyo;
+        }
+
+        var frame = this.frames[startFrame];
+
+        if (startFrame === 0 && !component.forward)
+        {
+            frame = this.getLastFrame();
+        }
+
+        component.updateFrame(frame);
+    },
+
+    /**
+     * Returns the frame closest to the given progress value between 0 and 1.
+     *
+     * @method Phaser.Animations.Animation#getFrameByProgress
+     * @since 3.4.0
+     *
+     * @param {number} value - A value between 0 and 1.
+     *
+     * @return {Phaser.Animations.AnimationFrame} The frame closest to the given progress value.
+     */
+    getFrameByProgress: function (value)
+    {
+        value = Clamp(value, 0, 1);
+
+        return FindClosestInSorted(value, this.frames, 'progress');
+    },
+
+    /**
+     * Advance the animation frame.
+     *
+     * @method Phaser.Animations.Animation#nextFrame
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component to advance.
+     */
+    nextFrame: function (component)
+    {
+        var frame = component.currentFrame;
+
+        //  TODO: Add frame skip support
+
+        if (frame.isLast)
+        {
+            //  We're at the end of the animation
+
+            //  Yoyo? (happens before repeat)
+            if (component._yoyo)
+            {
+                this.handleYoyoFrame(component, false);
+            }
+            else if (component.repeatCounter > 0)
+            {
+                //  Repeat (happens before complete)
+
+                if (component._reverse && component.forward)
+                {
+                    component.forward = false;
+                }
+                else
+                {
+                    this.repeatAnimation(component);
+                }
+            }
+            else
+            {
+                this.completeAnimation(component);
+            }
+        }
+        else
+        {
+            this.updateAndGetNextTick(component, frame.nextFrame);
+        }
+    },
+
+    /**
+     * Handle the yoyo functionality in nextFrame and previousFrame methods.
+     *
+     * @method Phaser.Animations.Animation#handleYoyoFrame
+     * @private
+     * @since 3.12.0
+     *
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component to advance.
+     * @param {boolean} isReverse - Is animation in reverse mode? (Default: false)
+     */
+    handleYoyoFrame: function (component, isReverse)
+    {
+        if (!isReverse) { isReverse = false; }
+
+        if (component._reverse === !isReverse && component.repeatCounter > 0)
+        {
+            if (!component._repeatDelay || component.pendingRepeat)
+
+            {
+                component.forward = isReverse;
+            }
+
+            this.repeatAnimation(component);
+
+            return;
+        }
+
+        if (component._reverse !== isReverse && component.repeatCounter === 0)
+        {
+            this.completeAnimation(component);
+
+            return;
+        }
+        
+        component.forward = isReverse;
+
+        var frame = (isReverse) ? component.currentFrame.nextFrame : component.currentFrame.prevFrame;
+
+        this.updateAndGetNextTick(component, frame);
+    },
+
+    /**
+     * Returns the animation last frame.
+     *
+     * @method Phaser.Animations.Animation#getLastFrame
+     * @since 3.12.0
+     *
+     * @return {Phaser.Animations.AnimationFrame} component - The Animation Last Frame.
+     */
+    getLastFrame: function ()
+    {
+        return this.frames[this.frames.length - 1];
+    },
+
+    /**
+     * Called internally when the Animation is playing backwards.
+     * Sets the previous frame, causing a yoyo, repeat, complete or update, accordingly.
+     *
+     * @method Phaser.Animations.Animation#previousFrame
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
+     */
+    previousFrame: function (component)
+    {
+        var frame = component.currentFrame;
+
+        //  TODO: Add frame skip support
+
+        if (frame.isFirst)
+        {
+            //  We're at the start of the animation
+
+            if (component._yoyo)
+            {
+                this.handleYoyoFrame(component, true);
+            }
+            else if (component.repeatCounter > 0)
+            {
+                if (component._reverse && !component.forward)
+                {
+                    component.currentFrame = this.getLastFrame();
+                    this.repeatAnimation(component);
+                }
+                else
+                {
+                    //  Repeat (happens before complete)
+                    component.forward = true;
+                    this.repeatAnimation(component);
+                }
+            }
+            else
+            {
+                this.completeAnimation(component);
+            }
+        }
+        else
+        {
+            this.updateAndGetNextTick(component, frame.prevFrame);
+        }
+    },
+
+    /**
+     * Update Frame and Wait next tick.
+     *
+     * @method Phaser.Animations.Animation#updateAndGetNextTick
+     * @private
+     * @since 3.12.0
+     *
+     * @param {Phaser.Animations.AnimationFrame} frame - An Animation frame.
+     */
+    updateAndGetNextTick: function (component, frame)
+    {
+        component.updateFrame(frame);
+
+        this.getNextTick(component);
+    },
+
+    /**
+     * Removes the given AnimationFrame from this Animation instance.
+     * This is a global action. Any Game Object using this Animation will be impacted by this change.
+     *
+     * @method Phaser.Animations.Animation#removeFrame
+     * @since 3.0.0
+     *
+     * @param {Phaser.Animations.AnimationFrame} frame - The AnimationFrame to be removed.
+     *
+     * @return {this} This Animation object.
+     */
+    removeFrame: function (frame)
+    {
+        var index = this.frames.indexOf(frame);
+
+        if (index !== -1)
+        {
+            this.removeFrameAt(index);
+        }
+
+        return this;
+    },
+
+    /**
+     * Removes a frame from the AnimationFrame array at the provided index
+     * and updates the animation accordingly.
+     *
+     * @method Phaser.Animations.Animation#removeFrameAt
+     * @since 3.0.0
+     *
+     * @param {integer} index - The index in the AnimationFrame array
+     *
+     * @return {this} This Animation object.
+     */
+    removeFrameAt: function (index)
+    {
+        this.frames.splice(index, 1);
+
+        this.updateFrameSequence();
+
+        return this;
+    },
+
+    /**
+     * Called internally during playback. Forces the animation to repeat, providing there are enough counts left
+     * in the repeat counter.
+     *
+     * @method Phaser.Animations.Animation#repeatAnimation
+     * @fires Phaser.Animations.Events#ANIMATION_REPEAT
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_REPEAT
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_REPEAT
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
+     */
+    repeatAnimation: function (component)
+    {
+        if (component._pendingStop === 2)
+        {
+            return this.completeAnimation(component);
+        }
+
+        if (component._repeatDelay > 0 && component.pendingRepeat === false)
+        {
+            component.pendingRepeat = true;
+            component.accumulator -= component.nextTick;
+            component.nextTick += component._repeatDelay;
+        }
+        else
+        {
+            component.repeatCounter--;
+
+            component.updateFrame(component.currentFrame[(component.forward) ? 'nextFrame' : 'prevFrame']);
+
+            if (component.isPlaying)
+            {
+                this.getNextTick(component);
+
+                component.pendingRepeat = false;
+
+                var frame = component.currentFrame;
+                var parent = component.parent;
+
+                this.emit(Events.ANIMATION_REPEAT, this, frame);
+
+                parent.emit(Events.SPRITE_ANIMATION_KEY_REPEAT + this.key, this, frame, component.repeatCounter, parent);
+
+                parent.emit(Events.SPRITE_ANIMATION_REPEAT, this, frame, component.repeatCounter, parent);
+            }
+        }
+    },
+
+    /**
+     * Sets the texture frame the animation uses for rendering.
+     *
+     * @method Phaser.Animations.Animation#setFrame
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
+     */
+    setFrame: function (component)
+    {
+        //  Work out which frame should be set next on the child, and set it
+        if (component.forward)
+        {
+            this.nextFrame(component);
+        }
+        else
+        {
+            this.previousFrame(component);
+        }
+    },
+
+    /**
+     * Converts the animation data to JSON.
+     *
+     * @method Phaser.Animations.Animation#toJSON
+     * @since 3.0.0
+     *
+     * @return {Phaser.Types.Animations.JSONAnimation} The resulting JSONAnimation formatted object.
+     */
+    toJSON: function ()
+    {
+        var output = {
+            key: this.key,
+            type: this.type,
+            frames: [],
+            frameRate: this.frameRate,
+            duration: this.duration,
+            skipMissedFrames: this.skipMissedFrames,
+            delay: this.delay,
+            repeat: this.repeat,
+            repeatDelay: this.repeatDelay,
+            yoyo: this.yoyo,
+            showOnStart: this.showOnStart,
+            hideOnComplete: this.hideOnComplete
+        };
+
+        this.frames.forEach(function (frame)
+        {
+            output.frames.push(frame.toJSON());
+        });
+
+        return output;
+    },
+
+    /**
+     * Called internally whenever frames are added to, or removed from, this Animation.
+     *
+     * @method Phaser.Animations.Animation#updateFrameSequence
+     * @since 3.0.0
+     *
+     * @return {this} This Animation object.
+     */
+    updateFrameSequence: function ()
+    {
+        var len = this.frames.length;
+        var slice = 1 / (len - 1);
+
+        var frame;
+
+        for (var i = 0; i < len; i++)
+        {
+            frame = this.frames[i];
+
+            frame.index = i + 1;
+            frame.isFirst = false;
+            frame.isLast = false;
+            frame.progress = i * slice;
+
+            if (i === 0)
+            {
+                frame.isFirst = true;
+
+                if (len === 1)
+                {
+                    frame.isLast = true;
+                    frame.nextFrame = frame;
+                    frame.prevFrame = frame;
+                }
+                else
+                {
+                    frame.isLast = false;
+                    frame.prevFrame = this.frames[len - 1];
+                    frame.nextFrame = this.frames[i + 1];
+                }
+            }
+            else if (i === len - 1 && len > 1)
+            {
+                frame.isLast = true;
+                frame.prevFrame = this.frames[len - 2];
+                frame.nextFrame = this.frames[0];
+            }
+            else if (len > 1)
+            {
+                frame.prevFrame = this.frames[i - 1];
+                frame.nextFrame = this.frames[i + 1];
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Pauses playback of this Animation. The paused state is set immediately.
+     *
+     * @method Phaser.Animations.Animation#pause
+     * @since 3.0.0
+     *
+     * @return {this} This Animation object.
+     */
+    pause: function ()
+    {
+        this.paused = true;
+
+        return this;
+    },
+
+    /**
+     * Resumes playback of this Animation. The paused state is reset immediately.
+     *
+     * @method Phaser.Animations.Animation#resume
+     * @since 3.0.0
+     *
+     * @return {this} This Animation object.
+     */
+    resume: function ()
+    {
+        this.paused = false;
+
+        return this;
+    },
+
+    /**
+     * Destroys this Animation instance. It will remove all event listeners,
+     * remove this animation and its key from the global Animation Manager,
+     * and then destroy all Animation Frames in turn.
+     *
+     * @method Phaser.Animations.Animation#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.removeAllListeners();
+
+        this.manager.off(Events.PAUSE_ALL, this.pause, this);
+        this.manager.off(Events.RESUME_ALL, this.resume, this);
+
+        this.manager.remove(this.key);
+
+        for (var i = 0; i < this.frames.length; i++)
+        {
+            this.frames[i].destroy();
+        }
+
+        this.frames = [];
+
+        this.manager = null;
+    }
+
+});
+
+module.exports = Animation;
+
+
+/***/ }),
+/* 290 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Add Animation Event.
+ * 
+ * This event is dispatched when a new animation is added to the global Animation Manager.
+ * 
+ * This can happen either as a result of an animation instance being added to the Animation Manager,
+ * or the Animation Manager creating a new animation directly.
+ *
+ * @event Phaser.Animations.Events#ADD_ANIMATION
+ * @since 3.0.0
+ * 
+ * @param {string} key - The key of the Animation that was added to the global Animation Manager.
+ * @param {Phaser.Animations.Animation} animation - An instance of the newly created Animation.
+ */
+module.exports = 'add';
+
+
+/***/ }),
+/* 291 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Animation Complete Event.
+ * 
+ * This event is dispatched by an Animation instance when it completes, i.e. finishes playing or is manually stopped.
+ * 
+ * Be careful with the volume of events this could generate. If a group of Sprites all complete the same
+ * animation at the same time, this event will invoke its handler for each one of them.
+ *
+ * @event Phaser.Animations.Events#ANIMATION_COMPLETE
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that completed.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation completed on.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation completed.
+ */
+module.exports = 'complete';
+
+
+/***/ }),
+/* 292 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Animation Repeat Event.
+ * 
+ * This event is dispatched when a currently playing animation repeats.
+ * 
+ * The event is dispatched directly from the Animation object itself. Which means that listeners
+ * bound to this event will be invoked every time the Animation repeats, for every Game Object that may have it.
+ *
+ * @event Phaser.Animations.Events#ANIMATION_REPEAT
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that repeated.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation was on when it repeated.
+ */
+module.exports = 'repeat';
+
+
+/***/ }),
+/* 293 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Animation Restart Event.
+ * 
+ * This event is dispatched by an Animation instance when it restarts.
+ * 
+ * Be careful with the volume of events this could generate. If a group of Sprites all restart the same
+ * animation at the same time, this event will invoke its handler for each one of them.
+ *
+ * @event Phaser.Animations.Events#ANIMATION_RESTART
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that restarted playing.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation restarted with.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation restarted playing.
+ */
+module.exports = 'restart';
+
+
+/***/ }),
+/* 294 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Animation Start Event.
+ * 
+ * This event is dispatched by an Animation instance when it starts playing.
+ * 
+ * Be careful with the volume of events this could generate. If a group of Sprites all play the same
+ * animation at the same time, this event will invoke its handler for each one of them.
+ *
+ * @event Phaser.Animations.Events#ANIMATION_START
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that started playing.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation started with.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation started playing.
+ */
+module.exports = 'start';
+
+
+/***/ }),
+/* 295 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Pause All Animations Event.
+ * 
+ * This event is dispatched when the global Animation Manager is told to pause.
+ * 
+ * When this happens all current animations will stop updating, although it doesn't necessarily mean
+ * that the game has paused as well.
+ *
+ * @event Phaser.Animations.Events#PAUSE_ALL
+ * @since 3.0.0
+ */
+module.exports = 'pauseall';
+
+
+/***/ }),
+/* 296 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Remove Animation Event.
+ * 
+ * This event is dispatched when an animation is removed from the global Animation Manager.
+ *
+ * @event Phaser.Animations.Events#REMOVE_ANIMATION
+ * @since 3.0.0
+ * 
+ * @param {string} key - The key of the Animation that was removed from the global Animation Manager.
+ * @param {Phaser.Animations.Animation} animation - An instance of the removed Animation.
+ */
+module.exports = 'remove';
+
+
+/***/ }),
+/* 297 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Resume All Animations Event.
+ * 
+ * This event is dispatched when the global Animation Manager resumes, having been previously paused.
+ * 
+ * When this happens all current animations will continue updating again.
+ *
+ * @event Phaser.Animations.Events#RESUME_ALL
+ * @since 3.0.0
+ */
+module.exports = 'resumeall';
+
+
+/***/ }),
+/* 298 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Sprite Animation Complete Event.
+ * 
+ * This event is dispatched by a Sprite when an animation finishes playing on it.
+ * 
+ * Listen for it on the Sprite using `sprite.on('animationcomplete', listener)`
+ * 
+ * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_COMPLETE` event.
+ *
+ * @event Phaser.Animations.Events#SPRITE_ANIMATION_COMPLETE
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that completed.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation completed on.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation completed.
+ */
+module.exports = 'animationcomplete';
+
+
+/***/ }),
+/* 299 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Sprite Animation Key Complete Event.
+ * 
+ * This event is dispatched by a Sprite when a specific animation finishes playing on it.
+ * 
+ * Listen for it on the Sprite using `sprite.on('animationcomplete-key', listener)` where `key` is the key of
+ * the animation. For example, if you had an animation with the key 'explode' you should listen for `animationcomplete-explode`.
+ *
+ * @event Phaser.Animations.Events#SPRITE_ANIMATION_KEY_COMPLETE
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that completed.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation completed on.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation completed.
+ */
+module.exports = 'animationcomplete-';
+
+
+/***/ }),
+/* 300 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Sprite Animation Key Repeat Event.
+ * 
+ * This event is dispatched by a Sprite when a specific animation repeats playing on it.
+ * 
+ * Listen for it on the Sprite using `sprite.on('animationrepeat-key', listener)` where `key` is the key of
+ * the animation. For example, if you had an animation with the key 'explode' you should listen for `animationrepeat-explode`.
+ *
+ * @event Phaser.Animations.Events#SPRITE_ANIMATION_KEY_REPEAT
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that is repeating on the Sprite.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation started with.
+ * @param {integer} repeatCount - The number of times the Animation has repeated so far.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation repeated playing.
+ */
+module.exports = 'animationrepeat-';
+
+
+/***/ }),
+/* 301 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Sprite Animation Key Restart Event.
+ * 
+ * This event is dispatched by a Sprite when a specific animation restarts playing on it.
+ * 
+ * Listen for it on the Sprite using `sprite.on('animationrestart-key', listener)` where `key` is the key of
+ * the animation. For example, if you had an animation with the key 'explode' you should listen for `animationrestart-explode`.
+ *
+ * @event Phaser.Animations.Events#SPRITE_ANIMATION_KEY_RESTART
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that was restarted on the Sprite.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation restarted with.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation restarted playing.
+ */
+module.exports = 'animationrestart-';
+
+
+/***/ }),
+/* 302 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Sprite Animation Key Start Event.
+ * 
+ * This event is dispatched by a Sprite when a specific animation starts playing on it.
+ * 
+ * Listen for it on the Sprite using `sprite.on('animationstart-key', listener)` where `key` is the key of
+ * the animation. For example, if you had an animation with the key 'explode' you should listen for `animationstart-explode`.
+ *
+ * @event Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that was started on the Sprite.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation started with.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation started playing.
+ */
+module.exports = 'animationstart-';
+
+
+/***/ }),
+/* 303 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Sprite Animation Key Update Event.
+ * 
+ * This event is dispatched by a Sprite when a specific animation playing on it updates. This happens when the animation changes frame,
+ * based on the animation frame rate and other factors like `timeScale` and `delay`.
+ * 
+ * Listen for it on the Sprite using `sprite.on('animationupdate-key', listener)` where `key` is the key of
+ * the animation. For example, if you had an animation with the key 'explode' you should listen for `animationupdate-explode`.
+ *
+ * @event Phaser.Animations.Events#SPRITE_ANIMATION_KEY_UPDATE
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that has updated on the Sprite.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame of the Animation.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation updated.
+ */
+module.exports = 'animationupdate-';
+
+
+/***/ }),
+/* 304 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Sprite Animation Repeat Event.
+ * 
+ * This event is dispatched by a Sprite when an animation repeats playing on it.
+ * 
+ * Listen for it on the Sprite using `sprite.on('animationrepeat', listener)`
+ * 
+ * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_REPEAT` event.
+ *
+ * @event Phaser.Animations.Events#SPRITE_ANIMATION_REPEAT
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that is repeating on the Sprite.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation started with.
+ * @param {integer} repeatCount - The number of times the Animation has repeated so far.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation repeated playing.
+ */
+module.exports = 'animationrepeat';
+
+
+/***/ }),
+/* 305 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Sprite Animation Restart Event.
+ * 
+ * This event is dispatched by a Sprite when an animation restarts playing on it.
+ * 
+ * Listen for it on the Sprite using `sprite.on('animationrestart', listener)`
+ * 
+ * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_RESTART` event.
+ *
+ * @event Phaser.Animations.Events#SPRITE_ANIMATION_RESTART
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that was restarted on the Sprite.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation restarted with.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation restarted playing.
+ */
+module.exports = 'animationrestart';
+
+
+/***/ }),
+/* 306 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Sprite Animation Start Event.
+ * 
+ * This event is dispatched by a Sprite when an animation starts playing on it.
+ * 
+ * Listen for it on the Sprite using `sprite.on('animationstart', listener)`
+ * 
+ * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_START` event.
+ *
+ * @event Phaser.Animations.Events#SPRITE_ANIMATION_START
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that was started on the Sprite.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation started with.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation started playing.
+ */
+module.exports = 'animationstart';
+
+
+/***/ }),
+/* 307 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Sprite Animation Update Event.
+ * 
+ * This event is dispatched by a Sprite when an animation playing on it updates. This happens when the animation changes frame,
+ * based on the animation frame rate and other factors like `timeScale` and `delay`.
+ * 
+ * Listen for it on the Sprite using `sprite.on('animationupdate', listener)`
+ * 
+ * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_UPDATE` event.
+ *
+ * @event Phaser.Animations.Events#SPRITE_ANIMATION_UPDATE
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that has updated on the Sprite.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame of the Animation.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation updated.
+ */
+module.exports = 'animationupdate';
+
+
+/***/ }),
+/* 308 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+
+/**
+ * @classdesc
+ * A single frame in an Animation sequence.
+ *
+ * An AnimationFrame consists of a reference to the Texture it uses for rendering, references to other
+ * frames in the animation, and index data. It also has the ability to modify the animation timing.
+ *
+ * AnimationFrames are generated automatically by the Animation class.
+ *
+ * @class AnimationFrame
+ * @memberof Phaser.Animations
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {string} textureKey - The key of the Texture this AnimationFrame uses.
+ * @param {(string|integer)} textureFrame - The key of the Frame within the Texture that this AnimationFrame uses.
+ * @param {integer} index - The index of this AnimationFrame within the Animation sequence.
+ * @param {Phaser.Textures.Frame} frame - A reference to the Texture Frame this AnimationFrame uses for rendering.
+ */
+var AnimationFrame = new Class({
+
+    initialize:
+
+    function AnimationFrame (textureKey, textureFrame, index, frame)
+    {
+        /**
+         * The key of the Texture this AnimationFrame uses.
+         *
+         * @name Phaser.Animations.AnimationFrame#textureKey
+         * @type {string}
+         * @since 3.0.0
+         */
+        this.textureKey = textureKey;
+
+        /**
+         * The key of the Frame within the Texture that this AnimationFrame uses.
+         *
+         * @name Phaser.Animations.AnimationFrame#textureFrame
+         * @type {(string|integer)}
+         * @since 3.0.0
+         */
+        this.textureFrame = textureFrame;
+
+        /**
+         * The index of this AnimationFrame within the Animation sequence.
+         *
+         * @name Phaser.Animations.AnimationFrame#index
+         * @type {integer}
+         * @since 3.0.0
+         */
+        this.index = index;
+
+        /**
+         * A reference to the Texture Frame this AnimationFrame uses for rendering.
+         *
+         * @name Phaser.Animations.AnimationFrame#frame
+         * @type {Phaser.Textures.Frame}
+         * @since 3.0.0
+         */
+        this.frame = frame;
+
+        /**
+         * Is this the first frame in an animation sequence?
+         *
+         * @name Phaser.Animations.AnimationFrame#isFirst
+         * @type {boolean}
+         * @default false
+         * @readonly
+         * @since 3.0.0
+         */
+        this.isFirst = false;
+
+        /**
+         * Is this the last frame in an animation sequence?
+         *
+         * @name Phaser.Animations.AnimationFrame#isLast
+         * @type {boolean}
+         * @default false
+         * @readonly
+         * @since 3.0.0
+         */
+        this.isLast = false;
+
+        /**
+         * A reference to the AnimationFrame that comes before this one in the animation, if any.
+         *
+         * @name Phaser.Animations.AnimationFrame#prevFrame
+         * @type {?Phaser.Animations.AnimationFrame}
+         * @default null
+         * @readonly
+         * @since 3.0.0
+         */
+        this.prevFrame = null;
+
+        /**
+         * A reference to the AnimationFrame that comes after this one in the animation, if any.
+         *
+         * @name Phaser.Animations.AnimationFrame#nextFrame
+         * @type {?Phaser.Animations.AnimationFrame}
+         * @default null
+         * @readonly
+         * @since 3.0.0
+         */
+        this.nextFrame = null;
+
+        /**
+         * Additional time (in ms) that this frame should appear for during playback.
+         * The value is added onto the msPerFrame set by the animation.
+         *
+         * @name Phaser.Animations.AnimationFrame#duration
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.duration = 0;
+
+        /**
+         * What % through the animation does this frame come?
+         * This value is generated when the animation is created and cached here.
+         *
+         * @name Phaser.Animations.AnimationFrame#progress
+         * @type {number}
+         * @default 0
+         * @readonly
+         * @since 3.0.0
+         */
+        this.progress = 0;
+    },
+
+    /**
+     * Generates a JavaScript object suitable for converting to JSON.
+     *
+     * @method Phaser.Animations.AnimationFrame#toJSON
+     * @since 3.0.0
+     *
+     * @return {Phaser.Types.Animations.JSONAnimationFrame} The AnimationFrame data.
+     */
+    toJSON: function ()
+    {
+        return {
+            key: this.textureKey,
+            frame: this.textureFrame,
+            duration: this.duration
+        };
+    },
+
+    /**
+     * Destroys this object by removing references to external resources and callbacks.
+     *
+     * @method Phaser.Animations.AnimationFrame#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.frame = undefined;
+    }
+
+});
+
+module.exports = AnimationFrame;
+
+
+/***/ }),
+/* 309 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var BlendModes = __webpack_require__(14);
+
+/**
+ * Provides methods used for setting the blend mode of a Game Object.
+ * Should be applied as a mixin and not used directly.
+ *
+ * @namespace Phaser.GameObjects.Components.BlendMode
+ * @since 3.0.0
+ */
+
+var BlendMode = {
+
+    /**
+     * Private internal value. Holds the current blend mode.
+     * 
+     * @name Phaser.GameObjects.Components.BlendMode#_blendMode
+     * @type {integer}
+     * @private
+     * @default 0
+     * @since 3.0.0
+     */
+    _blendMode: BlendModes.NORMAL,
+
+    /**
+     * Sets the Blend Mode being used by this Game Object.
+     *
+     * This can be a const, such as `Phaser.BlendModes.SCREEN`, or an integer, such as 4 (for Overlay)
+     *
+     * Under WebGL only the following Blend Modes are available:
+     *
+     * * ADD
+     * * MULTIPLY
+     * * SCREEN
+     * * ERASE
+     *
+     * Canvas has more available depending on browser support.
+     *
+     * You can also create your own custom Blend Modes in WebGL.
+     *
+     * Blend modes have different effects under Canvas and WebGL, and from browser to browser, depending
+     * on support. Blend Modes also cause a WebGL batch flush should it encounter a new blend mode. For these
+     * reasons try to be careful about the construction of your Scene and the frequency of which blend modes
+     * are used.
+     *
+     * @name Phaser.GameObjects.Components.BlendMode#blendMode
+     * @type {(Phaser.BlendModes|string)}
+     * @since 3.0.0
+     */
+    blendMode: {
+
+        get: function ()
+        {
+            return this._blendMode;
+        },
+
+        set: function (value)
+        {
+            if (typeof value === 'string')
+            {
+                value = BlendModes[value];
+            }
+
+            value |= 0;
+
+            if (value >= -1)
+            {
+                this._blendMode = value;
+            }
+        }
+
+    },
+
+    /**
+     * Sets the Blend Mode being used by this Game Object.
+     *
+     * This can be a const, such as `Phaser.BlendModes.SCREEN`, or an integer, such as 4 (for Overlay)
+     *
+     * Under WebGL only the following Blend Modes are available:
+     *
+     * * ADD
+     * * MULTIPLY
+     * * SCREEN
+     * * ERASE (only works when rendering to a framebuffer, like a Render Texture)
+     *
+     * Canvas has more available depending on browser support.
+     *
+     * You can also create your own custom Blend Modes in WebGL.
+     *
+     * Blend modes have different effects under Canvas and WebGL, and from browser to browser, depending
+     * on support. Blend Modes also cause a WebGL batch flush should it encounter a new blend mode. For these
+     * reasons try to be careful about the construction of your Scene and the frequency in which blend modes
+     * are used.
+     *
+     * @method Phaser.GameObjects.Components.BlendMode#setBlendMode
+     * @since 3.0.0
+     *
+     * @param {(string|Phaser.BlendModes)} value - The BlendMode value. Either a string or a CONST.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setBlendMode: function (value)
+    {
+        this.blendMode = value;
+
+        return this;
+    }
+
+};
+
+module.exports = BlendMode;
+
+
+/***/ }),
+/* 310 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Provides methods used for getting and setting the texture of a Game Object.
+ *
+ * @namespace Phaser.GameObjects.Components.Crop
+ * @since 3.12.0
+ */
+
+var Crop = {
+
+    /**
+     * The Texture this Game Object is using to render with.
+     *
+     * @name Phaser.GameObjects.Components.Crop#texture
+     * @type {Phaser.Textures.Texture|Phaser.Textures.CanvasTexture}
+     * @since 3.0.0
+     */
+    texture: null,
+
+    /**
+     * The Texture Frame this Game Object is using to render with.
+     *
+     * @name Phaser.GameObjects.Components.Crop#frame
+     * @type {Phaser.Textures.Frame}
+     * @since 3.0.0
+     */
+    frame: null,
+
+    /**
+     * A boolean flag indicating if this Game Object is being cropped or not.
+     * You can toggle this at any time after `setCrop` has been called, to turn cropping on or off.
+     * Equally, calling `setCrop` with no arguments will reset the crop and disable it.
+     *
+     * @name Phaser.GameObjects.Components.Crop#isCropped
+     * @type {boolean}
+     * @since 3.11.0
+     */
+    isCropped: false,
+
+    /**
+     * Applies a crop to a texture based Game Object, such as a Sprite or Image.
+     * 
+     * The crop is a rectangle that limits the area of the texture frame that is visible during rendering.
+     * 
+     * Cropping a Game Object does not change its size, dimensions, physics body or hit area, it just
+     * changes what is shown when rendered.
+     * 
+     * The crop coordinates are relative to the texture frame, not the Game Object, meaning 0 x 0 is the top-left.
+     * 
+     * Therefore, if you had a Game Object that had an 800x600 sized texture, and you wanted to show only the left
+     * half of it, you could call `setCrop(0, 0, 400, 600)`.
+     * 
+     * It is also scaled to match the Game Object scale automatically. Therefore a crop rect of 100x50 would crop
+     * an area of 200x100 when applied to a Game Object that had a scale factor of 2.
+     * 
+     * You can either pass in numeric values directly, or you can provide a single Rectangle object as the first argument.
+     * 
+     * Call this method with no arguments at all to reset the crop, or toggle the property `isCropped` to `false`.
+     * 
+     * You should do this if the crop rectangle becomes the same size as the frame itself, as it will allow
+     * the renderer to skip several internal calculations.
+     *
+     * @method Phaser.GameObjects.Components.Crop#setCrop
+     * @since 3.11.0
+     *
+     * @param {(number|Phaser.Geom.Rectangle)} [x] - The x coordinate to start the crop from. Or a Phaser.Geom.Rectangle object, in which case the rest of the arguments are ignored.
+     * @param {number} [y] - The y coordinate to start the crop from.
+     * @param {number} [width] - The width of the crop rectangle in pixels.
+     * @param {number} [height] - The height of the crop rectangle in pixels.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setCrop: function (x, y, width, height)
+    {
+        if (x === undefined)
+        {
+            this.isCropped = false;
+        }
+        else if (this.frame)
+        {
+            if (typeof x === 'number')
+            {
+                this.frame.setCropUVs(this._crop, x, y, width, height, this.flipX, this.flipY);
+            }
+            else
+            {
+                var rect = x;
+
+                this.frame.setCropUVs(this._crop, rect.x, rect.y, rect.width, rect.height, this.flipX, this.flipY);
+            }
+
+            this.isCropped = true;
+        }
+
+        return this;
+    },
+
+    /**
+     * Internal method that returns a blank, well-formed crop object for use by a Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Crop#resetCropObject
+     * @private
+     * @since 3.12.0
+     * 
+     * @return {object} The crop object.
+     */
+    resetCropObject: function ()
+    {
+        return { u0: 0, v0: 0, u1: 0, v1: 0, width: 0, height: 0, x: 0, y: 0, flipX: false, flipY: false, cx: 0, cy: 0, cw: 0, ch: 0 };
+    }
+
+};
+
+module.exports = Crop;
+
+
+/***/ }),
+/* 311 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Rectangle = __webpack_require__(24);
+var RotateAround = __webpack_require__(38);
+var Vector2 = __webpack_require__(1);
+
+/**
+ * Provides methods used for obtaining the bounds of a Game Object.
+ * Should be applied as a mixin and not used directly.
+ *
+ * @namespace Phaser.GameObjects.Components.GetBounds
+ * @since 3.0.0
+ */
+
+var GetBounds = {
+
+    /**
+     * Processes the bounds output vector before returning it.
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#prepareBoundsOutput
+     * @private
+     * @since 3.18.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} output - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    prepareBoundsOutput: function (output, includeParent)
+    {
+        if (includeParent === undefined) { includeParent = false; }
+
+        if (this.rotation !== 0)
+        {
+            RotateAround(output, this.x, this.y, this.rotation);
+        }
+
+        if (includeParent && this.parentContainer)
+        {
+            var parentMatrix = this.parentContainer.getBoundsTransformMatrix();
+
+            parentMatrix.transformPoint(output.x, output.y, output);
+        }
+
+        return output;
+    },
+
+    /**
+     * Gets the center coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getCenter
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    getCenter: function (output)
+    {
+        if (output === undefined) { output = new Vector2(); }
+
+        output.x = this.x - (this.displayWidth * this.originX) + (this.displayWidth / 2);
+        output.y = this.y - (this.displayHeight * this.originY) + (this.displayHeight / 2);
+
+        return output;
+    },
+
+    /**
+     * Gets the top-left corner coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getTopLeft
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    getTopLeft: function (output, includeParent)
+    {
+        if (!output) { output = new Vector2(); }
+
+        output.x = this.x - (this.displayWidth * this.originX);
+        output.y = this.y - (this.displayHeight * this.originY);
+
+        return this.prepareBoundsOutput(output, includeParent);
+    },
+
+    /**
+     * Gets the top-center coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getTopCenter
+     * @since 3.18.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    getTopCenter: function (output, includeParent)
+    {
+        if (!output) { output = new Vector2(); }
+
+        output.x = (this.x - (this.displayWidth * this.originX)) + (this.displayWidth / 2);
+        output.y = this.y - (this.displayHeight * this.originY);
+
+        return this.prepareBoundsOutput(output, includeParent);
+    },
+
+    /**
+     * Gets the top-right corner coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getTopRight
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    getTopRight: function (output, includeParent)
+    {
+        if (!output) { output = new Vector2(); }
+
+        output.x = (this.x - (this.displayWidth * this.originX)) + this.displayWidth;
+        output.y = this.y - (this.displayHeight * this.originY);
+
+        return this.prepareBoundsOutput(output, includeParent);
+    },
+
+    /**
+     * Gets the left-center coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getLeftCenter
+     * @since 3.18.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    getLeftCenter: function (output, includeParent)
+    {
+        if (!output) { output = new Vector2(); }
+
+        output.x = this.x - (this.displayWidth * this.originX);
+        output.y = (this.y - (this.displayHeight * this.originY)) + (this.displayHeight / 2);
+
+        return this.prepareBoundsOutput(output, includeParent);
+    },
+
+    /**
+     * Gets the right-center coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getRightCenter
+     * @since 3.18.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    getRightCenter: function (output, includeParent)
+    {
+        if (!output) { output = new Vector2(); }
+
+        output.x = (this.x - (this.displayWidth * this.originX)) + this.displayWidth;
+        output.y = (this.y - (this.displayHeight * this.originY)) + (this.displayHeight / 2);
+
+        return this.prepareBoundsOutput(output, includeParent);
+    },
+
+    /**
+     * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getBottomLeft
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    getBottomLeft: function (output, includeParent)
+    {
+        if (!output) { output = new Vector2(); }
+
+        output.x = this.x - (this.displayWidth * this.originX);
+        output.y = (this.y - (this.displayHeight * this.originY)) + this.displayHeight;
+
+        return this.prepareBoundsOutput(output, includeParent);
+    },
+
+    /**
+     * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getBottomCenter
+     * @since 3.18.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    getBottomCenter: function (output, includeParent)
+    {
+        if (!output) { output = new Vector2(); }
+
+        output.x = (this.x - (this.displayWidth * this.originX)) + (this.displayWidth / 2);
+        output.y = (this.y - (this.displayHeight * this.originY)) + this.displayHeight;
+
+        return this.prepareBoundsOutput(output, includeParent);
+    },
+
+    /**
+     * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getBottomRight
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    getBottomRight: function (output, includeParent)
+    {
+        if (!output) { output = new Vector2(); }
+
+        output.x = (this.x - (this.displayWidth * this.originX)) + this.displayWidth;
+        output.y = (this.y - (this.displayHeight * this.originY)) + this.displayHeight;
+
+        return this.prepareBoundsOutput(output, includeParent);
+    },
+
+    /**
+     * Gets the bounds of this Game Object, regardless of origin.
+     * The values are stored and returned in a Rectangle, or Rectangle-like, object.
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getBounds
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Rectangle} O - [output,$return]
+     *
+     * @param {(Phaser.Geom.Rectangle|object)} [output] - An object to store the values in. If not provided a new Rectangle will be created.
+     *
+     * @return {(Phaser.Geom.Rectangle|object)} The values stored in the output object.
+     */
+    getBounds: function (output)
+    {
+        if (output === undefined) { output = new Rectangle(); }
+
+        //  We can use the output object to temporarily store the x/y coords in:
+
+        var TLx, TLy, TRx, TRy, BLx, BLy, BRx, BRy;
+
+        // Instead of doing a check if parent container is 
+        // defined per corner we only do it once.
+        if (this.parentContainer)
+        {
+            var parentMatrix = this.parentContainer.getBoundsTransformMatrix();
+
+            this.getTopLeft(output);
+            parentMatrix.transformPoint(output.x, output.y, output);
+
+            TLx = output.x;
+            TLy = output.y;
+
+            this.getTopRight(output);
+            parentMatrix.transformPoint(output.x, output.y, output);
+
+            TRx = output.x;
+            TRy = output.y;
+
+            this.getBottomLeft(output);
+            parentMatrix.transformPoint(output.x, output.y, output);
+
+            BLx = output.x;
+            BLy = output.y;
+
+            this.getBottomRight(output);
+            parentMatrix.transformPoint(output.x, output.y, output);
+
+            BRx = output.x;
+            BRy = output.y;
+        }
+        else
+        {
+            this.getTopLeft(output);
+
+            TLx = output.x;
+            TLy = output.y;
+
+            this.getTopRight(output);
+
+            TRx = output.x;
+            TRy = output.y;
+
+            this.getBottomLeft(output);
+
+            BLx = output.x;
+            BLy = output.y;
+
+            this.getBottomRight(output);
+
+            BRx = output.x;
+            BRy = output.y;
+        }
+
+        output.x = Math.min(TLx, TRx, BLx, BRx);
+        output.y = Math.min(TLy, TRy, BLy, BRy);
+        output.width = Math.max(TLx, TRx, BLx, BRx) - output.x;
+        output.height = Math.max(TLy, TRy, BLy, BRy) - output.y;
+
+        return output;
+    }
+
+};
+
+module.exports = GetBounds;
+
+
+/***/ }),
+/* 312 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Checks if a given point is inside a Rectangle's bounds.
+ *
+ * @function Phaser.Geom.Rectangle.Contains
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Rectangle} rect - The Rectangle to check.
+ * @param {number} x - The X coordinate of the point to check.
+ * @param {number} y - The Y coordinate of the point to check.
+ *
+ * @return {boolean} `true` if the point is within the Rectangle's bounds, otherwise `false`.
+ */
+var Contains = function (rect, x, y)
+{
+    if (rect.width <= 0 || rect.height <= 0)
+    {
+        return false;
+    }
+
+    return (rect.x <= x && rect.x + rect.width >= x && rect.y <= y && rect.y + rect.height >= y);
+};
+
+module.exports = Contains;
+
+
+/***/ }),
+/* 313 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var GetPoint = __webpack_require__(60);
+var Perimeter = __webpack_require__(61);
+
+//  Return an array of points from the perimeter of the rectangle
+//  each spaced out based on the quantity or step required
+
+/**
+ * Return an array of points from the perimeter of the rectangle, each spaced out based on the quantity or step required.
+ *
+ * @function Phaser.Geom.Rectangle.GetPoints
+ * @since 3.0.0
+ *
+ * @generic {Phaser.Geom.Point[]} O - [out,$return]
+ *
+ * @param {Phaser.Geom.Rectangle} rectangle - The Rectangle object to get the points from.
+ * @param {number} step - Step between points. Used to calculate the number of points to return when quantity is falsey. Ignored if quantity is positive.
+ * @param {integer} quantity - The number of evenly spaced points from the rectangles perimeter to return. If falsey, step param will be used to calculate the number of points.
+ * @param {(array|Phaser.Geom.Point[])} [out] - An optional array to store the points in.
+ *
+ * @return {(array|Phaser.Geom.Point[])} An array of Points from the perimeter of the rectangle.
+ */
+var GetPoints = function (rectangle, quantity, stepRate, out)
+{
+    if (out === undefined) { out = []; }
+
+    //  If quantity is a falsey value (false, null, 0, undefined, etc) then we calculate it based on the stepRate instead.
+    if (!quantity && stepRate > 0)
+    {
+        quantity = Perimeter(rectangle) / stepRate;
+    }
+
+    for (var i = 0; i < quantity; i++)
+    {
+        var position = i / quantity;
+
+        out.push(GetPoint(rectangle, position));
+    }
+
+    return out;
+};
+
+module.exports = GetPoints;
+
+
+/***/ }),
+/* 314 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+var GetPoint = __webpack_require__(315);
+var GetPoints = __webpack_require__(316);
+var GEOM_CONST = __webpack_require__(25);
+var Random = __webpack_require__(318);
+var Vector2 = __webpack_require__(1);
+
+/**
+ * @classdesc
+ * Defines a Line segment, a part of a line between two endpoints.
+ *
+ * @class Line
+ * @memberof Phaser.Geom
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [x1=0] - The x coordinate of the lines starting point.
+ * @param {number} [y1=0] - The y coordinate of the lines starting point.
+ * @param {number} [x2=0] - The x coordinate of the lines ending point.
+ * @param {number} [y2=0] - The y coordinate of the lines ending point.
+ */
+var Line = new Class({
+
+    initialize:
+
+    function Line (x1, y1, x2, y2)
+    {
+        if (x1 === undefined) { x1 = 0; }
+        if (y1 === undefined) { y1 = 0; }
+        if (x2 === undefined) { x2 = 0; }
+        if (y2 === undefined) { y2 = 0; }
+
+        /**
+         * The geometry constant type of this object: `GEOM_CONST.LINE`.
+         * Used for fast type comparisons.
+         *
+         * @name Phaser.Geom.Line#type
+         * @type {integer}
+         * @readonly
+         * @since 3.19.0
+         */
+        this.type = GEOM_CONST.LINE;
+
+        /**
+         * The x coordinate of the lines starting point.
+         *
+         * @name Phaser.Geom.Line#x1
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.x1 = x1;
+
+        /**
+         * The y coordinate of the lines starting point.
+         *
+         * @name Phaser.Geom.Line#y1
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.y1 = y1;
+
+        /**
+         * The x coordinate of the lines ending point.
+         *
+         * @name Phaser.Geom.Line#x2
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.x2 = x2;
+
+        /**
+         * The y coordinate of the lines ending point.
+         *
+         * @name Phaser.Geom.Line#y2
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.y2 = y2;
+    },
+
+    /**
+     * Get a point on a line that's a given percentage along its length.
+     *
+     * @method Phaser.Geom.Line#getPoint
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Point} O - [output,$return]
+     *
+     * @param {number} position - A value between 0 and 1, where 0 is the start, 0.5 is the middle and 1 is the end of the line.
+     * @param {(Phaser.Geom.Point|object)} [output] - An optional point, or point-like object, to store the coordinates of the point on the line.
+     *
+     * @return {(Phaser.Geom.Point|object)} A Point, or point-like object, containing the coordinates of the point on the line.
+     */
+    getPoint: function (position, output)
+    {
+        return GetPoint(this, position, output);
+    },
+
+    /**
+     * Get a number of points along a line's length.
+     *
+     * Provide a `quantity` to get an exact number of points along the line.
+     *
+     * Provide a `stepRate` to ensure a specific distance between each point on the line. Set `quantity` to `0` when
+     * providing a `stepRate`.
+     *
+     * @method Phaser.Geom.Line#getPoints
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Point[]} O - [output,$return]
+     *
+     * @param {integer} quantity - The number of points to place on the line. Set to `0` to use `stepRate` instead.
+     * @param {integer} [stepRate] - The distance between each point on the line. When set, `quantity` is implied and should be set to `0`.
+     * @param {(array|Phaser.Geom.Point[])} [output] - An optional array of Points, or point-like objects, to store the coordinates of the points on the line.
+     *
+     * @return {(array|Phaser.Geom.Point[])} An array of Points, or point-like objects, containing the coordinates of the points on the line.
+     */
+    getPoints: function (quantity, stepRate, output)
+    {
+        return GetPoints(this, quantity, stepRate, output);
+    },
+
+    /**
+     * Get a random Point on the Line.
+     *
+     * @method Phaser.Geom.Line#getRandomPoint
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Point} O - [point,$return]
+     *
+     * @param {(Phaser.Geom.Point|object)} [point] - An instance of a Point to be modified.
+     *
+     * @return {Phaser.Geom.Point} A random Point on the Line.
+     */
+    getRandomPoint: function (point)
+    {
+        return Random(this, point);
+    },
+
+    /**
+     * Set new coordinates for the line endpoints.
+     *
+     * @method Phaser.Geom.Line#setTo
+     * @since 3.0.0
+     *
+     * @param {number} [x1=0] - The x coordinate of the lines starting point.
+     * @param {number} [y1=0] - The y coordinate of the lines starting point.
+     * @param {number} [x2=0] - The x coordinate of the lines ending point.
+     * @param {number} [y2=0] - The y coordinate of the lines ending point.
+     *
+     * @return {this} This Line object.
+     */
+    setTo: function (x1, y1, x2, y2)
+    {
+        if (x1 === undefined) { x1 = 0; }
+        if (y1 === undefined) { y1 = 0; }
+        if (x2 === undefined) { x2 = 0; }
+        if (y2 === undefined) { y2 = 0; }
+
+        this.x1 = x1;
+        this.y1 = y1;
+
+        this.x2 = x2;
+        this.y2 = y2;
+
+        return this;
+    },
+
+    /**
+     * Returns a Vector2 object that corresponds to the start of this Line.
+     *
+     * @method Phaser.Geom.Line#getPointA
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [vec2,$return]
+     *
+     * @param {Phaser.Math.Vector2} [vec2] - A Vector2 object to set the results in. If `undefined` a new Vector2 will be created.
+     *
+     * @return {Phaser.Math.Vector2} A Vector2 object that corresponds to the start of this Line.
+     */
+    getPointA: function (vec2)
+    {
+        if (vec2 === undefined) { vec2 = new Vector2(); }
+
+        vec2.set(this.x1, this.y1);
+
+        return vec2;
+    },
+
+    /**
+     * Returns a Vector2 object that corresponds to the end of this Line.
+     *
+     * @method Phaser.Geom.Line#getPointB
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [vec2,$return]
+     *
+     * @param {Phaser.Math.Vector2} [vec2] - A Vector2 object to set the results in. If `undefined` a new Vector2 will be created.
+     *
+     * @return {Phaser.Math.Vector2} A Vector2 object that corresponds to the end of this Line.
+     */
+    getPointB: function (vec2)
+    {
+        if (vec2 === undefined) { vec2 = new Vector2(); }
+
+        vec2.set(this.x2, this.y2);
+
+        return vec2;
+    },
+
+    /**
+     * The left position of the Line.
+     *
+     * @name Phaser.Geom.Line#left
+     * @type {number}
+     * @since 3.0.0
+     */
+    left: {
+
+        get: function ()
+        {
+            return Math.min(this.x1, this.x2);
+        },
+
+        set: function (value)
+        {
+            if (this.x1 <= this.x2)
+            {
+                this.x1 = value;
+            }
+            else
+            {
+                this.x2 = value;
+            }
+        }
+
+    },
+
+    /**
+     * The right position of the Line.
+     *
+     * @name Phaser.Geom.Line#right
+     * @type {number}
+     * @since 3.0.0
+     */
+    right: {
+
+        get: function ()
+        {
+            return Math.max(this.x1, this.x2);
+        },
+
+        set: function (value)
+        {
+            if (this.x1 > this.x2)
+            {
+                this.x1 = value;
+            }
+            else
+            {
+                this.x2 = value;
+            }
+        }
+
+    },
+
+    /**
+     * The top position of the Line.
+     *
+     * @name Phaser.Geom.Line#top
+     * @type {number}
+     * @since 3.0.0
+     */
+    top: {
+
+        get: function ()
+        {
+            return Math.min(this.y1, this.y2);
+        },
+
+        set: function (value)
+        {
+            if (this.y1 <= this.y2)
+            {
+                this.y1 = value;
+            }
+            else
+            {
+                this.y2 = value;
+            }
+        }
+
+    },
+
+    /**
+     * The bottom position of the Line.
+     *
+     * @name Phaser.Geom.Line#bottom
+     * @type {number}
+     * @since 3.0.0
+     */
+    bottom: {
+
+        get: function ()
+        {
+            return Math.max(this.y1, this.y2);
+        },
+
+        set: function (value)
+        {
+            if (this.y1 > this.y2)
+            {
+                this.y1 = value;
+            }
+            else
+            {
+                this.y2 = value;
+            }
+        }
+
+    }
+
+});
+
+module.exports = Line;
+
+
+/***/ }),
+/* 315 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Point = __webpack_require__(9);
+
+/**
+ * Get a point on a line that's a given percentage along its length.
+ *
+ * @function Phaser.Geom.Line.GetPoint
+ * @since 3.0.0
+ *
+ * @generic {Phaser.Geom.Point} O - [out,$return]
+ *
+ * @param {Phaser.Geom.Line} line - The line.
+ * @param {number} position - A value between 0 and 1, where 0 is the start, 0.5 is the middle and 1 is the end of the line.
+ * @param {(Phaser.Geom.Point|object)} [out] - An optional point, or point-like object, to store the coordinates of the point on the line.
+ *
+ * @return {(Phaser.Geom.Point|object)} The point on the line.
+ */
+var GetPoint = function (line, position, out)
+{
+    if (out === undefined) { out = new Point(); }
+
+    out.x = line.x1 + (line.x2 - line.x1) * position;
+    out.y = line.y1 + (line.y2 - line.y1) * position;
+
+    return out;
+};
+
+module.exports = GetPoint;
+
+
+/***/ }),
+/* 316 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Length = __webpack_require__(317);
+var Point = __webpack_require__(9);
+
+/**
+ * Get a number of points along a line's length.
+ *
+ * Provide a `quantity` to get an exact number of points along the line.
+ *
+ * Provide a `stepRate` to ensure a specific distance between each point on the line. Set `quantity` to `0` when
+ * providing a `stepRate`.
+ *
+ * @function Phaser.Geom.Line.GetPoints
+ * @since 3.0.0
+ *
+ * @generic {Phaser.Geom.Point[]} O - [out,$return]
+ *
+ * @param {Phaser.Geom.Line} line - The line.
+ * @param {integer} quantity - The number of points to place on the line. Set to `0` to use `stepRate` instead.
+ * @param {number} [stepRate] - The distance between each point on the line. When set, `quantity` is implied and should be set to `0`.
+ * @param {(array|Phaser.Geom.Point[])} [out] - An optional array of Points, or point-like objects, to store the coordinates of the points on the line.
+ *
+ * @return {(array|Phaser.Geom.Point[])} An array of Points, or point-like objects, containing the coordinates of the points on the line.
+ */
+var GetPoints = function (line, quantity, stepRate, out)
+{
+    if (out === undefined) { out = []; }
+
+    //  If quantity is a falsey value (false, null, 0, undefined, etc) then we calculate it based on the stepRate instead.
+    if (!quantity && stepRate > 0)
+    {
+        quantity = Length(line) / stepRate;
+    }
+
+    var x1 = line.x1;
+    var y1 = line.y1;
+
+    var x2 = line.x2;
+    var y2 = line.y2;
+
+    for (var i = 0; i < quantity; i++)
+    {
+        var position = i / quantity;
+
+        var x = x1 + (x2 - x1) * position;
+        var y = y1 + (y2 - y1) * position;
+
+        out.push(new Point(x, y));
+    }
+
+    return out;
+};
+
+module.exports = GetPoints;
+
+
+/***/ }),
+/* 317 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculate the length of the given line.
+ *
+ * @function Phaser.Geom.Line.Length
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Line} line - The line to calculate the length of.
+ *
+ * @return {number} The length of the line.
+ */
+var Length = function (line)
+{
+    return Math.sqrt((line.x2 - line.x1) * (line.x2 - line.x1) + (line.y2 - line.y1) * (line.y2 - line.y1));
+};
+
+module.exports = Length;
+
+
+/***/ }),
+/* 318 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Point = __webpack_require__(9);
+
+/**
+ * Returns a random point on a given Line.
+ *
+ * @function Phaser.Geom.Line.Random
+ * @since 3.0.0
+ *
+ * @generic {Phaser.Geom.Point} O - [out,$return]
+ *
+ * @param {Phaser.Geom.Line} line - The Line to calculate the random Point on.
+ * @param {(Phaser.Geom.Point|object)} [out] - An instance of a Point to be modified.
+ *
+ * @return {(Phaser.Geom.Point|object)} A random Point on the Line.
+ */
+var Random = function (line, out)
+{
+    if (out === undefined) { out = new Point(); }
+
+    var t = Math.random();
+
+    out.x = line.x1 + t * (line.x2 - line.x1);
+    out.y = line.y1 + t * (line.y2 - line.y1);
+
+    return out;
+};
+
+module.exports = Random;
+
+
+/***/ }),
+/* 319 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Point = __webpack_require__(9);
+
+/**
+ * Returns a random point within a Rectangle.
+ *
+ * @function Phaser.Geom.Rectangle.Random
+ * @since 3.0.0
+ *
+ * @generic {Phaser.Geom.Point} O - [out,$return]
+ *
+ * @param {Phaser.Geom.Rectangle} rect - The Rectangle to return a point from.
+ * @param {Phaser.Geom.Point} out - The object to update with the point's coordinates.
+ *
+ * @return {Phaser.Geom.Point} The modified `out` object, or a new Point if none was provided.
+ */
+var Random = function (rect, out)
+{
+    if (out === undefined) { out = new Point(); }
+
+    out.x = rect.x + (Math.random() * rect.width);
+    out.y = rect.y + (Math.random() * rect.height);
+
+    return out;
+};
+
+module.exports = Random;
+
+
+/***/ }),
+/* 320 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var BitmapMask = __webpack_require__(321);
+var GeometryMask = __webpack_require__(339);
+
+/**
+ * Provides methods used for getting and setting the mask of a Game Object.
+ *
+ * @namespace Phaser.GameObjects.Components.Mask
+ * @since 3.0.0
+ */
+
+var Mask = {
+
+    /**
+     * The Mask this Game Object is using during render.
+     *
+     * @name Phaser.GameObjects.Components.Mask#mask
+     * @type {Phaser.Display.Masks.BitmapMask|Phaser.Display.Masks.GeometryMask}
+     * @since 3.0.0
+     */
+    mask: null,
+
+    /**
+     * Sets the mask that this Game Object will use to render with.
+     *
+     * The mask must have been previously created and can be either a GeometryMask or a BitmapMask.
+     * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+     *
+     * If a mask is already set on this Game Object it will be immediately replaced.
+     * 
+     * Masks are positioned in global space and are not relative to the Game Object to which they
+     * are applied. The reason for this is that multiple Game Objects can all share the same mask.
+     * 
+     * Masks have no impact on physics or input detection. They are purely a rendering component
+     * that allows you to limit what is visible during the render pass.
+     *
+     * @method Phaser.GameObjects.Components.Mask#setMask
+     * @since 3.6.2
+     *
+     * @param {Phaser.Display.Masks.BitmapMask|Phaser.Display.Masks.GeometryMask} mask - The mask this Game Object will use when rendering.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setMask: function (mask)
+    {
+        this.mask = mask;
+
+        return this;
+    },
+
+    /**
+     * Clears the mask that this Game Object was using.
+     *
+     * @method Phaser.GameObjects.Components.Mask#clearMask
+     * @since 3.6.2
+     *
+     * @param {boolean} [destroyMask=false] - Destroy the mask before clearing it?
+     *
+     * @return {this} This Game Object instance.
+     */
+    clearMask: function (destroyMask)
+    {
+        if (destroyMask === undefined) { destroyMask = false; }
+
+        if (destroyMask && this.mask)
+        {
+            this.mask.destroy();
+        }
+
+        this.mask = null;
+
+        return this;
+    },
+
+    /**
+     * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+     * including this one.
+     *
+     * To create the mask you need to pass in a reference to a renderable Game Object.
+     * A renderable Game Object is one that uses a texture to render with, such as an
+     * Image, Sprite, Render Texture or BitmapText.
+     *
+     * If you do not provide a renderable object, and this Game Object has a texture,
+     * it will use itself as the object. This means you can call this method to create
+     * a Bitmap Mask from any renderable Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Mask#createBitmapMask
+     * @since 3.6.2
+     * 
+     * @param {Phaser.GameObjects.GameObject} [renderable] - A renderable Game Object that uses a texture, such as a Sprite.
+     *
+     * @return {Phaser.Display.Masks.BitmapMask} This Bitmap Mask that was created.
+     */
+    createBitmapMask: function (renderable)
+    {
+        if (renderable === undefined && (this.texture || this.shader))
+        {
+            // eslint-disable-next-line consistent-this
+            renderable = this;
+        }
+
+        return new BitmapMask(this.scene, renderable);
+    },
+
+    /**
+     * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+     * including this one.
+     *
+     * To create the mask you need to pass in a reference to a Graphics Game Object.
+     *
+     * If you do not provide a graphics object, and this Game Object is an instance
+     * of a Graphics object, then it will use itself to create the mask.
+     * 
+     * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Mask#createGeometryMask
+     * @since 3.6.2
+     * 
+     * @param {Phaser.GameObjects.Graphics} [graphics] - A Graphics Game Object. The geometry within it will be used as the mask.
+     *
+     * @return {Phaser.Display.Masks.GeometryMask} This Geometry Mask that was created.
+     */
+    createGeometryMask: function (graphics)
+    {
+        if (graphics === undefined && this.type === 'Graphics')
+        {
+            // eslint-disable-next-line consistent-this
+            graphics = this;
+        }
+
+        return new GeometryMask(this.scene, graphics);
+    }
+
+};
+
+module.exports = Mask;
+
+
+/***/ }),
+/* 321 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+var GameEvents = __webpack_require__(322);
+
+/**
+ * @classdesc
+ * A Bitmap Mask combines the alpha (opacity) of a masked pixel with the alpha of another pixel.
+ * Unlike the Geometry Mask, which is a clipping path, a Bitmap Mask behaves like an alpha mask,
+ * not a clipping path. It is only available when using the WebGL Renderer.
+ *
+ * A Bitmap Mask can use any Game Object to determine the alpha of each pixel of the masked Game Object(s).
+ * For any given point of a masked Game Object's texture, the pixel's alpha will be multiplied by the alpha
+ * of the pixel at the same position in the Bitmap Mask's Game Object. The color of the pixel from the
+ * Bitmap Mask doesn't matter.
+ *
+ * For example, if a pure blue pixel with an alpha of 0.95 is masked with a pure red pixel with an
+ * alpha of 0.5, the resulting pixel will be pure blue with an alpha of 0.475. Naturally, this means
+ * that a pixel in the mask with an alpha of 0 will hide the corresponding pixel in all masked Game Objects
+ *  A pixel with an alpha of 1 in the masked Game Object will receive the same alpha as the
+ * corresponding pixel in the mask.
+ *
+ * The Bitmap Mask's location matches the location of its Game Object, not the location of the
+ * masked objects. Moving or transforming the underlying Game Object will change the mask
+ * (and affect the visibility of any masked objects), whereas moving or transforming a masked object
+ * will not affect the mask.
+ *
+ * The Bitmap Mask will not render its Game Object by itself. If the Game Object is not in a
+ * Scene's display list, it will only be used for the mask and its full texture will not be directly
+ * visible. Adding the underlying Game Object to a Scene will not cause any problems - it will
+ * render as a normal Game Object and will also serve as a mask.
+ *
+ * @class BitmapMask
+ * @memberof Phaser.Display.Masks
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - The Scene which this Bitmap Mask will be used in.
+ * @param {Phaser.GameObjects.GameObject} renderable - A renderable Game Object that uses a texture, such as a Sprite.
+ */
+var BitmapMask = new Class({
+
+    initialize:
+
+    function BitmapMask (scene, renderable)
+    {
+        var renderer = scene.sys.game.renderer;
+
+        /**
+         * A reference to either the Canvas or WebGL Renderer that this Mask is using.
+         *
+         * @name Phaser.Display.Masks.BitmapMask#renderer
+         * @type {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)}
+         * @since 3.11.0
+         */
+        this.renderer = renderer;
+
+        /**
+         * A renderable Game Object that uses a texture, such as a Sprite.
+         *
+         * @name Phaser.Display.Masks.BitmapMask#bitmapMask
+         * @type {Phaser.GameObjects.GameObject}
+         * @since 3.0.0
+         */
+        this.bitmapMask = renderable;
+
+        /**
+         * The texture used for the mask's framebuffer.
+         *
+         * @name Phaser.Display.Masks.BitmapMask#maskTexture
+         * @type {WebGLTexture}
+         * @default null
+         * @since 3.0.0
+         */
+        this.maskTexture = null;
+
+        /**
+         * The texture used for the main framebuffer.
+         *
+         * @name Phaser.Display.Masks.BitmapMask#mainTexture
+         * @type {WebGLTexture}
+         * @default null
+         * @since 3.0.0
+         */
+        this.mainTexture = null;
+
+        /**
+         * Whether the Bitmap Mask is dirty and needs to be updated.
+         *
+         * @name Phaser.Display.Masks.BitmapMask#dirty
+         * @type {boolean}
+         * @default true
+         * @since 3.0.0
+         */
+        this.dirty = true;
+
+        /**
+         * The framebuffer to which a masked Game Object is rendered.
+         *
+         * @name Phaser.Display.Masks.BitmapMask#mainFramebuffer
+         * @type {WebGLFramebuffer}
+         * @since 3.0.0
+         */
+        this.mainFramebuffer = null;
+
+        /**
+         * The framebuffer to which the Bitmap Mask's masking Game Object is rendered.
+         *
+         * @name Phaser.Display.Masks.BitmapMask#maskFramebuffer
+         * @type {WebGLFramebuffer}
+         * @since 3.0.0
+         */
+        this.maskFramebuffer = null;
+
+        /**
+         * The previous framebuffer set in the renderer before this one was enabled.
+         *
+         * @name Phaser.Display.Masks.BitmapMask#prevFramebuffer
+         * @type {WebGLFramebuffer}
+         * @since 3.17.0
+         */
+        this.prevFramebuffer = null;
+
+        /**
+         * Whether to invert the masks alpha.
+         *
+         * If `true`, the alpha of the masking pixel will be inverted before it's multiplied with the masked pixel. Essentially, this means that a masked area will be visible only if the corresponding area in the mask is invisible.
+         *
+         * @name Phaser.Display.Masks.BitmapMask#invertAlpha
+         * @type {boolean}
+         * @since 3.1.2
+         */
+        this.invertAlpha = false;
+
+        /**
+         * Is this mask a stencil mask?
+         *
+         * @name Phaser.Display.Masks.BitmapMask#isStencil
+         * @type {boolean}
+         * @readonly
+         * @since 3.17.0
+         */
+        this.isStencil = false;
+
+        if (renderer && renderer.gl)
+        {
+            var width = renderer.width;
+            var height = renderer.height;
+            var pot = ((width & (width - 1)) === 0 && (height & (height - 1)) === 0);
+            var gl = renderer.gl;
+            var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
+            var filter = gl.LINEAR;
+
+            this.mainTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+            this.maskTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+            this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, true);
+            this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, true);
+
+            scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, function (renderer)
+            {
+                var width = renderer.width;
+                var height = renderer.height;
+                var pot = ((width & (width - 1)) === 0 && (height & (height - 1)) === 0);
+                var gl = renderer.gl;
+                var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
+                var filter = gl.LINEAR;
+
+                this.mainTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+                this.maskTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+                this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, true);
+                this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, true);
+
+            }, this);
+        }
+    },
+
+    /**
+     * Sets a new masking Game Object for the Bitmap Mask.
+     *
+     * @method Phaser.Display.Masks.BitmapMask#setBitmap
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.GameObject} renderable - A renderable Game Object that uses a texture, such as a Sprite.
+     */
+    setBitmap: function (renderable)
+    {
+        this.bitmapMask = renderable;
+    },
+
+    /**
+     * Prepares the WebGL Renderer to render a Game Object with this mask applied.
+     *
+     * This renders the masking Game Object to the mask framebuffer and switches to the main framebuffer so that the masked Game Object will be rendered to it instead of being rendered directly to the frame.
+     *
+     * @method Phaser.Display.Masks.BitmapMask#preRenderWebGL
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The WebGL Renderer to prepare.
+     * @param {Phaser.GameObjects.GameObject} maskedObject - The masked Game Object which will be drawn.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to render to.
+     */
+    preRenderWebGL: function (renderer, maskedObject, camera)
+    {
+        renderer.pipelines.BitmapMaskPipeline.beginMask(this, maskedObject, camera);
+    },
+
+    /**
+     * Finalizes rendering of a masked Game Object.
+     *
+     * This resets the previously bound framebuffer and switches the WebGL Renderer to the Bitmap Mask Pipeline, which uses a special fragment shader to apply the masking effect.
+     *
+     * @method Phaser.Display.Masks.BitmapMask#postRenderWebGL
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The WebGL Renderer to clean up.
+     */
+    postRenderWebGL: function (renderer, camera)
+    {
+        renderer.pipelines.BitmapMaskPipeline.endMask(this, camera);
+    },
+
+    /**
+     * This is a NOOP method. Bitmap Masks are not supported by the Canvas Renderer.
+     *
+     * @method Phaser.Display.Masks.BitmapMask#preRenderCanvas
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The Canvas Renderer which would be rendered to.
+     * @param {Phaser.GameObjects.GameObject} mask - The masked Game Object which would be rendered.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to render to.
+     */
+    preRenderCanvas: function ()
+    {
+        // NOOP
+    },
+
+    /**
+     * This is a NOOP method. Bitmap Masks are not supported by the Canvas Renderer.
+     *
+     * @method Phaser.Display.Masks.BitmapMask#postRenderCanvas
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The Canvas Renderer which would be rendered to.
+     */
+    postRenderCanvas: function ()
+    {
+        // NOOP
+    },
+
+    /**
+     * Destroys this BitmapMask and nulls any references it holds.
+     * 
+     * Note that if a Game Object is currently using this mask it will _not_ automatically detect you have destroyed it,
+     * so be sure to call `clearMask` on any Game Object using it, before destroying it.
+     *
+     * @method Phaser.Display.Masks.BitmapMask#destroy
+     * @since 3.7.0
+     */
+    destroy: function ()
+    {
+        this.bitmapMask = null;
+
+        var renderer = this.renderer;
+
+        if (renderer && renderer.gl)
+        {
+            renderer.deleteTexture(this.mainTexture);
+            renderer.deleteTexture(this.maskTexture);
+            renderer.deleteFramebuffer(this.mainFramebuffer);
+            renderer.deleteFramebuffer(this.maskFramebuffer);
+        }
+
+        this.mainTexture = null;
+        this.maskTexture = null;
+        this.mainFramebuffer = null;
+        this.maskFramebuffer = null;
+        this.prevFramebuffer = null;
+        this.renderer = null;
+    }
+
+});
+
+module.exports = BitmapMask;
+
+
+/***/ }),
+/* 322 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Core.Events
+ */
+
+module.exports = {
+
+    BLUR: __webpack_require__(323),
+    BOOT: __webpack_require__(324),
+    CONTEXT_LOST: __webpack_require__(325),
+    CONTEXT_RESTORED: __webpack_require__(326),
+    DESTROY: __webpack_require__(327),
+    FOCUS: __webpack_require__(328),
+    HIDDEN: __webpack_require__(329),
+    PAUSE: __webpack_require__(330),
+    POST_RENDER: __webpack_require__(331),
+    POST_STEP: __webpack_require__(332),
+    PRE_RENDER: __webpack_require__(333),
+    PRE_STEP: __webpack_require__(334),
+    READY: __webpack_require__(335),
+    RESUME: __webpack_require__(336),
+    STEP: __webpack_require__(337),
+    VISIBLE: __webpack_require__(338)
+
+};
+
+
+/***/ }),
+/* 323 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Blur Event.
+ * 
+ * This event is dispatched by the Game Visibility Handler when the window in which the Game instance is embedded
+ * enters a blurred state. The blur event is raised when the window loses focus. This can happen if a user swaps
+ * tab, or if they simply remove focus from the browser to another app.
+ *
+ * @event Phaser.Core.Events#BLUR
+ * @since 3.0.0
+ */
+module.exports = 'blur';
+
+
+/***/ }),
+/* 324 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Boot Event.
+ * 
+ * This event is dispatched when the Phaser Game instance has finished booting, but before it is ready to start running.
+ * The global systems use this event to know when to set themselves up, dispatching their own `ready` events as required.
+ *
+ * @event Phaser.Core.Events#BOOT
+ * @since 3.0.0
+ */
+module.exports = 'boot';
+
+
+/***/ }),
+/* 325 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Context Lost Event.
+ * 
+ * This event is dispatched by the Game if the WebGL Renderer it is using encounters a WebGL Context Lost event from the browser.
+ * 
+ * The partner event is `CONTEXT_RESTORED`.
+ *
+ * @event Phaser.Core.Events#CONTEXT_LOST
+ * @since 3.19.0
+ */
+module.exports = 'contextlost';
+
+
+/***/ }),
+/* 326 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Context Restored Event.
+ * 
+ * This event is dispatched by the Game if the WebGL Renderer it is using encounters a WebGL Context Restored event from the browser.
+ * 
+ * The partner event is `CONTEXT_LOST`.
+ *
+ * @event Phaser.Core.Events#CONTEXT_RESTORED
+ * @since 3.19.0
+ */
+module.exports = 'contextrestored';
+
+
+/***/ }),
+/* 327 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Destroy Event.
+ * 
+ * This event is dispatched when the game instance has been told to destroy itself.
+ * Lots of internal systems listen to this event in order to clear themselves out.
+ * Custom plugins and game code should also do the same.
+ *
+ * @event Phaser.Core.Events#DESTROY
+ * @since 3.0.0
+ */
+module.exports = 'destroy';
+
+
+/***/ }),
+/* 328 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Focus Event.
+ * 
+ * This event is dispatched by the Game Visibility Handler when the window in which the Game instance is embedded
+ * enters a focused state. The focus event is raised when the window re-gains focus, having previously lost it.
+ *
+ * @event Phaser.Core.Events#FOCUS
+ * @since 3.0.0
+ */
+module.exports = 'focus';
+
+
+/***/ }),
+/* 329 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Hidden Event.
+ * 
+ * This event is dispatched by the Game Visibility Handler when the document in which the Game instance is embedded
+ * enters a hidden state. Only browsers that support the Visibility API will cause this event to be emitted.
+ * 
+ * In most modern browsers, when the document enters a hidden state, the Request Animation Frame and setTimeout, which
+ * control the main game loop, will automatically pause. There is no way to stop this from happening. It is something
+ * your game should account for in its own code, should the pause be an issue (i.e. for multiplayer games)
+ *
+ * @event Phaser.Core.Events#HIDDEN
+ * @since 3.0.0
+ */
+module.exports = 'hidden';
+
+
+/***/ }),
+/* 330 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Pause Event.
+ * 
+ * This event is dispatched when the Game loop enters a paused state, usually as a result of the Visibility Handler.
+ *
+ * @event Phaser.Core.Events#PAUSE
+ * @since 3.0.0
+ */
+module.exports = 'pause';
+
+
+/***/ }),
+/* 331 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Post-Render Event.
+ * 
+ * This event is dispatched right at the end of the render process.
+ * 
+ * Every Scene will have rendered and been drawn to the canvas by the time this event is fired.
+ * Use it for any last minute post-processing before the next game step begins.
+ *
+ * @event Phaser.Core.Events#POST_RENDER
+ * @since 3.0.0
+ * 
+ * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - A reference to the current renderer being used by the Game instance.
+ */
+module.exports = 'postrender';
+
+
+/***/ }),
+/* 332 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Post-Step Event.
+ * 
+ * This event is dispatched after the Scene Manager has updated.
+ * Hook into it from plugins or systems that need to do things before the render starts.
+ *
+ * @event Phaser.Core.Events#POST_STEP
+ * @since 3.0.0
+ * 
+ * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+ * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
+ */
+module.exports = 'poststep';
+
+
+/***/ }),
+/* 333 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Pre-Render Event.
+ * 
+ * This event is dispatched immediately before any of the Scenes have started to render.
+ * 
+ * The renderer will already have been initialized this frame, clearing itself and preparing to receive the Scenes for rendering, but it won't have actually drawn anything yet.
+ *
+ * @event Phaser.Core.Events#PRE_RENDER
+ * @since 3.0.0
+ * 
+ * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - A reference to the current renderer being used by the Game instance.
+ */
+module.exports = 'prerender';
+
+
+/***/ }),
+/* 334 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Pre-Step Event.
+ * 
+ * This event is dispatched before the main Game Step starts. By this point in the game cycle none of the Scene updates have yet happened.
+ * Hook into it from plugins or systems that need to update before the Scene Manager does.
+ *
+ * @event Phaser.Core.Events#PRE_STEP
+ * @since 3.0.0
+ * 
+ * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+ * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
+ */
+module.exports = 'prestep';
+
+
+/***/ }),
+/* 335 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Ready Event.
+ * 
+ * This event is dispatched when the Phaser Game instance has finished booting, the Texture Manager is fully ready,
+ * and all local systems are now able to start.
+ *
+ * @event Phaser.Core.Events#READY
+ * @since 3.0.0
+ */
+module.exports = 'ready';
+
+
+/***/ }),
+/* 336 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Resume Event.
+ * 
+ * This event is dispatched when the game loop leaves a paused state and resumes running.
+ *
+ * @event Phaser.Core.Events#RESUME
+ * @since 3.0.0
+ */
+module.exports = 'resume';
+
+
+/***/ }),
+/* 337 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Step Event.
+ * 
+ * This event is dispatched after the Game Pre-Step and before the Scene Manager steps.
+ * Hook into it from plugins or systems that need to update before the Scene Manager does, but after the core Systems have.
+ *
+ * @event Phaser.Core.Events#STEP
+ * @since 3.0.0
+ * 
+ * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+ * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
+ */
+module.exports = 'step';
+
+
+/***/ }),
+/* 338 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Visible Event.
+ * 
+ * This event is dispatched by the Game Visibility Handler when the document in which the Game instance is embedded
+ * enters a visible state, previously having been hidden.
+ * 
+ * Only browsers that support the Visibility API will cause this event to be emitted.
+ *
+ * @event Phaser.Core.Events#VISIBLE
+ * @since 3.0.0
+ */
+module.exports = 'visible';
+
+
+/***/ }),
+/* 339 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+
+/**
+ * @classdesc
+ * A Geometry Mask can be applied to a Game Object to hide any pixels of it which don't intersect
+ * a visible pixel from the geometry mask. The mask is essentially a clipping path which can only
+ * make a masked pixel fully visible or fully invisible without changing its alpha (opacity).
+ *
+ * A Geometry Mask uses a Graphics Game Object to determine which pixels of the masked Game Object(s)
+ * should be clipped. For any given point of a masked Game Object's texture, the pixel will only be displayed
+ * if the Graphics Game Object of the Geometry Mask has a visible pixel at the same position. The color and
+ * alpha of the pixel from the Geometry Mask do not matter.
+ *
+ * The Geometry Mask's location matches the location of its Graphics object, not the location of the masked objects.
+ * Moving or transforming the underlying Graphics object will change the mask (and affect the visibility
+ * of any masked objects), whereas moving or transforming a masked object will not affect the mask.
+ * You can think of the Geometry Mask (or rather, of its Graphics object) as an invisible curtain placed
+ * in front of all masked objects which has its own visual properties and, naturally, respects the camera's
+ * visual properties, but isn't affected by and doesn't follow the masked objects by itself.
+ *
+ * @class GeometryMask
+ * @memberof Phaser.Display.Masks
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - This parameter is not used.
+ * @param {Phaser.GameObjects.Graphics} graphicsGeometry - The Graphics Game Object to use for the Geometry Mask. Doesn't have to be in the Display List.
+ */
+var GeometryMask = new Class({
+
+    initialize:
+
+    function GeometryMask (scene, graphicsGeometry)
+    {
+        /**
+         * The Graphics object which describes the Geometry Mask.
+         *
+         * @name Phaser.Display.Masks.GeometryMask#geometryMask
+         * @type {Phaser.GameObjects.Graphics}
+         * @since 3.0.0
+         */
+        this.geometryMask = graphicsGeometry;
+
+        /**
+         * Similar to the BitmapMasks invertAlpha setting this to true will then hide all pixels
+         * drawn to the Geometry Mask.
+         *
+         * @name Phaser.Display.Masks.GeometryMask#invertAlpha
+         * @type {boolean}
+         * @since 3.16.0
+         */
+        this.invertAlpha = false;
+
+        /**
+         * Is this mask a stencil mask?
+         *
+         * @name Phaser.Display.Masks.GeometryMask#isStencil
+         * @type {boolean}
+         * @readonly
+         * @since 3.17.0
+         */
+        this.isStencil = true;
+
+        /**
+         * The current stencil level.
+         *
+         * @name Phaser.Display.Masks.GeometryMask#level
+         * @type {boolean}
+         * @private
+         * @since 3.17.0
+         */
+        this.level = 0;
+    },
+
+    /**
+     * Sets a new Graphics object for the Geometry Mask.
+     *
+     * @method Phaser.Display.Masks.GeometryMask#setShape
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Graphics} graphicsGeometry - The Graphics object which will be used for the Geometry Mask.
+     * 
+     * @return {this} This Geometry Mask
+     */
+    setShape: function (graphicsGeometry)
+    {
+        this.geometryMask = graphicsGeometry;
+
+        return this;
+    },
+
+    /**
+     * Sets the `invertAlpha` property of this Geometry Mask.
+     * Inverting the alpha essentially flips the way the mask works.
+     *
+     * @method Phaser.Display.Masks.GeometryMask#setInvertAlpha
+     * @since 3.17.0
+     *
+     * @param {boolean} [value=true] - Invert the alpha of this mask?
+     * 
+     * @return {this} This Geometry Mask
+     */
+    setInvertAlpha: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.invertAlpha = value;
+
+        return this;
+    },
+
+    /**
+     * Renders the Geometry Mask's underlying Graphics object to the OpenGL stencil buffer and enables the stencil test, which clips rendered pixels according to the mask.
+     *
+     * @method Phaser.Display.Masks.GeometryMask#preRenderWebGL
+     * @since 3.0.0
+     *
+     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGL Renderer instance to draw to.
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object being rendered.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera the Game Object is being rendered through.
+     */
+    preRenderWebGL: function (renderer, child, camera)
+    {
+        var gl = renderer.gl;
+
+        //  Force flushing before drawing to stencil buffer
+        renderer.flush();
+
+        if (renderer.maskStack.length === 0)
+        {
+            gl.enable(gl.STENCIL_TEST);
+            gl.clear(gl.STENCIL_BUFFER_BIT);
+
+            renderer.maskCount = 0;
+        }
+
+        if (renderer.currentCameraMask.mask !== this)
+        {
+            renderer.currentMask.mask = this;
+        }
+
+        renderer.maskStack.push({ mask: this, camera: camera });
+
+        this.applyStencil(renderer, camera, true);
+
+        renderer.maskCount++;
+    },
+
+    /**
+     * Applies the current stencil mask to the renderer.
+     *
+     * @method Phaser.Display.Masks.GeometryMask#applyStencil
+     * @since 3.17.0
+     *
+     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGL Renderer instance to draw to.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera the Game Object is being rendered through.
+     * @param {boolean} inc - Is this an INCR stencil or a DECR stencil?
+     */
+    applyStencil: function (renderer, camera, inc)
+    {
+        var gl = renderer.gl;
+        var geometryMask = this.geometryMask;
+        var level = renderer.maskCount;
+
+        gl.colorMask(false, false, false, false);
+
+        if (inc)
+        {
+            gl.stencilFunc(gl.EQUAL, level, 0xFF);
+            gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
+        }
+        else
+        {
+            gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
+            gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
+        }
+
+        //  Write stencil buffer
+        geometryMask.renderWebGL(renderer, geometryMask, 0, camera);
+
+        renderer.flush();
+
+        gl.colorMask(true, true, true, true);
+        gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+
+        if (inc)
+        {
+            if (this.invertAlpha)
+            {
+                gl.stencilFunc(gl.NOTEQUAL, level + 1, 0xFF);
+            }
+            else
+            {
+                gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
+            }
+        }
+        else if (this.invertAlpha)
+        {
+            gl.stencilFunc(gl.NOTEQUAL, level, 0xFF);
+        }
+        else
+        {
+            gl.stencilFunc(gl.EQUAL, level, 0xFF);
+        }
+    },
+
+    /**
+     * Flushes all rendered pixels and disables the stencil test of a WebGL context, thus disabling the mask for it.
+     *
+     * @method Phaser.Display.Masks.GeometryMask#postRenderWebGL
+     * @since 3.0.0
+     *
+     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGL Renderer instance to draw flush.
+     */
+    postRenderWebGL: function (renderer)
+    {
+        var gl = renderer.gl;
+
+        renderer.maskStack.pop();
+
+        renderer.maskCount--;
+
+        if (renderer.maskStack.length === 0)
+        {
+            //  If this is the only mask in the stack, flush and disable
+            renderer.flush();
+
+            renderer.currentMask.mask = null;
+
+            gl.disable(gl.STENCIL_TEST);
+        }
+        else
+        {
+            //  Force flush before disabling stencil test
+            renderer.flush();
+
+            var prev = renderer.maskStack[renderer.maskStack.length - 1];
+
+            prev.mask.applyStencil(renderer, prev.camera, false);
+
+            if (renderer.currentCameraMask.mask !== prev.mask)
+            {
+                renderer.currentMask.mask = prev.mask;
+                renderer.currentMask.camera = prev.camera;
+            }
+            else
+            {
+                renderer.currentMask.mask = null;
+            }
+        }
+    },
+
+    /**
+     * Sets the clipping path of a 2D canvas context to the Geometry Mask's underlying Graphics object.
+     *
+     * @method Phaser.Display.Masks.GeometryMask#preRenderCanvas
+     * @since 3.0.0
+     *
+     * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - The Canvas Renderer instance to set the clipping path on.
+     * @param {Phaser.GameObjects.GameObject} mask - The Game Object being rendered.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera the Game Object is being rendered through.
+     */
+    preRenderCanvas: function (renderer, mask, camera)
+    {
+        var geometryMask = this.geometryMask;
+
+        renderer.currentContext.save();
+
+        geometryMask.renderCanvas(renderer, geometryMask, 0, camera, null, null, true);
+
+        renderer.currentContext.clip();
+    },
+
+    /**
+     * Restore the canvas context's previous clipping path, thus turning off the mask for it.
+     *
+     * @method Phaser.Display.Masks.GeometryMask#postRenderCanvas
+     * @since 3.0.0
+     *
+     * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - The Canvas Renderer instance being restored.
+     */
+    postRenderCanvas: function (renderer)
+    {
+        renderer.currentContext.restore();
+    },
+
+    /**
+     * Destroys this GeometryMask and nulls any references it holds.
+     *
+     * Note that if a Game Object is currently using this mask it will _not_ automatically detect you have destroyed it,
+     * so be sure to call `clearMask` on any Game Object using it, before destroying it.
+     *
+     * @method Phaser.Display.Masks.GeometryMask#destroy
+     * @since 3.7.0
+     */
+    destroy: function ()
+    {
+        this.geometryMask = null;
+    }
+
+});
+
+module.exports = GeometryMask;
+
+
+/***/ }),
+/* 340 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Provides methods used for getting and setting the origin of a Game Object.
+ * Values are normalized, given in the range 0 to 1.
+ * Display values contain the calculated pixel values.
+ * Should be applied as a mixin and not used directly.
+ *
+ * @namespace Phaser.GameObjects.Components.Origin
+ * @since 3.0.0
+ */
+
+var Origin = {
+
+    /**
+     * A property indicating that a Game Object has this component.
+     *
+     * @name Phaser.GameObjects.Components.Origin#_originComponent
+     * @type {boolean}
+     * @private
+     * @default true
+     * @since 3.2.0
+     */
+    _originComponent: true,
+
+    /**
+     * The horizontal origin of this Game Object.
+     * The origin maps the relationship between the size and position of the Game Object.
+     * The default value is 0.5, meaning all Game Objects are positioned based on their center.
+     * Setting the value to 0 means the position now relates to the left of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Origin#originX
+     * @type {number}
+     * @default 0.5
+     * @since 3.0.0
+     */
+    originX: 0.5,
+
+    /**
+     * The vertical origin of this Game Object.
+     * The origin maps the relationship between the size and position of the Game Object.
+     * The default value is 0.5, meaning all Game Objects are positioned based on their center.
+     * Setting the value to 0 means the position now relates to the top of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Origin#originY
+     * @type {number}
+     * @default 0.5
+     * @since 3.0.0
+     */
+    originY: 0.5,
+
+    //  private + read only
+    _displayOriginX: 0,
+    _displayOriginY: 0,
+
+    /**
+     * The horizontal display origin of this Game Object.
+     * The origin is a normalized value between 0 and 1.
+     * The displayOrigin is a pixel value, based on the size of the Game Object combined with the origin.
+     *
+     * @name Phaser.GameObjects.Components.Origin#displayOriginX
+     * @type {number}
+     * @since 3.0.0
+     */
+    displayOriginX: {
+
+        get: function ()
+        {
+            return this._displayOriginX;
+        },
+
+        set: function (value)
+        {
+            this._displayOriginX = value;
+            this.originX = value / this.width;
+        }
+
+    },
+
+    /**
+     * The vertical display origin of this Game Object.
+     * The origin is a normalized value between 0 and 1.
+     * The displayOrigin is a pixel value, based on the size of the Game Object combined with the origin.
+     *
+     * @name Phaser.GameObjects.Components.Origin#displayOriginY
+     * @type {number}
+     * @since 3.0.0
+     */
+    displayOriginY: {
+
+        get: function ()
+        {
+            return this._displayOriginY;
+        },
+
+        set: function (value)
+        {
+            this._displayOriginY = value;
+            this.originY = value / this.height;
+        }
+
+    },
+
+    /**
+     * Sets the origin of this Game Object.
+     *
+     * The values are given in the range 0 to 1.
+     *
+     * @method Phaser.GameObjects.Components.Origin#setOrigin
+     * @since 3.0.0
+     *
+     * @param {number} [x=0.5] - The horizontal origin value.
+     * @param {number} [y=x] - The vertical origin value. If not defined it will be set to the value of `x`.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setOrigin: function (x, y)
+    {
+        if (x === undefined) { x = 0.5; }
+        if (y === undefined) { y = x; }
+
+        this.originX = x;
+        this.originY = y;
+
+        return this.updateDisplayOrigin();
+    },
+
+    /**
+     * Sets the origin of this Game Object based on the Pivot values in its Frame.
+     *
+     * @method Phaser.GameObjects.Components.Origin#setOriginFromFrame
+     * @since 3.0.0
+     *
+     * @return {this} This Game Object instance.
+     */
+    setOriginFromFrame: function ()
+    {
+        if (!this.frame || !this.frame.customPivot)
+        {
+            return this.setOrigin();
+        }
+        else
+        {
+            this.originX = this.frame.pivotX;
+            this.originY = this.frame.pivotY;
+        }
+
+        return this.updateDisplayOrigin();
+    },
+
+    /**
+     * Sets the display origin of this Game Object.
+     * The difference between this and setting the origin is that you can use pixel values for setting the display origin.
+     *
+     * @method Phaser.GameObjects.Components.Origin#setDisplayOrigin
+     * @since 3.0.0
+     *
+     * @param {number} [x=0] - The horizontal display origin value.
+     * @param {number} [y=x] - The vertical display origin value. If not defined it will be set to the value of `x`.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setDisplayOrigin: function (x, y)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = x; }
+
+        this.displayOriginX = x;
+        this.displayOriginY = y;
+
+        return this;
+    },
+
+    /**
+     * Updates the Display Origin cached values internally stored on this Game Object.
+     * You don't usually call this directly, but it is exposed for edge-cases where you may.
+     *
+     * @method Phaser.GameObjects.Components.Origin#updateDisplayOrigin
+     * @since 3.0.0
+     *
+     * @return {this} This Game Object instance.
+     */
+    updateDisplayOrigin: function ()
+    {
+        this._displayOriginX = this.originX * this.width;
+        this._displayOriginY = this.originY * this.height;
+
+        return this;
+    }
+
+};
+
+module.exports = Origin;
+
+
+/***/ }),
+/* 341 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var DegToRad = __webpack_require__(17);
+var GetBoolean = __webpack_require__(342);
+var GetValue = __webpack_require__(6);
+var TWEEN_CONST = __webpack_require__(343);
+var Vector2 = __webpack_require__(1);
+
+/**
+ * Provides methods used for managing a Game Object following a Path.
+ * Should be applied as a mixin and not used directly.
+ *
+ * @namespace Phaser.GameObjects.Components.PathFollower
+ * @since 3.17.0
+ */
+
+var PathFollower = {
+
+    /**
+     * The Path this PathFollower is following. It can only follow one Path at a time.
+     *
+     * @name Phaser.GameObjects.Components.PathFollower#path
+     * @type {Phaser.Curves.Path}
+     * @since 3.0.0
+     */
+    path: null,
+
+    /**
+     * Should the PathFollower automatically rotate to point in the direction of the Path?
+     *
+     * @name Phaser.GameObjects.Components.PathFollower#rotateToPath
+     * @type {boolean}
+     * @default false
+     * @since 3.0.0
+     */
+    rotateToPath: false,
+
+    /**
+     * If the PathFollower is rotating to match the Path (@see Phaser.GameObjects.PathFollower#rotateToPath)
+     * this value is added to the rotation value. This allows you to rotate objects to a path but control
+     * the angle of the rotation as well.
+     *
+     * @name Phaser.GameObjects.PathFollower#pathRotationOffset
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    pathRotationOffset: 0,
+
+    /**
+     * An additional vector to add to the PathFollowers position, allowing you to offset it from the
+     * Path coordinates.
+     *
+     * @name Phaser.GameObjects.PathFollower#pathOffset
+     * @type {Phaser.Math.Vector2}
+     * @since 3.0.0
+     */
+    pathOffset: null,
+
+    /**
+     * A Vector2 that stores the current point of the path the follower is on.
+     *
+     * @name Phaser.GameObjects.PathFollower#pathVector
+     * @type {Phaser.Math.Vector2}
+     * @since 3.0.0
+     */
+    pathVector: null,
+
+    /**
+     * The distance the follower has traveled from the previous point to the current one, at the last update.
+     *
+     * @name Phaser.GameObjects.PathFollower#pathDelta
+     * @type {Phaser.Math.Vector2}
+     * @since 3.23.0
+     */
+    pathDelta: null,
+
+    /**
+     * The Tween used for following the Path.
+     *
+     * @name Phaser.GameObjects.PathFollower#pathTween
+     * @type {Phaser.Tweens.Tween}
+     * @since 3.0.0
+     */
+    pathTween: null,
+
+    /**
+     * Settings for the PathFollower.
+     *
+     * @name Phaser.GameObjects.PathFollower#pathConfig
+     * @type {?Phaser.Types.GameObjects.PathFollower.PathConfig}
+     * @default null
+     * @since 3.0.0
+     */
+    pathConfig: null,
+
+    /**
+     * Records the direction of the follower so it can change direction.
+     *
+     * @name Phaser.GameObjects.PathFollower#_prevDirection
+     * @type {integer}
+     * @private
+     * @since 3.0.0
+     */
+    _prevDirection: TWEEN_CONST.PLAYING_FORWARD,
+
+    /**
+     * Set the Path that this PathFollower should follow.
+     *
+     * Optionally accepts {@link Phaser.Types.GameObjects.PathFollower.PathConfig} settings.
+     *
+     * @method Phaser.GameObjects.Components.PathFollower#setPath
+     * @since 3.0.0
+     *
+     * @param {Phaser.Curves.Path} path - The Path this PathFollower is following. It can only follow one Path at a time.
+     * @param {(number|Phaser.Types.GameObjects.PathFollower.PathConfig|Phaser.Types.Tweens.NumberTweenBuilderConfig)} [config] - Settings for the PathFollower.
+     *
+     * @return {this} This Game Object.
+     */
+    setPath: function (path, config)
+    {
+        if (config === undefined) { config = this.pathConfig; }
+
+        var tween = this.pathTween;
+
+        if (tween && tween.isPlaying())
+        {
+            tween.stop();
+        }
+
+        this.path = path;
+
+        if (config)
+        {
+            this.startFollow(config);
+        }
+
+        return this;
+    },
+
+    /**
+     * Set whether the PathFollower should automatically rotate to point in the direction of the Path.
+     *
+     * @method Phaser.GameObjects.Components.PathFollower#setRotateToPath
+     * @since 3.0.0
+     *
+     * @param {boolean} value - Whether the PathFollower should automatically rotate to point in the direction of the Path.
+     * @param {number} [offset=0] - Rotation offset in degrees.
+     *
+     * @return {this} This Game Object.
+     */
+    setRotateToPath: function (value, offset)
+    {
+        if (offset === undefined) { offset = 0; }
+
+        this.rotateToPath = value;
+
+        this.pathRotationOffset = offset;
+
+        return this;
+    },
+
+    /**
+     * Is this PathFollower actively following a Path or not?
+     *
+     * To be considered as `isFollowing` it must be currently moving on a Path, and not paused.
+     *
+     * @method Phaser.GameObjects.Components.PathFollower#isFollowing
+     * @since 3.0.0
+     *
+     * @return {boolean} `true` is this PathFollower is actively following a Path, otherwise `false`.
+     */
+    isFollowing: function ()
+    {
+        var tween = this.pathTween;
+
+        return (tween && tween.isPlaying());
+    },
+
+    /**
+     * Starts this PathFollower following its given Path.
+     *
+     * @method Phaser.GameObjects.Components.PathFollower#startFollow
+     * @since 3.3.0
+     *
+     * @param {(number|Phaser.Types.GameObjects.PathFollower.PathConfig|Phaser.Types.Tweens.NumberTweenBuilderConfig)} [config={}] - The duration of the follow, or a PathFollower config object.
+     * @param {number} [startAt=0] - Optional start position of the follow, between 0 and 1.
+     *
+     * @return {this} This Game Object.
+     */
+    startFollow: function (config, startAt)
+    {
+        if (config === undefined) { config = {}; }
+        if (startAt === undefined) { startAt = 0; }
+
+        var tween = this.pathTween;
+
+        if (tween && tween.isPlaying())
+        {
+            tween.stop();
+        }
+
+        if (typeof config === 'number')
+        {
+            config = { duration: config };
+        }
+
+        //  Override in case they've been specified in the config
+        config.from = GetValue(config, 'from', 0);
+        config.to = GetValue(config, 'to', 1);
+
+        var positionOnPath = GetBoolean(config, 'positionOnPath', false);
+
+        this.rotateToPath = GetBoolean(config, 'rotateToPath', false);
+        this.pathRotationOffset = GetValue(config, 'rotationOffset', 0);
+
+        //  This works, but it's not an ideal way of doing it as the follower jumps position
+        var seek = GetValue(config, 'startAt', startAt);
+
+        if (seek)
+        {
+            config.onStart = function (tween)
+            {
+                var tweenData = tween.data[0];
+                tweenData.progress = seek;
+                tweenData.elapsed = tweenData.duration * seek;
+                var v = tweenData.ease(tweenData.progress);
+                tweenData.current = tweenData.start + ((tweenData.end - tweenData.start) * v);
+                tweenData.target[tweenData.key] = tweenData.current;
+            };
+        }
+
+        if (!this.pathOffset)
+        {
+            this.pathOffset = new Vector2(this.x, this.y);
+        }
+
+        if (!this.pathVector)
+        {
+            this.pathVector = new Vector2();
+        }
+
+        if (!this.pathDelta)
+        {
+            this.pathDelta = new Vector2();
+        }
+
+        this.pathDelta.reset();
+
+        this.pathTween = this.scene.sys.tweens.addCounter(config);
+
+        //  The starting point of the path, relative to this follower
+        this.path.getStartPoint(this.pathOffset);
+
+        if (positionOnPath)
+        {
+            this.x = this.pathOffset.x;
+            this.y = this.pathOffset.y;
+        }
+
+        this.pathOffset.x = this.x - this.pathOffset.x;
+        this.pathOffset.y = this.y - this.pathOffset.y;
+
+        this._prevDirection = TWEEN_CONST.PLAYING_FORWARD;
+
+        if (this.rotateToPath)
+        {
+            //  Set the rotation now (in case the tween has a delay on it, etc)
+            var nextPoint = this.path.getPoint(0.1);
+
+            this.rotation = Math.atan2(nextPoint.y - this.y, nextPoint.x - this.x) + DegToRad(this.pathRotationOffset);
+        }
+
+        this.pathConfig = config;
+
+        return this;
+    },
+
+    /**
+     * Pauses this PathFollower. It will still continue to render, but it will remain motionless at the
+     * point on the Path at which you paused it.
+     *
+     * @method Phaser.GameObjects.Components.PathFollower#pauseFollow
+     * @since 3.3.0
+     *
+     * @return {this} This Game Object.
+     */
+    pauseFollow: function ()
+    {
+        var tween = this.pathTween;
+
+        if (tween && tween.isPlaying())
+        {
+            tween.pause();
+        }
+
+        return this;
+    },
+
+    /**
+     * Resumes a previously paused PathFollower.
+     *
+     * If the PathFollower was not paused this has no effect.
+     *
+     * @method Phaser.GameObjects.Components.PathFollower#resumeFollow
+     * @since 3.3.0
+     *
+     * @return {this} This Game Object.
+     */
+    resumeFollow: function ()
+    {
+        var tween = this.pathTween;
+
+        if (tween && tween.isPaused())
+        {
+            tween.resume();
+        }
+
+        return this;
+    },
+
+    /**
+     * Stops this PathFollower from following the path any longer.
+     *
+     * This will invoke any 'stop' conditions that may exist on the Path, or for the follower.
+     *
+     * @method Phaser.GameObjects.Components.PathFollower#stopFollow
+     * @since 3.3.0
+     *
+     * @return {this} This Game Object.
+     */
+    stopFollow: function ()
+    {
+        var tween = this.pathTween;
+
+        if (tween && tween.isPlaying())
+        {
+            tween.stop();
+        }
+
+        return this;
+    },
+
+    /**
+     * Internal update handler that advances this PathFollower along the path.
+     *
+     * Called automatically by the Scene step, should not typically be called directly.
+     *
+     * @method Phaser.GameObjects.Components.PathFollower#pathUpdate
+     * @since 3.17.0
+     */
+    pathUpdate: function ()
+    {
+        var tween = this.pathTween;
+
+        if (tween)
+        {
+            var tweenData = tween.data[0];
+            var pathDelta = this.pathDelta;
+            var pathVector = this.pathVector;
+
+            pathDelta.copy(pathVector).negate();
+
+            if (tweenData.state === TWEEN_CONST.COMPLETE)
+            {
+                this.path.getPoint(1, pathVector);
+
+                pathDelta.add(pathVector);
+                pathVector.add(this.pathOffset);
+
+                this.setPosition(pathVector.x, pathVector.y);
+
+                return;
+            }
+            else if (tweenData.state !== TWEEN_CONST.PLAYING_FORWARD && tweenData.state !== TWEEN_CONST.PLAYING_BACKWARD)
+            {
+                //  If delayed, etc then bail out
+                return;
+            }
+
+            this.path.getPoint(tween.getValue(), pathVector);
+
+            pathDelta.add(pathVector);
+            pathVector.add(this.pathOffset);
+
+            var oldX = this.x;
+            var oldY = this.y;
+
+            this.setPosition(pathVector.x, pathVector.y);
+
+            var speedX = this.x - oldX;
+            var speedY = this.y - oldY;
+
+            if (speedX === 0 && speedY === 0)
+            {
+                //  Bail out early
+                return;
+            }
+
+            if (tweenData.state !== this._prevDirection)
+            {
+                //  We've changed direction, so don't do a rotate this frame
+                this._prevDirection = tweenData.state;
+
+                return;
+            }
+
+            if (this.rotateToPath)
+            {
+                this.rotation = Math.atan2(speedY, speedX) + DegToRad(this.pathRotationOffset);
+            }
+        }
+    }
+
+};
+
+module.exports = PathFollower;
+
+
+/***/ }),
+/* 342 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Retrieves the value of the given key from an object.
+ *
+ * @function Phaser.Tweens.Builders.GetBoolean
+ * @since 3.0.0
+ *
+ * @param {object} source - The object to retrieve the value from.
+ * @param {string} key - The key to look for in the `source` object.
+ * @param {*} defaultValue - The default value to return if the `key` doesn't exist or if no `source` object is provided.
+ *
+ * @return {*} The retrieved value.
+ */
+var GetBoolean = function (source, key, defaultValue)
+{
+    if (!source)
+    {
+        return defaultValue;
+    }
+    else if (source.hasOwnProperty(key))
+    {
+        return source[key];
+    }
+    else
+    {
+        return defaultValue;
+    }
+};
+
+module.exports = GetBoolean;
+
+
+/***/ }),
+/* 343 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var TWEEN_CONST = {
+
+    /**
+     * TweenData state.
+     * 
+     * @name Phaser.Tweens.CREATED
+     * @type {integer}
+     * @since 3.0.0
+     */
+    CREATED: 0,
+
+    /**
+     * TweenData state.
+     * 
+     * @name Phaser.Tweens.INIT
+     * @type {integer}
+     * @since 3.0.0
+     */
+    INIT: 1,
+
+    /**
+     * TweenData state.
+     * 
+     * @name Phaser.Tweens.DELAY
+     * @type {integer}
+     * @since 3.0.0
+     */
+    DELAY: 2,
+
+    /**
+     * TweenData state.
+     * 
+     * @name Phaser.Tweens.OFFSET_DELAY
+     * @type {integer}
+     * @since 3.0.0
+     */
+    OFFSET_DELAY: 3,
+
+    /**
+     * TweenData state.
+     * 
+     * @name Phaser.Tweens.PENDING_RENDER
+     * @type {integer}
+     * @since 3.0.0
+     */
+    PENDING_RENDER: 4,
+
+    /**
+     * TweenData state.
+     * 
+     * @name Phaser.Tweens.PLAYING_FORWARD
+     * @type {integer}
+     * @since 3.0.0
+     */
+    PLAYING_FORWARD: 5,
+
+    /**
+     * TweenData state.
+     * 
+     * @name Phaser.Tweens.PLAYING_BACKWARD
+     * @type {integer}
+     * @since 3.0.0
+     */
+    PLAYING_BACKWARD: 6,
+
+    /**
+     * TweenData state.
+     * 
+     * @name Phaser.Tweens.HOLD_DELAY
+     * @type {integer}
+     * @since 3.0.0
+     */
+    HOLD_DELAY: 7,
+
+    /**
+     * TweenData state.
+     * 
+     * @name Phaser.Tweens.REPEAT_DELAY
+     * @type {integer}
+     * @since 3.0.0
+     */
+    REPEAT_DELAY: 8,
+
+    /**
+     * TweenData state.
+     * 
+     * @name Phaser.Tweens.COMPLETE
+     * @type {integer}
+     * @since 3.0.0
+     */
+    COMPLETE: 9,
+
+    //  Tween specific (starts from 20 to cleanly allow extra TweenData consts in the future)
+
+    /**
+     * Tween state.
+     * 
+     * @name Phaser.Tweens.PENDING_ADD
+     * @type {integer}
+     * @since 3.0.0
+     */
+    PENDING_ADD: 20,
+
+    /**
+     * Tween state.
+     * 
+     * @name Phaser.Tweens.PAUSED
+     * @type {integer}
+     * @since 3.0.0
+     */
+    PAUSED: 21,
+
+    /**
+     * Tween state.
+     * 
+     * @name Phaser.Tweens.LOOP_DELAY
+     * @type {integer}
+     * @since 3.0.0
+     */
+    LOOP_DELAY: 22,
+
+    /**
+     * Tween state.
+     * 
+     * @name Phaser.Tweens.ACTIVE
+     * @type {integer}
+     * @since 3.0.0
+     */
+    ACTIVE: 23,
+
+    /**
+     * Tween state.
+     * 
+     * @name Phaser.Tweens.COMPLETE_DELAY
+     * @type {integer}
+     * @since 3.0.0
+     */
+    COMPLETE_DELAY: 24,
+
+    /**
+     * Tween state.
+     * 
+     * @name Phaser.Tweens.PENDING_REMOVE
+     * @type {integer}
+     * @since 3.0.0
+     */
+    PENDING_REMOVE: 25,
+
+    /**
+     * Tween state.
+     * 
+     * @name Phaser.Tweens.REMOVED
+     * @type {integer}
+     * @since 3.0.0
+     */
+    REMOVED: 26
+
+};
+
+module.exports = TWEEN_CONST;
+
+
+/***/ }),
+/* 344 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Provides methods used for setting the WebGL rendering pipeline of a Game Object.
+ *
+ * @namespace Phaser.GameObjects.Components.Pipeline
+ * @webglOnly
+ * @since 3.0.0
+ */
+
+var Pipeline = {
+
+    /**
+     * The initial WebGL pipeline of this Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Pipeline#defaultPipeline
+     * @type {Phaser.Renderer.WebGL.WebGLPipeline}
+     * @default null
+     * @webglOnly
+     * @since 3.0.0
+     */
+    defaultPipeline: null,
+
+    /**
+     * The current WebGL pipeline of this Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Pipeline#pipeline
+     * @type {Phaser.Renderer.WebGL.WebGLPipeline}
+     * @default null
+     * @webglOnly
+     * @since 3.0.0
+     */
+    pipeline: null,
+
+    /**
+     * Sets the initial WebGL Pipeline of this Game Object.
+     *
+     * This should only be called during the instantiation of the Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Pipeline#initPipeline
+     * @webglOnly
+     * @since 3.0.0
+     *
+     * @param {string} [pipelineName=MultiPipeline] - The name of the pipeline to set on this Game Object. Defaults to the Multi Pipeline.
+     *
+     * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
+     */
+    initPipeline: function (pipelineName)
+    {
+        if (pipelineName === undefined) { pipelineName = 'MultiPipeline'; }
+
+        var renderer = this.scene.sys.game.renderer;
+
+        if (renderer && renderer.gl && renderer.hasPipeline(pipelineName))
+        {
+            this.defaultPipeline = renderer.getPipeline(pipelineName);
+            this.pipeline = this.defaultPipeline;
+
+            return true;
+        }
+
+        return false;
+    },
+
+    /**
+     * Sets the active WebGL Pipeline of this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Pipeline#setPipeline
+     * @webglOnly
+     * @since 3.0.0
+     *
+     * @param {string} pipelineName - The name of the pipeline to set on this Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setPipeline: function (pipelineName)
+    {
+        var renderer = this.scene.sys.game.renderer;
+
+        if (renderer && renderer.gl && renderer.hasPipeline(pipelineName))
+        {
+            this.pipeline = renderer.getPipeline(pipelineName);
+        }
+
+        return this;
+    },
+
+    /**
+     * Resets the WebGL Pipeline of this Game Object back to the default it was created with.
+     *
+     * @method Phaser.GameObjects.Components.Pipeline#resetPipeline
+     * @webglOnly
+     * @since 3.0.0
+     *
+     * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
+     */
+    resetPipeline: function ()
+    {
+        this.pipeline = this.defaultPipeline;
+
+        return (this.pipeline !== null);
+    },
+
+    /**
+     * Gets the name of the WebGL Pipeline this Game Object is currently using.
+     *
+     * @method Phaser.GameObjects.Components.Pipeline#getPipelineName
+     * @webglOnly
+     * @since 3.0.0
+     *
+     * @return {string} The string-based name of the pipeline being used by this Game Object.
+     */
+    getPipelineName: function ()
+    {
+        return this.pipeline.name;
+    }
+
+};
+
+module.exports = Pipeline;
+
+
+/***/ }),
+/* 345 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Provides methods used for getting and setting the size of a Game Object.
+ * 
+ * @namespace Phaser.GameObjects.Components.Size
+ * @since 3.0.0
+ */
+
+var Size = {
+
+    /**
+     * A property indicating that a Game Object has this component.
+     * 
+     * @name Phaser.GameObjects.Components.Size#_sizeComponent
+     * @type {boolean}
+     * @private
+     * @default true
+     * @since 3.2.0
+     */
+    _sizeComponent: true,
+
+    /**
+     * The native (un-scaled) width of this Game Object.
+     * 
+     * Changing this value will not change the size that the Game Object is rendered in-game.
+     * For that you need to either set the scale of the Game Object (`setScale`) or use
+     * the `displayWidth` property.
+     * 
+     * @name Phaser.GameObjects.Components.Size#width
+     * @type {number}
+     * @since 3.0.0
+     */
+    width: 0,
+
+    /**
+     * The native (un-scaled) height of this Game Object.
+     * 
+     * Changing this value will not change the size that the Game Object is rendered in-game.
+     * For that you need to either set the scale of the Game Object (`setScale`) or use
+     * the `displayHeight` property.
+     * 
+     * @name Phaser.GameObjects.Components.Size#height
+     * @type {number}
+     * @since 3.0.0
+     */
+    height: 0,
+
+    /**
+     * The displayed width of this Game Object.
+     * 
+     * This value takes into account the scale factor.
+     * 
+     * Setting this value will adjust the Game Object's scale property.
+     * 
+     * @name Phaser.GameObjects.Components.Size#displayWidth
+     * @type {number}
+     * @since 3.0.0
+     */
+    displayWidth: {
+
+        get: function ()
+        {
+            return Math.abs(this.scaleX * this.frame.realWidth);
+        },
+
+        set: function (value)
+        {
+            this.scaleX = value / this.frame.realWidth;
+        }
+
+    },
+
+    /**
+     * The displayed height of this Game Object.
+     * 
+     * This value takes into account the scale factor.
+     * 
+     * Setting this value will adjust the Game Object's scale property.
+     * 
+     * @name Phaser.GameObjects.Components.Size#displayHeight
+     * @type {number}
+     * @since 3.0.0
+     */
+    displayHeight: {
+
+        get: function ()
+        {
+            return Math.abs(this.scaleY * this.frame.realHeight);
+        },
+
+        set: function (value)
+        {
+            this.scaleY = value / this.frame.realHeight;
+        }
+
+    },
+
+    /**
+     * Sets the size of this Game Object to be that of the given Frame.
+     * 
+     * This will not change the size that the Game Object is rendered in-game.
+     * For that you need to either set the scale of the Game Object (`setScale`) or call the
+     * `setDisplaySize` method, which is the same thing as changing the scale but allows you
+     * to do so by giving pixel values.
+     * 
+     * If you have enabled this Game Object for input, changing the size will _not_ change the
+     * size of the hit area. To do this you should adjust the `input.hitArea` object directly.
+     * 
+     * @method Phaser.GameObjects.Components.Size#setSizeToFrame
+     * @since 3.0.0
+     *
+     * @param {Phaser.Textures.Frame} frame - The frame to base the size of this Game Object on.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setSizeToFrame: function (frame)
+    {
+        if (frame === undefined) { frame = this.frame; }
+
+        this.width = frame.realWidth;
+        this.height = frame.realHeight;
+
+        return this;
+    },
+
+    /**
+     * Sets the internal size of this Game Object, as used for frame or physics body creation.
+     * 
+     * This will not change the size that the Game Object is rendered in-game.
+     * For that you need to either set the scale of the Game Object (`setScale`) or call the
+     * `setDisplaySize` method, which is the same thing as changing the scale but allows you
+     * to do so by giving pixel values.
+     * 
+     * If you have enabled this Game Object for input, changing the size will _not_ change the
+     * size of the hit area. To do this you should adjust the `input.hitArea` object directly.
+     * 
+     * @method Phaser.GameObjects.Components.Size#setSize
+     * @since 3.0.0
+     *
+     * @param {number} width - The width of this Game Object.
+     * @param {number} height - The height of this Game Object.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setSize: function (width, height)
+    {
+        this.width = width;
+        this.height = height;
+
+        return this;
+    },
+
+    /**
+     * Sets the display size of this Game Object.
+     * 
+     * Calling this will adjust the scale.
+     * 
+     * @method Phaser.GameObjects.Components.Size#setDisplaySize
+     * @since 3.0.0
+     *
+     * @param {number} width - The width of this Game Object.
+     * @param {number} height - The height of this Game Object.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setDisplaySize: function (width, height)
+    {
+        this.displayWidth = width;
+        this.displayHeight = height;
+
+        return this;
+    }
+
+};
+
+module.exports = Size;
+
+
+/***/ }),
+/* 346 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+//  bitmask flag for GameObject.renderMask
+var _FLAG = 8; // 1000
+
+/**
+ * Provides methods used for getting and setting the texture of a Game Object.
+ *
+ * @namespace Phaser.GameObjects.Components.Texture
+ * @since 3.0.0
+ */
+
+var Texture = {
+
+    /**
+     * The Texture this Game Object is using to render with.
+     *
+     * @name Phaser.GameObjects.Components.Texture#texture
+     * @type {Phaser.Textures.Texture|Phaser.Textures.CanvasTexture}
+     * @since 3.0.0
+     */
+    texture: null,
+
+    /**
+     * The Texture Frame this Game Object is using to render with.
+     *
+     * @name Phaser.GameObjects.Components.Texture#frame
+     * @type {Phaser.Textures.Frame}
+     * @since 3.0.0
+     */
+    frame: null,
+
+    /**
+     * Internal flag. Not to be set by this Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Texture#isCropped
+     * @type {boolean}
+     * @private
+     * @since 3.11.0
+     */
+    isCropped: false,
+
+    /**
+     * Sets the texture and frame this Game Object will use to render with.
+     *
+     * Textures are referenced by their string-based keys, as stored in the Texture Manager.
+     *
+     * @method Phaser.GameObjects.Components.Texture#setTexture
+     * @since 3.0.0
+     *
+     * @param {(string|Phaser.Textures.Texture)} key - The key of the texture to be used, as stored in the Texture Manager, or a Texture instance.
+     * @param {(string|integer)} [frame] - The name or index of the frame within the Texture.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setTexture: function (key, frame)
+    {
+        this.texture = this.scene.sys.textures.get(key);
+
+        return this.setFrame(frame);
+    },
+
+    /**
+     * Sets the frame this Game Object will use to render with.
+     *
+     * The Frame has to belong to the current Texture being used.
+     *
+     * It can be either a string or an index.
+     *
+     * Calling `setFrame` will modify the `width` and `height` properties of your Game Object.
+     * It will also change the `origin` if the Frame has a custom pivot point, as exported from packages like Texture Packer.
+     *
+     * @method Phaser.GameObjects.Components.Texture#setFrame
+     * @since 3.0.0
+     *
+     * @param {(string|integer)} frame - The name or index of the frame within the Texture.
+     * @param {boolean} [updateSize=true] - Should this call adjust the size of the Game Object?
+     * @param {boolean} [updateOrigin=true] - Should this call adjust the origin of the Game Object?
+     *
+     * @return {this} This Game Object instance.
+     */
+    setFrame: function (frame, updateSize, updateOrigin)
+    {
+        if (updateSize === undefined) { updateSize = true; }
+        if (updateOrigin === undefined) { updateOrigin = true; }
+
+        this.frame = this.texture.get(frame);
+
+        if (!this.frame.cutWidth || !this.frame.cutHeight)
+        {
+            this.renderFlags &= ~_FLAG;
+        }
+        else
+        {
+            this.renderFlags |= _FLAG;
+        }
+
+        if (this._sizeComponent && updateSize)
+        {
+            this.setSizeToFrame();
+        }
+
+        if (this._originComponent && updateOrigin)
+        {
+            if (this.frame.customPivot)
+            {
+                this.setOrigin(this.frame.pivotX, this.frame.pivotY);
+            }
+            else
+            {
+                this.updateDisplayOrigin();
+            }
+        }
+
+        return this;
+    }
+
+};
+
+module.exports = Texture;
+
+
+/***/ }),
+/* 347 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+//  bitmask flag for GameObject.renderMask
+var _FLAG = 8; // 1000
+
+/**
+ * Provides methods used for getting and setting the texture of a Game Object.
+ *
+ * @namespace Phaser.GameObjects.Components.TextureCrop
+ * @since 3.0.0
+ */
+
+var TextureCrop = {
+
+    /**
+     * The Texture this Game Object is using to render with.
+     *
+     * @name Phaser.GameObjects.Components.TextureCrop#texture
+     * @type {Phaser.Textures.Texture|Phaser.Textures.CanvasTexture}
+     * @since 3.0.0
+     */
+    texture: null,
+
+    /**
+     * The Texture Frame this Game Object is using to render with.
+     *
+     * @name Phaser.GameObjects.Components.TextureCrop#frame
+     * @type {Phaser.Textures.Frame}
+     * @since 3.0.0
+     */
+    frame: null,
+
+    /**
+     * A boolean flag indicating if this Game Object is being cropped or not.
+     * You can toggle this at any time after `setCrop` has been called, to turn cropping on or off.
+     * Equally, calling `setCrop` with no arguments will reset the crop and disable it.
+     *
+     * @name Phaser.GameObjects.Components.TextureCrop#isCropped
+     * @type {boolean}
+     * @since 3.11.0
+     */
+    isCropped: false,
+
+    /**
+     * Applies a crop to a texture based Game Object, such as a Sprite or Image.
+     * 
+     * The crop is a rectangle that limits the area of the texture frame that is visible during rendering.
+     * 
+     * Cropping a Game Object does not change its size, dimensions, physics body or hit area, it just
+     * changes what is shown when rendered.
+     * 
+     * The crop coordinates are relative to the texture frame, not the Game Object, meaning 0 x 0 is the top-left.
+     * 
+     * Therefore, if you had a Game Object that had an 800x600 sized texture, and you wanted to show only the left
+     * half of it, you could call `setCrop(0, 0, 400, 600)`.
+     * 
+     * It is also scaled to match the Game Object scale automatically. Therefore a crop rect of 100x50 would crop
+     * an area of 200x100 when applied to a Game Object that had a scale factor of 2.
+     * 
+     * You can either pass in numeric values directly, or you can provide a single Rectangle object as the first argument.
+     * 
+     * Call this method with no arguments at all to reset the crop, or toggle the property `isCropped` to `false`.
+     * 
+     * You should do this if the crop rectangle becomes the same size as the frame itself, as it will allow
+     * the renderer to skip several internal calculations.
+     *
+     * @method Phaser.GameObjects.Components.TextureCrop#setCrop
+     * @since 3.11.0
+     *
+     * @param {(number|Phaser.Geom.Rectangle)} [x] - The x coordinate to start the crop from. Or a Phaser.Geom.Rectangle object, in which case the rest of the arguments are ignored.
+     * @param {number} [y] - The y coordinate to start the crop from.
+     * @param {number} [width] - The width of the crop rectangle in pixels.
+     * @param {number} [height] - The height of the crop rectangle in pixels.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setCrop: function (x, y, width, height)
+    {
+        if (x === undefined)
+        {
+            this.isCropped = false;
+        }
+        else if (this.frame)
+        {
+            if (typeof x === 'number')
+            {
+                this.frame.setCropUVs(this._crop, x, y, width, height, this.flipX, this.flipY);
+            }
+            else
+            {
+                var rect = x;
+
+                this.frame.setCropUVs(this._crop, rect.x, rect.y, rect.width, rect.height, this.flipX, this.flipY);
+            }
+
+            this.isCropped = true;
+        }
+
+        return this;
+    },
+
+    /**
+     * Sets the texture and frame this Game Object will use to render with.
+     *
+     * Textures are referenced by their string-based keys, as stored in the Texture Manager.
+     *
+     * @method Phaser.GameObjects.Components.TextureCrop#setTexture
+     * @since 3.0.0
+     *
+     * @param {string} key - The key of the texture to be used, as stored in the Texture Manager.
+     * @param {(string|integer)} [frame] - The name or index of the frame within the Texture.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setTexture: function (key, frame)
+    {
+        this.texture = this.scene.sys.textures.get(key);
+
+        return this.setFrame(frame);
+    },
+
+    /**
+     * Sets the frame this Game Object will use to render with.
+     *
+     * The Frame has to belong to the current Texture being used.
+     *
+     * It can be either a string or an index.
+     *
+     * Calling `setFrame` will modify the `width` and `height` properties of your Game Object.
+     * It will also change the `origin` if the Frame has a custom pivot point, as exported from packages like Texture Packer.
+     *
+     * @method Phaser.GameObjects.Components.TextureCrop#setFrame
+     * @since 3.0.0
+     *
+     * @param {(string|integer)} frame - The name or index of the frame within the Texture.
+     * @param {boolean} [updateSize=true] - Should this call adjust the size of the Game Object?
+     * @param {boolean} [updateOrigin=true] - Should this call adjust the origin of the Game Object?
+     *
+     * @return {this} This Game Object instance.
+     */
+    setFrame: function (frame, updateSize, updateOrigin)
+    {
+        if (updateSize === undefined) { updateSize = true; }
+        if (updateOrigin === undefined) { updateOrigin = true; }
+
+        this.frame = this.texture.get(frame);
+
+        if (!this.frame.cutWidth || !this.frame.cutHeight)
+        {
+            this.renderFlags &= ~_FLAG;
+        }
+        else
+        {
+            this.renderFlags |= _FLAG;
+        }
+
+        if (this._sizeComponent && updateSize)
+        {
+            this.setSizeToFrame();
+        }
+
+        if (this._originComponent && updateOrigin)
+        {
+            if (this.frame.customPivot)
+            {
+                this.setOrigin(this.frame.pivotX, this.frame.pivotY);
+            }
+            else
+            {
+                this.updateDisplayOrigin();
+            }
+        }
+
+        if (this.isCropped)
+        {
+            this.frame.updateCropUVs(this._crop, this.flipX, this.flipY);
+        }
+
+        return this;
+    },
+
+    /**
+     * Internal method that returns a blank, well-formed crop object for use by a Game Object.
+     *
+     * @method Phaser.GameObjects.Components.TextureCrop#resetCropObject
+     * @private
+     * @since 3.12.0
+     * 
+     * @return {object} The crop object.
+     */
+    resetCropObject: function ()
+    {
+        return { u0: 0, v0: 0, u1: 0, v1: 0, width: 0, height: 0, x: 0, y: 0, flipX: false, flipY: false, cx: 0, cy: 0, cw: 0, ch: 0 };
+    }
+
+};
+
+module.exports = TextureCrop;
+
+
+/***/ }),
+/* 348 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var GetColorFromValue = __webpack_require__(349);
+
+/**
+ * Provides methods used for setting the tint of a Game Object.
+ * Should be applied as a mixin and not used directly.
+ *
+ * @namespace Phaser.GameObjects.Components.Tint
+ * @webglOnly
+ * @since 3.0.0
+ */
+
+var Tint = {
+
+    /**
+     * Private internal value. Holds the top-left tint value.
+     *
+     * @name Phaser.GameObjects.Components.Tint#_tintTL
+     * @type {number}
+     * @private
+     * @default 16777215
+     * @since 3.0.0
+     */
+    _tintTL: 16777215,
+
+    /**
+     * Private internal value. Holds the top-right tint value.
+     *
+     * @name Phaser.GameObjects.Components.Tint#_tintTR
+     * @type {number}
+     * @private
+     * @default 16777215
+     * @since 3.0.0
+     */
+    _tintTR: 16777215,
+
+    /**
+     * Private internal value. Holds the bottom-left tint value.
+     *
+     * @name Phaser.GameObjects.Components.Tint#_tintBL
+     * @type {number}
+     * @private
+     * @default 16777215
+     * @since 3.0.0
+     */
+    _tintBL: 16777215,
+
+    /**
+     * Private internal value. Holds the bottom-right tint value.
+     *
+     * @name Phaser.GameObjects.Components.Tint#_tintBR
+     * @type {number}
+     * @private
+     * @default 16777215
+     * @since 3.0.0
+     */
+    _tintBR: 16777215,
+
+    /**
+     * Private internal value. Holds if the Game Object is tinted or not.
+     *
+     * @name Phaser.GameObjects.Components.Tint#_isTinted
+     * @type {boolean}
+     * @private
+     * @default false
+     * @since 3.11.0
+     */
+    _isTinted: false,
+
+    /**
+     * Fill or additive?
+     *
+     * @name Phaser.GameObjects.Components.Tint#tintFill
+     * @type {boolean}
+     * @default false
+     * @since 3.11.0
+     */
+    tintFill: false,
+
+    /**
+     * Clears all tint values associated with this Game Object.
+     *
+     * Immediately sets the color values back to 0xffffff and the tint type to 'additive',
+     * which results in no visible change to the texture.
+     *
+     * @method Phaser.GameObjects.Components.Tint#clearTint
+     * @webglOnly
+     * @since 3.0.0
+     *
+     * @return {this} This Game Object instance.
+     */
+    clearTint: function ()
+    {
+        this.setTint(0xffffff);
+
+        this._isTinted = false;
+
+        return this;
+    },
+
+    /**
+     * Sets an additive tint on this Game Object.
+     *
+     * The tint works by taking the pixel color values from the Game Objects texture, and then
+     * multiplying it by the color value of the tint. You can provide either one color value,
+     * in which case the whole Game Object will be tinted in that color. Or you can provide a color
+     * per corner. The colors are blended together across the extent of the Game Object.
+     *
+     * To modify the tint color once set, either call this method again with new values or use the
+     * `tint` property to set all colors at once. Or, use the properties `tintTopLeft`, `tintTopRight,
+     * `tintBottomLeft` and `tintBottomRight` to set the corner color values independently.
+     *
+     * To remove a tint call `clearTint`.
+     *
+     * To swap this from being an additive tint to a fill based tint set the property `tintFill` to `true`.
+     *
+     * @method Phaser.GameObjects.Components.Tint#setTint
+     * @webglOnly
+     * @since 3.0.0
+     *
+     * @param {integer} [topLeft=0xffffff] - The tint being applied to the top-left of the Game Object. If no other values are given this value is applied evenly, tinting the whole Game Object.
+     * @param {integer} [topRight] - The tint being applied to the top-right of the Game Object.
+     * @param {integer} [bottomLeft] - The tint being applied to the bottom-left of the Game Object.
+     * @param {integer} [bottomRight] - The tint being applied to the bottom-right of the Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setTint: function (topLeft, topRight, bottomLeft, bottomRight)
+    {
+        if (topLeft === undefined) { topLeft = 0xffffff; }
+
+        if (topRight === undefined)
+        {
+            topRight = topLeft;
+            bottomLeft = topLeft;
+            bottomRight = topLeft;
+        }
+
+        this._tintTL = GetColorFromValue(topLeft);
+        this._tintTR = GetColorFromValue(topRight);
+        this._tintBL = GetColorFromValue(bottomLeft);
+        this._tintBR = GetColorFromValue(bottomRight);
+
+        this._isTinted = true;
+
+        this.tintFill = false;
+
+        return this;
+    },
+
+    /**
+     * Sets a fill-based tint on this Game Object.
+     *
+     * Unlike an additive tint, a fill-tint literally replaces the pixel colors from the texture
+     * with those in the tint. You can use this for effects such as making a player flash 'white'
+     * if hit by something. You can provide either one color value, in which case the whole
+     * Game Object will be rendered in that color. Or you can provide a color per corner. The colors
+     * are blended together across the extent of the Game Object.
+     *
+     * To modify the tint color once set, either call this method again with new values or use the
+     * `tint` property to set all colors at once. Or, use the properties `tintTopLeft`, `tintTopRight,
+     * `tintBottomLeft` and `tintBottomRight` to set the corner color values independently.
+     *
+     * To remove a tint call `clearTint`.
+     *
+     * To swap this from being a fill-tint to an additive tint set the property `tintFill` to `false`.
+     *
+     * @method Phaser.GameObjects.Components.Tint#setTintFill
+     * @webglOnly
+     * @since 3.11.0
+     *
+     * @param {integer} [topLeft=0xffffff] - The tint being applied to the top-left of the Game Object. If not other values are given this value is applied evenly, tinting the whole Game Object.
+     * @param {integer} [topRight] - The tint being applied to the top-right of the Game Object.
+     * @param {integer} [bottomLeft] - The tint being applied to the bottom-left of the Game Object.
+     * @param {integer} [bottomRight] - The tint being applied to the bottom-right of the Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setTintFill: function (topLeft, topRight, bottomLeft, bottomRight)
+    {
+        this.setTint(topLeft, topRight, bottomLeft, bottomRight);
+
+        this.tintFill = true;
+
+        return this;
+    },
+
+    /**
+     * The tint value being applied to the top-left of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Tint#tintTopLeft
+     * @type {integer}
+     * @webglOnly
+     * @since 3.0.0
+     */
+    tintTopLeft: {
+
+        get: function ()
+        {
+            return this._tintTL;
+        },
+
+        set: function (value)
+        {
+            this._tintTL = GetColorFromValue(value);
+            this._isTinted = true;
+        }
+
+    },
+
+    /**
+     * The tint value being applied to the top-right of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Tint#tintTopRight
+     * @type {integer}
+     * @webglOnly
+     * @since 3.0.0
+     */
+    tintTopRight: {
+
+        get: function ()
+        {
+            return this._tintTR;
+        },
+
+        set: function (value)
+        {
+            this._tintTR = GetColorFromValue(value);
+            this._isTinted = true;
+        }
+
+    },
+
+    /**
+     * The tint value being applied to the bottom-left of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Tint#tintBottomLeft
+     * @type {integer}
+     * @webglOnly
+     * @since 3.0.0
+     */
+    tintBottomLeft: {
+
+        get: function ()
+        {
+            return this._tintBL;
+        },
+
+        set: function (value)
+        {
+            this._tintBL = GetColorFromValue(value);
+            this._isTinted = true;
+        }
+
+    },
+
+    /**
+     * The tint value being applied to the bottom-right of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Tint#tintBottomRight
+     * @type {integer}
+     * @webglOnly
+     * @since 3.0.0
+     */
+    tintBottomRight: {
+
+        get: function ()
+        {
+            return this._tintBR;
+        },
+
+        set: function (value)
+        {
+            this._tintBR = GetColorFromValue(value);
+            this._isTinted = true;
+        }
+
+    },
+
+    /**
+     * The tint value being applied to the whole of the Game Object.
+     * This property is a setter-only. Use the properties `tintTopLeft` etc to read the current tint value.
+     *
+     * @name Phaser.GameObjects.Components.Tint#tint
+     * @type {integer}
+     * @webglOnly
+     * @since 3.0.0
+     */
+    tint: {
+
+        set: function (value)
+        {
+            this.setTint(value, value, value, value);
+        }
+    },
+
+    /**
+     * Does this Game Object have a tint applied to it or not?
+     *
+     * @name Phaser.GameObjects.Components.Tint#isTinted
+     * @type {boolean}
+     * @webglOnly
+     * @readonly
+     * @since 3.11.0
+     */
+    isTinted: {
+
+        get: function ()
+        {
+            return this._isTinted;
+        }
+
+    }
+
+};
+
+module.exports = Tint;
+
+
+/***/ }),
+/* 349 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Given a hex color value, such as 0xff00ff (for purple), it will return a
+ * numeric representation of it (i.e. 16711935) for use in WebGL tinting.
+ *
+ * @function Phaser.Display.Color.GetColorFromValue
+ * @since 3.50.0
+ *
+ * @param {number} red - The hex color value, such as 0xff0000.
+ *
+ * @return {number} The combined color value.
+ */
+var GetColorFromValue = function (value)
+{
+    return (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
+};
+
+module.exports = GetColorFromValue;
+
+
+/***/ }),
+/* 350 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Felipe Alfonso <@bitnenfer>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var renderWebGL = __webpack_require__(3);
+var renderCanvas = __webpack_require__(3);
+
+if (false)
+{}
+
+if (true)
+{
+    renderCanvas = __webpack_require__(351);
+}
+
+module.exports = {
+
+    renderWebGL: renderWebGL,
+    renderCanvas: renderCanvas
+
+};
+
+
+/***/ }),
+/* 351 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Felipe Alfonso <@bitnenfer>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Renders this Game Object with the Canvas Renderer to the given Camera.
+ * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
+ * This method should not be called directly. It is a utility function of the Render module.
+ *
+ * @method Phaser.GameObjects.Container#renderCanvas
+ * @since 3.4.0
+ * @private
+ *
+ * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
+ * @param {Phaser.GameObjects.Container} container - The Game Object being rendered in this call.
+ * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
+ */
+var ContainerCanvasRenderer = function (renderer, container, interpolationPercentage, camera, parentMatrix)
+{
+    var children = container.list;
+
+    if (children.length === 0)
+    {
+        return;
+    }
+
+    var transformMatrix = container.localTransform;
+
+    if (parentMatrix)
+    {
+        transformMatrix.loadIdentity();
+        transformMatrix.multiply(parentMatrix);
+        transformMatrix.translate(container.x, container.y);
+        transformMatrix.rotate(container.rotation);
+        transformMatrix.scale(container.scaleX, container.scaleY);
+    }
+    else
+    {
+        transformMatrix.applyITRS(container.x, container.y, container.rotation, container.scaleX, container.scaleY);
+    }
+
+    var containerHasBlendMode = (container.blendMode !== -1);
+
+    if (!containerHasBlendMode)
+    {
+        //  If Container is SKIP_TEST then set blend mode to be Normal
+        renderer.setBlendMode(0);
+    }
+
+    var alpha = container._alpha;
+    var scrollFactorX = container.scrollFactorX;
+    var scrollFactorY = container.scrollFactorY;
+
+    if (container.mask)
+    {
+        container.mask.preRenderCanvas(renderer, null, camera);
+    }
+
+    for (var i = 0; i < children.length; i++)
+    {
+        var child = children[i];
+
+        if (!child.willRender(camera))
+        {
+            continue;
+        }
+
+        var childAlpha = child.alpha;
+        var childScrollFactorX = child.scrollFactorX;
+        var childScrollFactorY = child.scrollFactorY;
+
+        if (!containerHasBlendMode && child.blendMode !== renderer.currentBlendMode)
+        {
+            //  If Container doesn't have its own blend mode, then a child can have one
+            renderer.setBlendMode(child.blendMode);
+        }
+
+        //  Set parent values
+        child.setScrollFactor(childScrollFactorX * scrollFactorX, childScrollFactorY * scrollFactorY);
+        child.setAlpha(childAlpha * alpha);
+
+        //  Render
+        child.renderCanvas(renderer, child, interpolationPercentage, camera, transformMatrix);
+
+        //  Restore original values
+        child.setAlpha(childAlpha);
+        child.setScrollFactor(childScrollFactorX, childScrollFactorY);
+    }
+
+    if (container.mask)
+    {
+        container.mask.postRenderCanvas(renderer);
+    }
+};
+
+module.exports = ContainerCanvasRenderer;
+
+
+/***/ }),
+/* 352 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Rectangle = __webpack_require__(24);
+
+/**
+ * Creates a new Rectangle or repositions and/or resizes an existing Rectangle so that it encompasses the two given Rectangles, i.e. calculates their union.
+ *
+ * @function Phaser.Geom.Rectangle.Union
+ * @since 3.0.0
+ *
+ * @generic {Phaser.Geom.Rectangle} O - [out,$return]
+ *
+ * @param {Phaser.Geom.Rectangle} rectA - The first Rectangle to use.
+ * @param {Phaser.Geom.Rectangle} rectB - The second Rectangle to use.
+ * @param {Phaser.Geom.Rectangle} [out] - The Rectangle to store the union in.
+ *
+ * @return {Phaser.Geom.Rectangle} The modified `out` Rectangle, or a new Rectangle if none was provided.
+ */
+var Union = function (rectA, rectB, out)
+{
+    if (out === undefined) { out = new Rectangle(); }
+
+    //  Cache vars so we can use one of the input rects as the output rect
+    var x = Math.min(rectA.x, rectB.x);
+    var y = Math.min(rectA.y, rectB.y);
+    var w = Math.max(rectA.right, rectB.right) - x;
+    var h = Math.max(rectA.bottom, rectB.bottom) - y;
+
+    return out.setTo(x, y, w, h);
+};
+
+module.exports = Union;
+
+
+/***/ }),
+/* 353 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var renderWebGL = __webpack_require__(3);
+var renderCanvas = __webpack_require__(3);
+
+if (false)
+{}
+
+if (true)
+{
+    renderCanvas = __webpack_require__(354);
+}
+
+module.exports = {
+
+    renderWebGL: renderWebGL,
+    renderCanvas: renderCanvas
+
+};
+
+
+/***/ }),
+/* 354 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Renders this Game Object with the Canvas Renderer to the given Camera.
+ * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
+ * This method should not be called directly. It is a utility function of the Render module.
+ *
+ * @method Phaser.GameObjects.Container#renderCanvas
+ * @since 3.4.0
+ * @private
+ *
+ * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
+ * @param {Phaser.GameObjects.Container} container - The Game Object being rendered in this call.
+ * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
+ */
+var SpineContainerCanvasRenderer = function (renderer, container, interpolationPercentage, camera, parentMatrix)
+{
+    var children = container.list;
+
+    if (children.length === 0)
+    {
+        return;
+    }
+
+    var transformMatrix = container.localTransform;
+
+    if (parentMatrix)
+    {
+        transformMatrix.loadIdentity();
+        transformMatrix.multiply(parentMatrix);
+        transformMatrix.translate(container.x, container.y);
+        transformMatrix.rotate(container.rotation);
+        transformMatrix.scale(container.scaleX, container.scaleY);
+    }
+    else
+    {
+        transformMatrix.applyITRS(container.x, container.y, container.rotation, container.scaleX, container.scaleY);
+    }
+
+    var containerHasBlendMode = (container.blendMode !== -1);
+
+    if (!containerHasBlendMode)
+    {
+        //  If Container is SKIP_TEST then set blend mode to be Normal
+        renderer.setBlendMode(0);
+    }
+
+    var alpha = container._alpha;
+    var scrollFactorX = container.scrollFactorX;
+    var scrollFactorY = container.scrollFactorY;
+
+    if (container.mask)
+    {
+        container.mask.preRenderCanvas(renderer, null, camera);
+    }
+
+    for (var i = 0; i < children.length; i++)
+    {
+        var child = children[i];
+
+        if (!child.willRender(camera))
+        {
+            continue;
+        }
+
+        var childAlpha = child.alpha;
+        var childScrollFactorX = child.scrollFactorX;
+        var childScrollFactorY = child.scrollFactorY;
+
+        if (!containerHasBlendMode && child.blendMode !== renderer.currentBlendMode)
+        {
+            //  If Container doesn't have its own blend mode, then a child can have one
+            renderer.setBlendMode(child.blendMode);
+        }
+
+        //  Set parent values
+        child.setScrollFactor(childScrollFactorX * scrollFactorX, childScrollFactorY * scrollFactorY);
+        child.setAlpha(childAlpha * alpha);
+
+        //  Render
+        child.renderCanvas(renderer, child, interpolationPercentage, camera, transformMatrix);
+
+        //  Restore original values
+        child.setAlpha(childAlpha);
+        child.setScrollFactor(childScrollFactorX, childScrollFactorY);
+    }
+
+    if (container.mask)
+    {
+        container.mask.postRenderCanvas(renderer);
+    }
+};
+
+module.exports = SpineContainerCanvasRenderer;
 
 
 /***/ })
