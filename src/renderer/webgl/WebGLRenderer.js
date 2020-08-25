@@ -1221,13 +1221,10 @@ var WebGLRenderer = new Class({
 
         this.setBlendMode(0, true);
 
-        this.resetTextures(true);
-
-        this.currentActiveTexture = 1;
-        this.startActiveTexture++;
+        this.resetTextures();
 
         this.currentPipeline = pipelineInstance;
-        this.currentPipeline.bind();
+        this.currentPipeline.bind(true);
         this.currentPipeline.onBind();
     },
 

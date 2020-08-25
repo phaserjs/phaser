@@ -298,11 +298,15 @@ var MultiPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#bind
      * @since 3.50.0
      *
+     * @param {boolean} [reset=false] - Should the pipeline be fully re-bound after a renderer pipeline clear?
+     *
      * @return {this} This WebGLPipeline instance.
      */
-    bind: function ()
+    bind: function (reset)
     {
-        WebGLPipeline.prototype.bind.call(this);
+        if (reset === undefined) { reset = false; }
+
+        WebGLPipeline.prototype.bind.call(this, reset);
 
         this.renderer.setInt1iv(this.program, 'uMainSampler', this.renderer.textureIndexes);
 

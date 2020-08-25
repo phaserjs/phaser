@@ -277,33 +277,12 @@ var WebGLPipeline = new Class({
      */
     boot: function ()
     {
-        var gl = this.gl;
-        var vertexBuffer = this.vertexBuffer;
-        var attributes = this.attributes;
-        var program = this.program;
         var renderer = this.renderer;
-        var vertexSize = this.vertexSize;
 
-        renderer.setProgram(program);
-        renderer.setVertexBuffer(vertexBuffer);
+        renderer.setProgram(this.program);
+        renderer.setVertexBuffer(this.vertexBuffer);
 
-        for (var i = 0; i < attributes.length; i++)
-        {
-            var element = attributes[i];
-            var location = gl.getAttribLocation(program, element.name);
-
-            if (location >= 0)
-            {
-                gl.enableVertexAttribArray(location);
-                gl.vertexAttribPointer(location, element.size, element.type, element.normalized, vertexSize, element.offset);
-                element.enabled = true;
-                element.location = location;
-            }
-            else if (location !== -1)
-            {
-                gl.disableVertexAttribArray(location);
-            }
-        }
+        this.setAttribPointers(true);
 
         this.hasBooted = true;
 
@@ -404,10 +383,14 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#bind
      * @since 3.0.0
      *
+     * @param {boolean} [reset=false] - Should the pipeline be fully re-bound after a renderer pipeline clear?
+     *
      * @return {this} This WebGLPipeline instance.
      */
-    bind: function ()
+    bind: function (reset)
     {
+        if (reset === undefined) { reset = false; }
+
         var vertexBuffer = this.vertexBuffer;
         var program = this.program;
         var renderer = this.renderer;
@@ -415,7 +398,7 @@ var WebGLPipeline = new Class({
         renderer.setProgram(program);
         renderer.setVertexBuffer(vertexBuffer);
 
-        this.setAttribPointers();
+        this.setAttribPointers(reset);
 
         return this;
     },
@@ -427,19 +410,40 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setAttribPointers
      * @since 3.50.0
      *
+     * @param {boolean} [reset=false] - Reset the vertex attribute locations?
+     *
      * @return {this} This WebGLPipeline instance.
      */
-    setAttribPointers: function ()
+    setAttribPointers: function (reset)
     {
+        if (reset === undefined) { reset = false; }
+
         var gl = this.gl;
         var attributes = this.attributes;
         var vertexSize = this.vertexSize;
+        var program = this.program;
 
         for (var i = 0; i < attributes.length; i++)
         {
             var element = attributes[i];
 
-            if (element.enabled)
+            if (reset)
+            {
+                var location = gl.getAttribLocation(program, element.name);
+
+                if (location >= 0)
+                {
+                    gl.enableVertexAttribArray(location);
+                    gl.vertexAttribPointer(location, element.size, element.type, element.normalized, vertexSize, element.offset);
+                    element.enabled = true;
+                    element.location = location;
+                }
+                else if (location !== -1)
+                {
+                    gl.disableVertexAttribArray(location);
+                }
+            }
+            else if (element.enabled)
             {
                 gl.vertexAttribPointer(element.location, element.size, element.type, element.normalized, vertexSize, element.offset);
             }

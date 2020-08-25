@@ -149,11 +149,15 @@ var LightPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#bind
      * @since 3.50.0
      *
+     * @param {boolean} [reset=false] - Should the pipeline be fully re-bound after a renderer pipeline clear?
+     *
      * @return {this} This WebGLPipeline instance.
      */
-    bind: function ()
+    bind: function (reset)
     {
-        WebGLPipeline.prototype.bind.call(this);
+        if (reset === undefined) { reset = false; }
+
+        WebGLPipeline.prototype.bind.call(this, reset);
 
         var renderer = this.renderer;
         var program = this.program;
