@@ -195,17 +195,19 @@ The way in which Game Objects add themselves to the Scene Update List has change
 
 ### Spine Plugin Updates
 
-* `SpineContainer` is a new Game Object available via `this.add.spinecontainer` to which you can add Spine Game Objects only. It uses a special rendering function to retain batching, even across multiple container or Spine Game Object instances, resulting in dramatically improved performance over using regular Containers.
+* The Spine Runtimes have been updated to 3.8.95, which are the most recent non-beta versions. Please note, you will _need_ to re-export your animations if you're working in a version of Spine lower than 3.8.20.
+* `SpineContainer` is a new Game Object available via `this.add.spineContainer` to which you can add Spine Game Objects only. It uses a special rendering function to retain batching, even across multiple container or Spine Game Object instances, resulting in dramatically improved performance over using regular Containers.
 * A Spine Game Object with `setVisible(false)` will no longer still cause internal gl commands and is now properly skipped, retaining any current batch in the process. Fix #5174 (thanks @Kitsee)
 * The Spine Game Object WebGL Renderer will no longer clear the type if invisible and will only end the batch if the next type doesn't match.
 * The Spine Game Object WebGL Renderer will no longer rebind the pipeline if it was the final object on the display list, saving lots of gl commands.
-* The Spine Runtimes have been updated to 3.8.95, which are the most recent non-beta versions. Please note, you will _need_ to re-export your animations if you're working in a version of Spine lower than 3.8.20.
 * The Webpack build scripts have all been updated for Webpack 4.44.x. Fix #5243 (thanks @RollinSafary)
 * There is a new npm script `npm run plugin.spine.runtimes` which will build all of the Spine runtimes, for ingestion by the plugin. Note: You will need to check-out the Esoteric Spine Runtimes repo into `plugins/spine/` in order for this to work.
 * Spine Game Objects can now be rendered to Render Textures. Fix #5184 (thanks @Kitsee)
 * Using > 128 Spine objects in a Container would cause a `WebGL: INVALID_OPERATION: vertexAttribPointer: no ARRAY_BUFFER is bound and offset is non-zero` error if you added any subsequent Spine objects to the Scene. There is now no limit. Fix #5246 (thanks @d7561985)
 * The Spine Plugin will now work in HEADLESS mode without crashing. Fix #4988 (thanks @raimon-segura)
 * Spine Game Objects now use -1 as their default blend mode, which means 'skip setting it'.
+* The Spine TypeScript defs have been updated for the latest version of the plugin and to add SpineContainers.
+* The `SpineGameObject.setAnimation` method will now use the `trackIndex` parameter if `ignoreIfPlaying` is set and run the check against this track index. Fix #4842 (thanks @vinerz)
 
 ### New Features
 
