@@ -17,12 +17,15 @@ var SpineGameObject = require('./gameobject/SpineGameObject');
  * @classdesc
  * The Spine Plugin is a Scene based plugin that handles the creation and rendering of Spine Game Objects.
  *
+ * Find more details about Spine itself at http://esotericsoftware.com/.
+ *
  * All rendering and object creation is handled via the official Spine Runtimes. This version of the plugin
- * uses the Spine 3.8.72 runtimes. Please note that due to the way the Spine runtimes use semver, you will
+ * uses the Spine 3.8.95 runtimes. Please note that due to the way the Spine runtimes use semver, you will
  * get breaking changes in point-releases. Therefore, files created in a different version of Spine may not
  * work as a result, without you first updating the runtimes and rebuilding the plugin.
  *
- * You can find more details about Spine at http://esotericsoftware.com/.
+ * Esoteric themselves recommend that you freeze your Spine editor version against the runtime versions.
+ * You can find more information about this here: http://esotericsoftware.com/spine-settings#Version
  *
  * Please note that you require a Spine license in order to use Spine Runtimes in your games.
  *
@@ -376,7 +379,7 @@ var SpinePlugin = new Class({
     {
         this.sceneRenderer = new Spine.webgl.SceneRenderer(this.renderer.canvas, this.gl, true);
 
-        //  Monkeypatch the Spine setBlendMode functions, or batching is destroyed
+        //  Monkeypatch the Spine setBlendMode functions, or batching is destroyed!
 
         var setBlendMode = function (srcBlend, dstBlend)
         {
