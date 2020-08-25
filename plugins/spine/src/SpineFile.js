@@ -218,7 +218,7 @@ var SpineFile = new Class({
 
                 if (file.type === 'text')
                 {
-                    atlasKey = file.key.replace(/_[\d]$/, "");
+                    atlasKey = file.key.replace(/_[\d]$/, '');
 
                     atlasCache = file.cache;
 
