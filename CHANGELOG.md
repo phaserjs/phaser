@@ -258,6 +258,7 @@ The way in which Game Objects add themselves to the Scene Update List has change
 * The `BaseShader` default vertex shader now includes the `outTexCoord` vec2 varying, mapped to be the same as that found in the pipeline shaders. Fix #5120 (@pavel-shirobok)
 * When using the `GameObjectCreator` for `Containers` you can now specify the `children` property in the configuration object.
 * `WebGLRenderer.finalType` is a new boolean property that signifies if the current Game Object being rendered is the final one in the list.
+* The `WebGLRenderer.updateCanvasTexture` method will now set `gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL` to true, which should stop issues where you update a Text Game Object, having added a Render Texture or Spine Game Object to the Scene after it, which switches the PMA setting. Fix #5064 (thanks @hugoruscitti)
 
 ### Bug Fixes
 
