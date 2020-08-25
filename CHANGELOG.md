@@ -208,6 +208,7 @@ The way in which Game Objects add themselves to the Scene Update List has change
 * Spine Game Objects now use -1 as their default blend mode, which means 'skip setting it'.
 * The Spine TypeScript defs have been updated for the latest version of the plugin and to add SpineContainers.
 * The `SpineGameObject.setAnimation` method will now use the `trackIndex` parameter if `ignoreIfPlaying` is set and run the check against this track index. Fix #4842 (thanks @vinerz)
+* The `SpineFile` will no longer throw a warning if adding a texture into the Texture Manager that already exists. This allows you to have multiple Spine JSON use the same texture file, however, it also means you now get no warning if you accidentally load a texture that exists, so be careful with your keys! Fix #4947 (thanks @Nomy1)
 
 ### New Features
 
