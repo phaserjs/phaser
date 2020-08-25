@@ -43,10 +43,10 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
         {
             //  The next object in the display list is not a Spine object, so we end the batch
             sceneRenderer.end();
-    
-            renderer.rebindPipeline(renderer.pipelines.TextureTintPipeline);
+
+            renderer.rebindPipeline(renderer.pipelines.MultiPipeline);
         }
-    
+
         return;
     }
 
@@ -155,7 +155,7 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
         //  The next object in the display list is not a Spine object, so we end the batch
         sceneRenderer.end();
 
-        renderer.rebindPipeline(renderer.pipelines.TextureTintPipeline);
+        renderer.rebindPipeline(renderer.pipelines.MultiPipeline);
     }
 };
 
