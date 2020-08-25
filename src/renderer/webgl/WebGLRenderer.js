@@ -580,6 +580,15 @@ var WebGLRenderer = new Class({
         this.nextTypeMatch = false;
 
         /**
+         * Is the Game Object being currently rendered the final one in the list?
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#finalType
+         * @type {boolean}
+         * @since 3.50.0
+         */
+        this.finalType = false;
+
+        /**
          * The mipmap magFilter to be used when creating textures.
          *
          * You can specify this as a string in the game config, i.e.:
@@ -2450,6 +2459,8 @@ var WebGLRenderer = new Class({
 
         for (var i = 0; i < childCount; i++)
         {
+            this.finalType = (i === childCount - 1);
+
             var child = list[i];
 
             if (!child.willRender(camera))
