@@ -124,6 +124,13 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
         skeleton.scaleY *= -1;
     }
 
+    if (renderer.currentFramebuffer !== null)
+    {
+        skeleton.x = 0;
+        skeleton.y = calcMatrix.ty - (viewportHeight * src.scaleY);
+        skeleton.scaleY *= -1;
+    }
+
     //  Add autoUpdate option
     skeleton.updateWorldTransform();
 

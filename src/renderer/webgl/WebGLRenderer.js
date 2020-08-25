@@ -1219,6 +1219,10 @@ var WebGLRenderer = new Class({
 
         gl.viewport(0, 0, this.width, this.height);
 
+        this.currentProgram = null;
+        this.currentVertexBuffer = null;
+        this.currentIndexBuffer = null;
+
         this.setBlendMode(0, true);
 
         this.resetTextures();
