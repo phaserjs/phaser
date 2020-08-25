@@ -118,16 +118,9 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
         }
     }
 
-    if (camera.renderToTexture)
+    if (camera.renderToTexture || renderer.currentFramebuffer !== null)
     {
         skeleton.y = calcMatrix.ty;
-        skeleton.scaleY *= -1;
-    }
-
-    if (renderer.currentFramebuffer !== null)
-    {
-        skeleton.x = 0;
-        skeleton.y = calcMatrix.ty - (viewportHeight * src.scaleY);
         skeleton.scaleY *= -1;
     }
 
