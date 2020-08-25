@@ -193,6 +193,20 @@ The way in which Game Objects add themselves to the Scene Update List has change
 * `DOMElementFactory`, `ExternFactory`, `ParticleManagerFactor`, `RopeFactory` and `SpriteFactory` all no longer add the objects to the Update List, this is now handled by the ADDED events instead.
 * `Sprite`, `Rope`, `ParticleEmitterManager`, `Extern` and `DOMElement` now all override the `addedToScene` and `removedFromScene` callbacks to handle further set-up tasks.
 
+### Spine Plugin Updates
+
+* `SpineContainer` is a new Game Object available via `this.add.spinecontainer` to which you can add Spine Game Objects only. It uses a special rendering function to retain batching, even across multiple container or Spine Game Object instances, resulting in dramatically improved performance over using regular Containers.
+* A Spine Game Object with `setVisible(false)` will no longer still cause internal gl commands and is now properly skipped, retaining any current batch in the process. Fix #5174 (thanks @Kitsee)
+* The Spine Game Object WebGL Renderer will no longer clear the type if invisible and will only end the batch if the next type doesn't match.
+* The Spine Game Object WebGL Renderer will no longer rebind the pipeline if it was the final object on the display list, saving lots of gl commands.
+* The Spine Runtimes have been updated to 3.8.95, which are the most recent non-beta versions. Please note, you will _need_ to re-export your animations if you're working in a version of Spine lower than 3.8.20.
+* The Webpack build scripts have all been updated for Webpack 4.44.x. Fix #5243 (thanks @RollinSafary)
+* There is a new npm script `npm run plugin.spine.runtimes` which will build all of the Spine runtimes, for ingestion by the plugin. Note: You will need to check-out the Esoteric Spine Runtimes repo into `plugins/spine/` in order for this to work.
+* Spine Game Objects can now be rendered to Render Textures. Fix #5184 (thanks @Kitsee)
+* Using > 128 Spine objects in a Container would cause a `WebGL: INVALID_OPERATION: vertexAttribPointer: no ARRAY_BUFFER is bound and offset is non-zero` error if you added any subsequent Spine objects to the Scene. There is now no limit. Fix #5246 (thanks @d7561985)
+* The Spine Plugin will now work in HEADLESS mode without crashing. Fix #4988 (thanks @raimon-segura)
+* Spine Game Objects now use -1 as their default blend mode, which means 'skip setting it'.
+
 ### New Features
 
 * `Geom.Intersects.GetLineToLine` is a new function that will return a Vector3 containing the point of intersection between 2 line segments, with the `z` property holding the distance value.
@@ -239,6 +253,8 @@ The way in which Game Objects add themselves to the Scene Update List has change
 * `Pointer.upTime` now stores the event timestamp of when the final depressed button on the input device was released, not just when button 1 was released.
 * The `Pointer.getDuration` method now uses the new Pointer `downTime` and `upTime` values, meaning it will accurately report the duration of when any button is being held down, not just the primary one. Fix #5112 (thanks @veleek)
 * The `BaseShader` default vertex shader now includes the `outTexCoord` vec2 varying, mapped to be the same as that found in the pipeline shaders. Fix #5120 (@pavel-shirobok)
+* When using the `GameObjectCreator` for `Containers` you can now specify the `children` property in the configuration object.
+* `WebGLRenderer.finalType` is a new boolean property that signifies if the current Game Object being rendered is the final one in the list.
 
 ### Bug Fixes
 
