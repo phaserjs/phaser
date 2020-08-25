@@ -217,6 +217,7 @@ The way in which Game Objects add themselves to the Scene Update List has change
 ### Updates and API Changes
 
 * Earcut, used for polygon triangulation, has been updated from 2.1.4 to 2.2.2.
+* Earcut has now been exposed and is available via `Geom.Polygon.Earcut` and is fully documented.
 * `Config.batchSize` has been increased from 2000 to 4096.
 * Removed the Deferred Diffuse fragment and vertex shaders from the project, as they're not used.
 * `StaticTilemapLayer.upload` will now set the vertex attributes and buffer the data, and handles internal checks more efficiently.
