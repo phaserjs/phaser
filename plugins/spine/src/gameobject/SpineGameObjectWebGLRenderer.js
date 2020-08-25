@@ -27,24 +27,28 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
 {
     var plugin = src.plugin;
     var skeleton = src.skeleton;
+    var childAlpha = skeleton.color.a;
     var sceneRenderer = plugin.sceneRenderer;
 
     var GameObjectRenderMask = 15;
 
-    var willRender = !(GameObjectRenderMask !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)));
+    var willRender = !(GameObjectRenderMask !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)) || childAlpha === 0);
 
     if (!skeleton || !willRender)
     {
-        //  Reset the current type
-        renderer.currentType = '';
-
         //  If there is already a batch running, we need to close it
         if (!renderer.nextTypeMatch)
         {
             //  The next object in the display list is not a Spine object, so we end the batch
             sceneRenderer.end();
 
-            renderer.rebindPipeline(renderer.pipelines.MultiPipeline);
+            if (!renderer.finalType)
+            {
+                //  Reset the current type
+                renderer.currentType = '';
+
+                renderer.rebindPipeline(renderer.pipelines.MultiPipeline);
+            }
         }
 
         return;
@@ -152,10 +156,13 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
 
     if (!renderer.nextTypeMatch)
     {
-        //  The next object in the display list is not a Spine object, so we end the batch
+        //  The next object in the display list is not a Spine Game Object or Spine Container, so we end the batch.
         sceneRenderer.end();
 
-        renderer.rebindPipeline(renderer.pipelines.MultiPipeline);
+        if (!renderer.finalType)
+        {
+            renderer.rebindPipeline(renderer.pipelines.MultiPipeline);
+        }
     }
 };
 
