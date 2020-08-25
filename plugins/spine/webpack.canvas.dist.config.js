@@ -28,11 +28,19 @@ module.exports = {
         rules: [
             {
                 test: require.resolve('./src/runtimes/spine-canvas.js'),
-                use: 'imports-loader?this=>window'
+                loader: 'imports-loader',
+                options: {
+                    type: 'commonjs',
+                    wrapper: 'window'
+                }
             },
             {
                 test: require.resolve('./src/runtimes/spine-canvas.js'),
-                use: 'exports-loader?spine'
+                loader: 'exports-loader',
+                options: {
+                    type: 'commonjs',
+                    exports: 'single spine'
+                }
             }
         ]
     },
