@@ -12,6 +12,7 @@ var ScenePlugin = require('../../../src/plugins/ScenePlugin');
 var Spine = require('Spine');
 var SpineFile = require('./SpineFile');
 var SpineGameObject = require('./gameobject/SpineGameObject');
+var NOOP = require('../../../src/utils/NOOP');
 
 /**
  * @classdesc
@@ -276,6 +277,19 @@ var SpinePlugin = new Class({
             this.renderer = game.renderer;
 
             this.getAtlas = this.getAtlasCanvas;
+        }
+
+        //  Headless mode?
+        if (!this.renderer)
+        {
+            this.renderer = {
+                width: game.scale.width,
+                height: game.scale.height,
+                preRender: NOOP,
+                postRender: NOOP,
+                render: NOOP,
+                destroy: NOOP
+            };
         }
 
         var _this = this;
