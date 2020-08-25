@@ -12,6 +12,7 @@ var ScenePlugin = require('../../../src/plugins/ScenePlugin');
 var Spine = require('Spine');
 var SpineFile = require('./SpineFile');
 var SpineGameObject = require('./gameobject/SpineGameObject');
+var SpineContainer = require('./container/SpineContainer');
 var NOOP = require('../../../src/utils/NOOP');
 
 /**
@@ -347,8 +348,38 @@ var SpinePlugin = new Class({
             return spineGO.refresh();
         };
 
+        var addContainer = function (x, y, children)
+        {
+            var spineGO = new SpineContainer(this.scene, _this, x, y, children);
+
+            this.displayList.add(spineGO);
+
+            return spineGO;
+        };
+
+        var makeContainer = function (config, addToScene)
+        {
+            if (config === undefined) { config = {}; }
+
+            var x = GetValue(config, 'x', 0);
+            var y = GetValue(config, 'y', 0);
+            var children = GetValue(config, 'children', null);
+
+            var container = new SpineContainer(this.scene, _this, x, y, children);
+
+            if (addToScene !== undefined)
+            {
+                config.add = addToScene;
+            }
+
+            BuildGameObject(this.scene, container, config);
+
+            return container;
+        };
+
         pluginManager.registerFileType('spine', this.spineFileCallback, scene);
         pluginManager.registerGameObject('spine', add, make);
+        pluginManager.registerGameObject('spinecontainer', addContainer, makeContainer);
     },
 
     /**
