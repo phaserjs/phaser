@@ -989,7 +989,7 @@ var SpineGameObject = new Class({
      * @param {integer} trackIndex - The track index to play the animation on.
      * @param {string} animationName - The string-based key of the animation to play.
      * @param {boolean} [loop=false] - Should the animation be looped when played?
-     * @param {boolean} [ignoreIfPlaying=false] - If this animation is already playing then ignore this call.
+     * @param {boolean} [ignoreIfPlaying=false] - If the animation specified by the track index is already playing then ignore this call.
      *
      * @return {spine.TrackEntry} A track entry to allow further customization of animation playback.
      */
@@ -1000,7 +1000,7 @@ var SpineGameObject = new Class({
 
         if (ignoreIfPlaying && this.state)
         {
-            var currentTrack = this.state.getCurrent(0);
+            var currentTrack = this.state.getCurrent(trackIndex);
 
             if (currentTrack && currentTrack.animation.name === animationName && !currentTrack.isComplete())
             {
