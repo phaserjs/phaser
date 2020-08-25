@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -1081,6 +1081,8 @@ var SpinePlugin = new Class({
     }
 
 });
+
+SpinePlugin.SpineGameObject = SpineGameObject;
 
 /**
  * Creates a new Spine Game Object and adds it to the Scene.

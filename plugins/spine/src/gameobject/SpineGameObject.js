@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -25,24 +25,24 @@ var SpineGameObjectRender = require('./SpineGameObjectRender');
  * A Spine Game Object is a Phaser level object that can be added to your Phaser Scenes. It encapsulates
  * a Spine Skeleton with Spine Animation Data and Animation State, with helper methods to allow you to
  * easily change the skin, slot attachment, bone positions and more.
- * 
+ *
  * Spine Game Objects can be created via the Game Object Factory, Game Object Creator, or directly.
  * You can only create them if the Spine plugin has been loaded into Phaser.
- * 
+ *
  * The quickest way is the Game Object Factory:
- * 
+ *
  * ```javascript
  * let jelly = this.add.spine(512, 550, 'jelly', 'jelly-think', true);
  * ```
- * 
+ *
  * Here we are creating a new Spine Game Object positioned at 512 x 550. It's using the `jelly`
  * Spine data, which has previously been loaded into your Scene. The `jelly-think` argument is
  * an optional animation to start playing on the skeleton. The final argument `true` sets the
  * animation to loop. Look at the documentation for further details on each of these options.
- * 
+ *
  * For more control, you can use the Game Object Creator, passing in a Spine Game Object
  * Configuration object:
- * 
+ *
  * ```javascript
  * let jelly = this.make.spine({
  *     x: 512, y: 550, key: 'jelly',
@@ -52,28 +52,28 @@ var SpineGameObjectRender = require('./SpineGameObjectRender');
  *     slotName: 'hat', attachmentName: 'images/La_14'
  * });
  * ```
- * 
+ *
  * Here, you've got the ability to specify extra details, such as the slot name, attachments or
  * overall scale.
- * 
+ *
  * If you wish to instantiate a Spine Game Object directly you can do so, but in order for it to
  * update and render, it must be added to the display and update lists of your Scene:
- * 
+ *
  * ```javascript
  * let jelly = new SpineGameObject(this, this.spine, 512, 550, 'jelly', 'jelly-think', true);
  * this.sys.displayList.add(jelly);
  * this.sys.updateList.add(jelly);
  * ```
- * 
+ *
  * It's possible to enable Spine Game Objects for input, but you should be aware that it will use
  * the bounds of the skeletons current pose to create the hit area from. Sometimes this is ok, but
  * often not. Make use of the `InputPlugin.enableDebug` method to view the input shape being created.
  * If it's not suitable, provide your own shape to the `setInteractive` method.
- * 
+ *
  * Due to the way Spine handles scaling, it's not recommended to enable a Spine Game Object for
  * physics directly. Instead, you should look at creating a proxy body and syncing the Spine Game
  * Object position with it. See the examples for further details.
- * 
+ *
  * If your Spine Game Object has black outlines around the different parts of the texture when it
  * renders then you have exported the files from Spine with pre-multiplied alpha enabled, but have
  * forgotten to set that flag when loading the Spine data. Please see the loader docs for more details.
@@ -173,7 +173,7 @@ var SpineGameObject = new Class({
          * @since 3.19.0
          */
         this.bounds = null;
-        
+
         /**
          * A Game Object level flag that allows you to enable debug drawing
          * to the Skeleton Debug Renderer by toggling it.
@@ -257,9 +257,9 @@ var SpineGameObject = new Class({
 
     /**
      * Set the Alpha level for the whole Skeleton of this Game Object.
-     * 
+     *
      * The alpha controls the opacity of the Game Object as it renders.
-     * 
+     *
      * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
      *
      * @method SpineGameObject#setAlpha
@@ -292,7 +292,7 @@ var SpineGameObject = new Class({
 
     /**
      * The alpha value of the Skeleton.
-     * 
+     *
      * A value between 0 and 1.
      *
      * This is a global value, impacting the entire Skeleton, not just a region of it.
@@ -331,7 +331,7 @@ var SpineGameObject = new Class({
 
     /**
      * The amount of red used when rendering the Skeleton.
-     * 
+     *
      * A value between 0 and 1.
      *
      * This is a global value, impacting the entire Skeleton, not just a region of it.
@@ -361,7 +361,7 @@ var SpineGameObject = new Class({
 
     /**
      * The amount of green used when rendering the Skeleton.
-     * 
+     *
      * A value between 0 and 1.
      *
      * This is a global value, impacting the entire Skeleton, not just a region of it.
@@ -391,7 +391,7 @@ var SpineGameObject = new Class({
 
     /**
      * The amount of blue used when rendering the Skeleton.
-     * 
+     *
      * A value between 0 and 1.
      *
      * This is a global value, impacting the entire Skeleton, not just a region of it.
@@ -427,7 +427,7 @@ var SpineGameObject = new Class({
      *
      * @param {integer} [color=0xffffff] - The color being applied to the Skeleton or named Slot. Set to white to disable any previously set color.
      * @param {string} [slotName] - The name of the slot to set the color on. If not give, will be set on the whole skeleton.
-     * 
+     *
      * @return {this} This Game Object instance.
      */
     setColor: function (color, slotName)
@@ -469,7 +469,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#setSkeletonFromJSON
      * @since 3.19.0
-     * 
+     *
      * @param {string} atlasDataKey - The key of the Spine data to use for this Skeleton.
      * @param {object} skeletonJSON - The JSON data for the Skeleton.
      * @param {string} [animationName] - Optional name of the animation to set on the Skeleton.
@@ -484,13 +484,13 @@ var SpineGameObject = new Class({
 
     /**
      * Sets this Game Object to use the given Skeleton based on its cache key.
-     * 
+     *
      * Typically, once set, the Skeleton doesn't change. Instead, you change the skin,
      * or slot attachment, or any other property to adjust it.
      *
      * @method SpineGameObject#setSkeleton
      * @since 3.19.0
-     * 
+     *
      * @param {string} atlasDataKey - The key of the Spine data to use for this Skeleton.
      * @param {object} skeletonJSON - The JSON data for the Skeleton.
      * @param {string} [animationName] - Optional name of the animation to set on the Skeleton.
@@ -567,7 +567,7 @@ var SpineGameObject = new Class({
      * @fires SpinePluginEvents#COMPLETE
      * @private
      * @since 3.19.0
-     * 
+     *
      * @param {any} entry - The event data from Spine.
      */
     onComplete: function (entry)
@@ -582,7 +582,7 @@ var SpineGameObject = new Class({
      * @fires SpinePluginEvents#DISPOSE
      * @private
      * @since 3.19.0
-     * 
+     *
      * @param {any} entry - The event data from Spine.
      */
     onDispose: function (entry)
@@ -597,7 +597,7 @@ var SpineGameObject = new Class({
      * @fires SpinePluginEvents#END
      * @private
      * @since 3.19.0
-     * 
+     *
      * @param {any} entry - The event data from Spine.
      */
     onEnd: function (entry)
@@ -612,7 +612,7 @@ var SpineGameObject = new Class({
      * @fires SpinePluginEvents#EVENT
      * @private
      * @since 3.19.0
-     * 
+     *
      * @param {any} entry - The event data from Spine.
      * @param {spine.Event} event - The Spine event.
      */
@@ -628,7 +628,7 @@ var SpineGameObject = new Class({
      * @fires SpinePluginEvents#INTERRUPTED
      * @private
      * @since 3.19.0
-     * 
+     *
      * @param {any} entry - The event data from Spine.
      */
     onInterrupted: function (entry)
@@ -643,7 +643,7 @@ var SpineGameObject = new Class({
      * @fires SpinePluginEvents#START
      * @private
      * @since 3.19.0
-     * 
+     *
      * @param {any} entry - The event data from Spine.
      */
     onStart: function (entry)
@@ -653,15 +653,15 @@ var SpineGameObject = new Class({
 
     /**
      * Refreshes the data about the current Skeleton.
-     * 
+     *
      * This will reset the rotation, position and size of the Skeleton to match this Game Object.
-     * 
+     *
      * Call this method if you need to access the Skeleton data directly, and it may have changed
      * recently.
      *
      * @method SpineGameObject#refresh
      * @since 3.19.0
-     * 
+     *
      * @return {this} This Game Object.
      */
     refresh: function ()
@@ -681,20 +681,20 @@ var SpineGameObject = new Class({
 
     /**
      * Sets the size of this Game Object.
-     * 
+     *
      * If no arguments are given it uses the current skeleton data dimensions.
-     * 
+     *
      * You can use this method to set a fixed size of this Game Object, such as for input detection,
      * when the skeleton data doesn't match what is required in-game.
      *
      * @method SpineGameObject#setSize
      * @since 3.19.0
-     * 
+     *
      * @param {number} [width] - The width of the Skeleton. If not given it defaults to the Skeleton Data width.
      * @param {number} [height] - The height of the Skeleton. If not given it defaults to the Skeleton Data height.
      * @param {number} [offsetX=0] - The horizontal offset of the Skeleton from its x and y coordinate.
      * @param {number} [offsetY=0] - The vertical offset of the Skeleton from its x and y coordinate.
-     * 
+     *
      * @return {this} This Game Object.
      */
     setSize: function (width, height, offsetX, offsetY)
@@ -717,15 +717,15 @@ var SpineGameObject = new Class({
 
     /**
      * Sets the offset of this Game Object from the Skeleton position.
-     * 
+     *
      * You can use this method to adjust how the position of this Game Object relates to the Skeleton it is using.
      *
      * @method SpineGameObject#setOffset
      * @since 3.19.0
-     * 
+     *
      * @param {number} [offsetX=0] - The horizontal offset of the Skeleton from its x and y coordinate.
      * @param {number} [offsetY=0] - The vertical offset of the Skeleton from its x and y coordinate.
-     * 
+     *
      * @return {this} This Game Object.
      */
     setOffset: function (offsetX, offsetY)
@@ -744,13 +744,13 @@ var SpineGameObject = new Class({
     /**
      * Internal method that syncs all of the Game Object position and scale data to the Skeleton.
      * It then syncs the skeleton bounds back to this Game Object.
-     * 
+     *
      * This method is called automatically as needed internally, however, it's also exposed should
      * you require overriding the size settings.
      *
      * @method SpineGameObject#updateSize
      * @since 3.19.0
-     * 
+     *
      * @return {this} This Game Object.
      */
     updateSize: function ()
@@ -839,7 +839,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#getBoneList
      * @since 3.19.0
-     * 
+     *
      * @return {string[]} An array containing the names of all the bones in the Skeleton Data.
      */
     getBoneList: function ()
@@ -864,7 +864,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#getSkinList
      * @since 3.19.0
-     * 
+     *
      * @return {string[]} An array containing the names of all the skins in the Skeleton Data.
      */
     getSkinList: function ()
@@ -889,7 +889,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#getSlotList
      * @since 3.19.0
-     * 
+     *
      * @return {string[]} An array containing the names of all the slots in the Skeleton.
      */
     getSlotList: function ()
@@ -911,7 +911,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#getAnimationList
      * @since 3.19.0
-     * 
+     *
      * @return {string[]} An array containing the names of all the animations in the Skeleton Data.
      */
     getAnimationList: function ()
@@ -936,9 +936,9 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#getCurrentAnimation
      * @since 3.19.0
-     * 
+     *
      * @param {integer} [trackIndex=0] - The track to return the current animation on.
-     * 
+     *
      * @return {?spine.Animation} The current Animation on the given track, or `undefined` if there is no current animation.
      */
     getCurrentAnimation: function (trackIndex)
@@ -956,7 +956,7 @@ var SpineGameObject = new Class({
     /**
      * Sets the current animation for a track, discarding any queued animations.
      * If the formerly current track entry was never applied to a skeleton, it is replaced (not mixed from).
-     * 
+     *
      * Animations are referenced by a unique string-based key, as defined in the Spine software.
      *
      * @method SpineGameObject#play
@@ -979,7 +979,7 @@ var SpineGameObject = new Class({
     /**
      * Sets the current animation for a track, discarding any queued animations.
      * If the formerly current track entry was never applied to a skeleton, it is replaced (not mixed from).
-     * 
+     *
      * Animations are referenced by a unique string-based key, as defined in the Spine software.
      *
      * @method SpineGameObject#setAnimation
@@ -1001,7 +1001,7 @@ var SpineGameObject = new Class({
         if (ignoreIfPlaying && this.state)
         {
             var currentTrack = this.state.getCurrent(0);
- 
+
             if (currentTrack && currentTrack.animation.name === animationName && !currentTrack.isComplete())
             {
                 return;
@@ -1017,9 +1017,9 @@ var SpineGameObject = new Class({
     /**
      * Adds an animation to be played after the current or last queued animation for a track.
      * If the track is empty, it is equivalent to calling setAnimation.
-     * 
+     *
      * Animations are referenced by a unique string-based key, as defined in the Spine software.
-     * 
+     *
      * The delay is a float. If > 0, sets delay. If <= 0, the delay set is the duration of the previous
      * track entry minus any mix duration (from the AnimationStateData) plus the specified delay
      * (ie the mix ends at (delay = 0) or before (delay < 0) the previous track entry duration).
@@ -1043,13 +1043,13 @@ var SpineGameObject = new Class({
     /**
      * Sets an empty animation for a track, discarding any queued animations, and sets the track
      * entry's mixDuration. An empty animation has no timelines and serves as a placeholder for mixing in or out.
-     * 
+     *
      * Mixing out is done by setting an empty animation with a mix duration using either setEmptyAnimation,
      * setEmptyAnimations, or addEmptyAnimation. Mixing to an empty animation causes the previous animation to be
      * applied less and less over the mix duration. Properties keyed in the previous animation transition to
      * the value from lower tracks or to the setup pose value if no lower tracks key the property.
      * A mix duration of 0 still mixes out over one frame.
-     * 
+     *
      * Mixing in is done by first setting an empty animation, then adding an animation using addAnimation
      * and on the returned track entry, set the mixDuration. Mixing from an empty animation causes the new
      * animation to be applied more and more over the mix duration. Properties keyed in the new animation
@@ -1071,7 +1071,7 @@ var SpineGameObject = new Class({
 
     /**
      * Removes all animations from the track, leaving skeletons in their current pose.
-     * 
+     *
      * It may be desired to use setEmptyAnimation to mix the skeletons back to the setup pose,
      * rather than leaving them in their current pose.
      *
@@ -1088,10 +1088,10 @@ var SpineGameObject = new Class({
 
         return this;
     },
-     
+
     /**
      * Removes all animations from all tracks, leaving skeletons in their current pose.
-     * 
+     *
      * It may be desired to use setEmptyAnimation to mix the skeletons back to the setup pose,
      * rather than leaving them in their current pose.
      *
@@ -1109,11 +1109,11 @@ var SpineGameObject = new Class({
 
     /**
      * Sets the skin used to look up attachments before looking in the defaultSkin.
-     * 
+     *
      * Attachments from the new skin are attached if the corresponding attachment from the
      * old skin was attached. If there was no old skin, each slot's setup mode attachment is
      * attached from the new skin.
-     * 
+     *
      * After changing the skin, the visible attachments can be reset to those attached in the
      * setup pose by calling setSlotsToSetupPose. Also, often apply is called before the next time
      * the skeleton is rendered to allow any attachment keys in the current animation(s) to hide
@@ -1121,7 +1121,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#setSkinByName
      * @since 3.19.0
-     * 
+     *
      * @param {string} skinName - The name of the skin to set.
      *
      * @return {this} This Game Object.
@@ -1141,11 +1141,11 @@ var SpineGameObject = new Class({
 
     /**
      * Sets the skin used to look up attachments before looking in the defaultSkin.
-     * 
+     *
      * Attachments from the new skin are attached if the corresponding attachment from the
      * old skin was attached. If there was no old skin, each slot's setup mode attachment is
      * attached from the new skin.
-     * 
+     *
      * After changing the skin, the visible attachments can be reset to those attached in the
      * setup pose by calling setSlotsToSetupPose. Also, often apply is called before the next time
      * the skeleton is rendered to allow any attachment keys in the current animation(s) to hide
@@ -1153,7 +1153,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#setSkin
      * @since 3.19.0
-     * 
+     *
      * @param {?spine.Skin} newSkin - The Skin to set. May be `null`.
      *
      * @return {this} This Game Object.
@@ -1176,7 +1176,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#setMix
      * @since 3.19.0
-     * 
+     *
      * @param {string} fromName - The animation to mix from.
      * @param {string} toName - The animation to mix to.
      * @param {number} [duration] - Seconds for mixing from the previous animation to this animation. Defaults to the value provided by AnimationStateData getMix based on the animation before this animation (if any).
@@ -1197,7 +1197,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#getAttachment
      * @since 3.19.0
-     * 
+     *
      * @param {integer} slotIndex - The slot index to search.
      * @param {string} attachmentName - The attachment name to look for.
      *
@@ -1213,7 +1213,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#getAttachmentByName
      * @since 3.19.0
-     * 
+     *
      * @param {string} slotName - The slot name to search.
      * @param {string} attachmentName - The attachment name to look for.
      *
@@ -1230,7 +1230,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#setAttachment
      * @since 3.19.0
-     * 
+     *
      * @param {string} slotName - The slot name to add the attachment to.
      * @param {string} attachmentName - The attachment name to add.
      *
@@ -1318,7 +1318,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#angleBoneToXY
      * @since 3.19.0
-     * 
+     *
      * @param {spine.Bone} bone - The bone to rotate towards the world position.
      * @param {number} worldX - The world x coordinate to rotate the bone towards.
      * @param {number} worldY - The world y coordinate to rotate the bone towards.
@@ -1350,7 +1350,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findBone
      * @since 3.19.0
-     * 
+     *
      * @param {string} boneName - The name of the bone to find.
      *
      * @return {spine.Bone} The bone, or null.
@@ -1366,7 +1366,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findBoneIndex
      * @since 3.19.0
-     * 
+     *
      * @param {string} boneName - The name of the bone to find.
      *
      * @return {integer} The bone index. Or -1 if the bone was not found.
@@ -1382,7 +1382,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findSlot
      * @since 3.19.0
-     * 
+     *
      * @param {string} slotName - The name of the slot to find.
      *
      * @return {spine.Slot} The Slot. May be null.
@@ -1398,7 +1398,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findSlotIndex
      * @since 3.19.0
-     * 
+     *
      * @param {string} slotName - The name of the slot to find.
      *
      * @return {integer} The slot index. Or -1 if the Slot was not found.
@@ -1414,7 +1414,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findSkin
      * @since 3.19.0
-     * 
+     *
      * @param {string} skinName - The name of the skin to find.
      *
      * @return {spine.Skin} The Skin. May be null.
@@ -1430,7 +1430,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findEvent
      * @since 3.19.0
-     * 
+     *
      * @param {string} eventDataName - The name of the event to find.
      *
      * @return {spine.EventData} The Event Data. May be null.
@@ -1446,7 +1446,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findAnimation
      * @since 3.19.0
-     * 
+     *
      * @param {string} animationName - The name of the animation to find.
      *
      * @return {spine.Animation} The Animation. May be null.
@@ -1462,7 +1462,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findIkConstraint
      * @since 3.19.0
-     * 
+     *
      * @param {string} constraintName - The name of the constraint to find.
      *
      * @return {spine.IkConstraintData} The IK constraint. May be null.
@@ -1478,7 +1478,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findTransformConstraint
      * @since 3.19.0
-     * 
+     *
      * @param {string} constraintName - The name of the constraint to find.
      *
      * @return {spine.TransformConstraintData} The transform constraint. May be null.
@@ -1494,7 +1494,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findPathConstraint
      * @since 3.19.0
-     * 
+     *
      * @param {string} constraintName - The name of the constraint to find.
      *
      * @return {spine.PathConstraintData} The path constraint. May be null.
@@ -1510,7 +1510,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findPathConstraintIndex
      * @since 3.19.0
-     * 
+     *
      * @param {string} constraintName - The name of the constraint to find.
      *
      * @return {integer} The constraint index. Or -1 if the constraint was not found.
@@ -1522,15 +1522,15 @@ var SpineGameObject = new Class({
 
     /**
      * Returns the axis aligned bounding box (AABB) of the region and mesh attachments for the current pose.
-     * 
+     *
      * The returned object contains two properties: `offset` and `size`:
-     * 
+     *
      * `offset` - The distance from the skeleton origin to the bottom left corner of the AABB.
      * `size` - The width and height of the AABB.
      *
      * @method SpineGameObject#getBounds
      * @since 3.19.0
-     * 
+     *
      * @return {any} The bounds object.
      */
     getBounds: function ()
@@ -1544,7 +1544,7 @@ var SpineGameObject = new Class({
      * @method SpineGameObject#preUpdate
      * @protected
      * @since 3.19.0
-     * 
+     *
      * @param {number} time - The current timestamp.
      * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
