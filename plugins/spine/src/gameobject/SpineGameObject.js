@@ -231,7 +231,7 @@ var SpineGameObject = new Class({
          * @readonly
          * @since 3.19.0
          */
-        this.blendMode = 0;
+        this.blendMode = -1;
 
         this.setPosition(x, y);
 
