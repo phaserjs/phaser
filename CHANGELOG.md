@@ -230,6 +230,8 @@ The way in which Game Objects add themselves to the Scene Update List has change
 * `WebGLPipeline.hasBooted` is a new boolean property that tracks if the pipeline has been booted or not, which is now far more important in 3.5 than in previous versions. This is checked in the `WebGLRenderer.addPipeline` method, and if not set, the pipeline is booted. Fix #5251 #5255 (thanks @telinc1 @rexrainbow)
 * The WebGL Renderer will now add the pipelines during the `boot` method, instead of `init`.
 * You can now use `this.renderer` from within a Scene, as it's now a Scene-level property and part of the Injection Map.
+* `Clock.addEvent` can now take an existing `TimerEvent` object, as well as a config object. If a `TimerEvent` is given it will be removed from the Clock, reset and then added. This allows you to pool TimerEvents rather than constantly create and delete them. Fix #4115 (thanks @jcyuan)
+* `Clock.removeEvent` is a new method that allows you to remove a `TimerEvent`, or an array of them, from all internal lists of the current Clock.
 
 ### Updates and API Changes
 
