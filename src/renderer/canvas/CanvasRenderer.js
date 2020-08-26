@@ -553,6 +553,16 @@ var CanvasRenderer = new Class({
     },
 
     /**
+     * Schedules a snapshot of given gameObject.
+     * */
+    snapshotGameObject: function (gameObject, callback, type, encoderOptions)
+    {
+        var bounds = gameObject.getBounds();
+
+        return this.snapshotArea(bounds.x, bounds.y, bounds.width, bounds.height, callback, type, encoderOptions);
+    },
+
+    /**
      * Schedules a snapshot of the given area of the game viewport to be taken after the current frame is rendered.
      *
      * To capture the whole game viewport see the `snapshot` method. To capture a specific pixel, see `snapshotPixel`.
