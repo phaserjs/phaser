@@ -261,6 +261,7 @@ The way in which Game Objects add themselves to the Scene Update List has change
 * When using the `GameObjectCreator` for `Containers` you can now specify the `children` property in the configuration object.
 * `WebGLRenderer.finalType` is a new boolean property that signifies if the current Game Object being rendered is the final one in the list.
 * The `WebGLRenderer.updateCanvasTexture` method will now set `gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL` to true, which should stop issues where you update a Text Game Object, having added a Render Texture or Spine Game Object to the Scene after it, which switches the PMA setting. Fix #5064 #5155 (thanks @hugoruscitti @immangrove-supertree)
+* `Textures.Parsers.JSONHash` will now perform a `hasOwnProperty` check when iterating the frames, skipping anything that isn't a direct property. This should allow you to use generated atlas data that comes from `JSON.parse`. Fix #4768 (thanks @RollinSafary)
 
 ### Bug Fixes
 
@@ -277,7 +278,7 @@ The way in which Game Objects add themselves to the Scene Update List has change
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
-@samme @16patsle @scott20145 @khasanovbi @mk360 @volkans80 @jaabberwocky
+@samme @16patsle @scott20145 @khasanovbi @mk360 @volkans80 @jaabberwocky @maikthomas @atursams @LearningCode2023 @DylanC 
 
 
 
