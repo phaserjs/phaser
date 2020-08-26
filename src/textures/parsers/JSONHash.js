@@ -41,6 +41,11 @@ var JSONHash = function (texture, sourceIndex, json)
 
     for (var key in frames)
     {
+        if (!frames.hasOwnProperty(key))
+        {
+            continue;
+        }
+
         var src = frames[key];
 
         //  The frame values are the exact coordinates to cut the frame out of the atlas from
