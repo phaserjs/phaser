@@ -22,6 +22,7 @@ module.exports = {
     LOOP: require('./LOOP_EVENT'),
     LOOPED: require('./LOOPED_EVENT'),
     MUTE: require('./MUTE_EVENT'),
+    PAN: require('./PAN_EVENT'),
     PAUSE_ALL: require('./PAUSE_ALL_EVENT'),
     PAUSE: require('./PAUSE_EVENT'),
     PLAY: require('./PLAY_EVENT'),
@@ -32,7 +33,6 @@ module.exports = {
     STOP_ALL: require('./STOP_ALL_EVENT'),
     STOP: require('./STOP_EVENT'),
     UNLOCKED: require('./UNLOCKED_EVENT'),
-    VOLUME: require('./VOLUME_EVENT'),
-    PAN: require('./PAN_EVENT')
+    VOLUME: require('./VOLUME_EVENT')
 
 };
