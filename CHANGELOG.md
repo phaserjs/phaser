@@ -263,6 +263,7 @@ The way in which Game Objects add themselves to the Scene Update List has change
 * The `WebGLRenderer.updateCanvasTexture` method will now set `gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL` to true, which should stop issues where you update a Text Game Object, having added a Render Texture or Spine Game Object to the Scene after it, which switches the PMA setting. Fix #5064 #5155 (thanks @hugoruscitti @immangrove-supertree)
 * `Textures.Parsers.JSONHash` will now perform a `hasOwnProperty` check when iterating the frames, skipping anything that isn't a direct property. This should allow you to use generated atlas data that comes from `JSON.parse`. Fix #4768 (thanks @RollinSafary)
 * The `Camera3D` Plugin has been rebuilt for Phaser 3.50 and the webpack config updated.
+* `Tween.seek` will no longer issue a console warning for `'Tween.seek duration too long'`, it's now up to you to check on the performance of tween seeking.
 
 ### Bug Fixes
 
