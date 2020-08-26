@@ -70,7 +70,8 @@ var NoAudioSound = new Class({
             detune: 0,
             seek: 0,
             loop: false,
-            delay: 0
+            delay: 0,
+            pan: 0
         }, config);
 
         this.currentConfig = this.config;
@@ -80,6 +81,7 @@ var NoAudioSound = new Class({
         this.detune = 0;
         this.seek = 0;
         this.loop = false;
+        this.pan = 0;
         this.markers = {};
         this.currentMarker = null;
         this.pendingRemove = false;
@@ -178,7 +180,9 @@ var NoAudioSound = new Class({
 
     setSeek: returnThis,
 
-    setLoop: returnThis
+    setLoop: returnThis,
+
+    setPan: returnThis
 
 });
 

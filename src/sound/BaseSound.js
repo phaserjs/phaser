@@ -128,7 +128,8 @@ var BaseSound = new Class({
             detune: 0,
             seek: 0,
             loop: false,
-            delay: 0
+            delay: 0,
+            pan: 0
 
         };
 
@@ -217,7 +218,8 @@ var BaseSound = new Class({
                 detune: 0,
                 seek: 0,
                 loop: false,
-                delay: 0
+                delay: 0,
+                pan: 0
             }
         }, marker);
 
@@ -418,6 +420,7 @@ var BaseSound = new Class({
         this.rate = this.currentConfig.rate;
         this.detune = this.currentConfig.detune;
         this.loop = this.currentConfig.loop;
+        this.pan = this.currentConfig.pan;
     },
 
     /**

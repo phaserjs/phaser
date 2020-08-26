@@ -92,6 +92,15 @@ var WebAudioSound = new Class({
         this.volumeNode = manager.context.createGain();
 
         /**
+         * Panner node responsible for controlling this sound's pan.
+         *
+         * @name Phaser.Sound.WebAudioSound#pannerNode
+         * @type {StereoPannerNode}
+         * @private
+         */
+        this.pannerNode = manager.context.createStereoPanner();
+
+        /**
          * The time at which the sound should have started playback from the beginning.
          * Based on BaseAudioContext.currentTime value.
          *
@@ -165,7 +174,9 @@ var WebAudioSound = new Class({
 
         this.muteNode.connect(this.volumeNode);
 
-        this.volumeNode.connect(manager.destination);
+        this.volumeNode.connect(this.pannerNode);
+
+        this.pannerNode.connect(manager.destination);
 
         this.duration = this.audioBuffer.duration;
 
@@ -493,6 +504,8 @@ var WebAudioSound = new Class({
         this.muteNode = null;
         this.volumeNode.disconnect();
         this.volumeNode = null;
+        this.pannerNode.disconnect();
+        this.pannerNode = null;
         this.rateUpdates.length = 0;
         this.rateUpdates = null;
     },
@@ -891,6 +904,49 @@ var WebAudioSound = new Class({
     setLoop: function (value)
     {
         this.loop = value;
+
+        return this;
+    },
+
+    /**
+     * Gets or sets the pan of this sound, a value between -1 (full left pan) and 1 (full right pan).
+     *
+     * @name Phaser.Sound.WebAudioSound#pan
+     * @type {number}
+     * @default 0
+     * @fires Phaser.Sound.Events#PAN
+     * @since 3.0.0
+     */
+    pan: {
+
+        get: function ()
+        {
+            return this.pannerNode.pan.value;
+        },
+
+        set: function (value)
+        {
+            this.currentConfig.pan = value;
+            this.pannerNode.pan.setValueAtTime(value, this.manager.context.currentTime);
+
+            this.emit(Events.PAN, this, value);
+        }
+    },
+
+    /**
+     * Sets the pan of this Sound.
+     *
+     * @method Phaser.Sound.WebAudioSound#setPan
+     * @fires Phaser.Sound.Events#PAN
+     * @since 3.4.0
+     *
+     * @param {number} value - The pan of the sound.
+     *
+     * @return {Phaser.Sound.WebAudioSound} This Sound instance.
+     */
+    setPan: function (value)
+    {
+        this.pan = value;
 
         return this;
     }

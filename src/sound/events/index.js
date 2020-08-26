@@ -32,6 +32,7 @@ module.exports = {
     STOP_ALL: require('./STOP_ALL_EVENT'),
     STOP: require('./STOP_EVENT'),
     UNLOCKED: require('./UNLOCKED_EVENT'),
-    VOLUME: require('./VOLUME_EVENT')
+    VOLUME: require('./VOLUME_EVENT'),
+    PAN: require('./PAN_EVENT')
 
 };
