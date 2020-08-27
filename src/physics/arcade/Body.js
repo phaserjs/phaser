@@ -1353,6 +1353,7 @@ var Body = new Class({
 
         this.updateBounds();
         this.updateCenter();
+        this.resetFlags();
     },
 
     /**
