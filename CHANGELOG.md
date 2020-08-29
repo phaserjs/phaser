@@ -232,6 +232,7 @@ The way in which Game Objects add themselves to the Scene Update List has change
 * You can now use `this.renderer` from within a Scene, as it's now a Scene-level property and part of the Injection Map.
 * `Clock.addEvent` can now take an existing `TimerEvent` object, as well as a config object. If a `TimerEvent` is given it will be removed from the Clock, reset and then added. This allows you to pool TimerEvents rather than constantly create and delete them. Fix #4115 (thanks @jcyuan)
 * `Clock.removeEvent` is a new method that allows you to remove a `TimerEvent`, or an array of them, from all internal lists of the current Clock.
+* `Group.getMatching` is a new method that will return any members of the Group that match the given criteria, such as `getMatching('visible', true)` (thanks @atursams)
 
 ### Updates and API Changes
 
