@@ -7,6 +7,7 @@
 var Actions = require('../../actions/');
 var Class = require('../../utils/Class');
 var Events = require('../events');
+var GetAll = require('../../utils/array/GetAll');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
@@ -731,6 +732,30 @@ var Group = new Class({
     getLength: function ()
     {
         return this.children.size;
+    },
+
+    /**
+     * Returns all children in this Group that match the given criteria based on the `property` and `value` arguments.
+     *
+     * For example: `getAll('visible', true)` would return only children that have their `visible` property set.
+     *
+     * Optionally, you can specify a start and end index. For example if the Group has 100 elements,
+     * and you set `startIndex` to 0 and `endIndex` to 50, it would return matches from only
+     * the first 50.
+     *
+     * @method Phaser.GameObjects.Group#getMatching
+     * @since 3.50.0
+     *
+     * @param {string} [property] - The property to test on each array element.
+     * @param {*} [value] - The value to test the property against. Must pass a strict (`===`) comparison check.
+     * @param {integer} [startIndex] - An optional start index to search from.
+     * @param {integer} [endIndex] - An optional end index to search to.
+     *
+     * @return {any[]} An array of matching Group members. The array will be empty if nothing matched.
+     */
+    getMatching: function (property, value, startIndex, endIndex)
+    {
+        return GetAll(this.children, property, value, startIndex, endIndex);
     },
 
     /**
