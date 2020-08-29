@@ -934,19 +934,37 @@ var Body = new Class({
      *
      * @method Phaser.Physics.Arcade.Body#resetFlags
      * @since 3.18.0
+     *
+     * @param {boolean} [clear=false] - Set the `wasTouching` values to their defaults.
      */
-    resetFlags: function ()
+    resetFlags: function (clear)
     {
+        if (clear === undefined)
+        {
+            clear = false;
+        }
+
         //  Store and reset collision flags
         var wasTouching = this.wasTouching;
         var touching = this.touching;
         var blocked = this.blocked;
 
-        wasTouching.none = touching.none;
-        wasTouching.up = touching.up;
-        wasTouching.down = touching.down;
-        wasTouching.left = touching.left;
-        wasTouching.right = touching.right;
+        if (clear)
+        {
+            wasTouching.none = true;
+            wasTouching.up = false;
+            wasTouching.down = false;
+            wasTouching.left = false;
+            wasTouching.right = false;
+        }
+        else
+        {
+            wasTouching.none = touching.none;
+            wasTouching.up = touching.up;
+            wasTouching.down = touching.down;
+            wasTouching.left = touching.left;
+            wasTouching.right = touching.right;
+        }
 
         touching.none = true;
         touching.up = false;
@@ -1353,7 +1371,7 @@ var Body = new Class({
 
         this.updateBounds();
         this.updateCenter();
-        this.resetFlags();
+        this.resetFlags(true);
     },
 
     /**
