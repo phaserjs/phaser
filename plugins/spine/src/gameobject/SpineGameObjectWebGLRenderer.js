@@ -30,6 +30,12 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     var childAlpha = skeleton.color.a;
     var sceneRenderer = plugin.sceneRenderer;
 
+    if (renderer.newType)
+    {
+        //  flush + clear if this is a new type, even if it doesn't render
+        renderer.clearPipeline();
+    }
+
     var GameObjectRenderMask = 15;
 
     var willRender = !(GameObjectRenderMask !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)) || childAlpha === 0);
@@ -47,16 +53,11 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
                 //  Reset the current type
                 renderer.currentType = '';
 
-                renderer.rebindPipeline(renderer.pipelines.MultiPipeline);
+                renderer.rebindPipeline();
             }
         }
 
         return;
-    }
-
-    if (renderer.newType)
-    {
-        renderer.clearPipeline();
     }
 
     var camMatrix = renderer._tempMatrix1;
@@ -156,13 +157,11 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
 
     if (!renderer.nextTypeMatch)
     {
-        //  The next object in the display list is not a Spine Game Object or Spine Container, so we end the batch.
+        //  The next object in the display list is not a Spine Game Object or Spine Container, so we end the batch
         sceneRenderer.end();
 
-        if (!renderer.finalType)
-        {
-            renderer.rebindPipeline(renderer.pipelines.MultiPipeline);
-        }
+        //  And rebind the previous pipeline
+        renderer.rebindPipeline();
     }
 };
 
