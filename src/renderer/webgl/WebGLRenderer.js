@@ -274,7 +274,7 @@ var WebGLRenderer = new Class({
         this.normalTexture;
 
         /**
-         * Current framebuffer in use
+         * Current framebuffer in use.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentFramebuffer
          * @type {WebGLFramebuffer}
@@ -284,7 +284,7 @@ var WebGLRenderer = new Class({
         this.currentFramebuffer = null;
 
         /**
-         * Current WebGLPipeline in use
+         * Current WebGLPipeline in use.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentPipeline
          * @type {Phaser.Renderer.WebGL.WebGLPipeline}
@@ -294,7 +294,18 @@ var WebGLRenderer = new Class({
         this.currentPipeline = null;
 
         /**
-         * Current WebGLProgram in use
+         * The previous WebGLPipeline in use.
+         * This is set when `clearPipeline` is called and restored in `rebindPipeline` if none is given.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#previousPipeline
+         * @type {Phaser.Renderer.WebGL.WebGLPipeline}
+         * @default null
+         * @since 3.50.0
+         */
+        this.previousPipeline = null;
+
+        /**
+         * Current WebGLProgram in use.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentProgram
          * @type {WebGLProgram}
@@ -1206,10 +1217,20 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#rebindPipeline
      * @since 3.16.0
      *
-     * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipelineInstance - The pipeline instance to be activated.
+     * @param {Phaser.Renderer.WebGL.WebGLPipeline} [pipelineInstance] - The pipeline instance to be activated.
      */
     rebindPipeline: function (pipelineInstance)
     {
+        if (pipelineInstance === undefined && this.previousPipeline)
+        {
+            pipelineInstance = this.previousPipeline;
+        }
+
+        if (!pipelineInstance)
+        {
+            return;
+        }
+
         var gl = this.gl;
 
         gl.disable(gl.DEPTH_TEST);
@@ -1253,6 +1274,8 @@ var WebGLRenderer = new Class({
     clearPipeline: function ()
     {
         this.flush();
+
+        this.previousPipeline = this.currentPipeline;
 
         this.currentPipeline = null;
         this.currentProgram = null;
