@@ -913,7 +913,6 @@ var World = new Class({
      * This is called automatically by your Scene and does not need to be invoked directly.
      *
      * @method Phaser.Physics.Arcade.World#update
-     * @protected
      * @fires Phaser.Physics.Arcade.Events#WORLD_STEP
      * @since 3.0.0
      *
