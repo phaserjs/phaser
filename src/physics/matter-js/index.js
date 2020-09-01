@@ -11,7 +11,10 @@
 module.exports = {
 
     BodyBounds: require('./BodyBounds'),
+    Components: require('./components'),
+    Events: require('./events'),
     Factory: require('./Factory'),
+    MatterGameObject: require('./MatterGameObject'),
     Image: require('./MatterImage'),
     Matter: require('./CustomMain'),
     MatterPhysics: require('./MatterPhysics'),
@@ -20,6 +23,7 @@ module.exports = {
     TileBody: require('./MatterTileBody'),
     PhysicsEditorParser: require('./PhysicsEditorParser'),
     PhysicsJSONParser: require('./PhysicsJSONParser'),
+    PointerConstraint: require('./PointerConstraint'),
     World: require('./World')
 
 };

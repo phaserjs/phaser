@@ -28,6 +28,7 @@ var Arcade = {
     Sprite: require('./ArcadeSprite'),
     StaticBody: require('./StaticBody'),
     StaticGroup: require('./StaticPhysicsGroup'),
+    Tilemap: require('./tilemap/'),
     World: require('./World')
 
 };

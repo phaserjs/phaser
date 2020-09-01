@@ -8,7 +8,7 @@
  * @namespace Phaser.Physics.Arcade.Tilemap
  */
 
-module.exports = {
+var Tilemap = {
 
     ProcessTileCallbacks: require('./ProcessTileCallbacks'),
     ProcessTileSeparationX: require('./ProcessTileSeparationX'),
@@ -19,3 +19,5 @@ module.exports = {
     TileIntersectsBody: require('./TileIntersectsBody')
 
 };
+
+module.exports = Tilemap;

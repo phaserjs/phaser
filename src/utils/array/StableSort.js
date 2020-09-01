@@ -35,6 +35,7 @@ var stable = function(arr, comp) {
  * @function Phaser.Utils.Array.StableSortFunctions.inplace
  * @memberof Phaser.Utils.Array.StableSortFunctions
  * @since 3.0.0
+ * @ignore
  *
  * @param {array} arr - The input array.
  * @param {function} comp - The comparison handler.
