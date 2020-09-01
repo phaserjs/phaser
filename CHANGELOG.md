@@ -285,6 +285,7 @@ The way in which Game Objects add themselves to the Scene Update List has change
 * Calling `Rectangle.setSize()` wouldn't change the underlying geometry of the Shape Game Object, causing any stroke to be incorrectly rendered after a size change.
 * The `ProcessQueue` was emitting the wrong events internally. It now emits 'add' and 'remove' correctly (thanks @halilcakar)
 * The `GridAlign` action didn't work if only the `height` parameter was set. Fix #5019 (thanks @halilcakar)
+* The `Color.HSVToRGB` function has been rewritten to use the HSL and HSV formula from Wikipedia, giving much better results. Fix #5089 (thanks @DiamondeX)
 
 ### Examples, Documentation and TypeScript
 
