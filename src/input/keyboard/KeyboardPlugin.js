@@ -15,6 +15,7 @@ var Key = require('./keys/Key');
 var KeyCodes = require('./keys/KeyCodes');
 var KeyCombo = require('./combo/KeyCombo');
 var KeyMap = require('./keys/KeyMap');
+var SceneEvents = require('../../scene/events');
 var SnapFloor = require('../../math/snap/SnapFloor');
 
 /**
@@ -210,6 +211,9 @@ var KeyboardPlugin = new Class({
         this.sceneInputPlugin.pluginEvents.once(InputEvents.SHUTDOWN, this.shutdown, this);
 
         this.game.events.on(GameEvents.BLUR, this.resetKeys, this);
+
+        this.scene.sys.events.on(SceneEvents.PAUSE, this.resetKeys, this);
+        this.scene.sys.events.on(SceneEvents.SLEEP, this.resetKeys, this);
     },
 
     /**
@@ -852,6 +856,9 @@ var KeyboardPlugin = new Class({
         this.sceneInputPlugin.manager.events.off(InputEvents.MANAGER_PROCESS, this.update, this);
 
         this.game.events.off(GameEvents.BLUR, this.resetKeys);
+
+        this.scene.sys.events.off(SceneEvents.PAUSE, this.resetKeys, this);
+        this.scene.sys.events.off(SceneEvents.SLEEP, this.resetKeys, this);
 
         this.removeAllListeners();
 
