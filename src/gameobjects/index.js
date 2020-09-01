@@ -24,6 +24,7 @@ var GameObjects = {
     GameObject: require('./GameObject'),
     BitmapText: require('./bitmaptext/static/BitmapText'),
     Blitter: require('./blitter/Blitter'),
+    Bob: require('./blitter/Bob'),
     Container: require('./container/Container'),
     DOMElement: require('./domelement/DOMElement'),
     DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapText'),
@@ -129,9 +130,8 @@ if (typeof WEBGL_RENDERER)
     GameObjects.Creators.Shader = require('./shader/ShaderCreator');
 
     GameObjects.Light = require('./lights/Light');
-
-    require('./lights/LightsManager');
-    require('./lights/LightsPlugin');
+    GameObjects.LightsManager = require('./lights/LightsManager');
+    GameObjects.LightsPlugin = require('./lights/LightsPlugin');
 }
 
 module.exports = GameObjects;
