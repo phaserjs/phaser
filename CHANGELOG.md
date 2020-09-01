@@ -267,6 +267,8 @@ The way in which Game Objects add themselves to the Scene Update List has change
 * `Textures.Parsers.JSONHash` will now perform a `hasOwnProperty` check when iterating the frames, skipping anything that isn't a direct property. This should allow you to use generated atlas data that comes from `JSON.parse`. Fix #4768 (thanks @RollinSafary)
 * The `Camera3D` Plugin has been rebuilt for Phaser 3.50 and the webpack config updated. This plugin is now considered deprecated and will not be updated beyond this release.
 * `Tween.seek` will no longer issue a console warning for `'Tween.seek duration too long'`, it's now up to you to check on the performance of tween seeking.
+* `WebGLRenderer.previousPipeline` is a new property that is set during a call to `clearPipeline` and used during calls to `rebindPipeline`, allowing the renderer to rebind any previous pipeline, not just the Multi Pipeline.
+* The `WebGLRenderer.rebindPipeline` method has been changed slightly. Previously, you had to specify the `pipelineInstance`, but this is now optional. If you don't, it will use the new `previousPipeline` property instead. If not set, or none given, it will now return without throwing gl errors as well.
 
 ### Bug Fixes
 
