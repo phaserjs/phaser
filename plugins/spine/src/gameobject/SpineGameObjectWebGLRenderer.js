@@ -30,34 +30,35 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     var childAlpha = skeleton.color.a;
     var sceneRenderer = plugin.sceneRenderer;
 
-    if (renderer.newType)
-    {
-        //  flush + clear if this is a new type, even if it doesn't render
-        renderer.clearPipeline();
-    }
-
     var GameObjectRenderMask = 15;
 
     var willRender = !(GameObjectRenderMask !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)) || childAlpha === 0);
 
     if (!skeleton || !willRender)
     {
-        //  If there is already a batch running, we need to close it
-        if (!renderer.nextTypeMatch)
+        //  If there is already a batch running, and the next type isn't a Spine object, or this is the end, we need to close it
+
+        if (sceneRenderer.batcher.isDrawing && (!renderer.nextTypeMatch || renderer.finalType))
         {
             //  The next object in the display list is not a Spine object, so we end the batch
             sceneRenderer.end();
 
-            if (!renderer.finalType)
-            {
-                //  Reset the current type
-                renderer.currentType = '';
+            renderer.rebindPipeline();
+        }
 
-                renderer.rebindPipeline();
-            }
+        if (!renderer.finalType)
+        {
+            //  Reset the current type
+            renderer.currentType = '';
         }
 
         return;
+    }
+
+    if (renderer.newType)
+    {
+        //  flush + clear previous pipeline if this is a new type
+        renderer.clearPipeline();
     }
 
     var camMatrix = renderer._tempMatrix1;

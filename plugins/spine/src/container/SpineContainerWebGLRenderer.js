@@ -35,6 +35,8 @@ var SpineContainerWebGLRenderer = function (renderer, container, interpolationPe
         if (sceneRenderer.batcher.isDrawing && renderer.finalType)
         {
             sceneRenderer.end();
+
+            renderer.rebindPipeline();
         }
 
         return;
@@ -63,6 +65,9 @@ var SpineContainerWebGLRenderer = function (renderer, container, interpolationPe
 
     if (renderer.newType)
     {
+        //  flush + clear if this is a new type
+        renderer.clearPipeline();
+
         sceneRenderer.begin();
     }
 
@@ -152,13 +157,11 @@ var SpineContainerWebGLRenderer = function (renderer, container, interpolationPe
 
     if (!renderer.nextTypeMatch)
     {
-        //  The next object in the display list is not a Spine Game Object or Spine Container, so we end the batch.
+        //  The next object in the display list is not a Spine Game Object or Spine Container, so we end the batch
         sceneRenderer.end();
 
-        if (!renderer.finalType)
-        {
-            renderer.rebindPipeline(renderer.pipelines.MultiPipeline);
-        }
+        //  And rebind the previous pipeline
+        renderer.rebindPipeline();
     }
 };
 
