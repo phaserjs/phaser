@@ -20,6 +20,8 @@ module.exports = {
     Gravity: require('./Gravity'),
     Immovable: require('./Immovable'),
     Mass: require('./Mass'),
+    OverlapCirc: require('./OverlapCirc'),
+    OverlapRect: require('./OverlapRect'),
     Size: require('./Size'),
     Velocity: require('./Velocity')
 

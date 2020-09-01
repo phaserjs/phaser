@@ -9,7 +9,7 @@ var CanvasPool = require('../../display/canvas/CanvasPool');
 /**
  * Calculates the ascent, descent and fontSize of a given font style.
  *
- * @function Phaser.GameObjects.Text.MeasureText
+ * @function Phaser.GameObjects.MeasureText
  * @since 3.0.0
  *
  * @param {Phaser.GameObjects.TextStyle} textStyle - The TextStyle object to measure.

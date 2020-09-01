@@ -38,7 +38,12 @@ var GameObjects = {
     RetroFont: require('./bitmaptext/RetroFont'),
     Rope: require('./rope/Rope'),
     Sprite: require('./sprite/Sprite'),
+
     Text: require('./text/static/Text'),
+    GetTextSize: require('./text/GetTextSize'),
+    MeasureText: require('./text/MeasureText'),
+    TextStyle: require('./text/TextStyle'),
+
     TileSprite: require('./tilesprite/TileSprite'),
     Zone: require('./zone/Zone'),
     Video: require('./video/Video'),
