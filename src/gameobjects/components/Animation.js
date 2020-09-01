@@ -522,13 +522,15 @@ var Animation = new Class({
      * @param {(string|Phaser.Animations.Animation)} key - The string-based key of the animation to play, as defined previously in the Animation Manager. Or an Animation instance.
      * @param {boolean} [ignoreIfPlaying=false] - If this animation is already playing then ignore this call.
      * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
+     * @param {number} [timeScale] - Set the Time Scale when starting this Animation. If not given, the Time Scale will use the current value.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
-    play: function (key, ignoreIfPlaying, startFrame)
+    play: function (key, ignoreIfPlaying, startFrame, timeScale)
     {
         if (ignoreIfPlaying === undefined) { ignoreIfPlaying = false; }
         if (startFrame === undefined) { startFrame = 0; }
+        if (timeScale === undefined) { timeScale = this._timeScale; }
 
         if (key instanceof BaseAnimation)
         {
@@ -544,6 +546,7 @@ var Animation = new Class({
         this._reverse = false;
         this._paused = false;
         this._wasPlaying = true;
+        this._timeScale = timeScale;
 
         return this._startAnimation(key, startFrame);
     },
@@ -558,13 +561,15 @@ var Animation = new Class({
      * @param {(string|Phaser.Animations.Animation)} key - The string-based key of the animation to play, as defined previously in the Animation Manager. Or an Animation instance.
      * @param {boolean} [ignoreIfPlaying=false] - If an animation is already playing then ignore this call.
      * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
+     * @param {number} [timeScale] - Set the Time Scale when starting this Animation. If not given, the Time Scale will use the current value.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
-    playReverse: function (key, ignoreIfPlaying, startFrame)
+    playReverse: function (key, ignoreIfPlaying, startFrame, timeScale)
     {
         if (ignoreIfPlaying === undefined) { ignoreIfPlaying = false; }
         if (startFrame === undefined) { startFrame = 0; }
+        if (timeScale === undefined) { timeScale = this._timeScale; }
 
         if (key instanceof BaseAnimation)
         {
@@ -578,6 +583,7 @@ var Animation = new Class({
 
         this.forward = false;
         this._reverse = true;
+        this._timeScale = timeScale;
 
         return this._startAnimation(key, startFrame);
     },
@@ -930,8 +936,10 @@ var Animation = new Class({
     },
 
     /**
-     * Sets the Time Scale factor, allowing you to make the animation go go faster or slower than default.
+     * Sets the Time Scale factor, allowing you to make the animation go faster or slower than default.
      * Where 1 = normal speed (the default), 0.5 = half speed, 2 = double speed, etc.
+     *
+     * Setting the time scale impacts all animations played on this Sprite from this point on.
      *
      * @method Phaser.GameObjects.Components.Animation#setTimeScale
      * @since 3.4.0
