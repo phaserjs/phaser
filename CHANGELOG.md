@@ -274,6 +274,19 @@ The way in which Game Objects add themselves to the Scene Update List has change
 * `WebGLRenderer.previousPipeline` is a new property that is set during a call to `clearPipeline` and used during calls to `rebindPipeline`, allowing the renderer to rebind any previous pipeline, not just the Multi Pipeline.
 * The `WebGLRenderer.rebindPipeline` method has been changed slightly. Previously, you had to specify the `pipelineInstance`, but this is now optional. If you don't, it will use the new `previousPipeline` property instead. If not set, or none given, it will now return without throwing gl errors as well.
 * If `inputWindowEvents` is set in the Game Config, then the `MouseManager` will now listen for the events on `window.top` instead of just `window`, which should help in situations where the pointer is released outside of an embedded iframe. Fix #4824 (thanks @rexrainbow)
+* `Types.GameObjects.Text.GetTextSizeObject` is a new type def for the GetTextSize function results.
+* The `Phaser.Curves.MoveTo` function has now been exposed on the Phaser namespace (thanks @samme)
+* The `Phaser.DOM.GetInnerHeight` function has now been exposed on the Phaser namespace (thanks @samme)
+* The `Phaser.GameObjects.Bob` class has now been exposed on the Phaser namespace (thanks @samme)
+* The `Phaser.GameObjects.LightsManager` class has now been exposed on the Phaser namespace (thanks @samme)
+* The `Phaser.GameObjects.LightsPlugin` class has now been exposed on the Phaser namespace (thanks @samme)
+* The `Phaser.GameObjects.Particles.EmitterOp` class has now been exposed on the Phaser namespace (thanks @samme)
+* The `Phaser.GameObjects.GetTextSize` function has now been exposed on the Phaser namespace (thanks @samme)
+* The `Phaser.GameObjects.MeasureText` function has now been exposed on the Phaser namespace (thanks @samme)
+* The `Phaser.GameObjects.TextStyle` function has now been exposed on the Phaser namespace (thanks @samme)
+* The `Phaser.Input.CreatePixelPerfectHandler` function has now been exposed on the Phaser namespace (thanks @samme)
+* The `Phaser.Physics.Arcade.Components.OverlapCirc` function has now been exposed on the Phaser namespace (thanks @samme)
+* The `Phaser.Physics.Arcade.Components.OverlapRect` function has now been exposed on the Phaser namespace (thanks @samme)
 
 ### Bug Fixes
 
