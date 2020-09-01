@@ -411,6 +411,8 @@ var SpinePlugin = new Class({
 
         eventEmitter.once('shutdown', this.shutdown, this);
         eventEmitter.once('destroy', this.destroy, this);
+
+        this.game.events.once('destroy', this.gameDestroy, this);
     },
 
     /**
@@ -1095,15 +1097,6 @@ var SpinePlugin = new Class({
     {
         this.shutdown();
 
-        if (this.sceneRenderer)
-        {
-            this.sceneRenderer.dispose();
-        }
-
-        this.pluginManager.removeGameObject('spine', true, true);
-        this.pluginManager.removeGameObject('spineContainer', true, true);
-
-        this.pluginManager = null;
         this.game = null;
         this.scene = null;
         this.systems = null;
@@ -1112,9 +1105,33 @@ var SpinePlugin = new Class({
         this.spineTextures = null;
         this.json = null;
         this.textures = null;
-        this.sceneRenderer = null;
         this.skeletonRenderer = null;
         this.gl = null;
+    },
+
+    /**
+     * The Game that owns this plugin is being destroyed.
+     *
+     * Dispose of the Scene Renderer and remove the Game Objects.
+     *
+     * @method SpinePlugin#gameDestroy
+     * @private
+     * @since 3.50.0
+     */
+    gameDestroy: function ()
+    {
+        this.destroy();
+
+        if (this.sceneRenderer)
+        {
+            this.sceneRenderer.dispose();
+        }
+
+        this.sceneRenderer = null;
+        this.pluginManager = null;
+
+        this.pluginManager.removeGameObject('spine', true, true);
+        this.pluginManager.removeGameObject('spineContainer', true, true);
     }
 
 });
