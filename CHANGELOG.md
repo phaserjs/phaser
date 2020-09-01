@@ -287,6 +287,15 @@ The way in which Game Objects add themselves to the Scene Update List has change
 * The `Phaser.Input.CreatePixelPerfectHandler` function has now been exposed on the Phaser namespace (thanks @samme)
 * The `Phaser.Physics.Arcade.Components.OverlapCirc` function has now been exposed on the Phaser namespace (thanks @samme)
 * The `Phaser.Physics.Arcade.Components.OverlapRect` function has now been exposed on the Phaser namespace (thanks @samme)
+* The `Phaser.Physics.Arcade.Tilemap` namespace has now been exposed on the Phaser namespace (thanks @samme)
+* The `Phaser.Physics.Matter.Components` namespace has now been exposed on the Phaser namespace (thanks @samme)
+* The `Phaser.Physics.Matter.Events` namespace has now been exposed on the Phaser namespace (thanks @samme)
+* The `Phaser.Physics.Matter.MatterGameObject` class has now been exposed on the Phaser namespace (thanks @samme)
+* The `Phaser.Physics.Matter.PointerConstraint` class has now been exposed on the Phaser namespace (thanks @samme)
+* The `Phaser.Scenes.GetPhysicsPlugins` function has now been exposed on the Phaser namespace (thanks @samme)
+* The `Phaser.Scenes.GetScenePlugins` function has now been exposed on the Phaser namespace (thanks @samme)
+* The `Phaser.Structs.Events` namespace has now been exposed on the Phaser namespace (thanks @samme)
+* The `Phaser.Tilemaps.Parsers.Tiled` function has now been exposed on the Phaser namespace (thanks @samme)
 
 ### Bug Fixes
 
