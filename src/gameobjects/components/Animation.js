@@ -516,7 +516,9 @@ var Animation = new Class({
      * Animations are stored in the global Animation Manager and are referenced by a unique string-based key.
      *
      * @method Phaser.GameObjects.Components.Animation#play
-     * @fires Phaser.GameObjects.Components.Animation#onStartEvent
+     * @fires Phaser.Animations.Events#ANIMATION_START
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_START
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
      * @since 3.0.0
      *
      * @param {(string|Phaser.Animations.Animation)} key - The string-based key of the animation to play, as defined previously in the Animation Manager. Or an Animation instance.
@@ -555,7 +557,9 @@ var Animation = new Class({
      * Plays an Animation (in reverse mode) on the Game Object that owns this Animation Component.
      *
      * @method Phaser.GameObjects.Components.Animation#playReverse
-     * @fires Phaser.GameObjects.Components.Animation#onStartEvent
+     * @fires Phaser.Animations.Events#ANIMATION_START
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_START
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
      * @since 3.12.0
      *
      * @param {(string|Phaser.Animations.Animation)} key - The string-based key of the animation to play, as defined previously in the Animation Manager. Or an Animation instance.
@@ -844,7 +848,9 @@ var Animation = new Class({
      * If there is another animation queued (via the `chain` method) then it will start playing immediately.
      *
      * @method Phaser.GameObjects.Components.Animation#stop
-     * @fires Phaser.GameObjects.Components.Animation#onCompleteEvent
+     * @fires Phaser.Animations.Events#ANIMATION_COMPLETE
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_COMPLETE
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_COMPLETE
      * @since 3.0.0
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
@@ -884,7 +890,9 @@ var Animation = new Class({
      * Stops the current animation from playing after the specified time delay, given in milliseconds.
      *
      * @method Phaser.GameObjects.Components.Animation#stopAfterDelay
-     * @fires Phaser.GameObjects.Components.Animation#onCompleteEvent
+     * @fires Phaser.Animations.Events#ANIMATION_COMPLETE
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_COMPLETE
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_COMPLETE
      * @since 3.4.0
      *
      * @param {integer} delay - The number of milliseconds to wait before stopping this animation.
@@ -903,7 +911,9 @@ var Animation = new Class({
      * Stops the current animation from playing when it next repeats.
      *
      * @method Phaser.GameObjects.Components.Animation#stopOnRepeat
-     * @fires Phaser.GameObjects.Components.Animation#onCompleteEvent
+     * @fires Phaser.Animations.Events#ANIMATION_COMPLETE
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_COMPLETE
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_COMPLETE
      * @since 3.4.0
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
@@ -920,7 +930,9 @@ var Animation = new Class({
      * If this frame doesn't exist within the animation it will not stop it from playing.
      *
      * @method Phaser.GameObjects.Components.Animation#stopOnFrame
-     * @fires Phaser.GameObjects.Components.Animation#onCompleteEvent
+     * @fires Phaser.Animations.Events#ANIMATION_COMPLETE
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_COMPLETE
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_COMPLETE
      * @since 3.4.0
      *
      * @param {Phaser.Animations.AnimationFrame} frame - The frame to check before stopping this animation.
