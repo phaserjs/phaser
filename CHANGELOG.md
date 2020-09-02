@@ -275,6 +275,10 @@ The way in which Game Objects add themselves to the Scene Update List has change
 * The `WebGLRenderer.rebindPipeline` method has been changed slightly. Previously, you had to specify the `pipelineInstance`, but this is now optional. If you don't, it will use the new `previousPipeline` property instead. If not set, or none given, it will now return without throwing gl errors as well.
 * If `inputWindowEvents` is set in the Game Config, then the `MouseManager` will now listen for the events on `window.top` instead of just `window`, which should help in situations where the pointer is released outside of an embedded iframe. Fix #4824 (thanks @rexrainbow)
 * `Types.GameObjects.Text.GetTextSizeObject` is a new type def for the GetTextSize function results.
+* The `Arcade.Body.resetFlags` method has a new optional boolean parameter `clear`. If set, it clears the `wasTouching` flags on the Body. This happens automatically when `Body.reset` is called. Previous to this, the flags were not reset until the next physics step (thanks @samme)
+
+### Namespace Updates
+
 * The `Phaser.Curves.MoveTo` function has now been exposed on the Phaser namespace (thanks @samme)
 * The `Phaser.DOM.GetInnerHeight` function has now been exposed on the Phaser namespace (thanks @samme)
 * The `Phaser.GameObjects.Bob` class has now been exposed on the Phaser namespace (thanks @samme)
