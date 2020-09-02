@@ -2350,7 +2350,7 @@ var WebGLRenderer = new Class({
                     camera.x, camera.y,
                     camera.width, camera.height,
                     1, 1,
-                    camera.rotation,
+                    0,
                     camera.flipX, !camera.flipY,
                     1, 1,
                     0, 0,
