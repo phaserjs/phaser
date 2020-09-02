@@ -300,6 +300,7 @@ The way in which Game Objects add themselves to the Scene Update List has change
 * The `Phaser.Scenes.GetScenePlugins` function has now been exposed on the Phaser namespace (thanks @samme)
 * The `Phaser.Structs.Events` namespace has now been exposed on the Phaser namespace (thanks @samme)
 * The `Phaser.Tilemaps.Parsers.Tiled` function has now been exposed on the Phaser namespace (thanks @samme)
+* Every single `Tilemap.Component` function has now been made public. This means you can call the Component functions directly, should you need to, outside of the Tilemap system.
 
 ### Bug Fixes
 

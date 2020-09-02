@@ -12,9 +12,8 @@ var GetTileAt = require('./GetTileAt');
  * internally to optimize recalculating faces when only one tile has been changed.
  *
  * @function Phaser.Tilemaps.Components.CalculateFacesAt
- * @private
  * @since 3.0.0
- * 
+ *
  * @param {integer} tileX - The x coordinate.
  * @param {integer} tileY - The y coordinate.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
@@ -40,29 +39,48 @@ var CalculateFacesAt = function (tileX, tileY, layer)
     // Reset edges that are shared between tile and its neighbors
     if (above && above.collides)
     {
-        if (tileCollides) { tile.faceTop = false; }
+        if (tileCollides)
+        {
+            tile.faceTop = false;
+        }
+
         above.faceBottom = !tileCollides;
     }
 
     if (below && below.collides)
     {
-        if (tileCollides) { tile.faceBottom = false; }
+        if (tileCollides)
+        {
+            tile.faceBottom = false;
+        }
+
         below.faceTop = !tileCollides;
     }
 
     if (left && left.collides)
     {
-        if (tileCollides) { tile.faceLeft = false; }
+        if (tileCollides)
+        {
+            tile.faceLeft = false;
+        }
+
         left.faceRight = !tileCollides;
     }
 
     if (right && right.collides)
     {
-        if (tileCollides) { tile.faceRight = false; }
+        if (tileCollides)
+        {
+            tile.faceRight = false;
+        }
+
         right.faceLeft = !tileCollides;
     }
 
-    if (tile && !tile.collides) { tile.resetFaces(); }
+    if (tile && !tile.collides)
+    {
+        tile.resetFaces();
+    }
 
     return tile;
 };

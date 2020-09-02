@@ -15,7 +15,6 @@ var WorldToTileY = require('./WorldToTileY');
  * changed. Collision information will be recalculated at the specified location.
  *
  * @function Phaser.Tilemaps.Components.PutTileAtWorldXY
- * @private
  * @since 3.0.0
  *
  * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
@@ -31,6 +30,7 @@ var PutTileAtWorldXY = function (tile, worldX, worldY, recalculateFaces, camera,
 {
     var tileX = WorldToTileX(worldX, true, camera, layer);
     var tileY = WorldToTileY(worldY, true, camera, layer);
+
     return PutTileAt(tile, tileX, tileY, recalculateFaces, layer);
 };
 

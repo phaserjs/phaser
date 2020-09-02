@@ -18,7 +18,6 @@ var defaultFaceColor = new Color(40, 39, 37, 150);
  * wherever you want on the screen.
  *
  * @function Phaser.Tilemaps.Components.RenderDebug
- * @private
  * @since 3.0.0
  *
  * @param {Phaser.GameObjects.Graphics} graphics - The target Graphics object to draw upon.

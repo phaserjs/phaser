@@ -9,14 +9,13 @@
  * layer's position, scale and scroll.
  *
  * @function Phaser.Tilemaps.Components.WorldToTileY
- * @private
  * @since 3.0.0
  *
  * @param {number} worldY - The y coordinate to be converted, in pixels, not tiles.
  * @param {boolean} [snapToFloor=true] - Whether or not to round the tile coordinate down to the nearest integer.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
- * 
+ *
  * @return {number} The Y location in tile units.
  */
 var WorldToTileY = function (worldY, snapToFloor, camera, layer)

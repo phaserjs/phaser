@@ -16,11 +16,10 @@ var ReplaceByIndex = require('./ReplaceByIndex');
  * Sprites, but want to replace the tile itself with a floor tile or similar once converted.
  *
  * @function Phaser.Tilemaps.Components.CreateFromTiles
- * @private
  * @since 3.0.0
  *
- * @param {(integer|array)} indexes - The tile index, or array of indexes, to create Sprites from.
- * @param {(integer|array)} replacements - The tile index, or array of indexes, to change a converted tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a one-to-one mapping with the indexes array.
+ * @param {(number|number[])} indexes - The tile index, or array of indexes, to create Sprites from.
+ * @param {(number|number[])} replacements - The tile index, or array of indexes, to change a converted tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a one-to-one mapping with the indexes array.
  * @param {Phaser.Types.GameObjects.Sprite.SpriteConfig} spriteConfig - The config object to pass into the Sprite creator (i.e. scene.make.sprite).
  * @param {Phaser.Scene} [scene=scene the map is within] - The Scene to create the Sprites within.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when determining the world XY
@@ -32,9 +31,13 @@ var CreateFromTiles = function (indexes, replacements, spriteConfig, scene, came
 {
     if (spriteConfig === undefined) { spriteConfig = {}; }
 
-    if (!Array.isArray(indexes)) { indexes = [ indexes ]; }
+    if (!Array.isArray(indexes))
+    {
+        indexes = [ indexes ];
+    }
 
     var tilemapLayer = layer.tilemapLayer;
+
     if (scene === undefined) { scene = tilemapLayer.scene; }
     if (camera === undefined) { camera = scene.cameras.main; }
 
@@ -51,8 +54,7 @@ var CreateFromTiles = function (indexes, replacements, spriteConfig, scene, came
             spriteConfig.x = TileToWorldX(tile.x, camera, layer);
             spriteConfig.y = TileToWorldY(tile.y, camera, layer);
 
-            var sprite = scene.make.sprite(spriteConfig);
-            sprites.push(sprite);
+            sprites.push(scene.make.sprite(spriteConfig));
         }
     }
 

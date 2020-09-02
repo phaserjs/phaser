@@ -12,7 +12,6 @@ var GetTilesWithin = require('./GetTilesWithin');
  * remove it.
  *
  * @function Phaser.Tilemaps.Components.SetTileLocationCallback
- * @private
  * @since 3.0.0
  *
  * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
@@ -31,7 +30,6 @@ var SetTileLocationCallback = function (tileX, tileY, width, height, callback, c
     {
         tiles[i].setCollisionCallback(callback, callbackContext);
     }
-
 };
 
 module.exports = SetTileLocationCallback;

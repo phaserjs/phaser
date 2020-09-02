@@ -10,7 +10,6 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * Gets the tiles in the given rectangular area (in tile coordinates) of the layer.
  *
  * @function Phaser.Tilemaps.Components.GetTilesWithin
- * @private
  * @since 3.0.0
  *
  * @param {integer} tileX - The left most tile index (in tile coordinates) to use as the origin of the area.
@@ -19,7 +18,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @param {integer} height - How many tiles tall from the `tileY` index the area will be.
  * @param {Phaser.Types.Tilemaps.GetTilesWithinFilteringOptions} GetTilesWithinFilteringOptions - Optional filters to apply when getting the tiles.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
- * 
+ *
  * @return {Phaser.Tilemaps.Tile[]} Array of Tile objects.
  */
 var GetTilesWithin = function (tileX, tileY, width, height, filteringOptions, layer)
@@ -39,6 +38,7 @@ var GetTilesWithin = function (tileX, tileY, width, height, filteringOptions, la
         width += tileX;
         tileX = 0;
     }
+
     if (tileY < 0)
     {
         height += tileY;
@@ -50,6 +50,7 @@ var GetTilesWithin = function (tileX, tileY, width, height, filteringOptions, la
     {
         width = Math.max(layer.width - tileX, 0);
     }
+
     if (tileY + height > layer.height)
     {
         height = Math.max(layer.height - tileY, 0);
@@ -62,11 +63,24 @@ var GetTilesWithin = function (tileX, tileY, width, height, filteringOptions, la
         for (var tx = tileX; tx < tileX + width; tx++)
         {
             var tile = layer.data[ty][tx];
+
             if (tile !== null)
             {
-                if (isNotEmpty && tile.index === -1) { continue; }
-                if (isColliding && !tile.collides) { continue; }
-                if (hasInterestingFace && !tile.hasInterestingFace) { continue; }
+                if (isNotEmpty && tile.index === -1)
+                {
+                    continue;
+                }
+
+                if (isColliding && !tile.collides)
+                {
+                    continue;
+                }
+
+                if (hasInterestingFace && !tile.hasInterestingFace)
+                {
+                    continue;
+                }
+
                 results.push(tile);
             }
         }
