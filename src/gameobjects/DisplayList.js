@@ -166,7 +166,7 @@ var DisplayList = new Class({
     {
         if (this.sortChildrenFlag)
         {
-            StableSort.inplace(this.list, this.sortByDepth);
+            StableSort(this.list, this.sortByDepth);
 
             this.sortChildrenFlag = false;
         }

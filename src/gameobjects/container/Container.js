@@ -636,7 +636,7 @@ var Container = new Class({
             };
         }
 
-        ArrayUtils.StableSort.inplace(this.list, handler);
+        ArrayUtils.StableSort(this.list, handler);
 
         return this;
     },
