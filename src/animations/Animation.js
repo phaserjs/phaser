@@ -104,27 +104,6 @@ var Animation = new Class({
          */
         this.duration = GetValue(config, 'duration', null);
 
-        if (this.duration === null && this.frameRate === null)
-        {
-            //  No duration or frameRate given, use default frameRate of 24fps
-            this.frameRate = 24;
-            this.duration = (this.frameRate / this.frames.length) * 1000;
-        }
-        else if (this.duration && this.frameRate === null)
-        {
-            //  Duration given but no frameRate, so set the frameRate based on duration
-            //  I.e. 12 frames in the animation, duration = 4000 ms
-            //  So frameRate is 12 / (4000 / 1000) = 3 fps
-            this.frameRate = this.frames.length / (this.duration / 1000);
-        }
-        else
-        {
-            //  frameRate given, derive duration from it (even if duration also specified)
-            //  I.e. 15 frames in the animation, frameRate = 30 fps
-            //  So duration is 15 / 30 = 0.5 * 1000 (half a second, or 500ms)
-            this.duration = (this.frames.length / this.frameRate) * 1000;
-        }
-
         /**
          * How many ms per frame, not including frame specific modifiers.
          *
@@ -132,7 +111,7 @@ var Animation = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.msPerFrame = 1000 / this.frameRate;
+        this.msPerFrame;
 
         /**
          * Skip frames if the time lags, or always advanced anyway?
@@ -214,8 +193,62 @@ var Animation = new Class({
          */
         this.paused = false;
 
+        this.calculateDuration(this, this.getTotalFrames(), this.duration, this.frameRate);
+
         this.manager.on(Events.PAUSE_ALL, this.pause, this);
         this.manager.on(Events.RESUME_ALL, this.resume, this);
+    },
+
+    /**
+     * Gets the total number of frames in this animation.
+     *
+     * @method Phaser.Animations.Animation#getTotalFrames
+     * @since 3.50.0
+     *
+     * @return {number} The total number of frames in this animation.
+     */
+    getTotalFrames: function ()
+    {
+        return this.frames.length;
+    },
+
+    /**
+     * Calculates the duration, frame rate and msPerFrame values.
+     *
+     * @method Phaser.Animations.Animation#calculateDuration
+     * @since 3.50.0
+     *
+     * @param {(Phaser.Animations.Animation|Phaser.GameObjects.Components.Animation)} target - The target to set the values on.
+     * @param {number} totalFrames - The total number of frames in the animation.
+     * @param {number} duration - The duration to calculate the frame rate from.
+     * @param {number} frameRate - The frame ate to calculate the duration from.
+     */
+    calculateDuration: function (target, totalFrames, duration, frameRate)
+    {
+        if (duration === null && frameRate === null)
+        {
+            //  No duration or frameRate given, use default frameRate of 24fps
+            target.frameRate = 24;
+            target.duration = (24 / totalFrames) * 1000;
+        }
+        else if (duration && frameRate === null)
+        {
+            //  Duration given but no frameRate, so set the frameRate based on duration
+            //  I.e. 12 frames in the animation, duration = 4000 ms
+            //  So frameRate is 12 / (4000 / 1000) = 3 fps
+            target.duration = duration;
+            target.frameRate = totalFrames / (duration / 1000);
+        }
+        else
+        {
+            //  frameRate given, derive duration from it (even if duration also specified)
+            //  I.e. 15 frames in the animation, frameRate = 30 fps
+            //  So duration is 15 / 30 = 0.5 * 1000 (half a second, or 500ms)
+            target.frameRate = frameRate;
+            target.duration = (totalFrames / frameRate) * 1000;
+        }
+
+        target.msPerFrame = 1000 / target.frameRate;
     },
 
     /**
@@ -299,7 +332,7 @@ var Animation = new Class({
      */
     completeAnimation: function (component)
     {
-        if (this.hideOnComplete)
+        if (component.hideOnComplete)
         {
             component.parent.visible = false;
         }
@@ -494,6 +527,8 @@ var Animation = new Class({
             component.duration = this.duration;
             component.msPerFrame = this.msPerFrame;
             component.skipMissedFrames = this.skipMissedFrames;
+            component.showOnStart = this.showOnStart;
+            component.hideOnComplete = this.hideOnComplete;
 
             component._delay = this.delay;
             component._repeat = this.repeat;
