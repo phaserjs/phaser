@@ -608,7 +608,7 @@ var Animation = new Class({
 
             return;
         }
-        
+
         component.forward = isReverse;
 
         var frame = (isReverse) ? component.currentFrame.nextFrame : component.currentFrame.prevFrame;
