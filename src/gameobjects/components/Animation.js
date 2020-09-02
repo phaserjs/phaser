@@ -6,6 +6,7 @@
 
 var BaseAnimation = require('../../animations/Animation');
 var Class = require('../../utils/Class');
+var GetFastValue = require('../../utils/object/GetFastValue');
 var Events = require('../../animations/events');
 
 /**
@@ -58,6 +59,16 @@ var Animation = new Class({
         this.isPlaying = false;
 
         /**
+         * Has the current animation started playing, or is it waiting for a delay to expire?
+         *
+         * @name Phaser.GameObjects.Components.Animation#hasStarted
+         * @type {boolean}
+         * @default false
+         * @since 3.50.0
+         */
+        this.hasStarted = false;
+
+        /**
          * The current Animation loaded into this Animation Controller.
          *
          * @name Phaser.GameObjects.Components.Animation#currentAnim
@@ -78,10 +89,10 @@ var Animation = new Class({
         this.currentFrame = null;
 
         /**
-         * The key of the next Animation to be loaded into this Animation Controller when the current animation completes.
+         * The key, instance of config of the next Animation to be loaded into this Animation Controller when the current animation completes.
          *
          * @name Phaser.GameObjects.Components.Animation#nextAnim
-         * @type {?string}
+         * @type {?(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)}
          * @default null
          * @since 3.16.0
          */
@@ -91,7 +102,7 @@ var Animation = new Class({
          * A queue of keys of the next Animations to be loaded into this Animation Controller when the current animation completes.
          *
          * @name Phaser.GameObjects.Components.Animation#nextAnimsQueue
-         * @type {string[]}
+         * @type {array}
          * @since 3.24.0
          */
         this.nextAnimsQueue = [];
@@ -237,7 +248,19 @@ var Animation = new Class({
         this.nextTick = 0;
 
         /**
-         * An internal counter keeping track of how many repeats are left to play.
+         * An internal counter keeping track of how much delay time is left before playback begins.
+         *
+         * This is set via the `delayedPlay` method.
+         *
+         * @name Phaser.GameObjects.Components.Animation#delayCounter
+         * @type {number}
+         * @default 0
+         * @since 3.50.0
+         */
+        this.delayCounter = 0;
+
+        /**
+         * An internal counter keeping track of how many repeats are left to run.
          *
          * @name Phaser.GameObjects.Components.Animation#repeatCounter
          * @type {number}
@@ -302,6 +325,24 @@ var Animation = new Class({
          * @since 3.4.0
          */
         this._pendingStopValue;
+
+        /**
+         * Should the GameObject's `visible` property be set to `true` when the animation starts to play?
+         *
+         * @name Phaser.GameObjects.Components.Animation#showOnStart
+         * @type {boolean}
+         * @since 3.50.0
+         */
+        this.showOnStart = false;
+
+        /**
+         * Should the GameObject's `visible` property be set to `false` when the animation finishes?
+         *
+         * @name Phaser.GameObjects.Components.Animation#hideOnComplete
+         * @type {boolean}
+         * @since 3.50.0
+         */
+        this.hideOnComplete = false;
     },
 
     /**
@@ -314,20 +355,25 @@ var Animation = new Class({
      * You can chain a new animation at any point, including before the current one starts playing, during it, or when it ends (via its `animationcomplete` callback).
      * Chained animations are specific to a Game Object, meaning different Game Objects can have different chained animations without impacting the global animation they're playing.
      *
-     * Call this method with no arguments to reset the chained animation.
+     * Call this method with no arguments to reset all chained animations.
      *
      * @method Phaser.GameObjects.Components.Animation#chain
      * @since 3.16.0
      *
-     * @param {(string|Phaser.Animations.Animation)} [key] - The string-based key of the animation to play next, as defined previously in the Animation Manager. Or an Animation instance.
+     * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
     chain: function (key)
     {
-        if (key instanceof BaseAnimation)
+        var parent = this.parent;
+
+        if (key === undefined)
         {
-            key = key.key;
+            this.nextAnimsQueue.length = 0;
+            this.nextAnim = null;
+
+            return parent;
         }
 
         if (this.nextAnim === null)
@@ -339,60 +385,7 @@ var Animation = new Class({
             this.nextAnimsQueue.push(key);
         }
 
-        return this.parent;
-    },
-
-    /**
-     * Sets the amount of time, in milliseconds, that the animation will be delayed before starting playback.
-     *
-     * @method Phaser.GameObjects.Components.Animation#setDelay
-     * @since 3.4.0
-     *
-     * @param {integer} [value=0] - The amount of time, in milliseconds, to wait before starting playback.
-     *
-     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
-     */
-    setDelay: function (value)
-    {
-        if (value === undefined) { value = 0; }
-
-        this._delay = value;
-
-        return this.parent;
-    },
-
-    /**
-     * Gets the amount of time, in milliseconds that the animation will be delayed before starting playback.
-     *
-     * @method Phaser.GameObjects.Components.Animation#getDelay
-     * @since 3.4.0
-     *
-     * @return {integer} The amount of time, in milliseconds, the Animation will wait before starting playback.
-     */
-    getDelay: function ()
-    {
-        return this._delay;
-    },
-
-    /**
-     * Waits for the specified delay, in milliseconds, then starts playback of the requested animation.
-     *
-     * @method Phaser.GameObjects.Components.Animation#delayedPlay
-     * @since 3.0.0
-     *
-     * @param {integer} delay - The delay, in milliseconds, to wait before starting the animation playing.
-     * @param {string} key - The key of the animation to play.
-     * @param {integer} [startFrame=0] - The frame of the animation to start from.
-     *
-     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
-     */
-    delayedPlay: function (delay, key, startFrame)
-    {
-        this.play(key, true, startFrame);
-
-        this.nextTick += delay;
-
-        return this.parent;
+        return parent;
     },
 
     /**
@@ -418,7 +411,7 @@ var Animation = new Class({
      * @protected
      * @since 3.0.0
      *
-     * @param {string} key - The key of the animation to load.
+     * @param {(string|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or a `PlayAnimationConfig` object.
      * @param {integer} [startFrame=0] - The start frame of the animation to load.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
@@ -432,8 +425,44 @@ var Animation = new Class({
             this.stop();
         }
 
-        //  Load the new animation in
-        this.animationManager.load(this, key, startFrame);
+        var manager = this.animationManager;
+
+        if (typeof key === 'string')
+        {
+            //  Load the new animation data in
+            manager.load(this, key, startFrame);
+        }
+        else
+        {
+            var animKey = GetFastValue(key, 'key', null);
+
+            startFrame = GetFastValue(key, 'startFrame', startFrame);
+
+            if (animKey)
+            {
+                //  Load the new animation data in
+                manager.load(this, animKey, startFrame);
+
+                var anim = this.currentAnim;
+
+                //  And now override the animation values, if set in the config.
+
+                var totalFrames = anim.getTotalFrames();
+                var frameRate = GetFastValue(key, 'frameRate', this.frameRate);
+                var duration = GetFastValue(key, 'duration', this.duration);
+
+                anim.calculateDuration(this, totalFrames, duration, frameRate);
+
+                this._delay = GetFastValue(key, 'delay', this._delay);
+                this._repeat = GetFastValue(key, 'repeat', this._repeat);
+                this._repeatDelay = GetFastValue(key, 'repeatDelay', this._repeatDelay);
+                this._yoyo = GetFastValue(key, 'yoyo', this._yoyo);
+                this._timeScale = GetFastValue(key, 'timeScale', this._timeScale);
+
+                this.showOnStart = GetFastValue(key, 'showOnStart', this.showOnStart);
+                this.hideOnComplete = GetFastValue(key, 'hideOnComplete', this.hideOnComplete);
+            }
+        }
 
         return this.parent;
     },
@@ -521,40 +550,36 @@ var Animation = new Class({
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
      * @since 3.0.0
      *
-     * @param {(string|Phaser.Animations.Animation)} key - The string-based key of the animation to play, as defined previously in the Animation Manager. Or an Animation instance.
+     * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object.
      * @param {boolean} [ignoreIfPlaying=false] - If this animation is already playing then ignore this call.
      * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
-     * @param {number} [timeScale] - Set the Time Scale when starting this Animation. If not given, the Time Scale will use the current value.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
-    play: function (key, ignoreIfPlaying, startFrame, timeScale)
+    play: function (key, ignoreIfPlaying, startFrame)
     {
         if (ignoreIfPlaying === undefined) { ignoreIfPlaying = false; }
         if (startFrame === undefined) { startFrame = 0; }
-        if (timeScale === undefined) { timeScale = this._timeScale; }
 
-        if (key instanceof BaseAnimation)
-        {
-            key = key.key;
-        }
+        //  Must be either an Animation instance, or a PlayAnimationConfig object
+        var animKey = (typeof key === 'string') ? key : key.key;
 
-        if (ignoreIfPlaying && this.isPlaying && this.currentAnim.key === key)
+        if (ignoreIfPlaying && this.isPlaying && this.currentAnim.key === animKey)
         {
             return this.parent;
         }
 
         this.forward = true;
+
         this._reverse = false;
         this._paused = false;
         this._wasPlaying = true;
-        this._timeScale = timeScale;
 
         return this._startAnimation(key, startFrame);
     },
 
     /**
-     * Plays an Animation (in reverse mode) on the Game Object that owns this Animation Component.
+     * Plays an Animation in reverse on the Game Object that owns this Animation Component.
      *
      * @method Phaser.GameObjects.Components.Animation#playReverse
      * @fires Phaser.Animations.Events#ANIMATION_START
@@ -562,46 +587,72 @@ var Animation = new Class({
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
      * @since 3.12.0
      *
-     * @param {(string|Phaser.Animations.Animation)} key - The string-based key of the animation to play, as defined previously in the Animation Manager. Or an Animation instance.
+     * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object.
      * @param {boolean} [ignoreIfPlaying=false] - If an animation is already playing then ignore this call.
      * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
-     * @param {number} [timeScale] - Set the Time Scale when starting this Animation. If not given, the Time Scale will use the current value.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
-    playReverse: function (key, ignoreIfPlaying, startFrame, timeScale)
+    playReverse: function (key, ignoreIfPlaying, startFrame)
     {
         if (ignoreIfPlaying === undefined) { ignoreIfPlaying = false; }
         if (startFrame === undefined) { startFrame = 0; }
-        if (timeScale === undefined) { timeScale = this._timeScale; }
 
-        if (key instanceof BaseAnimation)
-        {
-            key = key.key;
-        }
+        //  Must be either an Animation instance, or a PlayAnimationConfig object
+        var animKey = (typeof key === 'string') ? key : key.key;
 
-        if (ignoreIfPlaying && this.isPlaying && this.currentAnim.key === key)
+        if (ignoreIfPlaying && this.isPlaying && this.currentAnim.key === animKey)
         {
             return this.parent;
         }
 
         this.forward = false;
+
         this._reverse = true;
-        this._timeScale = timeScale;
+        this._paused = false;
+        this._wasPlaying = true;
 
         return this._startAnimation(key, startFrame);
     },
 
     /**
-     * Load an Animation and fires 'onStartEvent' event, extracted from 'play' method.
+     * Waits for the specified delay, in milliseconds, then starts playback of the requested animation.
+     *
+     * If the animation _also_ has a delay value set in its config, this value will override that and be used instead.
+     *
+     * The delay only takes effect if the animation has not already started playing.
+     *
+     * @method Phaser.GameObjects.Components.Animation#delayedPlay
+     * @fires Phaser.Animations.Events#ANIMATION_START
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_START
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
+     * @since 3.0.0
+     *
+     * @param {integer} delay - The delay, in milliseconds, to wait before starting the animation playing.
+     * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object.
+     * @param {integer} [startFrame=0] - The frame of the animation to start from.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    delayedPlay: function (delay, key, startFrame)
+    {
+        this.delayCounter = delay;
+
+        return this.play(key, true, startFrame);
+    },
+
+    /**
+     * Load the animation based on the key and set-up all of the internal values
+     * needed for playback to start. If there is no delay, it will also fire the start events.
      *
      * @method Phaser.GameObjects.Components.Animation#_startAnimation
      * @fires Phaser.Animations.Events#ANIMATION_START
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_START
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
+     * @private
      * @since 3.12.0
      *
-     * @param {string} key - The string-based key of the animation to play, as defined previously in the Animation Manager.
+     * @param {(string|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or a `PlayAnimationConfig` object.
      * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
@@ -625,21 +676,48 @@ var Animation = new Class({
 
         this.isPlaying = true;
         this.pendingRepeat = false;
+        this.hasStarted = false;
 
-        if (anim.showOnStart)
+        //  Add any delay the animation itself may have had as well
+        this.delayCounter += this._delay;
+
+        if (this.delayCounter === 0)
         {
-            gameObject.visible = true;
+            this._fireStartEvents();
         }
+
+        return gameObject;
+    },
+
+    /**
+     * Fires all of the animation start events and toggles internal flags.
+     *
+     * @method Phaser.GameObjects.Components.Animation#_fireStartEvents
+     * @fires Phaser.Animations.Events#ANIMATION_START
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_START
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
+     * @private
+     * @since 3.50.0
+     */
+    _fireStartEvents: function ()
+    {
+        var anim = this.currentAnim;
+        var gameObject = this.parent;
+
+        if (this.showOnStart)
+        {
+            gameObject.setVisible(true);
+        }
+
+        this.hasStarted = true;
 
         var frame = this.currentFrame;
 
         anim.emit(Events.ANIMATION_START, anim, frame, gameObject);
 
-        gameObject.emit(Events.SPRITE_ANIMATION_KEY_START + key, anim, frame, gameObject);
+        gameObject.emit(Events.SPRITE_ANIMATION_KEY_START + anim.key, anim, frame, gameObject);
 
         gameObject.emit(Events.SPRITE_ANIMATION_START, anim, frame, gameObject);
-
-        return gameObject;
     },
 
     /**
@@ -800,7 +878,11 @@ var Animation = new Class({
     },
 
     /**
-     * Restarts the current animation from its beginning, optionally including its delay value.
+     * Restarts the current animation from its beginning.
+     *
+     * You can optionally reset the delay and repeat counters as well.
+     *
+     * Calling this will fire the `ANIMATION_RESTART` series of events immediately.
      *
      * @method Phaser.GameObjects.Components.Animation#restart
      * @fires Phaser.Animations.Events#ANIMATION_RESTART
@@ -809,16 +891,23 @@ var Animation = new Class({
      * @since 3.0.0
      *
      * @param {boolean} [includeDelay=false] - Whether to include the delay value of the animation when restarting.
+     * @param {boolean} [resetRepeats=false] - Whether to reset the repeat counter or not?
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
-    restart: function (includeDelay)
+    restart: function (includeDelay, resetRepeats)
     {
         if (includeDelay === undefined) { includeDelay = false; }
+        if (resetRepeats === undefined) { resetRepeats = false; }
 
         var anim = this.currentAnim;
 
         anim.getFirstTick(this, includeDelay);
+
+        if (resetRepeats)
+        {
+            this.repeatCounter = (this._repeat === -1) ? Number.MAX_VALUE : this._repeat;
+        }
 
         this.forward = true;
         this.isPlaying = true;
@@ -867,6 +956,11 @@ var Animation = new Class({
 
         if (anim)
         {
+            if (this.hideOnComplete)
+            {
+                gameObject.setVisible(false);
+            }
+
             anim.emit(Events.ANIMATION_COMPLETE, anim, frame, gameObject);
 
             gameObject.emit(Events.SPRITE_ANIMATION_KEY_COMPLETE + anim.key, anim, frame, gameObject);
@@ -1023,7 +1117,16 @@ var Animation = new Class({
             }
         }
 
-        if (this.accumulator >= this.nextTick)
+        if (!this.hasStarted)
+        {
+            if (this.accumulator >= this.delayCounter)
+            {
+                this.accumulator -= this.delayCounter;
+
+                this._fireStartEvents();
+            }
+        }
+        else if (this.accumulator >= this.nextTick)
         {
             this.currentAnim.setFrame(this);
         }
