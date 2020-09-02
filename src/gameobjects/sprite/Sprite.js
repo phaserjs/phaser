@@ -137,9 +137,12 @@ var Sprite = new Class({
      * Start playing the given animation.
      *
      * @method Phaser.GameObjects.Sprite#play
+     * @fires Phaser.Animations.Events#ANIMATION_START
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_START
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
      * @since 3.0.0
      *
-     * @param {string} key - The string-based key of the animation to play.
+     * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object.
      * @param {boolean} [ignoreIfPlaying=false] - If an animation is already playing then ignore this call.
      * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
      *
@@ -147,9 +150,7 @@ var Sprite = new Class({
      */
     play: function (key, ignoreIfPlaying, startFrame)
     {
-        this.anims.play(key, ignoreIfPlaying, startFrame);
-
-        return this;
+        return this.anims.play(key, ignoreIfPlaying, startFrame);
     },
 
     /**
