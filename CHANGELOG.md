@@ -276,6 +276,7 @@ The way in which Game Objects add themselves to the Scene Update List has change
 * If `inputWindowEvents` is set in the Game Config, then the `MouseManager` will now listen for the events on `window.top` instead of just `window`, which should help in situations where the pointer is released outside of an embedded iframe. Fix #4824 (thanks @rexrainbow)
 * `Types.GameObjects.Text.GetTextSizeObject` is a new type def for the GetTextSize function results.
 * The `Arcade.Body.resetFlags` method has a new optional boolean parameter `clear`. If set, it clears the `wasTouching` flags on the Body. This happens automatically when `Body.reset` is called. Previous to this, the flags were not reset until the next physics step (thanks @samme)
+* `Utils.Array.StableSort` has been recoded. It's now based on Two-Screens stable sort 0.1.8 and has been updated to fit into Phaser better and no longer create any window bound objects. The `inplace` function has been removed, just call `StableSort(array)` directly now. All classes that used `StableSort.inplace` have been updated to call it directly.
 
 ### Namespace Updates
 
