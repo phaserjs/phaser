@@ -4,7 +4,6 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var BaseAnimation = require('../../animations/Animation');
 var Class = require('../../utils/Class');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Events = require('../../animations/events');
