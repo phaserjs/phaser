@@ -345,6 +345,7 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * The `ProcessQueue` was emitting the wrong events internally. It now emits 'add' and 'remove' correctly (thanks @halilcakar)
 * The `GridAlign` action didn't work if only the `height` parameter was set. Fix #5019 (thanks @halilcakar)
 * The `Color.HSVToRGB` function has been rewritten to use the HSL and HSV formula from Wikipedia, giving much better results. Fix #5089 (thanks @DiamondeX)
+* Previously, the `easeParams` array within a Tweens `props` object, or a multi-object tween, were ignored and it was only used if set on the root Tween object. It will now work correctly set at any depth. Fix #4292 (thanks @willblackmore)
 
 ### Examples, Documentation and TypeScript
 
