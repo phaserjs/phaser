@@ -10,6 +10,7 @@ var CustomMap = require('../structs/Map');
 var EventEmitter = require('eventemitter3');
 var Events = require('./events');
 var GameEvents = require('../core/events');
+var GetFastValue = require('../utils/object/GetFastValue');
 var GetValue = require('../utils/object/GetValue');
 var Pad = require('../utils/string/Pad');
 
@@ -166,6 +167,178 @@ var AnimationManager = new Class({
     exists: function (key)
     {
         return this.anims.has(key);
+    },
+
+    /**
+     * Create one, or more animations from a loaded Aseprite JSON file.
+     *
+     * Aseprite is a powerful animated sprite editor and pixel art tool.
+     *
+     * You can find more details at https://www.aseprite.org/
+     *
+     * To export a compatible JSON file in Aseprite, please do the following:
+     *
+     * 1. Go to "File - Export Sprite Sheet"
+     *
+     * 2. On the **Layout** tab:
+     * 2a. Set the "Sheet type" to "Packed"
+     * 2b. Set the "Constraints" to "None"
+     * 2c. Check the "Merge Duplicates" checkbox
+     *
+     * 3. On the **Sprite** tab:
+     * 3a. Set "Layers" to "Visible layers"
+     * 3b. Set "Frames" to "All frames", unless you only wish to export a sub-set of tags
+     *
+     * 4. On the **Borders** tab:
+     * 4a. Check the "Trim Sprite" and "Trim Cells" options
+     * 4b. Ensure "Border Padding", "Spacing" and "Inner Padding" are all > 0 (1 is usually enough)
+     *
+     * 5. On the **Output** tab:
+     * 5a. Check "Output File", give your image a name and make sure you choose "png files" as the file type
+     * 5b. Check "JSON Data" and give your json file a name
+     * 5c. The JSON Data type can be either a Hash or Array, Phaser doesn't mind.
+     * 5d. Make sure "Tags" is checked in the Meta options
+     * 5e. In the "Item Filename" input box, make sure it says just "{frame}" and nothing more.
+     *
+     * 6. Click export
+     *
+     * This was tested with Aseprite 1.2.25.
+     *
+     * This will export a png and json file which you can load using the Atlas Loader, i.e.:
+     *
+     * ```javascript
+     * function preload ()
+     * {
+     *     this.load.path = 'assets/animations/aseprite/';
+     *     this.load.atlas('paladin', 'paladin.png', 'paladin.json');
+     * }
+     * ```
+     *
+     * Once exported, you can call this method from within a Scene with the 'atlas' key:
+     *
+     * ```javascript
+     * this.anims.createFromAseprite('paladin');
+     * ```
+     *
+     * Any animations defined in the JSON will now be available to use in Phaser and you play them
+     * via their Tag name. For example, if you have an animation called 'War Cry' on your Aseprite timeline,
+     * you can play it in Phaser using that Tag name:
+     *
+     * ```javascript
+     * this.add.sprite(400, 300).play('War Cry');
+     * ```
+     *
+     * When calling this method you can optionally provide an array of tag names, and only those animations
+     * will be created. For example:
+     *
+     * ```javascript
+     * this.anims.createFromAseprite('paladin', [ 'step', 'War Cry', 'Magnum Break' ]);
+     * ```
+     *
+     * This will only create the 3 animations defined. Note that the tag names are case-sensitive.
+     *
+     * @method Phaser.Animations.AnimationManager#createFromAseprite
+     * @since 3.50.0
+     *
+     * @param {string} key - The key of the loaded Aseprite atlas. It must have been loaded prior to calling this method.
+     * @param {string[]} [tags] - An array of Tag names. If provided, only animations found in this array will be created.
+     *
+     * @return {Phaser.Animations.Animation[]} An array of Animation instances that were successfully created.
+     */
+    createFromAseprite: function (key, tags)
+    {
+        var output = [];
+
+        var data = this.game.cache.json.get(key);
+
+        if (!data)
+        {
+            return output;
+        }
+
+        var _this = this;
+
+        var meta = GetValue(data, 'meta', null);
+        var frames = GetValue(data, 'frames', null);
+
+        if (meta && frames)
+        {
+            var frameTags = GetValue(meta, 'frameTags', []);
+
+            frameTags.forEach(function (tag)
+            {
+                var animFrames = [];
+
+                var name = GetFastValue(tag, 'name', null);
+                var from = GetFastValue(tag, 'from', 0);
+                var to = GetFastValue(tag, 'to', 0);
+                var direction = GetFastValue(tag, 'direction', 'forward');
+
+                if (!name)
+                {
+                    //  Skip if no name
+                    return;
+                }
+
+                if (!tags || (tags && tags.indexOf(name) > -1))
+                {
+                    //  Get all the frames for this tag
+                    var tempFrames = [];
+                    var minDuration = Number.MAX_SAFE_INTEGER;
+
+                    for (var i = from; i <= to; i++)
+                    {
+                        var frameKey = i.toString();
+                        var frame = frames[frameKey];
+
+                        if (frame)
+                        {
+                            var frameDuration = GetFastValue(frame, 'duration', Number.MAX_SAFE_INTEGER);
+
+                            if (frameDuration < minDuration)
+                            {
+                                minDuration = frameDuration;
+                            }
+
+                            tempFrames.push({ frame: frameKey, duration: frameDuration });
+                        }
+                    }
+
+                    tempFrames.forEach(function (entry)
+                    {
+                        animFrames.push({
+                            key: key,
+                            frame: entry.frame,
+                            duration: (minDuration - entry.duration)
+                        });
+                    });
+
+                    var totalDuration = (minDuration * animFrames.length);
+
+                    if (direction === 'reverse')
+                    {
+                        animFrames = animFrames.reverse();
+                    }
+
+                    //  Create the animation
+                    var createConfig = {
+                        key: name,
+                        frames: animFrames,
+                        duration: totalDuration,
+                        yoyo: (direction === 'pingpong')
+                    };
+
+                    var result = _this.create(createConfig);
+
+                    if (result)
+                    {
+                        output.push(result);
+                    }
+                }
+            });
+        }
+
+        return output;
     },
 
     /**
