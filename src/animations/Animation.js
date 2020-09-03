@@ -11,6 +11,7 @@ var Events = require('./events');
 var FindClosestInSorted = require('../utils/array/FindClosestInSorted');
 var Frame = require('./AnimationFrame');
 var GetValue = require('../utils/object/GetValue');
+var SortByDigits = require('../utils/array/SortByDigits');
 
 /**
  * @classdesc
@@ -80,7 +81,8 @@ var Animation = new Class({
         this.frames = this.getFrames(
             manager.textureManager,
             GetValue(config, 'frames', []),
-            GetValue(config, 'defaultTextureKey', null)
+            GetValue(config, 'defaultTextureKey', null),
+            GetValue(config, 'sortFrames', true)
         );
 
         /**
@@ -321,26 +323,6 @@ var Animation = new Class({
     },
 
     /**
-     * Called internally when this Animation completes playback.
-     * Optionally, hides the parent Game Object, then stops playback.
-     *
-     * @method Phaser.Animations.Animation#completeAnimation
-     * @protected
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
-     */
-    completeAnimation: function (component)
-    {
-        if (component.hideOnComplete)
-        {
-            component.parent.visible = false;
-        }
-
-        component.stop();
-    },
-
-    /**
      * Called internally when this Animation first starts to play.
      * Sets the accumulator and nextTick properties.
      *
@@ -349,20 +331,13 @@ var Animation = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
-     * @param {boolean} [includeDelay=true] - If `true` the Animation Components delay value will be added to the `nextTick` total.
      */
-    getFirstTick: function (component, includeDelay)
+    getFirstTick: function (component)
     {
-        if (includeDelay === undefined) { includeDelay = true; }
-
         //  When is the first update due?
         component.accumulator = 0;
-        component.nextTick = component.msPerFrame + component.currentFrame.duration;
 
-        if (includeDelay)
-        {
-            component.nextTick += component._delay;
-        }
+        component.nextTick = component.msPerFrame + component.currentFrame.duration;
     },
 
     /**
@@ -393,8 +368,10 @@ var Animation = new Class({
      *
      * @return {Phaser.Animations.AnimationFrame[]} An array of newly created AnimationFrame instances.
      */
-    getFrames: function (textureManager, frames, defaultTextureKey)
+    getFrames: function (textureManager, frames, defaultTextureKey, sortFrames)
     {
+        if (sortFrames === undefined) { sortFrames = true; }
+
         var out = [];
         var prev;
         var animationFrame;
@@ -410,9 +387,14 @@ var Animation = new Class({
             var texture = textureManager.get(textureKey);
             var frameKeys = texture.getFrameNames();
 
+            if (sortFrames)
+            {
+                SortByDigits(frameKeys);
+            }
+
             frames = [];
 
-            frameKeys.forEach(function (idx, value)
+            frameKeys.forEach(function (value)
             {
                 frames.push({ key: textureKey, frame: value });
             });
@@ -503,50 +485,6 @@ var Animation = new Class({
     },
 
     /**
-     * Loads the Animation values into the Animation Component.
-     *
-     * @method Phaser.Animations.Animation#load
-     * @private
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component to load values into.
-     * @param {integer} startFrame - The start frame of the animation to load.
-     */
-    load: function (component, startFrame)
-    {
-        if (startFrame >= this.frames.length)
-        {
-            startFrame = 0;
-        }
-
-        if (component.currentAnim !== this)
-        {
-            component.currentAnim = this;
-
-            component.frameRate = this.frameRate;
-            component.duration = this.duration;
-            component.msPerFrame = this.msPerFrame;
-            component.skipMissedFrames = this.skipMissedFrames;
-            component.showOnStart = this.showOnStart;
-            component.hideOnComplete = this.hideOnComplete;
-
-            component._delay = this.delay;
-            component._repeat = this.repeat;
-            component._repeatDelay = this.repeatDelay;
-            component._yoyo = this.yoyo;
-        }
-
-        var frame = this.frames[startFrame];
-
-        if (startFrame === 0 && !component.forward)
-        {
-            frame = this.getLastFrame();
-        }
-
-        component.updateFrame(frame);
-    },
-
-    /**
      * Returns the frame closest to the given progress value between 0 and 1.
      *
      * @method Phaser.Animations.Animation#getFrameByProgress
@@ -582,7 +520,7 @@ var Animation = new Class({
             //  We're at the end of the animation
 
             //  Yoyo? (happens before repeat)
-            if (component._yoyo)
+            if (component.yoyo)
             {
                 this.handleYoyoFrame(component, false);
             }
@@ -590,7 +528,7 @@ var Animation = new Class({
             {
                 //  Repeat (happens before complete)
 
-                if (component._reverse && component.forward)
+                if (component.inReverse && component.forward)
                 {
                     component.forward = false;
                 }
@@ -601,7 +539,7 @@ var Animation = new Class({
             }
             else
             {
-                this.completeAnimation(component);
+                component.complete();
             }
         }
         else
@@ -624,10 +562,9 @@ var Animation = new Class({
     {
         if (!isReverse) { isReverse = false; }
 
-        if (component._reverse === !isReverse && component.repeatCounter > 0)
+        if (component.inReverse === !isReverse && component.repeatCounter > 0)
         {
-            if (!component._repeatDelay || component.pendingRepeat)
-
+            if (component.repeatDelay === 0 || component.pendingRepeat)
             {
                 component.forward = isReverse;
             }
@@ -637,9 +574,9 @@ var Animation = new Class({
             return;
         }
 
-        if (component._reverse !== isReverse && component.repeatCounter === 0)
+        if (component.inReverse !== isReverse && component.repeatCounter === 0)
         {
-            this.completeAnimation(component);
+            component.complete();
 
             return;
         }
@@ -683,27 +620,29 @@ var Animation = new Class({
         {
             //  We're at the start of the animation
 
-            if (component._yoyo)
+            if (component.yoyo)
             {
                 this.handleYoyoFrame(component, true);
             }
             else if (component.repeatCounter > 0)
             {
-                if (component._reverse && !component.forward)
+                if (component.inReverse && !component.forward)
                 {
                     component.currentFrame = this.getLastFrame();
+
                     this.repeatAnimation(component);
                 }
                 else
                 {
                     //  Repeat (happens before complete)
                     component.forward = true;
+
                     this.repeatAnimation(component);
                 }
             }
             else
             {
-                this.completeAnimation(component);
+                component.complete();
             }
         }
         else
@@ -787,57 +726,34 @@ var Animation = new Class({
     {
         if (component._pendingStop === 2)
         {
-            return this.completeAnimation(component);
+            return component.stop();
         }
 
-        if (component._repeatDelay > 0 && component.pendingRepeat === false)
+        if (component.repeatDelay > 0 && !component.pendingRepeat)
         {
             component.pendingRepeat = true;
             component.accumulator -= component.nextTick;
-            component.nextTick += component._repeatDelay;
+            component.nextTick += component.repeatDelay;
         }
         else
         {
             component.repeatCounter--;
 
-            component.updateFrame(component.currentFrame[(component.forward) ? 'nextFrame' : 'prevFrame']);
+            if (component.forward)
+            {
+                component.updateFrame(component.currentFrame.nextFrame);
+            }
+            else
+            {
+                component.updateFrame(component.currentFrame.prevFrame);
+            }
 
             if (component.isPlaying)
             {
                 this.getNextTick(component);
 
-                component.pendingRepeat = false;
-
-                var frame = component.currentFrame;
-                var parent = component.parent;
-
-                this.emit(Events.ANIMATION_REPEAT, this, frame);
-
-                parent.emit(Events.SPRITE_ANIMATION_KEY_REPEAT + this.key, this, frame, component.repeatCounter, parent);
-
-                parent.emit(Events.SPRITE_ANIMATION_REPEAT, this, frame, component.repeatCounter, parent);
+                component.handleRepeat();
             }
-        }
-    },
-
-    /**
-     * Sets the texture frame the animation uses for rendering.
-     *
-     * @method Phaser.Animations.Animation#setFrame
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
-     */
-    setFrame: function (component)
-    {
-        //  Work out which frame should be set next on the child, and set it
-        if (component.forward)
-        {
-            this.nextFrame(component);
-        }
-        else
-        {
-            this.previousFrame(component);
         }
     },
 
