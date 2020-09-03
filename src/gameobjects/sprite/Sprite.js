@@ -134,7 +134,39 @@ var Sprite = new Class({
     },
 
     /**
-     * Start playing the given animation.
+     * Start playing the given animation on this Sprite.
+     *
+     * Animations in Phaser belong to the global Animation Manager. This means multiple Sprites can all play the same
+     * animation. The following code shows how to create a global repeating animation. The animation will be created
+     * from all of the frames within the sprite sheet that was loaded with the key 'muybridge':
+     *
+     * ```javascript
+     * var config = {
+     *     key: 'run',
+     *     frames: 'muybridge',
+     *     frameRate: 15,
+     *     repeat: -1
+     * };
+     *
+     * this.anims.create(config);
+     * ```
+     *
+     * With the animation created, you can now play it on this Sprite:
+     *
+     * ```javascript
+     * this.add.sprite(x, y).play('run');
+     * ```
+     *
+     * Alternatively, if you wish to run it at a different frame rate, for example, you can pass a config
+     * object instead:
+     *
+     * ```javascript
+     * this.add.sprite(x, y).play({ key: 'run', frameRate: 24 });
+     * ```
+     *
+     * See the documentation for the `PlayAnimationConfig` config object for more details about this.
+     *
+     * Also, see the documentation in the Animation Manager for further details on creating animations.
      *
      * @method Phaser.GameObjects.Sprite#play
      * @fires Phaser.Animations.Events#ANIMATION_START
@@ -154,6 +186,102 @@ var Sprite = new Class({
     },
 
     /**
+     * Start playing the given animation on this Sprite in reverse.
+     *
+     * Animations in Phaser belong to the global Animation Manager. This means multiple Sprites can all play the same
+     * animation. The following code shows how to create a global repeating animation. The animation will be created
+     * from all of the frames within the sprite sheet that was loaded with the key 'muybridge':
+     *
+     * ```javascript
+     * var config = {
+     *     key: 'run',
+     *     frames: 'muybridge',
+     *     frameRate: 15,
+     *     repeat: -1
+     * };
+     *
+     * this.anims.create(config);
+     * ```
+     *
+     * With the animation created, you can now play it on this Sprite:
+     *
+     * ```javascript
+     * this.add.sprite(x, y).playReverse('run');
+     * ```
+     *
+     * Alternatively, if you wish to run it at a different frame rate, for example, you can pass a config
+     * object instead:
+     *
+     * ```javascript
+     * this.add.sprite(x, y).playReverse({ key: 'run', frameRate: 24 });
+     * ```
+     *
+     * See the documentation for the `PlayAnimationConfig` config object for more details about this.
+     *
+     * Also, see the documentation in the Animation Manager for further details on creating animations.
+     *
+     * @method Phaser.GameObjects.Sprite#playReverse
+     * @fires Phaser.Animations.Events#ANIMATION_START
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_START
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
+     * @since 3.50.0
+     *
+     * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object.
+     * @param {boolean} [ignoreIfPlaying=false] - If an animation is already playing then ignore this call.
+     * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
+     *
+     * @return {this} This Game Object.
+     */
+    playReverse: function (key, ignoreIfPlaying, startFrame)
+    {
+        return this.anims.playReverse(key, ignoreIfPlaying, startFrame);
+    },
+
+    /**
+     * Waits for the specified delay, in milliseconds, then starts playback of the requested animation.
+     *
+     * If the animation _also_ has a delay value set in its config, this value will override that and be used instead.
+     *
+     * The delay only takes effect if the animation has not already started playing.
+     *
+     * @method Phaser.GameObjects.Sprite#delayedPlay
+     * @fires Phaser.Animations.Events#ANIMATION_START
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_START
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
+     * @since 3.50.0
+     *
+     * @param {integer} delay - The delay, in milliseconds, to wait before starting the animation playing.
+     * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object.
+     * @param {integer} [startFrame=0] - The frame of the animation to start from.
+     *
+     * @return {this} This Game Object.
+     */
+    delayedPlay: function (delay, key, startFrame)
+    {
+        return this.anims.delayedPlay(delay, key, startFrame);
+    },
+
+    /**
+     * Immediately stops the current animation from playing and dispatches the `ANIMATION_STOP` events.
+     *
+     * If no animation is playing, no event will be dispatched.
+     *
+     * If there is another animation queued (via the `chain` method) then it will start playing immediately.
+     *
+     * @method Phaser.GameObjects.Sprite#stop
+     * @fires Phaser.Animations.Events#ANIMATION_STOP
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_STOP
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_STOP
+     * @since 3.50.0
+     *
+     * @return {this} This Game Object.
+     */
+    stop: function ()
+    {
+        return this.anims.stop();
+    },
+
+    /**
      * Build a JSON representation of this Sprite.
      *
      * @method Phaser.GameObjects.Sprite#toJSON
@@ -163,11 +291,7 @@ var Sprite = new Class({
      */
     toJSON: function ()
     {
-        var data = Components.ToJSON(this);
-
-        //  Extra Sprite data is added here
-
-        return data;
+        return Components.ToJSON(this);
     },
 
     /**
