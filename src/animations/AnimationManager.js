@@ -153,7 +153,7 @@ var AnimationManager = new Class({
 
     /**
      * Checks to see if the given key is already in use within the Animation Manager or not.
-     * 
+     *
      * Animations are global. Keys created in one scene can be used from any other Scene in your game. They are not Scene specific.
      *
      * @method Phaser.Animations.AnimationManager#exists
@@ -170,15 +170,15 @@ var AnimationManager = new Class({
 
     /**
      * Creates a new Animation and adds it to the Animation Manager.
-     * 
+     *
      * Animations are global. Once created, you can use them in any Scene in your game. They are not Scene specific.
-     * 
+     *
      * If an invalid key is given this method will return `false`.
-     * 
+     *
      * If you pass the key of an animation that already exists in the Animation Manager, that animation will be returned.
-     * 
+     *
      * A brand new animation is only created if the key is valid and not already in use.
-     * 
+     *
      * If you wish to re-use an existing key, call `AnimationManager.remove` first, then this method.
      *
      * @method Phaser.Animations.AnimationManager#create
@@ -204,7 +204,7 @@ var AnimationManager = new Class({
                 anim = new Animation(this, key, config);
 
                 this.anims.set(key, anim);
-        
+
                 this.emit(Events.ADD_ANIMATION, key, anim);
             }
         }
@@ -265,18 +265,18 @@ var AnimationManager = new Class({
      * Generate an array of {@link Phaser.Types.Animations.AnimationFrame} objects from a texture key and configuration object.
      *
      * Generates objects with string based frame names, as configured by the given {@link Phaser.Types.Animations.GenerateFrameNames}.
-     * 
+     *
      * It's a helper method, designed to make it easier for you to extract all of the frame names from texture atlases.
      * If you're working with a sprite sheet, see the `generateFrameNumbers` method instead.
-     * 
+     *
      * Example:
-     * 
+     *
      * If you have a texture atlases loaded called `gems` and it contains 6 frames called `ruby_0001`, `ruby_0002`, and so on,
      * then you can call this method using: `this.anims.generateFrameNames('gems', { prefix: 'ruby_', end: 6, zeroPad: 4 })`.
-     * 
+     *
      * The `end` value tells it to look for 6 frames, incrementally numbered, all starting with the prefix `ruby_`. The `zeroPad`
      * value tells it how many zeroes pad out the numbers. To create an animation using this method, you can do:
-     * 
+     *
      * ```javascript
      * this.anims.create({
      *   key: 'ruby',
@@ -288,7 +288,7 @@ var AnimationManager = new Class({
      *   })
      * });
      * ```
-     * 
+     *
      * Please see the animation examples for further details.
      *
      * @method Phaser.Animations.AnimationManager#generateFrameNames
@@ -367,7 +367,7 @@ var AnimationManager = new Class({
      * Generate an array of {@link Phaser.Types.Animations.AnimationFrame} objects from a texture key and configuration object.
      *
      * Generates objects with numbered frame names, as configured by the given {@link Phaser.Types.Animations.GenerateFrameNumbers}.
-     * 
+     *
      * If you're working with a texture atlas, see the `generateFrameNames` method instead.
      *
      * @method Phaser.Animations.AnimationManager#generateFrameNumbers
@@ -452,34 +452,6 @@ var AnimationManager = new Class({
     },
 
     /**
-     * Load an Animation into a Game Object's Animation Component.
-     *
-     * @method Phaser.Animations.AnimationManager#load
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.GameObject} child - The Game Object to load the animation into.
-     * @param {string} key - The key of the animation to load.
-     * @param {(string|integer)} [startFrame] - The name of a start frame to set on the loaded animation.
-     *
-     * @return {Phaser.GameObjects.GameObject} The Game Object with the animation loaded into it.
-     */
-    load: function (child, key, startFrame)
-    {
-        var anim = this.get(key);
-
-        if (anim)
-        {
-            anim.load(child, startFrame);
-        }
-        else
-        {
-            console.warn('Missing animation: ' + key);
-        }
-
-        return child;
-    },
-
-    /**
      * Pause all animations.
      *
      * @method Phaser.Animations.AnimationManager#pauseAll
@@ -506,28 +478,87 @@ var AnimationManager = new Class({
      * @method Phaser.Animations.AnimationManager#play
      * @since 3.0.0
      *
-     * @param {string} key - The key of the animation to play on the Game Object.
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} child - The Game Objects to play the animation on.
+     * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object.
+     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} children - An array of Game Objects to play the animation on. They must have an Animation Component.
      *
      * @return {this} This Animation Manager.
      */
-    play: function (key, child)
+    play: function (key, children)
     {
-        if (!Array.isArray(child))
+        if (!Array.isArray(children))
         {
-            child = [ child ];
+            children = [ children ];
         }
 
-        var anim = this.get(key);
-
-        if (!anim)
+        for (var i = 0; i < children.length; i++)
         {
-            return this;
+            children[i].anims.play(key);
         }
 
-        for (var i = 0; i < child.length; i++)
+        return this;
+    },
+
+    /**
+     * Takes an array of Game Objects that have an Animation Component and then
+     * starts the given animation playing on them. The start time of each Game Object
+     * is offset, incrementally, by the `stagger` amount.
+     *
+     * For example, if you pass an array with 4 children and a stagger time of 1000,
+     * the delays will be:
+     *
+     * child 1: 1000ms delay
+     * child 2: 2000ms delay
+     * child 3: 3000ms delay
+     * child 4: 4000ms delay
+     *
+     * If you set the `staggerFirst` parameter to `false` they would be:
+     *
+     * child 1: 0ms delay
+     * child 2: 1000ms delay
+     * child 3: 2000ms delay
+     * child 4: 3000ms delay
+     *
+     * You can also set `stagger` to be a negative value. If it was -1000, the above would be:
+     *
+     * child 1: 3000ms delay
+     * child 2: 2000ms delay
+     * child 3: 1000ms delay
+     * child 4: 0ms delay
+     *
+     * @method Phaser.Animations.AnimationManager#staggerPlay
+     * @since 3.0.0
+     *
+     * @generic {Phaser.GameObjects.GameObject[]} G - [items,$return]
+     *
+     * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object.
+     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} children - An array of Game Objects to play the animation on. They must have an Animation Component.
+     * @param {number} stagger - The amount of time, in milliseconds, to offset each play time by. If a negative value is given, it's applied to the children in reverse order.
+     * @param {boolean} [staggerFirst=true] -Should the first child be staggered as well?
+     *
+     * @return {this} This Animation Manager.
+     */
+    staggerPlay: function (key, children, stagger, staggerFirst)
+    {
+        if (stagger === undefined) { stagger = 0; }
+        if (staggerFirst === undefined) { staggerFirst = true; }
+
+        if (!Array.isArray(children))
         {
-            child[i].anims.play(key);
+            children = [ children ];
+        }
+
+        var len = children.length;
+
+        if (!staggerFirst)
+        {
+            len--;
+        }
+
+        for (var i = 0; i < children.length; i++)
+        {
+            var time = (stagger < 0) ? Math.abs(stagger) * (len - i) : stagger * i;
+
+            children[i].anims.delayedPlay(time, key);
         }
 
         return this;
@@ -535,7 +566,7 @@ var AnimationManager = new Class({
 
     /**
      * Removes an Animation from this Animation Manager, based on the given key.
-     * 
+     *
      * This is a global action. Once an Animation has been removed, no Game Objects
      * can carry on using it.
      *
@@ -577,46 +608,6 @@ var AnimationManager = new Class({
             this.paused = false;
 
             this.emit(Events.RESUME_ALL);
-        }
-
-        return this;
-    },
-
-    /**
-     * Takes an array of Game Objects that have an Animation Component and then
-     * starts the given animation playing on them, each one offset by the
-     * `stagger` amount given to this method.
-     *
-     * @method Phaser.Animations.AnimationManager#staggerPlay
-     * @since 3.0.0
-     *
-     * @generic {Phaser.GameObjects.GameObject[]} G - [items,$return]
-     *
-     * @param {string} key - The key of the animation to play on the Game Objects.
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} children - An array of Game Objects to play the animation on. They must have an Animation Component.
-     * @param {number} [stagger=0] - The amount of time, in milliseconds, to offset each play time by.
-     *
-     * @return {this} This Animation Manager.
-     */
-    staggerPlay: function (key, children, stagger)
-    {
-        if (stagger === undefined) { stagger = 0; }
-
-        if (!Array.isArray(children))
-        {
-            children = [ children ];
-        }
-
-        var anim = this.get(key);
-
-        if (!anim)
-        {
-            return this;
-        }
-
-        for (var i = 0; i < children.length; i++)
-        {
-            children[i].anims.delayedPlay(stagger * i, key);
         }
 
         return this;
