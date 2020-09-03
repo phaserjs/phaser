@@ -212,15 +212,12 @@ The way in which Game Objects add themselves to the Scene Update List has change
 * The Spine Plugin `destroy` method will now no longer remove the Game Objects from the Game Object Factory, or dispose of the Scene Renderer. This means when a Scene is destroyed, it will keep the Game Objects in the factory for other Scene's to use. Fix #5279 (thanks @Racoonacoon)
 * `SpinePlugin.gameDestroy` is a new method that is called if the Game instance emits a `destroy` event. It removes the Spine Game Objects from the factory and disposes of the Spine scene renderer.
 
-
-
-
-
 ### Animation API New Features and Updates
 
 The Animation API has had a significant overhaul to improve playback handling. Instead of just playing an animation based on its global key, you can now supply a new `PlayAnimationConfig` object instead, which allows you to override any of the default animation settings, such as `duration`, `delay` and `yoyo` (see below for the full list). This means you no longer have to create lots of duplicate animations, just to change properties such as `duration`, and can now set them dynamically at run-time as well.
 
 * The `play`, `playReverse`, `delayedPlay` and `chain` Animation Component methods can now all take a `Phaser.Types.Animations.PlayAnimationConfig` configuration object instead of a string as the `key` parameter. This allows you to override any default animation setting with those defined in the config, giving you far greater control over animations on a Game Object level, without needing to globally duplicate them.
+* The `Component.Animation` now handles all of the loading of the animation. It no longer has to make calls out to the Animation Manager or Animation itself and will load the animation data directly, replacing as required from the optional `PlayAnimationConfig`. This improves performance and reduces CPU calls in animation heavy games.
 * The `PlayAnimationConfig.frameRate` property lets you optionally override the animation frame rate.
 * The `PlayAnimationConfig.duration` property lets you optionally override the animation duration.
 * The `PlayAnimationConfig.delay` property lets you optionally override the animation delay.
@@ -238,10 +235,49 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * The `Components.Animation.chain` method docs said it would remove all pending animations if called with no parameters. However, it didn't - and now does!
 * The `Components.Animation.setDelay` method has been removed. It never actually worked and you can now perform the same thing by calling either `delayedPlay` or setting the `delay` property in the play config.
 * The `Components.Animation.getDelay` method has been removed. It never actually worked and you can now perform the same thing by calling either `delayedPlay` or setting the `delay` property in the play config.
-* `Components.Animation._fireStartEvents` is a new internal private method that handles dispatching the animation start events, to cut down on duplicate code.
+* The `Components.Animation.setRepeat` method has been removed. You can achieve the same thing by setting the `repeat` property in the play config, or adjusting the public `repeatCounter` property if the animation has started.
+* `Components.Animation.handleStart` is a new internal private method that handles the animation start process.
+* `Components.Animation.handleRepeat` is a new internal private method that handles the animation repeat process.
+* `Components.Animation.handleStop` is a new internal private method that handles the animation stop process.
+* `Components.Animation.handleComplete` is a new internal private method that handles the animation complete process.
+* `Components.Animation.emitEvents` is a new internal private method that emits animation events, cutting down on duplicate code.
 * The `Components.Animation.restart` method has a new optional boolean parameter `resetRepeats` which controls if you want to reset the repeat counter during the restart, or not.
 * `Animation.getTotalFrames` is a new method that will return the total number of frames in the animation. You can access it via `this.anims.currentAnim.getTotalFrames` from a Sprite.
 * `Animation.calculateDuration` is a new method that calculates the duration, frameRate and msPerFrame for a given animation target.
+* `ANIMATION_UPDATE_EVENT` is a new event that is emitted from an Animation when it is updated, i.e. its frame changes.
+* `ANIMATION_STOP_EVENT` is a new event that is emitted from an Animation when it is stopped before it reaches completion.
+* `SPRITE_ANIMATION_STOP_EVENT` is a new event that is emitted from a Sprite when its current animation is stopped before it reaches completion.
+* `SPRITE_ANIMATION_KEY_STOP_EVENT` is a new event that is emitted from a Sprite when its current animation is stopped before it reaches completion. This is a dynamic event name and carries the animation key in its title.
+* The `BuildGameObjectAnimation` function now uses the `PlayAnimationConfig` object to set the values.
+* `Sprite.playReverse` is a new method that allows you to play the given animation in reverse on the Sprite.
+* `Sprite.delayedPlay` is a new method that allows you to play the given animation on the Sprite after a delay.
+* `Sprite.stop` is a new method that allows you to stop the current animation on the Sprite.
+* `AnimationManager.load` has been removed as it's no longer required.
+* `AnimationManager.staggerPlay` has been fixed so you can now pass in negative stagger values.
+* `AnimationManager.staggerPlay` has a new optional boolean parameter `staggerFirst`, which allows you to either include or exclude the first child in the stagger calculations.
+* The `Animation.completeAnimation` method has been removed as it's no longer required internally.
+* The `Animation.load` method has been removed as it's no longer required internally.
+* The `Animation.setFrame` method has been removed as it's no longer required internally.
+* The `Animation.getFirstTick` method has no longer needs the `includeDelay` parameter, as it's handled by the component now.
+* The `Animation.getFrames` method has a new optional boolean parameter `sortFrames` which will run a numeric sort on the frame names after constructing them, if a string-based frame is given.
+* `Types.Animations.Animation` has a new boolean property `sortFrames`, which lets Phaser numerically sort the generated frames.
+* `Component.Animation.timeScale` is a new public property that replaces the old private `_timeScale` property.
+* `Component.Animation.delay` is a new public property that replaces the old private `_delay` property.
+* `Component.Animation.repeat` is a new public property that replaces the old private `_repeat` property.
+* `Component.Animation.repeatDelay` is a new public property that replaces the old private `_repeatDelay` property.
+* `Component.Animation.yoyo` is a new public property that replaces the old private `_yoyo` property.
+* `Component.Animation.inReverse` is a new public property that replaces the old private `_reverse` property.
+* `Component.Animation.startAnimation` is a new public method that replaces the old private `_startAnimation` method.
+* The `Component.Animation.getProgress` method has been fixed so it will return correctly if the animation is playing in reverse.
+* The `Component.Animation.remove` method will now always be called when an animation is removed, not just once.
+* The `Component.Animation.getRepeat` method has now been removed. You can get the value from the `repeat` property.
+* The `Component.Animation.setRepeatDelay` method has now been removed. You can set the value using the `repeatDelay` config property, or changing it at run-time.
+* `Component.Animation.complete` is a new method that handles the completion in animation playback.
+* The `Component.Animation.setTimeScale` method has now been removed. You can set the value using the `timeScale` config property, or changing it at run-time.
+* The `Component.Animation.getTimeScale` method has now been removed. You can read the value using the `timeScale` property.
+* The `Component.Animation.getTotalFrames` method has been fixed and won't error if called when no animation is loaded.
+* The `Component.Animation.setYoyo` method has now been removed. You can set the value using the `yoyo` config property, or changing it at run-time.
+* The `Component.Animation.getYoyo` method has now been removed. You can read the value using the `yoyo` property.
 
 ### New Features
 
@@ -269,6 +305,8 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * `ArcadePhysics.disableUpdate` is a new method that will prevent the Arcade Physics World `update` method from being called when the Scene updates. By disabling it, you're free to call the update method yourself, passing in your own delta and time values.
 * `ArcadePhysics.enableUpdate` is a new method that will make the Arcade Physics World update in time with the Scene update. This is the default, so only call this if you have specifically disabled it previously.
 * `ArcadeWorldConfig.customUpdate` is a new boolean property you can set in the Arcade Physics config object, either in the Scene or in the Game Config. If `true` the World update will never be called, allowing you to call it yourself from your own component. Close #5190 (thanks @cfortuner)
+* `Utils.Array.SortByDigits` is a new function that takes the given array of strings and runs a numeric sort on it, ignoring any non-digits.
+* `GroupCreateConfig`, which is used when calling `Group.createMultiple` or `Group.createFromConfig`, can now accept the following new properties: `setOrigin: { x, y, stepX, stepY }` which are applied to the items created by the Group.
 
 ### Updates and API Changes
 
@@ -308,6 +346,7 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * The `Arcade.Body.resetFlags` method has a new optional boolean parameter `clear`. If set, it clears the `wasTouching` flags on the Body. This happens automatically when `Body.reset` is called. Previous to this, the flags were not reset until the next physics step (thanks @samme)
 * `Utils.Array.StableSort` has been recoded. It's now based on Two-Screens stable sort 0.1.8 and has been updated to fit into Phaser better and no longer create any window bound objects. The `inplace` function has been removed, just call `StableSort(array)` directly now. All classes that used `StableSort.inplace` have been updated to call it directly.
 * If a Scene is paused, or sent to sleep, it will automatically call `Keyboard.resetKeys`. This means that if you hold a key down, then sleep or pause a Scene, then release the key and resume or wake the Scene, it will no longer think it is still being held down (thanks @samme)
+* `Actions.setOrigin` will now call `updateDisplayOrigin` on the items array, otherwise the effects can't be seen when rendering.
 
 ### Namespace Updates
 
