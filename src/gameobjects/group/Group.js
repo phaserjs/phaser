@@ -445,6 +445,13 @@ var Group = new Class({
 
         Actions.SetScale(entries, scaleX, scaleY, stepScaleX, stepScaleY);
 
+        var originX = GetValue(options, 'setOrigin.x', 0.5);
+        var originY = GetValue(options, 'setOrigin.y', originX);
+        var stepOriginX = GetValue(options, 'setOrigin.stepX', 0);
+        var stepOriginY = GetValue(options, 'setOrigin.stepY', 0);
+
+        Actions.SetOrigin(entries, originX, originY, stepOriginX, stepOriginY);
+
         var alpha = GetValue(options, 'setAlpha.value', 1);
         var stepAlpha = GetValue(options, 'setAlpha.step', 0);
 
