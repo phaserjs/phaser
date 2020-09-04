@@ -262,6 +262,33 @@ var Animation = new Class({
          */
         this.yoyo = false;
 
+
+        /**
+         * Should the GameObject's `visible` property be set to `true` when the animation starts to play?
+         *
+         * This will happen _after_ any delay that may have been set.
+         *
+         * This value is set when a new animation is loaded into this component, but can also be modified
+         * at run-time, assuming the animation is currently delayed.
+         *
+         * @name Phaser.GameObjects.Components.Animation#showOnStart
+         * @type {boolean}
+         * @since 3.50.0
+         */
+        this.showOnStart = false;
+
+        /**
+         * Should the GameObject's `visible` property be set to `false` when the animation completes?
+         *
+         * This value is set when a new animation is loaded into this component, but can also be modified
+         * at run-time, assuming the animation is still actively playing.
+         *
+         * @name Phaser.GameObjects.Components.Animation#hideOnComplete
+         * @type {boolean}
+         * @since 3.50.0
+         */
+        this.hideOnComplete = false;
+
         /**
          * Is the playhead moving forwards (`true`) or in reverse (`false`) ?
          *
@@ -392,32 +419,6 @@ var Animation = new Class({
          * @since 3.4.0
          */
         this._pendingStopValue;
-
-        /**
-         * Should the GameObject's `visible` property be set to `true` when the animation starts to play?
-         *
-         * This will happen _after_ any delay that may have been set.
-         *
-         * This value is set when a new animation is loaded into this component, but can also be modified
-         * at run-time, assuming the animation is currently delayed.
-         *
-         * @name Phaser.GameObjects.Components.Animation#showOnStart
-         * @type {boolean}
-         * @since 3.50.0
-         */
-        this.showOnStart = false;
-
-        /**
-         * Should the GameObject's `visible` property be set to `false` when the animation completes?
-         *
-         * This value is set when a new animation is loaded into this component, but can also be modified
-         * at run-time, assuming the animation is still actively playing.
-         *
-         * @name Phaser.GameObjects.Components.Animation#hideOnComplete
-         * @type {boolean}
-         * @since 3.50.0
-         */
-        this.hideOnComplete = false;
     },
 
     /**
