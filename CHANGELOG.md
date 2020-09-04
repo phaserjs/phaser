@@ -218,6 +218,14 @@ If you use Animations in your game, please read the following important API chan
 
 The Animation API has had a significant overhaul to improve playback handling. Instead of just playing an animation based on its global key, you can now supply a new `PlayAnimationConfig` object instead, which allows you to override any of the default animation settings, such as `duration`, `delay` and `yoyo` (see below for the full list). This means you no longer have to create lots of duplicate animations, just to change properties such as `duration`, and can now set them dynamically at run-time as well.
 
+* `Component.Animation.create` is a new method that allows you to create animations directly on a Sprite. These are not global and never enter the Animation Manager, instead risiding within the Sprite itself. This allows you to use the same keys across both local and global animations and set-up Sprite specific local animations.
+* All playback methods: `play`, `playReverse`, `playAfterDelay` and `playAfterRepeat` will now check to see if the given animation key exists locally on the Sprite first. If it does, it's used, otherwise it then checks the global Animation Manager for the key instead.
+* `Component.Animation.remove` is a new method that will remove a locally stored Animation instance from a Sprite.
+* `Component.Animation.get` is a new method that will return a locally stored Animation instance from the Sprite.
+* `Component.Animation.exists` is a new method that will check if a locally stored Animation exists on the Sprite.
+* The internal `Component.Animation.remove` method has been renamed to `globalRemove`.
+* `Component.Animation.textureManager` is a new property that references the global Texture Manager.
+* `Component.Animation.anims` is a new property that contains locally created Animations in a Custom Map.
 * `play` no longer accepts a `startFrame` parameter. Please set it via the `PlayAnimationConfig` instead.
 * `playReverse` no longer accepts a `startFrame` parameter. Please set it via the `PlayAnimationConfig` instead.
 * The `delayedPlay` method has been renamed. Please now use `playAfterDelay` instead.
@@ -293,6 +301,7 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * The `Component.Animation.setYoyo` method has now been removed. You can set the value using the `yoyo` config property, or changing it at run-time.
 * The `Component.Animation.getYoyo` method has now been removed. You can read the value using the `yoyo` property.
 * The `stopAfterRepeat` method now has an optional parameter `repeatCount`, so you can tell the animation to stop after a specified number of repeats, not just 1.
+* When playing an animation in reverse, if it reached the first frame and had to repeat, it would then jump to the frame before the final frame and carry on, skipping out the final frame.
 
 ### New Features
 
