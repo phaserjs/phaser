@@ -731,7 +731,7 @@ var AnimationManager = new Class({
         {
             var time = (stagger < 0) ? Math.abs(stagger) * (len - i) : stagger * i;
 
-            children[i].anims.delayedPlay(time, key);
+            children[i].anims.playAfterDelay(key, time);
         }
 
         return this;
