@@ -214,10 +214,23 @@ The way in which Game Objects add themselves to the Scene Update List has change
 
 ### Animation API New Features and Updates
 
+If you use Animations in your game, please read the following important API changes in 3.50:
+
 The Animation API has had a significant overhaul to improve playback handling. Instead of just playing an animation based on its global key, you can now supply a new `PlayAnimationConfig` object instead, which allows you to override any of the default animation settings, such as `duration`, `delay` and `yoyo` (see below for the full list). This means you no longer have to create lots of duplicate animations, just to change properties such as `duration`, and can now set them dynamically at run-time as well.
 
+* `play` no longer accepts a `startFrame` parameter. Please set it via the `PlayAnimationConfig` instead.
+* `playReverse` no longer accepts a `startFrame` parameter. Please set it via the `PlayAnimationConfig` instead.
+* The `delayedPlay` method has been renamed. Please now use `playAfterDelay` instead.
+* The `stopOnRepeat` method has been renamed. Please now use `stopAfterRepeat` instead.
+* The `Component.Animation.getCurrentKey` method has been renamed. Please now use `getName` instead.
+* `playAfterDelay` is a new method that will play the given animation after the delay expires. It is available on the Sprite and the Animation Component.
+* `playAfterRepeat` is a new method that will play the given animation after the current animation finishes repeating. It is available on the Sprite and the Animation Component.
+* The `chain` method is now available on the Sprite class.
+* The `stopAfterDelay` method is now available on the Sprite class.
+* The `stopAfterRepeat` method is now available on the Sprite class.
+* The `stopOnFrame` method is now available on the Sprite class.
 * `AnimationManager.createFromAseprite` is a new method that allows you to use animations created in the Aseprite editor directly in Phaser. Please see the comprehensive documentation for this method for full details on how to do this.
-* The `play`, `playReverse`, `delayedPlay` and `chain` Animation Component methods can now all take a `Phaser.Types.Animations.PlayAnimationConfig` configuration object instead of a string as the `key` parameter. This allows you to override any default animation setting with those defined in the config, giving you far greater control over animations on a Game Object level, without needing to globally duplicate them.
+* The `play`, `playReverse`, `playAfterDelay`, `playAfterRepeat` and `chain` Sprite and Animation Component methods can now all take a `Phaser.Types.Animations.PlayAnimationConfig` configuration object, instead of a string, as the `key` parameter. This allows you to override any default animation setting with those defined in the config, giving you far greater control over animations on a Game Object level, without needing to globally duplicate them.
 * The `Component.Animation` now handles all of the loading of the animation. It no longer has to make calls out to the Animation Manager or Animation itself and will load the animation data directly, replacing as required from the optional `PlayAnimationConfig`. This improves performance and reduces CPU calls in animation heavy games.
 * The `PlayAnimationConfig.frameRate` property lets you optionally override the animation frame rate.
 * The `PlayAnimationConfig.duration` property lets you optionally override the animation duration.
@@ -279,6 +292,7 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * The `Component.Animation.getTotalFrames` method has been fixed and won't error if called when no animation is loaded.
 * The `Component.Animation.setYoyo` method has now been removed. You can set the value using the `yoyo` config property, or changing it at run-time.
 * The `Component.Animation.getYoyo` method has now been removed. You can read the value using the `yoyo` property.
+* The `stopAfterRepeat` method now has an optional parameter `repeatCount`, so you can tell the animation to stop after a specified number of repeats, not just 1.
 
 ### New Features
 
