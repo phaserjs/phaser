@@ -197,8 +197,11 @@ var Animation = new Class({
 
         this.calculateDuration(this, this.getTotalFrames(), this.duration, this.frameRate);
 
-        this.manager.on(Events.PAUSE_ALL, this.pause, this);
-        this.manager.on(Events.RESUME_ALL, this.resume, this);
+        if (this.manager.on)
+        {
+            this.manager.on(Events.PAUSE_ALL, this.pause, this);
+            this.manager.on(Events.RESUME_ALL, this.resume, this);
+        }
     },
 
     /**
@@ -619,7 +622,6 @@ var Animation = new Class({
         if (frame.isFirst)
         {
             //  We're at the start of the animation
-
             if (component.yoyo)
             {
                 this.handleYoyoFrame(component, true);
@@ -628,8 +630,6 @@ var Animation = new Class({
             {
                 if (component.inReverse && !component.forward)
                 {
-                    component.currentFrame = this.getLastFrame();
-
                     this.repeatAnimation(component);
                 }
                 else
@@ -896,8 +896,11 @@ var Animation = new Class({
     {
         this.removeAllListeners();
 
-        this.manager.off(Events.PAUSE_ALL, this.pause, this);
-        this.manager.off(Events.RESUME_ALL, this.resume, this);
+        if (this.manager.off)
+        {
+            this.manager.off(Events.PAUSE_ALL, this.pause, this);
+            this.manager.off(Events.RESUME_ALL, this.resume, this);
+        }
 
         this.manager.remove(this.key);
 
