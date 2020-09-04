@@ -136,8 +136,12 @@ var Sprite = new Class({
     /**
      * Start playing the given animation on this Sprite.
      *
-     * Animations in Phaser belong to the global Animation Manager. This means multiple Sprites can all play the same
-     * animation. The following code shows how to create a global repeating animation. The animation will be created
+     * Animations in Phaser can either belong to the global Animation Manager, or specifically to this Sprite.
+     *
+     * The benefit of a global animation is that multiple Sprites can all play the same animation, without
+     * having to duplicate the data. You can just create it once and then play it on any Sprite.
+     *
+     * The following code shows how to create a global repeating animation. The animation will be created
      * from all of the frames within the sprite sheet that was loaded with the key 'muybridge':
      *
      * ```javascript
@@ -148,10 +152,15 @@ var Sprite = new Class({
      *     repeat: -1
      * };
      *
+     * //  This code should be run from within a Scene:
      * this.anims.create(config);
      * ```
      *
-     * With the animation created, you can now play it on this Sprite:
+     * However, if you wish to create an animation that is unique to this Sprite, and this Sprite alone,
+     * you can call the `Animation.create` method instead. It accepts the exact same parameters as when
+     * creating a global animation, however the resulting data is kept locally in this Sprite.
+     *
+     * With the animation created, either globally or locally, you can now play it on this Sprite:
      *
      * ```javascript
      * this.add.sprite(x, y).play('run');
@@ -163,6 +172,13 @@ var Sprite = new Class({
      * ```javascript
      * this.add.sprite(x, y).play({ key: 'run', frameRate: 24 });
      * ```
+     *
+     * When playing an animation on a Sprite it will first check to see if it can find a matching key
+     * locally within the Sprite. If it can, it will play the local animation. If not, it will then
+     * search the global Animation Manager and look for it there.
+     *
+     * If you need a Sprite to be able to play both local and global animations, make sure they don't
+     * have conflicting keys.
      *
      * See the documentation for the `PlayAnimationConfig` config object for more details about this.
      *
@@ -185,10 +201,14 @@ var Sprite = new Class({
     },
 
     /**
-     * Start playing the given animation on this Sprite in reverse.
+     * Start playing the given animation on this Sprite, in reverse.
      *
-     * Animations in Phaser belong to the global Animation Manager. This means multiple Sprites can all play the same
-     * animation. The following code shows how to create a global repeating animation. The animation will be created
+     * Animations in Phaser can either belong to the global Animation Manager, or specifically to this Sprite.
+     *
+     * The benefit of a global animation is that multiple Sprites can all play the same animation, without
+     * having to duplicate the data. You can just create it once and then play it on any Sprite.
+     *
+     * The following code shows how to create a global repeating animation. The animation will be created
      * from all of the frames within the sprite sheet that was loaded with the key 'muybridge':
      *
      * ```javascript
@@ -199,10 +219,15 @@ var Sprite = new Class({
      *     repeat: -1
      * };
      *
+     * //  This code should be run from within a Scene:
      * this.anims.create(config);
      * ```
      *
-     * With the animation created, you can now play it on this Sprite:
+     * However, if you wish to create an animation that is unique to this Sprite, and this Sprite alone,
+     * you can call the `Animation.create` method instead. It accepts the exact same parameters as when
+     * creating a global animation, however the resulting data is kept locally in this Sprite.
+     *
+     * With the animation created, either globally or locally, you can now play it on this Sprite:
      *
      * ```javascript
      * this.add.sprite(x, y).playReverse('run');
@@ -214,6 +239,13 @@ var Sprite = new Class({
      * ```javascript
      * this.add.sprite(x, y).playReverse({ key: 'run', frameRate: 24 });
      * ```
+     *
+     * When playing an animation on a Sprite it will first check to see if it can find a matching key
+     * locally within the Sprite. If it can, it will play the local animation. If not, it will then
+     * search the global Animation Manager and look for it there.
+     *
+     * If you need a Sprite to be able to play both local and global animations, make sure they don't
+     * have conflicting keys.
      *
      * See the documentation for the `PlayAnimationConfig` config object for more details about this.
      *
@@ -245,6 +277,10 @@ var Sprite = new Class({
      *
      * If no animation is currently running, the given one begins after the delay.
      *
+     * When playing an animation on a Sprite it will first check to see if it can find a matching key
+     * locally within the Sprite. If it can, it will play the local animation. If not, it will then
+     * search the global Animation Manager and look for it there.
+     *
      * Prior to Phaser 3.50 this method was called 'delayedPlay'.
      *
      * @method Phaser.GameObjects.Components.Animation#playAfterDelay
@@ -264,12 +300,17 @@ var Sprite = new Class({
     },
 
     /**
-     * Waits for the current animation to complete one 'repeat' cycle, then starts playback of the given animation.
+     * Waits for the current animation to complete the `repeatCount` number of repeat cycles, then starts playback
+     * of the given animation.
      *
-     * You can use this to ensure there are no harsh 'jumps' between two sets of animations, i.e. going from an
-     * idle animation to a walking animation.
+     * You can use this to ensure there are no harsh jumps between two sets of animations, i.e. going from an
+     * idle animation to a walking animation, by making them blend smoothly into each other.
      *
      * If no animation is currently running, the given one will start immediately.
+     *
+     * When playing an animation on a Sprite it will first check to see if it can find a matching key
+     * locally within the Sprite. If it can, it will play the local animation. If not, it will then
+     * search the global Animation Manager and look for it there.
      *
      * @method Phaser.GameObjects.Components.Animation#playAfterRepeat
      * @fires Phaser.Animations.Events#ANIMATION_START
@@ -295,11 +336,17 @@ var Sprite = new Class({
      *
      * An animation set to repeat forever will never enter a completed state.
      *
-     * You can chain a new animation at any point, including before the current one starts playing, during it, or when it ends (via its `animationcomplete` event).
+     * You can chain a new animation at any point, including before the current one starts playing, during it,
+     * or when it ends (via its `animationcomplete` event).
      *
-     * Chained animations are specific to a Game Object, meaning different Game Objects can have different chained animations without impacting the global animation they're playing.
+     * Chained animations are specific to a Game Object, meaning different Game Objects can have different chained
+     * animations without impacting the animation they're playing.
      *
      * Call this method with no arguments to reset all currently chained animations.
+     *
+     * When playing an animation on a Sprite it will first check to see if it can find a matching key
+     * locally within the Sprite. If it can, it will play the local animation. If not, it will then
+     * search the global Animation Manager and look for it there.
      *
      * @method Phaser.GameObjects.Sprite#chain
      * @since 3.50.0
@@ -359,7 +406,7 @@ var Sprite = new Class({
     },
 
     /**
-     * Stops the current animation from playing when it next repeats.
+     * Stops the current animation from playing after the given number of repeats.
      *
      * It then dispatches the `ANIMATION_STOP` series of events.
      *
