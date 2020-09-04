@@ -726,7 +726,14 @@ var Animation = new Class({
     {
         if (component._pendingStop === 2)
         {
-            return component.stop();
+            if (component._pendingStopValue === 0)
+            {
+                return component.stop();
+            }
+            else
+            {
+                component._pendingStopValue--;
+            }
         }
 
         if (component.repeatDelay > 0 && !component.pendingRepeat)
