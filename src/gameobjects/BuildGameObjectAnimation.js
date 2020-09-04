@@ -76,7 +76,7 @@ var BuildGameObjectAnimation = function (sprite, config)
             }
             else if (delayedPlay > 0)
             {
-                anims.delayedPlay(delayedPlay, playConfig);
+                anims.playAfterDelay(playConfig, delayedPlay);
             }
             else
             {
