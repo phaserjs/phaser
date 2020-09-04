@@ -5,8 +5,10 @@
  */
 
 var Class = require('../../utils/Class');
+var CustomMap = require('../../structs/Map');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Events = require('../../animations/events');
+var AnimationClass = require('../../animations/Animation');
 
 /**
  * @classdesc
@@ -52,7 +54,30 @@ var Animation = new Class({
          */
         this.animationManager = parent.scene.sys.anims;
 
-        this.animationManager.on(Events.REMOVE_ANIMATION, this.remove, this);
+        this.animationManager.on(Events.REMOVE_ANIMATION, this.globalRemove, this);
+
+        /**
+         * A reference to the Texture Manager.
+         *
+         * @name Phaser.GameObjects.Components.Animation#textureManager
+         * @type {Phaser.Textures.TextureManager}
+         * @protected
+         * @since 3.50.0
+         */
+        this.textureManager = this.animationManager.textureManager;
+
+        /**
+         * The Animations stored locally in this Animation component.
+         *
+         * Do not modify the contents of this Map directly, instead use the
+         * `add`, `create` and `remove` methods of this class instead.
+         *
+         * @name Phaser.GameObjects.Components.Animation#anims
+         * @type {Phaser.Structs.Map.<string, Phaser.Animations.Animation>}
+         * @protected
+         * @since 3.50.0
+         */
+        this.anims = null;
 
         /**
          * Is an animation currently playing or not?
@@ -261,7 +286,6 @@ var Animation = new Class({
          * @since 3.50.0
          */
         this.yoyo = false;
-
 
         /**
          * Should the GameObject's `visible` property be set to `true` when the animation starts to play?
@@ -512,8 +536,8 @@ var Animation = new Class({
         var manager = this.animationManager;
         var animKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', null);
 
-        //  Get the animation from the Animation Manager
-        var anim = manager.get(animKey);
+        //  Get the animation, first from the local map and, if not found, from the Animation Manager
+        var anim = (this.exists(animKey)) ? this.get(animKey) : manager.get(animKey);
 
         if (!anim)
         {
@@ -552,7 +576,7 @@ var Animation = new Class({
 
             if (startFrame === 0 && !this.forward)
             {
-                frame = this.getLastFrame();
+                frame = anim.getLastFrame();
             }
 
             this.currentFrame = frame;
@@ -668,10 +692,11 @@ var Animation = new Class({
     },
 
     /**
-     * Waits for the current animation to complete one 'repeat' cycle, then starts playback of the given animation.
+     * Waits for the current animation to complete the `repeatCount` number of repeat cycles, then starts playback
+     * of the given animation.
      *
-     * You can use this to ensure there are no harsh 'jumps' between two sets of animations, i.e. going from an
-     * idle animation to a walking animation.
+     * You can use this to ensure there are no harsh jumps between two sets of animations, i.e. going from an
+     * idle animation to a walking animation, by making them blend smoothly into each other.
      *
      * If no animation is currently running, the given one will start immediately.
      *
@@ -720,9 +745,55 @@ var Animation = new Class({
     },
 
     /**
-     * Plays an Animation on a Game Object that has the Animation component, such as a Sprite.
+     * Start playing the given animation on this Sprite.
      *
-     * Animations are stored in the global Animation Manager and are referenced by a unique string-based key.
+     * Animations in Phaser can either belong to the global Animation Manager, or specifically to this Sprite.
+     *
+     * The benefit of a global animation is that multiple Sprites can all play the same animation, without
+     * having to duplicate the data. You can just create it once and then play it on any Sprite.
+     *
+     * The following code shows how to create a global repeating animation. The animation will be created
+     * from all of the frames within the sprite sheet that was loaded with the key 'muybridge':
+     *
+     * ```javascript
+     * var config = {
+     *     key: 'run',
+     *     frames: 'muybridge',
+     *     frameRate: 15,
+     *     repeat: -1
+     * };
+     *
+     * //  This code should be run from within a Scene:
+     * this.anims.create(config);
+     * ```
+     *
+     * However, if you wish to create an animation that is unique to this Sprite, and this Sprite alone,
+     * you can call the `Animation.create` method instead. It accepts the exact same parameters as when
+     * creating a global animation, however the resulting data is kept locally in this Sprite.
+     *
+     * With the animation created, either globally or locally, you can now play it on this Sprite:
+     *
+     * ```javascript
+     * this.add.sprite(x, y).play('run');
+     * ```
+     *
+     * Alternatively, if you wish to run it at a different frame rate, for example, you can pass a config
+     * object instead:
+     *
+     * ```javascript
+     * this.add.sprite(x, y).play({ key: 'run', frameRate: 24 });
+     * ```
+     *
+     * When playing an animation on a Sprite it will first check to see if it can find a matching key
+     * locally within the Sprite. If it can, it will play the local animation. If not, it will then
+     * search the global Animation Manager and look for it there.
+     *
+     * If you need a Sprite to be able to play both local and global animations, make sure they don't
+     * have conflicting keys.
+     *
+     * See the documentation for the `PlayAnimationConfig` config object for more details about this.
+     *
+     * Also, see the documentation in the Animation Manager for further details on creating animations.
      *
      * @method Phaser.GameObjects.Components.Animation#play
      * @fires Phaser.Animations.Events#ANIMATION_START
@@ -757,7 +828,55 @@ var Animation = new Class({
     },
 
     /**
-     * Plays an Animation in reverse on the Game Object that owns this Animation Component.
+     * Start playing the given animation on this Sprite, in reverse.
+     *
+     * Animations in Phaser can either belong to the global Animation Manager, or specifically to this Sprite.
+     *
+     * The benefit of a global animation is that multiple Sprites can all play the same animation, without
+     * having to duplicate the data. You can just create it once and then play it on any Sprite.
+     *
+     * The following code shows how to create a global repeating animation. The animation will be created
+     * from all of the frames within the sprite sheet that was loaded with the key 'muybridge':
+     *
+     * ```javascript
+     * var config = {
+     *     key: 'run',
+     *     frames: 'muybridge',
+     *     frameRate: 15,
+     *     repeat: -1
+     * };
+     *
+     * //  This code should be run from within a Scene:
+     * this.anims.create(config);
+     * ```
+     *
+     * However, if you wish to create an animation that is unique to this Sprite, and this Sprite alone,
+     * you can call the `Animation.create` method instead. It accepts the exact same parameters as when
+     * creating a global animation, however the resulting data is kept locally in this Sprite.
+     *
+     * With the animation created, either globally or locally, you can now play it on this Sprite:
+     *
+     * ```javascript
+     * this.add.sprite(x, y).playReverse('run');
+     * ```
+     *
+     * Alternatively, if you wish to run it at a different frame rate, for example, you can pass a config
+     * object instead:
+     *
+     * ```javascript
+     * this.add.sprite(x, y).playReverse({ key: 'run', frameRate: 24 });
+     * ```
+     *
+     * When playing an animation on a Sprite it will first check to see if it can find a matching key
+     * locally within the Sprite. If it can, it will play the local animation. If not, it will then
+     * search the global Animation Manager and look for it there.
+     *
+     * If you need a Sprite to be able to play both local and global animations, make sure they don't
+     * have conflicting keys.
+     *
+     * See the documentation for the `PlayAnimationConfig` config object for more details about this.
+     *
+     * Also, see the documentation in the Animation Manager for further details on creating animations.
      *
      * @method Phaser.GameObjects.Components.Animation#playReverse
      * @fires Phaser.Animations.Events#ANIMATION_START
@@ -1041,13 +1160,13 @@ var Animation = new Class({
     /**
      * Handle the removal of an animation from the Animation Manager.
      *
-     * @method Phaser.GameObjects.Components.Animation#remove
-     * @since 3.0.0
+     * @method Phaser.GameObjects.Components.Animation#globalRemove
+     * @since 3.50.0
      *
      * @param {string} [key] - The key of the removed Animation.
      * @param {Phaser.Animations.Animation} [animation] - The removed Animation.
      */
-    remove: function (key, animation)
+    globalRemove: function (key, animation)
     {
         if (animation === undefined) { animation = this.currentAnim; }
 
@@ -1480,6 +1599,117 @@ var Animation = new Class({
     },
 
     /**
+     * Get an Animation instance that has been created locally on this Sprite.
+     *
+     * See the `create` method for more details.
+     *
+     * @method Phaser.GameObjects.Components.Animation#get
+     * @since 3.50.0
+     *
+     * @param {string} key - The key of the Animation to retrieve.
+     *
+     * @return {Phaser.Animations.Animation} The Animation, or `undefined` if the key is invalid.
+     */
+    get: function (key)
+    {
+        return (this.anims && this.anims.get(key));
+    },
+
+    /**
+     * Checks to see if the given key is already used locally within the animations stored on this Sprite.
+     *
+     * @method Phaser.GameObjects.Components.Animation#exists
+     * @since 3.50.0
+     *
+     * @param {string} key - The key of the Animation to check.
+     *
+     * @return {boolean} `true` if the Animation exists locally, or `false` if the key is available.
+     */
+    exists: function (key)
+    {
+        return (this.anims && this.anims.has(key));
+    },
+
+    /**
+     * Creates a new Animation that is local specifically to this Sprite.
+     *
+     * When a Sprite owns an animation, it is kept out of the global Animation Manager, which means
+     * you're free to use keys that may be already defined there. Unless you specifically need a Sprite
+     * to have a unique animation, you should favor using global animations instead, as they allow for
+     * the same animation to be used across multiple Sprites, saving on memory. However, if this Sprite
+     * is the only one to use this animation, it's sensible to create it here.
+     *
+     * If an invalid key is given this method will return `false`.
+     *
+     * If you pass the key of an animation that already exists locally, that animation will be returned.
+     *
+     * A brand new animation is only created if the key is valid and not already in use by this Sprite.
+     *
+     * If you wish to re-use an existing key, call the `remove` method first, then this method.
+     *
+     * @method Phaser.GameObjects.Components.Animation#create
+     * @since 3.50.0
+     *
+     * @param {Phaser.Types.Animations.Animation} config - The configuration settings for the Animation.
+     *
+     * @return {(Phaser.Animations.Animation|false)} The Animation that was created, or `false` if the key is already in use.
+     */
+    create: function (config)
+    {
+        var key = config.key;
+
+        var anim = false;
+
+        if (key)
+        {
+            anim = this.get(key);
+
+            if (!anim)
+            {
+                anim = new AnimationClass(this, key, config);
+
+                if (!this.anims)
+                {
+                    this.anims = new CustomMap();
+                }
+
+                this.anims.set(key, anim);
+            }
+        }
+
+        return anim;
+    },
+
+    /**
+     * Removes a locally created Animation from this Sprite, based on the given key.
+     *
+     * Once an Animation has been removed, this Sprite cannot play it again without re-creating it.
+     *
+     * @method Phaser.GameObjects.Components.Animation#remove
+     * @since 3.50.0
+     *
+     * @param {string} key - The key of the animation to remove.
+     *
+     * @return {Phaser.Animations.Animation} The Animation instance that was removed from this Sprite, if the key was valid.
+     */
+    remove: function (key)
+    {
+        var anim = this.get(key);
+
+        if (anim)
+        {
+            if (this.currentAnim === anim)
+            {
+                this.stop();
+            }
+
+            this.anims.delete(key);
+        }
+
+        return anim;
+    },
+
+    /**
      * Destroy this Animation component.
      *
      * Unregisters event listeners and cleans up its references.
@@ -1489,7 +1719,12 @@ var Animation = new Class({
      */
     destroy: function ()
     {
-        this.animationManager.off(Events.REMOVE_ANIMATION, this.remove, this);
+        this.animationManager.off(Events.REMOVE_ANIMATION, this.globalRemove, this);
+
+        if (this.anims)
+        {
+            this.anims.clear();
+        }
 
         this.animationManager = null;
         this.parent = null;
