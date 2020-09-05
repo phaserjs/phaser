@@ -662,7 +662,7 @@ var Animation = new Class({
      */
     updateAndGetNextTick: function (component, frame)
     {
-        component.updateFrame(frame);
+        component.setCurrentFrame(frame);
 
         this.getNextTick(component);
     },
@@ -748,11 +748,11 @@ var Animation = new Class({
 
             if (component.forward)
             {
-                component.updateFrame(component.currentFrame.nextFrame);
+                component.setCurrentFrame(component.currentFrame.nextFrame);
             }
             else
             {
-                component.updateFrame(component.currentFrame.prevFrame);
+                component.setCurrentFrame(component.currentFrame.prevFrame);
             }
 
             if (component.isPlaying)

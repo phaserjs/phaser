@@ -607,7 +607,7 @@ var Animation = new Class({
 
         if (atFrame !== undefined)
         {
-            this.updateFrame(atFrame);
+            this.setCurrentFrame(atFrame);
         }
 
         return this.parent;
@@ -634,7 +634,7 @@ var Animation = new Class({
 
         if (fromFrame !== undefined)
         {
-            this.updateFrame(fromFrame);
+            this.setCurrentFrame(fromFrame);
         }
 
         return this.parent;
@@ -974,7 +974,7 @@ var Animation = new Class({
             this.parent.setVisible(true);
         }
 
-        this.updateFrame(this.currentFrame);
+        this.setCurrentFrame(this.currentFrame);
 
         this.hasStarted = true;
 
@@ -1231,8 +1231,7 @@ var Animation = new Class({
         this._pendingStopValue = 0;
         this._paused = false;
 
-        //  Set frame
-        this.updateFrame(anim.frames[0]);
+        this.setCurrentFrame(anim.frames[0]);
 
         return this.parent;
     },
@@ -1482,9 +1481,15 @@ var Animation = new Class({
      * and applies it to the parent Game Object, adjusting size and origin as needed.
      *
      * @method Phaser.GameObjects.Components.Animation#setCurrentFrame
+     * @fires Phaser.Animations.Events#ANIMATION_UPDATE
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_UPDATE
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_UPDATE
+     * @fires Phaser.Animations.Events#ANIMATION_STOP
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_STOP
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_STOP
      * @since 3.4.0
      *
-     * @param {Phaser.Animations.AnimationFrame} animationFrame - The Animation Frame to set as being current.
+     * @param {Phaser.Animations.AnimationFrame} animationFrame - The animation frame to change to.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object this Animation Component belongs to.
      */
@@ -1502,6 +1507,11 @@ var Animation = new Class({
             gameObject.frame.updateCropUVs(gameObject._crop, gameObject.flipX, gameObject.flipY);
         }
 
+        if (animationFrame.setAlpha)
+        {
+            gameObject.alpha = animationFrame.alpha;
+        }
+
         gameObject.setSizeToFrame();
 
         if (gameObject._originComponent)
@@ -1516,35 +1526,8 @@ var Animation = new Class({
             }
         }
 
-        return gameObject;
-    },
-
-    /**
-     * Internal frame change handler.
-     *
-     * @method Phaser.GameObjects.Components.Animation#updateFrame
-     * @fires Phaser.Animations.Events#ANIMATION_UPDATE
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_UPDATE
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_UPDATE
-     * @fires Phaser.Animations.Events#ANIMATION_STOP
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_STOP
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_STOP
-     * @private
-     * @since 3.0.0
-     *
-     * @param {Phaser.Animations.AnimationFrame} animationFrame - The animation frame to change to.
-     */
-    updateFrame: function (animationFrame)
-    {
-        var gameObject = this.setCurrentFrame(animationFrame);
-
         if (this.isPlaying)
         {
-            if (animationFrame.setAlpha)
-            {
-                gameObject.alpha = animationFrame.alpha;
-            }
-
             this.emitEvents(Events.ANIMATION_UPDATE, Events.SPRITE_ANIMATION_KEY_UPDATE, Events.SPRITE_ANIMATION_UPDATE);
 
             if (this._pendingStop === 3 && this._pendingStopValue === animationFrame)
@@ -1552,6 +1535,8 @@ var Animation = new Class({
                 this.stop();
             }
         }
+
+        return gameObject;
     },
 
     /**
