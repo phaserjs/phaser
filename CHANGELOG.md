@@ -268,7 +268,7 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * `Animation.getTotalFrames` is a new method that will return the total number of frames in the animation. You can access it via `this.anims.currentAnim.getTotalFrames` from a Sprite.
 * `Animation.calculateDuration` is a new method that calculates the duration, frameRate and msPerFrame for a given animation target.
 * `ANIMATION_UPDATE_EVENT` is a new event that is emitted from an Animation when it is updated, i.e. its frame changes.
-* `ANIMATION_STOP_EVENT` is a new event that is emitted from an Animation when it is stopped. This can happen if any of the `stop` methods are called, or a new animation is played prior to this one reaching completion.
+* `ANIMATION_STOP_EVENT` is a new event that is emitted from an Animation when it is stopped. This can happen if any of the `stop` methods are called, or a new animation is played prior to this one reaching completion. Fix #4894 (thanks @scott20145)
 * `SPRITE_ANIMATION_STOP_EVENT` is a new event that is emitted from a Sprite when its current animation is stopped. This can happen if any of the `stop` methods are called, or a new animation is played prior to this one reaching completion.
 * `SPRITE_ANIMATION_KEY_STOP_EVENT` is a new event that is emitted from a Sprite when its current animation is stopped. This can happen if any of the `stop` methods are called, or a new animation is played prior to this one reaching completion. This is a dynamic event name and carries the animation key in its title.
 * The `BuildGameObjectAnimation` function now uses the `PlayAnimationConfig` object to set the values.
