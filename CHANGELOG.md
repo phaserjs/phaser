@@ -302,6 +302,7 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * The `Component.Animation.getYoyo` method has now been removed. You can read the value using the `yoyo` property.
 * The `stopAfterRepeat` method now has an optional parameter `repeatCount`, so you can tell the animation to stop after a specified number of repeats, not just 1.
 * When playing an animation in reverse, if it reached the first frame and had to repeat, it would then jump to the frame before the final frame and carry on, skipping out the final frame.
+* The `Component.Animation.updateFrame` method has now been removed. Everything is handled by `setCurrentFrame` instead, which removes one extra step out of the update process.
 
 ### New Features
 
