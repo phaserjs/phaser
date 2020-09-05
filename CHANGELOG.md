@@ -218,28 +218,29 @@ If you use Animations in your game, please read the following important API chan
 
 The Animation API has had a significant overhaul to improve playback handling. Instead of just playing an animation based on its global key, you can now supply a new `PlayAnimationConfig` object instead, which allows you to override any of the default animation settings, such as `duration`, `delay` and `yoyo` (see below for the full list). This means you no longer have to create lots of duplicate animations, just to change properties such as `duration`, and can now set them dynamically at run-time as well.
 
-* `Component.Animation.create` is a new method that allows you to create animations directly on a Sprite. These are not global and never enter the Animation Manager, instead risiding within the Sprite itself. This allows you to use the same keys across both local and global animations and set-up Sprite specific local animations.
+* The Game Object `Component.Animation` component has been renamed to `AnimationState` to help separate it from the same-named Animation class that also exists.
+* The `play`, `playReverse`, `playAfterDelay`, `playAfterRepeat` and `chain` Sprite and Animation Component methods can now all take a `Phaser.Types.Animations.PlayAnimationConfig` configuration object, as well as a string, as the `key` parameter. This allows you to override any default animation setting with those defined in the config, giving you far greater control over animations on a Game Object level, without needing to globally duplicate them.
+* `AnimationState.create` is a new method that allows you to create animations directly on a Sprite. These are not global and never enter the Animation Manager, instead risiding within the Sprite itself. This allows you to use the same keys across both local and global animations and set-up Sprite specific local animations.
 * All playback methods: `play`, `playReverse`, `playAfterDelay` and `playAfterRepeat` will now check to see if the given animation key exists locally on the Sprite first. If it does, it's used, otherwise it then checks the global Animation Manager for the key instead.
-* `Component.Animation.remove` is a new method that will remove a locally stored Animation instance from a Sprite.
-* `Component.Animation.get` is a new method that will return a locally stored Animation instance from the Sprite.
-* `Component.Animation.exists` is a new method that will check if a locally stored Animation exists on the Sprite.
-* The internal `Component.Animation.remove` method has been renamed to `globalRemove`.
-* `Component.Animation.textureManager` is a new property that references the global Texture Manager.
-* `Component.Animation.anims` is a new property that contains locally created Animations in a Custom Map.
-* `play` no longer accepts a `startFrame` parameter. Please set it via the `PlayAnimationConfig` instead.
-* `playReverse` no longer accepts a `startFrame` parameter. Please set it via the `PlayAnimationConfig` instead.
-* The `delayedPlay` method has been renamed. Please now use `playAfterDelay` instead.
-* The `stopOnRepeat` method has been renamed. Please now use `stopAfterRepeat` instead.
-* The `Component.Animation.getCurrentKey` method has been renamed. Please now use `getName` instead.
-* `playAfterDelay` is a new method that will play the given animation after the delay expires. It is available on the Sprite and the Animation Component.
-* `playAfterRepeat` is a new method that will play the given animation after the current animation finishes repeating. It is available on the Sprite and the Animation Component.
-* The `chain` method is now available on the Sprite class.
-* The `stopAfterDelay` method is now available on the Sprite class.
-* The `stopAfterRepeat` method is now available on the Sprite class.
-* The `stopOnFrame` method is now available on the Sprite class.
+* `AnimationState.remove` is a new method that will remove a locally stored Animation instance from a Sprite.
+* `AnimationState.get` is a new method that will return a locally stored Animation instance from the Sprite.
+* `AnimationState.exists` is a new method that will check if a locally stored Animation exists on the Sprite.
+* The internal `AnimationState.remove` method has been renamed to `globalRemove`.
+* `AnimationState.textureManager` is a new property that references the global Texture Manager.
+* `AnimationState.anims` is a new property that contains locally created Animations in a Custom Map.
+* `AnimationState.play` and `Sprite.play` no longer accept a `startFrame` parameter. Please set it via the `PlayAnimationConfig` instead.
+* `AnimationState.playReverse` and `Sprite.playReverse` no longer accept a `startFrame` parameter. Please set it via the `PlayAnimationConfig` instead.
+* The `AnimationState.delayedPlay` method has been renamed to `playAfterDelay`. The parameter order has also changed, so the key now comes first instead of the duration.
+* The `AnimationState.stopOnRepeat` method has been renamed to `stopAfterRepeat`
+* The `AnimationState.getCurrentKey` method has been renamed to `getName`.
+* `AnimationState.playAfterDelay` and `Sprite.playAfterDelay` are new methods that will play the given animation after the delay in ms expires.
+* `AnimationState.playAfterRepeat` and `Sprite.playAfterRepeat` are new methods that will play the given animation after the current animation finishes repeating. You can also specify the number of repeats allowed left to run.
+* The `AnimationState.chain` method is now available on the Sprite class.
+* The `AnimationState.stopAfterDelay` method is now available on the Sprite class.
+* The `AnimationState.stopAfterRepeat` method is now available on the Sprite class.
+* The `AnimationState.stopOnFrame` method is now available on the Sprite class.
 * `AnimationManager.createFromAseprite` is a new method that allows you to use animations created in the Aseprite editor directly in Phaser. Please see the comprehensive documentation for this method for full details on how to do this.
-* The `play`, `playReverse`, `playAfterDelay`, `playAfterRepeat` and `chain` Sprite and Animation Component methods can now all take a `Phaser.Types.Animations.PlayAnimationConfig` configuration object, instead of a string, as the `key` parameter. This allows you to override any default animation setting with those defined in the config, giving you far greater control over animations on a Game Object level, without needing to globally duplicate them.
-* The `Component.Animation` now handles all of the loading of the animation. It no longer has to make calls out to the Animation Manager or Animation itself and will load the animation data directly, replacing as required from the optional `PlayAnimationConfig`. This improves performance and reduces CPU calls in animation heavy games.
+* `AnimationState` now handles all of the loading of the animation. It no longer has to make calls out to the Animation Manager or Animation instance itself and will load the animation data directly, replacing as required from the optional `PlayAnimationConfig`. This improves performance and massively reduces CPU calls in animation heavy games.
 * The `PlayAnimationConfig.frameRate` property lets you optionally override the animation frame rate.
 * The `PlayAnimationConfig.duration` property lets you optionally override the animation duration.
 * The `PlayAnimationConfig.delay` property lets you optionally override the animation delay.
@@ -250,59 +251,59 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * The `PlayAnimationConfig.hideOnComplete` property lets you optionally override the animation hide on complete value.
 * The `PlayAnimationConfig.startFrame` property lets you optionally set the animation frame to start on.
 * The `PlayAnimationConfig.timeScale` property lets you optionally set the animation time scale factor.
-* `Components.Animation.delayCounter` is a new property that allows you to control the delay before an animation will start playing. Only once this delay has expired, will the animation `START` events fire. Fix #4426 (thanks @bdaenen)
-* `Components.Animation.hasStarted` is a new boolean property that allows you to tell if the current animation has started playing, or is still waiting for a delay to expire.
-* `Components.Animation.showOnStart` is a new boolean property that controls if the Game Object should have `setVisible(true)` called on it when the animation starts.
-* `Components.Animation.hideOnComplete` is a new boolean property that controls if the Game Object should have `setVisible(false)` called on it when the animation completes.
-* The `Components.Animation.chain` method docs said it would remove all pending animations if called with no parameters. However, it didn't - and now does!
-* The `Components.Animation.setDelay` method has been removed. It never actually worked and you can now perform the same thing by calling either `delayedPlay` or setting the `delay` property in the play config.
-* The `Components.Animation.getDelay` method has been removed. It never actually worked and you can now perform the same thing by calling either `delayedPlay` or setting the `delay` property in the play config.
-* The `Components.Animation.setRepeat` method has been removed. You can achieve the same thing by setting the `repeat` property in the play config, or adjusting the public `repeatCounter` property if the animation has started.
-* `Components.Animation.handleStart` is a new internal private method that handles the animation start process.
-* `Components.Animation.handleRepeat` is a new internal private method that handles the animation repeat process.
-* `Components.Animation.handleStop` is a new internal private method that handles the animation stop process.
-* `Components.Animation.handleComplete` is a new internal private method that handles the animation complete process.
-* `Components.Animation.emitEvents` is a new internal private method that emits animation events, cutting down on duplicate code.
-* The `Components.Animation.restart` method has a new optional boolean parameter `resetRepeats` which controls if you want to reset the repeat counter during the restart, or not.
+* `AnimationState.delayCounter` is a new property that allows you to control the delay before an animation will start playing. Only once this delay has expired, will the animation `START` events fire. Fix #4426 (thanks @bdaenen)
+* `AnimationState.hasStarted` is a new boolean property that allows you to tell if the current animation has started playing, or is still waiting for a delay to expire.
+* `AnimationState.showOnStart` is a new boolean property that controls if the Game Object should have `setVisible(true)` called on it when the animation starts.
+* `AnimationState.hideOnComplete` is a new boolean property that controls if the Game Object should have `setVisible(false)` called on it when the animation completes.
+* The `AnimationState.chain` method docs said it would remove all pending animations if called with no parameters. However, it didn't - and now does!
+* The `AnimationState.setDelay` method has been removed. It never actually worked and you can now perform the same thing by calling either `playAfterDelay` or setting the `delay` property in the play config.
+* The `AnimationState.getDelay` method has been removed. You can now read the `delay` property directly.
+* The `AnimationState.setRepeat` method has been removed. You can achieve the same thing by setting the `repeat` property in the play config, or adjusting the public `repeatCounter` property if the animation has started.
+* `AnimationState.handleStart` is a new internal private method that handles the animation start process.
+* `AnimationState.handleRepeat` is a new internal private method that handles the animation repeat process.
+* `AnimationState.handleStop` is a new internal private method that handles the animation stop process.
+* `AnimationState.handleComplete` is a new internal private method that handles the animation complete process.
+* `AnimationState.emitEvents` is a new internal private method that emits animation events, cutting down on duplicate code.
+* The `AnimationState.restart` method has a new optional boolean parameter `resetRepeats` which controls if you want to reset the repeat counter during the restart, or not.
 * `Animation.getTotalFrames` is a new method that will return the total number of frames in the animation. You can access it via `this.anims.currentAnim.getTotalFrames` from a Sprite.
 * `Animation.calculateDuration` is a new method that calculates the duration, frameRate and msPerFrame for a given animation target.
 * `ANIMATION_UPDATE_EVENT` is a new event that is emitted from an Animation when it is updated, i.e. its frame changes.
-* `ANIMATION_STOP_EVENT` is a new event that is emitted from an Animation when it is stopped before it reaches completion.
-* `SPRITE_ANIMATION_STOP_EVENT` is a new event that is emitted from a Sprite when its current animation is stopped before it reaches completion.
-* `SPRITE_ANIMATION_KEY_STOP_EVENT` is a new event that is emitted from a Sprite when its current animation is stopped before it reaches completion. This is a dynamic event name and carries the animation key in its title.
+* `ANIMATION_STOP_EVENT` is a new event that is emitted from an Animation when it is stopped. This can happen if any of the `stop` methods are called, or a new animation is played prior to this one reaching completion.
+* `SPRITE_ANIMATION_STOP_EVENT` is a new event that is emitted from a Sprite when its current animation is stopped. This can happen if any of the `stop` methods are called, or a new animation is played prior to this one reaching completion.
+* `SPRITE_ANIMATION_KEY_STOP_EVENT` is a new event that is emitted from a Sprite when its current animation is stopped. This can happen if any of the `stop` methods are called, or a new animation is played prior to this one reaching completion. This is a dynamic event name and carries the animation key in its title.
 * The `BuildGameObjectAnimation` function now uses the `PlayAnimationConfig` object to set the values.
 * `Sprite.playReverse` is a new method that allows you to play the given animation in reverse on the Sprite.
-* `Sprite.delayedPlay` is a new method that allows you to play the given animation on the Sprite after a delay.
+* `Sprite.playAfterDelay` is a new method that allows you to play the given animation on the Sprite after a delay.
 * `Sprite.stop` is a new method that allows you to stop the current animation on the Sprite.
 * `AnimationManager.load` has been removed as it's no longer required.
 * `AnimationManager.staggerPlay` has been fixed so you can now pass in negative stagger values.
 * `AnimationManager.staggerPlay` has a new optional boolean parameter `staggerFirst`, which allows you to either include or exclude the first child in the stagger calculations.
-* The `Animation.completeAnimation` method has been removed as it's no longer required internally.
-* The `Animation.load` method has been removed as it's no longer required internally.
-* The `Animation.setFrame` method has been removed as it's no longer required internally.
-* The `Animation.getFirstTick` method has no longer needs the `includeDelay` parameter, as it's handled by the component now.
+* The `Animation.completeAnimation` method has been removed as it's no longer required.
+* The `Animation.load` method has been removed as it's no longer required.
+* The `Animation.setFrame` method has been removed as it's no longer required.
+* The `Animation.getFirstTick` method has no longer needs the `includeDelay` parameter, as it's handled by `AnimationState` now.
 * The `Animation.getFrames` method has a new optional boolean parameter `sortFrames` which will run a numeric sort on the frame names after constructing them, if a string-based frame is given.
 * `Types.Animations.Animation` has a new boolean property `sortFrames`, which lets Phaser numerically sort the generated frames.
-* `Component.Animation.timeScale` is a new public property that replaces the old private `_timeScale` property.
-* `Component.Animation.delay` is a new public property that replaces the old private `_delay` property.
-* `Component.Animation.repeat` is a new public property that replaces the old private `_repeat` property.
-* `Component.Animation.repeatDelay` is a new public property that replaces the old private `_repeatDelay` property.
-* `Component.Animation.yoyo` is a new public property that replaces the old private `_yoyo` property.
-* `Component.Animation.inReverse` is a new public property that replaces the old private `_reverse` property.
-* `Component.Animation.startAnimation` is a new public method that replaces the old private `_startAnimation` method.
-* The `Component.Animation.getProgress` method has been fixed so it will return correctly if the animation is playing in reverse.
-* The `Component.Animation.remove` method will now always be called when an animation is removed, not just once.
-* The `Component.Animation.getRepeat` method has now been removed. You can get the value from the `repeat` property.
-* The `Component.Animation.setRepeatDelay` method has now been removed. You can set the value using the `repeatDelay` config property, or changing it at run-time.
-* `Component.Animation.complete` is a new method that handles the completion in animation playback.
-* The `Component.Animation.setTimeScale` method has now been removed. You can set the value using the `timeScale` config property, or changing it at run-time.
-* The `Component.Animation.getTimeScale` method has now been removed. You can read the value using the `timeScale` property.
-* The `Component.Animation.getTotalFrames` method has been fixed and won't error if called when no animation is loaded.
-* The `Component.Animation.setYoyo` method has now been removed. You can set the value using the `yoyo` config property, or changing it at run-time.
-* The `Component.Animation.getYoyo` method has now been removed. You can read the value using the `yoyo` property.
-* The `stopAfterRepeat` method now has an optional parameter `repeatCount`, so you can tell the animation to stop after a specified number of repeats, not just 1.
+* `AnimationState.timeScale` is a new public property that replaces the old private `_timeScale` property.
+* `AnimationState.delay` is a new public property that replaces the old private `_delay` property.
+* `AnimationState.repeat` is a new public property that replaces the old private `_repeat` property.
+* `AnimationState.repeatDelay` is a new public property that replaces the old private `_repeatDelay` property.
+* `AnimationState.yoyo` is a new public property that replaces the old private `_yoyo` property.
+* `AnimationState.inReverse` is a new public property that replaces the old private `_reverse` property.
+* `AnimationState.startAnimation` is a new public method that replaces the old private `_startAnimation` method.
+* The `AnimationState.getProgress` method has been fixed so it will return correctly if the animation is playing in reverse.
+* The `AnimationState.globalRemove` method will now always be called when an animation is removed from the global Animation Manager, not just once.
+* The `AnimationState.getRepeat` method has now been removed. You can get the value from the `repeat` property.
+* The `AnimationState.setRepeatDelay` method has now been removed. You can set the value using the `repeatDelay` config property, or changing it at run-time.
+* `AnimationState.complete` is a new method that handles the completion in animation playback.
+* The `AnimationState.setTimeScale` method has now been removed. You can set the value using the `timeScale` config property, or changing it at run-time.
+* The `AnimationState.getTimeScale` method has now been removed. You can read the value using the `timeScale` property.
+* The `AnimationState.getTotalFrames` method has been fixed and won't error if called when no animation is loaded.
+* The `AnimationState.setYoyo` method has now been removed. You can set the value using the `yoyo` config property, or changing it at run-time.
+* The `AnimationState.getYoyo` method has now been removed. You can read the value using the `yoyo` property.
+* The `AnimationState.stopAfterRepeat` method now has an optional parameter `repeatCount`, so you can tell the animation to stop after a specified number of repeats, not just 1.
 * When playing an animation in reverse, if it reached the first frame and had to repeat, it would then jump to the frame before the final frame and carry on, skipping out the final frame.
-* The `Component.Animation.updateFrame` method has now been removed. Everything is handled by `setCurrentFrame` instead, which removes one extra step out of the update process.
+* The `AnimationState.updateFrame` method has now been removed. Everything is handled by `setCurrentFrame` instead, which removes one extra step out of the update process.
 
 ### New Features
 
