@@ -88,13 +88,17 @@ var Sprite = new Class({
         this._crop = this.resetCropObject();
 
         /**
-         * The Animation Controller of this Sprite.
+         * The Animation State component of this Sprite.
+         *
+         * This component provides features to apply animations to this Sprite.
+         * It is responsible for playing, loading, queuing animations for later playback,
+         * mixing between animations and setting the current animation frame to this Sprite.
          *
          * @name Phaser.GameObjects.Sprite#anims
-         * @type {Phaser.GameObjects.Components.Animation}
+         * @type {Phaser.GameObjects.Components.AnimationState}
          * @since 3.0.0
          */
-        this.anims = new Components.Animation(this);
+        this.anims = new Components.AnimationState(this);
 
         this.setTexture(texture, frame);
         this.setPosition(x, y);

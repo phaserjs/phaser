@@ -12,7 +12,7 @@ module.exports = {
 
     Alpha: require('./Alpha'),
     AlphaSingle: require('./AlphaSingle'),
-    Animation: require('./Animation'),
+    AnimationState: require('./AnimationState'),
     BlendMode: require('./BlendMode'),
     ComputedSize: require('./ComputedSize'),
     Crop: require('./Crop'),
