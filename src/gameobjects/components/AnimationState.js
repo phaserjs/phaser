@@ -452,12 +452,12 @@ var AnimationState = new Class({
     },
 
     /**
-     * Sets an animation, or an array of animations, to be played immediately after the current one completes or stops.
+     * Sets an animation, or an array of animations, to be played in the future, after the current one completes or stops.
      *
      * The current animation must enter a 'completed' state for this to happen, i.e. finish all of its repeats, delays, etc,
-     * or have the `stop` method called directly on it.
+     * or have one of the `stop` methods called.
      *
-     * An animation set to repeat forever will never enter a completed state.
+     * An animation set to repeat forever will never enter a completed state unless stopped.
      *
      * You can chain a new animation at any point, including before the current one starts playing, during it, or when it ends (via its `animationcomplete` event).
      *
