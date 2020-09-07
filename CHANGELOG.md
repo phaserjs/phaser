@@ -379,6 +379,7 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * `Utils.Array.StableSort` has been recoded. It's now based on Two-Screens stable sort 0.1.8 and has been updated to fit into Phaser better and no longer create any window bound objects. The `inplace` function has been removed, just call `StableSort(array)` directly now. All classes that used `StableSort.inplace` have been updated to call it directly.
 * If a Scene is paused, or sent to sleep, it will automatically call `Keyboard.resetKeys`. This means that if you hold a key down, then sleep or pause a Scene, then release the key and resume or wake the Scene, it will no longer think it is still being held down (thanks @samme)
 * `Actions.setOrigin` will now call `updateDisplayOrigin` on the items array, otherwise the effects can't be seen when rendering.
+* You can now set the `ArcadeWorld.fixedStep` property via the `ArcadeWorldConfig` object (thanks @samme)
 
 ### Namespace Updates
 
@@ -424,7 +425,7 @@ The Animation API has had a significant overhaul to improve playback handling. I
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
-@samme @16patsle @scott20145 @khasanovbi @mk360 @volkans80 @jaabberwocky @maikthomas @atursams @LearningCode2023 @DylanC 
+@samme @16patsle @scott20145 @khasanovbi @mk360 @volkans80 @jaabberwocky @maikthomas @atursams @LearningCode2023 @DylanC @BenjaminDRichards
 
 
 
