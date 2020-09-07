@@ -1429,7 +1429,7 @@ var AnimationState = new Class({
     },
 
     /**
-     * The internal update loop for the Animation Component.
+     * The internal update loop for the AnimationState Component.
      *
      * This is called automatically by the `Sprite.preUpdate` method.
      *
