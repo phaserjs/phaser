@@ -167,7 +167,14 @@ var WebGLPipeline = new Class({
          * @type {WebGLBuffer}
          * @since 3.0.0
          */
-        this.vertexBuffer = this.renderer.createVertexBuffer(this.vertexData.byteLength, this.gl.STREAM_DRAW);
+        if (GetFastValue(config, 'vertices', null))
+        {
+            this.vertexBuffer = this.renderer.createVertexBuffer(this.vertexData, this.gl.STREAM_DRAW);
+        }
+        else
+        {
+            this.vertexBuffer = this.renderer.createVertexBuffer(this.vertexData.byteLength, this.gl.STREAM_DRAW);
+        }
 
         /**
          * The handle to a WebGL program.
