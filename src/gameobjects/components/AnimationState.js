@@ -1485,6 +1485,8 @@ var AnimationState = new Class({
             //  And only do more if we're skipping frames and have time left
             if (this.isPlaying && this._pendingStop === 0 && this.skipMissedFrames && this.accumulator > this.nextTick)
             {
+                var safetyNet = 0;
+
                 do
                 {
                     if (this.forward)
@@ -1496,7 +1498,9 @@ var AnimationState = new Class({
                         anim.previousFrame(this);
                     }
 
-                } while (this.accumulator > this.nextTick);
+                    safetyNet++;
+
+                } while (this.accumulator > this.nextTick && safetyNet < 60);
             }
         }
     },
