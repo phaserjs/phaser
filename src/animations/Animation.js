@@ -478,10 +478,6 @@ var Animation = new Class({
      */
     getNextTick: function (component)
     {
-        // accumulator += delta * _timeScale
-        // after a large delta surge (perf issue for example) we need to adjust for it here
-
-        //  When is the next update due?
         component.accumulator -= component.nextTick;
 
         component.nextTick = component.msPerFrame + component.currentFrame.duration;
@@ -515,8 +511,6 @@ var Animation = new Class({
     nextFrame: function (component)
     {
         var frame = component.currentFrame;
-
-        //  TODO: Add frame skip support
 
         if (frame.isLast)
         {
@@ -616,8 +610,6 @@ var Animation = new Class({
     previousFrame: function (component)
     {
         var frame = component.currentFrame;
-
-        //  TODO: Add frame skip support
 
         if (frame.isFirst)
         {
