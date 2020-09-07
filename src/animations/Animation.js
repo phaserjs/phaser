@@ -120,7 +120,7 @@ var Animation = new Class({
          *
          * @name Phaser.Animations.Animation#skipMissedFrames
          * @type {boolean}
-         * @default false
+         * @default true
          * @since 3.0.0
          */
         this.skipMissedFrames = GetValue(config, 'skipMissedFrames', true);
