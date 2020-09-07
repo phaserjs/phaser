@@ -1483,7 +1483,7 @@ var AnimationState = new Class({
             }
 
             //  And only do more if we're skipping frames and have time left
-            if (this.skipMissedFrames && this.accumulator > this.nextTick)
+            if (this.isPlaying && this._pendingStop === 0 && this.skipMissedFrames && this.accumulator > this.nextTick)
             {
                 do
                 {
