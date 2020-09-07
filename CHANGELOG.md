@@ -4,7 +4,7 @@
 
 ### WebGL Pipeline Updates
 
-If you use a custom WebGL Pipeline in your game, you must update in order to use Phaser 3.50.
+If you use a custom WebGL Pipeline in your game, you must update your code in order to use Phaser 3.50.
 
 Due to the huge amount of work that has taken place in this area, all of the pipelines have been renamed. If you extend any of these pipelines or use them in your game code (referenced by name), then please update accordingly. The name changes are:
 
@@ -37,7 +37,7 @@ There is also a new pipeline called `SinglePipeline`, created to emulate the old
 
 ### WebGL Multi-Texture Rendering
 
-The Multi Pipeline (previously the Texture Tint Pipeline) has had its core flow rewritten to eliminate the need for constantly creating `batch` objects. Instead, it now supports the new multi-texture shader, vastly increasing rendering performance, especially on draw call-bound systems.
+The Multi Pipeline (previously the Texture Tint Pipeline) has had its core flow rewritten to eliminate the need for constantly creating `batch` objects. Instead, it now supports the new multi-texture shader, vastly increasing rendering performance, especially on draw-call bound systems.
 
 All of the internal functions, such as `batchQuad` and `batchSprite` have been updated to use the new method of texture setting. The method signatures all remain the same unless indicated below.
 
@@ -308,8 +308,8 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * The `AnimationState.stopAfterRepeat` method now has an optional parameter `repeatCount`, so you can tell the animation to stop after a specified number of repeats, not just 1.
 * When playing an animation in reverse, if it reached the first frame and had to repeat, it would then jump to the frame before the final frame and carry on, skipping out the final frame.
 * The `AnimationState.updateFrame` method has now been removed. Everything is handled by `setCurrentFrame` instead, which removes one extra step out of the update process.
-* `GenerateFrameNames` will now console.warn if the generated frame isn't present in the texture, which should help with debugging animation creation massively.
-* `GenerateFrameNumbers` will now console.warn if the generated frame isn't present in the texture, which should help with debugging animation creation massively.
+* `GenerateFrameNames` will now `console.warn` if the generated frame isn't present in the texture, which should help with debugging animation creation massively.
+* `GenerateFrameNumbers` will now `console.warn` if the generated frame isn't present in the texture, which should help with debugging animation creation massively.
 
 ### New Features
 
