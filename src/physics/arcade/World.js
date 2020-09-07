@@ -165,7 +165,7 @@ var World = new Class({
          * @default true
          * @since 3.23.0
          */
-        this.fixedStep = true;
+        this.fixedStep = GetValue(config, 'fixedStep', true);
 
         /**
          * The amount of elapsed ms since the last frame.
