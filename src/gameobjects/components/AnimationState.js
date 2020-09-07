@@ -1471,6 +1471,8 @@ var AnimationState = new Class({
         }
         else if (this.accumulator >= this.nextTick)
         {
+            //  Process one frame advance as standard
+
             if (this.forward)
             {
                 anim.nextFrame(this);
@@ -1478,6 +1480,23 @@ var AnimationState = new Class({
             else
             {
                 anim.previousFrame(this);
+            }
+
+            //  And only do more if we're skipping frames and have time left
+            if (this.skipMissedFrames && this.accumulator > this.nextTick)
+            {
+                do
+                {
+                    if (this.forward)
+                    {
+                        anim.nextFrame(this);
+                    }
+                    else
+                    {
+                        anim.previousFrame(this);
+                    }
+
+                } while (this.accumulator > this.nextTick);
             }
         }
     },
