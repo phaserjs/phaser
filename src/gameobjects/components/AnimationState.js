@@ -816,12 +816,26 @@ var AnimationState = new Class({
     {
         if (ignoreIfPlaying === undefined) { ignoreIfPlaying = false; }
 
+        var currentAnim = this.currentAnim;
+        var parent = this.parent;
+
         //  Must be either an Animation instance, or a PlayAnimationConfig object
         var animKey = (typeof key === 'string') ? key : key.key;
 
-        if (ignoreIfPlaying && this.isPlaying && this.currentAnim.key === animKey)
+        if (ignoreIfPlaying && this.isPlaying && currentAnim.key === animKey)
         {
-            return this.parent;
+            return parent;
+        }
+
+        //  Are we mixing?
+        if (currentAnim && this.isPlaying)
+        {
+            var mix = this.animationManager.getMix(currentAnim.key, key);
+
+            if (mix > 0)
+            {
+                return this.playAfterDelay(key, mix);
+            }
         }
 
         this.forward = true;

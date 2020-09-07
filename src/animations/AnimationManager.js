@@ -87,6 +87,17 @@ var AnimationManager = new Class({
         this.anims = new CustomMap();
 
         /**
+         * A list of animation mix times.
+         *
+         * See the {@link #setMix} method for more details.
+         *
+         * @name Phaser.Animations.AnimationManager#mixes
+         * @type {Phaser.Structs.Map.<string>}
+         * @since 3.50.0
+         */
+        this.mixes = new CustomMap();
+
+        /**
          * Whether the Animation Manager is paused along with all of its Animations.
          *
          * @name Phaser.Animations.AnimationManager#paused
@@ -120,6 +131,144 @@ var AnimationManager = new Class({
         this.textureManager = this.game.textures;
 
         this.game.events.once(GameEvents.DESTROY, this.destroy, this);
+    },
+
+    /**
+     * Adds a mix between two animations.
+     *
+     * Mixing allows you to specify a unique delay between a pairing of animations.
+     *
+     * When playing Animation A on a Game Object, if you then play Animation B, and a
+     * mix exists, it will wait for the specified delay to be over before playing Animation B.
+     *
+     * This allows you to customise smoothing between different types of animation, such
+     * as blending between an idle and a walk state, or a running and a firing state.
+     *
+     * Note that mixing is only applied if you use the `Sprite.play` method. If you opt to use
+     * `playAfterRepeat` or `playAfterDelay` instead, those will take pririty and the mix
+     * delay will not be used.
+     *
+     * To update an existing mix, just call this method with the new delay.
+     *
+     * To remove a mix pairing, see the `removeMix` method.
+     *
+     * @method Phaser.Animations.AnimationManager#addMix
+     * @since 3.50.0
+     *
+     * @param {(string|Phaser.Animations.Animation)} animA - The string-based key, or instance of, Animation A.
+     * @param {(string|Phaser.Animations.Animation)} animB - The string-based key, or instance of, Animation B.
+     * @param {number} delay - The delay, in milliseconds, to wait when transitioning from Animation A to B.
+     *
+     * @return {this} This Animation Manager.
+     */
+    addMix: function (animA, animB, delay)
+    {
+        var anims = this.anims;
+        var mixes = this.mixes;
+
+        var keyA = (typeof(animA) === 'string') ? animA : animA.key;
+        var keyB = (typeof(animB) === 'string') ? animB : animB.key;
+
+        if (anims.has(keyA) && anims.has(keyB))
+        {
+            var mixObj = mixes.get(keyA);
+
+            if (!mixObj)
+            {
+                mixObj = {};
+            }
+
+            mixObj[keyB] = delay;
+
+            mixes.set(keyA, mixObj);
+        }
+
+        return this;
+    },
+
+    /**
+     * Removes a mix between two animations.
+     *
+     * Mixing allows you to specify a unique delay between a pairing of animations.
+     *
+     * Calling this method lets you remove those pairings. You can either remove
+     * it between `animA` and `animB`, or if you do not provide the `animB` parameter,
+     * it will remove all `animA` mixes.
+     *
+     * If you wish to update an existing mix instead, call the `addMix` method with the
+     * new delay.
+     *
+     * @method Phaser.Animations.AnimationManager#removeMix
+     * @since 3.50.0
+     *
+     * @param {(string|Phaser.Animations.Animation)} animA - The string-based key, or instance of, Animation A.
+     * @param {(string|Phaser.Animations.Animation)} [animB] - The string-based key, or instance of, Animation B. If not given, all mixes for Animation A will be removed.
+     *
+     * @return {this} This Animation Manager.
+     */
+    removeMix: function (animA, animB)
+    {
+        var mixes = this.mixes;
+
+        var keyA = (typeof(animA) === 'string') ? animA : animA.key;
+
+        var mixObj = mixes.get(keyA);
+
+        if (mixObj)
+        {
+            if (animB)
+            {
+                var keyB = (typeof(animB) === 'string') ? animB : animB.key;
+
+                if (mixObj.hasOwnProperty(keyB))
+                {
+                    //  Remove just this pairing
+                    delete mixObj[keyB];
+                }
+            }
+            else if (!animB)
+            {
+                //  Remove everything for animA
+                mixes.delete(keyA);
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Returns the mix delay between two animations.
+     *
+     * If no mix has been set-up, this method will return zero.
+     *
+     * If you wish to create, or update, a new mix, call the `addMix` method.
+     * If you wish to remove a mix, call the `removeMix` method.
+     *
+     * @method Phaser.Animations.AnimationManager#getMix
+     * @since 3.50.0
+     *
+     * @param {(string|Phaser.Animations.Animation)} animA - The string-based key, or instance of, Animation A.
+     * @param {(string|Phaser.Animations.Animation)} animB - The string-based key, or instance of, Animation B.
+     *
+     * @return {number} The mix duration, or zero if no mix exists.
+     */
+    getMix: function (animA, animB)
+    {
+        var mixes = this.mixes;
+
+        var keyA = (typeof(animA) === 'string') ? animA : animA.key;
+        var keyB = (typeof(animB) === 'string') ? animB : animB.key;
+
+        var mixObj = mixes.get(keyA);
+
+        if (mixObj && mixObj.hasOwnProperty(keyB))
+        {
+            return mixObj[keyB];
+        }
+        else
+        {
+            return 0;
+        }
     },
 
     /**
@@ -776,6 +925,8 @@ var AnimationManager = new Class({
             this.emit(Events.REMOVE_ANIMATION, key, anim);
 
             this.anims.delete(key);
+
+            this.removeMix(key);
         }
 
         return anim;
@@ -845,6 +996,7 @@ var AnimationManager = new Class({
     destroy: function ()
     {
         this.anims.clear();
+        this.mixes.clear();
 
         this.textureManager = null;
 
