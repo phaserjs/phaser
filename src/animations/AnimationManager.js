@@ -518,6 +518,10 @@ var AnimationManager = new Class({
                 {
                     out.push({ key: key, frame: frame });
                 }
+                else
+                {
+                    console.warn('generateFrameNames: Frame missing: ' + frame + ' from texture: ' + key);
+                }
             }
         }
         else
@@ -529,6 +533,10 @@ var AnimationManager = new Class({
                 if (texture.has(frame))
                 {
                     out.push({ key: key, frame: frame });
+                }
+                else
+                {
+                    console.warn('generateFrameNames: Frame missing: ' + frame + ' from texture: ' + key);
                 }
             }
         }
@@ -582,6 +590,10 @@ var AnimationManager = new Class({
                 {
                     out.push({ key: key, frame: frames[i] });
                 }
+                else
+                {
+                    console.warn('generateFrameNumbers: Frame ' + i + ' missing from texture: ' + key);
+                }
             }
         }
         else
@@ -602,6 +614,10 @@ var AnimationManager = new Class({
                 if (texture.has(i))
                 {
                     out.push({ key: key, frame: i });
+                }
+                else
+                {
+                    console.warn('generateFrameNumbers: Frame ' + i + ' missing from texture: ' + key);
                 }
             }
         }
