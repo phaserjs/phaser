@@ -14,10 +14,23 @@ var WebGLPipeline = require('../WebGLPipeline');
 /**
  * @classdesc
  *
+ * The Bitmap Mask Pipeline handles all of the bitmap mask rendering in WebGL for applying
+ * alpha masks to Game Objects. It works by sampling two texture on the fragment shader and
+ * using the fragments alpha to clip the region.
  *
+ * The fragment shader it uses can be found in `shaders/src/BitmapMask.frag`.
+ * The vertex shader it uses can be found in `shaders/src/BitmapMask.vert`.
  *
- * BitmapMaskPipeline handles all bitmap masking rendering in WebGL. It works by using
- * sampling two texture on the fragment shader and using the fragment's alpha to clip the region.
+ * The default shader attributes for this pipeline are:
+ *
+ * `inPosition` (vec2, offset 0)
+ *
+ * The default shader uniforms for this pipeline are:
+ *
+ * `uResolution` (vec2)
+ * `uMainSampler` (sampler2D)
+ * `uMaskSampler` (sampler2D)
+ * `uInvertMaskAlpha` (bool)
  *
  * @class BitmapMaskPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
@@ -53,54 +66,7 @@ var BitmapMaskPipeline = new Class({
         ]);
 
         WebGLPipeline.call(this, config);
-
-        /**
-         * Float32 view of the array buffer containing the pipeline's vertices.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#vertexViewF32
-         * @type {Float32Array}
-         * @since 3.0.0
-         */
-        // this.vertexViewF32 = new Float32Array(this.vertexData);
-
-        /**
-         * Dirty flag to check if resolution properties need to be updated on the
-         * masking shader.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#resolutionDirty
-         * @type {boolean}
-         * @default true
-         * @since 3.0.0
-         */
-        // this.resolutionDirty = true;
     },
-
-    /**
-     * Called every time the pipeline needs to be used.
-     * It binds all necessary resources.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#onBind
-     * @since 3.0.0
-     *
-     * @return {this} This WebGLPipeline instance.
-    onBind: function ()
-    {
-        WebGLPipeline.prototype.onBind.call(this);
-
-        var renderer = this.renderer;
-        var program = this.program;
-
-        if (this.resolutionDirty)
-        {
-            renderer.setFloat2(program, 'uResolution', this.width, this.height);
-            renderer.setInt1(program, 'uMainSampler', 0);
-            renderer.setInt1(program, 'uMaskSampler', 1);
-            this.resolutionDirty = false;
-        }
-
-        return this;
-    },
-    */
 
     /**
      * Called every time the pipeline is bound by the renderer.
@@ -126,27 +92,6 @@ var BitmapMaskPipeline = new Class({
         renderer.setFloat2(program, 'uResolution', this.width, this.height);
         renderer.setInt1(program, 'uMainSampler', 0);
         renderer.setInt1(program, 'uMaskSampler', 1);
-
-        return this;
-    },
-
-    /**
-     * Resizes this pipeline and updates the projection.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#resize
-     * @since 3.0.0
-     *
-     * @param {number} width - The new width.
-     * @param {number} height - The new height.
-     * @param {number} resolution - The resolution.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    resize: function (width, height, resolution)
-    {
-        WebGLPipeline.prototype.resize.call(this, width, height, resolution);
-
-        this.resolutionDirty = true;
 
         return this;
     },
