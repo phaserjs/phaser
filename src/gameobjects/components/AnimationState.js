@@ -1555,7 +1555,7 @@ var AnimationState = new Class({
             }
         }
 
-        if (this.isPlaying)
+        if (this.isPlaying && this.hasStarted)
         {
             this.emitEvents(Events.ANIMATION_UPDATE, Events.SPRITE_ANIMATION_KEY_UPDATE, Events.SPRITE_ANIMATION_UPDATE);
 
