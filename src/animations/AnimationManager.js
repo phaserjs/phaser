@@ -13,6 +13,7 @@ var GameEvents = require('../core/events');
 var GetFastValue = require('../utils/object/GetFastValue');
 var GetValue = require('../utils/object/GetValue');
 var Pad = require('../utils/string/Pad');
+var NumberArray = require('../utils/array/NumberArray');
 
 /**
  * @classdesc
@@ -728,46 +729,29 @@ var AnimationManager = new Class({
             out.push({ key: key, frame: firstFrame });
         }
 
-        var i;
+        //  No 'frames' array? Then calculate one automatically
 
-        //  Have they provided their own custom frame sequence array?
-        if (Array.isArray(frames))
+        if (!frames)
         {
-            for (i = 0; i < frames.length; i++)
-            {
-                if (texture.has(frames[i]))
-                {
-                    out.push({ key: key, frame: frames[i] });
-                }
-                else
-                {
-                    console.warn('generateFrameNumbers: Frame ' + i + ' missing from texture: ' + key);
-                }
-            }
-        }
-        else
-        {
-            //  No endFrame then see if we can get it
             if (endFrame === -1)
             {
-                endFrame = texture.frameTotal;
+                //  -1 because of __BASE, which we don't want in our results
+                //  and -1 because frames are zero based
+                endFrame = texture.frameTotal - 2;
             }
 
-            var diff = (startFrame < endFrame) ? 1 : -1;
+            frames = NumberArray(startFrame, endFrame);
+        }
 
-            //  Adjust because we use i !== end in the for loop
-            endFrame += diff;
-
-            for (i = startFrame; i !== endFrame; i += diff)
+        for (var i = 0; i < frames.length; i++)
+        {
+            if (texture.has(frames[i]))
             {
-                if (texture.has(i))
-                {
-                    out.push({ key: key, frame: i });
-                }
-                else
-                {
-                    console.warn('generateFrameNumbers: Frame ' + i + ' missing from texture: ' + key);
-                }
+                out.push({ key: key, frame: frames[i] });
+            }
+            else
+            {
+                console.warn('generateFrameNumbers: Frame ' + i + ' missing from texture: ' + key);
             }
         }
 
