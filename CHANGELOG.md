@@ -313,6 +313,7 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * `GenerateFrameNumbers` will now `console.warn` if the generated frame isn't present in the texture, which should help with debugging animation creation massively.
 * `GenerateFrameNumbers` would include the __BASE frame by mistake in its calculations. This didn't end up in the final animation, but did cause a cache miss when building the animation.
 * `GenerateFrameNumbers` can now accept the `start` and `end` parameters in reverse order, meaning you can now do `{ start: 10, end: 1 }` to create the animation in reverse.
+* `GenerateFrameNames` can now accept the `start` and `end` parameters in reverse order, meaning you can now do `{ start: 10, end: 1 }` to create the animation in reverse.
 
 ### New Features
 
