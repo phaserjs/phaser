@@ -1,6 +1,6 @@
 {
   "name": "phaser",
-  "version": "3.50.0-beta.1",
+  "version": "3.50.0-beta.4",
   "release": "Subaru",
   "description": "A fast, free and fun HTML5 Game Framework for Desktop and Mobile web browsers.",
   "author": "Richard Davey <rich@photonstorm.com> (http://www.photonstorm.com)",
@@ -30,6 +30,7 @@
     "plugin.spine.dist": "webpack --config plugins/spine/webpack.auto.dist.config.js",
     "plugin.spine.watch": "webpack --config plugins/spine/webpack.auto.config.js --watch --display-modules",
     "plugin.spine.dev": "webpack --config plugins/spine/webpack.auto.config.js",
+    "plugin.spine.runtimes": "cd plugins/spine && tsc -p tsconfig.both.json && tsc -p tsconfig.canvas.json && tsc -p tsconfig.webgl.json",
     "plugin.spine.canvas.dist": "webpack --config plugins/spine/webpack.canvas.dist.config.js",
     "plugin.spine.canvas.watch": "webpack --config plugins/spine/webpack.canvas.config.js --watch --display-modules",
     "plugin.spine.canvas.dev": "webpack --config plugins/spine/webpack.canvas.config.js",
@@ -61,23 +62,24 @@
     "web audio"
   ],
   "devDependencies": {
+    "@types/source-map": "^0.5.7",
     "clean-webpack-plugin": "^3.0.0",
     "dts-dom": "^3.6.0",
-    "eslint": "^7.4.0",
+    "eslint": "^7.8.1",
     "eslint-plugin-es5": "^1.5.0",
     "fs-extra": "^9.0.1",
-    "jsdoc": "^3.6.4",
+    "jsdoc": "^3.6.5",
     "node-sloc": "^0.1.12",
     "remove-files-webpack-plugin": "^1.4.3",
-    "typescript": "^3.9.6",
+    "typescript": "^4.0.2",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "vivid-cli": "^1.1.2",
-    "webpack": "^4.43.0",
+    "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
     "webpack-shell-plugin": "^0.5.0"
   },
   "dependencies": {
-    "eventemitter3": "^4.0.4",
+    "eventemitter3": "^4.0.7",
     "exports-loader": "^1.1.0",
     "imports-loader": "^1.1.0",
     "path": "^0.12.7"

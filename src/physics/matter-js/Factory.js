@@ -22,13 +22,13 @@ var Vertices = require('./lib/geometry/Vertices');
  * @classdesc
  * The Matter Factory is responsible for quickly creating a variety of different types of
  * bodies, constraints and Game Objects and adding them into the physics world.
- * 
+ *
  * You access the factory from within a Scene using `add`:
- * 
+ *
  * ```javascript
  * this.matter.add.rectangle(x, y, width, height);
  * ```
- * 
+ *
  * Use of the Factory is optional. All of the objects it creates can also be created
  * directly via your own code or constructors. It is provided as a means to keep your
  * code concise.
@@ -200,24 +200,24 @@ var Factory = new Class({
 
     /**
      * Creates a body using data exported from the application PhysicsEditor (https://www.codeandweb.com/physicseditor)
-     * 
+     *
      * The PhysicsEditor file should be loaded as JSON:
-     * 
+     *
      * ```javascript
      * preload ()
      * {
      *   this.load.json('vehicles', 'assets/vehicles.json);
      * }
-     * 
+     *
      * create ()
      * {
      *   const vehicleShapes = this.cache.json.get('vehicles');
      *   this.matter.add.fromPhysicsEditor(400, 300, vehicleShapes.truck);
      * }
      * ```
-     * 
+     *
      * Do not pass the entire JSON file to this method, but instead pass one of the shapes contained within it.
-     * 
+     *
      * If you pas in an `options` object, any settings in there will override those in the PhysicsEditor config object.
      *
      * @method Phaser.Physics.Matter.Factory#fromPhysicsEditor
@@ -247,18 +247,18 @@ var Factory = new Class({
 
     /**
      * Creates a body using the path data from an SVG file.
-     * 
+     *
      * SVG Parsing requires the pathseg polyfill from https://github.com/progers/pathseg
-     * 
+     *
      * The SVG file should be loaded as XML, as this method requires the ability to extract
      * the path data from it. I.e.:
-     * 
+     *
      * ```javascript
      * preload ()
      * {
      *   this.load.xml('face', 'assets/face.svg);
      * }
-     * 
+     *
      * create ()
      * {
      *   this.matter.add.fromSVG(400, 300, this.cache.xml.get('face'));
@@ -310,29 +310,29 @@ var Factory = new Class({
 
     /**
      * Creates a body using the supplied physics data, as provided by a JSON file.
-     * 
+     *
      * The data file should be loaded as JSON:
-     * 
+     *
      * ```javascript
      * preload ()
      * {
      *   this.load.json('ninjas', 'assets/ninjas.json);
      * }
-     * 
+     *
      * create ()
      * {
      *   const ninjaShapes = this.cache.json.get('ninjas');
-     * 
+     *
      *   this.matter.add.fromJSON(400, 300, ninjaShapes.shinobi);
      * }
      * ```
-     * 
+     *
      * Do not pass the entire JSON file to this method, but instead pass one of the shapes contained within it.
-     * 
+     *
      * If you pas in an `options` object, any settings in there will override those in the config object.
-     * 
+     *
      * The structure of the JSON file is as follows:
-     * 
+     *
      * ```text
      * {
      *   'generator_info': // The name of the application that created the JSON data
@@ -343,7 +343,7 @@ var Factory = new Class({
      *   }
      * }
      * ```
-     * 
+     *
      * At the time of writing, only the Phaser Physics Tracer App exports in this format.
      *
      * @method Phaser.Physics.Matter.Factory#fromJSON
@@ -418,7 +418,7 @@ var Factory = new Class({
 
     /**
      * Create a new composite containing bodies created in the callback in a grid arrangement.
-     * 
+     *
      * This function uses the body bounds to prevent overlaps.
      *
      * @method Phaser.Physics.Matter.Factory#stack
@@ -584,18 +584,18 @@ var Factory = new Class({
 
     /**
      * This method is an alias for `Factory.constraint`.
-     * 
+     *
      * Constraints (or joints) are used for specifying that a fixed distance must be maintained
      * between two bodies, or a body and a fixed world-space position.
-     * 
+     *
      * The stiffness of constraints can be modified to create springs or elastic.
-     * 
+     *
      * To simulate a revolute constraint (or pin joint) set `length: 0` and a high `stiffness`
      * value (e.g. `0.7` or above).
-     * 
+     *
      * If the constraint is unstable, try lowering the `stiffness` value and / or increasing
      * `constraintIterations` within the Matter Config.
-     * 
+     *
      * For compound bodies, constraints must be applied to the parent body and not one of its parts.
      *
      * @method Phaser.Physics.Matter.Factory#joint
@@ -616,18 +616,18 @@ var Factory = new Class({
 
     /**
      * This method is an alias for `Factory.constraint`.
-     * 
+     *
      * Constraints (or joints) are used for specifying that a fixed distance must be maintained
      * between two bodies, or a body and a fixed world-space position.
-     * 
+     *
      * The stiffness of constraints can be modified to create springs or elastic.
-     * 
+     *
      * To simulate a revolute constraint (or pin joint) set `length: 0` and a high `stiffness`
      * value (e.g. `0.7` or above).
-     * 
+     *
      * If the constraint is unstable, try lowering the `stiffness` value and / or increasing
      * `constraintIterations` within the Matter Config.
-     * 
+     *
      * For compound bodies, constraints must be applied to the parent body and not one of its parts.
      *
      * @method Phaser.Physics.Matter.Factory#spring
@@ -649,15 +649,15 @@ var Factory = new Class({
     /**
      * Constraints (or joints) are used for specifying that a fixed distance must be maintained
      * between two bodies, or a body and a fixed world-space position.
-     * 
+     *
      * The stiffness of constraints can be modified to create springs or elastic.
-     * 
+     *
      * To simulate a revolute constraint (or pin joint) set `length: 0` and a high `stiffness`
      * value (e.g. `0.7` or above).
-     * 
+     *
      * If the constraint is unstable, try lowering the `stiffness` value and / or increasing
      * `constraintIterations` within the Matter Config.
-     * 
+     *
      * For compound bodies, constraints must be applied to the parent body and not one of its parts.
      *
      * @method Phaser.Physics.Matter.Factory#constraint
@@ -696,18 +696,18 @@ var Factory = new Class({
     /**
      * Constraints (or joints) are used for specifying that a fixed distance must be maintained
      * between two bodies, or a body and a fixed world-space position.
-     * 
+     *
      * A world constraint has only one body, you should specify a `pointA` position in
      * the constraint options parameter to attach the constraint to the world.
-     * 
+     *
      * The stiffness of constraints can be modified to create springs or elastic.
-     * 
+     *
      * To simulate a revolute constraint (or pin joint) set `length: 0` and a high `stiffness`
      * value (e.g. `0.7` or above).
-     * 
+     *
      * If the constraint is unstable, try lowering the `stiffness` value and / or increasing
      * `constraintIterations` within the Matter Config.
-     * 
+     *
      * For compound bodies, constraints must be applied to the parent body and not one of its parts.
      *
      * @method Phaser.Physics.Matter.Factory#worldConstraint
@@ -743,13 +743,13 @@ var Factory = new Class({
 
     /**
      * This method is an alias for `Factory.pointerConstraint`.
-     * 
+     *
      * A Pointer Constraint is a special type of constraint that allows you to click
      * and drag bodies in a Matter World. It monitors the active Pointers in a Scene,
      * and when one is pressed down it checks to see if that hit any part of any active
      * body in the world. If it did, and the body has input enabled, it will begin to
      * drag it until either released, or you stop it via the `stopDrag` method.
-     * 
+     *
      * You can adjust the stiffness, length and other properties of the constraint via
      * the `options` object on creation.
      *
@@ -771,7 +771,7 @@ var Factory = new Class({
      * and when one is pressed down it checks to see if that hit any part of any active
      * body in the world. If it did, and the body has input enabled, it will begin to
      * drag it until either released, or you stop it via the `stopDrag` method.
-     * 
+     *
      * You can adjust the stiffness, length and other properties of the constraint via
      * the `options` object on creation.
      *
@@ -800,7 +800,7 @@ var Factory = new Class({
 
     /**
      * Creates a Matter Physics Image Game Object.
-     * 
+     *
      * An Image is a light-weight Game Object useful for the display of static images in your game,
      * such as logos, backgrounds, scenery or other non-animated elements. Images can have input
      * events and physics bodies, or be tweened, tinted or scrolled. The main difference between an
@@ -885,10 +885,10 @@ var Factory = new Class({
 
     /**
      * Takes an existing Game Object and injects all of the Matter Components into it.
-     * 
+     *
      * This enables you to use component methods such as `setVelocity` or `isSensor` directly from
      * this Game Object.
-     * 
+     *
      * You can also pass in either a Matter Body Configuration object, or a Matter Body instance
      * to link with this Game Object.
      *
@@ -899,7 +899,7 @@ var Factory = new Class({
      * @param {(Phaser.Types.Physics.Matter.MatterBodyConfig|MatterJS.Body)} [options] - A Matter Body configuration object, or an instance of a Matter Body.
      * @param {boolean} [addToWorld=true] - Add this Matter Body to the World?
      *
-     * @return {Phaser.GameObjects.GameObject} The Game Object that had the Matter Components injected into it.
+     * @return {Phaser.Physics.Matter.MatterGameObject} The Game Object that had the Matter Components injected into it.
      */
     gameObject: function (gameObject, options, addToWorld)
     {

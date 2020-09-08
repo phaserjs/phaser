@@ -373,7 +373,7 @@ var StaticTilemapLayer = new Class({
 
         this.updateVBOData();
 
-        this.initPipeline('TextureTintPipeline');
+        this.initPipeline('MultiPipeline');
 
         this.mvpInit();
 

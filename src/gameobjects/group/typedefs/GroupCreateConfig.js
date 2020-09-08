@@ -35,6 +35,11 @@
  * @property {?number} [setScale.y=0] - The vertical scale of each new Game Object.
  * @property {?number} [setScale.stepX=0] - Increment each Game Object's horizontal scale from the previous by this amount, starting from `setScale.x`.
  * @property {?number} [setScale.stepY=0] - Increment each Game object's vertical scale from the previous by this amount, starting from `setScale.y`.
+ * @property {?object} [setOrigin]
+ * @property {?number} [setOrigin.x=0] - The horizontal origin of each new Game Object.
+ * @property {?number} [setOrigin.y=0] - The vertical origin of each new Game Object.
+ * @property {?number} [setOrigin.stepX=0] - Increment each Game Object's horizontal origin from the previous by this amount, starting from `setOrigin.x`.
+ * @property {?number} [setOrigin.stepY=0] - Increment each Game object's vertical origin from the previous by this amount, starting from `setOrigin.y`.
  * @property {?object} [setAlpha]
  * @property {?number} [setAlpha.value=0] - The alpha value of each new Game Object.
  * @property {?number} [setAlpha.step=0] - Increment each Game Object's alpha from the previous by this amount, starting from `setAlpha.value`.

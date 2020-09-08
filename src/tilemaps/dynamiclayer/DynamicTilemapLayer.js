@@ -19,7 +19,7 @@ var Vector2 = require('../../math/Vector2');
  * A Dynamic Tilemap Layer trades some speed for being able to apply powerful effects. Unlike a
  * Static Tilemap Layer, you can apply per-tile effects like tint or alpha, and you can change the
  * tiles in a DynamicTilemapLayer.
- * 
+ *
  * Use this over a Static Tilemap Layer when you need those features.
  *
  * @class DynamicTilemapLayer
@@ -115,7 +115,7 @@ var DynamicTilemapLayer = new Class({
         
         /**
          * The Tileset/s associated with this layer.
-         * 
+         *
          * As of Phaser 3.14 this property is now an array of Tileset objects, previously it was a single reference.
          *
          * @name Phaser.Tilemaps.DynamicTilemapLayer#tileset
@@ -224,17 +224,17 @@ var DynamicTilemapLayer = new Class({
 
         /**
          * The rendering (draw) order of the tiles in this layer.
-         * 
+         *
          * The default is 0 which is 'right-down', meaning it will draw the tiles starting from the top-left,
          * drawing to the right and then moving down to the next row.
-         * 
+         *
          * The draw orders are:
-         * 
+         *
          * 0 = right-down
          * 1 = left-down
          * 2 = right-up
          * 3 = left-up
-         * 
+         *
          * This can be changed via the `setRenderOrder` method.
          *
          * @name Phaser.Tilemaps.DynamicTilemapLayer#_renderOrder
@@ -260,7 +260,7 @@ var DynamicTilemapLayer = new Class({
         this.setOrigin();
         this.setSize(tilemap.tileWidth * this.layer.width, tilemap.tileHeight * this.layer.height);
 
-        this.initPipeline('TextureTintPipeline');
+        this.initPipeline('MultiPipeline');
     },
 
     /**
@@ -269,7 +269,7 @@ var DynamicTilemapLayer = new Class({
      * @method Phaser.Tilemaps.DynamicTilemapLayer#setTilesets
      * @private
      * @since 3.14.0
-     * 
+     *
      * @param {(string|string[]|Phaser.Tilemaps.Tileset|Phaser.Tilemaps.Tileset[])} tileset - The tileset, or an array of tilesets, used to render this layer. Can be a string or a Tileset object.
      */
     setTilesets: function (tilesets)
@@ -311,20 +311,20 @@ var DynamicTilemapLayer = new Class({
 
     /**
      * Sets the rendering (draw) order of the tiles in this layer.
-     * 
+     *
      * The default is 'right-down', meaning it will order the tiles starting from the top-left,
      * drawing to the right and then moving down to the next row.
-     * 
+     *
      * The draw orders are:
-     * 
+     *
      * 0 = right-down
      * 1 = left-down
      * 2 = right-up
      * 3 = left-up
-     * 
+     *
      * Setting the render order does not change the tiles or how they are stored in the layer,
      * it purely impacts the order in which they are rendered.
-     * 
+     *
      * You can provide either an integer (0 to 3), or the string version of the order.
      *
      * @method Phaser.Tilemaps.DynamicTilemapLayer#setRenderOrder
@@ -464,7 +464,7 @@ var DynamicTilemapLayer = new Class({
      *
      * @method Phaser.Tilemaps.DynamicTilemapLayer#destroy
      * @since 3.0.0
-     * 
+     *
      * @param {boolean} [removeFromTilemap=true] - Remove this layer from the parent Tilemap?
      */
     destroy: function (removeFromTilemap)

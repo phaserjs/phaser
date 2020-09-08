@@ -13,6 +13,7 @@ var Extend = require('../utils/object/Extend');
 
 var Input = {
 
+    CreatePixelPerfectHandler: require('./CreatePixelPerfectHandler'),
     CreateInteractiveObject: require('./CreateInteractiveObject'),
     Events: require('./events'),
     Gamepad: require('./gamepad'),

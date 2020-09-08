@@ -51,6 +51,16 @@ var GameObjectCreator = new Class({
         this.systems = scene.sys;
 
         /**
+         * A reference to the Scene Event Emitter.
+         *
+         * @name Phaser.GameObjects.GameObjectCreator#events
+         * @type {Phaser.Events.EventEmitter}
+         * @protected
+         * @since 3.50.0
+         */
+        this.events = scene.sys.events;
+
+        /**
          * A reference to the Scene Display List.
          *
          * @name Phaser.GameObjects.GameObjectCreator#displayList
@@ -70,8 +80,8 @@ var GameObjectCreator = new Class({
          */
         this.updateList;
 
-        scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
-        scene.sys.events.on(SceneEvents.START, this.start, this);
+        this.events.once(SceneEvents.BOOT, this.boot, this);
+        this.events.on(SceneEvents.START, this.start, this);
     },
 
     /**
@@ -87,7 +97,7 @@ var GameObjectCreator = new Class({
         this.displayList = this.systems.displayList;
         this.updateList = this.systems.updateList;
 
-        this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
+        this.events.once(SceneEvents.DESTROY, this.destroy, this);
     },
 
     /**
@@ -101,7 +111,7 @@ var GameObjectCreator = new Class({
      */
     start: function ()
     {
-        this.systems.events.once(SceneEvents.SHUTDOWN, this.shutdown, this);
+        this.events.once(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -114,7 +124,7 @@ var GameObjectCreator = new Class({
      */
     shutdown: function ()
     {
-        this.systems.events.off(SceneEvents.SHUTDOWN, this.shutdown, this);
+        this.events.off(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -129,10 +139,12 @@ var GameObjectCreator = new Class({
     {
         this.shutdown();
 
-        this.scene.sys.events.off(SceneEvents.START, this.start, this);
+        this.events.off(SceneEvents.START, this.start, this);
 
         this.scene = null;
         this.systems = null;
+        this.events = null;
+
         this.displayList = null;
         this.updateList = null;
     }

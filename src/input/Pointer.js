@@ -92,7 +92,7 @@ var Pointer = new Class({
 
         /**
          * The camera the Pointer interacted with during its last update.
-         * 
+         *
          * A Pointer can only ever interact with one camera at once, which will be the top-most camera
          * in the list should multiple cameras be positioned on-top of each other.
          *
@@ -106,9 +106,9 @@ var Pointer = new Class({
         /**
          * A read-only property that indicates which button was pressed, or released, on the pointer
          * during the most recent event. It is only set during `up` and `down` events.
-         * 
+         *
          * On Touch devices the value is always 0.
-         * 
+         *
          * Users may change the configuration of buttons on their pointing device so that if an event's button property
          * is zero, it may not have been caused by the button that is physically left–most on the pointing device;
          * however, it should behave as if the left button was clicked in the standard button layout.
@@ -128,7 +128,7 @@ var Pointer = new Class({
          * 4: Wheel button or middle button
          * 8: 4th button (typically the "Browser Back" button)
          * 16: 5th button (typically the "Browser Forward" button)
-         * 
+         *
          * For a mouse configured for left-handed use, the button actions are reversed.
          * In this case, the values are read from right to left.
          *
@@ -151,9 +151,9 @@ var Pointer = new Class({
 
         /**
          * The previous position of the Pointer in screen space.
-         * 
+         *
          * The old x and y values are stored in here during the InputManager.transformPointer call.
-         * 
+         *
          * Use the properties `velocity`, `angle` and `distance` to create your own gesture recognition.
          *
          * @name Phaser.Input.Pointer#prevPosition
@@ -175,9 +175,9 @@ var Pointer = new Class({
 
         /**
          * The current velocity of the Pointer, based on its current and previous positions.
-         * 
+         *
          * This value is smoothed out each frame, according to the `motionFactor` property.
-         * 
+         *
          * This property is updated whenever the Pointer moves, regardless of any button states. In other words,
          * it changes based on movement alone - a button doesn't have to be pressed first.
          *
@@ -190,9 +190,9 @@ var Pointer = new Class({
 
         /**
          * The current angle the Pointer is moving, in radians, based on its previous and current position.
-         * 
+         *
          * The angle is based on the old position facing to the current position.
-         * 
+         *
          * This property is updated whenever the Pointer moves, regardless of any button states. In other words,
          * it changes based on movement alone - a button doesn't have to be pressed first.
          *
@@ -205,12 +205,12 @@ var Pointer = new Class({
 
         /**
          * The distance the Pointer has moved, based on its previous and current position.
-         * 
+         *
          * This value is smoothed out each frame, according to the `motionFactor` property.
-         * 
+         *
          * This property is updated whenever the Pointer moves, regardless of any button states. In other words,
          * it changes based on movement alone - a button doesn't have to be pressed first.
-         * 
+         *
          * If you need the total distance travelled since the primary buttons was pressed down,
          * then use the `Pointer.getDistance` method.
          *
@@ -223,14 +223,14 @@ var Pointer = new Class({
 
         /**
          * The smoothing factor to apply to the Pointer position.
-         * 
+         *
          * Due to their nature, pointer positions are inherently noisy. While this is fine for lots of games, if you need cleaner positions
          * then you can set this value to apply an automatic smoothing to the positions as they are recorded.
-         * 
+         *
          * The default value of zero means 'no smoothing'.
          * Set to a small value, such as 0.2, to apply an average level of smoothing between positions. You can do this by changing this
          * value directly, or by setting the `input.smoothFactor` property in the Game Config.
-         * 
+         *
          * Positions are only smoothed when the pointer moves. If the primary button on this Pointer enters an Up or Down state, then the position
          * is always precise, and not smoothed.
          *
@@ -243,7 +243,7 @@ var Pointer = new Class({
 
         /**
          * The factor applied to the motion smoothing each frame.
-         * 
+         *
          * This value is passed to the Smooth Step Interpolation that is used to calculate the velocity,
          * angle and distance of the Pointer. It's applied every frame, until the midPoint reaches the current
          * position of the Pointer. 0.2 provides a good average but can be increased if you need a
@@ -259,7 +259,7 @@ var Pointer = new Class({
 
         /**
          * The x position of this Pointer, translated into the coordinate space of the most recent Camera it interacted with.
-         * 
+         *
          * If you wish to use this value _outside_ of an input event handler then you should update it first by calling
          * the `Pointer.updateWorldPoint` method.
          *
@@ -272,7 +272,7 @@ var Pointer = new Class({
 
         /**
          * The y position of this Pointer, translated into the coordinate space of the most recent Camera it interacted with.
-         * 
+         *
          * If you wish to use this value _outside_ of an input event handler then you should update it first by calling
          * the `Pointer.updateWorldPoint` method.
          *
@@ -314,7 +314,7 @@ var Pointer = new Class({
         this.downY = 0;
 
         /**
-         * Time when Button 1 (left button), or Touch, was pressed, used for dragging objects.
+         * The Event timestamp when the first button, or Touch input, was pressed. Used for dragging objects.
          *
          * @name Phaser.Input.Pointer#downTime
          * @type {number}
@@ -344,7 +344,7 @@ var Pointer = new Class({
         this.upY = 0;
 
         /**
-         * Time when Button 1 (left button), or Touch, was released, used for dragging objects.
+         * The Event timestamp when the final button, or Touch input, was released. Used for dragging objects.
          *
          * @name Phaser.Input.Pointer#upTime
          * @type {number}
@@ -385,7 +385,7 @@ var Pointer = new Class({
 
         /**
          * Did this Pointer get canceled by a touchcancel event?
-         * 
+         *
          * Note: "canceled" is the American-English spelling of "cancelled". Please don't submit PRs correcting it!
          *
          * @name Phaser.Input.Pointer#wasCanceled
@@ -446,10 +446,10 @@ var Pointer = new Class({
 
         /**
          * Is this pointer Pointer Locked?
-         * 
+         *
          * Only a mouse pointer can be locked and it only becomes locked when requested via
          * the browsers Pointer Lock API.
-         * 
+         *
          * You can request this by calling the `this.input.mouse.requestPointerLock()` method from
          * a `pointerdown` or `pointerup` event handler.
          *
@@ -495,7 +495,7 @@ var Pointer = new Class({
     /**
      * Takes a Camera and updates this Pointer's `worldX` and `worldY` values so they are
      * the result of a translation through the given Camera.
-     * 
+     *
      * Note that the values will be automatically replaced the moment the Pointer is
      * updated by an input event, such as a mouse move, so should be used immediately.
      *
@@ -622,12 +622,17 @@ var Pointer = new Class({
             this.primaryDown = false;
             this.upX = this.x;
             this.upY = this.y;
-            this.upTime = event.timeStamp;
         }
 
-        this.isDown = false;
+        if (this.buttons === 0)
+        {
+            //  No more buttons are still down
+            this.isDown = false;
 
-        this.wasTouch = false;
+            this.upTime = event.timeStamp;
+
+            this.wasTouch = false;
+        }
     },
 
     /**
@@ -661,10 +666,14 @@ var Pointer = new Class({
             this.primaryDown = true;
             this.downX = this.x;
             this.downY = this.y;
-            this.downTime = event.timeStamp;
         }
 
-        this.isDown = true;
+        if (!this.isDown)
+        {
+            this.isDown = true;
+
+            this.downTime = event.timeStamp;
+        }
 
         this.wasTouch = false;
     },
@@ -827,7 +836,7 @@ var Pointer = new Class({
 
         this.wasTouch = true;
         this.wasCanceled = false;
-        
+
         this.active = false;
 
         this.updateMotion();
@@ -863,7 +872,7 @@ var Pointer = new Class({
 
         this.wasTouch = true;
         this.wasCanceled = true;
-        
+
         this.active = false;
     },
 
@@ -1013,10 +1022,10 @@ var Pointer = new Class({
     /**
      * If the Pointer has a button pressed down at the time this method is called, it will return the
      * distance between the Pointer's `downX` and `downY` values and the current position.
-     * 
+     *
      * If no button is held down, it will return the last recorded distance, based on where
      * the Pointer was when the button was released.
-     * 
+     *
      * If you wish to get the distance being travelled currently, based on the velocity of the Pointer,
      * then see the `Pointer.distance` property.
      *
@@ -1040,7 +1049,7 @@ var Pointer = new Class({
     /**
      * If the Pointer has a button pressed down at the time this method is called, it will return the
      * horizontal distance between the Pointer's `downX` and `downY` values and the current position.
-     * 
+     *
      * If no button is held down, it will return the last recorded horizontal distance, based on where
      * the Pointer was when the button was released.
      *
@@ -1064,7 +1073,7 @@ var Pointer = new Class({
     /**
      * If the Pointer has a button pressed down at the time this method is called, it will return the
      * vertical distance between the Pointer's `downX` and `downY` values and the current position.
-     * 
+     *
      * If no button is held down, it will return the last recorded vertical distance, based on where
      * the Pointer was when the button was released.
      *
@@ -1088,9 +1097,9 @@ var Pointer = new Class({
     /**
      * If the Pointer has a button pressed down at the time this method is called, it will return the
      * duration since the button was pressed down.
-     * 
+     *
      * If no button is held down, it will return the last recorded duration, based on the time
-     * the Pointer button was released.
+     * the last button on the Pointer was released.
      *
      * @method Phaser.Input.Pointer#getDuration
      * @since 3.16.0
@@ -1112,12 +1121,12 @@ var Pointer = new Class({
     /**
      * If the Pointer has a button pressed down at the time this method is called, it will return the
      * angle between the Pointer's `downX` and `downY` values and the current position.
-     * 
+     *
      * If no button is held down, it will return the last recorded angle, based on where
      * the Pointer was when the button was released.
-     * 
+     *
      * The angle is based on the old position facing to the current position.
-     * 
+     *
      * If you wish to get the current angle, based on the velocity of the Pointer, then
      * see the `Pointer.angle` property.
      *
@@ -1141,31 +1150,31 @@ var Pointer = new Class({
     /**
      * Takes the previous and current Pointer positions and then generates an array of interpolated values between
      * the two. The array will be populated up to the size of the `steps` argument.
-     * 
+     *
      * ```javaScript
      * var points = pointer.getInterpolatedPosition(4);
-     * 
+     *
      * // points[0] = { x: 0, y: 0 }
      * // points[1] = { x: 2, y: 1 }
      * // points[2] = { x: 3, y: 2 }
      * // points[3] = { x: 6, y: 3 }
      * ```
-     * 
+     *
      * Use this if you need to get smoothed values between the previous and current pointer positions. DOM pointer
      * events can often fire faster than the main browser loop, and this will help you avoid janky movement
      * especially if you have an object following a Pointer.
-     * 
+     *
      * Note that if you provide an output array it will only be populated up to the number of steps provided.
      * It will not clear any previous data that may have existed beyond the range of the steps count.
-     * 
+     *
      * Internally it uses the Smooth Step interpolation calculation.
      *
      * @method Phaser.Input.Pointer#getInterpolatedPosition
      * @since 3.11.0
-     * 
+     *
      * @param {integer} [steps=10] - The number of interpolation steps to use.
      * @param {array} [out] - An array to store the results in. If not provided a new one will be created.
-     * 
+     *
      * @return {array} An array of interpolated values.
      */
     getInterpolatedPosition: function (steps, out)

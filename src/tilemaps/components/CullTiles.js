@@ -13,7 +13,6 @@ var CheckIsoBounds = require('./CheckIsoBounds');
  * Returns the tiles in the given layer that are within the camera's viewport. This is used internally.
  *
  * @function Phaser.Tilemaps.Components.CullTiles
- * @private
  * @since 3.0.0
  *
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.

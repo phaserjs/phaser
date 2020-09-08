@@ -40,7 +40,7 @@ InputPluginCache.register = function (key, plugin, mapping, settingsKey, configK
 /**
  * Returns the input plugin object from the cache based on the given key.
  *
- * @function Phaser.Input.InputPluginCache.getCore
+ * @function Phaser.Input.InputPluginCache.getPlugin
  * @static
  * @since 3.10.0
  *

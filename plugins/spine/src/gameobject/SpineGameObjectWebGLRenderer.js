@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -27,31 +27,37 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
 {
     var plugin = src.plugin;
     var skeleton = src.skeleton;
+    var childAlpha = skeleton.color.a;
     var sceneRenderer = plugin.sceneRenderer;
 
     var GameObjectRenderMask = 15;
 
-    var willRender = !(GameObjectRenderMask !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)));
+    var willRender = !(GameObjectRenderMask !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)) || childAlpha === 0);
 
     if (!skeleton || !willRender)
     {
-        //  Reset the current type
-        renderer.currentType = '';
+        //  If there is already a batch running, and the next type isn't a Spine object, or this is the end, we need to close it
 
-        //  If there is already a batch running, we need to close it
-        if (!renderer.nextTypeMatch)
+        if (sceneRenderer.batcher.isDrawing && (!renderer.nextTypeMatch || renderer.finalType))
         {
             //  The next object in the display list is not a Spine object, so we end the batch
             sceneRenderer.end();
-    
-            renderer.rebindPipeline(renderer.pipelines.TextureTintPipeline);
+
+            renderer.rebindPipeline();
         }
-    
+
+        if (!renderer.finalType)
+        {
+            //  Reset the current type
+            renderer.currentType = '';
+        }
+
         return;
     }
 
     if (renderer.newType)
     {
+        //  flush + clear previous pipeline if this is a new type
         renderer.clearPipeline();
     }
 
@@ -118,7 +124,7 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
         }
     }
 
-    if (camera.renderToTexture)
+    if (camera.renderToTexture || renderer.currentFramebuffer !== null)
     {
         skeleton.y = calcMatrix.ty;
         skeleton.scaleY *= -1;
@@ -152,10 +158,11 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
 
     if (!renderer.nextTypeMatch)
     {
-        //  The next object in the display list is not a Spine object, so we end the batch
+        //  The next object in the display list is not a Spine Game Object or Spine Container, so we end the batch
         sceneRenderer.end();
 
-        renderer.rebindPipeline(renderer.pipelines.TextureTintPipeline);
+        //  And rebind the previous pipeline
+        renderer.rebindPipeline();
     }
 };
 

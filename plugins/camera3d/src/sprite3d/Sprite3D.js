@@ -18,7 +18,7 @@ var Vector4 = require('../../../../src/math/Vector4');
  * it to be rendered by a 3D Camera. The Sprite can be positioned anywhere within 3D space.
  *
  * @class Sprite3D
- * @extends Phaser.GameObjects.GameObject
+ * @extends Phaser.GameObjects.Sprite
  * @memberOf Phaser.GameObjects
  * @constructor
  * @since 3.0.0

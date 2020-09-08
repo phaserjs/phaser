@@ -11,7 +11,6 @@
  * at a specific location on the map then see setTileLocationCallback.
  *
  * @function Phaser.Tilemaps.Components.SetTileIndexCallback
- * @private
  * @since 3.0.0
  *
  * @param {(integer|array)} indexes - Either a single tile index, or an array of tile indexes to have a collision callback set for.

@@ -11,7 +11,6 @@ var CONST = require('../../const.js');
  * layer's position, scale and scroll.
  *
  * @function Phaser.Tilemaps.Components.TileToWorldX
- * @private
  * @since 3.0.0
  *
  * @param {integer} tileX - The x coordinate, in tiles, not pixels.

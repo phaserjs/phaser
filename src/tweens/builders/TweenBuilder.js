@@ -73,7 +73,7 @@ var TweenBuilder = function (parent, config, defaults)
                 ops.getEnd,
                 ops.getStart,
                 ops.getActive,
-                GetEaseFunction(GetValue(value, 'ease', ease), easeParams),
+                GetEaseFunction(GetValue(value, 'ease', ease), GetValue(value, 'easeParams', easeParams)),
                 GetNewValue(value, 'delay', delay),
                 GetNewValue(value, 'duration', duration),
                 GetBoolean(value, 'yoyo', yoyo),

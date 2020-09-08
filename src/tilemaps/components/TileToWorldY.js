@@ -12,13 +12,12 @@ var CONST = require('../../const.js');
  * layer's position, scale and scroll.
  *
  * @function Phaser.Tilemaps.Components.TileToWorldY
- * @private
  * @since 3.0.0
  *
  * @param {integer} tileY - The x coordinate, in tiles, not pixels.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
- * 
+ *
  * @return {number}
  */
 var OrthoTileToWorldY = function (tileY, camera, layer)

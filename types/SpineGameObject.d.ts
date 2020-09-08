@@ -5,7 +5,7 @@ declare class SpineGameObject extends Phaser.GameObjects.GameObject implements O
     constructor(scene: Phaser.Scene, pluginManager: SpinePlugin, x: number, y: number, key?: string, animationName?: string, loop?: boolean);
 
     alpha: number;
-    angle: integer;
+    angle: number;
 
     readonly blendMode: number;
 
@@ -44,9 +44,9 @@ declare class SpineGameObject extends Phaser.GameObjects.GameObject implements O
     w: number;
     width: number;
 
-    addAnimation(trackIndex: integer, animationName: string, loop?: boolean, delay?: integer): spine.TrackEntry;
+    addAnimation(trackIndex: number, animationName: string, loop?: boolean, delay?: number): spine.TrackEntry;
     angleBoneToXY(bone: spine.Bone, worldX: number, worldY: number, offset?: number, minAngle?: number, maxAngle?: number): SpineGameObject;
-    clearTrack(trackIndex: integer): SpineGameObject;
+    clearTrack(trackIndex: number): SpineGameObject;
     clearTracks(): SpineGameObject;
     findAnimation(animationName: string): spine.Animation;
     findBone(boneName: string): spine.Bone;
@@ -60,11 +60,11 @@ declare class SpineGameObject extends Phaser.GameObjects.GameObject implements O
     findSlotIndex(slotName: string): number;
     findTransformConstraint(constraintName: string): spine.TransformConstraintData;
     getAnimationList(): string[];
-    getAttachment(slotIndex: integer, attachmentName: string): spine.Attachment;
+    getAttachment(slotIndex: number, attachmentName: string): spine.Attachment;
     getAttachmentByName(slotName: string, attachmentName: string): spine.Attachment;
     getBoneList(): string[];
     getBounds(): any;
-    getCurrentAnimation(trackIndex?: integer): spine.Animation;
+    getCurrentAnimation(trackIndex?: number): spine.Animation;
     getLocalTransformMatrix(tempMatrix?: Phaser.GameObjects.Components.TransformMatrix): Phaser.GameObjects.Components.TransformMatrix;
     getParentRotation(): number;
     getRootBone(): spine.Bone;
@@ -80,13 +80,13 @@ declare class SpineGameObject extends Phaser.GameObjects.GameObject implements O
     resetFlip(): this;
     setAlpha(value?: number): SpineGameObject;
     setAngle(degrees?: number): this;
-    setAnimation(trackIndex: integer, animationName: string, loop?: boolean, ignoreIfPlaying?: boolean): spine.TrackEntry;
+    setAnimation(trackIndex: number, animationName: string, loop?: boolean, ignoreIfPlaying?: boolean): spine.TrackEntry;
     setAttachment(slotName: string, attachmentName: string): SpineGameObject;
     setBonesToSetupPose(): SpineGameObject;
-    setColor(color?: integer, slotName?: string): SpineGameObject;
-    setDepth(value: integer): this;
+    setColor(color?: number, slotName?: string): SpineGameObject;
+    setDepth(value: number): this;
     setDisplaySize(width: number, height: number): this;
-    setEmptyAnimation(trackIndex: integer, mixDuration?: integer): spine.TrackEntry;
+    setEmptyAnimation(trackIndex: number, mixDuration?: number): spine.TrackEntry;
     setFlipX(value: boolean): this;
     setFlipY(value: boolean): this;
     setFlip(x: boolean, y: boolean): this;

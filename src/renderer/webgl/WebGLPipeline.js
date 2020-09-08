@@ -6,46 +6,31 @@
  */
 
 var Class = require('../../utils/Class');
+var GetFastValue = require('../../utils/object/GetFastValue');
 var Utils = require('./Utils');
 
 /**
  * @classdesc
- * WebGLPipeline is a class that describes the way elements will be renderered
- * in WebGL, specially focused on batching vertices (batching is not provided).
- * Pipelines are mostly used for describing 2D rendering passes but it's
- * flexible enough to be used for any type of rendering including 3D.
- * Internally WebGLPipeline will handle things like compiling shaders,
- * creating vertex buffers, assigning primitive topology and binding
- * vertex attributes.
  *
- * The config properties are:
- * - game: Current game instance.
- * - renderer: Current WebGL renderer.
- * - gl: Current WebGL context.
- * - topology: This indicates how the primitives are rendered. The default value is GL_TRIANGLES.
- *              Here is the full list of rendering primitives (https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Constants).
- * - vertShader: Source for vertex shader as a string.
- * - fragShader: Source for fragment shader as a string.
- * - vertexCapacity: The amount of vertices that shall be allocated
- * - vertexSize: The size of a single vertex in bytes.
- * - vertices: An optional buffer of vertices
- * - attributes: An array describing the vertex attributes
+ * The `WebGLPipeline` is a base class used by all of the core Phaser pipelines.
  *
- * The vertex attributes properties are:
- * - name : String - Name of the attribute in the vertex shader
- * - size : integer - How many components describe the attribute. For ex: vec3 = size of 3, float = size of 1
- * - type : GLenum - WebGL type (gl.BYTE, gl.SHORT, gl.UNSIGNED_BYTE, gl.UNSIGNED_SHORT, gl.FLOAT)
- * - normalized : boolean - Is the attribute normalized
- * - offset : integer - The offset in bytes to the current attribute in the vertex. Equivalent to offsetof(vertex, attrib) in C
- * Here you can find more information of how to describe an attribute:
- * - https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer
+ * It describes the way elements will be rendered in WebGL. Internally, it handles
+ * compiling the shaders, creating vertex buffers, assigning primitive topolgy and
+ * binding vertex attributes, all based on the given configuration data.
+ *
+ * The pipeline is configured by passing in a `WebGLPipelineConfig` object. Please
+ * see the documentation for this type to fully understand the configuration options
+ * available to you.
+ *
+ * Usually, you would not extend from this class directly, but would instead extend
+ * from one of the core pipelines, such as the Multi Pipeline or Rope Pipeline.
  *
  * @class WebGLPipeline
  * @memberof Phaser.Renderer.WebGL
  * @constructor
  * @since 3.0.0
  *
- * @param {object} config - The configuration object for this WebGL Pipeline, as described above.
+ * @param {Phaser.Types.Renderer.WebGL.WebGLPipelineConfig} config - The configuration object for this WebGL Pipeline.
  */
 var WebGLPipeline = new Class({
 
@@ -53,59 +38,36 @@ var WebGLPipeline = new Class({
 
     function WebGLPipeline (config)
     {
+        var game = config.game;
+        var renderer = game.renderer;
+        var gl = renderer.gl;
+
         /**
-         * Name of the Pipeline. Used for identifying
+         * Name of the pipeline. Used for identification.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#name
          * @type {string}
          * @since 3.0.0
          */
-        this.name = 'WebGLPipeline';
+        this.name = GetFastValue(config, 'name', 'WebGLPipeline');
 
         /**
-         * The Game which owns this WebGL Pipeline.
+         * The Phaser Game instance to which this pipeline is bound.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#game
          * @type {Phaser.Game}
          * @since 3.0.0
          */
-        this.game = config.game;
+        this.game = game;
 
         /**
-         * The canvas which this WebGL Pipeline renders to.
+         * The WebGL Renderer instance to which this pipeline is bound.
          *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#view
-         * @type {HTMLCanvasElement}
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#renderer
+         * @type {Phaser.Renderer.WebGL.WebGLRenderer}
          * @since 3.0.0
          */
-        this.view = config.game.canvas;
-
-        /**
-         * Used to store the current game resolution
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#resolution
-         * @type {number}
-         * @since 3.0.0
-         */
-        this.resolution = 1;
-
-        /**
-         * Width of the current viewport
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#width
-         * @type {number}
-         * @since 3.0.0
-         */
-        this.width = 0;
-
-        /**
-         * Height of the current viewport
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#height
-         * @type {number}
-         * @since 3.0.0
-         */
-        this.height = 0;
+        this.renderer = renderer;
 
         /**
          * The WebGL context this WebGL Pipeline uses.
@@ -114,10 +76,47 @@ var WebGLPipeline = new Class({
          * @type {WebGLRenderingContext}
          * @since 3.0.0
          */
-        this.gl = config.gl;
+        this.gl = gl;
 
         /**
-         * How many vertices have been fed to the current pipeline.
+         * The canvas which this WebGL Pipeline renders to.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#view
+         * @type {HTMLCanvasElement}
+         * @since 3.0.0
+         */
+        this.view = game.canvas;
+
+        /**
+         * The current game resolution.
+         * This is hard-coded to 1.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#resolution
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.resolution = 1;
+
+        /**
+         * Width of the current viewport.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#width
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.width = 0;
+
+        /**
+         * Height of the current viewport.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#height
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.height = 0;
+
+        /**
+         * The current number of vertices that have been added to the pipeline batch.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexCount
          * @type {number}
@@ -127,22 +126,29 @@ var WebGLPipeline = new Class({
         this.vertexCount = 0;
 
         /**
-         * The limit of vertices that the pipeline can hold
+         * The total number of vertices that the pipeline batch can hold before it will flush.
+         * This defaults to `batchSize * 6`, where `batchSize` is defined in the Renderer Config.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexCapacity
          * @type {integer}
          * @since 3.0.0
          */
-        this.vertexCapacity = config.vertexCapacity;
+        this.vertexCapacity = GetFastValue(config, 'vertexCapacity', renderer.config.batchSize * 6);
 
         /**
-         * The WebGL Renderer which owns this WebGL Pipeline.
+         * The size in bytes of a vertex.
          *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#renderer
-         * @type {Phaser.Renderer.WebGL.WebGLRenderer}
+         * Derived by adding together all of the vertex attributes.
+         *
+         * For example, the Texture Tint Pipeline has 2 + 2 + 1 + 1 + 4 for the attributes
+         * `inPosition` (size 2), `inTexCoord` (size 2), `inTexId` (size 1), `inTintEffect` (size 1)
+         * and `inTint` (size 4), for a total of 28, which is the default for this property.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexSize
+         * @type {integer}
          * @since 3.0.0
          */
-        this.renderer = config.renderer;
+        this.vertexSize = GetFastValue(config, 'vertexSize', 28);
 
         /**
          * Raw byte buffer of vertices.
@@ -151,16 +157,24 @@ var WebGLPipeline = new Class({
          * @type {ArrayBuffer}
          * @since 3.0.0
          */
-        this.vertexData = (config.vertices ? config.vertices : new ArrayBuffer(config.vertexCapacity * config.vertexSize));
+        this.vertexData = GetFastValue(config, 'vertices', new ArrayBuffer(this.vertexCapacity * this.vertexSize));
 
         /**
-         * The handle to a WebGL vertex buffer object.
+         * The WebGLBuffer that holds the vertex data.
+         * Created from the `vertices` config ArrayBuffer that was passed in, or set by default, by the pipeline.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexBuffer
          * @type {WebGLBuffer}
          * @since 3.0.0
          */
-        this.vertexBuffer = this.renderer.createVertexBuffer((config.vertices ? config.vertices : this.vertexData.byteLength), this.gl.STREAM_DRAW);
+        if (GetFastValue(config, 'vertices', null))
+        {
+            this.vertexBuffer = this.renderer.createVertexBuffer(this.vertexData, this.gl.STREAM_DRAW);
+        }
+        else
+        {
+            this.vertexBuffer = this.renderer.createVertexBuffer(this.vertexData.byteLength, this.gl.STREAM_DRAW);
+        }
 
         /**
          * The handle to a WebGL program.
@@ -175,28 +189,20 @@ var WebGLPipeline = new Class({
          * Array of objects that describe the vertex attributes.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#attributes
-         * @type {object}
+         * @type {Phaser.Types.Renderer.WebGL.WebGLPipelineAttributesConfig}
          * @since 3.0.0
          */
         this.attributes = config.attributes;
 
         /**
-         * The size in bytes of the vertex.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexSize
-         * @type {integer}
-         * @since 3.0.0
-         */
-        this.vertexSize = config.vertexSize;
-
-        /**
          * The primitive topology which the pipeline will use to submit draw calls.
+         * Defaults to GL_TRIANGLES if not otherwise set.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#topology
-         * @type {integer}
+         * @type {GLenum}
          * @since 3.0.0
          */
-        this.topology = config.topology;
+        this.topology = GetFastValue(config, 'topology', gl.TRIANGLES);
 
         /**
          * Uint8 view to the vertex raw buffer. Used for uploading vertex buffer resources to the GPU.
@@ -214,7 +220,7 @@ var WebGLPipeline = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.vertexComponentCount = Utils.getComponentCount(config.attributes, this.gl);
+        this.vertexComponentCount = Utils.getComponentCount(this.attributes, gl);
 
         /**
          * Indicates if the current pipeline is flushing the contents to the GPU.
@@ -255,6 +261,16 @@ var WebGLPipeline = new Class({
          * @since 3.50.0
          */
         this.forceZero = false;
+
+        /**
+         * Indicates if the current pipeline has booted or not.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#hasBooted
+         * @type {boolean}
+         * @readonly
+         * @since 3.50.0
+         */
+        this.hasBooted = false;
     },
 
     /**
@@ -268,33 +284,14 @@ var WebGLPipeline = new Class({
      */
     boot: function ()
     {
-        var gl = this.gl;
-        var vertexBuffer = this.vertexBuffer;
-        var attributes = this.attributes;
-        var program = this.program;
         var renderer = this.renderer;
-        var vertexSize = this.vertexSize;
 
-        renderer.setProgram(program);
-        renderer.setVertexBuffer(vertexBuffer);
+        renderer.setProgram(this.program);
+        renderer.setVertexBuffer(this.vertexBuffer);
 
-        for (var i = 0; i < attributes.length; i++)
-        {
-            var element = attributes[i];
-            var location = gl.getAttribLocation(program, element.name);
+        this.setAttribPointers(true);
 
-            if (location >= 0)
-            {
-                gl.enableVertexAttribArray(location);
-                gl.vertexAttribPointer(location, element.size, element.type, element.normalized, vertexSize, element.offset);
-                element.enabled = true;
-                element.location = location;
-            }
-            else if (location !== -1)
-            {
-                gl.disableVertexAttribArray(location);
-            }
-        }
+        this.hasBooted = true;
 
         return this;
     },
@@ -393,10 +390,14 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#bind
      * @since 3.0.0
      *
+     * @param {boolean} [reset=false] - Should the pipeline be fully re-bound after a renderer pipeline clear?
+     *
      * @return {this} This WebGLPipeline instance.
      */
-    bind: function ()
+    bind: function (reset)
     {
+        if (reset === undefined) { reset = false; }
+
         var vertexBuffer = this.vertexBuffer;
         var program = this.program;
         var renderer = this.renderer;
@@ -404,7 +405,7 @@ var WebGLPipeline = new Class({
         renderer.setProgram(program);
         renderer.setVertexBuffer(vertexBuffer);
 
-        this.setAttribPointers();
+        this.setAttribPointers(reset);
 
         return this;
     },
@@ -416,19 +417,40 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setAttribPointers
      * @since 3.50.0
      *
+     * @param {boolean} [reset=false] - Reset the vertex attribute locations?
+     *
      * @return {this} This WebGLPipeline instance.
      */
-    setAttribPointers: function ()
+    setAttribPointers: function (reset)
     {
+        if (reset === undefined) { reset = false; }
+
         var gl = this.gl;
         var attributes = this.attributes;
         var vertexSize = this.vertexSize;
+        var program = this.program;
 
         for (var i = 0; i < attributes.length; i++)
         {
             var element = attributes[i];
 
-            if (element.enabled)
+            if (reset)
+            {
+                var location = gl.getAttribLocation(program, element.name);
+
+                if (location >= 0)
+                {
+                    gl.enableVertexAttribArray(location);
+                    gl.vertexAttribPointer(location, element.size, element.type, element.normalized, vertexSize, element.offset);
+                    element.enabled = true;
+                    element.location = location;
+                }
+                else if (location !== -1)
+                {
+                    gl.disableVertexAttribArray(location);
+                }
+            }
+            else if (element.enabled)
             {
                 gl.vertexAttribPointer(element.location, element.size, element.type, element.normalized, vertexSize, element.offset);
             }

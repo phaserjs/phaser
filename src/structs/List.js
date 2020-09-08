@@ -58,7 +58,7 @@ var List = new Class({
 
         /**
          * The index of the current element.
-         * 
+         *
          * This is used internally when iterating through the list with the {@link #first}, {@link #last}, {@link #get}, and {@link #previous} properties.
          *
          * @name Phaser.Structs.List#position
@@ -211,7 +211,7 @@ var List = new Class({
             };
         }
 
-        StableSort.inplace(this.list, handler);
+        StableSort(this.list, handler);
 
         return this;
     },
@@ -281,7 +281,7 @@ var List = new Class({
      * For example: `getAll('parent')` would return only children that have a property called `parent`.
      *
      * You can also specify a value to compare the property to:
-     * 
+     *
      * `getAll('visible', true)` would return only children that have their visible property set to `true`.
      *
      * Optionally you can specify a start and end index. For example if this List had 100 children,
@@ -441,7 +441,7 @@ var List = new Class({
      * @since 3.0.0
      *
      * @genericUse {Phaser.Structs.List.<T>} - [$return]
-     * 
+     *
      * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
      *
      * @return {Phaser.Structs.List} This List object.
@@ -749,7 +749,7 @@ var List = new Class({
 
     /**
      * The next item in the List, or `null` if the entire List has been traversed.
-     * 
+     *
      * This property can be read successively after reading {@link #first} or manually setting the {@link #position} to iterate the List.
      *
      * @name Phaser.Structs.List#next
@@ -778,7 +778,7 @@ var List = new Class({
 
     /**
      * The previous item in the List, or `null` if the entire List has been traversed.
-     * 
+     *
      * This property can be read successively after reading {@link #last} or manually setting the {@link #position} to iterate the List backwards.
      *
      * @name Phaser.Structs.List#previous

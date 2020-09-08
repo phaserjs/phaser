@@ -11,7 +11,7 @@ var Events = require('./events');
 /**
  * @classdesc
  * A Process Queue maintains three internal lists.
- * 
+ *
  * The `pending` list is a selection of items which are due to be made 'active' in the next update.
  * The `active` list is a selection of items which are considered active and should be updated.
  * The `destroy` list is a selection of items that were active and are awaiting being destroyed in the next update.
@@ -88,11 +88,20 @@ var ProcessQueue = new Class({
          * @since 3.0.0
          */
         this._toProcess = 0;
+
+        /**
+         * If `true` only unique objects will be allowed in the queue.
+         *
+         * @name Phaser.Structs.ProcessQueue#checkQueue
+         * @type {boolean}
+         * @since 3.50.0
+         */
+        this.checkQueue = false;
     },
 
     /**
      * Adds a new item to the Process Queue.
-     * 
+     *
      * The item is added to the pending list and made active in the next update.
      *
      * @method Phaser.Structs.ProcessQueue#add
@@ -116,7 +125,7 @@ var ProcessQueue = new Class({
 
     /**
      * Removes an item from the Process Queue.
-     * 
+     *
      * The item is added to the pending destroy and fully removed in the next update.
      *
      * @method Phaser.Structs.ProcessQueue#remove
@@ -140,7 +149,7 @@ var ProcessQueue = new Class({
 
     /**
      * Removes all active items from this Process Queue.
-     * 
+     *
      * All the items are marked as 'pending destroy' and fully removed in the next update.
      *
      * @method Phaser.Structs.ProcessQueue#removeAll
@@ -166,7 +175,7 @@ var ProcessQueue = new Class({
 
     /**
      * Update this queue. First it will process any items awaiting destruction, and remove them.
-     * 
+     *
      * Then it will check to see if there are any items pending insertion, and move them to an
      * active state. Finally, it will return a list of active items for further processing.
      *
@@ -202,7 +211,7 @@ var ProcessQueue = new Class({
             {
                 active.splice(idx, 1);
 
-                this.emit(Events.REMOVE, item);
+                this.emit(Events.PROCESS_QUEUE_REMOVE, item);
             }
         }
 
@@ -217,9 +226,12 @@ var ProcessQueue = new Class({
         {
             item = list[i];
 
-            this._active.push(item);
+            if (!this.checkQueue || (this.checkQueue && active.indexOf(item) === -1))
+            {
+                active.push(item);
 
-            this.emit(Events.ADD, item);
+                this.emit(Events.PROCESS_QUEUE_ADD, item);
+            }
         }
 
         list.length = 0;
@@ -227,12 +239,12 @@ var ProcessQueue = new Class({
         this._toProcess = 0;
 
         //  The owner of this queue can now safely do whatever it needs to with the active list
-        return this._active;
+        return active;
     },
 
     /**
      * Returns the current list of active items.
-     * 
+     *
      * This method returns a reference to the active list array, not a copy of it.
      * Therefore, be careful to not modify this array outside of the ProcessQueue.
      *

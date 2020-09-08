@@ -1,6 +1,7 @@
 /// <reference path="./spine.d.ts" />
 /// <reference path="./SpineFile.d.ts" />
 /// <reference path="./SpineGameObject.d.ts" />
+/// <reference path="./SpineContainer.d.ts" />
 
 declare namespace Phaser.Loader {
     interface LoaderPlugin extends Phaser.Events.EventEmitter {
@@ -10,11 +11,13 @@ declare namespace Phaser.Loader {
 
 declare namespace Phaser.GameObjects {
     interface GameObjectFactory {
-        spine(x: number, y: number, key?: string, aimationName?: string, loop?: boolean): SpineGameObject;
+        spine(x: number, y: number, key?: string, animationName?: string, loop?: boolean): SpineGameObject;
+        spineContainer(x: number, y: number, children?: SpineGameObject | SpineGameObject[]): SpineContainer;
     }
 
 	interface GameObjectCreator {
         spine(config: SpineGameObjectConfig, addToScene?: boolean): SpineGameObject;
+        spineContainer(config: SpineContainerConfig, addToScene?: boolean): SpineContainer;
     }
 }
 

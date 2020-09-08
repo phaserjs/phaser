@@ -165,7 +165,7 @@ var World = new Class({
          * @default true
          * @since 3.23.0
          */
-        this.fixedStep = true;
+        this.fixedStep = GetValue(config, 'fixedStep', true);
 
         /**
          * The amount of elapsed ms since the last frame.
@@ -913,7 +913,6 @@ var World = new Class({
      * This is called automatically by your Scene and does not need to be invoked directly.
      *
      * @method Phaser.Physics.Arcade.World#update
-     * @protected
      * @fires Phaser.Physics.Arcade.Events#WORLD_STEP
      * @since 3.0.0
      *

@@ -31,11 +31,7 @@ if (typeof WEBGL_RENDERER)
 {
     GameObjectFactory.register('rope', function (x, y, texture, frame, points, horizontal, colors, alphas)
     {
-        var rope = new Rope(this.scene, x, y, texture, frame, points, horizontal, colors, alphas);
-
-        this.displayList.add(rope);
-
-        return this.updateList.add(rope);
+        return this.displayList.add(new Rope(this.scene, x, y, texture, frame, points, horizontal, colors, alphas));
     });
 }
 

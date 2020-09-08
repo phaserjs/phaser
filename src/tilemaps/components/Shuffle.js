@@ -14,7 +14,6 @@ var ShuffleArray = require('../../utils/array/Shuffle');
  * information.
  *
  * @function Phaser.Tilemaps.Components.Shuffle
- * @private
  * @since 3.0.0
  *
  * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
@@ -28,6 +27,7 @@ var Shuffle = function (tileX, tileY, width, height, layer)
     var tiles = GetTilesWithin(tileX, tileY, width, height, null, layer);
 
     var indexes = tiles.map(function (tile) { return tile.index; });
+
     ShuffleArray(indexes);
 
     for (var i = 0; i < tiles.length; i++)

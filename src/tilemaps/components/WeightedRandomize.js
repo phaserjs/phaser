@@ -22,7 +22,6 @@ var GetTilesWithin = require('./GetTilesWithin');
  * method only modifies tile indexes and does not change collision information.
  *
  * @function Phaser.Tilemaps.Components.WeightedRandomize
- * @private
  * @since 3.0.0
  *
  * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
@@ -54,12 +53,15 @@ var WeightedRandomize = function (tileX, tileY, width, height, weightedIndexes, 
         var rand = Math.random() * weightTotal;
         var sum = 0;
         var randomIndex = -1;
+
         for (var j = 0; j < weightedIndexes.length; j++)
         {
             sum += weightedIndexes[j].weight;
+
             if (rand <= sum)
             {
                 var chosen = weightedIndexes[j].index;
+
                 randomIndex = Array.isArray(chosen)
                     ? chosen[Math.floor(Math.random() * chosen.length)]
                     : chosen;

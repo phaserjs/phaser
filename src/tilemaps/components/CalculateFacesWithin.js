@@ -13,7 +13,6 @@ var GetTilesWithin = require('./GetTilesWithin');
  * is mostly used internally.
  *
  * @function Phaser.Tilemaps.Components.CalculateFacesWithin
- * @private
  * @since 3.0.0
  *
  * @param {integer} tileX - The left most tile index (in tile coordinates) to use as the origin of the area.

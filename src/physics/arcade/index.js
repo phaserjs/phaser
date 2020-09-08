@@ -19,11 +19,16 @@ var Arcade = {
     Components: require('./components'),
     Events: require('./events'),
     Factory: require('./Factory'),
+    GetOverlapX: require('./GetOverlapX'),
+    GetOverlapY: require('./GetOverlapY'),
+    SeparateX: require('./SeparateX'),
+    SeparateY: require('./SeparateY'),
     Group: require('./PhysicsGroup'),
     Image: require('./ArcadeImage'),
     Sprite: require('./ArcadeSprite'),
     StaticBody: require('./StaticBody'),
     StaticGroup: require('./StaticPhysicsGroup'),
+    Tilemap: require('./tilemap/'),
     World: require('./World')
 
 };

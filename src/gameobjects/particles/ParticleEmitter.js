@@ -1824,7 +1824,7 @@ var ParticleEmitter = new Class({
      */
     depthSort: function ()
     {
-        StableSort.inplace(this.alive, this.depthSortCallback);
+        StableSort(this.alive, this.depthSortCallback);
 
         return this;
     },

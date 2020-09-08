@@ -40,6 +40,7 @@ module.exports = {
     SendToBack: require('./SendToBack'),
     SetAll: require('./SetAll'),
     Shuffle: require('./Shuffle'),
+    SortByDigits: require('./SortByDigits'),
     SpliceOne: require('./SpliceOne'),
     StableSort: require('./StableSort'),
     Swap: require('./Swap')

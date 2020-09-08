@@ -16,7 +16,6 @@ var SetTileCollision = require('./SetTileCollision');
  * Collision information will be recalculated at the specified location.
  *
  * @function Phaser.Tilemaps.Components.PutTileAt
- * @private
  * @since 3.0.0
  *
  * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
@@ -41,11 +40,13 @@ var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer)
         {
             layer.data[tileY][tileX] = new Tile(layer, tile.index, tileX, tileY, layer.tileWidth, layer.tileHeight);
         }
+
         layer.data[tileY][tileX].copy(tile);
     }
     else
     {
         var index = tile;
+
         if (layer.data[tileY][tileX] === null)
         {
             layer.data[tileY][tileX] = new Tile(layer, index, tileX, tileY, layer.tileWidth, layer.tileHeight);
@@ -59,6 +60,7 @@ var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer)
     // Updating colliding flag on the new tile
     var newTile = layer.data[tileY][tileX];
     var collides = layer.collideIndexes.indexOf(newTile.index) !== -1;
+
     SetTileCollision(newTile, collides);
 
     // Recalculate faces only if the colliding flag at (tileX, tileY) has changed
@@ -71,4 +73,3 @@ var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer)
 };
 
 module.exports = PutTileAt;
-
