@@ -6,7 +6,6 @@
 
 var Clamp = require('../math/Clamp');
 var Class = require('../utils/Class');
-var EventEmitter = require('eventemitter3');
 var Events = require('./events');
 var FindClosestInSorted = require('../utils/array/FindClosestInSorted');
 var Frame = require('./AnimationFrame');
@@ -17,15 +16,19 @@ var SortByDigits = require('../utils/array/SortByDigits');
  * @classdesc
  * A Frame based Animation.
  *
- * This consists of a key, some default values (like the frame rate) and a bunch of Frame objects.
+ * Animations in Phaser consist of a sequence of `AnimationFrame` objects, which are managed by
+ * this class, along with properties that impact playback, such as the animations frame rate
+ * or delay.
  *
- * The Animation Manager creates these. Game Objects don't own an instance of these directly.
- * Game Objects have the Animation Component, which are like playheads to global Animations (these objects)
- * So multiple Game Objects can have playheads all pointing to this one Animation instance.
+ * This class contains all of the properties and methods needed to handle playback of the animation
+ * directly to an `AnimationState` instance, which is owned by a Sprite, or similar Game Object.
+ *
+ * You don't typically create an instance of this class directly, but instead go via
+ * either the `AnimationManager` or the `AnimationState` and use their `create` methods,
+ * depending on if you need a global animation, or local to a specific Sprite.
  *
  * @class Animation
  * @memberof Phaser.Animations
- * @extends Phaser.Events.EventEmitter
  * @constructor
  * @since 3.0.0
  *
@@ -35,14 +38,10 @@ var SortByDigits = require('../utils/array/SortByDigits');
  */
 var Animation = new Class({
 
-    Extends: EventEmitter,
-
     initialize:
 
     function Animation (manager, key, config)
     {
-        EventEmitter.call(this);
-
         /**
          * A reference to the global Animation Manager.
          *
@@ -886,8 +885,6 @@ var Animation = new Class({
      */
     destroy: function ()
     {
-        this.removeAllListeners();
-
         if (this.manager.off)
         {
             this.manager.off(Events.PAUSE_ALL, this.pause, this);
