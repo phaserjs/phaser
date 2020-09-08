@@ -23,7 +23,7 @@ var Animation = require('./Animation');
  * You can access its properties and methods via the `anims` property, i.e. `Sprite.anims`.
  *
  * As well as playing animations stored in the global Animation Manager, this component
- * can also create animations that are stored locally within it. See the `create method
+ * can also create animations that are stored locally within it. See the `create` method
  * for more details.
  *
  * Prior to Phaser 3.50 this component was called just `Animation` and lived in the
@@ -526,6 +526,19 @@ var AnimationState = new Class({
     },
 
     /**
+     * Returns the key of the animation frame currently displayed by this component.
+     *
+     * @method Phaser.Animations.AnimationState#getFrameName
+     * @since 3.50.0
+     *
+     * @return {string} The key of the Animation Frame currently displayed by this component, or an empty string if no animation has been loaded.
+     */
+    getFrameName: function ()
+    {
+        return (this.currentFrame) ? this.currentFrame.textureFrame : '';
+    },
+
+    /**
      * Internal method used to load an animation into this component.
      *
      * @method Phaser.Animations.AnimationState#load
@@ -660,12 +673,10 @@ var AnimationState = new Class({
      *
      * If no animation is currently running, the given one begins after the delay.
      *
-     * Prior to Phaser 3.50 this method was called 'delayedPlay'.
+     * Prior to Phaser 3.50 this method was called 'delayedPlay' and the parameters were in the reverse order.
      *
      * @method Phaser.Animations.AnimationState#playAfterDelay
      * @fires Phaser.Animations.Events#ANIMATION_START
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_START
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
      * @since 3.50.0
      *
      * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object.
@@ -712,8 +723,6 @@ var AnimationState = new Class({
      *
      * @method Phaser.Animations.AnimationState#playAfterRepeat
      * @fires Phaser.Animations.Events#ANIMATION_START
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_START
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
      * @since 3.50.0
      *
      * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object.
@@ -807,8 +816,6 @@ var AnimationState = new Class({
      *
      * @method Phaser.Animations.AnimationState#play
      * @fires Phaser.Animations.Events#ANIMATION_START
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_START
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
      * @since 3.0.0
      *
      * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object.
@@ -904,8 +911,6 @@ var AnimationState = new Class({
      *
      * @method Phaser.Animations.AnimationState#playReverse
      * @fires Phaser.Animations.Events#ANIMATION_START
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_START
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
      * @since 3.12.0
      *
      * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object.
@@ -940,8 +945,6 @@ var AnimationState = new Class({
      *
      * @method Phaser.Animations.AnimationState#startAnimation
      * @fires Phaser.Animations.Events#ANIMATION_START
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_START
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
      * @since 3.50.0
      *
      * @param {(string|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or a `PlayAnimationConfig` object.
@@ -1002,7 +1005,7 @@ var AnimationState = new Class({
 
         this.hasStarted = true;
 
-        this.emitEvents(Events.ANIMATION_START, Events.SPRITE_ANIMATION_KEY_START, Events.SPRITE_ANIMATION_START);
+        this.emitEvents(Events.ANIMATION_START);
     },
 
     /**
@@ -1016,7 +1019,7 @@ var AnimationState = new Class({
     {
         this.pendingRepeat = false;
 
-        this.emitEvents(Events.ANIMATION_REPEAT, Events.SPRITE_ANIMATION_KEY_REPEAT, Events.SPRITE_ANIMATION_REPEAT);
+        this.emitEvents(Events.ANIMATION_REPEAT);
     },
 
     /**
@@ -1032,7 +1035,7 @@ var AnimationState = new Class({
 
         this.isPlaying = false;
 
-        this.emitEvents(Events.ANIMATION_STOP, Events.SPRITE_ANIMATION_KEY_STOP, Events.SPRITE_ANIMATION_STOP);
+        this.emitEvents(Events.ANIMATION_STOP);
     },
 
     /**
@@ -1053,30 +1056,25 @@ var AnimationState = new Class({
             this.parent.setVisible(false);
         }
 
-        this.emitEvents(Events.ANIMATION_COMPLETE, Events.SPRITE_ANIMATION_KEY_COMPLETE, Events.SPRITE_ANIMATION_COMPLETE);
+        this.emitEvents(Events.ANIMATION_COMPLETE);
     },
 
     /**
-     * Fires the given animation events.
+     * Fires the given animation event.
      *
      * @method Phaser.Animations.AnimationState#emitEvents
      * @private
      * @since 3.50.0
      *
-     * @param {string} animEvent - The Animation Event to dispatch.
-     * @param {string} spriteKeyEvent - The Sprite Key Event to dispatch.
-     * @param {string} spriteEvent - The Sprite Event to dispatch.
+     * @param {string} event - The Animation Event to dispatch.
      */
-    emitEvents: function (animEvent, spriteKeyEvent, spriteEvent)
+    emitEvents: function (event)
     {
         var anim = this.currentAnim;
         var frame = this.currentFrame;
         var gameObject = this.parent;
 
-        anim.emit(animEvent, anim, frame, gameObject);
-
-        gameObject.emit(spriteKeyEvent + anim.key, anim, frame, gameObject);
-        gameObject.emit(spriteEvent, anim, frame, gameObject);
+        gameObject.emit(event, anim, frame, gameObject, frame.textureFrame);
     },
 
     /**
@@ -1207,15 +1205,13 @@ var AnimationState = new Class({
      *
      * You can optionally reset the delay and repeat counters as well.
      *
-     * Calling this will fire the `ANIMATION_RESTART` series of events immediately.
+     * Calling this will fire the `ANIMATION_RESTART` event immediately.
      *
-     * If you `includeDelay` then it will also fire the `ANIMATION_START` series of events once
+     * If you `includeDelay` then it will also fire the `ANIMATION_START` event once
      * the delay has expired, otherwise, playback will just begin immediately.
      *
      * @method Phaser.Animations.AnimationState#restart
      * @fires Phaser.Animations.Events#ANIMATION_RESTART
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_RESTART
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_RESTART
      * @since 3.0.0
      *
      * @param {boolean} [includeDelay=false] - Whether to include the delay value of the animation when restarting.
@@ -1243,7 +1239,7 @@ var AnimationState = new Class({
 
         anim.getFirstTick(this);
 
-        this.emitEvents(Events.ANIMATION_RESTART, Events.SPRITE_ANIMATION_KEY_RESTART, Events.SPRITE_ANIMATION_RESTART);
+        this.emitEvents(Events.ANIMATION_RESTART);
 
         this.isPlaying = true;
         this.pendingRepeat = false;
@@ -1261,7 +1257,7 @@ var AnimationState = new Class({
     },
 
     /**
-     * The current animation has completed. This dispatches the `ANIMATION_COMPLETE` series of events.
+     * The current animation has completed. This dispatches the `ANIMATION_COMPLETE` event.
      *
      * This method is called by the Animation instance and should not usually be invoked directly.
      *
@@ -1271,8 +1267,6 @@ var AnimationState = new Class({
      *
      * @method Phaser.Animations.AnimationState#complete
      * @fires Phaser.Animations.Events#ANIMATION_COMPLETE
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_COMPLETE
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_COMPLETE
      * @since 3.50.0
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
@@ -1301,7 +1295,7 @@ var AnimationState = new Class({
     },
 
     /**
-     * Immediately stops the current animation from playing and dispatches the `ANIMATION_STOP` series of events.
+     * Immediately stops the current animation from playing and dispatches the `ANIMATION_STOP` event.
      *
      * If no animation is running, no events will be dispatched.
      *
@@ -1309,8 +1303,6 @@ var AnimationState = new Class({
      *
      * @method Phaser.Animations.AnimationState#stop
      * @fires Phaser.Animations.Events#ANIMATION_STOP
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_STOP
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_STOP
      * @since 3.0.0
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
@@ -1341,7 +1333,7 @@ var AnimationState = new Class({
     /**
      * Stops the current animation from playing after the specified time delay, given in milliseconds.
      *
-     * It then dispatches the `ANIMATION_STOP` series of events.
+     * It then dispatches the `ANIMATION_STOP` event.
      *
      * If no animation is running, no events will be dispatched.
      *
@@ -1350,8 +1342,6 @@ var AnimationState = new Class({
      *
      * @method Phaser.Animations.AnimationState#stopAfterDelay
      * @fires Phaser.Animations.Events#ANIMATION_STOP
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_STOP
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_STOP
      * @since 3.4.0
      *
      * @param {integer} delay - The number of milliseconds to wait before stopping this animation.
@@ -1369,7 +1359,7 @@ var AnimationState = new Class({
     /**
      * Stops the current animation from playing when it next repeats.
      *
-     * It then dispatches the `ANIMATION_STOP` series of events.
+     * It then dispatches the `ANIMATION_STOP` event.
      *
      * If no animation is running, no events will be dispatched.
      *
@@ -1380,8 +1370,6 @@ var AnimationState = new Class({
      *
      * @method Phaser.Animations.AnimationState#stopAfterRepeat
      * @fires Phaser.Animations.Events#ANIMATION_STOP
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_STOP
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_STOP
      * @since 3.50.0
      *
      * @param {integer} [repeatCount=1] - How many times should the animation repeat before stopping?
@@ -1407,7 +1395,7 @@ var AnimationState = new Class({
      * Stops the current animation from playing when it next sets the given frame.
      * If this frame doesn't exist within the animation it will not stop it from playing.
      *
-     * It then dispatches the `ANIMATION_STOP` series of events.
+     * It then dispatches the `ANIMATION_STOP` event.
      *
      * If no animation is running, no events will be dispatched.
      *
@@ -1416,8 +1404,6 @@ var AnimationState = new Class({
      *
      * @method Phaser.Animations.AnimationState#stopOnFrame
      * @fires Phaser.Animations.Events#ANIMATION_STOP
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_STOP
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_STOP
      * @since 3.4.0
      *
      * @param {Phaser.Animations.AnimationFrame} frame - The frame to check before stopping this animation.
@@ -1529,11 +1515,7 @@ var AnimationState = new Class({
      *
      * @method Phaser.Animations.AnimationState#setCurrentFrame
      * @fires Phaser.Animations.Events#ANIMATION_UPDATE
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_UPDATE
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_UPDATE
      * @fires Phaser.Animations.Events#ANIMATION_STOP
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_STOP
-     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_STOP
      * @since 3.4.0
      *
      * @param {Phaser.Animations.AnimationFrame} animationFrame - The animation frame to change to.
@@ -1575,7 +1557,7 @@ var AnimationState = new Class({
 
         if (this.isPlaying && this.hasStarted)
         {
-            this.emitEvents(Events.ANIMATION_UPDATE, Events.SPRITE_ANIMATION_KEY_UPDATE, Events.SPRITE_ANIMATION_UPDATE);
+            this.emitEvents(Events.ANIMATION_UPDATE);
 
             if (this._pendingStop === 3 && this._pendingStopValue === animationFrame)
             {
