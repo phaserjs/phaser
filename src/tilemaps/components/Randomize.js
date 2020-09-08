@@ -15,7 +15,6 @@ var GetRandom = require('../../utils/array/GetRandom');
  * indexes. This method only modifies tile indexes and does not change collision information.
  *
  * @function Phaser.Tilemaps.Components.Randomize
- * @private
  * @since 3.0.0
  *
  * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
@@ -34,6 +33,7 @@ var Randomize = function (tileX, tileY, width, height, indexes, layer)
     if (indexes === undefined)
     {
         indexes = [];
+
         for (i = 0; i < tiles.length; i++)
         {
             if (indexes.indexOf(tiles[i].index) === -1)

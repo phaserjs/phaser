@@ -88,9 +88,9 @@ window["SpinePlugin"] =
 /******/ ({
 
 /***/ "../../../node_modules/eventemitter3/index.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/node_modules/eventemitter3/index.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/node_modules/eventemitter3/index.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -435,16 +435,2292 @@ if (true) {
 
 /***/ }),
 
-/***/ "../../../src/data/DataManager.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/DataManager.js ***!
-  \**************************************************/
+/***/ "../../../src/animations/Animation.js":
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/animations/Animation.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Clamp = __webpack_require__(/*! ../math/Clamp */ "../../../src/math/Clamp.js");
+var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
+var EventEmitter = __webpack_require__(/*! eventemitter3 */ "../../../node_modules/eventemitter3/index.js");
+var Events = __webpack_require__(/*! ./events */ "../../../src/animations/events/index.js");
+var FindClosestInSorted = __webpack_require__(/*! ../utils/array/FindClosestInSorted */ "../../../src/utils/array/FindClosestInSorted.js");
+var Frame = __webpack_require__(/*! ./AnimationFrame */ "../../../src/animations/AnimationFrame.js");
+var GetValue = __webpack_require__(/*! ../utils/object/GetValue */ "../../../src/utils/object/GetValue.js");
+
+/**
+ * @classdesc
+ * A Frame based Animation.
+ *
+ * This consists of a key, some default values (like the frame rate) and a bunch of Frame objects.
+ *
+ * The Animation Manager creates these. Game Objects don't own an instance of these directly.
+ * Game Objects have the Animation Component, which are like playheads to global Animations (these objects)
+ * So multiple Game Objects can have playheads all pointing to this one Animation instance.
+ *
+ * @class Animation
+ * @memberof Phaser.Animations
+ * @extends Phaser.Events.EventEmitter
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Animations.AnimationManager} manager - A reference to the global Animation Manager
+ * @param {string} key - The unique identifying string for this animation.
+ * @param {Phaser.Types.Animations.Animation} config - The Animation configuration.
+ */
+var Animation = new Class({
+
+    Extends: EventEmitter,
+
+    initialize:
+
+    function Animation (manager, key, config)
+    {
+        EventEmitter.call(this);
+
+        /**
+         * A reference to the global Animation Manager.
+         *
+         * @name Phaser.Animations.Animation#manager
+         * @type {Phaser.Animations.AnimationManager}
+         * @since 3.0.0
+         */
+        this.manager = manager;
+
+        /**
+         * The unique identifying string for this animation.
+         *
+         * @name Phaser.Animations.Animation#key
+         * @type {string}
+         * @since 3.0.0
+         */
+        this.key = key;
+
+        /**
+         * A frame based animation (as opposed to a bone based animation)
+         *
+         * @name Phaser.Animations.Animation#type
+         * @type {string}
+         * @default frame
+         * @since 3.0.0
+         */
+        this.type = 'frame';
+
+        /**
+         * Extract all the frame data into the frames array.
+         *
+         * @name Phaser.Animations.Animation#frames
+         * @type {Phaser.Animations.AnimationFrame[]}
+         * @since 3.0.0
+         */
+        this.frames = this.getFrames(
+            manager.textureManager,
+            GetValue(config, 'frames', []),
+            GetValue(config, 'defaultTextureKey', null)
+        );
+
+        /**
+         * The frame rate of playback in frames per second (default 24 if duration is null)
+         *
+         * @name Phaser.Animations.Animation#frameRate
+         * @type {integer}
+         * @default 24
+         * @since 3.0.0
+         */
+        this.frameRate = GetValue(config, 'frameRate', null);
+
+        /**
+         * How long the animation should play for, in milliseconds.
+         * If the `frameRate` property has been set then it overrides this value,
+         * otherwise the `frameRate` is derived from `duration`.
+         *
+         * @name Phaser.Animations.Animation#duration
+         * @type {integer}
+         * @since 3.0.0
+         */
+        this.duration = GetValue(config, 'duration', null);
+
+        if (this.duration === null && this.frameRate === null)
+        {
+            //  No duration or frameRate given, use default frameRate of 24fps
+            this.frameRate = 24;
+            this.duration = (this.frameRate / this.frames.length) * 1000;
+        }
+        else if (this.duration && this.frameRate === null)
+        {
+            //  Duration given but no frameRate, so set the frameRate based on duration
+            //  I.e. 12 frames in the animation, duration = 4000 ms
+            //  So frameRate is 12 / (4000 / 1000) = 3 fps
+            this.frameRate = this.frames.length / (this.duration / 1000);
+        }
+        else
+        {
+            //  frameRate given, derive duration from it (even if duration also specified)
+            //  I.e. 15 frames in the animation, frameRate = 30 fps
+            //  So duration is 15 / 30 = 0.5 * 1000 (half a second, or 500ms)
+            this.duration = (this.frames.length / this.frameRate) * 1000;
+        }
+
+        /**
+         * How many ms per frame, not including frame specific modifiers.
+         *
+         * @name Phaser.Animations.Animation#msPerFrame
+         * @type {integer}
+         * @since 3.0.0
+         */
+        this.msPerFrame = 1000 / this.frameRate;
+
+        /**
+         * Skip frames if the time lags, or always advanced anyway?
+         *
+         * @name Phaser.Animations.Animation#skipMissedFrames
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.skipMissedFrames = GetValue(config, 'skipMissedFrames', true);
+
+        /**
+         * The delay in ms before the playback will begin.
+         *
+         * @name Phaser.Animations.Animation#delay
+         * @type {integer}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.delay = GetValue(config, 'delay', 0);
+
+        /**
+         * Number of times to repeat the animation. Set to -1 to repeat forever.
+         *
+         * @name Phaser.Animations.Animation#repeat
+         * @type {integer}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.repeat = GetValue(config, 'repeat', 0);
+
+        /**
+         * The delay in ms before the a repeat play starts.
+         *
+         * @name Phaser.Animations.Animation#repeatDelay
+         * @type {integer}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.repeatDelay = GetValue(config, 'repeatDelay', 0);
+
+        /**
+         * Should the animation yoyo (reverse back down to the start) before repeating?
+         *
+         * @name Phaser.Animations.Animation#yoyo
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.yoyo = GetValue(config, 'yoyo', false);
+
+        /**
+         * Should the GameObject's `visible` property be set to `true` when the animation starts to play?
+         *
+         * @name Phaser.Animations.Animation#showOnStart
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.showOnStart = GetValue(config, 'showOnStart', false);
+
+        /**
+         * Should the GameObject's `visible` property be set to `false` when the animation finishes?
+         *
+         * @name Phaser.Animations.Animation#hideOnComplete
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.hideOnComplete = GetValue(config, 'hideOnComplete', false);
+
+        /**
+         * Global pause. All Game Objects using this Animation instance are impacted by this property.
+         *
+         * @name Phaser.Animations.Animation#paused
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.paused = false;
+
+        this.manager.on(Events.PAUSE_ALL, this.pause, this);
+        this.manager.on(Events.RESUME_ALL, this.resume, this);
+    },
+
+    /**
+     * Add frames to the end of the animation.
+     *
+     * @method Phaser.Animations.Animation#addFrame
+     * @since 3.0.0
+     *
+     * @param {(string|Phaser.Types.Animations.AnimationFrame[])} config - Either a string, in which case it will use all frames from a texture with the matching key, or an array of Animation Frame configuration objects.
+     *
+     * @return {this} This Animation object.
+     */
+    addFrame: function (config)
+    {
+        return this.addFrameAt(this.frames.length, config);
+    },
+
+    /**
+     * Add frame/s into the animation.
+     *
+     * @method Phaser.Animations.Animation#addFrameAt
+     * @since 3.0.0
+     *
+     * @param {integer} index - The index to insert the frame at within the animation.
+     * @param {(string|Phaser.Types.Animations.AnimationFrame[])} config - Either a string, in which case it will use all frames from a texture with the matching key, or an array of Animation Frame configuration objects.
+     *
+     * @return {this} This Animation object.
+     */
+    addFrameAt: function (index, config)
+    {
+        var newFrames = this.getFrames(this.manager.textureManager, config);
+
+        if (newFrames.length > 0)
+        {
+            if (index === 0)
+            {
+                this.frames = newFrames.concat(this.frames);
+            }
+            else if (index === this.frames.length)
+            {
+                this.frames = this.frames.concat(newFrames);
+            }
+            else
+            {
+                var pre = this.frames.slice(0, index);
+                var post = this.frames.slice(index);
+
+                this.frames = pre.concat(newFrames, post);
+            }
+
+            this.updateFrameSequence();
+        }
+
+        return this;
+    },
+
+    /**
+     * Check if the given frame index is valid.
+     *
+     * @method Phaser.Animations.Animation#checkFrame
+     * @since 3.0.0
+     *
+     * @param {integer} index - The index to be checked.
+     *
+     * @return {boolean} `true` if the index is valid, otherwise `false`.
+     */
+    checkFrame: function (index)
+    {
+        return (index >= 0 && index < this.frames.length);
+    },
+
+    /**
+     * Called internally when this Animation completes playback.
+     * Optionally, hides the parent Game Object, then stops playback.
+     *
+     * @method Phaser.Animations.Animation#completeAnimation
+     * @protected
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
+     */
+    completeAnimation: function (component)
+    {
+        if (this.hideOnComplete)
+        {
+            component.parent.visible = false;
+        }
+
+        component.stop();
+    },
+
+    /**
+     * Called internally when this Animation first starts to play.
+     * Sets the accumulator and nextTick properties.
+     *
+     * @method Phaser.Animations.Animation#getFirstTick
+     * @protected
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
+     * @param {boolean} [includeDelay=true] - If `true` the Animation Components delay value will be added to the `nextTick` total.
+     */
+    getFirstTick: function (component, includeDelay)
+    {
+        if (includeDelay === undefined) { includeDelay = true; }
+
+        //  When is the first update due?
+        component.accumulator = 0;
+        component.nextTick = component.msPerFrame + component.currentFrame.duration;
+
+        if (includeDelay)
+        {
+            component.nextTick += component._delay;
+        }
+    },
+
+    /**
+     * Returns the AnimationFrame at the provided index
+     *
+     * @method Phaser.Animations.Animation#getFrameAt
+     * @protected
+     * @since 3.0.0
+     *
+     * @param {integer} index - The index in the AnimationFrame array
+     *
+     * @return {Phaser.Animations.AnimationFrame} The frame at the index provided from the animation sequence
+     */
+    getFrameAt: function (index)
+    {
+        return this.frames[index];
+    },
+
+    /**
+     * Creates AnimationFrame instances based on the given frame data.
+     *
+     * @method Phaser.Animations.Animation#getFrames
+     * @since 3.0.0
+     *
+     * @param {Phaser.Textures.TextureManager} textureManager - A reference to the global Texture Manager.
+     * @param {(string|Phaser.Types.Animations.AnimationFrame[])} frames - Either a string, in which case it will use all frames from a texture with the matching key, or an array of Animation Frame configuration objects.
+     * @param {string} [defaultTextureKey] - The key to use if no key is set in the frame configuration object.
+     *
+     * @return {Phaser.Animations.AnimationFrame[]} An array of newly created AnimationFrame instances.
+     */
+    getFrames: function (textureManager, frames, defaultTextureKey)
+    {
+        var out = [];
+        var prev;
+        var animationFrame;
+        var index = 1;
+        var i;
+        var textureKey;
+
+        //  if frames is a string, we'll get all the frames from the texture manager as if it's a sprite sheet
+        if (typeof frames === 'string')
+        {
+            textureKey = frames;
+
+            var texture = textureManager.get(textureKey);
+            var frameKeys = texture.getFrameNames();
+
+            frames = [];
+
+            frameKeys.forEach(function (idx, value)
+            {
+                frames.push({ key: textureKey, frame: value });
+            });
+        }
+
+        if (!Array.isArray(frames) || frames.length === 0)
+        {
+            return out;
+        }
+
+        for (i = 0; i < frames.length; i++)
+        {
+            var item = frames[i];
+
+            var key = GetValue(item, 'key', defaultTextureKey);
+
+            if (!key)
+            {
+                continue;
+            }
+
+            //  Could be an integer or a string
+            var frame = GetValue(item, 'frame', 0);
+
+            //  The actual texture frame
+            var textureFrame = textureManager.getFrame(key, frame);
+
+            animationFrame = new Frame(key, frame, index, textureFrame);
+
+            animationFrame.duration = GetValue(item, 'duration', 0);
+
+            animationFrame.isFirst = (!prev);
+
+            //  The previously created animationFrame
+            if (prev)
+            {
+                prev.nextFrame = animationFrame;
+
+                animationFrame.prevFrame = prev;
+            }
+
+            out.push(animationFrame);
+
+            prev = animationFrame;
+
+            index++;
+        }
+
+        if (out.length > 0)
+        {
+            animationFrame.isLast = true;
+
+            //  Link them end-to-end, so they loop
+            animationFrame.nextFrame = out[0];
+
+            out[0].prevFrame = animationFrame;
+
+            //  Generate the progress data
+
+            var slice = 1 / (out.length - 1);
+
+            for (i = 0; i < out.length; i++)
+            {
+                out[i].progress = i * slice;
+            }
+        }
+
+        return out;
+    },
+
+    /**
+     * Called internally. Sets the accumulator and nextTick values of the current Animation.
+     *
+     * @method Phaser.Animations.Animation#getNextTick
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
+     */
+    getNextTick: function (component)
+    {
+        // accumulator += delta * _timeScale
+        // after a large delta surge (perf issue for example) we need to adjust for it here
+
+        //  When is the next update due?
+        component.accumulator -= component.nextTick;
+
+        component.nextTick = component.msPerFrame + component.currentFrame.duration;
+    },
+
+    /**
+     * Loads the Animation values into the Animation Component.
+     *
+     * @method Phaser.Animations.Animation#load
+     * @private
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component to load values into.
+     * @param {integer} startFrame - The start frame of the animation to load.
+     */
+    load: function (component, startFrame)
+    {
+        if (startFrame >= this.frames.length)
+        {
+            startFrame = 0;
+        }
+
+        if (component.currentAnim !== this)
+        {
+            component.currentAnim = this;
+
+            component.frameRate = this.frameRate;
+            component.duration = this.duration;
+            component.msPerFrame = this.msPerFrame;
+            component.skipMissedFrames = this.skipMissedFrames;
+
+            component._delay = this.delay;
+            component._repeat = this.repeat;
+            component._repeatDelay = this.repeatDelay;
+            component._yoyo = this.yoyo;
+        }
+
+        var frame = this.frames[startFrame];
+
+        if (startFrame === 0 && !component.forward)
+        {
+            frame = this.getLastFrame();
+        }
+
+        component.updateFrame(frame);
+    },
+
+    /**
+     * Returns the frame closest to the given progress value between 0 and 1.
+     *
+     * @method Phaser.Animations.Animation#getFrameByProgress
+     * @since 3.4.0
+     *
+     * @param {number} value - A value between 0 and 1.
+     *
+     * @return {Phaser.Animations.AnimationFrame} The frame closest to the given progress value.
+     */
+    getFrameByProgress: function (value)
+    {
+        value = Clamp(value, 0, 1);
+
+        return FindClosestInSorted(value, this.frames, 'progress');
+    },
+
+    /**
+     * Advance the animation frame.
+     *
+     * @method Phaser.Animations.Animation#nextFrame
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component to advance.
+     */
+    nextFrame: function (component)
+    {
+        var frame = component.currentFrame;
+
+        //  TODO: Add frame skip support
+
+        if (frame.isLast)
+        {
+            //  We're at the end of the animation
+
+            //  Yoyo? (happens before repeat)
+            if (component._yoyo)
+            {
+                this.handleYoyoFrame(component, false);
+            }
+            else if (component.repeatCounter > 0)
+            {
+                //  Repeat (happens before complete)
+
+                if (component._reverse && component.forward)
+                {
+                    component.forward = false;
+                }
+                else
+                {
+                    this.repeatAnimation(component);
+                }
+            }
+            else
+            {
+                this.completeAnimation(component);
+            }
+        }
+        else
+        {
+            this.updateAndGetNextTick(component, frame.nextFrame);
+        }
+    },
+
+    /**
+     * Handle the yoyo functionality in nextFrame and previousFrame methods.
+     *
+     * @method Phaser.Animations.Animation#handleYoyoFrame
+     * @private
+     * @since 3.12.0
+     *
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component to advance.
+     * @param {boolean} isReverse - Is animation in reverse mode? (Default: false)
+     */
+    handleYoyoFrame: function (component, isReverse)
+    {
+        if (!isReverse) { isReverse = false; }
+
+        if (component._reverse === !isReverse && component.repeatCounter > 0)
+        {
+            if (!component._repeatDelay || component.pendingRepeat)
+
+            {
+                component.forward = isReverse;
+            }
+
+            this.repeatAnimation(component);
+
+            return;
+        }
+
+        if (component._reverse !== isReverse && component.repeatCounter === 0)
+        {
+            this.completeAnimation(component);
+
+            return;
+        }
+        
+        component.forward = isReverse;
+
+        var frame = (isReverse) ? component.currentFrame.nextFrame : component.currentFrame.prevFrame;
+
+        this.updateAndGetNextTick(component, frame);
+    },
+
+    /**
+     * Returns the animation last frame.
+     *
+     * @method Phaser.Animations.Animation#getLastFrame
+     * @since 3.12.0
+     *
+     * @return {Phaser.Animations.AnimationFrame} component - The Animation Last Frame.
+     */
+    getLastFrame: function ()
+    {
+        return this.frames[this.frames.length - 1];
+    },
+
+    /**
+     * Called internally when the Animation is playing backwards.
+     * Sets the previous frame, causing a yoyo, repeat, complete or update, accordingly.
+     *
+     * @method Phaser.Animations.Animation#previousFrame
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
+     */
+    previousFrame: function (component)
+    {
+        var frame = component.currentFrame;
+
+        //  TODO: Add frame skip support
+
+        if (frame.isFirst)
+        {
+            //  We're at the start of the animation
+
+            if (component._yoyo)
+            {
+                this.handleYoyoFrame(component, true);
+            }
+            else if (component.repeatCounter > 0)
+            {
+                if (component._reverse && !component.forward)
+                {
+                    component.currentFrame = this.getLastFrame();
+                    this.repeatAnimation(component);
+                }
+                else
+                {
+                    //  Repeat (happens before complete)
+                    component.forward = true;
+                    this.repeatAnimation(component);
+                }
+            }
+            else
+            {
+                this.completeAnimation(component);
+            }
+        }
+        else
+        {
+            this.updateAndGetNextTick(component, frame.prevFrame);
+        }
+    },
+
+    /**
+     * Update Frame and Wait next tick.
+     *
+     * @method Phaser.Animations.Animation#updateAndGetNextTick
+     * @private
+     * @since 3.12.0
+     *
+     * @param {Phaser.Animations.AnimationFrame} frame - An Animation frame.
+     */
+    updateAndGetNextTick: function (component, frame)
+    {
+        component.updateFrame(frame);
+
+        this.getNextTick(component);
+    },
+
+    /**
+     * Removes the given AnimationFrame from this Animation instance.
+     * This is a global action. Any Game Object using this Animation will be impacted by this change.
+     *
+     * @method Phaser.Animations.Animation#removeFrame
+     * @since 3.0.0
+     *
+     * @param {Phaser.Animations.AnimationFrame} frame - The AnimationFrame to be removed.
+     *
+     * @return {this} This Animation object.
+     */
+    removeFrame: function (frame)
+    {
+        var index = this.frames.indexOf(frame);
+
+        if (index !== -1)
+        {
+            this.removeFrameAt(index);
+        }
+
+        return this;
+    },
+
+    /**
+     * Removes a frame from the AnimationFrame array at the provided index
+     * and updates the animation accordingly.
+     *
+     * @method Phaser.Animations.Animation#removeFrameAt
+     * @since 3.0.0
+     *
+     * @param {integer} index - The index in the AnimationFrame array
+     *
+     * @return {this} This Animation object.
+     */
+    removeFrameAt: function (index)
+    {
+        this.frames.splice(index, 1);
+
+        this.updateFrameSequence();
+
+        return this;
+    },
+
+    /**
+     * Called internally during playback. Forces the animation to repeat, providing there are enough counts left
+     * in the repeat counter.
+     *
+     * @method Phaser.Animations.Animation#repeatAnimation
+     * @fires Phaser.Animations.Events#ANIMATION_REPEAT
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_REPEAT
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_REPEAT
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
+     */
+    repeatAnimation: function (component)
+    {
+        if (component._pendingStop === 2)
+        {
+            return this.completeAnimation(component);
+        }
+
+        if (component._repeatDelay > 0 && component.pendingRepeat === false)
+        {
+            component.pendingRepeat = true;
+            component.accumulator -= component.nextTick;
+            component.nextTick += component._repeatDelay;
+        }
+        else
+        {
+            component.repeatCounter--;
+
+            component.updateFrame(component.currentFrame[(component.forward) ? 'nextFrame' : 'prevFrame']);
+
+            if (component.isPlaying)
+            {
+                this.getNextTick(component);
+
+                component.pendingRepeat = false;
+
+                var frame = component.currentFrame;
+                var parent = component.parent;
+
+                this.emit(Events.ANIMATION_REPEAT, this, frame);
+
+                parent.emit(Events.SPRITE_ANIMATION_KEY_REPEAT + this.key, this, frame, component.repeatCounter, parent);
+
+                parent.emit(Events.SPRITE_ANIMATION_REPEAT, this, frame, component.repeatCounter, parent);
+            }
+        }
+    },
+
+    /**
+     * Sets the texture frame the animation uses for rendering.
+     *
+     * @method Phaser.Animations.Animation#setFrame
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
+     */
+    setFrame: function (component)
+    {
+        //  Work out which frame should be set next on the child, and set it
+        if (component.forward)
+        {
+            this.nextFrame(component);
+        }
+        else
+        {
+            this.previousFrame(component);
+        }
+    },
+
+    /**
+     * Converts the animation data to JSON.
+     *
+     * @method Phaser.Animations.Animation#toJSON
+     * @since 3.0.0
+     *
+     * @return {Phaser.Types.Animations.JSONAnimation} The resulting JSONAnimation formatted object.
+     */
+    toJSON: function ()
+    {
+        var output = {
+            key: this.key,
+            type: this.type,
+            frames: [],
+            frameRate: this.frameRate,
+            duration: this.duration,
+            skipMissedFrames: this.skipMissedFrames,
+            delay: this.delay,
+            repeat: this.repeat,
+            repeatDelay: this.repeatDelay,
+            yoyo: this.yoyo,
+            showOnStart: this.showOnStart,
+            hideOnComplete: this.hideOnComplete
+        };
+
+        this.frames.forEach(function (frame)
+        {
+            output.frames.push(frame.toJSON());
+        });
+
+        return output;
+    },
+
+    /**
+     * Called internally whenever frames are added to, or removed from, this Animation.
+     *
+     * @method Phaser.Animations.Animation#updateFrameSequence
+     * @since 3.0.0
+     *
+     * @return {this} This Animation object.
+     */
+    updateFrameSequence: function ()
+    {
+        var len = this.frames.length;
+        var slice = 1 / (len - 1);
+
+        var frame;
+
+        for (var i = 0; i < len; i++)
+        {
+            frame = this.frames[i];
+
+            frame.index = i + 1;
+            frame.isFirst = false;
+            frame.isLast = false;
+            frame.progress = i * slice;
+
+            if (i === 0)
+            {
+                frame.isFirst = true;
+
+                if (len === 1)
+                {
+                    frame.isLast = true;
+                    frame.nextFrame = frame;
+                    frame.prevFrame = frame;
+                }
+                else
+                {
+                    frame.isLast = false;
+                    frame.prevFrame = this.frames[len - 1];
+                    frame.nextFrame = this.frames[i + 1];
+                }
+            }
+            else if (i === len - 1 && len > 1)
+            {
+                frame.isLast = true;
+                frame.prevFrame = this.frames[len - 2];
+                frame.nextFrame = this.frames[0];
+            }
+            else if (len > 1)
+            {
+                frame.prevFrame = this.frames[i - 1];
+                frame.nextFrame = this.frames[i + 1];
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Pauses playback of this Animation. The paused state is set immediately.
+     *
+     * @method Phaser.Animations.Animation#pause
+     * @since 3.0.0
+     *
+     * @return {this} This Animation object.
+     */
+    pause: function ()
+    {
+        this.paused = true;
+
+        return this;
+    },
+
+    /**
+     * Resumes playback of this Animation. The paused state is reset immediately.
+     *
+     * @method Phaser.Animations.Animation#resume
+     * @since 3.0.0
+     *
+     * @return {this} This Animation object.
+     */
+    resume: function ()
+    {
+        this.paused = false;
+
+        return this;
+    },
+
+    /**
+     * Destroys this Animation instance. It will remove all event listeners,
+     * remove this animation and its key from the global Animation Manager,
+     * and then destroy all Animation Frames in turn.
+     *
+     * @method Phaser.Animations.Animation#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.removeAllListeners();
+
+        this.manager.off(Events.PAUSE_ALL, this.pause, this);
+        this.manager.off(Events.RESUME_ALL, this.resume, this);
+
+        this.manager.remove(this.key);
+
+        for (var i = 0; i < this.frames.length; i++)
+        {
+            this.frames[i].destroy();
+        }
+
+        this.frames = [];
+
+        this.manager = null;
+    }
+
+});
+
+module.exports = Animation;
+
+
+/***/ }),
+
+/***/ "../../../src/animations/AnimationFrame.js":
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/animations/AnimationFrame.js ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
+
+/**
+ * @classdesc
+ * A single frame in an Animation sequence.
+ *
+ * An AnimationFrame consists of a reference to the Texture it uses for rendering, references to other
+ * frames in the animation, and index data. It also has the ability to modify the animation timing.
+ *
+ * AnimationFrames are generated automatically by the Animation class.
+ *
+ * @class AnimationFrame
+ * @memberof Phaser.Animations
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {string} textureKey - The key of the Texture this AnimationFrame uses.
+ * @param {(string|integer)} textureFrame - The key of the Frame within the Texture that this AnimationFrame uses.
+ * @param {integer} index - The index of this AnimationFrame within the Animation sequence.
+ * @param {Phaser.Textures.Frame} frame - A reference to the Texture Frame this AnimationFrame uses for rendering.
+ */
+var AnimationFrame = new Class({
+
+    initialize:
+
+    function AnimationFrame (textureKey, textureFrame, index, frame)
+    {
+        /**
+         * The key of the Texture this AnimationFrame uses.
+         *
+         * @name Phaser.Animations.AnimationFrame#textureKey
+         * @type {string}
+         * @since 3.0.0
+         */
+        this.textureKey = textureKey;
+
+        /**
+         * The key of the Frame within the Texture that this AnimationFrame uses.
+         *
+         * @name Phaser.Animations.AnimationFrame#textureFrame
+         * @type {(string|integer)}
+         * @since 3.0.0
+         */
+        this.textureFrame = textureFrame;
+
+        /**
+         * The index of this AnimationFrame within the Animation sequence.
+         *
+         * @name Phaser.Animations.AnimationFrame#index
+         * @type {integer}
+         * @since 3.0.0
+         */
+        this.index = index;
+
+        /**
+         * A reference to the Texture Frame this AnimationFrame uses for rendering.
+         *
+         * @name Phaser.Animations.AnimationFrame#frame
+         * @type {Phaser.Textures.Frame}
+         * @since 3.0.0
+         */
+        this.frame = frame;
+
+        /**
+         * Is this the first frame in an animation sequence?
+         *
+         * @name Phaser.Animations.AnimationFrame#isFirst
+         * @type {boolean}
+         * @default false
+         * @readonly
+         * @since 3.0.0
+         */
+        this.isFirst = false;
+
+        /**
+         * Is this the last frame in an animation sequence?
+         *
+         * @name Phaser.Animations.AnimationFrame#isLast
+         * @type {boolean}
+         * @default false
+         * @readonly
+         * @since 3.0.0
+         */
+        this.isLast = false;
+
+        /**
+         * A reference to the AnimationFrame that comes before this one in the animation, if any.
+         *
+         * @name Phaser.Animations.AnimationFrame#prevFrame
+         * @type {?Phaser.Animations.AnimationFrame}
+         * @default null
+         * @readonly
+         * @since 3.0.0
+         */
+        this.prevFrame = null;
+
+        /**
+         * A reference to the AnimationFrame that comes after this one in the animation, if any.
+         *
+         * @name Phaser.Animations.AnimationFrame#nextFrame
+         * @type {?Phaser.Animations.AnimationFrame}
+         * @default null
+         * @readonly
+         * @since 3.0.0
+         */
+        this.nextFrame = null;
+
+        /**
+         * Additional time (in ms) that this frame should appear for during playback.
+         * The value is added onto the msPerFrame set by the animation.
+         *
+         * @name Phaser.Animations.AnimationFrame#duration
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.duration = 0;
+
+        /**
+         * What % through the animation does this frame come?
+         * This value is generated when the animation is created and cached here.
+         *
+         * @name Phaser.Animations.AnimationFrame#progress
+         * @type {number}
+         * @default 0
+         * @readonly
+         * @since 3.0.0
+         */
+        this.progress = 0;
+    },
+
+    /**
+     * Generates a JavaScript object suitable for converting to JSON.
+     *
+     * @method Phaser.Animations.AnimationFrame#toJSON
+     * @since 3.0.0
+     *
+     * @return {Phaser.Types.Animations.JSONAnimationFrame} The AnimationFrame data.
+     */
+    toJSON: function ()
+    {
+        return {
+            key: this.textureKey,
+            frame: this.textureFrame,
+            duration: this.duration
+        };
+    },
+
+    /**
+     * Destroys this object by removing references to external resources and callbacks.
+     *
+     * @method Phaser.Animations.AnimationFrame#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.frame = undefined;
+    }
+
+});
+
+module.exports = AnimationFrame;
+
+
+/***/ }),
+
+/***/ "../../../src/animations/events/ADD_ANIMATION_EVENT.js":
+/*!****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/animations/events/ADD_ANIMATION_EVENT.js ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Add Animation Event.
+ * 
+ * This event is dispatched when a new animation is added to the global Animation Manager.
+ * 
+ * This can happen either as a result of an animation instance being added to the Animation Manager,
+ * or the Animation Manager creating a new animation directly.
+ *
+ * @event Phaser.Animations.Events#ADD_ANIMATION
+ * @since 3.0.0
+ * 
+ * @param {string} key - The key of the Animation that was added to the global Animation Manager.
+ * @param {Phaser.Animations.Animation} animation - An instance of the newly created Animation.
+ */
+module.exports = 'add';
+
+
+/***/ }),
+
+/***/ "../../../src/animations/events/ANIMATION_COMPLETE_EVENT.js":
+/*!*********************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/animations/events/ANIMATION_COMPLETE_EVENT.js ***!
+  \*********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Animation Complete Event.
+ * 
+ * This event is dispatched by an Animation instance when it completes, i.e. finishes playing or is manually stopped.
+ * 
+ * Be careful with the volume of events this could generate. If a group of Sprites all complete the same
+ * animation at the same time, this event will invoke its handler for each one of them.
+ *
+ * @event Phaser.Animations.Events#ANIMATION_COMPLETE
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that completed.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation completed on.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation completed.
+ */
+module.exports = 'complete';
+
+
+/***/ }),
+
+/***/ "../../../src/animations/events/ANIMATION_REPEAT_EVENT.js":
+/*!*******************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/animations/events/ANIMATION_REPEAT_EVENT.js ***!
+  \*******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Animation Repeat Event.
+ * 
+ * This event is dispatched when a currently playing animation repeats.
+ * 
+ * The event is dispatched directly from the Animation object itself. Which means that listeners
+ * bound to this event will be invoked every time the Animation repeats, for every Game Object that may have it.
+ *
+ * @event Phaser.Animations.Events#ANIMATION_REPEAT
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that repeated.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation was on when it repeated.
+ */
+module.exports = 'repeat';
+
+
+/***/ }),
+
+/***/ "../../../src/animations/events/ANIMATION_RESTART_EVENT.js":
+/*!********************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/animations/events/ANIMATION_RESTART_EVENT.js ***!
+  \********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Animation Restart Event.
+ * 
+ * This event is dispatched by an Animation instance when it restarts.
+ * 
+ * Be careful with the volume of events this could generate. If a group of Sprites all restart the same
+ * animation at the same time, this event will invoke its handler for each one of them.
+ *
+ * @event Phaser.Animations.Events#ANIMATION_RESTART
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that restarted playing.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation restarted with.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation restarted playing.
+ */
+module.exports = 'restart';
+
+
+/***/ }),
+
+/***/ "../../../src/animations/events/ANIMATION_START_EVENT.js":
+/*!******************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/animations/events/ANIMATION_START_EVENT.js ***!
+  \******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Animation Start Event.
+ * 
+ * This event is dispatched by an Animation instance when it starts playing.
+ * 
+ * Be careful with the volume of events this could generate. If a group of Sprites all play the same
+ * animation at the same time, this event will invoke its handler for each one of them.
+ *
+ * @event Phaser.Animations.Events#ANIMATION_START
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that started playing.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation started with.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation started playing.
+ */
+module.exports = 'start';
+
+
+/***/ }),
+
+/***/ "../../../src/animations/events/PAUSE_ALL_EVENT.js":
+/*!************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/animations/events/PAUSE_ALL_EVENT.js ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Pause All Animations Event.
+ * 
+ * This event is dispatched when the global Animation Manager is told to pause.
+ * 
+ * When this happens all current animations will stop updating, although it doesn't necessarily mean
+ * that the game has paused as well.
+ *
+ * @event Phaser.Animations.Events#PAUSE_ALL
+ * @since 3.0.0
+ */
+module.exports = 'pauseall';
+
+
+/***/ }),
+
+/***/ "../../../src/animations/events/REMOVE_ANIMATION_EVENT.js":
+/*!*******************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/animations/events/REMOVE_ANIMATION_EVENT.js ***!
+  \*******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Remove Animation Event.
+ * 
+ * This event is dispatched when an animation is removed from the global Animation Manager.
+ *
+ * @event Phaser.Animations.Events#REMOVE_ANIMATION
+ * @since 3.0.0
+ * 
+ * @param {string} key - The key of the Animation that was removed from the global Animation Manager.
+ * @param {Phaser.Animations.Animation} animation - An instance of the removed Animation.
+ */
+module.exports = 'remove';
+
+
+/***/ }),
+
+/***/ "../../../src/animations/events/RESUME_ALL_EVENT.js":
+/*!*************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/animations/events/RESUME_ALL_EVENT.js ***!
+  \*************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Resume All Animations Event.
+ * 
+ * This event is dispatched when the global Animation Manager resumes, having been previously paused.
+ * 
+ * When this happens all current animations will continue updating again.
+ *
+ * @event Phaser.Animations.Events#RESUME_ALL
+ * @since 3.0.0
+ */
+module.exports = 'resumeall';
+
+
+/***/ }),
+
+/***/ "../../../src/animations/events/SPRITE_ANIMATION_COMPLETE_EVENT.js":
+/*!****************************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/animations/events/SPRITE_ANIMATION_COMPLETE_EVENT.js ***!
+  \****************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Sprite Animation Complete Event.
+ * 
+ * This event is dispatched by a Sprite when an animation finishes playing on it.
+ * 
+ * Listen for it on the Sprite using `sprite.on('animationcomplete', listener)`
+ * 
+ * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_COMPLETE` event.
+ *
+ * @event Phaser.Animations.Events#SPRITE_ANIMATION_COMPLETE
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that completed.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation completed on.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation completed.
+ */
+module.exports = 'animationcomplete';
+
+
+/***/ }),
+
+/***/ "../../../src/animations/events/SPRITE_ANIMATION_KEY_COMPLETE_EVENT.js":
+/*!********************************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/animations/events/SPRITE_ANIMATION_KEY_COMPLETE_EVENT.js ***!
+  \********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Sprite Animation Key Complete Event.
+ * 
+ * This event is dispatched by a Sprite when a specific animation finishes playing on it.
+ * 
+ * Listen for it on the Sprite using `sprite.on('animationcomplete-key', listener)` where `key` is the key of
+ * the animation. For example, if you had an animation with the key 'explode' you should listen for `animationcomplete-explode`.
+ *
+ * @event Phaser.Animations.Events#SPRITE_ANIMATION_KEY_COMPLETE
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that completed.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation completed on.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation completed.
+ */
+module.exports = 'animationcomplete-';
+
+
+/***/ }),
+
+/***/ "../../../src/animations/events/SPRITE_ANIMATION_KEY_REPEAT_EVENT.js":
+/*!******************************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/animations/events/SPRITE_ANIMATION_KEY_REPEAT_EVENT.js ***!
+  \******************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Sprite Animation Key Repeat Event.
+ * 
+ * This event is dispatched by a Sprite when a specific animation repeats playing on it.
+ * 
+ * Listen for it on the Sprite using `sprite.on('animationrepeat-key', listener)` where `key` is the key of
+ * the animation. For example, if you had an animation with the key 'explode' you should listen for `animationrepeat-explode`.
+ *
+ * @event Phaser.Animations.Events#SPRITE_ANIMATION_KEY_REPEAT
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that is repeating on the Sprite.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation started with.
+ * @param {integer} repeatCount - The number of times the Animation has repeated so far.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation repeated playing.
+ */
+module.exports = 'animationrepeat-';
+
+
+/***/ }),
+
+/***/ "../../../src/animations/events/SPRITE_ANIMATION_KEY_RESTART_EVENT.js":
+/*!*******************************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/animations/events/SPRITE_ANIMATION_KEY_RESTART_EVENT.js ***!
+  \*******************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Sprite Animation Key Restart Event.
+ * 
+ * This event is dispatched by a Sprite when a specific animation restarts playing on it.
+ * 
+ * Listen for it on the Sprite using `sprite.on('animationrestart-key', listener)` where `key` is the key of
+ * the animation. For example, if you had an animation with the key 'explode' you should listen for `animationrestart-explode`.
+ *
+ * @event Phaser.Animations.Events#SPRITE_ANIMATION_KEY_RESTART
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that was restarted on the Sprite.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation restarted with.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation restarted playing.
+ */
+module.exports = 'animationrestart-';
+
+
+/***/ }),
+
+/***/ "../../../src/animations/events/SPRITE_ANIMATION_KEY_START_EVENT.js":
+/*!*****************************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/animations/events/SPRITE_ANIMATION_KEY_START_EVENT.js ***!
+  \*****************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Sprite Animation Key Start Event.
+ * 
+ * This event is dispatched by a Sprite when a specific animation starts playing on it.
+ * 
+ * Listen for it on the Sprite using `sprite.on('animationstart-key', listener)` where `key` is the key of
+ * the animation. For example, if you had an animation with the key 'explode' you should listen for `animationstart-explode`.
+ *
+ * @event Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that was started on the Sprite.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation started with.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation started playing.
+ */
+module.exports = 'animationstart-';
+
+
+/***/ }),
+
+/***/ "../../../src/animations/events/SPRITE_ANIMATION_KEY_UPDATE_EVENT.js":
+/*!******************************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/animations/events/SPRITE_ANIMATION_KEY_UPDATE_EVENT.js ***!
+  \******************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Sprite Animation Key Update Event.
+ * 
+ * This event is dispatched by a Sprite when a specific animation playing on it updates. This happens when the animation changes frame,
+ * based on the animation frame rate and other factors like `timeScale` and `delay`.
+ * 
+ * Listen for it on the Sprite using `sprite.on('animationupdate-key', listener)` where `key` is the key of
+ * the animation. For example, if you had an animation with the key 'explode' you should listen for `animationupdate-explode`.
+ *
+ * @event Phaser.Animations.Events#SPRITE_ANIMATION_KEY_UPDATE
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that has updated on the Sprite.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame of the Animation.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation updated.
+ */
+module.exports = 'animationupdate-';
+
+
+/***/ }),
+
+/***/ "../../../src/animations/events/SPRITE_ANIMATION_REPEAT_EVENT.js":
+/*!**************************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/animations/events/SPRITE_ANIMATION_REPEAT_EVENT.js ***!
+  \**************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Sprite Animation Repeat Event.
+ * 
+ * This event is dispatched by a Sprite when an animation repeats playing on it.
+ * 
+ * Listen for it on the Sprite using `sprite.on('animationrepeat', listener)`
+ * 
+ * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_REPEAT` event.
+ *
+ * @event Phaser.Animations.Events#SPRITE_ANIMATION_REPEAT
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that is repeating on the Sprite.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation started with.
+ * @param {integer} repeatCount - The number of times the Animation has repeated so far.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation repeated playing.
+ */
+module.exports = 'animationrepeat';
+
+
+/***/ }),
+
+/***/ "../../../src/animations/events/SPRITE_ANIMATION_RESTART_EVENT.js":
+/*!***************************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/animations/events/SPRITE_ANIMATION_RESTART_EVENT.js ***!
+  \***************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Sprite Animation Restart Event.
+ * 
+ * This event is dispatched by a Sprite when an animation restarts playing on it.
+ * 
+ * Listen for it on the Sprite using `sprite.on('animationrestart', listener)`
+ * 
+ * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_RESTART` event.
+ *
+ * @event Phaser.Animations.Events#SPRITE_ANIMATION_RESTART
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that was restarted on the Sprite.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation restarted with.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation restarted playing.
+ */
+module.exports = 'animationrestart';
+
+
+/***/ }),
+
+/***/ "../../../src/animations/events/SPRITE_ANIMATION_START_EVENT.js":
+/*!*************************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/animations/events/SPRITE_ANIMATION_START_EVENT.js ***!
+  \*************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Sprite Animation Start Event.
+ * 
+ * This event is dispatched by a Sprite when an animation starts playing on it.
+ * 
+ * Listen for it on the Sprite using `sprite.on('animationstart', listener)`
+ * 
+ * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_START` event.
+ *
+ * @event Phaser.Animations.Events#SPRITE_ANIMATION_START
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that was started on the Sprite.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation started with.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation started playing.
+ */
+module.exports = 'animationstart';
+
+
+/***/ }),
+
+/***/ "../../../src/animations/events/SPRITE_ANIMATION_UPDATE_EVENT.js":
+/*!**************************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/animations/events/SPRITE_ANIMATION_UPDATE_EVENT.js ***!
+  \**************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Sprite Animation Update Event.
+ * 
+ * This event is dispatched by a Sprite when an animation playing on it updates. This happens when the animation changes frame,
+ * based on the animation frame rate and other factors like `timeScale` and `delay`.
+ * 
+ * Listen for it on the Sprite using `sprite.on('animationupdate', listener)`
+ * 
+ * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_UPDATE` event.
+ *
+ * @event Phaser.Animations.Events#SPRITE_ANIMATION_UPDATE
+ * @since 3.16.1
+ * 
+ * @param {Phaser.Animations.Animation} animation - A reference to the Animation that has updated on the Sprite.
+ * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame of the Animation.
+ * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation updated.
+ */
+module.exports = 'animationupdate';
+
+
+/***/ }),
+
+/***/ "../../../src/animations/events/index.js":
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/animations/events/index.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Animations.Events
+ */
+
+module.exports = {
+
+    ADD_ANIMATION: __webpack_require__(/*! ./ADD_ANIMATION_EVENT */ "../../../src/animations/events/ADD_ANIMATION_EVENT.js"),
+    ANIMATION_COMPLETE: __webpack_require__(/*! ./ANIMATION_COMPLETE_EVENT */ "../../../src/animations/events/ANIMATION_COMPLETE_EVENT.js"),
+    ANIMATION_REPEAT: __webpack_require__(/*! ./ANIMATION_REPEAT_EVENT */ "../../../src/animations/events/ANIMATION_REPEAT_EVENT.js"),
+    ANIMATION_RESTART: __webpack_require__(/*! ./ANIMATION_RESTART_EVENT */ "../../../src/animations/events/ANIMATION_RESTART_EVENT.js"),
+    ANIMATION_START: __webpack_require__(/*! ./ANIMATION_START_EVENT */ "../../../src/animations/events/ANIMATION_START_EVENT.js"),
+    PAUSE_ALL: __webpack_require__(/*! ./PAUSE_ALL_EVENT */ "../../../src/animations/events/PAUSE_ALL_EVENT.js"),
+    REMOVE_ANIMATION: __webpack_require__(/*! ./REMOVE_ANIMATION_EVENT */ "../../../src/animations/events/REMOVE_ANIMATION_EVENT.js"),
+    RESUME_ALL: __webpack_require__(/*! ./RESUME_ALL_EVENT */ "../../../src/animations/events/RESUME_ALL_EVENT.js"),
+    SPRITE_ANIMATION_COMPLETE: __webpack_require__(/*! ./SPRITE_ANIMATION_COMPLETE_EVENT */ "../../../src/animations/events/SPRITE_ANIMATION_COMPLETE_EVENT.js"),
+    SPRITE_ANIMATION_KEY_COMPLETE: __webpack_require__(/*! ./SPRITE_ANIMATION_KEY_COMPLETE_EVENT */ "../../../src/animations/events/SPRITE_ANIMATION_KEY_COMPLETE_EVENT.js"),
+    SPRITE_ANIMATION_KEY_REPEAT: __webpack_require__(/*! ./SPRITE_ANIMATION_KEY_REPEAT_EVENT */ "../../../src/animations/events/SPRITE_ANIMATION_KEY_REPEAT_EVENT.js"),
+    SPRITE_ANIMATION_KEY_RESTART: __webpack_require__(/*! ./SPRITE_ANIMATION_KEY_RESTART_EVENT */ "../../../src/animations/events/SPRITE_ANIMATION_KEY_RESTART_EVENT.js"),
+    SPRITE_ANIMATION_KEY_START: __webpack_require__(/*! ./SPRITE_ANIMATION_KEY_START_EVENT */ "../../../src/animations/events/SPRITE_ANIMATION_KEY_START_EVENT.js"),
+    SPRITE_ANIMATION_KEY_UPDATE: __webpack_require__(/*! ./SPRITE_ANIMATION_KEY_UPDATE_EVENT */ "../../../src/animations/events/SPRITE_ANIMATION_KEY_UPDATE_EVENT.js"),
+    SPRITE_ANIMATION_REPEAT: __webpack_require__(/*! ./SPRITE_ANIMATION_REPEAT_EVENT */ "../../../src/animations/events/SPRITE_ANIMATION_REPEAT_EVENT.js"),
+    SPRITE_ANIMATION_RESTART: __webpack_require__(/*! ./SPRITE_ANIMATION_RESTART_EVENT */ "../../../src/animations/events/SPRITE_ANIMATION_RESTART_EVENT.js"),
+    SPRITE_ANIMATION_START: __webpack_require__(/*! ./SPRITE_ANIMATION_START_EVENT */ "../../../src/animations/events/SPRITE_ANIMATION_START_EVENT.js"),
+    SPRITE_ANIMATION_UPDATE: __webpack_require__(/*! ./SPRITE_ANIMATION_UPDATE_EVENT */ "../../../src/animations/events/SPRITE_ANIMATION_UPDATE_EVENT.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/core/events/BLUR_EVENT.js":
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/BLUR_EVENT.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Blur Event.
+ * 
+ * This event is dispatched by the Game Visibility Handler when the window in which the Game instance is embedded
+ * enters a blurred state. The blur event is raised when the window loses focus. This can happen if a user swaps
+ * tab, or if they simply remove focus from the browser to another app.
+ *
+ * @event Phaser.Core.Events#BLUR
+ * @since 3.0.0
+ */
+module.exports = 'blur';
+
+
+/***/ }),
+
+/***/ "../../../src/core/events/BOOT_EVENT.js":
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/BOOT_EVENT.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Boot Event.
+ * 
+ * This event is dispatched when the Phaser Game instance has finished booting, but before it is ready to start running.
+ * The global systems use this event to know when to set themselves up, dispatching their own `ready` events as required.
+ *
+ * @event Phaser.Core.Events#BOOT
+ * @since 3.0.0
+ */
+module.exports = 'boot';
+
+
+/***/ }),
+
+/***/ "../../../src/core/events/CONTEXT_LOST_EVENT.js":
+/*!*********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/CONTEXT_LOST_EVENT.js ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Context Lost Event.
+ * 
+ * This event is dispatched by the Game if the WebGL Renderer it is using encounters a WebGL Context Lost event from the browser.
+ * 
+ * The partner event is `CONTEXT_RESTORED`.
+ *
+ * @event Phaser.Core.Events#CONTEXT_LOST
+ * @since 3.19.0
+ */
+module.exports = 'contextlost';
+
+
+/***/ }),
+
+/***/ "../../../src/core/events/CONTEXT_RESTORED_EVENT.js":
+/*!*************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/CONTEXT_RESTORED_EVENT.js ***!
+  \*************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Context Restored Event.
+ * 
+ * This event is dispatched by the Game if the WebGL Renderer it is using encounters a WebGL Context Restored event from the browser.
+ * 
+ * The partner event is `CONTEXT_LOST`.
+ *
+ * @event Phaser.Core.Events#CONTEXT_RESTORED
+ * @since 3.19.0
+ */
+module.exports = 'contextrestored';
+
+
+/***/ }),
+
+/***/ "../../../src/core/events/DESTROY_EVENT.js":
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/DESTROY_EVENT.js ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Destroy Event.
+ * 
+ * This event is dispatched when the game instance has been told to destroy itself.
+ * Lots of internal systems listen to this event in order to clear themselves out.
+ * Custom plugins and game code should also do the same.
+ *
+ * @event Phaser.Core.Events#DESTROY
+ * @since 3.0.0
+ */
+module.exports = 'destroy';
+
+
+/***/ }),
+
+/***/ "../../../src/core/events/FOCUS_EVENT.js":
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/FOCUS_EVENT.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Focus Event.
+ * 
+ * This event is dispatched by the Game Visibility Handler when the window in which the Game instance is embedded
+ * enters a focused state. The focus event is raised when the window re-gains focus, having previously lost it.
+ *
+ * @event Phaser.Core.Events#FOCUS
+ * @since 3.0.0
+ */
+module.exports = 'focus';
+
+
+/***/ }),
+
+/***/ "../../../src/core/events/HIDDEN_EVENT.js":
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/HIDDEN_EVENT.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Hidden Event.
+ * 
+ * This event is dispatched by the Game Visibility Handler when the document in which the Game instance is embedded
+ * enters a hidden state. Only browsers that support the Visibility API will cause this event to be emitted.
+ * 
+ * In most modern browsers, when the document enters a hidden state, the Request Animation Frame and setTimeout, which
+ * control the main game loop, will automatically pause. There is no way to stop this from happening. It is something
+ * your game should account for in its own code, should the pause be an issue (i.e. for multiplayer games)
+ *
+ * @event Phaser.Core.Events#HIDDEN
+ * @since 3.0.0
+ */
+module.exports = 'hidden';
+
+
+/***/ }),
+
+/***/ "../../../src/core/events/PAUSE_EVENT.js":
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/PAUSE_EVENT.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Pause Event.
+ * 
+ * This event is dispatched when the Game loop enters a paused state, usually as a result of the Visibility Handler.
+ *
+ * @event Phaser.Core.Events#PAUSE
+ * @since 3.0.0
+ */
+module.exports = 'pause';
+
+
+/***/ }),
+
+/***/ "../../../src/core/events/POST_RENDER_EVENT.js":
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/POST_RENDER_EVENT.js ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Post-Render Event.
+ * 
+ * This event is dispatched right at the end of the render process.
+ * 
+ * Every Scene will have rendered and been drawn to the canvas by the time this event is fired.
+ * Use it for any last minute post-processing before the next game step begins.
+ *
+ * @event Phaser.Core.Events#POST_RENDER
+ * @since 3.0.0
+ * 
+ * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - A reference to the current renderer being used by the Game instance.
+ */
+module.exports = 'postrender';
+
+
+/***/ }),
+
+/***/ "../../../src/core/events/POST_STEP_EVENT.js":
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/POST_STEP_EVENT.js ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Post-Step Event.
+ * 
+ * This event is dispatched after the Scene Manager has updated.
+ * Hook into it from plugins or systems that need to do things before the render starts.
+ *
+ * @event Phaser.Core.Events#POST_STEP
+ * @since 3.0.0
+ * 
+ * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+ * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
+ */
+module.exports = 'poststep';
+
+
+/***/ }),
+
+/***/ "../../../src/core/events/PRE_RENDER_EVENT.js":
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/PRE_RENDER_EVENT.js ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Pre-Render Event.
+ * 
+ * This event is dispatched immediately before any of the Scenes have started to render.
+ * 
+ * The renderer will already have been initialized this frame, clearing itself and preparing to receive the Scenes for rendering, but it won't have actually drawn anything yet.
+ *
+ * @event Phaser.Core.Events#PRE_RENDER
+ * @since 3.0.0
+ * 
+ * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - A reference to the current renderer being used by the Game instance.
+ */
+module.exports = 'prerender';
+
+
+/***/ }),
+
+/***/ "../../../src/core/events/PRE_STEP_EVENT.js":
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/PRE_STEP_EVENT.js ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Pre-Step Event.
+ * 
+ * This event is dispatched before the main Game Step starts. By this point in the game cycle none of the Scene updates have yet happened.
+ * Hook into it from plugins or systems that need to update before the Scene Manager does.
+ *
+ * @event Phaser.Core.Events#PRE_STEP
+ * @since 3.0.0
+ * 
+ * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+ * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
+ */
+module.exports = 'prestep';
+
+
+/***/ }),
+
+/***/ "../../../src/core/events/READY_EVENT.js":
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/READY_EVENT.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Ready Event.
+ * 
+ * This event is dispatched when the Phaser Game instance has finished booting, the Texture Manager is fully ready,
+ * and all local systems are now able to start.
+ *
+ * @event Phaser.Core.Events#READY
+ * @since 3.0.0
+ */
+module.exports = 'ready';
+
+
+/***/ }),
+
+/***/ "../../../src/core/events/RESUME_EVENT.js":
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/RESUME_EVENT.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Resume Event.
+ * 
+ * This event is dispatched when the game loop leaves a paused state and resumes running.
+ *
+ * @event Phaser.Core.Events#RESUME
+ * @since 3.0.0
+ */
+module.exports = 'resume';
+
+
+/***/ }),
+
+/***/ "../../../src/core/events/STEP_EVENT.js":
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/STEP_EVENT.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Step Event.
+ * 
+ * This event is dispatched after the Game Pre-Step and before the Scene Manager steps.
+ * Hook into it from plugins or systems that need to update before the Scene Manager does, but after the core Systems have.
+ *
+ * @event Phaser.Core.Events#STEP
+ * @since 3.0.0
+ * 
+ * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+ * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
+ */
+module.exports = 'step';
+
+
+/***/ }),
+
+/***/ "../../../src/core/events/VISIBLE_EVENT.js":
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/VISIBLE_EVENT.js ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Visible Event.
+ * 
+ * This event is dispatched by the Game Visibility Handler when the document in which the Game instance is embedded
+ * enters a visible state, previously having been hidden.
+ * 
+ * Only browsers that support the Visibility API will cause this event to be emitted.
+ *
+ * @event Phaser.Core.Events#VISIBLE
+ * @since 3.0.0
+ */
+module.exports = 'visible';
+
+
+/***/ }),
+
+/***/ "../../../src/core/events/index.js":
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/index.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Core.Events
+ */
+
+module.exports = {
+
+    BLUR: __webpack_require__(/*! ./BLUR_EVENT */ "../../../src/core/events/BLUR_EVENT.js"),
+    BOOT: __webpack_require__(/*! ./BOOT_EVENT */ "../../../src/core/events/BOOT_EVENT.js"),
+    CONTEXT_LOST: __webpack_require__(/*! ./CONTEXT_LOST_EVENT */ "../../../src/core/events/CONTEXT_LOST_EVENT.js"),
+    CONTEXT_RESTORED: __webpack_require__(/*! ./CONTEXT_RESTORED_EVENT */ "../../../src/core/events/CONTEXT_RESTORED_EVENT.js"),
+    DESTROY: __webpack_require__(/*! ./DESTROY_EVENT */ "../../../src/core/events/DESTROY_EVENT.js"),
+    FOCUS: __webpack_require__(/*! ./FOCUS_EVENT */ "../../../src/core/events/FOCUS_EVENT.js"),
+    HIDDEN: __webpack_require__(/*! ./HIDDEN_EVENT */ "../../../src/core/events/HIDDEN_EVENT.js"),
+    PAUSE: __webpack_require__(/*! ./PAUSE_EVENT */ "../../../src/core/events/PAUSE_EVENT.js"),
+    POST_RENDER: __webpack_require__(/*! ./POST_RENDER_EVENT */ "../../../src/core/events/POST_RENDER_EVENT.js"),
+    POST_STEP: __webpack_require__(/*! ./POST_STEP_EVENT */ "../../../src/core/events/POST_STEP_EVENT.js"),
+    PRE_RENDER: __webpack_require__(/*! ./PRE_RENDER_EVENT */ "../../../src/core/events/PRE_RENDER_EVENT.js"),
+    PRE_STEP: __webpack_require__(/*! ./PRE_STEP_EVENT */ "../../../src/core/events/PRE_STEP_EVENT.js"),
+    READY: __webpack_require__(/*! ./READY_EVENT */ "../../../src/core/events/READY_EVENT.js"),
+    RESUME: __webpack_require__(/*! ./RESUME_EVENT */ "../../../src/core/events/RESUME_EVENT.js"),
+    STEP: __webpack_require__(/*! ./STEP_EVENT */ "../../../src/core/events/STEP_EVENT.js"),
+    VISIBLE: __webpack_require__(/*! ./VISIBLE_EVENT */ "../../../src/core/events/VISIBLE_EVENT.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/data/DataManager.js":
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/data/DataManager.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -472,7 +2748,7 @@ var Events = __webpack_require__(/*! ./events */ "../../../src/data/events/index
  * @since 3.0.0
  *
  * @param {object} parent - The object that this DataManager belongs to.
- * @param {Phaser.Events.EventEmitter} eventEmitter - The DataManager's event emitter.
+ * @param {Phaser.Events.EventEmitter} [eventEmitter] - The DataManager's event emitter.
  */
 var DataManager = new Class({
 
@@ -699,7 +2975,7 @@ var DataManager = new Class({
      * @param {(string|object)} key - The key to set the value for. Or an object or key value pairs. If an object the `data` argument is ignored.
      * @param {*} data - The value to set for the given key. If an object is provided as the key this argument is ignored.
      *
-     * @return {Phaser.Data.DataManager} This DataManager object.
+     * @return {this} This DataManager object.
      */
     set: function (key, data)
     {
@@ -724,6 +3000,72 @@ var DataManager = new Class({
     },
 
     /**
+     * Increase a value for the given key. If the key doesn't already exist in the Data Manager then it is increased from 0.
+     * 
+     * When the value is first set, a `setdata` event is emitted.
+     * 
+     * @method Phaser.Data.DataManager#inc
+     * @fires Phaser.Data.Events#SET_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA_KEY
+     * @since 3.23.0
+     *
+     * @param {(string|object)} key - The key to increase the value for.
+     * @param {*} [data] - The value to increase for the given key.
+     *
+     * @return {Phaser.Data.DataManager} This DataManager object.
+     */
+    inc: function (key, data)
+    {
+        if (this._frozen)
+        {
+            return this;
+        }
+
+        if (data === undefined)
+        {
+            data = 1;
+        }
+
+        var value = this.get(key);
+        if (value === undefined)
+        {
+            value = 0;
+        }
+
+        this.set(key, (value + data));
+
+        return this;
+    },
+
+    /**
+     * Toggle a boolean value for the given key. If the key doesn't already exist in the Data Manager then it is toggled from false.
+     * 
+     * When the value is first set, a `setdata` event is emitted.
+     * 
+     * @method Phaser.Data.DataManager#toggle
+     * @fires Phaser.Data.Events#SET_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA_KEY
+     * @since 3.23.0
+     *
+     * @param {(string|object)} key - The key to toggle the value for.
+     *
+     * @return {Phaser.Data.DataManager} This DataManager object.
+     */
+    toggle: function (key)
+    {
+        if (this._frozen)
+        {
+            return this;
+        }
+
+        this.set(key, !this.get(key));
+
+        return this;
+    },
+
+    /**
      * Internal value setter, called automatically by the `set` method.
      *
      * @method Phaser.Data.DataManager#setValue
@@ -736,7 +3078,7 @@ var DataManager = new Class({
      * @param {string} key - The key to set the value for.
      * @param {*} data - The value to set.
      *
-     * @return {Phaser.Data.DataManager} This DataManager object.
+     * @return {this} This DataManager object.
      */
     setValue: function (key, data)
     {
@@ -800,7 +3142,7 @@ var DataManager = new Class({
      * @param {*} [context] - Value to use as `this` when executing callback.
      * @param {...*} [args] - Additional arguments that will be passed to the callback, after the game object, key, and data.
      *
-     * @return {Phaser.Data.DataManager} This DataManager object.
+     * @return {this} This DataManager object.
      */
     each: function (callback, context)
     {
@@ -837,7 +3179,7 @@ var DataManager = new Class({
      * @param {Object.<string, *>} data - The data to merge.
      * @param {boolean} [overwrite=true] - Whether to overwrite existing data. Defaults to true.
      *
-     * @return {Phaser.Data.DataManager} This DataManager object.
+     * @return {this} This DataManager object.
      */
     merge: function (data, overwrite)
     {
@@ -873,7 +3215,7 @@ var DataManager = new Class({
      *
      * @param {(string|string[])} key - The key to remove, or an array of keys to remove.
      *
-     * @return {Phaser.Data.DataManager} This DataManager object.
+     * @return {this} This DataManager object.
      */
     remove: function (key)
     {
@@ -907,7 +3249,7 @@ var DataManager = new Class({
      *
      * @param {string} key - The key to set the value for.
      *
-     * @return {Phaser.Data.DataManager} This DataManager object.
+     * @return {this} This DataManager object.
      */
     removeValue: function (key)
     {
@@ -979,7 +3321,7 @@ var DataManager = new Class({
      *
      * @param {boolean} value - Whether to freeze or unfreeze the Data Manager.
      *
-     * @return {Phaser.Data.DataManager} This DataManager object.
+     * @return {this} This DataManager object.
      */
     setFreeze: function (value)
     {
@@ -994,7 +3336,7 @@ var DataManager = new Class({
      * @method Phaser.Data.DataManager#reset
      * @since 3.0.0
      *
-     * @return {Phaser.Data.DataManager} This DataManager object.
+     * @return {this} This DataManager object.
      */
     reset: function ()
     {
@@ -1082,15 +3424,15 @@ module.exports = DataManager;
 /***/ }),
 
 /***/ "../../../src/data/events/CHANGE_DATA_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/CHANGE_DATA_EVENT.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/data/events/CHANGE_DATA_EVENT.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -1119,15 +3461,15 @@ module.exports = 'changedata';
 /***/ }),
 
 /***/ "../../../src/data/events/CHANGE_DATA_KEY_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/CHANGE_DATA_KEY_EVENT.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/data/events/CHANGE_DATA_KEY_EVENT.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -1145,7 +3487,6 @@ module.exports = 'changedata';
  * @since 3.16.1
  * 
  * @param {any} parent - A reference to the object that owns the instance of the Data Manager responsible for this event.
- * @param {string} key - The unique key of the data item within the Data Manager.
  * @param {any} value - The item that was updated in the Data Manager. This can be of any data type, i.e. a string, boolean, number, object or instance.
  * @param {any} previousValue - The previous item that was updated in the Data Manager. This can be of any data type, i.e. a string, boolean, number, object or instance.
  */
@@ -1155,15 +3496,15 @@ module.exports = 'changedata-';
 /***/ }),
 
 /***/ "../../../src/data/events/REMOVE_DATA_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/REMOVE_DATA_EVENT.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/data/events/REMOVE_DATA_EVENT.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -1188,15 +3529,15 @@ module.exports = 'removedata';
 /***/ }),
 
 /***/ "../../../src/data/events/SET_DATA_EVENT.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/SET_DATA_EVENT.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/data/events/SET_DATA_EVENT.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -1221,15 +3562,15 @@ module.exports = 'setdata';
 /***/ }),
 
 /***/ "../../../src/data/events/index.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/index.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/data/events/index.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -1249,16 +3590,668 @@ module.exports = {
 
 /***/ }),
 
-/***/ "../../../src/gameobjects/BuildGameObject.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/BuildGameObject.js ***!
-  \*************************************************************/
+/***/ "../../../src/display/color/GetColorFromValue.js":
+/*!**********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/display/color/GetColorFromValue.js ***!
+  \**********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Given a hex color value, such as 0xff00ff (for purple), it will return a
+ * numeric representation of it (i.e. 16711935) for use in WebGL tinting.
+ *
+ * @function Phaser.Display.Color.GetColorFromValue
+ * @since 3.50.0
+ *
+ * @param {number} red - The hex color value, such as 0xff0000.
+ *
+ * @return {number} The combined color value.
+ */
+var GetColorFromValue = function (value)
+{
+    return (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
+};
+
+module.exports = GetColorFromValue;
+
+
+/***/ }),
+
+/***/ "../../../src/display/mask/BitmapMask.js":
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/display/mask/BitmapMask.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(/*! ../../utils/Class */ "../../../src/utils/Class.js");
+var GameEvents = __webpack_require__(/*! ../../core/events */ "../../../src/core/events/index.js");
+
+/**
+ * @classdesc
+ * A Bitmap Mask combines the alpha (opacity) of a masked pixel with the alpha of another pixel.
+ * Unlike the Geometry Mask, which is a clipping path, a Bitmap Mask behaves like an alpha mask,
+ * not a clipping path. It is only available when using the WebGL Renderer.
+ *
+ * A Bitmap Mask can use any Game Object to determine the alpha of each pixel of the masked Game Object(s).
+ * For any given point of a masked Game Object's texture, the pixel's alpha will be multiplied by the alpha
+ * of the pixel at the same position in the Bitmap Mask's Game Object. The color of the pixel from the
+ * Bitmap Mask doesn't matter.
+ *
+ * For example, if a pure blue pixel with an alpha of 0.95 is masked with a pure red pixel with an
+ * alpha of 0.5, the resulting pixel will be pure blue with an alpha of 0.475. Naturally, this means
+ * that a pixel in the mask with an alpha of 0 will hide the corresponding pixel in all masked Game Objects
+ *  A pixel with an alpha of 1 in the masked Game Object will receive the same alpha as the
+ * corresponding pixel in the mask.
+ *
+ * The Bitmap Mask's location matches the location of its Game Object, not the location of the
+ * masked objects. Moving or transforming the underlying Game Object will change the mask
+ * (and affect the visibility of any masked objects), whereas moving or transforming a masked object
+ * will not affect the mask.
+ *
+ * The Bitmap Mask will not render its Game Object by itself. If the Game Object is not in a
+ * Scene's display list, it will only be used for the mask and its full texture will not be directly
+ * visible. Adding the underlying Game Object to a Scene will not cause any problems - it will
+ * render as a normal Game Object and will also serve as a mask.
+ *
+ * @class BitmapMask
+ * @memberof Phaser.Display.Masks
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - The Scene which this Bitmap Mask will be used in.
+ * @param {Phaser.GameObjects.GameObject} renderable - A renderable Game Object that uses a texture, such as a Sprite.
+ */
+var BitmapMask = new Class({
+
+    initialize:
+
+    function BitmapMask (scene, renderable)
+    {
+        var renderer = scene.sys.game.renderer;
+
+        /**
+         * A reference to either the Canvas or WebGL Renderer that this Mask is using.
+         *
+         * @name Phaser.Display.Masks.BitmapMask#renderer
+         * @type {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)}
+         * @since 3.11.0
+         */
+        this.renderer = renderer;
+
+        /**
+         * A renderable Game Object that uses a texture, such as a Sprite.
+         *
+         * @name Phaser.Display.Masks.BitmapMask#bitmapMask
+         * @type {Phaser.GameObjects.GameObject}
+         * @since 3.0.0
+         */
+        this.bitmapMask = renderable;
+
+        /**
+         * The texture used for the mask's framebuffer.
+         *
+         * @name Phaser.Display.Masks.BitmapMask#maskTexture
+         * @type {WebGLTexture}
+         * @default null
+         * @since 3.0.0
+         */
+        this.maskTexture = null;
+
+        /**
+         * The texture used for the main framebuffer.
+         *
+         * @name Phaser.Display.Masks.BitmapMask#mainTexture
+         * @type {WebGLTexture}
+         * @default null
+         * @since 3.0.0
+         */
+        this.mainTexture = null;
+
+        /**
+         * Whether the Bitmap Mask is dirty and needs to be updated.
+         *
+         * @name Phaser.Display.Masks.BitmapMask#dirty
+         * @type {boolean}
+         * @default true
+         * @since 3.0.0
+         */
+        this.dirty = true;
+
+        /**
+         * The framebuffer to which a masked Game Object is rendered.
+         *
+         * @name Phaser.Display.Masks.BitmapMask#mainFramebuffer
+         * @type {WebGLFramebuffer}
+         * @since 3.0.0
+         */
+        this.mainFramebuffer = null;
+
+        /**
+         * The framebuffer to which the Bitmap Mask's masking Game Object is rendered.
+         *
+         * @name Phaser.Display.Masks.BitmapMask#maskFramebuffer
+         * @type {WebGLFramebuffer}
+         * @since 3.0.0
+         */
+        this.maskFramebuffer = null;
+
+        /**
+         * The previous framebuffer set in the renderer before this one was enabled.
+         *
+         * @name Phaser.Display.Masks.BitmapMask#prevFramebuffer
+         * @type {WebGLFramebuffer}
+         * @since 3.17.0
+         */
+        this.prevFramebuffer = null;
+
+        /**
+         * Whether to invert the masks alpha.
+         *
+         * If `true`, the alpha of the masking pixel will be inverted before it's multiplied with the masked pixel. Essentially, this means that a masked area will be visible only if the corresponding area in the mask is invisible.
+         *
+         * @name Phaser.Display.Masks.BitmapMask#invertAlpha
+         * @type {boolean}
+         * @since 3.1.2
+         */
+        this.invertAlpha = false;
+
+        /**
+         * Is this mask a stencil mask?
+         *
+         * @name Phaser.Display.Masks.BitmapMask#isStencil
+         * @type {boolean}
+         * @readonly
+         * @since 3.17.0
+         */
+        this.isStencil = false;
+
+        if (renderer && renderer.gl)
+        {
+            var width = renderer.width;
+            var height = renderer.height;
+            var pot = ((width & (width - 1)) === 0 && (height & (height - 1)) === 0);
+            var gl = renderer.gl;
+            var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
+            var filter = gl.LINEAR;
+
+            this.mainTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+            this.maskTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+            this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, true);
+            this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, true);
+
+            scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, function (renderer)
+            {
+                var width = renderer.width;
+                var height = renderer.height;
+                var pot = ((width & (width - 1)) === 0 && (height & (height - 1)) === 0);
+                var gl = renderer.gl;
+                var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
+                var filter = gl.LINEAR;
+
+                this.mainTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+                this.maskTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+                this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, true);
+                this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, true);
+
+            }, this);
+        }
+    },
+
+    /**
+     * Sets a new masking Game Object for the Bitmap Mask.
+     *
+     * @method Phaser.Display.Masks.BitmapMask#setBitmap
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.GameObject} renderable - A renderable Game Object that uses a texture, such as a Sprite.
+     */
+    setBitmap: function (renderable)
+    {
+        this.bitmapMask = renderable;
+    },
+
+    /**
+     * Prepares the WebGL Renderer to render a Game Object with this mask applied.
+     *
+     * This renders the masking Game Object to the mask framebuffer and switches to the main framebuffer so that the masked Game Object will be rendered to it instead of being rendered directly to the frame.
+     *
+     * @method Phaser.Display.Masks.BitmapMask#preRenderWebGL
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The WebGL Renderer to prepare.
+     * @param {Phaser.GameObjects.GameObject} maskedObject - The masked Game Object which will be drawn.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to render to.
+     */
+    preRenderWebGL: function (renderer, maskedObject, camera)
+    {
+        renderer.pipelines.BitmapMaskPipeline.beginMask(this, maskedObject, camera);
+    },
+
+    /**
+     * Finalizes rendering of a masked Game Object.
+     *
+     * This resets the previously bound framebuffer and switches the WebGL Renderer to the Bitmap Mask Pipeline, which uses a special fragment shader to apply the masking effect.
+     *
+     * @method Phaser.Display.Masks.BitmapMask#postRenderWebGL
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The WebGL Renderer to clean up.
+     */
+    postRenderWebGL: function (renderer, camera)
+    {
+        renderer.pipelines.BitmapMaskPipeline.endMask(this, camera);
+    },
+
+    /**
+     * This is a NOOP method. Bitmap Masks are not supported by the Canvas Renderer.
+     *
+     * @method Phaser.Display.Masks.BitmapMask#preRenderCanvas
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The Canvas Renderer which would be rendered to.
+     * @param {Phaser.GameObjects.GameObject} mask - The masked Game Object which would be rendered.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to render to.
+     */
+    preRenderCanvas: function ()
+    {
+        // NOOP
+    },
+
+    /**
+     * This is a NOOP method. Bitmap Masks are not supported by the Canvas Renderer.
+     *
+     * @method Phaser.Display.Masks.BitmapMask#postRenderCanvas
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The Canvas Renderer which would be rendered to.
+     */
+    postRenderCanvas: function ()
+    {
+        // NOOP
+    },
+
+    /**
+     * Destroys this BitmapMask and nulls any references it holds.
+     * 
+     * Note that if a Game Object is currently using this mask it will _not_ automatically detect you have destroyed it,
+     * so be sure to call `clearMask` on any Game Object using it, before destroying it.
+     *
+     * @method Phaser.Display.Masks.BitmapMask#destroy
+     * @since 3.7.0
+     */
+    destroy: function ()
+    {
+        this.bitmapMask = null;
+
+        var renderer = this.renderer;
+
+        if (renderer && renderer.gl)
+        {
+            renderer.deleteTexture(this.mainTexture);
+            renderer.deleteTexture(this.maskTexture);
+            renderer.deleteFramebuffer(this.mainFramebuffer);
+            renderer.deleteFramebuffer(this.maskFramebuffer);
+        }
+
+        this.mainTexture = null;
+        this.maskTexture = null;
+        this.mainFramebuffer = null;
+        this.maskFramebuffer = null;
+        this.prevFramebuffer = null;
+        this.renderer = null;
+    }
+
+});
+
+module.exports = BitmapMask;
+
+
+/***/ }),
+
+/***/ "../../../src/display/mask/GeometryMask.js":
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/display/mask/GeometryMask.js ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(/*! ../../utils/Class */ "../../../src/utils/Class.js");
+
+/**
+ * @classdesc
+ * A Geometry Mask can be applied to a Game Object to hide any pixels of it which don't intersect
+ * a visible pixel from the geometry mask. The mask is essentially a clipping path which can only
+ * make a masked pixel fully visible or fully invisible without changing its alpha (opacity).
+ *
+ * A Geometry Mask uses a Graphics Game Object to determine which pixels of the masked Game Object(s)
+ * should be clipped. For any given point of a masked Game Object's texture, the pixel will only be displayed
+ * if the Graphics Game Object of the Geometry Mask has a visible pixel at the same position. The color and
+ * alpha of the pixel from the Geometry Mask do not matter.
+ *
+ * The Geometry Mask's location matches the location of its Graphics object, not the location of the masked objects.
+ * Moving or transforming the underlying Graphics object will change the mask (and affect the visibility
+ * of any masked objects), whereas moving or transforming a masked object will not affect the mask.
+ * You can think of the Geometry Mask (or rather, of its Graphics object) as an invisible curtain placed
+ * in front of all masked objects which has its own visual properties and, naturally, respects the camera's
+ * visual properties, but isn't affected by and doesn't follow the masked objects by itself.
+ *
+ * @class GeometryMask
+ * @memberof Phaser.Display.Masks
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - This parameter is not used.
+ * @param {Phaser.GameObjects.Graphics} graphicsGeometry - The Graphics Game Object to use for the Geometry Mask. Doesn't have to be in the Display List.
+ */
+var GeometryMask = new Class({
+
+    initialize:
+
+    function GeometryMask (scene, graphicsGeometry)
+    {
+        /**
+         * The Graphics object which describes the Geometry Mask.
+         *
+         * @name Phaser.Display.Masks.GeometryMask#geometryMask
+         * @type {Phaser.GameObjects.Graphics}
+         * @since 3.0.0
+         */
+        this.geometryMask = graphicsGeometry;
+
+        /**
+         * Similar to the BitmapMasks invertAlpha setting this to true will then hide all pixels
+         * drawn to the Geometry Mask.
+         *
+         * @name Phaser.Display.Masks.GeometryMask#invertAlpha
+         * @type {boolean}
+         * @since 3.16.0
+         */
+        this.invertAlpha = false;
+
+        /**
+         * Is this mask a stencil mask?
+         *
+         * @name Phaser.Display.Masks.GeometryMask#isStencil
+         * @type {boolean}
+         * @readonly
+         * @since 3.17.0
+         */
+        this.isStencil = true;
+
+        /**
+         * The current stencil level.
+         *
+         * @name Phaser.Display.Masks.GeometryMask#level
+         * @type {boolean}
+         * @private
+         * @since 3.17.0
+         */
+        this.level = 0;
+    },
+
+    /**
+     * Sets a new Graphics object for the Geometry Mask.
+     *
+     * @method Phaser.Display.Masks.GeometryMask#setShape
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Graphics} graphicsGeometry - The Graphics object which will be used for the Geometry Mask.
+     * 
+     * @return {this} This Geometry Mask
+     */
+    setShape: function (graphicsGeometry)
+    {
+        this.geometryMask = graphicsGeometry;
+
+        return this;
+    },
+
+    /**
+     * Sets the `invertAlpha` property of this Geometry Mask.
+     * Inverting the alpha essentially flips the way the mask works.
+     *
+     * @method Phaser.Display.Masks.GeometryMask#setInvertAlpha
+     * @since 3.17.0
+     *
+     * @param {boolean} [value=true] - Invert the alpha of this mask?
+     * 
+     * @return {this} This Geometry Mask
+     */
+    setInvertAlpha: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.invertAlpha = value;
+
+        return this;
+    },
+
+    /**
+     * Renders the Geometry Mask's underlying Graphics object to the OpenGL stencil buffer and enables the stencil test, which clips rendered pixels according to the mask.
+     *
+     * @method Phaser.Display.Masks.GeometryMask#preRenderWebGL
+     * @since 3.0.0
+     *
+     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGL Renderer instance to draw to.
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object being rendered.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera the Game Object is being rendered through.
+     */
+    preRenderWebGL: function (renderer, child, camera)
+    {
+        var gl = renderer.gl;
+
+        //  Force flushing before drawing to stencil buffer
+        renderer.flush();
+
+        if (renderer.maskStack.length === 0)
+        {
+            gl.enable(gl.STENCIL_TEST);
+            gl.clear(gl.STENCIL_BUFFER_BIT);
+
+            renderer.maskCount = 0;
+        }
+
+        if (renderer.currentCameraMask.mask !== this)
+        {
+            renderer.currentMask.mask = this;
+        }
+
+        renderer.maskStack.push({ mask: this, camera: camera });
+
+        this.applyStencil(renderer, camera, true);
+
+        renderer.maskCount++;
+    },
+
+    /**
+     * Applies the current stencil mask to the renderer.
+     *
+     * @method Phaser.Display.Masks.GeometryMask#applyStencil
+     * @since 3.17.0
+     *
+     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGL Renderer instance to draw to.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera the Game Object is being rendered through.
+     * @param {boolean} inc - Is this an INCR stencil or a DECR stencil?
+     */
+    applyStencil: function (renderer, camera, inc)
+    {
+        var gl = renderer.gl;
+        var geometryMask = this.geometryMask;
+        var level = renderer.maskCount;
+
+        gl.colorMask(false, false, false, false);
+
+        if (inc)
+        {
+            gl.stencilFunc(gl.EQUAL, level, 0xFF);
+            gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
+        }
+        else
+        {
+            gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
+            gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
+        }
+
+        //  Write stencil buffer
+        geometryMask.renderWebGL(renderer, geometryMask, 0, camera);
+
+        renderer.flush();
+
+        gl.colorMask(true, true, true, true);
+        gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+
+        if (inc)
+        {
+            if (this.invertAlpha)
+            {
+                gl.stencilFunc(gl.NOTEQUAL, level + 1, 0xFF);
+            }
+            else
+            {
+                gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
+            }
+        }
+        else if (this.invertAlpha)
+        {
+            gl.stencilFunc(gl.NOTEQUAL, level, 0xFF);
+        }
+        else
+        {
+            gl.stencilFunc(gl.EQUAL, level, 0xFF);
+        }
+    },
+
+    /**
+     * Flushes all rendered pixels and disables the stencil test of a WebGL context, thus disabling the mask for it.
+     *
+     * @method Phaser.Display.Masks.GeometryMask#postRenderWebGL
+     * @since 3.0.0
+     *
+     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGL Renderer instance to draw flush.
+     */
+    postRenderWebGL: function (renderer)
+    {
+        var gl = renderer.gl;
+
+        renderer.maskStack.pop();
+
+        renderer.maskCount--;
+
+        if (renderer.maskStack.length === 0)
+        {
+            //  If this is the only mask in the stack, flush and disable
+            renderer.flush();
+
+            renderer.currentMask.mask = null;
+
+            gl.disable(gl.STENCIL_TEST);
+        }
+        else
+        {
+            //  Force flush before disabling stencil test
+            renderer.flush();
+
+            var prev = renderer.maskStack[renderer.maskStack.length - 1];
+
+            prev.mask.applyStencil(renderer, prev.camera, false);
+
+            if (renderer.currentCameraMask.mask !== prev.mask)
+            {
+                renderer.currentMask.mask = prev.mask;
+                renderer.currentMask.camera = prev.camera;
+            }
+            else
+            {
+                renderer.currentMask.mask = null;
+            }
+        }
+    },
+
+    /**
+     * Sets the clipping path of a 2D canvas context to the Geometry Mask's underlying Graphics object.
+     *
+     * @method Phaser.Display.Masks.GeometryMask#preRenderCanvas
+     * @since 3.0.0
+     *
+     * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - The Canvas Renderer instance to set the clipping path on.
+     * @param {Phaser.GameObjects.GameObject} mask - The Game Object being rendered.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera the Game Object is being rendered through.
+     */
+    preRenderCanvas: function (renderer, mask, camera)
+    {
+        var geometryMask = this.geometryMask;
+
+        renderer.currentContext.save();
+
+        geometryMask.renderCanvas(renderer, geometryMask, 0, camera, null, null, true);
+
+        renderer.currentContext.clip();
+    },
+
+    /**
+     * Restore the canvas context's previous clipping path, thus turning off the mask for it.
+     *
+     * @method Phaser.Display.Masks.GeometryMask#postRenderCanvas
+     * @since 3.0.0
+     *
+     * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - The Canvas Renderer instance being restored.
+     */
+    postRenderCanvas: function (renderer)
+    {
+        renderer.currentContext.restore();
+    },
+
+    /**
+     * Destroys this GeometryMask and nulls any references it holds.
+     *
+     * Note that if a Game Object is currently using this mask it will _not_ automatically detect you have destroyed it,
+     * so be sure to call `clearMask` on any Game Object using it, before destroying it.
+     *
+     * @method Phaser.Display.Masks.GeometryMask#destroy
+     * @since 3.7.0
+     */
+    destroy: function ()
+    {
+        this.geometryMask = null;
+    }
+
+});
+
+module.exports = GeometryMask;
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/BuildGameObject.js":
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/BuildGameObject.js ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -1383,15 +4376,15 @@ module.exports = BuildGameObject;
 /***/ }),
 
 /***/ "../../../src/gameobjects/GameObject.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/GameObject.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/GameObject.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -1449,10 +4442,10 @@ var GameObject = new Class({
 
         /**
          * The current state of this Game Object.
-         * 
+         *
          * Phaser itself will never modify this value, although plugins may do so.
-         * 
-         * Use this property to track the state of a Game Object during its lifetime. For example, it could move from
+         *
+         * Use this property to track the state of a Game Object during its lifetime. For example, it could change from
          * a state of 'moving', to 'attacking', to 'dead'. The state value should be an integer (ideally mapped to a constant
          * in your game code), or a string. These are recommended to keep it light and simple, with fast comparisons.
          * If you need to store complex data about your Game Object, look at using the Data Component instead.
@@ -1557,10 +4550,10 @@ var GameObject = new Class({
         this.input = null;
 
         /**
-         * If this Game Object is enabled for physics then this property will contain a reference to a Physics Body.
+         * If this Game Object is enabled for Arcade or Matter Physics then this property will contain a reference to a Physics Body.
          *
          * @name Phaser.GameObjects.GameObject#body
-         * @type {?(object|Phaser.Physics.Arcade.Body|Phaser.Physics.Impact.Body)}
+         * @type {?(Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody|MatterJS.BodyType)}
          * @default null
          * @since 3.0.0
          */
@@ -1621,9 +4614,9 @@ var GameObject = new Class({
 
     /**
      * Sets the current state of this Game Object.
-     * 
+     *
      * Phaser itself will never modify the State of a Game Object, although plugins may do so.
-     * 
+     *
      * For example, a Game Object could change from a state of 'moving', to 'attacking', to 'dead'.
      * The state value should typically be an integer (ideally mapped to a constant
      * in your game code), but could also be a string. It is recommended to keep it light and simple.
@@ -1722,6 +4715,65 @@ var GameObject = new Class({
     },
 
     /**
+     * Increase a value for the given key within this Game Objects Data Manager. If the key doesn't already exist in the Data Manager then it is increased from 0.
+     *
+     * If the Game Object has not been enabled for data (via `setDataEnabled`) then it will be enabled
+     * before setting the value.
+     *
+     * If the key doesn't already exist in the Data Manager then it is created.
+     *
+     * When the value is first set, a `setdata` event is emitted from this Game Object.
+     *
+     * @method Phaser.GameObjects.GameObject#incData
+     * @since 3.23.0
+     *
+     * @param {(string|object)} key - The key to increase the value for.
+     * @param {*} [data] - The value to increase for the given key.
+     *
+     * @return {this} This GameObject.
+     */
+    incData: function (key, value)
+    {
+        if (!this.data)
+        {
+            this.data = new DataManager(this);
+        }
+
+        this.data.inc(key, value);
+
+        return this;
+    },
+
+    /**
+     * Toggle a boolean value for the given key within this Game Objects Data Manager. If the key doesn't already exist in the Data Manager then it is toggled from false.
+     *
+     * If the Game Object has not been enabled for data (via `setDataEnabled`) then it will be enabled
+     * before setting the value.
+     *
+     * If the key doesn't already exist in the Data Manager then it is created.
+     *
+     * When the value is first set, a `setdata` event is emitted from this Game Object.
+     *
+     * @method Phaser.GameObjects.GameObject#toggleData
+     * @since 3.23.0
+     *
+     * @param {(string|object)} key - The key to toggle the value for.
+     *
+     * @return {this} This GameObject.
+     */
+    toggleData: function (key)
+    {
+        if (!this.data)
+        {
+            this.data = new DataManager(this);
+        }
+
+        this.data.toggle(key);
+
+        return this;
+    },
+
+    /**
      * Retrieves the value for the given key in this Game Objects Data Manager, or undefined if it doesn't exist.
      *
      * You can also access values via the `values` object. For example, if you had a key called `gold` you can do either:
@@ -1774,18 +4826,27 @@ var GameObject = new Class({
      *
      * You can also provide an Input Configuration Object as the only argument to this method.
      *
+     * @example
+     * sprite.setInteractive();
+     *
+     * @example
+     * sprite.setInteractive(new Phaser.Geom.Circle(45, 46, 45), Phaser.Geom.Circle.Contains);
+     *
+     * @example
+     * graphics.setInteractive(new Phaser.Geom.Rectangle(0, 0, 128, 128), Phaser.Geom.Rectangle.Contains);
+     *
      * @method Phaser.GameObjects.GameObject#setInteractive
      * @since 3.0.0
      *
-     * @param {(Phaser.Types.Input.InputConfiguration|any)} [shape] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
-     * @param {Phaser.Types.Input.HitAreaCallback} [callback] - A callback to be invoked when the Game Object is interacted with. If you provide a shape you must also provide a callback.
+     * @param {(Phaser.Types.Input.InputConfiguration|any)} [hitArea] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not given it will try to create a Rectangle based on the texture frame.
+     * @param {Phaser.Types.Input.HitAreaCallback} [callback] - The callback that determines if the pointer is within the Hit Area shape or not. If you provide a shape you must also provide a callback.
      * @param {boolean} [dropZone=false] - Should this Game Object be treated as a drop zone target?
      *
      * @return {this} This GameObject.
      */
-    setInteractive: function (shape, callback, dropZone)
+    setInteractive: function (hitArea, hitAreaCallback, dropZone)
     {
-        this.scene.sys.input.enable(this, shape, callback, dropZone);
+        this.scene.sys.input.enable(this, hitArea, hitAreaCallback, dropZone);
 
         return this;
     },
@@ -1828,7 +4889,7 @@ var GameObject = new Class({
      * If you wish to only temporarily stop an object from receiving input then use
      * `disableInteractive` instead, as that toggles the interactive state, where-as
      * this erases it completely.
-     * 
+     *
      * If you wish to resize a hit area, don't remove and then set it as being
      * interactive. Instead, access the hitarea object directly and resize the shape
      * being used. I.e.: `sprite.input.hitArea.setSize(width, height)` (assuming the
@@ -1846,6 +4907,36 @@ var GameObject = new Class({
         this.input = undefined;
 
         return this;
+    },
+
+    /**
+     * This callback is invoked when this Game Object is added to a Scene.
+     *
+     * Can be overriden by custom Game Objects, but be aware of some Game Objects that
+     * will use this, such as Sprites, to add themselves into the Update List.
+     *
+     * You can also listen for the `ADDED_TO_SCENE` event from this Game Object.
+     *
+     * @method Phaser.GameObjects.GameObject#addedToScene
+     * @since 3.50.0
+     */
+    addedToScene: function ()
+    {
+    },
+
+    /**
+     * This callback is invoked when this Game Object is removed from a Scene.
+     *
+     * Can be overriden by custom Game Objects, but be aware of some Game Objects that
+     * will use this, such as Sprites, to removed themselves from the Update List.
+     *
+     * You can also listen for the `REMOVED_FROM_SCENE` event from this Game Object.
+     *
+     * @method Phaser.GameObjects.GameObject#removedFromScene
+     * @since 3.50.0
+     */
+    removedFromScene: function ()
+    {
     },
 
     /**
@@ -1974,7 +5065,6 @@ var GameObject = new Class({
         if (!fromScene)
         {
             sys.displayList.remove(this);
-            sys.updateList.remove(this);
         }
 
         if (this.input)
@@ -2028,16 +5118,1758 @@ module.exports = GameObject;
 
 /***/ }),
 
+/***/ "../../../src/gameobjects/components/Alpha.js":
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Alpha.js ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Clamp = __webpack_require__(/*! ../../math/Clamp */ "../../../src/math/Clamp.js");
+
+//  bitmask flag for GameObject.renderMask
+var _FLAG = 2; // 0010
+
+/**
+ * Provides methods used for setting the alpha properties of a Game Object.
+ * Should be applied as a mixin and not used directly.
+ *
+ * @namespace Phaser.GameObjects.Components.Alpha
+ * @since 3.0.0
+ */
+
+var Alpha = {
+
+    /**
+     * Private internal value. Holds the global alpha value.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#_alpha
+     * @type {number}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
+    _alpha: 1,
+
+    /**
+     * Private internal value. Holds the top-left alpha value.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#_alphaTL
+     * @type {number}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
+    _alphaTL: 1,
+
+    /**
+     * Private internal value. Holds the top-right alpha value.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#_alphaTR
+     * @type {number}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
+    _alphaTR: 1,
+
+    /**
+     * Private internal value. Holds the bottom-left alpha value.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#_alphaBL
+     * @type {number}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
+    _alphaBL: 1,
+
+    /**
+     * Private internal value. Holds the bottom-right alpha value.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#_alphaBR
+     * @type {number}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
+    _alphaBR: 1,
+
+    /**
+     * Clears all alpha values associated with this Game Object.
+     *
+     * Immediately sets the alpha levels back to 1 (fully opaque).
+     *
+     * @method Phaser.GameObjects.Components.Alpha#clearAlpha
+     * @since 3.0.0
+     *
+     * @return {this} This Game Object instance.
+     */
+    clearAlpha: function ()
+    {
+        return this.setAlpha(1);
+    },
+
+    /**
+     * Set the Alpha level of this Game Object. The alpha controls the opacity of the Game Object as it renders.
+     * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
+     *
+     * If your game is running under WebGL you can optionally specify four different alpha values, each of which
+     * correspond to the four corners of the Game Object. Under Canvas only the `topLeft` value given is used.
+     *
+     * @method Phaser.GameObjects.Components.Alpha#setAlpha
+     * @since 3.0.0
+     *
+     * @param {number} [topLeft=1] - The alpha value used for the top-left of the Game Object. If this is the only value given it's applied across the whole Game Object.
+     * @param {number} [topRight] - The alpha value used for the top-right of the Game Object. WebGL only.
+     * @param {number} [bottomLeft] - The alpha value used for the bottom-left of the Game Object. WebGL only.
+     * @param {number} [bottomRight] - The alpha value used for the bottom-right of the Game Object. WebGL only.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setAlpha: function (topLeft, topRight, bottomLeft, bottomRight)
+    {
+        if (topLeft === undefined) { topLeft = 1; }
+
+        //  Treat as if there is only one alpha value for the whole Game Object
+        if (topRight === undefined)
+        {
+            this.alpha = topLeft;
+        }
+        else
+        {
+            this._alphaTL = Clamp(topLeft, 0, 1);
+            this._alphaTR = Clamp(topRight, 0, 1);
+            this._alphaBL = Clamp(bottomLeft, 0, 1);
+            this._alphaBR = Clamp(bottomRight, 0, 1);
+        }
+
+        return this;
+    },
+
+    /**
+     * The alpha value of the Game Object.
+     *
+     * This is a global value, impacting the entire Game Object, not just a region of it.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#alpha
+     * @type {number}
+     * @since 3.0.0
+     */
+    alpha: {
+
+        get: function ()
+        {
+            return this._alpha;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            this._alpha = v;
+            this._alphaTL = v;
+            this._alphaTR = v;
+            this._alphaBL = v;
+            this._alphaBR = v;
+
+            if (v === 0)
+            {
+                this.renderFlags &= ~_FLAG;
+            }
+            else
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    },
+
+    /**
+     * The alpha value starting from the top-left of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#alphaTopLeft
+     * @type {number}
+     * @webglOnly
+     * @since 3.0.0
+     */
+    alphaTopLeft: {
+
+        get: function ()
+        {
+            return this._alphaTL;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            this._alphaTL = v;
+
+            if (v !== 0)
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    },
+
+    /**
+     * The alpha value starting from the top-right of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#alphaTopRight
+     * @type {number}
+     * @webglOnly
+     * @since 3.0.0
+     */
+    alphaTopRight: {
+
+        get: function ()
+        {
+            return this._alphaTR;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            this._alphaTR = v;
+
+            if (v !== 0)
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    },
+
+    /**
+     * The alpha value starting from the bottom-left of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#alphaBottomLeft
+     * @type {number}
+     * @webglOnly
+     * @since 3.0.0
+     */
+    alphaBottomLeft: {
+
+        get: function ()
+        {
+            return this._alphaBL;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            this._alphaBL = v;
+
+            if (v !== 0)
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    },
+
+    /**
+     * The alpha value starting from the bottom-right of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#alphaBottomRight
+     * @type {number}
+     * @webglOnly
+     * @since 3.0.0
+     */
+    alphaBottomRight: {
+
+        get: function ()
+        {
+            return this._alphaBR;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            this._alphaBR = v;
+
+            if (v !== 0)
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    }
+
+};
+
+module.exports = Alpha;
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/components/AlphaSingle.js":
+/*!*************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/AlphaSingle.js ***!
+  \*************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Clamp = __webpack_require__(/*! ../../math/Clamp */ "../../../src/math/Clamp.js");
+
+//  bitmask flag for GameObject.renderMask
+var _FLAG = 2; // 0010
+
+/**
+ * Provides methods used for setting the alpha property of a Game Object.
+ * Should be applied as a mixin and not used directly.
+ *
+ * @namespace Phaser.GameObjects.Components.AlphaSingle
+ * @since 3.22.0
+ */
+
+var AlphaSingle = {
+
+    /**
+     * Private internal value. Holds the global alpha value.
+     *
+     * @name Phaser.GameObjects.Components.AlphaSingle#_alpha
+     * @type {number}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
+    _alpha: 1,
+
+    /**
+     * Clears all alpha values associated with this Game Object.
+     *
+     * Immediately sets the alpha levels back to 1 (fully opaque).
+     *
+     * @method Phaser.GameObjects.Components.AlphaSingle#clearAlpha
+     * @since 3.0.0
+     *
+     * @return {this} This Game Object instance.
+     */
+    clearAlpha: function ()
+    {
+        return this.setAlpha(1);
+    },
+
+    /**
+     * Set the Alpha level of this Game Object. The alpha controls the opacity of the Game Object as it renders.
+     * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
+     *
+     * @method Phaser.GameObjects.Components.AlphaSingle#setAlpha
+     * @since 3.0.0
+     *
+     * @param {number} [value=1] - The alpha value applied across the whole Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setAlpha: function (value)
+    {
+        if (value === undefined) { value = 1; }
+
+        this.alpha = value;
+
+        return this;
+    },
+
+    /**
+     * The alpha value of the Game Object.
+     *
+     * This is a global value, impacting the entire Game Object, not just a region of it.
+     *
+     * @name Phaser.GameObjects.Components.AlphaSingle#alpha
+     * @type {number}
+     * @since 3.0.0
+     */
+    alpha: {
+
+        get: function ()
+        {
+            return this._alpha;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            this._alpha = v;
+
+            if (v === 0)
+            {
+                this.renderFlags &= ~_FLAG;
+            }
+            else
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    }
+
+};
+
+module.exports = AlphaSingle;
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/components/Animation.js":
+/*!***********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Animation.js ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var BaseAnimation = __webpack_require__(/*! ../../animations/Animation */ "../../../src/animations/Animation.js");
+var Class = __webpack_require__(/*! ../../utils/Class */ "../../../src/utils/Class.js");
+var Events = __webpack_require__(/*! ../../animations/events */ "../../../src/animations/events/index.js");
+
+/**
+ * @classdesc
+ * A Game Object Animation Controller.
+ *
+ * This controller lives as an instance within a Game Object, accessible as `sprite.anims`.
+ *
+ * @class Animation
+ * @memberof Phaser.GameObjects.Components
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.GameObjects.GameObject} parent - The Game Object to which this animation controller belongs.
+ */
+var Animation = new Class({
+
+    initialize:
+
+    function Animation (parent)
+    {
+        /**
+         * The Game Object to which this animation controller belongs.
+         *
+         * @name Phaser.GameObjects.Components.Animation#parent
+         * @type {Phaser.GameObjects.GameObject}
+         * @since 3.0.0
+         */
+        this.parent = parent;
+
+        /**
+         * A reference to the global Animation Manager.
+         *
+         * @name Phaser.GameObjects.Components.Animation#animationManager
+         * @type {Phaser.Animations.AnimationManager}
+         * @since 3.0.0
+         */
+        this.animationManager = parent.scene.sys.anims;
+
+        this.animationManager.once(Events.REMOVE_ANIMATION, this.remove, this);
+
+        /**
+         * Is an animation currently playing or not?
+         *
+         * @name Phaser.GameObjects.Components.Animation#isPlaying
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.isPlaying = false;
+
+        /**
+         * The current Animation loaded into this Animation Controller.
+         *
+         * @name Phaser.GameObjects.Components.Animation#currentAnim
+         * @type {?Phaser.Animations.Animation}
+         * @default null
+         * @since 3.0.0
+         */
+        this.currentAnim = null;
+
+        /**
+         * The current AnimationFrame being displayed by this Animation Controller.
+         *
+         * @name Phaser.GameObjects.Components.Animation#currentFrame
+         * @type {?Phaser.Animations.AnimationFrame}
+         * @default null
+         * @since 3.0.0
+         */
+        this.currentFrame = null;
+
+        /**
+         * The key of the next Animation to be loaded into this Animation Controller when the current animation completes.
+         *
+         * @name Phaser.GameObjects.Components.Animation#nextAnim
+         * @type {?string}
+         * @default null
+         * @since 3.16.0
+         */
+        this.nextAnim = null;
+
+        /**
+         * A queue of keys of the next Animations to be loaded into this Animation Controller when the current animation completes.
+         *
+         * @name Phaser.GameObjects.Components.Animation#nextAnimsQueue
+         * @type {string[]}
+         * @since 3.24.0
+         */
+        this.nextAnimsQueue = [];
+
+        /**
+         * Time scale factor.
+         *
+         * @name Phaser.GameObjects.Components.Animation#_timeScale
+         * @type {number}
+         * @private
+         * @default 1
+         * @since 3.0.0
+         */
+        this._timeScale = 1;
+
+        /**
+         * The frame rate of playback in frames per second.
+         * The default is 24 if the `duration` property is `null`.
+         *
+         * @name Phaser.GameObjects.Components.Animation#frameRate
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.frameRate = 0;
+
+        /**
+         * How long the animation should play for, in milliseconds.
+         * If the `frameRate` property has been set then it overrides this value,
+         * otherwise the `frameRate` is derived from `duration`.
+         *
+         * @name Phaser.GameObjects.Components.Animation#duration
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.duration = 0;
+
+        /**
+         * ms per frame, not including frame specific modifiers that may be present in the Animation data.
+         *
+         * @name Phaser.GameObjects.Components.Animation#msPerFrame
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.msPerFrame = 0;
+
+        /**
+         * Skip frames if the time lags, or always advanced anyway?
+         *
+         * @name Phaser.GameObjects.Components.Animation#skipMissedFrames
+         * @type {boolean}
+         * @default true
+         * @since 3.0.0
+         */
+        this.skipMissedFrames = true;
+
+        /**
+         * A delay before starting playback, in milliseconds.
+         *
+         * @name Phaser.GameObjects.Components.Animation#_delay
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.0.0
+         */
+        this._delay = 0;
+
+        /**
+         * Number of times to repeat the animation (-1 for infinity)
+         *
+         * @name Phaser.GameObjects.Components.Animation#_repeat
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.0.0
+         */
+        this._repeat = 0;
+
+        /**
+         * Delay before the repeat starts, in milliseconds.
+         *
+         * @name Phaser.GameObjects.Components.Animation#_repeatDelay
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.0.0
+         */
+        this._repeatDelay = 0;
+
+        /**
+         * Should the animation yoyo? (reverse back down to the start) before repeating?
+         *
+         * @name Phaser.GameObjects.Components.Animation#_yoyo
+         * @type {boolean}
+         * @private
+         * @default false
+         * @since 3.0.0
+         */
+        this._yoyo = false;
+
+        /**
+         * Will the playhead move forwards (`true`) or in reverse (`false`).
+         *
+         * @name Phaser.GameObjects.Components.Animation#forward
+         * @type {boolean}
+         * @default true
+         * @since 3.0.0
+         */
+        this.forward = true;
+
+        /**
+         * An Internal trigger that's play the animation in reverse mode ('true') or not ('false'),
+         * needed because forward can be changed by yoyo feature.
+         *
+         * @name Phaser.GameObjects.Components.Animation#_reverse
+         * @type {boolean}
+         * @default false
+         * @private
+         * @since 3.12.0
+         */
+        this._reverse = false;
+
+        /**
+         * Internal time overflow accumulator.
+         *
+         * @name Phaser.GameObjects.Components.Animation#accumulator
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.accumulator = 0;
+
+        /**
+         * The time point at which the next animation frame will change.
+         *
+         * @name Phaser.GameObjects.Components.Animation#nextTick
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.nextTick = 0;
+
+        /**
+         * An internal counter keeping track of how many repeats are left to play.
+         *
+         * @name Phaser.GameObjects.Components.Animation#repeatCounter
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.repeatCounter = 0;
+
+        /**
+         * An internal flag keeping track of pending repeats.
+         *
+         * @name Phaser.GameObjects.Components.Animation#pendingRepeat
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.pendingRepeat = false;
+
+        /**
+         * Is the Animation paused?
+         *
+         * @name Phaser.GameObjects.Components.Animation#_paused
+         * @type {boolean}
+         * @private
+         * @default false
+         * @since 3.0.0
+         */
+        this._paused = false;
+
+        /**
+         * Was the animation previously playing before being paused?
+         *
+         * @name Phaser.GameObjects.Components.Animation#_wasPlaying
+         * @type {boolean}
+         * @private
+         * @default false
+         * @since 3.0.0
+         */
+        this._wasPlaying = false;
+
+        /**
+         * Internal property tracking if this Animation is waiting to stop.
+         *
+         * 0 = No
+         * 1 = Waiting for ms to pass
+         * 2 = Waiting for repeat
+         * 3 = Waiting for specific frame
+         *
+         * @name Phaser.GameObjects.Components.Animation#_pendingStop
+         * @type {integer}
+         * @private
+         * @since 3.4.0
+         */
+        this._pendingStop = 0;
+
+        /**
+         * Internal property used by _pendingStop.
+         *
+         * @name Phaser.GameObjects.Components.Animation#_pendingStopValue
+         * @type {any}
+         * @private
+         * @since 3.4.0
+         */
+        this._pendingStopValue;
+    },
+
+    /**
+     * Sets an animation to be played immediately after the current one completes.
+     *
+     * The current animation must enter a 'completed' state for this to happen, i.e. finish all of its repeats, delays, etc, or have the `stop` method called directly on it.
+     *
+     * An animation set to repeat forever will never enter a completed state.
+     *
+     * You can chain a new animation at any point, including before the current one starts playing, during it, or when it ends (via its `animationcomplete` callback).
+     * Chained animations are specific to a Game Object, meaning different Game Objects can have different chained animations without impacting the global animation they're playing.
+     *
+     * Call this method with no arguments to reset the chained animation.
+     *
+     * @method Phaser.GameObjects.Components.Animation#chain
+     * @since 3.16.0
+     *
+     * @param {(string|Phaser.Animations.Animation)} [key] - The string-based key of the animation to play next, as defined previously in the Animation Manager. Or an Animation instance.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    chain: function (key)
+    {
+        if (key instanceof BaseAnimation)
+        {
+            key = key.key;
+        }
+
+        if (this.nextAnim === null)
+        {
+            this.nextAnim = key;
+        }
+        else
+        {
+            this.nextAnimsQueue.push(key);
+        }
+
+        return this.parent;
+    },
+
+    /**
+     * Sets the amount of time, in milliseconds, that the animation will be delayed before starting playback.
+     *
+     * @method Phaser.GameObjects.Components.Animation#setDelay
+     * @since 3.4.0
+     *
+     * @param {integer} [value=0] - The amount of time, in milliseconds, to wait before starting playback.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    setDelay: function (value)
+    {
+        if (value === undefined) { value = 0; }
+
+        this._delay = value;
+
+        return this.parent;
+    },
+
+    /**
+     * Gets the amount of time, in milliseconds that the animation will be delayed before starting playback.
+     *
+     * @method Phaser.GameObjects.Components.Animation#getDelay
+     * @since 3.4.0
+     *
+     * @return {integer} The amount of time, in milliseconds, the Animation will wait before starting playback.
+     */
+    getDelay: function ()
+    {
+        return this._delay;
+    },
+
+    /**
+     * Waits for the specified delay, in milliseconds, then starts playback of the requested animation.
+     *
+     * @method Phaser.GameObjects.Components.Animation#delayedPlay
+     * @since 3.0.0
+     *
+     * @param {integer} delay - The delay, in milliseconds, to wait before starting the animation playing.
+     * @param {string} key - The key of the animation to play.
+     * @param {integer} [startFrame=0] - The frame of the animation to start from.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    delayedPlay: function (delay, key, startFrame)
+    {
+        this.play(key, true, startFrame);
+
+        this.nextTick += delay;
+
+        return this.parent;
+    },
+
+    /**
+     * Returns the key of the animation currently loaded into this component.
+     *
+     * @method Phaser.GameObjects.Components.Animation#getCurrentKey
+     * @since 3.0.0
+     *
+     * @return {string} The key of the Animation loaded into this component.
+     */
+    getCurrentKey: function ()
+    {
+        if (this.currentAnim)
+        {
+            return this.currentAnim.key;
+        }
+    },
+
+    /**
+     * Internal method used to load an animation into this component.
+     *
+     * @method Phaser.GameObjects.Components.Animation#load
+     * @protected
+     * @since 3.0.0
+     *
+     * @param {string} key - The key of the animation to load.
+     * @param {integer} [startFrame=0] - The start frame of the animation to load.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    load: function (key, startFrame)
+    {
+        if (startFrame === undefined) { startFrame = 0; }
+
+        if (this.isPlaying)
+        {
+            this.stop();
+        }
+
+        //  Load the new animation in
+        this.animationManager.load(this, key, startFrame);
+
+        return this.parent;
+    },
+
+    /**
+     * Pause the current animation and set the `isPlaying` property to `false`.
+     * You can optionally pause it at a specific frame.
+     *
+     * @method Phaser.GameObjects.Components.Animation#pause
+     * @since 3.0.0
+     *
+     * @param {Phaser.Animations.AnimationFrame} [atFrame] - An optional frame to set after pausing the animation.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    pause: function (atFrame)
+    {
+        if (!this._paused)
+        {
+            this._paused = true;
+            this._wasPlaying = this.isPlaying;
+            this.isPlaying = false;
+        }
+
+        if (atFrame !== undefined)
+        {
+            this.updateFrame(atFrame);
+        }
+
+        return this.parent;
+    },
+
+    /**
+     * Resumes playback of a paused animation and sets the `isPlaying` property to `true`.
+     * You can optionally tell it to start playback from a specific frame.
+     *
+     * @method Phaser.GameObjects.Components.Animation#resume
+     * @since 3.0.0
+     *
+     * @param {Phaser.Animations.AnimationFrame} [fromFrame] - An optional frame to set before restarting playback.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    resume: function (fromFrame)
+    {
+        if (this._paused)
+        {
+            this._paused = false;
+            this.isPlaying = this._wasPlaying;
+        }
+
+        if (fromFrame !== undefined)
+        {
+            this.updateFrame(fromFrame);
+        }
+
+        return this.parent;
+    },
+
+    /**
+     * `true` if the current animation is paused, otherwise `false`.
+     *
+     * @name Phaser.GameObjects.Components.Animation#isPaused
+     * @readonly
+     * @type {boolean}
+     * @since 3.4.0
+     */
+    isPaused: {
+
+        get: function ()
+        {
+            return this._paused;
+        }
+
+    },
+
+    /**
+     * Plays an Animation on a Game Object that has the Animation component, such as a Sprite.
+     *
+     * Animations are stored in the global Animation Manager and are referenced by a unique string-based key.
+     *
+     * @method Phaser.GameObjects.Components.Animation#play
+     * @fires Phaser.GameObjects.Components.Animation#onStartEvent
+     * @since 3.0.0
+     *
+     * @param {(string|Phaser.Animations.Animation)} key - The string-based key of the animation to play, as defined previously in the Animation Manager. Or an Animation instance.
+     * @param {boolean} [ignoreIfPlaying=false] - If this animation is already playing then ignore this call.
+     * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    play: function (key, ignoreIfPlaying, startFrame)
+    {
+        if (ignoreIfPlaying === undefined) { ignoreIfPlaying = false; }
+        if (startFrame === undefined) { startFrame = 0; }
+
+        if (key instanceof BaseAnimation)
+        {
+            key = key.key;
+        }
+
+        if (ignoreIfPlaying && this.isPlaying && this.currentAnim.key === key)
+        {
+            return this.parent;
+        }
+
+        this.forward = true;
+        this._reverse = false;
+        this._paused = false;
+        this._wasPlaying = true;
+
+        return this._startAnimation(key, startFrame);
+    },
+
+    /**
+     * Plays an Animation (in reverse mode) on the Game Object that owns this Animation Component.
+     *
+     * @method Phaser.GameObjects.Components.Animation#playReverse
+     * @fires Phaser.GameObjects.Components.Animation#onStartEvent
+     * @since 3.12.0
+     *
+     * @param {(string|Phaser.Animations.Animation)} key - The string-based key of the animation to play, as defined previously in the Animation Manager. Or an Animation instance.
+     * @param {boolean} [ignoreIfPlaying=false] - If an animation is already playing then ignore this call.
+     * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    playReverse: function (key, ignoreIfPlaying, startFrame)
+    {
+        if (ignoreIfPlaying === undefined) { ignoreIfPlaying = false; }
+        if (startFrame === undefined) { startFrame = 0; }
+
+        if (key instanceof BaseAnimation)
+        {
+            key = key.key;
+        }
+
+        if (ignoreIfPlaying && this.isPlaying && this.currentAnim.key === key)
+        {
+            return this.parent;
+        }
+
+        this.forward = false;
+        this._reverse = true;
+
+        return this._startAnimation(key, startFrame);
+    },
+
+    /**
+     * Load an Animation and fires 'onStartEvent' event, extracted from 'play' method.
+     *
+     * @method Phaser.GameObjects.Components.Animation#_startAnimation
+     * @fires Phaser.Animations.Events#ANIMATION_START
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_START
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
+     * @since 3.12.0
+     *
+     * @param {string} key - The string-based key of the animation to play, as defined previously in the Animation Manager.
+     * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    _startAnimation: function (key, startFrame)
+    {
+        this.load(key, startFrame);
+
+        var anim = this.currentAnim;
+        var gameObject = this.parent;
+
+        if (!anim)
+        {
+            return gameObject;
+        }
+
+        //  Should give us 9,007,199,254,740,991 safe repeats
+        this.repeatCounter = (this._repeat === -1) ? Number.MAX_VALUE : this._repeat;
+
+        anim.getFirstTick(this);
+
+        this.isPlaying = true;
+        this.pendingRepeat = false;
+
+        if (anim.showOnStart)
+        {
+            gameObject.visible = true;
+        }
+
+        var frame = this.currentFrame;
+
+        anim.emit(Events.ANIMATION_START, anim, frame, gameObject);
+
+        gameObject.emit(Events.SPRITE_ANIMATION_KEY_START + key, anim, frame, gameObject);
+
+        gameObject.emit(Events.SPRITE_ANIMATION_START, anim, frame, gameObject);
+
+        return gameObject;
+    },
+
+    /**
+     * Reverse the Animation that is already playing on the Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Animation#reverse
+     * @since 3.12.0
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    reverse: function ()
+    {
+        if (this.isPlaying)
+        {
+            this._reverse = !this._reverse;
+
+            this.forward = !this.forward;
+        }
+
+        return this.parent;
+    },
+
+    /**
+     * Returns a value between 0 and 1 indicating how far this animation is through, ignoring repeats and yoyos.
+     * If the animation has a non-zero repeat defined, `getProgress` and `getTotalProgress` will be different
+     * because `getProgress` doesn't include any repeats or repeat delays, whereas `getTotalProgress` does.
+     *
+     * @method Phaser.GameObjects.Components.Animation#getProgress
+     * @since 3.4.0
+     *
+     * @return {number} The progress of the current animation, between 0 and 1.
+     */
+    getProgress: function ()
+    {
+        var p = this.currentFrame.progress;
+
+        if (!this.forward)
+        {
+            p = 1 - p;
+        }
+
+        return p;
+    },
+
+    /**
+     * Takes a value between 0 and 1 and uses it to set how far this animation is through playback.
+     * Does not factor in repeats or yoyos, but does handle playing forwards or backwards.
+     *
+     * @method Phaser.GameObjects.Components.Animation#setProgress
+     * @since 3.4.0
+     *
+     * @param {number} [value=0] - The progress value, between 0 and 1.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    setProgress: function (value)
+    {
+        if (!this.forward)
+        {
+            value = 1 - value;
+        }
+
+        this.setCurrentFrame(this.currentAnim.getFrameByProgress(value));
+
+        return this.parent;
+    },
+
+    /**
+     * Handle the removal of an animation from the Animation Manager.
+     *
+     * @method Phaser.GameObjects.Components.Animation#remove
+     * @since 3.0.0
+     *
+     * @param {string} [key] - The key of the removed Animation.
+     * @param {Phaser.Animations.Animation} [animation] - The removed Animation.
+     */
+    remove: function (key, animation)
+    {
+        if (animation === undefined) { animation = this.currentAnim; }
+
+        if (this.isPlaying && animation.key === this.currentAnim.key)
+        {
+            this.stop();
+
+            this.setCurrentFrame(this.currentAnim.frames[0]);
+        }
+    },
+
+    /**
+     * Gets the number of times that the animation will repeat
+     * after its first iteration. For example, if returns 1, the animation will
+     * play a total of twice (the initial play plus 1 repeat).
+     * A value of -1 means the animation will repeat indefinitely.
+     *
+     * @method Phaser.GameObjects.Components.Animation#getRepeat
+     * @since 3.4.0
+     *
+     * @return {integer} The number of times that the animation will repeat.
+     */
+    getRepeat: function ()
+    {
+        return this._repeat;
+    },
+
+    /**
+     * Sets the number of times that the animation should repeat
+     * after its first iteration. For example, if repeat is 1, the animation will
+     * play a total of twice (the initial play plus 1 repeat).
+     * To repeat indefinitely, use -1. repeat should always be an integer.
+     *
+     * @method Phaser.GameObjects.Components.Animation#setRepeat
+     * @since 3.4.0
+     *
+     * @param {integer} value - The number of times that the animation should repeat.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    setRepeat: function (value)
+    {
+        this._repeat = value;
+
+        this.repeatCounter = (value === -1) ? Number.MAX_VALUE : value;
+
+        return this.parent;
+    },
+
+    /**
+     * Gets the amount of delay between repeats, if any.
+     *
+     * @method Phaser.GameObjects.Components.Animation#getRepeatDelay
+     * @since 3.4.0
+     *
+     * @return {number} The delay between repeats.
+     */
+    getRepeatDelay: function ()
+    {
+        return this._repeatDelay;
+    },
+
+    /**
+     * Sets the amount of time in seconds between repeats.
+     * For example, if `repeat` is 2 and `repeatDelay` is 10, the animation will play initially,
+     * then wait for 10 seconds before repeating, then play again, then wait another 10 seconds
+     * before doing its final repeat.
+     *
+     * @method Phaser.GameObjects.Components.Animation#setRepeatDelay
+     * @since 3.4.0
+     *
+     * @param {number} value - The delay to wait between repeats, in seconds.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    setRepeatDelay: function (value)
+    {
+        this._repeatDelay = value;
+
+        return this.parent;
+    },
+
+    /**
+     * Restarts the current animation from its beginning, optionally including its delay value.
+     *
+     * @method Phaser.GameObjects.Components.Animation#restart
+     * @fires Phaser.Animations.Events#ANIMATION_RESTART
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_RESTART
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_RESTART
+     * @since 3.0.0
+     *
+     * @param {boolean} [includeDelay=false] - Whether to include the delay value of the animation when restarting.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    restart: function (includeDelay)
+    {
+        if (includeDelay === undefined) { includeDelay = false; }
+
+        var anim = this.currentAnim;
+
+        anim.getFirstTick(this, includeDelay);
+
+        this.forward = true;
+        this.isPlaying = true;
+        this.pendingRepeat = false;
+        this._paused = false;
+
+        //  Set frame
+        this.updateFrame(anim.frames[0]);
+
+        var gameObject = this.parent;
+        var frame = this.currentFrame;
+
+        anim.emit(Events.ANIMATION_RESTART, anim, frame, gameObject);
+
+        gameObject.emit(Events.SPRITE_ANIMATION_KEY_RESTART + anim.key, anim, frame, gameObject);
+
+        gameObject.emit(Events.SPRITE_ANIMATION_RESTART, anim, frame, gameObject);
+
+        return this.parent;
+    },
+
+    /**
+     * Immediately stops the current animation from playing and dispatches the `animationcomplete` event.
+     *
+     * If no animation is set, no event will be dispatched.
+     *
+     * If there is another animation queued (via the `chain` method) then it will start playing immediately.
+     *
+     * @method Phaser.GameObjects.Components.Animation#stop
+     * @fires Phaser.GameObjects.Components.Animation#onCompleteEvent
+     * @since 3.0.0
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    stop: function ()
+    {
+        this._pendingStop = 0;
+
+        this.isPlaying = false;
+
+        var gameObject = this.parent;
+        var anim = this.currentAnim;
+        var frame = this.currentFrame;
+
+        if (anim)
+        {
+            anim.emit(Events.ANIMATION_COMPLETE, anim, frame, gameObject);
+
+            gameObject.emit(Events.SPRITE_ANIMATION_KEY_COMPLETE + anim.key, anim, frame, gameObject);
+
+            gameObject.emit(Events.SPRITE_ANIMATION_COMPLETE, anim, frame, gameObject);
+        }
+
+        if (this.nextAnim)
+        {
+            var key = this.nextAnim;
+
+            this.nextAnim = (this.nextAnimsQueue.length > 0) ? this.nextAnimsQueue.shift() : null;
+
+            this.play(key);
+        }
+
+        return gameObject;
+    },
+
+    /**
+     * Stops the current animation from playing after the specified time delay, given in milliseconds.
+     *
+     * @method Phaser.GameObjects.Components.Animation#stopAfterDelay
+     * @fires Phaser.GameObjects.Components.Animation#onCompleteEvent
+     * @since 3.4.0
+     *
+     * @param {integer} delay - The number of milliseconds to wait before stopping this animation.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    stopAfterDelay: function (delay)
+    {
+        this._pendingStop = 1;
+        this._pendingStopValue = delay;
+
+        return this.parent;
+    },
+
+    /**
+     * Stops the current animation from playing when it next repeats.
+     *
+     * @method Phaser.GameObjects.Components.Animation#stopOnRepeat
+     * @fires Phaser.GameObjects.Components.Animation#onCompleteEvent
+     * @since 3.4.0
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    stopOnRepeat: function ()
+    {
+        this._pendingStop = 2;
+
+        return this.parent;
+    },
+
+    /**
+     * Stops the current animation from playing when it next sets the given frame.
+     * If this frame doesn't exist within the animation it will not stop it from playing.
+     *
+     * @method Phaser.GameObjects.Components.Animation#stopOnFrame
+     * @fires Phaser.GameObjects.Components.Animation#onCompleteEvent
+     * @since 3.4.0
+     *
+     * @param {Phaser.Animations.AnimationFrame} frame - The frame to check before stopping this animation.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    stopOnFrame: function (frame)
+    {
+        this._pendingStop = 3;
+        this._pendingStopValue = frame;
+
+        return this.parent;
+    },
+
+    /**
+     * Sets the Time Scale factor, allowing you to make the animation go go faster or slower than default.
+     * Where 1 = normal speed (the default), 0.5 = half speed, 2 = double speed, etc.
+     *
+     * @method Phaser.GameObjects.Components.Animation#setTimeScale
+     * @since 3.4.0
+     *
+     * @param {number} [value=1] - The time scale factor, where 1 is no change, 0.5 is half speed, etc.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    setTimeScale: function (value)
+    {
+        if (value === undefined) { value = 1; }
+
+        this._timeScale = value;
+
+        return this.parent;
+    },
+
+    /**
+     * Gets the Time Scale factor.
+     *
+     * @method Phaser.GameObjects.Components.Animation#getTimeScale
+     * @since 3.4.0
+     *
+     * @return {number} The Time Scale value.
+     */
+    getTimeScale: function ()
+    {
+        return this._timeScale;
+    },
+
+    /**
+     * Returns the total number of frames in this animation.
+     *
+     * @method Phaser.GameObjects.Components.Animation#getTotalFrames
+     * @since 3.4.0
+     *
+     * @return {integer} The total number of frames in this animation.
+     */
+    getTotalFrames: function ()
+    {
+        return this.currentAnim.frames.length;
+    },
+
+    /**
+     * The internal update loop for the Animation Component.
+     *
+     * @method Phaser.GameObjects.Components.Animation#update
+     * @since 3.0.0
+     *
+     * @param {number} time - The current timestamp.
+     * @param {number} delta - The delta time, in ms, elapsed since the last frame.
+     */
+    update: function (time, delta)
+    {
+        if (!this.currentAnim || !this.isPlaying || this.currentAnim.paused)
+        {
+            return;
+        }
+
+        this.accumulator += delta * this._timeScale;
+
+        if (this._pendingStop === 1)
+        {
+            this._pendingStopValue -= delta;
+
+            if (this._pendingStopValue <= 0)
+            {
+                return this.currentAnim.completeAnimation(this);
+            }
+        }
+
+        if (this.accumulator >= this.nextTick)
+        {
+            this.currentAnim.setFrame(this);
+        }
+    },
+
+    /**
+     * Sets the given Animation Frame as being the current frame
+     * and applies it to the parent Game Object, adjusting its size and origin as needed.
+     *
+     * @method Phaser.GameObjects.Components.Animation#setCurrentFrame
+     * @since 3.4.0
+     *
+     * @param {Phaser.Animations.AnimationFrame} animationFrame - The Animation Frame to set as being current.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object this Animation Component belongs to.
+     */
+    setCurrentFrame: function (animationFrame)
+    {
+        var gameObject = this.parent;
+
+        this.currentFrame = animationFrame;
+
+        gameObject.texture = animationFrame.frame.texture;
+        gameObject.frame = animationFrame.frame;
+
+        if (gameObject.isCropped)
+        {
+            gameObject.frame.updateCropUVs(gameObject._crop, gameObject.flipX, gameObject.flipY);
+        }
+
+        gameObject.setSizeToFrame();
+
+        if (gameObject._originComponent)
+        {
+            if (animationFrame.frame.customPivot)
+            {
+                gameObject.setOrigin(animationFrame.frame.pivotX, animationFrame.frame.pivotY);
+            }
+            else
+            {
+                gameObject.updateDisplayOrigin();
+            }
+        }
+
+        return gameObject;
+    },
+
+    /**
+     * Internal frame change handler.
+     *
+     * @method Phaser.GameObjects.Components.Animation#updateFrame
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_UPDATE
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_UPDATE
+     * @private
+     * @since 3.0.0
+     *
+     * @param {Phaser.Animations.AnimationFrame} animationFrame - The animation frame to change to.
+     */
+    updateFrame: function (animationFrame)
+    {
+        var gameObject = this.setCurrentFrame(animationFrame);
+
+        if (this.isPlaying)
+        {
+            if (animationFrame.setAlpha)
+            {
+                gameObject.alpha = animationFrame.alpha;
+            }
+
+            var anim = this.currentAnim;
+
+            gameObject.emit(Events.SPRITE_ANIMATION_KEY_UPDATE + anim.key, anim, animationFrame, gameObject);
+
+            gameObject.emit(Events.SPRITE_ANIMATION_UPDATE, anim, animationFrame, gameObject);
+
+            if (this._pendingStop === 3 && this._pendingStopValue === animationFrame)
+            {
+                this.currentAnim.completeAnimation(this);
+            }
+        }
+    },
+
+    /**
+     * Advances the animation to the next frame, regardless of the time or animation state.
+     * If the animation is set to repeat, or yoyo, this will still take effect.
+     *
+     * Calling this does not change the direction of the animation. I.e. if it was currently
+     * playing in reverse, calling this method doesn't then change the direction to forwards.
+     *
+     * @method Phaser.GameObjects.Components.Animation#nextFrame
+     * @since 3.16.0
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object this Animation Component belongs to.
+     */
+    nextFrame: function ()
+    {
+        if (this.currentAnim)
+        {
+            this.currentAnim.nextFrame(this);
+        }
+
+        return this.parent;
+    },
+
+    /**
+     * Advances the animation to the previous frame, regardless of the time or animation state.
+     * If the animation is set to repeat, or yoyo, this will still take effect.
+     *
+     * Calling this does not change the direction of the animation. I.e. if it was currently
+     * playing in forwards, calling this method doesn't then change the direction to backwards.
+     *
+     * @method Phaser.GameObjects.Components.Animation#previousFrame
+     * @since 3.16.0
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object this Animation Component belongs to.
+     */
+    previousFrame: function ()
+    {
+        if (this.currentAnim)
+        {
+            this.currentAnim.previousFrame(this);
+        }
+
+        return this.parent;
+    },
+
+    /**
+     * Sets if the current Animation will yoyo when it reaches the end.
+     * A yoyo'ing animation will play through consecutively, and then reverse-play back to the start again.
+     *
+     * @method Phaser.GameObjects.Components.Animation#setYoyo
+     * @since 3.4.0
+     *
+     * @param {boolean} [value=false] - `true` if the animation should yoyo, `false` to not.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object this Animation Component belongs to.
+     */
+    setYoyo: function (value)
+    {
+        if (value === undefined) { value = false; }
+
+        this._yoyo = value;
+
+        return this.parent;
+    },
+
+    /**
+     * Gets if the current Animation will yoyo when it reaches the end.
+     * A yoyo'ing animation will play through consecutively, and then reverse-play back to the start again.
+     *
+     * @method Phaser.GameObjects.Components.Animation#getYoyo
+     * @since 3.4.0
+     *
+     * @return {boolean} `true` if the animation is set to yoyo, `false` if not.
+     */
+    getYoyo: function ()
+    {
+        return this._yoyo;
+    },
+
+    /**
+     * Destroy this Animation component.
+     *
+     * Unregisters event listeners and cleans up its references.
+     *
+     * @method Phaser.GameObjects.Components.Animation#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.animationManager.off(Events.REMOVE_ANIMATION, this.remove, this);
+
+        this.animationManager = null;
+        this.parent = null;
+        this.nextAnimsQueue.length = 0;
+
+        this.currentAnim = null;
+        this.currentFrame = null;
+    }
+
+});
+
+module.exports = Animation;
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/components/BlendMode.js":
+/*!***********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/BlendMode.js ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var BlendModes = __webpack_require__(/*! ../../renderer/BlendModes */ "../../../src/renderer/BlendModes.js");
+
+/**
+ * Provides methods used for setting the blend mode of a Game Object.
+ * Should be applied as a mixin and not used directly.
+ *
+ * @namespace Phaser.GameObjects.Components.BlendMode
+ * @since 3.0.0
+ */
+
+var BlendMode = {
+
+    /**
+     * Private internal value. Holds the current blend mode.
+     * 
+     * @name Phaser.GameObjects.Components.BlendMode#_blendMode
+     * @type {integer}
+     * @private
+     * @default 0
+     * @since 3.0.0
+     */
+    _blendMode: BlendModes.NORMAL,
+
+    /**
+     * Sets the Blend Mode being used by this Game Object.
+     *
+     * This can be a const, such as `Phaser.BlendModes.SCREEN`, or an integer, such as 4 (for Overlay)
+     *
+     * Under WebGL only the following Blend Modes are available:
+     *
+     * * ADD
+     * * MULTIPLY
+     * * SCREEN
+     * * ERASE
+     *
+     * Canvas has more available depending on browser support.
+     *
+     * You can also create your own custom Blend Modes in WebGL.
+     *
+     * Blend modes have different effects under Canvas and WebGL, and from browser to browser, depending
+     * on support. Blend Modes also cause a WebGL batch flush should it encounter a new blend mode. For these
+     * reasons try to be careful about the construction of your Scene and the frequency of which blend modes
+     * are used.
+     *
+     * @name Phaser.GameObjects.Components.BlendMode#blendMode
+     * @type {(Phaser.BlendModes|string)}
+     * @since 3.0.0
+     */
+    blendMode: {
+
+        get: function ()
+        {
+            return this._blendMode;
+        },
+
+        set: function (value)
+        {
+            if (typeof value === 'string')
+            {
+                value = BlendModes[value];
+            }
+
+            value |= 0;
+
+            if (value >= -1)
+            {
+                this._blendMode = value;
+            }
+        }
+
+    },
+
+    /**
+     * Sets the Blend Mode being used by this Game Object.
+     *
+     * This can be a const, such as `Phaser.BlendModes.SCREEN`, or an integer, such as 4 (for Overlay)
+     *
+     * Under WebGL only the following Blend Modes are available:
+     *
+     * * ADD
+     * * MULTIPLY
+     * * SCREEN
+     * * ERASE (only works when rendering to a framebuffer, like a Render Texture)
+     *
+     * Canvas has more available depending on browser support.
+     *
+     * You can also create your own custom Blend Modes in WebGL.
+     *
+     * Blend modes have different effects under Canvas and WebGL, and from browser to browser, depending
+     * on support. Blend Modes also cause a WebGL batch flush should it encounter a new blend mode. For these
+     * reasons try to be careful about the construction of your Scene and the frequency in which blend modes
+     * are used.
+     *
+     * @method Phaser.GameObjects.Components.BlendMode#setBlendMode
+     * @since 3.0.0
+     *
+     * @param {(string|Phaser.BlendModes)} value - The BlendMode value. Either a string or a CONST.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setBlendMode: function (value)
+    {
+        this.blendMode = value;
+
+        return this;
+    }
+
+};
+
+module.exports = BlendMode;
+
+
+/***/ }),
+
 /***/ "../../../src/gameobjects/components/ComputedSize.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/ComputedSize.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/ComputedSize.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -2182,16 +7014,146 @@ module.exports = ComputedSize;
 
 /***/ }),
 
-/***/ "../../../src/gameobjects/components/Depth.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Depth.js ***!
-  \**************************************************************/
+/***/ "../../../src/gameobjects/components/Crop.js":
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Crop.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Provides methods used for getting and setting the texture of a Game Object.
+ *
+ * @namespace Phaser.GameObjects.Components.Crop
+ * @since 3.12.0
+ */
+
+var Crop = {
+
+    /**
+     * The Texture this Game Object is using to render with.
+     *
+     * @name Phaser.GameObjects.Components.Crop#texture
+     * @type {Phaser.Textures.Texture|Phaser.Textures.CanvasTexture}
+     * @since 3.0.0
+     */
+    texture: null,
+
+    /**
+     * The Texture Frame this Game Object is using to render with.
+     *
+     * @name Phaser.GameObjects.Components.Crop#frame
+     * @type {Phaser.Textures.Frame}
+     * @since 3.0.0
+     */
+    frame: null,
+
+    /**
+     * A boolean flag indicating if this Game Object is being cropped or not.
+     * You can toggle this at any time after `setCrop` has been called, to turn cropping on or off.
+     * Equally, calling `setCrop` with no arguments will reset the crop and disable it.
+     *
+     * @name Phaser.GameObjects.Components.Crop#isCropped
+     * @type {boolean}
+     * @since 3.11.0
+     */
+    isCropped: false,
+
+    /**
+     * Applies a crop to a texture based Game Object, such as a Sprite or Image.
+     * 
+     * The crop is a rectangle that limits the area of the texture frame that is visible during rendering.
+     * 
+     * Cropping a Game Object does not change its size, dimensions, physics body or hit area, it just
+     * changes what is shown when rendered.
+     * 
+     * The crop coordinates are relative to the texture frame, not the Game Object, meaning 0 x 0 is the top-left.
+     * 
+     * Therefore, if you had a Game Object that had an 800x600 sized texture, and you wanted to show only the left
+     * half of it, you could call `setCrop(0, 0, 400, 600)`.
+     * 
+     * It is also scaled to match the Game Object scale automatically. Therefore a crop rect of 100x50 would crop
+     * an area of 200x100 when applied to a Game Object that had a scale factor of 2.
+     * 
+     * You can either pass in numeric values directly, or you can provide a single Rectangle object as the first argument.
+     * 
+     * Call this method with no arguments at all to reset the crop, or toggle the property `isCropped` to `false`.
+     * 
+     * You should do this if the crop rectangle becomes the same size as the frame itself, as it will allow
+     * the renderer to skip several internal calculations.
+     *
+     * @method Phaser.GameObjects.Components.Crop#setCrop
+     * @since 3.11.0
+     *
+     * @param {(number|Phaser.Geom.Rectangle)} [x] - The x coordinate to start the crop from. Or a Phaser.Geom.Rectangle object, in which case the rest of the arguments are ignored.
+     * @param {number} [y] - The y coordinate to start the crop from.
+     * @param {number} [width] - The width of the crop rectangle in pixels.
+     * @param {number} [height] - The height of the crop rectangle in pixels.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setCrop: function (x, y, width, height)
+    {
+        if (x === undefined)
+        {
+            this.isCropped = false;
+        }
+        else if (this.frame)
+        {
+            if (typeof x === 'number')
+            {
+                this.frame.setCropUVs(this._crop, x, y, width, height, this.flipX, this.flipY);
+            }
+            else
+            {
+                var rect = x;
+
+                this.frame.setCropUVs(this._crop, rect.x, rect.y, rect.width, rect.height, this.flipX, this.flipY);
+            }
+
+            this.isCropped = true;
+        }
+
+        return this;
+    },
+
+    /**
+     * Internal method that returns a blank, well-formed crop object for use by a Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Crop#resetCropObject
+     * @private
+     * @since 3.12.0
+     * 
+     * @return {object} The crop object.
+     */
+    resetCropObject: function ()
+    {
+        return { u0: 0, v0: 0, u1: 0, v1: 0, width: 0, height: 0, x: 0, y: 0, flipX: false, flipY: false, cx: 0, cy: 0, cw: 0, ch: 0 };
+    }
+
+};
+
+module.exports = Crop;
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/components/Depth.js":
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Depth.js ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -2222,7 +7184,7 @@ var Depth = {
      * The depth is also known as the 'z-index' in some environments, and allows you to change the rendering order
      * of Game Objects, without actually moving their position in the display list.
      *
-     * The depth starts from zero (the default value) and increases from that point. A Game Object with a higher depth
+     * The default depth is zero. A Game Object with a higher depth
      * value will always render in front of one with a lower value.
      *
      * Setting the depth will queue a depth sort event within the Scene.
@@ -2252,7 +7214,7 @@ var Depth = {
      * The depth is also known as the 'z-index' in some environments, and allows you to change the rendering order
      * of Game Objects, without actually moving their position in the display list.
      *
-     * The depth starts from zero (the default value) and increases from that point. A Game Object with a higher depth
+     * The default depth is zero. A Game Object with a higher depth
      * value will always render in front of one with a lower value.
      *
      * Setting the depth will queue a depth sort event within the Scene.
@@ -2281,15 +7243,15 @@ module.exports = Depth;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Flip.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Flip.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Flip.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -2449,16 +7411,1307 @@ module.exports = Flip;
 
 /***/ }),
 
-/***/ "../../../src/gameobjects/components/ScrollFactor.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/ScrollFactor.js ***!
-  \*********************************************************************/
+/***/ "../../../src/gameobjects/components/GetBounds.js":
+/*!***********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/GetBounds.js ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Rectangle = __webpack_require__(/*! ../../geom/rectangle/Rectangle */ "../../../src/geom/rectangle/Rectangle.js");
+var RotateAround = __webpack_require__(/*! ../../math/RotateAround */ "../../../src/math/RotateAround.js");
+var Vector2 = __webpack_require__(/*! ../../math/Vector2 */ "../../../src/math/Vector2.js");
+
+/**
+ * Provides methods used for obtaining the bounds of a Game Object.
+ * Should be applied as a mixin and not used directly.
+ *
+ * @namespace Phaser.GameObjects.Components.GetBounds
+ * @since 3.0.0
+ */
+
+var GetBounds = {
+
+    /**
+     * Processes the bounds output vector before returning it.
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#prepareBoundsOutput
+     * @private
+     * @since 3.18.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} output - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    prepareBoundsOutput: function (output, includeParent)
+    {
+        if (includeParent === undefined) { includeParent = false; }
+
+        if (this.rotation !== 0)
+        {
+            RotateAround(output, this.x, this.y, this.rotation);
+        }
+
+        if (includeParent && this.parentContainer)
+        {
+            var parentMatrix = this.parentContainer.getBoundsTransformMatrix();
+
+            parentMatrix.transformPoint(output.x, output.y, output);
+        }
+
+        return output;
+    },
+
+    /**
+     * Gets the center coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getCenter
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    getCenter: function (output)
+    {
+        if (output === undefined) { output = new Vector2(); }
+
+        output.x = this.x - (this.displayWidth * this.originX) + (this.displayWidth / 2);
+        output.y = this.y - (this.displayHeight * this.originY) + (this.displayHeight / 2);
+
+        return output;
+    },
+
+    /**
+     * Gets the top-left corner coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getTopLeft
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    getTopLeft: function (output, includeParent)
+    {
+        if (!output) { output = new Vector2(); }
+
+        output.x = this.x - (this.displayWidth * this.originX);
+        output.y = this.y - (this.displayHeight * this.originY);
+
+        return this.prepareBoundsOutput(output, includeParent);
+    },
+
+    /**
+     * Gets the top-center coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getTopCenter
+     * @since 3.18.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    getTopCenter: function (output, includeParent)
+    {
+        if (!output) { output = new Vector2(); }
+
+        output.x = (this.x - (this.displayWidth * this.originX)) + (this.displayWidth / 2);
+        output.y = this.y - (this.displayHeight * this.originY);
+
+        return this.prepareBoundsOutput(output, includeParent);
+    },
+
+    /**
+     * Gets the top-right corner coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getTopRight
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    getTopRight: function (output, includeParent)
+    {
+        if (!output) { output = new Vector2(); }
+
+        output.x = (this.x - (this.displayWidth * this.originX)) + this.displayWidth;
+        output.y = this.y - (this.displayHeight * this.originY);
+
+        return this.prepareBoundsOutput(output, includeParent);
+    },
+
+    /**
+     * Gets the left-center coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getLeftCenter
+     * @since 3.18.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    getLeftCenter: function (output, includeParent)
+    {
+        if (!output) { output = new Vector2(); }
+
+        output.x = this.x - (this.displayWidth * this.originX);
+        output.y = (this.y - (this.displayHeight * this.originY)) + (this.displayHeight / 2);
+
+        return this.prepareBoundsOutput(output, includeParent);
+    },
+
+    /**
+     * Gets the right-center coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getRightCenter
+     * @since 3.18.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    getRightCenter: function (output, includeParent)
+    {
+        if (!output) { output = new Vector2(); }
+
+        output.x = (this.x - (this.displayWidth * this.originX)) + this.displayWidth;
+        output.y = (this.y - (this.displayHeight * this.originY)) + (this.displayHeight / 2);
+
+        return this.prepareBoundsOutput(output, includeParent);
+    },
+
+    /**
+     * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getBottomLeft
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    getBottomLeft: function (output, includeParent)
+    {
+        if (!output) { output = new Vector2(); }
+
+        output.x = this.x - (this.displayWidth * this.originX);
+        output.y = (this.y - (this.displayHeight * this.originY)) + this.displayHeight;
+
+        return this.prepareBoundsOutput(output, includeParent);
+    },
+
+    /**
+     * Gets the bottom-center coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getBottomCenter
+     * @since 3.18.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    getBottomCenter: function (output, includeParent)
+    {
+        if (!output) { output = new Vector2(); }
+
+        output.x = (this.x - (this.displayWidth * this.originX)) + (this.displayWidth / 2);
+        output.y = (this.y - (this.displayHeight * this.originY)) + this.displayHeight;
+
+        return this.prepareBoundsOutput(output, includeParent);
+    },
+
+    /**
+     * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
+     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getBottomRight
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     *
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
+     *
+     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     */
+    getBottomRight: function (output, includeParent)
+    {
+        if (!output) { output = new Vector2(); }
+
+        output.x = (this.x - (this.displayWidth * this.originX)) + this.displayWidth;
+        output.y = (this.y - (this.displayHeight * this.originY)) + this.displayHeight;
+
+        return this.prepareBoundsOutput(output, includeParent);
+    },
+
+    /**
+     * Gets the bounds of this Game Object, regardless of origin.
+     * The values are stored and returned in a Rectangle, or Rectangle-like, object.
+     *
+     * @method Phaser.GameObjects.Components.GetBounds#getBounds
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Rectangle} O - [output,$return]
+     *
+     * @param {(Phaser.Geom.Rectangle|object)} [output] - An object to store the values in. If not provided a new Rectangle will be created.
+     *
+     * @return {(Phaser.Geom.Rectangle|object)} The values stored in the output object.
+     */
+    getBounds: function (output)
+    {
+        if (output === undefined) { output = new Rectangle(); }
+
+        //  We can use the output object to temporarily store the x/y coords in:
+
+        var TLx, TLy, TRx, TRy, BLx, BLy, BRx, BRy;
+
+        // Instead of doing a check if parent container is 
+        // defined per corner we only do it once.
+        if (this.parentContainer)
+        {
+            var parentMatrix = this.parentContainer.getBoundsTransformMatrix();
+
+            this.getTopLeft(output);
+            parentMatrix.transformPoint(output.x, output.y, output);
+
+            TLx = output.x;
+            TLy = output.y;
+
+            this.getTopRight(output);
+            parentMatrix.transformPoint(output.x, output.y, output);
+
+            TRx = output.x;
+            TRy = output.y;
+
+            this.getBottomLeft(output);
+            parentMatrix.transformPoint(output.x, output.y, output);
+
+            BLx = output.x;
+            BLy = output.y;
+
+            this.getBottomRight(output);
+            parentMatrix.transformPoint(output.x, output.y, output);
+
+            BRx = output.x;
+            BRy = output.y;
+        }
+        else
+        {
+            this.getTopLeft(output);
+
+            TLx = output.x;
+            TLy = output.y;
+
+            this.getTopRight(output);
+
+            TRx = output.x;
+            TRy = output.y;
+
+            this.getBottomLeft(output);
+
+            BLx = output.x;
+            BLy = output.y;
+
+            this.getBottomRight(output);
+
+            BRx = output.x;
+            BRy = output.y;
+        }
+
+        output.x = Math.min(TLx, TRx, BLx, BRx);
+        output.y = Math.min(TLy, TRy, BLy, BRy);
+        output.width = Math.max(TLx, TRx, BLx, BRx) - output.x;
+        output.height = Math.max(TLy, TRy, BLy, BRy) - output.y;
+
+        return output;
+    }
+
+};
+
+module.exports = GetBounds;
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/components/Mask.js":
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Mask.js ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var BitmapMask = __webpack_require__(/*! ../../display/mask/BitmapMask */ "../../../src/display/mask/BitmapMask.js");
+var GeometryMask = __webpack_require__(/*! ../../display/mask/GeometryMask */ "../../../src/display/mask/GeometryMask.js");
+
+/**
+ * Provides methods used for getting and setting the mask of a Game Object.
+ *
+ * @namespace Phaser.GameObjects.Components.Mask
+ * @since 3.0.0
+ */
+
+var Mask = {
+
+    /**
+     * The Mask this Game Object is using during render.
+     *
+     * @name Phaser.GameObjects.Components.Mask#mask
+     * @type {Phaser.Display.Masks.BitmapMask|Phaser.Display.Masks.GeometryMask}
+     * @since 3.0.0
+     */
+    mask: null,
+
+    /**
+     * Sets the mask that this Game Object will use to render with.
+     *
+     * The mask must have been previously created and can be either a GeometryMask or a BitmapMask.
+     * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+     *
+     * If a mask is already set on this Game Object it will be immediately replaced.
+     * 
+     * Masks are positioned in global space and are not relative to the Game Object to which they
+     * are applied. The reason for this is that multiple Game Objects can all share the same mask.
+     * 
+     * Masks have no impact on physics or input detection. They are purely a rendering component
+     * that allows you to limit what is visible during the render pass.
+     *
+     * @method Phaser.GameObjects.Components.Mask#setMask
+     * @since 3.6.2
+     *
+     * @param {Phaser.Display.Masks.BitmapMask|Phaser.Display.Masks.GeometryMask} mask - The mask this Game Object will use when rendering.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setMask: function (mask)
+    {
+        this.mask = mask;
+
+        return this;
+    },
+
+    /**
+     * Clears the mask that this Game Object was using.
+     *
+     * @method Phaser.GameObjects.Components.Mask#clearMask
+     * @since 3.6.2
+     *
+     * @param {boolean} [destroyMask=false] - Destroy the mask before clearing it?
+     *
+     * @return {this} This Game Object instance.
+     */
+    clearMask: function (destroyMask)
+    {
+        if (destroyMask === undefined) { destroyMask = false; }
+
+        if (destroyMask && this.mask)
+        {
+            this.mask.destroy();
+        }
+
+        this.mask = null;
+
+        return this;
+    },
+
+    /**
+     * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+     * including this one.
+     *
+     * To create the mask you need to pass in a reference to a renderable Game Object.
+     * A renderable Game Object is one that uses a texture to render with, such as an
+     * Image, Sprite, Render Texture or BitmapText.
+     *
+     * If you do not provide a renderable object, and this Game Object has a texture,
+     * it will use itself as the object. This means you can call this method to create
+     * a Bitmap Mask from any renderable Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Mask#createBitmapMask
+     * @since 3.6.2
+     * 
+     * @param {Phaser.GameObjects.GameObject} [renderable] - A renderable Game Object that uses a texture, such as a Sprite.
+     *
+     * @return {Phaser.Display.Masks.BitmapMask} This Bitmap Mask that was created.
+     */
+    createBitmapMask: function (renderable)
+    {
+        if (renderable === undefined && (this.texture || this.shader))
+        {
+            // eslint-disable-next-line consistent-this
+            renderable = this;
+        }
+
+        return new BitmapMask(this.scene, renderable);
+    },
+
+    /**
+     * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+     * including this one.
+     *
+     * To create the mask you need to pass in a reference to a Graphics Game Object.
+     *
+     * If you do not provide a graphics object, and this Game Object is an instance
+     * of a Graphics object, then it will use itself to create the mask.
+     * 
+     * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Mask#createGeometryMask
+     * @since 3.6.2
+     * 
+     * @param {Phaser.GameObjects.Graphics} [graphics] - A Graphics Game Object. The geometry within it will be used as the mask.
+     *
+     * @return {Phaser.Display.Masks.GeometryMask} This Geometry Mask that was created.
+     */
+    createGeometryMask: function (graphics)
+    {
+        if (graphics === undefined && this.type === 'Graphics')
+        {
+            // eslint-disable-next-line consistent-this
+            graphics = this;
+        }
+
+        return new GeometryMask(this.scene, graphics);
+    }
+
+};
+
+module.exports = Mask;
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/components/Origin.js":
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Origin.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Provides methods used for getting and setting the origin of a Game Object.
+ * Values are normalized, given in the range 0 to 1.
+ * Display values contain the calculated pixel values.
+ * Should be applied as a mixin and not used directly.
+ *
+ * @namespace Phaser.GameObjects.Components.Origin
+ * @since 3.0.0
+ */
+
+var Origin = {
+
+    /**
+     * A property indicating that a Game Object has this component.
+     *
+     * @name Phaser.GameObjects.Components.Origin#_originComponent
+     * @type {boolean}
+     * @private
+     * @default true
+     * @since 3.2.0
+     */
+    _originComponent: true,
+
+    /**
+     * The horizontal origin of this Game Object.
+     * The origin maps the relationship between the size and position of the Game Object.
+     * The default value is 0.5, meaning all Game Objects are positioned based on their center.
+     * Setting the value to 0 means the position now relates to the left of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Origin#originX
+     * @type {number}
+     * @default 0.5
+     * @since 3.0.0
+     */
+    originX: 0.5,
+
+    /**
+     * The vertical origin of this Game Object.
+     * The origin maps the relationship between the size and position of the Game Object.
+     * The default value is 0.5, meaning all Game Objects are positioned based on their center.
+     * Setting the value to 0 means the position now relates to the top of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Origin#originY
+     * @type {number}
+     * @default 0.5
+     * @since 3.0.0
+     */
+    originY: 0.5,
+
+    //  private + read only
+    _displayOriginX: 0,
+    _displayOriginY: 0,
+
+    /**
+     * The horizontal display origin of this Game Object.
+     * The origin is a normalized value between 0 and 1.
+     * The displayOrigin is a pixel value, based on the size of the Game Object combined with the origin.
+     *
+     * @name Phaser.GameObjects.Components.Origin#displayOriginX
+     * @type {number}
+     * @since 3.0.0
+     */
+    displayOriginX: {
+
+        get: function ()
+        {
+            return this._displayOriginX;
+        },
+
+        set: function (value)
+        {
+            this._displayOriginX = value;
+            this.originX = value / this.width;
+        }
+
+    },
+
+    /**
+     * The vertical display origin of this Game Object.
+     * The origin is a normalized value between 0 and 1.
+     * The displayOrigin is a pixel value, based on the size of the Game Object combined with the origin.
+     *
+     * @name Phaser.GameObjects.Components.Origin#displayOriginY
+     * @type {number}
+     * @since 3.0.0
+     */
+    displayOriginY: {
+
+        get: function ()
+        {
+            return this._displayOriginY;
+        },
+
+        set: function (value)
+        {
+            this._displayOriginY = value;
+            this.originY = value / this.height;
+        }
+
+    },
+
+    /**
+     * Sets the origin of this Game Object.
+     *
+     * The values are given in the range 0 to 1.
+     *
+     * @method Phaser.GameObjects.Components.Origin#setOrigin
+     * @since 3.0.0
+     *
+     * @param {number} [x=0.5] - The horizontal origin value.
+     * @param {number} [y=x] - The vertical origin value. If not defined it will be set to the value of `x`.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setOrigin: function (x, y)
+    {
+        if (x === undefined) { x = 0.5; }
+        if (y === undefined) { y = x; }
+
+        this.originX = x;
+        this.originY = y;
+
+        return this.updateDisplayOrigin();
+    },
+
+    /**
+     * Sets the origin of this Game Object based on the Pivot values in its Frame.
+     *
+     * @method Phaser.GameObjects.Components.Origin#setOriginFromFrame
+     * @since 3.0.0
+     *
+     * @return {this} This Game Object instance.
+     */
+    setOriginFromFrame: function ()
+    {
+        if (!this.frame || !this.frame.customPivot)
+        {
+            return this.setOrigin();
+        }
+        else
+        {
+            this.originX = this.frame.pivotX;
+            this.originY = this.frame.pivotY;
+        }
+
+        return this.updateDisplayOrigin();
+    },
+
+    /**
+     * Sets the display origin of this Game Object.
+     * The difference between this and setting the origin is that you can use pixel values for setting the display origin.
+     *
+     * @method Phaser.GameObjects.Components.Origin#setDisplayOrigin
+     * @since 3.0.0
+     *
+     * @param {number} [x=0] - The horizontal display origin value.
+     * @param {number} [y=x] - The vertical display origin value. If not defined it will be set to the value of `x`.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setDisplayOrigin: function (x, y)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = x; }
+
+        this.displayOriginX = x;
+        this.displayOriginY = y;
+
+        return this;
+    },
+
+    /**
+     * Updates the Display Origin cached values internally stored on this Game Object.
+     * You don't usually call this directly, but it is exposed for edge-cases where you may.
+     *
+     * @method Phaser.GameObjects.Components.Origin#updateDisplayOrigin
+     * @since 3.0.0
+     *
+     * @return {this} This Game Object instance.
+     */
+    updateDisplayOrigin: function ()
+    {
+        this._displayOriginX = this.originX * this.width;
+        this._displayOriginY = this.originY * this.height;
+
+        return this;
+    }
+
+};
+
+module.exports = Origin;
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/components/PathFollower.js":
+/*!**************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/PathFollower.js ***!
+  \**************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var DegToRad = __webpack_require__(/*! ../../math/DegToRad */ "../../../src/math/DegToRad.js");
+var GetBoolean = __webpack_require__(/*! ../../tweens/builders/GetBoolean */ "../../../src/tweens/builders/GetBoolean.js");
+var GetValue = __webpack_require__(/*! ../../utils/object/GetValue */ "../../../src/utils/object/GetValue.js");
+var TWEEN_CONST = __webpack_require__(/*! ../../tweens/tween/const */ "../../../src/tweens/tween/const.js");
+var Vector2 = __webpack_require__(/*! ../../math/Vector2 */ "../../../src/math/Vector2.js");
+
+/**
+ * Provides methods used for managing a Game Object following a Path.
+ * Should be applied as a mixin and not used directly.
+ *
+ * @namespace Phaser.GameObjects.Components.PathFollower
+ * @since 3.17.0
+ */
+
+var PathFollower = {
+
+    /**
+     * The Path this PathFollower is following. It can only follow one Path at a time.
+     *
+     * @name Phaser.GameObjects.Components.PathFollower#path
+     * @type {Phaser.Curves.Path}
+     * @since 3.0.0
+     */
+    path: null,
+
+    /**
+     * Should the PathFollower automatically rotate to point in the direction of the Path?
+     *
+     * @name Phaser.GameObjects.Components.PathFollower#rotateToPath
+     * @type {boolean}
+     * @default false
+     * @since 3.0.0
+     */
+    rotateToPath: false,
+
+    /**
+     * If the PathFollower is rotating to match the Path (@see Phaser.GameObjects.PathFollower#rotateToPath)
+     * this value is added to the rotation value. This allows you to rotate objects to a path but control
+     * the angle of the rotation as well.
+     *
+     * @name Phaser.GameObjects.PathFollower#pathRotationOffset
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    pathRotationOffset: 0,
+
+    /**
+     * An additional vector to add to the PathFollowers position, allowing you to offset it from the
+     * Path coordinates.
+     *
+     * @name Phaser.GameObjects.PathFollower#pathOffset
+     * @type {Phaser.Math.Vector2}
+     * @since 3.0.0
+     */
+    pathOffset: null,
+
+    /**
+     * A Vector2 that stores the current point of the path the follower is on.
+     *
+     * @name Phaser.GameObjects.PathFollower#pathVector
+     * @type {Phaser.Math.Vector2}
+     * @since 3.0.0
+     */
+    pathVector: null,
+
+    /**
+     * The distance the follower has traveled from the previous point to the current one, at the last update.
+     *
+     * @name Phaser.GameObjects.PathFollower#pathDelta
+     * @type {Phaser.Math.Vector2}
+     * @since 3.23.0
+     */
+    pathDelta: null,
+
+    /**
+     * The Tween used for following the Path.
+     *
+     * @name Phaser.GameObjects.PathFollower#pathTween
+     * @type {Phaser.Tweens.Tween}
+     * @since 3.0.0
+     */
+    pathTween: null,
+
+    /**
+     * Settings for the PathFollower.
+     *
+     * @name Phaser.GameObjects.PathFollower#pathConfig
+     * @type {?Phaser.Types.GameObjects.PathFollower.PathConfig}
+     * @default null
+     * @since 3.0.0
+     */
+    pathConfig: null,
+
+    /**
+     * Records the direction of the follower so it can change direction.
+     *
+     * @name Phaser.GameObjects.PathFollower#_prevDirection
+     * @type {integer}
+     * @private
+     * @since 3.0.0
+     */
+    _prevDirection: TWEEN_CONST.PLAYING_FORWARD,
+
+    /**
+     * Set the Path that this PathFollower should follow.
+     *
+     * Optionally accepts {@link Phaser.Types.GameObjects.PathFollower.PathConfig} settings.
+     *
+     * @method Phaser.GameObjects.Components.PathFollower#setPath
+     * @since 3.0.0
+     *
+     * @param {Phaser.Curves.Path} path - The Path this PathFollower is following. It can only follow one Path at a time.
+     * @param {(number|Phaser.Types.GameObjects.PathFollower.PathConfig|Phaser.Types.Tweens.NumberTweenBuilderConfig)} [config] - Settings for the PathFollower.
+     *
+     * @return {this} This Game Object.
+     */
+    setPath: function (path, config)
+    {
+        if (config === undefined) { config = this.pathConfig; }
+
+        var tween = this.pathTween;
+
+        if (tween && tween.isPlaying())
+        {
+            tween.stop();
+        }
+
+        this.path = path;
+
+        if (config)
+        {
+            this.startFollow(config);
+        }
+
+        return this;
+    },
+
+    /**
+     * Set whether the PathFollower should automatically rotate to point in the direction of the Path.
+     *
+     * @method Phaser.GameObjects.Components.PathFollower#setRotateToPath
+     * @since 3.0.0
+     *
+     * @param {boolean} value - Whether the PathFollower should automatically rotate to point in the direction of the Path.
+     * @param {number} [offset=0] - Rotation offset in degrees.
+     *
+     * @return {this} This Game Object.
+     */
+    setRotateToPath: function (value, offset)
+    {
+        if (offset === undefined) { offset = 0; }
+
+        this.rotateToPath = value;
+
+        this.pathRotationOffset = offset;
+
+        return this;
+    },
+
+    /**
+     * Is this PathFollower actively following a Path or not?
+     *
+     * To be considered as `isFollowing` it must be currently moving on a Path, and not paused.
+     *
+     * @method Phaser.GameObjects.Components.PathFollower#isFollowing
+     * @since 3.0.0
+     *
+     * @return {boolean} `true` is this PathFollower is actively following a Path, otherwise `false`.
+     */
+    isFollowing: function ()
+    {
+        var tween = this.pathTween;
+
+        return (tween && tween.isPlaying());
+    },
+
+    /**
+     * Starts this PathFollower following its given Path.
+     *
+     * @method Phaser.GameObjects.Components.PathFollower#startFollow
+     * @since 3.3.0
+     *
+     * @param {(number|Phaser.Types.GameObjects.PathFollower.PathConfig|Phaser.Types.Tweens.NumberTweenBuilderConfig)} [config={}] - The duration of the follow, or a PathFollower config object.
+     * @param {number} [startAt=0] - Optional start position of the follow, between 0 and 1.
+     *
+     * @return {this} This Game Object.
+     */
+    startFollow: function (config, startAt)
+    {
+        if (config === undefined) { config = {}; }
+        if (startAt === undefined) { startAt = 0; }
+
+        var tween = this.pathTween;
+
+        if (tween && tween.isPlaying())
+        {
+            tween.stop();
+        }
+
+        if (typeof config === 'number')
+        {
+            config = { duration: config };
+        }
+
+        //  Override in case they've been specified in the config
+        config.from = GetValue(config, 'from', 0);
+        config.to = GetValue(config, 'to', 1);
+
+        var positionOnPath = GetBoolean(config, 'positionOnPath', false);
+
+        this.rotateToPath = GetBoolean(config, 'rotateToPath', false);
+        this.pathRotationOffset = GetValue(config, 'rotationOffset', 0);
+
+        //  This works, but it's not an ideal way of doing it as the follower jumps position
+        var seek = GetValue(config, 'startAt', startAt);
+
+        if (seek)
+        {
+            config.onStart = function (tween)
+            {
+                var tweenData = tween.data[0];
+                tweenData.progress = seek;
+                tweenData.elapsed = tweenData.duration * seek;
+                var v = tweenData.ease(tweenData.progress);
+                tweenData.current = tweenData.start + ((tweenData.end - tweenData.start) * v);
+                tweenData.target[tweenData.key] = tweenData.current;
+            };
+        }
+
+        if (!this.pathOffset)
+        {
+            this.pathOffset = new Vector2(this.x, this.y);
+        }
+
+        if (!this.pathVector)
+        {
+            this.pathVector = new Vector2();
+        }
+
+        if (!this.pathDelta)
+        {
+            this.pathDelta = new Vector2();
+        }
+
+        this.pathDelta.reset();
+
+        this.pathTween = this.scene.sys.tweens.addCounter(config);
+
+        //  The starting point of the path, relative to this follower
+        this.path.getStartPoint(this.pathOffset);
+
+        if (positionOnPath)
+        {
+            this.x = this.pathOffset.x;
+            this.y = this.pathOffset.y;
+        }
+
+        this.pathOffset.x = this.x - this.pathOffset.x;
+        this.pathOffset.y = this.y - this.pathOffset.y;
+
+        this._prevDirection = TWEEN_CONST.PLAYING_FORWARD;
+
+        if (this.rotateToPath)
+        {
+            //  Set the rotation now (in case the tween has a delay on it, etc)
+            var nextPoint = this.path.getPoint(0.1);
+
+            this.rotation = Math.atan2(nextPoint.y - this.y, nextPoint.x - this.x) + DegToRad(this.pathRotationOffset);
+        }
+
+        this.pathConfig = config;
+
+        return this;
+    },
+
+    /**
+     * Pauses this PathFollower. It will still continue to render, but it will remain motionless at the
+     * point on the Path at which you paused it.
+     *
+     * @method Phaser.GameObjects.Components.PathFollower#pauseFollow
+     * @since 3.3.0
+     *
+     * @return {this} This Game Object.
+     */
+    pauseFollow: function ()
+    {
+        var tween = this.pathTween;
+
+        if (tween && tween.isPlaying())
+        {
+            tween.pause();
+        }
+
+        return this;
+    },
+
+    /**
+     * Resumes a previously paused PathFollower.
+     *
+     * If the PathFollower was not paused this has no effect.
+     *
+     * @method Phaser.GameObjects.Components.PathFollower#resumeFollow
+     * @since 3.3.0
+     *
+     * @return {this} This Game Object.
+     */
+    resumeFollow: function ()
+    {
+        var tween = this.pathTween;
+
+        if (tween && tween.isPaused())
+        {
+            tween.resume();
+        }
+
+        return this;
+    },
+
+    /**
+     * Stops this PathFollower from following the path any longer.
+     *
+     * This will invoke any 'stop' conditions that may exist on the Path, or for the follower.
+     *
+     * @method Phaser.GameObjects.Components.PathFollower#stopFollow
+     * @since 3.3.0
+     *
+     * @return {this} This Game Object.
+     */
+    stopFollow: function ()
+    {
+        var tween = this.pathTween;
+
+        if (tween && tween.isPlaying())
+        {
+            tween.stop();
+        }
+
+        return this;
+    },
+
+    /**
+     * Internal update handler that advances this PathFollower along the path.
+     *
+     * Called automatically by the Scene step, should not typically be called directly.
+     *
+     * @method Phaser.GameObjects.Components.PathFollower#pathUpdate
+     * @since 3.17.0
+     */
+    pathUpdate: function ()
+    {
+        var tween = this.pathTween;
+
+        if (tween)
+        {
+            var tweenData = tween.data[0];
+            var pathDelta = this.pathDelta;
+            var pathVector = this.pathVector;
+
+            pathDelta.copy(pathVector).negate();
+
+            if (tweenData.state === TWEEN_CONST.COMPLETE)
+            {
+                this.path.getPoint(1, pathVector);
+
+                pathDelta.add(pathVector);
+                pathVector.add(this.pathOffset);
+
+                this.setPosition(pathVector.x, pathVector.y);
+
+                return;
+            }
+            else if (tweenData.state !== TWEEN_CONST.PLAYING_FORWARD && tweenData.state !== TWEEN_CONST.PLAYING_BACKWARD)
+            {
+                //  If delayed, etc then bail out
+                return;
+            }
+
+            this.path.getPoint(tween.getValue(), pathVector);
+
+            pathDelta.add(pathVector);
+            pathVector.add(this.pathOffset);
+
+            var oldX = this.x;
+            var oldY = this.y;
+
+            this.setPosition(pathVector.x, pathVector.y);
+
+            var speedX = this.x - oldX;
+            var speedY = this.y - oldY;
+
+            if (speedX === 0 && speedY === 0)
+            {
+                //  Bail out early
+                return;
+            }
+
+            if (tweenData.state !== this._prevDirection)
+            {
+                //  We've changed direction, so don't do a rotate this frame
+                this._prevDirection = tweenData.state;
+
+                return;
+            }
+
+            if (this.rotateToPath)
+            {
+                this.rotation = Math.atan2(speedY, speedX) + DegToRad(this.pathRotationOffset);
+            }
+        }
+    }
+
+};
+
+module.exports = PathFollower;
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/components/Pipeline.js":
+/*!**********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Pipeline.js ***!
+  \**********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Provides methods used for setting the WebGL rendering pipeline of a Game Object.
+ *
+ * @namespace Phaser.GameObjects.Components.Pipeline
+ * @webglOnly
+ * @since 3.0.0
+ */
+
+var Pipeline = {
+
+    /**
+     * The initial WebGL pipeline of this Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Pipeline#defaultPipeline
+     * @type {Phaser.Renderer.WebGL.WebGLPipeline}
+     * @default null
+     * @webglOnly
+     * @since 3.0.0
+     */
+    defaultPipeline: null,
+
+    /**
+     * The current WebGL pipeline of this Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Pipeline#pipeline
+     * @type {Phaser.Renderer.WebGL.WebGLPipeline}
+     * @default null
+     * @webglOnly
+     * @since 3.0.0
+     */
+    pipeline: null,
+
+    /**
+     * Sets the initial WebGL Pipeline of this Game Object.
+     *
+     * This should only be called during the instantiation of the Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Pipeline#initPipeline
+     * @webglOnly
+     * @since 3.0.0
+     *
+     * @param {string} [pipelineName=MultiPipeline] - The name of the pipeline to set on this Game Object. Defaults to the Multi Pipeline.
+     *
+     * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
+     */
+    initPipeline: function (pipelineName)
+    {
+        if (pipelineName === undefined) { pipelineName = 'MultiPipeline'; }
+
+        var renderer = this.scene.sys.game.renderer;
+
+        if (renderer && renderer.gl && renderer.hasPipeline(pipelineName))
+        {
+            this.defaultPipeline = renderer.getPipeline(pipelineName);
+            this.pipeline = this.defaultPipeline;
+
+            return true;
+        }
+
+        return false;
+    },
+
+    /**
+     * Sets the active WebGL Pipeline of this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Pipeline#setPipeline
+     * @webglOnly
+     * @since 3.0.0
+     *
+     * @param {string} pipelineName - The name of the pipeline to set on this Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setPipeline: function (pipelineName)
+    {
+        var renderer = this.scene.sys.game.renderer;
+
+        if (renderer && renderer.gl && renderer.hasPipeline(pipelineName))
+        {
+            this.pipeline = renderer.getPipeline(pipelineName);
+        }
+
+        return this;
+    },
+
+    /**
+     * Resets the WebGL Pipeline of this Game Object back to the default it was created with.
+     *
+     * @method Phaser.GameObjects.Components.Pipeline#resetPipeline
+     * @webglOnly
+     * @since 3.0.0
+     *
+     * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
+     */
+    resetPipeline: function ()
+    {
+        this.pipeline = this.defaultPipeline;
+
+        return (this.pipeline !== null);
+    },
+
+    /**
+     * Gets the name of the WebGL Pipeline this Game Object is currently using.
+     *
+     * @method Phaser.GameObjects.Components.Pipeline#getPipelineName
+     * @webglOnly
+     * @since 3.0.0
+     *
+     * @return {string} The string-based name of the pipeline being used by this Game Object.
+     */
+    getPipelineName: function ()
+    {
+        return this.pipeline.name;
+    }
+
+};
+
+module.exports = Pipeline;
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/components/ScrollFactor.js":
+/*!**************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/ScrollFactor.js ***!
+  \**************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -2561,16 +8814,893 @@ module.exports = ScrollFactor;
 
 /***/ }),
 
-/***/ "../../../src/gameobjects/components/ToJSON.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/ToJSON.js ***!
-  \***************************************************************/
+/***/ "../../../src/gameobjects/components/Size.js":
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Size.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Provides methods used for getting and setting the size of a Game Object.
+ * 
+ * @namespace Phaser.GameObjects.Components.Size
+ * @since 3.0.0
+ */
+
+var Size = {
+
+    /**
+     * A property indicating that a Game Object has this component.
+     * 
+     * @name Phaser.GameObjects.Components.Size#_sizeComponent
+     * @type {boolean}
+     * @private
+     * @default true
+     * @since 3.2.0
+     */
+    _sizeComponent: true,
+
+    /**
+     * The native (un-scaled) width of this Game Object.
+     * 
+     * Changing this value will not change the size that the Game Object is rendered in-game.
+     * For that you need to either set the scale of the Game Object (`setScale`) or use
+     * the `displayWidth` property.
+     * 
+     * @name Phaser.GameObjects.Components.Size#width
+     * @type {number}
+     * @since 3.0.0
+     */
+    width: 0,
+
+    /**
+     * The native (un-scaled) height of this Game Object.
+     * 
+     * Changing this value will not change the size that the Game Object is rendered in-game.
+     * For that you need to either set the scale of the Game Object (`setScale`) or use
+     * the `displayHeight` property.
+     * 
+     * @name Phaser.GameObjects.Components.Size#height
+     * @type {number}
+     * @since 3.0.0
+     */
+    height: 0,
+
+    /**
+     * The displayed width of this Game Object.
+     * 
+     * This value takes into account the scale factor.
+     * 
+     * Setting this value will adjust the Game Object's scale property.
+     * 
+     * @name Phaser.GameObjects.Components.Size#displayWidth
+     * @type {number}
+     * @since 3.0.0
+     */
+    displayWidth: {
+
+        get: function ()
+        {
+            return Math.abs(this.scaleX * this.frame.realWidth);
+        },
+
+        set: function (value)
+        {
+            this.scaleX = value / this.frame.realWidth;
+        }
+
+    },
+
+    /**
+     * The displayed height of this Game Object.
+     * 
+     * This value takes into account the scale factor.
+     * 
+     * Setting this value will adjust the Game Object's scale property.
+     * 
+     * @name Phaser.GameObjects.Components.Size#displayHeight
+     * @type {number}
+     * @since 3.0.0
+     */
+    displayHeight: {
+
+        get: function ()
+        {
+            return Math.abs(this.scaleY * this.frame.realHeight);
+        },
+
+        set: function (value)
+        {
+            this.scaleY = value / this.frame.realHeight;
+        }
+
+    },
+
+    /**
+     * Sets the size of this Game Object to be that of the given Frame.
+     * 
+     * This will not change the size that the Game Object is rendered in-game.
+     * For that you need to either set the scale of the Game Object (`setScale`) or call the
+     * `setDisplaySize` method, which is the same thing as changing the scale but allows you
+     * to do so by giving pixel values.
+     * 
+     * If you have enabled this Game Object for input, changing the size will _not_ change the
+     * size of the hit area. To do this you should adjust the `input.hitArea` object directly.
+     * 
+     * @method Phaser.GameObjects.Components.Size#setSizeToFrame
+     * @since 3.0.0
+     *
+     * @param {Phaser.Textures.Frame} frame - The frame to base the size of this Game Object on.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setSizeToFrame: function (frame)
+    {
+        if (frame === undefined) { frame = this.frame; }
+
+        this.width = frame.realWidth;
+        this.height = frame.realHeight;
+
+        return this;
+    },
+
+    /**
+     * Sets the internal size of this Game Object, as used for frame or physics body creation.
+     * 
+     * This will not change the size that the Game Object is rendered in-game.
+     * For that you need to either set the scale of the Game Object (`setScale`) or call the
+     * `setDisplaySize` method, which is the same thing as changing the scale but allows you
+     * to do so by giving pixel values.
+     * 
+     * If you have enabled this Game Object for input, changing the size will _not_ change the
+     * size of the hit area. To do this you should adjust the `input.hitArea` object directly.
+     * 
+     * @method Phaser.GameObjects.Components.Size#setSize
+     * @since 3.0.0
+     *
+     * @param {number} width - The width of this Game Object.
+     * @param {number} height - The height of this Game Object.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setSize: function (width, height)
+    {
+        this.width = width;
+        this.height = height;
+
+        return this;
+    },
+
+    /**
+     * Sets the display size of this Game Object.
+     * 
+     * Calling this will adjust the scale.
+     * 
+     * @method Phaser.GameObjects.Components.Size#setDisplaySize
+     * @since 3.0.0
+     *
+     * @param {number} width - The width of this Game Object.
+     * @param {number} height - The height of this Game Object.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setDisplaySize: function (width, height)
+    {
+        this.displayWidth = width;
+        this.displayHeight = height;
+
+        return this;
+    }
+
+};
+
+module.exports = Size;
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/components/Texture.js":
+/*!*********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Texture.js ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+//  bitmask flag for GameObject.renderMask
+var _FLAG = 8; // 1000
+
+/**
+ * Provides methods used for getting and setting the texture of a Game Object.
+ *
+ * @namespace Phaser.GameObjects.Components.Texture
+ * @since 3.0.0
+ */
+
+var Texture = {
+
+    /**
+     * The Texture this Game Object is using to render with.
+     *
+     * @name Phaser.GameObjects.Components.Texture#texture
+     * @type {Phaser.Textures.Texture|Phaser.Textures.CanvasTexture}
+     * @since 3.0.0
+     */
+    texture: null,
+
+    /**
+     * The Texture Frame this Game Object is using to render with.
+     *
+     * @name Phaser.GameObjects.Components.Texture#frame
+     * @type {Phaser.Textures.Frame}
+     * @since 3.0.0
+     */
+    frame: null,
+
+    /**
+     * Internal flag. Not to be set by this Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Texture#isCropped
+     * @type {boolean}
+     * @private
+     * @since 3.11.0
+     */
+    isCropped: false,
+
+    /**
+     * Sets the texture and frame this Game Object will use to render with.
+     *
+     * Textures are referenced by their string-based keys, as stored in the Texture Manager.
+     *
+     * @method Phaser.GameObjects.Components.Texture#setTexture
+     * @since 3.0.0
+     *
+     * @param {(string|Phaser.Textures.Texture)} key - The key of the texture to be used, as stored in the Texture Manager, or a Texture instance.
+     * @param {(string|integer)} [frame] - The name or index of the frame within the Texture.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setTexture: function (key, frame)
+    {
+        this.texture = this.scene.sys.textures.get(key);
+
+        return this.setFrame(frame);
+    },
+
+    /**
+     * Sets the frame this Game Object will use to render with.
+     *
+     * The Frame has to belong to the current Texture being used.
+     *
+     * It can be either a string or an index.
+     *
+     * Calling `setFrame` will modify the `width` and `height` properties of your Game Object.
+     * It will also change the `origin` if the Frame has a custom pivot point, as exported from packages like Texture Packer.
+     *
+     * @method Phaser.GameObjects.Components.Texture#setFrame
+     * @since 3.0.0
+     *
+     * @param {(string|integer)} frame - The name or index of the frame within the Texture.
+     * @param {boolean} [updateSize=true] - Should this call adjust the size of the Game Object?
+     * @param {boolean} [updateOrigin=true] - Should this call adjust the origin of the Game Object?
+     *
+     * @return {this} This Game Object instance.
+     */
+    setFrame: function (frame, updateSize, updateOrigin)
+    {
+        if (updateSize === undefined) { updateSize = true; }
+        if (updateOrigin === undefined) { updateOrigin = true; }
+
+        this.frame = this.texture.get(frame);
+
+        if (!this.frame.cutWidth || !this.frame.cutHeight)
+        {
+            this.renderFlags &= ~_FLAG;
+        }
+        else
+        {
+            this.renderFlags |= _FLAG;
+        }
+
+        if (this._sizeComponent && updateSize)
+        {
+            this.setSizeToFrame();
+        }
+
+        if (this._originComponent && updateOrigin)
+        {
+            if (this.frame.customPivot)
+            {
+                this.setOrigin(this.frame.pivotX, this.frame.pivotY);
+            }
+            else
+            {
+                this.updateDisplayOrigin();
+            }
+        }
+
+        return this;
+    }
+
+};
+
+module.exports = Texture;
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/components/TextureCrop.js":
+/*!*************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/TextureCrop.js ***!
+  \*************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+//  bitmask flag for GameObject.renderMask
+var _FLAG = 8; // 1000
+
+/**
+ * Provides methods used for getting and setting the texture of a Game Object.
+ *
+ * @namespace Phaser.GameObjects.Components.TextureCrop
+ * @since 3.0.0
+ */
+
+var TextureCrop = {
+
+    /**
+     * The Texture this Game Object is using to render with.
+     *
+     * @name Phaser.GameObjects.Components.TextureCrop#texture
+     * @type {Phaser.Textures.Texture|Phaser.Textures.CanvasTexture}
+     * @since 3.0.0
+     */
+    texture: null,
+
+    /**
+     * The Texture Frame this Game Object is using to render with.
+     *
+     * @name Phaser.GameObjects.Components.TextureCrop#frame
+     * @type {Phaser.Textures.Frame}
+     * @since 3.0.0
+     */
+    frame: null,
+
+    /**
+     * A boolean flag indicating if this Game Object is being cropped or not.
+     * You can toggle this at any time after `setCrop` has been called, to turn cropping on or off.
+     * Equally, calling `setCrop` with no arguments will reset the crop and disable it.
+     *
+     * @name Phaser.GameObjects.Components.TextureCrop#isCropped
+     * @type {boolean}
+     * @since 3.11.0
+     */
+    isCropped: false,
+
+    /**
+     * Applies a crop to a texture based Game Object, such as a Sprite or Image.
+     * 
+     * The crop is a rectangle that limits the area of the texture frame that is visible during rendering.
+     * 
+     * Cropping a Game Object does not change its size, dimensions, physics body or hit area, it just
+     * changes what is shown when rendered.
+     * 
+     * The crop coordinates are relative to the texture frame, not the Game Object, meaning 0 x 0 is the top-left.
+     * 
+     * Therefore, if you had a Game Object that had an 800x600 sized texture, and you wanted to show only the left
+     * half of it, you could call `setCrop(0, 0, 400, 600)`.
+     * 
+     * It is also scaled to match the Game Object scale automatically. Therefore a crop rect of 100x50 would crop
+     * an area of 200x100 when applied to a Game Object that had a scale factor of 2.
+     * 
+     * You can either pass in numeric values directly, or you can provide a single Rectangle object as the first argument.
+     * 
+     * Call this method with no arguments at all to reset the crop, or toggle the property `isCropped` to `false`.
+     * 
+     * You should do this if the crop rectangle becomes the same size as the frame itself, as it will allow
+     * the renderer to skip several internal calculations.
+     *
+     * @method Phaser.GameObjects.Components.TextureCrop#setCrop
+     * @since 3.11.0
+     *
+     * @param {(number|Phaser.Geom.Rectangle)} [x] - The x coordinate to start the crop from. Or a Phaser.Geom.Rectangle object, in which case the rest of the arguments are ignored.
+     * @param {number} [y] - The y coordinate to start the crop from.
+     * @param {number} [width] - The width of the crop rectangle in pixels.
+     * @param {number} [height] - The height of the crop rectangle in pixels.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setCrop: function (x, y, width, height)
+    {
+        if (x === undefined)
+        {
+            this.isCropped = false;
+        }
+        else if (this.frame)
+        {
+            if (typeof x === 'number')
+            {
+                this.frame.setCropUVs(this._crop, x, y, width, height, this.flipX, this.flipY);
+            }
+            else
+            {
+                var rect = x;
+
+                this.frame.setCropUVs(this._crop, rect.x, rect.y, rect.width, rect.height, this.flipX, this.flipY);
+            }
+
+            this.isCropped = true;
+        }
+
+        return this;
+    },
+
+    /**
+     * Sets the texture and frame this Game Object will use to render with.
+     *
+     * Textures are referenced by their string-based keys, as stored in the Texture Manager.
+     *
+     * @method Phaser.GameObjects.Components.TextureCrop#setTexture
+     * @since 3.0.0
+     *
+     * @param {string} key - The key of the texture to be used, as stored in the Texture Manager.
+     * @param {(string|integer)} [frame] - The name or index of the frame within the Texture.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setTexture: function (key, frame)
+    {
+        this.texture = this.scene.sys.textures.get(key);
+
+        return this.setFrame(frame);
+    },
+
+    /**
+     * Sets the frame this Game Object will use to render with.
+     *
+     * The Frame has to belong to the current Texture being used.
+     *
+     * It can be either a string or an index.
+     *
+     * Calling `setFrame` will modify the `width` and `height` properties of your Game Object.
+     * It will also change the `origin` if the Frame has a custom pivot point, as exported from packages like Texture Packer.
+     *
+     * @method Phaser.GameObjects.Components.TextureCrop#setFrame
+     * @since 3.0.0
+     *
+     * @param {(string|integer)} frame - The name or index of the frame within the Texture.
+     * @param {boolean} [updateSize=true] - Should this call adjust the size of the Game Object?
+     * @param {boolean} [updateOrigin=true] - Should this call adjust the origin of the Game Object?
+     *
+     * @return {this} This Game Object instance.
+     */
+    setFrame: function (frame, updateSize, updateOrigin)
+    {
+        if (updateSize === undefined) { updateSize = true; }
+        if (updateOrigin === undefined) { updateOrigin = true; }
+
+        this.frame = this.texture.get(frame);
+
+        if (!this.frame.cutWidth || !this.frame.cutHeight)
+        {
+            this.renderFlags &= ~_FLAG;
+        }
+        else
+        {
+            this.renderFlags |= _FLAG;
+        }
+
+        if (this._sizeComponent && updateSize)
+        {
+            this.setSizeToFrame();
+        }
+
+        if (this._originComponent && updateOrigin)
+        {
+            if (this.frame.customPivot)
+            {
+                this.setOrigin(this.frame.pivotX, this.frame.pivotY);
+            }
+            else
+            {
+                this.updateDisplayOrigin();
+            }
+        }
+
+        if (this.isCropped)
+        {
+            this.frame.updateCropUVs(this._crop, this.flipX, this.flipY);
+        }
+
+        return this;
+    },
+
+    /**
+     * Internal method that returns a blank, well-formed crop object for use by a Game Object.
+     *
+     * @method Phaser.GameObjects.Components.TextureCrop#resetCropObject
+     * @private
+     * @since 3.12.0
+     * 
+     * @return {object} The crop object.
+     */
+    resetCropObject: function ()
+    {
+        return { u0: 0, v0: 0, u1: 0, v1: 0, width: 0, height: 0, x: 0, y: 0, flipX: false, flipY: false, cx: 0, cy: 0, cw: 0, ch: 0 };
+    }
+
+};
+
+module.exports = TextureCrop;
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/components/Tint.js":
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Tint.js ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var GetColorFromValue = __webpack_require__(/*! ../../display/color/GetColorFromValue */ "../../../src/display/color/GetColorFromValue.js");
+
+/**
+ * Provides methods used for setting the tint of a Game Object.
+ * Should be applied as a mixin and not used directly.
+ *
+ * @namespace Phaser.GameObjects.Components.Tint
+ * @webglOnly
+ * @since 3.0.0
+ */
+
+var Tint = {
+
+    /**
+     * Private internal value. Holds the top-left tint value.
+     *
+     * @name Phaser.GameObjects.Components.Tint#_tintTL
+     * @type {number}
+     * @private
+     * @default 16777215
+     * @since 3.0.0
+     */
+    _tintTL: 16777215,
+
+    /**
+     * Private internal value. Holds the top-right tint value.
+     *
+     * @name Phaser.GameObjects.Components.Tint#_tintTR
+     * @type {number}
+     * @private
+     * @default 16777215
+     * @since 3.0.0
+     */
+    _tintTR: 16777215,
+
+    /**
+     * Private internal value. Holds the bottom-left tint value.
+     *
+     * @name Phaser.GameObjects.Components.Tint#_tintBL
+     * @type {number}
+     * @private
+     * @default 16777215
+     * @since 3.0.0
+     */
+    _tintBL: 16777215,
+
+    /**
+     * Private internal value. Holds the bottom-right tint value.
+     *
+     * @name Phaser.GameObjects.Components.Tint#_tintBR
+     * @type {number}
+     * @private
+     * @default 16777215
+     * @since 3.0.0
+     */
+    _tintBR: 16777215,
+
+    /**
+     * Private internal value. Holds if the Game Object is tinted or not.
+     *
+     * @name Phaser.GameObjects.Components.Tint#_isTinted
+     * @type {boolean}
+     * @private
+     * @default false
+     * @since 3.11.0
+     */
+    _isTinted: false,
+
+    /**
+     * Fill or additive?
+     *
+     * @name Phaser.GameObjects.Components.Tint#tintFill
+     * @type {boolean}
+     * @default false
+     * @since 3.11.0
+     */
+    tintFill: false,
+
+    /**
+     * Clears all tint values associated with this Game Object.
+     *
+     * Immediately sets the color values back to 0xffffff and the tint type to 'additive',
+     * which results in no visible change to the texture.
+     *
+     * @method Phaser.GameObjects.Components.Tint#clearTint
+     * @webglOnly
+     * @since 3.0.0
+     *
+     * @return {this} This Game Object instance.
+     */
+    clearTint: function ()
+    {
+        this.setTint(0xffffff);
+
+        this._isTinted = false;
+
+        return this;
+    },
+
+    /**
+     * Sets an additive tint on this Game Object.
+     *
+     * The tint works by taking the pixel color values from the Game Objects texture, and then
+     * multiplying it by the color value of the tint. You can provide either one color value,
+     * in which case the whole Game Object will be tinted in that color. Or you can provide a color
+     * per corner. The colors are blended together across the extent of the Game Object.
+     *
+     * To modify the tint color once set, either call this method again with new values or use the
+     * `tint` property to set all colors at once. Or, use the properties `tintTopLeft`, `tintTopRight,
+     * `tintBottomLeft` and `tintBottomRight` to set the corner color values independently.
+     *
+     * To remove a tint call `clearTint`.
+     *
+     * To swap this from being an additive tint to a fill based tint set the property `tintFill` to `true`.
+     *
+     * @method Phaser.GameObjects.Components.Tint#setTint
+     * @webglOnly
+     * @since 3.0.0
+     *
+     * @param {integer} [topLeft=0xffffff] - The tint being applied to the top-left of the Game Object. If no other values are given this value is applied evenly, tinting the whole Game Object.
+     * @param {integer} [topRight] - The tint being applied to the top-right of the Game Object.
+     * @param {integer} [bottomLeft] - The tint being applied to the bottom-left of the Game Object.
+     * @param {integer} [bottomRight] - The tint being applied to the bottom-right of the Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setTint: function (topLeft, topRight, bottomLeft, bottomRight)
+    {
+        if (topLeft === undefined) { topLeft = 0xffffff; }
+
+        if (topRight === undefined)
+        {
+            topRight = topLeft;
+            bottomLeft = topLeft;
+            bottomRight = topLeft;
+        }
+
+        this._tintTL = GetColorFromValue(topLeft);
+        this._tintTR = GetColorFromValue(topRight);
+        this._tintBL = GetColorFromValue(bottomLeft);
+        this._tintBR = GetColorFromValue(bottomRight);
+
+        this._isTinted = true;
+
+        this.tintFill = false;
+
+        return this;
+    },
+
+    /**
+     * Sets a fill-based tint on this Game Object.
+     *
+     * Unlike an additive tint, a fill-tint literally replaces the pixel colors from the texture
+     * with those in the tint. You can use this for effects such as making a player flash 'white'
+     * if hit by something. You can provide either one color value, in which case the whole
+     * Game Object will be rendered in that color. Or you can provide a color per corner. The colors
+     * are blended together across the extent of the Game Object.
+     *
+     * To modify the tint color once set, either call this method again with new values or use the
+     * `tint` property to set all colors at once. Or, use the properties `tintTopLeft`, `tintTopRight,
+     * `tintBottomLeft` and `tintBottomRight` to set the corner color values independently.
+     *
+     * To remove a tint call `clearTint`.
+     *
+     * To swap this from being a fill-tint to an additive tint set the property `tintFill` to `false`.
+     *
+     * @method Phaser.GameObjects.Components.Tint#setTintFill
+     * @webglOnly
+     * @since 3.11.0
+     *
+     * @param {integer} [topLeft=0xffffff] - The tint being applied to the top-left of the Game Object. If not other values are given this value is applied evenly, tinting the whole Game Object.
+     * @param {integer} [topRight] - The tint being applied to the top-right of the Game Object.
+     * @param {integer} [bottomLeft] - The tint being applied to the bottom-left of the Game Object.
+     * @param {integer} [bottomRight] - The tint being applied to the bottom-right of the Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setTintFill: function (topLeft, topRight, bottomLeft, bottomRight)
+    {
+        this.setTint(topLeft, topRight, bottomLeft, bottomRight);
+
+        this.tintFill = true;
+
+        return this;
+    },
+
+    /**
+     * The tint value being applied to the top-left of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Tint#tintTopLeft
+     * @type {integer}
+     * @webglOnly
+     * @since 3.0.0
+     */
+    tintTopLeft: {
+
+        get: function ()
+        {
+            return this._tintTL;
+        },
+
+        set: function (value)
+        {
+            this._tintTL = GetColorFromValue(value);
+            this._isTinted = true;
+        }
+
+    },
+
+    /**
+     * The tint value being applied to the top-right of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Tint#tintTopRight
+     * @type {integer}
+     * @webglOnly
+     * @since 3.0.0
+     */
+    tintTopRight: {
+
+        get: function ()
+        {
+            return this._tintTR;
+        },
+
+        set: function (value)
+        {
+            this._tintTR = GetColorFromValue(value);
+            this._isTinted = true;
+        }
+
+    },
+
+    /**
+     * The tint value being applied to the bottom-left of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Tint#tintBottomLeft
+     * @type {integer}
+     * @webglOnly
+     * @since 3.0.0
+     */
+    tintBottomLeft: {
+
+        get: function ()
+        {
+            return this._tintBL;
+        },
+
+        set: function (value)
+        {
+            this._tintBL = GetColorFromValue(value);
+            this._isTinted = true;
+        }
+
+    },
+
+    /**
+     * The tint value being applied to the bottom-right of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Tint#tintBottomRight
+     * @type {integer}
+     * @webglOnly
+     * @since 3.0.0
+     */
+    tintBottomRight: {
+
+        get: function ()
+        {
+            return this._tintBR;
+        },
+
+        set: function (value)
+        {
+            this._tintBR = GetColorFromValue(value);
+            this._isTinted = true;
+        }
+
+    },
+
+    /**
+     * The tint value being applied to the whole of the Game Object.
+     * This property is a setter-only. Use the properties `tintTopLeft` etc to read the current tint value.
+     *
+     * @name Phaser.GameObjects.Components.Tint#tint
+     * @type {integer}
+     * @webglOnly
+     * @since 3.0.0
+     */
+    tint: {
+
+        set: function (value)
+        {
+            this.setTint(value, value, value, value);
+        }
+    },
+
+    /**
+     * Does this Game Object have a tint applied to it or not?
+     *
+     * @name Phaser.GameObjects.Components.Tint#isTinted
+     * @type {boolean}
+     * @webglOnly
+     * @readonly
+     * @since 3.11.0
+     */
+    isTinted: {
+
+        get: function ()
+        {
+            return this._isTinted;
+        }
+
+    }
+
+};
+
+module.exports = Tint;
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/components/ToJSON.js":
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/ToJSON.js ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -2628,22 +9758,24 @@ module.exports = ToJSON;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Transform.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Transform.js ***!
-  \******************************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Transform.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var MATH_CONST = __webpack_require__(/*! ../../math/const */ "../../../src/math/const.js");
 var TransformMatrix = __webpack_require__(/*! ./TransformMatrix */ "../../../src/gameobjects/components/TransformMatrix.js");
+var TransformXY = __webpack_require__(/*! ../../math/TransformXY */ "../../../src/math/TransformXY.js");
 var WrapAngle = __webpack_require__(/*! ../../math/angle/Wrap */ "../../../src/math/angle/Wrap.js");
 var WrapAngleDegrees = __webpack_require__(/*! ../../math/angle/WrapDegrees */ "../../../src/math/angle/WrapDegrees.js");
+var Vector2 = __webpack_require__(/*! ../../math/Vector2 */ "../../../src/math/Vector2.js");
 
 //  global bitmask flag for GameObject.renderMask (used by Scale)
 var _FLAG = 4; // 0100
@@ -2659,7 +9791,7 @@ var Transform = {
 
     /**
      * Private internal value. Holds the horizontal scale value.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Transform#_scaleX
      * @type {number}
      * @private
@@ -2670,7 +9802,7 @@ var Transform = {
 
     /**
      * Private internal value. Holds the vertical scale value.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Transform#_scaleY
      * @type {number}
      * @private
@@ -2681,7 +9813,7 @@ var Transform = {
 
     /**
      * Private internal value. Holds the rotation value in radians.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Transform#_rotation
      * @type {number}
      * @private
@@ -2712,7 +9844,9 @@ var Transform = {
 
     /**
      * The z position of this Game Object.
-     * Note: Do not use this value to set the z-index, instead see the `depth` property.
+     *
+     * Note: The z position does not control the rendering order of 2D Game Objects. Use
+     * {@link Phaser.GameObjects.Components.Depth#depth} instead.
      *
      * @name Phaser.GameObjects.Components.Transform#z
      * @type {number}
@@ -2734,7 +9868,7 @@ var Transform = {
     /**
      * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
      * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
-     * 
+     *
      * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
      * isn't the case, use the `scaleX` or `scaleY` properties instead.
      *
@@ -2831,7 +9965,7 @@ var Transform = {
 
     /**
      * The angle of this Game Object as expressed in degrees.
-     * 
+     *
      * Phaser uses a right-hand clockwise rotation system, where 0 is right, 90 is down, 180/-180 is left
      * and -90 is up.
      *
@@ -2858,9 +9992,9 @@ var Transform = {
 
     /**
      * The angle of this Game Object in radians.
-     * 
-     * Phaser uses a right-hand clockwise rotation system, where 0 is right, 90 is down, 180/-180 is left
-     * and -90 is up.
+     *
+     * Phaser uses a right-hand clockwise rotation system, where 0 is right, PI/2 is down, +-PI is left
+     * and -PI/2 is up.
      *
      * If you prefer to work in degrees, see the `angle` property instead.
      *
@@ -2914,7 +10048,7 @@ var Transform = {
     /**
      * Sets the position of this Game Object to be a random position within the confines of
      * the given area.
-     * 
+     *
      * If no area is specified a random position between 0 x 0 and the game width x height is used instead.
      *
      * The position does not factor in the size of this Game Object, meaning that only the origin is
@@ -3044,6 +10178,9 @@ var Transform = {
     /**
      * Sets the z position of this Game Object.
      *
+     * Note: The z position does not control the rendering order of 2D Game Objects. Use
+     * {@link Phaser.GameObjects.Components.Depth#setDepth} instead.
+     *
      * @method Phaser.GameObjects.Components.Transform#setZ
      * @since 3.0.0
      *
@@ -3134,8 +10271,58 @@ var Transform = {
     },
 
     /**
+     * Takes the given `x` and `y` coordinates and converts them into local space for this
+     * Game Object, taking into account parent and local transforms, and the Display Origin.
+     *
+     * The returned Vector2 contains the translated point in its properties.
+     *
+     * A Camera needs to be provided in order to handle modified scroll factors. If no
+     * camera is specified, it will use the `main` camera from the Scene to which this
+     * Game Object belongs.
+     *
+     * @method Phaser.GameObjects.Components.Transform#getLocalPoint
+     * @since 3.50.0
+     *
+     * @param {number} x - The x position to translate.
+     * @param {number} y - The y position to translate.
+     * @param {Phaser.Math.Vector2} [point] - A Vector2, or point-like object, to store the results in.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera which is being tested against. If not given will use the Scene default camera.
+     *
+     * @return {Phaser.Math.Vector2} The translated point.
+     */
+    getLocalPoint: function (x, y, point, camera)
+    {
+        if (!point) { point = new Vector2(); }
+        if (!camera) { camera = this.scene.sys.cameras.main; }
+
+        var csx = camera.scrollX;
+        var csy = camera.scrollY;
+
+        var px = x + (csx * this.scrollFactorX) - csx;
+        var py = y + (csy * this.scrollFactorY) - csy;
+
+        if (this.parentContainer)
+        {
+            this.getWorldTransformMatrix().applyInverse(px, py, point);
+        }
+        else
+        {
+            TransformXY(px, py, this.x, this.y, this.rotation, this.scaleX, this.scaleY, point);
+        }
+
+        //  Normalize origin
+        if (this._originComponent)
+        {
+            point.x += this._displayOriginX;
+            point.y += this._displayOriginY;
+        }
+
+        return point;
+    },
+
+    /**
      * Gets the sum total rotation of all of this Game Objects parent Containers.
-     * 
+     *
      * The returned value is in radians and will be zero if this Game Object has no parent container.
      *
      * @method Phaser.GameObjects.Components.Transform#getParentRotation
@@ -3167,15 +10354,15 @@ module.exports = Transform;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/TransformMatrix.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/TransformMatrix.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/TransformMatrix.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -3613,7 +10800,7 @@ var TransformMatrix = new Class({
      * @param {Phaser.GameObjects.Components.TransformMatrix} rhs - The Matrix to multiply by.
      * @param {Phaser.GameObjects.Components.TransformMatrix} [out] - An optional Matrix to store the results in.
      *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} Either this TransformMatrix, or the `out` Matrix, if given in the arguments.
+     * @return {(this|Phaser.GameObjects.Components.TransformMatrix)} Either this TransformMatrix, or the `out` Matrix, if given in the arguments.
      */
     multiply: function (rhs, out)
     {
@@ -4106,6 +11293,58 @@ var TransformMatrix = new Class({
     },
 
     /**
+     * Returns the X component of this matrix multiplied by the given values.
+     * 
+     * This is the same as `x * a + y * c + e`, optionally passing via `Math.round`.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#getXRound
+     * @since 3.50.0
+     * 
+     * @param {number} x - The x value.
+     * @param {number} y - The y value.
+     * @param {boolean} [round=false] - Math.round the resulting value?
+     *
+     * @return {number} The calculated x value.
+     */
+    getXRound: function (x, y, round)
+    {
+        var v = this.getX(x, y);
+
+        if (round)
+        {
+            v = Math.round(v);
+        }
+
+        return v;
+    },
+
+    /**
+     * Returns the Y component of this matrix multiplied by the given values.
+     * 
+     * This is the same as `x * b + y * d + f`, optionally passing via `Math.round`.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#getYRound
+     * @since 3.50.0
+     * 
+     * @param {number} x - The x value.
+     * @param {number} y - The y value.
+     * @param {boolean} [round=false] - Math.round the resulting value?
+     *
+     * @return {number} The calculated y value.
+     */
+    getYRound: function (x, y, round)
+    {
+        var v = this.getY(x, y);
+
+        if (round)
+        {
+            v = Math.round(v);
+        }
+
+        return v;
+    },
+
+    /**
      * Returns a string that can be used in a CSS Transform call as a `matrix` property.
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#getCSSMatrix
@@ -4140,15 +11379,15 @@ module.exports = TransformMatrix;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Visible.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Visible.js ***!
-  \****************************************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Visible.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -4233,16 +11472,1767 @@ module.exports = Visible;
 
 /***/ }),
 
-/***/ "../../../src/gameobjects/events/DESTROY_EVENT.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/DESTROY_EVENT.js ***!
-  \******************************************************************/
+/***/ "../../../src/gameobjects/components/index.js":
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/index.js ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.GameObjects.Components
+ */
+
+module.exports = {
+
+    Alpha: __webpack_require__(/*! ./Alpha */ "../../../src/gameobjects/components/Alpha.js"),
+    AlphaSingle: __webpack_require__(/*! ./AlphaSingle */ "../../../src/gameobjects/components/AlphaSingle.js"),
+    Animation: __webpack_require__(/*! ./Animation */ "../../../src/gameobjects/components/Animation.js"),
+    BlendMode: __webpack_require__(/*! ./BlendMode */ "../../../src/gameobjects/components/BlendMode.js"),
+    ComputedSize: __webpack_require__(/*! ./ComputedSize */ "../../../src/gameobjects/components/ComputedSize.js"),
+    Crop: __webpack_require__(/*! ./Crop */ "../../../src/gameobjects/components/Crop.js"),
+    Depth: __webpack_require__(/*! ./Depth */ "../../../src/gameobjects/components/Depth.js"),
+    Flip: __webpack_require__(/*! ./Flip */ "../../../src/gameobjects/components/Flip.js"),
+    GetBounds: __webpack_require__(/*! ./GetBounds */ "../../../src/gameobjects/components/GetBounds.js"),
+    Mask: __webpack_require__(/*! ./Mask */ "../../../src/gameobjects/components/Mask.js"),
+    Origin: __webpack_require__(/*! ./Origin */ "../../../src/gameobjects/components/Origin.js"),
+    PathFollower: __webpack_require__(/*! ./PathFollower */ "../../../src/gameobjects/components/PathFollower.js"),
+    Pipeline: __webpack_require__(/*! ./Pipeline */ "../../../src/gameobjects/components/Pipeline.js"),
+    ScrollFactor: __webpack_require__(/*! ./ScrollFactor */ "../../../src/gameobjects/components/ScrollFactor.js"),
+    Size: __webpack_require__(/*! ./Size */ "../../../src/gameobjects/components/Size.js"),
+    Texture: __webpack_require__(/*! ./Texture */ "../../../src/gameobjects/components/Texture.js"),
+    TextureCrop: __webpack_require__(/*! ./TextureCrop */ "../../../src/gameobjects/components/TextureCrop.js"),
+    Tint: __webpack_require__(/*! ./Tint */ "../../../src/gameobjects/components/Tint.js"),
+    ToJSON: __webpack_require__(/*! ./ToJSON */ "../../../src/gameobjects/components/ToJSON.js"),
+    Transform: __webpack_require__(/*! ./Transform */ "../../../src/gameobjects/components/Transform.js"),
+    TransformMatrix: __webpack_require__(/*! ./TransformMatrix */ "../../../src/gameobjects/components/TransformMatrix.js"),
+    Visible: __webpack_require__(/*! ./Visible */ "../../../src/gameobjects/components/Visible.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/container/Container.js":
+/*!**********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/container/Container.js ***!
+  \**********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Felipe Alfonso <@bitnenfer>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var ArrayUtils = __webpack_require__(/*! ../../utils/array */ "../../../src/utils/array/index.js");
+var BlendModes = __webpack_require__(/*! ../../renderer/BlendModes */ "../../../src/renderer/BlendModes.js");
+var Class = __webpack_require__(/*! ../../utils/Class */ "../../../src/utils/Class.js");
+var Components = __webpack_require__(/*! ../components */ "../../../src/gameobjects/components/index.js");
+var Events = __webpack_require__(/*! ../events */ "../../../src/gameobjects/events/index.js");
+var GameObject = __webpack_require__(/*! ../GameObject */ "../../../src/gameobjects/GameObject.js");
+var GameObjectEvents = __webpack_require__(/*! ../events */ "../../../src/gameobjects/events/index.js");
+var Rectangle = __webpack_require__(/*! ../../geom/rectangle/Rectangle */ "../../../src/geom/rectangle/Rectangle.js");
+var Render = __webpack_require__(/*! ./ContainerRender */ "../../../src/gameobjects/container/ContainerRender.js");
+var Union = __webpack_require__(/*! ../../geom/rectangle/Union */ "../../../src/geom/rectangle/Union.js");
+var Vector2 = __webpack_require__(/*! ../../math/Vector2 */ "../../../src/math/Vector2.js");
+
+/**
+ * @classdesc
+ * A Container Game Object.
+ *
+ * A Container, as the name implies, can 'contain' other types of Game Object.
+ * When a Game Object is added to a Container, the Container becomes responsible for the rendering of it.
+ * By default it will be removed from the Display List and instead added to the Containers own internal list.
+ *
+ * The position of the Game Object automatically becomes relative to the position of the Container.
+ *
+ * The origin of a Container is 0x0 (in local space) and that cannot be changed. The children you add to the
+ * Container should be positioned with this value in mind. I.e. you should treat 0x0 as being the center of
+ * the Container, and position children positively and negative around it as required.
+ *
+ * When the Container is rendered, all of its children are rendered as well, in the order in which they exist
+ * within the Container. Container children can be repositioned using methods such as `MoveUp`, `MoveDown` and `SendToBack`.
+ *
+ * If you modify a transform property of the Container, such as `Container.x` or `Container.rotation` then it will
+ * automatically influence all children as well.
+ *
+ * Containers can include other Containers for deeply nested transforms.
+ *
+ * Containers can have masks set on them and can be used as a mask too. However, Container children cannot be masked.
+ * The masks do not 'stack up'. Only a Container on the root of the display list will use its mask.
+ *
+ * Containers can be enabled for input. Because they do not have a texture you need to provide a shape for them
+ * to use as their hit area. Container children can also be enabled for input, independent of the Container.
+ *
+ * Containers can be given a physics body for either Arcade Physics, Impact Physics or Matter Physics. However,
+ * if Container _children_ are enabled for physics you may get unexpected results, such as offset bodies,
+ * if the Container itself, or any of its ancestors, is positioned anywhere other than at 0 x 0. Container children
+ * with physics do not factor in the Container due to the excessive extra calculations needed. Please structure
+ * your game to work around this.
+ *
+ * It's important to understand the impact of using Containers. They add additional processing overhead into
+ * every one of their children. The deeper you nest them, the more the cost escalates. This is especially true
+ * for input events. You also loose the ability to set the display depth of Container children in the same
+ * flexible manner as those not within them. In short, don't use them for the sake of it. You pay a small cost
+ * every time you create one, try to structure your game around avoiding that where possible.
+ *
+ * @class Container
+ * @extends Phaser.GameObjects.GameObject
+ * @memberof Phaser.GameObjects
+ * @constructor
+ * @since 3.4.0
+ *
+ * @extends Phaser.GameObjects.Components.AlphaSingle
+ * @extends Phaser.GameObjects.Components.BlendMode
+ * @extends Phaser.GameObjects.Components.ComputedSize
+ * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.Mask
+ * @extends Phaser.GameObjects.Components.Transform
+ * @extends Phaser.GameObjects.Components.Visible
+ *
+ * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
+ * @param {number} [x=0] - The horizontal position of this Game Object in the world.
+ * @param {number} [y=0] - The vertical position of this Game Object in the world.
+ * @param {Phaser.GameObjects.GameObject[]} [children] - An optional array of Game Objects to add to this Container.
+ */
+var Container = new Class({
+
+    Extends: GameObject,
+
+    Mixins: [
+        Components.AlphaSingle,
+        Components.BlendMode,
+        Components.ComputedSize,
+        Components.Depth,
+        Components.Mask,
+        Components.Transform,
+        Components.Visible,
+        Render
+    ],
+
+    initialize:
+
+    function Container (scene, x, y, children)
+    {
+        GameObject.call(this, scene, 'Container');
+
+        /**
+         * An array holding the children of this Container.
+         *
+         * @name Phaser.GameObjects.Container#list
+         * @type {Phaser.GameObjects.GameObject[]}
+         * @since 3.4.0
+         */
+        this.list = [];
+
+        /**
+         * Does this Container exclusively manage its children?
+         *
+         * The default is `true` which means a child added to this Container cannot
+         * belong in another Container, which includes the Scene display list.
+         *
+         * If you disable this then this Container will no longer exclusively manage its children.
+         * This allows you to create all kinds of interesting graphical effects, such as replicating
+         * Game Objects without reparenting them all over the Scene.
+         * However, doing so will prevent children from receiving any kind of input event or have
+         * their physics bodies work by default, as they're no longer a single entity on the
+         * display list, but are being replicated where-ever this Container is.
+         *
+         * @name Phaser.GameObjects.Container#exclusive
+         * @type {boolean}
+         * @default true
+         * @since 3.4.0
+         */
+        this.exclusive = true;
+
+        /**
+         * Containers can have an optional maximum size. If set to anything above 0 it
+         * will constrict the addition of new Game Objects into the Container, capping off
+         * the maximum limit the Container can grow in size to.
+         *
+         * @name Phaser.GameObjects.Container#maxSize
+         * @type {integer}
+         * @default -1
+         * @since 3.4.0
+         */
+        this.maxSize = -1;
+
+        /**
+         * The cursor position.
+         *
+         * @name Phaser.GameObjects.Container#position
+         * @type {integer}
+         * @since 3.4.0
+         */
+        this.position = 0;
+
+        /**
+         * Internal Transform Matrix used for local space conversion.
+         *
+         * @name Phaser.GameObjects.Container#localTransform
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.4.0
+         */
+        this.localTransform = new Components.TransformMatrix();
+
+        /**
+         * Internal temporary Transform Matrix used to avoid object creation.
+         *
+         * @name Phaser.GameObjects.Container#tempTransformMatrix
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @private
+         * @since 3.4.0
+         */
+        this.tempTransformMatrix = new Components.TransformMatrix();
+
+        /**
+         * A reference to the Scene Display List.
+         *
+         * @name Phaser.GameObjects.Container#_displayList
+         * @type {Phaser.GameObjects.DisplayList}
+         * @private
+         * @since 3.4.0
+         */
+        this._displayList = scene.sys.displayList;
+
+        /**
+         * The property key to sort by.
+         *
+         * @name Phaser.GameObjects.Container#_sortKey
+         * @type {string}
+         * @private
+         * @since 3.4.0
+         */
+        this._sortKey = '';
+
+        /**
+         * A reference to the Scene Systems Event Emitter.
+         *
+         * @name Phaser.GameObjects.Container#_sysEvents
+         * @type {Phaser.Events.EventEmitter}
+         * @private
+         * @since 3.9.0
+         */
+        this._sysEvents = scene.sys.events;
+
+        /**
+         * The horizontal scroll factor of this Container.
+         *
+         * The scroll factor controls the influence of the movement of a Camera upon this Container.
+         *
+         * When a camera scrolls it will change the location at which this Container is rendered on-screen.
+         * It does not change the Containers actual position values.
+         *
+         * For a Container, setting this value will only update the Container itself, not its children.
+         * If you wish to change the scrollFactor of the children as well, use the `setScrollFactor` method.
+         *
+         * A value of 1 means it will move exactly in sync with a camera.
+         * A value of 0 means it will not move at all, even if the camera moves.
+         * Other values control the degree to which the camera movement is mapped to this Container.
+         *
+         * Please be aware that scroll factor values other than 1 are not taken in to consideration when
+         * calculating physics collisions. Bodies always collide based on their world position, but changing
+         * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
+         * them from physics bodies if not accounted for in your code.
+         *
+         * @name Phaser.GameObjects.Container#scrollFactorX
+         * @type {number}
+         * @default 1
+         * @since 3.0.0
+         */
+        this.scrollFactorX = 1;
+
+        /**
+         * The vertical scroll factor of this Container.
+         *
+         * The scroll factor controls the influence of the movement of a Camera upon this Container.
+         *
+         * When a camera scrolls it will change the location at which this Container is rendered on-screen.
+         * It does not change the Containers actual position values.
+         *
+         * For a Container, setting this value will only update the Container itself, not its children.
+         * If you wish to change the scrollFactor of the children as well, use the `setScrollFactor` method.
+         *
+         * A value of 1 means it will move exactly in sync with a camera.
+         * A value of 0 means it will not move at all, even if the camera moves.
+         * Other values control the degree to which the camera movement is mapped to this Container.
+         *
+         * Please be aware that scroll factor values other than 1 are not taken in to consideration when
+         * calculating physics collisions. Bodies always collide based on their world position, but changing
+         * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
+         * them from physics bodies if not accounted for in your code.
+         *
+         * @name Phaser.GameObjects.Container#scrollFactorY
+         * @type {number}
+         * @default 1
+         * @since 3.0.0
+         */
+        this.scrollFactorY = 1;
+
+        this.setPosition(x, y);
+
+        this.clearAlpha();
+
+        this.setBlendMode(BlendModes.SKIP_CHECK);
+
+        if (children)
+        {
+            this.add(children);
+        }
+    },
+
+    /**
+     * Internal value to allow Containers to be used for input and physics.
+     * Do not change this value. It has no effect other than to break things.
+     *
+     * @name Phaser.GameObjects.Container#originX
+     * @type {number}
+     * @readonly
+     * @since 3.4.0
+     */
+    originX: {
+
+        get: function ()
+        {
+            return 0.5;
+        }
+
+    },
+
+    /**
+     * Internal value to allow Containers to be used for input and physics.
+     * Do not change this value. It has no effect other than to break things.
+     *
+     * @name Phaser.GameObjects.Container#originY
+     * @type {number}
+     * @readonly
+     * @since 3.4.0
+     */
+    originY: {
+
+        get: function ()
+        {
+            return 0.5;
+        }
+
+    },
+
+    /**
+     * Internal value to allow Containers to be used for input and physics.
+     * Do not change this value. It has no effect other than to break things.
+     *
+     * @name Phaser.GameObjects.Container#displayOriginX
+     * @type {number}
+     * @readonly
+     * @since 3.4.0
+     */
+    displayOriginX: {
+
+        get: function ()
+        {
+            return this.width * 0.5;
+        }
+
+    },
+
+    /**
+     * Internal value to allow Containers to be used for input and physics.
+     * Do not change this value. It has no effect other than to break things.
+     *
+     * @name Phaser.GameObjects.Container#displayOriginY
+     * @type {number}
+     * @readonly
+     * @since 3.4.0
+     */
+    displayOriginY: {
+
+        get: function ()
+        {
+            return this.height * 0.5;
+        }
+
+    },
+
+    /**
+     * Does this Container exclusively manage its children?
+     *
+     * The default is `true` which means a child added to this Container cannot
+     * belong in another Container, which includes the Scene display list.
+     *
+     * If you disable this then this Container will no longer exclusively manage its children.
+     * This allows you to create all kinds of interesting graphical effects, such as replicating
+     * Game Objects without reparenting them all over the Scene.
+     * However, doing so will prevent children from receiving any kind of input event or have
+     * their physics bodies work by default, as they're no longer a single entity on the
+     * display list, but are being replicated where-ever this Container is.
+     *
+     * @method Phaser.GameObjects.Container#setExclusive
+     * @since 3.4.0
+     *
+     * @param {boolean} [value=true] - The exclusive state of this Container.
+     *
+     * @return {this} This Container.
+     */
+    setExclusive: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.exclusive = value;
+
+        return this;
+    },
+
+    /**
+     * Gets the bounds of this Container. It works by iterating all children of the Container,
+     * getting their respective bounds, and then working out a min-max rectangle from that.
+     * It does not factor in if the children render or not, all are included.
+     *
+     * Some children are unable to return their bounds, such as Graphics objects, in which case
+     * they are skipped.
+     *
+     * Depending on the quantity of children in this Container it could be a really expensive call,
+     * so cache it and only poll it as needed.
+     *
+     * The values are stored and returned in a Rectangle object.
+     *
+     * @method Phaser.GameObjects.Container#getBounds
+     * @since 3.4.0
+     *
+     * @param {Phaser.Geom.Rectangle} [output] - A Geom.Rectangle object to store the values in. If not provided a new Rectangle will be created.
+     *
+     * @return {Phaser.Geom.Rectangle} The values stored in the output object.
+     */
+    getBounds: function (output)
+    {
+        if (output === undefined) { output = new Rectangle(); }
+
+        output.setTo(this.x, this.y, 0, 0);
+
+        if (this.parentContainer)
+        {
+            var parentMatrix = this.parentContainer.getBoundsTransformMatrix();
+            var transformedPosition = parentMatrix.transformPoint(this.x, this.y);
+
+            output.setTo(transformedPosition.x, transformedPosition.y, 0, 0);
+        }
+
+        if (this.list.length > 0)
+        {
+            var children = this.list;
+            var tempRect = new Rectangle();
+            var hasSetFirst = false;
+
+            output.setEmpty();
+
+            for (var i = 0; i < children.length; i++)
+            {
+                var entry = children[i];
+
+                if (entry.getBounds)
+                {
+                    entry.getBounds(tempRect);
+
+                    if (!hasSetFirst)
+                    {
+                        output.setTo(tempRect.x, tempRect.y, tempRect.width, tempRect.height);
+                        hasSetFirst = true;
+                    }
+                    else
+                    {
+                        Union(tempRect, output, output);
+                    }
+                }
+            }
+        }
+
+        return output;
+    },
+
+    /**
+     * Internal add handler.
+     *
+     * @method Phaser.GameObjects.Container#addHandler
+     * @private
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was just added to this Container.
+     */
+    addHandler: function (gameObject)
+    {
+        gameObject.once(Events.DESTROY, this.remove, this);
+
+        if (this.exclusive)
+        {
+            this._displayList.remove(gameObject);
+
+            if (gameObject.parentContainer)
+            {
+                gameObject.parentContainer.remove(gameObject);
+            }
+
+            gameObject.parentContainer = this;
+        }
+
+        //  Is only on the Display List via this Container
+        if (!this.scene.sys.displayList.exists(gameObject))
+        {
+            gameObject.emit(GameObjectEvents.ADDED_TO_SCENE, gameObject, this.scene);
+        }
+    },
+
+    /**
+     * Internal remove handler.
+     *
+     * @method Phaser.GameObjects.Container#removeHandler
+     * @private
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was just removed from this Container.
+     */
+    removeHandler: function (gameObject)
+    {
+        gameObject.off(Events.DESTROY, this.remove);
+
+        if (this.exclusive)
+        {
+            gameObject.parentContainer = null;
+        }
+
+        //  Is only on the Display List via this Container
+        if (!this.scene.sys.displayList.exists(gameObject))
+        {
+            gameObject.emit(GameObjectEvents.REMOVED_FROM_SCENE, gameObject, this.scene);
+        }
+    },
+
+    /**
+     * Takes a Point-like object, such as a Vector2, Geom.Point or object with public x and y properties,
+     * and transforms it into the space of this Container, then returns it in the output object.
+     *
+     * @method Phaser.GameObjects.Container#pointToContainer
+     * @since 3.4.0
+     *
+     * @param {(object|Phaser.Geom.Point|Phaser.Math.Vector2)} source - The Source Point to be transformed.
+     * @param {(object|Phaser.Geom.Point|Phaser.Math.Vector2)} [output] - A destination object to store the transformed point in. If none given a Vector2 will be created and returned.
+     *
+     * @return {(object|Phaser.Geom.Point|Phaser.Math.Vector2)} The transformed point.
+     */
+    pointToContainer: function (source, output)
+    {
+        if (output === undefined) { output = new Vector2(); }
+
+        if (this.parentContainer)
+        {
+            this.parentContainer.pointToContainer(source, output);
+        }
+        else
+        {
+            output = new Vector2(source.x, source.y);
+        }
+
+        var tempMatrix = this.tempTransformMatrix;
+
+        //  No need to loadIdentity because applyITRS overwrites every value anyway
+        tempMatrix.applyITRS(this.x, this.y, this.rotation, this.scaleX, this.scaleY);
+
+        tempMatrix.invert();
+
+        tempMatrix.transformPoint(source.x, source.y, output);
+
+        return output;
+    },
+
+    /**
+     * Returns the world transform matrix as used for Bounds checks.
+     *
+     * The returned matrix is temporal and shouldn't be stored.
+     *
+     * @method Phaser.GameObjects.Container#getBoundsTransformMatrix
+     * @since 3.4.0
+     *
+     * @return {Phaser.GameObjects.Components.TransformMatrix} The world transform matrix.
+     */
+    getBoundsTransformMatrix: function ()
+    {
+        return this.getWorldTransformMatrix(this.tempTransformMatrix, this.localTransform);
+    },
+
+    /**
+     * Adds the given Game Object, or array of Game Objects, to this Container.
+     *
+     * Each Game Object must be unique within the Container.
+     *
+     * @method Phaser.GameObjects.Container#add
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} child - The Game Object, or array of Game Objects, to add to the Container.
+     *
+     * @return {this} This Container instance.
+     */
+    add: function (child)
+    {
+        ArrayUtils.Add(this.list, child, this.maxSize, this.addHandler, this);
+
+        return this;
+    },
+
+    /**
+     * Adds the given Game Object, or array of Game Objects, to this Container at the specified position.
+     *
+     * Existing Game Objects in the Container are shifted up.
+     *
+     * Each Game Object must be unique within the Container.
+     *
+     * @method Phaser.GameObjects.Container#addAt
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} child - The Game Object, or array of Game Objects, to add to the Container.
+     * @param {integer} [index=0] - The position to insert the Game Object/s at.
+     *
+     * @return {this} This Container instance.
+     */
+    addAt: function (child, index)
+    {
+        ArrayUtils.AddAt(this.list, child, index, this.maxSize, this.addHandler, this);
+
+        return this;
+    },
+
+    /**
+     * Returns the Game Object at the given position in this Container.
+     *
+     * @method Phaser.GameObjects.Container#getAt
+     * @since 3.4.0
+     *
+     * @param {integer} index - The position to get the Game Object from.
+     *
+     * @return {?Phaser.GameObjects.GameObject} The Game Object at the specified index, or `null` if none found.
+     */
+    getAt: function (index)
+    {
+        return this.list[index];
+    },
+
+    /**
+     * Returns the index of the given Game Object in this Container.
+     *
+     * @method Phaser.GameObjects.Container#getIndex
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object to search for in this Container.
+     *
+     * @return {integer} The index of the Game Object in this Container, or -1 if not found.
+     */
+    getIndex: function (child)
+    {
+        return this.list.indexOf(child);
+    },
+
+    /**
+     * Sort the contents of this Container so the items are in order based on the given property.
+     * For example: `sort('alpha')` would sort the elements based on the value of their `alpha` property.
+     *
+     * @method Phaser.GameObjects.Container#sort
+     * @since 3.4.0
+     *
+     * @param {string} property - The property to lexically sort by.
+     * @param {function} [handler] - Provide your own custom handler function. Will receive 2 children which it should compare and return a boolean.
+     *
+     * @return {this} This Container instance.
+     */
+    sort: function (property, handler)
+    {
+        if (!property)
+        {
+            return this;
+        }
+
+        if (handler === undefined)
+        {
+            handler = function (childA, childB)
+            {
+                return childA[property] - childB[property];
+            };
+        }
+
+        ArrayUtils.StableSort.inplace(this.list, handler);
+
+        return this;
+    },
+
+    /**
+     * Searches for the first instance of a child with its `name` property matching the given argument.
+     * Should more than one child have the same name only the first is returned.
+     *
+     * @method Phaser.GameObjects.Container#getByName
+     * @since 3.4.0
+     *
+     * @param {string} name - The name to search for.
+     *
+     * @return {?Phaser.GameObjects.GameObject} The first child with a matching name, or `null` if none were found.
+     */
+    getByName: function (name)
+    {
+        return ArrayUtils.GetFirst(this.list, 'name', name);
+    },
+
+    /**
+     * Returns a random Game Object from this Container.
+     *
+     * @method Phaser.GameObjects.Container#getRandom
+     * @since 3.4.0
+     *
+     * @param {integer} [startIndex=0] - An optional start index.
+     * @param {integer} [length] - An optional length, the total number of elements (from the startIndex) to choose from.
+     *
+     * @return {?Phaser.GameObjects.GameObject} A random child from the Container, or `null` if the Container is empty.
+     */
+    getRandom: function (startIndex, length)
+    {
+        return ArrayUtils.GetRandom(this.list, startIndex, length);
+    },
+
+    /**
+     * Gets the first Game Object in this Container.
+     *
+     * You can also specify a property and value to search for, in which case it will return the first
+     * Game Object in this Container with a matching property and / or value.
+     *
+     * For example: `getFirst('visible', true)` would return the first Game Object that had its `visible` property set.
+     *
+     * You can limit the search to the `startIndex` - `endIndex` range.
+     *
+     * @method Phaser.GameObjects.Container#getFirst
+     * @since 3.4.0
+     *
+     * @param {string} property - The property to test on each Game Object in the Container.
+     * @param {*} value - The value to test the property against. Must pass a strict (`===`) comparison check.
+     * @param {integer} [startIndex=0] - An optional start index to search from.
+     * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
+     *
+     * @return {?Phaser.GameObjects.GameObject} The first matching Game Object, or `null` if none was found.
+     */
+    getFirst: function (property, value, startIndex, endIndex)
+    {
+        return ArrayUtils.GetFirst(this.list, property, value, startIndex, endIndex);
+    },
+
+    /**
+     * Returns all Game Objects in this Container.
+     *
+     * You can optionally specify a matching criteria using the `property` and `value` arguments.
+     *
+     * For example: `getAll('body')` would return only Game Objects that have a body property.
+     *
+     * You can also specify a value to compare the property to:
+     *
+     * `getAll('visible', true)` would return only Game Objects that have their visible property set to `true`.
+     *
+     * Optionally you can specify a start and end index. For example if this Container had 100 Game Objects,
+     * and you set `startIndex` to 0 and `endIndex` to 50, it would return matches from only
+     * the first 50 Game Objects.
+     *
+     * @method Phaser.GameObjects.Container#getAll
+     * @since 3.4.0
+     *
+     * @param {string} [property] - The property to test on each Game Object in the Container.
+     * @param {any} [value] - If property is set then the `property` must strictly equal this value to be included in the results.
+     * @param {integer} [startIndex=0] - An optional start index to search from.
+     * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
+     *
+     * @return {Phaser.GameObjects.GameObject[]} An array of matching Game Objects from this Container.
+     */
+    getAll: function (property, value, startIndex, endIndex)
+    {
+        return ArrayUtils.GetAll(this.list, property, value, startIndex, endIndex);
+    },
+
+    /**
+     * Returns the total number of Game Objects in this Container that have a property
+     * matching the given value.
+     *
+     * For example: `count('visible', true)` would count all the elements that have their visible property set.
+     *
+     * You can optionally limit the operation to the `startIndex` - `endIndex` range.
+     *
+     * @method Phaser.GameObjects.Container#count
+     * @since 3.4.0
+     *
+     * @param {string} property - The property to check.
+     * @param {any} value - The value to check.
+     * @param {integer} [startIndex=0] - An optional start index to search from.
+     * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
+     *
+     * @return {integer} The total number of Game Objects in this Container with a property matching the given value.
+     */
+    count: function (property, value, startIndex, endIndex)
+    {
+        return ArrayUtils.CountAllMatching(this.list, property, value, startIndex, endIndex);
+    },
+
+    /**
+     * Swaps the position of two Game Objects in this Container.
+     * Both Game Objects must belong to this Container.
+     *
+     * @method Phaser.GameObjects.Container#swap
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child1 - The first Game Object to swap.
+     * @param {Phaser.GameObjects.GameObject} child2 - The second Game Object to swap.
+     *
+     * @return {this} This Container instance.
+     */
+    swap: function (child1, child2)
+    {
+        ArrayUtils.Swap(this.list, child1, child2);
+
+        return this;
+    },
+
+    /**
+     * Moves a Game Object to a new position within this Container.
+     *
+     * The Game Object must already be a child of this Container.
+     *
+     * The Game Object is removed from its old position and inserted into the new one.
+     * Therefore the Container size does not change. Other children will change position accordingly.
+     *
+     * @method Phaser.GameObjects.Container#moveTo
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object to move.
+     * @param {integer} index - The new position of the Game Object in this Container.
+     *
+     * @return {this} This Container instance.
+     */
+    moveTo: function (child, index)
+    {
+        ArrayUtils.MoveTo(this.list, child, index);
+
+        return this;
+    },
+
+    /**
+     * Removes the given Game Object, or array of Game Objects, from this Container.
+     *
+     * The Game Objects must already be children of this Container.
+     *
+     * You can also optionally call `destroy` on each Game Object that is removed from the Container.
+     *
+     * @method Phaser.GameObjects.Container#remove
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} child - The Game Object, or array of Game Objects, to be removed from the Container.
+     * @param {boolean} [destroyChild=false] - Optionally call `destroy` on each child successfully removed from this Container.
+     *
+     * @return {this} This Container instance.
+     */
+    remove: function (child, destroyChild)
+    {
+        var removed = ArrayUtils.Remove(this.list, child, this.removeHandler, this);
+
+        if (destroyChild && removed)
+        {
+            if (!Array.isArray(removed))
+            {
+                removed = [ removed ];
+            }
+
+            for (var i = 0; i < removed.length; i++)
+            {
+                removed[i].destroy();
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Removes the Game Object at the given position in this Container.
+     *
+     * You can also optionally call `destroy` on the Game Object, if one is found.
+     *
+     * @method Phaser.GameObjects.Container#removeAt
+     * @since 3.4.0
+     *
+     * @param {integer} index - The index of the Game Object to be removed.
+     * @param {boolean} [destroyChild=false] - Optionally call `destroy` on the Game Object if successfully removed from this Container.
+     *
+     * @return {this} This Container instance.
+     */
+    removeAt: function (index, destroyChild)
+    {
+        var removed = ArrayUtils.RemoveAt(this.list, index, this.removeHandler, this);
+
+        if (destroyChild && removed)
+        {
+            removed.destroy();
+        }
+
+        return this;
+    },
+
+    /**
+     * Removes the Game Objects between the given positions in this Container.
+     *
+     * You can also optionally call `destroy` on each Game Object that is removed from the Container.
+     *
+     * @method Phaser.GameObjects.Container#removeBetween
+     * @since 3.4.0
+     *
+     * @param {integer} [startIndex=0] - An optional start index to search from.
+     * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
+     * @param {boolean} [destroyChild=false] - Optionally call `destroy` on each Game Object successfully removed from this Container.
+     *
+     * @return {this} This Container instance.
+     */
+    removeBetween: function (startIndex, endIndex, destroyChild)
+    {
+        var removed = ArrayUtils.RemoveBetween(this.list, startIndex, endIndex, this.removeHandler, this);
+
+        if (destroyChild)
+        {
+            for (var i = 0; i < removed.length; i++)
+            {
+                removed[i].destroy();
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Removes all Game Objects from this Container.
+     *
+     * You can also optionally call `destroy` on each Game Object that is removed from the Container.
+     *
+     * @method Phaser.GameObjects.Container#removeAll
+     * @since 3.4.0
+     *
+     * @param {boolean} [destroyChild=false] - Optionally call `destroy` on each Game Object successfully removed from this Container.
+     *
+     * @return {this} This Container instance.
+     */
+    removeAll: function (destroyChild)
+    {
+        var removed = ArrayUtils.RemoveBetween(this.list, 0, this.list.length, this.removeHandler, this);
+
+        if (destroyChild)
+        {
+            for (var i = 0; i < removed.length; i++)
+            {
+                removed[i].destroy();
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Brings the given Game Object to the top of this Container.
+     * This will cause it to render on-top of any other objects in the Container.
+     *
+     * @method Phaser.GameObjects.Container#bringToTop
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object to bring to the top of the Container.
+     *
+     * @return {this} This Container instance.
+     */
+    bringToTop: function (child)
+    {
+        ArrayUtils.BringToTop(this.list, child);
+
+        return this;
+    },
+
+    /**
+     * Sends the given Game Object to the bottom of this Container.
+     * This will cause it to render below any other objects in the Container.
+     *
+     * @method Phaser.GameObjects.Container#sendToBack
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object to send to the bottom of the Container.
+     *
+     * @return {this} This Container instance.
+     */
+    sendToBack: function (child)
+    {
+        ArrayUtils.SendToBack(this.list, child);
+
+        return this;
+    },
+
+    /**
+     * Moves the given Game Object up one place in this Container, unless it's already at the top.
+     *
+     * @method Phaser.GameObjects.Container#moveUp
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object to be moved in the Container.
+     *
+     * @return {this} This Container instance.
+     */
+    moveUp: function (child)
+    {
+        ArrayUtils.MoveUp(this.list, child);
+
+        return this;
+    },
+
+    /**
+     * Moves the given Game Object down one place in this Container, unless it's already at the bottom.
+     *
+     * @method Phaser.GameObjects.Container#moveDown
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object to be moved in the Container.
+     *
+     * @return {this} This Container instance.
+     */
+    moveDown: function (child)
+    {
+        ArrayUtils.MoveDown(this.list, child);
+
+        return this;
+    },
+
+    /**
+     * Reverses the order of all Game Objects in this Container.
+     *
+     * @method Phaser.GameObjects.Container#reverse
+     * @since 3.4.0
+     *
+     * @return {this} This Container instance.
+     */
+    reverse: function ()
+    {
+        this.list.reverse();
+
+        return this;
+    },
+
+    /**
+     * Shuffles the all Game Objects in this Container using the Fisher-Yates implementation.
+     *
+     * @method Phaser.GameObjects.Container#shuffle
+     * @since 3.4.0
+     *
+     * @return {this} This Container instance.
+     */
+    shuffle: function ()
+    {
+        ArrayUtils.Shuffle(this.list);
+
+        return this;
+    },
+
+    /**
+     * Replaces a Game Object in this Container with the new Game Object.
+     * The new Game Object cannot already be a child of this Container.
+     *
+     * @method Phaser.GameObjects.Container#replace
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject} oldChild - The Game Object in this Container that will be replaced.
+     * @param {Phaser.GameObjects.GameObject} newChild - The Game Object to be added to this Container.
+     * @param {boolean} [destroyChild=false] - Optionally call `destroy` on the Game Object if successfully removed from this Container.
+     *
+     * @return {this} This Container instance.
+     */
+    replace: function (oldChild, newChild, destroyChild)
+    {
+        var moved = ArrayUtils.Replace(this.list, oldChild, newChild);
+
+        if (moved)
+        {
+            this.addHandler(newChild);
+            this.removeHandler(oldChild);
+
+            if (destroyChild)
+            {
+                oldChild.destroy();
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Returns `true` if the given Game Object is a direct child of this Container.
+     *
+     * This check does not scan nested Containers.
+     *
+     * @method Phaser.GameObjects.Container#exists
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object to check for within this Container.
+     *
+     * @return {boolean} True if the Game Object is an immediate child of this Container, otherwise false.
+     */
+    exists: function (child)
+    {
+        return (this.list.indexOf(child) > -1);
+    },
+
+    /**
+     * Sets the property to the given value on all Game Objects in this Container.
+     *
+     * Optionally you can specify a start and end index. For example if this Container had 100 Game Objects,
+     * and you set `startIndex` to 0 and `endIndex` to 50, it would return matches from only
+     * the first 50 Game Objects.
+     *
+     * @method Phaser.GameObjects.Container#setAll
+     * @since 3.4.0
+     *
+     * @param {string} property - The property that must exist on the Game Object.
+     * @param {any} value - The value to get the property to.
+     * @param {integer} [startIndex=0] - An optional start index to search from.
+     * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
+     *
+     * @return {this} This Container instance.
+     */
+    setAll: function (property, value, startIndex, endIndex)
+    {
+        ArrayUtils.SetAll(this.list, property, value, startIndex, endIndex);
+
+        return this;
+    },
+
+    /**
+     * @callback EachContainerCallback
+     * @generic I - [item]
+     *
+     * @param {*} item - The child Game Object of the Container.
+     * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
+     */
+
+    /**
+     * Passes all Game Objects in this Container to the given callback.
+     *
+     * A copy of the Container is made before passing each entry to your callback.
+     * This protects against the callback itself modifying the Container.
+     *
+     * If you know for sure that the callback will not change the size of this Container
+     * then you can use the more performant `Container.iterate` method instead.
+     *
+     * @method Phaser.GameObjects.Container#each
+     * @since 3.4.0
+     *
+     * @param {function} callback - The function to call.
+     * @param {object} [context] - Value to use as `this` when executing callback.
+     * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
+     *
+     * @return {this} This Container instance.
+     */
+    each: function (callback, context)
+    {
+        var args = [ null ];
+        var i;
+        var temp = this.list.slice();
+        var len = temp.length;
+
+        for (i = 2; i < arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
+
+        for (i = 0; i < len; i++)
+        {
+            args[0] = temp[i];
+
+            callback.apply(context, args);
+        }
+
+        return this;
+    },
+
+    /**
+     * Passes all Game Objects in this Container to the given callback.
+     *
+     * Only use this method when you absolutely know that the Container will not be modified during
+     * the iteration, i.e. by removing or adding to its contents.
+     *
+     * @method Phaser.GameObjects.Container#iterate
+     * @since 3.4.0
+     *
+     * @param {function} callback - The function to call.
+     * @param {object} [context] - Value to use as `this` when executing callback.
+     * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
+     *
+     * @return {this} This Container instance.
+     */
+    iterate: function (callback, context)
+    {
+        var args = [ null ];
+        var i;
+
+        for (i = 2; i < arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
+
+        for (i = 0; i < this.list.length; i++)
+        {
+            args[0] = this.list[i];
+
+            callback.apply(context, args);
+        }
+
+        return this;
+    },
+
+    /**
+     * Sets the scroll factor of this Container and optionally all of its children.
+     *
+     * The scroll factor controls the influence of the movement of a Camera upon this Game Object.
+     *
+     * When a camera scrolls it will change the location at which this Game Object is rendered on-screen.
+     * It does not change the Game Objects actual position values.
+     *
+     * A value of 1 means it will move exactly in sync with a camera.
+     * A value of 0 means it will not move at all, even if the camera moves.
+     * Other values control the degree to which the camera movement is mapped to this Game Object.
+     *
+     * Please be aware that scroll factor values other than 1 are not taken in to consideration when
+     * calculating physics collisions. Bodies always collide based on their world position, but changing
+     * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
+     * them from physics bodies if not accounted for in your code.
+     *
+     * @method Phaser.GameObjects.Container#setScrollFactor
+     * @since 3.0.0
+     *
+     * @param {number} x - The horizontal scroll factor of this Game Object.
+     * @param {number} [y=x] - The vertical scroll factor of this Game Object. If not set it will use the `x` value.
+     * @param {boolean} [updateChildren=false] - Apply this scrollFactor to all Container children as well?
+     *
+     * @return {this} This Game Object instance.
+     */
+    setScrollFactor: function (x, y, updateChildren)
+    {
+        if (y === undefined) { y = x; }
+        if (updateChildren === undefined) { updateChildren = false; }
+
+        this.scrollFactorX = x;
+        this.scrollFactorY = y;
+
+        if (updateChildren)
+        {
+            ArrayUtils.SetAll(this.list, 'scrollFactorX', x);
+            ArrayUtils.SetAll(this.list, 'scrollFactorY', y);
+        }
+
+        return this;
+    },
+
+    /**
+     * The number of Game Objects inside this Container.
+     *
+     * @name Phaser.GameObjects.Container#length
+     * @type {integer}
+     * @readonly
+     * @since 3.4.0
+     */
+    length: {
+
+        get: function ()
+        {
+            return this.list.length;
+        }
+
+    },
+
+    /**
+     * Returns the first Game Object within the Container, or `null` if it is empty.
+     *
+     * You can move the cursor by calling `Container.next` and `Container.previous`.
+     *
+     * @name Phaser.GameObjects.Container#first
+     * @type {?Phaser.GameObjects.GameObject}
+     * @readonly
+     * @since 3.4.0
+     */
+    first: {
+
+        get: function ()
+        {
+            this.position = 0;
+
+            if (this.list.length > 0)
+            {
+                return this.list[0];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+    },
+
+    /**
+     * Returns the last Game Object within the Container, or `null` if it is empty.
+     *
+     * You can move the cursor by calling `Container.next` and `Container.previous`.
+     *
+     * @name Phaser.GameObjects.Container#last
+     * @type {?Phaser.GameObjects.GameObject}
+     * @readonly
+     * @since 3.4.0
+     */
+    last: {
+
+        get: function ()
+        {
+            if (this.list.length > 0)
+            {
+                this.position = this.list.length - 1;
+
+                return this.list[this.position];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+    },
+
+    /**
+     * Returns the next Game Object within the Container, or `null` if it is empty.
+     *
+     * You can move the cursor by calling `Container.next` and `Container.previous`.
+     *
+     * @name Phaser.GameObjects.Container#next
+     * @type {?Phaser.GameObjects.GameObject}
+     * @readonly
+     * @since 3.4.0
+     */
+    next: {
+
+        get: function ()
+        {
+            if (this.position < this.list.length)
+            {
+                this.position++;
+
+                return this.list[this.position];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+    },
+
+    /**
+     * Returns the previous Game Object within the Container, or `null` if it is empty.
+     *
+     * You can move the cursor by calling `Container.next` and `Container.previous`.
+     *
+     * @name Phaser.GameObjects.Container#previous
+     * @type {?Phaser.GameObjects.GameObject}
+     * @readonly
+     * @since 3.4.0
+     */
+    previous: {
+
+        get: function ()
+        {
+            if (this.position > 0)
+            {
+                this.position--;
+
+                return this.list[this.position];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+    },
+
+    /**
+     * Internal destroy handler, called as part of the destroy process.
+     *
+     * @method Phaser.GameObjects.Container#preDestroy
+     * @protected
+     * @since 3.9.0
+     */
+    preDestroy: function ()
+    {
+        this.removeAll(!!this.exclusive);
+
+        this.localTransform.destroy();
+        this.tempTransformMatrix.destroy();
+
+        this.list = [];
+        this._displayList = null;
+    }
+
+});
+
+module.exports = Container;
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/container/ContainerCanvasRenderer.js":
+/*!************************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/container/ContainerCanvasRenderer.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @author       Felipe Alfonso <@bitnenfer>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Renders this Game Object with the Canvas Renderer to the given Camera.
+ * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
+ * This method should not be called directly. It is a utility function of the Render module.
+ *
+ * @method Phaser.GameObjects.Container#renderCanvas
+ * @since 3.4.0
+ * @private
+ *
+ * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
+ * @param {Phaser.GameObjects.Container} container - The Game Object being rendered in this call.
+ * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
+ */
+var ContainerCanvasRenderer = function (renderer, container, interpolationPercentage, camera, parentMatrix)
+{
+    var children = container.list;
+
+    if (children.length === 0)
+    {
+        return;
+    }
+
+    var transformMatrix = container.localTransform;
+
+    if (parentMatrix)
+    {
+        transformMatrix.loadIdentity();
+        transformMatrix.multiply(parentMatrix);
+        transformMatrix.translate(container.x, container.y);
+        transformMatrix.rotate(container.rotation);
+        transformMatrix.scale(container.scaleX, container.scaleY);
+    }
+    else
+    {
+        transformMatrix.applyITRS(container.x, container.y, container.rotation, container.scaleX, container.scaleY);
+    }
+
+    var containerHasBlendMode = (container.blendMode !== -1);
+
+    if (!containerHasBlendMode)
+    {
+        //  If Container is SKIP_TEST then set blend mode to be Normal
+        renderer.setBlendMode(0);
+    }
+
+    var alpha = container._alpha;
+    var scrollFactorX = container.scrollFactorX;
+    var scrollFactorY = container.scrollFactorY;
+
+    if (container.mask)
+    {
+        container.mask.preRenderCanvas(renderer, null, camera);
+    }
+
+    for (var i = 0; i < children.length; i++)
+    {
+        var child = children[i];
+
+        if (!child.willRender(camera))
+        {
+            continue;
+        }
+
+        var childAlpha = child.alpha;
+        var childScrollFactorX = child.scrollFactorX;
+        var childScrollFactorY = child.scrollFactorY;
+
+        if (!containerHasBlendMode && child.blendMode !== renderer.currentBlendMode)
+        {
+            //  If Container doesn't have its own blend mode, then a child can have one
+            renderer.setBlendMode(child.blendMode);
+        }
+
+        //  Set parent values
+        child.setScrollFactor(childScrollFactorX * scrollFactorX, childScrollFactorY * scrollFactorY);
+        child.setAlpha(childAlpha * alpha);
+
+        //  Render
+        child.renderCanvas(renderer, child, interpolationPercentage, camera, transformMatrix);
+
+        //  Restore original values
+        child.setAlpha(childAlpha);
+        child.setScrollFactor(childScrollFactorX, childScrollFactorY);
+    }
+
+    if (container.mask)
+    {
+        container.mask.postRenderCanvas(renderer);
+    }
+};
+
+module.exports = ContainerCanvasRenderer;
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/container/ContainerRender.js":
+/*!****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/container/ContainerRender.js ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Felipe Alfonso <@bitnenfer>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var renderWebGL = __webpack_require__(/*! ../../utils/NOOP */ "../../../src/utils/NOOP.js");
+var renderCanvas = __webpack_require__(/*! ../../utils/NOOP */ "../../../src/utils/NOOP.js");
+
+if (true)
+{
+    renderWebGL = __webpack_require__(/*! ./ContainerWebGLRenderer */ "../../../src/gameobjects/container/ContainerWebGLRenderer.js");
+}
+
+if (true)
+{
+    renderCanvas = __webpack_require__(/*! ./ContainerCanvasRenderer */ "../../../src/gameobjects/container/ContainerCanvasRenderer.js");
+}
+
+module.exports = {
+
+    renderWebGL: renderWebGL,
+    renderCanvas: renderCanvas
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/container/ContainerWebGLRenderer.js":
+/*!***********************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/container/ContainerWebGLRenderer.js ***!
+  \***********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Felipe Alfonso <@bitnenfer>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Renders this Game Object with the WebGL Renderer to the given Camera.
+ * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
+ * This method should not be called directly. It is a utility function of the Render module.
+ *
+ * @method Phaser.GameObjects.Container#renderWebGL
+ * @since 3.4.0
+ * @private
+ *
+ * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
+ * @param {Phaser.GameObjects.Container} container - The Game Object being rendered in this call.
+ * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
+ */
+var ContainerWebGLRenderer = function (renderer, container, interpolationPercentage, camera, parentMatrix)
+{
+    var children = container.list;
+
+    if (children.length === 0)
+    {
+        return;
+    }
+
+    var transformMatrix = container.localTransform;
+    
+    if (parentMatrix)
+    {
+        transformMatrix.loadIdentity();
+        transformMatrix.multiply(parentMatrix);
+        transformMatrix.translate(container.x, container.y);
+        transformMatrix.rotate(container.rotation);
+        transformMatrix.scale(container.scaleX, container.scaleY);
+    }
+    else
+    {
+        transformMatrix.applyITRS(container.x, container.y, container.rotation, container.scaleX, container.scaleY);
+    }
+
+    var containerHasBlendMode = (container.blendMode !== -1);
+
+    if (!containerHasBlendMode)
+    {
+        //  If Container is SKIP_TEST then set blend mode to be Normal
+        renderer.setBlendMode(0);
+    }
+
+    var alpha = container.alpha;
+
+    var scrollFactorX = container.scrollFactorX;
+    var scrollFactorY = container.scrollFactorY;
+
+    var list = children;
+    var childCount = children.length;
+
+    for (var i = 0; i < childCount; i++)
+    {
+        var child = children[i];
+
+        if (!child.willRender(camera))
+        {
+            continue;
+        }
+
+        var childAlphaTopLeft;
+        var childAlphaTopRight;
+        var childAlphaBottomLeft;
+        var childAlphaBottomRight;
+
+        if (child.alphaTopLeft !== undefined)
+        {
+            childAlphaTopLeft = child.alphaTopLeft;
+            childAlphaTopRight = child.alphaTopRight;
+            childAlphaBottomLeft = child.alphaBottomLeft;
+            childAlphaBottomRight = child.alphaBottomRight;
+        }
+        else
+        {
+            var childAlpha = child.alpha;
+
+            childAlphaTopLeft = childAlpha;
+            childAlphaTopRight = childAlpha;
+            childAlphaBottomLeft = childAlpha;
+            childAlphaBottomRight = childAlpha;
+        }
+
+        var childScrollFactorX = child.scrollFactorX;
+        var childScrollFactorY = child.scrollFactorY;
+
+        if (!containerHasBlendMode && child.blendMode !== renderer.currentBlendMode)
+        {
+            //  If Container doesn't have its own blend mode, then a child can have one
+            renderer.setBlendMode(child.blendMode);
+        }
+
+        var mask = child.mask;
+
+        if (mask)
+        {
+            mask.preRenderWebGL(renderer, child, camera);
+        }
+
+        var type = child.type;
+
+        if (type !== renderer.currentType)
+        {
+            renderer.newType = true;
+            renderer.currentType = type;
+        }
+
+        renderer.nextTypeMatch = (i < childCount - 1) ? (list[i + 1].type === renderer.currentType) : false;
+
+        //  Set parent values
+        child.setScrollFactor(childScrollFactorX * scrollFactorX, childScrollFactorY * scrollFactorY);
+
+        child.setAlpha(childAlphaTopLeft * alpha, childAlphaTopRight * alpha, childAlphaBottomLeft * alpha, childAlphaBottomRight * alpha);
+
+        //  Render
+        child.renderWebGL(renderer, child, interpolationPercentage, camera, transformMatrix);
+
+        //  Restore original values
+
+        child.setAlpha(childAlphaTopLeft, childAlphaTopRight, childAlphaBottomLeft, childAlphaBottomRight);
+
+        child.setScrollFactor(childScrollFactorX, childScrollFactorY);
+
+        if (mask)
+        {
+            mask.postRenderWebGL(renderer, camera);
+        }
+
+        renderer.newType = false;
+    }
+};
+
+module.exports = ContainerWebGLRenderer;
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/events/ADDED_TO_SCENE_EVENT.js":
+/*!******************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/ADDED_TO_SCENE_EVENT.js ***!
+  \******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Object Added to Scene Event.
+ *
+ * This event is dispatched when a Game Object is added to a Scene.
+ *
+ * Listen for it on a Game Object instance using `GameObject.on('addedtoscene', listener)`.
+ *
+ * @event Phaser.GameObjects.Events#ADDED_TO_SCENE
+ * @since 3.50.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was added to the Scene.
+ * @param {Phaser.Scene} scene - The Scene to which the Game Object was added.
+ */
+module.exports = 'addedtoscene';
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/events/DESTROY_EVENT.js":
+/*!***********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/DESTROY_EVENT.js ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -4263,16 +13253,47 @@ module.exports = 'destroy';
 
 /***/ }),
 
-/***/ "../../../src/gameobjects/events/VIDEO_COMPLETE_EVENT.js":
-/*!*************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_COMPLETE_EVENT.js ***!
-  \*************************************************************************/
+/***/ "../../../src/gameobjects/events/REMOVED_FROM_SCENE_EVENT.js":
+/*!**********************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/REMOVED_FROM_SCENE_EVENT.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Object Removed from Scene Event.
+ *
+ * This event is dispatched when a Game Object is removed from a Scene.
+ *
+ * Listen for it on a Game Object instance using `GameObject.on('removedfromscene', listener)`.
+ *
+ * @event Phaser.GameObjects.Events#REMOVED_FROM_SCENE
+ * @since 3.50.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was removed from the Scene.
+ * @param {Phaser.Scene} scene - The Scene from which the Game Object was removed.
+ */
+module.exports = 'removedfromscene';
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/events/VIDEO_COMPLETE_EVENT.js":
+/*!******************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_COMPLETE_EVENT.js ***!
+  \******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -4301,15 +13322,15 @@ module.exports = 'complete';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_CREATED_EVENT.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_CREATED_EVENT.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_CREATED_EVENT.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -4335,15 +13356,15 @@ module.exports = 'created';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_ERROR_EVENT.js":
-/*!**********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_ERROR_EVENT.js ***!
-  \**********************************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_ERROR_EVENT.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -4366,15 +13387,15 @@ module.exports = 'error';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_LOOP_EVENT.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_LOOP_EVENT.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_LOOP_EVENT.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -4403,15 +13424,15 @@ module.exports = 'loop';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_PLAY_EVENT.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_PLAY_EVENT.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_PLAY_EVENT.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -4436,15 +13457,15 @@ module.exports = 'play';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_SEEKED_EVENT.js":
-/*!***********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_SEEKED_EVENT.js ***!
-  \***********************************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_SEEKED_EVENT.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -4466,15 +13487,15 @@ module.exports = 'seeked';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_SEEKING_EVENT.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_SEEKING_EVENT.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_SEEKING_EVENT.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -4497,15 +13518,15 @@ module.exports = 'seeking';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_STOP_EVENT.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_STOP_EVENT.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_STOP_EVENT.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -4528,15 +13549,15 @@ module.exports = 'stop';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_TIMEOUT_EVENT.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_TIMEOUT_EVENT.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_TIMEOUT_EVENT.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -4559,15 +13580,15 @@ module.exports = 'timeout';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_UNLOCKED_EVENT.js":
-/*!*************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_UNLOCKED_EVENT.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_UNLOCKED_EVENT.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -4590,15 +13611,15 @@ module.exports = 'unlocked';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/index.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/index.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -4608,7 +13629,9 @@ module.exports = 'unlocked';
 
 module.exports = {
 
+    ADDED_TO_SCENE: __webpack_require__(/*! ./ADDED_TO_SCENE_EVENT */ "../../../src/gameobjects/events/ADDED_TO_SCENE_EVENT.js"),
     DESTROY: __webpack_require__(/*! ./DESTROY_EVENT */ "../../../src/gameobjects/events/DESTROY_EVENT.js"),
+    REMOVED_FROM_SCENE: __webpack_require__(/*! ./REMOVED_FROM_SCENE_EVENT */ "../../../src/gameobjects/events/REMOVED_FROM_SCENE_EVENT.js"),
     VIDEO_COMPLETE: __webpack_require__(/*! ./VIDEO_COMPLETE_EVENT */ "../../../src/gameobjects/events/VIDEO_COMPLETE_EVENT.js"),
     VIDEO_CREATED: __webpack_require__(/*! ./VIDEO_CREATED_EVENT */ "../../../src/gameobjects/events/VIDEO_CREATED_EVENT.js"),
     VIDEO_ERROR: __webpack_require__(/*! ./VIDEO_ERROR_EVENT */ "../../../src/gameobjects/events/VIDEO_ERROR_EVENT.js"),
@@ -4625,16 +13648,1557 @@ module.exports = {
 
 /***/ }),
 
-/***/ "../../../src/loader/File.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/File.js ***!
-  \*********************************************/
+/***/ "../../../src/geom/const.js":
+/*!*************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/const.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var GEOM_CONST = {
+
+    /**
+     * A Circle Geometry object type.
+     * 
+     * @name Phaser.Geom.CIRCLE
+     * @type {integer}
+     * @since 3.19.0
+     */
+    CIRCLE: 0,
+
+    /**
+     * An Ellipse Geometry object type.
+     * 
+     * @name Phaser.Geom.ELLIPSE
+     * @type {integer}
+     * @since 3.19.0
+     */
+    ELLIPSE: 1,
+
+    /**
+     * A Line Geometry object type.
+     * 
+     * @name Phaser.Geom.LINE
+     * @type {integer}
+     * @since 3.19.0
+     */
+    LINE: 2,
+
+    /**
+     * A Point Geometry object type.
+     * 
+     * @name Phaser.Geom.POINT
+     * @type {integer}
+     * @since 3.19.0
+     */
+    POINT: 3,
+
+    /**
+     * A Polygon Geometry object type.
+     * 
+     * @name Phaser.Geom.POLYGON
+     * @type {integer}
+     * @since 3.19.0
+     */
+    POLYGON: 4,
+
+    /**
+     * A Rectangle Geometry object type.
+     * 
+     * @name Phaser.Geom.RECTANGLE
+     * @type {integer}
+     * @since 3.19.0
+     */
+    RECTANGLE: 5,
+
+    /**
+     * A Triangle Geometry object type.
+     * 
+     * @name Phaser.Geom.TRIANGLE
+     * @type {integer}
+     * @since 3.19.0
+     */
+    TRIANGLE: 6
+
+};
+
+module.exports = GEOM_CONST;
+
+
+/***/ }),
+
+/***/ "../../../src/geom/line/GetPoint.js":
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/line/GetPoint.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Point = __webpack_require__(/*! ../point/Point */ "../../../src/geom/point/Point.js");
+
+/**
+ * Get a point on a line that's a given percentage along its length.
+ *
+ * @function Phaser.Geom.Line.GetPoint
+ * @since 3.0.0
+ *
+ * @generic {Phaser.Geom.Point} O - [out,$return]
+ *
+ * @param {Phaser.Geom.Line} line - The line.
+ * @param {number} position - A value between 0 and 1, where 0 is the start, 0.5 is the middle and 1 is the end of the line.
+ * @param {(Phaser.Geom.Point|object)} [out] - An optional point, or point-like object, to store the coordinates of the point on the line.
+ *
+ * @return {(Phaser.Geom.Point|object)} The point on the line.
+ */
+var GetPoint = function (line, position, out)
+{
+    if (out === undefined) { out = new Point(); }
+
+    out.x = line.x1 + (line.x2 - line.x1) * position;
+    out.y = line.y1 + (line.y2 - line.y1) * position;
+
+    return out;
+};
+
+module.exports = GetPoint;
+
+
+/***/ }),
+
+/***/ "../../../src/geom/line/GetPoints.js":
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/line/GetPoints.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Length = __webpack_require__(/*! ./Length */ "../../../src/geom/line/Length.js");
+var Point = __webpack_require__(/*! ../point/Point */ "../../../src/geom/point/Point.js");
+
+/**
+ * Get a number of points along a line's length.
+ *
+ * Provide a `quantity` to get an exact number of points along the line.
+ *
+ * Provide a `stepRate` to ensure a specific distance between each point on the line. Set `quantity` to `0` when
+ * providing a `stepRate`.
+ *
+ * @function Phaser.Geom.Line.GetPoints
+ * @since 3.0.0
+ *
+ * @generic {Phaser.Geom.Point[]} O - [out,$return]
+ *
+ * @param {Phaser.Geom.Line} line - The line.
+ * @param {integer} quantity - The number of points to place on the line. Set to `0` to use `stepRate` instead.
+ * @param {number} [stepRate] - The distance between each point on the line. When set, `quantity` is implied and should be set to `0`.
+ * @param {(array|Phaser.Geom.Point[])} [out] - An optional array of Points, or point-like objects, to store the coordinates of the points on the line.
+ *
+ * @return {(array|Phaser.Geom.Point[])} An array of Points, or point-like objects, containing the coordinates of the points on the line.
+ */
+var GetPoints = function (line, quantity, stepRate, out)
+{
+    if (out === undefined) { out = []; }
+
+    //  If quantity is a falsey value (false, null, 0, undefined, etc) then we calculate it based on the stepRate instead.
+    if (!quantity && stepRate > 0)
+    {
+        quantity = Length(line) / stepRate;
+    }
+
+    var x1 = line.x1;
+    var y1 = line.y1;
+
+    var x2 = line.x2;
+    var y2 = line.y2;
+
+    for (var i = 0; i < quantity; i++)
+    {
+        var position = i / quantity;
+
+        var x = x1 + (x2 - x1) * position;
+        var y = y1 + (y2 - y1) * position;
+
+        out.push(new Point(x, y));
+    }
+
+    return out;
+};
+
+module.exports = GetPoints;
+
+
+/***/ }),
+
+/***/ "../../../src/geom/line/Length.js":
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/line/Length.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculate the length of the given line.
+ *
+ * @function Phaser.Geom.Line.Length
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Line} line - The line to calculate the length of.
+ *
+ * @return {number} The length of the line.
+ */
+var Length = function (line)
+{
+    return Math.sqrt((line.x2 - line.x1) * (line.x2 - line.x1) + (line.y2 - line.y1) * (line.y2 - line.y1));
+};
+
+module.exports = Length;
+
+
+/***/ }),
+
+/***/ "../../../src/geom/line/Line.js":
+/*!*****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/line/Line.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(/*! ../../utils/Class */ "../../../src/utils/Class.js");
+var GetPoint = __webpack_require__(/*! ./GetPoint */ "../../../src/geom/line/GetPoint.js");
+var GetPoints = __webpack_require__(/*! ./GetPoints */ "../../../src/geom/line/GetPoints.js");
+var GEOM_CONST = __webpack_require__(/*! ../const */ "../../../src/geom/const.js");
+var Random = __webpack_require__(/*! ./Random */ "../../../src/geom/line/Random.js");
+var Vector2 = __webpack_require__(/*! ../../math/Vector2 */ "../../../src/math/Vector2.js");
+
+/**
+ * @classdesc
+ * Defines a Line segment, a part of a line between two endpoints.
+ *
+ * @class Line
+ * @memberof Phaser.Geom
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [x1=0] - The x coordinate of the lines starting point.
+ * @param {number} [y1=0] - The y coordinate of the lines starting point.
+ * @param {number} [x2=0] - The x coordinate of the lines ending point.
+ * @param {number} [y2=0] - The y coordinate of the lines ending point.
+ */
+var Line = new Class({
+
+    initialize:
+
+    function Line (x1, y1, x2, y2)
+    {
+        if (x1 === undefined) { x1 = 0; }
+        if (y1 === undefined) { y1 = 0; }
+        if (x2 === undefined) { x2 = 0; }
+        if (y2 === undefined) { y2 = 0; }
+
+        /**
+         * The geometry constant type of this object: `GEOM_CONST.LINE`.
+         * Used for fast type comparisons.
+         *
+         * @name Phaser.Geom.Line#type
+         * @type {integer}
+         * @readonly
+         * @since 3.19.0
+         */
+        this.type = GEOM_CONST.LINE;
+
+        /**
+         * The x coordinate of the lines starting point.
+         *
+         * @name Phaser.Geom.Line#x1
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.x1 = x1;
+
+        /**
+         * The y coordinate of the lines starting point.
+         *
+         * @name Phaser.Geom.Line#y1
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.y1 = y1;
+
+        /**
+         * The x coordinate of the lines ending point.
+         *
+         * @name Phaser.Geom.Line#x2
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.x2 = x2;
+
+        /**
+         * The y coordinate of the lines ending point.
+         *
+         * @name Phaser.Geom.Line#y2
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.y2 = y2;
+    },
+
+    /**
+     * Get a point on a line that's a given percentage along its length.
+     *
+     * @method Phaser.Geom.Line#getPoint
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Point} O - [output,$return]
+     *
+     * @param {number} position - A value between 0 and 1, where 0 is the start, 0.5 is the middle and 1 is the end of the line.
+     * @param {(Phaser.Geom.Point|object)} [output] - An optional point, or point-like object, to store the coordinates of the point on the line.
+     *
+     * @return {(Phaser.Geom.Point|object)} A Point, or point-like object, containing the coordinates of the point on the line.
+     */
+    getPoint: function (position, output)
+    {
+        return GetPoint(this, position, output);
+    },
+
+    /**
+     * Get a number of points along a line's length.
+     *
+     * Provide a `quantity` to get an exact number of points along the line.
+     *
+     * Provide a `stepRate` to ensure a specific distance between each point on the line. Set `quantity` to `0` when
+     * providing a `stepRate`.
+     *
+     * @method Phaser.Geom.Line#getPoints
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Point[]} O - [output,$return]
+     *
+     * @param {integer} quantity - The number of points to place on the line. Set to `0` to use `stepRate` instead.
+     * @param {integer} [stepRate] - The distance between each point on the line. When set, `quantity` is implied and should be set to `0`.
+     * @param {(array|Phaser.Geom.Point[])} [output] - An optional array of Points, or point-like objects, to store the coordinates of the points on the line.
+     *
+     * @return {(array|Phaser.Geom.Point[])} An array of Points, or point-like objects, containing the coordinates of the points on the line.
+     */
+    getPoints: function (quantity, stepRate, output)
+    {
+        return GetPoints(this, quantity, stepRate, output);
+    },
+
+    /**
+     * Get a random Point on the Line.
+     *
+     * @method Phaser.Geom.Line#getRandomPoint
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Point} O - [point,$return]
+     *
+     * @param {(Phaser.Geom.Point|object)} [point] - An instance of a Point to be modified.
+     *
+     * @return {Phaser.Geom.Point} A random Point on the Line.
+     */
+    getRandomPoint: function (point)
+    {
+        return Random(this, point);
+    },
+
+    /**
+     * Set new coordinates for the line endpoints.
+     *
+     * @method Phaser.Geom.Line#setTo
+     * @since 3.0.0
+     *
+     * @param {number} [x1=0] - The x coordinate of the lines starting point.
+     * @param {number} [y1=0] - The y coordinate of the lines starting point.
+     * @param {number} [x2=0] - The x coordinate of the lines ending point.
+     * @param {number} [y2=0] - The y coordinate of the lines ending point.
+     *
+     * @return {this} This Line object.
+     */
+    setTo: function (x1, y1, x2, y2)
+    {
+        if (x1 === undefined) { x1 = 0; }
+        if (y1 === undefined) { y1 = 0; }
+        if (x2 === undefined) { x2 = 0; }
+        if (y2 === undefined) { y2 = 0; }
+
+        this.x1 = x1;
+        this.y1 = y1;
+
+        this.x2 = x2;
+        this.y2 = y2;
+
+        return this;
+    },
+
+    /**
+     * Returns a Vector2 object that corresponds to the start of this Line.
+     *
+     * @method Phaser.Geom.Line#getPointA
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [vec2,$return]
+     *
+     * @param {Phaser.Math.Vector2} [vec2] - A Vector2 object to set the results in. If `undefined` a new Vector2 will be created.
+     *
+     * @return {Phaser.Math.Vector2} A Vector2 object that corresponds to the start of this Line.
+     */
+    getPointA: function (vec2)
+    {
+        if (vec2 === undefined) { vec2 = new Vector2(); }
+
+        vec2.set(this.x1, this.y1);
+
+        return vec2;
+    },
+
+    /**
+     * Returns a Vector2 object that corresponds to the end of this Line.
+     *
+     * @method Phaser.Geom.Line#getPointB
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [vec2,$return]
+     *
+     * @param {Phaser.Math.Vector2} [vec2] - A Vector2 object to set the results in. If `undefined` a new Vector2 will be created.
+     *
+     * @return {Phaser.Math.Vector2} A Vector2 object that corresponds to the end of this Line.
+     */
+    getPointB: function (vec2)
+    {
+        if (vec2 === undefined) { vec2 = new Vector2(); }
+
+        vec2.set(this.x2, this.y2);
+
+        return vec2;
+    },
+
+    /**
+     * The left position of the Line.
+     *
+     * @name Phaser.Geom.Line#left
+     * @type {number}
+     * @since 3.0.0
+     */
+    left: {
+
+        get: function ()
+        {
+            return Math.min(this.x1, this.x2);
+        },
+
+        set: function (value)
+        {
+            if (this.x1 <= this.x2)
+            {
+                this.x1 = value;
+            }
+            else
+            {
+                this.x2 = value;
+            }
+        }
+
+    },
+
+    /**
+     * The right position of the Line.
+     *
+     * @name Phaser.Geom.Line#right
+     * @type {number}
+     * @since 3.0.0
+     */
+    right: {
+
+        get: function ()
+        {
+            return Math.max(this.x1, this.x2);
+        },
+
+        set: function (value)
+        {
+            if (this.x1 > this.x2)
+            {
+                this.x1 = value;
+            }
+            else
+            {
+                this.x2 = value;
+            }
+        }
+
+    },
+
+    /**
+     * The top position of the Line.
+     *
+     * @name Phaser.Geom.Line#top
+     * @type {number}
+     * @since 3.0.0
+     */
+    top: {
+
+        get: function ()
+        {
+            return Math.min(this.y1, this.y2);
+        },
+
+        set: function (value)
+        {
+            if (this.y1 <= this.y2)
+            {
+                this.y1 = value;
+            }
+            else
+            {
+                this.y2 = value;
+            }
+        }
+
+    },
+
+    /**
+     * The bottom position of the Line.
+     *
+     * @name Phaser.Geom.Line#bottom
+     * @type {number}
+     * @since 3.0.0
+     */
+    bottom: {
+
+        get: function ()
+        {
+            return Math.max(this.y1, this.y2);
+        },
+
+        set: function (value)
+        {
+            if (this.y1 > this.y2)
+            {
+                this.y1 = value;
+            }
+            else
+            {
+                this.y2 = value;
+            }
+        }
+
+    }
+
+});
+
+module.exports = Line;
+
+
+/***/ }),
+
+/***/ "../../../src/geom/line/Random.js":
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/line/Random.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Point = __webpack_require__(/*! ../point/Point */ "../../../src/geom/point/Point.js");
+
+/**
+ * Returns a random point on a given Line.
+ *
+ * @function Phaser.Geom.Line.Random
+ * @since 3.0.0
+ *
+ * @generic {Phaser.Geom.Point} O - [out,$return]
+ *
+ * @param {Phaser.Geom.Line} line - The Line to calculate the random Point on.
+ * @param {(Phaser.Geom.Point|object)} [out] - An instance of a Point to be modified.
+ *
+ * @return {(Phaser.Geom.Point|object)} A random Point on the Line.
+ */
+var Random = function (line, out)
+{
+    if (out === undefined) { out = new Point(); }
+
+    var t = Math.random();
+
+    out.x = line.x1 + t * (line.x2 - line.x1);
+    out.y = line.y1 + t * (line.y2 - line.y1);
+
+    return out;
+};
+
+module.exports = Random;
+
+
+/***/ }),
+
+/***/ "../../../src/geom/point/Point.js":
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/point/Point.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(/*! ../../utils/Class */ "../../../src/utils/Class.js");
+var GEOM_CONST = __webpack_require__(/*! ../const */ "../../../src/geom/const.js");
+
+/**
+ * @classdesc
+ * Defines a Point in 2D space, with an x and y component.
+ *
+ * @class Point
+ * @memberof Phaser.Geom
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [x=0] - The x coordinate of this Point.
+ * @param {number} [y=x] - The y coordinate of this Point.
+ */
+var Point = new Class({
+
+    initialize:
+
+    function Point (x, y)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = x; }
+
+        /**
+         * The geometry constant type of this object: `GEOM_CONST.POINT`.
+         * Used for fast type comparisons.
+         *
+         * @name Phaser.Geom.Point#type
+         * @type {integer}
+         * @readonly
+         * @since 3.19.0
+         */
+        this.type = GEOM_CONST.POINT;
+
+        /**
+         * The x coordinate of this Point.
+         *
+         * @name Phaser.Geom.Point#x
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.x = x;
+
+        /**
+         * The y coordinate of this Point.
+         *
+         * @name Phaser.Geom.Point#y
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.y = y;
+    },
+
+    /**
+     * Set the x and y coordinates of the point to the given values.
+     *
+     * @method Phaser.Geom.Point#setTo
+     * @since 3.0.0
+     *
+     * @param {number} [x=0] - The x coordinate of this Point.
+     * @param {number} [y=x] - The y coordinate of this Point.
+     *
+     * @return {this} This Point object.
+     */
+    setTo: function (x, y)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = x; }
+
+        this.x = x;
+        this.y = y;
+
+        return this;
+    }
+
+});
+
+module.exports = Point;
+
+
+/***/ }),
+
+/***/ "../../../src/geom/rectangle/Contains.js":
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/rectangle/Contains.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Checks if a given point is inside a Rectangle's bounds.
+ *
+ * @function Phaser.Geom.Rectangle.Contains
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Rectangle} rect - The Rectangle to check.
+ * @param {number} x - The X coordinate of the point to check.
+ * @param {number} y - The Y coordinate of the point to check.
+ *
+ * @return {boolean} `true` if the point is within the Rectangle's bounds, otherwise `false`.
+ */
+var Contains = function (rect, x, y)
+{
+    if (rect.width <= 0 || rect.height <= 0)
+    {
+        return false;
+    }
+
+    return (rect.x <= x && rect.x + rect.width >= x && rect.y <= y && rect.y + rect.height >= y);
+};
+
+module.exports = Contains;
+
+
+/***/ }),
+
+/***/ "../../../src/geom/rectangle/GetPoint.js":
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/rectangle/GetPoint.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Perimeter = __webpack_require__(/*! ./Perimeter */ "../../../src/geom/rectangle/Perimeter.js");
+var Point = __webpack_require__(/*! ../point/Point */ "../../../src/geom/point/Point.js");
+
+/**
+ * Calculates the coordinates of a point at a certain `position` on the Rectangle's perimeter.
+ * 
+ * The `position` is a fraction between 0 and 1 which defines how far into the perimeter the point is.
+ * 
+ * A value of 0 or 1 returns the point at the top left corner of the rectangle, while a value of 0.5 returns the point at the bottom right corner of the rectangle. Values between 0 and 0.5 are on the top or the right side and values between 0.5 and 1 are on the bottom or the left side.
+ *
+ * @function Phaser.Geom.Rectangle.GetPoint
+ * @since 3.0.0
+ *
+ * @generic {Phaser.Geom.Point} O - [out,$return]
+ *
+ * @param {Phaser.Geom.Rectangle} rectangle - The Rectangle to get the perimeter point from.
+ * @param {number} position - The normalized distance into the Rectangle's perimeter to return.
+ * @param {(Phaser.Geom.Point|object)} [out] - An object to update with the `x` and `y` coordinates of the point.
+ *
+ * @return {Phaser.Geom.Point} The updated `output` object, or a new Point if no `output` object was given.
+ */
+var GetPoint = function (rectangle, position, out)
+{
+    if (out === undefined) { out = new Point(); }
+
+    if (position <= 0 || position >= 1)
+    {
+        out.x = rectangle.x;
+        out.y = rectangle.y;
+
+        return out;
+    }
+
+    var p = Perimeter(rectangle) * position;
+
+    if (position > 0.5)
+    {
+        p -= (rectangle.width + rectangle.height);
+
+        if (p <= rectangle.width)
+        {
+            //  Face 3
+            out.x = rectangle.right - p;
+            out.y = rectangle.bottom;
+        }
+        else
+        {
+            //  Face 4
+            out.x = rectangle.x;
+            out.y = rectangle.bottom - (p - rectangle.width);
+        }
+    }
+    else if (p <= rectangle.width)
+    {
+        //  Face 1
+        out.x = rectangle.x + p;
+        out.y = rectangle.y;
+    }
+    else
+    {
+        //  Face 2
+        out.x = rectangle.right;
+        out.y = rectangle.y + (p - rectangle.width);
+    }
+
+    return out;
+};
+
+module.exports = GetPoint;
+
+
+/***/ }),
+
+/***/ "../../../src/geom/rectangle/GetPoints.js":
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/rectangle/GetPoints.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var GetPoint = __webpack_require__(/*! ./GetPoint */ "../../../src/geom/rectangle/GetPoint.js");
+var Perimeter = __webpack_require__(/*! ./Perimeter */ "../../../src/geom/rectangle/Perimeter.js");
+
+//  Return an array of points from the perimeter of the rectangle
+//  each spaced out based on the quantity or step required
+
+/**
+ * Return an array of points from the perimeter of the rectangle, each spaced out based on the quantity or step required.
+ *
+ * @function Phaser.Geom.Rectangle.GetPoints
+ * @since 3.0.0
+ *
+ * @generic {Phaser.Geom.Point[]} O - [out,$return]
+ *
+ * @param {Phaser.Geom.Rectangle} rectangle - The Rectangle object to get the points from.
+ * @param {number} step - Step between points. Used to calculate the number of points to return when quantity is falsey. Ignored if quantity is positive.
+ * @param {integer} quantity - The number of evenly spaced points from the rectangles perimeter to return. If falsey, step param will be used to calculate the number of points.
+ * @param {(array|Phaser.Geom.Point[])} [out] - An optional array to store the points in.
+ *
+ * @return {(array|Phaser.Geom.Point[])} An array of Points from the perimeter of the rectangle.
+ */
+var GetPoints = function (rectangle, quantity, stepRate, out)
+{
+    if (out === undefined) { out = []; }
+
+    //  If quantity is a falsey value (false, null, 0, undefined, etc) then we calculate it based on the stepRate instead.
+    if (!quantity && stepRate > 0)
+    {
+        quantity = Perimeter(rectangle) / stepRate;
+    }
+
+    for (var i = 0; i < quantity; i++)
+    {
+        var position = i / quantity;
+
+        out.push(GetPoint(rectangle, position));
+    }
+
+    return out;
+};
+
+module.exports = GetPoints;
+
+
+/***/ }),
+
+/***/ "../../../src/geom/rectangle/Perimeter.js":
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/rectangle/Perimeter.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculates the perimeter of a Rectangle.
+ *
+ * @function Phaser.Geom.Rectangle.Perimeter
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Rectangle} rect - The Rectangle to use.
+ *
+ * @return {number} The perimeter of the Rectangle, equal to `(width * 2) + (height * 2)`.
+ */
+var Perimeter = function (rect)
+{
+    return 2 * (rect.width + rect.height);
+};
+
+module.exports = Perimeter;
+
+
+/***/ }),
+
+/***/ "../../../src/geom/rectangle/Random.js":
+/*!************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/rectangle/Random.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Point = __webpack_require__(/*! ../point/Point */ "../../../src/geom/point/Point.js");
+
+/**
+ * Returns a random point within a Rectangle.
+ *
+ * @function Phaser.Geom.Rectangle.Random
+ * @since 3.0.0
+ *
+ * @generic {Phaser.Geom.Point} O - [out,$return]
+ *
+ * @param {Phaser.Geom.Rectangle} rect - The Rectangle to return a point from.
+ * @param {Phaser.Geom.Point} out - The object to update with the point's coordinates.
+ *
+ * @return {Phaser.Geom.Point} The modified `out` object, or a new Point if none was provided.
+ */
+var Random = function (rect, out)
+{
+    if (out === undefined) { out = new Point(); }
+
+    out.x = rect.x + (Math.random() * rect.width);
+    out.y = rect.y + (Math.random() * rect.height);
+
+    return out;
+};
+
+module.exports = Random;
+
+
+/***/ }),
+
+/***/ "../../../src/geom/rectangle/Rectangle.js":
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/rectangle/Rectangle.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(/*! ../../utils/Class */ "../../../src/utils/Class.js");
+var Contains = __webpack_require__(/*! ./Contains */ "../../../src/geom/rectangle/Contains.js");
+var GetPoint = __webpack_require__(/*! ./GetPoint */ "../../../src/geom/rectangle/GetPoint.js");
+var GetPoints = __webpack_require__(/*! ./GetPoints */ "../../../src/geom/rectangle/GetPoints.js");
+var GEOM_CONST = __webpack_require__(/*! ../const */ "../../../src/geom/const.js");
+var Line = __webpack_require__(/*! ../line/Line */ "../../../src/geom/line/Line.js");
+var Random = __webpack_require__(/*! ./Random */ "../../../src/geom/rectangle/Random.js");
+
+/**
+ * @classdesc
+ * Encapsulates a 2D rectangle defined by its corner point in the top-left and its extends in x (width) and y (height)
+ *
+ * @class Rectangle
+ * @memberof Phaser.Geom
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [x=0] - The X coordinate of the top left corner of the Rectangle.
+ * @param {number} [y=0] - The Y coordinate of the top left corner of the Rectangle.
+ * @param {number} [width=0] - The width of the Rectangle.
+ * @param {number} [height=0] - The height of the Rectangle.
+ */
+var Rectangle = new Class({
+
+    initialize:
+
+    function Rectangle (x, y, width, height)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = 0; }
+        if (height === undefined) { height = 0; }
+
+        /**
+         * The geometry constant type of this object: `GEOM_CONST.RECTANGLE`.
+         * Used for fast type comparisons.
+         *
+         * @name Phaser.Geom.Rectangle#type
+         * @type {integer}
+         * @readonly
+         * @since 3.19.0
+         */
+        this.type = GEOM_CONST.RECTANGLE;
+
+        /**
+         * The X coordinate of the top left corner of the Rectangle.
+         *
+         * @name Phaser.Geom.Rectangle#x
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.x = x;
+
+        /**
+         * The Y coordinate of the top left corner of the Rectangle.
+         *
+         * @name Phaser.Geom.Rectangle#y
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.y = y;
+
+        /**
+         * The width of the Rectangle, i.e. the distance between its left side (defined by `x`) and its right side.
+         *
+         * @name Phaser.Geom.Rectangle#width
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.width = width;
+
+        /**
+         * The height of the Rectangle, i.e. the distance between its top side (defined by `y`) and its bottom side.
+         *
+         * @name Phaser.Geom.Rectangle#height
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.height = height;
+    },
+
+    /**
+     * Checks if the given point is inside the Rectangle's bounds.
+     *
+     * @method Phaser.Geom.Rectangle#contains
+     * @since 3.0.0
+     *
+     * @param {number} x - The X coordinate of the point to check.
+     * @param {number} y - The Y coordinate of the point to check.
+     *
+     * @return {boolean} `true` if the point is within the Rectangle's bounds, otherwise `false`.
+     */
+    contains: function (x, y)
+    {
+        return Contains(this, x, y);
+    },
+
+    /**
+     * Calculates the coordinates of a point at a certain `position` on the Rectangle's perimeter.
+     * 
+     * The `position` is a fraction between 0 and 1 which defines how far into the perimeter the point is.
+     * 
+     * A value of 0 or 1 returns the point at the top left corner of the rectangle, while a value of 0.5 returns the point at the bottom right corner of the rectangle. Values between 0 and 0.5 are on the top or the right side and values between 0.5 and 1 are on the bottom or the left side.
+     *
+     * @method Phaser.Geom.Rectangle#getPoint
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Point} O - [output,$return]
+     *
+     * @param {number} position - The normalized distance into the Rectangle's perimeter to return.
+     * @param {(Phaser.Geom.Point|object)} [output] - An object to update with the `x` and `y` coordinates of the point.
+     *
+     * @return {(Phaser.Geom.Point|object)} The updated `output` object, or a new Point if no `output` object was given.
+     */
+    getPoint: function (position, output)
+    {
+        return GetPoint(this, position, output);
+    },
+
+    /**
+     * Returns an array of points from the perimeter of the Rectangle, each spaced out based on the quantity or step required.
+     *
+     * @method Phaser.Geom.Rectangle#getPoints
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Point[]} O - [output,$return]
+     *
+     * @param {integer} quantity - The number of points to return. Set to `false` or 0 to return an arbitrary number of points (`perimeter / stepRate`) evenly spaced around the Rectangle based on the `stepRate`.
+     * @param {number} [stepRate] - If `quantity` is 0, determines the normalized distance between each returned point.
+     * @param {(array|Phaser.Geom.Point[])} [output] - An array to which to append the points.
+     *
+     * @return {(array|Phaser.Geom.Point[])} The modified `output` array, or a new array if none was provided.
+     */
+    getPoints: function (quantity, stepRate, output)
+    {
+        return GetPoints(this, quantity, stepRate, output);
+    },
+
+    /**
+     * Returns a random point within the Rectangle's bounds.
+     *
+     * @method Phaser.Geom.Rectangle#getRandomPoint
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Point} O - [point,$return]
+     *
+     * @param {Phaser.Geom.Point} [point] - The object in which to store the `x` and `y` coordinates of the point.
+     *
+     * @return {Phaser.Geom.Point} The updated `point`, or a new Point if none was provided.
+     */
+    getRandomPoint: function (point)
+    {
+        return Random(this, point);
+    },
+
+    /**
+     * Sets the position, width, and height of the Rectangle.
+     *
+     * @method Phaser.Geom.Rectangle#setTo
+     * @since 3.0.0
+     *
+     * @param {number} x - The X coordinate of the top left corner of the Rectangle.
+     * @param {number} y - The Y coordinate of the top left corner of the Rectangle.
+     * @param {number} width - The width of the Rectangle.
+     * @param {number} height - The height of the Rectangle.
+     *
+     * @return {this} This Rectangle object.
+     */
+    setTo: function (x, y, width, height)
+    {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+
+        return this;
+    },
+
+    /**
+     * Resets the position, width, and height of the Rectangle to 0.
+     *
+     * @method Phaser.Geom.Rectangle#setEmpty
+     * @since 3.0.0
+     *
+     * @return {this} This Rectangle object.
+     */
+    setEmpty: function ()
+    {
+        return this.setTo(0, 0, 0, 0);
+    },
+
+    /**
+     * Sets the position of the Rectangle.
+     *
+     * @method Phaser.Geom.Rectangle#setPosition
+     * @since 3.0.0
+     *
+     * @param {number} x - The X coordinate of the top left corner of the Rectangle.
+     * @param {number} [y=x] - The Y coordinate of the top left corner of the Rectangle.
+     *
+     * @return {this} This Rectangle object.
+     */
+    setPosition: function (x, y)
+    {
+        if (y === undefined) { y = x; }
+
+        this.x = x;
+        this.y = y;
+
+        return this;
+    },
+
+    /**
+     * Sets the width and height of the Rectangle.
+     *
+     * @method Phaser.Geom.Rectangle#setSize
+     * @since 3.0.0
+     *
+     * @param {number} width - The width to set the Rectangle to.
+     * @param {number} [height=width] - The height to set the Rectangle to.
+     *
+     * @return {this} This Rectangle object.
+     */
+    setSize: function (width, height)
+    {
+        if (height === undefined) { height = width; }
+
+        this.width = width;
+        this.height = height;
+
+        return this;
+    },
+
+    /**
+     * Determines if the Rectangle is empty. A Rectangle is empty if its width or height is less than or equal to 0.
+     *
+     * @method Phaser.Geom.Rectangle#isEmpty
+     * @since 3.0.0
+     *
+     * @return {boolean} `true` if the Rectangle is empty. A Rectangle object is empty if its width or height is less than or equal to 0.
+     */
+    isEmpty: function ()
+    {
+        return (this.width <= 0 || this.height <= 0);
+    },
+
+    /**
+     * Returns a Line object that corresponds to the top of this Rectangle.
+     *
+     * @method Phaser.Geom.Rectangle#getLineA
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Line} O - [line,$return]
+     *
+     * @param {Phaser.Geom.Line} [line] - A Line object to set the results in. If `undefined` a new Line will be created.
+     *
+     * @return {Phaser.Geom.Line} A Line object that corresponds to the top of this Rectangle.
+     */
+    getLineA: function (line)
+    {
+        if (line === undefined) { line = new Line(); }
+
+        line.setTo(this.x, this.y, this.right, this.y);
+
+        return line;
+    },
+
+    /**
+     * Returns a Line object that corresponds to the right of this Rectangle.
+     *
+     * @method Phaser.Geom.Rectangle#getLineB
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Line} O - [line,$return]
+     *
+     * @param {Phaser.Geom.Line} [line] - A Line object to set the results in. If `undefined` a new Line will be created.
+     *
+     * @return {Phaser.Geom.Line} A Line object that corresponds to the right of this Rectangle.
+     */
+    getLineB: function (line)
+    {
+        if (line === undefined) { line = new Line(); }
+
+        line.setTo(this.right, this.y, this.right, this.bottom);
+
+        return line;
+    },
+
+    /**
+     * Returns a Line object that corresponds to the bottom of this Rectangle.
+     *
+     * @method Phaser.Geom.Rectangle#getLineC
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Line} O - [line,$return]
+     *
+     * @param {Phaser.Geom.Line} [line] - A Line object to set the results in. If `undefined` a new Line will be created.
+     *
+     * @return {Phaser.Geom.Line} A Line object that corresponds to the bottom of this Rectangle.
+     */
+    getLineC: function (line)
+    {
+        if (line === undefined) { line = new Line(); }
+
+        line.setTo(this.right, this.bottom, this.x, this.bottom);
+
+        return line;
+    },
+
+    /**
+     * Returns a Line object that corresponds to the left of this Rectangle.
+     *
+     * @method Phaser.Geom.Rectangle#getLineD
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Line} O - [line,$return]
+     *
+     * @param {Phaser.Geom.Line} [line] - A Line object to set the results in. If `undefined` a new Line will be created.
+     *
+     * @return {Phaser.Geom.Line} A Line object that corresponds to the left of this Rectangle.
+     */
+    getLineD: function (line)
+    {
+        if (line === undefined) { line = new Line(); }
+
+        line.setTo(this.x, this.bottom, this.x, this.y);
+
+        return line;
+    },
+
+    /**
+     * The x coordinate of the left of the Rectangle.
+     * Changing the left property of a Rectangle object has no effect on the y and height properties. However it does affect the width property, whereas changing the x value does not affect the width property.
+     *
+     * @name Phaser.Geom.Rectangle#left
+     * @type {number}
+     * @since 3.0.0
+     */
+    left: {
+
+        get: function ()
+        {
+            return this.x;
+        },
+
+        set: function (value)
+        {
+            if (value >= this.right)
+            {
+                this.width = 0;
+            }
+            else
+            {
+                this.width = this.right - value;
+            }
+
+            this.x = value;
+        }
+
+    },
+
+    /**
+     * The sum of the x and width properties.
+     * Changing the right property of a Rectangle object has no effect on the x, y and height properties, however it does affect the width property.
+     *
+     * @name Phaser.Geom.Rectangle#right
+     * @type {number}
+     * @since 3.0.0
+     */
+    right: {
+
+        get: function ()
+        {
+            return this.x + this.width;
+        },
+
+        set: function (value)
+        {
+            if (value <= this.x)
+            {
+                this.width = 0;
+            }
+            else
+            {
+                this.width = value - this.x;
+            }
+        }
+
+    },
+
+    /**
+     * The y coordinate of the top of the Rectangle. Changing the top property of a Rectangle object has no effect on the x and width properties.
+     * However it does affect the height property, whereas changing the y value does not affect the height property.
+     *
+     * @name Phaser.Geom.Rectangle#top
+     * @type {number}
+     * @since 3.0.0
+     */
+    top: {
+
+        get: function ()
+        {
+            return this.y;
+        },
+
+        set: function (value)
+        {
+            if (value >= this.bottom)
+            {
+                this.height = 0;
+            }
+            else
+            {
+                this.height = (this.bottom - value);
+            }
+
+            this.y = value;
+        }
+
+    },
+
+    /**
+     * The sum of the y and height properties.
+     * Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
+     *
+     * @name Phaser.Geom.Rectangle#bottom
+     * @type {number}
+     * @since 3.0.0
+     */
+    bottom: {
+
+        get: function ()
+        {
+            return this.y + this.height;
+        },
+
+        set: function (value)
+        {
+            if (value <= this.y)
+            {
+                this.height = 0;
+            }
+            else
+            {
+                this.height = value - this.y;
+            }
+        }
+
+    },
+
+    /**
+     * The x coordinate of the center of the Rectangle.
+     *
+     * @name Phaser.Geom.Rectangle#centerX
+     * @type {number}
+     * @since 3.0.0
+     */
+    centerX: {
+
+        get: function ()
+        {
+            return this.x + (this.width / 2);
+        },
+
+        set: function (value)
+        {
+            this.x = value - (this.width / 2);
+        }
+
+    },
+
+    /**
+     * The y coordinate of the center of the Rectangle.
+     *
+     * @name Phaser.Geom.Rectangle#centerY
+     * @type {number}
+     * @since 3.0.0
+     */
+    centerY: {
+
+        get: function ()
+        {
+            return this.y + (this.height / 2);
+        },
+
+        set: function (value)
+        {
+            this.y = value - (this.height / 2);
+        }
+
+    }
+
+});
+
+module.exports = Rectangle;
+
+
+/***/ }),
+
+/***/ "../../../src/geom/rectangle/Union.js":
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/rectangle/Union.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Rectangle = __webpack_require__(/*! ./Rectangle */ "../../../src/geom/rectangle/Rectangle.js");
+
+/**
+ * Creates a new Rectangle or repositions and/or resizes an existing Rectangle so that it encompasses the two given Rectangles, i.e. calculates their union.
+ *
+ * @function Phaser.Geom.Rectangle.Union
+ * @since 3.0.0
+ *
+ * @generic {Phaser.Geom.Rectangle} O - [out,$return]
+ *
+ * @param {Phaser.Geom.Rectangle} rectA - The first Rectangle to use.
+ * @param {Phaser.Geom.Rectangle} rectB - The second Rectangle to use.
+ * @param {Phaser.Geom.Rectangle} [out] - The Rectangle to store the union in.
+ *
+ * @return {Phaser.Geom.Rectangle} The modified `out` Rectangle, or a new Rectangle if none was provided.
+ */
+var Union = function (rectA, rectB, out)
+{
+    if (out === undefined) { out = new Rectangle(); }
+
+    //  Cache vars so we can use one of the input rects as the output rect
+    var x = Math.min(rectA.x, rectB.x);
+    var y = Math.min(rectA.y, rectB.y);
+    var w = Math.max(rectA.right, rectB.right) - x;
+    var h = Math.max(rectA.bottom, rectB.bottom) - y;
+
+    return out.setTo(x, y, w, h);
+};
+
+module.exports = Union;
+
+
+/***/ }),
+
+/***/ "../../../src/loader/File.js":
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/File.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -4716,10 +15280,13 @@ var File = new Class({
 
         /**
          * The URL of the file, not including baseURL.
-         * Automatically has Loader.path prepended to it.
+         *
+         * Automatically has Loader.path prepended to it if a string.
+         *
+         * Can also be a JavaScript Object, such as the results of parsing JSON data.
          *
          * @name Phaser.Loader.File#url
-         * @type {string}
+         * @type {object|string}
          * @since 3.0.0
          */
         this.url = GetFastValue(fileConfig, 'url');
@@ -4728,7 +15295,7 @@ var File = new Class({
         {
             this.url = loader.path + loadKey + '.' + GetFastValue(fileConfig, 'extension', '');
         }
-        else if (typeof(this.url) !== 'function')
+        else if (typeof this.url === 'string' && this.url.indexOf('blob:') !== 0 && this.url.indexOf('data:') !== 0)
         {
             this.url = loader.path + this.url;
         }
@@ -4906,6 +15473,8 @@ var File = new Class({
         }
         else
         {
+            this.state = CONST.FILE_LOADING;
+
             this.src = GetURL(this, this.loader.baseURL);
 
             if (this.src.indexOf('data:') === 0)
@@ -4916,7 +15485,7 @@ var File = new Class({
             {
                 //  The creation of this XHRLoader starts the load process going.
                 //  It will automatically call the following, based on the load outcome:
-                //  
+                //
                 // xhr.onload = this.onLoad
                 // xhr.onerror = this.onError
                 // xhr.onprogress = this.onProgress
@@ -4946,6 +15515,8 @@ var File = new Class({
         {
             success = false;
         }
+
+        this.state = CONST.FILE_LOADED;
 
         this.resetXHR();
 
@@ -5121,7 +15692,7 @@ var File = new Class({
  * @method Phaser.Loader.File.createObjectURL
  * @static
  * @since 3.7.0
- * 
+ *
  * @param {HTMLImageElement} image - Image object which 'src' attribute should be set to object URL.
  * @param {Blob} blob - A Blob object to create an object URL for.
  * @param {string} defaultType - Default mime type used if blob type is not available.
@@ -5155,7 +15726,7 @@ File.createObjectURL = function (image, blob, defaultType)
  * @method Phaser.Loader.File.revokeObjectURL
  * @static
  * @since 3.7.0
- * 
+ *
  * @param {HTMLImageElement} image - Image object which 'src' attribute should be revoked.
  */
 File.revokeObjectURL = function (image)
@@ -5172,15 +15743,15 @@ module.exports = File;
 /***/ }),
 
 /***/ "../../../src/loader/FileTypesManager.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/FileTypesManager.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/FileTypesManager.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -5246,15 +15817,15 @@ module.exports = FileTypesManager;
 /***/ }),
 
 /***/ "../../../src/loader/GetURL.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/GetURL.js ***!
-  \***********************************************/
+/*!****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/GetURL.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -5292,15 +15863,15 @@ module.exports = GetURL;
 /***/ }),
 
 /***/ "../../../src/loader/MergeXHRSettings.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/MergeXHRSettings.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/MergeXHRSettings.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -5345,15 +15916,15 @@ module.exports = MergeXHRSettings;
 /***/ }),
 
 /***/ "../../../src/loader/MultiFile.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/MultiFile.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/MultiFile.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -5584,15 +16155,15 @@ module.exports = MultiFile;
 /***/ }),
 
 /***/ "../../../src/loader/XHRLoader.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/XHRLoader.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/XHRLoader.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -5622,6 +16193,14 @@ var XHRLoader = function (file, globalXHRSettings)
     xhr.responseType = file.xhrSettings.responseType;
     xhr.timeout = config.timeout;
 
+    if (config.headers)
+    {
+        for (var key in config.headers)
+        {
+            xhr.setRequestHeader(key, config.headers[key]);
+        }
+    }
+
     if (config.header && config.headerValue)
     {
         xhr.setRequestHeader(config.header, config.headerValue);
@@ -5635,6 +16214,11 @@ var XHRLoader = function (file, globalXHRSettings)
     if (config.overrideMimeType)
     {
         xhr.overrideMimeType(config.overrideMimeType);
+    }
+
+    if (config.withCredentials)
+    {
+        xhr.withCredentials = true;
     }
 
     // After a successful request, the xhr.response property will contain the requested data as a DOMString, ArrayBuffer, Blob, or Document (depending on what was set for responseType.)
@@ -5657,15 +16241,15 @@ module.exports = XHRLoader;
 /***/ }),
 
 /***/ "../../../src/loader/XHRSettings.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/XHRSettings.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/XHRSettings.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -5680,16 +16264,18 @@ module.exports = XHRLoader;
  * @param {string} [user=''] - Optional username for the XHR request.
  * @param {string} [password=''] - Optional password for the XHR request.
  * @param {integer} [timeout=0] - Optional XHR timeout value.
+ * @param {boolean} [withCredentials=false] - Optional XHR withCredentials value.
  *
  * @return {Phaser.Types.Loader.XHRSettingsObject} The XHRSettings object as used by the Loader.
  */
-var XHRSettings = function (responseType, async, user, password, timeout)
+var XHRSettings = function (responseType, async, user, password, timeout, withCredentials)
 {
     if (responseType === undefined) { responseType = ''; }
     if (async === undefined) { async = true; }
     if (user === undefined) { user = ''; }
     if (password === undefined) { password = ''; }
     if (timeout === undefined) { timeout = 0; }
+    if (withCredentials === undefined) { withCredentials = false; }
 
     // Before sending a request, set the xhr.responseType to "text",
     // "arraybuffer", "blob", or "document", depending on your data needs.
@@ -5710,12 +16296,16 @@ var XHRSettings = function (responseType, async, user, password, timeout)
         timeout: timeout,
 
         //  setRequestHeader
+        headers: undefined,
         header: undefined,
         headerValue: undefined,
         requestedWith: false,
 
         //  overrideMimeType
-        overrideMimeType: undefined
+        overrideMimeType: undefined,
+
+        //  withCredentials
+        withCredentials: withCredentials
 
     };
 };
@@ -5726,15 +16316,15 @@ module.exports = XHRSettings;
 /***/ }),
 
 /***/ "../../../src/loader/const.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/const.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/const.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -5883,15 +16473,15 @@ module.exports = FILE_CONST;
 /***/ }),
 
 /***/ "../../../src/loader/events/ADD_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/ADD_EVENT.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/ADD_EVENT.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -5918,15 +16508,15 @@ module.exports = 'addfile';
 /***/ }),
 
 /***/ "../../../src/loader/events/COMPLETE_EVENT.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/COMPLETE_EVENT.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/COMPLETE_EVENT.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -5951,15 +16541,15 @@ module.exports = 'complete';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_COMPLETE_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_COMPLETE_EVENT.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/FILE_COMPLETE_EVENT.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -5985,15 +16575,15 @@ module.exports = 'filecomplete';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_KEY_COMPLETE_EVENT.js":
-/*!***********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_KEY_COMPLETE_EVENT.js ***!
-  \***********************************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/FILE_KEY_COMPLETE_EVENT.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -6044,15 +16634,15 @@ module.exports = 'filecomplete-';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_LOAD_ERROR_EVENT.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_LOAD_ERROR_EVENT.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/FILE_LOAD_ERROR_EVENT.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -6074,15 +16664,15 @@ module.exports = 'loaderror';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_LOAD_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_LOAD_EVENT.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/FILE_LOAD_EVENT.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -6105,15 +16695,15 @@ module.exports = 'load';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_PROGRESS_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_PROGRESS_EVENT.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/FILE_PROGRESS_EVENT.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -6137,15 +16727,15 @@ module.exports = 'fileprogress';
 /***/ }),
 
 /***/ "../../../src/loader/events/POST_PROCESS_EVENT.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/POST_PROCESS_EVENT.js ***!
-  \******************************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/POST_PROCESS_EVENT.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -6171,15 +16761,15 @@ module.exports = 'postprocess';
 /***/ }),
 
 /***/ "../../../src/loader/events/PROGRESS_EVENT.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/PROGRESS_EVENT.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/PROGRESS_EVENT.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -6201,15 +16791,15 @@ module.exports = 'progress';
 /***/ }),
 
 /***/ "../../../src/loader/events/START_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/START_EVENT.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/START_EVENT.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -6233,15 +16823,15 @@ module.exports = 'start';
 /***/ }),
 
 /***/ "../../../src/loader/events/index.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/index.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/index.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -6268,15 +16858,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/ImageFile.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/filetypes/ImageFile.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/filetypes/ImageFile.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -6292,7 +16882,7 @@ var IsPlainObject = __webpack_require__(/*! ../../utils/object/IsPlainObject */ 
  * A single Image File suitable for loading by the Loader.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#image method and are not typically created directly.
- * 
+ *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#image.
  *
  * @class ImageFile
@@ -6436,7 +17026,7 @@ var ImageFile = new Class({
  * Adds an Image, or array of Images, to the current load queue.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
- * 
+ *
  * ```javascript
  * function preload ()
  * {
@@ -6451,7 +17041,7 @@ var ImageFile = new Class({
  * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
  * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
  * loaded.
- * 
+ *
  * Phaser can load all common image types: png, jpg, gif and any other format the browser can natively handle.
  * If you try to load an animated gif only the first frame will be rendered. Browsers do not natively support playback
  * of animated gifs to Canvas elements.
@@ -6462,7 +17052,7 @@ var ImageFile = new Class({
  * then remove it from the Texture Manager first, before loading a new one.
  *
  * Instead of passing arguments you can pass a configuration object, such as:
- * 
+ *
  * ```javascript
  * this.load.image({
  *     key: 'logo',
@@ -6473,7 +17063,7 @@ var ImageFile = new Class({
  * See the documentation for `Phaser.Types.Loader.FileTypes.ImageFileConfig` for more details.
  *
  * Once the file has finished loading you can use it as a texture for a Game Object by referencing its key:
- * 
+ *
  * ```javascript
  * this.load.image('logo', 'images/AtariLogo.png');
  * // and later in your game ...
@@ -6492,13 +17082,13 @@ var ImageFile = new Class({
  *
  * Phaser also supports the automatic loading of associated normal maps. If you have a normal map to go with this image,
  * then you can specify it by providing an array as the `url` where the second element is the normal map:
- * 
+ *
  * ```javascript
  * this.load.image('logo', [ 'images/AtariLogo.png', 'images/AtariLogo-n.png' ]);
  * ```
  *
  * Or, if you are using a config object use the `normalMap` property:
- * 
+ *
  * ```javascript
  * this.load.image({
  *     key: 'logo',
@@ -6514,14 +17104,14 @@ var ImageFile = new Class({
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#image
- * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @fires Phaser.Loader.LoaderPlugin#ADD
  * @since 3.0.0
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.ImageFileConfig|Phaser.Types.Loader.FileTypes.ImageFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string|string[]} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
- * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
+ * @return {this} The Loader instance.
  */
 FileTypesManager.register('image', function (key, url, xhrSettings)
 {
@@ -6547,15 +17137,15 @@ module.exports = ImageFile;
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/JSONFile.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/filetypes/JSONFile.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/filetypes/JSONFile.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -6572,7 +17162,7 @@ var IsPlainObject = __webpack_require__(/*! ../../utils/object/IsPlainObject */ 
  * A single JSON File suitable for loading by the Loader.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#json method and are not typically created directly.
- * 
+ *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#json.
  *
  * @class JSONFile
@@ -6583,7 +17173,7 @@ var IsPlainObject = __webpack_require__(/*! ../../utils/object/IsPlainObject */ 
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {(string|Phaser.Types.Loader.FileTypes.JSONFileConfig)} key - The key to use for this file, or a file configuration object.
- * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+ * @param {(object|string)} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json". Or, can be a fully formed JSON Object.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  * @param {string} [dataKey] - When the JSON file loads only this property will be stored in the Cache.
  */
@@ -6676,7 +17266,7 @@ var JSONFile = new Class({
  * Adds a JSON file, or array of JSON files, to the current load queue.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
- * 
+ *
  * ```javascript
  * function preload ()
  * {
@@ -6691,14 +17281,14 @@ var JSONFile = new Class({
  * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
  * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
  * loaded.
- * 
+ *
  * The key must be a unique String. It is used to add the file to the global JSON Cache upon a successful load.
  * The key should be unique both in terms of files being loaded and files already present in the JSON Cache.
  * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
  * then remove it from the JSON Cache first, before loading a new one.
  *
  * Instead of passing arguments you can pass a configuration object, such as:
- * 
+ *
  * ```javascript
  * this.load.json({
  *     key: 'wavedata',
@@ -6709,7 +17299,7 @@ var JSONFile = new Class({
  * See the documentation for `Phaser.Types.Loader.FileTypes.JSONFileConfig` for more details.
  *
  * Once the file has finished loading you can access it from its Cache using its key:
- * 
+ *
  * ```javascript
  * this.load.json('wavedata', 'files/AlienWaveData.json');
  * // and later in your game ...
@@ -6728,7 +17318,7 @@ var JSONFile = new Class({
  *
  * You can also optionally provide a `dataKey` to use. This allows you to extract only a part of the JSON and store it in the Cache,
  * rather than the whole file. For example, if your JSON data had a structure like this:
- * 
+ *
  * ```json
  * {
  *     "level1": {
@@ -6748,15 +17338,15 @@ var JSONFile = new Class({
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#json
- * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @fires Phaser.Loader.LoaderPlugin#ADD
  * @since 3.0.0
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.JSONFileConfig|Phaser.Types.Loader.FileTypes.JSONFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
- * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+ * @param {(object|string)} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json". Or, can be a fully formed JSON Object.
  * @param {string} [dataKey] - When the JSON file loads only this property will be stored in the Cache.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
- * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
+ * @return {this} The Loader instance.
  */
 FileTypesManager.register('json', function (key, url, dataKey, xhrSettings)
 {
@@ -6782,15 +17372,15 @@ module.exports = JSONFile;
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/TextFile.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/filetypes/TextFile.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/filetypes/TextFile.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -6929,14 +17519,14 @@ var TextFile = new Class({
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#text
- * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @fires Phaser.Loader.LoaderPlugin#ADD
  * @since 3.0.0
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.TextFileConfig|Phaser.Types.Loader.FileTypes.TextFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
- * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
+ * @return {this} The Loader instance.
  */
 FileTypesManager.register('text', function (key, url, xhrSettings)
 {
@@ -6962,15 +17552,15 @@ module.exports = TextFile;
 /***/ }),
 
 /***/ "../../../src/math/Average.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Average.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Average.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -7002,30 +17592,30 @@ module.exports = Average;
 /***/ }),
 
 /***/ "../../../src/math/Bernstein.js":
-/*!************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Bernstein.js ***!
-  \************************************************/
+/*!*****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Bernstein.js ***!
+  \*****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Factorial = __webpack_require__(/*! ./Factorial */ "../../../src/math/Factorial.js");
 
 /**
- * [description]
+ * Calculates the Bernstein basis from the three factorial coefficients.
  *
  * @function Phaser.Math.Bernstein
  * @since 3.0.0
  *
- * @param {number} n - [description]
- * @param {number} i - [description]
+ * @param {number} n - The first value.
+ * @param {number} i - The second value.
  *
- * @return {number} [description]
+ * @return {number} The Bernstein basis of Factorial(n) / Factorial(i) / Factorial(n - i)
  */
 var Bernstein = function (n, i)
 {
@@ -7038,15 +17628,15 @@ module.exports = Bernstein;
 /***/ }),
 
 /***/ "../../../src/math/Between.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Between.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Between.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -7072,29 +17662,29 @@ module.exports = Between;
 /***/ }),
 
 /***/ "../../../src/math/CatmullRom.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/CatmullRom.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/CatmullRom.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Calculates a Catmull-Rom value.
+ * Calculates a Catmull-Rom value from the given points, based on an alpha of 0.5.
  *
  * @function Phaser.Math.CatmullRom
  * @since 3.0.0
  *
- * @param {number} t - [description]
- * @param {number} p0 - [description]
- * @param {number} p1 - [description]
- * @param {number} p2 - [description]
- * @param {number} p3 - [description]
+ * @param {number} t - The amount to interpolate by.
+ * @param {number} p0 - The first control point.
+ * @param {number} p1 - The second control point.
+ * @param {number} p2 - The third control point.
+ * @param {number} p3 - The fourth control point.
  *
  * @return {number} The Catmull-Rom value.
  */
@@ -7114,15 +17704,15 @@ module.exports = CatmullRom;
 /***/ }),
 
 /***/ "../../../src/math/CeilTo.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/CeilTo.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/CeilTo.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -7156,15 +17746,15 @@ module.exports = CeilTo;
 /***/ }),
 
 /***/ "../../../src/math/Clamp.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Clamp.js ***!
-  \********************************************/
+/*!*************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Clamp.js ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -7191,15 +17781,15 @@ module.exports = Clamp;
 /***/ }),
 
 /***/ "../../../src/math/DegToRad.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/DegToRad.js ***!
-  \***********************************************/
+/*!****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/DegToRad.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -7226,15 +17816,15 @@ module.exports = DegToRad;
 /***/ }),
 
 /***/ "../../../src/math/Difference.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Difference.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Difference.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -7260,15 +17850,15 @@ module.exports = Difference;
 /***/ }),
 
 /***/ "../../../src/math/Factorial.js":
-/*!************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Factorial.js ***!
-  \************************************************/
+/*!*****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Factorial.js ***!
+  \*****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -7305,15 +17895,15 @@ module.exports = Factorial;
 /***/ }),
 
 /***/ "../../../src/math/FloatBetween.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/FloatBetween.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/FloatBetween.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -7339,15 +17929,15 @@ module.exports = FloatBetween;
 /***/ }),
 
 /***/ "../../../src/math/FloorTo.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/FloorTo.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/FloorTo.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -7381,15 +17971,15 @@ module.exports = FloorTo;
 /***/ }),
 
 /***/ "../../../src/math/FromPercent.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/FromPercent.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/FromPercent.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -7420,28 +18010,32 @@ module.exports = FromPercent;
 /***/ }),
 
 /***/ "../../../src/math/GetSpeed.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/GetSpeed.js ***!
-  \***********************************************/
+/*!****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/GetSpeed.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Calculate the speed required to cover a distance in the time given.
+ * Calculate a per-ms speed from a distance and time (given in seconds).
  *
  * @function Phaser.Math.GetSpeed
  * @since 3.0.0
  *
- * @param {number} distance - The distance to travel in pixels.
- * @param {integer} time - The time, in ms, to cover the distance in.
+ * @param {number} distance - The distance.
+ * @param {integer} time - The time, in seconds.
  *
- * @return {number} The amount you will need to increment the position by each step in order to cover the distance in the time given.
+ * @return {number} The speed, in distance per ms.
+ *
+ * @example
+ * // 400px over 1 second is 0.4 px/ms
+ * Phaser.Math.GetSpeed(400, 1) // -> 0.4
  */
 var GetSpeed = function (distance, time)
 {
@@ -7454,15 +18048,15 @@ module.exports = GetSpeed;
 /***/ }),
 
 /***/ "../../../src/math/IsEven.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/IsEven.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/IsEven.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -7490,15 +18084,15 @@ module.exports = IsEven;
 /***/ }),
 
 /***/ "../../../src/math/IsEvenStrict.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/IsEvenStrict.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/IsEvenStrict.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -7524,15 +18118,15 @@ module.exports = IsEvenStrict;
 /***/ }),
 
 /***/ "../../../src/math/Linear.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Linear.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Linear.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -7559,15 +18153,15 @@ module.exports = Linear;
 /***/ }),
 
 /***/ "../../../src/math/Matrix3.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Matrix3.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Matrix3.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8075,12 +18669,12 @@ var Matrix3 = new Class({
     },
 
     /**
-     * [description]
+     * Set the values of this Matrix3 to be normalized from the given Matrix4.
      *
      * @method Phaser.Math.Matrix3#normalFromMat4
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix4} m - [description]
+     * @param {Phaser.Math.Matrix4} m - The Matrix4 to normalize the values from.
      *
      * @return {Phaser.Math.Matrix3} This Matrix3.
      */
@@ -8157,15 +18751,15 @@ module.exports = Matrix3;
 /***/ }),
 
 /***/ "../../../src/math/Matrix4.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Matrix4.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Matrix4.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8724,12 +19318,12 @@ var Matrix4 = new Class({
     },
 
     /**
-     * [description]
+     * Multiply the values of this Matrix4 by those given in the `src` argument.
      *
      * @method Phaser.Math.Matrix4#multiplyLocal
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix4} src - [description]
+     * @param {Phaser.Math.Matrix4} src - The source Matrix4 that this Matrix4 is multiplied by.
      *
      * @return {Phaser.Math.Matrix4} This Matrix4.
      */
@@ -9521,9 +20115,9 @@ var Matrix4 = new Class({
      * @method Phaser.Math.Matrix4#yawPitchRoll
      * @since 3.0.0
      *
-     * @param {number} yaw - [description]
-     * @param {number} pitch - [description]
-     * @param {number} roll - [description]
+     * @param {number} yaw - The yaw value.
+     * @param {number} pitch - The pitch value.
+     * @param {number} roll - The roll value.
      *
      * @return {Phaser.Math.Matrix4} This Matrix4.
      */
@@ -9624,15 +20218,15 @@ module.exports = Matrix4;
 /***/ }),
 
 /***/ "../../../src/math/MaxAdd.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/MaxAdd.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/MaxAdd.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9659,15 +20253,15 @@ module.exports = MaxAdd;
 /***/ }),
 
 /***/ "../../../src/math/MinSub.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/MinSub.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/MinSub.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9694,15 +20288,15 @@ module.exports = MinSub;
 /***/ }),
 
 /***/ "../../../src/math/Percent.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Percent.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Percent.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9758,15 +20352,15 @@ module.exports = Percent;
 /***/ }),
 
 /***/ "../../../src/math/Quaternion.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Quaternion.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Quaternion.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10083,13 +20677,13 @@ var Quaternion = new Class({
     },
 
     /**
-     * [description]
+     * Rotates this Quaternion based on the two given vectors.
      *
      * @method Phaser.Math.Quaternion#rotationTo
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector3} a - [description]
-     * @param {Phaser.Math.Vector3} b - [description]
+     * @param {Phaser.Math.Vector3} a - The transform rotation vector.
+     * @param {Phaser.Math.Vector3} b - The target rotation vector.
      *
      * @return {Phaser.Math.Quaternion} This Quaternion.
      */
@@ -10535,15 +21129,15 @@ module.exports = Quaternion;
 /***/ }),
 
 /***/ "../../../src/math/RadToDeg.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RadToDeg.js ***!
-  \***********************************************/
+/*!****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RadToDeg.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10570,15 +21164,15 @@ module.exports = RadToDeg;
 /***/ }),
 
 /***/ "../../../src/math/RandomXY.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RandomXY.js ***!
-  \***********************************************/
+/*!****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RandomXY.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10615,15 +21209,15 @@ module.exports = RandomXY;
 /***/ }),
 
 /***/ "../../../src/math/RandomXYZ.js":
-/*!************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RandomXYZ.js ***!
-  \************************************************/
+/*!*****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RandomXYZ.js ***!
+  \*****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10659,15 +21253,15 @@ module.exports = RandomXYZ;
 /***/ }),
 
 /***/ "../../../src/math/RandomXYZW.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RandomXYZW.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RandomXYZW.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10701,15 +21295,15 @@ module.exports = RandomXYZW;
 /***/ }),
 
 /***/ "../../../src/math/Rotate.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Rotate.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Rotate.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10741,30 +21335,34 @@ module.exports = Rotate;
 /***/ }),
 
 /***/ "../../../src/math/RotateAround.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RotateAround.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RotateAround.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Rotate a `point` around `x` and `y` by the given `angle`.
+ * Rotate a `point` around `x` and `y` to the given `angle`, at the same distance.
+ *
+ * In polar notation, this maps a point from (r, t) to (r, angle), vs. the origin (x, y).
  *
  * @function Phaser.Math.RotateAround
  * @since 3.0.0
+ *
+ * @generic {Phaser.Types.Math.Vector2Like} T - [point,$return]
  *
  * @param {(Phaser.Geom.Point|object)} point - The point to be rotated.
  * @param {number} x - The horizontal coordinate to rotate around.
  * @param {number} y - The vertical coordinate to rotate around.
  * @param {number} angle - The angle of rotation in radians.
  *
- * @return {Phaser.Geom.Point} The given point, rotated by the given angle around the given coordinates.
+ * @return {Phaser.Types.Math.Vector2Like} The given point.
  */
 var RotateAround = function (point, x, y, angle)
 {
@@ -10786,23 +21384,27 @@ module.exports = RotateAround;
 /***/ }),
 
 /***/ "../../../src/math/RotateAroundDistance.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RotateAroundDistance.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RotateAroundDistance.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Rotate a `point` around `x` and `y` by the given `angle` and `distance`.
  *
+ * In polar notation, this maps a point from (r, t) to (distance, t + angle), vs. the origin (x, y).
+ *
  * @function Phaser.Math.RotateAroundDistance
  * @since 3.0.0
+ *
+ * @generic {Phaser.Types.Math.Vector2Like} T - [point,$return]
  *
  * @param {(Phaser.Geom.Point|object)} point - The point to be rotated.
  * @param {number} x - The horizontal coordinate to rotate around.
@@ -10810,7 +21412,7 @@ module.exports = RotateAround;
  * @param {number} angle - The angle of rotation in radians.
  * @param {number} distance - The distance from (x, y) to place the point at.
  *
- * @return {Phaser.Geom.Point} The given point.
+ * @return {Phaser.Types.Math.Vector2Like} The given point.
  */
 var RotateAroundDistance = function (point, x, y, angle, distance)
 {
@@ -10827,16 +21429,58 @@ module.exports = RotateAroundDistance;
 
 /***/ }),
 
+/***/ "../../../src/math/RotateTo.js":
+/*!****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RotateTo.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       samme
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Position a `point` at the given `angle` and `distance` to (`x`, `y`).
+ *
+ * @function Phaser.Math.RotateTo
+ * @since 3.24.0
+ *
+ * @generic {Phaser.Types.Math.Vector2Like} T - [point,$return]
+ *
+ * @param {Phaser.Types.Math.Vector2Like} point - The point to be positioned.
+ * @param {number} x - The horizontal coordinate to position from.
+ * @param {number} y - The vertical coordinate to position from.
+ * @param {number} angle - The angle of rotation in radians.
+ * @param {number} distance - The distance from (x, y) to place the point at.
+ *
+ * @return {Phaser.Types.Math.Vector2Like} The given point.
+ */
+var RotateTo = function (point, x, y, angle, distance)
+{
+    point.x = x + (distance * Math.cos(angle));
+    point.y = y + (distance * Math.sin(angle));
+
+    return point;
+};
+
+module.exports = RotateTo;
+
+
+/***/ }),
+
 /***/ "../../../src/math/RotateVec3.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RotateVec3.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RotateVec3.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10881,15 +21525,15 @@ module.exports = RotateVec3;
 /***/ }),
 
 /***/ "../../../src/math/RoundAwayFromZero.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RoundAwayFromZero.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RoundAwayFromZero.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10915,15 +21559,15 @@ module.exports = RoundAwayFromZero;
 /***/ }),
 
 /***/ "../../../src/math/RoundTo.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RoundTo.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RoundTo.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10972,15 +21616,15 @@ module.exports = RoundTo;
 /***/ }),
 
 /***/ "../../../src/math/SinCosTableGenerator.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/SinCosTableGenerator.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/SinCosTableGenerator.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11030,15 +21674,15 @@ module.exports = SinCosTableGenerator;
 /***/ }),
 
 /***/ "../../../src/math/SmoothStep.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/SmoothStep.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/SmoothStep.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11082,15 +21726,15 @@ module.exports = SmoothStep;
 /***/ }),
 
 /***/ "../../../src/math/SmootherStep.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/SmootherStep.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/SmootherStep.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11126,26 +21770,26 @@ module.exports = SmootherStep;
 /***/ }),
 
 /***/ "../../../src/math/ToXY.js":
-/*!*******************************************!*\
-  !*** D:/wamp/www/phaser/src/math/ToXY.js ***!
-  \*******************************************/
+/*!************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/ToXY.js ***!
+  \************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Vector2 = __webpack_require__(/*! ./Vector2 */ "../../../src/math/Vector2.js");
 
 /**
- * Returns a Vec2 containing the x and y position of the given index in a `width` x `height` sized grid.
+ * Returns a Vector2 containing the x and y position of the given index in a `width` x `height` sized grid.
  * 
  * For example, in a 6 x 4 grid, index 16 would equal x: 4 y: 2.
  * 
- * If the given index is out of range an empty Vec2 is returned.
+ * If the given index is out of range an empty Vector2 is returned.
  *
  * @function Phaser.Math.ToXY
  * @since 3.19.0
@@ -11189,15 +21833,15 @@ module.exports = ToXY;
 /***/ }),
 
 /***/ "../../../src/math/TransformXY.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/TransformXY.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/TransformXY.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11249,15 +21893,15 @@ module.exports = TransformXY;
 /***/ }),
 
 /***/ "../../../src/math/Vector2.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Vector2.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Vector2.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11265,6 +21909,7 @@ module.exports = TransformXY;
 //  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
 
 var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
+var FuzzyEqual = __webpack_require__(/*! ../math/fuzzy/Equal */ "../../../src/math/fuzzy/Equal.js");
 
 /**
  * @classdesc
@@ -11445,6 +22090,22 @@ var Vector2 = new Class({
     },
 
     /**
+     * Check whether this Vector is approximately equal to a given Vector.
+     *
+     * @method Phaser.Math.Vector2#fuzzyEquals
+     * @since 3.23.0
+     *
+     * @param {Phaser.Math.Vector2} v - The vector to compare with this Vector.
+     * @param {number} [epsilon=0.0001] - The tolerance value.
+     *
+     * @return {boolean} Whether both absolute differences of the x and y components are smaller than `epsilon`.
+     */
+    fuzzyEquals: function (v, epsilon)
+    {
+        return (FuzzyEqual(this.x, v.x, epsilon) && FuzzyEqual(this.y, v.y, epsilon));
+    },
+
+    /**
      * Calculate the angle between this Vector and the positive x-axis, in radians.
      *
      * @method Phaser.Math.Vector2#angle
@@ -11464,6 +22125,21 @@ var Vector2 = new Class({
         }
 
         return angle;
+    },
+
+    /**
+     * Set the angle of this Vector.
+     *
+     * @method Phaser.Math.Vector2#setAngle
+     * @since 3.23.0
+     *
+     * @param {number} angle - The angle, in radians.
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    setAngle: function (angle)
+    {
+        return this.setToPolar(angle, this.length());
     },
 
     /**
@@ -11637,6 +22313,21 @@ var Vector2 = new Class({
     },
 
     /**
+     * Set the length (or magnitude) of this Vector.
+     *
+     * @method Phaser.Math.Vector2#setLength
+     * @since 3.23.0
+     *
+     * @param {number} length
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    setLength: function (length)
+    {
+        return this.normalize().scale(length);
+    },
+
+    /**
      * Calculate the length of this Vector squared.
      *
      * @method Phaser.Math.Vector2#lengthSq
@@ -11680,7 +22371,7 @@ var Vector2 = new Class({
     },
 
     /**
-     * Right-hand normalize (make unit length) this Vector.
+     * Rotate this Vector to its perpendicular, in the positive direction.
      *
      * @method Phaser.Math.Vector2#normalizeRightHand
      * @since 3.0.0
@@ -11693,6 +22384,24 @@ var Vector2 = new Class({
 
         this.x = this.y * -1;
         this.y = x;
+
+        return this;
+    },
+
+    /**
+     * Rotate this Vector to its perpendicular, in the negative direction.
+     *
+     * @method Phaser.Math.Vector2#normalizeLeftHand
+     * @since 3.23.0
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    normalizeLeftHand: function ()
+    {
+        var x = this.x;
+
+        this.x = this.y;
+        this.y = x * -1;
 
         return this;
     },
@@ -11811,13 +22520,85 @@ var Vector2 = new Class({
         this.y = 0;
 
         return this;
+    },
+
+    /**
+     * Limit the length (or magnitude) of this Vector.
+     *
+     * @method Phaser.Math.Vector2#limit
+     * @since 3.23.0
+     *
+     * @param {number} max - The maximum length.
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    limit: function (max)
+    {
+        var len = this.length();
+
+        if (len && len > max)
+        {
+            this.scale(max / len);
+        }
+
+        return this;
+    },
+
+    /**
+     * Reflect this Vector off a line defined by a normal.
+     *
+     * @method Phaser.Math.Vector2#reflect
+     * @since 3.23.0
+     *
+     * @param {Phaser.Math.Vector2} normal - A vector perpendicular to the line.
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    reflect: function (normal)
+    {
+        normal = normal.clone().normalize();
+
+        return this.subtract(normal.scale(2 * this.dot(normal)));
+    },
+
+    /**
+     * Reflect this Vector across another.
+     *
+     * @method Phaser.Math.Vector2#mirror
+     * @since 3.23.0
+     *
+     * @param {Phaser.Math.Vector2} axis - A vector to reflect across.
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    mirror: function (axis)
+    {
+        return this.reflect(axis).negate();
+    },
+
+    /**
+     * Rotate this Vector by an angle amount.
+     *
+     * @method Phaser.Math.Vector2#rotate
+     * @since 3.23.0
+     *
+     * @param {number} delta - The angle to rotate by, in radians.
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    rotate: function (delta)
+    {
+        var cos = Math.cos(delta);
+        var sin = Math.sin(delta);
+
+        return this.set(cos * this.x - sin * this.y, sin * this.x + cos * this.y);
     }
 
 });
 
 /**
  * A static zero Vector2 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -11829,7 +22610,7 @@ Vector2.ZERO = new Vector2();
 
 /**
  * A static right Vector2 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -11841,7 +22622,7 @@ Vector2.RIGHT = new Vector2(1, 0);
 
 /**
  * A static left Vector2 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -11853,7 +22634,7 @@ Vector2.LEFT = new Vector2(-1, 0);
 
 /**
  * A static up Vector2 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -11865,7 +22646,7 @@ Vector2.UP = new Vector2(0, -1);
 
 /**
  * A static down Vector2 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -11877,7 +22658,7 @@ Vector2.DOWN = new Vector2(0, 1);
 
 /**
  * A static one Vector2 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -11893,15 +22674,15 @@ module.exports = Vector2;
 /***/ }),
 
 /***/ "../../../src/math/Vector3.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Vector3.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Vector3.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12708,15 +23489,15 @@ module.exports = Vector3;
 /***/ }),
 
 /***/ "../../../src/math/Vector4.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Vector4.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Vector4.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13258,15 +24039,15 @@ module.exports = Vector4;
 /***/ }),
 
 /***/ "../../../src/math/Within.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Within.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Within.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13293,15 +24074,15 @@ module.exports = Within;
 /***/ }),
 
 /***/ "../../../src/math/Wrap.js":
-/*!*******************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Wrap.js ***!
-  \*******************************************/
+/*!************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Wrap.js ***!
+  \************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13330,15 +24111,15 @@ module.exports = Wrap;
 /***/ }),
 
 /***/ "../../../src/math/angle/Between.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Between.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/Between.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13366,15 +24147,15 @@ module.exports = Between;
 /***/ }),
 
 /***/ "../../../src/math/angle/BetweenPoints.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/BetweenPoints.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/BetweenPoints.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13386,8 +24167,8 @@ module.exports = Between;
  * @function Phaser.Math.Angle.BetweenPoints
  * @since 3.0.0
  *
- * @param {(Phaser.Geom.Point|object)} point1 - The first point.
- * @param {(Phaser.Geom.Point|object)} point2 - The second point.
+ * @param {Phaser.Types.Math.Vector2Like} point1 - The first point.
+ * @param {Phaser.Types.Math.Vector2Like} point2 - The second point.
  *
  * @return {number} The angle in radians.
  */
@@ -13402,15 +24183,15 @@ module.exports = BetweenPoints;
 /***/ }),
 
 /***/ "../../../src/math/angle/BetweenPointsY.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/BetweenPointsY.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/BetweenPointsY.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13423,8 +24204,8 @@ module.exports = BetweenPoints;
  * @function Phaser.Math.Angle.BetweenPointsY
  * @since 3.0.0
  *
- * @param {(Phaser.Geom.Point|object)} point1 - The first point.
- * @param {(Phaser.Geom.Point|object)} point2 - The second point.
+ * @param {Phaser.Types.Math.Vector2Like} point1 - The first point.
+ * @param {Phaser.Types.Math.Vector2Like} point2 - The second point.
  *
  * @return {number} The angle in radians.
  */
@@ -13439,15 +24220,15 @@ module.exports = BetweenPointsY;
 /***/ }),
 
 /***/ "../../../src/math/angle/BetweenY.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/BetweenY.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/BetweenY.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13478,15 +24259,15 @@ module.exports = BetweenY;
 /***/ }),
 
 /***/ "../../../src/math/angle/CounterClockwise.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/CounterClockwise.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/CounterClockwise.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13528,15 +24309,15 @@ module.exports = CounterClockwise;
 /***/ }),
 
 /***/ "../../../src/math/angle/Normalize.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Normalize.js ***!
-  \******************************************************/
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/Normalize.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13569,16 +24350,84 @@ module.exports = Normalize;
 
 /***/ }),
 
-/***/ "../../../src/math/angle/Reverse.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Reverse.js ***!
-  \****************************************************/
+/***/ "../../../src/math/angle/Random.js":
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/Random.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @author       @samme
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var FloatBetween = __webpack_require__(/*! ../FloatBetween */ "../../../src/math/FloatBetween.js");
+
+/**
+ * Returns a random angle in the range [-pi, pi].
+ *
+ * @function Phaser.Math.Angle.Random
+ * @since 3.23.0
+ *
+ * @return {number} The angle, in radians.
+ */
+var Random = function ()
+{
+    return FloatBetween(-Math.PI, Math.PI);
+};
+
+module.exports = Random;
+
+
+/***/ }),
+
+/***/ "../../../src/math/angle/RandomDegrees.js":
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/RandomDegrees.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @author       @samme
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var FloatBetween = __webpack_require__(/*! ../FloatBetween */ "../../../src/math/FloatBetween.js");
+
+/**
+ * Returns a random angle in the range [-180, 180].
+ *
+ * @function Phaser.Math.Angle.RandomDegrees
+ * @since 3.23.0
+ *
+ * @return {number} The angle, in degrees.
+ */
+var RandomDegrees = function ()
+{
+    return FloatBetween(-180, 180);
+};
+
+module.exports = RandomDegrees;
+
+
+/***/ }),
+
+/***/ "../../../src/math/angle/Reverse.js":
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/Reverse.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13605,15 +24454,15 @@ module.exports = Reverse;
 /***/ }),
 
 /***/ "../../../src/math/angle/RotateTo.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/RotateTo.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/RotateTo.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13677,15 +24526,15 @@ module.exports = RotateTo;
 /***/ }),
 
 /***/ "../../../src/math/angle/ShortestBetween.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/ShortestBetween.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/ShortestBetween.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13731,15 +24580,15 @@ module.exports = ShortestBetween;
 /***/ }),
 
 /***/ "../../../src/math/angle/Wrap.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Wrap.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/Wrap.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13768,15 +24617,15 @@ module.exports = Wrap;
 /***/ }),
 
 /***/ "../../../src/math/angle/WrapDegrees.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/WrapDegrees.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/WrapDegrees.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13805,15 +24654,15 @@ module.exports = WrapDegrees;
 /***/ }),
 
 /***/ "../../../src/math/angle/index.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/index.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/index.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13829,6 +24678,8 @@ module.exports = {
     BetweenY: __webpack_require__(/*! ./BetweenY */ "../../../src/math/angle/BetweenY.js"),
     CounterClockwise: __webpack_require__(/*! ./CounterClockwise */ "../../../src/math/angle/CounterClockwise.js"),
     Normalize: __webpack_require__(/*! ./Normalize */ "../../../src/math/angle/Normalize.js"),
+    Random: __webpack_require__(/*! ./Random */ "../../../src/math/angle/Random.js"),
+    RandomDegrees: __webpack_require__(/*! ./RandomDegrees */ "../../../src/math/angle/RandomDegrees.js"),
     Reverse: __webpack_require__(/*! ./Reverse */ "../../../src/math/angle/Reverse.js"),
     RotateTo: __webpack_require__(/*! ./RotateTo */ "../../../src/math/angle/RotateTo.js"),
     ShortestBetween: __webpack_require__(/*! ./ShortestBetween */ "../../../src/math/angle/ShortestBetween.js"),
@@ -13841,15 +24692,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/const.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/const.js ***!
-  \********************************************/
+/*!*************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/const.js ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13908,7 +24759,27 @@ var MATH_CONST = {
      * @type {Phaser.Math.RandomDataGenerator}
      * @since 3.0.0
      */
-    RND: null
+    RND: null,
+
+    /**
+     * The minimum safe integer this browser supports.
+     * We use a const for backward compatibility with Internet Explorer.
+     * 
+     * @name Phaser.Math.MIN_SAFE_INTEGER
+     * @type {number}
+     * @since 3.21.0
+     */
+    MIN_SAFE_INTEGER: Number.MIN_SAFE_INTEGER || -9007199254740991,
+
+    /**
+     * The maximum safe integer this browser supports.
+     * We use a const for backward compatibility with Internet Explorer.
+     * 
+     * @name Phaser.Math.MAX_SAFE_INTEGER
+     * @type {number}
+     * @since 3.21.0
+     */
+    MAX_SAFE_INTEGER: Number.MAX_SAFE_INTEGER || 9007199254740991
 
 };
 
@@ -13918,15 +24789,15 @@ module.exports = MATH_CONST;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceBetween.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistanceBetween.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistanceBetween.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13956,16 +24827,129 @@ module.exports = DistanceBetween;
 
 /***/ }),
 
+/***/ "../../../src/math/distance/DistanceBetweenPoints.js":
+/*!**************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistanceBetweenPoints.js ***!
+  \**************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       samme
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculate the distance between two points.
+ *
+ * @function Phaser.Math.Distance.BetweenPoints
+ * @since 3.22.0
+ *
+ * @param {Phaser.Types.Math.Vector2Like} a - The first point.
+ * @param {Phaser.Types.Math.Vector2Like} b - The second point.
+ *
+ * @return {number} The distance between the points.
+ */
+var DistanceBetweenPoints = function (a, b)
+{
+    var dx = a.x - b.x;
+    var dy = a.y - b.y;
+
+    return Math.sqrt(dx * dx + dy * dy);
+};
+
+module.exports = DistanceBetweenPoints;
+
+
+/***/ }),
+
+/***/ "../../../src/math/distance/DistanceBetweenPointsSquared.js":
+/*!*********************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistanceBetweenPointsSquared.js ***!
+  \*********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       samme
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculate the squared distance between two points.
+ *
+ * @function Phaser.Math.Distance.BetweenPointsSquared
+ * @since 3.22.0
+ *
+ * @param {Phaser.Types.Math.Vector2Like} a - The first point.
+ * @param {Phaser.Types.Math.Vector2Like} b - The second point.
+ *
+ * @return {number} The squared distance between the points.
+ */
+var DistanceBetweenPointsSquared = function (a, b)
+{
+    var dx = a.x - b.x;
+    var dy = a.y - b.y;
+
+    return dx * dx + dy * dy;
+};
+
+module.exports = DistanceBetweenPointsSquared;
+
+
+/***/ }),
+
+/***/ "../../../src/math/distance/DistanceChebyshev.js":
+/*!**********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistanceChebyshev.js ***!
+  \**********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       samme
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculate the Chebyshev distance between two sets of coordinates (points).
+ *
+ * Chebyshev distance (or chessboard distance) is the maximum of the horizontal and vertical distances.
+ * It's the effective distance when movement can be horizontal, vertical, or diagonal.
+ *
+ * @function Phaser.Math.Distance.Chebyshev
+ * @since 3.22.0
+ *
+ * @param {number} x1 - The x coordinate of the first point.
+ * @param {number} y1 - The y coordinate of the first point.
+ * @param {number} x2 - The x coordinate of the second point.
+ * @param {number} y2 - The y coordinate of the second point.
+ *
+ * @return {number} The distance between each point.
+ */
+var ChebyshevDistance = function (x1, y1, x2, y2)
+{
+    return Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
+};
+
+module.exports = ChebyshevDistance;
+
+
+/***/ }),
+
 /***/ "../../../src/math/distance/DistancePower.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistancePower.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistancePower.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13995,16 +24979,55 @@ module.exports = DistancePower;
 
 /***/ }),
 
+/***/ "../../../src/math/distance/DistanceSnake.js":
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistanceSnake.js ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       samme
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculate the snake distance between two sets of coordinates (points).
+ *
+ * Snake distance (rectilinear distance, Manhattan distance) is the sum of the horizontal and vertical distances.
+ * It's the effective distance when movement is allowed only horizontally or vertically (but not both).
+ *
+ * @function Phaser.Math.Distance.Snake
+ * @since 3.22.0
+ *
+ * @param {number} x1 - The x coordinate of the first point.
+ * @param {number} y1 - The y coordinate of the first point.
+ * @param {number} x2 - The x coordinate of the second point.
+ * @param {number} y2 - The y coordinate of the second point.
+ *
+ * @return {number} The distance between each point.
+ */
+var SnakeDistance = function (x1, y1, x2, y2)
+{
+    return Math.abs(x1 - x2) + Math.abs(y1 - y2);
+};
+
+module.exports = SnakeDistance;
+
+
+/***/ }),
+
 /***/ "../../../src/math/distance/DistanceSquared.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistanceSquared.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistanceSquared.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14035,15 +25058,15 @@ module.exports = DistanceSquared;
 /***/ }),
 
 /***/ "../../../src/math/distance/index.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/index.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/index.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14054,7 +25077,11 @@ module.exports = DistanceSquared;
 module.exports = {
 
     Between: __webpack_require__(/*! ./DistanceBetween */ "../../../src/math/distance/DistanceBetween.js"),
+    BetweenPoints: __webpack_require__(/*! ./DistanceBetweenPoints */ "../../../src/math/distance/DistanceBetweenPoints.js"),
+    BetweenPointsSquared: __webpack_require__(/*! ./DistanceBetweenPointsSquared */ "../../../src/math/distance/DistanceBetweenPointsSquared.js"),
+    Chebyshev: __webpack_require__(/*! ./DistanceChebyshev */ "../../../src/math/distance/DistanceChebyshev.js"),
     Power: __webpack_require__(/*! ./DistancePower */ "../../../src/math/distance/DistancePower.js"),
+    Snake: __webpack_require__(/*! ./DistanceSnake */ "../../../src/math/distance/DistanceSnake.js"),
     Squared: __webpack_require__(/*! ./DistanceSquared */ "../../../src/math/distance/DistanceSquared.js")
 
 };
@@ -14063,15 +25090,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/back/In.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/back/In.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/back/In.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14099,15 +25126,15 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/back/InOut.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/back/InOut.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/back/InOut.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14144,15 +25171,15 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/back/Out.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/back/Out.js ***!
-  \******************************************************/
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/back/Out.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14180,15 +25207,15 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/back/index.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/back/index.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/back/index.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14208,15 +25235,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/In.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/bounce/In.js ***!
-  \*******************************************************/
+/*!************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/bounce/In.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14258,15 +25285,15 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/InOut.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/bounce/InOut.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/bounce/InOut.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14327,15 +25354,15 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/Out.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/bounce/Out.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/bounce/Out.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14375,15 +25402,15 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/bounce/index.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/bounce/index.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14403,15 +25430,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/In.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/circular/In.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/circular/In.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14436,15 +25463,15 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/InOut.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/circular/InOut.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/circular/InOut.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14476,15 +25503,15 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/Out.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/circular/Out.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/circular/Out.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14509,15 +25536,15 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/index.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/circular/index.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/circular/index.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14537,15 +25564,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/In.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/cubic/In.js ***!
-  \******************************************************/
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/cubic/In.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14570,15 +25597,15 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/InOut.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/cubic/InOut.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/cubic/InOut.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14610,15 +25637,15 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/Out.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/cubic/Out.js ***!
-  \*******************************************************/
+/*!************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/cubic/Out.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14643,15 +25670,15 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/index.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/cubic/index.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/cubic/index.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14671,15 +25698,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/In.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/elastic/In.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/elastic/In.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14731,15 +25758,15 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/InOut.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/elastic/InOut.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/elastic/InOut.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14798,15 +25825,15 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/Out.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/elastic/Out.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/elastic/Out.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14858,15 +25885,15 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/index.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/elastic/index.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/elastic/index.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14886,15 +25913,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/In.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/expo/In.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/expo/In.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14919,15 +25946,15 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/InOut.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/expo/InOut.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/expo/InOut.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14959,15 +25986,15 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/Out.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/expo/Out.js ***!
-  \******************************************************/
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/expo/Out.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14992,15 +26019,15 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/index.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/expo/index.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/expo/index.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15020,15 +26047,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/index.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/index.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/index.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15057,22 +26084,22 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/linear/Linear.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/linear/Linear.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/linear/Linear.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Linear easing (no variation).
  *
- * @function Phaser.Math.Easing.Linear.Linear
+ * @function Phaser.Math.Easing.Linear
  * @since 3.0.0
  *
  * @param {number} v - The value to be tweened.
@@ -15090,20 +26117,16 @@ module.exports = Linear;
 /***/ }),
 
 /***/ "../../../src/math/easing/linear/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/linear/index.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/linear/index.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * @namespace Phaser.Math.Easing.Linear
  */
 
 module.exports = __webpack_require__(/*! ./Linear */ "../../../src/math/easing/linear/Linear.js");
@@ -15112,15 +26135,15 @@ module.exports = __webpack_require__(/*! ./Linear */ "../../../src/math/easing/l
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/In.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quadratic/In.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quadratic/In.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15145,15 +26168,15 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/InOut.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quadratic/InOut.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quadratic/InOut.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15185,15 +26208,15 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/Out.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quadratic/Out.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quadratic/Out.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15218,15 +26241,15 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/index.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quadratic/index.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quadratic/index.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15246,15 +26269,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/In.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quartic/In.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quartic/In.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15279,15 +26302,15 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/InOut.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quartic/InOut.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quartic/InOut.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15319,15 +26342,15 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/Out.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quartic/Out.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quartic/Out.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15352,15 +26375,15 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/index.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quartic/index.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quartic/index.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15380,15 +26403,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/In.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quintic/In.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quintic/In.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15413,15 +26436,15 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/InOut.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quintic/InOut.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quintic/InOut.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15453,15 +26476,15 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/Out.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quintic/Out.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quintic/Out.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15486,15 +26509,15 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/index.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quintic/index.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quintic/index.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15514,15 +26537,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/In.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/sine/In.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/sine/In.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15558,15 +26581,15 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/InOut.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/sine/InOut.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/sine/InOut.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15602,15 +26625,15 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/Out.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/sine/Out.js ***!
-  \******************************************************/
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/sine/Out.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15646,15 +26669,15 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/index.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/sine/index.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/sine/index.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15674,22 +26697,22 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/stepped/Stepped.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/stepped/Stepped.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/stepped/Stepped.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Stepped easing.
  *
- * @function Phaser.Math.Easing.Stepped.Stepped
+ * @function Phaser.Math.Easing.Stepped
  * @since 3.0.0
  *
  * @param {number} v - The value to be tweened.
@@ -15721,15 +26744,15 @@ module.exports = Stepped;
 /***/ }),
 
 /***/ "../../../src/math/easing/stepped/index.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/stepped/index.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/stepped/index.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15743,15 +26766,15 @@ module.exports = __webpack_require__(/*! ./Stepped */ "../../../src/math/easing/
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/Ceil.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/Ceil.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/Ceil.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15779,15 +26802,15 @@ module.exports = Ceil;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/Equal.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/Equal.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/Equal.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15818,15 +26841,15 @@ module.exports = Equal;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/Floor.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/Floor.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/Floor.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15854,15 +26877,15 @@ module.exports = Floor;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/GreaterThan.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/GreaterThan.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/GreaterThan.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15893,15 +26916,15 @@ module.exports = GreaterThan;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/LessThan.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/LessThan.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/LessThan.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15932,15 +26955,15 @@ module.exports = LessThan;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/index.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/index.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/index.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15962,15 +26985,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/index.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/index.js ***!
-  \********************************************/
+/*!*************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/index.js ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -16022,6 +27045,7 @@ var PhaserMath = {
     Rotate: __webpack_require__(/*! ./Rotate */ "../../../src/math/Rotate.js"),
     RotateAround: __webpack_require__(/*! ./RotateAround */ "../../../src/math/RotateAround.js"),
     RotateAroundDistance: __webpack_require__(/*! ./RotateAroundDistance */ "../../../src/math/RotateAroundDistance.js"),
+    RotateTo: __webpack_require__(/*! ./RotateTo */ "../../../src/math/RotateTo.js"),
     RoundAwayFromZero: __webpack_require__(/*! ./RoundAwayFromZero */ "../../../src/math/RoundAwayFromZero.js"),
     RoundTo: __webpack_require__(/*! ./RoundTo */ "../../../src/math/RoundTo.js"),
     SinCosTableGenerator: __webpack_require__(/*! ./SinCosTableGenerator */ "../../../src/math/SinCosTableGenerator.js"),
@@ -16055,15 +27079,15 @@ module.exports = PhaserMath;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/BezierInterpolation.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/BezierInterpolation.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/BezierInterpolation.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -16099,15 +27123,15 @@ module.exports = BezierInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/CatmullRomInterpolation.js":
-/*!****************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/CatmullRomInterpolation.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/CatmullRomInterpolation.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -16161,15 +27185,15 @@ module.exports = CatmullRomInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/CubicBezierInterpolation.js":
-/*!*****************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/CubicBezierInterpolation.js ***!
-  \*****************************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/CubicBezierInterpolation.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -16236,15 +27260,15 @@ module.exports = CubicBezierInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/LinearInterpolation.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/LinearInterpolation.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/LinearInterpolation.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -16288,15 +27312,15 @@ module.exports = LinearInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/QuadraticBezierInterpolation.js":
-/*!*********************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/QuadraticBezierInterpolation.js ***!
-  \*********************************************************************************/
+/*!**************************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/QuadraticBezierInterpolation.js ***!
+  \**************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -16352,15 +27376,15 @@ module.exports = QuadraticBezierInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/SmoothStepInterpolation.js":
-/*!****************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/SmoothStepInterpolation.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/SmoothStepInterpolation.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -16390,15 +27414,15 @@ module.exports = SmoothStepInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/SmootherStepInterpolation.js":
-/*!******************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/SmootherStepInterpolation.js ***!
-  \******************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/SmootherStepInterpolation.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -16428,15 +27452,15 @@ module.exports = SmootherStepInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/index.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/index.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -16460,22 +27484,22 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/pow2/GetPowerOfTwo.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/pow2/GetPowerOfTwo.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/pow2/GetPowerOfTwo.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Returns the nearest power of 2 to the given `value`.
  *
- * @function Phaser.Math.Pow2.GetPowerOfTwo
+ * @function Phaser.Math.Pow2.GetNext
  * @since 3.0.0
  *
  * @param {number} value - The value.
@@ -16495,15 +27519,15 @@ module.exports = GetPowerOfTwo;
 /***/ }),
 
 /***/ "../../../src/math/pow2/IsSizePowerOfTwo.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/pow2/IsSizePowerOfTwo.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/pow2/IsSizePowerOfTwo.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -16511,7 +27535,7 @@ module.exports = GetPowerOfTwo;
  * Checks if the given `width` and `height` are a power of two.
  * Useful for checking texture dimensions.
  *
- * @function Phaser.Math.Pow2.IsSizePowerOfTwo
+ * @function Phaser.Math.Pow2.IsSize
  * @since 3.0.0
  *
  * @param {number} width - The width.
@@ -16530,22 +27554,22 @@ module.exports = IsSizePowerOfTwo;
 /***/ }),
 
 /***/ "../../../src/math/pow2/IsValuePowerOfTwo.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/pow2/IsValuePowerOfTwo.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/pow2/IsValuePowerOfTwo.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Tests the value and returns `true` if it is a power of two.
  *
- * @function Phaser.Math.Pow2.IsValuePowerOfTwo
+ * @function Phaser.Math.Pow2.IsValue
  * @since 3.0.0
  *
  * @param {number} value - The value to check if it's a power of two.
@@ -16563,15 +27587,15 @@ module.exports = IsValuePowerOfTwo;
 /***/ }),
 
 /***/ "../../../src/math/pow2/index.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/pow2/index.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/pow2/index.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -16591,15 +27615,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/random-data-generator/RandomDataGenerator.js":
-/*!********************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/random-data-generator/RandomDataGenerator.js ***!
-  \********************************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/random-data-generator/RandomDataGenerator.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -16946,10 +27970,14 @@ var RandomDataGenerator = new Class({
      *
      * @method Phaser.Math.RandomDataGenerator#pick
      * @since 3.0.0
+     * 
+     * @generic T
+     * @genericUse {T[]} - [array]
+     * @genericUse {T} - [$return]
      *
-     * @param {array} array - The array to pick a random element from.
+     * @param {T[]} array - The array to pick a random element from.
      *
-     * @return {*} A random member of the array.
+     * @return {T} A random member of the array.
      */
     pick: function (array)
     {
@@ -16975,9 +28003,13 @@ var RandomDataGenerator = new Class({
      * @method Phaser.Math.RandomDataGenerator#weightedPick
      * @since 3.0.0
      *
-     * @param {array} array - The array to pick a random element from.
+     * @generic T
+     * @genericUse {T[]} - [array]
+     * @genericUse {T} - [$return]
      *
-     * @return {*} A random member of the array.
+     * @param {T[]} array - The array to pick a random element from.
+     *
+     * @return {T} A random member of the array.
      */
     weightedPick: function (array)
     {
@@ -17067,9 +28099,12 @@ var RandomDataGenerator = new Class({
      * @method Phaser.Math.RandomDataGenerator#shuffle
      * @since 3.7.0
      *
-     * @param {array} [array] - The array to be shuffled.
+     * @generic T
+     * @genericUse {T[]} - [array,$return]
      *
-     * @return {array} The shuffled array.
+     * @param {T[]} [array] - The array to be shuffled.
+     *
+     * @return {T[]} The shuffled array.
      */
     shuffle: function (array)
     {
@@ -17095,15 +28130,15 @@ module.exports = RandomDataGenerator;
 /***/ }),
 
 /***/ "../../../src/math/snap/SnapCeil.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/snap/SnapCeil.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/snap/SnapCeil.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17144,15 +28179,15 @@ module.exports = SnapCeil;
 /***/ }),
 
 /***/ "../../../src/math/snap/SnapFloor.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/snap/SnapFloor.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/snap/SnapFloor.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17193,15 +28228,15 @@ module.exports = SnapFloor;
 /***/ }),
 
 /***/ "../../../src/math/snap/SnapTo.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/snap/SnapTo.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/snap/SnapTo.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17241,15 +28276,15 @@ module.exports = SnapTo;
 /***/ }),
 
 /***/ "../../../src/math/snap/index.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/snap/index.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/snap/index.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17269,15 +28304,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/plugins/BasePlugin.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/plugins/BasePlugin.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/plugins/BasePlugin.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2019 Photon Storm Ltd.
+* @copyright    2020 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser3-plugin-template/blob/master/LICENSE|MIT License}
 */
 
@@ -17404,15 +28439,15 @@ module.exports = BasePlugin;
 /***/ }),
 
 /***/ "../../../src/plugins/ScenePlugin.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/plugins/ScenePlugin.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/plugins/ScenePlugin.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2019 Photon Storm Ltd.
+* @copyright    2020 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser3-plugin-template/blob/master/LICENSE|MIT License}
 */
 
@@ -17537,15 +28572,15 @@ module.exports = ScenePlugin;
 /***/ }),
 
 /***/ "../../../src/renderer/BlendModes.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/BlendModes.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/renderer/BlendModes.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17881,15 +28916,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/scale/events/RESIZE_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scale/events/RESIZE_EVENT.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scale/events/RESIZE_EVENT.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17916,16 +28951,47 @@ module.exports = 'resize';
 
 /***/ }),
 
-/***/ "../../../src/scene/events/BOOT_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/BOOT_EVENT.js ***!
-  \*********************************************************/
+/***/ "../../../src/scene/events/ADDED_TO_SCENE_EVENT.js":
+/*!************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/ADDED_TO_SCENE_EVENT.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Object Added to Scene Event.
+ *
+ * This event is dispatched when a Game Object is added to a Scene.
+ *
+ * Listen for it from a Scene using `this.scene.events.on('addedtoscene', listener)`.
+ *
+ * @event Phaser.Scenes.Events#ADDED_TO_SCENE
+ * @since 3.50.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was added to the Scene.
+ * @param {Phaser.Scene} scene - The Scene to which the Game Object was added.
+ */
+module.exports = 'addedtoscene';
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/BOOT_EVENT.js":
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/BOOT_EVENT.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17947,15 +29013,15 @@ module.exports = 'boot';
 /***/ }),
 
 /***/ "../../../src/scene/events/CREATE_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/CREATE_EVENT.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/CREATE_EVENT.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17981,15 +29047,15 @@ module.exports = 'create';
 /***/ }),
 
 /***/ "../../../src/scene/events/DESTROY_EVENT.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/DESTROY_EVENT.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/DESTROY_EVENT.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18013,15 +29079,15 @@ module.exports = 'destroy';
 /***/ }),
 
 /***/ "../../../src/scene/events/PAUSE_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/PAUSE_EVENT.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/PAUSE_EVENT.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18045,15 +29111,15 @@ module.exports = 'pause';
 /***/ }),
 
 /***/ "../../../src/scene/events/POST_UPDATE_EVENT.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/POST_UPDATE_EVENT.js ***!
-  \****************************************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/POST_UPDATE_EVENT.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18087,15 +29153,15 @@ module.exports = 'postupdate';
 /***/ }),
 
 /***/ "../../../src/scene/events/PRE_UPDATE_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/PRE_UPDATE_EVENT.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/PRE_UPDATE_EVENT.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18129,15 +29195,15 @@ module.exports = 'preupdate';
 /***/ }),
 
 /***/ "../../../src/scene/events/READY_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/READY_EVENT.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/READY_EVENT.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18161,16 +29227,47 @@ module.exports = 'ready';
 
 /***/ }),
 
-/***/ "../../../src/scene/events/RENDER_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/RENDER_EVENT.js ***!
-  \***********************************************************/
+/***/ "../../../src/scene/events/REMOVED_FROM_SCENE_EVENT.js":
+/*!****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/REMOVED_FROM_SCENE_EVENT.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Game Object Removed from Scene Event.
+ *
+ * This event is dispatched when a Game Object is removed from a Scene.
+ *
+ * Listen for it from a Scene using `this.scene.events.on('removedfromscene', listener)`.
+ *
+ * @event Phaser.Scenes.Events#REMOVED_FROM_SCENE
+ * @since 3.50.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was removed from the Scene.
+ * @param {Phaser.Scene} scene - The Scene from which the Game Object was removed.
+ */
+module.exports = 'removedfromscene';
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/RENDER_EVENT.js":
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/RENDER_EVENT.js ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18203,15 +29300,15 @@ module.exports = 'render';
 /***/ }),
 
 /***/ "../../../src/scene/events/RESUME_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/RESUME_EVENT.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/RESUME_EVENT.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18235,15 +29332,15 @@ module.exports = 'resume';
 /***/ }),
 
 /***/ "../../../src/scene/events/SHUTDOWN_EVENT.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/SHUTDOWN_EVENT.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/SHUTDOWN_EVENT.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18270,15 +29367,15 @@ module.exports = 'shutdown';
 /***/ }),
 
 /***/ "../../../src/scene/events/SLEEP_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/SLEEP_EVENT.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/SLEEP_EVENT.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18302,15 +29399,15 @@ module.exports = 'sleep';
 /***/ }),
 
 /***/ "../../../src/scene/events/START_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/START_EVENT.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/START_EVENT.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18332,15 +29429,15 @@ module.exports = 'start';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_COMPLETE_EVENT.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_COMPLETE_EVENT.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/TRANSITION_COMPLETE_EVENT.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18373,15 +29470,15 @@ module.exports = 'transitioncomplete';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_INIT_EVENT.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_INIT_EVENT.js ***!
-  \********************************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/TRANSITION_INIT_EVENT.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18415,15 +29512,15 @@ module.exports = 'transitioninit';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_OUT_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_OUT_EVENT.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/TRANSITION_OUT_EVENT.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18454,15 +29551,15 @@ module.exports = 'transitionout';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_START_EVENT.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_START_EVENT.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/TRANSITION_START_EVENT.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18499,15 +29596,15 @@ module.exports = 'transitionstart';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_WAKE_EVENT.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_WAKE_EVENT.js ***!
-  \********************************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/TRANSITION_WAKE_EVENT.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18539,15 +29636,15 @@ module.exports = 'transitionwake';
 /***/ }),
 
 /***/ "../../../src/scene/events/UPDATE_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/UPDATE_EVENT.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/UPDATE_EVENT.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18581,15 +29678,15 @@ module.exports = 'update';
 /***/ }),
 
 /***/ "../../../src/scene/events/WAKE_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/WAKE_EVENT.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/WAKE_EVENT.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18613,15 +29710,15 @@ module.exports = 'wake';
 /***/ }),
 
 /***/ "../../../src/scene/events/index.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/index.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/index.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18631,6 +29728,7 @@ module.exports = 'wake';
 
 module.exports = {
 
+    ADDED_TO_SCENE: __webpack_require__(/*! ./ADDED_TO_SCENE_EVENT */ "../../../src/scene/events/ADDED_TO_SCENE_EVENT.js"),
     BOOT: __webpack_require__(/*! ./BOOT_EVENT */ "../../../src/scene/events/BOOT_EVENT.js"),
     CREATE: __webpack_require__(/*! ./CREATE_EVENT */ "../../../src/scene/events/CREATE_EVENT.js"),
     DESTROY: __webpack_require__(/*! ./DESTROY_EVENT */ "../../../src/scene/events/DESTROY_EVENT.js"),
@@ -18638,6 +29736,7 @@ module.exports = {
     POST_UPDATE: __webpack_require__(/*! ./POST_UPDATE_EVENT */ "../../../src/scene/events/POST_UPDATE_EVENT.js"),
     PRE_UPDATE: __webpack_require__(/*! ./PRE_UPDATE_EVENT */ "../../../src/scene/events/PRE_UPDATE_EVENT.js"),
     READY: __webpack_require__(/*! ./READY_EVENT */ "../../../src/scene/events/READY_EVENT.js"),
+    REMOVED_FROM_SCENE: __webpack_require__(/*! ./REMOVED_FROM_SCENE_EVENT */ "../../../src/scene/events/REMOVED_FROM_SCENE_EVENT.js"),
     RENDER: __webpack_require__(/*! ./RENDER_EVENT */ "../../../src/scene/events/RENDER_EVENT.js"),
     RESUME: __webpack_require__(/*! ./RESUME_EVENT */ "../../../src/scene/events/RESUME_EVENT.js"),
     SHUTDOWN: __webpack_require__(/*! ./SHUTDOWN_EVENT */ "../../../src/scene/events/SHUTDOWN_EVENT.js"),
@@ -18656,16 +29755,239 @@ module.exports = {
 
 /***/ }),
 
-/***/ "../../../src/utils/Class.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/Class.js ***!
-  \*********************************************/
+/***/ "../../../src/tweens/builders/GetBoolean.js":
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/tweens/builders/GetBoolean.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Retrieves the value of the given key from an object.
+ *
+ * @function Phaser.Tweens.Builders.GetBoolean
+ * @since 3.0.0
+ *
+ * @param {object} source - The object to retrieve the value from.
+ * @param {string} key - The key to look for in the `source` object.
+ * @param {*} defaultValue - The default value to return if the `key` doesn't exist or if no `source` object is provided.
+ *
+ * @return {*} The retrieved value.
+ */
+var GetBoolean = function (source, key, defaultValue)
+{
+    if (!source)
+    {
+        return defaultValue;
+    }
+    else if (source.hasOwnProperty(key))
+    {
+        return source[key];
+    }
+    else
+    {
+        return defaultValue;
+    }
+};
+
+module.exports = GetBoolean;
+
+
+/***/ }),
+
+/***/ "../../../src/tweens/tween/const.js":
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/tweens/tween/const.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var TWEEN_CONST = {
+
+    /**
+     * TweenData state.
+     * 
+     * @name Phaser.Tweens.CREATED
+     * @type {integer}
+     * @since 3.0.0
+     */
+    CREATED: 0,
+
+    /**
+     * TweenData state.
+     * 
+     * @name Phaser.Tweens.INIT
+     * @type {integer}
+     * @since 3.0.0
+     */
+    INIT: 1,
+
+    /**
+     * TweenData state.
+     * 
+     * @name Phaser.Tweens.DELAY
+     * @type {integer}
+     * @since 3.0.0
+     */
+    DELAY: 2,
+
+    /**
+     * TweenData state.
+     * 
+     * @name Phaser.Tweens.OFFSET_DELAY
+     * @type {integer}
+     * @since 3.0.0
+     */
+    OFFSET_DELAY: 3,
+
+    /**
+     * TweenData state.
+     * 
+     * @name Phaser.Tweens.PENDING_RENDER
+     * @type {integer}
+     * @since 3.0.0
+     */
+    PENDING_RENDER: 4,
+
+    /**
+     * TweenData state.
+     * 
+     * @name Phaser.Tweens.PLAYING_FORWARD
+     * @type {integer}
+     * @since 3.0.0
+     */
+    PLAYING_FORWARD: 5,
+
+    /**
+     * TweenData state.
+     * 
+     * @name Phaser.Tweens.PLAYING_BACKWARD
+     * @type {integer}
+     * @since 3.0.0
+     */
+    PLAYING_BACKWARD: 6,
+
+    /**
+     * TweenData state.
+     * 
+     * @name Phaser.Tweens.HOLD_DELAY
+     * @type {integer}
+     * @since 3.0.0
+     */
+    HOLD_DELAY: 7,
+
+    /**
+     * TweenData state.
+     * 
+     * @name Phaser.Tweens.REPEAT_DELAY
+     * @type {integer}
+     * @since 3.0.0
+     */
+    REPEAT_DELAY: 8,
+
+    /**
+     * TweenData state.
+     * 
+     * @name Phaser.Tweens.COMPLETE
+     * @type {integer}
+     * @since 3.0.0
+     */
+    COMPLETE: 9,
+
+    //  Tween specific (starts from 20 to cleanly allow extra TweenData consts in the future)
+
+    /**
+     * Tween state.
+     * 
+     * @name Phaser.Tweens.PENDING_ADD
+     * @type {integer}
+     * @since 3.0.0
+     */
+    PENDING_ADD: 20,
+
+    /**
+     * Tween state.
+     * 
+     * @name Phaser.Tweens.PAUSED
+     * @type {integer}
+     * @since 3.0.0
+     */
+    PAUSED: 21,
+
+    /**
+     * Tween state.
+     * 
+     * @name Phaser.Tweens.LOOP_DELAY
+     * @type {integer}
+     * @since 3.0.0
+     */
+    LOOP_DELAY: 22,
+
+    /**
+     * Tween state.
+     * 
+     * @name Phaser.Tweens.ACTIVE
+     * @type {integer}
+     * @since 3.0.0
+     */
+    ACTIVE: 23,
+
+    /**
+     * Tween state.
+     * 
+     * @name Phaser.Tweens.COMPLETE_DELAY
+     * @type {integer}
+     * @since 3.0.0
+     */
+    COMPLETE_DELAY: 24,
+
+    /**
+     * Tween state.
+     * 
+     * @name Phaser.Tweens.PENDING_REMOVE
+     * @type {integer}
+     * @since 3.0.0
+     */
+    PENDING_REMOVE: 25,
+
+    /**
+     * Tween state.
+     * 
+     * @name Phaser.Tweens.REMOVED
+     * @type {integer}
+     * @since 3.0.0
+     */
+    REMOVED: 26
+
+};
+
+module.exports = TWEEN_CONST;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/Class.js":
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/Class.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18916,15 +30238,15 @@ module.exports = Class;
 /***/ }),
 
 /***/ "../../../src/utils/NOOP.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/NOOP.js ***!
-  \********************************************/
+/*!*************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/NOOP.js ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18947,16 +30269,2728 @@ module.exports = NOOP;
 
 /***/ }),
 
-/***/ "../../../src/utils/object/Extend.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/Extend.js ***!
-  \*****************************************************/
+/***/ "../../../src/utils/array/Add.js":
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/Add.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Adds the given item, or array of items, to the array.
+ *
+ * Each item must be unique within the array.
+ *
+ * The array is modified in-place and returned.
+ *
+ * You can optionally specify a limit to the maximum size of the array. If the quantity of items being
+ * added will take the array length over this limit, it will stop adding once the limit is reached.
+ *
+ * You can optionally specify a callback to be invoked for each item successfully added to the array.
+ *
+ * @function Phaser.Utils.Array.Add
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to be added to.
+ * @param {any|any[]} item - The item, or array of items, to add to the array. Each item must be unique within the array.
+ * @param {integer} [limit] - Optional limit which caps the size of the array.
+ * @param {function} [callback] - A callback to be invoked for each item successfully added to the array.
+ * @param {object} [context] - The context in which the callback is invoked.
+ *
+ * @return {array} The input array.
+ */
+var Add = function (array, item, limit, callback, context)
+{
+    if (context === undefined) { context = array; }
+
+    if (limit > 0)
+    {
+        var remaining = limit - array.length;
+
+        //  There's nothing more we can do here, the array is full
+        if (remaining <= 0)
+        {
+            return null;
+        }
+    }
+
+    //  Fast path to avoid array mutation and iteration
+    if (!Array.isArray(item))
+    {
+        if (array.indexOf(item) === -1)
+        {
+            array.push(item);
+
+            if (callback)
+            {
+                callback.call(context, item);
+            }
+
+            return item;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    //  If we got this far, we have an array of items to insert
+
+    //  Ensure all the items are unique
+    var itemLength = item.length - 1;
+
+    while (itemLength >= 0)
+    {
+        if (array.indexOf(item[itemLength]) !== -1)
+        {
+            //  Already exists in array, so remove it
+            item.splice(itemLength, 1);
+        }
+
+        itemLength--;
+    }
+
+    //  Anything left?
+    itemLength = item.length;
+
+    if (itemLength === 0)
+    {
+        return null;
+    }
+
+    if (limit > 0 && itemLength > remaining)
+    {
+        item.splice(remaining);
+
+        itemLength = remaining;
+    }
+
+    for (var i = 0; i < itemLength; i++)
+    {
+        var entry = item[i];
+
+        array.push(entry);
+
+        if (callback)
+        {
+            callback.call(context, entry);
+        }
+    }
+
+    return item;
+};
+
+module.exports = Add;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/AddAt.js":
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/AddAt.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Adds the given item, or array of items, to the array starting at the index specified.
+ * 
+ * Each item must be unique within the array.
+ * 
+ * Existing elements in the array are shifted up.
+ * 
+ * The array is modified in-place and returned.
+ * 
+ * You can optionally specify a limit to the maximum size of the array. If the quantity of items being
+ * added will take the array length over this limit, it will stop adding once the limit is reached.
+ * 
+ * You can optionally specify a callback to be invoked for each item successfully added to the array.
+ *
+ * @function Phaser.Utils.Array.AddAt
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to be added to.
+ * @param {any|any[]} item - The item, or array of items, to add to the array.
+ * @param {integer} [index=0] - The index in the array where the item will be inserted.
+ * @param {integer} [limit] - Optional limit which caps the size of the array.
+ * @param {function} [callback] - A callback to be invoked for each item successfully added to the array.
+ * @param {object} [context] - The context in which the callback is invoked.
+ *
+ * @return {array} The input array.
+ */
+var AddAt = function (array, item, index, limit, callback, context)
+{
+    if (index === undefined) { index = 0; }
+    if (context === undefined) { context = array; }
+
+    if (limit > 0)
+    {
+        var remaining = limit - array.length;
+
+        //  There's nothing more we can do here, the array is full
+        if (remaining <= 0)
+        {
+            return null;
+        }
+    }
+
+    //  Fast path to avoid array mutation and iteration
+    if (!Array.isArray(item))
+    {
+        if (array.indexOf(item) === -1)
+        {
+            array.splice(index, 0, item);
+
+            if (callback)
+            {
+                callback.call(context, item);
+            }
+
+            return item;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    //  If we got this far, we have an array of items to insert
+
+    //  Ensure all the items are unique
+    var itemLength = item.length - 1;
+
+    while (itemLength >= 0)
+    {
+        if (array.indexOf(item[itemLength]) !== -1)
+        {
+            //  Already exists in array, so remove it
+            item.pop();
+        }
+
+        itemLength--;
+    }
+
+    //  Anything left?
+    itemLength = item.length;
+
+    if (itemLength === 0)
+    {
+        return null;
+    }
+
+    //  Truncate to the limit
+    if (limit > 0 && itemLength > remaining)
+    {
+        item.splice(remaining);
+
+        itemLength = remaining;
+    }
+
+    for (var i = itemLength - 1; i >= 0; i--)
+    {
+        var entry = item[i];
+
+        array.splice(index, 0, entry);
+
+        if (callback)
+        {
+            callback.call(context, entry);
+        }
+    }
+
+    return item;
+};
+
+module.exports = AddAt;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/BringToTop.js":
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/BringToTop.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Moves the given element to the top of the array.
+ * The array is modified in-place.
+ *
+ * @function Phaser.Utils.Array.BringToTop
+ * @since 3.4.0
+ *
+ * @param {array} array - The array.
+ * @param {*} item - The element to move.
+ *
+ * @return {*} The element that was moved.
+ */
+var BringToTop = function (array, item)
+{
+    var currentIndex = array.indexOf(item);
+
+    if (currentIndex !== -1 && currentIndex < array.length)
+    {
+        array.splice(currentIndex, 1);
+        array.push(item);
+    }
+
+    return item;
+};
+
+module.exports = BringToTop;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/CountAllMatching.js":
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/CountAllMatching.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var SafeRange = __webpack_require__(/*! ./SafeRange */ "../../../src/utils/array/SafeRange.js");
+
+/**
+ * Returns the total number of elements in the array which have a property matching the given value.
+ *
+ * @function Phaser.Utils.Array.CountAllMatching
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to search.
+ * @param {string} property - The property to test on each array element.
+ * @param {*} value - The value to test the property against. Must pass a strict (`===`) comparison check.
+ * @param {integer} [startIndex] - An optional start index to search from.
+ * @param {integer} [endIndex] - An optional end index to search to.
+ *
+ * @return {integer} The total number of elements with properties matching the given value.
+ */
+var CountAllMatching = function (array, property, value, startIndex, endIndex)
+{
+    if (startIndex === undefined) { startIndex = 0; }
+    if (endIndex === undefined) { endIndex = array.length; }
+
+    var total = 0;
+
+    if (SafeRange(array, startIndex, endIndex))
+    {
+        for (var i = startIndex; i < endIndex; i++)
+        {
+            var child = array[i];
+
+            if (child[property] === value)
+            {
+                total++;
+            }
+        }
+    }
+
+    return total;
+};
+
+module.exports = CountAllMatching;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/Each.js":
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/Each.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Passes each element in the array to the given callback.
+ *
+ * @function Phaser.Utils.Array.Each
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to search.
+ * @param {function} callback - A callback to be invoked for each item in the array.
+ * @param {object} context - The context in which the callback is invoked.
+ * @param {...*} [args] - Additional arguments that will be passed to the callback, after the current array item.
+ *
+ * @return {array} The input array.
+ */
+var Each = function (array, callback, context)
+{
+    var i;
+    var args = [ null ];
+
+    for (i = 3; i < arguments.length; i++)
+    {
+        args.push(arguments[i]);
+    }
+
+    for (i = 0; i < array.length; i++)
+    {
+        args[0] = array[i];
+
+        callback.apply(context, args);
+    }
+
+    return array;
+};
+
+module.exports = Each;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/EachInRange.js":
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/EachInRange.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var SafeRange = __webpack_require__(/*! ./SafeRange */ "../../../src/utils/array/SafeRange.js");
+
+/**
+ * Passes each element in the array, between the start and end indexes, to the given callback.
+ *
+ * @function Phaser.Utils.Array.EachInRange
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to search.
+ * @param {function} callback - A callback to be invoked for each item in the array.
+ * @param {object} context - The context in which the callback is invoked.
+ * @param {integer} startIndex - The start index to search from.
+ * @param {integer} endIndex - The end index to search to.
+ * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
+ *
+ * @return {array} The input array.
+ */
+var EachInRange = function (array, callback, context, startIndex, endIndex)
+{
+    if (startIndex === undefined) { startIndex = 0; }
+    if (endIndex === undefined) { endIndex = array.length; }
+
+    if (SafeRange(array, startIndex, endIndex))
+    {
+        var i;
+        var args = [ null ];
+
+        for (i = 5; i < arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
+
+        for (i = startIndex; i < endIndex; i++)
+        {
+            args[0] = array[i];
+
+            callback.apply(context, args);
+        }
+    }
+
+    return array;
+};
+
+module.exports = EachInRange;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/FindClosestInSorted.js":
+/*!**********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/FindClosestInSorted.js ***!
+  \**********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Searches a pre-sorted array for the closet value to the given number.
+ *
+ * If the `key` argument is given it will assume the array contains objects that all have the required `key` property name,
+ * and will check for the closest value of those to the given number.
+ *
+ * @function Phaser.Utils.Array.FindClosestInSorted
+ * @since 3.0.0
+ *
+ * @param {number} value - The value to search for in the array.
+ * @param {array} array - The array to search, which must be sorted.
+ * @param {string} [key] - An optional property key. If specified the array elements property will be checked against value.
+ *
+ * @return {(number|any)} The nearest value found in the array, or if a `key` was given, the nearest object with the matching property value.
+ */
+var FindClosestInSorted = function (value, array, key)
+{
+    if (!array.length)
+    {
+        return NaN;
+    }
+    else if (array.length === 1)
+    {
+        return array[0];
+    }
+
+    var i = 1;
+    var low;
+    var high;
+
+    if (key)
+    {
+        if (value < array[0][key])
+        {
+            return array[0];
+        }
+
+        while (array[i][key] < value)
+        {
+            i++;
+        }
+    }
+    else
+    {
+        while (array[i] < value)
+        {
+            i++;
+        }
+    }
+
+    if (i > array.length)
+    {
+        i = array.length;
+    }
+
+    if (key)
+    {
+        low = array[i - 1][key];
+        high = array[i][key];
+
+        return ((high - value) <= (value - low)) ? array[i] : array[i - 1];
+    }
+    else
+    {
+        low = array[i - 1];
+        high = array[i];
+
+        return ((high - value) <= (value - low)) ? high : low;
+    }
+};
+
+module.exports = FindClosestInSorted;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/GetAll.js":
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/GetAll.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var SafeRange = __webpack_require__(/*! ./SafeRange */ "../../../src/utils/array/SafeRange.js");
+
+/**
+ * Returns all elements in the array.
+ *
+ * You can optionally specify a matching criteria using the `property` and `value` arguments.
+ *
+ * For example: `getAll('visible', true)` would return only elements that have their visible property set.
+ *
+ * Optionally you can specify a start and end index. For example if the array had 100 elements,
+ * and you set `startIndex` to 0 and `endIndex` to 50, it would return matches from only
+ * the first 50 elements.
+ *
+ * @function Phaser.Utils.Array.GetAll
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to search.
+ * @param {string} [property] - The property to test on each array element.
+ * @param {*} [value] - The value to test the property against. Must pass a strict (`===`) comparison check.
+ * @param {integer} [startIndex] - An optional start index to search from.
+ * @param {integer} [endIndex] - An optional end index to search to.
+ *
+ * @return {array} All matching elements from the array.
+ */
+var GetAll = function (array, property, value, startIndex, endIndex)
+{
+    if (startIndex === undefined) { startIndex = 0; }
+    if (endIndex === undefined) { endIndex = array.length; }
+
+    var output = [];
+
+    if (SafeRange(array, startIndex, endIndex))
+    {
+        for (var i = startIndex; i < endIndex; i++)
+        {
+            var child = array[i];
+
+            if (!property ||
+                (property && value === undefined && child.hasOwnProperty(property)) ||
+                (property && value !== undefined && child[property] === value))
+            {
+                output.push(child);
+            }
+        }
+    }
+
+    return output;
+};
+
+module.exports = GetAll;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/GetFirst.js":
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/GetFirst.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var SafeRange = __webpack_require__(/*! ./SafeRange */ "../../../src/utils/array/SafeRange.js");
+
+/**
+ * Returns the first element in the array.
+ *
+ * You can optionally specify a matching criteria using the `property` and `value` arguments.
+ *
+ * For example: `getAll('visible', true)` would return the first element that had its `visible` property set.
+ *
+ * Optionally you can specify a start and end index. For example if the array had 100 elements,
+ * and you set `startIndex` to 0 and `endIndex` to 50, it would search only the first 50 elements.
+ *
+ * @function Phaser.Utils.Array.GetFirst
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to search.
+ * @param {string} [property] - The property to test on each array element.
+ * @param {*} [value] - The value to test the property against. Must pass a strict (`===`) comparison check.
+ * @param {integer} [startIndex=0] - An optional start index to search from.
+ * @param {integer} [endIndex=array.length] - An optional end index to search up to (but not included)
+ *
+ * @return {object} The first matching element from the array, or `null` if no element could be found in the range given.
+ */
+var GetFirst = function (array, property, value, startIndex, endIndex)
+{
+    if (startIndex === undefined) { startIndex = 0; }
+    if (endIndex === undefined) { endIndex = array.length; }
+
+    if (SafeRange(array, startIndex, endIndex))
+    {
+        for (var i = startIndex; i < endIndex; i++)
+        {
+            var child = array[i];
+
+            if (!property ||
+                (property && value === undefined && child.hasOwnProperty(property)) ||
+                (property && value !== undefined && child[property] === value))
+            {
+                return child;
+            }
+        }
+    }
+
+    return null;
+};
+
+module.exports = GetFirst;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/GetRandom.js":
+/*!************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/GetRandom.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Returns a Random element from the array.
+ *
+ * @function Phaser.Utils.Array.GetRandom
+ * @since 3.0.0
+ *
+ * @param {array} array - The array to select the random entry from.
+ * @param {integer} [startIndex=0] - An optional start index.
+ * @param {integer} [length=array.length] - An optional length, the total number of elements (from the startIndex) to choose from.
+ *
+ * @return {*} A random element from the array, or `null` if no element could be found in the range given.
+ */
+var GetRandom = function (array, startIndex, length)
+{
+    if (startIndex === undefined) { startIndex = 0; }
+    if (length === undefined) { length = array.length; }
+
+    var randomIndex = startIndex + Math.floor(Math.random() * length);
+
+    return (array[randomIndex] === undefined) ? null : array[randomIndex];
+};
+
+module.exports = GetRandom;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/MoveDown.js":
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/MoveDown.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Moves the given array element down one place in the array.
+ * The array is modified in-place.
+ *
+ * @function Phaser.Utils.Array.MoveDown
+ * @since 3.4.0
+ *
+ * @param {array} array - The input array.
+ * @param {*} item - The element to move down the array.
+ *
+ * @return {array} The input array.
+ */
+var MoveDown = function (array, item)
+{
+    var currentIndex = array.indexOf(item);
+
+    if (currentIndex > 0)
+    {
+        var item2 = array[currentIndex - 1];
+
+        var index2 = array.indexOf(item2);
+
+        array[currentIndex] = item2;
+        array[index2] = item;
+    }
+
+    return array;
+};
+
+module.exports = MoveDown;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/MoveTo.js":
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/MoveTo.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Moves an element in an array to a new position within the same array.
+ * The array is modified in-place.
+ *
+ * @function Phaser.Utils.Array.MoveTo
+ * @since 3.4.0
+ *
+ * @param {array} array - The array.
+ * @param {*} item - The element to move.
+ * @param {integer} index - The new index that the element will be moved to.
+ *
+ * @return {*} The element that was moved.
+ */
+var MoveTo = function (array, item, index)
+{
+    var currentIndex = array.indexOf(item);
+
+    if (currentIndex === -1 || index < 0 || index >= array.length)
+    {
+        throw new Error('Supplied index out of bounds');
+    }
+
+    if (currentIndex !== index)
+    {
+        //  Remove
+        array.splice(currentIndex, 1);
+
+        //  Add in new location
+        array.splice(index, 0, item);
+    }
+
+    return item;
+};
+
+module.exports = MoveTo;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/MoveUp.js":
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/MoveUp.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Moves the given array element up one place in the array.
+ * The array is modified in-place.
+ *
+ * @function Phaser.Utils.Array.MoveUp
+ * @since 3.4.0
+ *
+ * @param {array} array - The input array.
+ * @param {*} item - The element to move up the array.
+ *
+ * @return {array} The input array.
+ */
+var MoveUp = function (array, item)
+{
+    var currentIndex = array.indexOf(item);
+
+    if (currentIndex !== -1 && currentIndex < array.length - 1)
+    {
+        //  The element one above `item` in the array
+        var item2 = array[currentIndex + 1];
+        var index2 = array.indexOf(item2);
+
+        array[currentIndex] = item2;
+        array[index2] = item;
+    }
+
+    return array;
+};
+
+module.exports = MoveUp;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/NumberArray.js":
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/NumberArray.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Create an array representing the range of numbers (usually integers), between, and inclusive of,
+ * the given `start` and `end` arguments. For example:
+ *
+ * `var array = numberArray(2, 4); // array = [2, 3, 4]`
+ * `var array = numberArray(0, 9); // array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]`
+ *
+ * This is equivalent to `numberArrayStep(start, end, 1)`.
+ *
+ * You can optionally provide a prefix and / or suffix string. If given the array will contain
+ * strings, not integers. For example:
+ *
+ * `var array = numberArray(1, 4, 'Level '); // array = ["Level 1", "Level 2", "Level 3", "Level 4"]`
+ * `var array = numberArray(5, 7, 'HD-', '.png'); // array = ["HD-5.png", "HD-6.png", "HD-7.png"]`
+ *
+ * @function Phaser.Utils.Array.NumberArray
+ * @since 3.0.0
+ *
+ * @param {number} start - The minimum value the array starts with.
+ * @param {number} end - The maximum value the array contains.
+ * @param {string} [prefix] - Optional prefix to place before the number. If provided the array will contain strings, not integers.
+ * @param {string} [suffix] - Optional suffix to place after the number. If provided the array will contain strings, not integers.
+ *
+ * @return {(number[]|string[])} The array of number values, or strings if a prefix or suffix was provided.
+ */
+var NumberArray = function (start, end, prefix, suffix)
+{
+    var result = [];
+
+    for (var i = start; i <= end; i++)
+    {
+        if (prefix || suffix)
+        {
+            var key = (prefix) ? prefix + i.toString() : i.toString();
+
+            if (suffix)
+            {
+                key = key.concat(suffix);
+            }
+
+            result.push(key);
+        }
+        else
+        {
+            result.push(i);
+        }
+    }
+
+    return result;
+};
+
+module.exports = NumberArray;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/NumberArrayStep.js":
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/NumberArrayStep.js ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var RoundAwayFromZero = __webpack_require__(/*! ../../math/RoundAwayFromZero */ "../../../src/math/RoundAwayFromZero.js");
+
+/**
+ * Create an array of numbers (positive and/or negative) progressing from `start`
+ * up to but not including `end` by advancing by `step`.
+ *
+ * If `start` is less than `end` a zero-length range is created unless a negative `step` is specified.
+ *
+ * Certain values for `start` and `end` (eg. NaN/undefined/null) are currently coerced to 0;
+ * for forward compatibility make sure to pass in actual numbers.
+ * 
+ * @example
+ * NumberArrayStep(4);
+ * // => [0, 1, 2, 3]
+ *
+ * NumberArrayStep(1, 5);
+ * // => [1, 2, 3, 4]
+ *
+ * NumberArrayStep(0, 20, 5);
+ * // => [0, 5, 10, 15]
+ *
+ * NumberArrayStep(0, -4, -1);
+ * // => [0, -1, -2, -3]
+ *
+ * NumberArrayStep(1, 4, 0);
+ * // => [1, 1, 1]
+ *
+ * NumberArrayStep(0);
+ * // => []
+ *
+ * @function Phaser.Utils.Array.NumberArrayStep
+ * @since 3.0.0
+ *
+ * @param {number} [start=0] - The start of the range.
+ * @param {number} [end=null] - The end of the range.
+ * @param {number} [step=1] - The value to increment or decrement by.
+ *
+ * @return {number[]} The array of number values.
+ */
+var NumberArrayStep = function (start, end, step)
+{
+    if (start === undefined) { start = 0; }
+    if (end === undefined) { end = null; }
+    if (step === undefined) { step = 1; }
+
+    if (end === null)
+    {
+        end = start;
+        start = 0;
+    }
+
+    var result = [];
+
+    var total = Math.max(RoundAwayFromZero((end - start) / (step || 1)), 0);
+
+    for (var i = 0; i < total; i++)
+    {
+        result.push(start);
+        start += step;
+    }
+
+    return result;
+};
+
+module.exports = NumberArrayStep;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/QuickSelect.js":
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/QuickSelect.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @ignore
+ */
+function swap (arr, i, j)
+{
+    var tmp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = tmp;
+}
+
+/**
+ * @ignore
+ */
+function defaultCompare (a, b)
+{
+    return a < b ? -1 : a > b ? 1 : 0;
+}
+
+/**
+ * A [Floyd-Rivest](https://en.wikipedia.org/wiki/Floyd%E2%80%93Rivest_algorithm) quick selection algorithm.
+ *
+ * Rearranges the array items so that all items in the [left, k] range are smaller than all items in [k, right];
+ * The k-th element will have the (k - left + 1)th smallest value in [left, right].
+ *
+ * The array is modified in-place.
+ *
+ * Based on code by [Vladimir Agafonkin](https://www.npmjs.com/~mourner)
+ *
+ * @function Phaser.Utils.Array.QuickSelect
+ * @since 3.0.0
+ *
+ * @param {array} arr - The array to sort.
+ * @param {integer} k - The k-th element index.
+ * @param {integer} [left=0] - The index of the left part of the range.
+ * @param {integer} [right] - The index of the right part of the range.
+ * @param {function} [compare] - An optional comparison function. Is passed two elements and should return 0, 1 or -1.
+ */
+var QuickSelect = function (arr, k, left, right, compare)
+{
+    if (left === undefined) { left = 0; }
+    if (right === undefined) { right = arr.length - 1; }
+    if (compare === undefined) { compare = defaultCompare; }
+
+    while (right > left)
+    {
+        if (right - left > 600)
+        {
+            var n = right - left + 1;
+            var m = k - left + 1;
+            var z = Math.log(n);
+            var s = 0.5 * Math.exp(2 * z / 3);
+            var sd = 0.5 * Math.sqrt(z * s * (n - s) / n) * (m - n / 2 < 0 ? -1 : 1);
+            var newLeft = Math.max(left, Math.floor(k - m * s / n + sd));
+            var newRight = Math.min(right, Math.floor(k + (n - m) * s / n + sd));
+
+            QuickSelect(arr, k, newLeft, newRight, compare);
+        }
+
+        var t = arr[k];
+        var i = left;
+        var j = right;
+
+        swap(arr, left, k);
+
+        if (compare(arr[right], t) > 0)
+        {
+            swap(arr, left, right);
+        }
+
+        while (i < j)
+        {
+            swap(arr, i, j);
+
+            i++;
+            j--;
+
+            while (compare(arr[i], t) < 0)
+            {
+                i++;
+            }
+
+            while (compare(arr[j], t) > 0)
+            {
+                j--;
+            }
+        }
+
+        if (compare(arr[left], t) === 0)
+        {
+            swap(arr, left, j);
+        }
+        else
+        {
+            j++;
+            swap(arr, j, right);
+        }
+
+        if (j <= k)
+        {
+            left = j + 1;
+        }
+
+        if (k <= j)
+        {
+            right = j - 1;
+        }
+    }
+};
+
+module.exports = QuickSelect;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/Range.js":
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/Range.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var GetValue = __webpack_require__(/*! ../object/GetValue */ "../../../src/utils/object/GetValue.js");
+var Shuffle = __webpack_require__(/*! ./Shuffle */ "../../../src/utils/array/Shuffle.js");
+
+var BuildChunk = function (a, b, qty)
+{
+    var out = [];
+
+    for (var aIndex = 0; aIndex < a.length; aIndex++)
+    {
+        for (var bIndex = 0; bIndex < b.length; bIndex++)
+        {
+            for (var i = 0; i < qty; i++)
+            {
+                out.push({ a: a[aIndex], b: b[bIndex] });
+            }
+        }
+    }
+
+    return out;
+};
+
+/**
+ * Creates an array populated with a range of values, based on the given arguments and configuration object.
+ *
+ * Range ([a,b,c], [1,2,3]) =
+ * a1, a2, a3, b1, b2, b3, c1, c2, c3
+ * 
+ * Range ([a,b], [1,2,3], qty = 3) =
+ * a1, a1, a1, a2, a2, a2, a3, a3, a3, b1, b1, b1, b2, b2, b2, b3, b3, b3
+ * 
+ * Range ([a,b,c], [1,2,3], repeat x1) =
+ * a1, a2, a3, b1, b2, b3, c1, c2, c3, a1, a2, a3, b1, b2, b3, c1, c2, c3
+ * 
+ * Range ([a,b], [1,2], repeat -1 = endless, max = 14) =
+ * Maybe if max is set then repeat goes to -1 automatically?
+ * a1, a2, b1, b2, a1, a2, b1, b2, a1, a2, b1, b2, a1, a2 (capped at 14 elements)
+ * 
+ * Range ([a], [1,2,3,4,5], random = true) =
+ * a4, a1, a5, a2, a3
+ * 
+ * Range ([a, b], [1,2,3], random = true) =
+ * b3, a2, a1, b1, a3, b2
+ * 
+ * Range ([a, b, c], [1,2,3], randomB = true) =
+ * a3, a1, a2, b2, b3, b1, c1, c3, c2
+ * 
+ * Range ([a], [1,2,3,4,5], yoyo = true) =
+ * a1, a2, a3, a4, a5, a5, a4, a3, a2, a1
+ * 
+ * Range ([a, b], [1,2,3], yoyo = true) =
+ * a1, a2, a3, b1, b2, b3, b3, b2, b1, a3, a2, a1
+ *
+ * @function Phaser.Utils.Array.Range
+ * @since 3.0.0
+ *
+ * @param {array} a - The first array of range elements.
+ * @param {array} b - The second array of range elements.
+ * @param {object} [options] - A range configuration object. Can contain: repeat, random, randomB, yoyo, max, qty.
+ *
+ * @return {array} An array of arranged elements.
+ */
+var Range = function (a, b, options)
+{
+    var max = GetValue(options, 'max', 0);
+    var qty = GetValue(options, 'qty', 1);
+    var random = GetValue(options, 'random', false);
+    var randomB = GetValue(options, 'randomB', false);
+    var repeat = GetValue(options, 'repeat', 0);
+    var yoyo = GetValue(options, 'yoyo', false);
+
+    var out = [];
+
+    if (randomB)
+    {
+        Shuffle(b);
+    }
+
+    //  Endless repeat, so limit by max
+    if (repeat === -1)
+    {
+        if (max === 0)
+        {
+            repeat = 0;
+        }
+        else
+        {
+            //  Work out how many repeats we need
+            var total = (a.length * b.length) * qty;
+
+            if (yoyo)
+            {
+                total *= 2;
+            }
+
+            repeat = Math.ceil(max / total);
+        }
+    }
+
+    for (var i = 0; i <= repeat; i++)
+    {
+        var chunk = BuildChunk(a, b, qty);
+
+        if (random)
+        {
+            Shuffle(chunk);
+        }
+
+        out = out.concat(chunk);
+
+        if (yoyo)
+        {
+            chunk.reverse();
+
+            out = out.concat(chunk);
+        }
+    }
+
+    if (max)
+    {
+        out.splice(max);
+    }
+
+    return out;
+};
+
+module.exports = Range;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/Remove.js":
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/Remove.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var SpliceOne = __webpack_require__(/*! ./SpliceOne */ "../../../src/utils/array/SpliceOne.js");
+
+/**
+ * Removes the given item, or array of items, from the array.
+ * 
+ * The array is modified in-place.
+ * 
+ * You can optionally specify a callback to be invoked for each item successfully removed from the array.
+ *
+ * @function Phaser.Utils.Array.Remove
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to be modified.
+ * @param {*|Array.<*>} item - The item, or array of items, to be removed from the array.
+ * @param {function} [callback] - A callback to be invoked for each item successfully removed from the array.
+ * @param {object} [context] - The context in which the callback is invoked.
+ *
+ * @return {*|Array.<*>} The item, or array of items, that were successfully removed from the array.
+ */
+var Remove = function (array, item, callback, context)
+{
+    if (context === undefined) { context = array; }
+
+    var index;
+
+    //  Fast path to avoid array mutation and iteration
+    if (!Array.isArray(item))
+    {
+        index = array.indexOf(item);
+
+        if (index !== -1)
+        {
+            SpliceOne(array, index);
+
+            if (callback)
+            {
+                callback.call(context, item);
+            }
+
+            return item;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    //  If we got this far, we have an array of items to remove
+
+    var itemLength = item.length - 1;
+
+    while (itemLength >= 0)
+    {
+        var entry = item[itemLength];
+
+        index = array.indexOf(entry);
+
+        if (index !== -1)
+        {
+            SpliceOne(array, index);
+
+            if (callback)
+            {
+                callback.call(context, entry);
+            }
+        }
+        else
+        {
+            //  Item wasn't found in the array, so remove it from our return results
+            item.pop();
+        }
+
+        itemLength--;
+    }
+
+    return item;
+};
+
+module.exports = Remove;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/RemoveAt.js":
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/RemoveAt.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var SpliceOne = __webpack_require__(/*! ./SpliceOne */ "../../../src/utils/array/SpliceOne.js");
+
+/**
+ * Removes the item from the given position in the array.
+ * 
+ * The array is modified in-place.
+ * 
+ * You can optionally specify a callback to be invoked for the item if it is successfully removed from the array.
+ *
+ * @function Phaser.Utils.Array.RemoveAt
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to be modified.
+ * @param {integer} index - The array index to remove the item from. The index must be in bounds or it will throw an error.
+ * @param {function} [callback] - A callback to be invoked for the item removed from the array.
+ * @param {object} [context] - The context in which the callback is invoked.
+ *
+ * @return {*} The item that was removed.
+ */
+var RemoveAt = function (array, index, callback, context)
+{
+    if (context === undefined) { context = array; }
+
+    if (index < 0 || index > array.length - 1)
+    {
+        throw new Error('Index out of bounds');
+    }
+
+    var item = SpliceOne(array, index);
+
+    if (callback)
+    {
+        callback.call(context, item);
+    }
+
+    return item;
+};
+
+module.exports = RemoveAt;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/RemoveBetween.js":
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/RemoveBetween.js ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var SafeRange = __webpack_require__(/*! ./SafeRange */ "../../../src/utils/array/SafeRange.js");
+
+/**
+ * Removes the item within the given range in the array.
+ * 
+ * The array is modified in-place.
+ * 
+ * You can optionally specify a callback to be invoked for the item/s successfully removed from the array.
+ *
+ * @function Phaser.Utils.Array.RemoveBetween
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to be modified.
+ * @param {integer} startIndex - The start index to remove from.
+ * @param {integer} endIndex - The end index to remove to.
+ * @param {function} [callback] - A callback to be invoked for the item removed from the array.
+ * @param {object} [context] - The context in which the callback is invoked.
+ *
+ * @return {Array.<*>} An array of items that were removed.
+ */
+var RemoveBetween = function (array, startIndex, endIndex, callback, context)
+{
+    if (startIndex === undefined) { startIndex = 0; }
+    if (endIndex === undefined) { endIndex = array.length; }
+    if (context === undefined) { context = array; }
+
+    if (SafeRange(array, startIndex, endIndex))
+    {
+        var size = endIndex - startIndex;
+
+        var removed = array.splice(startIndex, size);
+
+        if (callback)
+        {
+            for (var i = 0; i < removed.length; i++)
+            {
+                var entry = removed[i];
+
+                callback.call(context, entry);
+            }
+        }
+
+        return removed;
+    }
+    else
+    {
+        return [];
+    }
+};
+
+module.exports = RemoveBetween;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/RemoveRandomElement.js":
+/*!**********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/RemoveRandomElement.js ***!
+  \**********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var SpliceOne = __webpack_require__(/*! ./SpliceOne */ "../../../src/utils/array/SpliceOne.js");
+
+/**
+ * Removes a random object from the given array and returns it.
+ * Will return null if there are no array items that fall within the specified range or if there is no item for the randomly chosen index.
+ *
+ * @function Phaser.Utils.Array.RemoveRandomElement
+ * @since 3.0.0
+ *
+ * @param {array} array - The array to removed a random element from.
+ * @param {integer} [start=0] - The array index to start the search from.
+ * @param {integer} [length=array.length] - Optional restriction on the number of elements to randomly select from.
+ *
+ * @return {object} The random element that was removed, or `null` if there were no array elements that fell within the given range.
+ */
+var RemoveRandomElement = function (array, start, length)
+{
+    if (start === undefined) { start = 0; }
+    if (length === undefined) { length = array.length; }
+
+    var randomIndex = start + Math.floor(Math.random() * length);
+
+    return SpliceOne(array, randomIndex);
+};
+
+module.exports = RemoveRandomElement;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/Replace.js":
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/Replace.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Replaces an element of the array with the new element.
+ * The new element cannot already be a member of the array.
+ * The array is modified in-place.
+ *
+ * @function Phaser.Utils.Array.Replace
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to search within.
+ * @param {*} oldChild - The element in the array that will be replaced.
+ * @param {*} newChild - The element to be inserted into the array at the position of `oldChild`.
+ *
+ * @return {boolean} Returns true if the oldChild was successfully replaced, otherwise returns false.
+ */
+var Replace = function (array, oldChild, newChild)
+{
+    var index1 = array.indexOf(oldChild);
+    var index2 = array.indexOf(newChild);
+
+    if (index1 !== -1 && index2 === -1)
+    {
+        array[index1] = newChild;
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+};
+
+module.exports = Replace;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/RotateLeft.js":
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/RotateLeft.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Moves the element at the start of the array to the end, shifting all items in the process.
+ * The "rotation" happens to the left.
+ *
+ * @function Phaser.Utils.Array.RotateLeft
+ * @since 3.0.0
+ *
+ * @param {array} array - The array to shift to the left. This array is modified in place.
+ * @param {integer} [total=1] - The number of times to shift the array.
+ *
+ * @return {*} The most recently shifted element.
+ */
+var RotateLeft = function (array, total)
+{
+    if (total === undefined) { total = 1; }
+
+    var element = null;
+
+    for (var i = 0; i < total; i++)
+    {
+        element = array.shift();
+        array.push(element);
+    }
+
+    return element;
+};
+
+module.exports = RotateLeft;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/RotateRight.js":
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/RotateRight.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Moves the element at the end of the array to the start, shifting all items in the process.
+ * The "rotation" happens to the right.
+ *
+ * @function Phaser.Utils.Array.RotateRight
+ * @since 3.0.0
+ *
+ * @param {array} array - The array to shift to the right. This array is modified in place.
+ * @param {integer} [total=1] - The number of times to shift the array.
+ *
+ * @return {*} The most recently shifted element.
+ */
+var RotateRight = function (array, total)
+{
+    if (total === undefined) { total = 1; }
+
+    var element = null;
+
+    for (var i = 0; i < total; i++)
+    {
+        element = array.pop();
+        array.unshift(element);
+    }
+
+    return element;
+};
+
+module.exports = RotateRight;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/SafeRange.js":
+/*!************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/SafeRange.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Tests if the start and end indexes are a safe range for the given array.
+ * 
+ * @function Phaser.Utils.Array.SafeRange
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to check.
+ * @param {integer} startIndex - The start index.
+ * @param {integer} endIndex - The end index.
+ * @param {boolean} [throwError=true] - Throw an error if the range is out of bounds.
+ *
+ * @return {boolean} True if the range is safe, otherwise false.
+ */
+var SafeRange = function (array, startIndex, endIndex, throwError)
+{
+    var len = array.length;
+
+    if (startIndex < 0 ||
+        startIndex > len ||
+        startIndex >= endIndex ||
+        endIndex > len ||
+        startIndex + endIndex > len)
+    {
+        if (throwError)
+        {
+            throw new Error('Range Error: Values outside acceptable range');
+        }
+
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+};
+
+module.exports = SafeRange;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/SendToBack.js":
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/SendToBack.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Moves the given element to the bottom of the array.
+ * The array is modified in-place.
+ *
+ * @function Phaser.Utils.Array.SendToBack
+ * @since 3.4.0
+ *
+ * @param {array} array - The array.
+ * @param {*} item - The element to move.
+ *
+ * @return {*} The element that was moved.
+ */
+var SendToBack = function (array, item)
+{
+    var currentIndex = array.indexOf(item);
+
+    if (currentIndex !== -1 && currentIndex > 0)
+    {
+        array.splice(currentIndex, 1);
+        array.unshift(item);
+    }
+
+    return item;
+};
+
+module.exports = SendToBack;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/SetAll.js":
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/SetAll.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var SafeRange = __webpack_require__(/*! ./SafeRange */ "../../../src/utils/array/SafeRange.js");
+
+/**
+ * Scans the array for elements with the given property. If found, the property is set to the `value`.
+ *
+ * For example: `SetAll('visible', true)` would set all elements that have a `visible` property to `false`.
+ *
+ * Optionally you can specify a start and end index. For example if the array had 100 elements,
+ * and you set `startIndex` to 0 and `endIndex` to 50, it would update only the first 50 elements.
+ *
+ * @function Phaser.Utils.Array.SetAll
+ * @since 3.4.0
+ *
+ * @param {array} array - The array to search.
+ * @param {string} property - The property to test for on each array element.
+ * @param {*} value - The value to set the property to.
+ * @param {integer} [startIndex] - An optional start index to search from.
+ * @param {integer} [endIndex] - An optional end index to search to.
+ *
+ * @return {array} The input array.
+ */
+var SetAll = function (array, property, value, startIndex, endIndex)
+{
+    if (startIndex === undefined) { startIndex = 0; }
+    if (endIndex === undefined) { endIndex = array.length; }
+
+    if (SafeRange(array, startIndex, endIndex))
+    {
+        for (var i = startIndex; i < endIndex; i++)
+        {
+            var entry = array[i];
+
+            if (entry.hasOwnProperty(property))
+            {
+                entry[property] = value;
+            }
+        }
+    }
+
+    return array;
+};
+
+module.exports = SetAll;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/Shuffle.js":
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/Shuffle.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Shuffles the contents of the given array using the Fisher-Yates implementation.
+ *
+ * The original array is modified directly and returned.
+ *
+ * @function Phaser.Utils.Array.Shuffle
+ * @since 3.0.0
+ *
+ * @generic T
+ * @genericUse {T[]} - [array,$return]
+ *
+ * @param {T[]} array - The array to shuffle. This array is modified in place.
+ *
+ * @return {T[]} The shuffled array.
+ */
+var Shuffle = function (array)
+{
+    for (var i = array.length - 1; i > 0; i--)
+    {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+
+    return array;
+};
+
+module.exports = Shuffle;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/SpliceOne.js":
+/*!************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/SpliceOne.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Removes a single item from an array and returns it without creating gc, like the native splice does.
+ * Based on code by Mike Reinstein.
+ *
+ * @function Phaser.Utils.Array.SpliceOne
+ * @since 3.0.0
+ *
+ * @param {array} array - The array to splice from.
+ * @param {integer} index - The index of the item which should be spliced.
+ *
+ * @return {*} The item which was spliced (removed).
+ */
+var SpliceOne = function (array, index)
+{
+    if (index >= array.length)
+    {
+        return;
+    }
+
+    var len = array.length - 1;
+
+    var item = array[index];
+
+    for (var i = index; i < len; i++)
+    {
+        array[i] = array[i + 1];
+    }
+
+    array.length = len;
+
+    return item;
+};
+
+module.exports = SpliceOne;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/StableSort.js":
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/StableSort.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+//! stable.js 0.1.6, https://github.com/Two-Screen/stable
+//! © 2017 Angry Bytes and contributors. MIT licensed.
+
+/**
+ * @namespace Phaser.Utils.Array.StableSortFunctions
+ */
+
+(function() {
+
+ /**
+ * A stable array sort, because `Array#sort()` is not guaranteed stable.
+ * This is an implementation of merge sort, without recursion.
+ *
+ * @function Phaser.Utils.Array.StableSort
+ * @since 3.0.0
+ *
+ * @param {array} arr - The input array to be sorted.
+ * @param {function} comp - The comparison handler.
+ *
+ * @return {array} The sorted result.
+ */
+var stable = function(arr, comp) {
+    return exec(arr.slice(), comp);
+};
+
+ /**
+ * Sort the input array and simply copy it back if the result isn't in the original array, which happens on an odd number of passes.
+ *
+ * @function Phaser.Utils.Array.StableSortFunctions.inplace
+ * @memberof Phaser.Utils.Array.StableSortFunctions
+ * @since 3.0.0
+ *
+ * @param {array} arr - The input array.
+ * @param {function} comp - The comparison handler.
+ *
+ * @return {array} The sorted array.
+ */
+stable.inplace = function(arr, comp) {
+    var result = exec(arr, comp);
+
+    // This simply copies back if the result isn't in the original array,
+    // which happens on an odd number of passes.
+    if (result !== arr) {
+        pass(result, null, arr.length, arr);
+    }
+
+    return arr;
+};
+
+// Execute the sort using the input array and a second buffer as work space.
+// Returns one of those two, containing the final result.
+function exec(arr, comp) {
+    if (typeof(comp) !== 'function') {
+        comp = function(a, b) {
+            return String(a).localeCompare(b);
+        };
+    }
+
+    // Short-circuit when there's nothing to sort.
+    var len = arr.length;
+    if (len <= 1) {
+        return arr;
+    }
+
+    // Rather than dividing input, simply iterate chunks of 1, 2, 4, 8, etc.
+    // Chunks are the size of the left or right hand in merge sort.
+    // Stop when the left-hand covers all of the array.
+    var buffer = new Array(len);
+    for (var chk = 1; chk < len; chk *= 2) {
+        pass(arr, comp, chk, buffer);
+
+        var tmp = arr;
+        arr = buffer;
+        buffer = tmp;
+    }
+
+    return arr;
+}
+
+// Run a single pass with the given chunk size.
+var pass = function(arr, comp, chk, result) {
+    var len = arr.length;
+    var i = 0;
+    // Step size / double chunk size.
+    var dbl = chk * 2;
+    // Bounds of the left and right chunks.
+    var l, r, e;
+    // Iterators over the left and right chunk.
+    var li, ri;
+
+    // Iterate over pairs of chunks.
+    for (l = 0; l < len; l += dbl) {
+        r = l + chk;
+        e = r + chk;
+        if (r > len) r = len;
+        if (e > len) e = len;
+
+        // Iterate both chunks in parallel.
+        li = l;
+        ri = r;
+        while (true) {
+            // Compare the chunks.
+            if (li < r && ri < e) {
+                // This works for a regular `sort()` compatible comparator,
+                // but also for a simple comparator like: `a > b`
+                if (comp(arr[li], arr[ri]) <= 0) {
+                    result[i++] = arr[li++];
+                }
+                else {
+                    result[i++] = arr[ri++];
+                }
+            }
+            // Nothing to compare, just flush what's left.
+            else if (li < r) {
+                result[i++] = arr[li++];
+            }
+            else if (ri < e) {
+                result[i++] = arr[ri++];
+            }
+            // Both iterators are at the chunk ends.
+            else {
+                break;
+            }
+        }
+    }
+};
+
+// Export using CommonJS or to the window.
+if (true) {
+    module.exports = stable;
+}
+else {}
+
+})();
+
+/***/ }),
+
+/***/ "../../../src/utils/array/Swap.js":
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/Swap.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Swaps the position of two elements in the given array.
+ * The elements must exist in the same array.
+ * The array is modified in-place.
+ *
+ * @function Phaser.Utils.Array.Swap
+ * @since 3.4.0
+ *
+ * @param {array} array - The input array.
+ * @param {*} item1 - The first element to swap.
+ * @param {*} item2 - The second element to swap.
+ *
+ * @return {array} The input array.
+ */
+var Swap = function (array, item1, item2)
+{
+    if (item1 === item2)
+    {
+        return;
+    }
+
+    var index1 = array.indexOf(item1);
+    var index2 = array.indexOf(item2);
+
+    if (index1 < 0 || index2 < 0)
+    {
+        throw new Error('Supplied items must be elements of the same array');
+    }
+
+    array[index1] = item2;
+    array[index2] = item1;
+
+    return array;
+};
+
+module.exports = Swap;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/index.js":
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/index.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Utils.Array
+ */
+
+module.exports = {
+
+    Matrix: __webpack_require__(/*! ./matrix */ "../../../src/utils/array/matrix/index.js"),
+
+    Add: __webpack_require__(/*! ./Add */ "../../../src/utils/array/Add.js"),
+    AddAt: __webpack_require__(/*! ./AddAt */ "../../../src/utils/array/AddAt.js"),
+    BringToTop: __webpack_require__(/*! ./BringToTop */ "../../../src/utils/array/BringToTop.js"),
+    CountAllMatching: __webpack_require__(/*! ./CountAllMatching */ "../../../src/utils/array/CountAllMatching.js"),
+    Each: __webpack_require__(/*! ./Each */ "../../../src/utils/array/Each.js"),
+    EachInRange: __webpack_require__(/*! ./EachInRange */ "../../../src/utils/array/EachInRange.js"),
+    FindClosestInSorted: __webpack_require__(/*! ./FindClosestInSorted */ "../../../src/utils/array/FindClosestInSorted.js"),
+    GetAll: __webpack_require__(/*! ./GetAll */ "../../../src/utils/array/GetAll.js"),
+    GetFirst: __webpack_require__(/*! ./GetFirst */ "../../../src/utils/array/GetFirst.js"),
+    GetRandom: __webpack_require__(/*! ./GetRandom */ "../../../src/utils/array/GetRandom.js"),
+    MoveDown: __webpack_require__(/*! ./MoveDown */ "../../../src/utils/array/MoveDown.js"),
+    MoveTo: __webpack_require__(/*! ./MoveTo */ "../../../src/utils/array/MoveTo.js"),
+    MoveUp: __webpack_require__(/*! ./MoveUp */ "../../../src/utils/array/MoveUp.js"),
+    NumberArray: __webpack_require__(/*! ./NumberArray */ "../../../src/utils/array/NumberArray.js"),
+    NumberArrayStep: __webpack_require__(/*! ./NumberArrayStep */ "../../../src/utils/array/NumberArrayStep.js"),
+    QuickSelect: __webpack_require__(/*! ./QuickSelect */ "../../../src/utils/array/QuickSelect.js"),
+    Range: __webpack_require__(/*! ./Range */ "../../../src/utils/array/Range.js"),
+    Remove: __webpack_require__(/*! ./Remove */ "../../../src/utils/array/Remove.js"),
+    RemoveAt: __webpack_require__(/*! ./RemoveAt */ "../../../src/utils/array/RemoveAt.js"),
+    RemoveBetween: __webpack_require__(/*! ./RemoveBetween */ "../../../src/utils/array/RemoveBetween.js"),
+    RemoveRandomElement: __webpack_require__(/*! ./RemoveRandomElement */ "../../../src/utils/array/RemoveRandomElement.js"),
+    Replace: __webpack_require__(/*! ./Replace */ "../../../src/utils/array/Replace.js"),
+    RotateLeft: __webpack_require__(/*! ./RotateLeft */ "../../../src/utils/array/RotateLeft.js"),
+    RotateRight: __webpack_require__(/*! ./RotateRight */ "../../../src/utils/array/RotateRight.js"),
+    SafeRange: __webpack_require__(/*! ./SafeRange */ "../../../src/utils/array/SafeRange.js"),
+    SendToBack: __webpack_require__(/*! ./SendToBack */ "../../../src/utils/array/SendToBack.js"),
+    SetAll: __webpack_require__(/*! ./SetAll */ "../../../src/utils/array/SetAll.js"),
+    Shuffle: __webpack_require__(/*! ./Shuffle */ "../../../src/utils/array/Shuffle.js"),
+    SpliceOne: __webpack_require__(/*! ./SpliceOne */ "../../../src/utils/array/SpliceOne.js"),
+    StableSort: __webpack_require__(/*! ./StableSort */ "../../../src/utils/array/StableSort.js"),
+    Swap: __webpack_require__(/*! ./Swap */ "../../../src/utils/array/Swap.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/matrix/CheckMatrix.js":
+/*!*********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/CheckMatrix.js ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Checks if an array can be used as a matrix.
+ *
+ * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows) have the same length. There must be at least two rows:
+ *
+ * ```
+ *    [
+ *        [ 1, 1, 1, 1, 1, 1 ],
+ *        [ 2, 0, 0, 0, 0, 4 ],
+ *        [ 2, 0, 1, 2, 0, 4 ],
+ *        [ 2, 0, 3, 4, 0, 4 ],
+ *        [ 2, 0, 0, 0, 0, 4 ],
+ *        [ 3, 3, 3, 3, 3, 3 ]
+ *    ]
+ * ```
+ *
+ * @function Phaser.Utils.Array.Matrix.CheckMatrix
+ * @since 3.0.0
+ * 
+ * @generic T
+ * @genericUse {T[][]} - [matrix]
+ *
+ * @param {T[][]} [matrix] - The array to check.
+ *
+ * @return {boolean} `true` if the given `matrix` array is a valid matrix.
+ */
+var CheckMatrix = function (matrix)
+{
+    if (!Array.isArray(matrix) || matrix.length < 2 || !Array.isArray(matrix[0]))
+    {
+        return false;
+    }
+
+    //  How long is the first row?
+    var size = matrix[0].length;
+
+    //  Validate the rest of the rows are the same length
+    for (var i = 1; i < matrix.length; i++)
+    {
+        if (matrix[i].length !== size)
+        {
+            return false;
+        }
+    }
+
+    return true;
+};
+
+module.exports = CheckMatrix;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/matrix/MatrixToString.js":
+/*!************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/MatrixToString.js ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Pad = __webpack_require__(/*! ../../string/Pad */ "../../../src/utils/string/Pad.js");
+var CheckMatrix = __webpack_require__(/*! ./CheckMatrix */ "../../../src/utils/array/matrix/CheckMatrix.js");
+
+/**
+ * Generates a string (which you can pass to console.log) from the given Array Matrix.
+ *
+ * @function Phaser.Utils.Array.Matrix.MatrixToString
+ * @since 3.0.0
+ *
+ * @generic T
+ * @genericUse {T[][]} - [matrix]
+ *
+ * @param {T[][]} [matrix] - A 2-dimensional array.
+ *
+ * @return {string} A string representing the matrix.
+ */
+var MatrixToString = function (matrix)
+{
+    var str = '';
+
+    if (!CheckMatrix(matrix))
+    {
+        return str;
+    }
+
+    for (var r = 0; r < matrix.length; r++)
+    {
+        for (var c = 0; c < matrix[r].length; c++)
+        {
+            var cell = matrix[r][c].toString();
+
+            if (cell !== 'undefined')
+            {
+                str += Pad(cell, 2);
+            }
+            else
+            {
+                str += '?';
+            }
+
+            if (c < matrix[r].length - 1)
+            {
+                str += ' |';
+            }
+        }
+
+        if (r < matrix.length - 1)
+        {
+            str += '\n';
+
+            for (var i = 0; i < matrix[r].length; i++)
+            {
+                str += '---';
+
+                if (i < matrix[r].length - 1)
+                {
+                    str += '+';
+                }
+            }
+
+            str += '\n';
+        }
+
+    }
+
+    return str;
+};
+
+module.exports = MatrixToString;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/matrix/ReverseColumns.js":
+/*!************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/ReverseColumns.js ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Reverses the columns in the given Array Matrix.
+ *
+ * @function Phaser.Utils.Array.Matrix.ReverseColumns
+ * @since 3.0.0
+ *
+ * @generic T
+ * @genericUse {T[][]} - [matrix,$return]
+ *
+ * @param {T[][]} [matrix] - The array matrix to reverse the columns for.
+ *
+ * @return {T[][]} The column reversed matrix.
+ */
+var ReverseColumns = function (matrix)
+{
+    return matrix.reverse();
+};
+
+module.exports = ReverseColumns;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/matrix/ReverseRows.js":
+/*!*********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/ReverseRows.js ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Reverses the rows in the given Array Matrix.
+ *
+ * @function Phaser.Utils.Array.Matrix.ReverseRows
+ * @since 3.0.0
+ *
+ * @generic T
+ * @genericUse {T[][]} - [matrix,$return]
+ *
+ * @param {T[][]} [matrix] - The array matrix to reverse the rows for.
+ *
+ * @return {T[][]} The column reversed matrix.
+ */
+var ReverseRows = function (matrix)
+{
+    for (var i = 0; i < matrix.length; i++)
+    {
+        matrix[i].reverse();
+    }
+
+    return matrix;
+};
+
+module.exports = ReverseRows;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/matrix/Rotate180.js":
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/Rotate180.js ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var RotateMatrix = __webpack_require__(/*! ./RotateMatrix */ "../../../src/utils/array/matrix/RotateMatrix.js");
+
+/**
+ * Rotates the array matrix 180 degrees.
+ *
+ * @function Phaser.Utils.Array.Matrix.Rotate180
+ * @since 3.0.0
+ *
+ * @generic T
+ * @genericUse {T[][]} - [matrix,$return]
+ *
+ * @param {T[][]} [matrix] - The array to rotate.
+ *
+ * @return {T[][]} The rotated matrix array. The source matrix should be discard for the returned matrix.
+ */
+var Rotate180 = function (matrix)
+{
+    return RotateMatrix(matrix, 180);
+};
+
+module.exports = Rotate180;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/matrix/RotateLeft.js":
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/RotateLeft.js ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var RotateMatrix = __webpack_require__(/*! ./RotateMatrix */ "../../../src/utils/array/matrix/RotateMatrix.js");
+
+/**
+ * Rotates the array matrix to the left (or 90 degrees)
+ *
+ * @function Phaser.Utils.Array.Matrix.RotateLeft
+ * @since 3.0.0
+ *
+ * @generic T
+ * @genericUse {T[][]} - [matrix,$return]
+ *
+ * @param {T[][]} [matrix] - The array to rotate.
+ *
+ * @return {T[][]} The rotated matrix array. The source matrix should be discard for the returned matrix.
+ */
+var RotateLeft = function (matrix)
+{
+    return RotateMatrix(matrix, 90);
+};
+
+module.exports = RotateLeft;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/matrix/RotateMatrix.js":
+/*!**********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/RotateMatrix.js ***!
+  \**********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var CheckMatrix = __webpack_require__(/*! ./CheckMatrix */ "../../../src/utils/array/matrix/CheckMatrix.js");
+var TransposeMatrix = __webpack_require__(/*! ./TransposeMatrix */ "../../../src/utils/array/matrix/TransposeMatrix.js");
+
+/**
+ * Rotates the array matrix based on the given rotation value.
+ *
+ * The value can be given in degrees: 90, -90, 270, -270 or 180,
+ * or a string command: `rotateLeft`, `rotateRight` or `rotate180`.
+ *
+ * Based on the routine from {@link http://jsfiddle.net/MrPolywhirl/NH42z/}.
+ *
+ * @function Phaser.Utils.Array.Matrix.RotateMatrix
+ * @since 3.0.0
+ *
+ * @generic T
+ * @genericUse {T[][]} - [matrix,$return]
+ *
+ * @param {T[][]} [matrix] - The array to rotate.
+ * @param {(number|string)} [direction=90] - The amount to rotate the matrix by.
+ *
+ * @return {T[][]} The rotated matrix array. The source matrix should be discard for the returned matrix.
+ */
+var RotateMatrix = function (matrix, direction)
+{
+    if (direction === undefined) { direction = 90; }
+
+    if (!CheckMatrix(matrix))
+    {
+        return null;
+    }
+
+    if (typeof direction !== 'string')
+    {
+        direction = ((direction % 360) + 360) % 360;
+    }
+
+    if (direction === 90 || direction === -270 || direction === 'rotateLeft')
+    {
+        matrix = TransposeMatrix(matrix);
+        matrix.reverse();
+    }
+    else if (direction === -90 || direction === 270 || direction === 'rotateRight')
+    {
+        matrix.reverse();
+        matrix = TransposeMatrix(matrix);
+    }
+    else if (Math.abs(direction) === 180 || direction === 'rotate180')
+    {
+        for (var i = 0; i < matrix.length; i++)
+        {
+            matrix[i].reverse();
+        }
+
+        matrix.reverse();
+    }
+
+    return matrix;
+};
+
+module.exports = RotateMatrix;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/matrix/RotateRight.js":
+/*!*********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/RotateRight.js ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var RotateMatrix = __webpack_require__(/*! ./RotateMatrix */ "../../../src/utils/array/matrix/RotateMatrix.js");
+
+/**
+ * Rotates the array matrix to the left (or -90 degrees)
+ *
+ * @function Phaser.Utils.Array.Matrix.RotateRight
+ * @since 3.0.0
+ *
+ * @generic T
+ * @genericUse {T[][]} - [matrix,$return]
+ *
+ * @param {T[][]} [matrix] - The array to rotate.
+ *
+ * @return {T[][]} The rotated matrix array. The source matrix should be discard for the returned matrix.
+ */
+var RotateRight = function (matrix)
+{
+    return RotateMatrix(matrix, -90);
+};
+
+module.exports = RotateRight;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/matrix/TransposeMatrix.js":
+/*!*************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/TransposeMatrix.js ***!
+  \*************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Transposes the elements of the given matrix (array of arrays).
+ *
+ * The transpose of a matrix is a new matrix whose rows are the columns of the original.
+ *
+ * @function Phaser.Utils.Array.Matrix.TransposeMatrix
+ * @since 3.0.0
+ * 
+ * @generic T
+ * @genericUse {T[][]} - [array,$return]
+ * 
+ * @param {T[][]} [array] - The array matrix to transpose.
+ *
+ * @return {T[][]} A new array matrix which is a transposed version of the given array.
+ */
+var TransposeMatrix = function (array)
+{
+    var sourceRowCount = array.length;
+    var sourceColCount = array[0].length;
+
+    var result = new Array(sourceColCount);
+
+    for (var i = 0; i < sourceColCount; i++)
+    {
+        result[i] = new Array(sourceRowCount);
+
+        for (var j = sourceRowCount - 1; j > -1; j--)
+        {
+            result[i][j] = array[j][i];
+        }
+    }
+
+    return result;
+};
+
+module.exports = TransposeMatrix;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/matrix/index.js":
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/index.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Utils.Array.Matrix
+ */
+
+module.exports = {
+
+    CheckMatrix: __webpack_require__(/*! ./CheckMatrix */ "../../../src/utils/array/matrix/CheckMatrix.js"),
+    MatrixToString: __webpack_require__(/*! ./MatrixToString */ "../../../src/utils/array/matrix/MatrixToString.js"),
+    ReverseColumns: __webpack_require__(/*! ./ReverseColumns */ "../../../src/utils/array/matrix/ReverseColumns.js"),
+    ReverseRows: __webpack_require__(/*! ./ReverseRows */ "../../../src/utils/array/matrix/ReverseRows.js"),
+    Rotate180: __webpack_require__(/*! ./Rotate180 */ "../../../src/utils/array/matrix/Rotate180.js"),
+    RotateLeft: __webpack_require__(/*! ./RotateLeft */ "../../../src/utils/array/matrix/RotateLeft.js"),
+    RotateMatrix: __webpack_require__(/*! ./RotateMatrix */ "../../../src/utils/array/matrix/RotateMatrix.js"),
+    RotateRight: __webpack_require__(/*! ./RotateRight */ "../../../src/utils/array/matrix/RotateRight.js"),
+    TransposeMatrix: __webpack_require__(/*! ./TransposeMatrix */ "../../../src/utils/array/matrix/TransposeMatrix.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/utils/object/Extend.js":
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/Extend.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18971,6 +33005,8 @@ var IsPlainObject = __webpack_require__(/*! ./IsPlainObject */ "../../../src/uti
  *
  * @function Phaser.Utils.Objects.Extend
  * @since 3.0.0
+ *
+ * @param {...*} [args] - The objects that will be mixed.
  *
  * @return {object} The extended object.
  */
@@ -19052,15 +33088,15 @@ module.exports = Extend;
 /***/ }),
 
 /***/ "../../../src/utils/object/GetAdvancedValue.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/GetAdvancedValue.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/GetAdvancedValue.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -19144,15 +33180,15 @@ module.exports = GetAdvancedValue;
 /***/ }),
 
 /***/ "../../../src/utils/object/GetFastValue.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/GetFastValue.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/GetFastValue.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -19192,15 +33228,15 @@ module.exports = GetFastValue;
 /***/ }),
 
 /***/ "../../../src/utils/object/GetValue.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/GetValue.js ***!
-  \*******************************************************/
+/*!************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/GetValue.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -19268,15 +33304,15 @@ module.exports = GetValue;
 /***/ }),
 
 /***/ "../../../src/utils/object/IsPlainObject.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/IsPlainObject.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/IsPlainObject.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -19328,6 +33364,87 @@ module.exports = IsPlainObject;
 
 /***/ }),
 
+/***/ "../../../src/utils/string/Pad.js":
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/string/Pad.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Takes the given string and pads it out, to the length required, using the character
+ * specified. For example if you need a string to be 6 characters long, you can call:
+ *
+ * `pad('bob', 6, '-', 2)`
+ *
+ * This would return: `bob---` as it has padded it out to 6 characters, using the `-` on the right.
+ *
+ * You can also use it to pad numbers (they are always returned as strings):
+ * 
+ * `pad(512, 6, '0', 1)`
+ *
+ * Would return: `000512` with the string padded to the left.
+ *
+ * If you don't specify a direction it'll pad to both sides:
+ * 
+ * `pad('c64', 7, '*')`
+ *
+ * Would return: `**c64**`
+ *
+ * @function Phaser.Utils.String.Pad
+ * @since 3.0.0
+ *
+ * @param {string|number|object} str - The target string. `toString()` will be called on the string, which means you can also pass in common data types like numbers.
+ * @param {integer} [len=0] - The number of characters to be added.
+ * @param {string} [pad=" "] - The string to pad it out with (defaults to a space).
+ * @param {integer} [dir=3] - The direction dir = 1 (left), 2 (right), 3 (both).
+ * 
+ * @return {string} The padded string.
+ */
+var Pad = function (str, len, pad, dir)
+{
+    if (len === undefined) { len = 0; }
+    if (pad === undefined) { pad = ' '; }
+    if (dir === undefined) { dir = 3; }
+
+    str = str.toString();
+
+    var padlen = 0;
+
+    if (len + 1 >= str.length)
+    {
+        switch (dir)
+        {
+            case 1:
+                str = new Array(len + 1 - str.length).join(pad) + str;
+                break;
+
+            case 3:
+                var right = Math.ceil((padlen = len - str.length) / 2);
+                var left = padlen - right;
+                str = new Array(left + 1).join(pad) + str + new Array(right + 1).join(pad);
+                break;
+
+            default:
+                str = str + new Array(len + 1 - str.length).join(pad);
+                break;
+        }
+    }
+
+    return str;
+};
+
+module.exports = Pad;
+
+
+/***/ }),
+
 /***/ "./SpineFile.js":
 /*!**********************!*\
   !*** ./SpineFile.js ***!
@@ -19353,13 +33470,11 @@ var TextFile = __webpack_require__(/*! ../../../src/loader/filetypes/TextFile.js
  * @typedef {object} Phaser.Loader.FileTypes.SpineFileConfig
  *
  * @property {string} key - The key of the file. Must be unique within both the Loader and the Texture Manager.
- * @property {string} [textureURL] - The absolute or relative URL to load the texture image file from.
- * @property {string} [textureExtension='png'] - The default file extension to use for the image texture if no url is provided.
- * @property {XHRSettingsObject} [textureXhrSettings] - Extra XHR Settings specifically for the texture image file.
- * @property {string} [normalMap] - The filename of an associated normal map. It uses the same path and url to load as the texture image.
- * @property {string} [atlasURL] - The absolute or relative URL to load the atlas data file from.
- * @property {string} [atlasExtension='txt'] - The default file extension to use for the atlas data if no url is provided.
- * @property {XHRSettingsObject} [atlasXhrSettings] - Extra XHR Settings specifically for the atlas data file.
+ * @property {string|string[]} [jsonURL] - The absolute or relative URL to load the JSON file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+ * @property {string} [atlasURL] - The absolute or relative URL to load the texture atlas data file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
+ * @property {boolean} [preMultipliedAlpha=false] - Do the textures contain pre-multiplied alpha or not?
+ * @property {XHRSettingsObject} [jsonXhrSettings] - An XHR Settings configuration object for the json file. Used in replacement of the Loaders default XHR Settings.
+ * @property {XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the atlas data file. Used in replacement of the Loaders default XHR Settings.
  */
 
 /**
@@ -19367,7 +33482,7 @@ var TextFile = __webpack_require__(/*! ../../../src/loader/filetypes/TextFile.js
  * A Spine File suitable for loading by the Loader.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#spine method and are not typically created directly.
- * 
+ *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#spine.
  *
  * @class SpineFile
@@ -19423,7 +33538,7 @@ var SpineFile = new Class({
             for (i = 0; i < atlasURL.length; i++)
             {
                 atlas = new TextFile(loader, {
-                    key: key,
+                    key: key + '_' + i,
                     url: atlasURL[i],
                     extension: GetFastValue(config, 'atlasExtension', 'atlas'),
                     xhrSettings: GetFastValue(config, 'atlasXhrSettings')
@@ -19503,7 +33618,7 @@ var SpineFile = new Class({
                 var currentPrefix = loader.prefix;
 
                 var baseURL = GetFastValue(config, 'baseURL', this.baseURL);
-                var path = GetFastValue(config, 'path', this.path);
+                var path = GetFastValue(config, 'path', file.src.match(/^.*\//))[0];
                 var prefix = GetFastValue(config, 'prefix', this.prefix);
                 var textureXhrSettings = GetFastValue(config, 'textureXhrSettings');
 
@@ -19515,7 +33630,7 @@ var SpineFile = new Class({
                 {
                     var textureURL = textures[i];
 
-                    var key = 'SP' + this.multiKeyIndex + '_' + textureURL;
+                    var key = this.prefix + textureURL;
 
                     var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
 
@@ -19550,6 +33665,7 @@ var SpineFile = new Class({
             var atlasKey = '';
             var combinedAtlasData = '';
             var preMultipliedAlpha = (this.config.preMultipliedAlpha) ? true : false;
+            var textureManager = this.loader.textureManager;
 
             for (var i = 1; i < this.files.length; i++)
             {
@@ -19557,7 +33673,7 @@ var SpineFile = new Class({
 
                 if (file.type === 'text')
                 {
-                    atlasKey = file.key.substr(0, file.key.length - 2);
+                    atlasKey = file.key.replace(/_[\d]$/, '');
 
                     atlasCache = file.cache;
 
@@ -19568,14 +33684,17 @@ var SpineFile = new Class({
                     var src = file.key.trim();
                     var pos = src.indexOf('_');
                     var key = src.substr(pos + 1);
-       
-                    this.loader.textureManager.addImage(key, file.data);
+
+                    if (!textureManager.exists(key))
+                    {
+                        textureManager.addImage(key, file.data);
+                    }
                 }
 
                 file.pendingDestroy();
             }
 
-            atlasCache.add(atlasKey, { preMultipliedAlpha: preMultipliedAlpha, data: combinedAtlasData });
+            atlasCache.add(atlasKey, { preMultipliedAlpha: preMultipliedAlpha, data: combinedAtlasData, prefix: this.prefix });
 
             this.complete = true;
         }
@@ -19597,7 +33716,7 @@ module.exports = SpineFile;
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -19609,26 +33728,33 @@ var ScenePlugin = __webpack_require__(/*! ../../../src/plugins/ScenePlugin */ ".
 var Spine = __webpack_require__(/*! Spine */ "./runtimes/spine-both.js");
 var SpineFile = __webpack_require__(/*! ./SpineFile */ "./SpineFile.js");
 var SpineGameObject = __webpack_require__(/*! ./gameobject/SpineGameObject */ "./gameobject/SpineGameObject.js");
+var SpineContainer = __webpack_require__(/*! ./container/SpineContainer */ "./container/SpineContainer.js");
+var NOOP = __webpack_require__(/*! ../../../src/utils/NOOP */ "../../../src/utils/NOOP.js");
 
 /**
  * @classdesc
  * The Spine Plugin is a Scene based plugin that handles the creation and rendering of Spine Game Objects.
- * 
+ *
+ * Find more details about Spine itself at http://esotericsoftware.com/.
+ *
  * All rendering and object creation is handled via the official Spine Runtimes. This version of the plugin
- * uses the Spine 3.8 runtimes. Files created in a different version of Spine may not work as a result.
- * 
- * You can find more details about Spine at http://esotericsoftware.com/.
- * 
+ * uses the Spine 3.8.95 runtimes. Please note that due to the way the Spine runtimes use semver, you will
+ * get breaking changes in point-releases. Therefore, files created in a different version of Spine may not
+ * work as a result, without you first updating the runtimes and rebuilding the plugin.
+ *
+ * Esoteric themselves recommend that you freeze your Spine editor version against the runtime versions.
+ * You can find more information about this here: http://esotericsoftware.com/spine-settings#Version
+ *
  * Please note that you require a Spine license in order to use Spine Runtimes in your games.
- * 
+ *
  * You can install this plugin into your Phaser game by either importing it, if you're using ES6:
- * 
+ *
  * ```javascript
  * import * as SpinePlugin from './SpinePlugin.js';
  * ```
- * 
+ *
  * and then adding it to your Phaser Game configuration:
- * 
+ *
  * ```javascript
  * plugins: {
  *     scene: [
@@ -19636,10 +33762,10 @@ var SpineGameObject = __webpack_require__(/*! ./gameobject/SpineGameObject */ ".
  *     ]
  * }
  * ```
- * 
+ *
  * If you're using ES5 then you can load the Spine Plugin in a Scene files payload, _within_ your
  * Game Configuration object, like this:
- * 
+ *
  * ```javascript
  * scene: {
  *     preload: preload,
@@ -19651,42 +33777,54 @@ var SpineGameObject = __webpack_require__(/*! ./gameobject/SpineGameObject */ ".
  *     }
  * }
  * ```
- * 
+ *
  * Loading it like this allows you to then use commands such as `this.load.spine` from within the
  * same Scene. Alternatively, you can use the method `this.load.plugin` to load the plugin via the normal
  * Phaser Loader. However, doing so will not add it to the current Scene. It will be available from any
  * subsequent Scenes.
- * 
+ *
  * Assuming a default environment you access it from within a Scene by using the `this.spine` reference.
- * 
+ *
  * When this plugin is installed into a Scene it will add a Loader File Type, allowing you to load
  * Spine files directly, i.e.:
- * 
+ *
  * ```javascript
  * this.load.spine('stretchyman', 'stretchyman-pro.json', [ 'stretchyman-pma.atlas' ], true);
  * ```
- * 
- * It also installs a Game Object Factory method, allowin you to create Spine Game Objects:
- * 
+ *
+ * It also installs two Game Object Factory methods, allowing you to create Spine Game Objects
+ * and Spine Containers:
+ *
  * ```javascript
- * this.add.spine(512, 650, 'stretchyman')
+ * const man = this.add.spine(512, 650, 'stretchyman');
+ *
+ * const container = this.add.spineContainer();
+ *
+ * container.add(man);
  * ```
- * 
+ *
  * The first argument is the key which you used when importing the Spine data. There are lots of
  * things you can specify, such as the animation name, skeleton, slot attachments and more. Please
  * see the respective documentation and examples for further details.
- * 
+ *
  * Phaser expects the Spine data to be exported from the Spine application in a JSON format, not binary.
  * The associated atlas files are scanned for any texture files present in them, which are then loaded.
- * If you have exported your Spine data with preMultipiedAlpha set, then you should enable this in the
+ * If you have exported your Spine data with preMultipliedAlpha set, then you should enable this in the
  * load arguments, or you may see black outlines around skeleton textures.
- * 
+ *
  * The Spine plugin is local to the Scene in which it is installed. This means a change to something,
  * such as the Skeleton Debug Renderer, in this Scene, will not impact the renderer in any other Scene.
  * The only exception to this is with the caches this plugin creates. Spine atlas and texture data are
  * stored in their own caches, which are global, meaning they're accessible from any Scene in your
  * game, regardless if the Scene loaded the Spine data or not.
- * 
+ *
+ * When destroying a Phaser Game instance, if you need to re-create it again on the same page without
+ * reloading, you must remember to remove the Spine Plugin as part of your tear-down process:
+ *
+ * ```javascript
+ * this.plugins.removeScenePlugin('SpinePlugin');
+ * ```
+ *
  * For details about the Spine Runtime API see http://esotericsoftware.com/spine-api-reference
  *
  * @class SpinePlugin
@@ -19721,7 +33859,7 @@ var SpinePlugin = new Class({
 
         /**
          * A custom cache that stores the Spine atlas data.
-         * 
+         *
          * This cache is global across your game, allowing you to access Spine data loaded from other Scenes,
          * no matter which Scene you are in.
          *
@@ -19733,7 +33871,7 @@ var SpinePlugin = new Class({
 
         /**
          * A custom cache that stores the Spine Textures.
-         * 
+         *
          * This cache is global across your game, allowing you to access Spine data loaded from other Scenes,
          * no matter which Scene you are in.
          *
@@ -19773,7 +33911,7 @@ var SpinePlugin = new Class({
 
         /**
          * The underlying WebGL context of the Phaser renderer.
-         * 
+         *
          * Only set if running in WebGL mode.
          *
          * @name SpinePlugin#gl
@@ -19793,7 +33931,7 @@ var SpinePlugin = new Class({
 
         /**
          * An instance of the Spine WebGL Scene Renderer.
-         * 
+         *
          * Only set if running in WebGL mode.
          *
          * @name SpinePlugin#sceneRenderer
@@ -19813,7 +33951,7 @@ var SpinePlugin = new Class({
 
         /**
          * An instance of the Spine Skeleton Debug Renderer.
-         * 
+         *
          * Only set if running in WebGL mode.
          *
          * @name SpinePlugin#skeletonDebugRenderer
@@ -19870,56 +34008,99 @@ var SpinePlugin = new Class({
             this.getAtlas = this.getAtlasCanvas;
         }
 
+        //  Headless mode?
+        if (!this.renderer)
+        {
+            this.renderer = {
+                width: game.scale.width,
+                height: game.scale.height,
+                preRender: NOOP,
+                postRender: NOOP,
+                render: NOOP,
+                destroy: NOOP
+            };
+        }
+
         var _this = this;
 
         var add = function (x, y, key, animationName, loop)
         {
             var spineGO = new SpineGameObject(this.scene, _this, x, y, key, animationName, loop);
-    
+
             this.displayList.add(spineGO);
             this.updateList.add(spineGO);
-        
+
             return spineGO;
         };
 
         var make = function (config, addToScene)
         {
             if (config === undefined) { config = {}; }
-    
+
             var key = GetValue(config, 'key', null);
             var animationName = GetValue(config, 'animationName', null);
             var loop = GetValue(config, 'loop', false);
-    
+
             var spineGO = new SpineGameObject(this.scene, _this, 0, 0, key, animationName, loop);
-    
+
             if (addToScene !== undefined)
             {
                 config.add = addToScene;
             }
-    
+
             BuildGameObject(this.scene, spineGO, config);
-    
+
             //  Spine specific
             var skinName = GetValue(config, 'skinName', false);
-    
+
             if (skinName)
             {
                 spineGO.setSkinByName(skinName);
             }
-    
+
             var slotName = GetValue(config, 'slotName', false);
             var attachmentName = GetValue(config, 'attachmentName', null);
-    
+
             if (slotName)
             {
                 spineGO.setAttachment(slotName, attachmentName);
             }
-    
+
             return spineGO.refresh();
+        };
+
+        var addContainer = function (x, y, children)
+        {
+            var spineGO = new SpineContainer(this.scene, _this, x, y, children);
+
+            this.displayList.add(spineGO);
+
+            return spineGO;
+        };
+
+        var makeContainer = function (config, addToScene)
+        {
+            if (config === undefined) { config = {}; }
+
+            var x = GetValue(config, 'x', 0);
+            var y = GetValue(config, 'y', 0);
+            var children = GetValue(config, 'children', null);
+
+            var container = new SpineContainer(this.scene, _this, x, y, children);
+
+            if (addToScene !== undefined)
+            {
+                config.add = addToScene;
+            }
+
+            BuildGameObject(this.scene, container, config);
+
+            return container;
         };
 
         pluginManager.registerFileType('spine', this.spineFileCallback, scene);
         pluginManager.registerGameObject('spine', add, make);
+        pluginManager.registerGameObject('spineContainer', addContainer, makeContainer);
     },
 
     /**
@@ -19946,6 +34127,8 @@ var SpinePlugin = new Class({
 
         eventEmitter.once('shutdown', this.shutdown, this);
         eventEmitter.once('destroy', this.destroy, this);
+
+        this.game.events.once('destroy', this.gameDestroy, this);
     },
 
     /**
@@ -19971,7 +34154,7 @@ var SpinePlugin = new Class({
     {
         this.sceneRenderer = new Spine.webgl.SceneRenderer(this.renderer.canvas, this.gl, true);
 
-        //  Monkeypatch the Spine setBlendMode functions, or batching is destroyed
+        //  Monkeypatch the Spine setBlendMode functions, or batching is destroyed!
 
         var setBlendMode = function (srcBlend, dstBlend)
         {
@@ -20006,9 +34189,9 @@ var SpinePlugin = new Class({
      *
      * @method SpinePlugin#getAtlasCanvas
      * @since 3.19.0
-     * 
+     *
      * @param {string} key - The key of the Spine Atlas to create.
-     * 
+     *
      * @return {spine.TextureAtlas} The Spine Texture Atlas, or undefined if the given key wasn't found.
      */
     getAtlasCanvas: function (key)
@@ -20034,7 +34217,7 @@ var SpinePlugin = new Class({
 
             atlas = new Spine.TextureAtlas(atlasEntry.data, function (path)
             {
-                return new Spine.canvas.CanvasTexture(textures.get(path).getSourceImage());
+                return new Spine.canvas.CanvasTexture(textures.get(atlasEntry.prefix + path).getSourceImage());
             });
         }
 
@@ -20047,9 +34230,9 @@ var SpinePlugin = new Class({
      *
      * @method SpinePlugin#getAtlasWebGL
      * @since 3.19.0
-     * 
+     *
      * @param {string} key - The key of the Spine Atlas to create.
-     * 
+     *
      * @return {spine.TextureAtlas} The Spine Texture Atlas, or undefined if the given key wasn't found.
      */
     getAtlasWebGL: function (key)
@@ -20079,7 +34262,7 @@ var SpinePlugin = new Class({
 
             atlas = new Spine.TextureAtlas(atlasEntry.data, function (path)
             {
-                return new Spine.webgl.GLTexture(gl, textures.get(path).getSourceImage(), false);
+                return new Spine.webgl.GLTexture(gl, textures.get(atlasEntry.prefix + path).getSourceImage(), false);
             });
         }
 
@@ -20090,7 +34273,7 @@ var SpinePlugin = new Class({
      * Adds a Spine Skeleton and Atlas file, or array of files, to the current load queue.
      *
      * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
-     * 
+     *
      * ```javascript
      * function preload ()
      * {
@@ -20105,21 +34288,21 @@ var SpinePlugin = new Class({
      * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
      * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
      * loaded.
-     * 
+     *
      * If you call this from outside of `preload` then you are responsible for starting the Loader afterwards and monitoring
      * its events to know when it's safe to use the asset. Please see the Phaser.Loader.LoaderPlugin class for more details.
-     * 
+     *
      * Phaser expects the Spine data to be exported from the Spine application in a JSON format, not binary. The associated
      * atlas files are scanned for any texture files present in them, which are then loaded. If you have exported
-     * your Spine data with preMultipiedAlpha set, then you should enable this in the arguments, or you may see black
+     * your Spine data with preMultipliedAlpha set, then you should enable this in the arguments, or you may see black
      * outlines around skeleton textures.
-     * 
+     *
      * The key must be a unique String. It is used to add the file to the global Spine cache upon a successful load.
      * The key should be unique both in terms of files being loaded and files already present in the Spine cache.
      * Loading a file using a key that is already taken will result in a warning.
      *
      * Instead of passing arguments you can pass a configuration object, such as:
-     * 
+     *
      * ```javascript
      * this.load.spine({
      *     key: 'mainmenu',
@@ -20128,9 +34311,9 @@ var SpinePlugin = new Class({
      *     preMultipliedAlpha: true
      * });
      * ```
-     * 
+     *
      * If you need to load multiple Spine atlas files, provide them as an array:
-     * 
+     *
      * ```javascript
      * function preload ()
      * {
@@ -20153,13 +34336,13 @@ var SpinePlugin = new Class({
      * Note: The ability to load this type of file will only be available if the Spine Plugin has been built or loaded into Phaser.
      *
      * @method Phaser.Loader.LoaderPlugin#spine
-     * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+     * @fires Phaser.Loader.LoaderPlugin#ADD
      * @since 3.19.0
      *
      * @param {(string|Phaser.Types.Loader.FileTypes.JSONFileConfig|Phaser.Types.Loader.FileTypes.JSONFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
      * @param {string} jsonURL - The absolute or relative URL to load the Spine json file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
      * @param {string|string[]} atlasURL - The absolute or relative URL to load the Spine atlas file from. If undefined or `null` it will be set to `<key>.atlas`, i.e. if `key` was "alien" then the URL will be "alien.atlas".
-     * @param {boolean} [preMultipiedAlpha=false] - Do the texture files include pre-multiplied alpha or not?
+     * @param {boolean} [preMultipliedAlpha=false] - Do the texture files include pre-multiplied alpha or not?
      * @param {Phaser.Types.Loader.XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the Spine json file. Used in replacement of the Loaders default XHR Settings.
      * @param {Phaser.Types.Loader.XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the Spine atlas file. Used in replacement of the Loaders default XHR Settings.
      *
@@ -20168,13 +34351,13 @@ var SpinePlugin = new Class({
     spineFileCallback: function (key, jsonURL, atlasURL, preMultipliedAlpha, jsonXhrSettings, atlasXhrSettings)
     {
         var multifile;
-   
+
         if (Array.isArray(key))
         {
             for (var i = 0; i < key.length; i++)
             {
                 multifile = new SpineFile(this, key[i]);
-    
+
                 this.addFile(multifile.files);
             }
         }
@@ -20184,23 +34367,23 @@ var SpinePlugin = new Class({
 
             this.addFile(multifile.files);
         }
-        
+
         return this;
     },
 
     /**
      * Converts the given x and y screen coordinates into the world space of the given Skeleton.
-     * 
+     *
      * Only works in WebGL.
      *
      * @method SpinePlugin#worldToLocal
      * @since 3.19.0
-     * 
+     *
      * @param {number} x - The screen space x coordinate to convert.
      * @param {number} y - The screen space y coordinate to convert.
      * @param {spine.Skeleton} skeleton - The Spine Skeleton to convert into.
      * @param {spine.Bone} [bone] - Optional bone of the Skeleton to convert into.
-     * 
+     *
      * @return {spine.Vector2} A Vector2 containing the translated point.
      */
     worldToLocal: function (x, y, skeleton, bone)
@@ -20237,10 +34420,10 @@ var SpinePlugin = new Class({
      *
      * @method SpinePlugin#getVector2
      * @since 3.19.0
-     * 
+     *
      * @param {number} x - The Vector x value.
      * @param {number} y - The Vector y value.
-     * 
+     *
      * @return {spine.Vector2} A Spine Vector2 based on the given values.
      */
     getVector2: function (x, y)
@@ -20250,16 +34433,16 @@ var SpinePlugin = new Class({
 
     /**
      * Returns a Spine Vector2 based on the given x, y and z values.
-     * 
+     *
      * Only works in WebGL.
      *
      * @method SpinePlugin#getVector3
      * @since 3.19.0
-     * 
+     *
      * @param {number} x - The Vector x value.
      * @param {number} y - The Vector y value.
      * @param {number} z - The Vector z value.
-     * 
+     *
      * @return {spine.Vector2} A Spine Vector2 based on the given values.
      */
     getVector3: function (x, y, z)
@@ -20269,14 +34452,14 @@ var SpinePlugin = new Class({
 
     /**
      * Sets `drawBones` in the Spine Skeleton Debug Renderer.
-     * 
+     *
      * Only works in WebGL.
      *
      * @method SpinePlugin#setDebugBones
      * @since 3.19.0
-     * 
+     *
      * @param {boolean} [value=true] - The value to set in the debug property.
-     * 
+     *
      * @return {this} This Spine Plugin.
      */
     setDebugBones: function (value)
@@ -20290,14 +34473,14 @@ var SpinePlugin = new Class({
 
     /**
      * Sets `drawRegionAttachments` in the Spine Skeleton Debug Renderer.
-     * 
+     *
      * Only works in WebGL.
      *
      * @method SpinePlugin#setDebugRegionAttachments
      * @since 3.19.0
-     * 
+     *
      * @param {boolean} [value=true] - The value to set in the debug property.
-     * 
+     *
      * @return {this} This Spine Plugin.
      */
     setDebugRegionAttachments: function (value)
@@ -20311,14 +34494,14 @@ var SpinePlugin = new Class({
 
     /**
      * Sets `drawBoundingBoxes` in the Spine Skeleton Debug Renderer.
-     * 
+     *
      * Only works in WebGL.
      *
      * @method SpinePlugin#setDebugBoundingBoxes
      * @since 3.19.0
-     * 
+     *
      * @param {boolean} [value=true] - The value to set in the debug property.
-     * 
+     *
      * @return {this} This Spine Plugin.
      */
     setDebugBoundingBoxes: function (value)
@@ -20332,14 +34515,14 @@ var SpinePlugin = new Class({
 
     /**
      * Sets `drawMeshHull` in the Spine Skeleton Debug Renderer.
-     * 
+     *
      * Only works in WebGL.
      *
      * @method SpinePlugin#setDebugMeshHull
      * @since 3.19.0
-     * 
+     *
      * @param {boolean} [value=true] - The value to set in the debug property.
-     * 
+     *
      * @return {this} This Spine Plugin.
      */
     setDebugMeshHull: function (value)
@@ -20353,14 +34536,14 @@ var SpinePlugin = new Class({
 
     /**
      * Sets `drawMeshTriangles` in the Spine Skeleton Debug Renderer.
-     * 
+     *
      * Only works in WebGL.
      *
      * @method SpinePlugin#setDebugMeshTriangles
      * @since 3.19.0
-     * 
+     *
      * @param {boolean} [value=true] - The value to set in the debug property.
-     * 
+     *
      * @return {this} This Spine Plugin.
      */
     setDebugMeshTriangles: function (value)
@@ -20374,14 +34557,14 @@ var SpinePlugin = new Class({
 
     /**
      * Sets `drawPaths` in the Spine Skeleton Debug Renderer.
-     * 
+     *
      * Only works in WebGL.
      *
      * @method SpinePlugin#setDebugPaths
      * @since 3.19.0
-     * 
+     *
      * @param {boolean} [value=true] - The value to set in the debug property.
-     * 
+     *
      * @return {this} This Spine Plugin.
      */
     setDebugPaths: function (value)
@@ -20395,14 +34578,14 @@ var SpinePlugin = new Class({
 
     /**
      * Sets `drawSkeletonXY` in the Spine Skeleton Debug Renderer.
-     * 
+     *
      * Only works in WebGL.
      *
      * @method SpinePlugin#setDebugSkeletonXY
      * @since 3.19.0
-     * 
+     *
      * @param {boolean} [value=true] - The value to set in the debug property.
-     * 
+     *
      * @return {this} This Spine Plugin.
      */
     setDebugSkeletonXY: function (value)
@@ -20416,14 +34599,14 @@ var SpinePlugin = new Class({
 
     /**
      * Sets `drawClipping` in the Spine Skeleton Debug Renderer.
-     * 
+     *
      * Only works in WebGL.
      *
      * @method SpinePlugin#setDebugClipping
      * @since 3.19.0
-     * 
+     *
      * @param {boolean} [value=true] - The value to set in the debug property.
-     * 
+     *
      * @return {this} This Spine Plugin.
      */
     setDebugClipping: function (value)
@@ -20437,14 +34620,14 @@ var SpinePlugin = new Class({
 
     /**
      * Sets the given vertex effect on the Spine Skeleton Renderer.
-     * 
+     *
      * Only works in WebGL.
      *
      * @method SpinePlugin#setEffect
      * @since 3.19.0
-     * 
+     *
      * @param {spine.VertexEffect} [effect] - The vertex effect to set on the Skeleton Renderer.
-     * 
+     *
      * @return {this} This Spine Plugin.
      */
     setEffect: function (effect)
@@ -20456,15 +34639,15 @@ var SpinePlugin = new Class({
 
     /**
      * Creates a Spine Skeleton based on the given key and optional Skeleton JSON data.
-     * 
+     *
      * The Skeleton data should have already been loaded before calling this method.
      *
      * @method SpinePlugin#createSkeleton
      * @since 3.19.0
-     * 
+     *
      * @param {string} key - The key of the Spine skeleton data, as loaded by the plugin. If the Spine JSON contains multiple skeletons, reference them with a period, i.e. `set.spineBoy`.
      * @param {object} [skeletonJSON] - Optional Skeleton JSON data to use, instead of getting it from the cache.
-     * 
+     *
      * @return {(any|null)} This Spine Skeleton data object, or `null` if the key was invalid.
      */
     createSkeleton: function (key, skeletonJSON)
@@ -20497,7 +34680,7 @@ var SpinePlugin = new Class({
         var preMultipliedAlpha = atlasData.preMultipliedAlpha;
 
         var atlasLoader = new Spine.AtlasAttachmentLoader(atlas);
-        
+
         var skeletonJson = new Spine.SkeletonJson(atlasLoader);
 
         var data;
@@ -20518,7 +34701,7 @@ var SpinePlugin = new Class({
             var skeletonData = skeletonJson.readSkeletonData(data);
 
             var skeleton = new Spine.Skeleton(skeletonData);
-        
+
             return { skeletonData: skeletonData, skeleton: skeleton, preMultipliedAlpha: preMultipliedAlpha };
         }
         else
@@ -20529,14 +34712,14 @@ var SpinePlugin = new Class({
 
     /**
      * Creates a new Animation State and Animation State Data for the given skeleton.
-     * 
+     *
      * The returned object contains two properties: `state` and `stateData` respectively.
      *
      * @method SpinePlugin#createAnimationState
      * @since 3.19.0
-     * 
+     *
      * @param {spine.Skeleton} skeleton - The Skeleton to create the Animation State for.
-     * 
+     *
      * @return {any} An object containing the Animation State and Animation State Data instances.
      */
     createAnimationState: function (skeleton)
@@ -20550,17 +34733,17 @@ var SpinePlugin = new Class({
 
     /**
      * Returns the axis aligned bounding box (AABB) of the region and mesh attachments for the current pose.
-     * 
+     *
      * The returned object contains two properties: `offset` and `size`:
-     * 
+     *
      * `offset` - The distance from the skeleton origin to the bottom left corner of the AABB.
      * `size` - The width and height of the AABB.
      *
      * @method SpinePlugin#getBounds
      * @since 3.19.0
-     * 
+     *
      * @param {spine.Skeleton} skeleton - The Skeleton to get the bounds from.
-     * 
+     *
      * @return {any} The bounds object.
      */
     getBounds: function (skeleton)
@@ -20575,7 +34758,7 @@ var SpinePlugin = new Class({
 
     /**
      * Internal handler for when the renderer resizes.
-     * 
+     *
      * Only called if running in WebGL.
      *
      * @method SpinePlugin#onResize
@@ -20591,14 +34774,14 @@ var SpinePlugin = new Class({
 
         sceneRenderer.camera.position.x = viewportWidth / 2;
         sceneRenderer.camera.position.y = viewportHeight / 2;
-    
+
         sceneRenderer.camera.viewportWidth = viewportWidth;
         sceneRenderer.camera.viewportHeight = viewportHeight;
     },
 
     /**
      * The Scene that owns this plugin is shutting down.
-     * 
+     *
      * We need to kill and reset all internal properties as well as stop listening to Scene events.
      *
      * @method SpinePlugin#shutdown
@@ -20610,11 +34793,16 @@ var SpinePlugin = new Class({
         var eventEmitter = this.systems.events;
 
         eventEmitter.off('shutdown', this.shutdown, this);
+
+        if (this.isWebGL)
+        {
+            this.game.scale.off(ResizeEvent, this.onResize, this);
+        }
     },
 
     /**
      * The Scene that owns this plugin is being destroyed.
-     * 
+     *
      * We need to shutdown and then kill off all external references.
      *
      * @method SpinePlugin#destroy
@@ -20625,14 +34813,6 @@ var SpinePlugin = new Class({
     {
         this.shutdown();
 
-        if (this.sceneRenderer)
-        {
-            this.sceneRenderer.dispose();
-        }
-
-        this.pluginManager.removeGameObject('spine', true, true);
-
-        this.pluginManager = null;
         this.game = null;
         this.scene = null;
         this.systems = null;
@@ -20641,39 +34821,66 @@ var SpinePlugin = new Class({
         this.spineTextures = null;
         this.json = null;
         this.textures = null;
-        this.sceneRenderer = null;
         this.skeletonRenderer = null;
         this.gl = null;
+    },
+
+    /**
+     * The Game that owns this plugin is being destroyed.
+     *
+     * Dispose of the Scene Renderer and remove the Game Objects.
+     *
+     * @method SpinePlugin#gameDestroy
+     * @private
+     * @since 3.50.0
+     */
+    gameDestroy: function ()
+    {
+        this.destroy();
+
+        if (this.sceneRenderer)
+        {
+            this.sceneRenderer.dispose();
+        }
+
+        this.sceneRenderer = null;
+        this.pluginManager = null;
+
+        this.pluginManager.removeGameObject('spine', true, true);
+        this.pluginManager.removeGameObject('spineContainer', true, true);
     }
 
 });
 
+SpinePlugin.SpineGameObject = SpineGameObject;
+SpinePlugin.SpineContainer = SpineContainer;
+
 /**
  * Creates a new Spine Game Object and adds it to the Scene.
- * 
+ *
  * The x and y coordinate given is used to set the placement of the root Spine bone, which can vary from
  * skeleton to skeleton. All rotation and scaling happens from the root bone placement. Spine Game Objects
  * do not have a Phaser origin.
- * 
+ *
  * If the Spine JSON file exported multiple Skeletons within it, then you can specify them by using a period
  * character in the key. For example, if you loaded a Spine JSON using the key `monsters` and it contains
  * multiple Skeletons, including one called `goblin` then you would use the key `monsters.goblin` to reference
  * that.
- * 
+ *
  * ```javascript
  * let jelly = this.add.spine(512, 550, 'jelly', 'jelly-think', true);
  * ```
- * 
+ *
  * The key is optional. If not passed here, you need to call `SpineGameObject.setSkeleton()` to use it.
- * 
+ *
  * The animation name is also optional and can be set later via `SpineGameObject.setAnimation`.
- * 
+ *
  * Should you wish for more control over the object creation, such as setting a slot attachment or skin
  * name, then use `SpinePlugin.make` instead.
  *
  * @method SpinePlugin#add
  * @since 3.19.0
- * 
+ *
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
  * @param {string} [key] - The key of the Spine Skeleton this Game Object will use, as stored in the Spine Plugin.
@@ -20685,16 +34892,16 @@ var SpinePlugin = new Class({
 
 /**
  * Creates a new Spine Game Object from the given configuration file and optionally adds it to the Scene.
- * 
+ *
  * The x and y coordinate given is used to set the placement of the root Spine bone, which can vary from
  * skeleton to skeleton. All rotation and scaling happens from the root bone placement. Spine Game Objects
  * do not have a Phaser origin.
- * 
+ *
  * If the Spine JSON file exported multiple Skeletons within it, then you can specify them by using a period
  * character in the key. For example, if you loaded a Spine JSON using the key `monsters` and it contains
  * multiple Skeletons, including one called `goblin` then you would use the key `monsters.goblin` to reference
  * that.
- * 
+ *
  * ```javascript
  * let jelly = this.make.spine({
  *     x: 500, y: 500, key: 'jelly',
@@ -20719,6 +34926,435 @@ module.exports = SpinePlugin;
 
 /***/ }),
 
+/***/ "./container/SpineContainer.js":
+/*!*************************************!*\
+  !*** ./container/SpineContainer.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Class = __webpack_require__(/*! ../../../../src/utils/Class */ "../../../src/utils/Class.js");
+var Container = __webpack_require__(/*! ../../../../src/gameobjects/container/Container */ "../../../src/gameobjects/container/Container.js");
+var SpineContainerRender = __webpack_require__(/*! ./SpineContainerRender */ "./container/SpineContainerRender.js");
+
+/**
+ * @classdesc
+ * A Spine Container is a special kind of Container created specifically for Spine Game Objects.
+ *
+ * You have all of the same features of a standard Container, but the rendering functions are optimized specifically
+ * for Spine Game Objects. You must only add ever Spine Game Objects to this type of Container. Although Phaser will
+ * not prevent you from adding other types, they will not render and are likely to throw runtime errors.
+ *
+ * To create one in a Scene, use the factory methods:
+ *
+ * ```javascript
+ * this.add.spinecontainer();
+ * ```
+ *
+ * or
+ *
+ * ```javascript
+ * this.make.spinecontainer();
+ * ```
+ *
+ * See the Container documentation for further details about what Containers can do.
+ *
+ * @class SpineContainer
+ * @extends Phaser.GameObjects.Container
+ * @constructor
+ * @since 3.50.0
+ *
+ * @param {Phaser.Scene} scene - A reference to the Scene that this Game Object belongs to.
+ * @param {SpinePlugin} pluginManager - A reference to the Phaser Spine Plugin.
+ * @param {number} x - The horizontal position of this Game Object in the world.
+ * @param {number} y - The vertical position of this Game Object in the world.
+ * @param {SpineGameObject[]} [children] - An optional array of Spine Game Objects to add to this Container.
+ */
+var SpineContainer = new Class({
+
+    Extends: Container,
+
+    Mixins: [
+        SpineContainerRender
+    ],
+
+    initialize:
+
+    function SpineContainer (scene, plugin, x, y, children)
+    {
+        Container.call(this, scene, x, y, children);
+
+        //  Same as SpineGameObject, to prevent the renderer from mis-typing it when batching
+        this.type = 'Spine';
+
+        /**
+         * A reference to the Spine Plugin.
+         *
+         * @name SpineContainer#plugin
+         * @type {SpinePlugin}
+         * @since 3.50.0
+         */
+        this.plugin = plugin;
+    },
+
+    /**
+     * Internal destroy handler, called as part of the destroy process.
+     *
+     * @method SpineContainer#preDestroy
+     * @protected
+     * @since 3.50.0
+     */
+    preDestroy: function ()
+    {
+        this.removeAll(!!this.exclusive);
+
+        this.localTransform.destroy();
+        this.tempTransformMatrix.destroy();
+
+        this.list = [];
+        this._displayList = null;
+        this.plugin = null;
+    }
+
+});
+
+module.exports = SpineContainer;
+
+
+/***/ }),
+
+/***/ "./container/SpineContainerCanvasRenderer.js":
+/*!***************************************************!*\
+  !*** ./container/SpineContainerCanvasRenderer.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Renders this Game Object with the Canvas Renderer to the given Camera.
+ * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
+ * This method should not be called directly. It is a utility function of the Render module.
+ *
+ * @method Phaser.GameObjects.Container#renderCanvas
+ * @since 3.4.0
+ * @private
+ *
+ * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
+ * @param {Phaser.GameObjects.Container} container - The Game Object being rendered in this call.
+ * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
+ */
+var SpineContainerCanvasRenderer = function (renderer, container, interpolationPercentage, camera, parentMatrix)
+{
+    var children = container.list;
+
+    if (children.length === 0)
+    {
+        return;
+    }
+
+    var transformMatrix = container.localTransform;
+
+    if (parentMatrix)
+    {
+        transformMatrix.loadIdentity();
+        transformMatrix.multiply(parentMatrix);
+        transformMatrix.translate(container.x, container.y);
+        transformMatrix.rotate(container.rotation);
+        transformMatrix.scale(container.scaleX, container.scaleY);
+    }
+    else
+    {
+        transformMatrix.applyITRS(container.x, container.y, container.rotation, container.scaleX, container.scaleY);
+    }
+
+    var containerHasBlendMode = (container.blendMode !== -1);
+
+    if (!containerHasBlendMode)
+    {
+        //  If Container is SKIP_TEST then set blend mode to be Normal
+        renderer.setBlendMode(0);
+    }
+
+    var alpha = container._alpha;
+    var scrollFactorX = container.scrollFactorX;
+    var scrollFactorY = container.scrollFactorY;
+
+    if (container.mask)
+    {
+        container.mask.preRenderCanvas(renderer, null, camera);
+    }
+
+    for (var i = 0; i < children.length; i++)
+    {
+        var child = children[i];
+
+        if (!child.willRender(camera))
+        {
+            continue;
+        }
+
+        var childAlpha = child.alpha;
+        var childScrollFactorX = child.scrollFactorX;
+        var childScrollFactorY = child.scrollFactorY;
+
+        if (!containerHasBlendMode && child.blendMode !== renderer.currentBlendMode)
+        {
+            //  If Container doesn't have its own blend mode, then a child can have one
+            renderer.setBlendMode(child.blendMode);
+        }
+
+        //  Set parent values
+        child.setScrollFactor(childScrollFactorX * scrollFactorX, childScrollFactorY * scrollFactorY);
+        child.setAlpha(childAlpha * alpha);
+
+        //  Render
+        child.renderCanvas(renderer, child, interpolationPercentage, camera, transformMatrix);
+
+        //  Restore original values
+        child.setAlpha(childAlpha);
+        child.setScrollFactor(childScrollFactorX, childScrollFactorY);
+    }
+
+    if (container.mask)
+    {
+        container.mask.postRenderCanvas(renderer);
+    }
+};
+
+module.exports = SpineContainerCanvasRenderer;
+
+
+/***/ }),
+
+/***/ "./container/SpineContainerRender.js":
+/*!*******************************************!*\
+  !*** ./container/SpineContainerRender.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var renderWebGL = __webpack_require__(/*! ../../../../src/utils/NOOP */ "../../../src/utils/NOOP.js");
+var renderCanvas = __webpack_require__(/*! ../../../../src/utils/NOOP */ "../../../src/utils/NOOP.js");
+
+if (true)
+{
+    renderWebGL = __webpack_require__(/*! ./SpineContainerWebGLRenderer */ "./container/SpineContainerWebGLRenderer.js");
+}
+
+if (true)
+{
+    renderCanvas = __webpack_require__(/*! ./SpineContainerCanvasRenderer */ "./container/SpineContainerCanvasRenderer.js");
+}
+
+module.exports = {
+
+    renderWebGL: renderWebGL,
+    renderCanvas: renderCanvas
+
+};
+
+
+/***/ }),
+
+/***/ "./container/SpineContainerWebGLRenderer.js":
+/*!**************************************************!*\
+  !*** ./container/SpineContainerWebGLRenderer.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var CounterClockwise = __webpack_require__(/*! ../../../../src/math/angle/CounterClockwise */ "../../../src/math/angle/CounterClockwise.js");
+var Clamp = __webpack_require__(/*! ../../../../src/math/Clamp */ "../../../src/math/Clamp.js");
+var RadToDeg = __webpack_require__(/*! ../../../../src/math/RadToDeg */ "../../../src/math/RadToDeg.js");
+var Wrap = __webpack_require__(/*! ../../../../src/math/Wrap */ "../../../src/math/Wrap.js");
+
+/**
+ * Renders this Game Object with the WebGL Renderer to the given Camera.
+ * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
+ * This method should not be called directly. It is a utility function of the Render module.
+ *
+ * @method SpineContainerWebGLRenderer#renderWebGL
+ * @since 3.50.0
+ * @private
+ *
+ * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
+ * @param {Phaser.GameObjects.Container} container - The Game Object being rendered in this call.
+ * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
+ */
+var SpineContainerWebGLRenderer = function (renderer, container, interpolationPercentage, camera, parentMatrix)
+{
+    var plugin = container.plugin;
+    var sceneRenderer = plugin.sceneRenderer;
+    var children = container.list;
+
+    if (children.length === 0)
+    {
+        if (sceneRenderer.batcher.isDrawing && renderer.finalType)
+        {
+            sceneRenderer.end();
+
+            renderer.rebindPipeline();
+        }
+
+        return;
+    }
+
+    var transformMatrix = container.localTransform;
+
+    if (parentMatrix)
+    {
+        transformMatrix.loadIdentity();
+        transformMatrix.multiply(parentMatrix);
+        transformMatrix.translate(container.x, container.y);
+        transformMatrix.rotate(container.rotation);
+        transformMatrix.scale(container.scaleX, container.scaleY);
+    }
+    else
+    {
+        transformMatrix.applyITRS(container.x, container.y, container.rotation, container.scaleX, container.scaleY);
+    }
+
+    var alpha = container.alpha;
+    var scrollFactorX = container.scrollFactorX;
+    var scrollFactorY = container.scrollFactorY;
+
+    var GameObjectRenderMask = 15;
+
+    if (renderer.newType)
+    {
+        //  flush + clear if this is a new type
+        renderer.clearPipeline();
+
+        sceneRenderer.begin();
+    }
+
+    for (var i = 0; i < children.length; i++)
+    {
+        var src = children[i];
+
+        var skeleton = src.skeleton;
+        var childAlpha = skeleton.color.a;
+
+        var willRender = !(GameObjectRenderMask !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)) || childAlpha === 0);
+
+        if (!skeleton || !willRender)
+        {
+            continue;
+        }
+
+        var camMatrix = renderer._tempMatrix1;
+        var spriteMatrix = renderer._tempMatrix2;
+        var calcMatrix = renderer._tempMatrix3;
+
+        spriteMatrix.applyITRS(src.x, src.y, src.rotation, Math.abs(src.scaleX), Math.abs(src.scaleY));
+
+        camMatrix.copyFrom(camera.matrix);
+
+        //  Multiply the camera by the parent matrix
+        camMatrix.multiplyWithOffset(transformMatrix, -camera.scrollX * scrollFactorX, -camera.scrollY * scrollFactorY);
+
+        //  Undo the camera scroll
+        spriteMatrix.e = src.x;
+        spriteMatrix.f = src.y;
+
+        //  Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(spriteMatrix, calcMatrix);
+
+        var viewportHeight = renderer.height;
+
+        skeleton.x = calcMatrix.tx;
+        skeleton.y = viewportHeight - calcMatrix.ty;
+
+        skeleton.scaleX = calcMatrix.scaleX;
+        skeleton.scaleY = calcMatrix.scaleY;
+
+        if (src.scaleX < 0)
+        {
+            skeleton.scaleX *= -1;
+
+            src.root.rotation = RadToDeg(calcMatrix.rotationNormalized);
+        }
+        else
+        {
+            //  +90 degrees to account for the difference in Spine vs. Phaser rotation
+            src.root.rotation = Wrap(RadToDeg(CounterClockwise(calcMatrix.rotationNormalized)) + 90, 0, 360);
+        }
+
+        if (src.scaleY < 0)
+        {
+            skeleton.scaleY *= -1;
+
+            if (src.scaleX < 0)
+            {
+                src.root.rotation -= (RadToDeg(calcMatrix.rotationNormalized) * 2);
+            }
+            else
+            {
+                src.root.rotation += (RadToDeg(calcMatrix.rotationNormalized) * 2);
+            }
+        }
+
+        if (camera.renderToTexture || renderer.currentFramebuffer !== null)
+        {
+            skeleton.y = calcMatrix.ty;
+            skeleton.scaleY *= -1;
+        }
+
+        //  Add autoUpdate option
+        skeleton.updateWorldTransform();
+
+        skeleton.color.a = Clamp(childAlpha * alpha, 0, 1);
+
+        //  Draw the current skeleton
+        sceneRenderer.drawSkeleton(skeleton, src.preMultipliedAlpha);
+
+        //  Restore alpha
+        skeleton.color.a = childAlpha;
+    }
+
+    if (!renderer.nextTypeMatch)
+    {
+        //  The next object in the display list is not a Spine Game Object or Spine Container, so we end the batch
+        sceneRenderer.end();
+
+        //  And rebind the previous pipeline
+        renderer.rebindPipeline();
+    }
+};
+
+module.exports = SpineContainerWebGLRenderer;
+
+
+/***/ }),
+
 /***/ "./events/COMPLETE_EVENT.js":
 /*!**********************************!*\
   !*** ./events/COMPLETE_EVENT.js ***!
@@ -20728,7 +35364,7 @@ module.exports = SpinePlugin;
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -20752,7 +35388,7 @@ module.exports = 'complete';
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -20776,7 +35412,7 @@ module.exports = 'dispose';
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -20800,7 +35436,7 @@ module.exports = 'end';
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -20824,7 +35460,7 @@ module.exports = 'event';
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -20848,7 +35484,7 @@ module.exports = 'interrupted';
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -20872,7 +35508,7 @@ module.exports = 'start';
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -20903,7 +35539,7 @@ module.exports = {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -20928,24 +35564,24 @@ var SpineGameObjectRender = __webpack_require__(/*! ./SpineGameObjectRender */ "
  * A Spine Game Object is a Phaser level object that can be added to your Phaser Scenes. It encapsulates
  * a Spine Skeleton with Spine Animation Data and Animation State, with helper methods to allow you to
  * easily change the skin, slot attachment, bone positions and more.
- * 
+ *
  * Spine Game Objects can be created via the Game Object Factory, Game Object Creator, or directly.
  * You can only create them if the Spine plugin has been loaded into Phaser.
- * 
+ *
  * The quickest way is the Game Object Factory:
- * 
+ *
  * ```javascript
  * let jelly = this.add.spine(512, 550, 'jelly', 'jelly-think', true);
  * ```
- * 
+ *
  * Here we are creating a new Spine Game Object positioned at 512 x 550. It's using the `jelly`
  * Spine data, which has previously been loaded into your Scene. The `jelly-think` argument is
  * an optional animation to start playing on the skeleton. The final argument `true` sets the
  * animation to loop. Look at the documentation for further details on each of these options.
- * 
+ *
  * For more control, you can use the Game Object Creator, passing in a Spine Game Object
  * Configuration object:
- * 
+ *
  * ```javascript
  * let jelly = this.make.spine({
  *     x: 512, y: 550, key: 'jelly',
@@ -20955,28 +35591,28 @@ var SpineGameObjectRender = __webpack_require__(/*! ./SpineGameObjectRender */ "
  *     slotName: 'hat', attachmentName: 'images/La_14'
  * });
  * ```
- * 
+ *
  * Here, you've got the ability to specify extra details, such as the slot name, attachments or
  * overall scale.
- * 
+ *
  * If you wish to instantiate a Spine Game Object directly you can do so, but in order for it to
  * update and render, it must be added to the display and update lists of your Scene:
- * 
+ *
  * ```javascript
  * let jelly = new SpineGameObject(this, this.spine, 512, 550, 'jelly', 'jelly-think', true);
  * this.sys.displayList.add(jelly);
  * this.sys.updateList.add(jelly);
  * ```
- * 
+ *
  * It's possible to enable Spine Game Objects for input, but you should be aware that it will use
  * the bounds of the skeletons current pose to create the hit area from. Sometimes this is ok, but
  * often not. Make use of the `InputPlugin.enableDebug` method to view the input shape being created.
  * If it's not suitable, provide your own shape to the `setInteractive` method.
- * 
+ *
  * Due to the way Spine handles scaling, it's not recommended to enable a Spine Game Object for
  * physics directly. Instead, you should look at creating a proxy body and syncing the Spine Game
  * Object position with it. See the examples for further details.
- * 
+ *
  * If your Spine Game Object has black outlines around the different parts of the texture when it
  * renders then you have exported the files from Spine with pre-multiplied alpha enabled, but have
  * forgotten to set that flag when loading the Spine data. Please see the loader docs for more details.
@@ -21076,7 +35712,7 @@ var SpineGameObject = new Class({
          * @since 3.19.0
          */
         this.bounds = null;
-        
+
         /**
          * A Game Object level flag that allows you to enable debug drawing
          * to the Skeleton Debug Renderer by toggling it.
@@ -21134,7 +35770,7 @@ var SpineGameObject = new Class({
          * @readonly
          * @since 3.19.0
          */
-        this.blendMode = 0;
+        this.blendMode = -1;
 
         this.setPosition(x, y);
 
@@ -21160,9 +35796,9 @@ var SpineGameObject = new Class({
 
     /**
      * Set the Alpha level for the whole Skeleton of this Game Object.
-     * 
+     *
      * The alpha controls the opacity of the Game Object as it renders.
-     * 
+     *
      * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
      *
      * @method SpineGameObject#setAlpha
@@ -21195,7 +35831,7 @@ var SpineGameObject = new Class({
 
     /**
      * The alpha value of the Skeleton.
-     * 
+     *
      * A value between 0 and 1.
      *
      * This is a global value, impacting the entire Skeleton, not just a region of it.
@@ -21234,7 +35870,7 @@ var SpineGameObject = new Class({
 
     /**
      * The amount of red used when rendering the Skeleton.
-     * 
+     *
      * A value between 0 and 1.
      *
      * This is a global value, impacting the entire Skeleton, not just a region of it.
@@ -21264,7 +35900,7 @@ var SpineGameObject = new Class({
 
     /**
      * The amount of green used when rendering the Skeleton.
-     * 
+     *
      * A value between 0 and 1.
      *
      * This is a global value, impacting the entire Skeleton, not just a region of it.
@@ -21294,7 +35930,7 @@ var SpineGameObject = new Class({
 
     /**
      * The amount of blue used when rendering the Skeleton.
-     * 
+     *
      * A value between 0 and 1.
      *
      * This is a global value, impacting the entire Skeleton, not just a region of it.
@@ -21330,7 +35966,7 @@ var SpineGameObject = new Class({
      *
      * @param {integer} [color=0xffffff] - The color being applied to the Skeleton or named Slot. Set to white to disable any previously set color.
      * @param {string} [slotName] - The name of the slot to set the color on. If not give, will be set on the whole skeleton.
-     * 
+     *
      * @return {this} This Game Object instance.
      */
     setColor: function (color, slotName)
@@ -21372,7 +36008,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#setSkeletonFromJSON
      * @since 3.19.0
-     * 
+     *
      * @param {string} atlasDataKey - The key of the Spine data to use for this Skeleton.
      * @param {object} skeletonJSON - The JSON data for the Skeleton.
      * @param {string} [animationName] - Optional name of the animation to set on the Skeleton.
@@ -21387,13 +36023,13 @@ var SpineGameObject = new Class({
 
     /**
      * Sets this Game Object to use the given Skeleton based on its cache key.
-     * 
+     *
      * Typically, once set, the Skeleton doesn't change. Instead, you change the skin,
      * or slot attachment, or any other property to adjust it.
      *
      * @method SpineGameObject#setSkeleton
      * @since 3.19.0
-     * 
+     *
      * @param {string} atlasDataKey - The key of the Spine data to use for this Skeleton.
      * @param {object} skeletonJSON - The JSON data for the Skeleton.
      * @param {string} [animationName] - Optional name of the animation to set on the Skeleton.
@@ -21470,7 +36106,7 @@ var SpineGameObject = new Class({
      * @fires SpinePluginEvents#COMPLETE
      * @private
      * @since 3.19.0
-     * 
+     *
      * @param {any} entry - The event data from Spine.
      */
     onComplete: function (entry)
@@ -21485,7 +36121,7 @@ var SpineGameObject = new Class({
      * @fires SpinePluginEvents#DISPOSE
      * @private
      * @since 3.19.0
-     * 
+     *
      * @param {any} entry - The event data from Spine.
      */
     onDispose: function (entry)
@@ -21500,7 +36136,7 @@ var SpineGameObject = new Class({
      * @fires SpinePluginEvents#END
      * @private
      * @since 3.19.0
-     * 
+     *
      * @param {any} entry - The event data from Spine.
      */
     onEnd: function (entry)
@@ -21515,7 +36151,7 @@ var SpineGameObject = new Class({
      * @fires SpinePluginEvents#EVENT
      * @private
      * @since 3.19.0
-     * 
+     *
      * @param {any} entry - The event data from Spine.
      * @param {spine.Event} event - The Spine event.
      */
@@ -21531,7 +36167,7 @@ var SpineGameObject = new Class({
      * @fires SpinePluginEvents#INTERRUPTED
      * @private
      * @since 3.19.0
-     * 
+     *
      * @param {any} entry - The event data from Spine.
      */
     onInterrupted: function (entry)
@@ -21546,7 +36182,7 @@ var SpineGameObject = new Class({
      * @fires SpinePluginEvents#START
      * @private
      * @since 3.19.0
-     * 
+     *
      * @param {any} entry - The event data from Spine.
      */
     onStart: function (entry)
@@ -21556,15 +36192,15 @@ var SpineGameObject = new Class({
 
     /**
      * Refreshes the data about the current Skeleton.
-     * 
+     *
      * This will reset the rotation, position and size of the Skeleton to match this Game Object.
-     * 
+     *
      * Call this method if you need to access the Skeleton data directly, and it may have changed
      * recently.
      *
      * @method SpineGameObject#refresh
      * @since 3.19.0
-     * 
+     *
      * @return {this} This Game Object.
      */
     refresh: function ()
@@ -21584,20 +36220,20 @@ var SpineGameObject = new Class({
 
     /**
      * Sets the size of this Game Object.
-     * 
+     *
      * If no arguments are given it uses the current skeleton data dimensions.
-     * 
+     *
      * You can use this method to set a fixed size of this Game Object, such as for input detection,
      * when the skeleton data doesn't match what is required in-game.
      *
      * @method SpineGameObject#setSize
      * @since 3.19.0
-     * 
+     *
      * @param {number} [width] - The width of the Skeleton. If not given it defaults to the Skeleton Data width.
      * @param {number} [height] - The height of the Skeleton. If not given it defaults to the Skeleton Data height.
      * @param {number} [offsetX=0] - The horizontal offset of the Skeleton from its x and y coordinate.
      * @param {number} [offsetY=0] - The vertical offset of the Skeleton from its x and y coordinate.
-     * 
+     *
      * @return {this} This Game Object.
      */
     setSize: function (width, height, offsetX, offsetY)
@@ -21620,15 +36256,15 @@ var SpineGameObject = new Class({
 
     /**
      * Sets the offset of this Game Object from the Skeleton position.
-     * 
+     *
      * You can use this method to adjust how the position of this Game Object relates to the Skeleton it is using.
      *
      * @method SpineGameObject#setOffset
      * @since 3.19.0
-     * 
+     *
      * @param {number} [offsetX=0] - The horizontal offset of the Skeleton from its x and y coordinate.
      * @param {number} [offsetY=0] - The vertical offset of the Skeleton from its x and y coordinate.
-     * 
+     *
      * @return {this} This Game Object.
      */
     setOffset: function (offsetX, offsetY)
@@ -21647,13 +36283,13 @@ var SpineGameObject = new Class({
     /**
      * Internal method that syncs all of the Game Object position and scale data to the Skeleton.
      * It then syncs the skeleton bounds back to this Game Object.
-     * 
+     *
      * This method is called automatically as needed internally, however, it's also exposed should
      * you require overriding the size settings.
      *
      * @method SpineGameObject#updateSize
      * @since 3.19.0
-     * 
+     *
      * @return {this} This Game Object.
      */
     updateSize: function ()
@@ -21742,7 +36378,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#getBoneList
      * @since 3.19.0
-     * 
+     *
      * @return {string[]} An array containing the names of all the bones in the Skeleton Data.
      */
     getBoneList: function ()
@@ -21767,7 +36403,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#getSkinList
      * @since 3.19.0
-     * 
+     *
      * @return {string[]} An array containing the names of all the skins in the Skeleton Data.
      */
     getSkinList: function ()
@@ -21792,7 +36428,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#getSlotList
      * @since 3.19.0
-     * 
+     *
      * @return {string[]} An array containing the names of all the slots in the Skeleton.
      */
     getSlotList: function ()
@@ -21814,7 +36450,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#getAnimationList
      * @since 3.19.0
-     * 
+     *
      * @return {string[]} An array containing the names of all the animations in the Skeleton Data.
      */
     getAnimationList: function ()
@@ -21839,9 +36475,9 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#getCurrentAnimation
      * @since 3.19.0
-     * 
+     *
      * @param {integer} [trackIndex=0] - The track to return the current animation on.
-     * 
+     *
      * @return {?spine.Animation} The current Animation on the given track, or `undefined` if there is no current animation.
      */
     getCurrentAnimation: function (trackIndex)
@@ -21859,7 +36495,7 @@ var SpineGameObject = new Class({
     /**
      * Sets the current animation for a track, discarding any queued animations.
      * If the formerly current track entry was never applied to a skeleton, it is replaced (not mixed from).
-     * 
+     *
      * Animations are referenced by a unique string-based key, as defined in the Spine software.
      *
      * @method SpineGameObject#play
@@ -21882,7 +36518,7 @@ var SpineGameObject = new Class({
     /**
      * Sets the current animation for a track, discarding any queued animations.
      * If the formerly current track entry was never applied to a skeleton, it is replaced (not mixed from).
-     * 
+     *
      * Animations are referenced by a unique string-based key, as defined in the Spine software.
      *
      * @method SpineGameObject#setAnimation
@@ -21892,7 +36528,7 @@ var SpineGameObject = new Class({
      * @param {integer} trackIndex - The track index to play the animation on.
      * @param {string} animationName - The string-based key of the animation to play.
      * @param {boolean} [loop=false] - Should the animation be looped when played?
-     * @param {boolean} [ignoreIfPlaying=false] - If this animation is already playing then ignore this call.
+     * @param {boolean} [ignoreIfPlaying=false] - If the animation specified by the track index is already playing then ignore this call.
      *
      * @return {spine.TrackEntry} A track entry to allow further customization of animation playback.
      */
@@ -21903,8 +36539,8 @@ var SpineGameObject = new Class({
 
         if (ignoreIfPlaying && this.state)
         {
-            var currentTrack = this.state.getCurrent(0);
- 
+            var currentTrack = this.state.getCurrent(trackIndex);
+
             if (currentTrack && currentTrack.animation.name === animationName && !currentTrack.isComplete())
             {
                 return;
@@ -21920,9 +36556,9 @@ var SpineGameObject = new Class({
     /**
      * Adds an animation to be played after the current or last queued animation for a track.
      * If the track is empty, it is equivalent to calling setAnimation.
-     * 
+     *
      * Animations are referenced by a unique string-based key, as defined in the Spine software.
-     * 
+     *
      * The delay is a float. If > 0, sets delay. If <= 0, the delay set is the duration of the previous
      * track entry minus any mix duration (from the AnimationStateData) plus the specified delay
      * (ie the mix ends at (delay = 0) or before (delay < 0) the previous track entry duration).
@@ -21946,13 +36582,13 @@ var SpineGameObject = new Class({
     /**
      * Sets an empty animation for a track, discarding any queued animations, and sets the track
      * entry's mixDuration. An empty animation has no timelines and serves as a placeholder for mixing in or out.
-     * 
+     *
      * Mixing out is done by setting an empty animation with a mix duration using either setEmptyAnimation,
      * setEmptyAnimations, or addEmptyAnimation. Mixing to an empty animation causes the previous animation to be
      * applied less and less over the mix duration. Properties keyed in the previous animation transition to
      * the value from lower tracks or to the setup pose value if no lower tracks key the property.
      * A mix duration of 0 still mixes out over one frame.
-     * 
+     *
      * Mixing in is done by first setting an empty animation, then adding an animation using addAnimation
      * and on the returned track entry, set the mixDuration. Mixing from an empty animation causes the new
      * animation to be applied more and more over the mix duration. Properties keyed in the new animation
@@ -21974,7 +36610,7 @@ var SpineGameObject = new Class({
 
     /**
      * Removes all animations from the track, leaving skeletons in their current pose.
-     * 
+     *
      * It may be desired to use setEmptyAnimation to mix the skeletons back to the setup pose,
      * rather than leaving them in their current pose.
      *
@@ -21991,10 +36627,10 @@ var SpineGameObject = new Class({
 
         return this;
     },
-     
+
     /**
      * Removes all animations from all tracks, leaving skeletons in their current pose.
-     * 
+     *
      * It may be desired to use setEmptyAnimation to mix the skeletons back to the setup pose,
      * rather than leaving them in their current pose.
      *
@@ -22012,11 +36648,11 @@ var SpineGameObject = new Class({
 
     /**
      * Sets the skin used to look up attachments before looking in the defaultSkin.
-     * 
+     *
      * Attachments from the new skin are attached if the corresponding attachment from the
      * old skin was attached. If there was no old skin, each slot's setup mode attachment is
      * attached from the new skin.
-     * 
+     *
      * After changing the skin, the visible attachments can be reset to those attached in the
      * setup pose by calling setSlotsToSetupPose. Also, often apply is called before the next time
      * the skeleton is rendered to allow any attachment keys in the current animation(s) to hide
@@ -22024,7 +36660,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#setSkinByName
      * @since 3.19.0
-     * 
+     *
      * @param {string} skinName - The name of the skin to set.
      *
      * @return {this} This Game Object.
@@ -22044,11 +36680,11 @@ var SpineGameObject = new Class({
 
     /**
      * Sets the skin used to look up attachments before looking in the defaultSkin.
-     * 
+     *
      * Attachments from the new skin are attached if the corresponding attachment from the
      * old skin was attached. If there was no old skin, each slot's setup mode attachment is
      * attached from the new skin.
-     * 
+     *
      * After changing the skin, the visible attachments can be reset to those attached in the
      * setup pose by calling setSlotsToSetupPose. Also, often apply is called before the next time
      * the skeleton is rendered to allow any attachment keys in the current animation(s) to hide
@@ -22056,7 +36692,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#setSkin
      * @since 3.19.0
-     * 
+     *
      * @param {?spine.Skin} newSkin - The Skin to set. May be `null`.
      *
      * @return {this} This Game Object.
@@ -22079,7 +36715,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#setMix
      * @since 3.19.0
-     * 
+     *
      * @param {string} fromName - The animation to mix from.
      * @param {string} toName - The animation to mix to.
      * @param {number} [duration] - Seconds for mixing from the previous animation to this animation. Defaults to the value provided by AnimationStateData getMix based on the animation before this animation (if any).
@@ -22100,7 +36736,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#getAttachment
      * @since 3.19.0
-     * 
+     *
      * @param {integer} slotIndex - The slot index to search.
      * @param {string} attachmentName - The attachment name to look for.
      *
@@ -22116,7 +36752,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#getAttachmentByName
      * @since 3.19.0
-     * 
+     *
      * @param {string} slotName - The slot name to search.
      * @param {string} attachmentName - The attachment name to look for.
      *
@@ -22133,7 +36769,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#setAttachment
      * @since 3.19.0
-     * 
+     *
      * @param {string} slotName - The slot name to add the attachment to.
      * @param {string} attachmentName - The attachment name to add.
      *
@@ -22221,7 +36857,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#angleBoneToXY
      * @since 3.19.0
-     * 
+     *
      * @param {spine.Bone} bone - The bone to rotate towards the world position.
      * @param {number} worldX - The world x coordinate to rotate the bone towards.
      * @param {number} worldY - The world y coordinate to rotate the bone towards.
@@ -22253,7 +36889,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findBone
      * @since 3.19.0
-     * 
+     *
      * @param {string} boneName - The name of the bone to find.
      *
      * @return {spine.Bone} The bone, or null.
@@ -22269,7 +36905,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findBoneIndex
      * @since 3.19.0
-     * 
+     *
      * @param {string} boneName - The name of the bone to find.
      *
      * @return {integer} The bone index. Or -1 if the bone was not found.
@@ -22285,7 +36921,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findSlot
      * @since 3.19.0
-     * 
+     *
      * @param {string} slotName - The name of the slot to find.
      *
      * @return {spine.Slot} The Slot. May be null.
@@ -22301,7 +36937,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findSlotIndex
      * @since 3.19.0
-     * 
+     *
      * @param {string} slotName - The name of the slot to find.
      *
      * @return {integer} The slot index. Or -1 if the Slot was not found.
@@ -22317,7 +36953,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findSkin
      * @since 3.19.0
-     * 
+     *
      * @param {string} skinName - The name of the skin to find.
      *
      * @return {spine.Skin} The Skin. May be null.
@@ -22333,7 +36969,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findEvent
      * @since 3.19.0
-     * 
+     *
      * @param {string} eventDataName - The name of the event to find.
      *
      * @return {spine.EventData} The Event Data. May be null.
@@ -22349,7 +36985,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findAnimation
      * @since 3.19.0
-     * 
+     *
      * @param {string} animationName - The name of the animation to find.
      *
      * @return {spine.Animation} The Animation. May be null.
@@ -22365,7 +37001,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findIkConstraint
      * @since 3.19.0
-     * 
+     *
      * @param {string} constraintName - The name of the constraint to find.
      *
      * @return {spine.IkConstraintData} The IK constraint. May be null.
@@ -22381,7 +37017,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findTransformConstraint
      * @since 3.19.0
-     * 
+     *
      * @param {string} constraintName - The name of the constraint to find.
      *
      * @return {spine.TransformConstraintData} The transform constraint. May be null.
@@ -22397,7 +37033,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findPathConstraint
      * @since 3.19.0
-     * 
+     *
      * @param {string} constraintName - The name of the constraint to find.
      *
      * @return {spine.PathConstraintData} The path constraint. May be null.
@@ -22413,7 +37049,7 @@ var SpineGameObject = new Class({
      *
      * @method SpineGameObject#findPathConstraintIndex
      * @since 3.19.0
-     * 
+     *
      * @param {string} constraintName - The name of the constraint to find.
      *
      * @return {integer} The constraint index. Or -1 if the constraint was not found.
@@ -22425,15 +37061,15 @@ var SpineGameObject = new Class({
 
     /**
      * Returns the axis aligned bounding box (AABB) of the region and mesh attachments for the current pose.
-     * 
+     *
      * The returned object contains two properties: `offset` and `size`:
-     * 
+     *
      * `offset` - The distance from the skeleton origin to the bottom left corner of the AABB.
      * `size` - The width and height of the AABB.
      *
      * @method SpineGameObject#getBounds
      * @since 3.19.0
-     * 
+     *
      * @return {any} The bounds object.
      */
     getBounds: function ()
@@ -22447,7 +37083,7 @@ var SpineGameObject = new Class({
      * @method SpineGameObject#preUpdate
      * @protected
      * @since 3.19.0
-     * 
+     *
      * @param {number} time - The current timestamp.
      * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
@@ -22500,7 +37136,7 @@ module.exports = SpineGameObject;
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -22636,7 +37272,7 @@ module.exports = SpineGameObjectCanvasRenderer;
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -22672,7 +37308,7 @@ module.exports = {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
+ * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -22699,31 +37335,37 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
 {
     var plugin = src.plugin;
     var skeleton = src.skeleton;
+    var childAlpha = skeleton.color.a;
     var sceneRenderer = plugin.sceneRenderer;
 
     var GameObjectRenderMask = 15;
 
-    var willRender = !(GameObjectRenderMask !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)));
+    var willRender = !(GameObjectRenderMask !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)) || childAlpha === 0);
 
     if (!skeleton || !willRender)
     {
-        //  Reset the current type
-        renderer.currentType = '';
+        //  If there is already a batch running, and the next type isn't a Spine object, or this is the end, we need to close it
 
-        //  If there is already a batch running, we need to close it
-        if (!renderer.nextTypeMatch)
+        if (sceneRenderer.batcher.isDrawing && (!renderer.nextTypeMatch || renderer.finalType))
         {
             //  The next object in the display list is not a Spine object, so we end the batch
             sceneRenderer.end();
-    
-            renderer.rebindPipeline(renderer.pipelines.TextureTintPipeline);
+
+            renderer.rebindPipeline();
         }
-    
+
+        if (!renderer.finalType)
+        {
+            //  Reset the current type
+            renderer.currentType = '';
+        }
+
         return;
     }
 
     if (renderer.newType)
     {
+        //  flush + clear previous pipeline if this is a new type
         renderer.clearPipeline();
     }
 
@@ -22790,7 +37432,7 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
         }
     }
 
-    if (camera.renderToTexture)
+    if (camera.renderToTexture || renderer.currentFramebuffer !== null)
     {
         skeleton.y = calcMatrix.ty;
         skeleton.scaleY *= -1;
@@ -22805,9 +37447,6 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     }
 
     //  Draw the current skeleton
-
-    // console.log('draw', src.name);
-
     sceneRenderer.drawSkeleton(skeleton, src.preMultipliedAlpha);
 
     if (plugin.drawDebug || src.drawDebug)
@@ -22827,10 +37466,11 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
 
     if (!renderer.nextTypeMatch)
     {
-        //  The next object in the display list is not a Spine object, so we end the batch
+        //  The next object in the display list is not a Spine Game Object or Spine Container, so we end the batch
         sceneRenderer.end();
 
-        renderer.rebindPipeline(renderer.pipelines.TextureTintPipeline);
+        //  And rebind the previous pipeline
+        renderer.rebindPipeline();
     }
 };
 
@@ -22847,13 +37487,13 @@ module.exports = SpineGameObjectWebGLRenderer;
 /***/ (function(module, exports) {
 
 /*** IMPORTS FROM imports-loader ***/
-(function() {
 
+(function() {
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -23526,17 +38166,15 @@ var spine;
             var slot = skeleton.slots[this.slotIndex];
             if (!slot.bone.active)
                 return;
-            if (direction == MixDirection.mixOut && blend == MixBlend.setup) {
-                var attachmentName_1 = slot.data.attachmentName;
-                slot.setAttachment(attachmentName_1 == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName_1));
+            if (direction == MixDirection.mixOut) {
+                if (blend == MixBlend.setup)
+                    this.setAttachment(skeleton, slot, slot.data.attachmentName);
                 return;
             }
             var frames = this.frames;
             if (time < frames[0]) {
-                if (blend == MixBlend.setup || blend == MixBlend.first) {
-                    var attachmentName_2 = slot.data.attachmentName;
-                    slot.setAttachment(attachmentName_2 == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName_2));
-                }
+                if (blend == MixBlend.setup || blend == MixBlend.first)
+                    this.setAttachment(skeleton, slot, slot.data.attachmentName);
                 return;
             }
             var frameIndex = 0;
@@ -23547,6 +38185,9 @@ var spine;
             var attachmentName = this.attachmentNames[frameIndex];
             skeleton.slots[this.slotIndex]
                 .setAttachment(attachmentName == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName));
+        };
+        AttachmentTimeline.prototype.setAttachment = function (skeleton, slot, attachmentName) {
+            slot.attachment = attachmentName == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName);
         };
         return AttachmentTimeline;
     }());
@@ -23649,6 +38290,7 @@ var spine;
                         case MixBlend.replace:
                             for (var i_5 = 0; i_5 < vertexCount; i_5++)
                                 deform[i_5] += (lastVertices[i_5] - deform[i_5]) * alpha;
+                            break;
                         case MixBlend.add:
                             var vertexAttachment = slotAttachment;
                             if (vertexAttachment.bones == null) {
@@ -23805,8 +38447,9 @@ var spine;
         DrawOrderTimeline.prototype.apply = function (skeleton, lastTime, time, firedEvents, alpha, blend, direction) {
             var drawOrder = skeleton.drawOrder;
             var slots = skeleton.slots;
-            if (direction == MixDirection.mixOut && blend == MixBlend.setup) {
-                spine.Utils.arrayCopy(skeleton.slots, 0, skeleton.drawOrder, 0, skeleton.slots.length);
+            if (direction == MixDirection.mixOut) {
+                if (blend == MixBlend.setup)
+                    spine.Utils.arrayCopy(skeleton.slots, 0, skeleton.drawOrder, 0, skeleton.slots.length);
                 return;
             }
             var frames = this.frames;
@@ -24198,6 +38841,7 @@ var spine;
         function AnimationState(data) {
             this.tracks = new Array();
             this.timeScale = 1;
+            this.unkeyedState = 0;
             this.events = new Array();
             this.listeners = new Array();
             this.queue = new EventQueue(this);
@@ -24287,12 +38931,12 @@ var spine;
             var events = this.events;
             var tracks = this.tracks;
             var applied = false;
-            for (var i = 0, n = tracks.length; i < n; i++) {
-                var current = tracks[i];
+            for (var i_16 = 0, n_1 = tracks.length; i_16 < n_1; i_16++) {
+                var current = tracks[i_16];
                 if (current == null || current.delay > 0)
                     continue;
                 applied = true;
-                var blend = i == 0 ? spine.MixBlend.first : current.mixBlend;
+                var blend = i_16 == 0 ? spine.MixBlend.first : current.mixBlend;
                 var mix = current.alpha;
                 if (current.mixingFrom != null)
                     mix *= this.applyMixingFrom(current, skeleton, blend);
@@ -24301,10 +38945,14 @@ var spine;
                 var animationLast = current.animationLast, animationTime = current.getAnimationTime();
                 var timelineCount = current.animation.timelines.length;
                 var timelines = current.animation.timelines;
-                if ((i == 0 && mix == 1) || blend == spine.MixBlend.add) {
+                if ((i_16 == 0 && mix == 1) || blend == spine.MixBlend.add) {
                     for (var ii = 0; ii < timelineCount; ii++) {
                         spine.Utils.webkit602BugfixHelper(mix, blend);
-                        timelines[ii].apply(skeleton, animationLast, animationTime, events, mix, blend, spine.MixDirection.mixIn);
+                        var timeline = timelines[ii];
+                        if (timeline instanceof spine.AttachmentTimeline)
+                            this.applyAttachmentTimeline(timeline, skeleton, animationTime, blend, true);
+                        else
+                            timeline.apply(skeleton, animationLast, animationTime, events, mix, blend, spine.MixDirection.mixIn);
                     }
                 }
                 else {
@@ -24314,14 +38962,17 @@ var spine;
                         spine.Utils.setArraySize(current.timelinesRotation, timelineCount << 1, null);
                     var timelinesRotation = current.timelinesRotation;
                     for (var ii = 0; ii < timelineCount; ii++) {
-                        var timeline = timelines[ii];
-                        var timelineBlend = (timelineMode[ii] & (AnimationState.NOT_LAST - 1)) == AnimationState.SUBSEQUENT ? blend : spine.MixBlend.setup;
-                        if (timeline instanceof spine.RotateTimeline) {
-                            this.applyRotateTimeline(timeline, skeleton, animationTime, mix, timelineBlend, timelinesRotation, ii << 1, firstFrame);
+                        var timeline_1 = timelines[ii];
+                        var timelineBlend = timelineMode[ii] == AnimationState.SUBSEQUENT ? blend : spine.MixBlend.setup;
+                        if (timeline_1 instanceof spine.RotateTimeline) {
+                            this.applyRotateTimeline(timeline_1, skeleton, animationTime, mix, timelineBlend, timelinesRotation, ii << 1, firstFrame);
+                        }
+                        else if (timeline_1 instanceof spine.AttachmentTimeline) {
+                            this.applyAttachmentTimeline(timeline_1, skeleton, animationTime, blend, true);
                         }
                         else {
                             spine.Utils.webkit602BugfixHelper(mix, blend);
-                            timeline.apply(skeleton, animationLast, animationTime, events, mix, timelineBlend, spine.MixDirection.mixIn);
+                            timeline_1.apply(skeleton, animationLast, animationTime, events, mix, timelineBlend, spine.MixDirection.mixIn);
                         }
                     }
                 }
@@ -24330,6 +38981,16 @@ var spine;
                 current.nextAnimationLast = animationTime;
                 current.nextTrackLast = current.trackTime;
             }
+            var setupState = this.unkeyedState + AnimationState.SETUP;
+            var slots = skeleton.slots;
+            for (var i = 0, n = skeleton.slots.length; i < n; i++) {
+                var slot = slots[i];
+                if (slot.attachmentState == setupState) {
+                    var attachmentName = slot.data.attachmentName;
+                    slot.attachment = (attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
+                }
+            }
+            this.unkeyedState += 2;
             this.queue.drain();
             return applied;
         };
@@ -24373,23 +39034,22 @@ var spine;
                     var direction = spine.MixDirection.mixOut;
                     var timelineBlend = void 0;
                     var alpha = 0;
-                    switch (timelineMode[i] & (AnimationState.NOT_LAST - 1)) {
+                    switch (timelineMode[i]) {
                         case AnimationState.SUBSEQUENT:
-                            timelineBlend = blend;
-                            if (!attachments && timeline instanceof spine.AttachmentTimeline) {
-                                if ((timelineMode[i] & AnimationState.NOT_LAST) == AnimationState.NOT_LAST)
-                                    continue;
-                                timelineBlend = spine.MixBlend.setup;
-                            }
                             if (!drawOrder && timeline instanceof spine.DrawOrderTimeline)
                                 continue;
+                            timelineBlend = blend;
                             alpha = alphaMix;
                             break;
                         case AnimationState.FIRST:
                             timelineBlend = spine.MixBlend.setup;
                             alpha = alphaMix;
                             break;
-                        case AnimationState.HOLD:
+                        case AnimationState.HOLD_SUBSEQUENT:
+                            timelineBlend = blend;
+                            alpha = alphaHold;
+                            break;
+                        case AnimationState.HOLD_FIRST:
                             timelineBlend = spine.MixBlend.setup;
                             alpha = alphaHold;
                             break;
@@ -24402,18 +39062,12 @@ var spine;
                     from.totalAlpha += alpha;
                     if (timeline instanceof spine.RotateTimeline)
                         this.applyRotateTimeline(timeline, skeleton, animationTime, alpha, timelineBlend, timelinesRotation, i << 1, firstFrame);
+                    else if (timeline instanceof spine.AttachmentTimeline)
+                        this.applyAttachmentTimeline(timeline, skeleton, animationTime, timelineBlend, attachments);
                     else {
                         spine.Utils.webkit602BugfixHelper(alpha, blend);
-                        if (timelineBlend == spine.MixBlend.setup) {
-                            if (timeline instanceof spine.AttachmentTimeline) {
-                                if (attachments || (timelineMode[i] & AnimationState.NOT_LAST) == AnimationState.NOT_LAST)
-                                    direction = spine.MixDirection.mixIn;
-                            }
-                            else if (timeline instanceof spine.DrawOrderTimeline) {
-                                if (drawOrder)
-                                    direction = spine.MixDirection.mixIn;
-                            }
-                        }
+                        if (drawOrder && timeline instanceof spine.DrawOrderTimeline && timelineBlend == spine.MixBlend.setup)
+                            direction = spine.MixDirection.mixIn;
                         timeline.apply(skeleton, animationLast, animationTime, events, alpha, timelineBlend, direction);
                     }
                 }
@@ -24424,6 +39078,31 @@ var spine;
             from.nextAnimationLast = animationTime;
             from.nextTrackLast = from.trackTime;
             return mix;
+        };
+        AnimationState.prototype.applyAttachmentTimeline = function (timeline, skeleton, time, blend, attachments) {
+            var slot = skeleton.slots[timeline.slotIndex];
+            if (!slot.bone.active)
+                return;
+            var frames = timeline.frames;
+            if (time < frames[0]) {
+                if (blend == spine.MixBlend.setup || blend == spine.MixBlend.first)
+                    this.setAttachment(skeleton, slot, slot.data.attachmentName, attachments);
+            }
+            else {
+                var frameIndex;
+                if (time >= frames[frames.length - 1])
+                    frameIndex = frames.length - 1;
+                else
+                    frameIndex = spine.Animation.binarySearch(frames, time) - 1;
+                this.setAttachment(skeleton, slot, timeline.attachmentNames[frameIndex], attachments);
+            }
+            if (slot.attachmentState <= this.unkeyedState)
+                slot.attachmentState = this.unkeyedState + AnimationState.SETUP;
+        };
+        AnimationState.prototype.setAttachment = function (skeleton, slot, attachmentName, attachments) {
+            slot.attachment = attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName);
+            if (attachments)
+                slot.attachmentState = this.unkeyedState + AnimationState.CURRENT;
         };
         AnimationState.prototype.applyRotateTimeline = function (timeline, skeleton, time, alpha, blend, timelinesRotation, i, firstFrame) {
             if (firstFrame)
@@ -24687,6 +39366,7 @@ var spine;
             entry.interruptAlpha = 1;
             entry.mixTime = 0;
             entry.mixDuration = last == null ? 0 : this.data.getMix(last.animation, animation);
+            entry.mixBlend = spine.MixBlend.replace;
             return entry;
         };
         AnimationState.prototype.disposeNext = function (entry) {
@@ -24712,14 +39392,6 @@ var spine;
                     entry = entry.mixingTo;
                 } while (entry != null);
             }
-            this.propertyIDs.clear();
-            for (var i = this.tracks.length - 1; i >= 0; i--) {
-                var entry = this.tracks[i];
-                while (entry != null) {
-                    this.computeNotLast(entry);
-                    entry = entry.mixingFrom;
-                }
-            }
         };
         AnimationState.prototype.computeHold = function (entry) {
             var to = entry.mixingTo;
@@ -24731,8 +39403,7 @@ var spine;
             var propertyIDs = this.propertyIDs;
             if (to != null && to.holdPrevious) {
                 for (var i = 0; i < timelinesCount; i++) {
-                    propertyIDs.add(timelines[i].getPropertyId());
-                    timelineMode[i] = AnimationState.HOLD;
+                    timelineMode[i] = propertyIDs.add(timelines[i].getPropertyId()) ? AnimationState.HOLD_FIRST : AnimationState.HOLD_SUBSEQUENT;
                 }
                 return;
             }
@@ -24756,20 +39427,7 @@ var spine;
                         }
                         break;
                     }
-                    timelineMode[i] = AnimationState.HOLD;
-                }
-            }
-        };
-        AnimationState.prototype.computeNotLast = function (entry) {
-            var timelines = entry.animation.timelines;
-            var timelinesCount = entry.animation.timelines.length;
-            var timelineMode = entry.timelineMode;
-            var propertyIDs = this.propertyIDs;
-            for (var i = 0; i < timelinesCount; i++) {
-                if (timelines[i] instanceof spine.AttachmentTimeline) {
-                    var timeline = timelines[i];
-                    if (!propertyIDs.add(timeline.slotIndex))
-                        timelineMode[i] |= AnimationState.NOT_LAST;
+                    timelineMode[i] = AnimationState.HOLD_FIRST;
                 }
             }
         };
@@ -24797,9 +39455,11 @@ var spine;
         AnimationState.emptyAnimation = new spine.Animation("<empty>", [], 0);
         AnimationState.SUBSEQUENT = 0;
         AnimationState.FIRST = 1;
-        AnimationState.HOLD = 2;
-        AnimationState.HOLD_MIX = 3;
-        AnimationState.NOT_LAST = 4;
+        AnimationState.HOLD_SUBSEQUENT = 2;
+        AnimationState.HOLD_FIRST = 3;
+        AnimationState.HOLD_MIX = 4;
+        AnimationState.SETUP = 1;
+        AnimationState.CURRENT = 2;
         return AnimationState;
     }());
     spine.AnimationState = AnimationState;
@@ -25012,11 +39672,15 @@ var spine;
             this.errors = {};
             this.toLoad = 0;
             this.loaded = 0;
+            this.rawDataUris = {};
             this.textureLoader = textureLoader;
             this.pathPrefix = pathPrefix;
         }
-        AssetManager.downloadText = function (url, success, error) {
+        AssetManager.prototype.downloadText = function (url, success, error) {
             var request = new XMLHttpRequest();
+            request.overrideMimeType("text/html");
+            if (this.rawDataUris[url])
+                url = this.rawDataUris[url];
             request.open("GET", url, true);
             request.onload = function () {
                 if (request.status == 200) {
@@ -25031,8 +39695,10 @@ var spine;
             };
             request.send();
         };
-        AssetManager.downloadBinary = function (url, success, error) {
+        AssetManager.prototype.downloadBinary = function (url, success, error) {
             var request = new XMLHttpRequest();
+            if (this.rawDataUris[url])
+                url = this.rawDataUris[url];
             request.open("GET", url, true);
             request.responseType = "arraybuffer";
             request.onload = function () {
@@ -25048,13 +39714,16 @@ var spine;
             };
             request.send();
         };
+        AssetManager.prototype.setRawDataURI = function (path, data) {
+            this.rawDataUris[this.pathPrefix + path] = data;
+        };
         AssetManager.prototype.loadBinary = function (path, success, error) {
             var _this = this;
             if (success === void 0) { success = null; }
             if (error === void 0) { error = null; }
             path = this.pathPrefix + path;
             this.toLoad++;
-            AssetManager.downloadBinary(path, function (data) {
+            this.downloadBinary(path, function (data) {
                 _this.assets[path] = data;
                 if (success)
                     success(path, data);
@@ -25074,7 +39743,7 @@ var spine;
             if (error === void 0) { error = null; }
             path = this.pathPrefix + path;
             this.toLoad++;
-            AssetManager.downloadText(path, function (data) {
+            this.downloadText(path, function (data) {
                 _this.assets[path] = data;
                 if (success)
                     success(path, data);
@@ -25093,12 +39762,13 @@ var spine;
             if (success === void 0) { success = null; }
             if (error === void 0) { error = null; }
             path = this.pathPrefix + path;
+            var storagePath = path;
             this.toLoad++;
             var img = new Image();
             img.crossOrigin = "anonymous";
             img.onload = function (ev) {
                 var texture = _this.textureLoader(img);
-                _this.assets[path] = texture;
+                _this.assets[storagePath] = texture;
                 _this.toLoad--;
                 _this.loaded++;
                 if (success)
@@ -25111,31 +39781,9 @@ var spine;
                 if (error)
                     error(path, "Couldn't load image " + path);
             };
+            if (this.rawDataUris[path])
+                path = this.rawDataUris[path];
             img.src = path;
-        };
-        AssetManager.prototype.loadTextureData = function (path, data, success, error) {
-            var _this = this;
-            if (success === void 0) { success = null; }
-            if (error === void 0) { error = null; }
-            path = this.pathPrefix + path;
-            this.toLoad++;
-            var img = new Image();
-            img.onload = function (ev) {
-                var texture = _this.textureLoader(img);
-                _this.assets[path] = texture;
-                _this.toLoad--;
-                _this.loaded++;
-                if (success)
-                    success(path, img);
-            };
-            img.onerror = function (ev) {
-                _this.errors[path] = "Couldn't load image " + path;
-                _this.toLoad--;
-                _this.loaded++;
-                if (error)
-                    error(path, "Couldn't load image " + path);
-            };
-            img.src = data;
         };
         AssetManager.prototype.loadTextureAtlas = function (path, success, error) {
             var _this = this;
@@ -25144,12 +39792,12 @@ var spine;
             var parent = path.lastIndexOf("/") >= 0 ? path.substring(0, path.lastIndexOf("/")) : "";
             path = this.pathPrefix + path;
             this.toLoad++;
-            AssetManager.downloadText(path, function (atlasData) {
+            this.downloadText(path, function (atlasData) {
                 var pagesLoaded = { count: 0 };
                 var atlasPages = new Array();
                 try {
                     var atlas = new spine.TextureAtlas(atlasData, function (path) {
-                        atlasPages.push(parent + "/" + path);
+                        atlasPages.push(parent == "" ? path : parent + "/" + path);
                         var image = document.createElement("img");
                         image.width = 16;
                         image.height = 16;
@@ -25173,7 +39821,7 @@ var spine;
                             if (!pageLoadError) {
                                 try {
                                     var atlas = new spine.TextureAtlas(atlasData, function (path) {
-                                        return _this.get(parent + "/" + path);
+                                        return _this.get(parent == "" ? path : parent + "/" + path);
                                     });
                                     _this.assets[path] = atlas;
                                     if (success)
@@ -25411,6 +40059,8 @@ var spine;
                     var prx = 0;
                     if (s > 0.0001) {
                         s = Math.abs(pa * pd - pb * pc) / s;
+                        pa /= this.skeleton.scaleX;
+                        pc /= this.skeleton.scaleY;
                         pb = pc * s;
                         pd = pa * s;
                         prx = Math.atan2(pc, pa) * spine.MathUtils.radDeg;
@@ -25681,10 +40331,27 @@ var spine;
             if (!bone.appliedValid)
                 bone.updateAppliedTransform();
             var p = bone.parent;
-            var id = 1 / (p.a * p.d - p.b * p.c);
-            var x = targetX - p.worldX, y = targetY - p.worldY;
-            var tx = (x * p.d - y * p.b) * id - bone.ax, ty = (y * p.a - x * p.c) * id - bone.ay;
-            var rotationIK = Math.atan2(ty, tx) * spine.MathUtils.radDeg - bone.ashearX - bone.arotation;
+            var pa = p.a, pb = p.b, pc = p.c, pd = p.d;
+            var rotationIK = -bone.ashearX - bone.arotation, tx = 0, ty = 0;
+            switch (bone.data.transformMode) {
+                case spine.TransformMode.OnlyTranslation:
+                    tx = targetX - bone.worldX;
+                    ty = targetY - bone.worldY;
+                    break;
+                case spine.TransformMode.NoRotationOrReflection:
+                    var s = Math.abs(pa * pd - pb * pc) / (pa * pa + pc * pc);
+                    var sa = pa / bone.skeleton.scaleX;
+                    var sc = pc / bone.skeleton.scaleY;
+                    pb = -sc * s * bone.skeleton.scaleX;
+                    pd = sa * s * bone.skeleton.scaleY;
+                    rotationIK += Math.atan2(sc, sa) * spine.MathUtils.radDeg;
+                default:
+                    var x = targetX - p.worldX, y = targetY - p.worldY;
+                    var d = pa * pd - pb * pc;
+                    tx = (x * pd - y * pb) / d - bone.ax;
+                    ty = (y * pa - x * pc) / d - bone.ay;
+            }
+            rotationIK += Math.atan2(ty, tx) * spine.MathUtils.radDeg;
             if (bone.ascaleX < 0)
                 rotationIK += 180;
             if (rotationIK > 180)
@@ -25693,6 +40360,12 @@ var spine;
                 rotationIK += 360;
             var sx = bone.ascaleX, sy = bone.ascaleY;
             if (compress || stretch) {
+                switch (bone.data.transformMode) {
+                    case spine.TransformMode.NoScale:
+                    case spine.TransformMode.NoScaleOrReflection:
+                        tx = targetX - bone.worldX;
+                        ty = targetY - bone.worldY;
+                }
                 var b = bone.data.length * sx, dd = Math.sqrt(tx * tx + ty * ty);
                 if ((compress && dd < b) || (stretch && dd > b) && b > 0.0001) {
                     var s = (dd / b - 1) * alpha + 1;
@@ -26351,6 +41024,7 @@ var spine;
             if (!this.queueAsset(clientId, null, path))
                 return;
             var request = new XMLHttpRequest();
+            request.overrideMimeType("text/html");
             request.onreadystatechange = function () {
                 if (request.readyState == XMLHttpRequest.DONE) {
                     if (request.status >= 200 && request.status < 300) {
@@ -26370,6 +41044,7 @@ var spine;
             if (!this.queueAsset(clientId, null, path))
                 return;
             var request = new XMLHttpRequest();
+            request.overrideMimeType("text/html");
             request.onreadystatechange = function () {
                 if (request.readyState == XMLHttpRequest.DONE) {
                     if (request.status >= 200 && request.status < 300) {
@@ -26389,7 +41064,6 @@ var spine;
             if (!this.queueAsset(clientId, textureLoader, path))
                 return;
             var img = new Image();
-            img.src = path;
             img.crossOrigin = "anonymous";
             img.onload = function (ev) {
                 _this.rawAssets[path] = img;
@@ -26397,6 +41071,7 @@ var spine;
             img.onerror = function (ev) {
                 _this.errors[path] = "Couldn't load image " + path;
             };
+            img.src = path;
         };
         SharedAssetManager.prototype.get = function (clientId, path) {
             path = this.pathPrefix + path;
@@ -26922,6 +41597,8 @@ var spine;
             var input = new BinaryInput(binary);
             skeletonData.hash = input.readString();
             skeletonData.version = input.readString();
+            if ("3.8.75" == skeletonData.version)
+                throw new Error("Unsupported skeleton data, please export with a newer version of Spine.");
             skeletonData.x = input.readFloat();
             skeletonData.y = input.readFloat();
             skeletonData.width = input.readFloat();
@@ -27910,7 +42587,7 @@ var spine;
             var clippingPolygon = this.clippingPolygon;
             SkeletonClipping.makeClockwise(clippingPolygon);
             var clippingPolygons = this.clippingPolygons = this.triangulator.decompose(clippingPolygon, this.triangulator.triangulate(clippingPolygon));
-            for (var i = 0, n_1 = clippingPolygons.length; i < n_1; i++) {
+            for (var i = 0, n_2 = clippingPolygons.length; i < n_2; i++) {
                 var polygon = clippingPolygons[i];
                 SkeletonClipping.makeClockwise(polygon);
                 polygon.push(polygon[0]);
@@ -28332,6 +43009,8 @@ var spine;
             if (skeletonMap != null) {
                 skeletonData.hash = skeletonMap.hash;
                 skeletonData.version = skeletonMap.spine;
+                if ("3.8.75" == skeletonData.version)
+                    throw new Error("Unsupported skeleton data, please export with a newer version of Spine.");
                 skeletonData.x = skeletonMap.x;
                 skeletonData.y = skeletonMap.y;
                 skeletonData.width = skeletonMap.width;
@@ -29009,7 +43688,7 @@ var spine;
             skeletonData.animations.push(new spine.Animation(name, timelines, duration));
         };
         SkeletonJson.prototype.readCurve = function (map, timeline, frameIndex) {
-            if (!map.curve)
+            if (!map.hasOwnProperty("curve"))
                 return;
             if (map.curve == "stepped")
                 timeline.setStepped(frameIndex);
@@ -30324,9 +45003,7 @@ var spine;
         };
         Pool.prototype.freeAll = function (items) {
             for (var i = 0; i < items.length; i++) {
-                if (items[i].reset)
-                    items[i].reset();
-                this.items[i] = items[i];
+                this.free(items[i]);
             }
         };
         Pool.prototype.clear = function () {
@@ -30868,7 +45545,7 @@ var spine;
             worldVertices[offset + 1] = offsetX * c + offsetY * d + y;
         };
         RegionAttachment.prototype.copy = function () {
-            var copy = new RegionAttachment(name);
+            var copy = new RegionAttachment(this.name);
             copy.region = this.region;
             copy.rendererObject = this.rendererObject;
             copy.path = this.path;
@@ -31372,6 +46049,8 @@ var spine;
                     this.texture = this.context.gl.createTexture();
                 }
                 this.bind();
+                if (GLTexture.DISABLE_UNPACK_PREMULTIPLIED_ALPHA_WEBGL)
+                    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this._image);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, useMipMaps ? gl.LINEAR_MIPMAP_LINEAR : gl.LINEAR);
@@ -31401,6 +46080,7 @@ var spine;
                 var gl = this.context.gl;
                 gl.deleteTexture(this.texture);
             };
+            GLTexture.DISABLE_UNPACK_PREMULTIPLIED_ALPHA_WEBGL = false;
             return GLTexture;
         }(spine.Texture));
         webgl.GLTexture = GLTexture;
@@ -33130,11 +47810,11 @@ var spine;
                         var nn = clip.worldVerticesLength;
                         var world = this.temp = spine.Utils.setArraySize(this.temp, nn, 0);
                         clip.computeWorldVertices(slot, 0, nn, world, 0, 2);
-                        for (var i_16 = 0, n_2 = world.length; i_16 < n_2; i_16 += 2) {
-                            var x = world[i_16];
-                            var y = world[i_16 + 1];
-                            var x2 = world[(i_16 + 2) % world.length];
-                            var y2 = world[(i_16 + 3) % world.length];
+                        for (var i_17 = 0, n_3 = world.length; i_17 < n_3; i_17 += 2) {
+                            var x = world[i_17];
+                            var y = world[i_17 + 1];
+                            var x2 = world[(i_17 + 2) % world.length];
+                            var y2 = world[(i_17 + 3) % world.length];
                             shapes.line(x, y, x2, y2);
                         }
                     }
@@ -33295,7 +47975,7 @@ var spine;
                                 var vertexEffect = this.vertexEffect;
                                 var verts = clippedVertices;
                                 if (!twoColorTint) {
-                                    for (var v = 0, n_3 = clippedVertices.length; v < n_3; v += vertexSize) {
+                                    for (var v = 0, n_4 = clippedVertices.length; v < n_4; v += vertexSize) {
                                         tempPos.x = verts[v];
                                         tempPos.y = verts[v + 1];
                                         tempLight.set(verts[v + 2], verts[v + 3], verts[v + 4], verts[v + 5]);
@@ -33314,7 +47994,7 @@ var spine;
                                     }
                                 }
                                 else {
-                                    for (var v = 0, n_4 = clippedVertices.length; v < n_4; v += vertexSize) {
+                                    for (var v = 0, n_5 = clippedVertices.length; v < n_5; v += vertexSize) {
                                         tempPos.x = verts[v];
                                         tempPos.y = verts[v + 1];
                                         tempLight.set(verts[v + 2], verts[v + 3], verts[v + 4], verts[v + 5]);
@@ -33344,7 +48024,7 @@ var spine;
                             if (this.vertexEffect != null) {
                                 var vertexEffect = this.vertexEffect;
                                 if (!twoColorTint) {
-                                    for (var v = 0, u = 0, n_5 = renderable.numFloats; v < n_5; v += vertexSize, u += 2) {
+                                    for (var v = 0, u = 0, n_6 = renderable.numFloats; v < n_6; v += vertexSize, u += 2) {
                                         tempPos.x = verts[v];
                                         tempPos.y = verts[v + 1];
                                         tempUv.x = uvs[u];
@@ -33363,7 +48043,7 @@ var spine;
                                     }
                                 }
                                 else {
-                                    for (var v = 0, u = 0, n_6 = renderable.numFloats; v < n_6; v += vertexSize, u += 2) {
+                                    for (var v = 0, u = 0, n_7 = renderable.numFloats; v < n_7; v += vertexSize, u += 2) {
                                         tempPos.x = verts[v];
                                         tempPos.y = verts[v + 1];
                                         tempUv.x = uvs[u];
@@ -33388,7 +48068,7 @@ var spine;
                             }
                             else {
                                 if (!twoColorTint) {
-                                    for (var v = 2, u = 0, n_7 = renderable.numFloats; v < n_7; v += vertexSize, u += 2) {
+                                    for (var v = 2, u = 0, n_8 = renderable.numFloats; v < n_8; v += vertexSize, u += 2) {
                                         verts[v] = finalColor.r;
                                         verts[v + 1] = finalColor.g;
                                         verts[v + 2] = finalColor.b;
@@ -33398,7 +48078,7 @@ var spine;
                                     }
                                 }
                                 else {
-                                    for (var v = 2, u = 0, n_8 = renderable.numFloats; v < n_8; v += vertexSize, u += 2) {
+                                    for (var v = 2, u = 0, n_9 = renderable.numFloats; v < n_9; v += vertexSize, u += 2) {
                                         verts[v] = finalColor.r;
                                         verts[v + 1] = finalColor.g;
                                         verts[v + 2] = finalColor.b;
@@ -33589,10 +48269,11 @@ var spine;
     })(webgl = spine.webgl || (spine.webgl = {}));
 })(spine || (spine = {}));
 //# sourceMappingURL=spine-both.js.map
-
 /*** EXPORTS FROM exports-loader ***/
 module.exports = spine;
+
 }.call(window));
+
 
 /***/ })
 

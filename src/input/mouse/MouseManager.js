@@ -15,9 +15,9 @@ var NOOP = require('../../utils/NOOP');
 /**
  * @classdesc
  * The Mouse Manager is a helper class that belongs to the Input Manager.
- * 
+ *
  * Its role is to listen for native DOM Mouse Events and then pass them onto the Input Manager for further processing.
- * 
+ *
  * You do not need to create this class directly, the Input Manager will create an instance of it automatically.
  *
  * @class MouseManager
@@ -222,9 +222,9 @@ var MouseManager = new Class({
 
     /**
      * Attempts to disable the context menu from appearing if you right-click on the browser.
-     * 
+     *
      * Works by listening for the `contextmenu` event and prevent defaulting it.
-     * 
+     *
      * Use this if you need to enable right-button mouse support in your game, and the browser
      * menu keeps getting in the way.
      *
@@ -306,7 +306,7 @@ var MouseManager = new Class({
             if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
             {
                 _this.manager.onMouseMove(event);
-    
+
                 if (_this.capture)
                 {
                     event.preventDefault();
@@ -324,7 +324,7 @@ var MouseManager = new Class({
             if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
             {
                 _this.manager.onMouseDown(event);
-    
+
                 if (_this.capture && event.target === canvas)
                 {
                     event.preventDefault();
@@ -346,7 +346,7 @@ var MouseManager = new Class({
             if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
             {
                 _this.manager.onMouseUp(event);
-    
+
                 if (_this.capture && event.target === canvas)
                 {
                     event.preventDefault();
@@ -406,8 +406,8 @@ var MouseManager = new Class({
 
         if (window && this.manager.game.config.inputWindowEvents)
         {
-            window.addEventListener('mousedown', this.onMouseDownWindow, nonPassive);
-            window.addEventListener('mouseup', this.onMouseUpWindow, nonPassive);
+            window.top.addEventListener('mousedown', this.onMouseDownWindow, nonPassive);
+            window.top.addEventListener('mouseup', this.onMouseUpWindow, nonPassive);
         }
 
         if (Features.pointerLock)
@@ -448,8 +448,8 @@ var MouseManager = new Class({
 
         if (window)
         {
-            window.removeEventListener('mousedown', this.onMouseDownWindow);
-            window.removeEventListener('mouseup', this.onMouseUpWindow);
+            window.top.removeEventListener('mousedown', this.onMouseDownWindow);
+            window.top.removeEventListener('mouseup', this.onMouseUpWindow);
         }
 
         if (Features.pointerLock)

@@ -8,16 +8,17 @@
  * Create an array representing the range of numbers (usually integers), between, and inclusive of,
  * the given `start` and `end` arguments. For example:
  *
- * `var array = numberArray(2, 4); // array = [2, 3, 4]`
- * `var array = numberArray(0, 9); // array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]`
+ * `var array = Phaser.Utils.Array.NumberArray(2, 4); // array = [2, 3, 4]`
+ * `var array = Phaser.Utils.Array.NumberArray(0, 9); // array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]`
+ * `var array = Phaser.Utils.Array.NumberArray(8, 2); // array = [8, 7, 6, 5, 4, 3, 2]`
  *
- * This is equivalent to `numberArrayStep(start, end, 1)`.
+ * This is equivalent to `Phaser.Utils.Array.NumberArrayStep(start, end, 1)`.
  *
  * You can optionally provide a prefix and / or suffix string. If given the array will contain
  * strings, not integers. For example:
  *
- * `var array = numberArray(1, 4, 'Level '); // array = ["Level 1", "Level 2", "Level 3", "Level 4"]`
- * `var array = numberArray(5, 7, 'HD-', '.png'); // array = ["HD-5.png", "HD-6.png", "HD-7.png"]`
+ * `var array = Phaser.Utils.Array.NumberArray(1, 4, 'Level '); // array = ["Level 1", "Level 2", "Level 3", "Level 4"]`
+ * `var array = Phaser.Utils.Array.NumberArray(5, 7, 'HD-', '.png'); // array = ["HD-5.png", "HD-6.png", "HD-7.png"]`
  *
  * @function Phaser.Utils.Array.NumberArray
  * @since 3.0.0
@@ -33,22 +34,50 @@ var NumberArray = function (start, end, prefix, suffix)
 {
     var result = [];
 
-    for (var i = start; i <= end; i++)
+    var i;
+    var asString = false;
+
+    if (prefix || suffix)
     {
-        if (prefix || suffix)
+        asString = true;
+
+        if (!prefix)
         {
-            var key = (prefix) ? prefix + i.toString() : i.toString();
-
-            if (suffix)
-            {
-                key = key.concat(suffix);
-            }
-
-            result.push(key);
+            prefix = '';
         }
-        else
+
+        if (!suffix)
         {
-            result.push(i);
+            suffix = '';
+        }
+    }
+
+    if (end < start)
+    {
+        for (i = start; i >= end; i--)
+        {
+            if (asString)
+            {
+                result.push(prefix + i.toString() + suffix);
+            }
+            else
+            {
+                result.push(i);
+            }
+        }
+    }
+    else
+    {
+        for (i = start; i <= end; i++)
+        {
+            if (asString)
+            {
+                result.push(prefix + i.toString() + suffix);
+            }
+            else
+            {
+                result.push(i);
+            }
         }
     }
 

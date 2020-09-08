@@ -3,12 +3,11 @@ let fs = require('fs-extra');
 /*
 BitmapMask.frag
 BitmapMask.vert
-DeferredDiffuse.frag
-DeferredDiffuse.vert
-ForwardDiffuse.frag
-GBuffer.frag
-TextureTint.frag
-TextureTint.vert
+Light.frag
+Single.frag
+Single.vert
+Multi.frag
+Multi.vert
 */
 
 let srcdir = './src/renderer/webgl/shaders/src/';

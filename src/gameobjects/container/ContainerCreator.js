@@ -29,8 +29,9 @@ GameObjectCreator.register('container', function (config, addToScene)
 
     var x = GetAdvancedValue(config, 'x', 0);
     var y = GetAdvancedValue(config, 'y', 0);
+    var children = GetAdvancedValue(config, 'children', null);
 
-    var container = new Container(this.scene, x, y);
+    var container = new Container(this.scene, x, y, children);
 
     if (addToScene !== undefined)
     {
@@ -38,6 +39,6 @@ GameObjectCreator.register('container', function (config, addToScene)
     }
 
     BuildGameObject(this.scene, container, config);
-    
+
     return container;
 });

@@ -10,6 +10,7 @@
 
 module.exports = {
 
+    EmitterOp: require('./EmitterOp'),
     GravityWell: require('./GravityWell'),
     Particle: require('./Particle'),
     ParticleEmitter: require('./ParticleEmitter'),

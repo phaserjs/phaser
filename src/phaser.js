@@ -76,7 +76,7 @@ Phaser = Extend(false, Phaser, CONST);
 
 /**
  * The root types namespace.
- * 
+ *
  * @namespace Phaser.Types
  * @since 3.17.0
  */
@@ -84,8 +84,6 @@ Phaser = Extend(false, Phaser, CONST);
 //  Export it
 
 module.exports = Phaser;
-
-global.Phaser = Phaser;
 
 /*
  * "Documentation is like pizza: when it is good, it is very, very good;

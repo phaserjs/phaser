@@ -13,7 +13,6 @@ var CalculateFacesAt = require('./CalculateFacesAt');
  * collision information.
  *
  * @function Phaser.Tilemaps.Components.RemoveTileAt
- * @private
  * @since 3.0.0
  *
  * @param {integer} tileX - The x coordinate.

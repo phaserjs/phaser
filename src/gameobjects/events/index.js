@@ -10,7 +10,9 @@
 
 module.exports = {
 
+    ADDED_TO_SCENE: require('./ADDED_TO_SCENE_EVENT'),
     DESTROY: require('./DESTROY_EVENT'),
+    REMOVED_FROM_SCENE: require('./REMOVED_FROM_SCENE_EVENT'),
     VIDEO_COMPLETE: require('./VIDEO_COMPLETE_EVENT'),
     VIDEO_CREATED: require('./VIDEO_CREATED_EVENT'),
     VIDEO_ERROR: require('./VIDEO_ERROR_EVENT'),

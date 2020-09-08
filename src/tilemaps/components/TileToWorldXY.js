@@ -23,6 +23,7 @@ var Vector2 = require('../../math/Vector2');
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
  * @return {Phaser.Math.Vector2} The XY location in world coordinates.
+ * 
  */
 var OrthoTileToWorldXY = function (tileX, tileY, point, camera, layer)
 {

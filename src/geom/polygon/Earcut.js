@@ -4,17 +4,70 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-//  Earcut 2.1.4 (December 4th 2018)
+/**
+ * This module implements a modified ear slicing algorithm, optimized by z-order curve hashing and extended to
+ * handle holes, twisted polygons, degeneracies and self-intersections in a way that doesn't guarantee correctness
+ * of triangulation, but attempts to always produce acceptable results for practical data.
+ *
+ * Example:
+ *
+ * ```javascript
+ * const triangles = Phaser.Geom.Polygon.Earcut([10,0, 0,50, 60,60, 70,10]); // returns [1,0,3, 3,2,1]
+ * ```
+ *
+ * Each group of three vertex indices in the resulting array forms a triangle.
+ *
+ * ```javascript
+ * // triangulating a polygon with a hole
+ * earcut([0,0, 100,0, 100,100, 0,100,  20,20, 80,20, 80,80, 20,80], [4]);
+ * // [3,0,4, 5,4,0, 3,4,7, 5,0,1, 2,3,7, 6,5,1, 2,7,6, 6,1,2]
+ *
+ * // triangulating a polygon with 3d coords
+ * earcut([10,0,1, 0,50,2, 60,60,3, 70,10,4], null, 3);
+ * // [1,0,3, 3,2,1]
+ * ```
+ *
+ * If you pass a single vertex as a hole, Earcut treats it as a Steiner point.
+ *
+ * If your input is a multi-dimensional array (e.g. GeoJSON Polygon), you can convert it to the format
+ * expected by Earcut with `Phaser.Geom.Polygon.Earcut.flatten`:
+ *
+ * ```javascript
+ * var data = earcut.flatten(geojson.geometry.coordinates);
+ * var triangles = earcut(data.vertices, data.holes, data.dimensions);
+ * ```
+ *
+ * After getting a triangulation, you can verify its correctness with `Phaser.Geom.Polygon.Earcut.deviation`:
+ *
+ * ```javascript
+ * var deviation = earcut.deviation(vertices, holes, dimensions, triangles);
+ * ```
+ * Returns the relative difference between the total area of triangles and the area of the input polygon.
+ * 0 means the triangulation is fully correct.
+ *
+ * For more information see https://github.com/mapbox/earcut
+ *
+ * @function Phaser.Geom.Polygon.Earcut
+ * @since 3.50.0
+ *
+ * @param {number[]} data - A flat array of vertex coordinate, like [x0,y0, x1,y1, x2,y2, ...]
+ * @param {number[]} [holeIndices] - An array of hole indices if any (e.g. [5, 8] for a 12-vertex input would mean one hole with vertices 5–7 and another with 8–11).
+ * @param {number} [dimensions=2] - The number of coordinates per vertex in the input array (2 by default).
+ *
+ * @return {number[]} An array of triangulated data.
+ */
+
+ //  Earcut 2.2.2 (January 21st 2020)
 
 /*
  * ISC License
- * 
+ *
  * Copyright (c) 2016, Mapbox
- * 
+ *
  * Permission to use, copy, modify, and/or distribute this software for any purpose
  * with or without fee is hereby granted, provided that the above copyright notice
  * and this permission notice appear in all copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
@@ -25,8 +78,6 @@
  */
 
 'use strict';
-
-module.exports = earcut;
 
 function earcut(data, holeIndices, dim) {
 
@@ -85,7 +136,7 @@ function linkedList(data, start, end, dim, clockwise) {
     return last;
 }
 
-// eliminate collinear or duplicate points
+// eliminate colinear or duplicate points
 function filterPoints(start, end) {
     if (!start) return start;
     if (!end) end = start;
@@ -149,7 +200,7 @@ function earcutLinked(ear, triangles, dim, minX, minY, invSize, pass) {
 
             // if this didn't work, try curing all small self-intersections locally
             } else if (pass === 1) {
-                ear = cureLocalIntersections(ear, triangles, dim);
+                ear = cureLocalIntersections(filterPoints(ear), triangles, dim);
                 earcutLinked(ear, triangles, dim, minX, minY, invSize, 2);
 
             // as a last resort, try splitting the remaining polygon into two
@@ -256,7 +307,7 @@ function cureLocalIntersections(start, triangles, dim) {
         p = p.next;
     } while (p !== start);
 
-    return p;
+    return filterPoints(p);
 }
 
 // try splitting polygon into two and triangulate them independently
@@ -270,7 +321,7 @@ function splitEarcut(start, triangles, dim, minX, minY, invSize) {
                 // split the polygon in two by the diagonal
                 var c = splitPolygon(a, b);
 
-                // filter collinear points around the cuts
+                // filter colinear points around the cuts
                 a = filterPoints(a, a.next);
                 c = filterPoints(c, c.next);
 
@@ -318,6 +369,9 @@ function eliminateHole(hole, outerNode) {
     outerNode = findHoleBridge(hole, outerNode);
     if (outerNode) {
         var b = splitPolygon(outerNode, hole);
+
+        // filter collinear points around the cuts
+        filterPoints(outerNode, outerNode.next);
         filterPoints(b, b.next);
     }
 }
@@ -349,7 +403,7 @@ function findHoleBridge(hole, outerNode) {
 
     if (!m) return null;
 
-    if (hx === qx) return m.prev; // hole touches outer segment; pick lower endpoint
+    if (hx === qx) return m; // hole touches outer segment; pick leftmost endpoint
 
     // look for points inside the triangle of hole point, segment intersection and endpoint;
     // if there are no points found, we have a valid connection;
@@ -361,24 +415,30 @@ function findHoleBridge(hole, outerNode) {
         tanMin = Infinity,
         tan;
 
-    p = m.next;
+    p = m;
 
-    while (p !== stop) {
+    do {
         if (hx >= p.x && p.x >= mx && hx !== p.x &&
                 pointInTriangle(hy < my ? hx : qx, hy, mx, my, hy < my ? qx : hx, hy, p.x, p.y)) {
 
             tan = Math.abs(hy - p.y) / (hx - p.x); // tangential
 
-            if ((tan < tanMin || (tan === tanMin && p.x > m.x)) && locallyInside(p, hole)) {
+            if (locallyInside(p, hole) &&
+                (tan < tanMin || (tan === tanMin && (p.x > m.x || (p.x === m.x && sectorContainsSector(m, p)))))) {
                 m = p;
                 tanMin = tan;
             }
         }
 
         p = p.next;
-    }
+    } while (p !== stop);
 
     return m;
+}
+
+// whether sector in vertex m contains sector in vertex p in the same coordinates
+function sectorContainsSector(m, p) {
+    return area(m.prev, m, p.prev) < 0 && area(p.next, m, m.next) < 0;
 }
 
 // interlink polygon nodes in z-order
@@ -474,7 +534,7 @@ function getLeftmost(start) {
     var p = start,
         leftmost = start;
     do {
-        if (p.x < leftmost.x) leftmost = p;
+        if (p.x < leftmost.x || (p.x === leftmost.x && p.y < leftmost.y)) leftmost = p;
         p = p.next;
     } while (p !== start);
 
@@ -490,8 +550,10 @@ function pointInTriangle(ax, ay, bx, by, cx, cy, px, py) {
 
 // check if a diagonal between two polygon nodes is valid (lies in polygon interior)
 function isValidDiagonal(a, b) {
-    return a.next.i !== b.i && a.prev.i !== b.i && !intersectsPolygon(a, b) &&
-           locallyInside(a, b) && locallyInside(b, a) && middleInside(a, b);
+    return a.next.i !== b.i && a.prev.i !== b.i && !intersectsPolygon(a, b) && // dones't intersect other edges
+           (locallyInside(a, b) && locallyInside(b, a) && middleInside(a, b) && // locally visible
+            (area(a.prev, a, b.prev) || area(a, b.prev, b)) || // does not create opposite-facing sectors
+            equals(a, b) && area(a.prev, a, a.next) > 0 && area(b.prev, b, b.next) > 0); // special zero-length case
 }
 
 // signed area of a triangle
@@ -506,10 +568,28 @@ function equals(p1, p2) {
 
 // check if two segments intersect
 function intersects(p1, q1, p2, q2) {
-    if ((equals(p1, q1) && equals(p2, q2)) ||
-        (equals(p1, q2) && equals(p2, q1))) return true;
-    return area(p1, q1, p2) > 0 !== area(p1, q1, q2) > 0 &&
-           area(p2, q2, p1) > 0 !== area(p2, q2, q1) > 0;
+    var o1 = sign(area(p1, q1, p2));
+    var o2 = sign(area(p1, q1, q2));
+    var o3 = sign(area(p2, q2, p1));
+    var o4 = sign(area(p2, q2, q1));
+
+    if (o1 !== o2 && o3 !== o4) return true; // general case
+
+    if (o1 === 0 && onSegment(p1, p2, q1)) return true; // p1, q1 and p2 are collinear and p2 lies on p1q1
+    if (o2 === 0 && onSegment(p1, q2, q1)) return true; // p1, q1 and q2 are collinear and q2 lies on p1q1
+    if (o3 === 0 && onSegment(p2, p1, q2)) return true; // p2, q2 and p1 are collinear and p1 lies on p2q2
+    if (o4 === 0 && onSegment(p2, q1, q2)) return true; // p2, q2 and q1 are collinear and q1 lies on p2q2
+
+    return false;
+}
+
+// for collinear points p, q, r, check if point q lies on segment pr
+function onSegment(p, q, r) {
+    return q.x <= Math.max(p.x, r.x) && q.x >= Math.min(p.x, r.x) && q.y <= Math.max(p.y, r.y) && q.y >= Math.min(p.y, r.y);
+}
+
+function sign(num) {
+    return num > 0 ? 1 : num < 0 ? -1 : 0;
 }
 
 // check if a polygon diagonal intersects any polygon segments
@@ -673,3 +753,5 @@ earcut.flatten = function (data) {
     }
     return result;
 };
+
+module.exports = earcut;

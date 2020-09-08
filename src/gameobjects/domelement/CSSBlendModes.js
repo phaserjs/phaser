@@ -6,8 +6,9 @@
 
 /**
  * Phaser Blend Modes to CSS Blend Modes Map.
- * 
+ *
  * @name Phaser.CSSBlendModes
+ * @ignore
  * @enum {string}
  * @memberof Phaser
  * @readonly

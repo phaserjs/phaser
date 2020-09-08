@@ -65,7 +65,7 @@ var ArcadePhysics = new Class({
          * A configuration object. Union of the `physics.arcade.*` properties of the GameConfig and SceneConfig objects.
          *
          * @name Phaser.Physics.Arcade.ArcadePhysics#config
-         * @type {object}
+         * @type {Phaser.Types.Physics.Arcade.ArcadeWorldConfig}
          * @since 3.0.0
          */
         this.config = this.getConfig();
@@ -127,9 +127,45 @@ var ArcadePhysics = new Class({
 
         var eventEmitter = this.systems.events;
 
-        eventEmitter.on(SceneEvents.UPDATE, this.world.update, this.world);
+        if (!GetFastValue(this.config, 'customUpdate', false))
+        {
+            eventEmitter.on(SceneEvents.UPDATE, this.world.update, this.world);
+        }
+
         eventEmitter.on(SceneEvents.POST_UPDATE, this.world.postUpdate, this.world);
         eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
+    },
+
+    /**
+     * Causes `World.update` to be automatically called each time the Scene
+     * emits and `UPDATE` event. This is the default setting, so only needs
+     * calling if you have specifically disabled it.
+     *
+     * @method Phaser.Physics.Arcade.ArcadePhysics#enableUpdate
+     * @since 3.50.0
+     */
+    enableUpdate: function ()
+    {
+        this.systems.events.on(SceneEvents.UPDATE, this.world.update, this.world);
+    },
+
+    /**
+     * Causes `World.update` to **not** be automatically called each time the Scene
+     * emits and `UPDATE` event.
+     *
+     * If you wish to run the World update at your own rate, or from your own
+     * component, then you should call this method to disable the built-in link,
+     * and then call `World.update(delta, time)` accordingly.
+     *
+     * Note that `World.postUpdate` is always automatically called when the Scene
+     * emits a `POST_UPDATE` event, regardless of this setting.
+     *
+     * @method Phaser.Physics.Arcade.ArcadePhysics#disableUpdate
+     * @since 3.50.0
+     */
+    disableUpdate: function ()
+    {
+        this.systems.events.off(SceneEvents.UPDATE, this.world.update, this.world);
     },
 
     /**
@@ -138,7 +174,7 @@ var ArcadePhysics = new Class({
      * @method Phaser.Physics.Arcade.ArcadePhysics#getConfig
      * @since 3.0.0
      *
-     * @return {object} The physics configuration.
+     * @return {Phaser.Types.Physics.Arcade.ArcadeWorldConfig} The physics configuration.
      */
     getConfig: function ()
     {

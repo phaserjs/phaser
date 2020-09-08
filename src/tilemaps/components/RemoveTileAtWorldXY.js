@@ -12,7 +12,6 @@ var RemoveTileAt = require('./RemoveTileAt');
  * collision information.
  *
  * @function Phaser.Tilemaps.Components.RemoveTileAtWorldXY
- * @private
  * @since 3.0.0
  *
  * @param {number} worldX - The x coordinate, in pixels.
@@ -26,7 +25,7 @@ var RemoveTileAt = require('./RemoveTileAt');
  */
 var RemoveTileAtWorldXY = function (worldX, worldY, replaceWithNull, recalculateFaces, camera, layer)
 {
-    var point = layer.tilemapLayer.worldToTileXY(worldX, worldY, true, undefined, camera);
+    var point = layer.tilemapLayer.worldToTileXY(worldX, worldY, true, undefined, camera, layer);
     var tileX = point.x;
     var tileY = point.y;
     return RemoveTileAt(tileX, tileY, replaceWithNull, recalculateFaces, layer);

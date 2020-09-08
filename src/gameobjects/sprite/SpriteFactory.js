@@ -27,7 +27,6 @@ GameObjectFactory.register('sprite', function (x, y, key, frame)
     var sprite = new Sprite(this.scene, x, y, key, frame);
 
     this.displayList.add(sprite);
-    this.updateList.add(sprite);
 
     return sprite;
 });

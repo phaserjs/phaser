@@ -10,8 +10,10 @@ var CustomMap = require('../structs/Map');
 var EventEmitter = require('eventemitter3');
 var Events = require('./events');
 var GameEvents = require('../core/events');
+var GetFastValue = require('../utils/object/GetFastValue');
 var GetValue = require('../utils/object/GetValue');
 var Pad = require('../utils/string/Pad');
+var NumberArray = require('../utils/array/NumberArray');
 
 /**
  * @classdesc
@@ -86,6 +88,17 @@ var AnimationManager = new Class({
         this.anims = new CustomMap();
 
         /**
+         * A list of animation mix times.
+         *
+         * See the {@link #setMix} method for more details.
+         *
+         * @name Phaser.Animations.AnimationManager#mixes
+         * @type {Phaser.Structs.Map.<string>}
+         * @since 3.50.0
+         */
+        this.mixes = new CustomMap();
+
+        /**
          * Whether the Animation Manager is paused along with all of its Animations.
          *
          * @name Phaser.Animations.AnimationManager#paused
@@ -122,6 +135,144 @@ var AnimationManager = new Class({
     },
 
     /**
+     * Adds a mix between two animations.
+     *
+     * Mixing allows you to specify a unique delay between a pairing of animations.
+     *
+     * When playing Animation A on a Game Object, if you then play Animation B, and a
+     * mix exists, it will wait for the specified delay to be over before playing Animation B.
+     *
+     * This allows you to customise smoothing between different types of animation, such
+     * as blending between an idle and a walk state, or a running and a firing state.
+     *
+     * Note that mixing is only applied if you use the `Sprite.play` method. If you opt to use
+     * `playAfterRepeat` or `playAfterDelay` instead, those will take pririty and the mix
+     * delay will not be used.
+     *
+     * To update an existing mix, just call this method with the new delay.
+     *
+     * To remove a mix pairing, see the `removeMix` method.
+     *
+     * @method Phaser.Animations.AnimationManager#addMix
+     * @since 3.50.0
+     *
+     * @param {(string|Phaser.Animations.Animation)} animA - The string-based key, or instance of, Animation A.
+     * @param {(string|Phaser.Animations.Animation)} animB - The string-based key, or instance of, Animation B.
+     * @param {number} delay - The delay, in milliseconds, to wait when transitioning from Animation A to B.
+     *
+     * @return {this} This Animation Manager.
+     */
+    addMix: function (animA, animB, delay)
+    {
+        var anims = this.anims;
+        var mixes = this.mixes;
+
+        var keyA = (typeof(animA) === 'string') ? animA : animA.key;
+        var keyB = (typeof(animB) === 'string') ? animB : animB.key;
+
+        if (anims.has(keyA) && anims.has(keyB))
+        {
+            var mixObj = mixes.get(keyA);
+
+            if (!mixObj)
+            {
+                mixObj = {};
+            }
+
+            mixObj[keyB] = delay;
+
+            mixes.set(keyA, mixObj);
+        }
+
+        return this;
+    },
+
+    /**
+     * Removes a mix between two animations.
+     *
+     * Mixing allows you to specify a unique delay between a pairing of animations.
+     *
+     * Calling this method lets you remove those pairings. You can either remove
+     * it between `animA` and `animB`, or if you do not provide the `animB` parameter,
+     * it will remove all `animA` mixes.
+     *
+     * If you wish to update an existing mix instead, call the `addMix` method with the
+     * new delay.
+     *
+     * @method Phaser.Animations.AnimationManager#removeMix
+     * @since 3.50.0
+     *
+     * @param {(string|Phaser.Animations.Animation)} animA - The string-based key, or instance of, Animation A.
+     * @param {(string|Phaser.Animations.Animation)} [animB] - The string-based key, or instance of, Animation B. If not given, all mixes for Animation A will be removed.
+     *
+     * @return {this} This Animation Manager.
+     */
+    removeMix: function (animA, animB)
+    {
+        var mixes = this.mixes;
+
+        var keyA = (typeof(animA) === 'string') ? animA : animA.key;
+
+        var mixObj = mixes.get(keyA);
+
+        if (mixObj)
+        {
+            if (animB)
+            {
+                var keyB = (typeof(animB) === 'string') ? animB : animB.key;
+
+                if (mixObj.hasOwnProperty(keyB))
+                {
+                    //  Remove just this pairing
+                    delete mixObj[keyB];
+                }
+            }
+            else if (!animB)
+            {
+                //  Remove everything for animA
+                mixes.delete(keyA);
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Returns the mix delay between two animations.
+     *
+     * If no mix has been set-up, this method will return zero.
+     *
+     * If you wish to create, or update, a new mix, call the `addMix` method.
+     * If you wish to remove a mix, call the `removeMix` method.
+     *
+     * @method Phaser.Animations.AnimationManager#getMix
+     * @since 3.50.0
+     *
+     * @param {(string|Phaser.Animations.Animation)} animA - The string-based key, or instance of, Animation A.
+     * @param {(string|Phaser.Animations.Animation)} animB - The string-based key, or instance of, Animation B.
+     *
+     * @return {number} The mix duration, or zero if no mix exists.
+     */
+    getMix: function (animA, animB)
+    {
+        var mixes = this.mixes;
+
+        var keyA = (typeof(animA) === 'string') ? animA : animA.key;
+        var keyB = (typeof(animB) === 'string') ? animB : animB.key;
+
+        var mixObj = mixes.get(keyA);
+
+        if (mixObj && mixObj.hasOwnProperty(keyB))
+        {
+            return mixObj[keyB];
+        }
+        else
+        {
+            return 0;
+        }
+    },
+
+    /**
      * Adds an existing Animation to the Animation Manager.
      *
      * @method Phaser.Animations.AnimationManager#add
@@ -153,7 +304,7 @@ var AnimationManager = new Class({
 
     /**
      * Checks to see if the given key is already in use within the Animation Manager or not.
-     * 
+     *
      * Animations are global. Keys created in one scene can be used from any other Scene in your game. They are not Scene specific.
      *
      * @method Phaser.Animations.AnimationManager#exists
@@ -169,16 +320,188 @@ var AnimationManager = new Class({
     },
 
     /**
+     * Create one, or more animations from a loaded Aseprite JSON file.
+     *
+     * Aseprite is a powerful animated sprite editor and pixel art tool.
+     *
+     * You can find more details at https://www.aseprite.org/
+     *
+     * To export a compatible JSON file in Aseprite, please do the following:
+     *
+     * 1. Go to "File - Export Sprite Sheet"
+     *
+     * 2. On the **Layout** tab:
+     * 2a. Set the "Sheet type" to "Packed"
+     * 2b. Set the "Constraints" to "None"
+     * 2c. Check the "Merge Duplicates" checkbox
+     *
+     * 3. On the **Sprite** tab:
+     * 3a. Set "Layers" to "Visible layers"
+     * 3b. Set "Frames" to "All frames", unless you only wish to export a sub-set of tags
+     *
+     * 4. On the **Borders** tab:
+     * 4a. Check the "Trim Sprite" and "Trim Cells" options
+     * 4b. Ensure "Border Padding", "Spacing" and "Inner Padding" are all > 0 (1 is usually enough)
+     *
+     * 5. On the **Output** tab:
+     * 5a. Check "Output File", give your image a name and make sure you choose "png files" as the file type
+     * 5b. Check "JSON Data" and give your json file a name
+     * 5c. The JSON Data type can be either a Hash or Array, Phaser doesn't mind.
+     * 5d. Make sure "Tags" is checked in the Meta options
+     * 5e. In the "Item Filename" input box, make sure it says just "{frame}" and nothing more.
+     *
+     * 6. Click export
+     *
+     * This was tested with Aseprite 1.2.25.
+     *
+     * This will export a png and json file which you can load using the Atlas Loader, i.e.:
+     *
+     * ```javascript
+     * function preload ()
+     * {
+     *     this.load.path = 'assets/animations/aseprite/';
+     *     this.load.atlas('paladin', 'paladin.png', 'paladin.json');
+     * }
+     * ```
+     *
+     * Once exported, you can call this method from within a Scene with the 'atlas' key:
+     *
+     * ```javascript
+     * this.anims.createFromAseprite('paladin');
+     * ```
+     *
+     * Any animations defined in the JSON will now be available to use in Phaser and you play them
+     * via their Tag name. For example, if you have an animation called 'War Cry' on your Aseprite timeline,
+     * you can play it in Phaser using that Tag name:
+     *
+     * ```javascript
+     * this.add.sprite(400, 300).play('War Cry');
+     * ```
+     *
+     * When calling this method you can optionally provide an array of tag names, and only those animations
+     * will be created. For example:
+     *
+     * ```javascript
+     * this.anims.createFromAseprite('paladin', [ 'step', 'War Cry', 'Magnum Break' ]);
+     * ```
+     *
+     * This will only create the 3 animations defined. Note that the tag names are case-sensitive.
+     *
+     * @method Phaser.Animations.AnimationManager#createFromAseprite
+     * @since 3.50.0
+     *
+     * @param {string} key - The key of the loaded Aseprite atlas. It must have been loaded prior to calling this method.
+     * @param {string[]} [tags] - An array of Tag names. If provided, only animations found in this array will be created.
+     *
+     * @return {Phaser.Animations.Animation[]} An array of Animation instances that were successfully created.
+     */
+    createFromAseprite: function (key, tags)
+    {
+        var output = [];
+
+        var data = this.game.cache.json.get(key);
+
+        if (!data)
+        {
+            return output;
+        }
+
+        var _this = this;
+
+        var meta = GetValue(data, 'meta', null);
+        var frames = GetValue(data, 'frames', null);
+
+        if (meta && frames)
+        {
+            var frameTags = GetValue(meta, 'frameTags', []);
+
+            frameTags.forEach(function (tag)
+            {
+                var animFrames = [];
+
+                var name = GetFastValue(tag, 'name', null);
+                var from = GetFastValue(tag, 'from', 0);
+                var to = GetFastValue(tag, 'to', 0);
+                var direction = GetFastValue(tag, 'direction', 'forward');
+
+                if (!name)
+                {
+                    //  Skip if no name
+                    return;
+                }
+
+                if (!tags || (tags && tags.indexOf(name) > -1))
+                {
+                    //  Get all the frames for this tag
+                    var tempFrames = [];
+                    var minDuration = Number.MAX_SAFE_INTEGER;
+
+                    for (var i = from; i <= to; i++)
+                    {
+                        var frameKey = i.toString();
+                        var frame = frames[frameKey];
+
+                        if (frame)
+                        {
+                            var frameDuration = GetFastValue(frame, 'duration', Number.MAX_SAFE_INTEGER);
+
+                            if (frameDuration < minDuration)
+                            {
+                                minDuration = frameDuration;
+                            }
+
+                            tempFrames.push({ frame: frameKey, duration: frameDuration });
+                        }
+                    }
+
+                    tempFrames.forEach(function (entry)
+                    {
+                        animFrames.push({
+                            key: key,
+                            frame: entry.frame,
+                            duration: (minDuration - entry.duration)
+                        });
+                    });
+
+                    var totalDuration = (minDuration * animFrames.length);
+
+                    if (direction === 'reverse')
+                    {
+                        animFrames = animFrames.reverse();
+                    }
+
+                    //  Create the animation
+                    var createConfig = {
+                        key: name,
+                        frames: animFrames,
+                        duration: totalDuration,
+                        yoyo: (direction === 'pingpong')
+                    };
+
+                    var result = _this.create(createConfig);
+
+                    if (result)
+                    {
+                        output.push(result);
+                    }
+                }
+            });
+        }
+
+        return output;
+    },
+
+    /**
      * Creates a new Animation and adds it to the Animation Manager.
-     * 
+     *
      * Animations are global. Once created, you can use them in any Scene in your game. They are not Scene specific.
-     * 
+     *
      * If an invalid key is given this method will return `false`.
-     * 
+     *
      * If you pass the key of an animation that already exists in the Animation Manager, that animation will be returned.
-     * 
+     *
      * A brand new animation is only created if the key is valid and not already in use.
-     * 
+     *
      * If you wish to re-use an existing key, call `AnimationManager.remove` first, then this method.
      *
      * @method Phaser.Animations.AnimationManager#create
@@ -187,7 +510,7 @@ var AnimationManager = new Class({
      *
      * @param {Phaser.Types.Animations.Animation} config - The configuration settings for the Animation.
      *
-     * @return {(Phaser.Animations.Animation|false)} The Animation that was created, or `false` is the key is already in use.
+     * @return {(Phaser.Animations.Animation|false)} The Animation that was created, or `false` if the key is already in use.
      */
     create: function (config)
     {
@@ -204,7 +527,7 @@ var AnimationManager = new Class({
                 anim = new Animation(this, key, config);
 
                 this.anims.set(key, anim);
-        
+
                 this.emit(Events.ADD_ANIMATION, key, anim);
             }
         }
@@ -265,18 +588,18 @@ var AnimationManager = new Class({
      * Generate an array of {@link Phaser.Types.Animations.AnimationFrame} objects from a texture key and configuration object.
      *
      * Generates objects with string based frame names, as configured by the given {@link Phaser.Types.Animations.GenerateFrameNames}.
-     * 
+     *
      * It's a helper method, designed to make it easier for you to extract all of the frame names from texture atlases.
      * If you're working with a sprite sheet, see the `generateFrameNumbers` method instead.
-     * 
+     *
      * Example:
-     * 
+     *
      * If you have a texture atlases loaded called `gems` and it contains 6 frames called `ruby_0001`, `ruby_0002`, and so on,
      * then you can call this method using: `this.anims.generateFrameNames('gems', { prefix: 'ruby_', end: 6, zeroPad: 4 })`.
-     * 
+     *
      * The `end` value tells it to look for 6 frames, incrementally numbered, all starting with the prefix `ruby_`. The `zeroPad`
      * value tells it how many zeroes pad out the numbers. To create an animation using this method, you can do:
-     * 
+     *
      * ```javascript
      * this.anims.create({
      *   key: 'ruby',
@@ -288,7 +611,7 @@ var AnimationManager = new Class({
      *   })
      * });
      * ```
-     * 
+     *
      * Please see the animation examples for further details.
      *
      * @method Phaser.Animations.AnimationManager#generateFrameNames
@@ -316,17 +639,11 @@ var AnimationManager = new Class({
             return out;
         }
 
-        var diff = (start < end) ? 1 : -1;
-
-        //  Adjust because we use i !== end in the for loop
-        end += diff;
-
         var i;
-        var frame;
 
         if (!config)
         {
-            //  Use every frame in the atlas?
+            //  Use every frame in the atlas
             frames = texture.getFrameNames();
 
             for (i = 0; i < frames.length; i++)
@@ -334,28 +651,24 @@ var AnimationManager = new Class({
                 out.push({ key: key, frame: frames[i] });
             }
         }
-        else if (Array.isArray(frames))
+        else
         {
-            //  Have they provided their own custom frame sequence array?
+            if (!frames)
+            {
+                frames = NumberArray(start, end);
+            }
+
             for (i = 0; i < frames.length; i++)
             {
-                frame = prefix + Pad(frames[i], zeroPad, '0', 1) + suffix;
+                var frame = prefix + Pad(frames[i], zeroPad, '0', 1) + suffix;
 
                 if (texture.has(frame))
                 {
                     out.push({ key: key, frame: frame });
                 }
-            }
-        }
-        else
-        {
-            for (i = start; i !== end; i += diff)
-            {
-                frame = prefix + Pad(i, zeroPad, '0', 1) + suffix;
-
-                if (texture.has(frame))
+                else
                 {
-                    out.push({ key: key, frame: frame });
+                    console.warn('generateFrameNames: Frame missing: ' + frame + ' from texture: ' + key);
                 }
             }
         }
@@ -367,7 +680,7 @@ var AnimationManager = new Class({
      * Generate an array of {@link Phaser.Types.Animations.AnimationFrame} objects from a texture key and configuration object.
      *
      * Generates objects with numbered frame names, as configured by the given {@link Phaser.Types.Animations.GenerateFrameNumbers}.
-     * 
+     *
      * If you're working with a texture atlas, see the `generateFrameNames` method instead.
      *
      * @method Phaser.Animations.AnimationManager#generateFrameNumbers
@@ -380,9 +693,9 @@ var AnimationManager = new Class({
      */
     generateFrameNumbers: function (key, config)
     {
-        var startFrame = GetValue(config, 'start', 0);
-        var endFrame = GetValue(config, 'end', -1);
-        var firstFrame = GetValue(config, 'first', false);
+        var start = GetValue(config, 'start', 0);
+        var end = GetValue(config, 'end', -1);
+        var first = GetValue(config, 'first', false);
         var out = GetValue(config, 'outputArray', []);
         var frames = GetValue(config, 'frames', false);
 
@@ -393,43 +706,33 @@ var AnimationManager = new Class({
             return out;
         }
 
-        if (firstFrame && texture.has(firstFrame))
+        if (first && texture.has(first))
         {
-            out.push({ key: key, frame: firstFrame });
+            out.push({ key: key, frame: first });
         }
 
-        var i;
-
-        //  Have they provided their own custom frame sequence array?
-        if (Array.isArray(frames))
+        //  No 'frames' array? Then generate one automatically
+        if (!frames)
         {
-            for (i = 0; i < frames.length; i++)
+            if (end === -1)
             {
-                if (texture.has(frames[i]))
-                {
-                    out.push({ key: key, frame: frames[i] });
-                }
+                //  -1 because of __BASE, which we don't want in our results
+                //  and -1 because frames are zero based
+                end = texture.frameTotal - 2;
             }
+
+            frames = NumberArray(start, end);
         }
-        else
+
+        for (var i = 0; i < frames.length; i++)
         {
-            //  No endFrame then see if we can get it
-            if (endFrame === -1)
+            if (texture.has(frames[i]))
             {
-                endFrame = texture.frameTotal;
+                out.push({ key: key, frame: frames[i] });
             }
-
-            var diff = (startFrame < endFrame) ? 1 : -1;
-
-            //  Adjust because we use i !== end in the for loop
-            endFrame += diff;
-
-            for (i = startFrame; i !== endFrame; i += diff)
+            else
             {
-                if (texture.has(i))
-                {
-                    out.push({ key: key, frame: i });
-                }
+                console.warn('generateFrameNumbers: Frame ' + i + ' missing from texture: ' + key);
             }
         }
 
@@ -449,34 +752,6 @@ var AnimationManager = new Class({
     get: function (key)
     {
         return this.anims.get(key);
-    },
-
-    /**
-     * Load an Animation into a Game Object's Animation Component.
-     *
-     * @method Phaser.Animations.AnimationManager#load
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.GameObject} child - The Game Object to load the animation into.
-     * @param {string} key - The key of the animation to load.
-     * @param {(string|integer)} [startFrame] - The name of a start frame to set on the loaded animation.
-     *
-     * @return {Phaser.GameObjects.GameObject} The Game Object with the animation loaded into it.
-     */
-    load: function (child, key, startFrame)
-    {
-        var anim = this.get(key);
-
-        if (anim)
-        {
-            anim.load(child, startFrame);
-        }
-        else
-        {
-            console.warn('Missing animation: ' + key);
-        }
-
-        return child;
     },
 
     /**
@@ -506,28 +781,87 @@ var AnimationManager = new Class({
      * @method Phaser.Animations.AnimationManager#play
      * @since 3.0.0
      *
-     * @param {string} key - The key of the animation to play on the Game Object.
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} child - The Game Objects to play the animation on.
+     * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object.
+     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} children - An array of Game Objects to play the animation on. They must have an Animation Component.
      *
      * @return {this} This Animation Manager.
      */
-    play: function (key, child)
+    play: function (key, children)
     {
-        if (!Array.isArray(child))
+        if (!Array.isArray(children))
         {
-            child = [ child ];
+            children = [ children ];
         }
 
-        var anim = this.get(key);
-
-        if (!anim)
+        for (var i = 0; i < children.length; i++)
         {
-            return this;
+            children[i].anims.play(key);
         }
 
-        for (var i = 0; i < child.length; i++)
+        return this;
+    },
+
+    /**
+     * Takes an array of Game Objects that have an Animation Component and then
+     * starts the given animation playing on them. The start time of each Game Object
+     * is offset, incrementally, by the `stagger` amount.
+     *
+     * For example, if you pass an array with 4 children and a stagger time of 1000,
+     * the delays will be:
+     *
+     * child 1: 1000ms delay
+     * child 2: 2000ms delay
+     * child 3: 3000ms delay
+     * child 4: 4000ms delay
+     *
+     * If you set the `staggerFirst` parameter to `false` they would be:
+     *
+     * child 1: 0ms delay
+     * child 2: 1000ms delay
+     * child 3: 2000ms delay
+     * child 4: 3000ms delay
+     *
+     * You can also set `stagger` to be a negative value. If it was -1000, the above would be:
+     *
+     * child 1: 3000ms delay
+     * child 2: 2000ms delay
+     * child 3: 1000ms delay
+     * child 4: 0ms delay
+     *
+     * @method Phaser.Animations.AnimationManager#staggerPlay
+     * @since 3.0.0
+     *
+     * @generic {Phaser.GameObjects.GameObject[]} G - [items,$return]
+     *
+     * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object.
+     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} children - An array of Game Objects to play the animation on. They must have an Animation Component.
+     * @param {number} stagger - The amount of time, in milliseconds, to offset each play time by. If a negative value is given, it's applied to the children in reverse order.
+     * @param {boolean} [staggerFirst=true] -Should the first child be staggered as well?
+     *
+     * @return {this} This Animation Manager.
+     */
+    staggerPlay: function (key, children, stagger, staggerFirst)
+    {
+        if (stagger === undefined) { stagger = 0; }
+        if (staggerFirst === undefined) { staggerFirst = true; }
+
+        if (!Array.isArray(children))
         {
-            child[i].anims.play(key);
+            children = [ children ];
+        }
+
+        var len = children.length;
+
+        if (!staggerFirst)
+        {
+            len--;
+        }
+
+        for (var i = 0; i < children.length; i++)
+        {
+            var time = (stagger < 0) ? Math.abs(stagger) * (len - i) : stagger * i;
+
+            children[i].anims.playAfterDelay(key, time);
         }
 
         return this;
@@ -535,7 +869,7 @@ var AnimationManager = new Class({
 
     /**
      * Removes an Animation from this Animation Manager, based on the given key.
-     * 
+     *
      * This is a global action. Once an Animation has been removed, no Game Objects
      * can carry on using it.
      *
@@ -556,6 +890,8 @@ var AnimationManager = new Class({
             this.emit(Events.REMOVE_ANIMATION, key, anim);
 
             this.anims.delete(key);
+
+            this.removeMix(key);
         }
 
         return anim;
@@ -577,46 +913,6 @@ var AnimationManager = new Class({
             this.paused = false;
 
             this.emit(Events.RESUME_ALL);
-        }
-
-        return this;
-    },
-
-    /**
-     * Takes an array of Game Objects that have an Animation Component and then
-     * starts the given animation playing on them, each one offset by the
-     * `stagger` amount given to this method.
-     *
-     * @method Phaser.Animations.AnimationManager#staggerPlay
-     * @since 3.0.0
-     *
-     * @generic {Phaser.GameObjects.GameObject[]} G - [items,$return]
-     *
-     * @param {string} key - The key of the animation to play on the Game Objects.
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} children - An array of Game Objects to play the animation on. They must have an Animation Component.
-     * @param {number} [stagger=0] - The amount of time, in milliseconds, to offset each play time by.
-     *
-     * @return {this} This Animation Manager.
-     */
-    staggerPlay: function (key, children, stagger)
-    {
-        if (stagger === undefined) { stagger = 0; }
-
-        if (!Array.isArray(children))
-        {
-            children = [ children ];
-        }
-
-        var anim = this.get(key);
-
-        if (!anim)
-        {
-            return this;
-        }
-
-        for (var i = 0; i < children.length; i++)
-        {
-            children[i].anims.delayedPlay(stagger * i, key);
         }
 
         return this;
@@ -665,6 +961,7 @@ var AnimationManager = new Class({
     destroy: function ()
     {
         this.anims.clear();
+        this.mixes.clear();
 
         this.textureManager = null;
 

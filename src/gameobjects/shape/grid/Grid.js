@@ -14,9 +14,9 @@ var GridRender = require('./GridRender');
  * treat it like any other Game Object in your game, such as tweening it, scaling it, or enabling
  * it for input or physics. It provides a quick and easy way for you to render this shape in your
  * game without using a texture, while still taking advantage of being fully batched in WebGL.
- * 
+ *
  * This shape supports only fill colors and cannot be stroked.
- * 
+ *
  * A Grid Shape allows you to display a grid in your game, where you can control the size of the
  * grid as well as the width and height of the grid cells. You can set a fill color for each grid
  * cell as well as an alternate fill color. When the alternate fill color is set then the grid
@@ -151,32 +151,25 @@ var Grid = new Class({
         this.setPosition(x, y);
         this.setSize(width, height);
 
-        if (fillColor !== undefined)
-        {
-            this.setFillStyle(fillColor, fillAlpha);
-        }
-
-        if (outlineFillColor !== undefined)
-        {
-            this.setOutlineStyle(outlineFillColor, outlineFillAlpha);
-        }
+        this.setFillStyle(fillColor, fillAlpha);
+        this.setOutlineStyle(outlineFillColor, outlineFillAlpha);
 
         this.updateDisplayOrigin();
     },
 
     /**
      * Sets the fill color and alpha level the grid cells will use when rendering.
-     * 
-     * If this method is called with no values then the grid cells will not be rendered, 
+     *
+     * If this method is called with no values then the grid cells will not be rendered,
      * however the grid lines and alternating cells may still be.
-     * 
+     *
      * Also see the `setOutlineStyle` and `setAltFillStyle` methods.
-     * 
+     *
      * This call can be chained.
      *
      * @method Phaser.GameObjects.Grid#setFillStyle
      * @since 3.13.0
-     * 
+     *
      * @param {number} [fillColor] - The color the grid cells will be filled with, i.e. 0xff0000 for red.
      * @param {number} [fillAlpha=1] - The alpha the grid cells will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
      *
@@ -202,16 +195,16 @@ var Grid = new Class({
 
     /**
      * Sets the fill color and alpha level that the alternating grid cells will use.
-     * 
+     *
      * If this method is called with no values then alternating grid cells will not be rendered in a different color.
-     * 
+     *
      * Also see the `setOutlineStyle` and `setFillStyle` methods.
-     * 
+     *
      * This call can be chained.
      *
      * @method Phaser.GameObjects.Grid#setAltFillStyle
      * @since 3.13.0
-     * 
+     *
      * @param {number} [fillColor] - The color the alternating grid cells will be filled with, i.e. 0xff0000 for red.
      * @param {number} [fillAlpha=1] - The alpha the alternating grid cells will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
      *
@@ -237,17 +230,17 @@ var Grid = new Class({
 
     /**
      * Sets the fill color and alpha level that the lines between each grid cell will use.
-     * 
+     *
      * If this method is called with no values then the grid lines will not be rendered at all, however
      * the cells themselves may still be if they have colors set.
-     * 
+     *
      * Also see the `setFillStyle` and `setAltFillStyle` methods.
-     * 
+     *
      * This call can be chained.
      *
      * @method Phaser.GameObjects.Grid#setOutlineStyle
      * @since 3.13.0
-     * 
+     *
      * @param {number} [fillColor] - The color the lines between the grid cells will be filled with, i.e. 0xff0000 for red.
      * @param {number} [fillAlpha=1] - The alpha the lines between the grid cells will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
      *

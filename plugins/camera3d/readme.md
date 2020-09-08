@@ -1,6 +1,8 @@
 Phaser 3 Camera 3D Plugin
 =========================
 
+Note: As of 26th August 2020 this plugin is now considered deprecated and will not be supported any further. It has been fixed to work with the Phaser 3.50 release, but will not be updated beyond this. You're free to use it as you see fit, but please do not open issues about it on GitHub, thank you.
+
 In Phaser 3.12 Camera 3D support was moved to its own external plugin.
 
 There are two ways to use this in your games:

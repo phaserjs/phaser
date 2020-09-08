@@ -4,7 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var AnimationComponent = require('../../gameobjects/components/Animation');
+var AnimationState = require('../../animations/AnimationState');
 var Class = require('../../utils/Class');
 var Components = require('./components');
 var GameObject = require('../../gameobjects/GameObject');
@@ -100,7 +100,7 @@ var MatterSprite = new Class({
          */
         this._crop = this.resetCropObject();
 
-        this.anims = new AnimationComponent(this);
+        this.anims = new AnimationState(this);
 
         this.setTexture(texture, frame);
         this.setSizeToFrame();
@@ -138,7 +138,7 @@ var MatterSprite = new Class({
 
         this.setPosition(x, y);
 
-        this.initPipeline('TextureTintPipeline');
+        this.initPipeline('MultiPipeline');
     }
 
 });

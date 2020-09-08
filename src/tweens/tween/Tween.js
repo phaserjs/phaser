@@ -310,9 +310,9 @@ var Tween = new Class({
 
         /**
          * An object containing the different Tween callback functions.
-         * 
+         *
          * You can either set these in the Tween config, or by calling the `Tween.setCallback` method.
-         * 
+         *
          * `onActive` When the Tween is moved from the pending to the active list in the Tween Manager, even if playback paused.
          * `onStart` When the Tween starts playing after a delayed state. Will happen at the same time as `onActive` if it has no delay.
          * `onYoyo` When a TweenData starts a yoyo. This happens _after_ the `hold` delay expires, if set.
@@ -346,12 +346,12 @@ var Tween = new Class({
         this.callbackScope;
     },
 
-    /**	
+    /**
      * Returns the current value of the specified Tween Data.
      *
      * @method Phaser.Tweens.Tween#getValue
      * @since 3.0.0
-     * 
+     *
      * @param {integer} [index=0] - The Tween Data to return the value from.
      *
      * @return {number} The value of the requested Tween Data.
@@ -436,9 +436,9 @@ var Tween = new Class({
 
     /**
      * Updates the 'end' value of the given property across all matching targets.
-     * 
+     *
      * Calling this does not adjust the duration of the tween, or the current progress.
-     * 
+     *
      * You can optionally tell it to set the 'start' value to be the current value (before the change).
      *
      * @method Phaser.Tweens.Tween#updateTo
@@ -720,12 +720,12 @@ var Tween = new Class({
 
     /**
      * Starts a Tween playing.
-     * 
+     *
      * You only need to call this method if you have configured the tween to be paused on creation.
-     * 
+     *
      * If the Tween is already playing, calling this method again will have no effect. If you wish to
      * restart the Tween, use `Tween.restart` instead.
-     * 
+     *
      * Calling this method after the Tween has completed will start the Tween playing again from the start.
      * This is the same as calling `Tween.seek(0)` and then `Tween.play()`.
      *
@@ -877,16 +877,17 @@ var Tween = new Class({
 
     /**
      * Seeks to a specific point in the Tween.
-     * 
-     * **Note:** You cannot seek a Tween that repeats or loops forever, or that has an unusually long total duration.
-     * 
+     *
+     * **Note:** Be careful when seeking a Tween that repeats or loops forever,
+     * or that has an unusually long total duration, as it's possible to hang the browser.
+     *
      * The given position is a value between 0 and 1 which represents how far through the Tween to seek to.
      * A value of 0.5 would seek to half-way through the Tween, where-as a value of zero would seek to the start.
-     * 
+     *
      * Note that the seek takes the entire duration of the Tween into account, including delays, loops and repeats.
      * For example, a Tween that lasts for 2 seconds, but that loops 3 times, would have a total duration of 6 seconds,
      * so seeking to 0.5 would seek to 3 seconds into the Tween, as that's half-way through its _entire_ duration.
-     * 
+     *
      * Seeking works by resetting the Tween to its initial values and then iterating through the Tween at `delta`
      * jumps per step. The longer the Tween, the longer this can take.
      *
@@ -901,13 +902,6 @@ var Tween = new Class({
     seek: function (toPosition, delta)
     {
         if (delta === undefined) { delta = 16.6; }
-
-        if (this.totalDuration >= 3600000)
-        {
-            console.warn('Tween.seek duration too long');
-
-            return this;
-        }
 
         if (this.state === TWEEN_CONST.REMOVED)
         {
@@ -987,11 +981,11 @@ var Tween = new Class({
 
     /**
      * Sets an event based callback to be invoked during playback.
-     * 
+     *
      * Calling this method will replace a previously set callback for the given type, if any exists.
-     * 
+     *
      * The types available are:
-     * 
+     *
      * `onActive` When the Tween is moved from the pending to the active list in the Tween Manager, even if playback paused.
      * `onStart` When the Tween starts playing after a delayed state. Will happen at the same time as `onActive` if it has no delay.
      * `onYoyo` When a TweenData starts a yoyo. This happens _after_ the `hold` delay expires, if set.
@@ -1056,7 +1050,7 @@ var Tween = new Class({
     /**
      * Immediately removes this Tween from the TweenManager and all of its internal arrays,
      * no matter what stage it as it. Then sets the tween state to `REMOVED`.
-     * 
+     *
      * You should dispose of your reference to this tween after calling this method, to
      * free it from memory.
      *
@@ -1159,7 +1153,7 @@ var Tween = new Class({
                 if (!this.hasStarted && !this.isSeeking)
                 {
                     this.startDelay -= delta;
-        
+
                     if (this.startDelay <= 0)
                     {
                         this.hasStarted = true;
@@ -1272,7 +1266,7 @@ var Tween = new Class({
             if (callback)
             {
                 callback.params[1] = this.targets;
-    
+
                 callback.func.apply(callback.scope, callback.params);
             }
         }

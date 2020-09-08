@@ -16,10 +16,10 @@ module.exports = {
     Friction: require('./Friction'),
     Gravity: require('./Gravity'),
     Mass: require('./Mass'),
-    Static: require('./Static'),
     Sensor: require('./Sensor'),
     SetBody: require('./SetBody'),
     Sleep: require('./Sleep'),
+    Static: require('./Static'),
     Transform: require('./Transform'),
     Velocity: require('./Velocity')
 

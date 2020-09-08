@@ -3,6 +3,7 @@
  * @since 3.0.0
  *
  * @property {number} [fps=60] - Sets {@link Phaser.Physics.Arcade.World#fps}.
+ * @property {boolean} [fixedStep=true] - Sets {@link Phaser.Physics.Arcade.World#fixedStep}.
  * @property {number} [timeScale=1] - Sets {@link Phaser.Physics.Arcade.World#timeScale}.
  * @property {Phaser.Types.Math.Vector2Like} [gravity] - Sets {@link Phaser.Physics.Arcade.World#gravity}.
  * @property {number} [x=0] - Sets {@link Phaser.Physics.Arcade.World#bounds bounds.x}.
@@ -23,4 +24,5 @@
  * @property {number} [debugVelocityColor=0x00ff00] - Sets {@link Phaser.Physics.Arcade.World#defaults velocityDebugColor}.
  * @property {number} [maxEntries=16] - Sets {@link Phaser.Physics.Arcade.World#maxEntries}.
  * @property {boolean} [useTree=true] - Sets {@link Phaser.Physics.Arcade.World#useTree}.
+ * @property {boolean} [customUpdate=false] - If enabled, you need to call `World.update` yourself.
  */

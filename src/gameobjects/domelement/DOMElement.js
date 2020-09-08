@@ -8,6 +8,7 @@ var Class = require('../../utils/Class');
 var Components = require('../components');
 var DOMElementRender = require('./DOMElementRender');
 var GameObject = require('../GameObject');
+var GameObjectEvents = require('../events');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
 var RemoveFromDOM = require('../../dom/RemoveFromDOM');
 var SCENE_EVENTS = require('../../scene/events');
@@ -29,6 +30,9 @@ var Vector4 = require('../../math/Vector4');
  * When this is added, Phaser will automatically create a DOM Container div that is positioned over the top
  * of the game canvas. This div is sized to match the canvas, and if the canvas size changes, as a result of
  * settings within the Scale Manager, the dom container is resized accordingly.
+ *
+ * If you have not already done so, you have to provide a `parent` in the Game Configuration, or the DOM
+ * Container will fail to be created.
  *
  * You can create a DOM Element by either passing in DOMStrings, or by passing in a reference to an existing
  * Element that you wish to be placed under the control of Phaser. For example:
@@ -287,6 +291,21 @@ var DOMElement = new Class({
 
         scene.sys.events.on(SCENE_EVENTS.SLEEP, this.handleSceneEvent, this);
         scene.sys.events.on(SCENE_EVENTS.WAKE, this.handleSceneEvent, this);
+
+        this.on(GameObjectEvents.ADDED_TO_SCENE, this.addedToScene, this);
+        this.on(GameObjectEvents.REMOVED_FROM_SCENE, this.removedFromScene, this);
+    },
+
+    //  Overrides Game Object method
+    addedToScene: function ()
+    {
+        this.scene.sys.updateList.add(this);
+    },
+
+    //  Overrides Game Object method
+    removedFromScene: function ()
+    {
+        this.scene.sys.updateList.remove(this);
     },
 
     /**

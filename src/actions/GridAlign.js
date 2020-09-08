@@ -65,6 +65,26 @@ var GridAlign = function (items, options)
             //  We keep laying them out vertically until we've done them all
             tempZone.y += cellHeight;
         }
+        else if (heightSet && !widthSet)
+        {
+            //  We keep laying them out until we hit the column limit
+            cy += cellHeight;
+            tempZone.y += cellHeight;
+
+            if (cy === h)
+            {
+                cy = 0;
+                cx += cellWidth;
+                tempZone.y = y;
+                tempZone.x += cellWidth;
+
+                if (cx === w)
+                {
+                    //  We've hit the column limit, so return, even if there are items left
+                    break;
+                }
+            }
+        }
         else
         {
             //  We keep laying them out until we hit the column limit

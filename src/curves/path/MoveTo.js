@@ -9,15 +9,16 @@ var Vector2 = require('../../math/Vector2');
 
 /**
  * @classdesc
- * A MoveTo Curve is a very simple curve consisting of only a single point. Its intended use is to move the ending point in a Path.
+ * A MoveTo Curve is a very simple curve consisting of only a single point.
+ * Its intended use is to move the ending point in a Path.
  *
  * @class MoveTo
  * @memberof Phaser.Curves
  * @constructor
  * @since 3.0.0
  *
- * @param {number} [x] - `x` pixel coordinate.
- * @param {number} [y] - `y` pixel coordinate.
+ * @param {number} [x=0] - `x` pixel coordinate.
+ * @param {number} [y=0] - `y` pixel coordinate.
  */
 var MoveTo = new Class({
 
@@ -25,8 +26,6 @@ var MoveTo = new Class({
 
     function MoveTo (x, y)
     {
-        //  Skip length calcs in paths
-
         /**
          * Denotes that this Curve does not influence the bounds, points, and drawing of its parent Path. Must be `false` or some methods in the parent Path will throw errors.
          *

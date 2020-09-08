@@ -2,7 +2,8 @@
 
 const webpack = require('webpack');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const exec = require('child_process').exec;
+const RemovePlugin = require('remove-files-webpack-plugin');
 
 module.exports = {
     mode: 'production',
@@ -42,6 +43,21 @@ module.exports = {
     },
 
     plugins: [
-        new CleanWebpackPlugin([ 'dist' ])
+        new RemovePlugin({
+            before: {
+                root: './plugins/camera3d/dist/',
+                include: [ 'camera3d.js', 'camera3d.min.js' ]
+            }
+        }),
+        {
+            apply: (compiler) => {
+                compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
+                    exec('node plugins/camera3d/copy-to-examples.js', (err, stdout, stderr) => {
+                        if (stdout) process.stdout.write(stdout);
+                        if (stderr) process.stderr.write(stderr);
+                    });
+                });
+            }
+        }
     ]
 };

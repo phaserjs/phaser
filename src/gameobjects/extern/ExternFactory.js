@@ -22,7 +22,6 @@ GameObjectFactory.register('extern', function ()
     var extern = new Extern(this.scene);
 
     this.displayList.add(extern);
-    this.updateList.add(extern);
 
     return extern;
 });

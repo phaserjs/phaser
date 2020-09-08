@@ -8,6 +8,7 @@ var Class = require('../utils/Class');
 var PluginCache = require('../plugins/PluginCache');
 var SceneEvents = require('../scene/events');
 var TimerEvent = require('./TimerEvent');
+var Remove = require('../utils/array/Remove');
 
 /**
  * @classdesc
@@ -55,12 +56,9 @@ var Clock = new Class({
          */
         this.now = 0;
 
-        //  Scale the delta time coming into the Clock by this factor
-        //  which then influences anything using this Clock for calculations, like TimerEvents
-
         /**
          * The scale of the Clock's time delta.
-         * 
+         *
          * The time delta is the time elapsed between two consecutive frames and influences the speed of time for this Clock and anything which uses it, such as its Timer Events. Values higher than 1 increase the speed of time, while values smaller than 1 decrease it. A value of 0 freezes time and is effectively equivalent to pausing the Clock.
          *
          * @name Phaser.Time.Clock#timeScale
@@ -94,7 +92,7 @@ var Clock = new Class({
         this._active = [];
 
         /**
-         * An array of all Timer Events which will be added to the Clock at the start of the frame.
+         * An array of all Timer Events which will be added to the Clock at the start of the next frame.
          *
          * @name Phaser.Time.Clock#_pendingInsertion
          * @type {Phaser.Time.TimerEvent[]}
@@ -105,7 +103,7 @@ var Clock = new Class({
         this._pendingInsertion = [];
 
         /**
-         * An array of all Timer Events which will be removed from the Clock at the start of the frame.
+         * An array of all Timer Events which will be removed from the Clock at the start of the next frame.
          *
          * @name Phaser.Time.Clock#_pendingRemoval
          * @type {Phaser.Time.TimerEvent[]}
@@ -131,7 +129,7 @@ var Clock = new Class({
     {
         //  Sync with the TimeStep
         this.now = this.systems.game.loop.time;
-        
+
         this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
     },
 
@@ -156,16 +154,36 @@ var Clock = new Class({
     /**
      * Creates a Timer Event and adds it to the Clock at the start of the frame.
      *
+     * You can also pass in an existing Timer Event, which will be reset and added to this Clock.
+     *
+     * Note that if the Timer Event is being used by _another_ Clock (in another Scene) it will still
+     * be updated by that Clock as well, so be careful when using this feature.
+     *
      * @method Phaser.Time.Clock#addEvent
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Time.TimerEventConfig} config - The configuration for the Timer Event.
+     * @param {(Phaser.Time.TimerEvent | Phaser.Types.Time.TimerEventConfig)} config - The configuration for the Timer Event, or an existing Timer Event object.
      *
-     * @return {Phaser.Time.TimerEvent} The Timer Event which was created.
+     * @return {Phaser.Time.TimerEvent} The Timer Event which was created, or passed in.
      */
     addEvent: function (config)
     {
-        var event = new TimerEvent(config);
+        var event;
+
+        if (config instanceof Phaser.Time.TimerEvent)
+        {
+            event = config;
+
+            this.removeEvent(event);
+
+            event.elapsed = event.startAt;
+            event.hasDispatched = false;
+            event.repeatCount = (event.repeat === -1 || event.loop) ? 999999999999 : event.repeat;
+        }
+        else
+        {
+            event = new TimerEvent(config);
+        }
 
         this._pendingInsertion.push(event);
 
@@ -198,11 +216,43 @@ var Clock = new Class({
      * @method Phaser.Time.Clock#clearPendingEvents
      * @since 3.0.0
      *
-     * @return {Phaser.Time.Clock} This Clock object.
+     * @return {this} - This Clock instance.
      */
     clearPendingEvents: function ()
     {
         this._pendingInsertion = [];
+
+        return this;
+    },
+
+    /**
+     * Removes the given Timer Event, or an array of Timer Events, from this Clock.
+     *
+     * The events are removed from all internal lists (active, pending and removal),
+     * freeing the event up to be re-used.
+     *
+     * @method Phaser.Time.Clock#removeEvent
+     * @since 3.50.0
+     *
+     * @param {(Phaser.Time.TimerEvent | Phaser.Time.TimerEvent[])} events - The Timer Event, or an array of Timer Events, to remove from this Clock.
+     *
+     * @return {this} - This Clock instance.
+     */
+    removeEvent: function (events)
+    {
+        if (!Array.isArray(events))
+        {
+            events = [ events ];
+        }
+
+        for (var i = 0; i < events.length; i++)
+        {
+            var event = events[i];
+
+            Remove(this._pendingRemoval, event);
+            Remove(this._pendingInsertion, event);
+            Remove(this._active, event);
+        }
 
         return this;
     },
@@ -213,7 +263,7 @@ var Clock = new Class({
      * @method Phaser.Time.Clock#removeAllEvents
      * @since 3.0.0
      *
-     * @return {Phaser.Time.Clock} This Clock object.
+     * @return {this} - This Clock instance.
      */
     removeAllEvents: function ()
     {

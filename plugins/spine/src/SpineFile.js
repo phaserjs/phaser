@@ -211,6 +211,7 @@ var SpineFile = new Class({
             var atlasKey = '';
             var combinedAtlasData = '';
             var preMultipliedAlpha = (this.config.preMultipliedAlpha) ? true : false;
+            var textureManager = this.loader.textureManager;
 
             for (var i = 1; i < this.files.length; i++)
             {
@@ -218,7 +219,7 @@ var SpineFile = new Class({
 
                 if (file.type === 'text')
                 {
-                    atlasKey = file.key.replace(/_[\d]$/, "");
+                    atlasKey = file.key.replace(/_[\d]$/, '');
 
                     atlasCache = file.cache;
 
@@ -230,7 +231,10 @@ var SpineFile = new Class({
                     var pos = src.indexOf('_');
                     var key = src.substr(pos + 1);
 
-                    this.loader.textureManager.addImage(key, file.data);
+                    if (!textureManager.exists(key))
+                    {
+                        textureManager.addImage(key, file.data);
+                    }
                 }
 
                 file.pendingDestroy();
