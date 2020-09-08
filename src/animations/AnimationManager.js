@@ -639,17 +639,11 @@ var AnimationManager = new Class({
             return out;
         }
 
-        var diff = (start < end) ? 1 : -1;
-
-        //  Adjust because we use i !== end in the for loop
-        end += diff;
-
         var i;
-        var frame;
 
         if (!config)
         {
-            //  Use every frame in the atlas?
+            //  Use every frame in the atlas
             frames = texture.getFrameNames();
 
             for (i = 0; i < frames.length; i++)
@@ -657,28 +651,16 @@ var AnimationManager = new Class({
                 out.push({ key: key, frame: frames[i] });
             }
         }
-        else if (Array.isArray(frames))
-        {
-            //  Have they provided their own custom frame sequence array?
-            for (i = 0; i < frames.length; i++)
-            {
-                frame = prefix + Pad(frames[i], zeroPad, '0', 1) + suffix;
-
-                if (texture.has(frame))
-                {
-                    out.push({ key: key, frame: frame });
-                }
-                else
-                {
-                    console.warn('generateFrameNames: Frame missing: ' + frame + ' from texture: ' + key);
-                }
-            }
-        }
         else
         {
-            for (i = start; i !== end; i += diff)
+            if (!frames)
             {
-                frame = prefix + Pad(i, zeroPad, '0', 1) + suffix;
+                frames = NumberArray(start, end);
+            }
+
+            for (i = 0; i < frames.length; i++)
+            {
+                var frame = prefix + Pad(frames[i], zeroPad, '0', 1) + suffix;
 
                 if (texture.has(frame))
                 {
@@ -711,9 +693,9 @@ var AnimationManager = new Class({
      */
     generateFrameNumbers: function (key, config)
     {
-        var startFrame = GetValue(config, 'start', 0);
-        var endFrame = GetValue(config, 'end', -1);
-        var firstFrame = GetValue(config, 'first', false);
+        var start = GetValue(config, 'start', 0);
+        var end = GetValue(config, 'end', -1);
+        var first = GetValue(config, 'first', false);
         var out = GetValue(config, 'outputArray', []);
         var frames = GetValue(config, 'frames', false);
 
@@ -724,23 +706,22 @@ var AnimationManager = new Class({
             return out;
         }
 
-        if (firstFrame && texture.has(firstFrame))
+        if (first && texture.has(first))
         {
-            out.push({ key: key, frame: firstFrame });
+            out.push({ key: key, frame: first });
         }
 
-        //  No 'frames' array? Then calculate one automatically
-
+        //  No 'frames' array? Then generate one automatically
         if (!frames)
         {
-            if (endFrame === -1)
+            if (end === -1)
             {
                 //  -1 because of __BASE, which we don't want in our results
                 //  and -1 because frames are zero based
-                endFrame = texture.frameTotal - 2;
+                end = texture.frameTotal - 2;
             }
 
-            frames = NumberArray(startFrame, endFrame);
+            frames = NumberArray(start, end);
         }
 
         for (var i = 0; i < frames.length; i++)
