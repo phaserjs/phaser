@@ -4,11 +4,11 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Class = require('../../utils/Class');
-var CustomMap = require('../../structs/Map');
-var GetFastValue = require('../../utils/object/GetFastValue');
-var Events = require('../../animations/events');
-var Animation = require('../../animations/Animation');
+var Class = require('../utils/Class');
+var CustomMap = require('../structs/Map');
+var GetFastValue = require('../utils/object/GetFastValue');
+var Events = require('./events');
+var Animation = require('./Animation');
 
 /**
  * @classdesc
@@ -26,11 +26,12 @@ var Animation = require('../../animations/Animation');
  * can also create animations that are stored locally within it. See the `create method
  * for more details.
  *
- * Prior to Phaser 3.50 this component was called just `Animation`. It was renamed to
- * `AnimationState` in 3.50 to help better separate it from the `Animation` class.
+ * Prior to Phaser 3.50 this component was called just `Animation` and lived in the
+ * `Phaser.GameObjects.Components` namespace. It was renamed to `AnimationState`
+ * in 3.50 to help better identify its true purpose when browsing the documentation.
  *
  * @class AnimationState
- * @memberof Phaser.GameObjects.Components
+ * @memberof Phaser.Animations
  * @constructor
  * @since 3.0.0
  *
@@ -45,7 +46,10 @@ var AnimationState = new Class({
         /**
          * The Game Object to which this animation component belongs.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#parent
+         * You can typically access this component from the Game Object
+         * via the `this.anims` property.
+         *
+         * @name Phaser.Animations.AnimationState#parent
          * @type {Phaser.GameObjects.GameObject}
          * @since 3.0.0
          */
@@ -54,7 +58,7 @@ var AnimationState = new Class({
         /**
          * A reference to the global Animation Manager.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#animationManager
+         * @name Phaser.Animations.AnimationState#animationManager
          * @type {Phaser.Animations.AnimationManager}
          * @since 3.0.0
          */
@@ -65,7 +69,7 @@ var AnimationState = new Class({
         /**
          * A reference to the Texture Manager.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#textureManager
+         * @name Phaser.Animations.AnimationState#textureManager
          * @type {Phaser.Textures.TextureManager}
          * @protected
          * @since 3.50.0
@@ -78,7 +82,7 @@ var AnimationState = new Class({
          * Do not modify the contents of this Map directly, instead use the
          * `add`, `create` and `remove` methods of this class instead.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#anims
+         * @name Phaser.Animations.AnimationState#anims
          * @type {Phaser.Structs.Map.<string, Phaser.Animations.Animation>}
          * @protected
          * @since 3.50.0
@@ -88,7 +92,7 @@ var AnimationState = new Class({
         /**
          * Is an animation currently playing or not?
          *
-         * @name Phaser.GameObjects.Components.AnimationState#isPlaying
+         * @name Phaser.Animations.AnimationState#isPlaying
          * @type {boolean}
          * @default false
          * @since 3.0.0
@@ -98,7 +102,7 @@ var AnimationState = new Class({
         /**
          * Has the current animation started playing, or is it waiting for a delay to expire?
          *
-         * @name Phaser.GameObjects.Components.AnimationState#hasStarted
+         * @name Phaser.Animations.AnimationState#hasStarted
          * @type {boolean}
          * @default false
          * @since 3.50.0
@@ -110,7 +114,7 @@ var AnimationState = new Class({
          *
          * Will by `null` if no animation is yet loaded.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#currentAnim
+         * @name Phaser.Animations.AnimationState#currentAnim
          * @type {?Phaser.Animations.Animation}
          * @default null
          * @since 3.0.0
@@ -122,7 +126,7 @@ var AnimationState = new Class({
          *
          * Will by `null` if no animation is yet loaded.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#currentFrame
+         * @name Phaser.Animations.AnimationState#currentFrame
          * @type {?Phaser.Animations.AnimationFrame}
          * @default null
          * @since 3.0.0
@@ -135,7 +139,7 @@ var AnimationState = new Class({
          *
          * Will by `null` if no animation has been queued.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#nextAnim
+         * @name Phaser.Animations.AnimationState#nextAnim
          * @type {?(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)}
          * @default null
          * @since 3.16.0
@@ -147,7 +151,7 @@ var AnimationState = new Class({
          *
          * Populate this queue via the `chain` method.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#nextAnimsQueue
+         * @name Phaser.Animations.AnimationState#nextAnimsQueue
          * @type {array}
          * @since 3.24.0
          */
@@ -164,7 +168,7 @@ var AnimationState = new Class({
          *
          * Prior to Phaser 3.50 this property was private and called `_timeScale`.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#timeScale
+         * @name Phaser.Animations.AnimationState#timeScale
          * @type {number}
          * @default 1
          * @since 3.50.0
@@ -178,7 +182,7 @@ var AnimationState = new Class({
          * be treated as read-only, as changing it once playback has started will not alter
          * the animation. To change the frame rate, provide a new value in the `PlayAnimationConfig` object.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#frameRate
+         * @name Phaser.Animations.AnimationState#frameRate
          * @type {number}
          * @default 0
          * @since 3.0.0
@@ -192,7 +196,7 @@ var AnimationState = new Class({
          * be treated as read-only, as changing it once playback has started will not alter
          * the animation. To change the duration, provide a new value in the `PlayAnimationConfig` object.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#duration
+         * @name Phaser.Animations.AnimationState#duration
          * @type {number}
          * @default 0
          * @since 3.0.0
@@ -206,7 +210,7 @@ var AnimationState = new Class({
          * This value is calculated when a new animation is loaded into this component and should
          * be treated as read-only. Changing it will not alter playback speed.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#msPerFrame
+         * @name Phaser.Animations.AnimationState#msPerFrame
          * @type {number}
          * @default 0
          * @since 3.0.0
@@ -216,7 +220,7 @@ var AnimationState = new Class({
         /**
          * Skip frames if the time lags, or always advanced anyway?
          *
-         * @name Phaser.GameObjects.Components.AnimationState#skipMissedFrames
+         * @name Phaser.Animations.AnimationState#skipMissedFrames
          * @type {boolean}
          * @default true
          * @since 3.0.0
@@ -232,7 +236,7 @@ var AnimationState = new Class({
          *
          * Prior to Phaser 3.50 this property was private and called `_delay`.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#delay
+         * @name Phaser.Animations.AnimationState#delay
          * @type {number}
          * @default 0
          * @since 3.50.0
@@ -250,7 +254,7 @@ var AnimationState = new Class({
          *
          * Prior to Phaser 3.50 this property was private and called `_repeat`.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#repeat
+         * @name Phaser.Animations.AnimationState#repeat
          * @type {number}
          * @default 0
          * @since 3.50.0
@@ -267,7 +271,7 @@ var AnimationState = new Class({
          *
          * Prior to Phaser 3.50 this property was private and called `_repeatDelay`.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#repeatDelay
+         * @name Phaser.Animations.AnimationState#repeatDelay
          * @type {number}
          * @default 0
          * @since 3.0.0
@@ -286,7 +290,7 @@ var AnimationState = new Class({
          *
          * Prior to Phaser 3.50 this property was private and called `_yoyo`.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#yoyo
+         * @name Phaser.Animations.AnimationState#yoyo
          * @type {boolean}
          * @default false
          * @since 3.50.0
@@ -301,7 +305,7 @@ var AnimationState = new Class({
          * This value is set when a new animation is loaded into this component, but can also be modified
          * at run-time, assuming the animation is currently delayed.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#showOnStart
+         * @name Phaser.Animations.AnimationState#showOnStart
          * @type {boolean}
          * @since 3.50.0
          */
@@ -313,7 +317,7 @@ var AnimationState = new Class({
          * This value is set when a new animation is loaded into this component, but can also be modified
          * at run-time, assuming the animation is still actively playing.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#hideOnComplete
+         * @name Phaser.Animations.AnimationState#hideOnComplete
          * @type {boolean}
          * @since 3.50.0
          */
@@ -322,7 +326,7 @@ var AnimationState = new Class({
         /**
          * Is the playhead moving forwards (`true`) or in reverse (`false`) ?
          *
-         * @name Phaser.GameObjects.Components.AnimationState#forward
+         * @name Phaser.Animations.AnimationState#forward
          * @type {boolean}
          * @default true
          * @since 3.0.0
@@ -336,7 +340,7 @@ var AnimationState = new Class({
          *
          * Prior to Phaser 3.50 this property was private and called `_reverse`.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#inReverse
+         * @name Phaser.Animations.AnimationState#inReverse
          * @type {boolean}
          * @default false
          * @since 3.50.0
@@ -348,7 +352,7 @@ var AnimationState = new Class({
          *
          * This has the `delta` time added to it as part of the `update` step.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#accumulator
+         * @name Phaser.Animations.AnimationState#accumulator
          * @type {number}
          * @default 0
          * @since 3.0.0
@@ -360,7 +364,7 @@ var AnimationState = new Class({
          *
          * This value is compared against the `accumulator` as part of the `update` step.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#nextTick
+         * @name Phaser.Animations.AnimationState#nextTick
          * @type {number}
          * @default 0
          * @since 3.0.0
@@ -373,7 +377,7 @@ var AnimationState = new Class({
          * This is set via the `playAfterDelay` method, although it can be modified at run-time
          * if required, as long as the animation has not already started playing.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#delayCounter
+         * @name Phaser.Animations.AnimationState#delayCounter
          * @type {number}
          * @default 0
          * @since 3.50.0
@@ -386,7 +390,7 @@ var AnimationState = new Class({
          * This value is set when a new animation is loaded into this component, but can also be modified
          * at run-time.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#repeatCounter
+         * @name Phaser.Animations.AnimationState#repeatCounter
          * @type {number}
          * @default 0
          * @since 3.0.0
@@ -396,7 +400,7 @@ var AnimationState = new Class({
         /**
          * An internal flag keeping track of pending repeats.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#pendingRepeat
+         * @name Phaser.Animations.AnimationState#pendingRepeat
          * @type {boolean}
          * @default false
          * @since 3.0.0
@@ -406,7 +410,7 @@ var AnimationState = new Class({
         /**
          * Is the Animation paused?
          *
-         * @name Phaser.GameObjects.Components.AnimationState#_paused
+         * @name Phaser.Animations.AnimationState#_paused
          * @type {boolean}
          * @private
          * @default false
@@ -417,7 +421,7 @@ var AnimationState = new Class({
         /**
          * Was the animation previously playing before being paused?
          *
-         * @name Phaser.GameObjects.Components.AnimationState#_wasPlaying
+         * @name Phaser.Animations.AnimationState#_wasPlaying
          * @type {boolean}
          * @private
          * @default false
@@ -433,7 +437,7 @@ var AnimationState = new Class({
          * 2 = Waiting for repeat
          * 3 = Waiting for specific frame
          *
-         * @name Phaser.GameObjects.Components.AnimationState#_pendingStop
+         * @name Phaser.Animations.AnimationState#_pendingStop
          * @type {integer}
          * @private
          * @since 3.4.0
@@ -443,7 +447,7 @@ var AnimationState = new Class({
         /**
          * Internal property used by _pendingStop.
          *
-         * @name Phaser.GameObjects.Components.AnimationState#_pendingStopValue
+         * @name Phaser.Animations.AnimationState#_pendingStopValue
          * @type {any}
          * @private
          * @since 3.4.0
@@ -465,7 +469,7 @@ var AnimationState = new Class({
      *
      * Call this method with no arguments to reset all currently chained animations.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#chain
+     * @method Phaser.Animations.AnimationState#chain
      * @since 3.16.0
      *
      * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig|string[]|Phaser.Animations.Animation[]|Phaser.Types.Animations.PlayAnimationConfig[])} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object, or an array of them.
@@ -511,7 +515,7 @@ var AnimationState = new Class({
      *
      * Prior to Phaser 3.50 this method was called `getCurrentKey`.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#getName
+     * @method Phaser.Animations.AnimationState#getName
      * @since 3.50.0
      *
      * @return {string} The key of the Animation currently loaded into this component, or an empty string if none loaded.
@@ -524,7 +528,7 @@ var AnimationState = new Class({
     /**
      * Internal method used to load an animation into this component.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#load
+     * @method Phaser.Animations.AnimationState#load
      * @protected
      * @since 3.0.0
      *
@@ -595,7 +599,7 @@ var AnimationState = new Class({
      * Pause the current animation and set the `isPlaying` property to `false`.
      * You can optionally pause it at a specific frame.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#pause
+     * @method Phaser.Animations.AnimationState#pause
      * @since 3.0.0
      *
      * @param {Phaser.Animations.AnimationFrame} [atFrame] - An optional frame to set after pausing the animation.
@@ -623,7 +627,7 @@ var AnimationState = new Class({
      * Resumes playback of a paused animation and sets the `isPlaying` property to `true`.
      * You can optionally tell it to start playback from a specific frame.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#resume
+     * @method Phaser.Animations.AnimationState#resume
      * @since 3.0.0
      *
      * @param {Phaser.Animations.AnimationFrame} [fromFrame] - An optional frame to set before restarting playback.
@@ -658,7 +662,7 @@ var AnimationState = new Class({
      *
      * Prior to Phaser 3.50 this method was called 'delayedPlay'.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#playAfterDelay
+     * @method Phaser.Animations.AnimationState#playAfterDelay
      * @fires Phaser.Animations.Events#ANIMATION_START
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_START
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
@@ -706,7 +710,7 @@ var AnimationState = new Class({
      *
      * If no animation is currently running, the given one will start immediately.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#playAfterRepeat
+     * @method Phaser.Animations.AnimationState#playAfterRepeat
      * @fires Phaser.Animations.Events#ANIMATION_START
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_START
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
@@ -801,7 +805,7 @@ var AnimationState = new Class({
      *
      * Also, see the documentation in the Animation Manager for further details on creating animations.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#play
+     * @method Phaser.Animations.AnimationState#play
      * @fires Phaser.Animations.Events#ANIMATION_START
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_START
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
@@ -898,7 +902,7 @@ var AnimationState = new Class({
      *
      * Also, see the documentation in the Animation Manager for further details on creating animations.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#playReverse
+     * @method Phaser.Animations.AnimationState#playReverse
      * @fires Phaser.Animations.Events#ANIMATION_START
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_START
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
@@ -934,7 +938,7 @@ var AnimationState = new Class({
      * Load the animation based on the key and set-up all of the internal values
      * needed for playback to start. If there is no delay, it will also fire the start events.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#startAnimation
+     * @method Phaser.Animations.AnimationState#startAnimation
      * @fires Phaser.Animations.Events#ANIMATION_START
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_START
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
@@ -983,7 +987,7 @@ var AnimationState = new Class({
     /**
      * Handles the start of an animation playback.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#handleStart
+     * @method Phaser.Animations.AnimationState#handleStart
      * @private
      * @since 3.50.0
      */
@@ -1004,7 +1008,7 @@ var AnimationState = new Class({
     /**
      * Handles the repeat of an animation.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#handleRepeat
+     * @method Phaser.Animations.AnimationState#handleRepeat
      * @private
      * @since 3.50.0
      */
@@ -1018,7 +1022,7 @@ var AnimationState = new Class({
     /**
      * Handles the stop of an animation playback.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#handleStop
+     * @method Phaser.Animations.AnimationState#handleStop
      * @private
      * @since 3.50.0
      */
@@ -1034,7 +1038,7 @@ var AnimationState = new Class({
     /**
      * Handles the completion of an animation playback.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#handleComplete
+     * @method Phaser.Animations.AnimationState#handleComplete
      * @private
      * @since 3.50.0
      */
@@ -1055,7 +1059,7 @@ var AnimationState = new Class({
     /**
      * Fires the given animation events.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#emitEvents
+     * @method Phaser.Animations.AnimationState#emitEvents
      * @private
      * @since 3.50.0
      *
@@ -1078,7 +1082,7 @@ var AnimationState = new Class({
     /**
      * Reverse the Animation that is already playing on the Game Object.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#reverse
+     * @method Phaser.Animations.AnimationState#reverse
      * @since 3.12.0
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
@@ -1101,7 +1105,7 @@ var AnimationState = new Class({
      * The value is based on the current frame and how far that is in the animation, it is not based on
      * the duration of the animation.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#getProgress
+     * @method Phaser.Animations.AnimationState#getProgress
      * @since 3.4.0
      *
      * @return {number} The progress of the current animation in frames, between 0 and 1.
@@ -1133,7 +1137,7 @@ var AnimationState = new Class({
      * The value is based on the current frame and how far that is in the animation, it is not based on
      * the duration of the animation.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#setProgress
+     * @method Phaser.Animations.AnimationState#setProgress
      * @since 3.4.0
      *
      * @param {number} [value=0] - The progress value, between 0 and 1.
@@ -1163,7 +1167,7 @@ var AnimationState = new Class({
      * value specified here will be overwritten when the next animation loads in. To avoid this,
      * use the `repeat` property of the `PlayAnimationConfig` object instead.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#setRepeat
+     * @method Phaser.Animations.AnimationState#setRepeat
      * @since 3.4.0
      *
      * @param {integer} value - The number of times that the animation should repeat.
@@ -1180,7 +1184,7 @@ var AnimationState = new Class({
     /**
      * Handle the removal of an animation from the Animation Manager.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#globalRemove
+     * @method Phaser.Animations.AnimationState#globalRemove
      * @since 3.50.0
      *
      * @param {string} [key] - The key of the removed Animation.
@@ -1208,7 +1212,7 @@ var AnimationState = new Class({
      * If you `includeDelay` then it will also fire the `ANIMATION_START` series of events once
      * the delay has expired, otherwise, playback will just begin immediately.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#restart
+     * @method Phaser.Animations.AnimationState#restart
      * @fires Phaser.Animations.Events#ANIMATION_RESTART
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_RESTART
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_RESTART
@@ -1265,7 +1269,7 @@ var AnimationState = new Class({
      *
      * If another animation has been queued for playback, it will be started after the events fire.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#complete
+     * @method Phaser.Animations.AnimationState#complete
      * @fires Phaser.Animations.Events#ANIMATION_COMPLETE
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_COMPLETE
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_COMPLETE
@@ -1303,7 +1307,7 @@ var AnimationState = new Class({
      *
      * If there is another animation in the queue (set via the `chain` method) then it will start playing.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#stop
+     * @method Phaser.Animations.AnimationState#stop
      * @fires Phaser.Animations.Events#ANIMATION_STOP
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_STOP
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_STOP
@@ -1344,7 +1348,7 @@ var AnimationState = new Class({
      * If there is another animation in the queue (set via the `chain` method) then it will start playing,
      * when the current one stops.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#stopAfterDelay
+     * @method Phaser.Animations.AnimationState#stopAfterDelay
      * @fires Phaser.Animations.Events#ANIMATION_STOP
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_STOP
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_STOP
@@ -1374,7 +1378,7 @@ var AnimationState = new Class({
      *
      * Prior to Phaser 3.50 this method was called `stopOnRepeat` and had no parameters.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#stopAfterRepeat
+     * @method Phaser.Animations.AnimationState#stopAfterRepeat
      * @fires Phaser.Animations.Events#ANIMATION_STOP
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_STOP
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_STOP
@@ -1410,7 +1414,7 @@ var AnimationState = new Class({
      * If there is another animation in the queue (set via the `chain` method) then it will start playing,
      * when the current one stops.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#stopOnFrame
+     * @method Phaser.Animations.AnimationState#stopOnFrame
      * @fires Phaser.Animations.Events#ANIMATION_STOP
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_STOP
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_STOP
@@ -1432,7 +1436,7 @@ var AnimationState = new Class({
      * Returns the total number of frames in this animation, or returns zero if no
      * animation has been loaded.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#getTotalFrames
+     * @method Phaser.Animations.AnimationState#getTotalFrames
      * @since 3.4.0
      *
      * @return {integer} The total number of frames in the current animation, or zero if no animation has been loaded.
@@ -1447,7 +1451,7 @@ var AnimationState = new Class({
      *
      * This is called automatically by the `Sprite.preUpdate` method.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#update
+     * @method Phaser.Animations.AnimationState#update
      * @since 3.0.0
      *
      * @param {number} time - The current timestamp.
@@ -1523,7 +1527,7 @@ var AnimationState = new Class({
      * Sets the given Animation Frame as being the current frame
      * and applies it to the parent Game Object, adjusting size and origin as needed.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#setCurrentFrame
+     * @method Phaser.Animations.AnimationState#setCurrentFrame
      * @fires Phaser.Animations.Events#ANIMATION_UPDATE
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_UPDATE
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_UPDATE
@@ -1589,7 +1593,7 @@ var AnimationState = new Class({
      * Calling this does not change the direction of the animation. I.e. if it was currently
      * playing in reverse, calling this method doesn't then change the direction to forwards.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#nextFrame
+     * @method Phaser.Animations.AnimationState#nextFrame
      * @since 3.16.0
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object this Animation Component belongs to.
@@ -1611,7 +1615,7 @@ var AnimationState = new Class({
      * Calling this does not change the direction of the animation. I.e. if it was currently
      * playing in forwards, calling this method doesn't then change the direction to backwards.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#previousFrame
+     * @method Phaser.Animations.AnimationState#previousFrame
      * @since 3.16.0
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object this Animation Component belongs to.
@@ -1631,7 +1635,7 @@ var AnimationState = new Class({
      *
      * See the `create` method for more details.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#get
+     * @method Phaser.Animations.AnimationState#get
      * @since 3.50.0
      *
      * @param {string} key - The key of the Animation to retrieve.
@@ -1646,7 +1650,7 @@ var AnimationState = new Class({
     /**
      * Checks to see if the given key is already used locally within the animations stored on this Sprite.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#exists
+     * @method Phaser.Animations.AnimationState#exists
      * @since 3.50.0
      *
      * @param {string} key - The key of the Animation to check.
@@ -1675,7 +1679,7 @@ var AnimationState = new Class({
      *
      * If you wish to re-use an existing key, call the `remove` method first, then this method.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#create
+     * @method Phaser.Animations.AnimationState#create
      * @since 3.50.0
      *
      * @param {Phaser.Types.Animations.Animation} config - The configuration settings for the Animation.
@@ -1713,7 +1717,7 @@ var AnimationState = new Class({
      *
      * Once an Animation has been removed, this Sprite cannot play it again without re-creating it.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#remove
+     * @method Phaser.Animations.AnimationState#remove
      * @since 3.50.0
      *
      * @param {string} key - The key of the animation to remove.
@@ -1742,7 +1746,7 @@ var AnimationState = new Class({
      *
      * Unregisters event listeners and cleans up its references.
      *
-     * @method Phaser.GameObjects.Components.AnimationState#destroy
+     * @method Phaser.Animations.AnimationState#destroy
      * @since 3.0.0
      */
     destroy: function ()
@@ -1766,7 +1770,7 @@ var AnimationState = new Class({
     /**
      * `true` if the current animation is paused, otherwise `false`.
      *
-     * @name Phaser.GameObjects.Components.AnimationState#isPaused
+     * @name Phaser.Animations.AnimationState#isPaused
      * @readonly
      * @type {boolean}
      * @since 3.4.0

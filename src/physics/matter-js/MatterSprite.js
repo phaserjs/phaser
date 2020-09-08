@@ -4,7 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var AnimationState = require('../../gameobjects/components/AnimationState');
+var AnimationState = require('../../animations/AnimationState');
 var Class = require('../../utils/Class');
 var Components = require('./components');
 var GameObject = require('../../gameobjects/GameObject');
