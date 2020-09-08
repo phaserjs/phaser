@@ -216,8 +216,12 @@ The way in which Game Objects add themselves to the Scene Update List has change
 
 If you use Animations in your game, please read the following important API changes in 3.50:
 
-The Animation API has had a significant overhaul to improve playback handling. Instead of just playing an animation based on its global key, you can now supply a new `PlayAnimationConfig` object instead, which allows you to override any of the default animation settings, such as `duration`, `delay` and `yoyo` (see below for the full list). This means you no longer have to create lots of duplicate animations, just to change properties such as `duration`, and can now set them dynamically at run-time as well.
+The Animation API has had a significant overhaul to improve playback handling. Instead of just playing an animation based on its global key, you can now supply a new `PlayAnimationConfig` object instead, which allows you to override any of the default animation settings, such as `duration`, `delay` and `yoyo` (see below for the full list). This means you no longer have to create lots of duplicate animations just to change properties such as `duration`, and can now set them dynamically at run-time as well.
 
+* The `Animation` class no longer extends `EventEmitter`, as it no longer emits any events directly. This means you cannot now listen for events directly from an Animation instance. All of the events are now dispatched by the Game Objects instead.
+* All of the `SPRITE_ANIMATION_KEY` events have been removed. Instead, please use the new events which all carry the `frameKey` parameter, which can be used to handle frame specific events.
+* `ANIMATION_UPDATE_EVENT` is a new event that is emitted from a Sprite when an animation updates, i.e. its frame changes.
+* `ANIMATION_STOP_EVENT` is a new event that is emitted from a Sprite when its current animation is stopped. This can happen if any of the `stop` methods are called, or a new animation is played prior to this one reaching completion. Fix #4894 (thanks @scott20145)
 * The Game Object `Component.Animation` component has been renamed to `AnimationState` and has moved namespace. It's now in `Phaser.Animations` instead of `GameObjects.Components` to help differentiate it from the `Animation` class when browsing the documentation.
 * The `play`, `playReverse`, `playAfterDelay`, `playAfterRepeat` and `chain` Sprite and Animation Component methods can now all take a `Phaser.Types.Animations.PlayAnimationConfig` configuration object, as well as a string, as the `key` parameter. This allows you to override any default animation setting with those defined in the config, giving you far greater control over animations on a Game Object level, without needing to globally duplicate them.
 * `AnimationState.create` is a new method that allows you to create animations directly on a Sprite. These are not global and never enter the Animation Manager, instead risiding within the Sprite itself. This allows you to use the same keys across both local and global animations and set-up Sprite specific local animations.
@@ -237,6 +241,7 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * The `AnimationState.delayedPlay` method has been renamed to `playAfterDelay`. The parameter order has also changed, so the key now comes first instead of the duration.
 * The `AnimationState.stopOnRepeat` method has been renamed to `stopAfterRepeat`
 * The `AnimationState.getCurrentKey` method has been renamed to `getName`.
+* `AnimationState.getFrameName` is a new method that will return the key of the current Animation Frame, if an animation has been loaded.
 * `AnimationState.playAfterDelay` and `Sprite.playAfterDelay` are new methods that will play the given animation after the delay in ms expires.
 * `AnimationState.playAfterRepeat` and `Sprite.playAfterRepeat` are new methods that will play the given animation after the current animation finishes repeating. You can also specify the number of repeats allowed left to run.
 * The `AnimationState.chain` method is now available on the Sprite class.
@@ -271,10 +276,6 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * The `AnimationState.restart` method has a new optional boolean parameter `resetRepeats` which controls if you want to reset the repeat counter during the restart, or not.
 * `Animation.getTotalFrames` is a new method that will return the total number of frames in the animation. You can access it via `this.anims.currentAnim.getTotalFrames` from a Sprite.
 * `Animation.calculateDuration` is a new method that calculates the duration, frameRate and msPerFrame for a given animation target.
-* `ANIMATION_UPDATE_EVENT` is a new event that is emitted from an Animation when it is updated, i.e. its frame changes.
-* `ANIMATION_STOP_EVENT` is a new event that is emitted from an Animation when it is stopped. This can happen if any of the `stop` methods are called, or a new animation is played prior to this one reaching completion. Fix #4894 (thanks @scott20145)
-* `SPRITE_ANIMATION_STOP_EVENT` is a new event that is emitted from a Sprite when its current animation is stopped. This can happen if any of the `stop` methods are called, or a new animation is played prior to this one reaching completion.
-* `SPRITE_ANIMATION_KEY_STOP_EVENT` is a new event that is emitted from a Sprite when its current animation is stopped. This can happen if any of the `stop` methods are called, or a new animation is played prior to this one reaching completion. This is a dynamic event name and carries the animation key in its title.
 * The `BuildGameObjectAnimation` function now uses the `PlayAnimationConfig` object to set the values.
 * `Sprite.playReverse` is a new method that allows you to play the given animation in reverse on the Sprite.
 * `Sprite.playAfterDelay` is a new method that allows you to play the given animation on the Sprite after a delay.
