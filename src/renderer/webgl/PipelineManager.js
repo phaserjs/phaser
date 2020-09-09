@@ -51,18 +51,6 @@ var PipelineManager = new Class({
         this.renderer = renderer;
 
         /**
-         * The underlying WebGL context of the renderer.
-         *
-         * This is set in the `boot` method.
-         *
-         * @name Phaser.Renderer.WebGL.PipelineManager#gl
-         * @type {WebGLRenderingContext}
-         * @default null
-         * @since 3.50.0
-         */
-        this.gl = null;
-
-        /**
          * This map stores all pipeline instances in this manager.
          *
          * This is populated with the default pipelines in the `boot` method.
@@ -421,8 +409,8 @@ var PipelineManager = new Class({
             return;
         }
 
-        var gl = this.gl;
         var renderer = this.renderer;
+        var gl = renderer.gl;
 
         gl.disable(gl.DEPTH_TEST);
         gl.disable(gl.CULL_FACE);
@@ -494,7 +482,6 @@ var PipelineManager = new Class({
 
         this.pipelines.clear();
 
-        this.gl = null;
         this.renderer = null;
         this.game = null;
         this.pipelines = null;
