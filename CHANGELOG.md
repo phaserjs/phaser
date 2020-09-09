@@ -31,13 +31,48 @@ Other pipeline changes are as follows:
 * All pipelines will now extract the `attributes` property from the config, allowing you to set it externally.
 * All pipelines will now extract the `topology` property from the config, allowing you to set it externally.
 
+### Pipeline Manager
+
+The `WebGL.PipelineManager` is a new class that is responsbile for managing all of the WebGL Pipelines in Phaser. An instance of the Pipeline Manager is created by the WebGL Renderer and is available under the `pipelines` property. This means that the WebGL Renderer no longer handles pipelines directly, causing the following API changes:
+
+* `WebGLRenderer.pipelines` is no longer a plain object containing pipeline instances. It's now an instance of the `PipelineManager` class. This instance is created during the init and boot phase of the renderer.
+* The `WebGLRenderer.currentPipeline` property no longer exists, instead use `PipelineManager.current`.
+* The `WebGLRenderer.previousPipeline` property no longer exists, instead use `PipelineManager.previous`.
+* The `WebGLRenderer.hasPipeline` method no longer exists, instead use `PipelineManager.has`.
+* The `WebGLRenderer.getPipeline` method no longer exists, instead use `PipelineManager.get`.
+* The `WebGLRenderer.removePipeline` method no longer exists, instead use `PipelineManager.remove`.
+* The `WebGLRenderer.addPipeline` method no longer exists, instead use `PipelineManager.add`.
+* The `WebGLRenderer.setPipeline` method no longer exists, instead use `PipelineManager.set`.
+* The `WebGLRenderer.rebindPipeline` method no longer exists, instead use `PipelineManager.rebind`.
+* The `WebGLRenderer.clearPipeline` method no longer exists, instead use `PipelineManager.clear`.
+
+The Pipeline Manager also offers the following new features:
+
+* The `PipelineManager.resize` method automatically handles resize events across all pipelines.
+* The `PipelineManager.preRender` method calls the pre-render method of all pipelines.
+* The `PipelineManager.render` method calls the render method of all pipelines.
+* The `PipelineManager.postRender` method calls the post-render method of all pipelines.
+* The `PipelineManager.setMulti` method automatically binds the Multi Texture Pipeline, Phaser's default.
+* The `PipelineManager.clear` method will clear the pipeline, store it in `previous` and free the renderer.
+* The `PipelineManager.rebind` method will reset the rendering context and restore the `previous` pipeline, if set.
+
+New constants have been created to help you reference a pipeline without needing to use strings:
+
+* `Phaser.Renderer.WebGL.Pipelines.BITMAPMASK_PIPELINE` for the Bitmap Mask Pipeline.
+* `Phaser.Renderer.WebGL.Pipelines.LIGHT_PIPELINE` for the Light 2D Pipeline.
+* `Phaser.Renderer.WebGL.Pipelines.SINGLE_PIPELINE` for the Single Pipeline.
+* `Phaser.Renderer.WebGL.Pipelines.MULTI_PIPELINE` for the Multi Pipeline.
+* `Phaser.Renderer.WebGL.Pipelines.ROPE_PIPELINE` for the Rope Pipeline.
+
+All Game Objects have been updated to use the new constants and Pipeline Manager.
+
 #### Single Pipeline
 
 There is also a new pipeline called `SinglePipeline`, created to emulate the old `TextureTintPipeline`. This special pipeline uses just a single texture and makes things a lot easier if you wish to create a custom pipeline, but not have to recode your shaders to work with multiple textures. Instead, just extend `SinglePipeline`, where-as before you extended the `TextureTintPipeline` and you won't have to change any of your shader code. However, if you can, you should update it to make it perform faster, but that choice is left up to you.
 
 ### WebGL Multi-Texture Rendering
 
-The Multi Pipeline (previously the Texture Tint Pipeline) has had its core flow rewritten to eliminate the need for constantly creating `batch` objects. Instead, it now supports the new multi-texture shader, vastly increasing rendering performance, especially on draw-call bound systems.
+The Multi Pipeline (previously called the Texture Tint Pipeline) has had its core flow rewritten to eliminate the need for constantly creating `batch` objects. Instead, it now supports the new multi-texture shader, vastly increasing rendering performance, especially on draw-call bound systems.
 
 All of the internal functions, such as `batchQuad` and `batchSprite` have been updated to use the new method of texture setting. The method signatures all remain the same unless indicated below.
 
