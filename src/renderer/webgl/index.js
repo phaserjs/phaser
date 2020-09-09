@@ -10,9 +10,10 @@
 
 module.exports = {
 
+    PipelineManager: require('./PipelineManager'),
+    Pipelines: require('./pipelines'),
     Utils: require('./Utils'),
     WebGLPipeline: require('./WebGLPipeline'),
-    WebGLRenderer: require('./WebGLRenderer'),
-    Pipelines: require('./pipelines')
+    WebGLRenderer: require('./WebGLRenderer')
 
 };
