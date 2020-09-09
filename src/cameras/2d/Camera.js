@@ -221,12 +221,12 @@ var Camera = new Class({
         /**
          * If this Camera is rendering to a texture (via `setRenderToTexture`) then you
          * have the option to control if it should also render to the Game canvas as well.
-         * 
+         *
          * By default, a Camera will render both to its texture and to the Game canvas.
-         * 
+         *
          * However, if you set ths property to `false` it will only render to the texture
          * and skip rendering to the Game canvas.
-         * 
+         *
          * Setting this property if the Camera isn't rendering to a texture has no effect.
          *
          * @name Phaser.Cameras.Scene2D.Camera#renderToGame
@@ -301,7 +301,7 @@ var Camera = new Class({
          * This is only set if Phaser is running with the WebGL Renderer.
          *
          * @name Phaser.Cameras.Scene2D.Camera#pipeline
-         * @type {any}
+         * @type {?Phaser.Renderer.WebGL.WebGLPipeline}
          * @since 3.13.0
          */
         this.pipeline = null;
@@ -332,7 +332,7 @@ var Camera = new Class({
      *
      * You should not enable this unless you plan on actually using the texture it creates
      * somehow, otherwise you're just doubling the work required to render your game.
-     * 
+     *
      * If you only require the Camera to render to a texture, and not also to the Game,
      * them set the `renderToGame` parameter to `false`.
      *
@@ -397,9 +397,9 @@ var Camera = new Class({
         {
             var renderer = this.scene.sys.game.renderer;
 
-            if (renderer.gl && renderer.hasPipeline(pipeline))
+            if (renderer.gl && renderer.pipelines.has(pipeline))
             {
-                this.pipeline = renderer.getPipeline(pipeline);
+                this.pipeline = renderer.pipelines.get(pipeline);
             }
         }
         else
