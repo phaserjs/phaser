@@ -619,7 +619,7 @@ var Tilemap = new Class({
      * @param {Phaser.Types.GameObjects.GameObjectConfig} spriteConfig - The config object to pass into the Sprite creator (i.e.
      * scene.make.sprite).
      * @param {Phaser.Scene} [scene=the scene the map is within] - The Scene to create the Sprites within.
-     * @param {function} [make] - The Sprite creator. Default is `scene.make.sprite`. See {@link Phaser.GameObjects.GameObjectCreator}.
+     * @param {Phaser.Types.GameObjects.MakeGameObjectCallback} [make] - The Sprite creator. Default is `scene.make.sprite`. See {@link Phaser.GameObjects.GameObjectCreator}.
      * @param {any} [makeContext] - The Sprite creator context. Default is `scene.make`.
      *
      * @return {Phaser.GameObjects.Sprite[]} An array of the Sprites that were created.
@@ -733,7 +733,7 @@ var Tilemap = new Class({
      * @param {Phaser.Scene} [scene=scene the map is within] - The Scene to create the Sprites within.
      * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
      * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
-     * @param {function} [make] - The Sprite creator. Default is `scene.make.sprite`. See {@link Phaser.GameObjects.GameObjectCreator}.
+     * @param {Phaser.Types.GameObjects.MakeGameObjectCallback} [make] - The Sprite creator. Default is `scene.make.sprite`. See {@link Phaser.GameObjects.GameObjectCreator}.
      * @param {any} [makeContext] - The Sprite creator context. Default is `scene.make`.
      *
      * @return {?Phaser.GameObjects.Sprite[]} Returns an array of Tiles, or null if the layer given was invalid.

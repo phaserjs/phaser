@@ -24,7 +24,7 @@ var ReplaceByIndex = require('./ReplaceByIndex');
  * @param {Phaser.Scene} [scene=scene the map is within] - The Scene to create the Sprites within.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when determining the world XY
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
- * @param {function} [make] - The Sprite creator. Default is `scene.make.sprite`. See {@link Phaser.GameObjects.GameObjectCreator}.
+ * @param {Phaser.Types.GameObjects.MakeGameObjectCallback} [make] - The Sprite creator. Default is `scene.make.sprite`. See {@link Phaser.GameObjects.GameObjectCreator}.
  * @param {any} [makeContext] - The Sprite creator context. Default is `scene.make`.
  *
  * @return {Phaser.GameObjects.Sprite[]} An array of the Sprites that were created.
