@@ -12,6 +12,8 @@ var CONST = require('../../const');
 var GameEvents = require('../../core/events');
 var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
 var NOOP = require('../../utils/NOOP');
+var PIPELINE_CONST = require('./pipelines/const');
+var PipelineManager = require('./PipelineManager');
 var ProjectOrtho = require('./mvp/ProjectOrtho');
 var ScaleEvents = require('../../scale/events');
 var SpliceOne = require('../../utils/array/SpliceOne');
@@ -19,13 +21,6 @@ var TextureEvents = require('../../textures/events');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 var Utils = require('./Utils');
 var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
-
-//  Default Pipelines
-var BitmapMaskPipeline = require('./pipelines/BitmapMaskPipeline');
-var LightPipeline = require('./pipelines/LightPipeline');
-var MultiPipeline = require('./pipelines/MultiPipeline');
-var RopePipeline = require('./pipelines/RopePipeline');
-var SinglePipeline = require('./pipelines/SinglePipeline');
 
 /**
  * @callback WebGLContextCallback
@@ -109,6 +104,23 @@ var WebGLRenderer = new Class({
         this.type = CONST.WEBGL;
 
         /**
+         * An instance of the Pipeline Manager class, that handles all WebGL Pipelines.
+         *
+         * Use this to manage all of your interactions with pipelines, such as adding, getting,
+         * setting and rendering them.
+         *
+         * The Pipeline Manager class is created in the `init` method and then populated
+         * with pipelines during the `boot` method.
+         *
+         * Prior to Phaser v3.50.0 this was just a plain JavaScript object, not a class.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#pipelines
+         * @type {Phaser.Renderer.WebGL.PipelineManager}
+         * @since 3.50.0
+         */
+        this.pipelines = null;
+
+        /**
          * The width of the canvas being rendered to.
          * This is populated in the onResize event handler.
          *
@@ -168,16 +180,6 @@ var WebGLRenderer = new Class({
          * @since 3.0.0
          */
         this.contextLost = false;
-
-        /**
-         * This object will store all pipelines created through addPipeline
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#pipelines
-         * @type {object}
-         * @default null
-         * @since 3.0.0
-         */
-        this.pipelines = null;
 
         /**
          * Details about the currently scheduled snapshot.
@@ -282,27 +284,6 @@ var WebGLRenderer = new Class({
          * @since 3.0.0
          */
         this.currentFramebuffer = null;
-
-        /**
-         * Current WebGLPipeline in use.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentPipeline
-         * @type {Phaser.Renderer.WebGL.WebGLPipeline}
-         * @default null
-         * @since 3.0.0
-         */
-        this.currentPipeline = null;
-
-        /**
-         * The previous WebGLPipeline in use.
-         * This is set when `clearPipeline` is called and restored in `rebindPipeline` if none is given.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#previousPipeline
-         * @type {Phaser.Renderer.WebGL.WebGLPipeline}
-         * @default null
-         * @since 3.50.0
-         */
-        this.previousPipeline = null;
 
         /**
          * Current WebGLProgram in use.
@@ -822,8 +803,7 @@ var WebGLRenderer = new Class({
         this.startActiveTexture++;
         gl.activeTexture(gl.TEXTURE1);
 
-        // Clear previous pipelines and reload default ones
-        this.pipelines = {};
+        this.pipelines = new PipelineManager(this);
 
         this.setBlendMode(CONST.BlendModes.NORMAL);
 
@@ -843,12 +823,9 @@ var WebGLRenderer = new Class({
     {
         var game = this.game;
 
-        var multi = this.addPipeline('MultiPipeline', new MultiPipeline({ game: game }));
+        this.pipelines.boot();
 
-        this.addPipeline('SinglePipeline', new SinglePipeline({ game: game }));
-        this.addPipeline('RopePipeline', new RopePipeline({ game: game }));
-        this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline({ game: game }));
-        this.addPipeline('Light2D', new LightPipeline({ game: game }));
+        var multi = this.pipelines.get(PIPELINE_CONST.MULTI_PIPELINE);
 
         var blank = game.textures.getFrame('__DEFAULT');
 
@@ -861,8 +838,6 @@ var WebGLRenderer = new Class({
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
         gl.enable(gl.SCISSOR_TEST);
-
-        this.setPipeline(multi);
 
         game.scale.on(ScaleEvents.RESIZE, this.onResize, this);
 
@@ -906,7 +881,6 @@ var WebGLRenderer = new Class({
     resize: function (width, height, resolution)
     {
         var gl = this.gl;
-        var pipelines = this.pipelines;
 
         this.width = width;
         this.height = height;
@@ -914,11 +888,7 @@ var WebGLRenderer = new Class({
 
         gl.viewport(0, 0, width, height);
 
-        //  Update all registered pipelines
-        for (var pipelineName in pipelines)
-        {
-            pipelines[pipelineName].resize(width, height, resolution);
-        }
+        this.pipelines.resize(width, height, resolution);
 
         this.drawingBufferHeight = gl.drawingBufferHeight;
 
@@ -974,91 +944,7 @@ var WebGLRenderer = new Class({
      */
     flush: function ()
     {
-        if (this.currentPipeline)
-        {
-            this.currentPipeline.flush();
-        }
-    },
-
-    /**
-     * Checks if a pipeline is present in the current WebGLRenderer
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#hasPipeline
-     * @since 3.0.0
-     *
-     * @param {string} pipelineName - The name of the pipeline.
-     *
-     * @return {boolean} `true` if the given pipeline is loaded, otherwise `false`.
-     */
-    hasPipeline: function (pipelineName)
-    {
-        return (pipelineName in this.pipelines);
-    },
-
-    /**
-     * Returns the pipeline by name if the pipeline exists
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#getPipeline
-     * @since 3.0.0
-     *
-     * @param {string} pipelineName - The name of the pipeline.
-     *
-     * @return {Phaser.Renderer.WebGL.WebGLPipeline} The pipeline instance, or `null` if not found.
-     */
-    getPipeline: function (pipelineName)
-    {
-        return (this.hasPipeline(pipelineName)) ? this.pipelines[pipelineName] : null;
-    },
-
-    /**
-     * Removes a pipeline by name.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#removePipeline
-     * @since 3.0.0
-     *
-     * @param {string} pipelineName - The name of the pipeline to be removed.
-     *
-     * @return {this} This WebGLRenderer instance.
-     */
-    removePipeline: function (pipelineName)
-    {
-        delete this.pipelines[pipelineName];
-
-        return this;
-    },
-
-    /**
-     * Adds a pipeline instance into the collection of pipelines
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#addPipeline
-     * @since 3.0.0
-     *
-     * @param {string} pipelineName - A unique string-based key for the pipeline.
-     * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipelineInstance - A pipeline instance which must extend WebGLPipeline.
-     *
-     * @return {Phaser.Renderer.WebGL.WebGLPipeline} The pipeline instance that was passed.
-     */
-    addPipeline: function (pipelineName, pipelineInstance)
-    {
-        if (!this.hasPipeline(pipelineName))
-        {
-            this.pipelines[pipelineName] = pipelineInstance;
-        }
-        else
-        {
-            console.warn('Pipeline exists: ' + pipelineName);
-        }
-
-        pipelineInstance.name = pipelineName;
-
-        if (!pipelineInstance.hasBooted)
-        {
-            pipelineInstance.boot();
-        }
-
-        this.pipelines[pipelineName].resize(this.width, this.height, this.config.resolution);
-
-        return pipelineInstance;
+        this.pipelines.flush();
     },
 
     /**
@@ -1158,33 +1044,6 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Binds a WebGLPipeline and sets it as the current pipeline to be used.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#setPipeline
-     * @since 3.0.0
-     *
-     * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipelineInstance - The pipeline instance to be activated.
-     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
-     *
-     * @return {Phaser.Renderer.WebGL.WebGLPipeline} The pipeline that was activated.
-     */
-    setPipeline: function (pipelineInstance, gameObject)
-    {
-        var current = this.currentPipeline;
-
-        if (current !== pipelineInstance || current.vertexBuffer !== this.currentVertexBuffer || current.program !== this.currentProgram)
-        {
-            this.resetTextures();
-            this.currentPipeline = pipelineInstance;
-            this.currentPipeline.bind();
-        }
-
-        this.currentPipeline.onBind(gameObject);
-
-        return this.currentPipeline;
-    },
-
-    /**
      * Is there an active stencil mask?
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#hasActiveStencilMask
@@ -1198,91 +1057,6 @@ var WebGLRenderer = new Class({
         var camMask = this.currentCameraMask.mask;
 
         return ((mask && mask.isStencil) || (camMask && camMask.isStencil));
-    },
-
-    /**
-     * Use this to reset the gl context to the state that Phaser requires to continue rendering.
-     * Calling this will:
-     *
-     * * Disable `DEPTH_TEST`, `CULL_FACE` and `STENCIL_TEST`.
-     * * Clear the depth buffer and stencil buffers.
-     * * Reset the viewport size.
-     * * Reset the blend mode.
-     * * Bind a blank texture as the active texture on texture unit zero.
-     * * Rebinds the given pipeline instance.
-     *
-     * You should call this having previously called `clearPipeline` and then wishing to return
-     * control to Phaser again.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#rebindPipeline
-     * @since 3.16.0
-     *
-     * @param {Phaser.Renderer.WebGL.WebGLPipeline} [pipelineInstance] - The pipeline instance to be activated.
-     */
-    rebindPipeline: function (pipelineInstance)
-    {
-        if (pipelineInstance === undefined && this.previousPipeline)
-        {
-            pipelineInstance = this.previousPipeline;
-        }
-
-        if (!pipelineInstance)
-        {
-            return;
-        }
-
-        var gl = this.gl;
-
-        gl.disable(gl.DEPTH_TEST);
-        gl.disable(gl.CULL_FACE);
-
-        if (this.hasActiveStencilMask())
-        {
-            gl.clear(gl.DEPTH_BUFFER_BIT);
-        }
-        else
-        {
-            //  If there wasn't a stencil mask set before this call, we can disable it safely
-            gl.disable(gl.STENCIL_TEST);
-            gl.clear(gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
-        }
-
-        gl.viewport(0, 0, this.width, this.height);
-
-        this.currentProgram = null;
-        this.currentVertexBuffer = null;
-        this.currentIndexBuffer = null;
-
-        this.setBlendMode(0, true);
-
-        this.resetTextures();
-
-        this.currentPipeline = pipelineInstance;
-        this.currentPipeline.bind(true);
-        this.currentPipeline.onBind();
-    },
-
-    /**
-     * Flushes the current WebGLPipeline being used and then clears it, along with the
-     * the current shader program and vertex buffer. Then resets the blend mode to NORMAL.
-     * Call this before jumping to your own gl context handler, and then call `rebindPipeline` when
-     * you wish to return control to Phaser again.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#clearPipeline
-     * @since 3.16.0
-     */
-    clearPipeline: function ()
-    {
-        this.flush();
-
-        this.previousPipeline = this.currentPipeline;
-
-        this.currentPipeline = null;
-        this.currentProgram = null;
-        this.currentVertexBuffer = null;
-        this.currentIndexBuffer = null;
-
-        this.setBlendMode(0, true);
     },
 
     /**
@@ -2140,14 +1914,6 @@ var WebGLRenderer = new Class({
 
         this.resetTextures();
 
-        /*
-        if (!this.game.pendingDestroy)
-        {
-            //  texture we just deleted is in use, so bind a blank texture
-            this.setBlankTexture(true);
-        }
-        */
-
         return this;
     },
 
@@ -2218,9 +1984,9 @@ var WebGLRenderer = new Class({
         var cw = camera._cw;
         var ch = camera._ch;
 
-        var MultiPipeline = this.pipelines.MultiPipeline;
-
         var color = camera.backgroundColor;
+
+        var MultiPipeline = this.pipelines.MULTI_PIPELINE;
 
         if (camera.renderToTexture)
         {
@@ -2316,12 +2082,10 @@ var WebGLRenderer = new Class({
      */
     postRenderCamera: function (camera)
     {
-        this.setPipeline(this.pipelines.MultiPipeline);
+        var multiPipeline = this.pipelines.setMulti();
 
-        var MultiPipeline = this.pipelines.MultiPipeline;
-
-        camera.flashEffect.postRenderWebGL(MultiPipeline, Utils.getTintFromFloats);
-        camera.fadeEffect.postRenderWebGL(MultiPipeline, Utils.getTintFromFloats);
+        camera.flashEffect.postRenderWebGL(multiPipeline, Utils.getTintFromFloats);
+        camera.fadeEffect.postRenderWebGL(multiPipeline, Utils.getTintFromFloats);
 
         camera.dirty = false;
 
@@ -2329,7 +2093,7 @@ var WebGLRenderer = new Class({
 
         if (camera.renderToTexture)
         {
-            MultiPipeline.flush();
+            multiPipeline.flush();
 
             this.setFramebuffer(null);
 
@@ -2337,11 +2101,11 @@ var WebGLRenderer = new Class({
 
             if (camera.renderToGame)
             {
-                ProjectOrtho(MultiPipeline, 0, MultiPipeline.width, MultiPipeline.height, 0, -1000.0, 1000.0);
+                ProjectOrtho(multiPipeline, 0, multiPipeline.width, multiPipeline.height, 0, -1000.0, 1000.0);
 
                 var getTint = Utils.getTintAppendFloatAlpha;
 
-                var pipeline = (camera.pipeline) ? camera.pipeline : MultiPipeline;
+                var pipeline = (camera.pipeline) ? camera.pipeline : multiPipeline;
 
                 pipeline.batchTexture(
                     camera,
@@ -2389,7 +2153,6 @@ var WebGLRenderer = new Class({
         if (this.contextLost) { return; }
 
         var gl = this.gl;
-        var pipelines = this.pipelines;
 
         //  Make sure we are bound to the main frame buffer
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -2405,10 +2168,7 @@ var WebGLRenderer = new Class({
 
         gl.enable(gl.SCISSOR_TEST);
 
-        for (var key in pipelines)
-        {
-            pipelines[key].onPreRender();
-        }
+        this.pipelines.preRender();
 
         //  TODO - Find a way to stop needing to create these arrays every frame
         //  and equally not need a huge array buffer created to hold them
@@ -2427,7 +2187,7 @@ var WebGLRenderer = new Class({
 
         this.textureFlush = 0;
 
-        this.setPipeline(this.pipelines.MultiPipeline);
+        this.pipelines.setMulti();
     },
 
     /**
@@ -2454,12 +2214,8 @@ var WebGLRenderer = new Class({
 
         var list = children.list;
         var childCount = list.length;
-        var pipelines = this.pipelines;
 
-        for (var key in pipelines)
-        {
-            pipelines[key].onRender(scene, camera);
-        }
+        this.pipelines.render(scene, camera);
 
         //   Apply scissor for cam region + render background color, if not transparent
         this.preRenderCamera(camera);
@@ -2563,12 +2319,7 @@ var WebGLRenderer = new Class({
             state.callback = null;
         }
 
-        var pipelines = this.pipelines;
-
-        for (var key in pipelines)
-        {
-            pipelines[key].onPostRender();
-        }
+        this.pipelines.postRender();
 
         if (this.textureFlush > 0)
         {
@@ -2952,7 +2703,6 @@ var WebGLRenderer = new Class({
         var gl = this.gl;
         var glFilter = [ gl.LINEAR, gl.NEAREST ][filter];
 
-        // this.setTexture2D(texture, 0);
         gl.activeTexture(gl.TEXTURE0);
 
         var currentTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
@@ -2962,7 +2712,6 @@ var WebGLRenderer = new Class({
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, glFilter);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, glFilter);
 
-        // this.setTexture2D(null, 0);
         if (currentTexture)
         {
             gl.bindTexture(gl.TEXTURE_2D, currentTexture);
@@ -3412,12 +3161,7 @@ var WebGLRenderer = new Class({
         this.textureIndexes = [];
         this.nativeTextures = [];
 
-        for (var key in this.pipelines)
-        {
-            this.pipelines[key].destroy();
-
-            delete this.pipelines[key];
-        }
+        this.pipelines.destroy();
 
         this.defaultCamera.destroy();
 
