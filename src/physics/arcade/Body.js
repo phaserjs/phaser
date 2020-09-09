@@ -402,7 +402,7 @@ var Body = new Class({
          * You can also change it by using the `Body.setBoundsRectangle` method.
          *
          * @name Phaser.Physics.Arcade.Body#customBoundsRectangle
-         * @type {?Phaser.Geom.Rectangle}
+         * @type {Phaser.Geom.Rectangle}
          * @since 3.20
          */
         this.customBoundsRectangle = world.bounds;
