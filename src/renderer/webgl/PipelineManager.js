@@ -374,6 +374,16 @@ var PipelineManager = new Class({
         return pipeline;
     },
 
+    /**
+     * Sets the Multi Pipeline to be the currently bound pipeline.
+     *
+     * This is the default Phaser 3 rendering pipeline.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#setMulti
+     * @since 3.50.0
+     *
+     * @return {Phaser.Renderer.WebGL.Pipelines.MultiPipeline} The Multi Pipeline instance.
+     */
     setMulti: function ()
     {
         return this.set(this.MULTI_PIPELINE);
