@@ -4,10 +4,12 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var AnimationState = require('../../animations/AnimationState');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
 var GameObjectEvents = require('../events');
+var PIPELINE_CONST = require('../../renderer/webgl/pipelines/const');
 var RopeRender = require('./RopeRender');
 var Vector2 = require('../../math/Vector2');
 
@@ -83,13 +85,13 @@ var Rope = new Class({
         GameObject.call(this, scene, 'Rope');
 
         /**
-         * The Animation Controller of this Rope.
+         * The Animation State of this Rope.
          *
          * @name Phaser.GameObjects.Rope#anims
-         * @type {Phaser.GameObjects.Components.Animation}
+         * @type {Phaser.Animation.AnimationState}
          * @since 3.23.0
          */
-        this.anims = new Components.Animation(this);
+        this.anims = new AnimationState(this);
 
         /**
          * An array containing the points data for this Rope.
@@ -274,7 +276,7 @@ var Rope = new Class({
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
-        this.initPipeline('RopePipeline');
+        this.initPipeline(PIPELINE_CONST.ROPE_PIPELINE);
 
         if (Array.isArray(points))
         {

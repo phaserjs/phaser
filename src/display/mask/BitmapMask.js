@@ -205,7 +205,7 @@ var BitmapMask = new Class({
      */
     preRenderWebGL: function (renderer, maskedObject, camera)
     {
-        renderer.pipelines.BitmapMaskPipeline.beginMask(this, maskedObject, camera);
+        renderer.pipelines.BITMAPMASK_PIPELINE.beginMask(this, maskedObject, camera);
     },
 
     /**
@@ -220,7 +220,7 @@ var BitmapMask = new Class({
      */
     postRenderWebGL: function (renderer, camera)
     {
-        renderer.pipelines.BitmapMaskPipeline.endMask(this, camera);
+        renderer.pipelines.BITMAPMASK_PIPELINE.endMask(this, camera);
     },
 
     /**
@@ -253,7 +253,7 @@ var BitmapMask = new Class({
 
     /**
      * Destroys this BitmapMask and nulls any references it holds.
-     * 
+     *
      * Note that if a Game Object is currently using this mask it will _not_ automatically detect you have destroyed it,
      * so be sure to call `clearMask` on any Game Object using it, before destroying it.
      *

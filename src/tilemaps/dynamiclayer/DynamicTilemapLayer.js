@@ -247,7 +247,7 @@ var DynamicTilemapLayer = new Class({
         this.setOrigin();
         this.setSize(tilemap.tileWidth * this.layer.width, tilemap.tileHeight * this.layer.height);
 
-        this.initPipeline('MultiPipeline');
+        this.initPipeline();
     },
 
     /**
