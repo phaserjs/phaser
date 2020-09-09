@@ -31,7 +31,7 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
         return;
     }
 
-    var pipeline = this.pipeline;
+    var pipeline = renderer.pipelines.set(this.pipeline);
 
     var camMatrix = pipeline._tempMatrix1.copyFrom(camera.matrix);
     var calcMatrix = pipeline._tempMatrix2;
@@ -39,8 +39,6 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
     var managerMatrix = pipeline._tempMatrix4.applyITRS(emitterManager.x, emitterManager.y, emitterManager.rotation, emitterManager.scaleX, emitterManager.scaleY);
 
     camMatrix.multiply(managerMatrix);
-
-    renderer.setPipeline(pipeline);
 
     var roundPixels = camera.roundPixels;
     var texture = emitterManager.defaultFrame.glTexture;

@@ -21,9 +21,7 @@
  */
 var ExternWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    var pipeline = renderer.currentPipeline;
-
-    renderer.clearPipeline();
+    renderer.pipelines.clear();
 
     var camMatrix = renderer._tempMatrix1;
     var spriteMatrix = renderer._tempMatrix2;
@@ -57,7 +55,7 @@ var ExternWebGLRenderer = function (renderer, src, interpolationPercentage, came
     //  Callback
     src.render.call(src, renderer, camera, calcMatrix);
 
-    renderer.rebindPipeline(pipeline);
+    renderer.pipelines.rebind();
 };
 
 module.exports = ExternWebGLRenderer;

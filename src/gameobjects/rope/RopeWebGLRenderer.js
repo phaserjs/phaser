@@ -23,9 +23,7 @@ var Utils = require('../../renderer/webgl/Utils');
  */
 var RopeWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    var pipeline = src.pipeline;
-
-    renderer.setPipeline(pipeline, src);
+    var pipeline = renderer.pipelines.set(src.pipeline, src);
 
     var camMatrix = pipeline._tempMatrix1;
     var spriteMatrix = pipeline._tempMatrix2;

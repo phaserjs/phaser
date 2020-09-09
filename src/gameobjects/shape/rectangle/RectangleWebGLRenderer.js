@@ -24,13 +24,11 @@ var Utils = require('../../../renderer/webgl/Utils');
  */
 var RectangleWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    var pipeline = this.pipeline;
+    var pipeline = renderer.pipelines.set(this.pipeline);
 
     var camMatrix = pipeline._tempMatrix1;
     var shapeMatrix = pipeline._tempMatrix2;
     var calcMatrix = pipeline._tempMatrix3;
-
-    renderer.setPipeline(pipeline);
 
     shapeMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
 
@@ -61,7 +59,7 @@ var RectangleWebGLRenderer = function (renderer, src, interpolationPercentage, c
     {
         var fillTint = pipeline.fillTint;
         var fillTintColor = Utils.getTintAppendFloatAlphaAndSwap(src.fillColor, src.fillAlpha * alpha);
-    
+
         fillTint.TL = fillTintColor;
         fillTint.TR = fillTintColor;
         fillTint.BL = fillTintColor;

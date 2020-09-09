@@ -41,7 +41,7 @@ var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPerc
     Scale(src, src.scaleX, src.scaleY, 1);
     ViewLoad2D(src, camera.matrix.matrix);
 
-    renderer.setPipeline(pipeline);
+    renderer.pipelines.set(pipeline);
 
     //  The above alters the uniforms, so make sure we call it _after_ setting the MVP stuff above
     renderer.setMatrix4(pipeline.program, 'uModelMatrix', false, src.modelMatrix);

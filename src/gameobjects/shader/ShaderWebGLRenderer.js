@@ -26,9 +26,7 @@ var ShaderWebGLRenderer = function (renderer, src, interpolationPercentage, came
         return;
     }
 
-    var pipeline = renderer.currentPipeline;
-
-    renderer.clearPipeline();
+    renderer.pipelines.clear();
 
     if (src.renderToTexture)
     {
@@ -40,16 +38,16 @@ var ShaderWebGLRenderer = function (renderer, src, interpolationPercentage, came
         var camMatrix = src._tempMatrix1;
         var shapeMatrix = src._tempMatrix2;
         var calcMatrix = src._tempMatrix3;
-    
+
         shapeMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
-    
+
         camMatrix.copyFrom(camera.matrix);
-    
+
         if (parentMatrix)
         {
             //  Multiply the camera by the parent matrix
             camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
-    
+
             //  Undo the camera scroll
             shapeMatrix.e = src.x;
             shapeMatrix.f = src.y;
@@ -59,20 +57,20 @@ var ShaderWebGLRenderer = function (renderer, src, interpolationPercentage, came
             shapeMatrix.e -= camera.scrollX * src.scrollFactorX;
             shapeMatrix.f -= camera.scrollY * src.scrollFactorY;
         }
-    
+
         camMatrix.multiply(shapeMatrix, calcMatrix);
-    
+
         //  Renderer size changed?
         if (renderer.width !== src._rendererWidth || renderer.height !== src._rendererHeight)
         {
             src.projOrtho(0, renderer.width, renderer.height, 0);
         }
-    
+
         src.load(calcMatrix.matrix);
         src.flush();
     }
 
-    renderer.rebindPipeline(pipeline);
+    renderer.pipelines.rebind();
 };
 
 module.exports = ShaderWebGLRenderer;

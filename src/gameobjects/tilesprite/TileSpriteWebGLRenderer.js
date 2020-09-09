@@ -27,15 +27,14 @@ var TileSpriteWebGLRenderer = function (renderer, src, interpolationPercentage, 
 
     var width = src.width;
     var height = src.height;
-    var getTint = Utils.getTintAppendFloatAlpha;
-    var pipeline = this.pipeline;
-
     if (width === 0 || height === 0)
     {
         return;
     }
 
-    renderer.setPipeline(pipeline, src);
+    var getTint = Utils.getTintAppendFloatAlpha;
+
+    var pipeline = renderer.pipelines.set(this.pipeline, src);
 
     var textureUnit = pipeline.setTexture2D(src.fillPattern, src);
 

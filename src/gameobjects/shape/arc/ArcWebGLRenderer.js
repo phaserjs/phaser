@@ -24,13 +24,11 @@ var StrokePathWebGL = require('../StrokePathWebGL');
  */
 var ArcWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    var pipeline = this.pipeline;
+    var pipeline = renderer.pipelines.set(this.pipeline);
 
     var camMatrix = pipeline._tempMatrix1;
     var shapeMatrix = pipeline._tempMatrix2;
     var calcMatrix = pipeline._tempMatrix3;
-
-    renderer.setPipeline(pipeline);
 
     shapeMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
 

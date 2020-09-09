@@ -47,9 +47,7 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
         return;
     }
 
-    var pipeline = this.pipeline;
-
-    renderer.setPipeline(pipeline, src);
+    var pipeline = renderer.pipelines.set(this.pipeline, src);
 
     var camMatrix = src._tempMatrix1;
     var graphicsMatrix = src._tempMatrix2;

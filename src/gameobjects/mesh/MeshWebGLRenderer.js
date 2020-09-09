@@ -23,9 +23,7 @@ var Utils = require('../../renderer/webgl/Utils');
  */
 var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    var pipeline = this.pipeline;
-
-    renderer.setPipeline(pipeline, src);
+    var pipeline = renderer.pipelines.set(this.pipeline, src);
 
     var camMatrix = pipeline._tempMatrix1;
     var spriteMatrix = pipeline._tempMatrix2;

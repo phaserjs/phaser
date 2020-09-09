@@ -32,9 +32,7 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
         return;
     }
 
-    var pipeline = this.pipeline;
-
-    renderer.setPipeline(pipeline, src);
+    var pipeline = renderer.pipelines.set(this.pipeline, src);
 
     var camMatrix = pipeline._tempMatrix1;
     var spriteMatrix = pipeline._tempMatrix2;

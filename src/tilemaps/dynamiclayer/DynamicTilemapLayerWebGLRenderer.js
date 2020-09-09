@@ -34,7 +34,7 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPer
     }
 
     var gidMap = src.gidMap;
-    var pipeline = src.pipeline;
+    var pipeline = renderer.pipelines.set(src.pipeline);
 
     var getTint = Utils.getTintAppendFloatAlphaAndSwap;
 
@@ -48,8 +48,6 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPer
     var sy = src.scaleY;
 
     var tilesets = src.tileset;
-
-    renderer.setPipeline(pipeline);
 
     //  Loop through each tileset in this layer, drawing just the tiles that are in that set each time
     //  Doing it this way around allows us to batch tiles using the same tileset

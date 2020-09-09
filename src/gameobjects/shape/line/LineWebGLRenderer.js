@@ -23,12 +23,10 @@ var Utils = require('../../../renderer/webgl/Utils');
  */
 var LineWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    var pipeline = this.pipeline;
+    var pipeline = renderer.pipelines.set(this.pipeline);
 
     var camMatrix = pipeline._tempMatrix1;
     var shapeMatrix = pipeline._tempMatrix2;
-
-    renderer.setPipeline(pipeline);
 
     shapeMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
 
