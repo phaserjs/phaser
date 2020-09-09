@@ -1198,7 +1198,7 @@ var WebGLRenderer = new Class({
      */
     setTextureSource: function (textureSource)
     {
-        if (this.currentPipeline.forceZero)
+        if (this.pipelines.current.forceZero)
         {
             this.setTextureZero(textureSource.glTexture, true);
 
@@ -1428,7 +1428,7 @@ var WebGLRenderer = new Class({
      */
     setTexture2D: function (texture)
     {
-        if (this.currentPipeline.forceZero)
+        if (this.pipelines.current.forceZero)
         {
             this.setTextureZero(texture, true);
 

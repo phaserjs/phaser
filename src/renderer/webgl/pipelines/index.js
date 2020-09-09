@@ -5,7 +5,7 @@
  */
 
 var CONST = require('./const');
-var Extend = require('../utils/object/Extend');
+var Extend = require('../../../utils/object/Extend');
 
 /**
  * @namespace Phaser.Renderer.WebGL.Pipelines

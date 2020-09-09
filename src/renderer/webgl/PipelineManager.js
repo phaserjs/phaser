@@ -279,9 +279,9 @@ var PipelineManager = new Class({
      */
     flush: function ()
     {
-        if (this.currentPipeline)
+        if (this.current)
         {
-            this.currentPipeline.flush();
+            this.current.flush();
         }
     },
 
