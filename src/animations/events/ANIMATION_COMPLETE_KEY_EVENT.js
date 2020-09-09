@@ -5,7 +5,7 @@
  */
 
 /**
- * The Animation Complete Event.
+ * The Animation Complete Dynamic Key Event.
  *
  * This event is dispatched by a Sprite when an animation playing on it completes playback.
  * This happens when the animation gets to the end of its sequence, factoring in any delays
@@ -15,7 +15,11 @@
  * it never actually completes. If you need to handle this, listen for the `ANIMATION_STOP`
  * event instead, as this is emitted when the animation is stopped directly.
  *
- * Listen for it on the Sprite using `sprite.on('animationcomplete', listener)`
+ * The difference between this and the `ANIMATION_COMPLETE` event is that this one has a
+ * dynamic event name that contains the name of the animation within it. For example,
+ * if you had an animation called `explode` you could listen for the completion of that
+ * specific animation by using: `sprite.on('animationcomplete-explode', listener)`. Or, if you
+ * wish to use types: `sprite.on(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + 'explode', listener)`.
  *
  * The animation event flow is as follows:
  *
@@ -29,7 +33,7 @@
  *
  * If the animation is restarted while it is already playing, `ANIMATION_RESTART` is emitted.
  *
- * @event Phaser.Animations.Events#ANIMATION_COMPLETE
+ * @event Phaser.Animations.Events#ANIMATION_COMPLETE_KEY
  * @since 3.50.0
  *
  * @param {Phaser.Animations.Animation} animation - A reference to the Animation that completed.
@@ -37,4 +41,4 @@
  * @param {Phaser.GameObjects.Sprite} gameObject - A reference to the Game Object on which the animation updated.
  * @param {string} frameKey - The unique key of the Animation Frame within the Animation.
  */
-module.exports = 'animationcomplete';
+module.exports = 'animationcomplete-';

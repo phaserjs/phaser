@@ -1056,7 +1056,7 @@ var AnimationState = new Class({
             this.parent.setVisible(false);
         }
 
-        this.emitEvents(Events.ANIMATION_COMPLETE);
+        this.emitEvents(Events.ANIMATION_COMPLETE, Events.ANIMATION_COMPLETE_KEY);
     },
 
     /**
@@ -1068,13 +1068,20 @@ var AnimationState = new Class({
      *
      * @param {string} event - The Animation Event to dispatch.
      */
-    emitEvents: function (event)
+    emitEvents: function (event, keyEvent)
     {
         var anim = this.currentAnim;
         var frame = this.currentFrame;
         var gameObject = this.parent;
 
-        gameObject.emit(event, anim, frame, gameObject, frame.textureFrame);
+        var frameKey = frame.textureFrame;
+
+        gameObject.emit(event, anim, frame, gameObject, frameKey);
+
+        if (keyEvent)
+        {
+            gameObject.emit(keyEvent + anim.key, anim, frame, gameObject, frameKey);
+        }
     },
 
     /**
