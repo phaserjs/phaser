@@ -11,7 +11,7 @@
  * @since 3.50.0
  * @private
  *
- * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipeline - The BitmapText Game Object.
+ * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipeline - The WebGLPipeline. Must have a `batchQuad` method.
  * @param {Phaser.GameObjects.BitmapText} src - The BitmapText Game Object.
  * @param {Phaser.Types.GameObjects.BitmapText.BitmapTextCharacter} char - The character to render.
  * @param {Phaser.Types.GameObjects.BitmapText.BitmapFontCharacterData} glyph - The character glyph.
