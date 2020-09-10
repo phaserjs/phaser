@@ -18,7 +18,7 @@ var WebAudioSoundManager = require('./webaudio/WebAudioSoundManager');
  * @since 3.0.0
  *
  * @param {Phaser.Game} game - Reference to the current game instance.
- * 
+ *
  * @return {(Phaser.Sound.HTML5AudioSoundManager|Phaser.Sound.WebAudioSoundManager|Phaser.Sound.NoAudioSoundManager)} The Sound Manager instance that was created.
  */
 var SoundManagerCreator = {
@@ -28,12 +28,12 @@ var SoundManagerCreator = {
         var audioConfig = game.config.audio;
         var deviceAudio = game.device.audio;
 
-        if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
+        if (audioConfig.noAudio || (!deviceAudio.webAudio && !deviceAudio.audioData))
         {
             return new NoAudioSoundManager(game);
         }
 
-        if (deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
+        if (deviceAudio.webAudio && !audioConfig.disableWebAudio)
         {
             return new WebAudioSoundManager(game);
         }

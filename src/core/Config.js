@@ -293,7 +293,7 @@ var Config = new Class({
         /**
          * @const {Phaser.Types.Core.AudioConfig} Phaser.Core.Config#audio - The Audio Configuration object.
          */
-        this.audio = GetValue(config, 'audio');
+        this.audio = GetValue(config, 'audio', {});
 
         //  If you do: { banner: false } it won't display any banner at all
 
