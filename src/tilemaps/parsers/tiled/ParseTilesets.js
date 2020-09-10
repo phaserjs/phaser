@@ -7,6 +7,7 @@
 var Tileset = require('../../Tileset');
 var ImageCollection = require('../../ImageCollection');
 var ParseObject = require('./ParseObject');
+var ParseWangsets = require('./ParseWangsets');
 
 /**
  * Tilesets and Image Collections
@@ -40,18 +41,19 @@ var ParseTilesets = function (json)
 
             if (json.version > 1)
             {
-                // Tiled 1.2+
-
+                var datas = undefined;
+                var props = undefined;
                 if (Array.isArray(set.tiles))
                 {
-                    var tiles = {};
-                    var props = {};
+                    datas = datas || {};
+                    props = props || {};
 
+                    // Tiled 1.2+
                     for (var t = 0; t < set.tiles.length; t++)
                     {
                         var tile = set.tiles[t];
 
-                        //  Convert tileproperties
+                        //  Convert tileproperties.
                         if (tile.properties)
                         {
                             var newPropData = {};
@@ -67,7 +69,7 @@ var ParseTilesets = function (json)
                         //  Convert objectgroup
                         if (tile.objectgroup)
                         {
-                            tiles[tile.id] = { objectgroup: tile.objectgroup };
+                            (datas[tile.id] || (datas[tile.id] = {})).objectgroup = tile.objectgroup;
 
                             if (tile.objectgroup.objects)
                             {
@@ -76,25 +78,33 @@ var ParseTilesets = function (json)
                                     return ParseObject(obj);
                                 });
 
-                                tiles[tile.id].objectgroup.objects = parsedObjects2;
+                                datas[tile.id].objectgroup.objects = parsedObjects2;
                             }
                         }
 
                         // Copy animation data
                         if (tile.animation)
                         {
-                            if (tiles.hasOwnProperty(tile.id))
-                            {
-                                tiles[tile.id].animation = tile.animation;
-                            }
-                            else
-                            {
-                                tiles[tile.id] = { animation: tile.animation };
-                            }
+                            (datas[tile.id] || (datas[tile.id] = {})).animation = tile.animation;
+                        }
+
+                        // Copy tile `type` field
+                        // (see https://doc.mapeditor.org/en/latest/manual/custom-properties/#typed-tiles).
+                        if (tile.type)
+                        {
+                            (datas[tile.id] || (datas[tile.id] = {})).type = tile.type;
                         }
                     }
-
-                    newSet.tileData = tiles;
+                }
+                if (Array.isArray(set.wangsets))
+                {
+                    datas = datas || {};
+                    props = props || {};
+                    ParseWangsets(set.wangsets, datas);
+                }
+                if (datas) // Implies also props is set.
+                {
+                    newSet.tileData = datas;
                     newSet.tileProperties = props;
                 }
             }
