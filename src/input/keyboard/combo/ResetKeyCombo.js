@@ -7,7 +7,7 @@
 /**
  * Used internally by the KeyCombo class.
  *
- * @function Phaser.Input.Keyboard.KeyCombo.ResetKeyCombo
+ * @function Phaser.Input.Keyboard.ResetKeyCombo
  * @private
  * @since 3.0.0
  *
