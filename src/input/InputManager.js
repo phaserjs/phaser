@@ -391,7 +391,7 @@ var InputManager = new Class({
 
     /**
      * Tells the Input system to set a custom cursor.
-     * 
+     *
      * This cursor will be the default cursor used when interacting with the game canvas.
      *
      * If an Interactive Object also sets a custom cursor, this is the cursor that is reset after its use.
@@ -401,7 +401,7 @@ var InputManager = new Class({
      * ```javascript
      * this.input.setDefaultCursor('url(assets/cursors/sword.cur), pointer');
      * ```
-     * 
+     *
      * Please read about the differences between browsers when it comes to the file formats and sizes they support:
      *
      * https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
@@ -411,7 +411,7 @@ var InputManager = new Class({
      *
      * @method Phaser.Input.InputManager#setDefaultCursor
      * @since 3.10.0
-     * 
+     *
      * @param {string} cursor - The CSS to be used when setting the default cursor.
      */
     setDefaultCursor: function (cursor)
@@ -426,7 +426,7 @@ var InputManager = new Class({
 
     /**
      * Called by the InputPlugin when processing over and out events.
-     * 
+     *
      * Tells the Input Manager to set a custom cursor during its postUpdate step.
      *
      * https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
@@ -434,7 +434,7 @@ var InputManager = new Class({
      * @method Phaser.Input.InputManager#setCursor
      * @private
      * @since 3.10.0
-     * 
+     *
      * @param {Phaser.Types.Input.InteractiveObject} interactiveObject - The Interactive Object that called this method.
      */
     setCursor: function (interactiveObject)
@@ -447,13 +447,13 @@ var InputManager = new Class({
 
     /**
      * Called by the InputPlugin when processing over and out events.
-     * 
+     *
      * Tells the Input Manager to clear the hand cursor, if set, during its postUpdate step.
      *
      * @method Phaser.Input.InputManager#resetCursor
      * @private
      * @since 3.10.0
-     * 
+     *
      * @param {Phaser.Types.Input.InteractiveObject} interactiveObject - The Interactive Object that called this method.
      */
     resetCursor: function (interactiveObject)
@@ -712,9 +712,13 @@ var InputManager = new Class({
      */
     onMouseDown: function (event)
     {
-        this.mousePointer.down(event);
+        var mousePointer = this.mousePointer;
 
-        this.mousePointer.updateMotion();
+        mousePointer.down(event);
+
+        mousePointer.updateMotion();
+
+        this.activePointer = mousePointer;
 
         this.updateInputPlugins(CONST.MOUSE_DOWN, this.mousePointerContainer);
     },
@@ -730,9 +734,13 @@ var InputManager = new Class({
      */
     onMouseMove: function (event)
     {
-        this.mousePointer.move(event);
+        var mousePointer = this.mousePointer;
 
-        this.mousePointer.updateMotion();
+        mousePointer.move(event);
+
+        mousePointer.updateMotion();
+
+        this.activePointer = mousePointer;
 
         this.updateInputPlugins(CONST.MOUSE_MOVE, this.mousePointerContainer);
     },
@@ -748,9 +756,13 @@ var InputManager = new Class({
      */
     onMouseUp: function (event)
     {
-        this.mousePointer.up(event);
+        var mousePointer = this.mousePointer;
 
-        this.mousePointer.updateMotion();
+        mousePointer.up(event);
+
+        mousePointer.updateMotion();
+
+        this.activePointer = mousePointer;
 
         this.updateInputPlugins(CONST.MOUSE_UP, this.mousePointerContainer);
     },
@@ -766,7 +778,11 @@ var InputManager = new Class({
      */
     onMouseWheel: function (event)
     {
-        this.mousePointer.wheel(event);
+        var mousePointer = this.mousePointer;
+
+        mousePointer.wheel(event);
+
+        this.activePointer = mousePointer;
 
         this.updateInputPlugins(CONST.MOUSE_WHEEL, this.mousePointerContainer);
     },
@@ -910,7 +926,7 @@ var InputManager = new Class({
             {
                 TransformXY(px, py, gameObject.x, gameObject.y, gameObject.rotation, gameObject.scaleX, gameObject.scaleY, point);
             }
-    
+
             if (this.pointWithinHitArea(gameObject, point.x, point.y))
             {
                 output.push(gameObject);
