@@ -43,14 +43,34 @@ var MouseManager = new Class({
         this.manager = inputManager;
 
         /**
-         * If true the DOM mouse events will have event.preventDefault applied to them, if false they will propagate fully.
+         * If `true` the DOM `mousedown` event will have `preventDefault` set.
          *
-         * @name Phaser.Input.Mouse.MouseManager#capture
+         * @name Phaser.Input.Mouse.MouseManager#preventDefaultDown
          * @type {boolean}
          * @default true
-         * @since 3.0.0
+         * @since 3.50.0
          */
-        this.capture = true;
+        this.preventDefaultDown = true;
+
+        /**
+         * If `true` the DOM `mouseup` event will have `preventDefault` set.
+         *
+         * @name Phaser.Input.Mouse.MouseManager#preventDefaultUp
+         * @type {boolean}
+         * @default true
+         * @since 3.50.0
+         */
+        this.preventDefaultUp = true;
+
+        /**
+         * If `true` the DOM `mousemove` event will have `preventDefault` set.
+         *
+         * @name Phaser.Input.Mouse.MouseManager#preventDefaultMove
+         * @type {boolean}
+         * @default true
+         * @since 3.50.0
+         */
+        this.preventDefaultMove = true;
 
         /**
          * A boolean that controls if the Mouse Manager is enabled or not.
@@ -198,7 +218,11 @@ var MouseManager = new Class({
 
         this.enabled = config.inputMouse;
         this.target = config.inputMouseEventTarget;
-        this.capture = config.inputMouseCapture;
+        this.passive = config.inputMousePassive;
+
+        this.preventDefaultDown = config.inputMousePreventDefaultDown;
+        this.preventDefaultUp = config.inputMousePreventDefaultUp;
+        this.preventDefaultMove = config.inputMousePreventDefaultMove;
 
         if (!this.target)
         {
@@ -297,17 +321,25 @@ var MouseManager = new Class({
      */
     startListeners: function ()
     {
+        var target = this.target;
+
+        if (!target)
+        {
+            return;
+        }
+
         var _this = this;
-        var canvas = this.manager.canvas;
-        var autoFocus = (window && window.focus && this.manager.game.config.autoFocus);
+        var manager = this.manager;
+        var canvas = manager.canvas;
+        var autoFocus = (window && window.focus && manager.game.config.autoFocus);
 
         this.onMouseMove = function (event)
         {
-            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
+            if (!event.defaultPrevented && _this.enabled && manager && manager.enabled)
             {
-                _this.manager.onMouseMove(event);
+                manager.onMouseMove(event);
 
-                if (_this.capture)
+                if (_this.preventDefaultMove)
                 {
                     event.preventDefault();
                 }
@@ -321,11 +353,11 @@ var MouseManager = new Class({
                 window.focus();
             }
 
-            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
+            if (!event.defaultPrevented && _this.enabled && manager && manager.enabled)
             {
-                _this.manager.onMouseDown(event);
+                manager.onMouseDown(event);
 
-                if (_this.capture && event.target === canvas)
+                if (_this.preventDefaultDown && event.target === canvas)
                 {
                     event.preventDefault();
                 }
@@ -334,20 +366,20 @@ var MouseManager = new Class({
 
         this.onMouseDownWindow = function (event)
         {
-            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled && event.target !== canvas)
+            if (!event.defaultPrevented && _this.enabled && manager && manager.enabled && event.target !== canvas)
             {
                 //  Only process the event if the target isn't the canvas
-                _this.manager.onMouseDown(event);
+                manager.onMouseDown(event);
             }
         };
 
         this.onMouseUp = function (event)
         {
-            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
+            if (!event.defaultPrevented && _this.enabled && manager && manager.enabled)
             {
-                _this.manager.onMouseUp(event);
+                manager.onMouseUp(event);
 
-                if (_this.capture && event.target === canvas)
+                if (_this.preventDefaultUp && event.target === canvas)
                 {
                     event.preventDefault();
                 }
@@ -356,58 +388,50 @@ var MouseManager = new Class({
 
         this.onMouseUpWindow = function (event)
         {
-            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled && event.target !== canvas)
+            if (!event.defaultPrevented && _this.enabled && manager && manager.enabled && event.target !== canvas)
             {
                 //  Only process the event if the target isn't the canvas
-                _this.manager.onMouseUp(event);
+                manager.onMouseUp(event);
             }
         };
 
         this.onMouseOver = function (event)
         {
-            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
+            if (!event.defaultPrevented && _this.enabled && manager && manager.enabled)
             {
-                _this.manager.setCanvasOver(event);
+                manager.setCanvasOver(event);
             }
         };
 
         this.onMouseOut = function (event)
         {
-            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
+            if (!event.defaultPrevented && _this.enabled && manager && manager.enabled)
             {
-                _this.manager.setCanvasOut(event);
+                manager.setCanvasOut(event);
             }
         };
 
         this.onMouseWheel = function (event)
         {
-            if (!event.defaultPrevented && _this.enabled && _this.manager && _this.manager.enabled)
+            if (!event.defaultPrevented && _this.enabled && manager && manager.enabled)
             {
-                _this.manager.onMouseWheel(event);
+                manager.onMouseWheel(event);
             }
         };
 
-        var target = this.target;
-
-        if (!target)
-        {
-            return;
-        }
-
         var passive = { passive: true };
-        var nonPassive = { passive: false };
 
-        target.addEventListener('mousemove', this.onMouseMove, (this.capture) ? nonPassive : passive);
-        target.addEventListener('mousedown', this.onMouseDown, (this.capture) ? nonPassive : passive);
-        target.addEventListener('mouseup', this.onMouseUp, (this.capture) ? nonPassive : passive);
-        target.addEventListener('mouseover', this.onMouseOver, (this.capture) ? nonPassive : passive);
-        target.addEventListener('mouseout', this.onMouseOut, (this.capture) ? nonPassive : passive);
-        target.addEventListener('wheel', this.onMouseWheel, (this.capture) ? nonPassive : passive);
+        target.addEventListener('mousemove', this.onMouseMove);
+        target.addEventListener('mousedown', this.onMouseDown);
+        target.addEventListener('mouseup', this.onMouseUp);
+        target.addEventListener('mouseover', this.onMouseOver, passive);
+        target.addEventListener('mouseout', this.onMouseOut, passive);
+        target.addEventListener('wheel', this.onMouseWheel, passive);
 
-        if (window && this.manager.game.config.inputWindowEvents)
+        if (window && manager.game.config.inputWindowEvents)
         {
-            window.top.addEventListener('mousedown', this.onMouseDownWindow, nonPassive);
-            window.top.addEventListener('mouseup', this.onMouseUpWindow, nonPassive);
+            window.top.addEventListener('mousedown', this.onMouseDownWindow, passive);
+            window.top.addEventListener('mouseup', this.onMouseUpWindow, passive);
         }
 
         if (Features.pointerLock)
@@ -418,7 +442,7 @@ var MouseManager = new Class({
 
                 _this.locked = (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) ? true : false;
 
-                _this.manager.onPointerLockChange(event);
+                manager.onPointerLockChange(event);
             };
 
             document.addEventListener('pointerlockchange', this.pointerLockChange, true);
