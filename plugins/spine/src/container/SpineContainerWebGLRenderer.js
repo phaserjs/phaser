@@ -36,7 +36,7 @@ var SpineContainerWebGLRenderer = function (renderer, container, interpolationPe
         {
             sceneRenderer.end();
 
-            renderer.rebindPipeline();
+            renderer.pipelines.rebind();
         }
 
         return;
@@ -66,7 +66,7 @@ var SpineContainerWebGLRenderer = function (renderer, container, interpolationPe
     if (renderer.newType)
     {
         //  flush + clear if this is a new type
-        renderer.clearPipeline();
+        renderer.pipelines.clear();
 
         sceneRenderer.begin();
     }
@@ -161,7 +161,7 @@ var SpineContainerWebGLRenderer = function (renderer, container, interpolationPe
         sceneRenderer.end();
 
         //  And rebind the previous pipeline
-        renderer.rebindPipeline();
+        renderer.pipelines.rebind();
     }
 };
 
