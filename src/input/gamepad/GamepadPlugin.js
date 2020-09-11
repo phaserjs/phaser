@@ -40,6 +40,9 @@ var InputEvents = require('../events');
  * to the gamepads you can poll its buttons and axis sticks. See the properties and methods available on
  * the `Gamepad` class for more details.
  *
+ * As of September 2020 Chrome, and likely other browsers, will soon start to require that games requesting
+ * access to the Gamepad API are running under SSL. They will actively block API access if they are not.
+ *
  * For more information about Gamepad support in browsers see the following resources:
  *
  * https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API
@@ -221,6 +224,8 @@ var GamepadPlugin = new Class({
         if (this.enabled)
         {
             this.startListeners();
+
+            this.refreshPads();
         }
 
         this.sceneInputPlugin.pluginEvents.once(InputEvents.SHUTDOWN, this.shutdown, this);
@@ -292,6 +297,11 @@ var GamepadPlugin = new Class({
         this.target.removeEventListener('gamepaddisconnected', this.onGamepadHandler);
 
         this.sceneInputPlugin.pluginEvents.off(InputEvents.UPDATE, this.update);
+
+        for (var i = 0; i < this.gamepads.length; i++)
+        {
+            this.gamepads[i].removeAllListeners();
+        }
     },
 
     /**
@@ -304,7 +314,7 @@ var GamepadPlugin = new Class({
     {
         for (var i = 0; i < this.gamepads.length; i++)
         {
-            this.gamepads.connected = false;
+            this.gamepads[i].pad.connected = false;
         }
     },
 
@@ -488,8 +498,6 @@ var GamepadPlugin = new Class({
     shutdown: function ()
     {
         this.stopListeners();
-
-        this.disconnectAll();
 
         this.removeAllListeners();
     },
