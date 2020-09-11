@@ -460,6 +460,7 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * Previously, the `easeParams` array within a Tweens `props` object, or a multi-object tween, were ignored and it was only used if set on the root Tween object. It will now work correctly set at any depth. Fix #4292 (thanks @willblackmore)
 * When using `Camera.setRenderToTexture` its `zoom` and `rotation` values would be applied twice. Fix #4221 #4924 #4713 (thanks @wayfu @DanMcgraw @pavel-shirobok)
 * `GameObjects.Shape.Grid` would render a white fill even if you passed `undefined` as the fill color in the constructor. It now doesn't render cells if no fill color is given.
+* The `onMouse` events in the Input Manager didn't reset the `activePointer` property to the mouse, meaning on dual-input systems such as Touch Screen devices, the active pointer would become locked to whichever input method was used first. Fix #4615 #5232 (thanks @mmolina01 @JstnPwll @Legomite)
 
 ### Examples, Documentation and TypeScript
 
