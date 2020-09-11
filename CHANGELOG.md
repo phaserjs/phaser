@@ -381,6 +381,7 @@ The Animation API has had a significant overhaul to improve playback handling. I
 
 ### Input / Mouse Updates and API Changes
 
+* `ScaleManager.refresh` is now called when the `Game.READY` event fires. This fixes a bug where the Scale Manager would have the incorrect canvas bounds, because they were calculated before a previous canvas was removed from the DOM. Fix #4905 (thanks @PavelMishin)
 * The Game Config property `inputMouseCapture` has been removed, as this is now split into 3 new config options:
 * `inputMousePreventDefaultDown` is a new config option that allows you to control `preventDefault` calls specifically on mouse down events. Set it via `input.mouse.preventDefaultDown` in the Game Config. It defaults to `true`, the same as the previous `capture` property did.
 * `inputMousePreventDefaultUp` is a new config option that allows you to control `preventDefault` calls specifically on mouse up events. Set it via `input.mouse.preventDefaultUp` in the Game Config. It defaults to `true`, the same as the previous `capture` property did.
