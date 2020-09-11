@@ -283,7 +283,7 @@ var Transform = {
      * Copies an object's coordinates to this Game Object's position.
      *
      * @method Phaser.GameObjects.Components.Transform#copyPosition
-     * @since 3.23.0
+     * @since 3.50.0
      *
      * @param {(Phaser.Types.Math.Vector2Like|Phaser.Types.Math.Vector3Like|Phaser.Types.Math.Vector4Like)} source - An object with numeric 'x', 'y', 'z', or 'w' properties. Undefined values are not copied.
      *
