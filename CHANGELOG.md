@@ -455,6 +455,7 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * The `onMouse` events in the Input Manager didn't reset the `activePointer` property to the mouse, meaning on dual-input systems such as Touch Screen devices, the active pointer would become locked to whichever input method was used first. Fix #4615 #5232 (thanks @mmolina01 @JstnPwll @Legomite)
 * The Scale Managers `GetScreenOrientation` function will now check for `window.orientation` first, because iOS mobile browsers have an incomplete implementation of the Screen API, forcing us to use the window value as a priority. This means the Scale Manager will now emit `orientationchange` events correctly on iOS. Fix #4361 #4914 (thanks @pfdtravalmatic @jackfreak @cuihu)
 * `Time.Clock.addEvent` can now take an instance of a `TimerEvent` as its parameter. Fix #5294 (thanks @samme @EmilSV)
+* `GameConfig.audio` now defaults to an empty object, which simplifies access to the config in later checks (thanks @samme)
 
 ### Namespace Updates
 
