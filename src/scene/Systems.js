@@ -374,13 +374,15 @@ var Systems = new Class({
      */
     step: function (time, delta)
     {
-        this.events.emit(Events.PRE_UPDATE, time, delta);
+        var events = this.events;
 
-        this.events.emit(Events.UPDATE, time, delta);
+        events.emit(Events.PRE_UPDATE, time, delta);
+
+        events.emit(Events.UPDATE, time, delta);
 
         this.sceneUpdate.call(this.scene, time, delta);
 
-        this.events.emit(Events.POST_UPDATE, time, delta);
+        events.emit(Events.POST_UPDATE, time, delta);
     },
 
     /**
@@ -440,13 +442,16 @@ var Systems = new Class({
      */
     pause: function (data)
     {
+        var events = this.events;
+        var settings = this.settings;
+
         if (this.settings.active)
         {
-            this.settings.status = CONST.PAUSED;
+            settings.status = CONST.PAUSED;
 
-            this.settings.active = false;
+            settings.active = false;
 
-            this.events.emit(Events.PAUSE, this, data);
+            events.emit(Events.PAUSE, this, data);
         }
 
         return this;
@@ -465,13 +470,16 @@ var Systems = new Class({
      */
     resume: function (data)
     {
+        var events = this.events;
+        var settings = this.settings;
+
         if (!this.settings.active)
         {
-            this.settings.status = CONST.RUNNING;
+            settings.status = CONST.RUNNING;
 
-            this.settings.active = true;
+            settings.active = true;
 
-            this.events.emit(Events.RESUME, this, data);
+            events.emit(Events.RESUME, this, data);
         }
 
         return this;
@@ -495,12 +503,15 @@ var Systems = new Class({
      */
     sleep: function (data)
     {
-        this.settings.status = CONST.SLEEPING;
+        var events = this.events;
+        var settings = this.settings;
 
-        this.settings.active = false;
-        this.settings.visible = false;
+        settings.status = CONST.SLEEPING;
 
-        this.events.emit(Events.SLEEP, this, data);
+        settings.active = false;
+        settings.visible = false;
+
+        events.emit(Events.SLEEP, this, data);
 
         return this;
     },
@@ -518,6 +529,7 @@ var Systems = new Class({
      */
     wake: function (data)
     {
+        var events = this.events;
         var settings = this.settings;
 
         settings.status = CONST.RUNNING;
@@ -525,11 +537,11 @@ var Systems = new Class({
         settings.active = true;
         settings.visible = true;
 
-        this.events.emit(Events.WAKE, this, data);
+        events.emit(Events.WAKE, this, data);
 
         if (settings.isTransition)
         {
-            this.events.emit(Events.TRANSITION_WAKE, settings.transitionFrom, settings.transitionDuration);
+            events.emit(Events.TRANSITION_WAKE, settings.transitionFrom, settings.transitionDuration);
         }
 
         return this;
@@ -698,21 +710,24 @@ var Systems = new Class({
      */
     start: function (data)
     {
+        var events = this.events;
+        var settings = this.settings;
+
         if (data)
         {
-            this.settings.data = data;
+            settings.data = data;
         }
 
-        this.settings.status = CONST.START;
+        settings.status = CONST.START;
 
-        this.settings.active = true;
-        this.settings.visible = true;
+        settings.active = true;
+        settings.visible = true;
 
         //  For plugins to listen out for
-        this.events.emit(Events.START, this);
+        events.emit(Events.START, this);
 
         //  For user-land code to listen out for
-        this.events.emit(Events.READY, this, data);
+        events.emit(Events.READY, this, data);
     },
 
     /**
@@ -730,17 +745,20 @@ var Systems = new Class({
      */
     shutdown: function (data)
     {
-        this.events.off(Events.TRANSITION_INIT);
-        this.events.off(Events.TRANSITION_START);
-        this.events.off(Events.TRANSITION_COMPLETE);
-        this.events.off(Events.TRANSITION_OUT);
+        var events = this.events;
+        var settings = this.settings;
 
-        this.settings.status = CONST.SHUTDOWN;
+        events.off(Events.TRANSITION_INIT);
+        events.off(Events.TRANSITION_START);
+        events.off(Events.TRANSITION_COMPLETE);
+        events.off(Events.TRANSITION_OUT);
 
-        this.settings.active = false;
-        this.settings.visible = false;
+        settings.status = CONST.SHUTDOWN;
 
-        this.events.emit(Events.SHUTDOWN, this, data);
+        settings.active = false;
+        settings.visible = false;
+
+        events.emit(Events.SHUTDOWN, this, data);
     },
 
     /**
@@ -755,14 +773,17 @@ var Systems = new Class({
      */
     destroy: function ()
     {
-        this.settings.status = CONST.DESTROYED;
+        var events = this.events;
+        var settings = this.settings;
 
-        this.settings.active = false;
-        this.settings.visible = false;
+        settings.status = CONST.DESTROYED;
 
-        this.events.emit(Events.DESTROY, this);
+        settings.active = false;
+        settings.visible = false;
 
-        this.events.removeAllListeners();
+        events.emit(Events.DESTROY, this);
+
+        events.removeAllListeners();
 
         var props = [ 'scene', 'game', 'anims', 'cache', 'plugins', 'registry', 'sound', 'textures', 'add', 'camera', 'displayList', 'events', 'make', 'scenePlugin', 'updateList' ];
 
