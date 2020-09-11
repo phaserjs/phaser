@@ -391,6 +391,9 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * `MouseManager.preventDefaultUp` is a new boolean property, set via the `inputMousePreventDefaultUp` config option that allows you to toggle capture of mouse up events at runtime.
 * `MouseManager.preventDefaultMove` is a new boolean property, set via the `inputMousePreventDefaultMove` config option that allows you to toggle capture of mouse move events at runtime.
 * In the `MouseManager` the up, down and move events are no longer set as being passive if captured. Over, Out, Wheel and the Window level Down and Up events are always flagged as being passive.
+* The `GamepadPlugin` will now call `refreshPads` as part of its start process. This allows you to use Gamepads across multiple Scenes, without having to wait for a connected event from each one of them. If you've already had a connected event in a previous Scene, you can now just read the pads directly via `this.input.gamepad.pad1` and similar. Fix #4890 (thanks @Sytten)
+* Shutting down the Gamepad plugin (such as when sleeping a Scene) no longer calls `GamepadPlugin.disconnectAll`, but destroying it does.
+* `Gamepad._created` is a new private internal property that keeps track of when the instance was created. This is compared to the navigator timestamp in the update loop to avoid event spamming. Fix #4890.
 
 ### Updates and API Changes
 
