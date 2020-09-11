@@ -421,7 +421,7 @@ var ScaleManager = new Class({
         //  Parse the config to get the scaling values we need
         this.parseConfig(this.game.config);
 
-        this.game.events.once('boot', this.boot, this);
+        this.game.events.once(GameEvents.BOOT, this.boot, this);
     },
 
     /**
@@ -464,6 +464,7 @@ var ScaleManager = new Class({
         }
 
         game.events.on(GameEvents.PRE_STEP, this.step, this);
+        game.events.once(GameEvents.READY, this.refresh, this);
         game.events.once(GameEvents.DESTROY, this.destroy, this);
 
         this.startListeners();
