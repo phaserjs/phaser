@@ -55,7 +55,7 @@ var PipelineManager = new Class({
          *
          * This is populated with the default pipelines in the `boot` method.
          *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#pipelines
+         * @name Phaser.Renderer.WebGL.PipelineManager#pipelines
          * @type {Phaser.Structs.Map.<string, Phaser.Renderer.WebGL.WebGLPipeline>}
          * @since 3.50.0
          */
