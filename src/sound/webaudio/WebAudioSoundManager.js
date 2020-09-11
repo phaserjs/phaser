@@ -108,7 +108,7 @@ var WebAudioSoundManager = new Class({
     {
         var audioConfig = game.config.audio;
 
-        if (audioConfig && audioConfig.context)
+        if (audioConfig.context)
         {
             audioConfig.context.resume();
 
@@ -355,7 +355,7 @@ var WebAudioSoundManager = new Class({
         this.masterMuteNode.disconnect();
         this.masterMuteNode = null;
 
-        if (this.game.config.audio && this.game.config.audio.context)
+        if (this.game.config.audio.context)
         {
             this.context.suspend();
         }
