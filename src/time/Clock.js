@@ -170,7 +170,7 @@ var Clock = new Class({
     {
         var event;
 
-        if (config instanceof Phaser.Time.TimerEvent)
+        if (config instanceof TimerEvent)
         {
             event = config;
 
