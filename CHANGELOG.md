@@ -379,6 +379,18 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * `Utils.Array.SortByDigits` is a new function that takes the given array of strings and runs a numeric sort on it, ignoring any non-digits.
 * `GroupCreateConfig`, which is used when calling `Group.createMultiple` or `Group.createFromConfig`, can now accept the following new properties: `setOrigin: { x, y, stepX, stepY }` which are applied to the items created by the Group.
 
+### Input / Mouse Updates and API Changes
+
+* The Game Config property `inputMouseCapture` has been removed, as this is now split into 3 new config options:
+* `inputMousePreventDefaultDown` is a new config option that allows you to control `preventDefault` calls specifically on mouse down events. Set it via `input.mouse.preventDefaultDown` in the Game Config. It defaults to `true`, the same as the previous `capture` property did.
+* `inputMousePreventDefaultUp` is a new config option that allows you to control `preventDefault` calls specifically on mouse up events. Set it via `input.mouse.preventDefaultUp` in the Game Config. It defaults to `true`, the same as the previous `capture` property did.
+* `inputMousePreventDefaultMove` is a new config option that allows you to control `preventDefault` calls specifically on mouse move events. Set it via `input.mouse.preventDefaultMove` in the Game Config. It defaults to `true`, the same as the previous `capture` property did.
+* The `MouseManager.capture` property has been removed, as this is now split into 3 new config options (see below)
+* `MouseManager.preventDefaultDown` is a new boolean property, set via the `inputMousePreventDefaultDown` config option that allows you to toggle capture of mouse down events at runtime.
+* `MouseManager.preventDefaultUp` is a new boolean property, set via the `inputMousePreventDefaultUp` config option that allows you to toggle capture of mouse up events at runtime.
+* `MouseManager.preventDefaultMove` is a new boolean property, set via the `inputMousePreventDefaultMove` config option that allows you to toggle capture of mouse move events at runtime.
+* In the `MouseManager` the up, down and move events are no longer set as being passive if captured. Over, Out, Wheel and the Window level Down and Up events are always flagged as being passive.
+
 ### Updates and API Changes
 
 * Earcut, used for polygon triangulation, has been updated from 2.1.4 to 2.2.2.
@@ -421,6 +433,22 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * You can now set the `ArcadeWorld.fixedStep` property via the `ArcadeWorldConfig` object (thanks @samme)
 * `Utils.Array.NumerArray` can now accept the `start` and `end` parameters in reverse order, i.e. `10, 1` will generate a number array running from 10 to 1. Internally it has also been optimized to skip string based returns.
 
+### Bug Fixes
+
+* `RenderTexture.resize` (which is called from `setSize`) wouldn't correctly set the `TextureSource.glTexture` property, leading to `bindTexture: attempt to use a deleted object` errors under WebGL.
+* `RenderTexture.fill` would fail to fill the correct area under WebGL if the RenderTexture wasn't the same size as the Canvas. It now fills the given region properly.
+* The `MatterAttractors` plugin, which enables attractors between bodies, has been fixed. The original plugin only worked if the body with the attractor was _first_ in the world bodies list. It can now attract any body, no matter where in the world list it is. Fix #5160 (thanks @strahius)
+* The `KeyboardManager` and `KeyboardPlugin` were both still checking for the `InputManager.useQueue` property, which was removed several versions ago.
+* In Arcade Physics, Dynamic bodies would no longer hit walls when riding on horizontally moving platforms. The horizontal (and vertical) friction is now re-applied correctly in these edge-cases. Fix #5210 (thanks @Dercetech @samme)
+* Calling `Rectangle.setSize()` wouldn't change the underlying geometry of the Shape Game Object, causing any stroke to be incorrectly rendered after a size change.
+* The `ProcessQueue` was emitting the wrong events internally. It now emits 'add' and 'remove' correctly (thanks @halilcakar)
+* The `GridAlign` action didn't work if only the `height` parameter was set. Fix #5019 (thanks @halilcakar)
+* The `Color.HSVToRGB` function has been rewritten to use the HSL and HSV formula from Wikipedia, giving much better results. Fix #5089 (thanks @DiamondeX)
+* Previously, the `easeParams` array within a Tweens `props` object, or a multi-object tween, were ignored and it was only used if set on the root Tween object. It will now work correctly set at any depth. Fix #4292 (thanks @willblackmore)
+* When using `Camera.setRenderToTexture` its `zoom` and `rotation` values would be applied twice. Fix #4221 #4924 #4713 (thanks @wayfu @DanMcgraw @pavel-shirobok)
+* `GameObjects.Shape.Grid` would render a white fill even if you passed `undefined` as the fill color in the constructor. It now doesn't render cells if no fill color is given.
+* The `onMouse` events in the Input Manager didn't reset the `activePointer` property to the mouse, meaning on dual-input systems such as Touch Screen devices, the active pointer would become locked to whichever input method was used first. Fix #4615 #5232 (thanks @mmolina01 @JstnPwll @Legomite)
+
 ### Namespace Updates
 
 * The `Phaser.Curves.MoveTo` function has now been exposed on the Phaser namespace (thanks @samme)
@@ -445,22 +473,6 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * The `Phaser.Structs.Events` namespace has now been exposed on the Phaser namespace (thanks @samme)
 * The `Phaser.Tilemaps.Parsers.Tiled` function has now been exposed on the Phaser namespace (thanks @samme)
 * Every single `Tilemap.Component` function has now been made public. This means you can call the Component functions directly, should you need to, outside of the Tilemap system.
-
-### Bug Fixes
-
-* `RenderTexture.resize` (which is called from `setSize`) wouldn't correctly set the `TextureSource.glTexture` property, leading to `bindTexture: attempt to use a deleted object` errors under WebGL.
-* `RenderTexture.fill` would fail to fill the correct area under WebGL if the RenderTexture wasn't the same size as the Canvas. It now fills the given region properly.
-* The `MatterAttractors` plugin, which enables attractors between bodies, has been fixed. The original plugin only worked if the body with the attractor was _first_ in the world bodies list. It can now attract any body, no matter where in the world list it is. Fix #5160 (thanks @strahius)
-* The `KeyboardManager` and `KeyboardPlugin` were both still checking for the `InputManager.useQueue` property, which was removed several versions ago.
-* In Arcade Physics, Dynamic bodies would no longer hit walls when riding on horizontally moving platforms. The horizontal (and vertical) friction is now re-applied correctly in these edge-cases. Fix #5210 (thanks @Dercetech @samme)
-* Calling `Rectangle.setSize()` wouldn't change the underlying geometry of the Shape Game Object, causing any stroke to be incorrectly rendered after a size change.
-* The `ProcessQueue` was emitting the wrong events internally. It now emits 'add' and 'remove' correctly (thanks @halilcakar)
-* The `GridAlign` action didn't work if only the `height` parameter was set. Fix #5019 (thanks @halilcakar)
-* The `Color.HSVToRGB` function has been rewritten to use the HSL and HSV formula from Wikipedia, giving much better results. Fix #5089 (thanks @DiamondeX)
-* Previously, the `easeParams` array within a Tweens `props` object, or a multi-object tween, were ignored and it was only used if set on the root Tween object. It will now work correctly set at any depth. Fix #4292 (thanks @willblackmore)
-* When using `Camera.setRenderToTexture` its `zoom` and `rotation` values would be applied twice. Fix #4221 #4924 #4713 (thanks @wayfu @DanMcgraw @pavel-shirobok)
-* `GameObjects.Shape.Grid` would render a white fill even if you passed `undefined` as the fill color in the constructor. It now doesn't render cells if no fill color is given.
-* The `onMouse` events in the Input Manager didn't reset the `activePointer` property to the mouse, meaning on dual-input systems such as Touch Screen devices, the active pointer would become locked to whichever input method was used first. Fix #4615 #5232 (thanks @mmolina01 @JstnPwll @Legomite)
 
 ### Examples, Documentation and TypeScript
 
