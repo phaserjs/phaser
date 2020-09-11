@@ -453,6 +453,7 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * When using `Camera.setRenderToTexture` its `zoom` and `rotation` values would be applied twice. Fix #4221 #4924 #4713 (thanks @wayfu @DanMcgraw @pavel-shirobok)
 * `GameObjects.Shape.Grid` would render a white fill even if you passed `undefined` as the fill color in the constructor. It now doesn't render cells if no fill color is given.
 * The `onMouse` events in the Input Manager didn't reset the `activePointer` property to the mouse, meaning on dual-input systems such as Touch Screen devices, the active pointer would become locked to whichever input method was used first. Fix #4615 #5232 (thanks @mmolina01 @JstnPwll @Legomite)
+* The Scale Managers `GetScreenOrientation` function will now check for `window.orientation` first, because iOS mobile browsers have an incomplete implementation of the Screen API, forcing us to use the window value as a priority. This means the Scale Manager will now emit `orientationchange` events correctly on iOS. Fix #4361 #4914 (thanks @pfdtravalmatic @jackfreak @cuihu)
 
 ### Namespace Updates
 
