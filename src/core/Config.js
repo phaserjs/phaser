@@ -241,9 +241,19 @@ var Config = new Class({
         this.inputMouseEventTarget = GetValue(config, 'input.mouse.target', null);
 
         /**
-         * @const {boolean} Phaser.Core.Config#inputMouseCapture - Should mouse events be captured? I.e. have prevent default called on them.
+         * @const {boolean} Phaser.Core.Config#inputMousePreventDefaultDown - Should `mousedown` events be captured? I.e. have prevent default called on them.
          */
-        this.inputMouseCapture = GetValue(config, 'input.mouse.capture', true);
+        this.inputMousePreventDefaultDown = GetValue(config, 'input.mouse.preventDefaultDown', true);
+
+        /**
+         * @const {boolean} Phaser.Core.Config#inputMousePreventDefaultUp - Should `mouseup` events be captured? I.e. have prevent default called on them.
+         */
+        this.inputMousePreventDefaultUp = GetValue(config, 'input.mouse.preventDefaultUp', true);
+
+        /**
+         * @const {boolean} Phaser.Core.Config#inputMousePreventDefaultMove - Should `mousemove` events be captured? I.e. have prevent default called on them.
+         */
+        this.inputMousePreventDefaultMove = GetValue(config, 'input.mouse.preventDefaultMove', true);
 
         /**
          * @const {boolean} Phaser.Core.Config#inputTouch - Enable the Touch Plugin. This can be disabled in games that don't need touch input.
