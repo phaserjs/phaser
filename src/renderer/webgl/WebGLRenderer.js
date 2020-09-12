@@ -76,7 +76,6 @@ var WebGLRenderer = new Class({
             antialias: gameConfig.antialias,
             backgroundColor: gameConfig.backgroundColor,
             contextCreation: contextCreationConfig,
-            resolution: gameConfig.resolution,
             roundPixels: gameConfig.roundPixels,
             maxTextures: gameConfig.maxTextures,
             maxTextureSize: gameConfig.maxTextureSize,
@@ -843,7 +842,7 @@ var WebGLRenderer = new Class({
 
         var baseSize = game.scale.baseSize;
 
-        this.resize(baseSize.width, baseSize.height, game.scale.resolution);
+        this.resize(baseSize.width, baseSize.height);
     },
 
     /**
@@ -853,16 +852,14 @@ var WebGLRenderer = new Class({
      * @since 3.16.0
      *
      * @param {Phaser.Structs.Size} gameSize - The default Game Size object. This is the un-modified game dimensions.
-     * @param {Phaser.Structs.Size} baseSize - The base Size object. The game dimensions multiplied by the resolution. The canvas width / height values match this.
-     * @param {Phaser.Structs.Size} displaySize - The display Size object. The size of the canvas style width / height attributes.
-     * @param {number} [resolution] - The Scale Manager resolution setting.
+     * @param {Phaser.Structs.Size} baseSize - The base Size object. The game dimensions. The canvas width / height values match this.
      */
-    onResize: function (gameSize, baseSize, displaySize, resolution)
+    onResize: function (gameSize, baseSize)
     {
         //  Has the underlying canvas size changed?
-        if (baseSize.width !== this.width || baseSize.height !== this.height || resolution !== this.resolution)
+        if (baseSize.width !== this.width || baseSize.height !== this.height)
         {
-            this.resize(baseSize.width, baseSize.height, resolution);
+            this.resize(baseSize.width, baseSize.height);
         }
     },
 
@@ -874,21 +871,19 @@ var WebGLRenderer = new Class({
      *
      * @param {number} [width] - The new width of the renderer.
      * @param {number} [height] - The new height of the renderer.
-     * @param {number} [resolution] - The new resolution of the renderer.
      *
      * @return {this} This WebGLRenderer instance.
      */
-    resize: function (width, height, resolution)
+    resize: function (width, height)
     {
         var gl = this.gl;
 
         this.width = width;
         this.height = height;
-        this.resolution = resolution;
 
         gl.viewport(0, 0, width, height);
 
-        this.pipelines.resize(width, height, resolution);
+        this.pipelines.resize(width, height);
 
         this.drawingBufferHeight = gl.drawingBufferHeight;
 
