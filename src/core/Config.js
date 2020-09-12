@@ -62,11 +62,6 @@ var Config = new Class({
         this.zoom = GetValue(config, 'zoom', 1);
 
         /**
-         * @const {number} Phaser.Core.Config#resolution - The canvas device pixel resolution. Currently un-used.
-         */
-        this.resolution = GetValue(config, 'resolution', 1);
-
-        /**
          * @const {?*} Phaser.Core.Config#parent - A parent DOM element into which the canvas created by the renderer will be injected.
          */
         this.parent = GetValue(config, 'parent', undefined);
@@ -130,7 +125,6 @@ var Config = new Class({
             this.width = GetValue(scaleConfig, 'width', this.width);
             this.height = GetValue(scaleConfig, 'height', this.height);
             this.zoom = GetValue(scaleConfig, 'zoom', this.zoom);
-            this.resolution = GetValue(scaleConfig, 'resolution', this.resolution);
             this.parent = GetValue(scaleConfig, 'parent', this.parent);
             this.scaleMode = GetValue(scaleConfig, 'mode', this.scaleMode);
             this.expandParent = GetValue(scaleConfig, 'expandParent', this.expandParent);
