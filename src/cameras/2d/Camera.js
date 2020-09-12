@@ -748,10 +748,8 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#preRender
      * @protected
      * @since 3.0.0
-     *
-     * @param {number} resolution - The game resolution, as set in the Scale Manager.
      */
-    preRender: function (resolution)
+    preRender: function ()
     {
         var width = this.width;
         var height = this.height;
@@ -759,7 +757,7 @@ var Camera = new Class({
         var halfWidth = width * 0.5;
         var halfHeight = height * 0.5;
 
-        var zoom = this.zoom * resolution;
+        var zoom = this.zoom;
         var matrix = this.matrix;
 
         var originX = width * this.originX;
