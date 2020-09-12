@@ -15,13 +15,13 @@ var SceneEvents = require('../../scene/events');
 /**
  * @classdesc
  * The Camera Manager is a plugin that belongs to a Scene and is responsible for managing all of the Scene Cameras.
- * 
+ *
  * By default you can access the Camera Manager from within a Scene using `this.cameras`, although this can be changed
  * in your game config.
- * 
+ *
  * Create new Cameras using the `add` method. Or extend the Camera class with your own addition code and then add
  * the new Camera in using the `addExisting` method.
- * 
+ *
  * Cameras provide a view into your game world, and can be positioned, rotated, zoomed and scrolled accordingly.
  *
  * A Camera consists of two elements: The viewport and the scroll values.
@@ -36,7 +36,7 @@ var SceneEvents = require('../../scene/events');
  * viewport, and changing the viewport has no impact on the scrolling.
  *
  * By default a Camera will render all Game Objects it can see. You can change this using the `ignore` method,
- * allowing you to filter Game Objects out on a per-Camera basis. The Camera Manager can manage up to 31 unique 
+ * allowing you to filter Game Objects out on a per-Camera basis. The Camera Manager can manage up to 31 unique
  * 'Game Object ignore capable' Cameras. Any Cameras beyond 31 that you create will all be given a Camera ID of
  * zero, meaning that they cannot be used for Game Object exclusion. This means if you need your Camera to ignore
  * Game Objects, make sure it's one of the first 31 created.
@@ -102,11 +102,11 @@ var CameraManager = new Class({
          * A handy reference to the 'main' camera. By default this is the first Camera the
          * Camera Manager creates. You can also set it directly, or use the `makeMain` argument
          * in the `add` and `addExisting` methods. It allows you to access it from your game:
-         * 
+         *
          * ```javascript
          * var cam = this.cameras.main;
          * ```
-         * 
+         *
          * Also see the properties `camera1`, `camera2` and so on.
          *
          * @name Phaser.Cameras.Scene2D.CameraManager#main
@@ -192,7 +192,7 @@ var CameraManager = new Class({
                 //  Make one
                 this.add();
             }
-    
+
             this.main = this.cameras[0];
         }
 
@@ -204,19 +204,19 @@ var CameraManager = new Class({
 
     /**
      * Adds a new Camera into the Camera Manager. The Camera Manager can support up to 31 different Cameras.
-     * 
+     *
      * Each Camera has its own viewport, which controls the size of the Camera and its position within the canvas.
-     * 
+     *
      * Use the `Camera.scrollX` and `Camera.scrollY` properties to change where the Camera is looking, or the
      * Camera methods such as `centerOn`. Cameras also have built in special effects, such as fade, flash, shake,
      * pan and zoom.
-     * 
+     *
      * By default Cameras are transparent and will render anything that they can see based on their `scrollX`
      * and `scrollY` values. Game Objects can be set to be ignored by a Camera by using the `Camera.ignore` method.
-     * 
+     *
      * The Camera will have its `roundPixels` property set to whatever `CameraManager.roundPixels` is. You can change
      * it after creation if required.
-     * 
+     *
      * See the Camera class documentation for more details.
      *
      * @method Phaser.Cameras.Scene2D.CameraManager#add
@@ -260,15 +260,15 @@ var CameraManager = new Class({
 
     /**
      * Adds an existing Camera into the Camera Manager.
-     * 
+     *
      * The Camera should either be a `Phaser.Cameras.Scene2D.Camera` instance, or a class that extends from it.
-     * 
+     *
      * The Camera will have its `roundPixels` property set to whatever `CameraManager.roundPixels` is. You can change
      * it after addition if required.
-     * 
+     *
      * The Camera will be assigned an ID, which is used for Game Object exclusion and then added to the
      * manager. As long as it doesn't already exist in the manager it will be added then returned.
-     * 
+     *
      * If this method returns `null` then the Camera already exists in this Camera Manager.
      *
      * @method Phaser.Cameras.Scene2D.CameraManager#addExisting
@@ -297,7 +297,7 @@ var CameraManager = new Class({
             {
                 this.main = camera;
             }
-    
+
             return camera;
         }
 
@@ -306,7 +306,7 @@ var CameraManager = new Class({
 
     /**
      * Gets the next available Camera ID number.
-     * 
+     *
      * The Camera Manager supports up to 31 unique cameras, after which the ID returned will always be zero.
      * You can create additional cameras beyond 31, but they cannot be used for Game Object exclusion.
      *
@@ -354,12 +354,12 @@ var CameraManager = new Class({
 
     /**
      * Gets the total number of Cameras in this Camera Manager.
-     * 
+     *
      * If the optional `isVisible` argument is set it will only count Cameras that are currently visible.
      *
      * @method Phaser.Cameras.Scene2D.CameraManager#getTotal
      * @since 3.11.0
-     * 
+     *
      * @param {boolean} [isVisible=false] - Set the `true` to only include visible Cameras in the total.
      *
      * @return {integer} The total number of Cameras in this Camera Manager.
@@ -387,7 +387,7 @@ var CameraManager = new Class({
 
     /**
      * Populates this Camera Manager based on the given configuration object, or an array of config objects.
-     * 
+     *
      * See the `Phaser.Types.Cameras.Scene2D.CameraConfig` documentation for details of the object structure.
      *
      * @method Phaser.Cameras.Scene2D.CameraManager#fromJSON
@@ -456,7 +456,7 @@ var CameraManager = new Class({
 
     /**
      * Gets a Camera based on its name.
-     * 
+     *
      * Camera names are optional and don't have to be set, so this method is only of any use if you
      * have given your Cameras unique names.
      *
@@ -484,7 +484,7 @@ var CameraManager = new Class({
 
     /**
      * Returns an array of all cameras below the given Pointer.
-     * 
+     *
      * The first camera in the array is the top-most camera in the camera list.
      *
      * @method Phaser.Cameras.Scene2D.CameraManager#getCamerasBelowPointer
@@ -519,10 +519,10 @@ var CameraManager = new Class({
 
     /**
      * Removes the given Camera, or an array of Cameras, from this Camera Manager.
-     * 
+     *
      * If found in the Camera Manager it will be immediately removed from the local cameras array.
      * If also currently the 'main' camera, 'main' will be reset to be camera 0.
-     * 
+     *
      * The removed Cameras are automatically destroyed if the `runDestroy` argument is `true`, which is the default.
      * If you wish to re-use the cameras then set this to `false`, but know that they will retain their references
      * and internal data until destroyed or re-added to a Camera Manager.
@@ -532,7 +532,7 @@ var CameraManager = new Class({
      *
      * @param {(Phaser.Cameras.Scene2D.Camera|Phaser.Cameras.Scene2D.Camera[])} camera - The Camera, or an array of Cameras, to be removed from this Camera Manager.
      * @param {boolean} [runDestroy=true] - Automatically call `Camera.destroy` on each Camera removed from this Camera Manager.
-     * 
+     *
      * @return {integer} The total number of Cameras removed.
      */
     remove: function (camera, runDestroy)
@@ -574,7 +574,7 @@ var CameraManager = new Class({
 
     /**
      * The internal render method. This is called automatically by the Scene and should not be invoked directly.
-     * 
+     *
      * It will iterate through all local cameras and render them in turn, as long as they're visible and have
      * an alpha level > 0.
      *
@@ -607,7 +607,7 @@ var CameraManager = new Class({
 
     /**
      * Resets this Camera Manager.
-     * 
+     *
      * This will iterate through all current Cameras, destroying them all, then it will reset the
      * cameras array, reset the ID counter and create 1 new single camera using the default values.
      *
@@ -655,9 +655,9 @@ var CameraManager = new Class({
      * @since 3.18.0
      *
      * @param {Phaser.Structs.Size} gameSize - The default Game Size object. This is the un-modified game dimensions.
-     * @param {Phaser.Structs.Size} baseSize - The base Size object. The game dimensions multiplied by the resolution. The canvas width / height values match this.
+     * @param {Phaser.Structs.Size} baseSize - The base Size object. The game dimensions. The canvas width / height values match this.
      */
-    onResize: function (gameSize, baseSize, displaySize, resolution, previousWidth, previousHeight)
+    onResize: function (gameSize, baseSize, displaySize, previousWidth, previousHeight)
     {
         for (var i = 0; i < this.cameras.length; i++)
         {
