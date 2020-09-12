@@ -379,6 +379,7 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * `Utils.Array.SortByDigits` is a new function that takes the given array of strings and runs a numeric sort on it, ignoring any non-digits.
 * `GroupCreateConfig`, which is used when calling `Group.createMultiple` or `Group.createFromConfig`, can now accept the following new properties: `setOrigin: { x, y, stepX, stepY }` which are applied to the items created by the Group.
 * `Transform.copyPosition` is a new method that will copy the position from the given object to the Game Object (thanks @samme)
+* The `Text.MeasureText` function, which is used to calculate the ascent and descent of Text Game Objects whenever the style, or font size, is changed, has been updated to use the new `actualBoundingBoxAscent` functions present in modern browsers. This allows for significantly faster ascent calculations than previously. Older browsers, such as IE, will still fall back (thanks @rexrainbow)
 
 ### Input / Mouse Updates and API Changes
 
