@@ -885,12 +885,6 @@ var InputManager = new Class({
         var x = pointer.x;
         var y = pointer.y;
 
-        if (camera.resolution !== 1)
-        {
-            x += camera._x;
-            y += camera._y;
-        }
-
         //  Stores the world point inside of tempPoint
         camera.getWorldPoint(x, y, tempPoint);
 
