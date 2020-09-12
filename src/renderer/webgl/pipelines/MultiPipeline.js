@@ -338,13 +338,12 @@ var MultiPipeline = new Class({
      *
      * @param {number} width - The new width.
      * @param {number} height - The new height.
-     * @param {number} resolution - The resolution.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    resize: function (width, height, resolution)
+    resize: function (width, height)
     {
-        WebGLPipeline.prototype.resize.call(this, width, height, resolution);
+        WebGLPipeline.prototype.resize.call(this, width, height);
 
         ProjectOrtho(this, 0, this.width, this.height, 0, -1000, 1000);
 

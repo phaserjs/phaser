@@ -175,7 +175,7 @@ var PipelineManager = new Class({
             pipeline.boot();
         }
 
-        pipeline.resize(renderer.width, renderer.height, renderer.config.resolution);
+        pipeline.resize(renderer.width, renderer.height);
 
         return pipeline;
     },
@@ -190,15 +190,14 @@ var PipelineManager = new Class({
      *
      * @param {number} [width] - The new width of the renderer.
      * @param {number} [height] - The new height of the renderer.
-     * @param {number} [resolution] - The new resolution of the renderer.
      */
-    resize: function (width, height, resolution)
+    resize: function (width, height)
     {
         var pipelines = this.pipelines;
 
         pipelines.each(function (pipelineName, pipelineInstance)
         {
-            pipelineInstance.resize(width, height, resolution);
+            pipelineInstance.resize(width, height);
         });
     },
 
