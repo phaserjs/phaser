@@ -18,30 +18,25 @@ var CanvasPool = require('../../display/canvas/CanvasPool');
  */
 var MeasureText = function (textStyle)
 {
-    // @property {HTMLCanvasElement} canvas - The canvas element that the text is rendered.
     var canvas = CanvasPool.create(this);
-
-    // @property {HTMLCanvasElement} context - The context of the canvas element that the text is rendered to.
     var context = canvas.getContext('2d');
 
     textStyle.syncFont(canvas, context);
 
     var metrics = context.measureText(textStyle.testString);
-    
-    if (metrics.hasOwnProperty('actualBoundingBoxAscent') && metrics.hasOwnProperty('actualBoundingBoxDescent')) 
+
+    if (metrics.hasOwnProperty('actualBoundingBoxAscent'))
     {
         var ascent = metrics.actualBoundingBoxAscent;
         var descent = metrics.actualBoundingBoxDescent;
-    
-        var output = {
+
+        CanvasPool.remove(canvas);
+
+        return {
             ascent: ascent,
             descent: descent,
-            fontSize: (ascent + descent)
+            fontSize: ascent + descent
         };
-    
-        CanvasPool.remove(canvas);
-    
-        return output;
     }
 
     var width = Math.ceil(metrics.width * textStyle.baselineX);
