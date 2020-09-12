@@ -482,6 +482,28 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * The `Phaser.Tilemaps.Parsers.Tiled` function has now been exposed on the Phaser namespace (thanks @samme)
 * Every single `Tilemap.Component` function has now been made public. This means you can call the Component functions directly, should you need to, outside of the Tilemap system.
 
+### Removal of 'Resolution' property from across the API
+
+For legacy reasons, Phaser 3 has never properly supported HighDPI devices. It will render happily to them of course, but wouldn't let you set a 'resolution' for the Canvas beyond 1. Earlier versions of 3.x had a resolution property in the Game Config, but it was never fully implemented (for example, it would break zooming cameras). When the Scale Manager was introduced in v3.16 we forced the resolution to be 1 to avoid it breaking anything else internally.
+
+For a long time, the 'resolution' property has been present - taunting developers and confusing new comers. In this release we have finally gone through and removed all references to it. The Game Config option is now gone, it's removed from the Scale Manager, Base Camera and everywhere else where it matters. As much as we would have liked to implement the feature, we've spent too long without and things have been built around the assumption it isn't present that just wouldn't cope with having it shoe-horned in at this stage. As frustrating as this is, it's even more annoying to just leave the property there confusing people and wasting CPU cycles. Phaser 4 has been built with HighDPI screens in mind from the very start, but it's just too late for v3. The following changes are a result of this removal:
+
+* The `Phaser.Scale.Events#RESIZE` event no longer sends the `resolution` as a parameter.
+* The `BaseCamera.resolution` property has been removed.
+* The internal private `BaseCamera._cx`, `_cy`, `_cw` and `_ch` properties has been removed.
+* The `BaseCamera.preRender` method no longer receives or uses the `resolution` parameter.
+* The `Camera.preRender` method no longer receives or uses the `resolution` parameter.
+* The `CameraManager.onResize` method no longer receives or uses the `resolution` parameter.
+* The `Core.Config.resolution` property has been removed.
+* The `TextStyle.resolution` property is no longer read from the Game Config. You can still set it via the Text Style config to a value other than 1, but it will default to this now.
+* The `CanvasRenderer` no longer reads or uses the Game Config resolution property.
+* The `PipelineManager.resize` method along with `WebGLPipeline.resize` and anything else that extends them no longer receives or uses the `resolution` parameter.
+* The `WebGLRenderer.resize` and `onResize` methods no longer receives or uses the `resolution` parameter.
+* The `ScaleManager.resolution` property has been removed and all internal use of it.
+
+
+
+
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
