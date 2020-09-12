@@ -204,7 +204,7 @@ var ScaleManager = new Class({
         /**
          * The Base Size component.
          *
-         * The modified game size, which is the gameSize * resolution, used to set the canvas width and height
+         * The modified game size, which is the auto-rounded gameSize, used to set the canvas width and height
          * (but not the CSS style)
          *
          * @name Phaser.Scale.ScaleManager#baseSize
@@ -232,17 +232,6 @@ var ScaleManager = new Class({
          * @since 3.16.0
          */
         this.scaleMode = CONST.SCALE_MODE.NONE;
-
-        /**
-         * The canvas resolution.
-         *
-         * This is hard-coded to a value of 1 in the 3.16 release of Phaser and will be enabled at a later date.
-         *
-         * @name Phaser.Scale.ScaleManager#resolution
-         * @type {number}
-         * @since 3.16.0
-         */
-        this.resolution = 1;
 
         /**
          * The game zoom factor.
@@ -491,7 +480,6 @@ var ScaleManager = new Class({
         var width = config.width;
         var height = config.height;
         var scaleMode = config.scaleMode;
-        var resolution = config.resolution;
         var zoom = config.zoom;
         var autoRound = config.autoRound;
 
@@ -527,11 +515,6 @@ var ScaleManager = new Class({
             height = Math.floor(parentHeight * parentScaleY);
         }
 
-        //  This is fixed at 1 on purpose.
-        //  Changing it will break all user input.
-        //  Wait for another release to solve this issue.
-        this.resolution = 1;
-
         this.scaleMode = scaleMode;
 
         this.autoRound = autoRound;
@@ -561,8 +544,8 @@ var ScaleManager = new Class({
             this._resetZoom = true;
         }
 
-        //  The modified game size, which is the w/h * resolution
-        this.baseSize.setSize(width * resolution, height * resolution);
+        //  The modified game size
+        this.baseSize.setSize(width, height);
 
         if (autoRound)
         {
@@ -663,9 +646,8 @@ var ScaleManager = new Class({
             DOMRect.height = GetInnerHeight(true);
         }
 
-        var resolution = this.resolution;
-        var newWidth = DOMRect.width * resolution;
-        var newHeight = DOMRect.height * resolution;
+        var newWidth = DOMRect.width;
+        var newHeight = DOMRect.height;
 
         if (parentSize.width !== newWidth || parentSize.height !== newHeight)
         {
@@ -745,7 +727,6 @@ var ScaleManager = new Class({
     setGameSize: function (width, height)
     {
         var autoRound = this.autoRound;
-        var resolution = this.resolution;
 
         if (autoRound)
         {
@@ -759,8 +740,8 @@ var ScaleManager = new Class({
         //  The un-modified game size, as requested in the game config (the raw width / height) as used for world bounds, etc
         this.gameSize.resize(width, height);
 
-        //  The modified game size, which is the w/h * resolution
-        this.baseSize.resize(width * resolution, height * resolution);
+        //  The modified game size
+        this.baseSize.resize(width, height);
 
         if (autoRound)
         {
@@ -810,7 +791,6 @@ var ScaleManager = new Class({
     resize: function (width, height)
     {
         var zoom = this.zoom;
-        var resolution = this.resolution;
         var autoRound = this.autoRound;
 
         if (autoRound)
@@ -825,8 +805,8 @@ var ScaleManager = new Class({
         //  The un-modified game size, as requested in the game config (the raw width / height) as used for world bounds, etc
         this.gameSize.resize(width, height);
 
-        //  The modified game size, which is the w/h * resolution
-        this.baseSize.resize(width * resolution, height * resolution);
+        //  The modified game size
+        this.baseSize.resize(width, height);
 
         if (autoRound)
         {
@@ -836,7 +816,7 @@ var ScaleManager = new Class({
 
         //  The size used for the canvas style, factoring in the scale mode and parent and zoom value
         //  We just use the w/h here as this is what sets the aspect ratio (which doesn't then change)
-        this.displaySize.setSize((width * zoom) * resolution, (height * zoom) * resolution);
+        this.displaySize.setSize((width * zoom), (height * zoom));
 
         this.canvas.width = this.baseSize.width;
         this.canvas.height = this.baseSize.height;
@@ -940,7 +920,7 @@ var ScaleManager = new Class({
             domStyle.marginTop = canvasStyle.marginTop;
         }
 
-        this.emit(Events.RESIZE, this.gameSize, this.baseSize, this.displaySize, this.resolution, previousWidth, previousHeight);
+        this.emit(Events.RESIZE, this.gameSize, this.baseSize, this.displaySize, previousWidth, previousHeight);
 
         return this;
     },
@@ -989,15 +969,14 @@ var ScaleManager = new Class({
 
         var zoom = this.zoom;
         var autoRound = this.autoRound;
-        var resolution = 1;
 
         if (this.scaleMode === CONST.SCALE_MODE.NONE)
         {
             //  No scale
-            this.displaySize.setSize((width * zoom) * resolution, (height * zoom) * resolution);
+            this.displaySize.setSize((width * zoom), (height * zoom));
 
-            styleWidth = this.displaySize.width / resolution;
-            styleHeight = this.displaySize.height / resolution;
+            styleWidth = this.displaySize.width;
+            styleHeight = this.displaySize.height;
 
             if (autoRound)
             {
@@ -1022,10 +1001,10 @@ var ScaleManager = new Class({
 
             this.gameSize.setSize(this.displaySize.width, this.displaySize.height);
 
-            this.baseSize.setSize(this.displaySize.width * resolution, this.displaySize.height * resolution);
+            this.baseSize.setSize(this.displaySize.width, this.displaySize.height);
 
-            styleWidth = this.displaySize.width / resolution;
-            styleHeight = this.displaySize.height / resolution;
+            styleWidth = this.displaySize.width;
+            styleHeight = this.displaySize.height;
 
             if (autoRound)
             {
@@ -1041,8 +1020,8 @@ var ScaleManager = new Class({
             //  All other scale modes
             this.displaySize.setSize(this.parentSize.width, this.parentSize.height);
 
-            styleWidth = this.displaySize.width / resolution;
-            styleHeight = this.displaySize.height / resolution;
+            styleWidth = this.displaySize.width;
+            styleHeight = this.displaySize.height;
 
             if (autoRound)
             {
