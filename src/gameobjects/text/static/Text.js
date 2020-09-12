@@ -19,11 +19,11 @@ var TextStyle = require('../TextStyle');
 /**
  * @classdesc
  * A Text Game Object.
- * 
+ *
  * Text objects work by creating their own internal hidden Canvas and then renders text to it using
  * the standard Canvas `fillText` API. It then creates a texture from this canvas which is rendered
  * to your game during the render pass.
- * 
+ *
  * Because it uses the Canvas API you can take advantage of all the features this offers, such as
  * applying gradient fills to the text, or strokes, shadows and more. You can also use custom fonts
  * loaded externally, such as Google or TypeKit Web fonts.
@@ -46,7 +46,7 @@ var TextStyle = require('../TextStyle');
  *
  * See {@link http://www.jordanm.co.uk/tinytype this compatibility table} for the available default fonts
  * across mobile browsers.
- * 
+ *
  * A note on performance: Every time the contents of a Text object changes, i.e. changing the text being
  * displayed, or the style of the text, it needs to remake the Text canvas, and if on WebGL, re-upload the
  * new texture to the GPU. This can be an expensive operation if used often, or with large quantities of
@@ -220,7 +220,7 @@ var Text = new Class({
          * The line spacing value.
          * This value is added to the font height to calculate the overall line height.
          * Only has an effect if this Text object contains multiple lines of text.
-         * 
+         *
          * If you update this property directly, instead of using the `setLineSpacing` method, then
          * be sure to call `updateText` after, or you won't see the change reflected in the Text object.
          *
@@ -240,10 +240,10 @@ var Text = new Class({
          */
         this.dirty = false;
 
-        //  If resolution wasn't set, then we get it from the game config
+        //  If resolution wasn't set, force it to 1
         if (this.style.resolution === 0)
         {
-            this.style.resolution = scene.sys.game.config.resolution;
+            this.style.resolution = 1;
         }
 
         /**
@@ -680,10 +680,10 @@ var Text = new Class({
      * ```javascript
      * Text.setFont('"Press Start 2P"');
      * ```
-     * 
+     *
      * Equally, if you wish to provide a list of fallback fonts, then you should ensure they are all
      * quoted properly, too:
-     * 
+     *
      * ```javascript
      * Text.setFont('Georgia, "Goudy Bookletter 1911", Times, serif');
      * ```
@@ -951,9 +951,9 @@ var Text = new Class({
 
     /**
      * Set the alignment of the text in this Text object.
-     * 
+     *
      * The argument can be one of: `left`, `right`, `center` or `justify`.
-     * 
+     *
      * Alignment only works if the Text object has more than one line of text.
      *
      * @method Phaser.GameObjects.Text#setAlign
@@ -973,10 +973,10 @@ var Text = new Class({
      *
      * By default it will be set to match the resolution set in the Game Config,
      * but you can override it via this method, or by specifying it in the Text style configuration object.
-     * 
+     *
      * It allows for much clearer text on High DPI devices, at the cost of memory because it uses larger
      * internal Canvas textures for the Text.
-     * 
+     *
      * Therefore, please use with caution, as the more high res Text you have, the more memory it uses.
      *
      * @method Phaser.GameObjects.Text#setResolution
@@ -1233,9 +1233,9 @@ var Text = new Class({
                     var spaceSize = context.measureText(' ').width;
                     var trimmedLine = lines[i].trim();
                     var array = trimmedLine.split(' ');
-            
+
                     extraSpace += (lines[i].length - trimmedLine.length) * spaceSize;
-            
+
                     var extraSpaceCharacters = Math.floor(extraSpace / spaceSize);
                     var idx = 0;
 
@@ -1245,7 +1245,7 @@ var Text = new Class({
                         idx = (idx + 1) % (array.length - 1 || 1);
                         --extraSpaceCharacters;
                     }
-            
+
                     lines[i] = array.join(' ');
                 }
             }
