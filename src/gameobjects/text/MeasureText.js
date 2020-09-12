@@ -26,7 +26,25 @@ var MeasureText = function (textStyle)
 
     textStyle.syncFont(canvas, context);
 
-    var width = Math.ceil(context.measureText(textStyle.testString).width * textStyle.baselineX);
+    var metrics = context.measureText(textStyle.testString);
+    
+    if (metrics.hasOwnProperty('actualBoundingBoxAscent') && metrics.hasOwnProperty('actualBoundingBoxDescent')) 
+    {
+        var ascent = metrics.actualBoundingBoxAscent;
+        var descent = metrics.actualBoundingBoxDescent;
+    
+        var output = {
+            ascent: ascent,
+            descent: descent,
+            fontSize: (ascent + descent)
+        };
+    
+        CanvasPool.remove(canvas);
+    
+        return output;
+    }
+
+    var width = Math.ceil(metrics.width * textStyle.baselineX);
     var baseline = width;
     var height = 2 * baseline;
 
