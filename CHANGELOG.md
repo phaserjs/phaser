@@ -378,6 +378,7 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * `ArcadeWorldConfig.customUpdate` is a new boolean property you can set in the Arcade Physics config object, either in the Scene or in the Game Config. If `true` the World update will never be called, allowing you to call it yourself from your own component. Close #5190 (thanks @cfortuner)
 * `Utils.Array.SortByDigits` is a new function that takes the given array of strings and runs a numeric sort on it, ignoring any non-digits.
 * `GroupCreateConfig`, which is used when calling `Group.createMultiple` or `Group.createFromConfig`, can now accept the following new properties: `setOrigin: { x, y, stepX, stepY }` which are applied to the items created by the Group.
+* `Transform.copyPosition` is a new method that will copy the position from the given object to the Game Object (thanks @samme)
 
 ### Input / Mouse Updates and API Changes
 
