@@ -348,6 +348,20 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * `GenerateFrameNumbers` can now accept the `start` and `end` parameters in reverse order, meaning you can now do `{ start: 10, end: 1 }` to create the animation in reverse.
 * `GenerateFrameNames` can now accept the `start` and `end` parameters in reverse order, meaning you can now do `{ start: 10, end: 1 }` to create the animation in reverse.
 
+### Mesh Game Object New Features and Updates
+
+* `Mesh.setVertices` is a new method that allows you to set the verts of a Mesh Game Object from the given parameters. This allows you to modify a mesh post-creation, or populate it with data at a later stage.
+* The Mesh constructor signature has changed to `scene, x, y, vertices, uvs, indicies, colors, alphas, texture, frame`, where `indicies` is the new parameter added to the list. It allows you to provide indexed vertex data to create the Mesh from, where the `indicies` array holds the vertex index information. The final list of vertices is built from this index along with the provided vertices and uvs arrays.
+* You can now supply just a single numerical value as the `color` parameter in the constructor, factory method and `setVertices` method. If a number, instead of an array, it will be used as the color for all vertices created.
+* You can now supply just a single numerical value as the `alpha` parameter in the constructor, factory method and `setVertices` method. If a number, instead of an array, it will be used as the alpha for all vertices created.
+* The `Mesh` Game Object now extends the `SingleAlpha` component and the alpha value is factored into the final alpha value per vertex during rendering. This means you can now set the whole alpha across the Mesh using the standard `setAlpha` methods. But, if you wish to, you can still control the alpha on a per-vertex basis as well.
+* The `Mesh` Game Object now has the Animation State Component. This allows you to create and play animations across the texture of a Mesh, something that previously wasn't possible. As a result, the Mesh now adds itself to the Update List when added to a Scene.
+* `Mesh.setDebug` is a new method that allows you to render a debug visualisation of the Mesh vertices to a Graphics Game Object. You can provide your own Graphics instance and optionally callback that is invoked during rendering. This allows you to easily visualise the vertices of your Mesh to help debug UV mapping.
+* `Mesh.debugGraphic` is a new property that holds the debug Graphics instance reference.
+* `Mesh.debugCallback` is a new property that holds the debug render callback.
+* `Mesh.renderDebugVerts` is a new method that acts as the default render callback for `setDebug` if none is provided.
+* `Mesh.preDestroy` is a new method that will clean-up the Mesh arrays and debug references on destruction.
+
 ### New Features
 
 * `Geom.Intersects.GetLineToLine` is a new function that will return a Vector3 containing the point of intersection between 2 line segments, with the `z` property holding the distance value.
@@ -500,9 +514,6 @@ For a long time, the 'resolution' property has been present - taunting developer
 * The `PipelineManager.resize` method along with `WebGLPipeline.resize` and anything else that extends them no longer receives or uses the `resolution` parameter.
 * The `WebGLRenderer.resize` and `onResize` methods no longer receives or uses the `resolution` parameter.
 * The `ScaleManager.resolution` property has been removed and all internal use of it.
-
-
-
 
 ### Examples, Documentation and TypeScript
 
