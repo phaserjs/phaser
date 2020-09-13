@@ -103,6 +103,28 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     }
 
     pipeline.vertexCount += vertexCount;
+
+    /*
+    pipeline.flush();
+
+    for (var i = 0; i < meshVerticesLength; i += 2)
+    {
+        var x = vertices[i + 0];
+        var y = vertices[i + 1];
+
+        var tx = x * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
+        var ty = x * calcMatrix.b + y * calcMatrix.d + calcMatrix.f;
+
+        if (camera.roundPixels)
+        {
+            tx = Math.round(tx);
+            ty = Math.round(ty);
+        }
+
+        pipeline.drawFillRect(tx, ty, 2, 2, 0x00ff00, 1);
+    }
+    */
+
 };
 
 module.exports = MeshWebGLRenderer;
