@@ -77,6 +77,9 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     var colorIndex = 0;
     var tintEffect = src.tintFill;
 
+    var debugCallback = src.debugCallback;
+    var debugVerts = [];
+
     for (var i = 0; i < meshVerticesLength; i += 2)
     {
         var x = vertices[i + 0];
@@ -89,6 +92,12 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
         {
             tx = Math.round(tx);
             ty = Math.round(ty);
+        }
+
+        if (debugCallback)
+        {
+            debugVerts[i + 0] = tx;
+            debugVerts[i + 1] = ty;
         }
 
         vertexViewF32[++vertexOffset] = tx;
@@ -97,34 +106,17 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
         vertexViewF32[++vertexOffset] = uvs[i + 1];
         vertexViewF32[++vertexOffset] = textureUnit;
         vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = Utils.getTintAppendFloatAlpha(colors[colorIndex], camera.alpha * alphas[colorIndex]);
+        vertexViewU32[++vertexOffset] = Utils.getTintAppendFloatAlpha(colors[colorIndex], camera.alpha * src.alpha * alphas[colorIndex]);
 
         colorIndex++;
     }
 
     pipeline.vertexCount += vertexCount;
 
-    /*
-    pipeline.flush();
-
-    for (var i = 0; i < meshVerticesLength; i += 2)
+    if (debugCallback)
     {
-        var x = vertices[i + 0];
-        var y = vertices[i + 1];
-
-        var tx = x * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
-        var ty = x * calcMatrix.b + y * calcMatrix.d + calcMatrix.f;
-
-        if (camera.roundPixels)
-        {
-            tx = Math.round(tx);
-            ty = Math.round(ty);
-        }
-
-        pipeline.drawFillRect(tx, ty, 2, 2, 0x00ff00, 1);
+        debugCallback.call(src, src, meshVerticesLength, debugVerts);
     }
-    */
-
 };
 
 module.exports = MeshWebGLRenderer;
