@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var GetCalcMatrix = require('../../GetCalcMatrix');
 var Utils = require('../../../renderer/webgl/Utils');
 
 /**
@@ -25,30 +26,9 @@ var IsoBoxWebGLRenderer = function (renderer, src, interpolationPercentage, came
 {
     var pipeline = renderer.pipelines.set(this.pipeline);
 
-    var camMatrix = pipeline._tempMatrix1;
-    var shapeMatrix = pipeline._tempMatrix2;
-    var calcMatrix = pipeline._tempMatrix3;
+    var result = GetCalcMatrix(src, camera, parentMatrix);
 
-    shapeMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
-
-    camMatrix.copyFrom(camera.matrix);
-
-    if (parentMatrix)
-    {
-        //  Multiply the camera by the parent matrix
-        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
-
-        //  Undo the camera scroll
-        shapeMatrix.e = src.x;
-        shapeMatrix.f = src.y;
-    }
-    else
-    {
-        shapeMatrix.e -= camera.scrollX * src.scrollFactorX;
-        shapeMatrix.f -= camera.scrollY * src.scrollFactorY;
-    }
-
-    camMatrix.multiply(shapeMatrix, calcMatrix);
+    var calcMatrix = pipeline._tempMatrix3.copyFrom(result.calc);
 
     var size = src.width;
     var height = src.height;
@@ -83,7 +63,7 @@ var IsoBoxWebGLRenderer = function (renderer, src, interpolationPercentage, came
 
     if (src.showTop)
     {
-        tint = Utils.getTintAppendFloatAlphaAndSwap(src.fillTop, alpha);
+        tint = Utils.getTintAppendFloatAlpha(src.fillTop, alpha);
 
         x0 = calcMatrix.getX(-sizeA, -height);
         y0 = calcMatrix.getY(-sizeA, -height);
@@ -97,14 +77,14 @@ var IsoBoxWebGLRenderer = function (renderer, src, interpolationPercentage, came
         x3 = calcMatrix.getX(0, sizeB - height);
         y3 = calcMatrix.getY(0, sizeB - height);
 
-        pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 2);
+        pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 1);
     }
 
     //  Left Face
 
     if (src.showLeft)
     {
-        tint = Utils.getTintAppendFloatAlphaAndSwap(src.fillLeft, alpha);
+        tint = Utils.getTintAppendFloatAlpha(src.fillLeft, alpha);
 
         x0 = calcMatrix.getX(-sizeA, 0);
         y0 = calcMatrix.getY(-sizeA, 0);
@@ -118,14 +98,14 @@ var IsoBoxWebGLRenderer = function (renderer, src, interpolationPercentage, came
         x3 = calcMatrix.getX(-sizeA, -height);
         y3 = calcMatrix.getY(-sizeA, -height);
 
-        pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 2);
+        pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 1);
     }
 
     //  Right Face
 
     if (src.showRight)
     {
-        tint = Utils.getTintAppendFloatAlphaAndSwap(src.fillRight, alpha);
+        tint = Utils.getTintAppendFloatAlpha(src.fillRight, alpha);
 
         x0 = calcMatrix.getX(sizeA, 0);
         y0 = calcMatrix.getY(sizeA, 0);
@@ -139,7 +119,7 @@ var IsoBoxWebGLRenderer = function (renderer, src, interpolationPercentage, came
         x3 = calcMatrix.getX(sizeA, -height);
         y3 = calcMatrix.getY(sizeA, -height);
 
-        pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 2);
+        pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 1);
     }
 };
 

@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var GetCalcMatrix = require('../GetCalcMatrix');
 var Utils = require('../../renderer/webgl/Utils');
 
 /**
@@ -25,42 +26,10 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
 {
     var pipeline = renderer.pipelines.set(this.pipeline, src);
 
-    var camMatrix = pipeline._tempMatrix1;
-    var spriteMatrix = pipeline._tempMatrix2;
-    var calcMatrix = pipeline._tempMatrix3;
-
-    spriteMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
-
-    camMatrix.copyFrom(camera.matrix);
-
-    if (parentMatrix)
-    {
-        //  Multiply the camera by the parent matrix
-        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
-
-        //  Undo the camera scroll
-        spriteMatrix.e = src.x;
-        spriteMatrix.f = src.y;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(spriteMatrix, calcMatrix);
-    }
-    else
-    {
-        spriteMatrix.e -= camera.scrollX * src.scrollFactorX;
-        spriteMatrix.f -= camera.scrollY * src.scrollFactorY;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(spriteMatrix, calcMatrix);
-    }
+    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
     var vertices = src.vertices;
-    var uvs = src.uv;
-    var colors = src.colors;
-    var alphas = src.alphas;
-
-    var meshVerticesLength = vertices.length;
-    var vertexCount = Math.floor(meshVerticesLength * 0.5);
+    var vertexCount = Math.floor(vertices.length);
 
     if (pipeline.vertexCount + vertexCount > pipeline.vertexCapacity)
     {
@@ -74,19 +43,17 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
 
     var vertexOffset = (pipeline.vertexCount * pipeline.vertexComponentCount) - 1;
 
-    var colorIndex = 0;
     var tintEffect = src.tintFill;
 
     var debugCallback = src.debugCallback;
     var debugVerts = [];
 
-    for (var i = 0; i < meshVerticesLength; i += 2)
+    for (var i = 0; i < vertexCount; i++)
     {
-        var x = vertices[i + 0];
-        var y = vertices[i + 1];
+        var vertex = vertices[i];
 
-        var tx = x * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
-        var ty = x * calcMatrix.b + y * calcMatrix.d + calcMatrix.f;
+        var tx = vertex.x * calcMatrix.a + vertex.y * calcMatrix.c + calcMatrix.e;
+        var ty = vertex.x * calcMatrix.b + vertex.y * calcMatrix.d + calcMatrix.f;
 
         if (camera.roundPixels)
         {
@@ -96,26 +63,23 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
 
         if (debugCallback)
         {
-            debugVerts[i + 0] = tx;
-            debugVerts[i + 1] = ty;
+            debugVerts.push(tx, ty);
         }
 
         vertexViewF32[++vertexOffset] = tx;
         vertexViewF32[++vertexOffset] = ty;
-        vertexViewF32[++vertexOffset] = uvs[i + 0];
-        vertexViewF32[++vertexOffset] = uvs[i + 1];
+        vertexViewF32[++vertexOffset] = vertex.u;
+        vertexViewF32[++vertexOffset] = vertex.v;
         vertexViewF32[++vertexOffset] = textureUnit;
         vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = Utils.getTintAppendFloatAlpha(colors[colorIndex], camera.alpha * src.alpha * alphas[colorIndex]);
-
-        colorIndex++;
+        vertexViewU32[++vertexOffset] = Utils.getTintAppendFloatAlpha(vertex.color, camera.alpha * src.alpha * vertex.alpha);
     }
 
     pipeline.vertexCount += vertexCount;
 
     if (debugCallback)
     {
-        debugCallback.call(src, src, meshVerticesLength, debugVerts);
+        debugCallback.call(src, src, vertexCount * 2, debugVerts);
     }
 };
 

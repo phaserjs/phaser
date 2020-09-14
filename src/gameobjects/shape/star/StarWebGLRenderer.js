@@ -5,6 +5,7 @@
  */
 
 var FillPathWebGL = require('../FillPathWebGL');
+var GetCalcMatrix = require('../../GetCalcMatrix');
 var StrokePathWebGL = require('../StrokePathWebGL');
 
 /**
@@ -26,30 +27,9 @@ var StarWebGLRenderer = function (renderer, src, interpolationPercentage, camera
 {
     var pipeline = renderer.pipelines.set(this.pipeline);
 
-    var camMatrix = pipeline._tempMatrix1;
-    var shapeMatrix = pipeline._tempMatrix2;
-    var calcMatrix = pipeline._tempMatrix3;
+    var result = GetCalcMatrix(src, camera, parentMatrix);
 
-    shapeMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
-
-    camMatrix.copyFrom(camera.matrix);
-
-    if (parentMatrix)
-    {
-        //  Multiply the camera by the parent matrix
-        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
-
-        //  Undo the camera scroll
-        shapeMatrix.e = src.x;
-        shapeMatrix.f = src.y;
-    }
-    else
-    {
-        shapeMatrix.e -= camera.scrollX * src.scrollFactorX;
-        shapeMatrix.f -= camera.scrollY * src.scrollFactorY;
-    }
-
-    camMatrix.multiply(shapeMatrix, calcMatrix);
+    var calcMatrix = pipeline._tempMatrix3.copyFrom(result.calc);
 
     var dx = src._displayOriginX;
     var dy = src._displayOriginY;

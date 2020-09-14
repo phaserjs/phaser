@@ -100,10 +100,10 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
     var pathOpen = false;
     var lastPath = null;
 
-    var getTint = Utils.getTintAppendFloatAlphaAndSwap;
+    var getTint = Utils.getTintAppendFloatAlpha;
 
     //  Set to a white texture, not a blank one, so Lights2D works too!
-    var currentTexture = renderer.tempTextures[0];
+    var currentTexture = renderer.whiteTexture;
 
     for (var cmdIndex = 0; cmdIndex < commands.length; cmdIndex++)
     {

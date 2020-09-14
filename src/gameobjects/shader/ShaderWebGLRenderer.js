@@ -4,6 +4,8 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var GetCalcMatrix = require('../GetCalcMatrix');
+
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -35,30 +37,7 @@ var ShaderWebGLRenderer = function (renderer, src, interpolationPercentage, came
     }
     else
     {
-        var camMatrix = src._tempMatrix1;
-        var shapeMatrix = src._tempMatrix2;
-        var calcMatrix = src._tempMatrix3;
-
-        shapeMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
-
-        camMatrix.copyFrom(camera.matrix);
-
-        if (parentMatrix)
-        {
-            //  Multiply the camera by the parent matrix
-            camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
-
-            //  Undo the camera scroll
-            shapeMatrix.e = src.x;
-            shapeMatrix.f = src.y;
-        }
-        else
-        {
-            shapeMatrix.e -= camera.scrollX * src.scrollFactorX;
-            shapeMatrix.f -= camera.scrollY * src.scrollFactorY;
-        }
-
-        camMatrix.multiply(shapeMatrix, calcMatrix);
+        var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
         //  Renderer size changed?
         if (renderer.width !== src._rendererWidth || renderer.height !== src._rendererHeight)

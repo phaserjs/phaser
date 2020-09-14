@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var GetCalcMatrix = require('../../GetCalcMatrix');
 var StrokePathWebGL = require('../StrokePathWebGL');
 var Utils = require('../../../renderer/webgl/Utils');
 
@@ -26,30 +27,9 @@ var RectangleWebGLRenderer = function (renderer, src, interpolationPercentage, c
 {
     var pipeline = renderer.pipelines.set(this.pipeline);
 
-    var camMatrix = pipeline._tempMatrix1;
-    var shapeMatrix = pipeline._tempMatrix2;
-    var calcMatrix = pipeline._tempMatrix3;
+    var result = GetCalcMatrix(src, camera, parentMatrix);
 
-    shapeMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
-
-    camMatrix.copyFrom(camera.matrix);
-
-    if (parentMatrix)
-    {
-        //  Multiply the camera by the parent matrix
-        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
-
-        //  Undo the camera scroll
-        shapeMatrix.e = src.x;
-        shapeMatrix.f = src.y;
-    }
-    else
-    {
-        shapeMatrix.e -= camera.scrollX * src.scrollFactorX;
-        shapeMatrix.f -= camera.scrollY * src.scrollFactorY;
-    }
-
-    camMatrix.multiply(shapeMatrix, calcMatrix);
+    pipeline._tempMatrix3.copyFrom(result.calc);
 
     var dx = src._displayOriginX;
     var dy = src._displayOriginY;
@@ -58,7 +38,7 @@ var RectangleWebGLRenderer = function (renderer, src, interpolationPercentage, c
     if (src.isFilled)
     {
         var fillTint = pipeline.fillTint;
-        var fillTintColor = Utils.getTintAppendFloatAlphaAndSwap(src.fillColor, src.fillAlpha * alpha);
+        var fillTintColor = Utils.getTintAppendFloatAlpha(src.fillColor, src.fillAlpha * alpha);
 
         fillTint.TL = fillTintColor;
         fillTint.TR = fillTintColor;
