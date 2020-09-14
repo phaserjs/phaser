@@ -584,9 +584,8 @@ var CameraManager = new Class({
      *
      * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The Renderer that will render the children to this camera.
      * @param {Phaser.GameObjects.GameObject[]} children - An array of renderable Game Objects.
-     * @param {number} interpolation - Interpolation value. Reserved for future use.
      */
-    render: function (renderer, children, interpolation)
+    render: function (renderer, children)
     {
         var scene = this.scene;
         var cameras = this.cameras;
@@ -600,7 +599,7 @@ var CameraManager = new Class({
                 //  Hard-coded to 1 for now
                 camera.preRender(1);
 
-                renderer.render(scene, children, interpolation, camera);
+                renderer.render(scene, children, camera);
             }
         }
     },

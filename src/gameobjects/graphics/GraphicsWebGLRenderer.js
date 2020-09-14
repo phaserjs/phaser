@@ -36,11 +36,10 @@ var matrixStack = [];
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Graphics} src - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
+var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
     if (src.commandBuffer.length === 0)
     {

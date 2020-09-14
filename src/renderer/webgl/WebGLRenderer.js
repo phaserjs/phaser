@@ -2210,10 +2210,9 @@ var WebGLRenderer = new Class({
      *
      * @param {Phaser.Scene} scene - The Scene to render.
      * @param {Phaser.GameObjects.GameObject} children - The Game Object's within the Scene to be rendered.
-     * @param {number} interpolationPercentage - The interpolation percentage to apply. Currently un-used.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The Scene Camera to render with.
      */
-    render: function (scene, children, interpolationPercentage, camera)
+    render: function (scene, children, camera)
     {
         if (this.contextLost) { return; }
 
@@ -2282,7 +2281,7 @@ var WebGLRenderer = new Class({
 
             this.nextTypeMatch = (i < childCount - 1) ? (list[i + 1].type === this.currentType) : false;
 
-            child.renderWebGL(this, child, interpolationPercentage, camera);
+            child.renderWebGL(this, child, camera);
 
             this.newType = false;
         }

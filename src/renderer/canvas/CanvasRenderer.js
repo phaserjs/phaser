@@ -357,10 +357,9 @@ var CanvasRenderer = new Class({
      *
      * @param {Phaser.Scene} scene - The Scene to render.
      * @param {Phaser.GameObjects.DisplayList} children - The Game Objects within the Scene to be rendered.
-     * @param {number} interpolationPercentage - The interpolation percentage to apply. Currently unused.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The Scene Camera to render with.
      */
-    render: function (scene, children, interpolationPercentage, camera)
+    render: function (scene, children, camera)
     {
         var list = children.list;
         var childCount = list.length;
@@ -424,7 +423,7 @@ var CanvasRenderer = new Class({
                 child.mask.preRenderCanvas(this, child, camera);
             }
 
-            child.renderCanvas(this, child, interpolationPercentage, camera);
+            child.renderCanvas(this, child, camera);
 
             if (child.mask)
             {

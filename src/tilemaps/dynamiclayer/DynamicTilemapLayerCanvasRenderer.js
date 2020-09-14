@@ -15,11 +15,10 @@
  *
  * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
  * @param {Phaser.Tilemaps.DynamicTilemapLayer} src - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
+var DynamicTilemapLayerCanvasRenderer = function (renderer, src, camera, parentMatrix)
 {
     src.cull(camera);
 
@@ -91,23 +90,23 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
         {
             var halfWidth = tile.width / 2;
             var halfHeight = tile.height / 2;
-    
+
             ctx.save();
 
             ctx.translate(tile.pixelX + halfWidth, tile.pixelY + halfHeight);
-    
+
             if (tile.rotation !== 0)
             {
                 ctx.rotate(tile.rotation);
             }
-    
+
             if (tile.flipX || tile.flipY)
             {
                 ctx.scale((tile.flipX) ? -1 : 1, (tile.flipY) ? -1 : 1);
             }
-    
+
             ctx.globalAlpha = alpha * tile.alpha;
-    
+
             ctx.drawImage(
                 image,
                 tileTexCoords.x, tileTexCoords.y,
@@ -115,7 +114,7 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
                 -halfWidth, -halfHeight,
                 tile.width, tile.height
             );
-    
+
             ctx.restore();
         }
     }
