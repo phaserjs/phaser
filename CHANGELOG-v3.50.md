@@ -350,6 +350,12 @@ The Animation API has had a significant overhaul to improve playback handling. I
 
 ### Mesh Game Object New Features and Updates
 
+The Mesh Game Object has been rewritten in v3.50 with a lot of internal changes to make it more useful:
+
+* `GameObject.Vertex` is a new micro class that encapsulates all of the data required for a single vertex, such as position, uv, color and alpha. This class is now created internally by the Mesh Game Object.
+* `GameObject.Face` is a new micro class that consists of references to the three `Vertex` instances that construct the single Face.
+* `Mesh.vertices` is now an array of `GameObject.Vertex` instances, not a Float32Array.
+* `Mesh.faces` is a new array of `GameObject.Face` instances, which is populated during a call to `setVertices`.
 * `Mesh.setVertices` is a new method that allows you to set the verts of a Mesh Game Object from the given parameters. This allows you to modify a mesh post-creation, or populate it with data at a later stage.
 * The Mesh constructor signature has changed to `scene, x, y, vertices, uvs, indicies, colors, alphas, texture, frame`, where `indicies` is the new parameter added to the list. It allows you to provide indexed vertex data to create the Mesh from, where the `indicies` array holds the vertex index information. The final list of vertices is built from this index along with the provided vertices and uvs arrays.
 * You can now supply just a single numerical value as the `color` parameter in the constructor, factory method and `setVertices` method. If a number, instead of an array, it will be used as the color for all vertices created.
@@ -361,37 +367,10 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * `Mesh.debugCallback` is a new property that holds the debug render callback.
 * `Mesh.renderDebugVerts` is a new method that acts as the default render callback for `setDebug` if none is provided.
 * `Mesh.preDestroy` is a new method that will clean-up the Mesh arrays and debug references on destruction.
-
-### New Features
-
-* `Geom.Intersects.GetLineToLine` is a new function that will return a Vector3 containing the point of intersection between 2 line segments, with the `z` property holding the distance value.
-* `Geom.Intersects.GetLineToPolygon` is a new function that checks for the closest point of intersection between a line segment and an array of polygons.
-* `Geom.Intersects.GetLineToPoints` is a new function that checks for the closest point of intersection between a line segment and an array of points, where each pair of points form a line segment.
-* `Geom.Intersects.GetRaysFromPointToPolygon` is a new function that emits rays out from the given point and detects for intersection against all given polygons, returning the points of intersection in the results array.
-* `Geom.Polygon.Translate` is a new function that allows you to translate all the points of a polygon by the given values.
-* `Geom.Polygon.Simplify` is a new function that takes a polygon and simplifies the points by running them through a combination of Douglas-Peucker and Radial Distance algorithms, potentially dramatically reducing the number of points while retaining its shape.
-* `WebGLRenderer.setInt1iv` will allow you to look-up and set a 1iv uniform on the given shader.
-* `Phaser.Types.Math.Vector3Like` is a new data type representing as Vector 3 like object.
-* `Phaser.Types.Math.Vector4Like` is a new data type representing as Vector 4 like object.
-* `Transform.getLocalPoint` is a new method, available on all Game Objects, that takes an `x` / `y` pair and translates them into the local space of the Game Object, factoring in parent transforms and display origins.
-* The `KeyboardPlugin` will now track the key code and timestamp of the previous key pressed and compare it to the current event. If they match, it will skip the event. On some systems, if you were to type quickly, you would sometimes get duplicate key events firing (the exact same event firing more than once). This is now prevented from happening.
-* `Display.Color.GetColorFromValue` is a new function that will take a hex color value and return it as an integer, for use in WebGL. This is now used internally by the Tint component and other classes.
-* `Utils.String.RemoveAt` is a new function that will remove a character from the given index in a string and return the new string.
-* `Frame.setUVs` is a new method that allows you to directly set the canvas and UV data for a frame. Use this if you need to override the values set automatically during frame creation.
-* `TweenManager.getTweensOf` has a new parameter `includePending`. If set, it will also check the pending tweens for the given targets and return those in the results as well. Fix #5260 (thanks @pcharest2000)
-* `WebGLPipeline.hasBooted` is a new boolean property that tracks if the pipeline has been booted or not, which is now far more important in 3.5 than in previous versions. This is checked in the `WebGLRenderer.addPipeline` method, and if not set, the pipeline is booted. Fix #5251 #5255 (thanks @telinc1 @rexrainbow)
-* The WebGL Renderer will now add the pipelines during the `boot` method, instead of `init`.
-* You can now use `this.renderer` from within a Scene, as it's now a Scene-level property and part of the Injection Map.
-* `Clock.addEvent` can now take an existing `TimerEvent` object, as well as a config object. If a `TimerEvent` is given it will be removed from the Clock, reset and then added. This allows you to pool TimerEvents rather than constantly create and delete them. Fix #4115 (thanks @jcyuan)
-* `Clock.removeEvent` is a new method that allows you to remove a `TimerEvent`, or an array of them, from all internal lists of the current Clock.
-* `Group.getMatching` is a new method that will return any members of the Group that match the given criteria, such as `getMatching('visible', true)` (thanks @atursams)
-* `ArcadePhysics.disableUpdate` is a new method that will prevent the Arcade Physics World `update` method from being called when the Scene updates. By disabling it, you're free to call the update method yourself, passing in your own delta and time values.
-* `ArcadePhysics.enableUpdate` is a new method that will make the Arcade Physics World update in time with the Scene update. This is the default, so only call this if you have specifically disabled it previously.
-* `ArcadeWorldConfig.customUpdate` is a new boolean property you can set in the Arcade Physics config object, either in the Scene or in the Game Config. If `true` the World update will never be called, allowing you to call it yourself from your own component. Close #5190 (thanks @cfortuner)
-* `Utils.Array.SortByDigits` is a new function that takes the given array of strings and runs a numeric sort on it, ignoring any non-digits.
-* `GroupCreateConfig`, which is used when calling `Group.createMultiple` or `Group.createFromConfig`, can now accept the following new properties: `setOrigin: { x, y, stepX, stepY }` which are applied to the items created by the Group.
-* `Transform.copyPosition` is a new method that will copy the position from the given object to the Game Object (thanks @samme)
-* The `Text.MeasureText` function, which is used to calculate the ascent and descent of Text Game Objects whenever the style, or font size, is changed, has been updated to use the new `actualBoundingBoxAscent` functions present in modern browsers. This allows for significantly faster ascent calculations than previously. Older browsers, such as IE, will still fall back (thanks @rexrainbow)
+* The `Mesh.uv` array has been removed. All UV data is now bound in the Vertex instances.
+* The `Mesh.colors` array has been removed. All color data is now bound in the Vertex instances.
+* The `Mesh.alphas` array has been removed. All color data is now bound in the Vertex instances.
+* The `Mesh.tintFill` property is now a `boolean` and defaults to `false`.
 
 ### Input / Mouse Updates and API Changes
 
@@ -424,7 +403,44 @@ This has all changed in 3.50, as outlined below. Tint values are now used direct
 * The `Single.frag`, `Light.frag` and `Multi.frag` shaders have all been updated so they no longer have a 3-way check on the `outTintEffect` value.
 * The `Multi Pipeline`, `Bitmap Text`, `Render Texture`, `Text`, `TileSprite` and `Camera` now all read the tint values from the public properties instead of the private `_tintTL` etc ones. They also now set the `tintEffect` value directly from the `tintFill` property, removing another conditional check.
 * The function `GetColorFromValue` has been removed as it's no longer used internally.
+* The `Rope.tintFill` property is now a boolean, not an integer, and can no longer take `2` as a value for a complete fill. Instead, you should provide a solid color texture with no alpha.
+* As a result of the change to the shader, all uses of the WebGL Util function `getTintAppendFloatAlphaAndSwap` have been replaced with `getTintAppendFloatAlpha` instead.
+* As a result of the change to the shader, the Multi Pipeline now uses the `WebGLRenderer.whiteTexture` and `tintEffect` mode of 1 by default, instead of mode 2 (which has been removed) and a transparent texture. This ensures Graphics and Shapes objects still render correctly under the new smaller shader code.
+* `WebGLRenderer.whiteTexture` is a new property that is a reference to a pure white 4x4 texture that is created during Boot by the Texture Manager. The Multi Pipeline uses this internally for all Graphic, Shape and fill rendering.
+* The `TextureManager` now generates a new texture with the key `__WHITE` durings its boot process. This is a pure white 4x4 texture used by the Graphics pipelines.
+* `Config.images.white` is a new Game Config property that specifies the 4x4 white PNG texture used by Graphics rendering. You can override this via the config, but only do so if needed.
 
+### New Features
+
+* `Geom.Intersects.GetLineToLine` is a new function that will return a Vector3 containing the point of intersection between 2 line segments, with the `z` property holding the distance value.
+* `Geom.Intersects.GetLineToPolygon` is a new function that checks for the closest point of intersection between a line segment and an array of polygons.
+* `Geom.Intersects.GetLineToPoints` is a new function that checks for the closest point of intersection between a line segment and an array of points, where each pair of points form a line segment.
+* `Geom.Intersects.GetRaysFromPointToPolygon` is a new function that emits rays out from the given point and detects for intersection against all given polygons, returning the points of intersection in the results array.
+* `Geom.Polygon.Translate` is a new function that allows you to translate all the points of a polygon by the given values.
+* `Geom.Polygon.Simplify` is a new function that takes a polygon and simplifies the points by running them through a combination of Douglas-Peucker and Radial Distance algorithms, potentially dramatically reducing the number of points while retaining its shape.
+* `WebGLRenderer.setInt1iv` will allow you to look-up and set a 1iv uniform on the given shader.
+* `Phaser.Types.Math.Vector3Like` is a new data type representing as Vector 3 like object.
+* `Phaser.Types.Math.Vector4Like` is a new data type representing as Vector 4 like object.
+* `Transform.getLocalPoint` is a new method, available on all Game Objects, that takes an `x` / `y` pair and translates them into the local space of the Game Object, factoring in parent transforms and display origins.
+* The `KeyboardPlugin` will now track the key code and timestamp of the previous key pressed and compare it to the current event. If they match, it will skip the event. On some systems, if you were to type quickly, you would sometimes get duplicate key events firing (the exact same event firing more than once). This is now prevented from happening.
+* `Display.Color.GetColorFromValue` is a new function that will take a hex color value and return it as an integer, for use in WebGL. This is now used internally by the Tint component and other classes.
+* `Utils.String.RemoveAt` is a new function that will remove a character from the given index in a string and return the new string.
+* `Frame.setUVs` is a new method that allows you to directly set the canvas and UV data for a frame. Use this if you need to override the values set automatically during frame creation.
+* `TweenManager.getTweensOf` has a new parameter `includePending`. If set, it will also check the pending tweens for the given targets and return those in the results as well. Fix #5260 (thanks @pcharest2000)
+* `WebGLPipeline.hasBooted` is a new boolean property that tracks if the pipeline has been booted or not, which is now far more important in 3.5 than in previous versions. This is checked in the `WebGLRenderer.addPipeline` method, and if not set, the pipeline is booted. Fix #5251 #5255 (thanks @telinc1 @rexrainbow)
+* The WebGL Renderer will now add the pipelines during the `boot` method, instead of `init`.
+* You can now use `this.renderer` from within a Scene, as it's now a Scene-level property and part of the Injection Map.
+* `Clock.addEvent` can now take an existing `TimerEvent` object, as well as a config object. If a `TimerEvent` is given it will be removed from the Clock, reset and then added. This allows you to pool TimerEvents rather than constantly create and delete them. Fix #4115 (thanks @jcyuan)
+* `Clock.removeEvent` is a new method that allows you to remove a `TimerEvent`, or an array of them, from all internal lists of the current Clock.
+* `Group.getMatching` is a new method that will return any members of the Group that match the given criteria, such as `getMatching('visible', true)` (thanks @atursams)
+* `ArcadePhysics.disableUpdate` is a new method that will prevent the Arcade Physics World `update` method from being called when the Scene updates. By disabling it, you're free to call the update method yourself, passing in your own delta and time values.
+* `ArcadePhysics.enableUpdate` is a new method that will make the Arcade Physics World update in time with the Scene update. This is the default, so only call this if you have specifically disabled it previously.
+* `ArcadeWorldConfig.customUpdate` is a new boolean property you can set in the Arcade Physics config object, either in the Scene or in the Game Config. If `true` the World update will never be called, allowing you to call it yourself from your own component. Close #5190 (thanks @cfortuner)
+* `Utils.Array.SortByDigits` is a new function that takes the given array of strings and runs a numeric sort on it, ignoring any non-digits.
+* `GroupCreateConfig`, which is used when calling `Group.createMultiple` or `Group.createFromConfig`, can now accept the following new properties: `setOrigin: { x, y, stepX, stepY }` which are applied to the items created by the Group.
+* `Transform.copyPosition` is a new method that will copy the position from the given object to the Game Object (thanks @samme)
+* The `Text.MeasureText` function, which is used to calculate the ascent and descent of Text Game Objects whenever the style, or font size, is changed, has been updated to use the new `actualBoundingBoxAscent` functions present in modern browsers. This allows for significantly faster ascent calculations than previously. Older browsers, such as IE, will still fall back (thanks @rexrainbow)
+* `GameObjects.GetCalcMatrix` is a new function that is used to calculate the transformed Game Object matrix, based on the given Game Object, Camera and Parent. This function is now used by the following Game Objects: `BitmapText` (Static and Dynamic), `Graphics`, `Mesh`, `Rope`, `Shader`, `Arc`, `Curve`, `Ellipse`, `Grid`, `IsoBox`, `IsoTriangle`, `Line`, `Polygon`, `Rectangle`, `Star` and `Triangle`. This dramatically reduces the amount of duplicate code across the API.
 
 ### Updates and API Changes
 
