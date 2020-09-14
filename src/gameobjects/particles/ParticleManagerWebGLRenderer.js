@@ -42,7 +42,7 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
 
     var roundPixels = camera.roundPixels;
     var texture = emitterManager.defaultFrame.glTexture;
-    var getTint = Utils.getTintAppendFloatAlphaAndSwap;
+    var getTint = Utils.getTintAppendFloatAlpha;
 
     var textureUnit = pipeline.setGameObject(emitterManager, emitterManager.defaultFrame);
 
