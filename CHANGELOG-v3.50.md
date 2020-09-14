@@ -470,6 +470,7 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * The Scale Managers `GetScreenOrientation` function will now check for `window.orientation` first, because iOS mobile browsers have an incomplete implementation of the Screen API, forcing us to use the window value as a priority. This means the Scale Manager will now emit `orientationchange` events correctly on iOS. Fix #4361 #4914 (thanks @pfdtravalmatic @jackfreak @cuihu)
 * `Time.Clock.addEvent` can now take an instance of a `TimerEvent` as its parameter. Fix #5294 (thanks @samme @EmilSV)
 * `GameConfig.audio` now defaults to an empty object, which simplifies access to the config in later checks (thanks @samme)
+* The `Loader.path` was being added to the File URL even if the URL was absolute. This is now checked for and the path is not applied unless the URL is relative (thanks @firesoft)
 
 ### Namespace Updates
 
