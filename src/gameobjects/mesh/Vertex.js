@@ -84,6 +84,22 @@ var Vertex = new Class({
          * @since 3.50.0
          */
         this.alpha = alpha;
+    },
+
+    setPosition: function (x, y)
+    {
+        this.x = x;
+        this.y = y;
+
+        return this;
+    },
+
+    translate: function (x, y)
+    {
+        if (y === undefined) { y = 0; }
+
+        this.x += x;
+        this.y += y;
     }
 
 });
