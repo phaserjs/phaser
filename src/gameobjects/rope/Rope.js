@@ -948,9 +948,10 @@ var Rope = new Class({
     /**
      * This method enables rendering of the Rope vertices to the given Graphics instance.
      *
-     * If you enable this feature, you must call `Graphics.clear()` in your Scene `update`,
-     * otherwise the Graphics instance will fill-in with draw calls. This is not done automatically
-     * to allow for you to debug render multiple Rope objects to a single Graphics instance.
+     * If you enable this feature, you **must** call `Graphics.clear()` in your Scene `update`,
+     * otherwise the Graphics instance you provide to debug will fill-up with draw calls,
+     * eventually crashing the browser. This is not done automatically to allow you to debug
+     * draw multiple Rope objects to a single Graphics instance.
      *
      * The Rope class has a built-in debug rendering callback `Rope.renderDebugVerts`, however
      * you can also provide your own callback to be used instead. Do this by setting the `callback` parameter.
