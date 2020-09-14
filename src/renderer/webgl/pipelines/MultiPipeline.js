@@ -528,10 +528,10 @@ var MultiPipeline = new Class({
         var tx3 = calcMatrix.getX(xw, y);
         var ty3 = calcMatrix.getY(xw, y);
 
-        var tintTL = Utils.getTintAppendFloatAlpha(sprite._tintTL, camera.alpha * sprite._alphaTL);
-        var tintTR = Utils.getTintAppendFloatAlpha(sprite._tintTR, camera.alpha * sprite._alphaTR);
-        var tintBL = Utils.getTintAppendFloatAlpha(sprite._tintBL, camera.alpha * sprite._alphaBL);
-        var tintBR = Utils.getTintAppendFloatAlpha(sprite._tintBR, camera.alpha * sprite._alphaBR);
+        var tintTL = Utils.getTintAppendFloatAlpha(sprite.tintTopLeft, camera.alpha * sprite._alphaTL);
+        var tintTR = Utils.getTintAppendFloatAlpha(sprite.tintTopRight, camera.alpha * sprite._alphaTR);
+        var tintBL = Utils.getTintAppendFloatAlpha(sprite.tintBottomLeft, camera.alpha * sprite._alphaBL);
+        var tintBR = Utils.getTintAppendFloatAlpha(sprite.tintBottomRight, camera.alpha * sprite._alphaBR);
 
         if (camera.roundPixels)
         {
@@ -556,7 +556,7 @@ var MultiPipeline = new Class({
 
         var unit = this.setGameObject(sprite);
 
-        var tintEffect = (sprite._isTinted && sprite.tintFill);
+        var tintEffect = sprite.tintFill;
 
         this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, unit);
     },

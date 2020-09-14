@@ -5,7 +5,6 @@
  */
 
 var Utils = require('../../../renderer/webgl/Utils');
-var GetColorFromValue = require('../../../display/color/GetColorFromValue');
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -85,11 +84,11 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
     var textureWidth = texture.width;
     var textureHeight = texture.height;
 
-    var tintEffect = (src._isTinted && src.tintFill);
-    var tintTL = Utils.getTintAppendFloatAlpha(src._tintTL, camera.alpha * src._alphaTL);
-    var tintTR = Utils.getTintAppendFloatAlpha(src._tintTR, camera.alpha * src._alphaTR);
-    var tintBL = Utils.getTintAppendFloatAlpha(src._tintBL, camera.alpha * src._alphaBL);
-    var tintBR = Utils.getTintAppendFloatAlpha(src._tintBR, camera.alpha * src._alphaBR);
+    var tintEffect = src.tintFill;
+    var tintTL = Utils.getTintAppendFloatAlpha(src.tintTopLeft, camera.alpha * src._alphaTL);
+    var tintTR = Utils.getTintAppendFloatAlpha(src.tintTopRight, camera.alpha * src._alphaTR);
+    var tintBL = Utils.getTintAppendFloatAlpha(src.tintBottomLeft, camera.alpha * src._alphaBL);
+    var tintBR = Utils.getTintAppendFloatAlpha(src.tintBottomRight, camera.alpha * src._alphaBR);
 
     var textureUnit = pipeline.setGameObject(src);
 
@@ -232,10 +231,10 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
                 tintBR = output.tint.bottomRight;
             }
 
-            tintTL = Utils.getTintAppendFloatAlpha(GetColorFromValue(tintTL), camera.alpha * src._alphaTL);
-            tintTR = Utils.getTintAppendFloatAlpha(GetColorFromValue(tintTR), camera.alpha * src._alphaTR);
-            tintBL = Utils.getTintAppendFloatAlpha(GetColorFromValue(tintBL), camera.alpha * src._alphaBL);
-            tintBR = Utils.getTintAppendFloatAlpha(GetColorFromValue(tintBR), camera.alpha * src._alphaBR);
+            tintTL = Utils.getTintAppendFloatAlpha(tintTL, camera.alpha * src._alphaTL);
+            tintTR = Utils.getTintAppendFloatAlpha(tintTR, camera.alpha * src._alphaTR);
+            tintBL = Utils.getTintAppendFloatAlpha(tintBL, camera.alpha * src._alphaBL);
+            tintBR = Utils.getTintAppendFloatAlpha(tintBR, camera.alpha * src._alphaBR);
         }
 
         x *= scale;

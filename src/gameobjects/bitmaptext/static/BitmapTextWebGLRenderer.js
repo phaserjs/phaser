@@ -69,12 +69,12 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
 
     var charColors = src.charColors;
 
-    var tintEffect = (src._isTinted && src.tintFill);
+    var tintEffect = src.tintFill;
 
-    var tintTL = Utils.getTintAppendFloatAlpha(src._tintTL, cameraAlpha * src._alphaTL);
-    var tintTR = Utils.getTintAppendFloatAlpha(src._tintTR, cameraAlpha * src._alphaTR);
-    var tintBL = Utils.getTintAppendFloatAlpha(src._tintBL, cameraAlpha * src._alphaBL);
-    var tintBR = Utils.getTintAppendFloatAlpha(src._tintBR, cameraAlpha * src._alphaBR);
+    var tintTL = Utils.getTintAppendFloatAlpha(src.tintTopLeft, cameraAlpha * src._alphaTL);
+    var tintTR = Utils.getTintAppendFloatAlpha(src.tintTopRight, cameraAlpha * src._alphaTR);
+    var tintBL = Utils.getTintAppendFloatAlpha(src.tintBottomLeft, cameraAlpha * src._alphaBL);
+    var tintBR = Utils.getTintAppendFloatAlpha(src.tintBottomRight, cameraAlpha * src._alphaBR);
 
     var texture = src.frame.glTexture;
     var textureUnit = pipeline.setGameObject(src);
