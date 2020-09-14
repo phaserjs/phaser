@@ -178,6 +178,10 @@ If you used any of them in your code, please update to the new function names be
 * `projOrtho` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ProjectOrtho`
 * `Phaser.Renderer.WebGL.MVP.SetIdentity` is a new function the others use, to save on space.
 
+### Removed 'interpolationPercentage' parameter from all render functions
+
+Since v3.0.0 the Game Object `render` functions have received a parameter called `interpolationPercentage` that was never used. The renderers do not calculate this value and no Game Objects apply it, so for the sake of clairty, reducing code and removing complexity from the API it has been removed from every single function that either sent or expected the parameter. This touches every single Game Object and changes the parameter order as a result, so please be aware of this if you have your own custom Game Objects that implement their own render methods.
+
 ### BitmapText New Features, Updates and API Changes
 
 * `BitmapText.setCharacterTint` is a new method that allows you to set a tint color (either additive or fill) on a specific range of characters within a static Bitmap Text. You can specify the start and length offsets and per-corner tint colors.
@@ -440,7 +444,7 @@ This has all changed in 3.50, as outlined below. Tint values are now used direct
 * `GroupCreateConfig`, which is used when calling `Group.createMultiple` or `Group.createFromConfig`, can now accept the following new properties: `setOrigin: { x, y, stepX, stepY }` which are applied to the items created by the Group.
 * `Transform.copyPosition` is a new method that will copy the position from the given object to the Game Object (thanks @samme)
 * The `Text.MeasureText` function, which is used to calculate the ascent and descent of Text Game Objects whenever the style, or font size, is changed, has been updated to use the new `actualBoundingBoxAscent` functions present in modern browsers. This allows for significantly faster ascent calculations than previously. Older browsers, such as IE, will still fall back (thanks @rexrainbow)
-* `GameObjects.GetCalcMatrix` is a new function that is used to calculate the transformed Game Object matrix, based on the given Game Object, Camera and Parent. This function is now used by the following Game Objects: `BitmapText` (Static and Dynamic), `Graphics`, `Mesh`, `Rope`, `Shader`, `Arc`, `Curve`, `Ellipse`, `Grid`, `IsoBox`, `IsoTriangle`, `Line`, `Polygon`, `Rectangle`, `Star` and `Triangle`. This dramatically reduces the amount of duplicate code across the API.
+* `GameObjects.GetCalcMatrix` is a new function that is used to calculate the transformed Game Object matrix, based on the given Game Object, Camera and Parent. This function is now used by the following Game Objects: `BitmapText` (Static and Dynamic), `Graphics`, `Extern`, `Mesh`, `Rope`, `Shader`, `Arc`, `Curve`, `Ellipse`, `Grid`, `IsoBox`, `IsoTriangle`, `Line`, `Polygon`, `Rectangle`, `Star` and `Triangle`. This dramatically reduces the amount of duplicate code across the API.
 
 ### Updates and API Changes
 
