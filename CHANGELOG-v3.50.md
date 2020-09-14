@@ -409,6 +409,23 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * Shutting down the Gamepad plugin (such as when sleeping a Scene) no longer calls `GamepadPlugin.disconnectAll`, but destroying it does.
 * `Gamepad._created` is a new private internal property that keeps track of when the instance was created. This is compared to the navigator timestamp in the update loop to avoid event spamming. Fix #4890.
 
+### Tint Updates and Shader Changes
+
+Phaser has had the ability to apply an additive tint to a Game Object since the beginning, and gained 'filled tints', with and without texture alpha, in v3.11. While this was handy, it introduced a 3-way if-else condition to the shaders to handle the different modes. Plus, setting tint colors was also generating rgb order Float32 color values for each Game Object, making reading those colors back again difficult (as they'd return in BGR order).
+
+This has all changed in 3.50, as outlined below. Tint values are now used directly in the shader and don't pass through a color conversion function first. Lots of private properties have been removed and the shaders no longer have a 3-way if-else block. All of this means improved performance and a slight reduction in memory overhead.
+
+* `Tint.tintTopLeft` is now a normal property in RGB order, not a setter, and no longer passes through the `GetColorFromValue` function. This directly replaces the private property `_tintTL` which has now been removed.
+* `Tint.tintTopRight` is now a normal property in RGB order, not a setter, and no longer passes through the `GetColorFromValue` function. This directly replaces the private property `_tintTR` which has now been removed.
+* `Tint.tintBottomLeft` is now a normal property in RGB order, not a setter, and no longer passes through the `GetColorFromValue` function. This directly replaces the private property `_tintBL` which has now been removed.
+* `Tint.tintBottomRight` is now a normal property in RGB order, not a setter, and no longer passes through the `GetColorFromValue` function. This directly replaces the private property `_tintBR` which has now been removed.
+* The property `Tint._isTinted` has been removed as it's no longer required.
+* The `Single.frag`, `Light.frag` and `Multi.frag` shaders have all been updated so they now read the color value as `outTint.bgr` instead of `outTint.rgb`. This allows the colors to remain in RGB order within the Tint component.
+* The `Single.frag`, `Light.frag` and `Multi.frag` shaders have all been updated so they no longer have a 3-way check on the `outTintEffect` value.
+* The `Multi Pipeline`, `Bitmap Text`, `Render Texture`, `Text`, `TileSprite` and `Camera` now all read the tint values from the public properties instead of the private `_tintTL` etc ones. They also now set the `tintEffect` value directly from the `tintFill` property, removing another conditional check.
+* The function `GetColorFromValue` has been removed as it's no longer used internally.
+
+
 ### Updates and API Changes
 
 * Earcut, used for polygon triangulation, has been updated from 2.1.4 to 2.2.2.
