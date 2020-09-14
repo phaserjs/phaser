@@ -446,6 +446,17 @@ var WebGLRenderer = new Class({
         this.blankTexture = null;
 
         /**
+         * A pure white 4x4 texture, as used by the Graphics system where needed.
+         * This is set in the `boot` method.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#whiteTexture
+         * @type {WebGLTexture}
+         * @readonly
+         * @since 3.50.0
+         */
+        this.whiteTexture = null;
+
+        /**
          * A default Camera used in calls when no other camera has been provided.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#defaultCamera
@@ -826,11 +837,10 @@ var WebGLRenderer = new Class({
 
         var multi = this.pipelines.get(PIPELINE_CONST.MULTI_PIPELINE);
 
-        var blank = game.textures.getFrame('__DEFAULT');
+        this.blankTexture = game.textures.getFrame('__DEFAULT');
+        this.whiteTexture = game.textures.getFrame('__WHITE');
 
-        multi.currentFrame = blank;
-
-        this.blankTexture = blank;
+        multi.currentFrame = this.whiteTexture;
 
         var gl = this.gl;
 
