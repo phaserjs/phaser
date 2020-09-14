@@ -362,7 +362,7 @@ var MultiPipeline = new Class({
      */
     setTexture2D: function (texture)
     {
-        if (texture === undefined) { texture = this.renderer.blankTexture.glTexture; }
+        if (texture === undefined) { texture = this.renderer.whiteTexture.glTexture; }
 
         this.currentUnit = this.renderer.setTexture2D(texture);
 
@@ -500,18 +500,15 @@ var MultiPipeline = new Class({
             //  Undo the camera scroll
             spriteMatrix.e = sprite.x;
             spriteMatrix.f = sprite.y;
-
-            //  Multiply by the Sprite matrix, store result in calcMatrix
-            camMatrix.multiply(spriteMatrix, calcMatrix);
         }
         else
         {
             spriteMatrix.e -= camera.scrollX * sprite.scrollFactorX;
             spriteMatrix.f -= camera.scrollY * sprite.scrollFactorY;
-
-            //  Multiply by the Sprite matrix, store result in calcMatrix
-            camMatrix.multiply(spriteMatrix, calcMatrix);
         }
+
+        //  Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(spriteMatrix, calcMatrix);
 
         var xw = x + frameWidth;
         var yh = y + frameHeight;
@@ -732,6 +729,8 @@ var MultiPipeline = new Class({
         var vertexViewU32 = this.vertexViewU32;
 
         var vertexOffset = (this.vertexCount * this.vertexComponentCount) - 1;
+
+        tintEffect = 1;
 
         vertexViewF32[++vertexOffset] = x1;
         vertexViewF32[++vertexOffset] = y1;
@@ -1038,13 +1037,13 @@ var MultiPipeline = new Class({
         var xw = Math.floor(x + width);
         var yh = Math.floor(y + height);
 
-        var blank = this.renderer.blankTexture.glTexture;
+        var white = this.renderer.whiteTexture.glTexture;
 
-        var unit = this.renderer.setTexture2D(blank);
+        var unit = this.renderer.setTexture2D(white);
 
-        var tint = Utils.getTintAppendFloatAlphaAndSwap(color, alpha);
+        var tint = Utils.getTintAppendFloatAlpha(color, alpha);
 
-        this.batchQuad(x, y, x, yh, xw, yh, xw, y, 0, 0, 1, 1, tint, tint, tint, tint, 2, blank, unit);
+        this.batchQuad(x, y, x, yh, xw, yh, xw, y, 0, 0, 1, 1, tint, tint, tint, tint, 1, white, unit);
     },
 
     /**
