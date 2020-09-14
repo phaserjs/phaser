@@ -7,9 +7,11 @@
 var AnimationState = require('../../animations/AnimationState');
 var Class = require('../../utils/Class');
 var Components = require('../components');
+var Face = require('./Face');
 var GameObject = require('../GameObject');
 var GameObjectEvents = require('../events');
 var MeshRender = require('./MeshRender');
+var Vertex = require('./Vertex');
 
 /**
  * @classdesc
@@ -82,53 +84,41 @@ var Mesh = new Class({
         this.anims = new AnimationState(this);
 
         /**
-         * An array containing the vertices data for this Mesh.
+         * An array containing the Face instances belonging to this Mesh.
+         *
+         * A Face consists of 3 Vertex objects.
+         *
+         * This array is populated during the `setVertices` method.
+         *
+         * @name Phaser.GameObjects.Mesh#faces
+         * @type {Phaser.GameObjects.Face[]}
+         * @since 3.50.0
+         */
+        this.faces;
+
+        /**
+         * An array containing Vertex instances. One instance per vertex in this Mesh.
+         *
+         * This array is populated during the `setVertices` method.
          *
          * @name Phaser.GameObjects.Mesh#vertices
-         * @type {Float32Array}
-         * @since 3.0.0
+         * @type {Phaser.GameObjects.Vertex[]}
+         * @since 3.50.0
          */
         this.vertices;
 
         /**
-         * An array containing the uv data for this Mesh.
-         *
-         * @name Phaser.GameObjects.Mesh#uv
-         * @type {Float32Array}
-         * @since 3.0.0
-         */
-        this.uv;
-
-        /**
-         * An array containing the color data for this Mesh.
-         *
-         * @name Phaser.GameObjects.Mesh#colors
-         * @type {Uint32Array}
-         * @since 3.0.0
-         */
-        this.colors;
-
-        /**
-         * An array containing the alpha data for this Mesh.
-         *
-         * @name Phaser.GameObjects.Mesh#alphas
-         * @type {Float32Array}
-         * @since 3.0.0
-         */
-        this.alphas;
-
-        /**
          * The tint fill mode.
          *
-         * 0 = An additive tint (the default), where vertices colors are blended with the texture.
-         * 1 = A fill tint, where the vertices colors replace the texture, but respects texture alpha.
-         * 2 = A complete tint, where the vertices colors replace the texture, including alpha, entirely.
+         * `false` = An additive tint (the default), where vertices colors are blended with the texture.
+         * `true` = A fill tint, where the vertices colors replace the texture, but respects texture alpha.
          *
          * @name Phaser.GameObjects.Mesh#tintFill
-         * @type {integer}
-         * @since 3.11.0
+         * @type {boolean}
+         * @default false
+         * @since 3.50.0
          */
-        this.tintFill = 0;
+        this.tintFill = false;
 
         /**
          * You can optionally choose to render the vertices of this Mesh to a Graphics instance.
@@ -195,55 +185,91 @@ var Mesh = new Class({
             throw new Error('Mesh - vertices and uv count not equal');
         }
 
+        var i;
+        var vert;
+        var verts = [];
+        var faces = [];
+
+        var isColorArray = Array.isArray(colors);
+        var isAlphaArray = Array.isArray(alphas);
+
         if (Array.isArray(indicies))
         {
-            var verticesFull = [];
-            var uvsFull = [];
-
-            for (var i = 0; i < indicies.length; i++)
+            for (i = 0; i < indicies.length; i++)
             {
                 var index = indicies[i] * 2;
 
-                verticesFull.push(vertices[index], vertices[index + 1]);
-                uvsFull.push(uvs[index], uvs[index + 1]);
+                vert = new Vertex(
+                    vertices[index],
+                    vertices[index + 1],
+                    uvs[index],
+                    uvs[index + 1],
+                    (isColorArray) ? colors[i] : colors,
+                    (isAlphaArray) ? alphas[i] : alphas
+                );
+
+                verts.push(vert);
             }
-
-            vertices = verticesFull;
-            uvs = uvsFull;
         }
-
-        var halfVerts = Math.floor(vertices.length / 2);
-
-        if (!Array.isArray(colors))
+        else
         {
-            var tempColor = colors;
+            var colorIndex = 0;
 
-            colors = [];
-
-            for (var c = 0; c < halfVerts; c++)
+            for (i = 0; i < vertices.length; i += 2)
             {
-                colors.push(tempColor);
+                vert = new Vertex(
+                    vertices[i],
+                    vertices[i + 1],
+                    uvs[i],
+                    uvs[i + 1],
+                    (isColorArray) ? colors[colorIndex] : colors,
+                    (isAlphaArray) ? alphas[colorIndex] : alphas
+                );
+
+                verts.push(vert);
+
+                colorIndex++;
             }
         }
 
-        if (!Array.isArray(alphas))
+        for (i = 0; i < verts.length; i += 3)
         {
-            var tempAlpha = alphas;
+            var vert1 = verts[i];
+            var vert2 = verts[i + 1];
+            var vert3 = verts[i + 2];
 
-            alphas = [];
+            var face = new Face(vert1, vert2, vert3);
 
-            for (var a = 0; a < halfVerts; a++)
-            {
-                alphas.push(tempAlpha);
-            }
+            faces.push(face);
         }
 
-        this.vertices = new Float32Array(vertices);
-        this.uv = new Float32Array(uvs);
-        this.colors = new Uint32Array(colors);
-        this.alphas = new Float32Array(alphas);
+        this.vertices = verts;
+        this.faces = faces;
 
         return this;
+    },
+
+    getFaceCount: function ()
+    {
+        return this.faces.length;
+    },
+
+    getVertexCount: function ()
+    {
+        return this.vertices.length;
+    },
+
+    getFace: function (index)
+    {
+        return this.faces[index];
+    },
+
+    getFaceAt: function (x, y, camera)
+    {
+        if (camera === undefined) { camera = this.scene.sys.cameras.main; }
+
+
+
     },
 
     /**
@@ -356,9 +382,7 @@ var Mesh = new Class({
         this.anims = undefined;
 
         this.vertices = null;
-        this.uv = null;
-        this.colors = null;
-        this.alphas = null;
+        this.faces = null;
 
         this.debugCallback = null;
         this.debugGraphic = null;
