@@ -27,9 +27,9 @@ function GetLength (x1, y1, x2, y2)
  * @constructor
  * @since 3.50.0
  *
- * @param {Phaser.GameObjects.Vertex} vertex1 - The first vertex in this Face.
- * @param {Phaser.GameObjects.Vertex} vertex2 - The second vertex in this Face.
- * @param {Phaser.GameObjects.Vertex} vertex3 - The third vertex in this Face.
+ * @param {Phaser.GameObjects.Vertex} vertex1 - The first vertex of the Face.
+ * @param {Phaser.GameObjects.Vertex} vertex2 - The second vertex of the Face.
+ * @param {Phaser.GameObjects.Vertex} vertex3 - The third vertex of the Face.
  */
 var Face = new Class({
 
@@ -147,6 +147,69 @@ var Face = new Class({
         return this;
     },
 
+    contains: function (x, y, calcMatrix)
+    {
+        var v1x = this.vertex1.x;
+        var v1y = this.vertex1.y;
+
+        var v2x = this.vertex2.x;
+        var v2y = this.vertex2.y;
+
+        var v3x = this.vertex3.x;
+        var v3y = this.vertex3.y;
+
+        if (calcMatrix)
+        {
+            var a = calcMatrix.a;
+            var b = calcMatrix.b;
+            var c = calcMatrix.c;
+            var d = calcMatrix.d;
+            var e = calcMatrix.e;
+            var f = calcMatrix.f;
+
+            v1x = this.vertex1.x * a + this.vertex1.y * c + e;
+            v1y = this.vertex1.x * b + this.vertex1.y * d + f;
+
+            v2x = this.vertex2.x * a + this.vertex2.y * c + e;
+            v2y = this.vertex2.x * b + this.vertex2.y * d + f;
+
+            v3x = this.vertex3.x * a + this.vertex3.y * c + e;
+            v3y = this.vertex3.x * b + this.vertex3.y * d + f;
+        }
+
+        var t0x = v3x - v1x;
+        var t0y = v3y - v1y;
+
+        var t1x = v2x - v1x;
+        var t1y = v2y - v1y;
+
+        var t2x = x - v1x;
+        var t2y = y - v1y;
+
+        var dot00 = (t0x * t0x) + (t0y * t0y);
+        var dot01 = (t0x * t1x) + (t0y * t1y);
+        var dot02 = (t0x * t2x) + (t0y * t2y);
+        var dot11 = (t1x * t1x) + (t1y * t1y);
+        var dot12 = (t1x * t2x) + (t1y * t2y);
+
+        // Compute barycentric coordinates
+        var bc = ((dot00 * dot11) - (dot01 * dot01));
+        var inv = (bc === 0) ? 0 : (1 / bc);
+        var u = ((dot11 * dot02) - (dot01 * dot12)) * inv;
+        var v = ((dot00 * dot12) - (dot01 * dot02)) * inv;
+
+        return (u >= 0 && v >= 0 && (u + v < 1));
+    },
+
+    isCounterClockwise: function ()
+    {
+        var v1 = this.vertex1;
+        var v2 = this.vertex2;
+        var v3 = this.vertex3;
+
+        return (v2.x - v1.x) * (v3.y - v1.y) - (v2.y - v1.y) * (v3.x - v1.x) >= 0;
+    },
+
     x: {
 
         get: function ()
@@ -175,6 +238,19 @@ var Face = new Class({
             var current = this.getInCenter();
 
             this.translate(0, value - current.y);
+        }
+
+    },
+
+    depth: {
+
+        get: function ()
+        {
+            var v1 = this.vertex1;
+            var v2 = this.vertex2;
+            var v3 = this.vertex3;
+
+            return (v1.z + v2.z + v3.z) / 3;
         }
 
     },
