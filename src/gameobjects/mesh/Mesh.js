@@ -10,6 +10,7 @@ var Components = require('../components');
 var Face = require('./Face');
 var GameObject = require('../GameObject');
 var GameObjectEvents = require('../events');
+var GetCalcMatrix = require('../GetCalcMatrix');
 var MeshRender = require('./MeshRender');
 var Vertex = require('./Vertex');
 
@@ -94,7 +95,7 @@ var Mesh = new Class({
          * @type {Phaser.GameObjects.Face[]}
          * @since 3.50.0
          */
-        this.faces;
+        this.faces = [];
 
         /**
          * An array containing Vertex instances. One instance per vertex in this Mesh.
@@ -105,7 +106,7 @@ var Mesh = new Class({
          * @type {Phaser.GameObjects.Vertex[]}
          * @since 3.50.0
          */
-        this.vertices;
+        this.vertices = [];
 
         /**
          * The tint fill mode.
@@ -156,8 +157,9 @@ var Mesh = new Class({
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
-        this.setVertices(vertices, uvs, indicies, colors, alphas);
         this.initPipeline();
+
+        this.addVertices(vertices, uvs, indicies, colors, alphas);
 
         this.on(GameObjectEvents.ADDED_TO_SCENE, this.addedToScene, this);
         this.on(GameObjectEvents.REMOVED_FROM_SCENE, this.removedFromScene, this);
@@ -175,7 +177,20 @@ var Mesh = new Class({
         this.scene.sys.updateList.remove(this);
     },
 
-    setVertices: function (vertices, uvs, indicies, colors, alphas)
+    clearVertices: function ()
+    {
+        this.faces.forEach(function (face)
+        {
+            face.destroy();
+        });
+
+        this.faces = [];
+        this.vertices = [];
+
+        return this;
+    },
+
+    addVertices: function (vertices, uvs, indicies, colors, alphas)
     {
         if (colors === undefined) { colors = 0xffffff; }
         if (alphas === undefined) { alphas = 1; }
@@ -187,8 +202,8 @@ var Mesh = new Class({
 
         var i;
         var vert;
-        var verts = [];
-        var faces = [];
+        var verts = this.vertices;
+        var faces = this.faces;
 
         var isColorArray = Array.isArray(colors);
         var isAlphaArray = Array.isArray(alphas);
@@ -243,9 +258,6 @@ var Mesh = new Class({
             faces.push(face);
         }
 
-        this.vertices = verts;
-        this.faces = faces;
-
         return this;
     },
 
@@ -268,8 +280,22 @@ var Mesh = new Class({
     {
         if (camera === undefined) { camera = this.scene.sys.cameras.main; }
 
+        var calcMatrix = GetCalcMatrix(this, camera).calc;
 
+        var faces = this.faces;
+        var results = [];
 
+        for (var i = 0; i < faces.length; i++)
+        {
+            var face = faces[i];
+
+            if (face.contains(x, y, calcMatrix))
+            {
+                results.push(face);
+            }
+        }
+
+        return results;
     },
 
     /**
@@ -381,8 +407,7 @@ var Mesh = new Class({
 
         this.anims = undefined;
 
-        this.vertices = null;
-        this.faces = null;
+        this.clearVertices();
 
         this.debugCallback = null;
         this.debugGraphic = null;
