@@ -5,7 +5,6 @@
  */
 
 var GetCalcMatrix = require('../GetCalcMatrix');
-var Utils = require('../../renderer/webgl/Utils');
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -27,58 +26,62 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
-    var vertices = src.vertices;
-    var vertexCount = Math.floor(vertices.length);
-
-    if (pipeline.vertexCount + vertexCount > pipeline.vertexCapacity)
-    {
-        pipeline.flush();
-    }
-
     var textureUnit = pipeline.setGameObject(src);
 
-    var vertexViewF32 = pipeline.vertexViewF32;
-    var vertexViewU32 = pipeline.vertexViewU32;
+    var F32 = pipeline.vertexViewF32;
+    var U32 = pipeline.vertexViewU32;
 
     var vertexOffset = (pipeline.vertexCount * pipeline.vertexComponentCount) - 1;
 
+    var faces = src.faces;
     var tintEffect = src.tintFill;
 
     var debugCallback = src.debugCallback;
     var debugVerts = [];
 
-    for (var i = 0; i < vertexCount; i++)
+    var a = calcMatrix.a;
+    var b = calcMatrix.b;
+    var c = calcMatrix.c;
+    var d = calcMatrix.d;
+    var e = calcMatrix.e;
+    var f = calcMatrix.f;
+
+    var roundPixels = camera.roundPixels;
+    var alpha = camera.alpha * src.alpha;
+
+    for (var i = 0; i < faces.length; i++)
     {
-        var vertex = vertices[i];
-
-        var tx = vertex.x * calcMatrix.a + vertex.y * calcMatrix.c + calcMatrix.e;
-        var ty = vertex.x * calcMatrix.b + vertex.y * calcMatrix.d + calcMatrix.f;
-
-        if (camera.roundPixels)
+        if (pipeline.shouldFlush(3))
         {
-            tx = Math.round(tx);
-            ty = Math.round(ty);
+            pipeline.flush();
+
+            vertexOffset = 0;
         }
+
+        var face = faces[i];
+
+        vertexOffset = face.vertex1.load(F32, U32, vertexOffset, textureUnit, tintEffect, alpha, a, b, c, d, e, f, roundPixels);
+        vertexOffset = face.vertex2.load(F32, U32, vertexOffset, textureUnit, tintEffect, alpha, a, b, c, d, e, f, roundPixels);
+        vertexOffset = face.vertex3.load(F32, U32, vertexOffset, textureUnit, tintEffect, alpha, a, b, c, d, e, f, roundPixels);
+
+        pipeline.vertexCount += 3;
 
         if (debugCallback)
         {
-            debugVerts.push(tx, ty);
+            debugVerts.push(
+                F32[vertexOffset - 20],
+                F32[vertexOffset - 19],
+                F32[vertexOffset - 13],
+                F32[vertexOffset - 12],
+                F32[vertexOffset - 6],
+                F32[vertexOffset - 5]
+            );
         }
-
-        vertexViewF32[++vertexOffset] = tx;
-        vertexViewF32[++vertexOffset] = ty;
-        vertexViewF32[++vertexOffset] = vertex.u;
-        vertexViewF32[++vertexOffset] = vertex.v;
-        vertexViewF32[++vertexOffset] = textureUnit;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = Utils.getTintAppendFloatAlpha(vertex.color, camera.alpha * src.alpha * vertex.alpha);
     }
-
-    pipeline.vertexCount += vertexCount;
 
     if (debugCallback)
     {
-        debugCallback.call(src, src, vertexCount * 2, debugVerts);
+        debugCallback.call(src, src, src.vertices.length * 2, debugVerts);
     }
 };
 
