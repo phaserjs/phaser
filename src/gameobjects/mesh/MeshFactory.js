@@ -16,22 +16,23 @@ var GameObjectFactory = require('../GameObjectFactory');
  * @webglOnly
  * @since 3.0.0
  *
- * @param {number} x - The horizontal position of this Game Object in the world.
- * @param {number} y - The vertical position of this Game Object in the world.
- * @param {number[]} vertices - An array containing the vertices data for this Mesh.
- * @param {number[]} uv - An array containing the uv data for this Mesh.
- * @param {number[]} colors - An array containing the color data for this Mesh.
- * @param {number[]} alphas - An array containing the alpha data for this Mesh.
- * @param {(string|Phaser.Textures.Texture)} texture - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
- * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
+ * @param {number} [x] - The horizontal position of this Game Object in the world.
+ * @param {number} [y] - The vertical position of this Game Object in the world.
+ * @param {string|Phaser.Textures.Texture} [texture] - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+ * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
+ * @param {number[]} [vertices] - An array containing the vertices data for this Mesh.
+ * @param {number[]} [uvs] - An array containing the uv data for this Mesh.
+ * @param {number[]} [indicies] - An array containing the vertex indicies for this Mesh.
+ * @param {number|number[]} [colors=0xffffff] - An array containing the color data for this Mesh.
+ * @param {number|number[]} [alphas=1] - An array containing the alpha data for this Mesh.
  *
  * @return {Phaser.GameObjects.Mesh} The Game Object that was created.
  */
 if (typeof WEBGL_RENDERER)
 {
-    GameObjectFactory.register('mesh', function (x, y, vertices, uv, colors, alphas, texture, frame)
+    GameObjectFactory.register('mesh', function (x, y, texture, frame, vertices, uvs, indicies, colors, alphas)
     {
-        return this.displayList.add(new Mesh(this.scene, x, y, vertices, uv, colors, alphas, texture, frame));
+        return this.displayList.add(new Mesh(this.scene, x, y, texture, frame, vertices, uvs, indicies, colors, alphas));
     });
 }
 
