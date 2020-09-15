@@ -28,6 +28,7 @@ Other pipeline changes are as follows:
 * All pipelines will now extract the `vertexData` property from the config, allowing you to set it externally.
 * All pipelines will now extract the `attributes` property from the config, allowing you to set it externally.
 * All pipelines will now extract the `topology` property from the config, allowing you to set it externally.
+* The `WebGLPipeline.shouldFlush` method now accepts an optional parameter `amount`. If given, it will return `true` if when the amount is added to the vertex count it will exceed the vertex capacity. The Multi Pipeline has been updated to now use this method instead of performing the comparison multiple times itself.
 
 ### Pipeline Manager
 
@@ -178,11 +179,7 @@ If you used any of them in your code, please update to the new function names be
 * `projOrtho` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ProjectOrtho`
 * `Phaser.Renderer.WebGL.MVP.SetIdentity` is a new function the others use, to save on space.
 
-### Removed 'interpolationPercentage' parameter from all render functions
-
-Since v3.0.0 the Game Object `render` functions have received a parameter called `interpolationPercentage` that was never used. The renderers do not calculate this value and no Game Objects apply it, so for the sake of clairty, reducing code and removing complexity from the API it has been removed from every single function that either sent or expected the parameter. This touches every single Game Object and changes the parameter order as a result, so please be aware of this if you have your own custom Game Objects that implement their own render methods.
-
-### BitmapText New Features, Updates and API Changes
+### BitmapText - New Features, Updates and API Changes
 
 * `BitmapText.setCharacterTint` is a new method that allows you to set a tint color (either additive or fill) on a specific range of characters within a static Bitmap Text. You can specify the start and length offsets and per-corner tint colors.
 * `BitmapText.setWordTint` is a new method that allows you to set a tint color (either additive or fill) on all matching words within a static Bitmap Text. You can specify the word by string, or numeric offset, and the number of replacements to tint.
@@ -249,7 +246,7 @@ The way in which Game Objects add themselves to the Scene Update List has change
 * The Spine Plugin `destroy` method will now no longer remove the Game Objects from the Game Object Factory, or dispose of the Scene Renderer. This means when a Scene is destroyed, it will keep the Game Objects in the factory for other Scene's to use. Fix #5279 (thanks @Racoonacoon)
 * `SpinePlugin.gameDestroy` is a new method that is called if the Game instance emits a `destroy` event. It removes the Spine Game Objects from the factory and disposes of the Spine scene renderer.
 
-### Animation API New Features and Updates
+### Animation API - New Features and Updates
 
 If you use Animations in your game, please read the following important API changes in 3.50:
 
@@ -352,18 +349,20 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * `GenerateFrameNumbers` can now accept the `start` and `end` parameters in reverse order, meaning you can now do `{ start: 10, end: 1 }` to create the animation in reverse.
 * `GenerateFrameNames` can now accept the `start` and `end` parameters in reverse order, meaning you can now do `{ start: 10, end: 1 }` to create the animation in reverse.
 
-### Mesh Game Object New Features and Updates
+### Mesh Game Object - New Features, Updates and API Changes
 
 The Mesh Game Object has been rewritten in v3.50 with a lot of internal changes to make it more useful:
 
 * `GameObject.Vertex` is a new micro class that encapsulates all of the data required for a single vertex, such as position, uv, color and alpha. This class is now created internally by the Mesh Game Object.
 * `GameObject.Face` is a new micro class that consists of references to the three `Vertex` instances that construct the single Face.
 * `Mesh.vertices` is now an array of `GameObject.Vertex` instances, not a Float32Array.
-* `Mesh.faces` is a new array of `GameObject.Face` instances, which is populated during a call to `setVertices`.
-* `Mesh.setVertices` is a new method that allows you to set the verts of a Mesh Game Object from the given parameters. This allows you to modify a mesh post-creation, or populate it with data at a later stage.
+* `Mesh.faces` is a new array of `GameObject.Face` instances, which is populated during a call to `addVertices`.
+* `Mesh.addVertices` is a new method that allows you to add vertices to a Mesh Game Object based on the given parameters. This allows you to modify a mesh post-creation, or populate it with data at a later stage.
+* `Mesh.clearVertices` is a new method that will destroy all Faces and Vertices and clear the Mesh.
+* The Mesh now renders by iterating through the Faces array, not the vertices. This allows you to use Array methods such as `BringToTop` to reposition a Face, thus changing the drawing order without having to repopulate all of the vertices.
 * The Mesh constructor signature has changed to `scene, x, y, vertices, uvs, indicies, colors, alphas, texture, frame`, where `indicies` is the new parameter added to the list. It allows you to provide indexed vertex data to create the Mesh from, where the `indicies` array holds the vertex index information. The final list of vertices is built from this index along with the provided vertices and uvs arrays.
-* You can now supply just a single numerical value as the `color` parameter in the constructor, factory method and `setVertices` method. If a number, instead of an array, it will be used as the color for all vertices created.
-* You can now supply just a single numerical value as the `alpha` parameter in the constructor, factory method and `setVertices` method. If a number, instead of an array, it will be used as the alpha for all vertices created.
+* You can now supply just a single numerical value as the `color` parameter in the constructor, factory method and `addVertices` method. If a number, instead of an array, it will be used as the color for all vertices created.
+* You can now supply just a single numerical value as the `alpha` parameter in the constructor, factory method and `addVertices` method. If a number, instead of an array, it will be used as the alpha for all vertices created.
 * The `Mesh` Game Object now extends the `SingleAlpha` component and the alpha value is factored into the final alpha value per vertex during rendering. This means you can now set the whole alpha across the Mesh using the standard `setAlpha` methods. But, if you wish to, you can still control the alpha on a per-vertex basis as well.
 * The `Mesh` Game Object now has the Animation State Component. This allows you to create and play animations across the texture of a Mesh, something that previously wasn't possible. As a result, the Mesh now adds itself to the Update List when added to a Scene.
 * `Mesh.setDebug` is a new method that allows you to render a debug visualisation of the Mesh vertices to a Graphics Game Object. You can provide your own Graphics instance and optionally callback that is invoked during rendering. This allows you to easily visualise the vertices of your Mesh to help debug UV mapping.
@@ -413,6 +412,29 @@ This has all changed in 3.50, as outlined below. Tint values are now used direct
 * `WebGLRenderer.whiteTexture` is a new property that is a reference to a pure white 4x4 texture that is created during Boot by the Texture Manager. The Multi Pipeline uses this internally for all Graphic, Shape and fill rendering.
 * The `TextureManager` now generates a new texture with the key `__WHITE` durings its boot process. This is a pure white 4x4 texture used by the Graphics pipelines.
 * `Config.images.white` is a new Game Config property that specifies the 4x4 white PNG texture used by Graphics rendering. You can override this via the config, but only do so if needed.
+
+### Removal of 'resolution' property from across the API
+
+For legacy reasons, Phaser 3 has never properly supported HighDPI devices. It will render happily to them of course, but wouldn't let you set a 'resolution' for the Canvas beyond 1. Earlier versions of 3.x had a resolution property in the Game Config, but it was never fully implemented (for example, it would break zooming cameras). When the Scale Manager was introduced in v3.16 we forced the resolution to be 1 to avoid it breaking anything else internally.
+
+For a long time, the 'resolution' property has been present - taunting developers and confusing new comers. In this release we have finally gone through and removed all references to it. The Game Config option is now gone, it's removed from the Scale Manager, Base Camera and everywhere else where it matters. As much as we would have liked to implement the feature, we've spent too long without it, and things have been built around the assumption it isn't present. The API just wouldn't cope with having it shoe-horned in at this stage. As frustrating as this is, it's even more annoying to just leave the property there confusing people and wasting CPU cycles. Phaser 4 has been built with HighDPI screens in mind from the very start, but it's too late for v3. The following changes are a result of this removal:
+
+* The `Phaser.Scale.Events#RESIZE` event no longer sends the `resolution` as a parameter.
+* The `BaseCamera.resolution` property has been removed.
+* The internal private `BaseCamera._cx`, `_cy`, `_cw` and `_ch` properties has been removed.
+* The `BaseCamera.preRender` method no longer receives or uses the `resolution` parameter.
+* The `Camera.preRender` method no longer receives or uses the `resolution` parameter.
+* The `CameraManager.onResize` method no longer receives or uses the `resolution` parameter.
+* The `Core.Config.resolution` property has been removed.
+* The `TextStyle.resolution` property is no longer read from the Game Config. You can still set it via the Text Style config to a value other than 1, but it will default to this now.
+* The `CanvasRenderer` no longer reads or uses the Game Config resolution property.
+* The `PipelineManager.resize` method along with `WebGLPipeline.resize` and anything else that extends them no longer receives or uses the `resolution` parameter.
+* The `WebGLRenderer.resize` and `onResize` methods no longer receives or uses the `resolution` parameter.
+* The `ScaleManager.resolution` property has been removed and all internal use of it.
+
+### Removed 'interpolationPercentage' parameter from all render functions
+
+Since v3.0.0 the Game Object `render` functions have received a parameter called `interpolationPercentage` that was never used. The renderers do not calculate this value and no Game Objects apply it, so for the sake of clairty, reducing code and removing complexity from the API it has been removed from every single function that either sent or expected the parameter. This touches every single Game Object and changes the parameter order as a result, so please be aware of this if you have your own _custom_ Game Objects that implement their own `render` methods. In terms of surface API changes, you shouldn't notice anything at all from this removal.
 
 ### New Features
 
@@ -534,25 +556,6 @@ This has all changed in 3.50, as outlined below. Tint values are now used direct
 * The `Phaser.Structs.Events` namespace has now been exposed on the Phaser namespace (thanks @samme)
 * The `Phaser.Tilemaps.Parsers.Tiled` function has now been exposed on the Phaser namespace (thanks @samme)
 * Every single `Tilemap.Component` function has now been made public. This means you can call the Component functions directly, should you need to, outside of the Tilemap system.
-
-### Removal of 'Resolution' property from across the API
-
-For legacy reasons, Phaser 3 has never properly supported HighDPI devices. It will render happily to them of course, but wouldn't let you set a 'resolution' for the Canvas beyond 1. Earlier versions of 3.x had a resolution property in the Game Config, but it was never fully implemented (for example, it would break zooming cameras). When the Scale Manager was introduced in v3.16 we forced the resolution to be 1 to avoid it breaking anything else internally.
-
-For a long time, the 'resolution' property has been present - taunting developers and confusing new comers. In this release we have finally gone through and removed all references to it. The Game Config option is now gone, it's removed from the Scale Manager, Base Camera and everywhere else where it matters. As much as we would have liked to implement the feature, we've spent too long without and things have been built around the assumption it isn't present that just wouldn't cope with having it shoe-horned in at this stage. As frustrating as this is, it's even more annoying to just leave the property there confusing people and wasting CPU cycles. Phaser 4 has been built with HighDPI screens in mind from the very start, but it's just too late for v3. The following changes are a result of this removal:
-
-* The `Phaser.Scale.Events#RESIZE` event no longer sends the `resolution` as a parameter.
-* The `BaseCamera.resolution` property has been removed.
-* The internal private `BaseCamera._cx`, `_cy`, `_cw` and `_ch` properties has been removed.
-* The `BaseCamera.preRender` method no longer receives or uses the `resolution` parameter.
-* The `Camera.preRender` method no longer receives or uses the `resolution` parameter.
-* The `CameraManager.onResize` method no longer receives or uses the `resolution` parameter.
-* The `Core.Config.resolution` property has been removed.
-* The `TextStyle.resolution` property is no longer read from the Game Config. You can still set it via the Text Style config to a value other than 1, but it will default to this now.
-* The `CanvasRenderer` no longer reads or uses the Game Config resolution property.
-* The `PipelineManager.resize` method along with `WebGLPipeline.resize` and anything else that extends them no longer receives or uses the `resolution` parameter.
-* The `WebGLRenderer.resize` and `onResize` methods no longer receives or uses the `resolution` parameter.
-* The `ScaleManager.resolution` property has been removed and all internal use of it.
 
 ### Examples, Documentation and TypeScript
 
