@@ -343,14 +343,22 @@ var WebGLPipeline = new Class({
     /**
      * Check if the current batch of vertices is full.
      *
+     * You can optionally provide an `amount` parameter. If given, it will check if the batch
+     * needs to flush _if_ the `amount` is added to it. This allows you to test if you should
+     * flush before populating the batch.
+     *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#shouldFlush
      * @since 3.0.0
      *
+     * @param {integer} [amount=0] - Will the batch need to flush if this many vertices are added to it?
+     *
      * @return {boolean} `true` if the current batch should be flushed, otherwise `false`.
      */
-    shouldFlush: function ()
+    shouldFlush: function (amount)
     {
-        return (this.vertexCount >= this.vertexCapacity);
+        if (amount === undefined) { amount = 0; }
+
+        return (this.vertexCount + amount >= this.vertexCapacity);
     },
 
     /**
