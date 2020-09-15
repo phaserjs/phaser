@@ -351,8 +351,12 @@ The Animation API has had a significant overhaul to improve playback handling. I
 
 ### Mesh Game Object - New Features, Updates and API Changes
 
-The Mesh Game Object has been rewritten in v3.50 with a lot of internal changes to make it more useful:
+The Mesh Game Object has been rewritten in v3.50 with a lot of changes to make it more useful and able to handle 3D objects:
 
+* TODO - addFace, addVertex, addModel, etc.
+
+* `Geom.ParseObj` is a new function that will parse a Wavefront OBJ file into model data that can be consumed by the Mesh Game Object.
+* `Loader.OBJFile` is a new File Loader type that can load Wavefront OBJ files, which are then parsed and stored in the OBJ Cache.
 * `GameObject.Vertex` is a new micro class that encapsulates all of the data required for a single vertex, such as position, uv, color and alpha. This class is now created internally by the Mesh Game Object.
 * `GameObject.Face` is a new micro class that consists of references to the three `Vertex` instances that construct the single Face.
 * `Mesh.vertices` is now an array of `GameObject.Vertex` instances, not a Float32Array.
@@ -360,7 +364,8 @@ The Mesh Game Object has been rewritten in v3.50 with a lot of internal changes 
 * `Mesh.addVertices` is a new method that allows you to add vertices to a Mesh Game Object based on the given parameters. This allows you to modify a mesh post-creation, or populate it with data at a later stage.
 * `Mesh.clearVertices` is a new method that will destroy all Faces and Vertices and clear the Mesh.
 * The Mesh now renders by iterating through the Faces array, not the vertices. This allows you to use Array methods such as `BringToTop` to reposition a Face, thus changing the drawing order without having to repopulate all of the vertices.
-* The Mesh constructor signature has changed to `scene, x, y, vertices, uvs, indicies, colors, alphas, texture, frame`, where `indicies` is the new parameter added to the list. It allows you to provide indexed vertex data to create the Mesh from, where the `indicies` array holds the vertex index information. The final list of vertices is built from this index along with the provided vertices and uvs arrays.
+* The Mesh renderer will now check to see if the pipeline capacity has been exceeded for every Face added, allowing you to use Meshes with vertex counts that exceed the pipeline capacity without causing runtime errors.
+* The Mesh constructor signature has changed to `scene, x, y, vertices, uvs, indicies, colors, alphas, texture, frame`, where `indicies` is the new parameter added to the list. It allows you to provide indexed vertex data to create the Mesh from, where the `indicies` array holds the vertex index information. The final list of vertices is built from this index along with the provided vertices and uvs arrays. The `indicies` array is optional. If your data is not indexes, then simply pass `null` or an empty array for this parameter.
 * You can now supply just a single numerical value as the `color` parameter in the constructor, factory method and `addVertices` method. If a number, instead of an array, it will be used as the color for all vertices created.
 * You can now supply just a single numerical value as the `alpha` parameter in the constructor, factory method and `addVertices` method. If a number, instead of an array, it will be used as the alpha for all vertices created.
 * The `Mesh` Game Object now extends the `SingleAlpha` component and the alpha value is factored into the final alpha value per vertex during rendering. This means you can now set the whole alpha across the Mesh using the standard `setAlpha` methods. But, if you wish to, you can still control the alpha on a per-vertex basis as well.
