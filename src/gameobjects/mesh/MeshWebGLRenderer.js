@@ -22,7 +22,15 @@ var GetCalcMatrix = require('../GetCalcMatrix');
  */
 var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
-    var pipeline = renderer.pipelines.set(this.pipeline, src);
+    var faces = src.faces;
+    var totalFaces = faces.length;
+
+    if (totalFaces === 0)
+    {
+        return;
+    }
+
+    var pipeline = renderer.pipelines.set(src.pipeline, src);
 
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
@@ -33,7 +41,6 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var vertexOffset = (pipeline.vertexCount * pipeline.vertexComponentCount) - 1;
 
-    var faces = src.faces;
     var tintEffect = src.tintFill;
 
     var debugCallback = src.debugCallback;
@@ -48,17 +55,23 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var roundPixels = camera.roundPixels;
     var alpha = camera.alpha * src.alpha;
+    var hideCCW = src.hideCCW;
 
-    for (var i = 0; i < faces.length; i++)
+    for (var i = 0; i < totalFaces; i++)
     {
+        var face = faces[i];
+
+        if (hideCCW && !face.isCounterClockwise())
+        {
+            continue;
+        }
+
         if (pipeline.shouldFlush(3))
         {
             pipeline.flush();
 
             vertexOffset = 0;
         }
-
-        var face = faces[i];
 
         vertexOffset = face.vertex1.load(F32, U32, vertexOffset, textureUnit, tintEffect, alpha, a, b, c, d, e, f, roundPixels);
         vertexOffset = face.vertex2.load(F32, U32, vertexOffset, textureUnit, tintEffect, alpha, a, b, c, d, e, f, roundPixels);
