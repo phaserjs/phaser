@@ -7,13 +7,14 @@
 var AnimationState = require('../../animations/AnimationState');
 var Class = require('../../utils/Class');
 var Components = require('../components');
-var Face = require('./Face');
+var Face = require('../../geom/mesh/Face');
 var GameObject = require('../GameObject');
 var GameObjectEvents = require('../events');
-var GetCalcMatrix = require('../GetCalcMatrix');
+var Matrix4 = require('../../math/Matrix4');
 var MeshRender = require('./MeshRender');
-var StableSort = require('../../utils/array/StableSort');
-var Vertex = require('./Vertex');
+var Model = require('../../geom/mesh/Model');
+var Vertex = require('../../geom/mesh/Vertex');
+var Vector3 = require('../../math/Vector3');
 
 /**
  * @classdesc
@@ -85,42 +86,18 @@ var Mesh = new Class({
          */
         this.anims = new AnimationState(this);
 
-        /**
-         * An array containing the Face instances belonging to this Mesh.
-         *
-         * A Face consists of 3 Vertex objects.
-         *
-         * This array is populated during the `setVertices` method.
-         *
-         * @name Phaser.GameObjects.Mesh#faces
-         * @type {Phaser.GameObjects.Face[]}
-         * @since 3.50.0
-         */
-        this.faces = [];
+        this.camera = {
+            fov: 0.8,
+            near: 0.01,
+            far: 1000,
+            position: new Vector3(0, 0, -10),
+            target: new Vector3(0, 0, 0)
+        };
 
-        /**
-         * An array containing Vertex instances. One instance per vertex in this Mesh.
-         *
-         * This array is populated during the `setVertices` method.
-         *
-         * @name Phaser.GameObjects.Mesh#vertices
-         * @type {Phaser.GameObjects.Vertex[]}
-         * @since 3.50.0
-         */
-        this.vertices = [];
+        this.models = [];
 
-        /**
-         * The tint fill mode.
-         *
-         * `false` = An additive tint (the default), where vertices colors are blended with the texture.
-         * `true` = A fill tint, where the vertices colors replace the texture, but respects texture alpha.
-         *
-         * @name Phaser.GameObjects.Mesh#tintFill
-         * @type {boolean}
-         * @default false
-         * @since 3.50.0
-         */
-        this.tintFill = false;
+        this.viewMatrix = new Matrix4();
+        this.projectionMatrix = new Matrix4();
 
         /**
          * You can optionally choose to render the vertices of this Mesh to a Graphics instance.
@@ -155,18 +132,6 @@ var Mesh = new Class({
          */
         this.debugGraphic = null;
 
-        /**
-         * When rendering, skip any Face that isn't counter clockwise?
-         *
-         * Enable this to hide backward-facing Faces during rendering.
-         * Disable it to render all Faces.
-         *
-         * @name Phaser.GameObjects.Mesh#hideCCW
-         * @type {boolean}
-         * @since 3.50.0
-         */
-        this.hideCCW = true;
-
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
@@ -193,26 +158,16 @@ var Mesh = new Class({
         this.scene.sys.updateList.remove(this);
     },
 
-    /**
-     * Iterates and destroys all current Faces in this Mesh, if any.
-     * Then resets the Face and Vertices arrays.
-     *
-     * @method Phaser.GameObjects.Mesh#clearVertices
-     * @since 3.50.0
-     *
-     * @return {this} This Mesh Game Object.
-     */
-    clearVertices: function ()
+    clearModels: function ()
     {
-        this.faces.forEach(function (face)
+        var models = this.models;
+
+        for (var i = 0; i < models.length; i++)
         {
-            face.destroy();
-        });
+            models[i].destroy();
+        }
 
-        this.faces = [];
-        this.vertices = [];
-
-        return this;
+        this.models = [];
     },
 
     /**
@@ -243,18 +198,28 @@ var Mesh = new Class({
      * @param {number} [y=0] - Offset the model y position by this amount.
      * @param {number} [z=0] - Offset the model z position by this amount.
      *
-     * @return {this} This Mesh Game Object.
+     * @return {Phaser.GameObjects.Model} The Model instance that was created.
      */
     addOBJ: function (key, scale, x, y, z)
     {
+        var model;
         var data = this.scene.sys.cache.obj.get(key);
 
         if (data)
         {
-            this.addModel(data, scale, x, y, z);
+            model = this.addModelData(data, scale, x, y, z);
         }
 
-        return this;
+        return model;
+    },
+
+    addModel: function (x, y, z)
+    {
+        var model = new Model(x, y, z);
+
+        this.models.push(model);
+
+        return model;
     },
 
     /**
@@ -276,7 +241,7 @@ var Mesh = new Class({
      * moved or rotated. You can scale the model data, should it be too small (or large) to visualize.
      * You can also offset the model via the `x`, `y` and `z` parameters.
      *
-     * @method Phaser.GameObjects.Mesh#addModel
+     * @method Phaser.GameObjects.Mesh#addModelData
      * @since 3.50.0
      *
      * @param {array} data - The parsed model data array.
@@ -287,20 +252,24 @@ var Mesh = new Class({
      *
      * @return {this} This Mesh Game Object.
      */
-    addModel: function (data, scale, x, y, z)
+    addModelData: function (data, scale, x, y, z)
     {
         if (scale === undefined) { scale = 1; }
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
         if (z === undefined) { z = 0; }
 
+        var results = [];
+
         for (var m = 0; m < data.models.length; m++)
         {
-            var model = data.models[m];
+            var model = this.addModel(x, y, z);
 
-            var vertices = model.vertices;
-            var textureCoords = model.textureCoords;
-            var faces = model.faces;
+            var modelData = data.models[m];
+
+            var vertices = modelData.vertices;
+            var textureCoords = modelData.textureCoords;
+            var faces = modelData.faces;
 
             for (var i = 0; i < faces.length; i++)
             {
@@ -322,196 +291,17 @@ var Mesh = new Class({
                 var uv2 = (t2 === -1) ? { u: 0, v: 0 } : textureCoords[t2];
                 var uv3 = (t3 === -1) ? { u: 1, v: 1 } : textureCoords[t3];
 
-                var vert1 = this.addVertex(x + m1.x * scale, y + m1.y * scale, z + m1.z * scale, uv1.u, uv1.v);
-                var vert2 = this.addVertex(x + m2.x * scale, y + m2.y * scale, z + m2.z * scale, uv2.u, uv2.v);
-                var vert3 = this.addVertex(x + m3.x * scale, y + m3.y * scale, z + m3.z * scale, uv3.u, uv3.v);
+                var vert1 = model.addVertex(x + m1.x * scale, y + m1.y * scale, z + m1.z * scale, uv1.u, uv1.v);
+                var vert2 = model.addVertex(x + m2.x * scale, y + m2.y * scale, z + m2.z * scale, uv2.u, uv2.v);
+                var vert3 = model.addVertex(x + m3.x * scale, y + m3.y * scale, z + m3.z * scale, uv3.u, uv3.v);
 
-                this.addFace(vert1, vert2, vert3);
+                model.addFace(vert1, vert2, vert3);
             }
+
+            results.push(model);
         }
 
-        return this;
-    },
-
-    /**
-     * Compare the depth of two Faces.
-     *
-     * @method Phaser.GameObjects.Mesh#sortByDepth
-     * @since 3.50.0
-     *
-     * @param {Phaser.GameObjects.Face} faceA - The first Face.
-     * @param {Phaser.GameObjects.Face} faceB - The second Face.
-     *
-     * @return {integer} The difference between the depths of each Face.
-     */
-    sortByDepth: function (faceA, faceB)
-    {
-        return faceA.depth - faceB.depth;
-    },
-
-    /**
-     * Rotates all vertices of this Mesh around the X axis by the amount given.
-     *
-     * It then runs a depth sort on the faces before returning.
-     *
-     * @method Phaser.GameObjects.Mesh#rotateX
-     * @since 3.50.0
-     *
-     * @param {number} theta - The amount to rotate by in radians.
-     *
-     * @return {this} This Mesh Game Object.
-     */
-    rotateX: function (theta)
-    {
-        var ts = Math.sin(theta);
-        var tc = Math.cos(theta);
-
-        var verts = this.vertices;
-
-        for (var n = 0; n < verts.length; n++)
-        {
-            var vert = verts[n];
-            var y = vert.y;
-            var z = vert.z;
-
-            vert.y = y * tc - z * ts;
-            vert.z = z * tc + y * ts;
-        }
-
-        return this.depthSort();
-    },
-
-    /**
-     * Rotates all vertices of this Mesh around the Y axis by the amount given.
-     *
-     * It then runs a depth sort on the faces before returning.
-     *
-     * @method Phaser.GameObjects.Mesh#rotateY
-     * @since 3.50.0
-     *
-     * @param {number} theta - The amount to rotate by in radians.
-     *
-     * @return {this} This Mesh Game Object.
-     */
-    rotateY: function (theta)
-    {
-        var ts = Math.sin(theta);
-        var tc = Math.cos(theta);
-
-        var verts = this.vertices;
-
-        for (var n = 0; n < verts.length; n++)
-        {
-            var vert = verts[n];
-            var x = vert.x;
-            var z = vert.z;
-
-            vert.x = x * tc - z * ts;
-            vert.z = z * tc + x * ts;
-        }
-
-        return this.depthSort();
-    },
-
-    /**
-     * Rotates all vertices of this Mesh around the Z axis by the amount given.
-     *
-     * It then runs a depth sort on the faces before returning.
-     *
-     * @method Phaser.GameObjects.Mesh#rotateZ
-     * @since 3.50.0
-     *
-     * @param {number} theta - The amount to rotate by in radians.
-     *
-     * @return {this} This Mesh Game Object.
-     */
-    rotateZ: function (theta)
-    {
-        var ts = Math.sin(theta);
-        var tc = Math.cos(theta);
-
-        var verts = this.vertices;
-
-        for (var n = 0; n < verts.length; n++)
-        {
-            var vert = verts[n];
-            var x = vert.x;
-            var y = vert.y;
-
-            vert.x = x * tc - y * ts;
-            vert.y = y * tc + x * ts;
-        }
-
-        return this.depthSort();
-    },
-
-    /**
-     * Runs a depth sort across all Faces in this Mesh, comparing their averaged depth.
-     *
-     * This is called automatically if you use any of the `rotate` methods, but you can
-     * also invoke it to sort the Faces should you manually position them.
-     *
-     * @method Phaser.GameObjects.Mesh#depthSort
-     * @since 3.50.0
-     *
-     * @return {this} This Mesh Game Object.
-     */
-    depthSort: function ()
-    {
-        StableSort(this.faces, this.sortByDepth);
-
-        return this;
-    },
-
-    /**
-     * Adds a new Vertex into the vertices array of this Mesh.
-     *
-     * Just adding a vertex isn't enough to render it. You need to also
-     * make it part of a Face, with 3 Vertex instances per Face.
-     *
-     * @method Phaser.GameObjects.Mesh#addVertex
-     * @since 3.50.0
-     *
-     * @param {number} x - The x position of the vertex.
-     * @param {number} y - The y position of the vertex.
-     * @param {number} z - The z position of the vertex.
-     * @param {number} u - The UV u coordinate of the vertex.
-     * @param {number} v - The UV v coordinate of the vertex.
-     * @param {number} [color=0xffffff] - The color value of the vertex.
-     * @param {number} [alpha=1] - The alpha value of the vertex.
-     *
-     * @return {this} This Mesh Game Object.
-     */
-    addVertex: function (x, y, z, u, v, color, alpha)
-    {
-        var vert = new Vertex(x, y, z, u, v, color, alpha);
-
-        this.vertices.push(vert);
-
-        return vert;
-    },
-
-    /**
-     * Adds a new Face into the faces array of this Mesh.
-     *
-     * A Face consists of references to 3 Vertex instances, which must be provided.
-     *
-     * @method Phaser.GameObjects.Mesh#addFace
-     * @since 3.50.0
-     *
-     * @param {Phaser.GameObjects.Vertex} vertex1 - The first vertex of the Face.
-     * @param {Phaser.GameObjects.Vertex} vertex2 - The second vertex of the Face.
-     * @param {Phaser.GameObjects.Vertex} vertex3 - The third vertex of the Face.
-     *
-     * @return {this} This Mesh Game Object.
-     */
-    addFace: function (vertex1, vertex2, vertex3)
-    {
-        var face = new Face(vertex1, vertex2, vertex3);
-
-        this.faces.push(face);
-
-        return face;
+        return results;
     },
 
     /**
@@ -631,47 +421,6 @@ var Mesh = new Class({
     },
 
     /**
-     * Returns the total number of Faces in this Mesh Game Object.
-     *
-     * @method Phaser.GameObjects.Mesh#getFaceCount
-     * @since 3.50.0
-     *
-     * @return {number} The number of Faces in this Mesh Game Object.
-     */
-    getFaceCount: function ()
-    {
-        return this.faces.length;
-    },
-
-    /**
-     * Returns the total number of Vertices in this Mesh Game Object.
-     *
-     * @method Phaser.GameObjects.Mesh#getVertexCount
-     * @since 3.50.0
-     *
-     * @return {number} The number of Vertices in this Mesh Game Object.
-     */
-    getVertexCount: function ()
-    {
-        return this.vertices.length;
-    },
-
-    /**
-     * Returns the Face at the given index in this Mesh Game Object.
-     *
-     * @method Phaser.GameObjects.Mesh#getFace
-     * @since 3.50.0
-     *
-     * @param {number} index - The index of the Face to get.
-     *
-     * @return {Phaser.GameObjects.Face} The Face at the given index, or `undefined` if index out of range.
-     */
-    getFace: function (index)
-    {
-        return this.faces[index];
-    },
-
-    /**
      * Return an array of Face objects from this Mesh that intersect with the given coordinates.
      *
      * The given position is translated through the matrix of this Mesh and the given Camera,
@@ -689,26 +438,10 @@ var Mesh = new Class({
      *
      * @return {Phaser.GameObjects.Face[]} An array of Face objects that intersect with the given point, ordered by depth.
      */
-    getFaceAt: function (x, y, camera)
+    getModelAt: function (x, y, camera)
     {
         if (camera === undefined) { camera = this.scene.sys.cameras.main; }
 
-        var calcMatrix = GetCalcMatrix(this, camera).calc;
-
-        var faces = this.faces;
-        var results = [];
-
-        for (var i = 0; i < faces.length; i++)
-        {
-            var face = faces[i];
-
-            if (face.contains(x, y, calcMatrix))
-            {
-                results.push(face);
-            }
-        }
-
-        return StableSort(results, this.sortByDepth);
     },
 
     /**
@@ -776,6 +509,24 @@ var Mesh = new Class({
     preUpdate: function (time, delta)
     {
         this.anims.update(time, delta);
+
+        var renderer = this.scene.sys.renderer;
+        var width = renderer.width;
+        var height = renderer.height;
+
+        var camera = this.camera;
+        var models = this.models;
+        var viewMatrix = this.viewMatrix;
+        var projectionMatrix = this.projectionMatrix;
+
+        viewMatrix.lookAt(camera.position, camera.target, Vector3.UP);
+
+        projectionMatrix.perspective(camera.fov, width / height, camera.near, camera.far);
+
+        for (var i = 0; i < models.length; i++)
+        {
+            models[i].update(viewMatrix, projectionMatrix, width, height);
+        }
     },
 
     /**
@@ -787,14 +538,13 @@ var Mesh = new Class({
      * @since 3.50.0
      *
      * @param {Phaser.GameObjects.Mesh} src - The Mesh object being rendered.
-     * @param {integer} meshLength - The number of vertices in the mesh.
      * @param {number[]} verts - An array of translated vertex coordinates.
      */
-    renderDebugVerts: function (src, meshLength, verts)
+    renderDebugVerts: function (src, verts)
     {
         var graphic = src.debugGraphic;
 
-        for (var i = 0; i < meshLength; i += 6)
+        for (var i = 0; i < verts.length; i += 6)
         {
             var x0 = verts[i + 0];
             var y0 = verts[i + 1];
@@ -820,7 +570,7 @@ var Mesh = new Class({
 
         this.anims = undefined;
 
-        this.clearVertices();
+        this.clearModels();
 
         this.debugCallback = null;
         this.debugGraphic = null;
