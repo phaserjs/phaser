@@ -10,7 +10,7 @@ var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
-var ParseObj = require('../../geom/ParseObj');
+var ParseObj = require('../../geom/mesh/ParseObj');
 
 /**
  * @classdesc
