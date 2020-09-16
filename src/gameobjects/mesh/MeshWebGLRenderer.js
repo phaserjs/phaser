@@ -22,13 +22,13 @@ var GetCalcMatrix = require('../GetCalcMatrix');
  */
 var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
-    var faces = src.faces;
-    var totalFaces = faces.length;
+    // var faces = src.faces;
+    // var totalFaces = faces.length;
 
-    if (totalFaces === 0)
-    {
-        return;
-    }
+    // if (totalFaces === 0)
+    // {
+    //     return;
+    // }
 
     var pipeline = renderer.pipelines.set(src.pipeline, src);
 
@@ -53,48 +53,67 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var e = calcMatrix.e;
     var f = calcMatrix.f;
 
-    var roundPixels = camera.roundPixels;
-    var alpha = camera.alpha * src.alpha;
-    var hideCCW = src.hideCCW;
+    var globalAlpha = camera.alpha * src.alpha;
 
-    for (var i = 0; i < totalFaces; i++)
+    var models = src.models;
+
+    for (var m = 0; m < models.length; m++)
     {
-        var face = faces[i];
+        var model = models[m];
 
-        if (hideCCW && !face.isCounterClockwise())
+        var faces = model.faces;
+        var totalFaces = faces.length;
+        var alpha = globalAlpha * model.alpha;
+
+        if (totalFaces === 0 || !model.visible || alpha <= 0)
         {
             continue;
         }
 
-        if (pipeline.shouldFlush(3))
+        if (pipeline.shouldFlush(model.getVertexCount()))
         {
             pipeline.flush();
 
             vertexOffset = 0;
         }
 
-        vertexOffset = face.vertex1.load(F32, U32, vertexOffset, textureUnit, tintEffect, alpha, a, b, c, d, e, f, roundPixels);
-        vertexOffset = face.vertex2.load(F32, U32, vertexOffset, textureUnit, tintEffect, alpha, a, b, c, d, e, f, roundPixels);
-        vertexOffset = face.vertex3.load(F32, U32, vertexOffset, textureUnit, tintEffect, alpha, a, b, c, d, e, f, roundPixels);
+        if (debugCallback)
+        {
+            debugVerts = [];
+        }
 
-        pipeline.vertexCount += 3;
+        for (var i = 0; i < totalFaces; i++)
+        {
+            var face = faces[i];
+
+            if (model.hideCCW && !face.isCounterClockwise())
+            {
+                continue;
+            }
+
+            vertexOffset = face.vertex1.load(F32, U32, vertexOffset, textureUnit, tintEffect, alpha, a, b, c, d, e, f);
+            vertexOffset = face.vertex2.load(F32, U32, vertexOffset, textureUnit, tintEffect, alpha, a, b, c, d, e, f);
+            vertexOffset = face.vertex3.load(F32, U32, vertexOffset, textureUnit, tintEffect, alpha, a, b, c, d, e, f);
+
+            pipeline.vertexCount += 3;
+
+            if (debugCallback)
+            {
+                debugVerts.push(
+                    F32[vertexOffset - 20],
+                    F32[vertexOffset - 19],
+                    F32[vertexOffset - 13],
+                    F32[vertexOffset - 12],
+                    F32[vertexOffset - 6],
+                    F32[vertexOffset - 5]
+                );
+            }
+        }
 
         if (debugCallback)
         {
-            debugVerts.push(
-                F32[vertexOffset - 20],
-                F32[vertexOffset - 19],
-                F32[vertexOffset - 13],
-                F32[vertexOffset - 12],
-                F32[vertexOffset - 6],
-                F32[vertexOffset - 5]
-            );
+            debugCallback.call(src, src, debugVerts);
         }
-    }
-
-    if (debugCallback)
-    {
-        debugCallback.call(src, src, src.vertices.length * 2, debugVerts);
     }
 };
 
