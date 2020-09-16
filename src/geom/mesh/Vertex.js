@@ -5,17 +5,19 @@
  */
 
 var Class = require('../../utils/Class');
+var Vector3 = require('../../math/Vector3');
 var Utils = require('../../renderer/webgl/Utils');
 
 /**
  * @classdesc
- * A Vertex Game Object.
+ * A Vertex Object.
  *
- * This tiny class consists of all the information for a single vertex within a Mesh
- * Game Object.
+ * This class consists of all the information needed for a single vertex within
+ * a Model Game Object.
  *
  * @class Vertex
- * @memberof Phaser.GameObjects
+ * @memberof Phaser.Geom.Mesh
+ * @extends Phaser.Math.Vector3
  * @constructor
  * @since 3.50.0
  *
@@ -29,39 +31,34 @@ var Utils = require('../../renderer/webgl/Utils');
  */
 var Vertex = new Class({
 
+    Extends: Vector3,
+
     initialize:
 
     function Vertex (x, y, z, u, v, color, alpha)
     {
+        Vector3.call(this, x, y, z);
+
         if (color === undefined) { color = 0xffffff; }
         if (alpha === undefined) { alpha = 1; }
 
         /**
-         * The x coordinate of this vertex.
+         * The projected x coordinate of this vertex.
          *
-         * @name Phaser.GameObjects.Vertex#x
+         * @name Phaser.GameObjects.Vertex#vx
          * @type {number}
          * @since 3.50.0
          */
-        this.x = x;
+        this.vx = 0;
 
         /**
-         * The y coordinate of this vertex.
+         * The projected y coordinate of this vertex.
          *
-         * @name Phaser.GameObjects.Vertex#y
+         * @name Phaser.GameObjects.Vertex#vy
          * @type {number}
          * @since 3.50.0
          */
-        this.y = y;
-
-        /**
-         * The z coordinate of this vertex.
-         *
-         * @name Phaser.GameObjects.Vertex#z
-         * @type {number}
-         * @since 3.50.0
-         */
-        this.z = z;
+        this.vy = 0;
 
         /**
          * UV u coordinate of this vertex.
@@ -100,36 +97,26 @@ var Vertex = new Class({
         this.alpha = alpha;
     },
 
-    setPosition: function (x, y, z)
+    transformCoordinatesLocal: function (transformMatrix, width, height)
     {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
 
-        return this;
+        var m = transformMatrix.val;
+
+        var tx = (x * m[0]) + (y * m[4]) + (z * m[8]) + m[12];
+        var ty = (x * m[1]) + (y * m[5]) + (z * m[9]) + m[13];
+        var tw = (x * m[3]) + (y * m[7]) + (z * m[11]) + m[15];
+
+        this.vx = (tx / tw) * width + width / 2;
+        this.vy = -(ty / tw) * height + height / 2;
     },
 
-    translate: function (x, y)
+    load: function (F32, U32, offset, textureUnit, tintEffect, alpha, a, b, c, d, e, f)
     {
-        if (y === undefined) { y = 0; }
-
-        this.x += x;
-        this.y += y;
-    },
-
-    load: function (F32, U32, offset, textureUnit, tintEffect, alpha, a, b, c, d, e, f, roundPixels)
-    {
-        var tx = this.x * a + this.y * c + e;
-        var ty = this.x * b + this.y * d + f;
-
-        if (roundPixels)
-        {
-            tx = Math.round(tx);
-            ty = Math.round(ty);
-        }
-
-        F32[++offset] = tx;
-        F32[++offset] = ty;
+        F32[++offset] = this.vx * a + this.vy * c + e;
+        F32[++offset] = this.vx * b + this.vy * d + f;
         F32[++offset] = this.u;
         F32[++offset] = this.v;
         F32[++offset] = textureUnit;

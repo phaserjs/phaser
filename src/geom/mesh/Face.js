@@ -18,12 +18,12 @@ function GetLength (x1, y1, x2, y2)
 
 /**
  * @classdesc
- * A Face Game Object.
+ * A Face Object.
  *
  * This class consists of 3 Vertex instances, for the 3 corners of the face.
  *
  * @class Face
- * @memberof Phaser.GameObjects
+ * @memberof Phaser.Geom.Mesh
  * @constructor
  * @since 3.50.0
  *
@@ -40,7 +40,7 @@ var Face = new Class({
         /**
          * The first vertex in this Face.
          *
-         * @name Phaser.GameObjects.Face#vertex1
+         * @name Phaser.Geom.Mesh.Face#vertex1
          * @type {Phaser.GameObjects.Vertex}
          * @since 3.50.0
          */
@@ -49,7 +49,7 @@ var Face = new Class({
         /**
          * The second vertex in this Face.
          *
-         * @name Phaser.GameObjects.Face#vertex2
+         * @name Phaser.Geom.Mesh.Face#vertex2
          * @type {Phaser.GameObjects.Vertex}
          * @since 3.50.0
          */
@@ -58,7 +58,7 @@ var Face = new Class({
         /**
          * The third vertex in this Face.
          *
-         * @name Phaser.GameObjects.Face#vertex3
+         * @name Phaser.Geom.Mesh.Face#vertex3
          * @type {Phaser.GameObjects.Vertex}
          * @since 3.50.0
          */
@@ -67,7 +67,7 @@ var Face = new Class({
         /**
          * The face inCenter. Do not access directly, instead use the `getInCenter` method.
          *
-         * @name Phaser.GameObjects.Face#_inCenter
+         * @name Phaser.Geom.Mesh.Face#_inCenter
          * @type {Phaser.Math.Vector2}
          * @private
          * @since 3.50.0
