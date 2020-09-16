@@ -13,7 +13,7 @@ var Utils = require('../../renderer/webgl/Utils');
  * A Vertex Object.
  *
  * This class consists of all the information needed for a single vertex within
- * a Model Game Object.
+ * a Model Object.
  *
  * @class Vertex
  * @memberof Phaser.Geom.Mesh
@@ -37,15 +37,15 @@ var Vertex = new Class({
 
     function Vertex (x, y, z, u, v, color, alpha)
     {
-        Vector3.call(this, x, y, z);
-
         if (color === undefined) { color = 0xffffff; }
         if (alpha === undefined) { alpha = 1; }
+
+        Vector3.call(this, x, y, z);
 
         /**
          * The projected x coordinate of this vertex.
          *
-         * @name Phaser.GameObjects.Vertex#vx
+         * @name Phaser.Geom.Mesh.Vertex#vx
          * @type {number}
          * @since 3.50.0
          */
@@ -54,7 +54,7 @@ var Vertex = new Class({
         /**
          * The projected y coordinate of this vertex.
          *
-         * @name Phaser.GameObjects.Vertex#vy
+         * @name Phaser.Geom.Mesh.Vertex#vy
          * @type {number}
          * @since 3.50.0
          */
@@ -63,7 +63,7 @@ var Vertex = new Class({
         /**
          * UV u coordinate of this vertex.
          *
-         * @name Phaser.GameObjects.Vertex#u
+         * @name Phaser.Geom.Mesh.Vertex#u
          * @type {number}
          * @since 3.50.0
          */
@@ -72,7 +72,7 @@ var Vertex = new Class({
         /**
          * UV v coordinate of this vertex.
          *
-         * @name Phaser.GameObjects.Vertex#v
+         * @name Phaser.Geom.Mesh.Vertex#v
          * @type {number}
          * @since 3.50.0
          */
@@ -81,7 +81,7 @@ var Vertex = new Class({
         /**
          * The color value of this vertex.
          *
-         * @name Phaser.GameObjects.Vertex#color
+         * @name Phaser.Geom.Mesh.Vertex#color
          * @type {number}
          * @since 3.50.0
          */
@@ -90,13 +90,23 @@ var Vertex = new Class({
         /**
          * The alpha value of this vertex.
          *
-         * @name Phaser.GameObjects.Vertex#alpha
+         * @name Phaser.Geom.Mesh.Vertex#alpha
          * @type {number}
          * @since 3.50.0
          */
         this.alpha = alpha;
     },
 
+    /**
+     * Transforms this vertex by the given matrix, storing the results in `vx` and `vy`.
+     *
+     * @method Phaser.Geom.Mesh.Model#transformCoordinatesLocal
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} transformMatrix - The transform matrix to apply to this vertex.
+     * @param {number} width - The width of the parent Mesh.
+     * @param {number} height - The height of the parent Mesh.
+     */
     transformCoordinatesLocal: function (transformMatrix, width, height)
     {
         var x = this.x;
@@ -109,10 +119,30 @@ var Vertex = new Class({
         var ty = (x * m[1]) + (y * m[5]) + (z * m[9]) + m[13];
         var tw = (x * m[3]) + (y * m[7]) + (z * m[11]) + m[15];
 
-        this.vx = (tx / tw) * width + width / 2;
-        this.vy = -(ty / tw) * height + height / 2;
+        this.vx = (tx / tw) * width;
+        this.vy = -(ty / tw) * height;
     },
 
+    /**
+     * Loads this vertex into the given Typed Arrays.
+     *
+     * @method Phaser.Geom.Mesh.Model#load
+     * @since 3.50.0
+     *
+     * @param {Float32Array} F32 - The Float32 Array to put the position data in.
+     * @param {Uint32Array} U32 - The Uint32 Array to put the color data in.
+     * @param {number} offset - The vertex offset to place the data at.
+     * @param {number} textureUnit - The currently bound texture unit.
+     * @param {number} alpha - The alpha value.
+     * @param {number} a - The transform matrix a value.
+     * @param {number} b - The transform matrix b value.
+     * @param {number} c - The transform matrix c value.
+     * @param {number} d - The transform matrix d value.
+     * @param {number} e - The transform matrix e value.
+     * @param {number} f - The transform matrix f value.
+     *
+     * @return {number} The new vertex offset.
+     */
     load: function (F32, U32, offset, textureUnit, tintEffect, alpha, a, b, c, d, e, f)
     {
         F32[++offset] = this.vx * a + this.vy * c + e;
