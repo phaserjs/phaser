@@ -27,9 +27,9 @@ function GetLength (x1, y1, x2, y2)
  * @constructor
  * @since 3.50.0
  *
- * @param {Phaser.GameObjects.Vertex} vertex1 - The first vertex of the Face.
- * @param {Phaser.GameObjects.Vertex} vertex2 - The second vertex of the Face.
- * @param {Phaser.GameObjects.Vertex} vertex3 - The third vertex of the Face.
+ * @param {Phaser.Geom.Mesh.Vertex} vertex1 - The first vertex of the Face.
+ * @param {Phaser.Geom.Mesh.Vertex} vertex2 - The second vertex of the Face.
+ * @param {Phaser.Geom.Mesh.Vertex} vertex3 - The third vertex of the Face.
  */
 var Face = new Class({
 
@@ -41,7 +41,7 @@ var Face = new Class({
          * The first vertex in this Face.
          *
          * @name Phaser.Geom.Mesh.Face#vertex1
-         * @type {Phaser.GameObjects.Vertex}
+         * @type {Phaser.Geom.Mesh.Vertex}
          * @since 3.50.0
          */
         this.vertex1 = vertex1;
@@ -50,7 +50,7 @@ var Face = new Class({
          * The second vertex in this Face.
          *
          * @name Phaser.Geom.Mesh.Face#vertex2
-         * @type {Phaser.GameObjects.Vertex}
+         * @type {Phaser.Geom.Mesh.Vertex}
          * @since 3.50.0
          */
         this.vertex2 = vertex2;
@@ -59,7 +59,7 @@ var Face = new Class({
          * The third vertex in this Face.
          *
          * @name Phaser.Geom.Mesh.Face#vertex3
-         * @type {Phaser.GameObjects.Vertex}
+         * @type {Phaser.Geom.Mesh.Vertex}
          * @since 3.50.0
          */
         this.vertex3 = vertex3;
@@ -75,6 +75,14 @@ var Face = new Class({
         this._inCenter = new Vector2();
     },
 
+    /**
+     * Gets the In Center of this Face.
+     *
+     * @method Phaser.Geom.Mesh.Face#getInCenter
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Vector2} A Vector2 instance with the In Center set in it.
+     */
     getInCenter: function ()
     {
         var v1 = this.vertex1;
@@ -93,6 +101,17 @@ var Face = new Class({
         );
     },
 
+    /**
+     * Translate this Face using the given values.
+     *
+     * @method Phaser.Geom.Mesh.Face#translate
+     * @since 3.50.0
+     *
+     * @param {number} x - The x component.
+     * @param {number} y - The y component.
+     *
+     * @return {Phaser.Geom.Mesh.Face} This Face instance.
+     */
     translate: function (x, y)
     {
         if (y === undefined) { y = 0; }
@@ -108,6 +127,18 @@ var Face = new Class({
         return this;
     },
 
+    /**
+     * Rotates the vertices in this Face around an optional center point.
+     *
+     * @method Phaser.Geom.Mesh.Face#rotate
+     * @since 3.50.0
+     *
+     * @param {number} angle - The angle of ratation, in radians.
+     * @param {number} [cx] - Optional center x coordinate to rotate around.
+     * @param {number} [cy] - Optional center y coordinate to rotate around.
+     *
+     * @return {Phaser.Geom.Mesh.Face} This Face instance.
+     */
     rotate: function (angle, cx, cy)
     {
         var x;
@@ -147,6 +178,18 @@ var Face = new Class({
         return this;
     },
 
+    /**
+     * Return `true` if this Face intersects with the given coordinates.
+     *
+     * @method Phaser.Geom.Mesh.Face#contains
+     * @since 3.50.0
+     *
+     * @param {number} x - The x position to check against.
+     * @param {number} y - The y position to check against.
+     * @param {Phaser.Math.Matrix4} [calcMatrix] - Optional transform matrix to apply the vertices through.
+     *
+     * @return {boolean} `true` if the position intersects with this Face, otherwise `false`.
+     */
     contains: function (x, y, calcMatrix)
     {
         var v1x = this.vertex1.x;
@@ -201,6 +244,14 @@ var Face = new Class({
         return (u >= 0 && v >= 0 && (u + v < 1));
     },
 
+    /**
+     * Return `true` if the vertices of this Face wind counter-clockwise.
+     *
+     * @method Phaser.Geom.Mesh.Face#isCounterClockwise
+     * @since 3.50.0
+     *
+     * @return {boolean} `true` if the vertices of this Face wind counter-clockwise , otherwise `false`.
+     */
     isCounterClockwise: function ()
     {
         var v1 = this.vertex1;
@@ -210,6 +261,13 @@ var Face = new Class({
         return (v2.x - v1.x) * (v3.y - v1.y) - (v2.y - v1.y) * (v3.x - v1.x) >= 0;
     },
 
+    /**
+     * Returns the horizontal in center of this Face. If set, translates the Face by the given amount.
+     *
+     * @name Phaser.Geom.Mesh.Face#x
+     * @type {number}
+     * @since 3.50.0
+     */
     x: {
 
         get: function ()
@@ -226,6 +284,13 @@ var Face = new Class({
 
     },
 
+    /**
+     * Returns the vertical in center of this Face. If set, translates the Face by the given amount.
+     *
+     * @name Phaser.Geom.Mesh.Face#y
+     * @type {number}
+     * @since 3.50.0
+     */
     y: {
 
         get: function ()
@@ -242,6 +307,14 @@ var Face = new Class({
 
     },
 
+    /**
+     * The averaged depth of this Face.
+     *
+     * @name Phaser.Geom.Mesh.Face#depth
+     * @type {number}
+     * @readonly
+     * @since 3.50.0
+     */
     depth: {
 
         get: function ()
@@ -255,6 +328,12 @@ var Face = new Class({
 
     },
 
+    /**
+     * Destroys this Face and its references.
+     *
+     * @method Phaser.Geom.Mesh.Face#destroy
+     * @since 3.50.0
+     */
     destroy: function ()
     {
         this.vertex1 = null;
