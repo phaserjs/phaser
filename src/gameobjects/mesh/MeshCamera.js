@@ -11,10 +11,10 @@ var Vector3 = require('../../math/Vector3');
 
 /**
  * @classdesc
- * A Model Game Object.
+ * The Mesh Camera.
  *
- * @class Model
- * @memberof Phaser.Geom.Mesh
+ * @class MeshCamera
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.50.0
  */
