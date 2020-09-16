@@ -72,11 +72,25 @@ var Mesh = new Class({
     {
         GameObject.call(this, scene, 'Mesh');
 
-        this._prevWidth = 0;
-        this._prevHeight = 0;
-
+        /**
+         * A Camera which can be used to control the view of the models being managed
+         * by this Mesh. It will default to have an fov of 45 and be positioned at 0, 0, -10,
+         * with a near of 0.01 and far of 1000. You can change all of these by using the
+         * methods and properties available on the `MeshCamera` class.
+         *
+         * @name Phaser.GameObjects.Mesh#camera
+         * @type {Phaser.GameObjects.MeshCamera}
+         * @since 3.50.0
+         */
         this.camera = new MeshCamera(45, 0, 0, -10, 0.01, 1000);
 
+        /**
+         * An array of Model instances that have been created in this Mesh.
+         *
+         * @name Phaser.GameObjects.Mesh#models
+         * @type {Phaser.Geom.Mesh.Model[]}
+         * @since 3.50.0
+         */
         this.models = [];
 
         /**
@@ -112,9 +126,30 @@ var Mesh = new Class({
          */
         this.debugGraphic = null;
 
+        /**
+         * Internal cached value.
+         *
+         * @name Phaser.GameObjects.Mesh#_prevWidth
+         * @type {number}
+         * @private
+         * @since 3.50.0
+         */
+        this._prevWidth = 0;
+
+        /**
+         * Internal cached value.
+         *
+         * @name Phaser.GameObjects.Mesh#_prevHeight
+         * @type {number}
+         * @private
+         * @since 3.50.0
+         */
+        this._prevHeight = 0;
+
         var renderer = scene.sys.renderer;
 
         this.setPosition(x, y);
+
         this.setSize(renderer.width, renderer.height);
 
         this.initPipeline();
@@ -500,7 +535,7 @@ var Mesh = new Class({
 
         if (camera.dirty || width !== this._prevWidth || height !== this._prevHeight)
         {
-            //  Renderer has resized, flow that down to the Camera
+            //  Mesh has resized, flow that down to the Camera
             camera.update(width, height);
 
             this._prevWidth = width;
