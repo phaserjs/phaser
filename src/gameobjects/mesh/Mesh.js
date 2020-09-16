@@ -36,6 +36,7 @@ var Model = require('../../geom/mesh/Model');
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  * @extends Phaser.GameObjects.Components.ScrollFactor
+ * @extends Phaser.GameObjects.Components.Size
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {number} [x] - The horizontal position of this Game Object in the world.
@@ -61,6 +62,7 @@ var Mesh = new Class({
         Components.Transform,
         Components.Visible,
         Components.ScrollFactor,
+        Components.Size,
         MeshRender
     ],
 
@@ -110,7 +112,10 @@ var Mesh = new Class({
          */
         this.debugGraphic = null;
 
+        var renderer = scene.sys.renderer;
+
         this.setPosition(x, y);
+        this.setSize(renderer.width, renderer.height);
 
         this.initPipeline();
 
@@ -488,10 +493,8 @@ var Mesh = new Class({
      */
     preUpdate: function (time, delta)
     {
-        var renderer = this.scene.sys.renderer;
-
-        var width = renderer.width;
-        var height = renderer.height;
+        var width = this.width;
+        var height = this.height;
 
         var camera = this.camera;
 
@@ -548,7 +551,8 @@ var Mesh = new Class({
     },
 
     /**
-     * Handles the pre-destroy step for the Mesh, which removes the Animation component and typed arrays.
+     * The destroy step for the Mesh, which removes all models, destroys the camera and
+     * nulls references.
      *
      * @method Phaser.GameObjects.Mesh#preDestroy
      * @private
