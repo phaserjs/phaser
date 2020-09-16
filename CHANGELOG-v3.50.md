@@ -353,24 +353,35 @@ The Animation API has had a significant overhaul to improve playback handling. I
 
 The Mesh Game Object has been rewritten in v3.50 with a lot of changes to make it more useful and able to handle 3D objects:
 
-* TODO - addFace, addVertex, addModel, etc.
-
-* `Geom.ParseObj` is a new function that will parse a Wavefront OBJ file into model data that can be consumed by the Mesh Game Object.
-* `Loader.OBJFile` is a new File Loader type that can load Wavefront OBJ files, which are then parsed and stored in the OBJ Cache.
 * `GameObject.Vertex` is a new micro class that encapsulates all of the data required for a single vertex, such as position, uv, color and alpha. This class is now created internally by the Mesh Game Object.
 * `GameObject.Face` is a new micro class that consists of references to the three `Vertex` instances that construct the single Face.
-* `Mesh.vertices` is now an array of `GameObject.Vertex` instances, not a Float32Array.
-* `Mesh.faces` is a new array of `GameObject.Face` instances, which is populated during a call to `addVertices`.
-* `Mesh.addVertices` is a new method that allows you to add vertices to a Mesh Game Object based on the given parameters. This allows you to modify a mesh post-creation, or populate it with data at a later stage.
-* `Mesh.clearVertices` is a new method that will destroy all Faces and Vertices and clear the Mesh.
-* The Mesh now renders by iterating through the Faces array, not the vertices. This allows you to use Array methods such as `BringToTop` to reposition a Face, thus changing the drawing order without having to repopulate all of the vertices.
-* The Mesh renderer will now check to see if the pipeline capacity has been exceeded for every Face added, allowing you to use Meshes with vertex counts that exceed the pipeline capacity without causing runtime errors.
-* The Mesh constructor signature has changed to `scene, x, y, vertices, uvs, indicies, colors, alphas, texture, frame`, where `indicies` is the new parameter added to the list. It allows you to provide indexed vertex data to create the Mesh from, where the `indicies` array holds the vertex index information. The final list of vertices is built from this index along with the provided vertices and uvs arrays. The `indicies` array is optional. If your data is not indexes, then simply pass `null` or an empty array for this parameter.
-* You can now supply just a single numerical value as the `color` parameter in the constructor, factory method and `addVertices` method. If a number, instead of an array, it will be used as the color for all vertices created.
-* You can now supply just a single numerical value as the `alpha` parameter in the constructor, factory method and `addVertices` method. If a number, instead of an array, it will be used as the alpha for all vertices created.
+* The Mesh constructor and `MeshFactory` signatures have changed to `scene, x, y, texture, frame, vertices, uvs, indicies, colors, alphas`. Note the way the Texture and Frame parameters now comes first. `indicies` is a new parameter added to the list. It allows you to provide indexed vertex data to create the Mesh from, where the `indicies` array holds the vertex index information. The final list of vertices is built from this index along with the provided vertices and uvs arrays. The `indicies` array is optional. If your data is not indexed, then simply pass `null` or an empty array for this parameter.
 * The `Mesh` Game Object now extends the `SingleAlpha` component and the alpha value is factored into the final alpha value per vertex during rendering. This means you can now set the whole alpha across the Mesh using the standard `setAlpha` methods. But, if you wish to, you can still control the alpha on a per-vertex basis as well.
 * The `Mesh` Game Object now has the Animation State Component. This allows you to create and play animations across the texture of a Mesh, something that previously wasn't possible. As a result, the Mesh now adds itself to the Update List when added to a Scene.
+* `Geom.ParseObj` is a new function that will parse a triangulated Wavefront OBJ file into model data that can be consumed by the Mesh Game Object.
+* `Loader.OBJFile` is a new File Loader type that can load triangulated Wavefront OBJ files, which are then parsed and stored in the OBJ Cache.
+* `Mesh.hideCCW` is a new boolean property that, when enabled, tells a Face to not render if it isn't counter-clockwise. You can use this to hide backward facing Faces.
+* `Mesh.addOBJ` is a new method that will add the model data from a loaded Wavefront OBJ file to a Mesh. You load it via the new `OBJFile` with a `this.load.obj` call, then you can use the key with the `addOBJ` method. This method also takes an optional scale and position parameters to control placement of the created model within the Mesh.
+* `Mesh.addModel` is a new method that will add the model data to a Mesh. You can prepare the model data yourself, pull it in from a server, or get it by calling `Geom.ParseObj`, or a similar custom function. This method also takes an optional scale and position parameters to control placement of the created model within the Mesh.
+* `Mesh.rotateX` is a new method that will rotate all vertices of the Mesh around the x axis, by the amount given. It then depth sorts the faces.
+* `Mesh.rotateY` is a new method that will rotate all vertices of the Mesh around the y axis, by the amount given. It then depth sorts the faces.
+* `Mesh.rotateZ` is a new method that will rotate all vertices of the Mesh around the z axis, by the amount given. It then depth sorts the faces.
+* `Mesh.depthSort` is a new method that will run a depth sort across all Faces in the Mesh by sorting them on their average depth.
+* `Mesh.addVertex` is a new method that allows you to add a new single Vertex into the Mesh.
+* `Mesh.addFace` is a new method that allows you to add a new Face into the Mesh. A Face must consist of 3 Vertex instances.
+* `Mesh.addVertices` is a new method that allows you to add vertices to a Mesh Game Object based on the given parameters. This allows you to modify a mesh post-creation, or populate it with data at a later stage.
+* `Mesh.getFaceCount` new is a new method that will return the total number of Faces in the Mesh.
+* `Mesh.getVertexCount` new is a new method that will return the total number of Vertices in the Mesh.
+* `Mesh.getFace` new is a new method that will return a Face instance from the Mesh based on the given index.
+* `Mesh.getFaceAt` new is a new method that will return an array of Face instances from the Mesh based on the given position. The position is checked against each Face, translated through the optional Camera and Mesh matrix. If more than one Face intersects, they will all be returned but the array will be depth sorted first, so the first element will be that closest to the camera.
+* `Mesh.vertices` is now an array of `GameObject.Vertex` instances, not a Float32Array.
+* `Mesh.faces` is a new array of `GameObject.Face` instances, which is populated during a call to methods like `addVertices` or `addModel`.
+* `Mesh.clearVertices` is a new method that will destroy all Faces and Vertices and clear the Mesh.
 * `Mesh.setDebug` is a new method that allows you to render a debug visualisation of the Mesh vertices to a Graphics Game Object. You can provide your own Graphics instance and optionally callback that is invoked during rendering. This allows you to easily visualise the vertices of your Mesh to help debug UV mapping.
+* The Mesh now renders by iterating through the Faces array, not the vertices. This allows you to use Array methods such as `BringToTop` to reposition a Face, thus changing the drawing order without having to repopulate all of the vertices. Or, for a 3D model, you can now depth sort the Faces.
+* The Mesh renderer will now check to see if the pipeline capacity has been exceeded for every Face added, allowing you to use Meshes with vertex counts that exceed the pipeline capacity without causing runtime errors.
+* You can now supply just a single numerical value as the `colors` parameter in the constructor, factory method and `addVertices` method. If a number, instead of an array, it will be used as the color for all vertices created.
+* You can now supply just a single numerical value as the `alphas` parameter in the constructor, factory method and `addVertices` method. If a number, instead of an array, it will be used as the alpha for all vertices created.
 * `Mesh.debugGraphic` is a new property that holds the debug Graphics instance reference.
 * `Mesh.debugCallback` is a new property that holds the debug render callback.
 * `Mesh.renderDebugVerts` is a new method that acts as the default render callback for `setDebug` if none is provided.
