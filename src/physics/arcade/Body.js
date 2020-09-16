@@ -1668,7 +1668,9 @@ var Body = new Class({
     /**
      * Sets whether this Body collides with the world boundary.
      *
-     * Optionally also sets the World Bounce values. If the `Body.worldBounce` is null, it's set to a new Phaser.Math.Vector2 first.
+     * Optionally also sets the World Bounce and `onCollide` values.
+     *
+     * If the `Body.worldBounce` is null, it's set to a new Phaser.Math.Vector2 first.
      *
      * @method Phaser.Physics.Arcade.Body#setCollideWorldBounds
      * @since 3.0.0
