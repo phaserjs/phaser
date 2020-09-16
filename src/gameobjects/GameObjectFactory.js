@@ -134,7 +134,8 @@ var GameObjectFactory = new Class({
         {
             this.displayList.add(child);
         }
-        else if (child.preUpdate)
+        
+        if (child.preUpdate)
         {
             this.updateList.add(child);
         }
