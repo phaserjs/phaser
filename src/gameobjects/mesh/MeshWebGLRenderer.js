@@ -22,29 +22,22 @@ var GetCalcMatrix = require('../GetCalcMatrix');
  */
 var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
-    // var faces = src.faces;
-    // var totalFaces = faces.length;
+    var models = src.models;
+    var totalModels = models.length;
 
-    // if (totalFaces === 0)
-    // {
-    //     return;
-    // }
+    if (totalModels === 0)
+    {
+        return;
+    }
 
     var pipeline = renderer.pipelines.set(src.pipeline, src);
 
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
-    var textureUnit = pipeline.setGameObject(src);
-
-    var F32 = pipeline.vertexViewF32;
-    var U32 = pipeline.vertexViewU32;
-
     var vertexOffset = (pipeline.vertexCount * pipeline.vertexComponentCount) - 1;
 
-    var tintEffect = src.tintFill;
-
+    var debugVerts;
     var debugCallback = src.debugCallback;
-    var debugVerts = [];
 
     var a = calcMatrix.a;
     var b = calcMatrix.b;
@@ -53,11 +46,12 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var e = calcMatrix.e;
     var f = calcMatrix.f;
 
+    var F32 = pipeline.vertexViewF32;
+    var U32 = pipeline.vertexViewU32;
+
     var globalAlpha = camera.alpha * src.alpha;
 
-    var models = src.models;
-
-    for (var m = 0; m < models.length; m++)
+    for (var m = 0; m < totalModels; m++)
     {
         var model = models[m];
 
@@ -82,6 +76,9 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
             debugVerts = [];
         }
 
+        var tintEffect = model.tintFill;
+        var textureUnit = pipeline.setGameObject(model);
+
         for (var i = 0; i < totalFaces; i++)
         {
             var face = faces[i];
@@ -97,7 +94,7 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
             pipeline.vertexCount += 3;
 
-            if (debugCallback)
+            if (debugCallback && model.drawDebug)
             {
                 debugVerts.push(
                     F32[vertexOffset - 20],
@@ -110,7 +107,7 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
             }
         }
 
-        if (debugCallback)
+        if (debugCallback && model.drawDebug)
         {
             debugCallback.call(src, src, debugVerts);
         }
