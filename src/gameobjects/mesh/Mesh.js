@@ -4,17 +4,14 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var AnimationState = require('../../animations/AnimationState');
 var Class = require('../../utils/Class');
 var Components = require('../components');
-var Face = require('../../geom/mesh/Face');
 var GameObject = require('../GameObject');
 var GameObjectEvents = require('../events');
-var Matrix4 = require('../../math/Matrix4');
+var GetCalcMatrix = require('../GetCalcMatrix');
 var MeshRender = require('./MeshRender');
+var MeshCamera = require('./MeshCamera');
 var Model = require('../../geom/mesh/Model');
-var Vertex = require('../../geom/mesh/Vertex');
-var Vector3 = require('../../math/Vector3');
 
 /**
  * @classdesc
@@ -36,8 +33,6 @@ var Vector3 = require('../../math/Vector3');
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.Size
- * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  * @extends Phaser.GameObjects.Components.ScrollFactor
@@ -63,8 +58,6 @@ var Mesh = new Class({
         Components.Depth,
         Components.Mask,
         Components.Pipeline,
-        Components.Size,
-        Components.Texture,
         Components.Transform,
         Components.Visible,
         Components.ScrollFactor,
@@ -77,27 +70,12 @@ var Mesh = new Class({
     {
         GameObject.call(this, scene, 'Mesh');
 
-        /**
-         * The Animation State of this Mesh.
-         *
-         * @name Phaser.GameObjects.Mesh#anims
-         * @type {Phaser.Animation.AnimationState}
-         * @since 3.50.0
-         */
-        this.anims = new AnimationState(this);
+        this._prevWidth = 0;
+        this._prevHeight = 0;
 
-        this.camera = {
-            fov: 0.8,
-            near: 0.01,
-            far: 1000,
-            position: new Vector3(0, 0, -10),
-            target: new Vector3(0, 0, 0)
-        };
+        this.camera = new MeshCamera(45, 0, 0, -10, 0.01, 1000);
 
         this.models = [];
-
-        this.viewMatrix = new Matrix4();
-        this.projectionMatrix = new Matrix4();
 
         /**
          * You can optionally choose to render the vertices of this Mesh to a Graphics instance.
@@ -132,14 +110,13 @@ var Mesh = new Class({
          */
         this.debugGraphic = null;
 
-        this.setTexture(texture, frame);
         this.setPosition(x, y);
-        this.setSizeToFrame();
+
         this.initPipeline();
 
         if (vertices)
         {
-            this.addVertices(vertices, uvs, indicies, colors, alphas);
+            this.addModelFromVertices(vertices, uvs, indicies, texture, frame, colors, alphas);
         }
 
         this.on(GameObjectEvents.ADDED_TO_SCENE, this.addedToScene, this);
@@ -158,6 +135,12 @@ var Mesh = new Class({
         this.scene.sys.updateList.remove(this);
     },
 
+    /**
+     * Removes all Models from this Mesh, calling `destroy` on each one of them.
+     *
+     * @method Phaser.GameObjects.Mesh#clearModels
+     * @since 3.50.0
+     */
     clearModels: function ()
     {
         var models = this.models;
@@ -171,51 +154,22 @@ var Mesh = new Class({
     },
 
     /**
-     * This method will add the model data from a loaded triangulated Wavefront OBJ file to this Mesh.
+     * This method creates a new blank Model instance and adds it to this Mesh.
      *
-     * The obj should have been loaded via the OBJFile:
-     *
-     * ```javascript
-     * this.load.obj(key, url);
-     * ```
-     *
-     * Then use the key it was loaded under in this call.
-     *
-     * Multiple Mesh objects can use the same model data without impacting on each other.
-     *
-     * Make sure your 3D package has triangulated the model data prior to exporting it.
-     *
-     * You may add multiple models to a single Mesh, although they will act as one when
-     * moved or rotated. You can scale the model data, should it be too small (or large) to visualize.
-     * You can also offset the model via the `x`, `y` and `z` parameters.
-     *
-     * @method Phaser.GameObjects.Mesh#addOBJ
+     * @method Phaser.GameObjects.Mesh#addModel
      * @since 3.50.0
      *
-     * @param {string} key - The key of the model data in the OBJ Cache to add to this Mesh.
-     * @param {number} [scale=1] - An amount to scale the model data by. Use this if the model has exported too small, or large, to see.
-     * @param {number} [x=0] - Offset the model x position by this amount.
-     * @param {number} [y=0] - Offset the model y position by this amount.
-     * @param {number} [z=0] - Offset the model z position by this amount.
+     * @param {string|Phaser.Textures.Texture} [texture] - The key, or instance of the Texture this model will use to render with, as stored in the Texture Manager.
+     * @param {string|integer} [frame] - An optional frame from the Texture this model is rendering with. Ensure your UV data also matches this frame.
+     * @param {number} [x=0] - The x position of the Model.
+     * @param {number} [y=0] - The y position of the Model.
+     * @param {number} [z=0] - The z position of the Model.
      *
-     * @return {Phaser.GameObjects.Model} The Model instance that was created.
+     * @return {Phaser.Geom.Mesh.Model} The Model instance that was created.
      */
-    addOBJ: function (key, scale, x, y, z)
+    addModel: function (texture, frame, x, y, z)
     {
-        var model;
-        var data = this.scene.sys.cache.obj.get(key);
-
-        if (data)
-        {
-            model = this.addModelData(data, scale, x, y, z);
-        }
-
-        return model;
-    },
-
-    addModel: function (x, y, z)
-    {
-        var model = new Model(x, y, z);
+        var model = new Model(this, texture, frame, x, y, z);
 
         this.models.push(model);
 
@@ -223,53 +177,118 @@ var Mesh = new Class({
     },
 
     /**
-     * This method will add parsed triangulated OBJ model data to this Mesh.
+     * This method creates a new Model based on a loaded triangulated Wavefront OBJ.
      *
-     * The obj should have been parsed in advance via the ParseObj function:
+     * The obj file should have been loaded via OBJFile:
      *
      * ```javascript
-     * var data = Phaser.Geom.ParseObj(rawData, flipUV);
-     *
-     * Mesh.addModel(data);
+     * this.load.obj(key, url, [ flipUV ]);
      * ```
      *
-     * Multiple Mesh objects can use the same model data without impacting on each other.
+     * Then use the key it was loaded under in this method.
+     *
+     * If the model has a texture, you must provide it as the second parameter.
+     *
+     * The model is then added to this Mesh. A single Mesh can contain multiple models
+     * without impacting each other. Equally, multiple models can all share the same base OBJ
+     * data.
      *
      * Make sure your 3D package has triangulated the model data prior to exporting it.
      *
-     * You may add multiple models to a single Mesh, although they will act as one when
-     * moved or rotated. You can scale the model data, should it be too small (or large) to visualize.
-     * You can also offset the model via the `x`, `y` and `z` parameters.
+     * You can scale the model data during import, which will set the new 'base' scale for the model.
      *
-     * @method Phaser.GameObjects.Mesh#addModelData
+     * You can also offset the models generated vertex positions via the `originX`, `originY` and `originZ`
+     * parameters, which will change the rotation origin of the model. The model itself can be positioned,
+     * rotated and scaled independantly of these settings, so don't use them to position the model, just
+     * use them to offset the base values.
+     *
+     * @method Phaser.GameObjects.Mesh#addModelFromOBJ
      * @since 3.50.0
      *
-     * @param {array} data - The parsed model data array.
-     * @param {number} [scale=1] - An amount to scale the model data by. Use this if the model has exported too small, or large, to see.
-     * @param {number} [x=0] - Offset the model x position by this amount.
-     * @param {number} [y=0] - Offset the model y position by this amount.
-     * @param {number} [z=0] - Offset the model z position by this amount.
+     * @param {string} key - The key of the data in the OBJ Cache to create the model from.
+     * @param {string|Phaser.Textures.Texture} [texture] - The key, or instance of the Texture this model will use to render with, as stored in the Texture Manager.
+     * @param {string|integer} [frame] - An optional frame from the Texture this model is rendering with. Ensure your UV data also matches this frame.
+     * @param {number} [scale=1] - An amount to scale the model data by during creation.
+     * @param {number} [originX=0] - The x origin of the model vertices during creation.
+     * @param {number} [originY=0] - The y origin of the model vertices during creation.
+     * @param {number} [originZ=0] - The z origin of the model vertices during creation.
      *
-     * @return {this} This Mesh Game Object.
+     * @return {Phaser.Geom.Mesh.Model|Phaser.Geom.Mesh.Model[]} The Model instance that was created. If the OBJ contained multiple models then an array of Model instances is returned.
      */
-    addModelData: function (data, scale, x, y, z)
+    addModelFromOBJ: function (key, texture, frame, scale, originX, originY, originZ)
+    {
+        var model = [];
+        var data = this.scene.sys.cache.obj.get(key);
+
+        if (data)
+        {
+            model = this.addModelFromData(data, texture, frame, scale, originX, originY, originZ);
+        }
+
+        return (model.length === 1) ? model[0] : model;
+    },
+
+    /**
+     * This method creates a new Model based on the parsed triangulated model data.
+     *
+     * The data should have been parsed in advance via a function such as `ParseObj`:
+     *
+     * ```javascript
+     * const data = Phaser.Geom.Mesh.ParseObj(rawData, flipUV);
+     *
+     * Mesh.addModelFromData(data, texture, frame);
+     * ```
+     *
+     * If the model has a texture, you must provide it as the second parameter.
+     *
+     * The model is then added to this Mesh. A single Mesh can contain multiple models
+     * without impacting each other. Equally, multiple models can all share the same base OBJ
+     * data.
+     *
+     * Make sure your 3D package has triangulated the model data prior to exporting it.
+     *
+     * You can scale the model data during import, which will set the new 'base' scale for the model.
+     *
+     * You can also offset the models generated vertex positions via the `originX`, `originY` and `originZ`
+     * parameters, which will change the rotation origin of the model. The model itself can be positioned,
+     * rotated and scaled independantly of these settings, so don't use them to position the model, just
+     * use them to offset the base values.
+     *
+     * @method Phaser.GameObjects.Mesh#addModelFromData
+     * @since 3.50.0
+     *
+     * @param {array} data - The parsed model data.
+     * @param {string|Phaser.Textures.Texture} [texture] - The key, or instance of the Texture this model will use to render with, as stored in the Texture Manager.
+     * @param {string|integer} [frame] - An optional frame from the Texture this model is rendering with. Ensure your UV data also matches this frame.
+     * @param {number} [scale=1] - An amount to scale the model data by during creation.
+     * @param {number} [originX=0] - The x origin of the model vertices during creation.
+     * @param {number} [originY=0] - The y origin of the model vertices during creation.
+     * @param {number} [originZ=0] - The z origin of the model vertices during creation.
+     *
+     * @return {Phaser.Geom.Mesh.Model|Phaser.Geom.Mesh.Model[]} The Model instance that was created. If the data contained multiple models then an array of Model instances is returned.
+     */
+    addModelFromData: function (data, texture, frame, scale, originX, originY, originZ)
     {
         if (scale === undefined) { scale = 1; }
-        if (x === undefined) { x = 0; }
-        if (y === undefined) { y = 0; }
-        if (z === undefined) { z = 0; }
+        if (originX === undefined) { originX = 0; }
+        if (originY === undefined) { originY = 0; }
+        if (originZ === undefined) { originZ = 0; }
 
         var results = [];
 
         for (var m = 0; m < data.models.length; m++)
         {
-            var model = this.addModel(x, y, z);
+            var model = this.addModel(texture, frame);
 
             var modelData = data.models[m];
 
             var vertices = modelData.vertices;
             var textureCoords = modelData.textureCoords;
             var faces = modelData.faces;
+
+            var defaultUV1 = { u: 0, v: 1 };
+            var defaultUV2 = { u: 0, v: 0 };
+            var defaultUV3 = { u: 1, v: 1 };
 
             for (var i = 0; i < faces.length; i++)
             {
@@ -287,13 +306,13 @@ var Mesh = new Class({
                 var t2 = v2.textureCoordsIndex;
                 var t3 = v3.textureCoordsIndex;
 
-                var uv1 = (t1 === -1) ? { u: 0, v: 1 } : textureCoords[t1];
-                var uv2 = (t2 === -1) ? { u: 0, v: 0 } : textureCoords[t2];
-                var uv3 = (t3 === -1) ? { u: 1, v: 1 } : textureCoords[t3];
+                var uv1 = (t1 === -1) ? defaultUV1 : textureCoords[t1];
+                var uv2 = (t2 === -1) ? defaultUV2 : textureCoords[t2];
+                var uv3 = (t3 === -1) ? defaultUV3 : textureCoords[t3];
 
-                var vert1 = model.addVertex(x + m1.x * scale, y + m1.y * scale, z + m1.z * scale, uv1.u, uv1.v);
-                var vert2 = model.addVertex(x + m2.x * scale, y + m2.y * scale, z + m2.z * scale, uv2.u, uv2.v);
-                var vert3 = model.addVertex(x + m3.x * scale, y + m3.y * scale, z + m3.z * scale, uv3.u, uv3.v);
+                var vert1 = model.addVertex(originX + m1.x * scale, originY + m1.y * scale, originZ + m1.z * scale, uv1.u, uv1.v);
+                var vert2 = model.addVertex(originX + m2.x * scale, originY + m2.y * scale, originZ + m2.z * scale, uv2.u, uv2.v);
+                var vert3 = model.addVertex(originX + m3.x * scale, originY + m3.y * scale, originZ + m3.z * scale, uv3.u, uv3.v);
 
                 model.addFace(vert1, vert2, vert3);
             }
@@ -305,7 +324,7 @@ var Mesh = new Class({
     },
 
     /**
-     * Adds new vertices to this Mesh by parsing the given arrays.
+     * This method creates a new Model based on the given triangulated vertices arrays.
      *
      * The `vertices` parameter is a numeric array consisting of `x` and `y` pairs.
      * The `uvs` parameter is a numeric array consisting of `u` and `v` pairs.
@@ -330,127 +349,89 @@ var Mesh = new Class({
      *
      * const indices = [ 0, 2, 1, 2, 3, 1 ];
      *
-     * Mesh.addVertices(vertices, uvs, indicies);
+     * Mesh.addModelFromVertices(vertices, uvs, indicies);
      * ```
      *
      * Vertices must be provided as x/y pairs, there is no `z` component used in this call. For that, please see
-     * `addModel` instead.
+     * `addModelFromData` instead.
      *
-     * @method Phaser.GameObjects.Mesh#addVertices
+     * @method Phaser.GameObjects.Mesh#addModelFromVertices
      * @since 3.50.0
      *
      * @param {number[]} vertices - The vertices array.
      * @param {number[]} uvs - The UVs array.
      * @param {number[]} [indicies] - Optional vertex indicies array.
+     * @param {string|Phaser.Textures.Texture} [texture] - The key, or instance of the Texture this model will use to render with, as stored in the Texture Manager.
+     * @param {string|integer} [frame] - An optional frame from the Texture this model is rendering with.
      * @param {number|number[]} [colors=0xffffff] - An array of colors, one per vertex, or a single color value applied to all vertices.
      * @param {number|number[]} [alphas=1] - An array of alpha values, one per vertex, or a single alpha value applied to all vertices.
      *
-     * @return {this} This Mesh Game Object.
+     * @return {Phaser.Geom.Mesh.Model} The Model instance that was created.
      */
-    addVertices: function (vertices, uvs, indicies, colors, alphas)
+    addModelFromVertices: function (vertices, uvs, indicies, texture, frame, colors, alphas)
     {
-        if (colors === undefined) { colors = 0xffffff; }
-        if (alphas === undefined) { alphas = 1; }
+        var model = this.addModel(texture, frame, 0, 0, 0);
 
-        if (vertices.length !== uvs.length)
-        {
-            throw new Error('Mesh - vertices and uv count not equal');
-        }
+        model.addVertices(vertices, uvs, indicies, colors, alphas);
 
-        var i;
-        var vert;
-        var verts = this.vertices;
-        var faces = this.faces;
-
-        var isColorArray = Array.isArray(colors);
-        var isAlphaArray = Array.isArray(alphas);
-
-        if (Array.isArray(indicies) && indicies.length > 0)
-        {
-            for (i = 0; i < indicies.length; i++)
-            {
-                var index = indicies[i] * 2;
-
-                vert = new Vertex(
-                    vertices[index],
-                    vertices[index + 1],
-                    0,
-                    uvs[index],
-                    uvs[index + 1],
-                    (isColorArray) ? colors[i] : colors,
-                    (isAlphaArray) ? alphas[i] : alphas
-                );
-
-                verts.push(vert);
-            }
-        }
-        else
-        {
-            var colorIndex = 0;
-
-            for (i = 0; i < vertices.length; i += 2)
-            {
-                vert = new Vertex(
-                    vertices[i],
-                    vertices[i + 1],
-                    0,
-                    uvs[i],
-                    uvs[i + 1],
-                    (isColorArray) ? colors[colorIndex] : colors,
-                    (isAlphaArray) ? alphas[colorIndex] : alphas
-                );
-
-                verts.push(vert);
-
-                colorIndex++;
-            }
-        }
-
-        for (i = 0; i < verts.length; i += 3)
-        {
-            var vert1 = verts[i];
-            var vert2 = verts[i + 1];
-            var vert3 = verts[i + 2];
-
-            var face = new Face(vert1, vert2, vert3);
-
-            faces.push(face);
-        }
-
-        return this;
+        return model;
     },
 
     /**
-     * Return an array of Face objects from this Mesh that intersect with the given coordinates.
+     * Return an array of Modes from this Mesh that intersect with the given coordinates.
      *
      * The given position is translated through the matrix of this Mesh and the given Camera,
-     * before being compared against the vertices.
+     * before being compared against the model vertices.
      *
-     * If more than one Face intersects, they will all be returned in the array, but the array will
+     * If more than one model intersects, they will all be returned in the array, but the array will
      * be depth sorted first, so the first element will always be that closest to the camera.
      *
-     * @method Phaser.GameObjects.Mesh#getFaceAt
+     * @method Phaser.GameObjects.Mesh#getModelAt
      * @since 3.50.0
      *
      * @param {number} x - The x position to check against.
      * @param {number} y - The y position to check against.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The camera to pass the coordinates through. If not give, the default Scene Camera is used.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The camera to pass the coordinates through. If not given, the default Scene Camera is used.
      *
-     * @return {Phaser.GameObjects.Face[]} An array of Face objects that intersect with the given point, ordered by depth.
+     * @return {Phaser.Geom.Mesh.Model[]} An array of Models objects that intersect with the given point, ordered by depth.
      */
     getModelAt: function (x, y, camera)
     {
         if (camera === undefined) { camera = this.scene.sys.cameras.main; }
 
+        var results = [];
+
+        var models = this.models;
+
+        var calcMatrix = GetCalcMatrix(this.mesh, camera).calc;
+
+        for (var i = 0; i < models.length; i++)
+        {
+            var model = models[i];
+
+            if (model.visible)
+            {
+                var faces = model.getFaceAt(x, y, camera, calcMatrix);
+
+                if (faces.length > 0)
+                {
+                    results.push({ model: model, faces: faces });
+                }
+            }
+        }
+
+        return results;
     },
 
     /**
-     * This method enables rendering of the Mesh vertices to the given Graphics instance.
+     * This method enables rendering of the Model vertices to the given Graphics instance.
      *
      * If you enable this feature, you **must** call `Graphics.clear()` in your Scene `update`,
      * otherwise the Graphics instance you provide to debug will fill-up with draw calls,
      * eventually crashing the browser. This is not done automatically to allow you to debug
      * draw multiple Mesh objects to a single Graphics instance.
+     *
+     * You can toggle debug drawing on a per-Model basis via the `Model.drawDebug` boolean property.
      *
      * The Mesh class has a built-in debug rendering callback `Mesh.renderDebugVerts`, however
      * you can also provide your own callback to be used instead. Do this by setting the `callback` parameter.
@@ -459,8 +440,7 @@ var Mesh = new Class({
      *
      * `callback(src, meshLength, verts)`
      *
-     * `src` is the Mesh instance being debugged.
-     * `meshLength` is the number of mesh vertices in total.
+     * `src` is the Model instance being debugged.
      * `verts` is an array of the translated vertex coordinates.
      *
      * If using your own callback you do not have to provide a Graphics instance to this method.
@@ -508,36 +488,46 @@ var Mesh = new Class({
      */
     preUpdate: function (time, delta)
     {
-        this.anims.update(time, delta);
-
         var renderer = this.scene.sys.renderer;
+
         var width = renderer.width;
         var height = renderer.height;
 
         var camera = this.camera;
+
+        if (camera.dirty || width !== this._prevWidth || height !== this._prevHeight)
+        {
+            //  Renderer has resized, flow that down to the Camera
+            camera.update(width, height);
+
+            this._prevWidth = width;
+            this._prevHeight = height;
+        }
+
         var models = this.models;
-        var viewMatrix = this.viewMatrix;
-        var projectionMatrix = this.projectionMatrix;
-
-        viewMatrix.lookAt(camera.position, camera.target, Vector3.UP);
-
-        projectionMatrix.perspective(camera.fov, width / height, camera.near, camera.far);
 
         for (var i = 0; i < models.length; i++)
         {
-            models[i].update(viewMatrix, projectionMatrix, width, height);
+            var model = models[i];
+
+            if (model.visible)
+            {
+                model.preUpdate(time, delta, camera, width, height);
+            }
         }
+
+        camera.dirty = false;
     },
 
     /**
-     * The built-in Mesh vertices debug rendering method.
+     * The built-in vertices debug rendering method.
      *
      * See `Mesh.setDebug` for more details.
      *
      * @method Phaser.GameObjects.Mesh#renderDebugVerts
      * @since 3.50.0
      *
-     * @param {Phaser.GameObjects.Mesh} src - The Mesh object being rendered.
+     * @param {Phaser.Geom.Mesh.Model} src - The Model being rendered.
      * @param {number[]} verts - An array of translated vertex coordinates.
      */
     renderDebugVerts: function (src, verts)
@@ -566,11 +556,11 @@ var Mesh = new Class({
      */
     preDestroy: function ()
     {
-        this.anims.destroy();
-
-        this.anims = undefined;
-
         this.clearModels();
+
+        this.camera.destroy();
+
+        this.camera = null;
 
         this.debugCallback = null;
         this.debugGraphic = null;
