@@ -316,7 +316,7 @@ var EmitterOp = new Class({
 
                 var easeType = this.has(value, 'ease') ? value.ease : 'Linear';
 
-                this.ease = GetEaseFunction(easeType);
+                this.ease = GetEaseFunction(easeType, value.easeParams);
 
                 if (!isRandom)
                 {
