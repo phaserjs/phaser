@@ -234,8 +234,6 @@ var Model = new Class({
         }
 
         this.depthSort();
-
-        console.log('model.update');
     },
 
     /**
