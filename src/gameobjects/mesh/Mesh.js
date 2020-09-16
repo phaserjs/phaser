@@ -158,6 +158,9 @@ var Mesh = new Class({
         /**
          * When rendering, skip any Face that isn't counter clockwise?
          *
+         * Enable this to hide backward-facing Faces during rendering.
+         * Disable it to render all Faces.
+         *
          * @name Phaser.GameObjects.Mesh#hideCCW
          * @type {boolean}
          * @since 3.50.0
@@ -213,7 +216,7 @@ var Mesh = new Class({
     },
 
     /**
-     * This method will add the model data from a loaded Wavefront OBJ file to this Mesh.
+     * This method will add the model data from a loaded triangulated Wavefront OBJ file to this Mesh.
      *
      * The obj should have been loaded via the OBJFile:
      *
@@ -255,7 +258,7 @@ var Mesh = new Class({
     },
 
     /**
-     * This method will add parsed OBJ model data to this Mesh.
+     * This method will add parsed triangulated OBJ model data to this Mesh.
      *
      * The obj should have been parsed in advance via the ParseObj function:
      *
@@ -512,7 +515,36 @@ var Mesh = new Class({
     },
 
     /**
-     * TODO
+     * Adds new vertices to this Mesh by parsing the given arrays.
+     *
+     * The `vertices` parameter is a numeric array consisting of `x` and `y` pairs.
+     * The `uvs` parameter is a numeric array consisting of `u` and `v` pairs.
+     * The `indicies` parameter is an optional array that, if given, is an indexed list of vertices to be added.
+     *
+     * The following example will create a 256 x 256 sized quad using an index array:
+     *
+     * ```javascript
+     * const vertices = [
+     *   -128, 128,
+     *   128, 128,
+     *   -128, -128,
+     *   128, -128
+     * ];
+     *
+     * const uvs = [
+     *   0, 1,
+     *   1, 1,
+     *   0, 0,
+     *   1, 0
+     * ];
+     *
+     * const indices = [ 0, 2, 1, 2, 3, 1 ];
+     *
+     * Mesh.addVertices(vertices, uvs, indicies);
+     * ```
+     *
+     * Vertices must be provided as x/y pairs, there is no `z` component used in this call. For that, please see
+     * `addModel` instead.
      *
      * @method Phaser.GameObjects.Mesh#addVertices
      * @since 3.50.0
