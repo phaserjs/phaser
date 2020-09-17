@@ -222,15 +222,11 @@ var Model = new Class({
 
         transformMatrix.setWorldMatrix(this.rotation, this.position, this.scale, camera.viewMatrix, camera.projectionMatrix);
 
-        var faces = this.faces;
+        var vertices = this.vertices;
 
-        for (var f = 0; f < faces.length; f++)
+        for (var i = 0; i < vertices.length; i++)
         {
-            var face = faces[f];
-
-            face.vertex1.transformCoordinatesLocal(transformMatrix, width, height);
-            face.vertex2.transformCoordinatesLocal(transformMatrix, width, height);
-            face.vertex3.transformCoordinatesLocal(transformMatrix, width, height);
+            vertices[i].transformCoordinatesLocal(transformMatrix, width, height);
         }
 
         this.depthSort();
