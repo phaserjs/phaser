@@ -34,6 +34,8 @@ var MeshCamera = new Class({
         this._position = new Vector3(x, y, z);
         this._target = new Vector3();
 
+        this.orientation = Vector3.DOWN;
+
         this.viewMatrix = new Matrix4();
         this.projectionMatrix = new Matrix4();
     },
@@ -42,7 +44,7 @@ var MeshCamera = new Class({
     {
         this.aspectRatio = width / height;
 
-        this.viewMatrix.lookAt(this._position, this._target, Vector3.UP);
+        this.viewMatrix.lookAt(this._position, this._target, this.orientation);
 
         this.projectionMatrix.perspective(DegToRad(this._fov), this.aspectRatio, this._near, this._far);
     },
