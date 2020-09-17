@@ -61,6 +61,15 @@ var Vertex = new Class({
         this.vy = 0;
 
         /**
+         * The projected z coordinate of this vertex.
+         *
+         * @name Phaser.Geom.Mesh.Vertex#vz
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.vz = 0;
+
+        /**
          * UV u coordinate of this vertex.
          *
          * @name Phaser.Geom.Mesh.Vertex#u
@@ -98,7 +107,7 @@ var Vertex = new Class({
     },
 
     /**
-     * Transforms this vertex by the given matrix, storing the results in `vx` and `vy`.
+     * Transforms this vertex by the given matrix, storing the results in `vx`, `vy` and `vz`.
      *
      * @method Phaser.Geom.Mesh.Model#transformCoordinatesLocal
      * @since 3.50.0
@@ -117,10 +126,12 @@ var Vertex = new Class({
 
         var tx = (x * m[0]) + (y * m[4]) + (z * m[8]) + m[12];
         var ty = (x * m[1]) + (y * m[5]) + (z * m[9]) + m[13];
+        var tz = (x * m[2]) + (y * m[6]) + (z * m[10]) + m[14];
         var tw = (x * m[3]) + (y * m[7]) + (z * m[11]) + m[15];
 
         this.vx = (tx / tw) * width;
         this.vy = -(ty / tw) * height;
+        this.vz = (tz / tw);
     },
 
     /**
