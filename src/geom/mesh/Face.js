@@ -258,7 +258,7 @@ var Face = new Class({
         var v2 = this.vertex2;
         var v3 = this.vertex3;
 
-        return (v2.x - v1.x) * (v3.y - v1.y) - (v2.y - v1.y) * (v3.x - v1.x) >= 0;
+        return (v2.vx - v1.vx) * (v3.vy - v1.vy) - (v2.vy - v1.vy) * (v3.vx - v1.vx) >= 0;
     },
 
     /**
@@ -323,7 +323,7 @@ var Face = new Class({
             var v2 = this.vertex2;
             var v3 = this.vertex3;
 
-            return (v1.z + v2.z + v3.z) / 3;
+            return (v1.vz + v2.vz + v3.vz) / 3;
         }
 
     },
