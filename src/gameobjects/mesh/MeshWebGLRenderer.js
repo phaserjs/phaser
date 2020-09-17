@@ -64,13 +64,6 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
             continue;
         }
 
-        if (pipeline.shouldFlush(model.getVertexCount()))
-        {
-            pipeline.flush();
-
-            vertexOffset = 0;
-        }
-
         if (debugCallback)
         {
             debugVerts = [];
@@ -86,6 +79,13 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
             if (model.hideCCW && !face.isCounterClockwise())
             {
                 continue;
+            }
+
+            if (pipeline.shouldFlush(3))
+            {
+                pipeline.flush();
+
+                vertexOffset = 0;
             }
 
             vertexOffset = face.vertex1.load(F32, U32, vertexOffset, textureUnit, tintEffect, alpha, a, b, c, d, e, f);
