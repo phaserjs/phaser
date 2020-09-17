@@ -484,6 +484,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * The `Text.MeasureText` function, which is used to calculate the ascent and descent of Text Game Objects whenever the style, or font size, is changed, has been updated to use the new `actualBoundingBoxAscent` functions present in modern browsers. This allows for significantly faster ascent calculations than previously. Older browsers, such as IE, will still fall back (thanks @rexrainbow)
 * `GameObjects.GetCalcMatrix` is a new function that is used to calculate the transformed Game Object matrix, based on the given Game Object, Camera and Parent. This function is now used by the following Game Objects: `BitmapText` (Static and Dynamic), `Graphics`, `Extern`, `Mesh`, `Rope`, `Shader`, `Arc`, `Curve`, `Ellipse`, `Grid`, `IsoBox`, `IsoTriangle`, `Line`, `Polygon`, `Rectangle`, `Star` and `Triangle`. This dramatically reduces the amount of duplicate code across the API.
 * `Utils.Array.Matrix.Translate` is a new function that will translate an Array Matrix by horizontally and vertically by the given amounts.
+* `Vertor3.addScale` is a new method that will add the given vector and multiply it in the process.
 
 ### Updates and API Changes
 
