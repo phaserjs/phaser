@@ -762,7 +762,7 @@ var Group = new Class({
      */
     getMatching: function (property, value, startIndex, endIndex)
     {
-        return GetAll(this.children, property, value, startIndex, endIndex);
+        return GetAll(this.children.entries, property, value, startIndex, endIndex);
     },
 
     /**
