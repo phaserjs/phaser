@@ -156,7 +156,7 @@ var SinglePipeline = new Class({
 
         var hasFlushed = false;
 
-        if (this.vertexCount + 6 > this.vertexCapacity)
+        if (this.shouldFlush(6))
         {
             this.flush();
 
@@ -260,7 +260,7 @@ var SinglePipeline = new Class({
 
         var hasFlushed = false;
 
-        if (this.vertexCount + 3 > this.vertexCapacity)
+        if (this.shouldFlush(3))
         {
             this.flush();
 
