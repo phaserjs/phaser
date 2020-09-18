@@ -79,6 +79,90 @@ var Matrix4 = new Class({
         return this.copy(src);
     },
 
+    //  TODO - Docs
+    fromRotationXYTranslation: function (rotation, position, translateFirst)
+    {
+        var x = position.x;
+        var y = position.y;
+        var z = position.z;
+
+        var sx = Math.sin(rotation.x);
+        var cx = Math.cos(rotation.x);
+
+        var sy = Math.sin(rotation.y);
+        var cy = Math.cos(rotation.y);
+
+        var a30 = x;
+        var a31 = y;
+        var a32 = z;
+
+        //  Rotate X
+
+        var b21 = -sx;
+
+        //  Rotate Y
+
+        var c01 = 0 - b21 * sy;
+
+        var c02 = 0 - cx * sy;
+
+        var c21 = b21 * cy;
+
+        var c22 = cx * cy;
+
+        //  Translate
+        if (!translateFirst)
+        {
+            // a30 = cy * x + 0 * y + sy * z;
+            a30 = cy * x + sy * z;
+            a31 = c01 * x + cx * y + c21 * z;
+            a32 = c02 * x + sx * y + c22 * z;
+        }
+
+        return this.setValues(
+            cy,
+            c01,
+            c02,
+            0,
+            0,
+            cx,
+            sx,
+            0,
+            sy,
+            c21,
+            c22,
+            0,
+            a30,
+            a31,
+            a32,
+            1
+        );
+    },
+
+    setValues: function (m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33)
+    {
+        var out = this.val;
+
+        out[0] = m00;
+        out[1] = m01;
+        out[2] = m02;
+        out[3] = m03;
+        out[4] = m10;
+        out[5] = m11;
+        out[6] = m12;
+        out[7] = m13;
+        out[8] = m20;
+        out[9] = m21;
+        out[10] = m22;
+        out[11] = m23;
+        out[12] = m30;
+        out[13] = m31;
+        out[14] = m32;
+        out[15] = m33;
+
+        return this;
+    },
+
     /**
      * Copy the values of a given Matrix into this Matrix.
      *
@@ -476,6 +560,69 @@ var Matrix4 = new Class({
 
         // Calculate the determinant
         return b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+    },
+
+    //  TODO - Docs
+    multiplyToMat4: function (src, out)
+    {
+        var a = this.val;
+        var b = src.val;
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a03 = a[3];
+        var a10 = a[4];
+        var a11 = a[5];
+        var a12 = a[6];
+        var a13 = a[7];
+        var a20 = a[8];
+        var a21 = a[9];
+        var a22 = a[10];
+        var a23 = a[11];
+        var a30 = a[12];
+        var a31 = a[13];
+        var a32 = a[14];
+        var a33 = a[15];
+
+        var b00 = b[0];
+        var b01 = b[1];
+        var b02 = b[2];
+        var b03 = b[3];
+        var b10 = b[4];
+        var b11 = b[5];
+        var b12 = b[6];
+        var b13 = b[7];
+        var b20 = b[8];
+        var b21 = b[9];
+        var b22 = b[10];
+        var b23 = b[11];
+        var b30 = b[12];
+        var b31 = b[13];
+        var b32 = b[14];
+        var b33 = b[15];
+
+        return out.setValues(
+            b00 * a00 + b01 * a10 + b02 * a20 + b03 * a30,
+            b01 * a01 + b01 * a11 + b02 * a21 + b03 * a31,
+            b02 * a02 + b01 * a12 + b02 * a22 + b03 * a32,
+            b03 * a03 + b01 * a13 + b02 * a23 + b03 * a33,
+
+            b10 * a00 + b11 * a10 + b12 * a20 + b13 * a30,
+            b10 * a01 + b11 * a11 + b12 * a21 + b13 * a31,
+            b10 * a02 + b11 * a12 + b12 * a22 + b13 * a32,
+            b10 * a03 + b11 * a13 + b12 * a23 + b13 * a33,
+
+            b20 * a00 + b21 * a10 + b22 * a20 + b23 * a30,
+            b20 * a01 + b21 * a11 + b22 * a21 + b23 * a31,
+            b20 * a02 + b21 * a12 + b22 * a22 + b23 * a32,
+            b20 * a03 + b21 * a13 + b22 * a23 + b23 * a33,
+
+            b30 * a00 + b31 * a10 + b32 * a20 + b33 * a30,
+            b30 * a01 + b31 * a11 + b32 * a21 + b33 * a31,
+            b30 * a02 + b31 * a12 + b32 * a22 + b33 * a32,
+            b30 * a03 + b31 * a13 + b32 * a23 + b33 * a33
+        );
     },
 
     /**
