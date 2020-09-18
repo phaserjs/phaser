@@ -8,11 +8,151 @@ var CONST = require('../../const.js');
 var SnapFloor = require('../../math/snap/SnapFloor');
 var SnapCeil = require('../../math/snap/SnapCeil');
 var CheckIsoBounds = require('./CheckIsoBounds');
+var GetCullBounds = require('./GetCullBounds');
+
+/**
+ * Orientation-Decorated function that returns the tiles in the given layer that are within the camera's viewport. This is used internally.
+ *
+ * @function Phaser.Tilemaps.Components.GetStandardCullTiles
+ * @since 3.0.0
+ * --- decorator:
+ * @param {function} getCullBounds
+ * --- inner function : 
+ * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
+ * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to run the cull check against.
+ * @param {array} [outputArray] - An optional array to store the Tile objects within.
+ *
+ * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects.
+ */
+var GetStandardCullTiles = function (getCullBounds)
+{
+    console.log('getting standard cull tiles function');
+    
+    var StandardCullTiles = function (layer, camera, outputArray, renderOrder)
+    {
+        if (outputArray === undefined) { outputArray = []; }
+        if (renderOrder === undefined) { renderOrder = 0; }
+        console.log('culling tiles');
+        outputArray.length = 0;
+
+        var tilemapLayer = layer.tilemapLayer;
+
+        var mapData = layer.data;
+        var mapWidth = layer.width;
+        var mapHeight = layer.height;
+
+        var drawLeft = 0;
+        var drawRight = mapWidth;
+        var drawTop = 0;
+        var drawBottom = mapHeight;
+
+        if (!tilemapLayer.skipCull && tilemapLayer.scrollFactorX === 1 && tilemapLayer.scrollFactorY === 1)
+        {
+        //  Camera world view bounds, snapped for scaled tile size
+        //  Cull Padding values are given in tiles, not pixels
+            var bounds = getCullBounds(layer,camera);
+
+            drawLeft = Math.max(0, bounds.left);
+            drawRight = Math.min(mapWidth, bounds.right);
+            drawTop = Math.max(0, bounds.top);
+            drawBottom = Math.min(mapHeight, bounds.bottom);
+        }
+        var x;
+        var y;
+        var tile;
+
+    
+        if (renderOrder === 0)
+        {
+        //  right-down
+
+            for (y = drawTop; y < drawBottom; y++)
+            {
+                for (x = drawLeft; mapData[y] && x < drawRight; x++)
+                {
+                    tile = mapData[y][x];
+
+                    if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                    {
+                        continue;
+                    }
+
+                    outputArray.push(tile);
+                }
+            }
+        }
+        else if (renderOrder === 1)
+        {
+        //  left-down
+
+            for (y = drawTop; y < drawBottom; y++)
+            {
+                for (x = drawRight; mapData[y] && x >= drawLeft; x--)
+                {
+                    tile = mapData[y][x];
+
+                    if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                    {
+                        continue;
+                    }
+
+                    outputArray.push(tile);
+                }
+            }
+        }
+        else if (renderOrder === 2)
+        {
+        //  right-up
+
+            for (y = drawBottom; y >= drawTop; y--)
+            {
+                for (x = drawLeft; mapData[y] && x < drawRight; x++)
+                {
+                    tile = mapData[y][x];
+
+                    if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                    {
+                        continue;
+                    }
+
+                    outputArray.push(tile);
+                }
+            }
+        }
+        else if (renderOrder === 3)
+        {
+        //  left-up
+
+            for (y = drawBottom; y >= drawTop; y--)
+            {
+                for (x = drawRight; mapData[y] && x >= drawLeft; x--)
+                {
+                    tile = mapData[y][x];
+
+                    if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                    {
+                        continue;
+                    }
+
+                    outputArray.push(tile);
+                }
+            }
+        }
+    
+
+        tilemapLayer.tilesDrawn = outputArray.length;
+        tilemapLayer.tilesTotal = mapWidth * mapHeight;
+
+        return outputArray;
+    };
+    return StandardCullTiles;
+};
+
 
 /**
  * Returns the tiles in the given layer that are within the camera's viewport. This is used internally.
  *
- * @function Phaser.Tilemaps.Components.CullTiles
+ * @function Phaser.Tilemaps.Components.IsoCullTiles
  * @since 3.0.0
  *
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
@@ -21,7 +161,7 @@ var CheckIsoBounds = require('./CheckIsoBounds');
  *
  * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects.
  */
-var CullTiles = function (layer, camera, outputArray, renderOrder)
+var IsoCullTiles = function (layer, camera, outputArray, renderOrder)
 {
     if (outputArray === undefined) { outputArray = []; }
     if (renderOrder === undefined) { renderOrder = 0; }
@@ -257,15 +397,12 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
                         {
                             continue;
                         }
-    
                         outputArray.push(tile);
                     }
                 }
             }
         }
-
     }
-
 
     tilemapLayer.tilesDrawn = outputArray.length;
     tilemapLayer.tilesTotal = mapWidth * mapHeight;
@@ -273,4 +410,15 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
     return outputArray;
 };
 
+
+var CullTiles = function (orientation)
+{
+    switch (orientation)
+    {
+        case CONST.ISOMETRIC:
+            return IsoCullTiles;
+        default:
+            return GetStandardCullTiles(GetCullBounds(orientation));
+    }
+};
 module.exports = CullTiles;

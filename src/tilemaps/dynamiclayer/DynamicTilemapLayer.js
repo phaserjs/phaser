@@ -220,7 +220,7 @@ var DynamicTilemapLayer = new Class({
          * @type {function}
          * @since 3.11.0
          */
-        this.cullCallback = TilemapComponents.CullTiles;
+        this.cullCallback = TilemapComponents.CullTiles(this.layer.orientation);
 
         /**
          * The rendering (draw) order of the tiles in this layer.
