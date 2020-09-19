@@ -1510,8 +1510,8 @@ var Graphics = new Class({
 
         if (ctx)
         {
-            // var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix, renderTargetCtx, allowClip)
-            this.renderCanvas(renderer, this, 0, Graphics.TargetCamera, null, ctx, false);
+            // var GraphicsCanvasRenderer = function (renderer, src, camera, parentMatrix, renderTargetCtx, allowClip)
+            this.renderCanvas(renderer, this, Graphics.TargetCamera, null, ctx, false);
 
             if (texture)
             {

@@ -4,8 +4,6 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CONST = require('../../const.js');
-
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -17,16 +15,16 @@ var CONST = require('../../const.js');
  *
  * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
  * @param {Phaser.Tilemaps.DynamicTilemapLayer} src - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
+var DynamicTilemapLayerCanvasRenderer = function (renderer, src, camera, parentMatrix)
 {
     src.cull(camera);
 
     var renderTiles = src.culledTiles;
     var tileCount = renderTiles.length;
+
     if (tileCount === 0)
     {
         return;
@@ -76,8 +74,8 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
 
     for (var i = 0; i < tileCount; i++)
     {
-
         var tile = renderTiles[i];
+
         var tileset = gidMap[tile.index];
 
         if (!tileset)
@@ -86,51 +84,39 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
         }
 
         var image = tileset.image.getSourceImage();
-
         var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
-  
+
         if (tileTexCoords)
         {
-            var width = tile.width;
-            var height = tile.width;
+            var halfWidth = tileset.tileWidth 2;
+            var halfHeight = tileset.tileHeight / 2;
 
-            if (src.layer.orientation === CONST.ISOMETRIC || src.layer.orientation === CONST.STAGGERED || src.layer.orientation === CONST.HEXAGONAL)
-            {
-                // we use the tileset width and height because in isometric and hexagonal maps the tileset's height is often different from the tilemap's.
-                width = tileset.tileWidth;
-                height = tileset.tileHeight;
-            }
-
-            var halfWidth = width / 2;
-            var halfHeight = height / 2;
-    
             ctx.save();
 
             ctx.translate(tile.pixelX + halfWidth, tile.pixelY + halfHeight);
-    
+
             if (tile.rotation !== 0)
             {
                 ctx.rotate(tile.rotation);
             }
-    
+
             if (tile.flipX || tile.flipY)
             {
                 ctx.scale((tile.flipX) ? -1 : 1, (tile.flipY) ? -1 : 1);
             }
-    
+
             ctx.globalAlpha = alpha * tile.alpha;
 
             ctx.drawImage(
                 image,
                 tileTexCoords.x, tileTexCoords.y,
-                tileset.tileWidth, tileset.tileHeight,
+                tileset.tileWidth , tileset.Height,
                 -halfWidth, -halfHeight,
-                width, height
+                tileset.tileWidth , tileset.tileHeight
             );
-    
+
             ctx.restore();
         }
-
     }
 
     ctx.restore();

@@ -189,7 +189,7 @@ var BitmapMaskPipeline = new Class({
             }
 
             //  Bind bitmap mask pipeline and draw
-            renderer.setPipeline(this);
+            renderer.pipelines.set(this);
 
             gl.activeTexture(gl.TEXTURE1);
             gl.bindTexture(gl.TEXTURE_2D, mask.maskTexture);

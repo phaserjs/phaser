@@ -10,7 +10,6 @@ Color.ColorToRGBA = require('./ColorToRGBA');
 Color.ComponentToHex = require('./ComponentToHex');
 Color.GetColor = require('./GetColor');
 Color.GetColor32 = require('./GetColor32');
-Color.GetColorFromValue = require('./GetColorFromValue');
 Color.HexStringToColor = require('./HexStringToColor');
 Color.HSLToColor = require('./HSLToColor');
 Color.HSVColorWheel = require('./HSVColorWheel');

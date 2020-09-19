@@ -18,6 +18,7 @@ module.exports = {
     RotateLeft: require('./RotateLeft'),
     RotateMatrix: require('./RotateMatrix'),
     RotateRight: require('./RotateRight'),
+    Translate: require('./TranslateMatrix'),
     TransposeMatrix: require('./TransposeMatrix')
 
 };

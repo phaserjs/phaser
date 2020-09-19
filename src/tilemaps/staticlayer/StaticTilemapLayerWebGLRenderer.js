@@ -23,10 +23,9 @@ var ViewLoad2D = require('../../renderer/webgl/mvp/ViewLoad2D');
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.Tilemaps.StaticTilemapLayer} src - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  */
-var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
+var StaticTilemapLayerWebGLRenderer = function (renderer, src, camera)
 {
     var gl = renderer.gl;
     var pipeline = src.pipeline;
@@ -41,7 +40,7 @@ var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPerc
     Scale(src, src.scaleX, src.scaleY, 1);
     ViewLoad2D(src, camera.matrix.matrix);
 
-    renderer.setPipeline(pipeline);
+    renderer.pipelines.set(pipeline);
 
     //  The above alters the uniforms, so make sure we call it _after_ setting the MVP stuff above
     renderer.setMatrix4(pipeline.program, 'uModelMatrix', false, src.modelMatrix);

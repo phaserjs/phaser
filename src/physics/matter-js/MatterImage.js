@@ -132,7 +132,7 @@ var MatterImage = new Class({
 
         this.setPosition(x, y);
 
-        this.initPipeline('MultiPipeline');
+        this.initPipeline();
     }
 
 });

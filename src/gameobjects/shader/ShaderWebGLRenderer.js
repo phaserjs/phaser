@@ -4,6 +4,8 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var GetCalcMatrix = require('../GetCalcMatrix');
+
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -15,20 +17,17 @@
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Shader} src - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var ShaderWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
+var ShaderWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
     if (!src.shader)
     {
         return;
     }
 
-    var pipeline = renderer.currentPipeline;
-
-    renderer.clearPipeline();
+    renderer.pipelines.clear();
 
     if (src.renderToTexture)
     {
@@ -37,42 +36,19 @@ var ShaderWebGLRenderer = function (renderer, src, interpolationPercentage, came
     }
     else
     {
-        var camMatrix = src._tempMatrix1;
-        var shapeMatrix = src._tempMatrix2;
-        var calcMatrix = src._tempMatrix3;
-    
-        shapeMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
-    
-        camMatrix.copyFrom(camera.matrix);
-    
-        if (parentMatrix)
-        {
-            //  Multiply the camera by the parent matrix
-            camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
-    
-            //  Undo the camera scroll
-            shapeMatrix.e = src.x;
-            shapeMatrix.f = src.y;
-        }
-        else
-        {
-            shapeMatrix.e -= camera.scrollX * src.scrollFactorX;
-            shapeMatrix.f -= camera.scrollY * src.scrollFactorY;
-        }
-    
-        camMatrix.multiply(shapeMatrix, calcMatrix);
-    
+        var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
+
         //  Renderer size changed?
         if (renderer.width !== src._rendererWidth || renderer.height !== src._rendererHeight)
         {
             src.projOrtho(0, renderer.width, renderer.height, 0);
         }
-    
+
         src.load(calcMatrix.matrix);
         src.flush();
     }
 
-    renderer.rebindPipeline(pipeline);
+    renderer.pipelines.rebind();
 };
 
 module.exports = ShaderWebGLRenderer;

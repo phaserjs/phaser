@@ -155,7 +155,7 @@ var DynamicTilemapLayer = new Class({
          * 
          * @name Phaser.Tilemaps.DynamicTilemapLayer#isoCullDistances
          * @type {Phaser.Math.Vector2}
-         * @since 3.23.0
+         * @since 3.50.iso
          */
         this.isoCullDistances = new Vector2(1, 1);
 
@@ -260,7 +260,7 @@ var DynamicTilemapLayer = new Class({
         this.setOrigin();
         this.setSize(tilemap.tileWidth * this.layer.width, tilemap.tileHeight * this.layer.height);
 
-        this.initPipeline('MultiPipeline');
+        this.initPipeline();
     },
 
     /**

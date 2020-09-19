@@ -4,10 +4,12 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var AnimationState = require('../../animations/AnimationState');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
 var GameObjectEvents = require('../events');
+var PIPELINE_CONST = require('../../renderer/webgl/pipelines/const');
 var RopeRender = require('./RopeRender');
 var Vector2 = require('../../math/Vector2');
 
@@ -83,13 +85,13 @@ var Rope = new Class({
         GameObject.call(this, scene, 'Rope');
 
         /**
-         * The Animation Controller of this Rope.
+         * The Animation State of this Rope.
          *
          * @name Phaser.GameObjects.Rope#anims
-         * @type {Phaser.GameObjects.Components.Animation}
+         * @type {Phaser.Animation.AnimationState}
          * @since 3.23.0
          */
-        this.anims = new Components.Animation(this);
+        this.anims = new AnimationState(this);
 
         /**
          * An array containing the points data for this Rope.
@@ -165,15 +167,14 @@ var Rope = new Class({
         /**
          * The tint fill mode.
          *
-         * 0 = An additive tint (the default), where vertices colors are blended with the texture.
-         * 1 = A fill tint, where the vertices colors replace the texture, but respects texture alpha.
-         * 2 = A complete tint, where the vertices colors replace the texture, including alpha, entirely.
+        * `false` = An additive tint (the default), where vertices colors are blended with the texture.
+        * `true` = A fill tint, where the vertices colors replace the texture, but respects texture alpha.
          *
          * @name Phaser.GameObjects.Rope#tintFill
-         * @type {integer}
+         * @type {boolean}
          * @since 3.23.0
          */
-        this.tintFill = (texture === '__DEFAULT') ? 2 : 0;
+        this.tintFill = (texture === '__DEFAULT') ? true : false;
 
         /**
          * If the Rope is marked as `dirty` it will automatically recalculate its vertices
@@ -274,7 +275,7 @@ var Rope = new Class({
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
-        this.initPipeline('RopePipeline');
+        this.initPipeline(PIPELINE_CONST.ROPE_PIPELINE);
 
         if (Array.isArray(points))
         {
@@ -421,14 +422,12 @@ var Rope = new Class({
     /**
      * Sets the tint fill mode.
      *
-     * Mode 0 is an additive tint, the default, which blends the vertices colors with the texture.
+     * Mode 0 (`false`) is an additive tint, the default, which blends the vertices colors with the texture.
      * This mode respects the texture alpha.
      *
-     * Mode 1 is a fill tint. Unlike an additive tint, a fill-tint literally replaces the pixel colors
+     * Mode 1 (`true`) is a fill tint. Unlike an additive tint, a fill-tint literally replaces the pixel colors
      * from the texture with those in the tint. You can use this for effects such as making a player flash 'white'
      * if hit by something. This mode respects the texture alpha.
-     *
-     * Mode 2 is a complete tint. The texture colors and alpha are replaced entirely by the vertices colors.
      *
      * See the `setColors` method for details of how to color each of the vertices.
      *
@@ -436,13 +435,13 @@ var Rope = new Class({
      * @webglOnly
      * @since 3.23.0
      *
-     * @param {integer} [value=0] - Set to 0 for an Additive tint, 1 for a fill tint with alpha, or 2 for a fill tint without alpha.
+     * @param {boolean} [value=false] - Set to `false` for an Additive tint or `true` fill tint with alpha.
      *
      * @return {this} This Game Object instance.
      */
     setTintFill: function (value)
     {
-        if (value === undefined) { value = 0; }
+        if (value === undefined) { value = false; }
 
         this.tintFill = value;
 
@@ -949,9 +948,10 @@ var Rope = new Class({
     /**
      * This method enables rendering of the Rope vertices to the given Graphics instance.
      *
-     * If you enable this feature, you must call `Graphics.clear()` in your Scene `update`,
-     * otherwise the Graphics instance will fill-in with draw calls. This is not done automatically
-     * to allow for you to debug render multiple Rope objects to a single Graphics instance.
+     * If you enable this feature, you **must** call `Graphics.clear()` in your Scene `update`,
+     * otherwise the Graphics instance you provide to debug will fill-up with draw calls,
+     * eventually crashing the browser. This is not done automatically to allow you to debug
+     * draw multiple Rope objects to a single Graphics instance.
      *
      * The Rope class has a built-in debug rendering callback `Rope.renderDebugVerts`, however
      * you can also provide your own callback to be used instead. Do this by setting the `callback` parameter.

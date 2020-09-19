@@ -8,7 +8,6 @@ var Class = require('../../../utils/Class');
 var Clamp = require('../../../math/Clamp');
 var Components = require('../../components');
 var GameObject = require('../../GameObject');
-var GetColorFromValue = require('../../../display/color/GetColorFromValue');
 var GetBitmapTextSize = require('../GetBitmapTextSize');
 var ParseFromAtlas = require('../ParseFromAtlas');
 var ParseXMLBitmapFont = require('../ParseXMLBitmapFont');
@@ -246,22 +245,13 @@ var BitmapText = new Class({
         /**
          * The color of the drop shadow.
          *
-         * @name Phaser.GameObjects.BitmapText#_dropShadowColor
-         * @type {number}
-         * @private
-         * @since 3.50.0
-         */
-        this._dropShadowColor = 0x000000;
-
-        /**
-         * The GL encoded color of the drop shadow.
+         * You can set this directly, or use `Phaser.GameObjects.BitmapText#setDropShadow`.
          *
-         * @name Phaser.GameObjects.BitmapText#_dropShadowColorGL
+         * @name Phaser.GameObjects.BitmapText#dropShadowColor
          * @type {number}
-         * @private
          * @since 3.50.0
          */
-        this._dropShadowColorGL = 0x000000;
+        this.dropShadowColor = 0x000000;
 
         /**
          * The alpha value of the drop shadow.
@@ -536,27 +526,23 @@ var BitmapText = new Class({
             else
             {
                 var tintEffect = (tintFill) ? 1 : 0;
-                var tintTL = GetColorFromValue(topLeft);
-                var tintTR = GetColorFromValue(topRight);
-                var tintBL = GetColorFromValue(bottomLeft);
-                var tintBR = GetColorFromValue(bottomRight);
 
                 if (color)
                 {
                     color.tintEffect = tintEffect;
-                    color.tintTL = tintTL;
-                    color.tintTR = tintTR;
-                    color.tintBL = tintBL;
-                    color.tintBR = tintBR;
+                    color.tintTL = topLeft;
+                    color.tintTR = topRight;
+                    color.tintBL = bottomLeft;
+                    color.tintBR = bottomRight;
                 }
                 else
                 {
                     charColors[i] = {
                         tintEffect: tintEffect,
-                        tintTL: tintTL,
-                        tintTR: tintTR,
-                        tintBL: tintBL,
-                        tintBR: tintBR
+                        tintTL: topLeft,
+                        tintTR: topRight,
+                        tintBL: bottomLeft,
+                        tintBR: bottomRight
                     };
                 }
             }
@@ -985,31 +971,6 @@ var BitmapText = new Class({
             this.getTextBounds(false);
 
             return this._bounds.global.height;
-        }
-
-    },
-
-    /**
-     * The color of the drop shadow.
-     *
-     * You can also set this via `Phaser.GameObjects.BitmapText#setDropShadow`.
-     *
-     * @name Phaser.GameObjects.BitmapText#dropShadowColor
-     * @type {number}
-     * @since 3.50.0
-     */
-    dropShadowColor: {
-
-        get: function ()
-        {
-            return this._dropShadowColor;
-        },
-
-        set: function (value)
-        {
-            this._dropShadowColor = value;
-
-            this._dropShadowColorGL = GetColorFromValue(value);
         }
 
     },

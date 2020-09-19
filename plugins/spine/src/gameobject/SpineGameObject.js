@@ -1037,6 +1037,9 @@ var SpineGameObject = new Class({
      */
     addAnimation: function (trackIndex, animationName, loop, delay)
     {
+        if (loop === undefined) { loop = false; }
+        if (delay === undefined) { delay = 0; }
+
         return this.state.addAnimation(trackIndex, animationName, loop, delay);
     },
 

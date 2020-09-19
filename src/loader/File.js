@@ -77,7 +77,18 @@ var File = new Class({
 
         if (!this.type || !this.key)
         {
-            throw new Error('Error calling \'Loader.' + this.type + '\' invalid key provided.');
+            throw new Error('Invalid Loader.' + this.type + ' key');
+        }
+
+        var url = GetFastValue(fileConfig, 'url');
+
+        if (url === undefined)
+        {
+            url = loader.path + loadKey + '.' + GetFastValue(fileConfig, 'extension', '');
+        }
+        else if (typeof url === 'string' && !url.match(/^(?:blob:|data:|http:\/\/|https:\/\/|\/\/)/))
+        {
+            url = loader.path + url;
         }
 
         /**
@@ -91,16 +102,7 @@ var File = new Class({
          * @type {object|string}
          * @since 3.0.0
          */
-        this.url = GetFastValue(fileConfig, 'url');
-
-        if (this.url === undefined)
-        {
-            this.url = loader.path + loadKey + '.' + GetFastValue(fileConfig, 'extension', '');
-        }
-        else if (typeof this.url === 'string' && this.url.indexOf('blob:') !== 0 && this.url.indexOf('data:') !== 0)
-        {
-            this.url = loader.path + this.url;
-        }
+        this.url = url;
 
         /**
          * The final URL this file will load from, including baseURL and path.

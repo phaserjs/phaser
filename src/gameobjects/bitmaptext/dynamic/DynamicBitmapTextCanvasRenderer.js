@@ -17,11 +17,10 @@ var SetTransform = require('../../../renderer/canvas/utils/SetTransform');
  *
  * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
  * @param {Phaser.GameObjects.DynamicBitmapText} src - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
+var DynamicBitmapTextCanvasRenderer = function (renderer, src, camera, parentMatrix)
 {
     var text = src._text;
     var textLength = text.length;
@@ -32,7 +31,7 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
     {
         return;
     }
-    
+
     var textureFrame = src.frame;
 
     var displayCallback = src.displayCallback;

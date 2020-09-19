@@ -79,13 +79,13 @@ var DataManager = new Class({
          * ```
          *
          * You can also modify it directly:
-         * 
+         *
          * ```javascript
          * this.data.values.gold += 1000;
          * ```
          *
          * Doing so will emit a `setdata` event from the parent of this Data Manager.
-         * 
+         *
          * Do not modify this object directly. Adding properties directly to this object will not
          * emit any events. Always use `DataManager.set` to create new items the first time around.
          *
@@ -109,7 +109,7 @@ var DataManager = new Class({
 
         if (!parent.hasOwnProperty('sys') && this.events)
         {
-            this.events.once('destroy', this.destroy, this);
+            this.events.once(Events.DESTROY, this.destroy, this);
         }
     },
 
@@ -117,19 +117,19 @@ var DataManager = new Class({
      * Retrieves the value for the given key, or undefined if it doesn't exist.
      *
      * You can also access values via the `values` object. For example, if you had a key called `gold` you can do either:
-     * 
+     *
      * ```javascript
      * this.data.get('gold');
      * ```
      *
      * Or access the value directly:
-     * 
+     *
      * ```javascript
      * this.data.values.gold;
      * ```
      *
      * You can also pass in an array of keys, in which case an array of values will be returned:
-     * 
+     *
      * ```javascript
      * this.data.get([ 'gold', 'armor', 'health' ]);
      * ```
@@ -214,7 +214,7 @@ var DataManager = new Class({
 
     /**
      * Sets a value for the given key. If the key doesn't already exist in the Data Manager then it is created.
-     * 
+     *
      * ```javascript
      * data.set('name', 'Red Gem Stone');
      * ```
@@ -226,13 +226,13 @@ var DataManager = new Class({
      * ```
      *
      * To get a value back again you can call `get`:
-     * 
+     *
      * ```javascript
      * data.get('gold');
      * ```
-     * 
+     *
      * Or you can access the value directly via the `values` property, where it works like any other variable:
-     * 
+     *
      * ```javascript
      * data.values.gold += 50;
      * ```
@@ -281,9 +281,9 @@ var DataManager = new Class({
 
     /**
      * Increase a value for the given key. If the key doesn't already exist in the Data Manager then it is increased from 0.
-     * 
+     *
      * When the value is first set, a `setdata` event is emitted.
-     * 
+     *
      * @method Phaser.Data.DataManager#inc
      * @fires Phaser.Data.Events#SET_DATA
      * @fires Phaser.Data.Events#CHANGE_DATA
@@ -320,9 +320,9 @@ var DataManager = new Class({
 
     /**
      * Toggle a boolean value for the given key. If the key doesn't already exist in the Data Manager then it is toggled from false.
-     * 
+     *
      * When the value is first set, a `setdata` event is emitted.
-     * 
+     *
      * @method Phaser.Data.DataManager#toggle
      * @fires Phaser.Data.Events#SET_DATA
      * @fires Phaser.Data.Events#CHANGE_DATA
@@ -382,7 +382,7 @@ var DataManager = new Class({
             Object.defineProperty(this.values, key, {
 
                 enumerable: true,
-                
+
                 configurable: true,
 
                 get: function ()
@@ -482,9 +482,9 @@ var DataManager = new Class({
      *
      * If the key is found in this Data Manager it is removed from the internal lists and a
      * `removedata` event is emitted.
-     * 
+     *
      * You can also pass in an array of keys, in which case all keys in the array will be removed:
-     * 
+     *
      * ```javascript
      * this.data.remove([ 'gold', 'armor', 'health' ]);
      * ```
@@ -576,7 +576,7 @@ var DataManager = new Class({
 
     /**
      * Determines whether the given key is set in this Data Manager.
-     * 
+     *
      * Please note that the keys are case-sensitive and must be valid JavaScript Object property strings.
      * This means the keys `gold` and `Gold` are treated as two unique values within the Data Manager.
      *

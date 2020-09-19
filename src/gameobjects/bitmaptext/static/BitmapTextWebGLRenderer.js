@@ -5,6 +5,7 @@
  */
 
 var BatchChar = require('../BatchChar');
+var GetCalcMatrix = require('../../GetCalcMatrix');
 var Utils = require('../../../renderer/webgl/Utils');
 
 /**
@@ -18,11 +19,10 @@ var Utils = require('../../../renderer/webgl/Utils');
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.BitmapText} src - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
+var BitmapTextWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
     var text = src._text;
     var textLength = text.length;
@@ -32,38 +32,9 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
         return;
     }
 
-    var pipeline = this.pipeline;
+    var pipeline = renderer.pipelines.set(this.pipeline, src);
 
-    renderer.setPipeline(pipeline, src);
-
-    var camMatrix = pipeline._tempMatrix1;
-    var spriteMatrix = pipeline._tempMatrix2;
-    var calcMatrix = pipeline._tempMatrix3;
-
-    spriteMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
-
-    camMatrix.copyFrom(camera.matrix);
-
-    if (parentMatrix)
-    {
-        //  Multiply the camera by the parent matrix
-        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
-
-        //  Undo the camera scroll
-        spriteMatrix.e = src.x;
-        spriteMatrix.f = src.y;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(spriteMatrix, calcMatrix);
-    }
-    else
-    {
-        spriteMatrix.e -= camera.scrollX * src.scrollFactorX;
-        spriteMatrix.f -= camera.scrollY * src.scrollFactorY;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(spriteMatrix, calcMatrix);
-    }
+    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
     var roundPixels = camera.roundPixels;
 
@@ -71,12 +42,12 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
 
     var charColors = src.charColors;
 
-    var tintEffect = (src._isTinted && src.tintFill);
+    var tintEffect = src.tintFill;
 
-    var tintTL = Utils.getTintAppendFloatAlpha(src._tintTL, cameraAlpha * src._alphaTL);
-    var tintTR = Utils.getTintAppendFloatAlpha(src._tintTR, cameraAlpha * src._alphaTR);
-    var tintBL = Utils.getTintAppendFloatAlpha(src._tintBL, cameraAlpha * src._alphaBL);
-    var tintBR = Utils.getTintAppendFloatAlpha(src._tintBR, cameraAlpha * src._alphaBR);
+    var tintTL = Utils.getTintAppendFloatAlpha(src.tintTopLeft, cameraAlpha * src._alphaTL);
+    var tintTR = Utils.getTintAppendFloatAlpha(src.tintTopRight, cameraAlpha * src._alphaTR);
+    var tintBL = Utils.getTintAppendFloatAlpha(src.tintBottomLeft, cameraAlpha * src._alphaBL);
+    var tintBR = Utils.getTintAppendFloatAlpha(src.tintBottomRight, cameraAlpha * src._alphaBR);
 
     var texture = src.frame.glTexture;
     var textureUnit = pipeline.setGameObject(src);

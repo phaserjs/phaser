@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var GetCalcMatrix = require('../../GetCalcMatrix');
 var Utils = require('../../../renderer/webgl/Utils');
 
 /**
@@ -17,40 +18,16 @@ var Utils = require('../../../renderer/webgl/Utils');
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.IsoTriangle} src - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var IsoTriangleWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
+var IsoTriangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
-    var pipeline = this.pipeline;
+    var pipeline = renderer.pipelines.set(this.pipeline);
 
-    var camMatrix = pipeline._tempMatrix1;
-    var shapeMatrix = pipeline._tempMatrix2;
-    var calcMatrix = pipeline._tempMatrix3;
+    var result = GetCalcMatrix(src, camera, parentMatrix);
 
-    renderer.setPipeline(pipeline);
-
-    shapeMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
-
-    camMatrix.copyFrom(camera.matrix);
-
-    if (parentMatrix)
-    {
-        //  Multiply the camera by the parent matrix
-        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
-
-        //  Undo the camera scroll
-        shapeMatrix.e = src.x;
-        shapeMatrix.f = src.y;
-    }
-    else
-    {
-        shapeMatrix.e -= camera.scrollX * src.scrollFactorX;
-        shapeMatrix.f -= camera.scrollY * src.scrollFactorY;
-    }
-
-    camMatrix.multiply(shapeMatrix, calcMatrix);
+    var calcMatrix = pipeline._tempMatrix3.copyFrom(result.calc);
 
     var size = src.width;
     var height = src.height;
@@ -84,7 +61,7 @@ var IsoTriangleWebGLRenderer = function (renderer, src, interpolationPercentage,
 
     if (src.showTop && reversed)
     {
-        tint = Utils.getTintAppendFloatAlphaAndSwap(src.fillTop, alpha);
+        tint = Utils.getTintAppendFloatAlpha(src.fillTop, alpha);
 
         x0 = calcMatrix.getX(-sizeA, -height);
         y0 = calcMatrix.getY(-sizeA, -height);
@@ -98,14 +75,14 @@ var IsoTriangleWebGLRenderer = function (renderer, src, interpolationPercentage,
         var x3 = calcMatrix.getX(0, sizeB - height);
         var y3 = calcMatrix.getY(0, sizeB - height);
 
-        pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 2);
+        pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 1);
     }
 
     //  Left Face
 
     if (src.showLeft)
     {
-        tint = Utils.getTintAppendFloatAlphaAndSwap(src.fillLeft, alpha);
+        tint = Utils.getTintAppendFloatAlpha(src.fillLeft, alpha);
 
         if (reversed)
         {
@@ -130,14 +107,14 @@ var IsoTriangleWebGLRenderer = function (renderer, src, interpolationPercentage,
             y2 = calcMatrix.getY(0, sizeB - height);
         }
 
-        pipeline.batchTri(x0, y0, x1, y1, x2, y2, 0, 0, 1, 1, tint, tint, tint, 2);
+        pipeline.batchTri(x0, y0, x1, y1, x2, y2, 0, 0, 1, 1, tint, tint, tint, 1);
     }
 
     //  Right Face
 
     if (src.showRight)
     {
-        tint = Utils.getTintAppendFloatAlphaAndSwap(src.fillRight, alpha);
+        tint = Utils.getTintAppendFloatAlpha(src.fillRight, alpha);
 
         if (reversed)
         {
@@ -162,7 +139,7 @@ var IsoTriangleWebGLRenderer = function (renderer, src, interpolationPercentage,
             y2 = calcMatrix.getY(0, sizeB - height);
         }
 
-        pipeline.batchTri(x0, y0, x1, y1, x2, y2, 0, 0, 1, 1, tint, tint, tint, 2);
+        pipeline.batchTri(x0, y0, x1, y1, x2, y2, 0, 0, 1, 1, tint, tint, tint, 1);
     }
 };
 

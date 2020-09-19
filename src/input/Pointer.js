@@ -508,17 +508,8 @@ var Pointer = new Class({
      */
     updateWorldPoint: function (camera)
     {
-        var x = this.x;
-        var y = this.y;
-
-        if (camera.resolution !== 1)
-        {
-            x += camera._x;
-            y += camera._y;
-        }
-
         //  Stores the world point inside of tempPoint
-        var temp = camera.getWorldPoint(x, y);
+        var temp = camera.getWorldPoint(this.x, this.y);
 
         this.worldX = temp.x;
         this.worldY = temp.y;

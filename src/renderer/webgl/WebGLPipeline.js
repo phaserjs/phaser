@@ -88,16 +88,6 @@ var WebGLPipeline = new Class({
         this.view = game.canvas;
 
         /**
-         * The current game resolution.
-         * This is hard-coded to 1.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#resolution
-         * @type {number}
-         * @since 3.0.0
-         */
-        this.resolution = 1;
-
-        /**
          * Width of the current viewport.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#width
@@ -353,14 +343,22 @@ var WebGLPipeline = new Class({
     /**
      * Check if the current batch of vertices is full.
      *
+     * You can optionally provide an `amount` parameter. If given, it will check if the batch
+     * needs to flush _if_ the `amount` is added to it. This allows you to test if you should
+     * flush before populating the batch.
+     *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#shouldFlush
      * @since 3.0.0
      *
+     * @param {integer} [amount=0] - Will the batch need to flush if this many vertices are added to it?
+     *
      * @return {boolean} `true` if the current batch should be flushed, otherwise `false`.
      */
-    shouldFlush: function ()
+    shouldFlush: function (amount)
     {
-        return (this.vertexCount >= this.vertexCapacity);
+        if (amount === undefined) { amount = 0; }
+
+        return (this.vertexCount + amount >= this.vertexCapacity);
     },
 
     /**
@@ -371,15 +369,13 @@ var WebGLPipeline = new Class({
      *
      * @param {number} width - The new width of this WebGL Pipeline.
      * @param {number} height - The new height of this WebGL Pipeline.
-     * @param {number} resolution - The resolution this WebGL Pipeline should be resized to.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    resize: function (width, height, resolution)
+    resize: function (width, height)
     {
-        this.width = width * resolution;
-        this.height = height * resolution;
-        this.resolution = resolution;
+        this.width = width;
+        this.height = height;
 
         return this;
     },

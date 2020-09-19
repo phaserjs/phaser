@@ -338,13 +338,12 @@ var MultiPipeline = new Class({
      *
      * @param {number} width - The new width.
      * @param {number} height - The new height.
-     * @param {number} resolution - The resolution.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    resize: function (width, height, resolution)
+    resize: function (width, height)
     {
-        WebGLPipeline.prototype.resize.call(this, width, height, resolution);
+        WebGLPipeline.prototype.resize.call(this, width, height);
 
         ProjectOrtho(this, 0, this.width, this.height, 0, -1000, 1000);
 
@@ -363,7 +362,7 @@ var MultiPipeline = new Class({
      */
     setTexture2D: function (texture)
     {
-        if (texture === undefined) { texture = this.renderer.blankTexture.glTexture; }
+        if (texture === undefined) { texture = this.renderer.whiteTexture.glTexture; }
 
         this.currentUnit = this.renderer.setTexture2D(texture);
 
@@ -416,7 +415,7 @@ var MultiPipeline = new Class({
     batchSprite: function (sprite, camera, parentTransformMatrix)
     {
         //  Will cause a flush if this isn't the current pipeline, vertexbuffer or program
-        this.renderer.setPipeline(this);
+        this.renderer.pipelines.set(this);
 
         var camMatrix = this._tempMatrix1;
         var spriteMatrix = this._tempMatrix2;
@@ -501,18 +500,15 @@ var MultiPipeline = new Class({
             //  Undo the camera scroll
             spriteMatrix.e = sprite.x;
             spriteMatrix.f = sprite.y;
-
-            //  Multiply by the Sprite matrix, store result in calcMatrix
-            camMatrix.multiply(spriteMatrix, calcMatrix);
         }
         else
         {
             spriteMatrix.e -= camera.scrollX * sprite.scrollFactorX;
             spriteMatrix.f -= camera.scrollY * sprite.scrollFactorY;
-
-            //  Multiply by the Sprite matrix, store result in calcMatrix
-            camMatrix.multiply(spriteMatrix, calcMatrix);
         }
+
+        //  Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(spriteMatrix, calcMatrix);
 
         var xw = x + frameWidth;
         var yh = y + frameHeight;
@@ -529,10 +525,10 @@ var MultiPipeline = new Class({
         var tx3 = calcMatrix.getX(xw, y);
         var ty3 = calcMatrix.getY(xw, y);
 
-        var tintTL = Utils.getTintAppendFloatAlpha(sprite._tintTL, camera.alpha * sprite._alphaTL);
-        var tintTR = Utils.getTintAppendFloatAlpha(sprite._tintTR, camera.alpha * sprite._alphaTR);
-        var tintBL = Utils.getTintAppendFloatAlpha(sprite._tintBL, camera.alpha * sprite._alphaBL);
-        var tintBR = Utils.getTintAppendFloatAlpha(sprite._tintBR, camera.alpha * sprite._alphaBR);
+        var tintTL = Utils.getTintAppendFloatAlpha(sprite.tintTopLeft, camera.alpha * sprite._alphaTL);
+        var tintTR = Utils.getTintAppendFloatAlpha(sprite.tintTopRight, camera.alpha * sprite._alphaTR);
+        var tintBL = Utils.getTintAppendFloatAlpha(sprite.tintBottomLeft, camera.alpha * sprite._alphaBL);
+        var tintBR = Utils.getTintAppendFloatAlpha(sprite.tintBottomRight, camera.alpha * sprite._alphaBR);
 
         if (camera.roundPixels)
         {
@@ -550,14 +546,14 @@ var MultiPipeline = new Class({
         }
 
         //  So batchQuad never assigns a unit to the glTexture, but to the textureSource instead
-        if (this.vertexCount + 6 > this.vertexCapacity)
+        if (this.shouldFlush(6))
         {
             this.flush();
         }
 
         var unit = this.setGameObject(sprite);
 
-        var tintEffect = (sprite._isTinted && sprite.tintFill);
+        var tintEffect = sprite.tintFill;
 
         this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, unit);
     },
@@ -610,7 +606,7 @@ var MultiPipeline = new Class({
 
         var hasFlushed = false;
 
-        if (this.vertexCount + 6 > this.vertexCapacity)
+        if (this.shouldFlush(6))
         {
             this.flush();
 
@@ -720,7 +716,7 @@ var MultiPipeline = new Class({
 
         var hasFlushed = false;
 
-        if (this.vertexCount + 3 > this.vertexCapacity)
+        if (this.shouldFlush(3))
         {
             this.flush();
 
@@ -733,6 +729,8 @@ var MultiPipeline = new Class({
         var vertexViewU32 = this.vertexViewU32;
 
         var vertexOffset = (this.vertexCount * this.vertexComponentCount) - 1;
+
+        tintEffect = 1;
 
         vertexViewF32[++vertexOffset] = x1;
         vertexViewF32[++vertexOffset] = y1;
@@ -823,7 +821,7 @@ var MultiPipeline = new Class({
     {
         var renderer = this.renderer;
 
-        renderer.setPipeline(this, gameObject);
+        renderer.pipelines.set(this, gameObject);
 
         var camMatrix = this._tempMatrix1;
         var spriteMatrix = this._tempMatrix2;
@@ -975,7 +973,7 @@ var MultiPipeline = new Class({
         parentTransformMatrix
     )
     {
-        this.renderer.setPipeline(this);
+        this.renderer.pipelines.set(this);
 
         var spriteMatrix = this._tempMatrix1.copyFrom(transformMatrix);
         var calcMatrix = this._tempMatrix2;
@@ -1039,13 +1037,13 @@ var MultiPipeline = new Class({
         var xw = Math.floor(x + width);
         var yh = Math.floor(y + height);
 
-        var blank = this.renderer.blankTexture.glTexture;
+        var white = this.renderer.whiteTexture.glTexture;
 
-        var unit = this.renderer.setTexture2D(blank);
+        var unit = this.renderer.setTexture2D(white);
 
-        var tint = Utils.getTintAppendFloatAlphaAndSwap(color, alpha);
+        var tint = Utils.getTintAppendFloatAlpha(color, alpha);
 
-        this.batchQuad(x, y, x, yh, xw, yh, xw, y, 0, 0, 1, 1, tint, tint, tint, tint, 2, blank, unit);
+        this.batchQuad(x, y, x, yh, xw, yh, xw, y, 0, 0, 1, 1, tint, tint, tint, tint, 1, white, unit);
     },
 
     /**
@@ -1064,7 +1062,7 @@ var MultiPipeline = new Class({
      */
     batchFillRect: function (x, y, width, height, currentMatrix, parentMatrix)
     {
-        this.renderer.setPipeline(this);
+        this.renderer.pipelines.set(this);
 
         var calcMatrix = this._tempMatrix3;
 
@@ -1119,7 +1117,7 @@ var MultiPipeline = new Class({
      */
     batchFillTriangle: function (x0, y0, x1, y1, x2, y2, currentMatrix, parentMatrix)
     {
-        this.renderer.setPipeline(this);
+        this.renderer.pipelines.set(this);
 
         var calcMatrix = this._tempMatrix3;
 
@@ -1206,7 +1204,7 @@ var MultiPipeline = new Class({
      */
     batchFillPath: function (path, currentMatrix, parentMatrix)
     {
-        this.renderer.setPipeline(this);
+        this.renderer.pipelines.set(this);
 
         var calcMatrix = this._tempMatrix3;
 
@@ -1289,7 +1287,7 @@ var MultiPipeline = new Class({
      */
     batchStrokePath: function (path, lineWidth, pathOpen, currentMatrix, parentMatrix)
     {
-        this.renderer.setPipeline(this);
+        this.renderer.pipelines.set(this);
 
         //  Reset the closePath booleans
         this.prevQuad[4] = 0;
@@ -1335,7 +1333,7 @@ var MultiPipeline = new Class({
      */
     batchLine: function (ax, ay, bx, by, aLineWidth, bLineWidth, lineWidth, index, closePath, currentMatrix, parentMatrix)
     {
-        this.renderer.setPipeline(this);
+        this.renderer.pipelines.set(this);
 
         var calcMatrix = this._tempMatrix3;
 

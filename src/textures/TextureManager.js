@@ -123,13 +123,16 @@ var TextureManager = new Class({
      */
     boot: function ()
     {
-        this._pending = 2;
-
         this.on(Events.LOAD, this.updatePending, this);
         this.on(Events.ERROR, this.updatePending, this);
 
-        this.addBase64('__DEFAULT', this.game.config.defaultImage);
-        this.addBase64('__MISSING', this.game.config.missingImage);
+        var config = this.game.config;
+
+        this.addBase64('__DEFAULT', config.defaultImage);
+        this.addBase64('__MISSING', config.missingImage);
+        this.addBase64('__WHITE', config.whiteImage);
+
+        this._pending = 3;
 
         this.game.events.once(GameEvents.DESTROY, this.destroy, this);
     },
@@ -252,7 +255,7 @@ var TextureManager = new Class({
      *
      * @param {string} key - The unique string-based key of the Texture.
      * @param {*} data - The Base64 encoded data.
-     * 
+     *
      * @return {this} This Texture Manager instance.
      */
     addBase64: function (key, data)
@@ -287,9 +290,9 @@ var TextureManager = new Class({
 
     /**
      * Gets an existing texture frame and converts it into a base64 encoded image and returns the base64 data.
-     * 
+     *
      * You can also provide the image type and encoder options.
-     * 
+     *
      * This will only work with bitmap based texture frames, such as those created from Texture Atlases.
      * It will not work with GL Texture objects, such as Shaders, or Render Textures. For those please
      * see the WebGL Snapshot function instead.
@@ -301,7 +304,7 @@ var TextureManager = new Class({
      * @param {(string|integer)} [frame] - The string-based name, or integer based index, of the Frame to get from the Texture.
      * @param {string} [type='image/png'] - A DOMString indicating the image format. The default format type is image/png.
      * @param {number} [encoderOptions=0.92] - A Number between 0 and 1 indicating the image quality to use for image formats that use lossy compression such as image/jpeg and image/webp. If this argument is anything else, the default value for image quality is used. The default value is 0.92. Other arguments are ignored.
-     * 
+     *
      * @return {string} The base64 encoded data, or an empty string if the texture frame could not be found.
      */
     getBase64: function (key, frame, type, encoderOptions)
@@ -374,15 +377,15 @@ var TextureManager = new Class({
 
             this.emit(Events.ADD, key, texture);
         }
-        
+
         return texture;
     },
 
     /**
      * Takes a WebGL Texture and creates a Phaser Texture from it, which is added to the Texture Manager using the given key.
-     * 
+     *
      * This allows you to then use the Texture as a normal texture for texture based Game Objects like Sprites.
-     * 
+     *
      * This is a WebGL only feature.
      *
      * @method Phaser.Textures.TextureManager#addGLTexture
@@ -408,7 +411,7 @@ var TextureManager = new Class({
 
             this.emit(Events.ADD, key, texture);
         }
-        
+
         return texture;
     },
 
@@ -437,17 +440,17 @@ var TextureManager = new Class({
 
             this.emit(Events.ADD, key, texture);
         }
-        
+
         return texture;
     },
 
     /**
      * Creates a new Texture using the given config values.
-     * 
+     *
      * Generated textures consist of a Canvas element to which the texture data is drawn.
-     * 
+     *
      * Generates a texture based on the given Create configuration object.
-     * 
+     *
      * The texture is drawn using a fixed-size indexed palette of 16 colors, where the hex value in the
      * data cells map to a single color. For example, if the texture config looked like this:
      *
@@ -466,14 +469,14 @@ var TextureManager = new Class({
      *   '.27887.78872.',
      *   '.787.....787.'
      * ];
-     * 
+     *
      * this.textures.generate('star', { data: star, pixelWidth: 4 });
      * ```
-     * 
+     *
      * Then it would generate a texture that is 52 x 48 pixels in size, because each cell of the data array
      * represents 1 pixel multiplied by the `pixelWidth` value. The cell values, such as `8`, maps to color
      * number 8 in the palette. If a cell contains a period character `.` then it is transparent.
-     * 
+     *
      * The default palette is Arne16, but you can specify your own using the `palette` property.
      *
      * @method Phaser.Textures.TextureManager#generate
@@ -717,7 +720,7 @@ var TextureManager = new Class({
         if (this.checkKey(key))
         {
             texture = this.create(key, source);
-            
+
             Parser.AtlasXML(texture, 0, data);
 
             if (dataSource)
@@ -899,11 +902,11 @@ var TextureManager = new Class({
 
     /**
      * Returns a Texture from the Texture Manager that matches the given key.
-     * 
+     *
      * If the key is `undefined` it will return the `__DEFAULT` Texture.
-     * 
+     *
      * If the key is an instance of a Texture, it will return the key directly.
-     * 
+     *
      * Finally. if the key is given, but not found and not a Texture instance, it will return the `__MISSING` Texture.
      *
      * @method Phaser.Textures.TextureManager#get
@@ -1076,9 +1079,9 @@ var TextureManager = new Class({
 
                 ctx.clearRect(0, 0, 1, 1);
                 ctx.drawImage(textureFrame.source.image, x, y, 1, 1, 0, 0, 1, 1);
-    
+
                 var rgb = ctx.getImageData(0, 0, 1, 1);
-    
+
                 return rgb.data[3];
             }
         }
@@ -1112,9 +1115,9 @@ var TextureManager = new Class({
 
     /**
      * Changes the key being used by a Texture to the new key provided.
-     * 
+     *
      * The old key is removed, allowing it to be re-used.
-     * 
+     *
      * Game Objects are linked to Textures by a reference to the Texture object, so
      * all existing references will be retained.
      *

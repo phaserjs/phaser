@@ -4,9 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
- 
 var Utils = require('../../renderer/webgl/Utils');
-var CONST = require('../../const.js');
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -19,10 +17,9 @@ var CONST = require('../../const.js');
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.Tilemaps.DynamicTilemapLayer} src - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  */
-var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
+var DynamicTilemapLayerWebGLRenderer = function (renderer, src, camera)
 {
     src.cull(camera);
 
@@ -36,9 +33,9 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPer
     }
 
     var gidMap = src.gidMap;
-    var pipeline = src.pipeline;
+    var pipeline = renderer.pipelines.set(src.pipeline);
 
-    var getTint = Utils.getTintAppendFloatAlphaAndSwap;
+    var getTint = Utils.getTintAppendFloatAlpha;
 
     var scrollFactorX = src.scrollFactorX;
     var scrollFactorY = src.scrollFactorY;
@@ -50,8 +47,6 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPer
     var sy = src.scaleY;
 
     var tilesets = src.tileset;
-
-    renderer.setPipeline(pipeline);
 
     //  Loop through each tileset in this layer, drawing just the tiles that are in that set each time
     //  Doing it this way around allows us to batch tiles using the same tileset
@@ -80,26 +75,14 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPer
                 continue;
             }
 
-            var frameWidth = 0;
-            var frameHeight = 0;
-
-            if (src.layer.orientation === CONST.ISOMETRIC || src.layer.orientation === CONST.STAGGERED || src.layer.orientation === CONST.HEXAGONAL)
-            {
-                // we use the tileset width and height because in isometric maps the tileset's height is often different from the tilemap's.
-                frameWidth = tileset.tileWidth;
-                frameHeight = tileset.tileHeight;
-            }
-            else
-            {
-                frameWidth = tile.width;
-                frameHeight = tile.height;
-            }
+            var frameWidth = tileset.tileWidth;
+            var frameHeight = tile.tileHeight;
 
             var frameX = tileTexCoords.x;
             var frameY = tileTexCoords.y;
 
-            var tw = frameWidth * 0.5;
-            var th = frameHeight * 0.5;
+            var tw = tileset.tileWidth * 0.5;
+            var th = tileset.tileHeight * 0.5;
 
             var tint = getTint(tile.tint, alpha * tile.alpha);
 
@@ -108,7 +91,7 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPer
                 texture,
                 texture.width, texture.height,
                 x + ((tw + tile.pixelX) * sx), y + ((th + tile.pixelY) * sy),
-                frameWidth, frameHeight,
+                tile.width, tile.height,
                 sx, sy,
                 tile.rotation,
                 tile.flipX, tile.flipY,

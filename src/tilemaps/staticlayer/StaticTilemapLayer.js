@@ -373,7 +373,7 @@ var StaticTilemapLayer = new Class({
 
         this.updateVBOData();
 
-        this.initPipeline('MultiPipeline');
+        this.initPipeline();
 
         this.mvpInit();
 

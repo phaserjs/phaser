@@ -114,6 +114,8 @@ if (typeof FEATURE_SOUND)
 
 module.exports = Phaser;
 
+global.Phaser = Phaser;
+
 /*
  * "Documentation is like pizza: when it is good, it is very, very good;
  * and when it is bad, it is better than nothing."

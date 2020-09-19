@@ -122,7 +122,7 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
     // https://developers.google.com/web/updates/2012/02/HTML5-audio-and-the-Web-Audio-API-are-BFFs
     // var stream = GetFastValue(config, 'stream', false);
 
-    if (deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
+    if (deviceAudio.webAudio && !audioConfig.disableWebAudio)
     {
         return new AudioFile(loader, key, urlConfig, xhrSettings, game.sound.context);
     }
@@ -231,7 +231,7 @@ FileTypesManager.register('audio', function (key, urls, config, xhrSettings)
     var audioConfig = game.config.audio;
     var deviceAudio = game.device.audio;
 
-    if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
+    if (audioConfig.noAudio || (!deviceAudio.webAudio && !deviceAudio.audioData))
     {
         //  Sounds are disabled, so skip loading audio
         return this;

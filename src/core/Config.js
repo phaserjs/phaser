@@ -62,11 +62,6 @@ var Config = new Class({
         this.zoom = GetValue(config, 'zoom', 1);
 
         /**
-         * @const {number} Phaser.Core.Config#resolution - The canvas device pixel resolution. Currently un-used.
-         */
-        this.resolution = GetValue(config, 'resolution', 1);
-
-        /**
          * @const {?*} Phaser.Core.Config#parent - A parent DOM element into which the canvas created by the renderer will be injected.
          */
         this.parent = GetValue(config, 'parent', undefined);
@@ -130,7 +125,6 @@ var Config = new Class({
             this.width = GetValue(scaleConfig, 'width', this.width);
             this.height = GetValue(scaleConfig, 'height', this.height);
             this.zoom = GetValue(scaleConfig, 'zoom', this.zoom);
-            this.resolution = GetValue(scaleConfig, 'resolution', this.resolution);
             this.parent = GetValue(scaleConfig, 'parent', this.parent);
             this.scaleMode = GetValue(scaleConfig, 'mode', this.scaleMode);
             this.expandParent = GetValue(scaleConfig, 'expandParent', this.expandParent);
@@ -241,9 +235,19 @@ var Config = new Class({
         this.inputMouseEventTarget = GetValue(config, 'input.mouse.target', null);
 
         /**
-         * @const {boolean} Phaser.Core.Config#inputMouseCapture - Should mouse events be captured? I.e. have prevent default called on them.
+         * @const {boolean} Phaser.Core.Config#inputMousePreventDefaultDown - Should `mousedown` events be captured? I.e. have prevent default called on them.
          */
-        this.inputMouseCapture = GetValue(config, 'input.mouse.capture', true);
+        this.inputMousePreventDefaultDown = GetValue(config, 'input.mouse.preventDefaultDown', true);
+
+        /**
+         * @const {boolean} Phaser.Core.Config#inputMousePreventDefaultUp - Should `mouseup` events be captured? I.e. have prevent default called on them.
+         */
+        this.inputMousePreventDefaultUp = GetValue(config, 'input.mouse.preventDefaultUp', true);
+
+        /**
+         * @const {boolean} Phaser.Core.Config#inputMousePreventDefaultMove - Should `mousemove` events be captured? I.e. have prevent default called on them.
+         */
+        this.inputMousePreventDefaultMove = GetValue(config, 'input.mouse.preventDefaultMove', true);
 
         /**
          * @const {boolean} Phaser.Core.Config#inputTouch - Enable the Touch Plugin. This can be disabled in games that don't need touch input.
@@ -293,7 +297,7 @@ var Config = new Class({
         /**
          * @const {Phaser.Types.Core.AudioConfig} Phaser.Core.Config#audio - The Audio Configuration object.
          */
-        this.audio = GetValue(config, 'audio');
+        this.audio = GetValue(config, 'audio', {});
 
         //  If you do: { banner: false } it won't display any banner at all
 
@@ -561,6 +565,11 @@ var Config = new Class({
          * @const {string} Phaser.Core.Config#missingImage - A base64 encoded PNG that will be used as the default texture when a texture is assigned that is missing or not loaded.
          */
         this.missingImage = GetValue(config, 'images.missing', pngPrefix + 'CAIAAAD8GO2jAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJ9JREFUeNq01ssOwyAMRFG46v//Mt1ESmgh+DFmE2GPOBARKb2NVjo+17PXLD8a1+pl5+A+wSgFygymWYHBb0FtsKhJDdZlncG2IzJ4ayoMDv20wTmSMzClEgbWYNTAkQ0Z+OJ+A/eWnAaR9+oxCF4Os0H8htsMUp+pwcgBBiMNnAwF8GqIgL2hAzaGFFgZauDPKABmowZ4GL369/0rwACp2yA/ttmvsQAAAABJRU5ErkJggg==');
+
+        /**
+         * @const {string} Phaser.Core.Config#whiteImage - A base64 encoded PNG that will be used as the default texture when a texture is assigned that is white or not loaded.
+         */
+        this.whiteImage = GetValue(config, 'images.white', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABdJREFUeNpi/P//PwMMMDEgAdwcgAADAJZuAwXJYZOzAAAAAElFTkSuQmCC');
 
         if (window)
         {

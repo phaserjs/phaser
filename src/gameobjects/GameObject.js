@@ -36,12 +36,15 @@ var GameObject = new Class({
         EventEmitter.call(this);
 
         /**
-         * The Scene to which this Game Object belongs.
+         * A reference to the Scene to which this Game Object belongs.
+         *
          * Game Objects can only belong to one Scene.
+         *
+         * You should consider this property as being read-only. You cannot move a
+         * Game Object to another Scene by simply changing it.
          *
          * @name Phaser.GameObjects.GameObject#scene
          * @type {Phaser.Scene}
-         * @protected
          * @since 3.0.0
          */
         this.scene = scene;

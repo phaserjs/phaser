@@ -18,11 +18,10 @@ var GameObject = require('../GameObject');
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active renderer.
  * @param {Phaser.GameObjects.DOMElement} src - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var DOMElementCSSRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
+var DOMElementCSSRenderer = function (renderer, src, camera, parentMatrix)
 {
     var node = src.node;
     var style = node.style;
@@ -34,7 +33,7 @@ var DOMElementCSSRenderer = function (renderer, src, interpolationPercentage, ca
         {
             style.display = 'none';
         }
-        
+
         return;
     }
 
@@ -79,9 +78,9 @@ var DOMElementCSSRenderer = function (renderer, src, interpolationPercentage, ca
     {
         dx = (src.width) * src.originX;
         dy = (src.height) * src.originY;
- 
+
         srcMatrix.applyITRS(src.x - dx, src.y - dy, src.rotation, src.scaleX, src.scaleY);
-        
+
         camMatrix.copyFrom(camera.matrix);
 
         tx = (100 * src.originX) + '%';

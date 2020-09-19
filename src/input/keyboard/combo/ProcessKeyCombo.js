@@ -9,7 +9,7 @@ var AdvanceKeyCombo = require('./AdvanceKeyCombo');
 /**
  * Used internally by the KeyCombo class.
  *
- * @function Phaser.Input.Keyboard.KeyCombo.ProcessKeyCombo
+ * @function Phaser.Input.Keyboard.ProcessKeyCombo
  * @private
  * @since 3.0.0
  *
