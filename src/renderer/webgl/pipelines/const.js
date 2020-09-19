@@ -54,7 +54,17 @@ var PIPELINE_CONST = {
      * @const
      * @since 3.50.0
      */
-    ROPE_PIPELINE: 'RopePipeline'
+    ROPE_PIPELINE: 'RopePipeline',
+
+    /**
+     * The Mesh Pipeline.
+     *
+     * @name Phaser.Renderer.WebGL.Pipelines.MESH_PIPELINE
+     * @type {string}
+     * @const
+     * @since 3.50.0
+     */
+    MESH_PIPELINE: 'MeshPipeline'
 
 };
 

@@ -11,6 +11,7 @@ var CONST = require('./pipelines/const');
 //  Default Phaser 3 Pipelines
 var BitmapMaskPipeline = require('./pipelines/BitmapMaskPipeline');
 var LightPipeline = require('./pipelines/LightPipeline');
+var MeshPipeline = require('./pipelines/MeshPipeline');
 var MultiPipeline = require('./pipelines/MultiPipeline');
 var RopePipeline = require('./pipelines/RopePipeline');
 var SinglePipeline = require('./pipelines/SinglePipeline');
@@ -131,6 +132,7 @@ var PipelineManager = new Class({
         this.add(CONST.SINGLE_PIPELINE, new SinglePipeline({ game: game }));
         this.add(CONST.ROPE_PIPELINE, new RopePipeline({ game: game }));
         this.add(CONST.LIGHT_PIPELINE, new LightPipeline({ game: game }));
+        this.add(CONST.MESH_PIPELINE, new MeshPipeline({ game: game }));
 
         this.set(this.MULTI_PIPELINE);
     },

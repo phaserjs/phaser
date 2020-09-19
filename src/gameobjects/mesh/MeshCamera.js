@@ -39,9 +39,10 @@ var MeshCamera = new Class({
         this.up = new Vector4(); //  What the up direction is, invert to get bottom
         this.right = new Vector4();	//  What the right direction is, invert to get left
 
-        this.matView = new Matrix4();
-        this.viewMatrix = new Matrix4();
-        this.projectionMatrix = new Matrix4();
+        this.matrix = new Matrix4(); // the transform matrix
+        this.viewMatrix = new Matrix4(); // the inverse of the transform matrix
+        this.projectionMatrix = new Matrix4(); // perspective projection matrix
+        this.viewProjectionMatrix = new Matrix4(); // perspective projection matrix multiplied by the view matrix
 
         this.mode = MeshCamera.MODE_ORBIT;
     },
@@ -88,30 +89,20 @@ var MeshCamera = new Class({
     //  To have different modes of movements, this function handles the view matrix update for the transform object.
     updateViewMatrix: function ()
     {
-        var d = Math.PI / 180;
-        var matView = this.matView;
-        var rotation = this.rotation;
+        var matView = this.matrix;
 
-        matView.identity();
-
-        //  Optimize camera transform update, no need for scale nor rotateZ
         if (this.mode === MeshCamera.MODE_FREE)
         {
-            matView.translate(this.position);
-            matView.rotateX(rotation.x * d);
-            matView.rotateY(rotation.y * d);
+            matView.fromRotationXYTranslation(this.rotation, this.position, true);
         }
         else
         {
-            matView.rotateX(rotation.x * d);
-            matView.rotateY(rotation.y * d);
-            matView.translate(this.position);
+            matView.fromRotationXYTranslation(this.rotation, this.position, false);
         }
 
         this.updateDirection();
 
-        this.viewMatrix.copy(matView);
-        this.viewMatrix.invert();
+        this.viewMatrix.copy(matView).invert();
 
         this.dirty = true;
     },
@@ -120,28 +111,21 @@ var MeshCamera = new Class({
     {
         this.aspectRatio = width / height;
 
-        this.updateViewMatrix();
-
+        //  TODO - Only needs changing when the fov/etc does
         this.projectionMatrix.perspective(DegToRad(this._fov), this.aspectRatio, this._near, this._far);
+
+        //  TODO - Only needs calculating when this camera is dirty
+        this.projectionMatrix.multiplyToMat4(this.viewMatrix, this.viewProjectionMatrix);
     },
 
     updateDirection: function ()
     {
-        var matView = this.matView;
+        var matView = this.matrix;
 
         this.forward.set(0, 0, 1, 0).transformMat4(matView);
         this.up.set(0, 1, 0, 0).transformMat4(matView);
         this.right.set(1, 0, 0, 0).transformMat4(matView);
     },
-
-    reset: function ()
-    {
-        this.position.set();
-        this.rotation.set();
-
-        this.updateViewMatrix();
-    },
-
     fov: {
 
         get: function ()
