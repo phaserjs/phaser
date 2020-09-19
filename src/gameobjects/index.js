@@ -123,6 +123,8 @@ if (typeof WEBGL_RENDERER)
 {
     //  WebGL only Game Objects
     GameObjects.Mesh = require('./mesh/Mesh');
+    GameObjects.MeshCamera = require('./mesh/MeshCamera');
+
     GameObjects.Quad = require('./quad/Quad');
     GameObjects.Shader = require('./shader/Shader');
 

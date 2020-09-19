@@ -17,11 +17,10 @@ var Utils = require('../../../renderer/webgl/Utils');
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Text} src - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var TextWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
+var TextWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
     if (src.width === 0 || src.height === 0)
     {
@@ -32,9 +31,7 @@ var TextWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     var width = frame.width;
     var height = frame.height;
     var getTint = Utils.getTintAppendFloatAlpha;
-    var pipeline = this.pipeline;
-
-    renderer.setPipeline(pipeline, src);
+    var pipeline = renderer.pipelines.set(this.pipeline, src);
 
     var textureUnit = pipeline.setTexture2D(frame.glTexture, src);
 
@@ -50,11 +47,11 @@ var TextWebGLRenderer = function (renderer, src, interpolationPercentage, camera
         src.scrollFactorX, src.scrollFactorY,
         src.displayOriginX, src.displayOriginY,
         0, 0, width, height,
-        getTint(src._tintTL, camera.alpha * src._alphaTL),
-        getTint(src._tintTR, camera.alpha * src._alphaTR),
-        getTint(src._tintBL, camera.alpha * src._alphaBL),
-        getTint(src._tintBR, camera.alpha * src._alphaBR),
-        (src._isTinted && src.tintFill),
+        getTint(src.tintTopLeft, camera.alpha * src._alphaTL),
+        getTint(src.tintTopRight, camera.alpha * src._alphaTR),
+        getTint(src.tintBottomLeft, camera.alpha * src._alphaBL),
+        getTint(src.tintBottomRight, camera.alpha * src._alphaBR),
+        src.tintFill,
         0, 0,
         camera,
         parentMatrix,

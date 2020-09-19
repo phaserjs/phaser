@@ -330,8 +330,10 @@ var RenderTexture = new Class({
      * texture will not change.
      *
      * If Render Texture was not created from specific frame, the following will happen:
+     *
      * In WebGL it will destroy and then re-create the frame buffer being used by the Render Texture.
      * In Canvas it will resize the underlying canvas element.
+     *
      * Both approaches will erase everything currently drawn to the Render Texture.
      *
      * If the dimensions given are the same as those already being used, calling this method will do nothing.

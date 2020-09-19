@@ -43,7 +43,7 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
             //  The next object in the display list is not a Spine object, so we end the batch
             sceneRenderer.end();
 
-            renderer.rebindPipeline();
+            renderer.pipelines.rebind();
         }
 
         if (!renderer.finalType)
@@ -58,7 +58,7 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     if (renderer.newType)
     {
         //  flush + clear previous pipeline if this is a new type
-        renderer.clearPipeline();
+        renderer.pipelines.clear();
     }
 
     var camMatrix = renderer._tempMatrix1;
@@ -162,7 +162,7 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
         sceneRenderer.end();
 
         //  And rebind the previous pipeline
-        renderer.rebindPipeline();
+        renderer.pipelines.rebind();
     }
 };
 

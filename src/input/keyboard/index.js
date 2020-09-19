@@ -20,9 +20,13 @@ module.exports = {
 
     KeyCombo: require('./combo/KeyCombo'),
 
+    AdvanceKeyCombo: require('./combo/AdvanceKeyCombo'),
+    ProcessKeyCombo: require('./combo/ProcessKeyCombo'),
+    ResetKeyCombo: require('./combo/ResetKeyCombo'),
+
     JustDown: require('./keys/JustDown'),
     JustUp: require('./keys/JustUp'),
     DownDuration: require('./keys/DownDuration'),
     UpDuration: require('./keys/UpDuration')
-    
+
 };

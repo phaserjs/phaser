@@ -34,10 +34,10 @@ var Vector2 = require('../../math/Vector2');
  *
  * By default a Camera will render all Game Objects it can see. You can change this using the `ignore` method,
  * allowing you to filter Game Objects out on a per-Camera basis.
- * 
+ *
  * The Base Camera is extended by the Camera class, which adds in special effects including Fade,
  * Flash and Camera Shake, as well as the ability to follow Game Objects.
- * 
+ *
  * The Base Camera was introduced in Phaser 3.12. It was split off from the Camera class, to allow
  * you to isolate special effects as needed. Therefore the 'since' values for properties of this class relate
  * to when they were added to the Camera class.
@@ -46,7 +46,7 @@ var Vector2 = require('../../math/Vector2');
  * @memberof Phaser.Cameras.Scene2D
  * @constructor
  * @since 3.12.0
- * 
+ *
  * @extends Phaser.Events.EventEmitter
  * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.Visible
@@ -134,19 +134,6 @@ var BaseCamera = new Class({
         this.name = '';
 
         /**
-         * This property is un-used in v3.16.
-         * 
-         * The resolution of the Game, used in most Camera calculations.
-         *
-         * @name Phaser.Cameras.Scene2D.BaseCamera#resolution
-         * @type {number}
-         * @readonly
-         * @deprecated
-         * @since 3.12.0
-         */
-        this.resolution = 1;
-
-        /**
          * Should this camera round its pixel values to integers?
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#roundPixels
@@ -195,9 +182,9 @@ var BaseCamera = new Class({
 
         /**
          * Is this Camera dirty?
-         * 
+         *
          * A dirty Camera has had either its viewport size, bounds, scroll, rotation or zoom levels changed since the last frame.
-         * 
+         *
          * This flag is cleared during the `postRenderCamera` method of the renderer.
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#dirty
@@ -230,46 +217,6 @@ var BaseCamera = new Class({
          * @since 3.0.0
          */
         this._y = y;
-
-        /**
-         * Internal Camera X value multiplied by the resolution.
-         *
-         * @name Phaser.Cameras.Scene2D.BaseCamera#_cx
-         * @type {number}
-         * @private
-         * @since 3.12.0
-         */
-        this._cx = 0;
-
-        /**
-         * Internal Camera Y value multiplied by the resolution.
-         *
-         * @name Phaser.Cameras.Scene2D.BaseCamera#_cy
-         * @type {number}
-         * @private
-         * @since 3.12.0
-         */
-        this._cy = 0;
-
-        /**
-         * Internal Camera Width value multiplied by the resolution.
-         *
-         * @name Phaser.Cameras.Scene2D.BaseCamera#_cw
-         * @type {number}
-         * @private
-         * @since 3.12.0
-         */
-        this._cw = 0;
-
-        /**
-         * Internal Camera Height value multiplied by the resolution.
-         *
-         * @name Phaser.Cameras.Scene2D.BaseCamera#_ch
-         * @type {number}
-         * @private
-         * @since 3.12.0
-         */
-        this._ch = 0;
 
         /**
          * The width of the Camera viewport, in pixels.
@@ -513,7 +460,7 @@ var BaseCamera = new Class({
 
         /**
          * The Camera that this Camera uses for translation during masking.
-         * 
+         *
          * If the mask is fixed in position this will be a reference to
          * the CameraManager.default instance. Otherwise, it'll be a reference
          * to itself.
@@ -847,18 +794,16 @@ var BaseCamera = new Class({
         var s = Math.sin(this.rotation);
 
         var zoom = this.zoom;
-        var res = this.resolution;
 
         var scrollX = this.scrollX;
         var scrollY = this.scrollY;
 
-        //  Works for zoom of 1 with any resolution, but resolution > 1 and zoom !== 1 breaks
         var sx = x + ((scrollX * c - scrollY * s) * zoom);
         var sy = y + ((scrollX * s + scrollY * c) * zoom);
 
         //  Apply transform to point
-        output.x = (sx * ima + sy * imc) * res + ime;
-        output.y = (sx * imb + sy * imd) * res + imf;
+        output.x = (sx * ima + sy * imc) + ime;
+        output.y = (sx * imb + sy * imd) + imf;
 
         return output;
     },
@@ -910,10 +855,8 @@ var BaseCamera = new Class({
      * @method Phaser.Cameras.Scene2D.BaseCamera#preRender
      * @protected
      * @since 3.0.0
-     *
-     * @param {number} resolution - The game resolution, as set in the Scale Manager.
      */
-    preRender: function (resolution)
+    preRender: function ()
     {
         var width = this.width;
         var height = this.height;
@@ -921,7 +864,7 @@ var BaseCamera = new Class({
         var halfWidth = width * 0.5;
         var halfHeight = height * 0.5;
 
-        var zoom = this.zoom * resolution;
+        var zoom = this.zoom;
         var matrix = this.matrix;
 
         var originX = width * this.originX;
@@ -1104,15 +1047,15 @@ var BaseCamera = new Class({
 
     /**
      * Set the bounds of the Camera. The bounds are an axis-aligned rectangle.
-     * 
+     *
      * The Camera bounds controls where the Camera can scroll to, stopping it from scrolling off the
      * edges and into blank space. It does not limit the placement of Game Objects, or where
      * the Camera viewport can be positioned.
-     * 
+     *
      * Temporarily disable the bounds by changing the boolean `Camera.useBounds`.
-     * 
+     *
      * Clear the bounds entirely by calling `Camera.removeBounds`.
-     * 
+     *
      * If you set bounds that are smaller than the viewport it will stop the Camera from being
      * able to scroll. The bounds can be positioned where-ever you wish. By default they are from
      * 0x0 to the canvas width x height. This means that the coordinate 0x0 is the top left of
@@ -1156,9 +1099,9 @@ var BaseCamera = new Class({
 
     /**
      * Returns a rectangle containing the bounds of the Camera.
-     * 
+     *
      * If the Camera does not have any bounds the rectangle will be empty.
-     * 
+     *
      * The rectangle is a copy of the bounds, so is safe to modify.
      *
      * @method Phaser.Cameras.Scene2D.BaseCamera#getBounds
@@ -1245,7 +1188,7 @@ var BaseCamera = new Class({
 
     /**
      * Should the Camera round pixel values to whole integers when rendering Game Objects?
-     * 
+     *
      * In some types of game, especially with pixel art, this is required to prevent sub-pixel aliasing.
      *
      * @method Phaser.Cameras.Scene2D.BaseCamera#setRoundPixels
@@ -1264,8 +1207,6 @@ var BaseCamera = new Class({
 
     /**
      * Sets the Scene the Camera is bound to.
-     * 
-     * Also populates the `resolution` property and updates the internal size values.
      *
      * @method Phaser.Cameras.Scene2D.BaseCamera#setScene
      * @since 3.0.0
@@ -1288,15 +1229,6 @@ var BaseCamera = new Class({
         this.sceneManager = sys.game.scene;
         this.scaleManager = sys.scale;
         this.cameraManager = sys.cameras;
-
-        var res = this.scaleManager.resolution;
-
-        this.resolution = res;
-
-        this._cx = this._x * res;
-        this._cy = this._y * res;
-        this._cw = this._width * res;
-        this._ch = this._height * res;
 
         this.updateSystem();
 
@@ -1419,14 +1351,14 @@ var BaseCamera = new Class({
      * Sets the mask to be applied to this Camera during rendering.
      *
      * The mask must have been previously created and can be either a GeometryMask or a BitmapMask.
-     * 
+     *
      * Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
      *
      * If a mask is already set on this Camera it will be immediately replaced.
-     * 
+     *
      * Masks have no impact on physics or input detection. They are purely a rendering component
      * that allows you to limit what is visible during the render pass.
-     * 
+     *
      * Note: You cannot mask a Camera that has `renderToTexture` set.
      *
      * @method Phaser.Cameras.Scene2D.BaseCamera#setMask
@@ -1573,9 +1505,9 @@ var BaseCamera = new Class({
     /**
      * Destroys this Camera instance and its internal properties and references.
      * Once destroyed you cannot use this Camera again, even if re-added to a Camera Manager.
-     * 
+     *
      * This method is called automatically by `CameraManager.remove` if that methods `runDestroy` argument is `true`, which is the default.
-     * 
+     *
      * Unless you have a specific reason otherwise, always use `CameraManager.remove` and allow it to handle the camera destruction,
      * rather than calling this method directly.
      *
@@ -1626,7 +1558,6 @@ var BaseCamera = new Class({
         set: function (value)
         {
             this._x = value;
-            this._cx = value * this.resolution;
             this.updateSystem();
         }
 
@@ -1651,7 +1582,6 @@ var BaseCamera = new Class({
         set: function (value)
         {
             this._y = value;
-            this._cy = value * this.resolution;
             this.updateSystem();
         }
 
@@ -1677,7 +1607,6 @@ var BaseCamera = new Class({
         set: function (value)
         {
             this._width = value;
-            this._cw = value * this.resolution;
             this.updateSystem();
         }
 
@@ -1703,7 +1632,6 @@ var BaseCamera = new Class({
         set: function (value)
         {
             this._height = value;
-            this._ch = value * this.resolution;
             this.updateSystem();
         }
 

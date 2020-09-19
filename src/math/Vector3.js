@@ -219,6 +219,26 @@ var Vector3 = new Class({
     },
 
     /**
+     * Add and scale a given Vector to this Vector. Addition is component-wise.
+     *
+     * @method Phaser.Math.Vector3#addScale
+     * @since 3.50.0
+     *
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3)} v - The Vector to add to this Vector.
+     * @param {number} scale - The amount to scale `v` by.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    addScale: function (v, scale)
+    {
+        this.x += v.x * scale;
+        this.y += v.y * scale;
+        this.z += v.z * scale || 0;
+
+        return this;
+    },
+
+    /**
      * Subtract the given Vector from this Vector. Subtraction is component-wise.
      *
      * @method Phaser.Math.Vector3#subtract
@@ -707,7 +727,7 @@ var Vector3 = new Class({
 
 /**
  * A static zero Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -719,7 +739,7 @@ Vector3.ZERO = new Vector3();
 
 /**
  * A static right Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -731,7 +751,7 @@ Vector3.RIGHT = new Vector3(1, 0, 0);
 
 /**
  * A static left Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -743,7 +763,7 @@ Vector3.LEFT = new Vector3(-1, 0, 0);
 
 /**
  * A static up Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -755,7 +775,7 @@ Vector3.UP = new Vector3(0, -1, 0);
 
 /**
  * A static down Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -767,7 +787,7 @@ Vector3.DOWN = new Vector3(0, 1, 0);
 
 /**
  * A static forward Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -779,7 +799,7 @@ Vector3.FORWARD = new Vector3(0, 0, 1);
 
 /**
  * A static back Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -791,7 +811,7 @@ Vector3.BACK = new Vector3(0, 0, -1);
 
 /**
  * A static one Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant

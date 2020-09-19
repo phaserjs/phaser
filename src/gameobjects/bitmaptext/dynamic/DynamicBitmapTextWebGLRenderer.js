@@ -4,8 +4,8 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var GetCalcMatrix = require('../../GetCalcMatrix');
 var Utils = require('../../../renderer/webgl/Utils');
-var GetColorFromValue = require('../../../display/color/GetColorFromValue');
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -18,11 +18,10 @@ var GetColorFromValue = require('../../../display/color/GetColorFromValue');
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.DynamicBitmapText} src - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
+var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
     var text = src.text;
     var textLength = text.length;
@@ -32,39 +31,14 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
         return;
     }
 
-    var pipeline = this.pipeline;
+    var pipeline = renderer.pipelines.set(this.pipeline, src);
 
-    renderer.setPipeline(pipeline, src);
+    var result = GetCalcMatrix(src, camera, parentMatrix);
 
-    var camMatrix = pipeline._tempMatrix1;
-    var spriteMatrix = pipeline._tempMatrix2;
-    var calcMatrix = pipeline._tempMatrix3;
+    var spriteMatrix = result.sprite;
+    var calcMatrix = result.calc;
+
     var fontMatrix = pipeline._tempMatrix4;
-
-    spriteMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
-
-    camMatrix.copyFrom(camera.matrix);
-
-    if (parentMatrix)
-    {
-        //  Multiply the camera by the parent matrix
-        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
-
-        //  Undo the camera scroll
-        spriteMatrix.e = src.x;
-        spriteMatrix.f = src.y;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(spriteMatrix, calcMatrix);
-    }
-    else
-    {
-        spriteMatrix.e -= camera.scrollX * src.scrollFactorX;
-        spriteMatrix.f -= camera.scrollY * src.scrollFactorY;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(spriteMatrix, calcMatrix);
-    }
 
     var crop = (src.cropWidth > 0 || src.cropHeight > 0);
 
@@ -87,11 +61,11 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
     var textureWidth = texture.width;
     var textureHeight = texture.height;
 
-    var tintEffect = (src._isTinted && src.tintFill);
-    var tintTL = Utils.getTintAppendFloatAlpha(src._tintTL, camera.alpha * src._alphaTL);
-    var tintTR = Utils.getTintAppendFloatAlpha(src._tintTR, camera.alpha * src._alphaTR);
-    var tintBL = Utils.getTintAppendFloatAlpha(src._tintBL, camera.alpha * src._alphaBL);
-    var tintBR = Utils.getTintAppendFloatAlpha(src._tintBR, camera.alpha * src._alphaBR);
+    var tintEffect = src.tintFill;
+    var tintTL = Utils.getTintAppendFloatAlpha(src.tintTopLeft, camera.alpha * src._alphaTL);
+    var tintTR = Utils.getTintAppendFloatAlpha(src.tintTopRight, camera.alpha * src._alphaTR);
+    var tintBL = Utils.getTintAppendFloatAlpha(src.tintBottomLeft, camera.alpha * src._alphaBL);
+    var tintBR = Utils.getTintAppendFloatAlpha(src.tintBottomRight, camera.alpha * src._alphaBR);
 
     var textureUnit = pipeline.setGameObject(src);
 
@@ -234,10 +208,10 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
                 tintBR = output.tint.bottomRight;
             }
 
-            tintTL = Utils.getTintAppendFloatAlpha(GetColorFromValue(tintTL), camera.alpha * src._alphaTL);
-            tintTR = Utils.getTintAppendFloatAlpha(GetColorFromValue(tintTR), camera.alpha * src._alphaTR);
-            tintBL = Utils.getTintAppendFloatAlpha(GetColorFromValue(tintBL), camera.alpha * src._alphaBL);
-            tintBR = Utils.getTintAppendFloatAlpha(GetColorFromValue(tintBR), camera.alpha * src._alphaBR);
+            tintTL = Utils.getTintAppendFloatAlpha(tintTL, camera.alpha * src._alphaTL);
+            tintTR = Utils.getTintAppendFloatAlpha(tintTR, camera.alpha * src._alphaTR);
+            tintBL = Utils.getTintAppendFloatAlpha(tintBL, camera.alpha * src._alphaBL);
+            tintBR = Utils.getTintAppendFloatAlpha(tintBR, camera.alpha * src._alphaBR);
         }
 
         x *= scale;

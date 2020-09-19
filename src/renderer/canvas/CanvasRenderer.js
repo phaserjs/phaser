@@ -86,7 +86,6 @@ var CanvasRenderer = new Class({
         this.config = {
             clearBeforeRender: game.config.clearBeforeRender,
             backgroundColor: game.config.backgroundColor,
-            resolution: game.config.resolution,
             antialias: game.config.antialias,
             roundPixels: game.config.roundPixels
         };
@@ -229,8 +228,6 @@ var CanvasRenderer = new Class({
      *
      * @param {Phaser.Structs.Size} gameSize - The default Game Size object. This is the un-modified game dimensions.
      * @param {Phaser.Structs.Size} baseSize - The base Size object. The game dimensions multiplied by the resolution. The canvas width / height values match this.
-     * @param {Phaser.Structs.Size} displaySize - The display Size object. The size of the canvas style width / height attributes.
-     * @param {number} [resolution] - The Scale Manager resolution setting.
      */
     onResize: function (gameSize, baseSize)
     {
@@ -360,10 +357,9 @@ var CanvasRenderer = new Class({
      *
      * @param {Phaser.Scene} scene - The Scene to render.
      * @param {Phaser.GameObjects.DisplayList} children - The Game Objects within the Scene to be rendered.
-     * @param {number} interpolationPercentage - The interpolation percentage to apply. Currently unused.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The Scene Camera to render with.
      */
-    render: function (scene, children, interpolationPercentage, camera)
+    render: function (scene, children, camera)
     {
         var list = children.list;
         var childCount = list.length;
@@ -427,7 +423,7 @@ var CanvasRenderer = new Class({
                 child.mask.preRenderCanvas(this, child, camera);
             }
 
-            child.renderCanvas(this, child, interpolationPercentage, camera);
+            child.renderCanvas(this, child, camera);
 
             if (child.mask)
             {

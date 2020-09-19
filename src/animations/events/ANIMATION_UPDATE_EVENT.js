@@ -23,6 +23,7 @@
  * 2. `ANIMATION_UPDATE` (repeated for however many frames the animation has)
  * 3. `ANIMATION_REPEAT` (only if the animation is set to repeat, it then emits more update events after this)
  * 4. `ANIMATION_COMPLETE` (only if there is a finite, or zero, repeat count)
+ * 5. `ANIMATION_COMPLETE_KEY` (only if there is a finite, or zero, repeat count)
  *
  * If the animation is stopped directly, the `ANIMATION_STOP` event is dispatched instead of `ANIMATION_COMPLETE`.
  *

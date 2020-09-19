@@ -4,6 +4,8 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var PIPELINE_CONST = require('../../renderer/webgl/pipelines/const');
+
 /**
  * Provides methods used for setting the WebGL rendering pipeline of a Game Object.
  *
@@ -45,19 +47,20 @@ var Pipeline = {
      * @webglOnly
      * @since 3.0.0
      *
-     * @param {string} [pipelineName=MultiPipeline] - The name of the pipeline to set on this Game Object. Defaults to the Multi Pipeline.
+     * @param {string} [name=MultiPipeline] - The name of the pipeline to set on this Game Object. Defaults to the Multi Pipeline.
      *
      * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
      */
-    initPipeline: function (pipelineName)
+    initPipeline: function (name)
     {
-        if (pipelineName === undefined) { pipelineName = 'MultiPipeline'; }
+        if (name === undefined) { name = PIPELINE_CONST.MULTI_PIPELINE; }
 
         var renderer = this.scene.sys.game.renderer;
+        var pipelines = renderer.pipelines;
 
-        if (renderer && renderer.gl && renderer.hasPipeline(pipelineName))
+        if (pipelines && pipelines.has(name))
         {
-            this.defaultPipeline = renderer.getPipeline(pipelineName);
+            this.defaultPipeline = pipelines.get(name);
             this.pipeline = this.defaultPipeline;
 
             return true;
@@ -73,17 +76,18 @@ var Pipeline = {
      * @webglOnly
      * @since 3.0.0
      *
-     * @param {string} pipelineName - The name of the pipeline to set on this Game Object.
+     * @param {string} name - The name of the pipeline to set on this Game Object.
      *
      * @return {this} This Game Object instance.
      */
-    setPipeline: function (pipelineName)
+    setPipeline: function (name)
     {
         var renderer = this.scene.sys.game.renderer;
+        var pipelines = renderer.pipelines;
 
-        if (renderer && renderer.gl && renderer.hasPipeline(pipelineName))
+        if (pipelines && pipelines.has(name))
         {
-            this.pipeline = renderer.getPipeline(pipelineName);
+            this.pipeline = pipelines.get(name);
         }
 
         return this;

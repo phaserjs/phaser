@@ -22,7 +22,7 @@ var Utils = require('../../renderer/webgl/Utils');
  */
 var FillPathWebGL = function (pipeline, calcMatrix, src, alpha, dx, dy)
 {
-    var fillTintColor = Utils.getTintAppendFloatAlphaAndSwap(src.fillColor, src.fillAlpha * alpha);
+    var fillTintColor = Utils.getTintAppendFloatAlpha(src.fillColor, src.fillAlpha * alpha);
 
     var path = src.pathData;
     var pathIndexes = src.pathIndexes;

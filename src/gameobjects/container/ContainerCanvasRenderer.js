@@ -16,11 +16,10 @@
  *
  * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
  * @param {Phaser.GameObjects.Container} container - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var ContainerCanvasRenderer = function (renderer, container, interpolationPercentage, camera, parentMatrix)
+var ContainerCanvasRenderer = function (renderer, container, camera, parentMatrix)
 {
     var children = container.list;
 
@@ -85,7 +84,7 @@ var ContainerCanvasRenderer = function (renderer, container, interpolationPercen
         child.setAlpha(childAlpha * alpha);
 
         //  Render
-        child.renderCanvas(renderer, child, interpolationPercentage, camera, transformMatrix);
+        child.renderCanvas(renderer, child, camera, transformMatrix);
 
         //  Restore original values
         child.setAlpha(childAlpha);

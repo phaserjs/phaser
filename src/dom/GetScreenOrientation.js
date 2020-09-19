@@ -33,12 +33,9 @@ var GetScreenOrientation = function (width, height)
         return orientation;
     }
 
-    if (screen)
+    if (typeof window.orientation === 'number')
     {
-        return (screen.height > screen.width) ? CONST.ORIENTATION.PORTRAIT : CONST.ORIENTATION.LANDSCAPE;
-    }
-    else if (typeof window.orientation === 'number')
-    {
+        //  Do this check first, as iOS supports this, but also has an incomplete window.screen implementation
         //  This may change by device based on "natural" orientation.
         return (window.orientation === 0 || window.orientation === 180) ? CONST.ORIENTATION.PORTRAIT : CONST.ORIENTATION.LANDSCAPE;
     }
@@ -53,8 +50,10 @@ var GetScreenOrientation = function (width, height)
             return CONST.ORIENTATION.LANDSCAPE;
         }
     }
-    
-    return (height > width) ? CONST.ORIENTATION.PORTRAIT : CONST.ORIENTATION.LANDSCAPE;
+    else
+    {
+        return (height > width) ? CONST.ORIENTATION.PORTRAIT : CONST.ORIENTATION.LANDSCAPE;
+    }
 };
 
 module.exports = GetScreenOrientation;

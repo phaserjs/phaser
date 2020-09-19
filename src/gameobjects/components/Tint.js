@@ -4,8 +4,6 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var GetColorFromValue = require('../../display/color/GetColorFromValue');
-
 /**
  * Provides methods used for setting the tint of a Game Object.
  * Should be applied as a mixin and not used directly.
@@ -18,62 +16,58 @@ var GetColorFromValue = require('../../display/color/GetColorFromValue');
 var Tint = {
 
     /**
-     * Private internal value. Holds the top-left tint value.
+     * The tint value being applied to the top-left vertice of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     * The value should be set as a hex number, i.e. 0xff0000 for red, or 0xff00ff for purple.
      *
-     * @name Phaser.GameObjects.Components.Tint#_tintTL
+     * @name Phaser.GameObjects.Components.Tint#tintTopLeft
      * @type {number}
-     * @private
-     * @default 16777215
+     * @default 0xffffff
      * @since 3.0.0
      */
-    _tintTL: 16777215,
+    tintTopLeft: 0xffffff,
 
     /**
-     * Private internal value. Holds the top-right tint value.
+     * The tint value being applied to the top-right vertice of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     * The value should be set as a hex number, i.e. 0xff0000 for red, or 0xff00ff for purple.
      *
-     * @name Phaser.GameObjects.Components.Tint#_tintTR
+     * @name Phaser.GameObjects.Components.Tint#tintTopRight
      * @type {number}
-     * @private
-     * @default 16777215
+     * @default 0xffffff
      * @since 3.0.0
      */
-    _tintTR: 16777215,
+    tintTopRight: 0xffffff,
 
     /**
-     * Private internal value. Holds the bottom-left tint value.
+     * The tint value being applied to the bottom-left vertice of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     * The value should be set as a hex number, i.e. 0xff0000 for red, or 0xff00ff for purple.
      *
-     * @name Phaser.GameObjects.Components.Tint#_tintBL
+     * @name Phaser.GameObjects.Components.Tint#tintBottomLeft
      * @type {number}
-     * @private
-     * @default 16777215
+     * @default 0xffffff
      * @since 3.0.0
      */
-    _tintBL: 16777215,
+    tintBottomLeft: 0xffffff,
 
     /**
-     * Private internal value. Holds the bottom-right tint value.
+     * The tint value being applied to the bottom-right vertice of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     * The value should be set as a hex number, i.e. 0xff0000 for red, or 0xff00ff for purple.
      *
-     * @name Phaser.GameObjects.Components.Tint#_tintBR
+     * @name Phaser.GameObjects.Components.Tint#tintBottomRight
      * @type {number}
-     * @private
-     * @default 16777215
+     * @default 0xffffff
      * @since 3.0.0
      */
-    _tintBR: 16777215,
+    tintBottomRight: 0xffffff,
 
     /**
-     * Private internal value. Holds if the Game Object is tinted or not.
+     * The tint fill mode.
      *
-     * @name Phaser.GameObjects.Components.Tint#_isTinted
-     * @type {boolean}
-     * @private
-     * @default false
-     * @since 3.11.0
-     */
-    _isTinted: false,
-
-    /**
-     * Fill or additive?
+     * `false` = An additive tint (the default), where vertices colors are blended with the texture.
+     * `true` = A fill tint, where the vertices colors replace the texture, but respects texture alpha.
      *
      * @name Phaser.GameObjects.Components.Tint#tintFill
      * @type {boolean}
@@ -97,8 +91,6 @@ var Tint = {
     clearTint: function ()
     {
         this.setTint(0xffffff);
-
-        this._isTinted = false;
 
         return this;
     },
@@ -141,12 +133,10 @@ var Tint = {
             bottomRight = topLeft;
         }
 
-        this._tintTL = GetColorFromValue(topLeft);
-        this._tintTR = GetColorFromValue(topRight);
-        this._tintBL = GetColorFromValue(bottomLeft);
-        this._tintBR = GetColorFromValue(bottomRight);
-
-        this._isTinted = true;
+        this.tintTopLeft = topLeft;
+        this.tintTopRight = topRight;
+        this.tintBottomLeft = bottomLeft;
+        this.tintBottomRight = bottomRight;
 
         this.tintFill = false;
 
@@ -191,102 +181,6 @@ var Tint = {
     },
 
     /**
-     * The tint value being applied to the top-left of the Game Object.
-     * This value is interpolated from the corner to the center of the Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Tint#tintTopLeft
-     * @type {integer}
-     * @webglOnly
-     * @since 3.0.0
-     */
-    tintTopLeft: {
-
-        get: function ()
-        {
-            return this._tintTL;
-        },
-
-        set: function (value)
-        {
-            this._tintTL = GetColorFromValue(value);
-            this._isTinted = true;
-        }
-
-    },
-
-    /**
-     * The tint value being applied to the top-right of the Game Object.
-     * This value is interpolated from the corner to the center of the Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Tint#tintTopRight
-     * @type {integer}
-     * @webglOnly
-     * @since 3.0.0
-     */
-    tintTopRight: {
-
-        get: function ()
-        {
-            return this._tintTR;
-        },
-
-        set: function (value)
-        {
-            this._tintTR = GetColorFromValue(value);
-            this._isTinted = true;
-        }
-
-    },
-
-    /**
-     * The tint value being applied to the bottom-left of the Game Object.
-     * This value is interpolated from the corner to the center of the Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Tint#tintBottomLeft
-     * @type {integer}
-     * @webglOnly
-     * @since 3.0.0
-     */
-    tintBottomLeft: {
-
-        get: function ()
-        {
-            return this._tintBL;
-        },
-
-        set: function (value)
-        {
-            this._tintBL = GetColorFromValue(value);
-            this._isTinted = true;
-        }
-
-    },
-
-    /**
-     * The tint value being applied to the bottom-right of the Game Object.
-     * This value is interpolated from the corner to the center of the Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Tint#tintBottomRight
-     * @type {integer}
-     * @webglOnly
-     * @since 3.0.0
-     */
-    tintBottomRight: {
-
-        get: function ()
-        {
-            return this._tintBR;
-        },
-
-        set: function (value)
-        {
-            this._tintBR = GetColorFromValue(value);
-            this._isTinted = true;
-        }
-
-    },
-
-    /**
      * The tint value being applied to the whole of the Game Object.
      * This property is a setter-only. Use the properties `tintTopLeft` etc to read the current tint value.
      *
@@ -304,7 +198,10 @@ var Tint = {
     },
 
     /**
-     * Does this Game Object have a tint applied to it or not?
+     * Does this Game Object have a tint applied?
+     *
+     * It checks to see if the 4 tint properties are set to the value 0xffffff
+     * and that the `tintFill` property is `false`. This indicates that a Game Object isn't tinted.
      *
      * @name Phaser.GameObjects.Components.Tint#isTinted
      * @type {boolean}
@@ -316,7 +213,15 @@ var Tint = {
 
         get: function ()
         {
-            return this._isTinted;
+            var white = 0xffffff;
+
+            return (
+                this.tintFill ||
+                this.tintTopLeft !== white ||
+                this.tintTopRight !== white ||
+                this.tintBottomLeft !== white ||
+                this.tintBottomRight !== white
+            );
         }
 
     }

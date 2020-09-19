@@ -27,7 +27,7 @@ module.exports = [
     'void main()',
     '{',
     '    vec3 finalColor = vec3(0.0, 0.0, 0.0);',
-    '    vec4 color = texture2D(uMainSampler, outTexCoord) * vec4(outTint.rgb * outTint.a, outTint.a);',
+    '    vec4 color = texture2D(uMainSampler, outTexCoord) * vec4(outTint.bgr * outTint.a, outTint.a);',
     '    vec3 normalMap = texture2D(uNormSampler, outTexCoord).rgb;',
     '    vec3 normal = normalize(uInverseRotationMatrix * vec3(normalMap * 2.0 - 1.0));',
     '    vec2 res = vec2(min(uResolution.x, uResolution.y)) * uCamera.w;',

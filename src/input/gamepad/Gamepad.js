@@ -313,6 +313,16 @@ var Gamepad = new Class({
          * @since 3.10.0
          */
         this.rightStick = new Vector2();
+
+        /**
+         * When was this Gamepad created? Used to avoid duplicate event spamming in the update loop.
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#_created
+         * @type {number}
+         * @private
+         * @since 3.50.0
+         */
+        this._created = performance.now();
     },
 
     /**
@@ -420,6 +430,11 @@ var Gamepad = new Class({
      */
     update: function (pad)
     {
+        if (pad.timestamp < this._created)
+        {
+            return;
+        }
+
         var i;
 
         //  Sync the button values

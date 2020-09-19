@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var GetCalcMatrix = require('../GetCalcMatrix');
 var Utils = require('../../renderer/webgl/Utils');
 
 /**
@@ -17,51 +18,21 @@ var Utils = require('../../renderer/webgl/Utils');
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Rope} src - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var RopeWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
+var RopeWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
-    var pipeline = src.pipeline;
+    var pipeline = renderer.pipelines.set(src.pipeline, src);
 
-    renderer.setPipeline(pipeline, src);
-
-    var camMatrix = pipeline._tempMatrix1;
-    var spriteMatrix = pipeline._tempMatrix2;
-    var calcMatrix = pipeline._tempMatrix3;
-
-    spriteMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
-
-    camMatrix.copyFrom(camera.matrix);
-
-    if (parentMatrix)
-    {
-        //  Multiply the camera by the parent matrix
-        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
-
-        //  Undo the camera scroll
-        spriteMatrix.e = src.x;
-        spriteMatrix.f = src.y;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(spriteMatrix, calcMatrix);
-    }
-    else
-    {
-        spriteMatrix.e -= camera.scrollX * src.scrollFactorX;
-        spriteMatrix.f -= camera.scrollY * src.scrollFactorY;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(spriteMatrix, calcMatrix);
-    }
+    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
     var vertices = src.vertices;
     var uvs = src.uv;
     var colors = src.colors;
     var alphas = src.alphas;
     var alpha = src.alpha;
-    var getTint = Utils.getTintAppendFloatAlphaAndSwap;
+    var getTint = Utils.getTintAppendFloatAlpha;
     var roundPixels = camera.roundPixels;
 
     var meshVerticesLength = vertices.length;

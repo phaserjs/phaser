@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var GetCalcMatrix = require('../../GetCalcMatrix');
 var Utils = require('../../../renderer/webgl/Utils');
 
 /**
@@ -17,40 +18,16 @@ var Utils = require('../../../renderer/webgl/Utils');
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Grid} src - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var GridWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
+var GridWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
-    var pipeline = this.pipeline;
+    var pipeline = renderer.pipelines.set(this.pipeline);
 
-    var camMatrix = pipeline._tempMatrix1;
-    var shapeMatrix = pipeline._tempMatrix2;
-    var calcMatrix = pipeline._tempMatrix3;
+    var result = GetCalcMatrix(src, camera, parentMatrix);
 
-    renderer.setPipeline(pipeline);
-
-    shapeMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
-
-    camMatrix.copyFrom(camera.matrix);
-
-    if (parentMatrix)
-    {
-        //  Multiply the camera by the parent matrix
-        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
-
-        //  Undo the camera scroll
-        shapeMatrix.e = src.x;
-        shapeMatrix.f = src.y;
-    }
-    else
-    {
-        shapeMatrix.e -= camera.scrollX * src.scrollFactorX;
-        shapeMatrix.f -= camera.scrollY * src.scrollFactorY;
-    }
-
-    camMatrix.multiply(shapeMatrix, calcMatrix);
+    var calcMatrix = pipeline._tempMatrix3.copyFrom(result.calc);
 
     calcMatrix.translate(-src._displayOriginX, -src._displayOriginY);
 
@@ -108,7 +85,7 @@ var GridWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     if (showCells && src.fillAlpha > 0)
     {
         fillTint = pipeline.fillTint;
-        fillTintColor = Utils.getTintAppendFloatAlphaAndSwap(src.fillColor, src.fillAlpha * alpha);
+        fillTintColor = Utils.getTintAppendFloatAlpha(src.fillColor, src.fillAlpha * alpha);
 
         fillTint.TL = fillTintColor;
         fillTint.TR = fillTintColor;
@@ -148,7 +125,7 @@ var GridWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     if (showAltCells && src.altFillAlpha > 0)
     {
         fillTint = pipeline.fillTint;
-        fillTintColor = Utils.getTintAppendFloatAlphaAndSwap(src.altFillColor, src.altFillAlpha * alpha);
+        fillTintColor = Utils.getTintAppendFloatAlpha(src.altFillColor, src.altFillAlpha * alpha);
 
         fillTint.TL = fillTintColor;
         fillTint.TR = fillTintColor;
@@ -188,7 +165,7 @@ var GridWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     if (showOutline && src.outlineFillAlpha > 0)
     {
         var strokeTint = pipeline.strokeTint;
-        var color = Utils.getTintAppendFloatAlphaAndSwap(src.outlineFillColor, src.outlineFillAlpha * alpha);
+        var color = Utils.getTintAppendFloatAlpha(src.outlineFillColor, src.outlineFillAlpha * alpha);
 
         strokeTint.TL = color;
         strokeTint.TR = color;
