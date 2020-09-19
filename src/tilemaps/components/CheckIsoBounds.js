@@ -11,7 +11,7 @@
  *
  * @function Phaser.Tilemaps.Components.CheckIsoBounds
  * @private
- * @since 3.2.3
+ * @since 3.50.iso
  *
  * @param {integer} tileX - The x coordinate, in tiles, not pixels.
  * @param {integer} tileY - The y coordinate, in tiles, not pixels.

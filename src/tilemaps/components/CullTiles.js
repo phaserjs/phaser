@@ -14,7 +14,7 @@ var GetCullBounds = require('./GetCullBounds');
  * Orientation-Decorated function that returns the tiles in the given layer that are within the camera's viewport. This is used internally.
  *
  * @function Phaser.Tilemaps.Components.GetStandardCullTiles
- * @since 3.0.0
+ * @since 3.50.iso
  * --- decorator:
  * @param {function} getCullBounds
  * --- inner function : 
@@ -153,7 +153,7 @@ var GetStandardCullTiles = function (getCullBounds)
  * Returns the tiles in the given layer that are within the camera's viewport. This is used internally.
  *
  * @function Phaser.Tilemaps.Components.IsoCullTiles
- * @since 3.0.0
+ * @since 3.50.iso
  *
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to run the cull check against.
