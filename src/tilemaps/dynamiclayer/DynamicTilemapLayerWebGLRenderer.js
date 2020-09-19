@@ -76,7 +76,7 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, camera)
             }
 
             var frameWidth = tileset.tileWidth;
-            var frameHeight = tile.tileHeight;
+            var frameHeight = tileset.tileHeight;
 
             var frameX = tileTexCoords.x;
             var frameY = tileTexCoords.y;
