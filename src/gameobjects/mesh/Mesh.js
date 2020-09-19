@@ -11,7 +11,9 @@ var GameObjectEvents = require('../events');
 var GetCalcMatrix = require('../GetCalcMatrix');
 var MeshRender = require('./MeshRender');
 var MeshCamera = require('./MeshCamera');
+var MeshLight = require('./MeshLight');
 var Model = require('../../geom/mesh/Model');
+var Vector3 = require('../../math/Vector3');
 
 /**
  * @classdesc
@@ -84,6 +86,8 @@ var Mesh = new Class({
          */
         this.camera = new MeshCamera(45, 0, 0, -10, 0.01, 1000);
 
+        this.light = new MeshLight();
+
         /**
          * An array of Model instances that have been created in this Mesh.
          *
@@ -152,7 +156,8 @@ var Mesh = new Class({
 
         this.setSize(renderer.width, renderer.height);
 
-        this.initPipeline();
+        //  TODO - Change to const
+        this.initPipeline('MeshPipeline');
 
         if (vertices)
         {
@@ -324,6 +329,7 @@ var Mesh = new Class({
 
             var vertices = modelData.vertices;
             var textureCoords = modelData.textureCoords;
+            var normals = modelData.vertexNormals;
             var faces = modelData.faces;
 
             var defaultUV1 = { u: 0, v: 1 };
@@ -334,13 +340,19 @@ var Mesh = new Class({
             {
                 var face = faces[i];
 
+                //  {textureCoordsIndex: 0, vertexIndex: 16, vertexNormalIndex: 16}
                 var v1 = face.vertices[0];
                 var v2 = face.vertices[1];
                 var v3 = face.vertices[2];
 
+                //  {x: 0.19509, y: 0.980785, z: 0}
                 var m1 = vertices[v1.vertexIndex];
                 var m2 = vertices[v2.vertexIndex];
                 var m3 = vertices[v3.vertexIndex];
+
+                var n1 = normals[v1.vertexNormalIndex];
+                var n2 = normals[v2.vertexNormalIndex];
+                var n3 = normals[v3.vertexNormalIndex];
 
                 var t1 = v1.textureCoordsIndex;
                 var t2 = v2.textureCoordsIndex;
@@ -350,9 +362,9 @@ var Mesh = new Class({
                 var uv2 = (t2 === -1) ? defaultUV2 : textureCoords[t2];
                 var uv3 = (t3 === -1) ? defaultUV3 : textureCoords[t3];
 
-                var vert1 = model.addVertex(originX + m1.x * scale, originY + m1.y * scale, originZ + m1.z * scale, uv1.u, uv1.v);
-                var vert2 = model.addVertex(originX + m2.x * scale, originY + m2.y * scale, originZ + m2.z * scale, uv2.u, uv2.v);
-                var vert3 = model.addVertex(originX + m3.x * scale, originY + m3.y * scale, originZ + m3.z * scale, uv3.u, uv3.v);
+                var vert1 = model.addVertex(originX + m1.x * scale, originY + m1.y * scale, originZ + m1.z * scale, uv1.u, uv1.v, n1.x, n1.y, n1.z);
+                var vert2 = model.addVertex(originX + m2.x * scale, originY + m2.y * scale, originZ + m2.z * scale, uv2.u, uv2.v, n2.x, n2.y, n2.z);
+                var vert3 = model.addVertex(originX + m3.x * scale, originY + m3.y * scale, originZ + m3.z * scale, uv3.u, uv3.v, n3.x, n3.y, n3.z);
 
                 model.addFace(vert1, vert2, vert3);
             }
@@ -533,6 +545,7 @@ var Mesh = new Class({
 
         var camera = this.camera;
 
+        /*
         if (camera.dirty || width !== this._prevWidth || height !== this._prevHeight)
         {
             //  Mesh has resized, flow that down to the Camera
@@ -541,6 +554,9 @@ var Mesh = new Class({
             this._prevWidth = width;
             this._prevHeight = height;
         }
+        */
+
+        camera.update(width, height);
 
         var models = this.models;
 

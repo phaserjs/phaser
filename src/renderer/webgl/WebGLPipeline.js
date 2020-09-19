@@ -126,13 +126,19 @@ var WebGLPipeline = new Class({
         this.vertexCapacity = GetFastValue(config, 'vertexCapacity', renderer.config.batchSize * 6);
 
         /**
-         * The size in bytes of a vertex.
+         * The size, in bytes, of a single vertex.
          *
-         * Derived by adding together all of the vertex attributes.
+         * This is derived by adding together all of the vertex attributes.
          *
-         * For example, the Texture Tint Pipeline has 2 + 2 + 1 + 1 + 4 for the attributes
-         * `inPosition` (size 2), `inTexCoord` (size 2), `inTexId` (size 1), `inTintEffect` (size 1)
-         * and `inTint` (size 4), for a total of 28, which is the default for this property.
+         * For example, the Multi Pipeline has the following attributes:
+         *
+         * inPosition - (size 2 x gl.FLOAT) = 8
+         * inTexCoord - (size 2 x gl.FLOAT) = 8
+         * inTexId - (size 1 x gl.FLOAT) = 4
+         * inTintEffect - (size 1 x gl.FLOAT) = 4
+         * inTint - (size 4 x gl.UNSIGNED_BYTE) = 4
+         *
+         * The total is 8 + 8 + 4 + 4 + 4 = 28, which is the default for this property.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexSize
          * @type {integer}
@@ -459,12 +465,15 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * Set whenever this WebGL Pipeline is bound to a WebGL Renderer.
+     * This method is called every time a Game Object asks the Pipeline Manager to use this pipeline.
      *
-     * This method is called every time the WebGL Pipeline is attempted to be bound, even if it already is the current pipeline.
+     * Unlike the `bind` method, which is only called once per frame, this is called for every object
+     * that requests it, allowing you to perform per-object GL set-up.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onBind
      * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
      *
      * @return {this} This WebGLPipeline instance.
      */

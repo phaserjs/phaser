@@ -15,10 +15,11 @@ var Pipelines = {
 
     BitmapMaskPipeline: require('./BitmapMaskPipeline'),
     LightPipeline: require('./LightPipeline'),
-    SinglePipeline: require('./SinglePipeline'),
+    MeshPipeline: require('./MeshPipeline'),
+    ModelViewProjection: require('./components/ModelViewProjection'),
     MultiPipeline: require('./MultiPipeline'),
     RopePipeline: require('./RopePipeline'),
-    ModelViewProjection: require('./components/ModelViewProjection')
+    SinglePipeline: require('./SinglePipeline')
 
 };
 

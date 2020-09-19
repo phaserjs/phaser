@@ -8,9 +8,8 @@ var AnimationState = require('../../animations/AnimationState');
 var Class = require('../../utils/Class');
 var Components = require('../../gameobjects/components');
 var Face = require('./Face');
-var GetCalcMatrix = require('../../gameobjects/GetCalcMatrix');
 var Matrix4 = require('../../math/Matrix4');
-var StableSort = require('../../utils/array/StableSort');
+var Quaternion = require('../../math/Quaternion');
 var Vector3 = require('../../math/Vector3');
 var Vertex = require('./Vertex');
 var WrapAngle = require('../../math/angle/Wrap');
@@ -59,7 +58,7 @@ var Model = new Class({
          *
          * A Face consists of 3 Vertex objects.
          *
-         * This array is populated during the `setVertices` method.
+         * This array is populated during the `addVertices` method.
          *
          * @name Phaser.Geom.Mesh.Model#faces
          * @type {Phaser.Geom.Mesh.Face[]}
@@ -78,39 +77,18 @@ var Model = new Class({
          */
         this.vertices = [];
 
-        /**
-         * The tint fill mode.
-         *
-         * `false` = An additive tint (the default), where vertices colors are blended with the texture.
-         * `true` = A fill tint, where the vertices colors replace the texture, but respects texture alpha.
-         *
-         * @name Phaser.Geom.Mesh.Model#tintFill
-         * @type {boolean}
-         * @default false
-         * @since 3.50.0
-         */
-        this.tintFill = false;
-
-        /**
-         * When rendering, skip any Face that isn't counter clockwise?
-         *
-         * Enable this to hide backward-facing Faces during rendering.
-         * Disable it to render all Faces.
-         *
-         * @name Phaser.Geom.Mesh.Model#hideCCW
-         * @type {boolean}
-         * @since 3.50.0
-         */
-        this.hideCCW = true;
-
-        this.drawDebug = true;
-
         this.position = new Vector3(x, y, z);
-        this.rotation = new Vector3();
         this.scale = new Vector3(1, 1, 1);
+        this.rotation = new Quaternion();
 
-        this.dirtyCache = [ x, y, z, 0, 0, 0, 1, 1, 1, 0 ];
+        this.dirtyCache = [ x, y, z, 0, 0, 0, 0, 1, 1, 1, 0 ];
 
+        this.ambient = new Vector3(1, 1, 1);
+        this.diffuse = new Vector3(1, 1, 1);
+        this.specular = new Vector3(1, 1, 1);
+        this.shine = 0.25;
+
+        this.normalMatrix = new Matrix4();
         this.transformMatrix = new Matrix4();
 
         if (!texture)
@@ -165,6 +143,7 @@ var Model = new Class({
         var rx = rotation.x;
         var ry = rotation.y;
         var rz = rotation.z;
+        var rw = rotation.w;
 
         var sx = scale.x;
         var sy = scale.y;
@@ -179,12 +158,13 @@ var Model = new Class({
         var rxCached = dirtyCache[3];
         var ryCached = dirtyCache[4];
         var rzCached = dirtyCache[5];
+        var rwCached = dirtyCache[6];
 
-        var sxCached = dirtyCache[6];
-        var syCached = dirtyCache[7];
-        var szCached = dirtyCache[8];
+        var sxCached = dirtyCache[7];
+        var syCached = dirtyCache[8];
+        var szCached = dirtyCache[9];
 
-        var fCached = dirtyCache[9];
+        var fCached = dirtyCache[10];
 
         dirtyCache[0] = px;
         dirtyCache[1] = py;
@@ -193,43 +173,40 @@ var Model = new Class({
         dirtyCache[3] = rx;
         dirtyCache[4] = ry;
         dirtyCache[5] = rz;
+        dirtyCache[6] = rw;
 
-        dirtyCache[6] = sx;
-        dirtyCache[7] = sy;
-        dirtyCache[8] = sz;
+        dirtyCache[7] = sx;
+        dirtyCache[8] = sy;
+        dirtyCache[9] = sz;
 
-        dirtyCache[9] = faces;
+        dirtyCache[10] = faces;
 
         return (
             pxCached !== px || pyCached !== py || pzCached !== pz ||
-            rxCached !== rx || ryCached !== ry || rzCached !== rz ||
+            rxCached !== rx || ryCached !== ry || rzCached !== rz || rwCached !== rw ||
             sxCached !== sx || syCached !== sy || szCached !== sz ||
             fCached !== faces
         );
     },
 
-    preUpdate: function (time, delta, camera, width, height)
+    preUpdate: function (time, delta)
     {
         this.anims.update(time, delta);
 
-        if (!camera.dirty && !this.isDirty())
+        //  If the model isn't dirty we can bail out and save lots of math
+        if (this.isDirty())
         {
-            //  If neither the camera or the model is dirty, we can bail out and save lots of math
-            return;
+            var normalMatrix = this.normalMatrix;
+            var transformMatrix = this.transformMatrix;
+
+            //  TODO - No scale
+            transformMatrix.fromRotationTranslation(this.rotation, this.position);
+            transformMatrix.scale(this.scale);
+
+            normalMatrix.copy(transformMatrix);
+            normalMatrix.invert();
+            normalMatrix.transpose();
         }
-
-        var transformMatrix = this.transformMatrix;
-
-        transformMatrix.setWorldMatrix(this.rotation, this.position, this.scale, camera.viewMatrix, camera.projectionMatrix);
-
-        var vertices = this.vertices;
-
-        for (var i = 0; i < vertices.length; i++)
-        {
-            vertices[i].transformCoordinatesLocal(transformMatrix, width, height);
-        }
-
-        this.depthSort();
     },
 
     /**
@@ -271,79 +248,6 @@ var Model = new Class({
     getFace: function (index)
     {
         return this.faces[index];
-    },
-
-    /**
-     * Return an array of Face objects from this Mesh that intersect with the given coordinates.
-     *
-     * The given position is translated through the matrix of this Mesh and the given Camera,
-     * before being compared against the vertices.
-     *
-     * If more than one Face intersects, they will all be returned in the array, but the array will
-     * be depth sorted first, so the first element will always be that closest to the camera.
-     *
-     * @method Phaser.Geom.Mesh.Model#getFaceAt
-     * @since 3.50.0
-     *
-     * @param {number} x - The x position to check against.
-     * @param {number} y - The y position to check against.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The camera to pass the coordinates through. If not given, the default Scene Camera is used.
-     *
-     * @return {Phaser.Geom.Mesh.Face[]} An array of Face objects that intersect with the given point, ordered by depth.
-     */
-    getFaceAt: function (x, y, camera, calcMatrix)
-    {
-        if (camera === undefined) { camera = this.scene.sys.cameras.main; }
-        if (calcMatrix === undefined) { calcMatrix = GetCalcMatrix(this.mesh, camera).calc; }
-
-        var faces = this.faces;
-        var results = [];
-
-        for (var i = 0; i < faces.length; i++)
-        {
-            var face = faces[i];
-
-            if (face.contains(x, y, calcMatrix))
-            {
-                results.push(face);
-            }
-        }
-
-        return StableSort(results, this.sortByDepth);
-    },
-
-    /**
-     * Runs a depth sort across all Faces in this Mesh, comparing their averaged depth.
-     *
-     * This is called automatically if you use any of the `rotate` methods, but you can
-     * also invoke it to sort the Faces should you manually position them.
-     *
-     * @method Phaser.Geom.Mesh.Model#depthSort
-     * @since 3.50.0
-     *
-     * @return {this} This Mesh Game Object.
-     */
-    depthSort: function ()
-    {
-        StableSort(this.faces, this.sortByDepth);
-
-        return this;
-    },
-
-    /**
-     * Compare the depth of two Faces.
-     *
-     * @method Phaser.Geom.Mesh.Model#sortByDepth
-     * @since 3.50.0
-     *
-     * @param {Phaser.Geom.Mesh.Face} faceA - The first Face.
-     * @param {Phaser.Geom.Mesh.Face} faceB - The second Face.
-     *
-     * @return {integer} The difference between the depths of each Face.
-     */
-    sortByDepth: function (faceA, faceB)
-    {
-        return faceA.depth - faceB.depth;
     },
 
     /**
@@ -511,102 +415,6 @@ var Model = new Class({
         }
 
         return this;
-    },
-
-    /**
-     * Rotates all vertices of this Mesh around the X axis by the amount given.
-     *
-     * It then runs a depth sort on the faces before returning.
-     *
-     * @method Phaser.Geom.Mesh.Model#rotateVerticesX
-     * @since 3.50.0
-     *
-     * @param {number} theta - The amount to rotate by in radians.
-     *
-     * @return {this} This Mesh Game Object.
-     */
-    rotateVerticesX: function (theta)
-    {
-        var ts = Math.sin(theta);
-        var tc = Math.cos(theta);
-
-        var verts = this.vertices;
-
-        for (var n = 0; n < verts.length; n++)
-        {
-            var vert = verts[n];
-            var y = vert.y;
-            var z = vert.z;
-
-            vert.y = y * tc - z * ts;
-            vert.z = z * tc + y * ts;
-        }
-
-        return this.depthSort();
-    },
-
-    /**
-     * Rotates all vertices of this Mesh around the Y axis by the amount given.
-     *
-     * It then runs a depth sort on the faces before returning.
-     *
-     * @method Phaser.Geom.Mesh.Model#rotateVerticesY
-     * @since 3.50.0
-     *
-     * @param {number} theta - The amount to rotate by in radians.
-     *
-     * @return {this} This Mesh Game Object.
-     */
-    rotateVerticesY: function (theta)
-    {
-        var ts = Math.sin(theta);
-        var tc = Math.cos(theta);
-
-        var verts = this.vertices;
-
-        for (var n = 0; n < verts.length; n++)
-        {
-            var vert = verts[n];
-            var x = vert.x;
-            var z = vert.z;
-
-            vert.x = x * tc - z * ts;
-            vert.z = z * tc + x * ts;
-        }
-
-        return this.depthSort();
-    },
-
-    /**
-     * Rotates all vertices of this Mesh around the Z axis by the amount given.
-     *
-     * It then runs a depth sort on the faces before returning.
-     *
-     * @method Phaser.Geom.Mesh.Model#rotateVerticesZ
-     * @since 3.50.0
-     *
-     * @param {number} theta - The amount to rotate by in radians.
-     *
-     * @return {this} This Mesh Game Object.
-     */
-    rotateVerticesZ: function (theta)
-    {
-        var ts = Math.sin(theta);
-        var tc = Math.cos(theta);
-
-        var verts = this.vertices;
-
-        for (var n = 0; n < verts.length; n++)
-        {
-            var vert = verts[n];
-            var x = vert.x;
-            var y = vert.y;
-
-            vert.x = x * tc - y * ts;
-            vert.y = y * tc + x * ts;
-        }
-
-        return this.depthSort();
     },
 
     x: {
