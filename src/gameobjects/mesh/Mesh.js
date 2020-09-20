@@ -13,7 +13,7 @@ var MeshRender = require('./MeshRender');
 var MeshCamera = require('./MeshCamera');
 var MeshLight = require('./MeshLight');
 var Model = require('../../geom/mesh/Model');
-var Vector3 = require('../../math/Vector3');
+var CONST = require('../../renderer/webgl/pipelines/const');
 
 /**
  * @classdesc
@@ -86,7 +86,18 @@ var Mesh = new Class({
          */
         this.camera = new MeshCamera(45, 0, 0, -10, 0.01, 1000);
 
+        /**
+         * TODO
+         *
+         * @name Phaser.GameObjects.Mesh#light
+         * @type {Phaser.GameObjects.MeshLight}
+         * @since 3.50.0
+         */
         this.light = new MeshLight();
+
+        this.fogColor = { r: 0, g: 0, b: 0 };
+        this.fogNear = 0;
+        this.fogFar = Infinity;
 
         /**
          * An array of Model instances that have been created in this Mesh.
@@ -96,39 +107,6 @@ var Mesh = new Class({
          * @since 3.50.0
          */
         this.models = [];
-
-        /**
-         * You can optionally choose to render the vertices of this Mesh to a Graphics instance.
-         *
-         * Achieve this by setting the `debugCallback` and the `debugGraphic` properties.
-         *
-         * You can do this in a single call via the `Mesh.setDebug` method, which will use the
-         * built-in debug function. You can also set it to your own callback. The callback
-         * will be invoked _once per render_ and sent the following parameters:
-         *
-         * `debugCallback(src, meshLength, verts)`
-         *
-         * `src` is the Mesh instance being debugged.
-         * `meshLength` is the number of mesh vertices in total.
-         * `verts` is an array of the translated vertex coordinates.
-         *
-         * To disable rendering, set this property back to `null`.
-         *
-         * @name Phaser.GameObjects.Mesh#debugCallback
-         * @type {function}
-         * @since 3.50.0
-         */
-        this.debugCallback = null;
-
-        /**
-         * The Graphics instance that the debug vertices will be drawn to, if `setDebug` has
-         * been called.
-         *
-         * @name Phaser.GameObjects.Mesh#debugGraphic
-         * @type {Phaser.GameObjects.Graphics}
-         * @since 3.50.0
-         */
-        this.debugGraphic = null;
 
         /**
          * Internal cached value.
@@ -153,11 +131,8 @@ var Mesh = new Class({
         var renderer = scene.sys.renderer;
 
         this.setPosition(x, y);
-
         this.setSize(renderer.width, renderer.height);
-
-        //  TODO - Change to const
-        this.initPipeline('MeshPipeline');
+        this.initPipeline(CONST.MESH_PIPELINE);
 
         if (vertices)
         {
@@ -212,9 +187,9 @@ var Mesh = new Class({
      *
      * @return {Phaser.Geom.Mesh.Model} The Model instance that was created.
      */
-    addModel: function (texture, frame, x, y, z)
+    addModel: function (verticesCount, texture, frame, x, y, z)
     {
-        var model = new Model(this, texture, frame, x, y, z);
+        var model = new Model(this, verticesCount, texture, frame, x, y, z);
 
         this.models.push(model);
 
@@ -323,14 +298,14 @@ var Mesh = new Class({
 
         for (var m = 0; m < data.models.length; m++)
         {
-            var model = this.addModel(texture, frame);
-
             var modelData = data.models[m];
 
             var vertices = modelData.vertices;
             var textureCoords = modelData.textureCoords;
             var normals = modelData.vertexNormals;
             var faces = modelData.faces;
+
+            var model = this.addModel(faces.length * 3, texture, frame);
 
             var defaultUV1 = { u: 0, v: 1 };
             var defaultUV2 = { u: 0, v: 0 };
@@ -362,11 +337,9 @@ var Mesh = new Class({
                 var uv2 = (t2 === -1) ? defaultUV2 : textureCoords[t2];
                 var uv3 = (t3 === -1) ? defaultUV3 : textureCoords[t3];
 
-                var vert1 = model.addVertex(originX + m1.x * scale, originY + m1.y * scale, originZ + m1.z * scale, uv1.u, uv1.v, n1.x, n1.y, n1.z);
-                var vert2 = model.addVertex(originX + m2.x * scale, originY + m2.y * scale, originZ + m2.z * scale, uv2.u, uv2.v, n2.x, n2.y, n2.z);
-                var vert3 = model.addVertex(originX + m3.x * scale, originY + m3.y * scale, originZ + m3.z * scale, uv3.u, uv3.v, n3.x, n3.y, n3.z);
-
-                model.addFace(vert1, vert2, vert3);
+                model.addVertex(originX + m1.x * scale, originY + m1.y * scale, originZ + m1.z * scale, uv1.u, uv1.v, n1.x, n1.y, n1.z);
+                model.addVertex(originX + m2.x * scale, originY + m2.y * scale, originZ + m2.z * scale, uv2.u, uv2.v, n2.x, n2.y, n2.z);
+                model.addVertex(originX + m3.x * scale, originY + m3.y * scale, originZ + m3.z * scale, uv3.u, uv3.v, n3.x, n3.y, n3.z);
             }
 
             results.push(model);
@@ -430,7 +403,7 @@ var Mesh = new Class({
     },
 
     /**
-     * Return an array of Modes from this Mesh that intersect with the given coordinates.
+     * Return an array of Models from this Mesh that intersect with the given coordinates.
      *
      * The given position is translated through the matrix of this Mesh and the given Camera,
      * before being compared against the model vertices.
@@ -473,59 +446,6 @@ var Mesh = new Class({
         }
 
         return results;
-    },
-
-    /**
-     * This method enables rendering of the Model vertices to the given Graphics instance.
-     *
-     * If you enable this feature, you **must** call `Graphics.clear()` in your Scene `update`,
-     * otherwise the Graphics instance you provide to debug will fill-up with draw calls,
-     * eventually crashing the browser. This is not done automatically to allow you to debug
-     * draw multiple Mesh objects to a single Graphics instance.
-     *
-     * You can toggle debug drawing on a per-Model basis via the `Model.drawDebug` boolean property.
-     *
-     * The Mesh class has a built-in debug rendering callback `Mesh.renderDebugVerts`, however
-     * you can also provide your own callback to be used instead. Do this by setting the `callback` parameter.
-     *
-     * The callback is invoked _once per render_ and sent the following parameters:
-     *
-     * `callback(src, meshLength, verts)`
-     *
-     * `src` is the Model instance being debugged.
-     * `verts` is an array of the translated vertex coordinates.
-     *
-     * If using your own callback you do not have to provide a Graphics instance to this method.
-     *
-     * To disable debug rendering, to either your own callback or the built-in one, call this method
-     * with no arguments.
-     *
-     * @method Phaser.GameObjects.Mesh#setDebug
-     * @since 3.50.0
-     *
-     * @param {Phaser.GameObjects.Graphics} [graphic] - The Graphic instance to render to if using the built-in callback.
-     * @param {function} [callback] - The callback to invoke during debug render. Leave as undefined to use the built-in callback.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setDebug: function (graphic, callback)
-    {
-        this.debugGraphic = graphic;
-
-        if (!graphic && !callback)
-        {
-            this.debugCallback = null;
-        }
-        else if (!callback)
-        {
-            this.debugCallback = this.renderDebugVerts;
-        }
-        else
-        {
-            this.debugCallback = callback;
-        }
-
-        return this;
     },
 
     /**
@@ -574,34 +494,6 @@ var Mesh = new Class({
     },
 
     /**
-     * The built-in vertices debug rendering method.
-     *
-     * See `Mesh.setDebug` for more details.
-     *
-     * @method Phaser.GameObjects.Mesh#renderDebugVerts
-     * @since 3.50.0
-     *
-     * @param {Phaser.Geom.Mesh.Model} src - The Model being rendered.
-     * @param {number[]} verts - An array of translated vertex coordinates.
-     */
-    renderDebugVerts: function (src, verts)
-    {
-        var graphic = src.debugGraphic;
-
-        for (var i = 0; i < verts.length; i += 6)
-        {
-            var x0 = verts[i + 0];
-            var y0 = verts[i + 1];
-            var x1 = verts[i + 2];
-            var y1 = verts[i + 3];
-            var x2 = verts[i + 4];
-            var y2 = verts[i + 5];
-
-            graphic.strokeTriangle(x0, y0, x1, y1, x2, y2);
-        }
-    },
-
-    /**
      * The destroy step for the Mesh, which removes all models, destroys the camera and
      * nulls references.
      *
@@ -616,9 +508,6 @@ var Mesh = new Class({
         this.camera.destroy();
 
         this.camera = null;
-
-        this.debugCallback = null;
-        this.debugGraphic = null;
     }
 
 });
