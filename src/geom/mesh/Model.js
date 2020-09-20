@@ -34,7 +34,7 @@ var Model = new Class({
 
     initialize:
 
-    function Model (mesh, texture, frame, x, y, z)
+    function Model (mesh, verticesCount, texture, frame, x, y, z)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -53,29 +53,10 @@ var Model = new Class({
          */
         this.anims = new AnimationState(this);
 
-        /**
-         * An array containing the Face instances belonging to this Mesh.
-         *
-         * A Face consists of 3 Vertex objects.
-         *
-         * This array is populated during the `addVertices` method.
-         *
-         * @name Phaser.Geom.Mesh.Model#faces
-         * @type {Phaser.Geom.Mesh.Face[]}
-         * @since 3.50.0
-         */
-        this.faces = [];
-
-        /**
-         * An array containing Vertex instances. One instance per vertex in this Mesh.
-         *
-         * This array is populated during the `setVertices` method.
-         *
-         * @name Phaser.Geom.Mesh.Model#vertices
-         * @type {Phaser.Geom.Mesh.Vertex[]}
-         * @since 3.50.0
-         */
-        this.vertices = [];
+        this.vertexSize = 32; // 8 attributes * bytes size
+        this.vertexCount = 0; // current number of vertices added to the buffer
+        this.vertexData = new ArrayBuffer(verticesCount * this.vertexSize);
+        this.vertexViewF32 = new Float32Array(this.vertexData);
 
         this.position = new Vector3(x, y, z);
         this.scale = new Vector3(1, 1, 1);
@@ -104,28 +85,6 @@ var Model = new Class({
     emit: function ()
     {
         this.mesh.emit.call(arguments);
-    },
-
-    /**
-     * Iterates and destroys all current Faces in this Mesh, if any.
-     * Then resets the Face and Vertices arrays.
-     *
-     * @method Phaser.Geom.Mesh.Model#clearVertices
-     * @since 3.50.0
-     *
-     * @return {this} This Mesh Game Object.
-     */
-    clearVertices: function ()
-    {
-        this.faces.forEach(function (face)
-        {
-            face.destroy();
-        });
-
-        this.faces = [];
-        this.vertices = [];
-
-        return this;
     },
 
     isDirty: function ()
@@ -219,20 +178,34 @@ var Model = new Class({
      */
     getFaceCount: function ()
     {
-        return this.faces.length;
+        return this.vertexCount / 3;
     },
 
     /**
-     * Returns the total number of Vertices in this Mesh Game Object.
+     * TODO
      *
-     * @method Phaser.Geom.Mesh.Model#getVertexCount
+     * @method Phaser.Geom.Mesh.Model#getVertex
      * @since 3.50.0
      *
-     * @return {number} The number of Vertices in this Mesh Game Object.
+     * @return {Phaser.Geom.Mesh.Vertex} A Vertex object.
      */
-    getVertexCount: function ()
+    getVertex: function (index)
     {
-        return this.vertices.length;
+        var vertexViewF32 = this.vertexViewF32;
+
+        //  8 = attribute count (number of items added into the view below)
+        var vertexOffset = (index * 8) - 1;
+
+        var x = vertexViewF32[++vertexOffset];
+        var y = vertexViewF32[++vertexOffset];
+        var z = vertexViewF32[++vertexOffset];
+        var normalX = vertexViewF32[++vertexOffset];
+        var normalY = vertexViewF32[++vertexOffset];
+        var normalZ = vertexViewF32[++vertexOffset];
+        var u = vertexViewF32[++vertexOffset];
+        var v = vertexViewF32[++vertexOffset];
+
+        return new Vertex(x, y, z, u, v, normalX, normalY, normalZ);
     },
 
     /**
@@ -247,7 +220,6 @@ var Model = new Class({
      */
     getFace: function (index)
     {
-        return this.faces[index];
     },
 
     /**
@@ -264,41 +236,27 @@ var Model = new Class({
      * @param {number} z - The z position of the vertex.
      * @param {number} u - The UV u coordinate of the vertex.
      * @param {number} v - The UV v coordinate of the vertex.
-     * @param {number} [color=0xffffff] - The color value of the vertex.
      * @param {number} [alpha=1] - The alpha value of the vertex.
      *
      * @return {this} This Mesh Game Object.
      */
-    addVertex: function (x, y, z, u, v, color, alpha)
+    addVertex: function (x, y, z, u, v, normalX, normalY, normalZ, alpha)
     {
-        var vert = new Vertex(x, y, z, u, v, color, alpha);
+        var vertexViewF32 = this.vertexViewF32;
 
-        this.vertices.push(vert);
+        //  8 = attribute count (number of items added into the view below)
+        var vertexOffset = (this.vertexCount * 8) - 1;
 
-        return vert;
-    },
+        vertexViewF32[++vertexOffset] = x;
+        vertexViewF32[++vertexOffset] = y;
+        vertexViewF32[++vertexOffset] = z;
+        vertexViewF32[++vertexOffset] = normalX;
+        vertexViewF32[++vertexOffset] = normalY;
+        vertexViewF32[++vertexOffset] = normalZ;
+        vertexViewF32[++vertexOffset] = u;
+        vertexViewF32[++vertexOffset] = v;
 
-    /**
-     * Adds a new Face into the faces array of this Mesh.
-     *
-     * A Face consists of references to 3 Vertex instances, which must be provided.
-     *
-     * @method Phaser.Geom.Mesh.Model#addFace
-     * @since 3.50.0
-     *
-     * @param {Phaser.Geom.Mesh.Vertex} vertex1 - The first vertex of the Face.
-     * @param {Phaser.Geom.Mesh.Vertex} vertex2 - The second vertex of the Face.
-     * @param {Phaser.Geom.Mesh.Vertex} vertex3 - The third vertex of the Face.
-     *
-     * @return {this} This Mesh Game Object.
-     */
-    addFace: function (vertex1, vertex2, vertex3)
-    {
-        var face = new Face(vertex1, vertex2, vertex3);
-
-        this.faces.push(face);
-
-        return face;
+        this.vertexCount++;
     },
 
     /**
@@ -551,8 +509,6 @@ var Model = new Class({
      */
     destroy: function ()
     {
-        this.clearVertices();
-
         this.anims.destroy();
 
         this.mesh = null;
@@ -562,6 +518,7 @@ var Model = new Class({
         this.rotation = null;
         this.scale = null;
         this.transformMatrix = null;
+        this.vertexData = null;
     }
 
 });
