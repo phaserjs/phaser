@@ -7,6 +7,10 @@ uniform vec3 uLightAmbient;
 uniform vec3 uLightDiffuse;
 uniform vec3 uLightSpecular;
 
+uniform vec3 uFogColor;
+uniform float uFogNear;
+uniform float uFogFar;
+
 uniform vec3 uMaterialAmbient;
 uniform vec3 uMaterialDiffuse;
 uniform vec3 uMaterialSpecular;
@@ -38,5 +42,11 @@ void main (void)
 
     vec3 result = (ambient + diffuse + specular) * color.rgb;
 
-    gl_FragColor = vec4(result, color.a);
+    float depth = gl_FragCoord.z / gl_FragCoord.w;
+
+    float fogFactor = smoothstep(uFogNear, uFogFar, depth);
+
+    gl_FragColor.rgb = mix(result.rgb, uFogColor, fogFactor);
+
+    gl_FragColor.a = color.a;
 }
