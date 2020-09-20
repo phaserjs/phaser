@@ -34,7 +34,7 @@ var MeshPipeline = new Class({
 
         config.fragShader = GetFastValue(config, 'fragShader', ShaderSourceFS),
         config.vertShader = GetFastValue(config, 'vertShader', ShaderSourceVS),
-        config.vertexCapacity = GetFastValue(config, 'vertexCapacity', 2048 * 8),
+        config.vertexCapacity = GetFastValue(config, 'vertexCapacity', 8),
         config.vertexSize = GetFastValue(config, 'vertexSize', 32),
         config.attributes = GetFastValue(config, 'attributes', [
             {
@@ -67,15 +67,6 @@ var MeshPipeline = new Class({
         ]);
 
         WebGLPipeline.call(this, config);
-
-        /**
-         * Float32 view of the array buffer containing the pipeline's vertices.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.MeshPipeline#vertexViewF32
-         * @type {Float32Array}
-         * @since 3.0.0
-         */
-        this.vertexViewF32 = new Float32Array(this.vertexData);
 
         this.forceZero = true;
     },
@@ -134,7 +125,12 @@ var MeshPipeline = new Class({
         renderer.setFloat3(program, 'uLightAmbient', light.ambient.x, light.ambient.y, light.ambient.z);
         renderer.setFloat3(program, 'uLightDiffuse', light.diffuse.x, light.diffuse.y, light.diffuse.z);
         renderer.setFloat3(program, 'uLightSpecular', light.specular.x, light.specular.y, light.specular.z);
+
         renderer.setFloat3(program, 'uCameraPosition', camera.x, camera.y, camera.z);
+
+        renderer.setFloat3(program, 'uFogColor', mesh.fogColor.r, mesh.fogColor.g, mesh.fogColor.b);
+        renderer.setFloat1(program, 'uFogNear', mesh.forNear);
+        renderer.setFloat1(program, 'uFogFar', mesh.forFar);
     },
 
     drawModel: function (mesh, model)
@@ -153,36 +149,14 @@ var MeshPipeline = new Class({
         renderer.setTextureZero(model.frame.glTexture);
         renderer.setInt1(program, 'uTexture', 0);
 
-        //  All the uniforms are finally bound, so now lets draw our faces!
+        //  All the uniforms are finally bound, so let's buffer our data
 
-        var vertexViewF32 = this.vertexViewF32;
+        var gl = this.gl;
 
-        var vertices = model.vertices;
+        //  STATIC because the buffer data doesn't change, the uniforms do
+        gl.bufferData(gl.ARRAY_BUFFER, model.vertexData, gl.STATIC_DRAW);
 
-        for (var i = 0; i < vertices.length; i++)
-        {
-            if (this.shouldFlush(1))
-            {
-                this.flush();
-            }
-
-            var vertexOffset = (this.vertexCount * this.vertexComponentCount) - 1;
-
-            var vert = vertices[i];
-
-            vertexViewF32[++vertexOffset] = vert.x;
-            vertexViewF32[++vertexOffset] = vert.y;
-            vertexViewF32[++vertexOffset] = vert.z;
-            vertexViewF32[++vertexOffset] = vert.nx;
-            vertexViewF32[++vertexOffset] = vert.ny;
-            vertexViewF32[++vertexOffset] = vert.nz;
-            vertexViewF32[++vertexOffset] = vert.u;
-            vertexViewF32[++vertexOffset] = vert.v;
-
-            this.vertexCount++;
-        }
-
-        this.flush();
+        gl.drawArrays(this.topology, 0, model.vertexCount);
     }
 
 });
