@@ -1827,11 +1827,12 @@ var WebGLRenderer = new Class({
 
         if (!gl.getShaderParameter(vs, gl.COMPILE_STATUS))
         {
-            throw new Error('Failed to compile Vertex Shader:\n' + gl.getShaderInfoLog(vs));
+            throw new Error('Vertex Shader failed:\n' + gl.getShaderInfoLog(vs));
         }
+
         if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS))
         {
-            throw new Error('Failed to compile Fragment Shader:\n' + gl.getShaderInfoLog(fs));
+            throw new Error('Fragment Shader failed:\n' + gl.getShaderInfoLog(fs));
         }
 
         gl.attachShader(program, vs);
@@ -1840,7 +1841,7 @@ var WebGLRenderer = new Class({
 
         if (!gl.getProgramParameter(program, gl.LINK_STATUS))
         {
-            throw new Error('Failed to link program:\n' + gl.getProgramInfoLog(program));
+            throw new Error('Link Program failed:\n' + gl.getProgramInfoLog(program));
         }
 
         return program;
