@@ -485,6 +485,8 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `GameObjects.GetCalcMatrix` is a new function that is used to calculate the transformed Game Object matrix, based on the given Game Object, Camera and Parent. This function is now used by the following Game Objects: `BitmapText` (Static and Dynamic), `Graphics`, `Extern`, `Mesh`, `Rope`, `Shader`, `Arc`, `Curve`, `Ellipse`, `Grid`, `IsoBox`, `IsoTriangle`, `Line`, `Polygon`, `Rectangle`, `Star` and `Triangle`. This dramatically reduces the amount of duplicate code across the API.
 * `Utils.Array.Matrix.Translate` is a new function that will translate an Array Matrix by horizontally and vertically by the given amounts.
 * `Vertor3.addScale` is a new method that will add the given vector and multiply it in the process.
+* `Physics.Arcade.Body.setCollideWorldBounds` now has a new optional parameter `onWorldBounds` which allows you to enable the World Bounce property in the same call (thanks @samme)
+* When defining the ease used with a Particle Emitter you can now set `easeParams` in the config object, allowing you to pass custom ease parameters through to an ease function (thanks @vforsh)
 
 ### Updates and API Changes
 
@@ -548,6 +550,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `Time.Clock.addEvent` can now take an instance of a `TimerEvent` as its parameter. Fix #5294 (thanks @samme @EmilSV)
 * `GameConfig.audio` now defaults to an empty object, which simplifies access to the config in later checks (thanks @samme)
 * The `Loader.path` was being added to the File URL even if the URL was absolute. This is now checked for and the path is not applied unless the URL is relative (thanks @firesoft)
+* `Group.getMatching` would always return an empty array. It now returns matching children (thanks @samme)
 
 ### Namespace Updates
 
