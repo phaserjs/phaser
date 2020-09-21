@@ -66,7 +66,7 @@ var Flash = new Class({
         this.duration = 0;
 
         /**
-         * The value of the red color channel the camera will use for the fade effect.
+         * The value of the red color channel the camera will use for the flash effect.
          * A value between 0 and 255.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Flash#red
@@ -77,7 +77,7 @@ var Flash = new Class({
         this.red = 0;
 
         /**
-         * The value of the green color channel the camera will use for the fade effect.
+         * The value of the green color channel the camera will use for the flash effect.
          * A value between 0 and 255.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Flash#green
@@ -88,7 +88,7 @@ var Flash = new Class({
         this.green = 0;
 
         /**
-         * The value of the blue color channel the camera will use for the fade effect.
+         * The value of the blue color channel the camera will use for the flash effect.
          * A value between 0 and 255.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Flash#blue
@@ -99,7 +99,7 @@ var Flash = new Class({
         this.blue = 0;
 
         /**
-         * The value of the alpha channel used during the fade effect.
+         * The value of the alpha channel used during the flash effect.
          * A value between 0 and 1.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Flash#alpha
@@ -159,9 +159,9 @@ var Flash = new Class({
      * @since 3.5.0
      *
      * @param {integer} [duration=250] - The duration of the effect in milliseconds.
-     * @param {integer} [red=255] - The amount to fade the red channel towards. A value between 0 and 255.
-     * @param {integer} [green=255] - The amount to fade the green channel towards. A value between 0 and 255.
-     * @param {integer} [blue=255] - The amount to fade the blue channel towards. A value between 0 and 255.
+     * @param {integer} [red=255] - The amount to flash the red channel towards. A value between 0 and 255.
+     * @param {integer} [green=255] - The amount to flash the green channel towards. A value between 0 and 255.
+     * @param {integer} [blue=255] - The amount to flash the blue channel towards. A value between 0 and 255.
      * @param {boolean} [force=false] - Force the effect to start immediately, even if already running.
      * @param {Phaser.Types.Cameras.Scene2D.CameraFlashCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
