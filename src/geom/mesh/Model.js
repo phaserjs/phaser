@@ -12,7 +12,6 @@ var Matrix4 = require('../../math/Matrix4');
 var Quaternion = require('../../math/Quaternion');
 var Vector3 = require('../../math/Vector3');
 var Vertex = require('./Vertex');
-var WrapAngle = require('../../math/angle/Wrap');
 
 /**
  * @classdesc
@@ -156,8 +155,6 @@ var Model = new Class({
         //  If the model isn't dirty we can bail out and save lots of math
         if (this.isDirty())
         {
-            console.log('model update');
-
             var normalMatrix = this.normalMatrix;
             var transformMatrix = this.transformMatrix;
 
