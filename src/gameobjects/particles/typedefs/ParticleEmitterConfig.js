@@ -48,7 +48,8 @@
  * @property {(Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType)} [tint] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#tint}.
  * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [x] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#x} (emit only).
  * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [y] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#y} (emit only).
- * @property {object} [emitZone] - As {@link Phaser.GameObjects.Particles.ParticleEmitter#setEmitZone}.
+ * @property {Phaser.Types.GameObjects.Particles.ParticleEmitterEdgeZoneConfig | Phaser.Types.GameObjects.Particles.ParticleEmitterRandomZoneConfig} [emitZone] - As {@link Phaser.GameObjects.Particles.ParticleEmitter#setEmitZone}.
+ * @property {Phaser.Types.GameObjects.Particles.ParticleEmitterDeathZoneConfig} [deathZone] - As {@link Phaser.GameObjects.Particles.ParticleEmitter#setDeathZone}.
  * @property {Phaser.Types.GameObjects.Particles.ParticleEmitterBounds|Phaser.Types.GameObjects.Particles.ParticleEmitterBoundsAlt} [bounds] - As {@link Phaser.GameObjects.Particles.ParticleEmitter#setBounds}.
  * @property {object} [followOffset] - Assigns to {@link Phaser.GameObjects.Particles.ParticleEmitter#followOffset}.
  * @property {number} [followOffset.x] - x-coordinate of the offset.
