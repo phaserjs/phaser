@@ -448,8 +448,6 @@ var WebGLPipeline = new Class({
 
             var location = gl.getUniformLocation(program, name);
 
-            console.log(name, location);
-
             if (location !== null)
             {
                 uniforms[name] = location;
