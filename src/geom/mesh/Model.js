@@ -7,21 +7,27 @@
 var AnimationState = require('../../animations/AnimationState');
 var Class = require('../../utils/Class');
 var Components = require('../../gameobjects/components');
-var Face = require('./Face');
 var Matrix4 = require('../../math/Matrix4');
 var Quaternion = require('../../math/Quaternion');
 var RGB = require('../../display/RGB');
 var Vector3 = require('../../math/Vector3');
-var Vertex = require('./Vertex');
 
 /**
  * @classdesc
- * A Model Game Object.
+ * A 3D Model.
  *
  * @class Model
  * @memberof Phaser.Geom.Mesh
  * @constructor
  * @since 3.50.0
+ *
+ * @param {Phaser.GameObjects.Layer3D} layer - A reference to the Layer3D instance that this model belongs to.
+ * @param {number} verticesCount - The total number of vertices this model can contain.
+ * @param {string|Phaser.Textures.Texture} [texture] - The key, or instance of the Texture this model will use to render with, as stored in the Texture Manager.
+ * @param {string|integer} [frame] - An optional frame from the Texture this model is rendering with. Ensure your UV data also matches this frame.
+ * @param {number} [x=0] - The x position of the Model.
+ * @param {number} [y=0] - The y position of the Model.
+ * @param {number} [z=0] - The z position of the Model.
  */
 var Model = new Class({
 
@@ -34,44 +40,217 @@ var Model = new Class({
 
     initialize:
 
-    function Model (mesh, verticesCount, texture, frame, x, y, z)
+    function Model (layer, verticesCount, texture, frame, x, y, z)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
         if (z === undefined) { z = 0; }
 
-        this.mesh = mesh;
-
-        this.scene = mesh.scene;
+        /**
+         * The Layer3D instance this model belongs to.
+         *
+         * A model can only belong to one single Layer3D instance at once.
+         *
+         * You should consider this property as being read-only. You cannot move a
+         * model to another Layer3D by simply changing it.
+         *
+         * @name Phaser.Geom.Mesh.Model#layer
+         * @type {Phaser.GameObjects.Layer3D}
+         * @since 3.50.0
+         */
+        this.layer = layer;
 
         /**
-         * The Animation State of this Mesh.
+         * A reference to the Scene to which this the Layer3D Object which owns this model belongs.
          *
-         * @name Phaser.GameObjects.Mesh#anims
+         * You should consider this property as being read-only. You cannot move a
+         * Game Object to another Scene by simply changing it.
+         *
+         * @name Phaser.Geom.Mesh.Model#scene
+         * @type {Phaser.Scene}
+         * @since 3.50.0
+         */
+        this.scene = layer.scene;
+
+        /**
+         * The Animation State of this Model.
+         *
+         * @name Phaser.Geom.Mesh.Model#anims
          * @type {Phaser.Animation.AnimationState}
          * @since 3.50.0
          */
         this.anims = new AnimationState(this);
 
-        this.vertexSize = 32; // 8 attributes * bytes size
-        this.vertexCount = 0; // current number of vertices added to the buffer
-        this.vertexData = new ArrayBuffer(verticesCount * this.vertexSize);
-        this.vertexViewF32 = new Float32Array(this.vertexData);
+        /**
+         * The size of a single vertex, in bytes.
+         *
+         * The total of all 8 attributes * bytes size.
+         *
+         * @name Phaser.Geom.Mesh.Model#vertexSize
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.vertexSize = 32;
 
+        /**
+         * The total number of vertices the ArrayBuffer in this model can hold.
+         *
+         * @name Phaser.Geom.Mesh.Model#maxVertexCount
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.maxVertexCount = verticesCount;
+
+        /**
+         * The total number of vertices currently added to this model.
+         *
+         * @name Phaser.Geom.Mesh.Model#vertexCount
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.vertexCount = 0;
+
+        /**
+         * An ArrayBuffer that contains the GPU byte data for this model.
+         *
+         * The size of the buffer is set to `verticesCount * vertexSize` when
+         * this model is created and cannot be changed without resetting the vertices.
+         *
+         * @name Phaser.Geom.Mesh.Model#vertexData
+         * @type {ArrayBuffer}
+         * @since 3.50.0
+         */
+        this.vertexData;
+
+        /**
+         * A Float32 View into the Array Buffer.
+         *
+         * @name Phaser.Geom.Mesh.Model#vertexViewF32
+         * @type {Float32Array}
+         * @since 3.50.0
+         */
+        this.vertexViewF32;
+
+        /**
+         * A Vector3 containing the position of this model in 3D space.
+         *
+         * @name Phaser.Geom.Mesh.Model#position
+         * @type {Phaser.Math.Vector3}
+         * @since 3.50.0
+         */
         this.position = new Vector3(x, y, z);
+
+        /**
+         * A Vector3 containing the scale of this model in 3D space.
+         *
+         * @name Phaser.Geom.Mesh.Model#scale
+         * @type {Phaser.Math.Vector3}
+         * @since 3.50.0
+         */
         this.scale = new Vector3(1, 1, 1);
+
+        /**
+         * A Quaternion containing the rotation of this model in 3D space.
+         *
+         * @name Phaser.Geom.Mesh.Model#position
+         * @type {Phaser.Math.Quaternion}
+         * @since 3.50.0
+         */
         this.rotation = new Quaternion();
 
-        //  cache structure = position | rotation | scale | verts count
-        this.dirtyCache = [ x, y, z, 0, 0, 0, 1, 1, 1, 1, 0 ];
-
+        /**
+         * An RGB object containing the ambient material color of this model.
+         *
+         * You can adjust the ambient material color by calling the methods
+         * on this object and changing its properties.
+         *
+         * Remember that all color values should be specified in the range
+         * of 0 to 1.
+         *
+         * @name Phaser.Geom.Mesh.Model#ambient
+         * @type {Phaser.Display.RGB}
+         * @since 3.50.0
+         */
         this.ambient = new RGB(1, 1, 1);
+
+        /**
+         * An RGB object containing the diffuse material color of this model.
+         *
+         * You can adjust the diffuse material color by calling the methods
+         * on this object and changing its properties.
+         *
+         * Remember that all color values should be specified in the range
+         * of 0 to 1.
+         *
+         * @name Phaser.Geom.Mesh.Model#diffuse
+         * @type {Phaser.Display.RGB}
+         * @since 3.50.0
+         */
         this.diffuse = new RGB(1, 1, 1);
+
+        /**
+         * An RGB object containing the specular material color of this model.
+         *
+         * You can adjust the specular material color by calling the methods
+         * on this object and changing its properties.
+         *
+         * Remember that all color values should be specified in the range
+         * of 0 to 1.
+         *
+         * @name Phaser.Geom.Mesh.Model#specular
+         * @type {Phaser.Display.RGB}
+         * @since 3.50.0
+         */
         this.specular = new RGB(1, 1, 1);
+
+        /**
+         * The material shine value of this model.
+         *
+         * Default to 0.25. Keep this value in the range 0 to 1.
+         *
+         * @name Phaser.Geom.Mesh.Model#ambient
+         * @type {number}
+         * @default 0.25
+         * @since 3.50.0
+         */
         this.shine = 0.25;
 
+        /**
+         * A Matrix4 containing the transformed normal values for this model.
+         *
+         * You should consider this Matrix as being read-only. Its values are
+         * repopulated during `Model.preUpdate` as required.
+         *
+         * @name Phaser.Geom.Mesh.Model#normalMatrix
+         * @type {Phaser.Math.Matrix4}
+         * @since 3.50.0
+         */
         this.normalMatrix = new Matrix4();
+
+        /**
+         * A Matrix4 containing the transform matrix for this model.
+         *
+         * You should consider this Matrix as being read-only. Its values are
+         * repopulated during `Model.preUpdate` as required.
+         *
+         * @name Phaser.Geom.Mesh.Model#transformMatrix
+         * @type {Phaser.Math.Matrix4}
+         * @since 3.50.0
+         */
         this.transformMatrix = new Matrix4();
+
+        /**
+         * An internal cache, used to compare position, rotation, scale and verts data
+         * each frame, to avoid math calculates in `preUpdate`.
+         *
+         * cache structure = position | rotation | scale | verts count
+         *
+         * @name Phaser.Geom.Mesh.Model#dirtyCache
+         * @type {number[]}
+         * @private
+         * @since 3.50.0
+         */
+        this.dirtyCache = [ x, y, z, 0, 0, 0, 1, 1, 1, 1, 0 ];
 
         if (!texture)
         {
@@ -81,13 +260,37 @@ var Model = new Class({
         this.setTexture(texture, frame);
 
         this.setSizeToFrame();
+
+        this.resetVertices(verticesCount);
     },
 
+    /**
+     * Calls each of the listeners registered for a given event.
+     *
+     * This is a proxy for the Layer3D `emit` method.
+     *
+     * @method Phaser.Geom.Mesh.Model#emit
+     * @since 3.50.0
+     *
+     * @param {(string|symbol)} event - The event name.
+     * @param {...*} [args] - Additional arguments that will be passed to the event handler.
+     *
+     * @return {boolean} `true` if the event had listeners, else `false`.
+     */
     emit: function ()
     {
-        this.mesh.emit.call(arguments);
+        return this.layer.emit.call(arguments);
     },
 
+    /**
+     * Checks all of the current model values against the `dirtyCache` to see if the
+     * normal and transform matrices need updating.
+     *
+     * @method Phaser.Geom.Mesh.Model#isDirty
+     * @since 3.50.0
+     *
+     * @return {boolean} Returns `true` if any of the model values are dirty, otherwise `false`.
+     */
     isDirty: function ()
     {
         var position = this.position;
@@ -149,6 +352,18 @@ var Model = new Class({
         );
     },
 
+    /**
+     * Internal update handler. Advances any animations that are set on the model and,
+     * if the model data is dirty, recalculates the transform and normal matrices.
+     *
+     * This method is called automatically by the `Layer3D` to which this model belongs.
+     *
+     * @method Phaser.Geom.Mesh.Model#preUpdate
+     * @since 3.50.0
+     *
+     * @param {number} time - The current timestamp.
+     * @param {number} delta - The delta time, in ms, elapsed since the last frame.
+     */
     preUpdate: function (time, delta)
     {
         this.anims.update(time, delta);
@@ -156,6 +371,8 @@ var Model = new Class({
         //  If the model isn't dirty we can bail out and save lots of math
         if (this.isDirty())
         {
+            console.log('model.update');
+
             var normalMatrix = this.normalMatrix;
             var transformMatrix = this.transformMatrix;
 
@@ -170,7 +387,10 @@ var Model = new Class({
     },
 
     /**
-     * Returns the total number of Faces in this Model.
+     * Returns the total number of Faces _currently added_ to this model.
+     *
+     * Models in Phaser 3 must always be triangulated, so this value is the same as
+     * `vertexCount / 3`.
      *
      * @method Phaser.Geom.Mesh.Model#getFaceCount
      * @since 3.50.0
@@ -215,16 +435,19 @@ var Model = new Class({
     },
 
     /**
-     * Returns the Face at the given index in this Model.
+     * Returns the Face at the given index in this model.
      *
      * A face comprises of 3 vertices.
+     *
+     * Be aware that the Face vertices are untranslated, so will need transforming if you wish
+     * to use their coordinates in world space.
      *
      * @method Phaser.Geom.Mesh.Model#getFace
      * @since 3.50.0
      *
-     * @param {number} index - The index of the Face to get.
+     * @param {number} index - The index of the Face to get. Make sure the index is in range.
      *
-     * @return {Phaser.Types.GameObjects.Face} The Face at the given index, or `undefined` if index out of range.
+     * @return {Phaser.Types.GameObjects.Face} The Face at the given index.
      */
     getFace: function (index)
     {
@@ -239,10 +462,64 @@ var Model = new Class({
     },
 
     /**
-     * Adds a new Vertex into the vertices array of this Mesh.
+     * Resets the data in this model, clearing the `vertexData` ArrayBuffer and
+     * setting it to the new max count given.
      *
-     * Just adding a vertex isn't enough to render it. You need to also
-     * make it part of a Face, with 3 Vertex instances per Face.
+     * @method Phaser.Geom.Mesh.Model#resetVertices
+     * @since 3.50.0
+     *
+     * @param {number} verticesCount - The total number of vertices this model can contain.
+     */
+    resetVertices: function (verticesCount)
+    {
+        this.vertexData = new ArrayBuffer(verticesCount * this.vertexSize);
+        this.vertexViewF32 = new Float32Array(this.vertexData);
+        this.vertexCount = 0;
+        this.maxVertexCount = verticesCount;
+
+        return this;
+    },
+
+    /**
+     * Updates all values of the vertex at the given index.
+     *
+     * Ensure that the index is in range.
+     *
+     * @method Phaser.Geom.Mesh.Model#updateVertex
+     * @since 3.50.0
+     *
+     * @param {number} index - The index of the vertex to update.
+     * @param {number} x - The x position of the vertex.
+     * @param {number} y - The y position of the vertex.
+     * @param {number} z - The z position of the vertex.
+     * @param {number} u - The UV u coordinate of the vertex.
+     * @param {number} v - The UV v coordinate of the vertex.
+     * @param {number} normalX - The x normal of the vertex.
+     * @param {number} normalY - The y normal of the vertex.
+     * @param {number} normalZ - The z normal of the vertex.
+     */
+    updateVertex: function (index, x, y, z, u, v, normalX, normalY, normalZ)
+    {
+        var vertexViewF32 = this.vertexViewF32;
+
+        //  8 = attribute count
+        var vertexOffset = (index * 8) - 1;
+
+        vertexViewF32[++vertexOffset] = x;
+        vertexViewF32[++vertexOffset] = y;
+        vertexViewF32[++vertexOffset] = z;
+        vertexViewF32[++vertexOffset] = normalX;
+        vertexViewF32[++vertexOffset] = normalY;
+        vertexViewF32[++vertexOffset] = normalZ;
+        vertexViewF32[++vertexOffset] = u;
+        vertexViewF32[++vertexOffset] = v;
+    },
+
+    /**
+     * Adds a new vertex to this model and increments the `vertexCount` by one.
+     *
+     * You cannot add more vertices to this model than the total specified when the model was created.
+     * If you need to clear all vertices first, call `Model.resetVertices`.
      *
      * @method Phaser.Geom.Mesh.Model#addVertex
      * @since 3.50.0
@@ -255,33 +532,28 @@ var Model = new Class({
      * @param {number} normalX - The x normal of the vertex.
      * @param {number} normalY - The y normal of the vertex.
      * @param {number} normalZ - The z normal of the vertex.
-     *
-     * @return {this} This Mesh Game Object.
      */
     addVertex: function (x, y, z, u, v, normalX, normalY, normalZ)
     {
-        var vertexViewF32 = this.vertexViewF32;
+        if (this.vertexCount < this.maxVertexCount)
+        {
+            this.updateVertex(this.vertexCount, x, y, z, u, v, normalX, normalY, normalZ);
 
-        //  8 = attribute count (number of items added into the view below)
-        var vertexOffset = (this.vertexCount * 8) - 1;
-
-        vertexViewF32[++vertexOffset] = x;
-        vertexViewF32[++vertexOffset] = y;
-        vertexViewF32[++vertexOffset] = z;
-        vertexViewF32[++vertexOffset] = normalX;
-        vertexViewF32[++vertexOffset] = normalY;
-        vertexViewF32[++vertexOffset] = normalZ;
-        vertexViewF32[++vertexOffset] = u;
-        vertexViewF32[++vertexOffset] = v;
-
-        this.vertexCount++;
+            this.vertexCount++;
+        }
     },
 
     /**
-     * Adds new vertices to this Model by parsing the given arrays.
+     * Adds vertices to this model by parsing the given arrays.
      *
-     * The `vertices` parameter is a numeric array consisting of `x` and `y` pairs.
+     * This method will take vertex data in one of two formats, based on the `containsZ` parameter.
+     *
+     * If your vertex data are `x`, `y` pairs, then `containsZ` should be `false` (this is the default)
+     *
+     * If your vertex data is groups of `x`, `y` and `z` values, then the `containsZ` parameter must be true.
+     *
      * The `uvs` parameter is a numeric array consisting of `u` and `v` pairs.
+     * The `normals` parameter is a numeric array consisting of `x`, `y` vertex normal values and, if `containsZ` is true, `z` values as well.
      * The `indicies` parameter is an optional array that, if given, is an indexed list of vertices to be added.
      *
      * The following example will create a 256 x 256 sized quad using an index array:
@@ -303,94 +575,97 @@ var Model = new Class({
      *
      * const indices = [ 0, 2, 1, 2, 3, 1 ];
      *
-     * Mesh.addVertices(vertices, uvs, indicies);
+     * Model.addVertices(vertices, uvs, indicies);
      * ```
      *
-     * Vertices must be provided as x/y pairs, there is no `z` component used in this call. For that, please see
-     * `addModel` instead.
+     * You cannot add more vertices to this model than the total specified when the model was created.
+     * If you need to clear all vertices first, call `Model.resetVertices`.
      *
-     * @method Phaser.GameObjects.Mesh#addVertices
+     * @method Phaser.Geom.Mesh.Model#addVertices
      * @since 3.50.0
      *
-     * @param {number[]} vertices - The vertices array.
-     * @param {number[]} uvs - The UVs array.
-     * @param {number[]} [indicies] - Optional vertex indicies array.
-     * @param {number|number[]} [colors=0xffffff] - An array of colors, one per vertex, or a single color value applied to all vertices.
-     * @param {number|number[]} [alphas=1] - An array of alpha values, one per vertex, or a single alpha value applied to all vertices.
-     *
-     * @return {this} This Mesh Game Object.
+     * @param {number[]} vertices - The vertices array. Either `xy` pairs, or `xyz` if the `containsZ` parameter is `true`.
+     * @param {number[]} uvs - The UVs pairs array.
+     * @param {number[]} [normals] - Optional vertex normals array. If you don't have one, pass `null` or an empty array.
+     * @param {number[]} [indicies] - Optional vertex indicies array. If you don't have one, pass `null` or an empty array.
+     * @param {boolean} [containsZ=false] - Does the vertices data include a `z` component?
      */
-    addVertices: function (vertices, uvs, indicies, colors, alphas)
+    addVertices: function (vertices, uvs, normals, indicies, containsZ)
     {
-        if (colors === undefined) { colors = 0xffffff; }
-        if (alphas === undefined) { alphas = 1; }
+        if (containsZ === undefined) { containsZ = false; }
 
         if (vertices.length !== uvs.length)
         {
-            throw new Error('Mesh - vertices and uv count not equal');
+            throw new Error('Model vertices and uv count not equal');
         }
 
         var i;
-        var vert;
-        var verts = this.vertices;
-        var faces = this.faces;
-
-        var isColorArray = Array.isArray(colors);
-        var isAlphaArray = Array.isArray(alphas);
+        var x;
+        var y;
+        var z;
+        var u;
+        var v;
+        var normalX;
+        var normalY;
+        var normalZ;
+        var iInc = (containsZ) ? 3 : 2;
 
         if (Array.isArray(indicies) && indicies.length > 0)
         {
             for (i = 0; i < indicies.length; i++)
             {
-                var index = indicies[i] * 2;
+                var index = indicies[i] * iInc;
 
-                vert = new Vertex(
-                    vertices[index],
-                    vertices[index + 1],
-                    0,
-                    uvs[index],
-                    uvs[index + 1],
-                    (isColorArray) ? colors[i] : colors,
-                    (isAlphaArray) ? alphas[i] : alphas
+                x = vertices[index];
+                y = vertices[index + 1];
+                z = (containsZ) ? vertices[index + 2] : 0;
+                u = uvs[index];
+                v = uvs[index + 1];
+                normalX = 0;
+                normalY = 0;
+                normalZ = 0;
+
+                if (normals)
+                {
+                    normalX = normals[index];
+                    normalY = normals[index + 1];
+                    normalZ = (containsZ) ? normals[index + 2] : 0;
+                }
+
+                this.addVertex(
+                    x, y, z,
+                    u, v,
+                    normalX, normalY, normalZ
                 );
-
-                verts.push(vert);
             }
         }
         else
         {
-            var colorIndex = 0;
-
-            for (i = 0; i < vertices.length; i += 2)
+            for (i = 0; i < vertices.length; i += iInc)
             {
-                vert = new Vertex(
-                    vertices[i],
-                    vertices[i + 1],
-                    0,
-                    uvs[i],
-                    uvs[i + 1],
-                    (isColorArray) ? colors[colorIndex] : colors,
-                    (isAlphaArray) ? alphas[colorIndex] : alphas
+                x = vertices[i];
+                y = vertices[i + 1];
+                z = (containsZ) ? vertices[i + 2] : 0;
+                u = uvs[i];
+                v = uvs[i + 1];
+                normalX = 0;
+                normalY = 0;
+                normalZ = 0;
+
+                if (normals)
+                {
+                    normalX = normals[i];
+                    normalY = normals[i + 1];
+                    normalZ = (containsZ) ? normals[i + 2] : 0;
+                }
+
+                this.addVertex(
+                    x, y, z,
+                    u, v,
+                    normalX, normalY, normalZ
                 );
-
-                verts.push(vert);
-
-                colorIndex++;
             }
         }
-
-        for (i = 0; i < verts.length; i += 3)
-        {
-            var vert1 = verts[i];
-            var vert2 = verts[i + 1];
-            var vert3 = verts[i + 2];
-
-            var face = new Face(vert1, vert2, vert3);
-
-            faces.push(face);
-        }
-
-        return this;
     },
 
     /**
@@ -401,9 +676,9 @@ var Model = new Class({
      * @method Phaser.Geom.Mesh.Model#rotateX
      * @since 3.50.0
      *
-     * @param {number} rad - The amount, in radians, to rotate the Model by.
+     * @param {number} rad - The amount, in radians, to rotate the model by.
      *
-     * @return {this} This Mesh Game Object.
+     * @return {this} This model instance.
      */
     rotateX: function (rad)
     {
@@ -420,9 +695,9 @@ var Model = new Class({
      * @method Phaser.Geom.Mesh.Model#rotateY
      * @since 3.50.0
      *
-     * @param {number} rad - The amount, in radians, to rotate the Model by.
+     * @param {number} rad - The amount, in radians, to rotate the model by.
      *
-     * @return {this} This Mesh Game Object.
+     * @return {this} This model instance.
      */
     rotateY: function (rad)
     {
@@ -439,9 +714,9 @@ var Model = new Class({
      * @method Phaser.Geom.Mesh.Model#rotateZ
      * @since 3.50.0
      *
-     * @param {number} rad - The amount, in radians, to rotate the Model by.
+     * @param {number} rad - The amount, in radians, to rotate the model by.
      *
-     * @return {this} This Mesh Game Object.
+     * @return {this} This model instance.
      */
     rotateZ: function (rad)
     {
@@ -453,7 +728,7 @@ var Model = new Class({
     /**
      * The x position of this model in 3D space.
      *
-     * @name Phaser.Geom.Mesh.Face#x
+     * @name Phaser.Geom.Mesh.Model#x
      * @type {number}
      * @since 3.50.0
      */
@@ -474,7 +749,7 @@ var Model = new Class({
     /**
      * The y position of this model in 3D space.
      *
-     * @name Phaser.Geom.Mesh.Face#y
+     * @name Phaser.Geom.Mesh.Model#y
      * @type {number}
      * @since 3.50.0
      */
@@ -495,7 +770,7 @@ var Model = new Class({
     /**
      * The z position of this model in 3D space.
      *
-     * @name Phaser.Geom.Mesh.Face#z
+     * @name Phaser.Geom.Mesh.Model#z
      * @type {number}
      * @since 3.50.0
      */
@@ -516,7 +791,7 @@ var Model = new Class({
     /**
      * The x scale of this model in 3D space.
      *
-     * @name Phaser.Geom.Mesh.Face#scaleX
+     * @name Phaser.Geom.Mesh.Model#scaleX
      * @type {number}
      * @since 3.50.0
      */
@@ -537,7 +812,7 @@ var Model = new Class({
     /**
      * The y scale of this model in 3D space.
      *
-     * @name Phaser.Geom.Mesh.Face#scaleY
+     * @name Phaser.Geom.Mesh.Model#scaleY
      * @type {number}
      * @since 3.50.0
      */
@@ -558,7 +833,7 @@ var Model = new Class({
     /**
      * The z scale of this model in 3D space.
      *
-     * @name Phaser.Geom.Mesh.Face#scaleZ
+     * @name Phaser.Geom.Mesh.Model#scaleZ
      * @type {number}
      * @since 3.50.0
      */
@@ -577,7 +852,12 @@ var Model = new Class({
     },
 
     /**
-     * Destroys this Model, all of vertex data and references.
+     * Destroys this Model instance, all of its vertex data and references.
+     *
+     * Calling this method will not remove it from any parent Layer3D, so be sure to do that first,
+     * prior to calling `destroy`.
+     *
+     * If a Layer3D object is destroyed, this is the method that is called on all of its models.
      *
      * @method Phaser.Geom.Mesh.Model#destroy
      * @since 3.50.0
@@ -586,7 +866,7 @@ var Model = new Class({
     {
         this.anims.destroy();
 
-        this.mesh = null;
+        this.layer = null;
         this.scene = null;
         this.anims = null;
 
