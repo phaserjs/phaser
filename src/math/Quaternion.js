@@ -32,10 +32,10 @@ var tmpMat3 = new Matrix3();
  * @constructor
  * @since 3.0.0
  *
- * @param {number} [x] - The x component.
- * @param {number} [y] - The y component.
- * @param {number} [z] - The z component.
- * @param {number} [w] - The w component.
+ * @param {number} [x=0] - The x component.
+ * @param {number} [y=0] - The y component.
+ * @param {number} [z=0] - The z component.
+ * @param {number} [w=1] - The w component.
  */
 var Quaternion = new Class({
 
@@ -84,14 +84,14 @@ var Quaternion = new Class({
             this.x = x.x || 0;
             this.y = x.y || 0;
             this.z = x.z || 0;
-            this.w = x.w || 0;
+            this.w = x.w || 1;
         }
         else
         {
             this.x = x || 0;
             this.y = y || 0;
             this.z = z || 0;
-            this.w = w || 0;
+            this.w = w || 1;
         }
     },
 
