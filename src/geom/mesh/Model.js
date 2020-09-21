@@ -10,6 +10,7 @@ var Components = require('../../gameobjects/components');
 var Face = require('./Face');
 var Matrix4 = require('../../math/Matrix4');
 var Quaternion = require('../../math/Quaternion');
+var RGB = require('../../display/RGB');
 var Vector3 = require('../../math/Vector3');
 var Vertex = require('./Vertex');
 
@@ -64,9 +65,9 @@ var Model = new Class({
         //  cache structure = position | rotation | scale | verts count
         this.dirtyCache = [ x, y, z, 0, 0, 0, 1, 1, 1, 1, 0 ];
 
-        this.ambient = new Vector3(1, 1, 1);
-        this.diffuse = new Vector3(1, 1, 1);
-        this.specular = new Vector3(1, 1, 1);
+        this.ambient = new RGB(1, 1, 1);
+        this.diffuse = new RGB(1, 1, 1);
+        this.specular = new RGB(1, 1, 1);
         this.shine = 0.25;
 
         this.normalMatrix = new Matrix4();
@@ -158,7 +159,7 @@ var Model = new Class({
             var normalMatrix = this.normalMatrix;
             var transformMatrix = this.transformMatrix;
 
-            //  TODO - No scale
+            //  TODO - Merge scale into this op
             transformMatrix.fromRotationTranslation(this.rotation, this.position);
             transformMatrix.scale(this.scale);
 
@@ -169,12 +170,12 @@ var Model = new Class({
     },
 
     /**
-     * Returns the total number of Faces in this Mesh Game Object.
+     * Returns the total number of Faces in this Model.
      *
      * @method Phaser.Geom.Mesh.Model#getFaceCount
      * @since 3.50.0
      *
-     * @return {number} The number of Faces in this Mesh Game Object.
+     * @return {number} The number of Faces in this Model.
      */
     getFaceCount: function ()
     {
@@ -182,12 +183,17 @@ var Model = new Class({
     },
 
     /**
-     * TODO
+     * Gets the Vertex at the given offset from this models data.
+     *
+     * Be aware that the returned Vertex is untranslated, so will need transforming if you wish
+     * to use its coordinates in world space.
      *
      * @method Phaser.Geom.Mesh.Model#getVertex
      * @since 3.50.0
      *
-     * @return {Phaser.Geom.Mesh.Vertex} A Vertex object.
+     * @param {number} index - The index of the vertex to get. Cannot be negative, or exceed `Model.vertexCount`.
+     *
+     * @return {Phaser.Types.GameObjects.Vertex} A Vertex object.
      */
     getVertex: function (index)
     {
@@ -205,21 +211,31 @@ var Model = new Class({
         var u = vertexViewF32[++vertexOffset];
         var v = vertexViewF32[++vertexOffset];
 
-        return new Vertex(x, y, z, u, v, normalX, normalY, normalZ);
+        return { x: x, y: y, z: z, u: u, v: v, normalX: normalX, normalY: normalY, normalZ: normalZ, alpha: 1 };
     },
 
     /**
-     * Returns the Face at the given index in this Mesh Game Object.
+     * Returns the Face at the given index in this Model.
+     *
+     * A face comprises of 3 vertices.
      *
      * @method Phaser.Geom.Mesh.Model#getFace
      * @since 3.50.0
      *
      * @param {number} index - The index of the Face to get.
      *
-     * @return {Phaser.Geom.Mesh.Face} The Face at the given index, or `undefined` if index out of range.
+     * @return {Phaser.Types.GameObjects.Face} The Face at the given index, or `undefined` if index out of range.
      */
     getFace: function (index)
     {
+        var offset = index * 3;
+
+        var v1 = this.getVertex(offset);
+        var v2 = this.getVertex(offset + 1);
+        var v3 = this.getVertex(offset + 2);
+        var ccw = (v2.x - v1.x) * (v3.y - v1.y) - (v2.y - v1.y) * (v3.x - v1.x) >= 0;
+
+        return { vertex1: v1, vertex2: v2, vertex3: 3, isCounterClockwise: ccw };
     },
 
     /**
@@ -236,11 +252,13 @@ var Model = new Class({
      * @param {number} z - The z position of the vertex.
      * @param {number} u - The UV u coordinate of the vertex.
      * @param {number} v - The UV v coordinate of the vertex.
-     * @param {number} [alpha=1] - The alpha value of the vertex.
+     * @param {number} normalX - The x normal of the vertex.
+     * @param {number} normalY - The y normal of the vertex.
+     * @param {number} normalZ - The z normal of the vertex.
      *
      * @return {this} This Mesh Game Object.
      */
-    addVertex: function (x, y, z, u, v, normalX, normalY, normalZ, alpha)
+    addVertex: function (x, y, z, u, v, normalX, normalY, normalZ)
     {
         var vertexViewF32 = this.vertexViewF32;
 
@@ -375,6 +393,18 @@ var Model = new Class({
         return this;
     },
 
+    /**
+     * Rotates this model along the x axis by the given amount.
+     *
+     * This method works by calling the `rotateX` method of the `rotation` quaternion of this model.
+     *
+     * @method Phaser.Geom.Mesh.Model#rotateX
+     * @since 3.50.0
+     *
+     * @param {number} rad - The amount, in radians, to rotate the Model by.
+     *
+     * @return {this} This Mesh Game Object.
+     */
     rotateX: function (rad)
     {
         this.rotation.rotateX(rad);
@@ -382,6 +412,18 @@ var Model = new Class({
         return this;
     },
 
+    /**
+     * Rotates this model along the y axis by the given amount.
+     *
+     * This method works by calling the `rotateY` method of the `rotation` quaternion of this model.
+     *
+     * @method Phaser.Geom.Mesh.Model#rotateY
+     * @since 3.50.0
+     *
+     * @param {number} rad - The amount, in radians, to rotate the Model by.
+     *
+     * @return {this} This Mesh Game Object.
+     */
     rotateY: function (rad)
     {
         this.rotation.rotateY(rad);
@@ -389,6 +431,18 @@ var Model = new Class({
         return this;
     },
 
+    /**
+     * Rotates this model along the z axis by the given amount.
+     *
+     * This method works by calling the `rotateZ` method of the `rotation` quaternion of this model.
+     *
+     * @method Phaser.Geom.Mesh.Model#rotateZ
+     * @since 3.50.0
+     *
+     * @param {number} rad - The amount, in radians, to rotate the Model by.
+     *
+     * @return {this} This Mesh Game Object.
+     */
     rotateZ: function (rad)
     {
         this.rotation.rotateZ(rad);
@@ -396,6 +450,13 @@ var Model = new Class({
         return this;
     },
 
+    /**
+     * The x position of this model in 3D space.
+     *
+     * @name Phaser.Geom.Mesh.Face#x
+     * @type {number}
+     * @since 3.50.0
+     */
     x: {
 
         get: function ()
@@ -410,6 +471,13 @@ var Model = new Class({
 
     },
 
+    /**
+     * The y position of this model in 3D space.
+     *
+     * @name Phaser.Geom.Mesh.Face#y
+     * @type {number}
+     * @since 3.50.0
+     */
     y: {
 
         get: function ()
@@ -424,6 +492,13 @@ var Model = new Class({
 
     },
 
+    /**
+     * The z position of this model in 3D space.
+     *
+     * @name Phaser.Geom.Mesh.Face#z
+     * @type {number}
+     * @since 3.50.0
+     */
     z: {
 
         get: function ()
@@ -438,6 +513,13 @@ var Model = new Class({
 
     },
 
+    /**
+     * The x scale of this model in 3D space.
+     *
+     * @name Phaser.Geom.Mesh.Face#scaleX
+     * @type {number}
+     * @since 3.50.0
+     */
     scaleX: {
 
         get: function ()
@@ -452,6 +534,13 @@ var Model = new Class({
 
     },
 
+    /**
+     * The y scale of this model in 3D space.
+     *
+     * @name Phaser.Geom.Mesh.Face#scaleY
+     * @type {number}
+     * @since 3.50.0
+     */
     scaleY: {
 
         get: function ()
@@ -466,6 +555,13 @@ var Model = new Class({
 
     },
 
+    /**
+     * The z scale of this model in 3D space.
+     *
+     * @name Phaser.Geom.Mesh.Face#scaleZ
+     * @type {number}
+     * @since 3.50.0
+     */
     scaleZ: {
 
         get: function ()
@@ -481,7 +577,7 @@ var Model = new Class({
     },
 
     /**
-     * Destroys this Model, all of its Faces, Vertices and references.
+     * Destroys this Model, all of vertex data and references.
      *
      * @method Phaser.Geom.Mesh.Model#destroy
      * @since 3.50.0
@@ -493,11 +589,20 @@ var Model = new Class({
         this.mesh = null;
         this.scene = null;
         this.anims = null;
-        this.position = null;
-        this.rotation = null;
-        this.scale = null;
-        this.transformMatrix = null;
+
         this.vertexData = null;
+        this.vertexViewF32 = null;
+
+        this.position = null;
+        this.scale = null;
+        this.rotation = null;
+
+        this.ambient = null;
+        this.diffuse = null;
+        this.specular = null;
+
+        this.normalMatrix = null;
+        this.transformMatrix = null;
     }
 
 });
