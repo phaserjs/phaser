@@ -65,10 +65,46 @@ var MeshPipeline = new Class({
                 location: -1
             }
         ]);
+        config.uniforms = GetFastValue(config, 'uniforms', [
+            'uViewProjectionMatrix',
+            'uLightPosition',
+            'uLightAmbient',
+            'uLightDiffuse',
+            'uLightSpecular',
+            'uCameraPosition',
+            'uFogColor',
+            'uFogNear',
+            'uFogFar',
+            'uModelMatrix',
+            'uNormalMatrix',
+            'uMaterialAmbient',
+            'uMaterialDiffuse',
+            'uMaterialSpecular',
+            'uMaterialShine',
+            'uTexture'
+        ]);
 
         WebGLPipeline.call(this, config);
 
         this.forceZero = true;
+
+        //  Cache structure:
+
+        //  0 fog near
+        //  1 fog far
+        //  2, 3, 4 model material ambient
+        //  5, 6, 7 model material diffuse
+        //  8, 9, 10 model material specular
+        //  11 model material shine
+
+        this.dirtyCache = [
+            -1,
+            0,
+            0, 0, 0,
+            0, 0, 0,
+            0, 0, 0,
+            0
+        ];
     },
 
     /**
@@ -113,44 +149,115 @@ var MeshPipeline = new Class({
      */
     onBind: function (mesh)
     {
-        var program = this.program;
-        var renderer = this.renderer;
-
         var camera = mesh.camera;
+
+        if (camera.dirty)
+        {
+            this.setMatrix4fv('uViewProjectionMatrix', false, camera.viewProjectionMatrix.val);
+
+            this.set3f('uCameraPosition', camera.x, camera.y, camera.z);
+        }
+
         var light = mesh.light;
 
-        renderer.setMatrix4(program, 'uViewProjectionMatrix', false, camera.viewProjectionMatrix.val);
+        if (light.isDirty())
+        {
+            this.set3f('uLightPosition', light.x, light.y, light.z);
+        }
 
-        renderer.setFloat3(program, 'uLightPosition', light.x, light.y, light.z);
-        renderer.setFloat3(program, 'uLightAmbient', light.ambient.x, light.ambient.y, light.ambient.z);
-        renderer.setFloat3(program, 'uLightDiffuse', light.diffuse.x, light.diffuse.y, light.diffuse.z);
-        renderer.setFloat3(program, 'uLightSpecular', light.specular.x, light.specular.y, light.specular.z);
+        if (light.ambient.dirty)
+        {
+            this.set3f('uLightAmbient', light.ambient.x, light.ambient.y, light.ambient.z);
+        }
 
-        renderer.setFloat3(program, 'uCameraPosition', camera.x, camera.y, camera.z);
+        if (light.diffuse.dirty)
+        {
+            this.set3f('uLightDiffuse', light.diffuse.x, light.diffuse.y, light.diffuse.z);
+        }
 
-        renderer.setFloat3(program, 'uFogColor', mesh.fogColor.r, mesh.fogColor.g, mesh.fogColor.b);
-        renderer.setFloat1(program, 'uFogNear', mesh.forNear);
-        renderer.setFloat1(program, 'uFogFar', mesh.forFar);
+        if (light.specular.dirty)
+        {
+            this.set3f('uLightSpecular', light.specular.x, light.specular.y, light.specular.z);
+        }
+
+        if (mesh.fogColor.dirty)
+        {
+            this.set3f('uFogColor', mesh.fogColor.r, mesh.fogColor.g, mesh.fogColor.b);
+        }
+
+        var cache = this.dirtyCache;
+        var fogNear = mesh.fogNear;
+        var fogFar = mesh.fogFar;
+
+        if (cache[0] !== fogNear)
+        {
+            this.set1f('uFogNear', fogNear);
+
+            cache[0] = fogNear;
+        }
+
+        if (cache[1] !== fogFar)
+        {
+            this.set1f('uFogFar', fogFar);
+
+            cache[1] = fogFar;
+        }
+
+        this.set1i('uTexture', 0);
     },
 
     drawModel: function (mesh, model)
     {
-        var program = this.program;
-        var renderer = this.renderer;
+        var cache = this.dirtyCache;
 
-        renderer.setMatrix4(program, 'uModelMatrix', false, model.transformMatrix.val);
-        renderer.setMatrix4(program, 'uNormalMatrix', false, model.normalMatrix.val);
+        this.setMatrix4fv('uModelMatrix', false, model.transformMatrix.val);
+        this.setMatrix4fv('uNormalMatrix', false, model.normalMatrix.val);
 
-        renderer.setFloat3(program, 'uMaterialAmbient', model.ambient.x, model.ambient.y, model.ambient.z);
-        renderer.setFloat3(program, 'uMaterialDiffuse', model.diffuse.x, model.diffuse.y, model.diffuse.z);
-        renderer.setFloat3(program, 'uMaterialSpecular', model.specular.x, model.specular.y, model.specular.z);
-        renderer.setFloat1(program, 'uMaterialShine', model.shine);
+        var ambient = model.ambient;
 
-        renderer.setTextureZero(model.frame.glTexture);
-        renderer.setInt1(program, 'uTexture', 0);
+        if (!ambient.equals(cache[2], cache[3], cache[4]))
+        {
+            this.set3f('uMaterialAmbient', ambient.r, ambient.g, ambient.b);
+
+            cache[2] = ambient.r;
+            cache[3] = ambient.g;
+            cache[4] = ambient.b;
+        }
+
+        var diffuse = model.diffuse;
+
+        if (!diffuse.equals(cache[5], cache[6], cache[7]))
+        {
+            this.set3f('uMaterialDiffuse', diffuse.r, diffuse.g, diffuse.b);
+
+            cache[5] = diffuse.r;
+            cache[6] = diffuse.g;
+            cache[7] = diffuse.b;
+        }
+
+        var specular = model.specular;
+
+        if (!specular.equals(cache[8], cache[9], cache[10]))
+        {
+            this.set3f('uMaterialSpecular', specular.r, specular.g, specular.b);
+
+            cache[8] = specular.r;
+            cache[9] = specular.g;
+            cache[10] = specular.b;
+        }
+
+        var shine = model.shine;
+
+        if (!shine !== cache[11])
+        {
+            this.set1f('uMaterialShine', shine);
+
+            cache[11] = specular.b;
+        }
+
+        this.renderer.setTextureZero(model.frame.glTexture);
 
         //  All the uniforms are finally bound, so let's buffer our data
-
         var gl = this.gl;
 
         //  STATIC because the buffer data doesn't change, the uniforms do
