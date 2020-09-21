@@ -99,11 +99,11 @@ var MeshPipeline = new Class({
 
         this.dirtyCache = [
             -1,
-            0,
-            0, 0, 0,
-            0, 0, 0,
-            0, 0, 0,
-            0
+            -1,
+            -1, -1, -1,
+            -1, -1, -1,
+            -1, -1, -1,
+            -1
         ];
     },
 
@@ -165,24 +165,30 @@ var MeshPipeline = new Class({
             this.set3f('uLightPosition', light.x, light.y, light.z);
         }
 
-        if (light.ambient.dirty)
+        var ambient = light.ambient;
+        var diffuse = light.diffuse;
+        var specular = light.specular;
+
+        if (ambient.dirty)
         {
-            this.set3f('uLightAmbient', light.ambient.x, light.ambient.y, light.ambient.z);
+            this.set3f('uLightAmbient', ambient.r, ambient.g, ambient.b);
         }
 
-        if (light.diffuse.dirty)
+        if (diffuse.dirty)
         {
-            this.set3f('uLightDiffuse', light.diffuse.x, light.diffuse.y, light.diffuse.z);
+            this.set3f('uLightDiffuse', diffuse.r, diffuse.g, diffuse.b);
         }
 
-        if (light.specular.dirty)
+        if (specular.dirty)
         {
-            this.set3f('uLightSpecular', light.specular.x, light.specular.y, light.specular.z);
+            this.set3f('uLightSpecular', specular.r, specular.g, specular.b);
         }
 
-        if (mesh.fogColor.dirty)
+        var fogColor = mesh.fogColor;
+
+        if (fogColor.dirty)
         {
-            this.set3f('uFogColor', mesh.fogColor.r, mesh.fogColor.g, mesh.fogColor.b);
+            this.set3f('uFogColor', fogColor.r, fogColor.g, fogColor.b);
         }
 
         var cache = this.dirtyCache;
