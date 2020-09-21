@@ -9,16 +9,16 @@
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
  * This method should not be called directly. It is a utility function of the Render module.
  *
- * @method Phaser.GameObjects.Mesh#renderWebGL
- * @since 3.0.0
+ * @method Phaser.GameObjects.Layer3D#renderWebGL
+ * @since 3.50.0
  * @private
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
- * @param {Phaser.GameObjects.Mesh} src - The Game Object being rendered in this call.
+ * @param {Phaser.GameObjects.Layer3D} src - The Game Object being rendered in this call.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var MeshWebGLRenderer = function (renderer, src)
+var Layer3DWebGLRenderer = function (renderer, src)
 {
     var models = src.models;
     var totalModels = models.length;
@@ -36,7 +36,10 @@ var MeshWebGLRenderer = function (renderer, src)
     {
         var model = models[m];
 
-        pipeline.drawModel(src, model);
+        if (model.visible && model.vertexCount > 0)
+        {
+            pipeline.drawModel(src, model);
+        }
     }
 
     src.resetDirtyFlags();
@@ -44,4 +47,4 @@ var MeshWebGLRenderer = function (renderer, src)
     renderer.pipelines.rebind();
 };
 
-module.exports = MeshWebGLRenderer;
+module.exports = Layer3DWebGLRenderer;

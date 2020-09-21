@@ -9,27 +9,26 @@ var Components = require('../components');
 var CONST = require('../../renderer/webgl/pipelines/const');
 var GameObject = require('../GameObject');
 var GameObjectEvents = require('../events');
-var GetCalcMatrix = require('../GetCalcMatrix');
-var MeshCamera = require('./MeshCamera');
-var MeshLight = require('./MeshLight');
-var MeshRender = require('./MeshRender');
+var Layer3DCamera = require('./Layer3DCamera');
+var Layer3DLight = require('./Layer3DLight');
+var Layer3DRender = require('./Layer3DRender');
 var Model = require('../../geom/mesh/Model');
 var RGB = require('../../display/RGB');
 
 /**
  * @classdesc
- * A Mesh Game Object.
+ * A Layer3D Game Object.
  *
  * The Mesh object is WebGL only and does not have a Canvas counterpart.
  *
- * The Mesh origin is always 0.5 x 0.5 and cannot be changed.
+ * TODO - Finish this.
  *
- * @class Mesh
+ * @class Layer3D
  * @extends Phaser.GameObjects.GameObject
  * @memberof Phaser.GameObjects
  * @constructor
  * @webglOnly
- * @since 3.0.0
+ * @since 3.50.0
  *
  * @extends Phaser.GameObjects.Components.AlphaSingle
  * @extends Phaser.GameObjects.Components.BlendMode
@@ -44,15 +43,8 @@ var RGB = require('../../display/RGB');
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {number} [x] - The horizontal position of this Game Object in the world.
  * @param {number} [y] - The vertical position of this Game Object in the world.
- * @param {string|Phaser.Textures.Texture} [texture] - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
- * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
- * @param {number[]} [vertices] - An array containing the vertices data for this Mesh.
- * @param {number[]} [uvs] - An array containing the uv data for this Mesh.
- * @param {number[]} [indicies] - An array containing the vertex indicies for this Mesh.
- * @param {number|number[]} [colors=0xffffff] - An array containing the color data for this Mesh.
- * @param {number|number[]} [alphas=1] - An array containing the alpha data for this Mesh.
  */
-var Mesh = new Class({
+var Layer3D = new Class({
 
     Extends: GameObject,
 
@@ -66,40 +58,40 @@ var Mesh = new Class({
         Components.Visible,
         Components.ScrollFactor,
         Components.Size,
-        MeshRender
+        Layer3DRender
     ],
 
     initialize:
 
-    function Mesh (scene, x, y, texture, frame, vertices, uvs, indicies, colors, alphas)
+    function Layer3D (scene, x, y)
     {
-        GameObject.call(this, scene, 'Mesh');
+        GameObject.call(this, scene, 'Layer3D');
 
         /**
          * A Camera which can be used to control the view of the models being managed
-         * by this Mesh. It will default to have an fov of 45 and be positioned at 0, 0, -10,
+         * by this Layer3D. It will default to have an fov of 45 and be positioned at 0, 0, -10,
          * with a near of 0.01 and far of 1000. You can change all of these by using the
-         * methods and properties available on the `MeshCamera` class.
+         * methods and properties available on the `Layer3DCamera` class.
          *
-         * @name Phaser.GameObjects.Mesh#camera
-         * @type {Phaser.GameObjects.MeshCamera}
+         * @name Phaser.GameObjects.Layer3D#camera
+         * @type {Phaser.GameObjects.Layer3DCamera}
          * @since 3.50.0
          */
-        this.camera = new MeshCamera(45, 0, 0, -10, 0.01, 1000);
+        this.camera = new Layer3DCamera(45, 0, 0, -10, 0.01, 1000);
 
         /**
          * TODO
          *
-         * @name Phaser.GameObjects.Mesh#light
-         * @type {Phaser.GameObjects.MeshLight}
+         * @name Phaser.GameObjects.Layer3D#light
+         * @type {Phaser.GameObjects.Layer3DLight}
          * @since 3.50.0
          */
-        this.light = new MeshLight();
+        this.light = new Layer3DLight();
 
         /**
          * TODO
          *
-         * @name Phaser.GameObjects.Mesh#fogColor
+         * @name Phaser.GameObjects.Layer3D#fogColor
          * @type {Phaser.Display.RGB}
          * @since 3.50.0
          */
@@ -108,7 +100,7 @@ var Mesh = new Class({
         /**
          * TODO
          *
-         * @name Phaser.GameObjects.Mesh#fogNear
+         * @name Phaser.GameObjects.Layer3D#fogNear
          * @type {number}
          * @since 3.50.0
          */
@@ -117,16 +109,18 @@ var Mesh = new Class({
         /**
          * TODO
          *
-         * @name Phaser.GameObjects.Mesh#fogFar
+         * @name Phaser.GameObjects.Layer3D#fogFar
          * @type {number}
          * @since 3.50.0
          */
         this.fogFar = Infinity;
 
         /**
-         * An array of Model instances that have been created in this Mesh.
+         * An array of model instances that have been created in this Layer3D.
          *
-         * @name Phaser.GameObjects.Mesh#models
+         * This array can be sorted, by your own functions, to control model rendering order.
+         *
+         * @name Phaser.GameObjects.Layer3D#models
          * @type {Phaser.Geom.Mesh.Model[]}
          * @since 3.50.0
          */
@@ -135,7 +129,7 @@ var Mesh = new Class({
         /**
          * Internal cached value.
          *
-         * @name Phaser.GameObjects.Mesh#_prevWidth
+         * @name Phaser.GameObjects.Layer3D#_prevWidth
          * @type {number}
          * @private
          * @since 3.50.0
@@ -145,7 +139,7 @@ var Mesh = new Class({
         /**
          * Internal cached value.
          *
-         * @name Phaser.GameObjects.Mesh#_prevHeight
+         * @name Phaser.GameObjects.Layer3D#_prevHeight
          * @type {number}
          * @private
          * @since 3.50.0
@@ -157,11 +151,6 @@ var Mesh = new Class({
         this.setPosition(x, y);
         this.setSize(renderer.width, renderer.height);
         this.initPipeline(CONST.MESH_PIPELINE);
-
-        if (vertices)
-        {
-            this.addModelFromVertices(vertices, uvs, indicies, texture, frame, colors, alphas);
-        }
 
         this.on(GameObjectEvents.ADDED_TO_SCENE, this.addedToScene, this);
         this.on(GameObjectEvents.REMOVED_FROM_SCENE, this.removedFromScene, this);
@@ -180,9 +169,9 @@ var Mesh = new Class({
     },
 
     /**
-     * Removes all Models from this Mesh, calling `destroy` on each one of them.
+     * Removes all models from this Layer3D, calling `destroy` on each one of them.
      *
-     * @method Phaser.GameObjects.Mesh#clearModels
+     * @method Phaser.GameObjects.Layer3D#clearModels
      * @since 3.50.0
      */
     clearModels: function ()
@@ -198,18 +187,23 @@ var Mesh = new Class({
     },
 
     /**
-     * This method creates a new blank Model instance and adds it to this Mesh.
+     * This method creates a new blank Model instance and adds it to this Layer3D.
      *
-     * @method Phaser.GameObjects.Mesh#addModel
+     * You still need to tell it how many vertices it's going to contain in total, but you can
+     * populate the vertex data at a later stage after calling this. It won't try to render
+     * while it has no vertices.
+     *
+     * @method Phaser.GameObjects.Layer3D#addModel
      * @since 3.50.0
      *
+     * @param {number} verticesCount - The total number of vertices this model can contain.
      * @param {string|Phaser.Textures.Texture} [texture] - The key, or instance of the Texture this model will use to render with, as stored in the Texture Manager.
      * @param {string|integer} [frame] - An optional frame from the Texture this model is rendering with. Ensure your UV data also matches this frame.
      * @param {number} [x=0] - The x position of the Model.
      * @param {number} [y=0] - The y position of the Model.
      * @param {number} [z=0] - The z position of the Model.
      *
-     * @return {Phaser.Geom.Mesh.Model} The Model instance that was created.
+     * @return {Phaser.Geom.Mesh.Model} The model instance that was created.
      */
     addModel: function (verticesCount, texture, frame, x, y, z)
     {
@@ -233,7 +227,7 @@ var Mesh = new Class({
      *
      * If the model has a texture, you must provide it as the second parameter.
      *
-     * The model is then added to this Mesh. A single Mesh can contain multiple models
+     * The model is then added to this Layer3D. A single Layer3D can contain multiple models
      * without impacting each other. Equally, multiple models can all share the same base OBJ
      * data.
      *
@@ -246,7 +240,7 @@ var Mesh = new Class({
      * rotated and scaled independantly of these settings, so don't use them to position the model, just
      * use them to offset the base values.
      *
-     * @method Phaser.GameObjects.Mesh#addModelFromOBJ
+     * @method Phaser.GameObjects.Layer3D#addModelFromOBJ
      * @since 3.50.0
      *
      * @param {string} key - The key of the data in the OBJ Cache to create the model from.
@@ -280,12 +274,12 @@ var Mesh = new Class({
      * ```javascript
      * const data = Phaser.Geom.Mesh.ParseObj(rawData, flipUV);
      *
-     * Mesh.addModelFromData(data, texture, frame);
+     * Layer3D.addModelFromData(data, texture, frame);
      * ```
      *
      * If the model has a texture, you must provide it as the second parameter.
      *
-     * The model is then added to this Mesh. A single Mesh can contain multiple models
+     * The model is then added to this Layer3D. A single Layer3D can contain multiple models
      * without impacting each other. Equally, multiple models can all share the same base OBJ
      * data.
      *
@@ -298,7 +292,7 @@ var Mesh = new Class({
      * rotated and scaled independantly of these settings, so don't use them to position the model, just
      * use them to offset the base values.
      *
-     * @method Phaser.GameObjects.Mesh#addModelFromData
+     * @method Phaser.GameObjects.Layer3D#addModelFromData
      * @since 3.50.0
      *
      * @param {array} data - The parsed model data.
@@ -375,8 +369,16 @@ var Mesh = new Class({
     /**
      * This method creates a new Model based on the given triangulated vertices arrays.
      *
-     * The `vertices` parameter is a numeric array consisting of `x` and `y` pairs.
+     * Adds vertices to this model by parsing the given arrays.
+     *
+     * This method will take vertex data in one of two formats, based on the `containsZ` parameter.
+     *
+     * If your vertex data are `x`, `y` pairs, then `containsZ` should be `false` (this is the default)
+     *
+     * If your vertex data is groups of `x`, `y` and `z` values, then the `containsZ` parameter must be true.
+     *
      * The `uvs` parameter is a numeric array consisting of `u` and `v` pairs.
+     * The `normals` parameter is a numeric array consisting of `x`, `y` vertex normal values and, if `containsZ` is true, `z` values as well.
      * The `indicies` parameter is an optional array that, if given, is an indexed list of vertices to be added.
      *
      * The following example will create a 256 x 256 sized quad using an index array:
@@ -398,80 +400,62 @@ var Mesh = new Class({
      *
      * const indices = [ 0, 2, 1, 2, 3, 1 ];
      *
-     * Mesh.addModelFromVertices(vertices, uvs, indicies);
+     * Layer3D.addModelFromVertices(vertices, uvs, indicies);
      * ```
      *
-     * Vertices must be provided as x/y pairs, there is no `z` component used in this call. For that, please see
-     * `addModelFromData` instead.
+     * You cannot add more vertices to a model than the total specified when the model was created.
+     * If you need to clear all vertices first, call `Model.resetVertices`.
      *
-     * @method Phaser.GameObjects.Mesh#addModelFromVertices
+     * @method Phaser.GameObjects.Layer3D#addModelFromVertices
      * @since 3.50.0
      *
-     * @param {number[]} vertices - The vertices array.
-     * @param {number[]} uvs - The UVs array.
-     * @param {number[]} [indicies] - Optional vertex indicies array.
-     * @param {string|Phaser.Textures.Texture} [texture] - The key, or instance of the Texture this model will use to render with, as stored in the Texture Manager.
-     * @param {string|integer} [frame] - An optional frame from the Texture this model is rendering with.
-     * @param {number|number[]} [colors=0xffffff] - An array of colors, one per vertex, or a single color value applied to all vertices.
-     * @param {number|number[]} [alphas=1] - An array of alpha values, one per vertex, or a single alpha value applied to all vertices.
+     * @param {number[]} vertices - The vertices array. Either `xy` pairs, or `xyz` if the `containsZ` parameter is `true`.
+     * @param {number[]} uvs - The UVs pairs array.
+     * @param {number[]} [normals] - Optional vertex normals array. If you don't have one, pass `null` or an empty array.
+     * @param {number[]} [indicies] - Optional vertex indicies array. If you don't have one, pass `null` or an empty array.
+     * @param {boolean} [containsZ=false] - Does the vertices data include a `z` component?
+     * @param {string|Phaser.Textures.Texture} [texture] - The key, or instance of the Texture the model will use to render with, as stored in the Texture Manager.
+     * @param {string|integer} [frame] - An optional frame from the Texture the model is rendering with.
      *
      * @return {Phaser.Geom.Mesh.Model} The Model instance that was created.
      */
-    addModelFromVertices: function (vertices, uvs, indicies, texture, frame, colors, alphas)
+    addModelFromVertices: function (vertices, uvs, normals, indicies, containsZ, texture, frame)
     {
-        var model = this.addModel(texture, frame, 0, 0, 0);
+        var isIndexed = (Array.isArray(indicies) && indicies.length > 0);
 
-        model.addVertices(vertices, uvs, indicies, colors, alphas);
+        var verticesCount = (isIndexed) ? indicies.length : vertices.length;
+
+        if (!isIndexed)
+        {
+            verticesCount /= 2;
+        }
+
+        var model = this.addModel(verticesCount, texture, frame, 0, 0, 0);
+
+        model.addVertices(vertices, uvs, normals, indicies, containsZ);
 
         return model;
     },
 
     /**
-     * Return an array of Models from this Mesh that intersect with the given coordinates.
+     * Sets the fog values for this Layer3D, including the fog color and the near and
+     * far distance values.
      *
-     * The given position is translated through the matrix of this Mesh and the given Camera,
-     * before being compared against the model vertices.
+     * By default, fog effects all models in this layer.
      *
-     * If more than one model intersects, they will all be returned in the array, but the array will
-     * be depth sorted first, so the first element will always be that closest to the camera.
+     * If you do not wish to have a fog effect, see the `disableFog` method.
      *
-     * @method Phaser.GameObjects.Mesh#getModelAt
+     * @method Phaser.GameObjects.Layer3D#setFog
      * @since 3.50.0
      *
-     * @param {number} x - The x position to check against.
-     * @param {number} y - The y position to check against.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The camera to pass the coordinates through. If not given, the default Scene Camera is used.
+     * @param {number} red - The red color component of the fog. A value between 0 and 1.
+     * @param {number} green - The green color component of the fog. A value between 0 and 1.
+     * @param {number} blue - The blue color component of the fog. A value between 0 and 1.
+     * @param {number} [near] - The 'near' value of the fog.
+     * @param {number} [far] - The 'far' value of the fog, beyond which objects are 'fogged' out.
      *
-     * @return {Phaser.Geom.Mesh.Model[]} An array of Models objects that intersect with the given point, ordered by depth.
+     * @return {this} This Layer3D Game Object.
      */
-    getModelAt: function (x, y, camera)
-    {
-        if (camera === undefined) { camera = this.scene.sys.cameras.main; }
-
-        var results = [];
-
-        var models = this.models;
-
-        var calcMatrix = GetCalcMatrix(this.mesh, camera).calc;
-
-        for (var i = 0; i < models.length; i++)
-        {
-            var model = models[i];
-
-            if (model.visible)
-            {
-                var faces = model.getFaceAt(x, y, camera, calcMatrix);
-
-                if (faces.length > 0)
-                {
-                    results.push({ model: model, faces: faces });
-                }
-            }
-        }
-
-        return results;
-    },
-
     setFog: function (red, green, blue, near, far)
     {
         if (near === undefined) { near = this.fogNear; }
@@ -485,6 +469,16 @@ var Mesh = new Class({
         return this;
     },
 
+    /**
+     * Disables fog for this Layer3D and all models it renders.
+     *
+     * To re-enable fog, just call `setFog` and provide new color, near and far values.
+     *
+     * @method Phaser.GameObjects.Layer3D#disableFog
+     * @since 3.50.0
+     *
+     * @return {this} This Layer3D Game Object.
+     */
     disableFog: function ()
     {
         this.fogFar = Infinity;
@@ -493,9 +487,9 @@ var Mesh = new Class({
     },
 
     /**
-     * The Mesh update loop.
+     * The Layer3D update loop.
      *
-     * @method Phaser.GameObjects.Mesh#preUpdate
+     * @method Phaser.GameObjects.Layer3D#preUpdate
      * @protected
      * @since 3.50.0
      *
@@ -531,6 +525,15 @@ var Mesh = new Class({
         }
     },
 
+    /**
+     * Resets all of the dirty cache values this Layer3D object uses.
+     *
+     * This is called automatically at the end of the render step.
+     *
+     * @method Phaser.GameObjects.Layer3D#resetDirtyFlags
+     * @protected
+     * @since 3.50.0
+     */
     resetDirtyFlags: function ()
     {
         this.camera.dirty = false;
@@ -541,10 +544,10 @@ var Mesh = new Class({
     },
 
     /**
-     * The destroy step for the Mesh, which removes all models, destroys the camera and
-     * nulls references.
+     * The destroy step for this Layer3D, which removes all models, destroys the camera and
+     * nulls external references.
      *
-     * @method Phaser.GameObjects.Mesh#preDestroy
+     * @method Phaser.GameObjects.Layer3D#preDestroy
      * @private
      * @since 3.50.0
      */
@@ -553,10 +556,12 @@ var Mesh = new Class({
         this.clearModels();
 
         this.camera.destroy();
+        this.light.destroy();
 
         this.camera = null;
+        this.light = null;
     }
 
 });
 
-module.exports = Mesh;
+module.exports = Layer3D;

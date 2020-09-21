@@ -12,18 +12,18 @@ var Vector4 = require('../../math/Vector4');
 
 /**
  * @classdesc
- * The Mesh Camera.
+ * The Layer3D Camera.
  *
- * @class MeshCamera
+ * @class Layer3DCamera
  * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.50.0
  */
-var MeshCamera = new Class({
+var Layer3DCamera = new Class({
 
     initialize:
 
-    function MeshCamera (fov, x, y, z, near, far)
+    function Layer3DCamera (fov, x, y, z, near, far)
     {
         this.dirty = true;
         this.aspectRatio = 1;
@@ -44,7 +44,7 @@ var MeshCamera = new Class({
         this.projectionMatrix = new Matrix4(); // perspective projection matrix
         this.viewProjectionMatrix = new Matrix4(); // perspective projection matrix multiplied by the view matrix
 
-        this.mode = MeshCamera.MODE_ORBIT;
+        this.mode = Layer3DCamera.MODE_ORBIT;
     },
 
     panX: function (v)
@@ -60,7 +60,7 @@ var MeshCamera = new Class({
 
         this.position.y += this.up.y * v;
 
-        if (this.mode === MeshCamera.MODE_ORBIT)
+        if (this.mode === Layer3DCamera.MODE_ORBIT)
         {
             //  Can only move up and down the y axix in orbit mode
             return;
@@ -74,7 +74,7 @@ var MeshCamera = new Class({
     {
         this.updateViewMatrix();
 
-        if (this.mode === MeshCamera.MODE_ORBIT)
+        if (this.mode === Layer3DCamera.MODE_ORBIT)
         {
             //  orbit mode does translate after rotate, so only need to set Z, the rotate will handle the rest.
             this.position.z += v;
@@ -91,7 +91,7 @@ var MeshCamera = new Class({
     {
         var matView = this.matrix;
 
-        if (this.mode === MeshCamera.MODE_FREE)
+        if (this.mode === Layer3DCamera.MODE_FREE)
         {
             matView.fromRotationXYTranslation(this.rotation, this.position, true);
         }
@@ -126,6 +126,7 @@ var MeshCamera = new Class({
         this.up.set(0, 1, 0, 0).transformMat4(matView);
         this.right.set(1, 0, 0, 0).transformMat4(matView);
     },
+
     fov: {
 
         get: function ()
@@ -278,9 +279,9 @@ var MeshCamera = new Class({
 });
 
 // Allows free movement of position and rotation
-MeshCamera.MODE_FREE = 0;
+Layer3DCamera.MODE_FREE = 0;
 
 // Movement is locked to rotate around the origin
-MeshCamera.MODE_ORBIT = 1;
+Layer3DCamera.MODE_ORBIT = 1;
 
-module.exports = MeshCamera;
+module.exports = Layer3DCamera;

@@ -10,18 +10,18 @@ var Vector3 = require('../../math/Vector3');
 
 /**
  * @classdesc
- * The Mesh Light.
+ * A Layer3D Ambient Light.
  *
- * @class MeshLight
+ * @class Layer3DLight
  * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.50.0
  */
-var MeshLight = new Class({
+var Layer3DLight = new Class({
 
     initialize:
 
-    function MeshLight (x, y, z)
+    function Layer3DLight (x, y, z)
     {
         this.position = new Vector3(x, y, z);
         this.ambient = new RGB(1, 1, 1);
@@ -124,4 +124,4 @@ var MeshLight = new Class({
 
 });
 
-module.exports = MeshLight;
+module.exports = Layer3DLight;

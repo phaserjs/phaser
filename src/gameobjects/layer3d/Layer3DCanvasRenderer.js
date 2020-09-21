@@ -5,18 +5,18 @@
  */
 
 /**
- * This is a stub function for Mesh.Render. There is no Canvas renderer for Mesh objects.
+ * This is a stub function for Layer3D.Render. There is no Canvas renderer for Layer3D objects.
  *
- * @method Phaser.GameObjects.Mesh#renderCanvas
- * @since 3.0.0
+ * @method Phaser.GameObjects.Layer3D#renderCanvas
+ * @since 3.50.0
  * @private
  *
  * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
- * @param {Phaser.GameObjects.Mesh} src - The Game Object being rendered in this call.
+ * @param {Phaser.GameObjects.Layer3D} src - The Game Object being rendered in this call.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  */
-var MeshCanvasRenderer = function ()
+var Layer3DCanvasRenderer = function ()
 {
 };
 
-module.exports = MeshCanvasRenderer;
+module.exports = Layer3DCanvasRenderer;

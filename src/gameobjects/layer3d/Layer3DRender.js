@@ -9,12 +9,12 @@ var renderCanvas = require('../../utils/NOOP');
 
 if (typeof WEBGL_RENDERER)
 {
-    renderWebGL = require('./MeshWebGLRenderer');
+    renderWebGL = require('./Layer3DWebGLRenderer');
 }
 
 if (typeof CANVAS_RENDERER)
 {
-    renderCanvas = require('./MeshCanvasRenderer');
+    renderCanvas = require('./Layer3DCanvasRenderer');
 }
 
 module.exports = {
