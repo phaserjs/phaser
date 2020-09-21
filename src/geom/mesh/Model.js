@@ -62,7 +62,8 @@ var Model = new Class({
         this.scale = new Vector3(1, 1, 1);
         this.rotation = new Quaternion();
 
-        this.dirtyCache = [ x, y, z, 0, 0, 0, 0, 1, 1, 1, 0 ];
+        //  cache structure = position | rotation | scale | verts count
+        this.dirtyCache = [ x, y, z, 0, 0, 0, 1, 1, 1, 1, 0 ];
 
         this.ambient = new Vector3(1, 1, 1);
         this.diffuse = new Vector3(1, 1, 1);
@@ -108,7 +109,7 @@ var Model = new Class({
         var sy = scale.y;
         var sz = scale.z;
 
-        var faces = this.getFaceCount();
+        var vertices = this.vertexCount;
 
         var pxCached = dirtyCache[0];
         var pyCached = dirtyCache[1];
@@ -123,7 +124,7 @@ var Model = new Class({
         var syCached = dirtyCache[8];
         var szCached = dirtyCache[9];
 
-        var fCached = dirtyCache[10];
+        var vCached = dirtyCache[10];
 
         dirtyCache[0] = px;
         dirtyCache[1] = py;
@@ -138,13 +139,13 @@ var Model = new Class({
         dirtyCache[8] = sy;
         dirtyCache[9] = sz;
 
-        dirtyCache[10] = faces;
+        dirtyCache[10] = vertices;
 
         return (
             pxCached !== px || pyCached !== py || pzCached !== pz ||
             rxCached !== rx || ryCached !== ry || rzCached !== rz || rwCached !== rw ||
             sxCached !== sx || syCached !== sy || szCached !== sz ||
-            fCached !== faces
+            vCached !== vertices
         );
     },
 
@@ -155,6 +156,8 @@ var Model = new Class({
         //  If the model isn't dirty we can bail out and save lots of math
         if (this.isDirty())
         {
+            console.log('model update');
+
             var normalMatrix = this.normalMatrix;
             var transformMatrix = this.transformMatrix;
 
@@ -375,6 +378,27 @@ var Model = new Class({
         return this;
     },
 
+    rotateX: function (rad)
+    {
+        this.rotation.rotateX(rad);
+
+        return this;
+    },
+
+    rotateY: function (rad)
+    {
+        this.rotation.rotateY(rad);
+
+        return this;
+    },
+
+    rotateZ: function (rad)
+    {
+        this.rotation.rotateZ(rad);
+
+        return this;
+    },
+
     x: {
 
         get: function ()
@@ -413,48 +437,6 @@ var Model = new Class({
         set: function (value)
         {
             this.position.z = value;
-        }
-
-    },
-
-    rotationX: {
-
-        get: function ()
-        {
-            return this.rotation.x;
-        },
-
-        set: function (value)
-        {
-            this.rotation.x = WrapAngle(value);
-        }
-
-    },
-
-    rotationY: {
-
-        get: function ()
-        {
-            return this.rotation.y;
-        },
-
-        set: function (value)
-        {
-            this.rotation.y = WrapAngle(value);
-        }
-
-    },
-
-    rotationZ: {
-
-        get: function ()
-        {
-            return this.rotation.z;
-        },
-
-        set: function (value)
-        {
-            this.rotation.z = WrapAngle(value);
         }
 
     },
