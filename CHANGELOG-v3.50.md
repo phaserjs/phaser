@@ -530,6 +530,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * You can now set the `ArcadeWorld.fixedStep` property via the `ArcadeWorldConfig` object (thanks @samme)
 * `Utils.Array.NumerArray` can now accept the `start` and `end` parameters in reverse order, i.e. `10, 1` will generate a number array running from 10 to 1. Internally it has also been optimized to skip string based returns.
 * `DataManager.Events.DESTROY` is a new event that the Data Manager will _listen_ for from its parent and then call its own `destroy` method when received.
+* The `Quaternion` class constructor will now default the values to `0,0,0,1` if they're not provided, making it an identity quaternion, rather than the `0,0,0,0` it was before.
 
 ### Bug Fixes
 
