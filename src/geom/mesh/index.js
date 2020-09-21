@@ -10,10 +10,8 @@
 
 var Mesh = {
 
-    Face: require('./Face'),
     Model: require('./Model'),
-    ParseObj: require('./ParseObj'),
-    Vertex: require('./Vertex')
+    ParseObj: require('./ParseObj')
 
 };
 
