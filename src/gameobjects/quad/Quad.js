@@ -5,7 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
-var Mesh = require('../mesh/Mesh');
+var Layer3D = require('../layer3d/Layer3D');
 
 /**
  * @classdesc
@@ -18,7 +18,7 @@ var Mesh = require('../mesh/Mesh');
  * change their alpha and color values. The quad itself can be moved by adjusting the `x` and `y` properties.
  *
  * @class Quad
- * @extends Phaser.GameObjects.Mesh
+ * @extends Phaser.GameObjects.Layer3D
  * @memberof Phaser.GameObjects
  * @constructor
  * @webglOnly
@@ -32,7 +32,7 @@ var Mesh = require('../mesh/Mesh');
  */
 var Quad = new Class({
 
-    Extends: Mesh,
+    Extends: Layer3D,
 
     initialize:
 
@@ -82,7 +82,7 @@ var Quad = new Class({
             1 // tr
         ];
 
-        Mesh.call(this, scene, x, y, vertices, uv, colors, alphas, texture, frame);
+        Layer3D.call(this, scene, x, y, vertices, uv, colors, alphas, texture, frame);
 
         this.resetPosition();
     },
