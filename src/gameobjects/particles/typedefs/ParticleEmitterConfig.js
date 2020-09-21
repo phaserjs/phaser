@@ -54,4 +54,5 @@
  * @property {number} [followOffset.x] - x-coordinate of the offset.
  * @property {number} [followOffset.y] - y-coordinate of the offset.
  * @property {number|number[]|string|string[]|Phaser.Textures.Frame|Phaser.Textures.Frame[]|Phaser.Types.GameObjects.Particles.ParticleEmitterFrameConfig} [frame] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#frames}.
+ * @property {integer} [reserve] - Creates specified number of inactive particles and adds them to this emitter's pool. {@link Phaser.GameObjects.Particles.ParticleEmitter#reserve}
  */
