@@ -30,6 +30,52 @@ Other pipeline changes are as follows:
 * All pipelines will now extract the `topology` property from the config, allowing you to set it externally.
 * The `WebGLPipeline.shouldFlush` method now accepts an optional parameter `amount`. If given, it will return `true` if when the amount is added to the vertex count it will exceed the vertex capacity. The Multi Pipeline has been updated to now use this method instead of performing the comparison multiple times itself.
 
+### Pipeline Uniform Changes
+
+Piplines now have a new `uniforms` array that can be passed in with the config. All default pipelines now set these. The array contains the names, as strings, of all uniforms your pipeline shader uses. Once the pipeline shader has been successfully linked, it will use the array of names to look-up the `WebGLUniformLocation` of all uniforms specified. These are stored in the new `WebGLPipeline.uniforms` object. This takes place in the new `WebGLPipeline.setUniformLocations` method.
+
+When a pipeline is bound, you can now use the new methods (listed below) to set uniform values directly on the pipeline. Previously, calling a method such as `setFloat3` on a pipeline would pass that call over to `WebGLRenderer`. The renderer would first check to see if the pipeline program was current, and if not, make it so, before then looking up the uniform location and finally setting it. This is a lot of steps to take for pipelines that potentially need to change uniforms for every Game Object they render.
+
+Under the new methods, and using the new pre-cached uniform locations, these extra steps are skipped. The uniform value is set directly, no shader binding takes place and no location look-up happens. This dramatically reduces the number of WebGL ops being issued per frame. To clearly differentiate these pipline methods, we have renamed them. The new method names are as follows:
+
+* `WebGLPipeline.set1f` will set a 1f uniform based on the given name.
+* `WebGLPipeline.set2f` will set a 2f uniform based on the given name.
+* `WebGLPipeline.set3f` will set a 3f uniform based on the given name.
+* `WebGLPipeline.set4f` will set a 4f uniform based on the given name.
+* `WebGLPipeline.set1fv` will set a 1fv uniform based on the given name.
+* `WebGLPipeline.set2fv` will set a 2fv uniform based on the given name.
+* `WebGLPipeline.set3fv` will set a 3fv uniform based on the given name.
+* `WebGLPipeline.set4fv` will set a 4fv uniform based on the given name.
+* `WebGLPipeline.set1iv` will set a 1iv uniform based on the given name.
+* `WebGLPipeline.set2iv` will set a 2iv uniform based on the given name.
+* `WebGLPipeline.set3iv` will set a 3iv uniform based on the given name.
+* `WebGLPipeline.set4iv` will set a 4iv uniform based on the given name.
+* `WebGLPipeline.set1i` will set a 1i uniform based on the given name.
+* `WebGLPipeline.set2i` will set a 2i uniform based on the given name.
+* `WebGLPipeline.set3i` will set a 3i uniform based on the given name.
+* `WebGLPipeline.set4i` will set a 4i uniform based on the given name.
+* `WebGLPipeline.setMatrix2fv` will set a matrix 2fv uniform based on the given name.
+* `WebGLPipeline.setMatrix3fv` will set a matrix 3fv uniform based on the given name.
+* `WebGLPipeline.setMatrix4fv` will set a matrix 4fv uniform based on the given name.
+
+If your code uses any of the old method names, please update them using the list below:
+
+* `WebGLPipeline.setFloat1` has been removed. Please use `set1f` instead.
+* `WebGLPipeline.setFloat2` has been removed. Please use `set2f` instead.
+* `WebGLPipeline.setFloat3` has been removed. Please use `set3f` instead.
+* `WebGLPipeline.setFloat4` has been removed. Please use `set4f` instead.
+* `WebGLPipeline.setFloat1v` has been removed. Please use `set1fv` instead.
+* `WebGLPipeline.setFloat2v` has been removed. Please use `set2fv` instead.
+* `WebGLPipeline.setFloat3v` has been removed. Please use `set3fv` instead.
+* `WebGLPipeline.setFloat4v` has been removed. Please use `set4fv` instead.
+* `WebGLPipeline.setInt1` has been removed. Please use `set1i` instead.
+* `WebGLPipeline.setInt2` has been removed. Please use `set2i` instead.
+* `WebGLPipeline.setInt3` has been removed. Please use `set3i` instead.
+* `WebGLPipeline.setInt4` has been removed. Please use `set4i` instead.
+* `WebGLPipeline.setMatrix1` has been removed. Please use `setMatrix2fv` instead.
+* `WebGLPipeline.setMatrix2` has been removed. Please use `setMatrix3fv` instead.
+* `WebGLPipeline.setMatrix3` has been removed. Please use `setMatrix4fv` instead.
+
 ### Pipeline Manager
 
 The `WebGL.PipelineManager` is a new class that is responsbile for managing all of the WebGL Pipelines in Phaser. An instance of the Pipeline Manager is created by the WebGL Renderer and is available under the `pipelines` property. This means that the WebGL Renderer no longer handles pipelines directly, causing the following API changes:
