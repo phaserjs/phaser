@@ -6,14 +6,15 @@
 
 var Class = require('../../utils/Class');
 var Components = require('../components');
+var CONST = require('../../renderer/webgl/pipelines/const');
 var GameObject = require('../GameObject');
 var GameObjectEvents = require('../events');
 var GetCalcMatrix = require('../GetCalcMatrix');
-var MeshRender = require('./MeshRender');
 var MeshCamera = require('./MeshCamera');
 var MeshLight = require('./MeshLight');
+var MeshRender = require('./MeshRender');
 var Model = require('../../geom/mesh/Model');
-var CONST = require('../../renderer/webgl/pipelines/const');
+var RGB = require('../../display/RGB');
 
 /**
  * @classdesc
@@ -95,8 +96,31 @@ var Mesh = new Class({
          */
         this.light = new MeshLight();
 
-        this.fogColor = { r: 0, g: 0, b: 0 };
+        /**
+         * TODO
+         *
+         * @name Phaser.GameObjects.Mesh#fogColor
+         * @type {Phaser.Display.RGB}
+         * @since 3.50.0
+         */
+        this.fogColor = new RGB();
+
+        /**
+         * TODO
+         *
+         * @name Phaser.GameObjects.Mesh#fogNear
+         * @type {number}
+         * @since 3.50.0
+         */
         this.fogNear = 0;
+
+        /**
+         * TODO
+         *
+         * @name Phaser.GameObjects.Mesh#fogFar
+         * @type {number}
+         * @since 3.50.0
+         */
         this.fogFar = Infinity;
 
         /**
@@ -448,6 +472,26 @@ var Mesh = new Class({
         return results;
     },
 
+    setFog: function (red, green, blue, near, far)
+    {
+        if (near === undefined) { near = this.fogNear; }
+        if (far === undefined) { far = this.fogFar; }
+
+        this.fogColor.set(red, green, blue);
+
+        this.fogNear = near;
+        this.fogFar = far;
+
+        return this;
+    },
+
+    disableFog: function ()
+    {
+        this.fogFar = Infinity;
+
+        return this;
+    },
+
     /**
      * The Mesh update loop.
      *
@@ -465,7 +509,6 @@ var Mesh = new Class({
 
         var camera = this.camera;
 
-        /*
         if (camera.dirty || width !== this._prevWidth || height !== this._prevHeight)
         {
             //  Mesh has resized, flow that down to the Camera
@@ -474,9 +517,6 @@ var Mesh = new Class({
             this._prevWidth = width;
             this._prevHeight = height;
         }
-        */
-
-        camera.update(width, height);
 
         var models = this.models;
 
@@ -486,11 +526,18 @@ var Mesh = new Class({
 
             if (model.visible)
             {
-                model.preUpdate(time, delta, camera, width, height);
+                model.preUpdate(time, delta);
             }
         }
+    },
 
-        camera.dirty = false;
+    resetDirtyFlags: function ()
+    {
+        this.camera.dirty = false;
+        this.light.ambient.dirty = false;
+        this.light.diffuse.dirty = false;
+        this.light.specular.dirty = false;
+        this.fogColor.dirty = false;
     },
 
     /**
