@@ -39,6 +39,8 @@ var MeshWebGLRenderer = function (renderer, src)
         pipeline.drawModel(src, model);
     }
 
+    src.resetDirtyFlags();
+
     renderer.pipelines.rebind();
 };
 
