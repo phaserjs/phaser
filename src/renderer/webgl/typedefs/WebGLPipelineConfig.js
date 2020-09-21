@@ -11,4 +11,5 @@
  * @property {number} [vertexSize] - The size, in bytes, of a single entry in the vertex buffer. Defaults to Float32Array.BYTES_PER_ELEMENT * 6 + Uint8Array.BYTES_PER_ELEMENT * 4.
  * @property {ArrayBuffer} [vertices] - An optional Array Buffer full of pre-calculated vertices data.
  * @property {Phaser.Types.Renderer.WebGL.WebGLPipelineAttributesConfig} [attributes] - An array of shader attribute data.
+ * @property {string[]} [uniforms] - An array of shader uniform names that will be looked-up to get the locations for.
  */
