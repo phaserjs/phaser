@@ -47,10 +47,7 @@ module.exports = [
     '',
     '    float fogFactor = smoothstep(uFogNear, uFogFar, depth);',
     '',
-    '    // gl_FragColor = vec4(result, color.a);',
-    '',
     '    gl_FragColor.rgb = mix(result.rgb, uFogColor, fogFactor);',
-    '',
     '    gl_FragColor.a = color.a;',
     '}',
     ''

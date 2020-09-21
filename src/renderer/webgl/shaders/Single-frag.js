@@ -21,7 +21,6 @@ module.exports = [
     '    {',
     '        //  Solid color + texture alpha',
     '        color.rgb = mix(texture.rgb, outTint.bgr * outTint.a, texture.a);',
-    '        // color.a = texture.a * texel.a;',
     '    }',
     '',
     '    gl_FragColor = color;',
