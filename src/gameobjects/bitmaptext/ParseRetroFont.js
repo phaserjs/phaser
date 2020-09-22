@@ -22,8 +22,10 @@ var ParseRetroFont = function (scene, config)
 {
     var w = config.width;
     var h = config.height;
+
     var cx = Math.floor(w / 2);
     var cy = Math.floor(h / 2);
+
     var letters = GetValue(config, 'chars', '');
 
     if (letters === '')
@@ -32,6 +34,13 @@ var ParseRetroFont = function (scene, config)
     }
 
     var key = GetValue(config, 'image', '');
+
+    var frame = scene.sys.textures.getFrame(key);
+    var textureX = frame.cutX;
+    var textureY = frame.cutY;
+    var textureWidth = frame.source.width;
+    var textureHeight = frame.source.height;
+
     var offsetX = GetValue(config, 'offset.x', 0);
     var offsetY = GetValue(config, 'offset.y', 0);
     var spacingX = GetValue(config, 'spacing.x', 0);
@@ -42,7 +51,7 @@ var ParseRetroFont = function (scene, config)
 
     if (charsPerRow === null)
     {
-        charsPerRow = scene.sys.textures.getFrame(key).width / w;
+        charsPerRow = textureWidth / w;
 
         if (charsPerRow > letters.length)
         {
@@ -65,9 +74,12 @@ var ParseRetroFont = function (scene, config)
 
     for (var i = 0; i < letters.length; i++)
     {
-        // var node = letters[i];
-
         var charCode = letters.charCodeAt(i);
+
+        var u0 = (textureX + x) / textureWidth;
+        var v0 = (textureY + y) / textureHeight;
+        var u1 = (textureX + x + w) / textureWidth;
+        var v1 = (textureY + y + h) / textureHeight;
 
         data.chars[charCode] =
         {
@@ -81,7 +93,11 @@ var ParseRetroFont = function (scene, config)
             yOffset: 0,
             xAdvance: w,
             data: {},
-            kerning: {}
+            kerning: {},
+            u0: u0,
+            v0: v0,
+            u1: u1,
+            v1: v1
         };
 
         r++;
