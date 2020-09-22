@@ -34,6 +34,7 @@ var Parse2DArray = function (name, data, tileWidth, tileHeight, insertNull)
         tileWidth: tileWidth,
         tileHeight: tileHeight
     });
+    
     var mapData = new MapData({
         name: name,
         tileWidth: tileWidth,
