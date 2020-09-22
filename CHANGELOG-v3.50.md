@@ -453,6 +453,7 @@ The Mesh Game Object has been rewritten in v3.50 with a lot of changes to make i
 * The `GamepadPlugin` will now call `refreshPads` as part of its start process. This allows you to use Gamepads across multiple Scenes, without having to wait for a connected event from each one of them. If you've already had a connected event in a previous Scene, you can now just read the pads directly via `this.input.gamepad.pad1` and similar. Fix #4890 (thanks @Sytten)
 * Shutting down the Gamepad plugin (such as when sleeping a Scene) no longer calls `GamepadPlugin.disconnectAll`, but destroying it does.
 * `Gamepad._created` is a new private internal property that keeps track of when the instance was created. This is compared to the navigator timestamp in the update loop to avoid event spamming. Fix #4890.
+* `Pointer.down` will now check if the browser is running under macOS and if the ctrl key was also pressed, if so, it will flag the down event as being a right-click instead of a left-click, as per macOS conventions. Fix #4245 (thanks @BigZaphod)
 
 ### Tint Updates and Shader Changes
 
