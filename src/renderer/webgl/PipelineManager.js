@@ -18,7 +18,23 @@ var SinglePipeline = require('./pipelines/SinglePipeline');
 
 /**
  * @classdesc
+ * The Pipeline Manager is responsible for the creation, activation, running and destruction
+ * of WebGL Pipelines in Phaser 3.
  *
+ * The `WebGLRenderer` owns a single instance of the Pipeline Manager, which you can access
+ * via the `WebGLRenderer.pipelines` property.
+ *
+ * By default, there are 6 pipelines installed into the Pipeline Manager when Phaser boots:
+ *
+ * 1. The Multi Pipeline. Responsible for all multi-texture rendering, i.e. Sprites, Shapes.
+ * 2. The Single Pipeline. Responsible for rendering Game Objects that explicitly require one bound texture.
+ * 3. The Rope Pipeline. Responsible for rendering the Rope Game Object.
+ * 4. The Mesh Pipeline. Responsible for rendering the Layer3D Game Object.
+ * 5. The Light Pipeline. Responsible for rendering the Light Game Object.
+ * 6. The Bitmap Mask Pipeline. Responsible for Bitmap Mask rendering.
+ *
+ * You can add your own custom pipeline via the `PipelineManager.add` method. Pipelines are
+ * identified by unique string-based keys.
  *
  * @class PipelineManager
  * @memberof Phaser.Renderer.WebGL
