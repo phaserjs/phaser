@@ -196,6 +196,17 @@ var RGB = new Class({
             this.onChange();
         }
 
+    },
+
+    /**
+     * Nulls any external references this object contains.
+     *
+     * @method Phaser.Display.RGB#destroy
+     * @since 3.50.0
+     */
+    destroy: function ()
+    {
+        this.onChangeCallback = null;
     }
 
 });
