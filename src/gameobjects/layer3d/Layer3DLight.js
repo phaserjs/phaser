@@ -21,8 +21,22 @@ var Layer3DLight = new Class({
 
     initialize:
 
-    function Layer3DLight (x, y, z)
+    function Layer3DLight (layer, x, y, z)
     {
+        /**
+         * The Layer3D instance this light belongs to.
+         *
+         * A light can only belong to a single Layer3D instance.
+         *
+         * You should consider this property as being read-only. You cannot move a
+         * light to another Layer3D by simply changing it.
+         *
+         * @name Phaser.GameObjects.Layer3DLight#layer
+         * @type {Phaser.GameObjects.Layer3D}
+         * @since 3.50.0
+         */
+        this.layer = layer;
+
         /**
          * The position of the light in 3D space.
          *
@@ -262,6 +276,18 @@ var Layer3DLight = new Class({
             this.position.z = value;
         }
 
+    },
+
+    /**
+     * Destroy handler for this light.
+     *
+     * @method Phaser.GameObjects.Layer3DLight#destroy
+     * @since 3.50.0
+     */
+    destroy: function ()
+    {
+        this.layer = null;
+        this.position = null;
     }
 
 });
