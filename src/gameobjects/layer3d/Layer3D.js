@@ -503,14 +503,15 @@ var Layer3D = new Class({
 
         var camera = this.camera;
 
-        if (camera.dirty || width !== this._prevWidth || height !== this._prevHeight)
+        if (camera.dirtyProjection || width !== this._prevWidth || height !== this._prevHeight)
         {
-            //  Mesh has resized, flow that down to the Camera
-            camera.update(width, height);
+            camera.updateProjectionMatrix(width, height);
 
             this._prevWidth = width;
             this._prevHeight = height;
         }
+
+        camera.update();
 
         var models = this.models;
 
@@ -523,6 +524,9 @@ var Layer3D = new Class({
                 model.preUpdate(time, delta);
             }
         }
+
+        camera.dirtyView = false;
+        camera.dirtyProjection = false;
     },
 
     /**
