@@ -387,8 +387,6 @@ var Model = new Class({
         //  If the model isn't dirty we can bail out and save lots of math
         if (this.isDirty())
         {
-            console.log('model.update');
-
             var normalMatrix = this.normalMatrix;
             var transformMatrix = this.transformMatrix;
 

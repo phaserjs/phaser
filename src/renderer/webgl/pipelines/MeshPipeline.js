@@ -153,7 +153,7 @@ var MeshPipeline = new Class({
     {
         var camera = mesh.camera;
 
-        if (camera.dirty)
+        if (camera.dirtyView || camera.dirtyProjection)
         {
             this.setMatrix4fv('uViewProjectionMatrix', false, camera.viewProjectionMatrix.val);
 
@@ -268,11 +268,13 @@ var MeshPipeline = new Class({
         //  All the uniforms are finally bound, so let's buffer our data
         var gl = this.gl;
 
-        if (model.cullMode !== this.cullMode)
-        {
-            this.cullMode = model.cullMode;
+        var cullMode = model.cullMode;
 
-            gl.cullFace(model.cullMode);
+        if (cullMode !== this.cullMode)
+        {
+            this.cullMode = cullMode;
+
+            gl.cullFace(cullMode);
         }
 
         //  STATIC because the buffer data doesn't change, the uniforms do

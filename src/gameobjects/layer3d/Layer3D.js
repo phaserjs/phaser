@@ -524,9 +524,6 @@ var Layer3D = new Class({
                 model.preUpdate(time, delta);
             }
         }
-
-        camera.dirtyView = false;
-        camera.dirtyProjection = false;
     },
 
     /**
@@ -540,10 +537,13 @@ var Layer3D = new Class({
      */
     resetDirtyFlags: function ()
     {
-        this.camera.dirty = false;
+        this.camera.dirtyView = false;
+        this.camera.dirtyProjection = false;
+
         this.light.ambient.dirty = false;
         this.light.diffuse.dirty = false;
         this.light.specular.dirty = false;
+
         this.fogColor.dirty = false;
     },
 
