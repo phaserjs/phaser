@@ -579,6 +579,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `DataManager.Events.DESTROY` is a new event that the Data Manager will _listen_ for from its parent and then call its own `destroy` method when received.
 * The `Quaternion` class constructor will now default the values to `0,0,0,1` if they're not provided, making it an identity quaternion, rather than the `0,0,0,0` it was before.
 * You can now set the `ParticleEmitter.reserve` value via the emitter configuration object (thanks @vforsh)
+* Setting the `pixelArt` config option will now set `antialiasGL` to `false`, as well as `antialias`. Fix #5309 (thanks @Vegita2)
 
 ### Bug Fixes
 
