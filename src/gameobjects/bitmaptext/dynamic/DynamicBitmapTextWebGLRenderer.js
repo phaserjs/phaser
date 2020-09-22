@@ -56,10 +56,6 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
 
     var frame = src.frame;
     var texture = frame.glTexture;
-    var textureX = frame.cutX;
-    var textureY = frame.cutY;
-    var textureWidth = texture.width;
-    var textureHeight = texture.height;
 
     var tintEffect = src.tintFill;
     var tintTL = Utils.getTintAppendFloatAlpha(src.tintTopLeft, camera.alpha * src._alphaTL);
@@ -75,8 +71,6 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
     var lastCharCode = 0;
     var letterSpacing = src.letterSpacing;
     var glyph;
-    var glyphX = 0;
-    var glyphY = 0;
     var glyphW = 0;
     var glyphH = 0;
     var lastGlyph;
@@ -142,9 +136,6 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
         {
             continue;
         }
-
-        glyphX = textureX + glyph.x;
-        glyphY = textureY + glyph.y;
 
         glyphW = glyph.width;
         glyphH = glyph.height;
@@ -226,10 +217,10 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
 
         calcMatrix.multiply(fontMatrix, spriteMatrix);
 
-        var u0 = glyphX / textureWidth;
-        var v0 = glyphY / textureHeight;
-        var u1 = (glyphX + glyphW) / textureWidth;
-        var v1 = (glyphY + glyphH) / textureHeight;
+        var u0 = glyph.u0;
+        var v0 = glyph.v0;
+        var u1 = glyph.u1;
+        var v1 = glyph.v1;
 
         var xw = glyphW;
         var yh = glyphH;
