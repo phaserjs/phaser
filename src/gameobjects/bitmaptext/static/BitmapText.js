@@ -771,6 +771,8 @@ var BitmapText = new Class({
     /**
      * Sets the maximum display width of this BitmapText in pixels.
      *
+     * Note: This has no effect for Dynamic BitmapText. You should enforce max widths via your display callback.
+     *
      * If `BitmapText.text` is longer than `maxWidth` then the lines will be automatically wrapped
      * based on the previous whitespace character found in the line.
      *
