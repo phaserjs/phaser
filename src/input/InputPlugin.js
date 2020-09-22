@@ -796,8 +796,6 @@ var InputPlugin = new Class({
         input.hitAreaCallback = undefined;
         input.callbackContext = undefined;
 
-        this.manager.resetCursor(input);
-
         gameObject.input = null;
 
         //  Clear from _draggable, _drag and _over
@@ -820,6 +818,8 @@ var InputPlugin = new Class({
         if (index > -1)
         {
             this._over[0].splice(index, 1);
+
+            this.manager.resetCursor(input);
         }
 
         return gameObject;
@@ -2859,6 +2859,10 @@ var InputPlugin = new Class({
 
         this.removeAllListeners();
 
+        var manager = this.manager;
+
+        manager.canvas.style.cursor = manager.defaultCursor;
+
         var eventEmitter = this.systems.events;
 
         eventEmitter.off(SceneEvents.TRANSITION_START, this.transitionIn, this);
@@ -2866,8 +2870,8 @@ var InputPlugin = new Class({
         eventEmitter.off(SceneEvents.TRANSITION_COMPLETE, this.transitionComplete, this);
         eventEmitter.off(SceneEvents.PRE_UPDATE, this.preUpdate, this);
 
-        this.manager.events.off(Events.GAME_OUT, this.onGameOut, this);
-        this.manager.events.off(Events.GAME_OVER, this.onGameOver, this);
+        manager.events.off(Events.GAME_OUT, this.onGameOut, this);
+        manager.events.off(Events.GAME_OVER, this.onGameOver, this);
 
         eventEmitter.off(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
