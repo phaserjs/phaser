@@ -77,19 +77,25 @@ var Layer3D = new Class({
          * @type {Phaser.GameObjects.Layer3DCamera}
          * @since 3.50.0
          */
-        this.camera = new Layer3DCamera(45, 0, 0, -10, 0.01, 1000);
+        this.camera = new Layer3DCamera(this, 45, 0, 0, -10, 0.01, 1000);
 
         /**
-         * TODO
+         * An ambient light source for the entire Layer3D scene and all models it is rendering.
+         *
+         * It is created at a position of 0, -100, 0 with full ambient, diffuse and specular
+         * values. You can change all of these by using the methods and properties
+         * available on the `Layer3DLight` class.
          *
          * @name Phaser.GameObjects.Layer3D#light
          * @type {Phaser.GameObjects.Layer3DLight}
          * @since 3.50.0
          */
-        this.light = new Layer3DLight();
+        this.light = new Layer3DLight(this, 0, -100, 0);
 
         /**
-         * TODO
+         * The color of the fog.
+         *
+         * By default it is 0,0,0, which is black.
          *
          * @name Phaser.GameObjects.Layer3D#fogColor
          * @type {Phaser.Display.RGB}
@@ -98,7 +104,7 @@ var Layer3D = new Class({
         this.fogColor = new RGB();
 
         /**
-         * TODO
+         * The minimum distance from which fog starts to affect objects closer than it.
          *
          * @name Phaser.GameObjects.Layer3D#fogNear
          * @type {number}
@@ -107,7 +113,7 @@ var Layer3D = new Class({
         this.fogNear = 0;
 
         /**
-         * TODO
+         * The maximum distance from which fog starts to affect objects further than it.
          *
          * @name Phaser.GameObjects.Layer3D#fogFar
          * @type {number}
