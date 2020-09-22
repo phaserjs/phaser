@@ -19,6 +19,8 @@
  * @property {number} [gravityY=0] - Sets {@link Phaser.Physics.Arcade.Body#gravity gravity.y}.
  * @property {number} [frictionX=0] - Sets {@link Phaser.Physics.Arcade.Body#friction friction.x}.
  * @property {number} [frictionY=0] - Sets {@link Phaser.Physics.Arcade.Body#friction friction.y}.
+ * @property {number} [maxVelocityX=10000] - Sets {@link Phaser.Physics.Arcade.Body#maxVelocity maxVelocity.x}.
+ * @property {number} [maxVelocityY=10000] - Sets {@link Phaser.Physics.Arcade.Body#maxVelocity maxVelocity.y}.
  * @property {number} [velocityX=0] - Sets {@link Phaser.Physics.Arcade.Body#velocity velocity.x}.
  * @property {number} [velocityY=0] - Sets {@link Phaser.Physics.Arcade.Body#velocity velocity.y}.
  * @property {number} [angularVelocity=0] - Sets {@link Phaser.Physics.Arcade.Body#angularVelocity}.

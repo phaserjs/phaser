@@ -145,6 +145,8 @@ var PhysicsGroup = new Class({
             setGravityY: GetFastValue(config, 'gravityY', 0),
             setFrictionX: GetFastValue(config, 'frictionX', 0),
             setFrictionY: GetFastValue(config, 'frictionY', 0),
+            setMaxVelocityX: GetFastValue(config, 'maxVelocityX', 10000),
+            setMaxVelocityY: GetFastValue(config, 'maxVelocityY', 10000),
             setVelocityX: GetFastValue(config, 'velocityX', 0),
             setVelocityY: GetFastValue(config, 'velocityY', 0),
             setAngularVelocity: GetFastValue(config, 'angularVelocity', 0),

@@ -1820,6 +1820,40 @@ var Body = new Class({
     },
 
     /**
+     * Sets the Body's maximum horizontal velocity.
+     *
+     * @method Phaser.Physics.Arcade.Body#setMaxVelocityX
+     * @since 3.50.0
+     *
+     * @param {number} value - The maximum horizontal velocity, in pixels per second.
+     *
+     * @return {Phaser.Physics.Arcade.Body} This Body object.
+     */
+    setMaxVelocityX: function (value)
+    {
+        this.maxVelocity.x = value;
+
+        return this;
+    },
+
+    /**
+     * Sets the Body's maximum vertical velocity.
+     *
+     * @method Phaser.Physics.Arcade.Body#setMaxVelocityY
+     * @since 3.50.0
+     *
+     * @param {number} value - The maximum vertical velocity, in pixels per second.
+     *
+     * @return {Phaser.Physics.Arcade.Body} This Body object.
+     */
+    setMaxVelocityY: function (value)
+    {
+        this.maxVelocity.y = value;
+
+        return this;
+    },
+
+    /**
      * Sets the maximum speed the Body can move.
      *
      * @method Phaser.Physics.Arcade.Body#setMaxSpeed
