@@ -369,6 +369,7 @@ var Config = new Class({
         if (this.pixelArt)
         {
             this.antialias = false;
+            this.antialiasGL = false;
             this.roundPixels = true;
         }
 
