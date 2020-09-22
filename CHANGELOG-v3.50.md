@@ -454,6 +454,8 @@ The Mesh Game Object has been rewritten in v3.50 with a lot of changes to make i
 * Shutting down the Gamepad plugin (such as when sleeping a Scene) no longer calls `GamepadPlugin.disconnectAll`, but destroying it does.
 * `Gamepad._created` is a new private internal property that keeps track of when the instance was created. This is compared to the navigator timestamp in the update loop to avoid event spamming. Fix #4890.
 * `Pointer.down` will now check if the browser is running under macOS and if the ctrl key was also pressed, if so, it will flag the down event as being a right-click instead of a left-click, as per macOS conventions. Fix #4245 (thanks @BigZaphod)
+* When destroying an interactive Game Object that had `useHandCursor` enabled, it would reset the CSS cursor to default, even if the cursor wasn't over that Game Object. It will now only reset the cursor if it's over the Game Object being destroyed. Fix #5321 (thanks @JstnPwll)
+* The `InputPlugin.shutdown` method will now reset the CSS cursor, in case it was set by any Game Objects in the Scene that have since been destroyed.
 
 ### Tint Updates and Shader Changes
 
