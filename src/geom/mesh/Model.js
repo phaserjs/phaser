@@ -240,6 +240,22 @@ var Model = new Class({
         this.transformMatrix = new Matrix4();
 
         /**
+         * The culling mode used by this Model during rendering.
+         *
+         * Specifies whether front or back facing polygons are candidates
+         * for culling. The default value is `gl.BACK`. Possible values are:
+         *
+         * `gl.FRONT` (1028)
+         * `gl.BACK` (1029)
+         * `gl.FRONT_AND_BACK` (1032)
+         *
+         * @name Phaser.Geom.Mesh.Model#cullMode
+         * @type {GLenum}
+         * @since 3.50.0
+         */
+        this.cullMode = 1029;
+
+        /**
          * An internal cache, used to compare position, rotation, scale and verts data
          * each frame, to avoid math calculates in `preUpdate`.
          *

@@ -105,6 +105,8 @@ var MeshPipeline = new Class({
             -1, -1, -1,
             -1
         ];
+
+        this.cullMode = 1029;
     },
 
     /**
@@ -265,6 +267,13 @@ var MeshPipeline = new Class({
 
         //  All the uniforms are finally bound, so let's buffer our data
         var gl = this.gl;
+
+        if (model.cullMode !== this.cullMode)
+        {
+            this.cullMode = model.cullMode;
+
+            gl.cullFace(model.cullMode);
+        }
 
         //  STATIC because the buffer data doesn't change, the uniforms do
         gl.bufferData(gl.ARRAY_BUFFER, model.vertexData, gl.STATIC_DRAW);
