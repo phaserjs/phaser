@@ -390,6 +390,27 @@ var Layer3DCamera = new Class({
     },
 
     /**
+     * Internal method that is called by the Layer3D instance that owns this camera
+     * during its `render` step. If the view matrix is dirty, it is recalculated
+     * and then applied to the view projection matrix, ready for rendering.
+     *
+     * @method Phaser.GameObjects.Layer3DCamera#update
+     * @since 3.50.0
+     */
+    update: function ()
+    {
+        if (this.dirtyView)
+        {
+            this.updateViewMatrix();
+        }
+
+        if (this.dirtyView || this.dirtyProjection)
+        {
+            this.projectionMatrix.multiplyToMat4(this.viewMatrix, this.viewProjectionMatrix);
+        }
+    },
+
+    /**
      * Internal method that handles the update of the view transform matrix, based on the rotation
      * and position of the camera. Called automatically when the camera is updated.
      *
@@ -412,27 +433,6 @@ var Layer3DCamera = new Class({
         this.updateDirection();
 
         this.viewMatrix.copy(matView).invert();
-    },
-
-    /**
-     * Internal method that is called by the Layer3D instance that owns this camera
-     * during its `preUpdate` step. If the view matrix is dirty, it is recalculated
-     * and then applied to the view projection matrix, ready for rendering.
-     *
-     * @method Phaser.GameObjects.Layer3DCamera#update
-     * @since 3.50.0
-     */
-    update: function ()
-    {
-        if (this.dirtyView)
-        {
-            this.updateViewMatrix();
-        }
-
-        if (this.dirtyView || this.dirtyProjection)
-        {
-            this.projectionMatrix.multiplyToMat4(this.viewMatrix, this.viewProjectionMatrix);
-        }
     },
 
     /**

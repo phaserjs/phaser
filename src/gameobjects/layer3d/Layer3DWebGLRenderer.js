@@ -30,6 +30,8 @@ var Layer3DWebGLRenderer = function (renderer, src)
 
     renderer.pipelines.clear();
 
+    src.camera.update();
+
     var pipeline = renderer.pipelines.set(src.pipeline, src);
 
     for (var m = 0; m < totalModels; m++)

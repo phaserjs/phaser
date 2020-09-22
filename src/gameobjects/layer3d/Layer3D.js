@@ -90,7 +90,7 @@ var Layer3D = new Class({
          * @type {Phaser.GameObjects.Layer3DLight}
          * @since 3.50.0
          */
-        this.light = new Layer3DLight(this, 0, -100, 0);
+        this.light = new Layer3DLight(this, 0, 100, 0);
 
         /**
          * The color of the fog.
@@ -516,8 +516,6 @@ var Layer3D = new Class({
             this._prevWidth = width;
             this._prevHeight = height;
         }
-
-        camera.update();
 
         var models = this.models;
 
