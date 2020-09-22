@@ -85,7 +85,10 @@ var Layer3DCamera = new Class({
         this.aspectRatio = 1;
 
         /**
-         * The position of the camera.
+         * The position of the camera in 3D space.
+         *
+         * You can modify this vector directly, or use the `x`, `y` and `z`
+         * properties of this class.
          *
          * @name Phaser.GameObjects.Layer3DCamera#position
          * @type {Phaser.Math.Vector3}
@@ -94,7 +97,10 @@ var Layer3DCamera = new Class({
         this.position = new Vector3(x, y, z);
 
         /**
-         * The rotation of the camera.
+         * The rotation of the camera in 3D space.
+         *
+         * You can modify this vector directly, or use the `rotationX`, `rotationY`
+         * and `rotationZ` properties of this class.
          *
          * @name Phaser.GameObjects.Layer3DCamera#rotation
          * @type {Phaser.Math.Vector3}
