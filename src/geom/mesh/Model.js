@@ -739,6 +739,20 @@ var Model = new Class({
         return this;
     },
 
+    setPosition: function (x, y, z)
+    {
+        this.position.set(x, y, z);
+
+        return this;
+    },
+
+    setScale: function (x, y, z)
+    {
+        this.scale.set(x, y, z);
+
+        return this;
+    },
+
     /**
      * The x position of this model in 3D space.
      *
