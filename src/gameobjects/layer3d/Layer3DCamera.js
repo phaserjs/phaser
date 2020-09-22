@@ -25,28 +25,181 @@ var Layer3DCamera = new Class({
 
     function Layer3DCamera (fov, x, y, z, near, far)
     {
-        this.dirty = true;
-        this.aspectRatio = 1;
+        /**
+         * Internal 'dirty' flag that tells the parent Layer3D if the
+         * view matrix of this camera needs recalculating at the next step.
+         *
+         * @name Phaser.GameObjects.Layer3DCamera#dirtyView
+         * @type {boolean}
+         * @since 3.50.0
+         */
+        this.dirtyView = true;
 
+        /**
+         * Internal 'dirty' flag that tells the parent Layer3D if the
+         * projection matrix of this camera needs recalculating at the next step.
+         *
+         * @name Phaser.GameObjects.Layer3DCamera#dirtyProjection
+         * @type {boolean}
+         * @since 3.50.0
+         */
+        this.dirtyProjection = true;
+
+        /**
+         * Internal fov value.
+         *
+         * @name Phaser.GameObjects.Layer3DCamera#_fov
+         * @type {number}
+         * @private
+         * @since 3.50.0
+         */
         this._fov = fov;
+
+        /**
+         * Internal near value.
+         *
+         * @name Phaser.GameObjects.Layer3DCamera#_near
+         * @type {number}
+         * @private
+         * @since 3.50.0
+         */
         this._near = near;
+
+        /**
+         * Internal far value.
+         *
+         * @name Phaser.GameObjects.Layer3DCamera#_far
+         * @type {number}
+         * @private
+         * @since 3.50.0
+         */
         this._far = far;
 
-        this.position = new Vector3();
+        /**
+         * The aspect ratio of the camera.
+         *
+         * @name Phaser.GameObjects.Layer3DCamera#aspectRatio
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.aspectRatio = 1;
+
+        /**
+         * The position of the camera.
+         *
+         * @name Phaser.GameObjects.Layer3DCamera#position
+         * @type {Phaser.Math.Vector3}
+         * @since 3.50.0
+         */
+        this.position = new Vector3(x, y, z);
+
+        /**
+         * The rotation of the camera.
+         *
+         * @name Phaser.GameObjects.Layer3DCamera#rotation
+         * @type {Phaser.Math.Vector3}
+         * @since 3.50.0
+         */
         this.rotation = new Vector3();
 
+        /**
+         * The forward facing vector of the camera.
+         *
+         * Calculated and updated automatically when the view matrix changes.
+         *
+         * @name Phaser.GameObjects.Layer3DCamera#forward
+         * @type {Phaser.Math.Vector4}
+         * @since 3.50.0
+         */
         this.forward = new Vector4();
-        this.up = new Vector4(); //  What the up direction is, invert to get bottom
-        this.right = new Vector4();	//  What the right direction is, invert to get left
 
-        this.matrix = new Matrix4(); // the transform matrix
-        this.viewMatrix = new Matrix4(); // the inverse of the transform matrix
-        this.projectionMatrix = new Matrix4(); // perspective projection matrix
-        this.viewProjectionMatrix = new Matrix4(); // perspective projection matrix multiplied by the view matrix
+        /**
+         * The upward facing vector of the camera.
+         * Invert it to get the bottom vector.
+         *
+         * Calculated and updated automatically when the view matrix changes.
+         *
+         * @name Phaser.GameObjects.Layer3DCamera#up
+         * @type {Phaser.Math.Vector4}
+         * @since 3.50.0
+         */
+        this.up = new Vector4();
 
+        /**
+         * The right facing vector of the camera.
+         * Invert it to get the left vector.
+         *
+         * Calculated and updated automatically when the view matrix changes.
+         *
+         * @name Phaser.GameObjects.Layer3DCamera#right
+         * @type {Phaser.Math.Vector4}
+         * @since 3.50.0
+         */
+        this.right = new Vector4();
+
+        /**
+         * Internal transform matrix.
+         *
+         * Calculated and updated automatically when the camera is dirty.
+         *
+         * @name Phaser.GameObjects.Layer3DCamera#matrix
+         * @type {Phaser.Math.Matrix4}
+         * @since 3.50.0
+         */
+        this.matrix = new Matrix4();
+
+        /**
+         * The inverse of the transform matrix.
+         *
+         * Calculated and updated automatically when the camera is dirty.
+         *
+         * @name Phaser.GameObjects.Layer3DCamera#viewMatrix
+         * @type {Phaser.Math.Matrix4}
+         * @since 3.50.0
+         */
+        this.viewMatrix = new Matrix4();
+
+        /**
+         * The perspective projection matrix.
+         *
+         * Calculated and updated automatically when the camera is dirty.
+         *
+         * @name Phaser.GameObjects.Layer3DCamera#projectionMatrix
+         * @type {Phaser.Math.Matrix4}
+         * @since 3.50.0
+         */
+        this.projectionMatrix = new Matrix4();
+
+        /**
+         * The perspective projection matrix, multiplied by the view matrix.
+         *
+         * Calculated and updated automatically when the camera is dirty.
+         *
+         * @name Phaser.GameObjects.Layer3DCamera#viewProjectionMatrix
+         * @type {Phaser.Math.Matrix4}
+         * @since 3.50.0
+         */
+        this.viewProjectionMatrix = new Matrix4();
+
+        /**
+         * The movement and rotation mode of this camera.
+         * Either ORBIT, or FREE.
+         *
+         * @name Phaser.GameObjects.Layer3DCamera#mode
+         * @type {number}
+         * @since 3.50.0
+         */
         this.mode = Layer3DCamera.MODE_ORBIT;
     },
 
+    /**
+     * Pans this camera on the x axis by the given amount.
+     *
+     * @method Phaser.GameObjects.Layer3DCamera#panX
+     * @since 3.50.0
+     *
+     * @param {number} v - The amount to pan by.
+     */
     panX: function (v)
     {
         this.updateViewMatrix();
@@ -54,39 +207,61 @@ var Layer3DCamera = new Class({
         this.position.addScale(this.right, v);
     },
 
+    /**
+     * Pans this camera on the y axis by the given amount.
+     *
+     * @method Phaser.GameObjects.Layer3DCamera#panY
+     * @since 3.50.0
+     *
+     * @param {number} v - The amount to pan by.
+     */
     panY: function (v)
     {
         this.updateViewMatrix();
 
-        this.position.y += this.up.y * v;
+        this.y += this.up.y * v;
 
         if (this.mode === Layer3DCamera.MODE_ORBIT)
         {
-            //  Can only move up and down the y axix in orbit mode
+            //  Can only move up and down the y axis in orbit mode
             return;
         }
 
-        this.position.x += this.up.x * v;
-        this.position.z += this.up.z * v;
+        this.x += this.up.x * v;
+        this.z += this.up.z * v;
     },
 
+    /**
+     * Pans this camera on the z axis by the given amount.
+     *
+     * @method Phaser.GameObjects.Layer3DCamera#panZ
+     * @since 3.50.0
+     *
+     * @param {number} v - The amount to pan by.
+     */
     panZ: function (v)
     {
         this.updateViewMatrix();
 
         if (this.mode === Layer3DCamera.MODE_ORBIT)
         {
-            //  orbit mode does translate after rotate, so only need to set Z, the rotate will handle the rest.
-            this.position.z += v;
+            //  Orbit mode translates after rotatation, so only need to set Z. The rotation will handle the rest.
+            this.z += v;
         }
         else
         {
-            //  In freemode to move forward, we need to move based on our forward which is relative to our current rotation
+            //  In freemode to move forward, we move based on our forward, which is relative to our current rotation.
             this.position.addScale(this.forward, v);
         }
     },
 
-    //  To have different modes of movements, this function handles the view matrix update for the transform object.
+    /**
+     * Internal method that handles the update of the view transform matrix, based on the rotation
+     * and position of the camera. Called automatically when the camera is updated.
+     *
+     * @method Phaser.GameObjects.Layer3DCamera#updateViewMatrix
+     * @since 3.50.0
+     */
     updateViewMatrix: function ()
     {
         var matView = this.matrix;
@@ -103,21 +278,55 @@ var Layer3DCamera = new Class({
         this.updateDirection();
 
         this.viewMatrix.copy(matView).invert();
-
-        this.dirty = true;
     },
 
-    update: function (width, height)
+    /**
+     * Internal method that is called by the Layer3D instance that owns this camera
+     * during its `preUpdate` step. If the view matrix is dirty, it is recalculated
+     * and then applied to the view projection matrix, ready for rendering.
+     *
+     * @method Phaser.GameObjects.Layer3DCamera#update
+     * @since 3.50.0
+     */
+    update: function ()
+    {
+        if (this.dirtyView)
+        {
+            this.updateViewMatrix();
+        }
+
+        if (this.dirtyView || this.dirtyProjection)
+        {
+            this.projectionMatrix.multiplyToMat4(this.viewMatrix, this.viewProjectionMatrix);
+        }
+    },
+
+    /**
+     * Internal method that is called by the Layer3D instance that owns this camera
+     * during its `preUpdate` step. If the projection matrix is dirty, or the renderer
+     * width or height has changed, then a new projection matrix is calculated.
+     *
+     * @method Phaser.GameObjects.Layer3DCamera#updateProjectionMatrix
+     * @since 3.50.0
+     *
+     * @param {number} width - The width of the renderer.
+     * @param {number} height - The height of the renderer.
+     */
+    updateProjectionMatrix: function (width, height)
     {
         this.aspectRatio = width / height;
 
-        //  TODO - Only needs changing when the fov/etc does
         this.projectionMatrix.perspective(DegToRad(this._fov), this.aspectRatio, this._near, this._far);
-
-        //  TODO - Only needs calculating when this camera is dirty
-        this.projectionMatrix.multiplyToMat4(this.viewMatrix, this.viewProjectionMatrix);
     },
 
+    /**
+     * Internal method that sets the forward, up and right vectors from
+     * the view matrix. This is called automatically as part of the
+     * `updateViewMatrix` method.
+     *
+     * @method Phaser.GameObjects.Layer3DCamera#updateDirection
+     * @since 3.50.0
+     */
     updateDirection: function ()
     {
         var matView = this.matrix;
@@ -127,6 +336,15 @@ var Layer3DCamera = new Class({
         this.right.set(1, 0, 0, 0).transformMat4(matView);
     },
 
+    /**
+     * The field of view, in degrees, of this camera.
+     *
+     * Limited to the range of 0 to 180.
+     *
+     * @name Phaser.GameObjects.Layer3DCamera#fov
+     * @type {number}
+     * @since 3.50.0
+     */
     fov: {
 
         get: function ()
@@ -139,12 +357,22 @@ var Layer3DCamera = new Class({
             if (value > 0 && value < 180)
             {
                 this._fov = value;
-                this.dirty = true;
+                this.dirtyProjection = true;
             }
         }
 
     },
 
+    /**
+     * The minimum distance the camera can see from.
+     *
+     * It's important to consider that depth buffers are not infinite and the closer
+     * a camera starts, the more you may encounter depth fighting issues.
+     *
+     * @name Phaser.GameObjects.Layer3DCamera#near
+     * @type {number}
+     * @since 3.50.0
+     */
     near: {
 
         get: function ()
@@ -157,12 +385,22 @@ var Layer3DCamera = new Class({
             if (value > 0)
             {
                 this._near = value;
-                this.dirty = true;
+                this.dirtyProjection = true;
             }
         }
 
     },
 
+    /**
+     * The maximum distance the camera can see to.
+     *
+     * It's important to consider that depth buffers are not infinite and the further
+     * a camera ends, the more you may encounter depth fighting issues.
+     *
+     * @name Phaser.GameObjects.Layer3DCamera#far
+     * @type {number}
+     * @since 3.50.0
+     */
     far: {
 
         get: function ()
@@ -175,12 +413,19 @@ var Layer3DCamera = new Class({
             if (value > 0)
             {
                 this._far = value;
-                this.dirty = true;
+                this.dirtyProjection = true;
             }
         }
 
     },
 
+    /**
+     * The x position of the camera.
+     *
+     * @name Phaser.GameObjects.Layer3DCamera#x
+     * @type {number}
+     * @since 3.50.0
+     */
     x: {
 
         get: function ()
@@ -191,11 +436,18 @@ var Layer3DCamera = new Class({
         set: function (value)
         {
             this.position.x = value;
-            this.updateViewMatrix();
+            this.dirtyView = true;
         }
 
     },
 
+    /**
+     * The y position of the camera.
+     *
+     * @name Phaser.GameObjects.Layer3DCamera#y
+     * @type {number}
+     * @since 3.50.0
+     */
     y: {
 
         get: function ()
@@ -206,11 +458,18 @@ var Layer3DCamera = new Class({
         set: function (value)
         {
             this.position.y = value;
-            this.updateViewMatrix();
+            this.dirtyView = true;
         }
 
     },
 
+    /**
+     * The z position of the camera.
+     *
+     * @name Phaser.GameObjects.Layer3DCamera#z
+     * @type {number}
+     * @since 3.50.0
+     */
     z: {
 
         get: function ()
@@ -221,11 +480,18 @@ var Layer3DCamera = new Class({
         set: function (value)
         {
             this.position.z = value;
-            this.updateViewMatrix();
+            this.dirtyView = true;
         }
 
     },
 
+    /**
+     * The x axis rotation, in radians, of the camera.
+     *
+     * @name Phaser.GameObjects.Layer3DCamera#rotationX
+     * @type {number}
+     * @since 3.50.0
+     */
     rotationX: {
 
         get: function ()
@@ -236,11 +502,18 @@ var Layer3DCamera = new Class({
         set: function (value)
         {
             this.rotation.x = value;
-            this.updateViewMatrix();
+            this.dirtyView = true;
         }
 
     },
 
+    /**
+     * The y axis rotation, in radians, of the camera.
+     *
+     * @name Phaser.GameObjects.Layer3DCamera#rotationY
+     * @type {number}
+     * @since 3.50.0
+     */
     rotationY: {
 
         get: function ()
@@ -251,11 +524,18 @@ var Layer3DCamera = new Class({
         set: function (value)
         {
             this.rotation.y = value;
-            this.updateViewMatrix();
+            this.dirtyView = true;
         }
 
     },
 
+    /**
+     * The z axis rotation, in radians, of the camera.
+     *
+     * @name Phaser.GameObjects.Layer3DCamera#rotationZ
+     * @type {number}
+     * @since 3.50.0
+     */
     rotationZ: {
 
         get: function ()
@@ -266,14 +546,28 @@ var Layer3DCamera = new Class({
         set: function (value)
         {
             this.rotation.z = value;
-            this.updateViewMatrix();
+            this.dirtyView = true;
         }
 
     },
 
+    /**
+     * Destroy handler for this camera.
+     *
+     * @method Phaser.GameObjects.Layer3DCamera#destroy
+     * @since 3.50.0
+     */
     destroy: function ()
     {
-        //  TODO - Needed?
+        this.position = null;
+        this.rotation = null;
+        this.forward = null;
+        this.up = null;
+        this.right = null;
+        this.matrix = null;
+        this.viewMatrix = null;
+        this.projectionMatrix = null;
+        this.viewProjectionMatrix = null;
     }
 
 });
