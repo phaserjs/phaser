@@ -10,6 +10,7 @@ var Distance = require('../math/distance/DistanceBetween');
 var FuzzyEqual = require('../math/fuzzy/Equal');
 var SmoothStepInterpolation = require('../math/interpolation/SmoothStepInterpolation');
 var Vector2 = require('../math/Vector2');
+var OS = require('../device/OS');
 
 /**
  * @classdesc
@@ -657,6 +658,13 @@ var Pointer = new Class({
             this.primaryDown = true;
             this.downX = this.x;
             this.downY = this.y;
+        }
+
+        if (OS.macOS && event.ctrlKey)
+        {
+            //  Override button settings on macOS
+            this.buttons = 2;
+            this.primaryDown = false;
         }
 
         if (!this.isDown)
