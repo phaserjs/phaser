@@ -49,7 +49,7 @@ var Model = new Class({
         /**
          * The Layer3D instance this model belongs to.
          *
-         * A model can only belong to one single Layer3D instance at once.
+         * A model can only belong to a single Layer3D instance.
          *
          * You should consider this property as being read-only. You cannot move a
          * model to another Layer3D by simply changing it.
