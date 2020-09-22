@@ -6,6 +6,8 @@
 
 var Class = require('../../utils/Class');
 var DegToRad = require('../../math/DegToRad');
+var GetFastValue = require('../../utils/object/GetFastValue');
+var INPUT_EVENTS = require('../../input/events');
 var Matrix4 = require('../../math/Matrix4');
 var Vector3 = require('../../math/Vector3');
 var Vector4 = require('../../math/Vector4');
@@ -23,8 +25,31 @@ var Layer3DCamera = new Class({
 
     initialize:
 
-    function Layer3DCamera (fov, x, y, z, near, far)
+    function Layer3DCamera (layer, fov, x, y, z, near, far)
     {
+        /**
+         * The Layer3D instance this camera belongs to.
+         *
+         * A camera can only belong to a single Layer3D instance.
+         *
+         * You should consider this property as being read-only. You cannot move a
+         * camera to another Layer3D by simply changing it.
+         *
+         * @name Phaser.GameObjects.Layer3DCamera#layer
+         * @type {Phaser.GameObjects.Layer3D}
+         * @since 3.50.0
+         */
+        this.layer = layer;
+
+        /**
+         * The Scene Input Plugin, as referenced via the Layer3D parent.
+         *
+         * @name Phaser.GameObjects.Layer3DCamera#input
+         * @type {Phaser.Input.InputPlugin}
+         * @since 3.50.0
+         */
+        this.input = layer.scene.sys.input;
+
         /**
          * Internal 'dirty' flag that tells the parent Layer3D if the
          * view matrix of this camera needs recalculating at the next step.
@@ -196,6 +221,109 @@ var Layer3DCamera = new Class({
          * @since 3.50.0
          */
         this.mode = Layer3DCamera.MODE_ORBIT;
+
+        /**
+         * How fast to rotate the camera, in degrees per delta.
+         *
+         * This value is only used after calling the `enableControls` method,
+         * it does not influence changing the rotation values directly.
+         *
+         * @name Phaser.GameObjects.Layer3DCamera#rotateSpeed
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.rotateSpeed = 0.5;
+
+        /**
+         * How fast to pan the camera, in units per delta.
+         *
+         * This value is only used after calling the `enableControls` method,
+         * it does not influence calling the pan methods directly.
+         *
+         * @name Phaser.GameObjects.Layer3DCamera#panSpeed
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.panSpeed = 4;
+
+        /**
+         * How fast to zoom the camera.
+         *
+         * This value is only used after calling the `enableControls` method,
+         * it does not influence calling the panZ method directly.
+         *
+         * @name Phaser.GameObjects.Layer3DCamera#zoomSpeed
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.zoomSpeed = 3;
+
+        this.allowPan = false;
+
+        this.lockXAxis = false;
+        this.lockYAxis = false;
+    },
+
+    enableOrbitControls: function (config)
+    {
+        this.rotateSpeed = GetFastValue(config, 'rotateSpeed', this.rotateSpeed);
+        this.panSpeed = GetFastValue(config, 'panSpeed', this.panSpeed);
+        this.allowPan = GetFastValue(config, 'allowPan', this.allowPan);
+        this.lockXAxis = GetFastValue(config, 'lockXAxis', this.lockXAxis);
+        this.lockYAxis = GetFastValue(config, 'lockYAxis', this.lockYAxis);
+
+        this.input.on(INPUT_EVENTS.POINTER_MOVE, this.pointerMoveHandler, this);
+    },
+
+    disableOrbitControls: function ()
+    {
+        this.input.off(INPUT_EVENTS.POINTER_MOVE, this.pointerMoveHandler, this);
+    },
+
+    enableZoom: function (zoomSpeed)
+    {
+        if (zoomSpeed === undefined) { zoomSpeed = 3; }
+
+        this.zoomSpeed = zoomSpeed;
+
+        this.input.on(INPUT_EVENTS.POINTER_WHEEL, this.pointerWheelHandler, this);
+    },
+
+    disableZoom: function ()
+    {
+        this.input.off(INPUT_EVENTS.POINTER_WHEEL, this.pointerWheelHandler, this);
+    },
+
+    pointerMoveHandler: function (pointer)
+    {
+        if (pointer.isDown)
+        {
+            var width = this.layer.width;
+            var height = this.layer.height;
+
+            if (pointer.event.shiftKey && this.allowPan)
+            {
+                this.panX(pointer.velocity.x * (this.panSpeed / width));
+                this.panY(pointer.velocity.y * (this.panSpeed / height));
+            }
+            else
+            {
+                if (!this.lockXAxis)
+                {
+                    this.rotationX -= pointer.velocity.y * (this.rotateSpeed / height);
+                }
+
+                if (!this.lockYAxis)
+                {
+                    this.rotationY -= pointer.velocity.x * (this.rotateSpeed / width);
+                }
+            }
+        }
+    },
+
+    pointerWheelHandler: function (pointer, over, deltaX, deltaY)
+    {
+        this.panZ(deltaY * (this.zoomSpeed / this.layer.height));
     },
 
     /**
@@ -565,6 +693,7 @@ var Layer3DCamera = new Class({
      */
     destroy: function ()
     {
+        this.layer = null;
         this.position = null;
         this.rotation = null;
         this.forward = null;
