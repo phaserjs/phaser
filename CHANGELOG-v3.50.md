@@ -250,6 +250,7 @@ If you used any of them in your code, please update to the new function names be
 * Setting the `color` value in the `DynamicBitmapText.setDisplayCallback` would inverse the red and blue channels if the color was not properly encoded for WebGL. It is now encoded automatically, meaning you can pass normal hex values as the colors in the display callback. Fix #5225 (thanks @teebarjunk)
 * If you apply `setSize` to the Dynamic BitmapText the scissor is now calculated based on the parent transforms, not just the local ones, meaning you can crop Bitmap Text objects that exist within Containers. Fix #4653 (thanks @lgibson02)
 * `ParseXMLBitmapFont` has a new optional parameter `texture`. If defined, this Texture is populated with Frame data, one frame per glyph. This happens automatically when loading Bitmap Text data in Phaser.
+* You can now use `setMaxWidth` on `DynamicBitmapText`, which wasn't previously possible. Fix #4997 (thanks @AndreaBoeAbrahamsen)
 
 ### Update List Changes
 
