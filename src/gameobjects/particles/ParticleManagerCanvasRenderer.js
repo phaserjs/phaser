@@ -31,15 +31,23 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, camera, 
     var camMatrix = renderer._tempMatrix1.copyFrom(camera.matrix);
     var calcMatrix = renderer._tempMatrix2;
     var particleMatrix = renderer._tempMatrix3;
-    var managerMatrix = renderer._tempMatrix4.applyITRS(emitterManager.x, emitterManager.y, emitterManager.rotation, emitterManager.scaleX, emitterManager.scaleY);
+    var managerMatrix = renderer._tempMatrix4;
 
-    camMatrix.multiply(managerMatrix);
-
-    var roundPixels = camera.roundPixels;
+    if (parentMatrix)
+    {
+        managerMatrix.loadIdentity();
+        managerMatrix.multiply(parentMatrix);
+        managerMatrix.translate(emitterManager.x, emitterManager.y);
+        managerMatrix.rotate(emitterManager.rotation);
+        managerMatrix.scale(emitterManager.scaleX, emitterManager.scaleY);
+    }
+    else
+    {
+        managerMatrix.applyITRS(emitterManager.x, emitterManager.y, emitterManager.rotation, emitterManager.scaleX, emitterManager.scaleY);
+    }
 
     var ctx = renderer.currentContext;
-
-    ctx.save();
+    var roundPixels = camera.roundPixels;
 
     for (var e = 0; e < emittersLength; e++)
     {
@@ -52,17 +60,13 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, camera, 
             continue;
         }
 
-        var scrollX = camera.scrollX * emitter.scrollFactorX;
-        var scrollY = camera.scrollY * emitter.scrollFactorY;
+        var followX = (emitter.follow) ? emitter.follow.x + emitter.followOffset.x : 0;
+        var followY = (emitter.follow) ? emitter.follow.y + emitter.followOffset.y : 0;
 
-        if (parentMatrix)
-        {
-            //  Multiply the camera by the parent matrix
-            camMatrix.multiplyWithOffset(parentMatrix, -scrollX, -scrollY);
+        var scrollFactorX = emitter.scrollFactorX;
+        var scrollFactorY = emitter.scrollFactorY;
 
-            scrollX = 0;
-            scrollY = 0;
-        }
+        ctx.save();
 
         ctx.globalCompositeOperation = renderer.blendModes[emitter.blendMode];
 
@@ -77,24 +81,30 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, camera, 
                 continue;
             }
 
+            particleMatrix.applyITRS(particle.x, particle.y, particle.rotation, particle.scaleX, particle.scaleY);
+
+            camMatrix.copyFrom(camera.matrix);
+
+            camMatrix.multiplyWithOffset(managerMatrix, followX + -camera.scrollX * scrollFactorX, followY + -camera.scrollY * scrollFactorY);
+
+            //  Undo the camera scroll
+            particleMatrix.e = particle.x;
+            particleMatrix.f = particle.y;
+
+            //  Multiply by the particle matrix, store result in calcMatrix
+            camMatrix.multiply(particleMatrix, calcMatrix);
+
             var frame = particle.frame;
             var cd = frame.canvasData;
 
             var x = -(frame.halfWidth);
             var y = -(frame.halfHeight);
 
-            particleMatrix.applyITRS(0, 0, particle.rotation, particle.scaleX, particle.scaleY);
-
-            particleMatrix.e = particle.x - scrollX;
-            particleMatrix.f = particle.y - scrollY;
-
-            camMatrix.multiply(particleMatrix, calcMatrix);
-
             ctx.globalAlpha = alpha;
 
             ctx.save();
 
-            calcMatrix.copyToContext(ctx);
+            calcMatrix.setToContext(ctx);
 
             if (roundPixels)
             {
@@ -108,9 +118,9 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, camera, 
 
             ctx.restore();
         }
-    }
 
-    ctx.restore();
+        ctx.restore();
+    }
 };
 
 module.exports = ParticleManagerCanvasRenderer;
