@@ -64,8 +64,16 @@ var BitmapMaskPipeline = new Class({
                 location: -1
             }
         ]);
+        config.uniforms = GetFastValue(config, 'uniforms', [
+            'uResolution',
+            'uMainSampler',
+            'uMaskSampler',
+            'uInvertMaskAlpha'
+        ]);
 
         WebGLPipeline.call(this, config);
+
+        // this.forceZero = true;
     },
 
     /**
@@ -86,12 +94,9 @@ var BitmapMaskPipeline = new Class({
 
         WebGLPipeline.prototype.bind.call(this, reset);
 
-        var renderer = this.renderer;
-        var program = this.program;
-
-        renderer.setFloat2(program, 'uResolution', this.width, this.height);
-        renderer.setInt1(program, 'uMainSampler', 0);
-        renderer.setInt1(program, 'uMaskSampler', 1);
+        this.set2f('uResolution', this.width, this.height);
+        this.set1i('uMainSampler', 0);
+        this.set1i('uMaskSampler', 1);
 
         return this;
     },
@@ -124,9 +129,7 @@ var BitmapMaskPipeline = new Class({
             renderer.setFramebuffer(mask.mainFramebuffer);
 
             gl.disable(gl.STENCIL_TEST);
-
             gl.clearColor(0, 0, 0, 0);
-
             gl.clear(gl.COLOR_BUFFER_BIT);
 
             if (renderer.currentCameraMask.mask !== mask)
@@ -168,7 +171,7 @@ var BitmapMaskPipeline = new Class({
 
             renderer.setBlendMode(0, true);
 
-            bitmapMask.renderWebGL(renderer, bitmapMask, 0, camera);
+            bitmapMask.renderWebGL(renderer, bitmapMask, camera);
 
             renderer.flush();
 
@@ -197,7 +200,7 @@ var BitmapMaskPipeline = new Class({
             gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D, mask.mainTexture);
 
-            gl.uniform1i(gl.getUniformLocation(this.program, 'uInvertMaskAlpha'), mask.invertAlpha);
+            this.set1i('uInvertMaskAlpha', mask.invertAlpha);
 
             //  Finally, draw a triangle filling the whole screen
             gl.drawArrays(this.topology, 0, 3);
