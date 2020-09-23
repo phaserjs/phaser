@@ -863,7 +863,7 @@ var ParticleEmitter = new Class({
             this.setFrame(config.frame);
         }
 
-        if (HasValue(config, "reserve"))
+        if (HasValue(config, 'reserve'))
         {
             this.reserve(config.reserve);
         }
