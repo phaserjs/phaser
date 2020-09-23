@@ -615,6 +615,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * The `ParticleManagerCanvasRenderer` now calculates its transform matrix differently, splitting out the parent matrix and factoring in the follow offsets separately. It also uses `setToContext` internally. This fixes numerous issues with particle emitters being incorrectly offset when added to Containers, or having the Camera zoomed, running under Canvas. Fix #4908 #4531 #4131 (thanks @smjnab @SirLink @jhooper04)
 * The `Graphics` WebGL Renderer will now default to `pathOpen = true`. This fixes issues under WebGL where, for example, adding an arc and calling `strokePath`, without first calling `beginPath` will no longer cause rendering artefacts when WebGL tries to close the path with a single tri.
 * `Graphics.strokeRoundedRect` now issues `moveTo` commands as part of the drawing sequence, preventing issues under WebGL where on older Android devices it would project additional vertices into the display. Fix #3955 (thanks @alexeymolchan)
+* Creating a Bitmap Mask from a texture atlas that was then used to mask another Game Object also using that same texture atlas would throw the error `GL_INVALID_OPERATION : glDrawArrays: Source and destination textures of the draw are the same.`. It now renders as expected. Fix #4675 (thanks @JacobCaron)
 
 ### Namespace Updates
 
