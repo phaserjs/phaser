@@ -861,7 +861,7 @@ var Tilemap = new Class({
      * @param {TilemapFilterCallback} callback - The callback. Each object in the given area will be passed to this callback as the first and only parameter.
      * @param {object} [context] - The context under which the callback should be run.
      *
-     * @return {?Phaser.GameObjects.GameObject[]} An array of object that match the search, or null if the objectLayer given was invalid.
+     * @return {?Phaser.Types.Tilemaps.TiledObject[]} An array of object that match the search, or null if the objectLayer given was invalid.
      */
     filterObjects: function (objectLayer, callback, context)
     {
@@ -951,7 +951,7 @@ var Tilemap = new Class({
      * @param {TilemapFindCallback} callback - The callback. Each object in the given area will be passed to this callback as the first and only parameter.
      * @param {object} [context] - The context under which the callback should be run.
      *
-     * @return {?Phaser.GameObjects.GameObject} An object that matches the search, or null if no object found.
+     * @return {?Phaser.Types.Tilemaps.TiledObject} An object that matches the search, or null if no object found.
      */
     findObject: function (objectLayer, callback, context)
     {
