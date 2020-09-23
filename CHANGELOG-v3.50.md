@@ -537,6 +537,9 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `Vertor3.addScale` is a new method that will add the given vector and multiply it in the process.
 * `Physics.Arcade.Body.setCollideWorldBounds` now has a new optional parameter `onWorldBounds` which allows you to enable the World Bounce property in the same call (thanks @samme)
 * When defining the ease used with a Particle Emitter you can now set `easeParams` in the config object, allowing you to pass custom ease parameters through to an ease function (thanks @vforsh)
+* `ArcadePhysics.Body.setMaxVelocityX` is a new method that allows you to set the maximum horizontal velocity of a Body (thanks @samme)
+* `ArcadePhysics.Body.setMaxVelocityY` is a new method that allows you to set the maximum vertical velocity of a Body (thanks @samme)
+* The `PhysicsGroup` config now has two new optional properties `maxVelocityX` and `maxVelocityY` which allows you to set the maximum velocity on bodies added to the Group (thanks @samme)
 
 ### Updates and API Changes
 
