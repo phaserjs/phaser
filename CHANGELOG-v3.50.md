@@ -604,6 +604,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `GameConfig.audio` now defaults to an empty object, which simplifies access to the config in later checks (thanks @samme)
 * The `Loader.path` was being added to the File URL even if the URL was absolute. This is now checked for and the path is not applied unless the URL is relative (thanks @firesoft)
 * `Group.getMatching` would always return an empty array. It now returns matching children (thanks @samme)
+* The `ParticleManagerWebGLRenderer` now calculates its transform matrix differently, splitting out the parent matrix and factoring in follow offsets separately. This fixes numerous issues with particle emitters being incorrectly offset when added to Containers. Fix #5319 #5195 #4739 #4691 (thanks @vforsh @condeagustin @IvanDem @Formic)
 
 ### Namespace Updates
 
