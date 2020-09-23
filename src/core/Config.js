@@ -458,7 +458,9 @@ var Config = new Class({
         /**
          * @const {integer} Phaser.Core.Config#loaderMaxParallelDownloads - Maximum parallel downloads allowed for resources (Default to 32).
          */
-        this.loaderMaxParallelDownloads = GetValue(config, 'loader.maxParallelDownloads', 32);
+        var defaultParallel = (Device.OS.android) ? 6 : 32;
+
+        this.loaderMaxParallelDownloads = GetValue(config, 'loader.maxParallelDownloads', defaultParallel);
 
         /**
          * @const {(string|undefined)} Phaser.Core.Config#loaderCrossOrigin - 'anonymous', 'use-credentials', or `undefined`. If you're not making cross-origin requests, leave this as `undefined`. See {@link https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_settings_attributes}.
