@@ -804,12 +804,16 @@ var Graphics = new Class({
         this.beginPath();
         this.moveTo(x + tl, y);
         this.lineTo(x + width - tr, y);
+        this.moveTo(x + width - tr, y);
         this.arc(x + width - tr, y + tr, tr, -MATH_CONST.TAU, 0);
         this.lineTo(x + width, y + height - br);
+        this.moveTo(x + width, y + height - br)
         this.arc(x + width - br, y + height - br, br, 0, MATH_CONST.TAU);
         this.lineTo(x + bl, y + height);
+        this.moveTo(x + bl, y + height);
         this.arc(x + bl, y + height - bl, bl, MATH_CONST.TAU, Math.PI);
         this.lineTo(x, y + tl);
+        this.moveTo(x, y + tl);
         this.arc(x + tl, y + tl, tl, -Math.PI, -MATH_CONST.TAU);
         this.strokePath();
 
