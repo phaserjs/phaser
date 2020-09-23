@@ -903,18 +903,15 @@ var MultiPipeline = new Class({
             //  Undo the camera scroll
             spriteMatrix.e = srcX;
             spriteMatrix.f = srcY;
-
-            //  Multiply by the Sprite matrix, store result in calcMatrix
-            camMatrix.multiply(spriteMatrix, calcMatrix);
         }
         else
         {
             spriteMatrix.e -= camera.scrollX * scrollFactorX;
             spriteMatrix.f -= camera.scrollY * scrollFactorY;
-
-            //  Multiply by the Sprite matrix, store result in calcMatrix
-            camMatrix.multiply(spriteMatrix, calcMatrix);
         }
+
+        //  Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(spriteMatrix, calcMatrix);
 
         var tx0 = calcMatrix.getX(x, y);
         var ty0 = calcMatrix.getY(x, y);
