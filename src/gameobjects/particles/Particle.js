@@ -301,11 +301,6 @@ var Particle = new Class({
 
         if (x === undefined)
         {
-            if (emitter.follow)
-            {
-                this.x += emitter.follow.x + emitter.followOffset.x;
-            }
-
             this.x += emitter.x.onEmit(this, 'x');
         }
         else
@@ -315,11 +310,6 @@ var Particle = new Class({
 
         if (y === undefined)
         {
-            if (emitter.follow)
-            {
-                this.y += emitter.follow.y + emitter.followOffset.y;
-            }
-
             this.y += emitter.y.onEmit(this, 'y');
         }
         else

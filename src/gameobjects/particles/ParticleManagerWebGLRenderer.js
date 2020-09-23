@@ -35,9 +35,20 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
     var camMatrix = pipeline._tempMatrix1.copyFrom(camera.matrix);
     var calcMatrix = pipeline._tempMatrix2;
     var particleMatrix = pipeline._tempMatrix3;
-    var managerMatrix = pipeline._tempMatrix4.applyITRS(emitterManager.x, emitterManager.y, emitterManager.rotation, emitterManager.scaleX, emitterManager.scaleY);
+    var managerMatrix = pipeline._tempMatrix4;
 
-    camMatrix.multiply(managerMatrix);
+    if (parentMatrix)
+    {
+        managerMatrix.loadIdentity();
+        managerMatrix.multiply(parentMatrix);
+        managerMatrix.translate(emitterManager.x, emitterManager.y);
+        managerMatrix.rotate(emitterManager.rotation);
+        managerMatrix.scale(emitterManager.scaleX, emitterManager.scaleY);
+    }
+    else
+    {
+        managerMatrix.applyITRS(emitterManager.x, emitterManager.y, emitterManager.rotation, emitterManager.scaleX, emitterManager.scaleY);
+    }
 
     var roundPixels = camera.roundPixels;
     var texture = emitterManager.defaultFrame.glTexture;
@@ -56,23 +67,13 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
             continue;
         }
 
-        var scrollX = camera.scrollX * emitter.scrollFactorX;
-        var scrollY = camera.scrollY * emitter.scrollFactorY;
+        var followX = (emitter.follow) ? emitter.follow.x + emitter.followOffset.x : 0;
+        var followY = (emitter.follow) ? emitter.follow.y + emitter.followOffset.y : 0;
 
-        if (parentMatrix)
-        {
-            //  Multiply the camera by the parent matrix
-            camMatrix.multiplyWithOffset(parentMatrix, -scrollX, -scrollY);
+        var scrollFactorX = emitter.scrollFactorX;
+        var scrollFactorY = emitter.scrollFactorY;
 
-            scrollX = 0;
-            scrollY = 0;
-        }
-
-        if (renderer.setBlendMode(emitter.blendMode))
-        {
-            //  Rebind the texture if we've flushed
-            // pipeline.setTexture2D(texture, 0);
-        }
+        renderer.setBlendMode(emitter.blendMode);
 
         if (emitter.mask)
         {
@@ -94,19 +95,25 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
                 continue;
             }
 
+            particleMatrix.applyITRS(particle.x, particle.y, particle.rotation, particle.scaleX, particle.scaleY);
+
+            camMatrix.copyFrom(camera.matrix);
+
+            camMatrix.multiplyWithOffset(managerMatrix, followX + -camera.scrollX * scrollFactorX, followY + -camera.scrollY * scrollFactorY);
+
+            //  Undo the camera scroll
+            particleMatrix.e = particle.x;
+            particleMatrix.f = particle.y;
+
+            //  Multiply by the particle matrix, store result in calcMatrix
+            camMatrix.multiply(particleMatrix, calcMatrix);
+
             var frame = particle.frame;
 
-            var x = -(frame.halfWidth);
-            var y = -(frame.halfHeight);
+            var x = -frame.halfWidth;
+            var y = -frame.halfHeight;
             var xw = x + frame.width;
             var yh = y + frame.height;
-
-            particleMatrix.applyITRS(0, 0, particle.rotation, particle.scaleX, particle.scaleY);
-
-            particleMatrix.e = particle.x - scrollX;
-            particleMatrix.f = particle.y - scrollY;
-
-            camMatrix.multiply(particleMatrix, calcMatrix);
 
             var tx0 = calcMatrix.getX(x, y);
             var ty0 = calcMatrix.getY(x, y);
