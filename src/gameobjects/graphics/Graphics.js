@@ -807,7 +807,7 @@ var Graphics = new Class({
         this.moveTo(x + width - tr, y);
         this.arc(x + width - tr, y + tr, tr, -MATH_CONST.TAU, 0);
         this.lineTo(x + width, y + height - br);
-        this.moveTo(x + width, y + height - br)
+        this.moveTo(x + width, y + height - br);
         this.arc(x + width - br, y + height - br, br, 0, MATH_CONST.TAU);
         this.lineTo(x + bl, y + height);
         this.moveTo(x + bl, y + height);
