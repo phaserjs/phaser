@@ -72,8 +72,6 @@ var BitmapMaskPipeline = new Class({
         ]);
 
         WebGLPipeline.call(this, config);
-
-        // this.forceZero = true;
     },
 
     /**
