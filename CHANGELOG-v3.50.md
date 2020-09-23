@@ -606,6 +606,8 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `Group.getMatching` would always return an empty array. It now returns matching children (thanks @samme)
 * The `ParticleManagerWebGLRenderer` now calculates its transform matrix differently, splitting out the parent matrix and factoring in follow offsets separately. This fixes numerous issues with particle emitters being incorrectly offset when added to Containers. Fix #5319 #5195 #4739 #4691 (thanks @vforsh @condeagustin @IvanDem @Formic)
 * The `ParticleManagerCanvasRenderer` now calculates its transform matrix differently, splitting out the parent matrix and factoring in the follow offsets separately. It also uses `setToContext` internally. This fixes numerous issues with particle emitters being incorrectly offset when added to Containers, or having the Camera zoomed, running under Canvas. Fix #4908 #4531 #4131 (thanks @smjnab @SirLink @jhooper04)
+* The `Graphics` WebGL Renderer will now default to `pathOpen = true`. This fixes issues under WebGL where, for example, adding an arc and calling `strokePath`, without first calling `beginPath` will no longer cause rendering artefacts when WebGL tries to close the path with a single tri.
+* `Graphics.strokeRoundedRect` now issues `moveTo` commands as part of the drawing sequence, preventing issues under WebGL where on older Android devices it would project additional vertices into the display. Fix #3955 (thanks @alexeymolchan)
 
 ### Namespace Updates
 
