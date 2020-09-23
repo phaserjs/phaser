@@ -85,7 +85,7 @@ var GeometryMask = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Graphics} graphicsGeometry - The Graphics object which will be used for the Geometry Mask.
-     * 
+     *
      * @return {this} This Geometry Mask
      */
     setShape: function (graphicsGeometry)
@@ -103,7 +103,7 @@ var GeometryMask = new Class({
      * @since 3.17.0
      *
      * @param {boolean} [value=true] - Invert the alpha of this mask?
-     * 
+     *
      * @return {this} This Geometry Mask
      */
     setInvertAlpha: function (value)
@@ -182,7 +182,7 @@ var GeometryMask = new Class({
         }
 
         //  Write stencil buffer
-        geometryMask.renderWebGL(renderer, geometryMask, 0, camera);
+        geometryMask.renderWebGL(renderer, geometryMask, camera);
 
         renderer.flush();
 
@@ -272,7 +272,7 @@ var GeometryMask = new Class({
 
         renderer.currentContext.save();
 
-        geometryMask.renderCanvas(renderer, geometryMask, 0, camera, null, null, true);
+        geometryMask.renderCanvas(renderer, geometryMask, camera, null, null, true);
 
         renderer.currentContext.clip();
     },

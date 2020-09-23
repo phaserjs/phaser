@@ -1019,7 +1019,7 @@ var RenderTexture = new Class({
 
         gameObject.setPosition(x + this.frame.cutX, y + this.frame.cutY);
 
-        gameObject.renderWebGL(this.renderer, gameObject, 0, this.camera, null);
+        gameObject.renderWebGL(this.renderer, gameObject, this.camera);
 
         gameObject.setPosition(prevX, prevY);
     },
@@ -1052,7 +1052,7 @@ var RenderTexture = new Class({
 
         gameObject.setPosition(x + this.frame.cutX, y + this.frame.cutY);
 
-        gameObject.renderCanvas(this.renderer, gameObject, 0, this.camera, null);
+        gameObject.renderCanvas(this.renderer, gameObject, this.camera, null);
 
         gameObject.setPosition(prevX, prevY);
 
