@@ -96,7 +96,7 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var path = [];
     var pathIndex = 0;
-    var pathOpen = false;
+    var pathOpen = true;
     var lastPath = null;
 
     var getTint = Utils.getTintAppendFloatAlpha;
