@@ -740,18 +740,15 @@ var CanvasRenderer = new Class({
             //  Undo the camera scroll
             spriteMatrix.e = sprite.x;
             spriteMatrix.f = sprite.y;
-
-            //  Multiply by the Sprite matrix, store result in calcMatrix
-            camMatrix.multiply(spriteMatrix, calcMatrix);
         }
         else
         {
             spriteMatrix.e -= camera.scrollX * sprite.scrollFactorX;
             spriteMatrix.f -= camera.scrollY * sprite.scrollFactorY;
-
-            //  Multiply by the Sprite matrix, store result in calcMatrix
-            camMatrix.multiply(spriteMatrix, calcMatrix);
         }
+
+        //  Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(spriteMatrix, calcMatrix);
 
         ctx.save();
 
