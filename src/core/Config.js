@@ -458,7 +458,7 @@ var Config = new Class({
         /**
          * @const {integer} Phaser.Core.Config#loaderMaxParallelDownloads - Maximum parallel downloads allowed for resources (Default to 32).
          */
-        var defaultParallel = (Device.OS.android) ? 6 : 32;
+        var defaultParallel = (Device.os.android) ? 6 : 32;
 
         this.loaderMaxParallelDownloads = GetValue(config, 'loader.maxParallelDownloads', defaultParallel);
 
