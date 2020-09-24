@@ -22,6 +22,7 @@ module.exports = {
     Mass: require('./Mass'),
     OverlapCirc: require('./OverlapCirc'),
     OverlapRect: require('./OverlapRect'),
+    Pushable: require('./Pushable'),
     Size: require('./Size'),
     Velocity: require('./Velocity')
 

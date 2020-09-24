@@ -272,6 +272,25 @@ var StaticBody = new Class({
         this.immovable = true;
 
         /**
+         * Sets if this Body can be pushed by another Body.
+         *
+         * A body that cannot be pushed will reflect back all of the velocity it is given to the
+         * colliding body. If that body is also not pushable, then the separation will be split
+         * between them evenly.
+         *
+         * If you want your body to never move or seperate at all, see the `setImmovable` method.
+         *
+         * By default, Static Bodies are not pushable.
+         *
+         * @name Phaser.Physics.Arcade.StaticBody#pushable
+         * @type {boolean}
+         * @default false
+         * @since 3.50.0
+         * @see Phaser.GameObjects.Components.Pushable#setPushable
+         */
+        this.pushable = false;
+
+        /**
          * A flag disabling the default horizontal separation of colliding bodies. Pass your own `collideHandler` to the collider.
          *
          * @name Phaser.Physics.Arcade.StaticBody#customSeparateX

@@ -31,6 +31,7 @@ var Image = require('../../gameobjects/image/Image');
  * @extends Phaser.Physics.Arcade.Components.Gravity
  * @extends Phaser.Physics.Arcade.Components.Immovable
  * @extends Phaser.Physics.Arcade.Components.Mass
+ * @extends Phaser.Physics.Arcade.Components.Pushable
  * @extends Phaser.Physics.Arcade.Components.Size
  * @extends Phaser.Physics.Arcade.Components.Velocity
  * @extends Phaser.GameObjects.Components.Alpha
@@ -68,6 +69,7 @@ var ArcadeImage = new Class({
         Components.Gravity,
         Components.Immovable,
         Components.Mass,
+        Components.Pushable,
         Components.Size,
         Components.Velocity
     ],

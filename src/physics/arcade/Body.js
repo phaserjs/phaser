@@ -596,6 +596,25 @@ var Body = new Class({
         this.immovable = false;
 
         /**
+         * Sets if this Body can be pushed by another Body.
+         *
+         * A body that cannot be pushed will reflect back all of the velocity it is given to the
+         * colliding body. If that body is also not pushable, then the separation will be split
+         * between them evenly.
+         *
+         * If you want your body to never move or seperate at all, see the `setImmovable` method.
+         *
+         * By default, Dynamic Bodies are always pushable.
+         *
+         * @name Phaser.Physics.Arcade.Body#pushable
+         * @type {boolean}
+         * @default true
+         * @since 3.50.0
+         * @see Phaser.GameObjects.Components.Pushable#setPushable
+         */
+        this.pushable = true;
+
+        /**
          * Whether the Body's position and rotation are affected by its velocity, acceleration, drag, and gravity.
          *
          * @name Phaser.Physics.Arcade.Body#moves

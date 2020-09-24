@@ -32,6 +32,7 @@ var Sprite = require('../../gameobjects/sprite/Sprite');
  * @extends Phaser.Physics.Arcade.Components.Gravity
  * @extends Phaser.Physics.Arcade.Components.Immovable
  * @extends Phaser.Physics.Arcade.Components.Mass
+ * @extends Phaser.Physics.Arcade.Components.Pushable
  * @extends Phaser.Physics.Arcade.Components.Size
  * @extends Phaser.Physics.Arcade.Components.Velocity
  * @extends Phaser.GameObjects.Components.Alpha
@@ -69,6 +70,7 @@ var ArcadeSprite = new Class({
         Components.Gravity,
         Components.Immovable,
         Components.Mass,
+        Components.Pushable,
         Components.Size,
         Components.Velocity
     ],
