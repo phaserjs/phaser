@@ -10,7 +10,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 
 /**
  * Takes a snapshot of an area from the current frame displayed by a WebGL canvas.
- * 
+ *
  * This is then copied to an Image object. When this loads, the results are sent
  * to the callback provided in the Snapshot Configuration object.
  *
@@ -57,19 +57,19 @@ var WebGLSnapshot = function (sourceCanvas, config)
         var pixels = new Uint8Array(total);
 
         gl.readPixels(x, bufferHeight - y - height, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-    
+
         var canvas = CanvasPool.createWebGL(this, width, height);
         var ctx = canvas.getContext('2d');
 
         var imageData = ctx.getImageData(0, 0, width, height);
-    
+
         var data = imageData.data;
 
         for (var py = 0; py < height; py++)
         {
             for (var px = 0; px < width; px++)
             {
-                var sourceIndex = ((height - py) * width + px) * 4;
+                var sourceIndex = ((height - py - 1) * width + px) * 4;
                 var destIndex = (isFramebuffer) ? total - ((py * width + (width - px)) * 4) : (py * width + px) * 4;
 
                 data[destIndex + 0] = pixels[sourceIndex + 0];
@@ -80,7 +80,7 @@ var WebGLSnapshot = function (sourceCanvas, config)
         }
 
         ctx.putImageData(imageData, 0, 0);
-    
+
         var image = new Image();
 
         image.onerror = function ()
