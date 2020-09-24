@@ -591,6 +591,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * The `Shape` class now includes the `ComputedSize` component properties and methods directly in the class, rather than applying as a mixin. `setSize` is now flagged as being `private`, because it shouldn't be used on Shape classes, which was leading to confusion as it appeared in the public-facing API. Fix #4811 (thanks @aolsx)
 * The `Loader.maxParallelDownloads` value is now set to 6 if running on Android, or 32 on any other OS. This avoids `net::ERR_FAILED` issues specifically on Android. You can still override this in the Game Config if you wish. Fix #4957 (thanks @RollinSafary)
 * `WebGLRenderer.defaultScissor` is a new property that holds the default scissor dimensions for the renderer. This is modified during `resize` and avoids continuous array generation in the `preRender` loop.
+* When running an Arcade Physics `overlap` test against a `StaticBody`, it will no longer set the `blocked` states of the dynamic body. If you are doing a collision test, they will still be set, but they're skipped for overlap-only tests. Fix #4435 (thanks @samme)
 
 ### Bug Fixes
 
