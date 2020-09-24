@@ -625,6 +625,16 @@ var WebGLRenderer = new Class({
          */
         this.textureFlush = 0;
 
+        /**
+         * The default scissor, set during `preRender` and modified during `resize`.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#defaultScissor
+         * @type {number[]}
+         * @private
+         * @since 3.50.0
+         */
+        this.defaultScissor = [ 0, 0, 0, 0 ];
+
         this.init(this.config);
     },
 
@@ -900,6 +910,9 @@ var WebGLRenderer = new Class({
         gl.scissor(0, (gl.drawingBufferHeight - height), width, height);
 
         this.defaultCamera.setSize(width, height);
+
+        this.defaultScissor[2] = width;
+        this.defaultScissor[3] = height;
 
         return this;
     },
@@ -2176,11 +2189,10 @@ var WebGLRenderer = new Class({
 
         this.pipelines.preRender();
 
-        //  TODO - Find a way to stop needing to create these arrays every frame
-        //  and equally not need a huge array buffer created to hold them
+        this.currentScissor = this.defaultScissor;
 
-        this.currentScissor = [ 0, 0, this.width, this.height ];
-        this.scissorStack = [ this.currentScissor ];
+        this.scissorStack.length = 0;
+        this.scissorStack.push(this.currentScissor);
 
         if (this.game.scene.customViewports)
         {
