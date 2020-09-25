@@ -1238,6 +1238,7 @@ var Body = new Class({
 
     /**
      * Sets the offset of the Body's position from its Game Object's position.
+     * The Body's `position` isn't changed until the next `preUpdate`.
      *
      * @method Phaser.Physics.Arcade.Body#setOffset
      * @since 3.0.0
