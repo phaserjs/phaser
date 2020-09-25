@@ -1252,7 +1252,6 @@ var Body = new Class({
         if (y === undefined) { y = x; }
 
         this.offset.set(x, y);
-        this.updateCenter();
 
         return this;
     },
