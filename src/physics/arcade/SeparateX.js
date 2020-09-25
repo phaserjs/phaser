@@ -4,7 +4,9 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var BlockCheckX = require('./BlockCheckX');
 var GetOverlapX = require('./GetOverlapX');
+var ProcessX = require('./ProcessX');
 
 /**
  * Separates two overlapping bodies on the X-axis (horizontally).
@@ -21,7 +23,7 @@ var GetOverlapX = require('./GetOverlapX');
  * @param {boolean} overlapOnly - If `true`, the bodies will only have their overlap data set and no separation will take place.
  * @param {number} bias - A value to add to the delta value during overlap checking. Used to prevent sprite tunneling.
  *
- * @return {boolean} `true` if the two bodies overlap horizontally, otherwise `false`.
+ * @return {boolean} `true` if the two bodies overlap vertically, otherwise `false`.
  */
 var SeparateX = function (body1, body2, overlapOnly, bias)
 {
@@ -39,79 +41,35 @@ var SeparateX = function (body1, body2, overlapOnly, bias)
         return (overlap !== 0) || (body1.embedded && body2.embedded);
     }
 
+    var blockedState = BlockCheckX(body1, body2, Math.abs(overlap));
+
     //  Adjust their positions and velocities accordingly (if there was any overlap)
     var v1 = body1.velocity.x;
     var v2 = body2.velocity.x;
 
+    var body1FullImpact = v2 - v1 * body1.bounce.x;
+    var body2FullImpact = v1 - v2 * body2.bounce.x;
+
     if (!body1Immovable && !body2Immovable)
     {
-        if (body1Pushable === body2Pushable)
+        if (blockedState > 0)
         {
-            //  Both equally pushable (true/false doesn't matter)
-            overlap *= 0.5;
-
-            body1.x -= overlap;
-            body2.x += overlap;
-        }
-        else if (body1Pushable && !body2Pushable)
-        {
-            //  Only body1 is pushable
-            body1.x -= overlap;
-        }
-        else if (body2Pushable && !body1Pushable)
-        {
-            //  Only body2 is pushable
-            body2.x += overlap;
-        }
-    }
-    else if (!body1Immovable)
-    {
-        //  Body2 is immovable, so 1 gets all the separation no matter what
-        body1.x -= overlap;
-
-        body1.velocity.x = v2 - v1 * body1.bounce.x;
-
-        //  This is special case code that handles things like vertically moving platforms you can ride
-        if (body2.moves)
-        {
-            body1.y += (body2.y - body2.prev.y) * body2.friction.y;
-            body1._dy = body1.y - body1.prev.y;
+            return true;
         }
 
-        return true;
-    }
-    else if (!body2Immovable)
-    {
-        //  Body1 is immovable, so 2 gets all the separation no matter what
-        body2.x += overlap;
+        //  negative delta = up, positive delta = down (inc. gravity)
+        overlap = Math.abs(overlap);
 
-        body2.velocity.x = v1 - v2 * body2.bounce.x;
+        var body1MovingLeft = body1._dx < 0;
+        var body1MovingRight = body1._dx > 0;
+        var body1Stationary = body1._dx === 0;
 
-        //  This is special case code that handles things like vertically moving platforms you can ride
-        if (body1.moves)
-        {
-            body2.y += (body1.y - body1.prev.y) * body1.friction.y;
-            body2._dy = body2.y - body2.prev.y;
-        }
+        var body2MovingLeft = body2._dx < 0;
+        var body2MovingRight = body2._dx > 0;
+        var body2Stationary = body2._dx === 0;
 
-        return true;
-    }
-
-    //  Separation is over and we've 2 movable bodies, so now calculate velocity
-
-    if (body1._dx > body2._dx && (body2.blocked.right || !body2Pushable))
-    {
-        //  Body1 is moving right and Body2 is blocked from going right any further, or isn't pushable
-        body1.velocity.x = v2 - v1 * body1.bounce.x;
-    }
-    else if (body1._dx < body2._dx && (body2.blocked.left || !body2Pushable))
-    {
-        //  Body1 is moving left and Body2 is blocked from going left any further, or isn't pushable
-        body1.velocity.x = v2 - v1 * body1.bounce.x;
-    }
-    else
-    {
-        //  If neither body is pushable, or are both pushable, they should both rebound equally
+        var body1OnLeft = Math.abs(body1.right - body2.x) <= Math.abs(body2.right - body1.x);
+        var body2OnLeft = !body1OnLeft;
 
         var nv1 = Math.sqrt((v2 * v2 * body2.mass) / body1.mass) * ((v2 > 0) ? 1 : -1);
         var nv2 = Math.sqrt((v1 * v1 * body1.mass) / body2.mass) * ((v1 > 0) ? 1 : -1);
@@ -120,8 +78,98 @@ var SeparateX = function (body1, body2, overlapOnly, bias)
         nv1 -= avg;
         nv2 -= avg;
 
-        body1.velocity.x = avg + nv1 * body1.bounce.x;
-        body2.velocity.x = avg + nv2 * body2.bounce.x;
+        var body1MassImpact = avg + nv1 * body1.bounce.y;
+        var body2MassImpact = avg + nv2 * body2.bounce.y;
+
+        ProcessX.SetProcessX(
+            body1Pushable,
+            body2Pushable,
+            body1MassImpact,
+            body2MassImpact,
+            body1FullImpact,
+            body2FullImpact
+        );
+
+        //  -----------------------------------------------------------------------
+        //  Pushable Checks
+        //  -----------------------------------------------------------------------
+
+        //  Body1 hits Body2 on its right side
+        if (body1MovingLeft && body2OnLeft)
+        {
+            return ProcessX.RunProcessX(body1, body2, overlap, -overlap, body2Stationary, body2MovingRight, 'PushX1');
+        }
+
+        //  Body2 hits Body1 on its right side
+        if (body2MovingLeft && body1OnLeft)
+        {
+            return ProcessX.RunProcessX(body1, body2, -overlap, overlap, body1Stationary, body1MovingRight, 'PushX2');
+        }
+
+        //  Body1 hits Body2 from above
+        /*
+        if (body1MovingDown && body1OnTop)
+        {
+            return ProcessX.RunProcessX(body1, body2, overlap, -overlap, body2Stationary, body2MovingUp, 'PushX3');
+        }
+
+        //  Body2 hits Body1 from above
+        if (body2MovingDown && body2OnTop)
+        {
+            return ProcessX.RunProcessX(body1, body2, -overlap, overlap, body1Stationary, body1MovingUp, 'PushX4');
+        }
+        */
+
+        console.log('uh oh');
+
+        // console.log('body1MovingUp', body1MovingUp, 'body2MovingUp', body2MovingUp, 'body1OnTop', body1OnTop, 'body2OnTop', body2OnTop);
+
+    }
+    else if (body1Immovable)
+    {
+        console.log('SepX 1');
+
+        //  Body1 is immovable
+        if (blockedState === 1 || blockedState === 3)
+        {
+            //  But Body2 cannot go anywhere either, so we cancel out velocity
+            body2.velocity.x = 0;
+        }
+        else
+        {
+            body2.x += overlap;
+            body2.velocity.x = body2FullImpact;
+        }
+
+        //  This is special case code that handles things like vertically moving platforms you can ride
+        if (body1.moves)
+        {
+            body2.y += (body1.y - body1.prev.y) * body1.friction.y;
+            body2._dy = body2.y - body2.prev.y;
+        }
+    }
+    else if (body2Immovable)
+    {
+        console.log('SepX 2');
+
+        //  Body2 is immovable
+        if (blockedState === 2 || blockedState === 4)
+        {
+            //  But Body1 cannot go anywhere either, so we cancel out velocity
+            body1.velocity.x = 0;
+        }
+        else
+        {
+            body1.x -= overlap;
+            body1.velocity.x = body1FullImpact;
+        }
+
+        //  This is special case code that handles things like vertically moving platforms you can ride
+        if (body2.moves)
+        {
+            body1.y += (body2.y - body2.prev.y) * body2.friction.y;
+            body1._dy = body1.y - body1.prev.y;
+        }
     }
 
     //  If we got this far then there WAS overlap, and separation is complete, so return true

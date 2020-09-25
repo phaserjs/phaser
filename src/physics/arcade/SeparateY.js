@@ -4,7 +4,9 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var BlockCheckY = require('./BlockCheckY');
 var GetOverlapY = require('./GetOverlapY');
+var ProcessY = require('./ProcessY');
 
 /**
  * Separates two overlapping bodies on the Y-axis (vertically).
@@ -39,21 +41,32 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         return (overlap !== 0) || (body1.embedded && body2.embedded);
     }
 
+    var blockedState = BlockCheckY(body1, body2, Math.abs(overlap));
+
     //  Adjust their positions and velocities accordingly (if there was any overlap)
     var v1 = body1.velocity.y;
     var v2 = body2.velocity.y;
 
+    var body1FullImpact = v2 - v1 * body1.bounce.y;
+    var body2FullImpact = v1 - v2 * body2.bounce.y;
+
     if (!body1Immovable && !body2Immovable)
     {
-        //  negative delta = up, positive delta = down (inc. gravity)
+        if (blockedState > 0)
+        {
+            return true;
+        }
 
+        //  negative delta = up, positive delta = down (inc. gravity)
         overlap = Math.abs(overlap);
 
         var body1MovingUp = body1._dy < 0;
-        var body1MovingDown = body1._dy >= 0;
+        var body1MovingDown = body1._dy > 0;
+        var body1Stationary = body1._dy === 0;
 
         var body2MovingUp = body2._dy < 0;
-        var body2MovingDown = body2._dy >= 0;
+        var body2MovingDown = body2._dy > 0;
+        var body2Stationary = body2._dy === 0;
 
         var body1OnTop = Math.abs(body1.bottom - body2.y) <= Math.abs(body2.bottom - body1.y);
         var body2OnTop = !body1OnTop;
@@ -65,241 +78,94 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         nv1 -= avg;
         nv2 -= avg;
 
-        //  -----------------------------------------------------------------------
-        //  Blocked / Ground Checks
-        //  -----------------------------------------------------------------------
+        var body1MassImpact = avg + nv1 * body1.bounce.y;
+        var body2MassImpact = avg + nv2 * body2.bounce.y;
 
-        //  Body1 is moving down and Body2 is blocked from going down any further
-        if (body1MovingDown && body1OnTop && body2.blocked.down)
-        {
-            console.log('BlockY 1', body1.gameObject.name, 'vs', body2.gameObject.name, body1.y, overlap);
-
-            body1.y -= overlap;
-
-            body1.velocity.y = v2 - v1 * body1.bounce.y;
-
-            return true;
-        }
-
-        //  Body2 is moving down and Body1 is blocked from going down any further
-        if (body2MovingDown && body2OnTop && body1.blocked.down)
-        {
-            console.log('BlockY 2', body1.gameObject.name, 'vs', body2.gameObject.name, body2.y, overlap);
-
-            body2.y -= overlap;
-
-            body2.velocity.y = v1 - v2 * body2.bounce.y;
-
-            return true;
-        }
-
-        //  Body1 is moving up and Body2 is blocked from going up any further
-        if (body1MovingUp && body2OnTop && body2.blocked.up)
-        {
-            console.log('BlockY 3', body1.gameObject.name, 'vs', body2.gameObject.name, body1.y, overlap);
-
-            body1.y += overlap;
-
-            body1.velocity.y = v2 - v1 * body1.bounce.y;
-
-            return true;
-        }
-
-        //  Body2 is moving up and Body1 is blocked from going up any further
-        if (body2MovingUp && body1OnTop && body1.blocked.up)
-        {
-            console.log('BlockY 4', body1.gameObject.name, 'vs', body2.gameObject.name, body2.y, overlap);
-
-            body2.y += overlap;
-
-            body2.velocity.y = v1 - v2 * body2.bounce.y;
-
-            return true;
-        }
+        ProcessY.SetProcessY(
+            body1Pushable,
+            body2Pushable,
+            body1MassImpact,
+            body2MassImpact,
+            body1FullImpact,
+            body2FullImpact
+        );
 
         //  -----------------------------------------------------------------------
         //  Pushable Checks
         //  -----------------------------------------------------------------------
 
-        //  Body1 is moving down and on top - and Body2 is pushable
-        if (body1MovingDown && !body1Pushable && body1OnTop && body2Pushable)
+        //  Body1 hits Body2 from below
+        if (body1MovingUp && body2OnTop)
         {
-            console.log('PushY 1', body1.gameObject.name, 'vs', body2.gameObject.name, body2.y, overlap);
-
-            //  Body 2 gets it all
-            body2.y += overlap;
-            body2.velocity.y = v1;
-
-            // body2.velocity.y = v1 - v2 * body2.bounce.y;
-
-            return true;
+            return ProcessY.RunProcessY(body1, body2, overlap, -overlap, body2Stationary, body2MovingDown, 'PushY1');
         }
 
-        //  Body1 is moving down and on top - and Body2 is pushable
-        if (body2MovingDown && !body2Pushable && body2OnTop && body1Pushable)
+        //  Body2 hits Body1 from below
+        if (body2MovingUp && body1OnTop)
         {
-            console.log('PushY 2', body1.gameObject.name, 'vs', body2.gameObject.name, body2.y, overlap);
-
-            //  Body 1 gets it all
-            body1.y += overlap;
-            body1.velocity.y = v2;
-
-            // body1.velocity.y = v2 - v1 * body1.bounce.y;
-
-            return true;
+            return ProcessY.RunProcessY(body1, body2, -overlap, overlap, body1Stationary, body1MovingDown, 'PushY2');
         }
 
-        //  Insert Up versions here ^^^
-
-
-
-
-        //  Body1 is moving down and on top - and Body2 is pushable
-        if (body1MovingDown && body1OnTop && body2Pushable)
+        //  Body1 hits Body2 from above
+        if (body1MovingDown && body1OnTop)
         {
-            if (body1Pushable)
-            {
-                console.log('PushY 3', body1.gameObject.name, 'vs', body2.gameObject.name, body1.y, overlap);
-
-                //  They're both pushable? They can share the separation then
-                overlap *= 0.5;
-
-                body1.y -= overlap;
-                body2.y += overlap;
-
-                body1.velocity.y = avg + nv1 * body1.bounce.y;
-                body2.velocity.y = avg + nv2 * body2.bounce.y;
-            }
-            else
-            {
-                console.log('PushY 4', body1.gameObject.name, 'vs', body2.gameObject.name, body2.y, overlap);
-
-                //  Body 2 gets it all
-                body2.y += overlap;
-
-                // body2.velocity.y = v1 - v2 * body2.bounce.y;
-            }
-
-            return true;
+            return ProcessY.RunProcessY(body1, body2, overlap, -overlap, body2Stationary, body2MovingUp, 'PushY3');
         }
 
-        //  Body2 is moving down and on top - and Body1 is pushable
-        if (body2MovingDown && body2OnTop && body1Pushable)
+        //  Body2 hits Body1 from above
+        if (body2MovingDown && body2OnTop)
         {
-            if (body2Pushable)
-            {
-                console.log('PushY 5', body1.gameObject.name, 'vs', body2.gameObject.name, body1.y, overlap);
-
-                //  They're both pushable? They can share the separation then
-                overlap *= 0.5;
-
-                body1.y += overlap;
-                body2.y -= overlap;
-
-                body1.velocity.y = avg + nv1 * body1.bounce.y;
-                body2.velocity.y = avg + nv2 * body2.bounce.y;
-            }
-            else
-            {
-                console.log('PushY 6', body1.gameObject.name, 'vs', body2.gameObject.name, body1.y, overlap);
-
-                //  Body 1 gets it all
-                body1.y += overlap;
-
-                // body1.velocity.y = v2 - v1 * body1.bounce.y;
-            }
-
-            return true;
-        }
-
-        //  Body1 is moving up and on the bottom - and Body2 is pushable
-        if (body1MovingUp && body2OnTop && body2Pushable)
-        {
-            if (body1Pushable)
-            {
-                console.log('PushY 7', body1.gameObject.name, 'vs', body2.gameObject.name, body1.y, overlap);
-
-                //  They're both pushable? They can share the separation then
-                overlap *= 0.5;
-
-                body1.y += overlap;
-                body2.y -= overlap;
-
-                body1.velocity.y = avg + nv1 * body1.bounce.y;
-                body2.velocity.y = avg + nv2 * body2.bounce.y;
-            }
-            else
-            {
-                console.log('PushY 8', body1.gameObject.name, 'vs', body2.gameObject.name, body2.y, overlap);
-
-                //  Body 2 gets it all
-                body2.y -= overlap;
-
-                body2.velocity.y = v1 - v2 * body2.bounce.y;
-            }
-
-            return true;
-        }
-
-        //  Body2 is moving up and on the bottom - and Body1 is pushable
-        if (body2MovingUp && body1OnTop && body1Pushable)
-        {
-            if (body2Pushable)
-            {
-                console.log('PushY 9', body1.gameObject.name, 'vs', body2.gameObject.name, body1.y, overlap);
-
-                //  They're both pushable? They can share the separation then
-                overlap *= 0.5;
-
-                body1.y -= overlap;
-                body2.y += overlap;
-
-                body1.velocity.y = avg + nv1 * body1.bounce.y;
-                body2.velocity.y = avg + nv2 * body2.bounce.y;
-            }
-            else
-            {
-                console.log('PushY 10', body1.gameObject.name, 'vs', body2.gameObject.name, body1.y, overlap);
-
-                //  Body 1 gets it all
-                body1.y -= overlap;
-
-                body1.velocity.y = v2 - v1 * body1.bounce.y;
-            }
-
-            return true;
+            return ProcessY.RunProcessY(body1, body2, -overlap, overlap, body1Stationary, body1MovingUp, 'PushY4');
         }
 
         console.log('uh oh');
         console.log('body1MovingUp', body1MovingUp, 'body2MovingUp', body2MovingUp, 'body1OnTop', body1OnTop, 'body2OnTop', body2OnTop);
 
     }
-    else if (!body1Immovable)
+    else if (body1Immovable)
     {
-        //  Body2 is immovable, so 1 gets all the separation no matter what
-        body1.y -= overlap;
+        console.log('SepY 1');
 
-        body1.velocity.y = v2 - v1 * body1.bounce.y;
-
-        //  This is special case code that handles things like horizontally moving platforms you can ride
-        if (body2.moves)
+        //  Body1 is immovable
+        if (blockedState === 1 || blockedState === 3)
         {
-            body1.x += (body2.x - body2.prev.x) * body2.friction.x;
-            body1._dx = body1.x - body1.prev.x;
+            //  But Body2 cannot go anywhere either, so we cancel out velocity
+            body2.velocity.y = 0;
         }
-    }
-    else if (!body2Immovable)
-    {
-        //  Body1 is immovable, so 2 gets all the separation no matter what
-        body2.y += overlap;
-
-        body2.velocity.y = v1 - v2 * body2.bounce.y;
+        else
+        {
+            body2.y += overlap;
+            body2.velocity.y = body2FullImpact;
+        }
 
         //  This is special case code that handles things like horizontally moving platforms you can ride
         if (body1.moves)
         {
             body2.x += (body1.x - body1.prev.x) * body1.friction.x;
             body2._dx = body2.x - body2.prev.x;
+        }
+    }
+    else if (body2Immovable)
+    {
+        console.log('SepY 2');
+
+        //  Body2 is immovable
+        if (blockedState === 2 || blockedState === 4)
+        {
+            //  But Body1 cannot go anywhere either, so we cancel out velocity
+            body1.velocity.y = 0;
+        }
+        else
+        {
+            body1.y -= overlap;
+            body1.velocity.y = body1FullImpact;
+        }
+
+        //  This is special case code that handles things like horizontally moving platforms you can ride
+        if (body2.moves)
+        {
+            body1.x += (body2.x - body2.prev.x) * body2.friction.x;
+            body1._dx = body1.x - body1.prev.x;
         }
     }
 
