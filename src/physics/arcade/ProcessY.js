@@ -1,3 +1,9 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
 var body1Pushable;
 var body2Pushable;
 var body1MassImpact;
@@ -65,6 +71,20 @@ var RunProcessY = function (body1, body2, overlap1, overlap2, bodyStationary, bo
         }
 
         //  Neither pushable, so base it on movement
+        if (bodyStationary)
+        {
+            body1.y += overlap1;
+        }
+        else
+        {
+            //  Both pushable, or both moving at the same time, so equal rebound
+            overlap1 *= 0.5;
+            overlap2 *= 0.5;
+
+            body1.y += overlap1;
+            body2.y += overlap2;
+        }
+
         body1.velocity.y = 0;
         body2.velocity.y = 0;
     }

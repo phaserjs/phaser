@@ -1,3 +1,9 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
 var body1Pushable;
 var body2Pushable;
 var body1MassImpact;
@@ -15,7 +21,7 @@ var SetProcessX = function (b1Pushable, b2Pushable, b1MassImpact, b2MassImpact, 
     body2FullImpact = b2FullImpact;
 };
 
-var RunProcessX = function (body1, body2, overlap1, overlap2, bodyStationary, body2Direction, debug)
+var RunProcessX = function (body1, body2, overlap1, overlap2, bodyStationary, body2Direction, movingBody, debug)
 {
     if (body1Pushable && body2Pushable)
     {
@@ -59,12 +65,38 @@ var RunProcessX = function (body1, body2, overlap1, overlap2, bodyStationary, bo
     }
     else if (bodyStationary || body2Direction)
     {
-        if (debug)
+        //  Neither pushable, so base it on movement
+        if (bodyStationary)
         {
-            console.log(debug + '-3 :: body1', body1.x, 'body2', body2.x, 'overlap', overlap1, overlap2);
+            if (debug)
+            {
+                console.log(debug + '-3a :: body1', body1.x, 'body2', body2.x, 'overlap', overlap1, overlap2);
+            }
+
+            if (movingBody === body1)
+            {
+                movingBody.x += overlap1;
+            }
+            else
+            {
+                movingBody.x += overlap2;
+            }
+        }
+        else
+        {
+            if (debug)
+            {
+                console.log(debug + '-3b :: body1', body1.x, 'body2', body2.x, 'overlap', overlap1, overlap2);
+            }
+
+            //  Both pushable, or both moving at the same time, so equal rebound
+            overlap1 *= 0.5;
+            overlap2 *= 0.5;
+
+            body1.x += overlap1;
+            body2.x += overlap2;
         }
 
-        //  Neither pushable, so base it on movement
         body1.velocity.x = 0;
         body2.velocity.x = 0;
     }
@@ -83,6 +115,6 @@ var RunProcessX = function (body1, body2, overlap1, overlap2, bodyStationary, bo
 };
 
 module.exports = {
-    SetProcessY: SetProcessX,
-    RunProcessY: RunProcessX
+    SetProcessX: SetProcessX,
+    RunProcessX: RunProcessX
 };

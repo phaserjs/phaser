@@ -94,36 +94,31 @@ var SeparateX = function (body1, body2, overlapOnly, bias)
         //  Pushable Checks
         //  -----------------------------------------------------------------------
 
-        //  Body1 hits Body2 on its right side
+        //  Body1 hits Body2 on the right hand side
         if (body1MovingLeft && body2OnLeft)
         {
-            return ProcessX.RunProcessX(body1, body2, overlap, -overlap, body2Stationary, body2MovingRight, 'PushX1');
+            return ProcessX.RunProcessX(body1, body2, overlap, -overlap, body2Stationary, body2MovingRight, body1, 'PushX1');
         }
 
-        //  Body2 hits Body1 on its right side
+        //  Body2 hits Body1 on the right hand side
         if (body2MovingLeft && body1OnLeft)
         {
-            return ProcessX.RunProcessX(body1, body2, -overlap, overlap, body1Stationary, body1MovingRight, 'PushX2');
+            return ProcessX.RunProcessX(body1, body2, -overlap, overlap, body1Stationary, body1MovingRight, body2, 'PushX2');
         }
 
-        //  Body1 hits Body2 from above
-        /*
-        if (body1MovingDown && body1OnTop)
+        //  Body1 hits Body2 on the left hand side
+        if (body1MovingRight && body1OnLeft)
         {
-            return ProcessX.RunProcessX(body1, body2, overlap, -overlap, body2Stationary, body2MovingUp, 'PushX3');
+            return ProcessX.RunProcessX(body1, body2, overlap, -overlap, body2Stationary, body2MovingLeft, body1, 'PushX3');
         }
 
-        //  Body2 hits Body1 from above
-        if (body2MovingDown && body2OnTop)
+        //  Body2 hits Body1 on the left hand side
+        if (body2MovingRight && body2OnLeft)
         {
-            return ProcessX.RunProcessX(body1, body2, -overlap, overlap, body1Stationary, body1MovingUp, 'PushX4');
+            return ProcessX.RunProcessX(body1, body2, -overlap, overlap, body1Stationary, body1MovingLeft, body2, 'PushX4');
         }
-        */
 
         console.log('uh oh');
-
-        // console.log('body1MovingUp', body1MovingUp, 'body2MovingUp', body2MovingUp, 'body1OnTop', body1OnTop, 'body2OnTop', body2OnTop);
-
     }
     else if (body1Immovable)
     {

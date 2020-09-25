@@ -119,8 +119,6 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         }
 
         console.log('uh oh');
-        console.log('body1MovingUp', body1MovingUp, 'body2MovingUp', body2MovingUp, 'body1OnTop', body1OnTop, 'body2OnTop', body2OnTop);
-
     }
     else if (body1Immovable)
     {
