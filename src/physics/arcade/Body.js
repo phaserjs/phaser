@@ -1238,6 +1238,7 @@ var Body = new Class({
 
     /**
      * Sets the offset of the Body's position from its Game Object's position.
+     * The Body's `position` isn't changed until the next `preUpdate`.
      *
      * @method Phaser.Physics.Arcade.Body#setOffset
      * @since 3.0.0
@@ -1356,14 +1357,14 @@ var Body = new Class({
     },
 
     /**
-     * Resets this Body to the given coordinates. Also positions its parent Game Object to the same coordinates.
+     * Sets this Body's parent Game Object to the given coordinates and resets this Body at the new coordinates.
      * If the Body had any velocity or acceleration it is lost as a result of calling this.
      *
      * @method Phaser.Physics.Arcade.Body#reset
      * @since 3.0.0
      *
-     * @param {number} x - The horizontal position to place the Game Object and Body.
-     * @param {number} y - The vertical position to place the Game Object and Body.
+     * @param {number} x - The horizontal position to place the Game Object.
+     * @param {number} y - The vertical position to place the Game Object.
      */
     reset: function (x, y)
     {
