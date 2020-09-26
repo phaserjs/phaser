@@ -983,7 +983,7 @@ var RenderTexture = new Class({
         {
             var entry = children[i];
 
-            if (entry.willRender())
+            if (entry.willRender(this.camera))
             {
                 var tx = entry.x + x;
                 var ty = entry.y + y;
