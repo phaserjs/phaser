@@ -479,6 +479,26 @@ This has all changed in 3.50, as outlined below. Tint values are now used direct
 * The `TextureManager` now generates a new texture with the key `__WHITE` durings its boot process. This is a pure white 4x4 texture used by the Graphics pipelines.
 * `Config.images.white` is a new Game Config property that specifies the 4x4 white PNG texture used by Graphics rendering. You can override this via the config, but only do so if needed.
 
+### Arcade Physics Updates
+
+Prior to v3.50 an Arcade Physics Body could be one of two states: immovable, or moveable. An immovable body could not receive _any_ impact from another Body. If something collided with it, it wouldn't even separate to break free from the collision (the other body had to take the full separation value). It was intended for objects such as platforms, ground or walls, there they absolutely shouldn't move under any circumstances. As a result, two immovable bodies could never be collided together. While this worked for scenery-like items, it didn't work if you required maybe 2 players who could collide with each other, but should never be able to push one another. As of 3.50 all physics bodies now have a new property `pushable` that allows this. A pushable body can share separation with its collider, as well as take on mass-based velocity from the impact. A non-pushable body will behave differently depending on what it collides with. For example, a pushable body hitting a non-pushable (or immoveable) body will rebound off it.
+
+* The Arcade Physics `Body` class has a new boolean property `pushable` (true, by default). This allows you to set if a Body can be physically pushed by another Body, or not. Fix #4175 #4415 (thanks @inmylo @CipSoft-Components)
+* `Body.setPushable` is a new chainable method that allows you to set the `pushable` state of a Body.
+* `Arcade.Components.Pushable` is a new component, inherited by the standard Arcade Physics Image and Sprite classes.
+* Bodies will now check to see if they are blocked in the direction they're being pushed, before resolving the collision. This helps stop some bodies from being pushed into other objects.
+* Bodies will now check which direction they were moving and separate accordingly. This helps stop some bodies from being pushed into other objects.
+* `ArcadePhysics.disableUpdate` is a new method that will prevent the Arcade Physics World `update` method from being called when the Scene updates. By disabling it, you're free to call the update method yourself, passing in your own delta and time values.
+* `ArcadePhysics.enableUpdate` is a new method that will make the Arcade Physics World update in time with the Scene update. This is the default, so only call this if you have specifically disabled it previously.
+* `ArcadeWorldConfig.customUpdate` is a new boolean property you can set in the Arcade Physics config object, either in the Scene or in the Game Config. If `true` the World update will never be called, allowing you to call it yourself from your own component. Close #5190 (thanks @cfortuner)
+* `Physics.Arcade.Body.setCollideWorldBounds` now has a new optional parameter `onWorldBounds` which allows you to enable the World Bounce property in the same call (thanks @samme)
+* `ArcadePhysics.Body.setMaxVelocityX` is a new method that allows you to set the maximum horizontal velocity of a Body (thanks @samme)
+* `ArcadePhysics.Body.setMaxVelocityY` is a new method that allows you to set the maximum vertical velocity of a Body (thanks @samme)
+* The `PhysicsGroup` config now has two new optional properties `maxVelocityX` and `maxVelocityY` which allows you to set the maximum velocity on bodies added to the Group (thanks @samme)
+* The `Arcade.Body.resetFlags` method has a new optional boolean parameter `clear`. If set, it clears the `wasTouching` flags on the Body. This happens automatically when `Body.reset` is called. Previous to this, the flags were not reset until the next physics step (thanks @samme)
+* `Physics.Arcade.ProcessX` is a new set of functions, called by the `SeparateX` function, that handles all of the different collision tests, checks and resolutions. These functions are not exposed in the public API.
+* `Physics.Arcade.ProcessY` is a new set of functions, called by the `SeparateY` function, that handles all of the different collision tests, checks and resolutions. These functions are not exposed in the public API.
+
 ### Removal of 'resolution' property from across the API
 
 For legacy reasons, Phaser 3 has never properly supported HighDPI devices. It will render happily to them of course, but wouldn't let you set a 'resolution' for the Canvas beyond 1. Earlier versions of 3.x had a resolution property in the Game Config, but it was never fully implemented (for example, it would break zooming cameras). When the Scale Manager was introduced in v3.16 we forced the resolution to be 1 to avoid it breaking anything else internally.
@@ -525,9 +545,6 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `Clock.addEvent` can now take an existing `TimerEvent` object, as well as a config object. If a `TimerEvent` is given it will be removed from the Clock, reset and then added. This allows you to pool TimerEvents rather than constantly create and delete them. Fix #4115 (thanks @jcyuan)
 * `Clock.removeEvent` is a new method that allows you to remove a `TimerEvent`, or an array of them, from all internal lists of the current Clock.
 * `Group.getMatching` is a new method that will return any members of the Group that match the given criteria, such as `getMatching('visible', true)` (thanks @atursams)
-* `ArcadePhysics.disableUpdate` is a new method that will prevent the Arcade Physics World `update` method from being called when the Scene updates. By disabling it, you're free to call the update method yourself, passing in your own delta and time values.
-* `ArcadePhysics.enableUpdate` is a new method that will make the Arcade Physics World update in time with the Scene update. This is the default, so only call this if you have specifically disabled it previously.
-* `ArcadeWorldConfig.customUpdate` is a new boolean property you can set in the Arcade Physics config object, either in the Scene or in the Game Config. If `true` the World update will never be called, allowing you to call it yourself from your own component. Close #5190 (thanks @cfortuner)
 * `Utils.Array.SortByDigits` is a new function that takes the given array of strings and runs a numeric sort on it, ignoring any non-digits.
 * `GroupCreateConfig`, which is used when calling `Group.createMultiple` or `Group.createFromConfig`, can now accept the following new properties: `setOrigin: { x, y, stepX, stepY }` which are applied to the items created by the Group.
 * `Transform.copyPosition` is a new method that will copy the position from the given object to the Game Object (thanks @samme)
@@ -535,11 +552,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `GameObjects.GetCalcMatrix` is a new function that is used to calculate the transformed Game Object matrix, based on the given Game Object, Camera and Parent. This function is now used by the following Game Objects: `BitmapText` (Static and Dynamic), `Graphics`, `Extern`, `Mesh`, `Rope`, `Shader`, `Arc`, `Curve`, `Ellipse`, `Grid`, `IsoBox`, `IsoTriangle`, `Line`, `Polygon`, `Rectangle`, `Star` and `Triangle`. This dramatically reduces the amount of duplicate code across the API.
 * `Utils.Array.Matrix.Translate` is a new function that will translate an Array Matrix by horizontally and vertically by the given amounts.
 * `Vertor3.addScale` is a new method that will add the given vector and multiply it in the process.
-* `Physics.Arcade.Body.setCollideWorldBounds` now has a new optional parameter `onWorldBounds` which allows you to enable the World Bounce property in the same call (thanks @samme)
 * When defining the ease used with a Particle Emitter you can now set `easeParams` in the config object, allowing you to pass custom ease parameters through to an ease function (thanks @vforsh)
-* `ArcadePhysics.Body.setMaxVelocityX` is a new method that allows you to set the maximum horizontal velocity of a Body (thanks @samme)
-* `ArcadePhysics.Body.setMaxVelocityY` is a new method that allows you to set the maximum vertical velocity of a Body (thanks @samme)
-* The `PhysicsGroup` config now has two new optional properties `maxVelocityX` and `maxVelocityY` which allows you to set the maximum velocity on bodies added to the Group (thanks @samme)
 * `BitmapMask.createMask` is a new method that will internally create the WebGL textures and framebuffers required for the mask. This is now used by the constructor and if the context is lost. It now also clears any previous textures/fbos that may have been created first, helping prevent memory leaks.
 * `BitmapMask.clearMask` will delete any WebGL textures or framebuffers the mask is using. This is now called when the mask is destroyed, or a new mask is created upon it.
 
@@ -578,7 +591,6 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * The `WebGLRenderer.rebindPipeline` method has been changed slightly. Previously, you had to specify the `pipelineInstance`, but this is now optional. If you don't, it will use the new `previousPipeline` property instead. If not set, or none given, it will now return without throwing gl errors as well.
 * If `inputWindowEvents` is set in the Game Config, then the `MouseManager` will now listen for the events on `window.top` instead of just `window`, which should help in situations where the pointer is released outside of an embedded iframe. Fix #4824 (thanks @rexrainbow)
 * `Types.GameObjects.Text.GetTextSizeObject` is a new type def for the GetTextSize function results.
-* The `Arcade.Body.resetFlags` method has a new optional boolean parameter `clear`. If set, it clears the `wasTouching` flags on the Body. This happens automatically when `Body.reset` is called. Previous to this, the flags were not reset until the next physics step (thanks @samme)
 * `Utils.Array.StableSort` has been recoded. It's now based on Two-Screens stable sort 0.1.8 and has been updated to fit into Phaser better and no longer create any window bound objects. The `inplace` function has been removed, just call `StableSort(array)` directly now. All classes that used `StableSort.inplace` have been updated to call it directly.
 * If a Scene is paused, or sent to sleep, it will automatically call `Keyboard.resetKeys`. This means that if you hold a key down, then sleep or pause a Scene, then release the key and resume or wake the Scene, it will no longer think it is still being held down (thanks @samme)
 * `Actions.setOrigin` will now call `updateDisplayOrigin` on the items array, otherwise the effects can't be seen when rendering.
