@@ -47,12 +47,7 @@ var SeparateX = function (body1, body2, overlapOnly, bias)
             return true;
         }
 
-        if (!ProcessX.Check())
-        {
-            console.log('uh oh');
-
-            return false;
-        }
+        return ProcessX.Check();
     }
     else if (body1Immovable)
     {
