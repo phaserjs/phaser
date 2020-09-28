@@ -98,31 +98,35 @@ var SeparateX = function (body1, body2, overlapOnly, bias)
         if (body1MovingLeft && body2OnLeft)
         {
             return ProcessX.RunProcessX(body1, body2, overlap, -overlap, body2Stationary, body2MovingRight, body1, 'PushX1');
+            // return ProcessX.RunProcessX(body1, body2, overlap, -overlap, body2Stationary, body2MovingRight, body1);
         }
 
         //  Body2 hits Body1 on the right hand side
         if (body2MovingLeft && body1OnLeft)
         {
             return ProcessX.RunProcessX(body1, body2, -overlap, overlap, body1Stationary, body1MovingRight, body2, 'PushX2');
+            // return ProcessX.RunProcessX(body1, body2, -overlap, overlap, body1Stationary, body1MovingRight, body2);
         }
 
         //  Body1 hits Body2 on the left hand side
         if (body1MovingRight && body1OnLeft)
         {
             return ProcessX.RunProcessX(body1, body2, overlap, -overlap, body2Stationary, body2MovingLeft, body1, 'PushX3');
+            // return ProcessX.RunProcessX(body1, body2, overlap, -overlap, body2Stationary, body2MovingLeft, body1);
         }
 
         //  Body2 hits Body1 on the left hand side
         if (body2MovingRight && body2OnLeft)
         {
             return ProcessX.RunProcessX(body1, body2, -overlap, overlap, body1Stationary, body1MovingLeft, body2, 'PushX4');
+            // return ProcessX.RunProcessX(body1, body2, -overlap, overlap, body1Stationary, body1MovingLeft, body2);
         }
 
         console.log('uh oh');
     }
     else if (body1Immovable)
     {
-        console.log('SepX 1');
+        // console.log('SepX 1');
 
         //  Body1 is immovable
         if (blockedState === 1 || blockedState === 3)
@@ -145,7 +149,7 @@ var SeparateX = function (body1, body2, overlapOnly, bias)
     }
     else if (body2Immovable)
     {
-        console.log('SepX 2');
+        // console.log('SepX 2');
 
         //  Body2 is immovable
         if (blockedState === 2 || blockedState === 4)

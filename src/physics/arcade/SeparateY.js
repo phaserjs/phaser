@@ -97,32 +97,36 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         //  Body1 hits Body2 from below
         if (body1MovingUp && body2OnTop)
         {
-            return ProcessY.RunProcessY(body1, body2, overlap, -overlap, body2Stationary, body2MovingDown, 'PushY1');
+            // return ProcessY.RunProcessY(body1, body2, overlap, -overlap, body2Stationary, body2MovingDown, body1, 'PushY1');
+            return ProcessY.RunProcessY(body1, body2, overlap, -overlap, body2Stationary, body2MovingDown, body1);
         }
 
         //  Body2 hits Body1 from below
         if (body2MovingUp && body1OnTop)
         {
-            return ProcessY.RunProcessY(body1, body2, -overlap, overlap, body1Stationary, body1MovingDown, 'PushY2');
+            // return ProcessY.RunProcessY(body1, body2, -overlap, overlap, body1Stationary, body1MovingDown, body2, 'PushY2');
+            return ProcessY.RunProcessY(body1, body2, -overlap, overlap, body1Stationary, body1MovingDown, body2);
         }
 
         //  Body1 hits Body2 from above
         if (body1MovingDown && body1OnTop)
         {
-            return ProcessY.RunProcessY(body1, body2, overlap, -overlap, body2Stationary, body2MovingUp, 'PushY3');
+            // return ProcessY.RunProcessY(body1, body2, overlap, -overlap, body2Stationary, body2MovingUp, body1, 'PushY3');
+            return ProcessY.RunProcessY(body1, body2, overlap, -overlap, body2Stationary, body2MovingUp, body1);
         }
 
         //  Body2 hits Body1 from above
         if (body2MovingDown && body2OnTop)
         {
-            return ProcessY.RunProcessY(body1, body2, -overlap, overlap, body1Stationary, body1MovingUp, 'PushY4');
+            // return ProcessY.RunProcessY(body1, body2, -overlap, overlap, body1Stationary, body1MovingUp, body2, 'PushY4');
+            return ProcessY.RunProcessY(body1, body2, -overlap, overlap, body1Stationary, body1MovingUp, body2);
         }
 
         console.log('uh oh');
     }
     else if (body1Immovable)
     {
-        console.log('SepY 1');
+        // console.log('SepY 1');
 
         //  Body1 is immovable
         if (blockedState === 1 || blockedState === 3)
@@ -145,7 +149,7 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     }
     else if (body2Immovable)
     {
-        console.log('SepY 2');
+        // console.log('SepY 2');
 
         //  Body2 is immovable
         if (blockedState === 2 || blockedState === 4)

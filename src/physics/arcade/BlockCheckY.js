@@ -28,7 +28,7 @@ var BlockCheckY = function (body1, body2, overlap)
     //  Body1 is moving down and Body2 is blocked from going down any further
     if (body1MovingDown && body1OnTop && body2.blocked.down)
     {
-        console.log('BlockY 1', body1.y, overlap);
+        // console.log('BlockY 1', body1.y, overlap);
 
         body1.y -= overlap;
         body1.velocity.y = body1FullImpact;
@@ -39,7 +39,7 @@ var BlockCheckY = function (body1, body2, overlap)
     //  Body2 is moving down and Body1 is blocked from going down any further
     if (body2MovingDown && body2OnTop && body1.blocked.down)
     {
-        console.log('BlockY 2', body2.y, overlap);
+        // console.log('BlockY 2', body2.y, overlap);
 
         body2.y -= overlap;
         body2.velocity.y = body2FullImpact;
@@ -50,7 +50,7 @@ var BlockCheckY = function (body1, body2, overlap)
     //  Body1 is moving up and Body2 is blocked from going up any further
     if (body1MovingUp && body2OnTop && body2.blocked.up)
     {
-        console.log('BlockY 3', body1.y, overlap);
+        // console.log('BlockY 3', body1.y, overlap);
 
         body1.y += overlap;
         body1.velocity.y = body1FullImpact;
@@ -61,7 +61,7 @@ var BlockCheckY = function (body1, body2, overlap)
     //  Body2 is moving up and Body1 is blocked from going up any further
     if (body2MovingUp && body1OnTop && body1.blocked.up)
     {
-        console.log('BlockY 4', body2.y, overlap);
+        // console.log('BlockY 4', body2.y, overlap);
 
         body2.y += overlap;
         body2.velocity.y = body2FullImpact;

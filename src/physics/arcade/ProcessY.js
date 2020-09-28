@@ -21,7 +21,7 @@ var SetProcessY = function (b1Pushable, b2Pushable, b1MassImpact, b2MassImpact, 
     body2FullImpact = b2FullImpact;
 };
 
-var RunProcessY = function (body1, body2, overlap1, overlap2, bodyStationary, body2Direction, debug)
+var RunProcessY = function (body1, body2, overlap1, overlap2, bodyStationary, body2Direction, movingBody, debug)
 {
     if (body1Pushable && body2Pushable)
     {
@@ -73,7 +73,19 @@ var RunProcessY = function (body1, body2, overlap1, overlap2, bodyStationary, bo
         //  Neither pushable, so base it on movement
         if (bodyStationary)
         {
-            body1.y += overlap1;
+            if (debug)
+            {
+                console.log(debug + '-3a :: body1', body1.y, 'body2', body2.y, 'overlap', overlap1, overlap2);
+            }
+
+            if (movingBody === body1)
+            {
+                movingBody.y += overlap1;
+            }
+            else
+            {
+                movingBody.y += overlap2;
+            }
         }
         else
         {

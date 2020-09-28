@@ -35,8 +35,19 @@ var RunProcessX = function (body1, body2, overlap1, overlap2, bodyStationary, bo
         overlap1 *= 0.5;
         overlap2 *= 0.5;
 
-        body1.x += overlap1;
-        body2.x += overlap2;
+        if (movingBody === body1)
+        {
+            body1.x += overlap2;
+            body2.x += overlap1;
+        }
+        else
+        {
+            body1.x += overlap1;
+            body2.x += overlap2;
+        }
+
+        // body1.x += overlap1;
+        // body2.x += overlap2;
 
         body1.velocity.x = body1MassImpact;
         body2.velocity.x = body2MassImpact;

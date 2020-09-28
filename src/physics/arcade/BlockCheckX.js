@@ -28,7 +28,7 @@ var BlockCheckX = function (body1, body2, overlap)
     //  Body1 is moving right and Body2 is blocked from going right any further
     if (body1MovingRight && body1OnLeft && body2.blocked.right)
     {
-        console.log('BlockX 1', body1.x, overlap);
+        // console.log('BlockX 1', body1.x, overlap);
 
         body1.x -= overlap;
         body1.velocity.x = body1FullImpact;
@@ -39,7 +39,7 @@ var BlockCheckX = function (body1, body2, overlap)
     //  Body2 is moving right and Body1 is blocked from going right any further
     if (body2MovingRight && body2OnLeft && body1.blocked.right)
     {
-        console.log('BlockX 2', body2.x, overlap);
+        // console.log('BlockX 2', body2.x, overlap);
 
         body2.x -= overlap;
         body2.velocity.x = body2FullImpact;
@@ -50,7 +50,7 @@ var BlockCheckX = function (body1, body2, overlap)
     //  Body1 is moving up and Body2 is blocked from going up any further
     if (body1MovingLeft && body2OnLeft && body2.blocked.left)
     {
-        console.log('BlockX 3', body1.x, overlap);
+        // console.log('BlockX 3', body1.x, overlap);
 
         body1.x += overlap;
         body1.velocity.x = body1FullImpact;
@@ -61,7 +61,7 @@ var BlockCheckX = function (body1, body2, overlap)
     //  Body2 is moving up and Body1 is blocked from going up any further
     if (body2MovingLeft && body1OnLeft && body1.blocked.left)
     {
-        console.log('BlockX 4', body2.x, overlap);
+        // console.log('BlockX 4', body2.x, overlap);
 
         body2.x += overlap;
         body2.velocity.x = body2FullImpact;
