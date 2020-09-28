@@ -491,7 +491,7 @@ Prior to v3.50 an Arcade Physics Body could be one of two states: immovable, or 
 * `ArcadePhysics.disableUpdate` is a new method that will prevent the Arcade Physics World `update` method from being called when the Scene updates. By disabling it, you're free to call the update method yourself, passing in your own delta and time values.
 * `ArcadePhysics.enableUpdate` is a new method that will make the Arcade Physics World update in time with the Scene update. This is the default, so only call this if you have specifically disabled it previously.
 * `ArcadeWorldConfig.customUpdate` is a new boolean property you can set in the Arcade Physics config object, either in the Scene or in the Game Config. If `true` the World update will never be called, allowing you to call it yourself from your own component. Close #5190 (thanks @cfortuner)
-* `Physics.Arcade.Body.setCollideWorldBounds` now has a new optional parameter `onWorldBounds` which allows you to enable the World Bounce property in the same call (thanks @samme)
+* `Physics.Arcade.Body.setCollideWorldBounds` now has a new optional parameter `onWorldBounds` which allows you to enable the Body's `onWorldBounds` property in the same call (thanks @samme)
 * `ArcadePhysics.Body.setMaxVelocityX` is a new method that allows you to set the maximum horizontal velocity of a Body (thanks @samme)
 * `ArcadePhysics.Body.setMaxVelocityY` is a new method that allows you to set the maximum vertical velocity of a Body (thanks @samme)
 * The `PhysicsGroup` config now has two new optional properties `maxVelocityX` and `maxVelocityY` which allows you to set the maximum velocity on bodies added to the Group (thanks @samme)
