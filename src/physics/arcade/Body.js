@@ -2316,7 +2316,75 @@ var Body = new Class({
     },
 
     /**
-     * The Body's horizontal position (left edge).
+     * This is an internal handler, called by the `ProcessX` function as part
+     * of the collision step. You should almost never call this directly.
+     *
+     * @method Phaser.Physics.Arcade.Body#processX
+     * @since 3.50.0
+     *
+     * @param {number} x - The amount to add to the Body position.
+     * @param {number} [vx] - The amount to add to the Body velocity.
+     * @param {boolean} [left] - Set the blocked.left value?
+     * @param {boolean} [right] - Set the blocked.right value?
+     */
+    processX: function (x, vx, left, right)
+    {
+        this.x += x;
+
+        if (vx !== null)
+        {
+            this.velocity.x = vx;
+        }
+
+        var blocked = this.blocked;
+
+        if (left)
+        {
+            blocked.left = true;
+        }
+
+        if (right)
+        {
+            blocked.right = true;
+        }
+    },
+
+    /**
+     * This is an internal handler, called by the `ProcessY` function as part
+     * of the collision step. You should almost never call this directly.
+     *
+     * @method Phaser.Physics.Arcade.Body#processY
+     * @since 3.50.0
+     *
+     * @param {number} y - The amount to add to the Body position.
+     * @param {number} [vy] - The amount to add to the Body velocity.
+     * @param {boolean} [up] - Set the blocked.up value?
+     * @param {boolean} [down] - Set the blocked.down value?
+     */
+    processY: function (y, vy, up, down)
+    {
+        this.y += y;
+
+        if (vy !== null)
+        {
+            this.velocity.y = vy;
+        }
+
+        var blocked = this.blocked;
+
+        if (up)
+        {
+            blocked.up = true;
+        }
+
+        if (down)
+        {
+            blocked.down = true;
+        }
+    },
+
+    /**
+     * The Bodys horizontal position (left edge).
      *
      * @name Phaser.Physics.Arcade.Body#x
      * @type {number}
@@ -2337,7 +2405,7 @@ var Body = new Class({
     },
 
     /**
-     * The Body's vertical position (top edge).
+     * The Bodys vertical position (top edge).
      *
      * @name Phaser.Physics.Arcade.Body#y
      * @type {number}
