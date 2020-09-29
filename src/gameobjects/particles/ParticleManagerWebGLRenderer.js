@@ -32,7 +32,7 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
 
     var pipeline = renderer.pipelines.set(this.pipeline);
 
-    var camMatrix = pipeline._tempMatrix1.copyFrom(camera.matrix);
+    var camMatrix = pipeline._tempMatrix1;
     var calcMatrix = pipeline._tempMatrix2;
     var particleMatrix = pipeline._tempMatrix3;
     var managerMatrix = pipeline._tempMatrix4;
@@ -115,32 +115,17 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
             var xw = x + frame.width;
             var yh = y + frame.height;
 
-            var tx0 = calcMatrix.getX(x, y);
-            var ty0 = calcMatrix.getY(x, y);
+            var tx0 = calcMatrix.getXRound(x, y, roundPixels);
+            var ty0 = calcMatrix.getYRound(x, y, roundPixels);
 
-            var tx1 = calcMatrix.getX(x, yh);
-            var ty1 = calcMatrix.getY(x, yh);
+            var tx1 = calcMatrix.getXRound(x, yh, roundPixels);
+            var ty1 = calcMatrix.getYRound(x, yh, roundPixels);
 
-            var tx2 = calcMatrix.getX(xw, yh);
-            var ty2 = calcMatrix.getY(xw, yh);
+            var tx2 = calcMatrix.getXRound(xw, yh, roundPixels);
+            var ty2 = calcMatrix.getYRound(xw, yh, roundPixels);
 
-            var tx3 = calcMatrix.getX(xw, y);
-            var ty3 = calcMatrix.getY(xw, y);
-
-            if (roundPixels)
-            {
-                tx0 = Math.round(tx0);
-                ty0 = Math.round(ty0);
-
-                tx1 = Math.round(tx1);
-                ty1 = Math.round(ty1);
-
-                tx2 = Math.round(tx2);
-                ty2 = Math.round(ty2);
-
-                tx3 = Math.round(tx3);
-                ty3 = Math.round(ty3);
-            }
+            var tx3 = calcMatrix.getXRound(xw, y, roundPixels);
+            var ty3 = calcMatrix.getYRound(xw, y, roundPixels);
 
             var tint = getTint(particle.tint, alpha);
 
