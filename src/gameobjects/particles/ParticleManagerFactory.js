@@ -25,11 +25,3 @@ GameObjectFactory.register('particles', function (key, frame, emitters)
 {
     return this.displayList.add(new ParticleEmitterManager(this.scene, key, frame, emitters));
 });
-
-//  When registering a factory function 'this' refers to the GameObjectFactory context.
-//
-//  There are several properties available to use:
-//
-//  this.scene - a reference to the Scene that owns the GameObjectFactory
-//  this.displayList - a reference to the Display List the Scene owns
-//  this.updateList - a reference to the Update List the Scene owns
