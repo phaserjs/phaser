@@ -644,6 +644,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * Creating a Bitmap Mask from a texture atlas that was then used to mask another Game Object also using that same texture atlas would throw the error `GL_INVALID_OPERATION : glDrawArrays: Source and destination textures of the draw are the same.`. It now renders as expected. Fix #4675 (thanks @JacobCaron)
 * When using the same asset for a Game Object to be used as a mask, it would make other Game Objects using the same asset, that appeared above the mask in the display list, to not render. Fix #4767 (thanks @smjnab)
 * When taking a `snapshot` in WebGL it would often have an extra line of empty pixels at the top of the resulting image, due to a rounding error in the `WebGLSnapshot` function. Fix #4956 (thanks @gammafp @telinc1)
+* You can now draw a `Group` to a `RenderTexture`. Previously, it failed to pass the camera across, resulting in none of the Group children being drawn. Fix #5330 (thanks @somnolik)
 
 ### Namespace Updates
 
