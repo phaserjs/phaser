@@ -98,8 +98,6 @@ var UnityAtlasFile = new Class({
 
             this.loader.textureManager.addUnityAtlas(image.key, image.data, text.data, normalMap);
 
-            text.addToCache();
-
             this.complete = true;
         }
     }
