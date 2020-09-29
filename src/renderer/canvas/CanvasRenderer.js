@@ -364,10 +364,10 @@ var CanvasRenderer = new Class({
         var list = children.list;
         var childCount = list.length;
 
-        var cx = camera._cx;
-        var cy = camera._cy;
-        var cw = camera._cw;
-        var ch = camera._ch;
+        var cx = camera.x;
+        var cy = camera.y;
+        var cw = camera.width;
+        var ch = camera.height;
 
         var ctx = (camera.renderToTexture) ? camera.context : scene.sys.context;
 
