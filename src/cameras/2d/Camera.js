@@ -316,7 +316,7 @@ var Camera = new Class({
      *
      * Doing this gives you the ability to modify the texture before this happens,
      * allowing for special effects such as Camera specific shaders, or post-processing
-     * on the texture.
+     * on the texture. You can also then 'tint' the Camera.
      *
      * If running under Canvas the Camera will render to its `canvas` property.
      *
