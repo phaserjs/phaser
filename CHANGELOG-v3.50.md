@@ -518,7 +518,7 @@ For a long time, the 'resolution' property has been present - taunting developer
 
 * The `Phaser.Scale.Events#RESIZE` event no longer sends the `resolution` as a parameter.
 * The `BaseCamera.resolution` property has been removed.
-* The internal private `BaseCamera._cx`, `_cy`, `_cw` and `_ch` properties has been removed.
+* The internal private `BaseCamera._cx`, `_cy`, `_cw` and `_ch` properties has been removed, use `x`, `y`, `width` and `height` instead.
 * The `BaseCamera.preRender` method no longer receives or uses the `resolution` parameter.
 * The `Camera.preRender` method no longer receives or uses the `resolution` parameter.
 * The `CameraManager.onResize` method no longer receives or uses the `resolution` parameter.
