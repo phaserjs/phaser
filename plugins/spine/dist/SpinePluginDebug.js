@@ -31247,9 +31247,12 @@ var SpineFile = new Class({
 
                     var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
 
-                    this.addToMultiFile(image);
+                    if (!loader.keyExists(image))
+                    {
+                        this.addToMultiFile(image);
 
-                    loader.addFile(image);
+                        loader.addFile(image);
+                    }
                 }
 
                 //  Reset the loader settings
