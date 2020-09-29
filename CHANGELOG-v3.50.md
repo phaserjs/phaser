@@ -499,6 +499,16 @@ Prior to v3.50 an Arcade Physics Body could be one of two states: immovable, or 
 * `Physics.Arcade.ProcessX` is a new set of functions, called by the `SeparateX` function, that handles all of the different collision tests, checks and resolutions. These functions are not exposed in the public API.
 * `Physics.Arcade.ProcessY` is a new set of functions, called by the `SeparateY` function, that handles all of the different collision tests, checks and resolutions. These functions are not exposed in the public API.
 
+### Loader Cache Changes
+
+When loading any of the file types listed below it will no longer store the data file in the cache. For example, when loading a Texture Atlas using a JSON File, it would store the parsed image data in the Texture Manager and also store the JSON in the JSON Cache under the same key. This has changed in 3.50. The data files are no longer cached, as they are not required by the textures once parsing is completed, which happens during load. This helps free-up memory (how much depends on the size of your data files) and also allows you to easily remove textures based on just their key, without also having to clear out the corresponding data cache.
+
+* `AtlasJSONFile` no longer stores the JSON in the JSON Cache once the texture has been created.
+* `AtlasXMLFile` no longer stores the XML in the XML Cache once the texture has been created.
+* `UnityAtlasFile` no longer stores the Text in the Text Cache once the texture has been created.
+* `BitmapFontFile` no longer stores the XML in the XML Cache once the texture has been created.
+* You can now use `TextureManager.remove` to remove a texture and not have to worry about clearing the corresponding JSON or XML cache entry as well in order to reload a new texture using the same key. Fix #5323 (thanks @TedGriggs)
+
 ### Removal of 'resolution' property from across the API
 
 For legacy reasons, Phaser 3 has never properly supported HighDPI devices. It will render happily to them of course, but wouldn't let you set a 'resolution' for the Canvas beyond 1. Earlier versions of 3.x had a resolution property in the Game Config, but it was never fully implemented (for example, it would break zooming cameras). When the Scale Manager was introduced in v3.16 we forced the resolution to be 1 to avoid it breaking anything else internally.
