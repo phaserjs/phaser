@@ -1838,40 +1838,6 @@ module.exports = {
 
 /***/ }),
 
-/***/ "../../../src/display/color/GetColorFromValue.js":
-/*!*****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/display/color/GetColorFromValue.js ***!
-  \*****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * Given a hex color value, such as 0xff00ff (for purple), it will return a
- * numeric representation of it (i.e. 16711935) for use in WebGL tinting.
- *
- * @function Phaser.Display.Color.GetColorFromValue
- * @since 3.50.0
- *
- * @param {number} red - The hex color value, such as 0xff0000.
- *
- * @return {number} The combined color value.
- */
-var GetColorFromValue = function (value)
-{
-    return (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
-};
-
-module.exports = GetColorFromValue;
-
-
-/***/ }),
-
 /***/ "../../../src/display/mask/BitmapMask.js":
 /*!*********************************************************!*\
   !*** D:/wamp/www/phaser/src/display/mask/BitmapMask.js ***!
@@ -1904,6 +1870,9 @@ var GameEvents = __webpack_require__(/*! ../../core/events */ "../../../src/core
  * that a pixel in the mask with an alpha of 0 will hide the corresponding pixel in all masked Game Objects
  *  A pixel with an alpha of 1 in the masked Game Object will receive the same alpha as the
  * corresponding pixel in the mask.
+ *
+ * Note: You cannot combine Bitmap Masks and Blend Modes on the same Game Object. You can, however,
+ * combine Geometry Masks and Blend Modes together.
  *
  * The Bitmap Mask's location matches the location of its Game Object, not the location of the
  * masked objects. Moving or transforming the underlying Game Object will change the mask
@@ -2027,36 +1996,73 @@ var BitmapMask = new Class({
          */
         this.isStencil = false;
 
-        if (renderer && renderer.gl)
+        this.createMask();
+
+        scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, this.createMask, this);
+    },
+
+    /**
+     * Creates the WebGL Texture2D objects and Framebuffers required for this
+     * mask. If this mask has already been created, then `clearMask` is called first.
+     *
+     * @method Phaser.Display.Masks.BitmapMask#createMask
+     * @since 3.50.0
+     */
+    createMask: function ()
+    {
+        var renderer = this.renderer;
+
+        if (!renderer.gl)
         {
-            var width = renderer.width;
-            var height = renderer.height;
-            var pot = ((width & (width - 1)) === 0 && (height & (height - 1)) === 0);
-            var gl = renderer.gl;
-            var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
-            var filter = gl.LINEAR;
-
-            this.mainTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
-            this.maskTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
-            this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, true);
-            this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, true);
-
-            scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, function (renderer)
-            {
-                var width = renderer.width;
-                var height = renderer.height;
-                var pot = ((width & (width - 1)) === 0 && (height & (height - 1)) === 0);
-                var gl = renderer.gl;
-                var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
-                var filter = gl.LINEAR;
-
-                this.mainTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
-                this.maskTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
-                this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, true);
-                this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, true);
-
-            }, this);
+            return;
         }
+
+        if (this.mainTexture)
+        {
+            this.clearMask();
+        }
+
+        var width = renderer.width;
+        var height = renderer.height;
+        var pot = ((width & (width - 1)) === 0 && (height & (height - 1)) === 0);
+        var gl = renderer.gl;
+        var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
+        var filter = gl.LINEAR;
+
+        this.mainTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+        this.maskTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+        this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, true);
+        this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, true);
+    },
+
+    /**
+     * Deletes the `mainTexture` and `maskTexture` WebGL Textures and deletes
+     * the `mainFramebuffer` and `maskFramebuffer` too, nulling all references.
+     *
+     * This is called when this mask is destroyed, or if you try to creat a new
+     * mask from this object when one is already set.
+     *
+     * @method Phaser.Display.Masks.BitmapMask#clearMask
+     * @since 3.50.0
+     */
+    clearMask: function ()
+    {
+        var renderer = this.renderer;
+
+        if (!renderer.gl || !this.mainTexture)
+        {
+            return;
+        }
+
+        renderer.deleteTexture(this.mainTexture);
+        renderer.deleteTexture(this.maskTexture);
+        renderer.deleteFramebuffer(this.mainFramebuffer);
+        renderer.deleteFramebuffer(this.maskFramebuffer);
+
+        this.mainTexture = null;
+        this.maskTexture = null;
+        this.mainFramebuffer = null;
+        this.maskFramebuffer = null;
     },
 
     /**
@@ -2143,22 +2149,9 @@ var BitmapMask = new Class({
      */
     destroy: function ()
     {
+        this.clearMask();
+
         this.bitmapMask = null;
-
-        var renderer = this.renderer;
-
-        if (renderer && renderer.gl)
-        {
-            renderer.deleteTexture(this.mainTexture);
-            renderer.deleteTexture(this.maskTexture);
-            renderer.deleteFramebuffer(this.mainFramebuffer);
-            renderer.deleteFramebuffer(this.maskFramebuffer);
-        }
-
-        this.mainTexture = null;
-        this.maskTexture = null;
-        this.mainFramebuffer = null;
-        this.maskFramebuffer = null;
         this.prevFramebuffer = null;
         this.renderer = null;
     }
@@ -2264,7 +2257,7 @@ var GeometryMask = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Graphics} graphicsGeometry - The Graphics object which will be used for the Geometry Mask.
-     * 
+     *
      * @return {this} This Geometry Mask
      */
     setShape: function (graphicsGeometry)
@@ -2282,7 +2275,7 @@ var GeometryMask = new Class({
      * @since 3.17.0
      *
      * @param {boolean} [value=true] - Invert the alpha of this mask?
-     * 
+     *
      * @return {this} This Geometry Mask
      */
     setInvertAlpha: function (value)
@@ -2361,7 +2354,7 @@ var GeometryMask = new Class({
         }
 
         //  Write stencil buffer
-        geometryMask.renderWebGL(renderer, geometryMask, 0, camera);
+        geometryMask.renderWebGL(renderer, geometryMask, camera);
 
         renderer.flush();
 
@@ -2451,7 +2444,7 @@ var GeometryMask = new Class({
 
         renderer.currentContext.save();
 
-        geometryMask.renderCanvas(renderer, geometryMask, 0, camera, null, null, true);
+        geometryMask.renderCanvas(renderer, geometryMask, camera, null, null, true);
 
         renderer.currentContext.clip();
     },
@@ -2668,12 +2661,15 @@ var GameObject = new Class({
         EventEmitter.call(this);
 
         /**
-         * The Scene to which this Game Object belongs.
+         * A reference to the Scene to which this Game Object belongs.
+         *
          * Game Objects can only belong to one Scene.
+         *
+         * You should consider this property as being read-only. You cannot move a
+         * Game Object to another Scene by simply changing it.
          *
          * @name Phaser.GameObjects.GameObject#scene
          * @type {Phaser.Scene}
-         * @protected
          * @since 3.0.0
          */
         this.scene = scene;
@@ -3362,6 +3358,82 @@ var GameObject = new Class({
 GameObject.RENDER_MASK = 15;
 
 module.exports = GameObject;
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/GetCalcMatrix.js":
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/GetCalcMatrix.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var TransformMatrix = __webpack_require__(/*! ./components/TransformMatrix */ "../../../src/gameobjects/components/TransformMatrix.js");
+
+var tempMatrix1 = new TransformMatrix();
+var tempMatrix2 = new TransformMatrix();
+var tempMatrix3 = new TransformMatrix();
+
+var result = { camera: tempMatrix1, sprite: tempMatrix2, calc: tempMatrix3 };
+
+/**
+ * Calculates the Transform Matrix of the given Game Object and Camera, factoring in
+ * the parent matrix if provided.
+ *
+ * Note that the object this results contains _references_ to the Transform Matrices,
+ * not new instances of them. Therefore, you should use their values immediately, or
+ * copy them to your own matrix, as they will be replaced as soon as another Game
+ * Object is rendered.
+ *
+ * @function Phaser.GameObjects.GetCalcMatrix
+ * @memberof Phaser.GameObjects
+ * @since 3.50.0
+ *
+ * @param {Phaser.GameObjects.GameObject} src - The Game Object to calculate the transform matrix for.
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera being used to render the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - The transform matrix of the parent container, if any.
+ *
+ * @return {Phaser.Types.GameObjects.GetCalcMatrixResults} The results object containing the updated transform matrices.
+ */
+var GetCalcMatrix = function (src, camera, parentMatrix)
+{
+    var camMatrix = tempMatrix1;
+    var spriteMatrix = tempMatrix2;
+    var calcMatrix = tempMatrix3;
+
+    spriteMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
+
+    camMatrix.copyFrom(camera.matrix);
+
+    if (parentMatrix)
+    {
+        //  Multiply the camera by the parent matrix
+        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
+
+        //  Undo the camera scroll
+        spriteMatrix.e = src.x;
+        spriteMatrix.f = src.y;
+    }
+    else
+    {
+        spriteMatrix.e -= camera.scrollX * src.scrollFactorX;
+        spriteMatrix.f -= camera.scrollY * src.scrollFactorY;
+    }
+
+    //  Multiply by the Sprite matrix, store result in calcMatrix
+    camMatrix.multiply(spriteMatrix, calcMatrix);
+
+    return result;
+};
+
+module.exports = GetCalcMatrix;
 
 
 /***/ }),
@@ -4864,10 +4936,10 @@ var Mask = {
      * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
      *
      * If a mask is already set on this Game Object it will be immediately replaced.
-     * 
+     *
      * Masks are positioned in global space and are not relative to the Game Object to which they
      * are applied. The reason for this is that multiple Game Objects can all share the same mask.
-     * 
+     *
      * Masks have no impact on physics or input detection. They are purely a rendering component
      * that allows you to limit what is visible during the render pass.
      *
@@ -4913,6 +4985,8 @@ var Mask = {
      * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
      * including this one.
      *
+     * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+     *
      * To create the mask you need to pass in a reference to a renderable Game Object.
      * A renderable Game Object is one that uses a texture to render with, such as an
      * Image, Sprite, Render Texture or BitmapText.
@@ -4923,7 +4997,7 @@ var Mask = {
      *
      * @method Phaser.GameObjects.Components.Mask#createBitmapMask
      * @since 3.6.2
-     * 
+     *
      * @param {Phaser.GameObjects.GameObject} [renderable] - A renderable Game Object that uses a texture, such as a Sprite.
      *
      * @return {Phaser.Display.Masks.BitmapMask} This Bitmap Mask that was created.
@@ -4947,12 +5021,12 @@ var Mask = {
      *
      * If you do not provide a graphics object, and this Game Object is an instance
      * of a Graphics object, then it will use itself to create the mask.
-     * 
+     *
      * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
      *
      * @method Phaser.GameObjects.Components.Mask#createGeometryMask
      * @since 3.6.2
-     * 
+     *
      * @param {Phaser.GameObjects.Graphics} [graphics] - A Graphics Game Object. The geometry within it will be used as the mask.
      *
      * @return {Phaser.Display.Masks.GeometryMask} This Geometry Mask that was created.
@@ -6411,15 +6485,13 @@ module.exports = TextureCrop;
   !*** D:/wamp/www/phaser/src/gameobjects/components/Tint.js ***!
   \*************************************************************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
-
-var GetColorFromValue = __webpack_require__(/*! ../../display/color/GetColorFromValue */ "../../../src/display/color/GetColorFromValue.js");
 
 /**
  * Provides methods used for setting the tint of a Game Object.
@@ -6433,62 +6505,58 @@ var GetColorFromValue = __webpack_require__(/*! ../../display/color/GetColorFrom
 var Tint = {
 
     /**
-     * Private internal value. Holds the top-left tint value.
+     * The tint value being applied to the top-left vertice of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     * The value should be set as a hex number, i.e. 0xff0000 for red, or 0xff00ff for purple.
      *
-     * @name Phaser.GameObjects.Components.Tint#_tintTL
+     * @name Phaser.GameObjects.Components.Tint#tintTopLeft
      * @type {number}
-     * @private
-     * @default 16777215
+     * @default 0xffffff
      * @since 3.0.0
      */
-    _tintTL: 16777215,
+    tintTopLeft: 0xffffff,
 
     /**
-     * Private internal value. Holds the top-right tint value.
+     * The tint value being applied to the top-right vertice of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     * The value should be set as a hex number, i.e. 0xff0000 for red, or 0xff00ff for purple.
      *
-     * @name Phaser.GameObjects.Components.Tint#_tintTR
+     * @name Phaser.GameObjects.Components.Tint#tintTopRight
      * @type {number}
-     * @private
-     * @default 16777215
+     * @default 0xffffff
      * @since 3.0.0
      */
-    _tintTR: 16777215,
+    tintTopRight: 0xffffff,
 
     /**
-     * Private internal value. Holds the bottom-left tint value.
+     * The tint value being applied to the bottom-left vertice of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     * The value should be set as a hex number, i.e. 0xff0000 for red, or 0xff00ff for purple.
      *
-     * @name Phaser.GameObjects.Components.Tint#_tintBL
+     * @name Phaser.GameObjects.Components.Tint#tintBottomLeft
      * @type {number}
-     * @private
-     * @default 16777215
+     * @default 0xffffff
      * @since 3.0.0
      */
-    _tintBL: 16777215,
+    tintBottomLeft: 0xffffff,
 
     /**
-     * Private internal value. Holds the bottom-right tint value.
+     * The tint value being applied to the bottom-right vertice of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     * The value should be set as a hex number, i.e. 0xff0000 for red, or 0xff00ff for purple.
      *
-     * @name Phaser.GameObjects.Components.Tint#_tintBR
+     * @name Phaser.GameObjects.Components.Tint#tintBottomRight
      * @type {number}
-     * @private
-     * @default 16777215
+     * @default 0xffffff
      * @since 3.0.0
      */
-    _tintBR: 16777215,
+    tintBottomRight: 0xffffff,
 
     /**
-     * Private internal value. Holds if the Game Object is tinted or not.
+     * The tint fill mode.
      *
-     * @name Phaser.GameObjects.Components.Tint#_isTinted
-     * @type {boolean}
-     * @private
-     * @default false
-     * @since 3.11.0
-     */
-    _isTinted: false,
-
-    /**
-     * Fill or additive?
+     * `false` = An additive tint (the default), where vertices colors are blended with the texture.
+     * `true` = A fill tint, where the vertices colors replace the texture, but respects texture alpha.
      *
      * @name Phaser.GameObjects.Components.Tint#tintFill
      * @type {boolean}
@@ -6512,8 +6580,6 @@ var Tint = {
     clearTint: function ()
     {
         this.setTint(0xffffff);
-
-        this._isTinted = false;
 
         return this;
     },
@@ -6556,12 +6622,10 @@ var Tint = {
             bottomRight = topLeft;
         }
 
-        this._tintTL = GetColorFromValue(topLeft);
-        this._tintTR = GetColorFromValue(topRight);
-        this._tintBL = GetColorFromValue(bottomLeft);
-        this._tintBR = GetColorFromValue(bottomRight);
-
-        this._isTinted = true;
+        this.tintTopLeft = topLeft;
+        this.tintTopRight = topRight;
+        this.tintBottomLeft = bottomLeft;
+        this.tintBottomRight = bottomRight;
 
         this.tintFill = false;
 
@@ -6606,102 +6670,6 @@ var Tint = {
     },
 
     /**
-     * The tint value being applied to the top-left of the Game Object.
-     * This value is interpolated from the corner to the center of the Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Tint#tintTopLeft
-     * @type {integer}
-     * @webglOnly
-     * @since 3.0.0
-     */
-    tintTopLeft: {
-
-        get: function ()
-        {
-            return this._tintTL;
-        },
-
-        set: function (value)
-        {
-            this._tintTL = GetColorFromValue(value);
-            this._isTinted = true;
-        }
-
-    },
-
-    /**
-     * The tint value being applied to the top-right of the Game Object.
-     * This value is interpolated from the corner to the center of the Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Tint#tintTopRight
-     * @type {integer}
-     * @webglOnly
-     * @since 3.0.0
-     */
-    tintTopRight: {
-
-        get: function ()
-        {
-            return this._tintTR;
-        },
-
-        set: function (value)
-        {
-            this._tintTR = GetColorFromValue(value);
-            this._isTinted = true;
-        }
-
-    },
-
-    /**
-     * The tint value being applied to the bottom-left of the Game Object.
-     * This value is interpolated from the corner to the center of the Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Tint#tintBottomLeft
-     * @type {integer}
-     * @webglOnly
-     * @since 3.0.0
-     */
-    tintBottomLeft: {
-
-        get: function ()
-        {
-            return this._tintBL;
-        },
-
-        set: function (value)
-        {
-            this._tintBL = GetColorFromValue(value);
-            this._isTinted = true;
-        }
-
-    },
-
-    /**
-     * The tint value being applied to the bottom-right of the Game Object.
-     * This value is interpolated from the corner to the center of the Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Tint#tintBottomRight
-     * @type {integer}
-     * @webglOnly
-     * @since 3.0.0
-     */
-    tintBottomRight: {
-
-        get: function ()
-        {
-            return this._tintBR;
-        },
-
-        set: function (value)
-        {
-            this._tintBR = GetColorFromValue(value);
-            this._isTinted = true;
-        }
-
-    },
-
-    /**
      * The tint value being applied to the whole of the Game Object.
      * This property is a setter-only. Use the properties `tintTopLeft` etc to read the current tint value.
      *
@@ -6719,7 +6687,10 @@ var Tint = {
     },
 
     /**
-     * Does this Game Object have a tint applied to it or not?
+     * Does this Game Object have a tint applied?
+     *
+     * It checks to see if the 4 tint properties are set to the value 0xffffff
+     * and that the `tintFill` property is `false`. This indicates that a Game Object isn't tinted.
      *
      * @name Phaser.GameObjects.Components.Tint#isTinted
      * @type {boolean}
@@ -6731,7 +6702,15 @@ var Tint = {
 
         get: function ()
         {
-            return this._isTinted;
+            var white = 0xffffff;
+
+            return (
+                this.tintFill ||
+                this.tintTopLeft !== white ||
+                this.tintTopRight !== white ||
+                this.tintBottomLeft !== white ||
+                this.tintBottomRight !== white
+            );
         }
 
     }
@@ -7093,6 +7072,26 @@ var Transform = {
         this.y = y;
         this.z = z;
         this.w = w;
+
+        return this;
+    },
+
+    /**
+     * Copies an object's coordinates to this Game Object's position.
+     *
+     * @method Phaser.GameObjects.Components.Transform#copyPosition
+     * @since 3.50.0
+     *
+     * @param {(Phaser.Types.Math.Vector2Like|Phaser.Types.Math.Vector3Like|Phaser.Types.Math.Vector4Like)} source - An object with numeric 'x', 'y', 'z', or 'w' properties. Undefined values are not copied.
+     *
+     * @return {this} This Game Object instance.
+     */
+    copyPosition: function (source)
+    {
+        if (source.x !== undefined) { this.x = source.x; }
+        if (source.y !== undefined) { this.y = source.y; }
+        if (source.z !== undefined) { this.z = source.z; }
+        if (source.w !== undefined) { this.w = source.w; }
 
         return this;
     },
@@ -9968,11 +9967,10 @@ module.exports = Container;
  *
  * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
  * @param {Phaser.GameObjects.Container} container - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var ContainerCanvasRenderer = function (renderer, container, interpolationPercentage, camera, parentMatrix)
+var ContainerCanvasRenderer = function (renderer, container, camera, parentMatrix)
 {
     var children = container.list;
 
@@ -10037,7 +10035,7 @@ var ContainerCanvasRenderer = function (renderer, container, interpolationPercen
         child.setAlpha(childAlpha * alpha);
 
         //  Render
-        child.renderCanvas(renderer, child, interpolationPercentage, camera, transformMatrix);
+        child.renderCanvas(renderer, child, camera, transformMatrix);
 
         //  Restore original values
         child.setAlpha(childAlpha);
@@ -10117,11 +10115,10 @@ module.exports = {
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Container} container - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var ContainerWebGLRenderer = function (renderer, container, interpolationPercentage, camera, parentMatrix)
+var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix)
 {
     var children = container.list;
 
@@ -10131,7 +10128,7 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
     }
 
     var transformMatrix = container.localTransform;
-    
+
     if (parentMatrix)
     {
         transformMatrix.loadIdentity();
@@ -10224,7 +10221,7 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
         child.setAlpha(childAlphaTopLeft * alpha, childAlphaTopRight * alpha, childAlphaBottomLeft * alpha, childAlphaBottomRight * alpha);
 
         //  Render
-        child.renderWebGL(renderer, child, interpolationPercentage, camera, transformMatrix);
+        child.renderWebGL(renderer, child, camera, transformMatrix);
 
         //  Restore original values
 
@@ -12329,7 +12326,18 @@ var File = new Class({
 
         if (!this.type || !this.key)
         {
-            throw new Error('Error calling \'Loader.' + this.type + '\' invalid key provided.');
+            throw new Error('Invalid Loader.' + this.type + ' key');
+        }
+
+        var url = GetFastValue(fileConfig, 'url');
+
+        if (url === undefined)
+        {
+            url = loader.path + loadKey + '.' + GetFastValue(fileConfig, 'extension', '');
+        }
+        else if (typeof url === 'string' && !url.match(/^(?:blob:|data:|http:\/\/|https:\/\/|\/\/)/))
+        {
+            url = loader.path + url;
         }
 
         /**
@@ -12343,16 +12351,7 @@ var File = new Class({
          * @type {object|string}
          * @since 3.0.0
          */
-        this.url = GetFastValue(fileConfig, 'url');
-
-        if (this.url === undefined)
-        {
-            this.url = loader.path + loadKey + '.' + GetFastValue(fileConfig, 'extension', '');
-        }
-        else if (typeof this.url === 'string' && this.url.indexOf('blob:') !== 0 && this.url.indexOf('data:') !== 0)
-        {
-            this.url = loader.path + this.url;
-        }
+        this.url = url;
 
         /**
          * The final URL this file will load from, including baseURL and path.
@@ -15892,6 +15891,90 @@ var Matrix4 = new Class({
         return this.copy(src);
     },
 
+    //  TODO - Docs
+    fromRotationXYTranslation: function (rotation, position, translateFirst)
+    {
+        var x = position.x;
+        var y = position.y;
+        var z = position.z;
+
+        var sx = Math.sin(rotation.x);
+        var cx = Math.cos(rotation.x);
+
+        var sy = Math.sin(rotation.y);
+        var cy = Math.cos(rotation.y);
+
+        var a30 = x;
+        var a31 = y;
+        var a32 = z;
+
+        //  Rotate X
+
+        var b21 = -sx;
+
+        //  Rotate Y
+
+        var c01 = 0 - b21 * sy;
+
+        var c02 = 0 - cx * sy;
+
+        var c21 = b21 * cy;
+
+        var c22 = cx * cy;
+
+        //  Translate
+        if (!translateFirst)
+        {
+            // a30 = cy * x + 0 * y + sy * z;
+            a30 = cy * x + sy * z;
+            a31 = c01 * x + cx * y + c21 * z;
+            a32 = c02 * x + sx * y + c22 * z;
+        }
+
+        return this.setValues(
+            cy,
+            c01,
+            c02,
+            0,
+            0,
+            cx,
+            sx,
+            0,
+            sy,
+            c21,
+            c22,
+            0,
+            a30,
+            a31,
+            a32,
+            1
+        );
+    },
+
+    setValues: function (m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33)
+    {
+        var out = this.val;
+
+        out[0] = m00;
+        out[1] = m01;
+        out[2] = m02;
+        out[3] = m03;
+        out[4] = m10;
+        out[5] = m11;
+        out[6] = m12;
+        out[7] = m13;
+        out[8] = m20;
+        out[9] = m21;
+        out[10] = m22;
+        out[11] = m23;
+        out[12] = m30;
+        out[13] = m31;
+        out[14] = m32;
+        out[15] = m33;
+
+        return this;
+    },
+
     /**
      * Copy the values of a given Matrix into this Matrix.
      *
@@ -16289,6 +16372,69 @@ var Matrix4 = new Class({
 
         // Calculate the determinant
         return b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+    },
+
+    //  TODO - Docs
+    multiplyToMat4: function (src, out)
+    {
+        var a = this.val;
+        var b = src.val;
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a03 = a[3];
+        var a10 = a[4];
+        var a11 = a[5];
+        var a12 = a[6];
+        var a13 = a[7];
+        var a20 = a[8];
+        var a21 = a[9];
+        var a22 = a[10];
+        var a23 = a[11];
+        var a30 = a[12];
+        var a31 = a[13];
+        var a32 = a[14];
+        var a33 = a[15];
+
+        var b00 = b[0];
+        var b01 = b[1];
+        var b02 = b[2];
+        var b03 = b[3];
+        var b10 = b[4];
+        var b11 = b[5];
+        var b12 = b[6];
+        var b13 = b[7];
+        var b20 = b[8];
+        var b21 = b[9];
+        var b22 = b[10];
+        var b23 = b[11];
+        var b30 = b[12];
+        var b31 = b[13];
+        var b32 = b[14];
+        var b33 = b[15];
+
+        return out.setValues(
+            b00 * a00 + b01 * a10 + b02 * a20 + b03 * a30,
+            b01 * a01 + b01 * a11 + b02 * a21 + b03 * a31,
+            b02 * a02 + b01 * a12 + b02 * a22 + b03 * a32,
+            b03 * a03 + b01 * a13 + b02 * a23 + b03 * a33,
+
+            b10 * a00 + b11 * a10 + b12 * a20 + b13 * a30,
+            b10 * a01 + b11 * a11 + b12 * a21 + b13 * a31,
+            b10 * a02 + b11 * a12 + b12 * a22 + b13 * a32,
+            b10 * a03 + b11 * a13 + b12 * a23 + b13 * a33,
+
+            b20 * a00 + b21 * a10 + b22 * a20 + b23 * a30,
+            b20 * a01 + b21 * a11 + b22 * a21 + b23 * a31,
+            b20 * a02 + b21 * a12 + b22 * a22 + b23 * a32,
+            b20 * a03 + b21 * a13 + b22 * a23 + b23 * a33,
+
+            b30 * a00 + b31 * a10 + b32 * a20 + b33 * a30,
+            b30 * a01 + b31 * a11 + b32 * a21 + b33 * a31,
+            b30 * a02 + b31 * a12 + b32 * a22 + b33 * a32,
+            b30 * a03 + b31 * a13 + b32 * a23 + b33 * a33
+        );
     },
 
     /**
@@ -17446,10 +17592,10 @@ var tmpMat3 = new Matrix3();
  * @constructor
  * @since 3.0.0
  *
- * @param {number} [x] - The x component.
- * @param {number} [y] - The y component.
- * @param {number} [z] - The z component.
- * @param {number} [w] - The w component.
+ * @param {number} [x=0] - The x component.
+ * @param {number} [y=0] - The y component.
+ * @param {number} [z=0] - The z component.
+ * @param {number} [w=1] - The w component.
  */
 var Quaternion = new Class({
 
@@ -17498,14 +17644,14 @@ var Quaternion = new Class({
             this.x = x.x || 0;
             this.y = x.y || 0;
             this.z = x.z || 0;
-            this.w = x.w || 0;
+            this.w = x.w || 1;
         }
         else
         {
             this.x = x || 0;
             this.y = y || 0;
             this.z = z || 0;
-            this.w = w || 0;
+            this.w = w || 1;
         }
     },
 
@@ -19955,6 +20101,26 @@ var Vector3 = new Class({
     },
 
     /**
+     * Add and scale a given Vector to this Vector. Addition is component-wise.
+     *
+     * @method Phaser.Math.Vector3#addScale
+     * @since 3.50.0
+     *
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3)} v - The Vector to add to this Vector.
+     * @param {number} scale - The amount to scale `v` by.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    addScale: function (v, scale)
+    {
+        this.x += v.x * scale;
+        this.y += v.y * scale;
+        this.z += v.z * scale || 0;
+
+        return this;
+    },
+
+    /**
      * Subtract the given Vector from this Vector. Subtraction is component-wise.
      *
      * @method Phaser.Math.Vector3#subtract
@@ -20443,7 +20609,7 @@ var Vector3 = new Class({
 
 /**
  * A static zero Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -20455,7 +20621,7 @@ Vector3.ZERO = new Vector3();
 
 /**
  * A static right Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -20467,7 +20633,7 @@ Vector3.RIGHT = new Vector3(1, 0, 0);
 
 /**
  * A static left Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -20479,7 +20645,7 @@ Vector3.LEFT = new Vector3(-1, 0, 0);
 
 /**
  * A static up Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -20491,7 +20657,7 @@ Vector3.UP = new Vector3(0, -1, 0);
 
 /**
  * A static down Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -20503,7 +20669,7 @@ Vector3.DOWN = new Vector3(0, 1, 0);
 
 /**
  * A static forward Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -20515,7 +20681,7 @@ Vector3.FORWARD = new Vector3(0, 0, 1);
 
 /**
  * A static back Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -20527,7 +20693,7 @@ Vector3.BACK = new Vector3(0, 0, -1);
 
 /**
  * A static one Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -26032,7 +26198,17 @@ var PIPELINE_CONST = {
      * @const
      * @since 3.50.0
      */
-    ROPE_PIPELINE: 'RopePipeline'
+    ROPE_PIPELINE: 'RopePipeline',
+
+    /**
+     * The Mesh Pipeline.
+     *
+     * @name Phaser.Renderer.WebGL.Pipelines.MESH_PIPELINE
+     * @type {string}
+     * @const
+     * @since 3.50.0
+     */
+    MESH_PIPELINE: 'MeshPipeline'
 
 };
 
@@ -26056,7 +26232,7 @@ module.exports = PIPELINE_CONST;
 
 /**
  * The Scale Manager Resize Event.
- * 
+ *
  * This event is dispatched whenever the Scale Manager detects a resize event from the browser.
  * It sends three parameters to the callback, each of them being Size components. You can read
  * the `width`, `height`, `aspectRatio` and other properties of these components to help with
@@ -26064,11 +26240,10 @@ module.exports = PIPELINE_CONST;
  *
  * @event Phaser.Scale.Events#RESIZE
  * @since 3.16.1
- * 
+ *
  * @param {Phaser.Structs.Size} gameSize - A reference to the Game Size component. This is the un-scaled size of your game canvas.
- * @param {Phaser.Structs.Size} baseSize - A reference to the Base Size component. This is the game size multiplied by resolution.
+ * @param {Phaser.Structs.Size} baseSize - A reference to the Base Size component. This is the game size.
  * @param {Phaser.Structs.Size} displaySize - A reference to the Display Size component. This is the scaled canvas size, after applying zoom and scale mode.
- * @param {number} resolution - The current resolution. Defaults to 1 at the moment.
  * @param {number} previousWidth - If the `gameSize` has changed, this value contains its previous width, otherwise it contains the current width.
  * @param {number} previousHeight - If the `gameSize` has changed, this value contains its previous height, otherwise it contains the current height.
  */
@@ -29720,22 +29895,23 @@ module.exports = {
 /**
  * Checks if an array can be used as a matrix.
  *
- * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows) have the same length. There must be at least two rows:
+ * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
+ * have the same length. There must be at least two rows. This is an example matrix:
  *
  * ```
- *    [
- *        [ 1, 1, 1, 1, 1, 1 ],
- *        [ 2, 0, 0, 0, 0, 4 ],
- *        [ 2, 0, 1, 2, 0, 4 ],
- *        [ 2, 0, 3, 4, 0, 4 ],
- *        [ 2, 0, 0, 0, 0, 4 ],
- *        [ 3, 3, 3, 3, 3, 3 ]
- *    ]
+ * [
+ *    [ 1, 1, 1, 1, 1, 1 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 2, 0, 1, 2, 0, 4 ],
+ *    [ 2, 0, 3, 4, 0, 4 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 3, 3, 3, 3, 3, 3 ]
+ * ]
  * ```
  *
  * @function Phaser.Utils.Array.Matrix.CheckMatrix
  * @since 3.0.0
- * 
+ *
  * @generic T
  * @genericUse {T[][]} - [matrix]
  *
@@ -29788,6 +29964,20 @@ var CheckMatrix = __webpack_require__(/*! ./CheckMatrix */ "../../../src/utils/a
 
 /**
  * Generates a string (which you can pass to console.log) from the given Array Matrix.
+ *
+ * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
+ * have the same length. There must be at least two rows. This is an example matrix:
+ *
+ * ```
+ * [
+ *    [ 1, 1, 1, 1, 1, 1 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 2, 0, 1, 2, 0, 4 ],
+ *    [ 2, 0, 3, 4, 0, 4 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 3, 3, 3, 3, 3, 3 ]
+ * ]
+ * ```
  *
  * @function Phaser.Utils.Array.Matrix.MatrixToString
  * @since 3.0.0
@@ -29872,6 +30062,20 @@ module.exports = MatrixToString;
 /**
  * Reverses the columns in the given Array Matrix.
  *
+ * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
+ * have the same length. There must be at least two rows. This is an example matrix:
+ *
+ * ```
+ * [
+ *    [ 1, 1, 1, 1, 1, 1 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 2, 0, 1, 2, 0, 4 ],
+ *    [ 2, 0, 3, 4, 0, 4 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 3, 3, 3, 3, 3, 3 ]
+ * ]
+ * ```
+ *
  * @function Phaser.Utils.Array.Matrix.ReverseColumns
  * @since 3.0.0
  *
@@ -29907,6 +30111,20 @@ module.exports = ReverseColumns;
 
 /**
  * Reverses the rows in the given Array Matrix.
+ *
+ * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
+ * have the same length. There must be at least two rows. This is an example matrix:
+ *
+ * ```
+ * [
+ *    [ 1, 1, 1, 1, 1, 1 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 2, 0, 1, 2, 0, 4 ],
+ *    [ 2, 0, 3, 4, 0, 4 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 3, 3, 3, 3, 3, 3 ]
+ * ]
+ * ```
  *
  * @function Phaser.Utils.Array.Matrix.ReverseRows
  * @since 3.0.0
@@ -29951,6 +30169,20 @@ var RotateMatrix = __webpack_require__(/*! ./RotateMatrix */ "../../../src/utils
 /**
  * Rotates the array matrix 180 degrees.
  *
+ * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
+ * have the same length. There must be at least two rows. This is an example matrix:
+ *
+ * ```
+ * [
+ *    [ 1, 1, 1, 1, 1, 1 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 2, 0, 1, 2, 0, 4 ],
+ *    [ 2, 0, 3, 4, 0, 4 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 3, 3, 3, 3, 3, 3 ]
+ * ]
+ * ```
+ *
  * @function Phaser.Utils.Array.Matrix.Rotate180
  * @since 3.0.0
  *
@@ -29988,6 +30220,20 @@ var RotateMatrix = __webpack_require__(/*! ./RotateMatrix */ "../../../src/utils
 
 /**
  * Rotates the array matrix to the left (or 90 degrees)
+ *
+ * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
+ * have the same length. There must be at least two rows. This is an example matrix:
+ *
+ * ```
+ * [
+ *    [ 1, 1, 1, 1, 1, 1 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 2, 0, 1, 2, 0, 4 ],
+ *    [ 2, 0, 3, 4, 0, 4 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 3, 3, 3, 3, 3, 3 ]
+ * ]
+ * ```
  *
  * @function Phaser.Utils.Array.Matrix.RotateLeft
  * @since 3.0.0
@@ -30032,6 +30278,20 @@ var TransposeMatrix = __webpack_require__(/*! ./TransposeMatrix */ "../../../src
  * or a string command: `rotateLeft`, `rotateRight` or `rotate180`.
  *
  * Based on the routine from {@link http://jsfiddle.net/MrPolywhirl/NH42z/}.
+ *
+ * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
+ * have the same length. There must be at least two rows. This is an example matrix:
+ *
+ * ```
+ * [
+ *    [ 1, 1, 1, 1, 1, 1 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 2, 0, 1, 2, 0, 4 ],
+ *    [ 2, 0, 3, 4, 0, 4 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 3, 3, 3, 3, 3, 3 ]
+ * ]
+ * ```
  *
  * @function Phaser.Utils.Array.Matrix.RotateMatrix
  * @since 3.0.0
@@ -30104,6 +30364,20 @@ var RotateMatrix = __webpack_require__(/*! ./RotateMatrix */ "../../../src/utils
 /**
  * Rotates the array matrix to the left (or -90 degrees)
  *
+ * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
+ * have the same length. There must be at least two rows. This is an example matrix:
+ *
+ * ```
+ * [
+ *    [ 1, 1, 1, 1, 1, 1 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 2, 0, 1, 2, 0, 4 ],
+ *    [ 2, 0, 3, 4, 0, 4 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 3, 3, 3, 3, 3, 3 ]
+ * ]
+ * ```
+ *
  * @function Phaser.Utils.Array.Matrix.RotateRight
  * @since 3.0.0
  *
@@ -30120,6 +30394,100 @@ var RotateRight = function (matrix)
 };
 
 module.exports = RotateRight;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/matrix/TranslateMatrix.js":
+/*!********************************************************************!*\
+  !*** D:/wamp/www/phaser/src/utils/array/matrix/TranslateMatrix.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var RotateLeft = __webpack_require__(/*! ../RotateLeft */ "../../../src/utils/array/RotateLeft.js");
+var RotateRight = __webpack_require__(/*! ../RotateRight */ "../../../src/utils/array/RotateRight.js");
+
+/**
+ * Translates the given Array Matrix by shifting each column and row the
+ * amount specified.
+ *
+ * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
+ * have the same length. There must be at least two rows. This is an example matrix:
+ *
+ * ```
+ * [
+ *    [ 1, 1, 1, 1, 1, 1 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 2, 0, 1, 2, 0, 4 ],
+ *    [ 2, 0, 3, 4, 0, 4 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 3, 3, 3, 3, 3, 3 ]
+ * ]
+ * ```
+ *
+ * @function Phaser.Utils.Array.Matrix.Translate
+ * @since 3.50.0
+ *
+ * @generic T
+ * @genericUse {T[][]} - [matrix,$return]
+ *
+ * @param {T[][]} [matrix] - The array matrix to translate.
+ * @param {number} [x=0] - The amount to horizontally translate the matrix by.
+ * @param {number} [y=0] - The amount to vertically translate the matrix by.
+ *
+ * @return {T[][]} The translated matrix.
+ */
+var TranslateMatrix = function (matrix, x, y)
+{
+    if (x === undefined) { x = 0; }
+    if (y === undefined) { y = 0; }
+
+    //  Vertical translation
+
+    if (y !== 0)
+    {
+        if (y < 0)
+        {
+            //  Shift Up
+            RotateLeft(matrix, Math.abs(y));
+        }
+        else
+        {
+            //  Shift Down
+            RotateRight(matrix, y);
+        }
+    }
+
+    //  Horizontal translation
+
+    if (x !== 0)
+    {
+        for (var i = 0; i < matrix.length; i++)
+        {
+            var row = matrix[i];
+
+            if (x < 0)
+            {
+                RotateLeft(row, Math.abs(x));
+            }
+            else
+            {
+                RotateRight(row, x);
+            }
+        }
+    }
+
+    return matrix;
+};
+
+module.exports = TranslateMatrix;
 
 
 /***/ }),
@@ -30142,12 +30510,26 @@ module.exports = RotateRight;
  *
  * The transpose of a matrix is a new matrix whose rows are the columns of the original.
  *
+ * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
+ * have the same length. There must be at least two rows. This is an example matrix:
+ *
+ * ```
+ * [
+ *    [ 1, 1, 1, 1, 1, 1 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 2, 0, 1, 2, 0, 4 ],
+ *    [ 2, 0, 3, 4, 0, 4 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 3, 3, 3, 3, 3, 3 ]
+ * ]
+ * ```
+ *
  * @function Phaser.Utils.Array.Matrix.TransposeMatrix
  * @since 3.0.0
- * 
+ *
  * @generic T
  * @genericUse {T[][]} - [array,$return]
- * 
+ *
  * @param {T[][]} [array] - The array matrix to transpose.
  *
  * @return {T[][]} A new array matrix which is a transposed version of the given array.
@@ -30204,6 +30586,7 @@ module.exports = {
     RotateLeft: __webpack_require__(/*! ./RotateLeft */ "../../../src/utils/array/matrix/RotateLeft.js"),
     RotateMatrix: __webpack_require__(/*! ./RotateMatrix */ "../../../src/utils/array/matrix/RotateMatrix.js"),
     RotateRight: __webpack_require__(/*! ./RotateRight */ "../../../src/utils/array/matrix/RotateRight.js"),
+    Translate: __webpack_require__(/*! ./TranslateMatrix */ "../../../src/utils/array/matrix/TranslateMatrix.js"),
     TransposeMatrix: __webpack_require__(/*! ./TransposeMatrix */ "../../../src/utils/array/matrix/TransposeMatrix.js")
 
 };
@@ -32283,11 +32666,10 @@ module.exports = SpineContainer;
  *
  * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
  * @param {Phaser.GameObjects.Container} container - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var SpineContainerCanvasRenderer = function (renderer, container, interpolationPercentage, camera, parentMatrix)
+var SpineContainerCanvasRenderer = function (renderer, container, camera, parentMatrix)
 {
     var children = container.list;
 
@@ -32435,11 +32817,10 @@ var Wrap = __webpack_require__(/*! ../../../../src/math/Wrap */ "../../../src/ma
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Container} container - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var SpineContainerWebGLRenderer = function (renderer, container, interpolationPercentage, camera, parentMatrix)
+var SpineContainerWebGLRenderer = function (renderer, container, camera, parentMatrix)
 {
     var plugin = container.plugin;
     var sceneRenderer = plugin.sceneRenderer;
@@ -33806,6 +34187,9 @@ var SpineGameObject = new Class({
      */
     addAnimation: function (trackIndex, animationName, loop, delay)
     {
+        if (loop === undefined) { loop = false; }
+        if (delay === undefined) { delay = 0; }
+
         return this.state.addAnimation(trackIndex, animationName, loop, delay);
     },
 
@@ -34385,11 +34769,10 @@ var Wrap = __webpack_require__(/*! ../../../../src/math/Wrap */ "../../../src/ma
  *
  * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
  * @param {SpineGameObject} src - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var SpineGameObjectCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
+var SpineGameObjectCanvasRenderer = function (renderer, src, camera, parentMatrix)
 {
     var context = renderer.currentContext;
 
@@ -34543,6 +34926,7 @@ module.exports = {
  */
 
 var CounterClockwise = __webpack_require__(/*! ../../../../src/math/angle/CounterClockwise */ "../../../src/math/angle/CounterClockwise.js");
+var GetCalcMatrix = __webpack_require__(/*! ../../../../src/gameobjects/GetCalcMatrix */ "../../../src/gameobjects/GetCalcMatrix.js");
 var RadToDeg = __webpack_require__(/*! ../../../../src/math/RadToDeg */ "../../../src/math/RadToDeg.js");
 var Wrap = __webpack_require__(/*! ../../../../src/math/Wrap */ "../../../src/math/Wrap.js");
 
@@ -34557,11 +34941,10 @@ var Wrap = __webpack_require__(/*! ../../../../src/math/Wrap */ "../../../src/ma
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {SpineGameObject} src - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
+var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
     var plugin = src.plugin;
     var skeleton = src.skeleton;
@@ -34599,34 +34982,7 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
         renderer.pipelines.clear();
     }
 
-    var camMatrix = renderer._tempMatrix1;
-    var spriteMatrix = renderer._tempMatrix2;
-    var calcMatrix = renderer._tempMatrix3;
-
-    spriteMatrix.applyITRS(src.x, src.y, src.rotation, Math.abs(src.scaleX), Math.abs(src.scaleY));
-
-    camMatrix.copyFrom(camera.matrix);
-
-    if (parentMatrix)
-    {
-        //  Multiply the camera by the parent matrix
-        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
-
-        //  Undo the camera scroll
-        spriteMatrix.e = src.x;
-        spriteMatrix.f = src.y;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(spriteMatrix, calcMatrix);
-    }
-    else
-    {
-        spriteMatrix.e -= camera.scrollX * src.scrollFactorX;
-        spriteMatrix.f -= camera.scrollY * src.scrollFactorY;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(spriteMatrix, calcMatrix);
-    }
+    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
     var viewportHeight = renderer.height;
 
