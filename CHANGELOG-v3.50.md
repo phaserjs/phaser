@@ -530,7 +530,7 @@ For a long time, the 'resolution' property has been present - taunting developer
 
 ### Removed 'interpolationPercentage' parameter from all render functions
 
-Since v3.0.0 the Game Object `render` functions have received a parameter called `interpolationPercentage` that was never used. The renderers do not calculate this value and no Game Objects apply it, so for the sake of clairty, reducing code and removing complexity from the API it has been removed from every single function that either sent or expected the parameter. This touches every single Game Object and changes the parameter order as a result, so please be aware of this if you have your own _custom_ Game Objects that implement their own `render` methods. In terms of surface API changes, you shouldn't notice anything at all from this removal.
+Since v3.0.0 the Game Object `render` functions have received a parameter called `interpolationPercentage` that was never used. The renderers do not calculate this value and no Game Objects apply it, so for the sake of clairty, reducing code and removing complexity from the API it has been removed from every single function that either sent or expected the parameter. This touches every single Game Object and changes the parameter order as a result, so please be aware of this if you have your own _custom_ Game Objects, or plugins, that implement their own `render` methods. In terms of surface API changes, you shouldn't notice anything at all from this removal.
 
 ### New Features
 
