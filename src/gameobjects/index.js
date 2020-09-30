@@ -122,19 +122,10 @@ var GameObjects = {
 if (typeof WEBGL_RENDERER)
 {
     //  WebGL only Game Objects
-    GameObjects.Layer3D = require('./layer3d/Layer3D');
-    GameObjects.Layer3DCamera = require('./layer3d/Layer3DCamera');
-    GameObjects.Layer3DLight = require('./layer3d/Layer3DLight');
-
-    GameObjects.Quad = require('./quad/Quad');
     GameObjects.Shader = require('./shader/Shader');
 
-    GameObjects.Factories.Layer3D = require('./layer3d/Layer3DFactory');
-    GameObjects.Factories.Quad = require('./quad/QuadFactory');
     GameObjects.Factories.Shader = require('./shader/ShaderFactory');
 
-    GameObjects.Creators.Layer3D = require('./layer3d/Layer3DCreator');
-    GameObjects.Creators.Quad = require('./quad/QuadCreator');
     GameObjects.Creators.Shader = require('./shader/ShaderCreator');
 
     GameObjects.Light = require('./lights/Light');
