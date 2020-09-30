@@ -347,6 +347,23 @@ var Matrix4 = new Class({
     },
 
     /**
+     * Copies the given Matrix4 into this Matrix and then inverses it.
+     *
+     * @method Phaser.Math.Matrix4#getInverse
+     * @since 3.50.0
+     *
+     * @return {Phaser.Math.Matrix4} m - The Matrix4 to invert into this Matrix4.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    getInverse: function (m)
+    {
+        this.copy(m);
+
+        return this.invert();
+    },
+
+    /**
      * Invert this Matrix.
      *
      * @method Phaser.Math.Matrix4#invert
@@ -393,12 +410,12 @@ var Matrix4 = new Class({
         var b10 = a21 * a33 - a23 * a31;
         var b11 = a22 * a33 - a23 * a32;
 
-        // Calculate the determinant
+        //  Calculate the determinant
         var det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
 
         if (!det)
         {
-            return null;
+            return this;
         }
 
         det = 1 / det;
