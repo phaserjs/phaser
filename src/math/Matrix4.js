@@ -63,8 +63,6 @@ var Matrix4 = new Class({
         return new Matrix4(this);
     },
 
-    //  TODO - Should work with basic values
-
     /**
      * This method is an alias for `Matrix4.copy`.
      *
@@ -78,90 +76,6 @@ var Matrix4 = new Class({
     set: function (src)
     {
         return this.copy(src);
-    },
-
-    //  TODO - Docs
-    fromRotationXYTranslation: function (rotation, position, translateFirst)
-    {
-        var x = position.x;
-        var y = position.y;
-        var z = position.z;
-
-        var sx = Math.sin(rotation.x);
-        var cx = Math.cos(rotation.x);
-
-        var sy = Math.sin(rotation.y);
-        var cy = Math.cos(rotation.y);
-
-        var a30 = x;
-        var a31 = y;
-        var a32 = z;
-
-        //  Rotate X
-
-        var b21 = -sx;
-
-        //  Rotate Y
-
-        var c01 = 0 - b21 * sy;
-
-        var c02 = 0 - cx * sy;
-
-        var c21 = b21 * cy;
-
-        var c22 = cx * cy;
-
-        //  Translate
-        if (!translateFirst)
-        {
-            // a30 = cy * x + 0 * y + sy * z;
-            a30 = cy * x + sy * z;
-            a31 = c01 * x + cx * y + c21 * z;
-            a32 = c02 * x + sx * y + c22 * z;
-        }
-
-        return this.setValues(
-            cy,
-            c01,
-            c02,
-            0,
-            0,
-            cx,
-            sx,
-            0,
-            sy,
-            c21,
-            c22,
-            0,
-            a30,
-            a31,
-            a32,
-            1
-        );
-    },
-
-    setValues: function (m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33)
-    {
-        var out = this.val;
-
-        out[0] = m00;
-        out[1] = m01;
-        out[2] = m02;
-        out[3] = m03;
-        out[4] = m10;
-        out[5] = m11;
-        out[6] = m12;
-        out[7] = m13;
-        out[8] = m20;
-        out[9] = m21;
-        out[10] = m22;
-        out[11] = m23;
-        out[12] = m30;
-        out[13] = m31;
-        out[14] = m32;
-        out[15] = m33;
-
-        return this;
     },
 
     /**
@@ -263,6 +177,53 @@ var Matrix4 = new Class({
         out[13] = 0;
         out[14] = 0;
         out[15] = 0;
+
+        return this;
+    },
+
+    /**
+     * Generates a transform matrix based on the given position, scale and rotation.
+     *
+     * @method Phaser.Math.Matrix4#transform
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Vector3} position - The position vector.
+     * @param {Phaser.Math.Vector3} scale - The scale vector.
+     * @param {Phaser.Math.Quaternion} rotation - The rotation quaternion.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    transform: function (position, scale, rotation)
+    {
+        // var rotMatrix = rotation.toMatrix4(_tempMat1);
+        var rotMatrix = _tempMat1.fromQuat(rotation);
+
+        var rm = rotMatrix.val;
+        var m = this.val;
+
+        var sx = scale.x;
+        var sy = scale.y;
+        var sz = scale.z;
+
+        m[0] = rm[0] * sx;
+        m[1] = rm[1] * sx;
+        m[2] = rm[2] * sx;
+        m[3] = 0;
+
+        m[4] = rm[4] * sy;
+        m[5] = rm[5] * sy;
+        m[6] = rm[6] * sy;
+        m[7] = 0;
+
+        m[8] = rm[8] * sz;
+        m[9] = rm[9] * sz;
+        m[10] = rm[10] * sz;
+        m[11] = 0;
+
+        m[12] = position.x;
+        m[13] = position.y;
+        m[14] = position.z;
+        m[15] = 1;
 
         return this;
     },
