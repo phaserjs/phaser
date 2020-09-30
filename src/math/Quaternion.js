@@ -784,7 +784,7 @@ var Quaternion = new Class({
     /**
      * Set this Quaternion from the given Euler, based on Euler order.
      *
-     * @method Phaser.Math.Quaternion#fromEuler
+     * @method Phaser.Math.Quaternion#setFromEuler
      * @since 3.50.0
      *
      * @param {Phaser.Math.Euler} euler - The Euler to convert from.
@@ -792,7 +792,7 @@ var Quaternion = new Class({
      *
      * @return {Phaser.Math.Quaternion} This Quaternion.
      */
-    fromEuler: function (euler, update)
+    setFromEuler: function (euler, update)
     {
         var x = euler.x / 2;
         var y = euler.y / 2;
