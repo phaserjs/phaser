@@ -61,6 +61,19 @@ var Renderer = new Class({
         */
     },
 
+    clear: function (color, depth, stencil)
+    {
+        var gl = this.gl;
+
+        var bits = 0;
+
+        if (color === undefined || color) { bits |= gl.COLOR_BUFFER_BIT; }
+        if (depth === undefined || depth) { bits |= gl.DEPTH_BUFFER_BIT; }
+        if (stencil === undefined || stencil) { bits |= gl.STENCIL_BUFFER_BIT; }
+
+        gl.clear(bits);
+    },
+
     render: function (scene, camera, renderTarget, forceClear)
     {
         if (renderTarget === undefined) { renderTarget = this.backRenderTarget; }
