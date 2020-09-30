@@ -1593,6 +1593,25 @@ var Matrix4 = new Class({
         }
 
         return this;
+    },
+
+    /**
+     * Returns the maximum axis scale from this Matrix4.
+     *
+     * @method Phaser.Math.Matrix4#getMaxScaleOnAxis
+     * @since 3.50.0
+     *
+     * @return {number} The maximum axis scale.
+     */
+    getMaxScaleOnAxis: function ()
+    {
+        var m = this.val;
+
+        var scaleXSq = m[0] * m[0] + m[1] * m[1] + m[2] * m[2];
+        var scaleYSq = m[4] * m[4] + m[5] * m[5] + m[6] * m[6];
+        var scaleZSq = m[8] * m[8] + m[9] * m[9] + m[10] * m[10];
+
+        return Math.sqrt(Math.max(scaleXSq, scaleYSq, scaleZSq));
     }
 
 });
