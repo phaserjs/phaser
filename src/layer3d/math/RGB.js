@@ -17,7 +17,7 @@ var NOOP = require('../../utils/NOOP');
  * @constructor
  * @since 3.50.0
  *
- * @param {number} [red=0] - The red color value. A number between 0 and 1.
+ * @param {number} [red=0] - The red color value. A number between 0 and 1, or if `green` and `blue` are undefined, a hex color value.
  * @param {number} [green=0] - The green color value. A number between 0 and 1.
  * @param {number} [blue=0] - The blue color value. A number between 0 and 1.
  */
@@ -57,7 +57,14 @@ var RGB = new Class({
          */
         this.dirty = false;
 
-        this.set(red, green, blue);
+        if (green === undefined)
+        {
+            this.setHex(red);
+        }
+        else
+        {
+            this.set(red, green, blue);
+        }
     },
 
     /**
@@ -84,6 +91,28 @@ var RGB = new Class({
         this.onChange();
 
         return this;
+    },
+
+    /**
+     * Sets the red, green and blue values of this RGB object based on the given hex color value.
+     * Then flags it as being dirty and invokes the `onChangeCallback`, if set.
+     *
+     * @method Phaser.Layer3D.Math.RGB#setHex
+     * @since 3.50.0
+     *
+     * @param {number} color - The hex color value, i.e. 0xffffff for white, or 0x00ff00 for green.
+     *
+     * @return {this} This RGB instance.
+     */
+    setHex: function (color)
+    {
+        color = Math.floor(color);
+
+        return this.set(
+            (color >> 16 & 255) / 255,
+            (color >> 8 & 255) / 255,
+            (color & 255) / 255
+        );
     },
 
     /**
