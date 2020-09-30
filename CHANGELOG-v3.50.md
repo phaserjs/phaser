@@ -567,6 +567,18 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `BitmapMask.createMask` is a new method that will internally create the WebGL textures and framebuffers required for the mask. This is now used by the constructor and if the context is lost. It now also clears any previous textures/fbos that may have been created first, helping prevent memory leaks.
 * `BitmapMask.clearMask` will delete any WebGL textures or framebuffers the mask is using. This is now called when the mask is destroyed, or a new mask is created upon it.
 * `Quaternion` now has a new property `onChangeCallback` which, if set, will be invoked each time the quaternion is updated. This allows you to link change events to other objects.
+* The `Quaternion.set` method has a new optional boolean parameter `update` (defaults to `true`), which will call the `onChangeCallback` if set.
+* `Quaternion.setFromEuler` is a new method that will set the quaternion from the given `Euler` object, optionally calling the `onChangeCallback` in the process.
+* `Vector3.setFromMatrixPosition` is a new method that will set the components of the Vector3 based on the position of the given Matrix4.
+* `Vector3.setFromMatrixColumn` is a new method that will set the components of the Vector3 based on the specified Matrix4 column.
+* `Vector3.fromArray` is a new method that will set the components of the Vector3 based on the values in the given array, at the given offset.
+* `Vector3.min` is a new method that will set the components of the Vector3 based on the `Main.min` between it and the given Vector3.
+* `Vector3.max` is a new method that will set the components of the Vector3 based on the `Main.max` between it and the given Vector3.
+* `Vector3.addVectors` is a new method that will set the components of the Vector3 based on the addition of the two Vector3s given.
+* `Vector3.addScalar` is a new method that will multiply the components of the Vector3 by the scale value given.
+* `Vector3.applyMatrix3` is a new method that will take a Matrix3 and apply it to the Vector3.
+* `Vector3.applyMatrix4` is a new method that will take a Matrix4 and apply it to the Vector3.
+* `Matrix4.getMaxScaleOnAxis` is a new method that will return the maximum axis scale from the Matrix4.
 
 ### Updates and API Changes
 
