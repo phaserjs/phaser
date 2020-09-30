@@ -201,7 +201,7 @@ var Quaternion = new Class({
     },
 
     /**
-     * Set the components of this Quaternion.
+     * Set the components of this Quaternion and optionally call the `onChangeCallback`.
      *
      * @method Phaser.Math.Quaternion#set
      * @since 3.0.0
@@ -210,11 +210,14 @@ var Quaternion = new Class({
      * @param {number} [y=0] - The y component.
      * @param {number} [z=0] - The z component.
      * @param {number} [w=0] - The w component.
+     * @param {boolean} [update=true] - Call the `onChangeCallback`?
      *
      * @return {Phaser.Math.Quaternion} This Quaternion.
      */
-    set: function (x, y, z, w)
+    set: function (x, y, z, w, update)
     {
+        if (update === undefined) { update = true; }
+
         if (typeof x === 'object')
         {
             this._x = x.x || 0;
@@ -230,7 +233,10 @@ var Quaternion = new Class({
             this._w = w || 0;
         }
 
-        this.onChangeCallback(this);
+        if (update)
+        {
+            this.onChangeCallback(this);
+        }
 
         return this;
     },
@@ -771,6 +777,115 @@ var Quaternion = new Class({
         var z = this.z;
 
         this.w = -Math.sqrt(1.0 - x * x - y * y - z * z);
+
+        return this;
+    },
+
+    /**
+     * Set this Quaternion from the given Euler, based on Euler order.
+     *
+     * @method Phaser.Math.Quaternion#fromEuler
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Euler} euler - The Euler to convert from.
+     * @param {boolean} [update=true] - Run the `onChangeCallback`?
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    fromEuler: function (euler, update)
+    {
+        var x = euler.x / 2;
+        var y = euler.y / 2;
+        var z = euler.z / 2;
+
+        var c1 = Math.cos(x);
+        var c2 = Math.cos(y);
+        var c3 = Math.cos(z);
+
+        var s1 = Math.sin(x);
+        var s2 = Math.sin(y);
+        var s3 = Math.sin(z);
+
+        switch (euler.order)
+        {
+            case 'XYZ':
+            {
+                this.set(
+                    s1 * c2 * c3 + c1 * s2 * s3,
+                    c1 * s2 * c3 - s1 * c2 * s3,
+                    c1 * c2 * s3 + s1 * s2 * c3,
+                    c1 * c2 * c3 - s1 * s2 * s3,
+                    update
+                );
+
+                break;
+            }
+
+            case 'YXZ':
+            {
+                this.set(
+                    s1 * c2 * c3 + c1 * s2 * s3,
+                    c1 * s2 * c3 - s1 * c2 * s3,
+                    c1 * c2 * s3 - s1 * s2 * c3,
+                    c1 * c2 * c3 + s1 * s2 * s3,
+                    update
+                );
+
+                break;
+            }
+
+            case 'ZXY':
+            {
+                this.set(
+                    s1 * c2 * c3 - c1 * s2 * s3,
+                    c1 * s2 * c3 + s1 * c2 * s3,
+                    c1 * c2 * s3 + s1 * s2 * c3,
+                    c1 * c2 * c3 - s1 * s2 * s3,
+                    update
+                );
+
+                break;
+            }
+
+            case 'ZYX':
+            {
+                this.set(
+                    s1 * c2 * c3 - c1 * s2 * s3,
+                    c1 * s2 * c3 + s1 * c2 * s3,
+                    c1 * c2 * s3 - s1 * s2 * c3,
+                    c1 * c2 * c3 + s1 * s2 * s3,
+                    update
+                );
+
+                break;
+            }
+
+            case 'YZX':
+            {
+                this.set(
+                    s1 * c2 * c3 + c1 * s2 * s3,
+                    c1 * s2 * c3 + s1 * c2 * s3,
+                    c1 * c2 * s3 - s1 * s2 * c3,
+                    c1 * c2 * c3 - s1 * s2 * s3,
+                    update
+                );
+
+                break;
+            }
+
+            case 'XZY':
+            {
+                this.set(
+                    s1 * c2 * c3 - c1 * s2 * s3,
+                    c1 * s2 * c3 - s1 * c2 * s3,
+                    c1 * c2 * s3 + s1 * s2 * c3,
+                    c1 * c2 * c3 + s1 * s2 * s3,
+                    update
+                );
+
+                break;
+            }
+        }
 
         return this;
     },
