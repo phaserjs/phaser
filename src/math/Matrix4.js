@@ -524,69 +524,6 @@ var Matrix4 = new Class({
         return b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
     },
 
-    //  TODO - Docs
-    multiplyToMat4: function (src, out)
-    {
-        var a = this.val;
-        var b = src.val;
-
-        var a00 = a[0];
-        var a01 = a[1];
-        var a02 = a[2];
-        var a03 = a[3];
-        var a10 = a[4];
-        var a11 = a[5];
-        var a12 = a[6];
-        var a13 = a[7];
-        var a20 = a[8];
-        var a21 = a[9];
-        var a22 = a[10];
-        var a23 = a[11];
-        var a30 = a[12];
-        var a31 = a[13];
-        var a32 = a[14];
-        var a33 = a[15];
-
-        var b00 = b[0];
-        var b01 = b[1];
-        var b02 = b[2];
-        var b03 = b[3];
-        var b10 = b[4];
-        var b11 = b[5];
-        var b12 = b[6];
-        var b13 = b[7];
-        var b20 = b[8];
-        var b21 = b[9];
-        var b22 = b[10];
-        var b23 = b[11];
-        var b30 = b[12];
-        var b31 = b[13];
-        var b32 = b[14];
-        var b33 = b[15];
-
-        return out.setValues(
-            b00 * a00 + b01 * a10 + b02 * a20 + b03 * a30,
-            b01 * a01 + b01 * a11 + b02 * a21 + b03 * a31,
-            b02 * a02 + b01 * a12 + b02 * a22 + b03 * a32,
-            b03 * a03 + b01 * a13 + b02 * a23 + b03 * a33,
-
-            b10 * a00 + b11 * a10 + b12 * a20 + b13 * a30,
-            b10 * a01 + b11 * a11 + b12 * a21 + b13 * a31,
-            b10 * a02 + b11 * a12 + b12 * a22 + b13 * a32,
-            b10 * a03 + b11 * a13 + b12 * a23 + b13 * a33,
-
-            b20 * a00 + b21 * a10 + b22 * a20 + b23 * a30,
-            b20 * a01 + b21 * a11 + b22 * a21 + b23 * a31,
-            b20 * a02 + b21 * a12 + b22 * a22 + b23 * a32,
-            b20 * a03 + b21 * a13 + b22 * a23 + b23 * a33,
-
-            b30 * a00 + b31 * a10 + b32 * a20 + b33 * a30,
-            b30 * a01 + b31 * a11 + b32 * a21 + b33 * a31,
-            b30 * a02 + b31 * a12 + b32 * a22 + b33 * a32,
-            b30 * a03 + b31 * a13 + b32 * a23 + b33 * a33
-        );
-    },
-
     /**
      * Multiply this Matrix by the given Matrix.
      *
@@ -704,6 +641,97 @@ var Matrix4 = new Class({
         a[15] = m1[12] * m2[3] + m1[13] * m2[7] + m1[14] * m2[11] + m1[15] * m2[15];
 
         return this.fromArray(a);
+    },
+
+    /**
+     * Multiplies the given Matrix4 object with this Matrix.
+     *
+     * This is the same as calling `multiplyMatrices(m, this)`.
+     *
+     * @method Phaser.Math.Matrix4#premultiply
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} m - The Matrix4 to multiply with this one.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    premultiply: function (m)
+    {
+        return this.multiplyMatrices(m, this);
+    },
+
+    /**
+     * Multiplies the two given Matrix4 objects and stores the results in this Matrix.
+     *
+     * @method Phaser.Math.Matrix4#multiplyMatrices
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} a - The first Matrix4 to multiply.
+     * @param {Phaser.Math.Matrix4} b - The second Matrix4 to multiply.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    multiplyMatrices: function (a, b)
+    {
+        var am = a.val;
+        var bm = b.val;
+        var m = this.val;
+
+        var a11 = am[0];
+        var a12 = am[4];
+        var a13 = am[8];
+        var a14 = am[12];
+        var a21 = am[1];
+        var a22 = am[5];
+        var a23 = am[9];
+        var a24 = am[13];
+        var a31 = am[2];
+        var a32 = am[6];
+        var a33 = am[10];
+        var a34 = am[14];
+        var a41 = am[3];
+        var a42 = am[7];
+        var a43 = am[11];
+        var a44 = am[15];
+
+        var b11 = bm[0];
+        var b12 = bm[4];
+        var b13 = bm[8];
+        var b14 = bm[12];
+        var b21 = bm[1];
+        var b22 = bm[5];
+        var b23 = bm[9];
+        var b24 = bm[13];
+        var b31 = bm[2];
+        var b32 = bm[6];
+        var b33 = bm[10];
+        var b34 = bm[14];
+        var b41 = bm[3];
+        var b42 = bm[7];
+        var b43 = bm[11];
+        var b44 = bm[15];
+
+        m[0] = a11 * b11 + a12 * b21 + a13 * b31 + a14 * b41;
+        m[4] = a11 * b12 + a12 * b22 + a13 * b32 + a14 * b42;
+        m[8] = a11 * b13 + a12 * b23 + a13 * b33 + a14 * b43;
+        m[12] = a11 * b14 + a12 * b24 + a13 * b34 + a14 * b44;
+
+        m[1] = a21 * b11 + a22 * b21 + a23 * b31 + a24 * b41;
+        m[5] = a21 * b12 + a22 * b22 + a23 * b32 + a24 * b42;
+        m[9] = a21 * b13 + a22 * b23 + a23 * b33 + a24 * b43;
+        m[13] = a21 * b14 + a22 * b24 + a23 * b34 + a24 * b44;
+
+        m[2] = a31 * b11 + a32 * b21 + a33 * b31 + a34 * b41;
+        m[6] = a31 * b12 + a32 * b22 + a33 * b32 + a34 * b42;
+        m[10] = a31 * b13 + a32 * b23 + a33 * b33 + a34 * b43;
+        m[14] = a31 * b14 + a32 * b24 + a33 * b34 + a34 * b44;
+
+        m[3] = a41 * b11 + a42 * b21 + a43 * b31 + a44 * b41;
+        m[7] = a41 * b12 + a42 * b22 + a43 * b32 + a44 * b42;
+        m[11] = a41 * b13 + a42 * b23 + a43 * b33 + a44 * b43;
+        m[15] = a41 * b14 + a42 * b24 + a43 * b34 + a44 * b44;
+
+        return this;
     },
 
     /**
