@@ -262,21 +262,6 @@ var Container = new Class({
         {
             this.add(children);
         }
-
-        this.on(Events.ADDED_TO_SCENE, this.addedToScene, this);
-        this.on(Events.REMOVED_FROM_SCENE, this.removedFromScene, this);
-    },
-
-    //  Overrides Game Object method
-    addedToScene: function ()
-    {
-        this.scene.sys.updateList.add(this);
-    },
-
-    //  Overrides Game Object method
-    removedFromScene: function ()
-    {
-        this.scene.sys.updateList.remove(this);
     },
 
     /**

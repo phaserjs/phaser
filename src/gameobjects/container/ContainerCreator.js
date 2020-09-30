@@ -40,10 +40,5 @@ GameObjectCreator.register('container', function (config, addToScene)
 
     BuildGameObject(this.scene, container, config);
 
-    if (!config.add)
-    {
-        this.updateList.add(container);
-    }
-
     return container;
 });
