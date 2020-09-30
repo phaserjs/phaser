@@ -50,7 +50,12 @@ var Phaser = {
 
 };
 
-//  Merge in the optional plugins
+//  Merge in the optional plugins and WebGL only features
+
+if (typeof FEATURE_3D)
+{
+    Phaser.Layer3D = require('./layer3d');
+}
 
 if (typeof FEATURE_SOUND)
 {
