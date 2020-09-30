@@ -566,6 +566,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * When defining the ease used with a Particle Emitter you can now set `easeParams` in the config object, allowing you to pass custom ease parameters through to an ease function (thanks @vforsh)
 * `BitmapMask.createMask` is a new method that will internally create the WebGL textures and framebuffers required for the mask. This is now used by the constructor and if the context is lost. It now also clears any previous textures/fbos that may have been created first, helping prevent memory leaks.
 * `BitmapMask.clearMask` will delete any WebGL textures or framebuffers the mask is using. This is now called when the mask is destroyed, or a new mask is created upon it.
+* `Quaternion` now has a new property `onChangeCallback` which, if set, will be invoked each time the quaternion is updated. This allows you to link change events to other objects.
 
 ### Updates and API Changes
 
@@ -616,6 +617,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `WebGLRenderer.defaultScissor` is a new property that holds the default scissor dimensions for the renderer. This is modified during `resize` and avoids continuous array generation in the `preRender` loop.
 * When running an Arcade Physics `overlap` test against a `StaticBody`, it will no longer set the `blocked` states of the dynamic body. If you are doing a collision test, they will still be set, but they're skipped for overlap-only tests. Fix #4435 (thanks @samme)
 * The `Line` Game Object will now default its width and height to 1, rather than zero. This allows you to give Line objects a physics body (although you will still need to re-adjust the center of the body manually). Fix #4596 (thanks @andrewaustin)
+* Internally, the `Quaternion` class now has 4 new private properties: `_x`, `_y`, `_z` and `_w` and 4 new getters and setters for the public versions. It also now passes most methods via `set` to allow for the onChange callback to be invoked. This does not change the public-facing API.
 
 ### Bug Fixes
 
