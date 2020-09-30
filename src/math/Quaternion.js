@@ -8,8 +8,9 @@
 //  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
 
 var Class = require('../utils/Class');
-var Vector3 = require('./Vector3');
 var Matrix3 = require('./Matrix3');
+var NOOP = require('../utils/NOOP');
+var Vector3 = require('./Vector3');
 
 var EPSILON = 0.000001;
 
@@ -46,52 +47,141 @@ var Quaternion = new Class({
         /**
          * The x component of this Quaternion.
          *
-         * @name Phaser.Math.Quaternion#x
+         * @name Phaser.Math.Quaternion#_x
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @private
+         * @since 3.50.0
          */
 
         /**
          * The y component of this Quaternion.
          *
-         * @name Phaser.Math.Quaternion#y
+         * @name Phaser.Math.Quaternion#_y
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @private
+         * @since 3.50.0
          */
 
         /**
          * The z component of this Quaternion.
          *
-         * @name Phaser.Math.Quaternion#z
+         * @name Phaser.Math.Quaternion#_z
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @private
+         * @since 3.50.0
          */
 
         /**
          * The w component of this Quaternion.
          *
-         * @name Phaser.Math.Quaternion#w
+         * @name Phaser.Math.Quaternion#_w
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @private
+         * @since 3.50.0
          */
 
-        if (typeof x === 'object')
+        /**
+         * This callback is invoked, if set, each time a value in this quaternion is changed.
+         * The callback is passed one argument, a reference to this quaternion.
+         *
+         * @name Phaser.Math.Quaternion#onChangeCallback
+         * @type {function}
+         * @since 3.50.0
+         */
+        this.onChangeCallback = NOOP;
+
+        this.set(x, y, z, w);
+    },
+
+    /**
+     * The x component of this Quaternion.
+     *
+     * @name Phaser.Math.Quaternion#x
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    x: {
+        get: function ()
         {
-            this.x = x.x || 0;
-            this.y = x.y || 0;
-            this.z = x.z || 0;
-            this.w = x.w || 1;
+            return this._x;
+        },
+
+        set: function (value)
+        {
+            this._x = value;
+
+            this.onChangeCallback(this);
         }
-        else
+    },
+
+    /**
+     * The y component of this Quaternion.
+     *
+     * @name Phaser.Math.Quaternion#y
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    y: {
+        get: function ()
         {
-            this.x = x || 0;
-            this.y = y || 0;
-            this.z = z || 0;
-            this.w = w || 1;
+            return this._y;
+        },
+
+        set: function (value)
+        {
+            this._y = value;
+
+            this.onChangeCallback(this);
+        }
+    },
+
+    /**
+     * The z component of this Quaternion.
+     *
+     * @name Phaser.Math.Quaternion#z
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    z: {
+        get: function ()
+        {
+            return this._z;
+        },
+
+        set: function (value)
+        {
+            this._z = value;
+
+            this.onChangeCallback(this);
+        }
+    },
+
+    /**
+     * The w component of this Quaternion.
+     *
+     * @name Phaser.Math.Quaternion#w
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    w: {
+        get: function ()
+        {
+            return this._w;
+        },
+
+        set: function (value)
+        {
+            this._w = value;
+
+            this.onChangeCallback(this);
         }
     },
 
@@ -107,12 +197,7 @@ var Quaternion = new Class({
      */
     copy: function (src)
     {
-        this.x = src.x;
-        this.y = src.y;
-        this.z = src.z;
-        this.w = src.w;
-
-        return this;
+        return this.set(src);
     },
 
     /**
@@ -132,18 +217,20 @@ var Quaternion = new Class({
     {
         if (typeof x === 'object')
         {
-            this.x = x.x || 0;
-            this.y = x.y || 0;
-            this.z = x.z || 0;
-            this.w = x.w || 0;
+            this._x = x.x || 0;
+            this._y = x.y || 0;
+            this._z = x.z || 0;
+            this._w = x.w || 0;
         }
         else
         {
-            this.x = x || 0;
-            this.y = y || 0;
-            this.z = z || 0;
-            this.w = w || 0;
+            this._x = x || 0;
+            this._y = y || 0;
+            this._z = z || 0;
+            this._w = w || 0;
         }
+
+        this.onChangeCallback(this);
 
         return this;
     },
@@ -160,10 +247,12 @@ var Quaternion = new Class({
      */
     add: function (v)
     {
-        this.x += v.x;
-        this.y += v.y;
-        this.z += v.z;
-        this.w += v.w;
+        this._x += v.x;
+        this._y += v.y;
+        this._z += v.z;
+        this._w += v.w;
+
+        this.onChangeCallback(this);
 
         return this;
     },
@@ -180,10 +269,12 @@ var Quaternion = new Class({
      */
     subtract: function (v)
     {
-        this.x -= v.x;
-        this.y -= v.y;
-        this.z -= v.z;
-        this.w -= v.w;
+        this._x -= v.x;
+        this._y -= v.y;
+        this._z -= v.z;
+        this._w -= v.w;
+
+        this.onChangeCallback(this);
 
         return this;
     },
@@ -200,10 +291,12 @@ var Quaternion = new Class({
      */
     scale: function (scale)
     {
-        this.x *= scale;
-        this.y *= scale;
-        this.z *= scale;
-        this.w *= scale;
+        this._x *= scale;
+        this._y *= scale;
+        this._z *= scale;
+        this._w *= scale;
+
+        this.onChangeCallback(this);
 
         return this;
     },
@@ -264,11 +357,13 @@ var Quaternion = new Class({
         {
             len = 1 / Math.sqrt(len);
 
-            this.x = x * len;
-            this.y = y * len;
-            this.z = z * len;
-            this.w = w * len;
+            this._x = x * len;
+            this._y = y * len;
+            this._z = z * len;
+            this._w = w * len;
         }
+
+        this.onChangeCallback(this);
 
         return this;
     },
@@ -308,12 +403,12 @@ var Quaternion = new Class({
         var az = this.z;
         var aw = this.w;
 
-        this.x = ax + t * (v.x - ax);
-        this.y = ay + t * (v.y - ay);
-        this.z = az + t * (v.z - az);
-        this.w = aw + t * (v.w - aw);
-
-        return this;
+        return this.set(
+            ax + t * (v.x - ax),
+            ay + t * (v.y - ay),
+            az + t * (v.z - az),
+            aw + t * (v.w - aw)
+        );
     },
 
     /**
@@ -345,21 +440,16 @@ var Quaternion = new Class({
         }
         else if (dot > 0.999999)
         {
-            this.x = 0;
-            this.y = 0;
-            this.z = 0;
-            this.w = 1;
-
-            return this;
+            return this.set(0, 0, 0, 1);
         }
         else
         {
             tmpvec.copy(a).cross(b);
 
-            this.x = tmpvec.x;
-            this.y = tmpvec.y;
-            this.z = tmpvec.z;
-            this.w = 1 + dot;
+            this._x = tmpvec.x;
+            this._y = tmpvec.y;
+            this._z = tmpvec.z;
+            this._w = 1 + dot;
 
             return this.normalize();
         }
@@ -406,12 +496,7 @@ var Quaternion = new Class({
      */
     identity: function ()
     {
-        this.x = 0;
-        this.y = 0;
-        this.z = 0;
-        this.w = 1;
-
-        return this;
+        return this.set(0, 0, 0, 1);
     },
 
     /**
@@ -431,12 +516,12 @@ var Quaternion = new Class({
 
         var s = Math.sin(rad);
 
-        this.x = s * axis.x;
-        this.y = s * axis.y;
-        this.z = s * axis.z;
-        this.w = Math.cos(rad);
-
-        return this;
+        return this.set(
+            s * axis.x,
+            s * axis.y,
+            s * axis.z,
+            Math.cos(rad)
+        );
     },
 
     /**
@@ -461,12 +546,12 @@ var Quaternion = new Class({
         var bz = b.z;
         var bw = b.w;
 
-        this.x = ax * bw + aw * bx + ay * bz - az * by;
-        this.y = ay * bw + aw * by + az * bx - ax * bz;
-        this.z = az * bw + aw * bz + ax * by - ay * bx;
-        this.w = aw * bw - ax * bx - ay * by - az * bz;
-
-        return this;
+        return this.set(
+            ax * bw + aw * bx + ay * bz - az * by,
+            ay * bw + aw * by + az * bx - ax * bz,
+            az * bw + aw * bz + ax * by - ay * bx,
+            aw * bw - ax * bx - ay * by - az * bz
+        );
     },
 
     /**
@@ -524,12 +609,12 @@ var Quaternion = new Class({
         }
 
         // calculate final values
-        this.x = scale0 * ax + scale1 * bx;
-        this.y = scale0 * ay + scale1 * by;
-        this.z = scale0 * az + scale1 * bz;
-        this.w = scale0 * aw + scale1 * bw;
-
-        return this;
+        return this.set(
+            scale0 * ax + scale1 * bx,
+            scale0 * ay + scale1 * by,
+            scale0 * az + scale1 * bz,
+            scale0 * aw + scale1 * bw
+        );
     },
 
     /**
@@ -550,14 +635,12 @@ var Quaternion = new Class({
         var dot = a0 * a0 + a1 * a1 + a2 * a2 + a3 * a3;
         var invDot = (dot) ? 1 / dot : 0;
 
-        // TODO: Would be faster to return [0,0,0,0] immediately if dot == 0
-
-        this.x = -a0 * invDot;
-        this.y = -a1 * invDot;
-        this.z = -a2 * invDot;
-        this.w = a3 * invDot;
-
-        return this;
+        return this.set(
+            -a0 * invDot,
+            -a1 * invDot,
+            -a2 * invDot,
+            a3 * invDot
+        );
     },
 
     /**
@@ -572,9 +655,11 @@ var Quaternion = new Class({
      */
     conjugate: function ()
     {
-        this.x = -this.x;
-        this.y = -this.y;
-        this.z = -this.z;
+        this._x = -this.x;
+        this._y = -this.y;
+        this._z = -this.z;
+
+        this.onChangeCallback(this);
 
         return this;
     },
@@ -601,12 +686,12 @@ var Quaternion = new Class({
         var bx = Math.sin(rad);
         var bw = Math.cos(rad);
 
-        this.x = ax * bw + aw * bx;
-        this.y = ay * bw + az * bx;
-        this.z = az * bw - ay * bx;
-        this.w = aw * bw - ax * bx;
-
-        return this;
+        return this.set(
+            ax * bw + aw * bx,
+            ay * bw + az * bx,
+            az * bw - ay * bx,
+            aw * bw - ax * bx
+        );
     },
 
     /**
@@ -631,12 +716,12 @@ var Quaternion = new Class({
         var by = Math.sin(rad);
         var bw = Math.cos(rad);
 
-        this.x = ax * bw - az * by;
-        this.y = ay * bw + aw * by;
-        this.z = az * bw + ax * by;
-        this.w = aw * bw - ay * by;
-
-        return this;
+        return this.set(
+            ax * bw - az * by,
+            ay * bw + aw * by,
+            az * bw + ax * by,
+            aw * bw - ay * by
+        );
     },
 
     /**
@@ -661,12 +746,12 @@ var Quaternion = new Class({
         var bz = Math.sin(rad);
         var bw = Math.cos(rad);
 
-        this.x = ax * bw + ay * bz;
-        this.y = ay * bw - ax * bz;
-        this.z = az * bw + aw * bz;
-        this.w = aw * bw - az * bz;
-
-        return this;
+        return this.set(
+            ax * bw + ay * bz,
+            ay * bw - ax * bz,
+            az * bw + aw * bz,
+            aw * bw - az * bz
+        );
     },
 
     /**
@@ -721,9 +806,9 @@ var Quaternion = new Class({
 
             fRoot = 0.5 / fRoot; // 1/(4w)
 
-            this.x = (m[7] - m[5]) * fRoot;
-            this.y = (m[2] - m[6]) * fRoot;
-            this.z = (m[3] - m[1]) * fRoot;
+            this._x = (m[7] - m[5]) * fRoot;
+            this._y = (m[2] - m[6]) * fRoot;
+            this._z = (m[3] - m[1]) * fRoot;
         }
         else
         {
@@ -752,11 +837,13 @@ var Quaternion = new Class({
             tmp[j] = (m[j * 3 + i] + m[i * 3 + j]) * fRoot;
             tmp[k] = (m[k * 3 + i] + m[i * 3 + k]) * fRoot;
 
-            this.x = tmp[0];
-            this.y = tmp[1];
-            this.z = tmp[2];
-            this.w = (m[k * 3 + j] - m[j * 3 + k]) * fRoot;
+            this._x = tmp[0];
+            this._y = tmp[1];
+            this._z = tmp[2];
+            this._w = (m[k * 3 + j] - m[j * 3 + k]) * fRoot;
         }
+
+        this.onChangeCallback(this);
 
         return this;
     }
