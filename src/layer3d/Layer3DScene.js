@@ -124,12 +124,6 @@ var Layer3DScene = new Class({
             renderList.add(object, camera);
         }
 
-        // if (object.type === OBJECT_TYPE.CANVAS2D)
-        // {
-        //     return;
-        // }
-
-        //  Handle children by recursion
         var children = object.children;
 
         for (var i = 0; i < children.length; i++)
@@ -149,11 +143,6 @@ var Layer3DScene = new Class({
         {
             this.lights.add(object);
         }
-
-        // if (object.type === OBJECT_TYPE.CANVAS2D)
-        // {
-        //     return;
-        // }
 
         var children = object.children;
 
