@@ -9,7 +9,7 @@ var Class = require('../../utils/Class');
 var Components = require('../../gameobjects/components');
 var Matrix4 = require('../../math/Matrix4');
 var Quaternion = require('../../math/Quaternion');
-var RGB = require('../../display/RGB');
+var RGB = require('../../layer3d/math/RGB');
 var Vector3 = require('../../math/Vector3');
 
 /**
