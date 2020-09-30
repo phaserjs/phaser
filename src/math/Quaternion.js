@@ -891,6 +891,81 @@ var Quaternion = new Class({
     },
 
     /**
+     * Sets the rotation of this Quaternion from the given Matrix4.
+     *
+     * @method Phaser.Math.Quaternion#setFromRotationMatrix
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} mat4 - The Matrix4 to set the rotation from.
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    setFromRotationMatrix: function (mat4)
+    {
+        var m = mat4.val;
+
+        var m11 = m[0];
+        var m12 = m[4];
+        var m13 = m[8];
+        var m21 = m[1];
+        var m22 = m[5];
+        var m23 = m[9];
+        var m31 = m[2];
+        var m32 = m[6];
+        var m33 = m[10];
+
+        var trace = m11 + m22 + m33;
+        var s;
+
+        if (trace > 0)
+        {
+            s = 0.5 / Math.sqrt(trace + 1.0);
+
+            this.set(
+                (m32 - m23) * s,
+                (m13 - m31) * s,
+                (m21 - m12) * s,
+                0.25 / s
+            );
+        }
+        else if (m11 > m22 && m11 > m33)
+        {
+            s = 2.0 * Math.sqrt(1.0 + m11 - m22 - m33);
+
+            this.set(
+                0.25 * s,
+                (m12 + m21) / s,
+                (m13 + m31) / s,
+                (m32 - m23) / s
+            );
+        }
+        else if (m22 > m33)
+        {
+            s = 2.0 * Math.sqrt(1.0 + m22 - m11 - m33);
+
+            this.set(
+                (m12 + m21) / s,
+                0.25 * s,
+                (m23 + m32) / s,
+                (m13 - m31) / s
+            );
+        }
+        else
+        {
+            s = 2.0 * Math.sqrt(1.0 + m33 - m11 - m22);
+
+            this.set(
+                (m13 + m31) / s,
+                (m23 + m32) / s,
+                0.25 * s,
+                (m21 - m12) / s
+            );
+        }
+
+        return this;
+    },
+
+    /**
      * Convert the given Matrix into this Quaternion.
      *
      * @method Phaser.Math.Quaternion#fromMat3
