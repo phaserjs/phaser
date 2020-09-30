@@ -10,10 +10,14 @@
 
 module.exports = {
 
+    Cameras: require('./cameras'),
+    Geometry: require('./geometry'),
     Lights: require('./lights'),
     Materials: require('./materials'),
     Math: require('./math'),
+
     GameObject3D: require('./GameObject3D'),
-    Layer3DScene: require('./Layer3DScene')
+    Layer3DScene: require('./Layer3DScene'),
+    Mesh: require('./Mesh')
 
 };
