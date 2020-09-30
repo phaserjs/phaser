@@ -549,6 +549,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `Matrix4.transform` is a new method that will generate a transform matrix from the given position and scale vectors and a rotation quaternion.
 * `Matrix4.multiplyMatrices` is a new method that multiplies two given Matrix4 objects and stores the results in the Matrix4.
 * `Matrix4.premultiply` is a new method that takes a Matrix4 and multiplies it by the current Matrix4.
+* `Matrix4.getInverse` is a new method that takes a Matrix4, copies it to the current matrix, then returns the inverse of it.
 
 ### Updates and API Changes
 
