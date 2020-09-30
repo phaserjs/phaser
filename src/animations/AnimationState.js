@@ -1629,11 +1629,11 @@ var AnimationState = new Class({
      *
      * @param {string} key - The key of the Animation to retrieve.
      *
-     * @return {Phaser.Animations.Animation} The Animation, or `undefined` if the key is invalid.
+     * @return {Phaser.Animations.Animation} The Animation, or `null` if the key is invalid.
      */
     get: function (key)
     {
-        return (this.anims && this.anims.get(key));
+        return (this.anims) ? this.anims.get(key) : null;
     },
 
     /**
@@ -1644,11 +1644,11 @@ var AnimationState = new Class({
      *
      * @param {string} key - The key of the Animation to check.
      *
-     * @return {boolean} `true` if the Animation exists locally, or `false` if the key is available.
+     * @return {boolean} `true` if the Animation exists locally, or `false` if the key is available, or there are no local animations.
      */
     exists: function (key)
     {
-        return (this.anims && this.anims.has(key));
+        return (this.anims) ? this.anims.has(key) : false;
     },
 
     /**
