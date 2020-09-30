@@ -855,6 +855,38 @@ var Vector3 = new Class({
     },
 
     /**
+     * Multiplies this Vector3 by the given view and projection matrices.
+     *
+     * @method Phaser.Math.Vector3#projectViewMatrix
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} viewMatrix - A View Matrix.
+     * @param {Phaser.Math.Matrix4} projectionMatrix - A Projection Matrix.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    projectViewMatrix: function (viewMatrix, projectionMatrix)
+    {
+        return this.applyMatrix4(viewMatrix).applyMatrix4(projectionMatrix);
+    },
+
+    /**
+     * Multiplies this Vector3 by the given inversed projection matrix and world matrix.
+     *
+     * @method Phaser.Math.Vector3#unprojectViewMatrix
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} projectionMatrix - An inversed Projection Matrix.
+     * @param {Phaser.Math.Matrix4} worldMatrix - A World View Matrix.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    unprojectViewMatrix: function (projectionMatrix, worldMatrix)
+    {
+        return this.applyMatrix4(projectionMatrix).applyMatrix4(worldMatrix);
+    },
+
+    /**
      * Unproject this point from 2D space to 3D space.
      * The point should have its x and y properties set to
      * 2D screen space, and the z either at 0 (near plane)
