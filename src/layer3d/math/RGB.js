@@ -4,8 +4,8 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Class = require('../utils/Class');
-var NOOP = require('../utils/NOOP');
+var Class = require('../../utils/Class');
+var NOOP = require('../../utils/NOOP');
 
 /**
  * @classdesc
@@ -13,7 +13,7 @@ var NOOP = require('../utils/NOOP');
  * with optional on-change callback notification and a dirty flag.
  *
  * @class RGB
- * @memberof Phaser.Display
+ * @memberof Phaser.Layer3D.Math
  * @constructor
  * @since 3.50.0
  *
@@ -30,7 +30,7 @@ var RGB = new Class({
         /**
          * Cached RGB values.
          *
-         * @name Phaser.Display.RGB#_rgb
+         * @name Phaser.Layer3D.Math.RGB#_rgb
          * @type {number[]}
          * @private
          * @since 3.50.0
@@ -42,7 +42,7 @@ var RGB = new Class({
          *
          * The callback is sent the new color values as the parameters.
          *
-         * @name Phaser.Display.RGB#onChangeCallback
+         * @name Phaser.Layer3D.Math.RGB#onChangeCallback
          * @type {function}
          * @since 3.50.0
          */
@@ -51,7 +51,7 @@ var RGB = new Class({
         /**
          * Is this color dirty?
          *
-         * @name Phaser.Display.RGB#dirty
+         * @name Phaser.Layer3D.Math.RGB#dirty
          * @type {boolean}
          * @since 3.50.0
          */
@@ -64,7 +64,7 @@ var RGB = new Class({
      * Sets the red, green and blue values of this RGB object, flags it as being
      * dirty and then invokes the `onChangeCallback`, if set.
      *
-     * @method Phaser.Display.RGB#set
+     * @method Phaser.Layer3D.Math.RGB#set
      * @since 3.50.0
      *
      * @param {number} [red=0] - The red color value. A number between 0 and 1.
@@ -90,7 +90,7 @@ var RGB = new Class({
      * Compares the given rgb parameters with those in this object and returns
      * a boolean `true` value if they are equal, otherwise it returns `false`.
      *
-     * @method Phaser.Display.RGB#equals
+     * @method Phaser.Layer3D.Math.RGB#equals
      * @since 3.50.0
      *
      * @param {number} red - The red value to compare with this object.
@@ -111,7 +111,7 @@ var RGB = new Class({
      * then invokes the `onChangeCallback`, if set, passing in the
      * new RGB values.
      *
-     * @method Phaser.Display.RGB#onChange
+     * @method Phaser.Layer3D.Math.RGB#onChange
      * @since 3.50.0
      */
     onChange: function ()
@@ -129,7 +129,7 @@ var RGB = new Class({
      * Changing this property will flag this RGB object as being dirty
      * and invoke the `onChangeCallback` , if set.
      *
-     * @name Phaser.Display.RGB#r
+     * @name Phaser.Layer3D.Math.RGB#r
      * @type {number}
      * @since 3.50.0
      */
@@ -154,7 +154,7 @@ var RGB = new Class({
      * Changing this property will flag this RGB object as being dirty
      * and invoke the `onChangeCallback` , if set.
      *
-     * @name Phaser.Display.RGB#g
+     * @name Phaser.Layer3D.Math.RGB#g
      * @type {number}
      * @since 3.50.0
      */
@@ -179,7 +179,7 @@ var RGB = new Class({
      * Changing this property will flag this RGB object as being dirty
      * and invoke the `onChangeCallback` , if set.
      *
-     * @name Phaser.Display.RGB#b
+     * @name Phaser.Layer3D.Math.RGB#b
      * @type {number}
      * @since 3.50.0
      */
@@ -201,7 +201,7 @@ var RGB = new Class({
     /**
      * Nulls any external references this object contains.
      *
-     * @method Phaser.Display.RGB#destroy
+     * @method Phaser.Layer3D.Math.RGB#destroy
      * @since 3.50.0
      */
     destroy: function ()
