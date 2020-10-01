@@ -369,6 +369,109 @@ var Material = new Class({
          * This property is automatically set to true when instancing a new material.
          */
         this.needsUpdate = true;
+
+        //  Scene-level Properties that control if the material needs updating, or not
+
+        this.program = null;
+
+        this.sceneProperties = {
+            numClippingPlanes: 0,
+            fog: null,
+            outputEncoding: 'linear',
+            gammaFactor: 2,
+            lightsHash: null,
+            acceptLight: false,
+            receiveShadow: false,
+            shadowType: null
+        };
+    },
+
+    isDirty: function (scene, camera, object)
+    {
+        if (this.needsUpdate)
+        {
+            //  We know it needs an update already, so skip any further checks
+            return true;
+        }
+
+        var props = this.sceneProperties;
+
+        if (!this.program || props.fog !== scene.fog || camera.outputEncoding !== props.outputEncoding || camera.gammaFactor !== props.gammaFactor)
+        {
+            this.needsUpdate = true;
+
+            return true;
+        }
+
+        // if (scene.clippingPlanes && scene.clippingPlanes.length !== props.numClippingPlanes)
+        // {
+        //     this.needsUpdate = true;
+        // }
+
+        var acceptLight = this.acceptLight && !!scene.lights && (scene.lights.totalNum > 0);
+
+        if (acceptLight !== props.acceptLight)
+        {
+            this.needsUpdate = true;
+
+            return true;
+        }
+        else if (acceptLight)
+        {
+            if (object.receiveShadow !== props.receiveShadow || object.shadowType !== props.shadowType || !scene.lights.hash.compare(props.lightsHash))
+            {
+                this.needsUpdate = true;
+
+                return true;
+            }
+        }
+
+        return false;
+    },
+
+    update: function (scene, camera, object)
+    {
+        if (!this.isDirty(scene, camera, object))
+        {
+            //  Camera doesn't need updating, so let's bail out
+            return;
+        }
+
+        var props = this.sceneProperties;
+
+        if (!this.program)
+        {
+            // this.addEventListener('dispose', this.onMaterialDispose, this);
+        }
+
+        var oldProgram = this.program;
+
+        this.program = this.programs.getProgram(camera, this, object, scene);
+
+        if (oldProgram)
+        {
+            this.programs.releaseProgram(oldProgram);
+        }
+
+        props.fog = scene.fog;
+
+        if (scene.lights)
+        {
+            props.acceptLight = this.acceptLight;
+            props.lightsHash = scene.lights.hash.copyTo(props.lightsHash);
+            props.receiveShadow = object.receiveShadow;
+            props.shadowType = object.shadowType;
+        }
+        else
+        {
+            props.acceptLight = false;
+        }
+
+        props.numClippingPlanes = scene.clippingPlanes ? scene.clippingPlanes.length : 0;
+        props.outputEncoding = camera.outputEncoding;
+        props.gammaFactor = camera.gammaFactor;
+
+        this.needsUpdate = false;
     }
 
 });
