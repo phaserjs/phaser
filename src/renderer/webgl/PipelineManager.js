@@ -11,7 +11,6 @@ var CONST = require('./pipelines/const');
 //  Default Phaser 3 Pipelines
 var BitmapMaskPipeline = require('./pipelines/BitmapMaskPipeline');
 var LightPipeline = require('./pipelines/LightPipeline');
-var MeshPipeline = require('./pipelines/MeshPipeline');
 var MultiPipeline = require('./pipelines/MultiPipeline');
 var RopePipeline = require('./pipelines/RopePipeline');
 var SinglePipeline = require('./pipelines/SinglePipeline');
@@ -24,14 +23,13 @@ var SinglePipeline = require('./pipelines/SinglePipeline');
  * The `WebGLRenderer` owns a single instance of the Pipeline Manager, which you can access
  * via the `WebGLRenderer.pipelines` property.
  *
- * By default, there are 6 pipelines installed into the Pipeline Manager when Phaser boots:
+ * By default, there are 5 pipelines installed into the Pipeline Manager when Phaser boots:
  *
  * 1. The Multi Pipeline. Responsible for all multi-texture rendering, i.e. Sprites, Shapes.
  * 2. The Single Pipeline. Responsible for rendering Game Objects that explicitly require one bound texture.
  * 3. The Rope Pipeline. Responsible for rendering the Rope Game Object.
- * 4. The Mesh Pipeline. Responsible for rendering the Layer3D Game Object.
- * 5. The Light Pipeline. Responsible for rendering the Light Game Object.
- * 6. The Bitmap Mask Pipeline. Responsible for Bitmap Mask rendering.
+ * 4. The Light Pipeline. Responsible for rendering the Light Game Object.
+ * 5. The Bitmap Mask Pipeline. Responsible for Bitmap Mask rendering.
  *
  * You can add your own custom pipeline via the `PipelineManager.add` method. Pipelines are
  * identified by unique string-based keys.
@@ -148,7 +146,6 @@ var PipelineManager = new Class({
         this.add(CONST.SINGLE_PIPELINE, new SinglePipeline({ game: game }));
         this.add(CONST.ROPE_PIPELINE, new RopePipeline({ game: game }));
         this.add(CONST.LIGHT_PIPELINE, new LightPipeline({ game: game }));
-        this.add(CONST.MESH_PIPELINE, new MeshPipeline({ game: game }));
 
         this.set(this.MULTI_PIPELINE);
     },
