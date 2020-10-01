@@ -2331,6 +2331,8 @@ var Body = new Class({
     {
         this.x += x;
 
+        this.updateCenter();
+
         if (vx !== null)
         {
             this.velocity.x = vx;
@@ -2364,6 +2366,8 @@ var Body = new Class({
     processY: function (y, vy, up, down)
     {
         this.y += y;
+
+        this.updateCenter();
 
         if (vy !== null)
         {
