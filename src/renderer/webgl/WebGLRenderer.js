@@ -404,6 +404,17 @@ var WebGLRenderer = new Class({
         this.instancedArraysExtension = null;
 
         /**
+         * If the browser supports the `OES_vertex_array_object` extension, this property will hold
+         * a reference to the glExtension for it.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#vaoExtension
+         * @type {OES_vertex_array_object}
+         * @default null
+         * @since 3.50.0
+         */
+        this.vaoExtension = null;
+
+        /**
          * The WebGL Extensions loaded into the current context.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#extensions
@@ -784,6 +795,10 @@ var WebGLRenderer = new Class({
         var angleString = 'ANGLE_instanced_arrays';
 
         this.instancedArraysExtension = (exts.indexOf(angleString) > -1) ? gl.getExtension(angleString) : null;
+
+        var vaoString = 'OES_vertex_array_object';
+
+        this.vaoExtension = (exts.indexOf(vaoString) > -1) ? gl.getExtension(vaoString) : null;
 
         //  Setup initial WebGL state
         gl.disable(gl.DEPTH_TEST);
