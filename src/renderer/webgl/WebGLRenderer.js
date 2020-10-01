@@ -382,17 +382,29 @@ var WebGLRenderer = new Class({
         this.gl = null;
 
         /**
-         * Array of strings that indicate which WebGL extensions are supported by the browser
+         * Array of strings that indicate which WebGL extensions are supported by the browser.
+         * This is populated in the `boot` method.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#supportedExtensions
-         * @type {object}
+         * @type {string[]}
          * @default null
          * @since 3.0.0
          */
         this.supportedExtensions = null;
 
         /**
-         * Extensions loaded into the current context
+         * If the browser supports the `ANGLE_instanced_arrays` extension, this property will hold
+         * a reference to the glExtension for it.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#instancedArraysExtension
+         * @type {ANGLE_instanced_arrays}
+         * @default null
+         * @since 3.50.0
+         */
+        this.instancedArraysExtension = null;
+
+        /**
+         * The WebGL Extensions loaded into the current context.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#extensions
          * @type {object}
@@ -402,7 +414,7 @@ var WebGLRenderer = new Class({
         this.extensions = {};
 
         /**
-         * Stores the current WebGL component formats for further use
+         * Stores the current WebGL component formats for further use.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#glFormats
          * @type {array}
@@ -415,7 +427,7 @@ var WebGLRenderer = new Class({
          * Stores the supported WebGL texture compression formats.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#compression
-         * @type {array}
+         * @type {object}
          * @since 3.8.0
          */
         this.compression = {
@@ -768,6 +780,10 @@ var WebGLRenderer = new Class({
         this.compression.S3TC = gl.getExtension(extString + 's3tc') || gl.getExtension(wkExtString + 's3tc');
 
         this.supportedExtensions = exts;
+
+        var angleString = 'ANGLE_instanced_arrays';
+
+        this.instancedArraysExtension = (exts.indexOf(angleString) > -1) ? gl.getExtension(angleString) : null;
 
         //  Setup initial WebGL state
         gl.disable(gl.DEPTH_TEST);
