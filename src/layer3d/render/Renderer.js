@@ -8,6 +8,8 @@ var Class = require('../../utils/Class');
 var CONST = require('../const');
 var RenderState = require('./RenderState');
 var RenderTargetBack = require('./RenderTargetBack');
+var WebGLGeometry = require('./WebGLGeometry');
+var WebGLVertexArray = require('./WebGLVertexArray');
 var Vector3 = require('../../math/Vector3');
 var Vector4 = require('../../math/Vector4');
 
@@ -39,23 +41,14 @@ var Renderer = new Class({
 
         this._usedTextureUnits = 0;
 
-        var state = new RenderState(this);
-
-        this.state = state;
+        this.state = new RenderState(this);
+        this.vertexArrayBindings = new WebGLVertexArray(this);
+        this.geometry = new WebGLGeometry(this);
 
         /*
-        var vertexArrayBindings = new WebGLVertexArrayBindings(gl, properties, capabilities);
-        this.vertexArrayBindings = vertexArrayBindings;
-
-        var texture = new WebGLTexture(gl, state, properties, capabilities);
-        this.texture = texture;
-
-        var renderBuffer = new WebGLRenderBuffer(gl, properties, capabilities);
-
+        this.texture = new WebGLTexture(gl, state, properties, capabilities);
+        this.renderBuffer = new WebGLRenderBuffer(gl, properties, capabilities);
         this.renderTarget = new WebGLRenderTarget(gl, state, texture, renderBuffer, properties, capabilities);
-
-        this.geometry = new WebGLGeometry(gl, state, vertexArrayBindings, properties, capabilities);
-
         this.programs = new WebGLPrograms(gl, state, capabilities);
         */
     },
@@ -166,18 +159,13 @@ var Renderer = new Class({
             state.setProgram(program);
 
             this.geometry.setGeometry(geometry);
-
-            //  Morph targets?
-
             this.vertexArrayBindings.setup(object, geometry, program);
 
             var uniforms = this.updateUniforms(scene, camera, material, object);
 
-            //  Bones?
-
-            //  Lights
             if (material.acceptLight && scene.lights)
             {
+                //  TODO ----------------------------------------------------------------------------------
                 this.uploadLights(uniforms, scene.lights, object.receiveShadow, camera);
             }
 

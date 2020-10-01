@@ -61,6 +61,12 @@ var Geometry = new Class({
          * A version number, incremented every time the attribute object or index object changes to mark VAO drity.
          */
         this.version = 0;
+
+        this.sceneProperties = {
+            created: false,
+            attributes: {},
+            vaos: {}
+        };
     },
 
     /**
