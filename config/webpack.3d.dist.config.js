@@ -2,6 +2,7 @@
 
 const webpack = require('webpack');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
     mode: 'production',
@@ -9,13 +10,13 @@ module.exports = {
     context: `${__dirname}/../src/`,
 
     entry: {
-        'phaser-facebook-instant-games': './phaser.js',
-        'phaser-facebook-instant-games.min': './phaser.js'
+        phaser: './phaser.js',
+        'phaser.min': './phaser.js'
     },
 
     output: {
         path: `${__dirname}/../dist/`,
-        filename: '[name].js',
+        filename: '[name]3d.js',
         library: 'Phaser',
         libraryTarget: 'umd',
         umdNamedDefine: true
@@ -46,10 +47,12 @@ module.exports = {
             "typeof CANVAS_RENDERER": JSON.stringify(true),
             "typeof WEBGL_RENDERER": JSON.stringify(true),
             "typeof EXPERIMENTAL": JSON.stringify(false),
-            "typeof PLUGIN_3D": JSON.stringify(false),
+            "typeof PLUGIN_3D": JSON.stringify(true),
             "typeof PLUGIN_CAMERA3D": JSON.stringify(false),
-            "typeof PLUGIN_FBINSTANT": JSON.stringify(true),
+            "typeof PLUGIN_FBINSTANT": JSON.stringify(false),
             "typeof FEATURE_SOUND": JSON.stringify(true)
-        })
+        }),
+
+        new CleanWebpackPlugin()
     ]
 };

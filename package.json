@@ -23,6 +23,7 @@
     "buildfb": "webpack --config config/webpack.fb.config.js",
     "watchfb": "webpack --config config/webpack.fb.config.js --watch",
     "dist": "webpack --config config/webpack.dist.config.js",
+    "dist3d": "webpack --config config/webpack.3d.dist.config.js",
     "distfb": "webpack --config config/webpack.fb.dist.config.js",
     "distfull": "npm run dist && npm run distfb",
     "plugin.cam3d": "webpack --config plugins/camera3d/webpack.config.js",
