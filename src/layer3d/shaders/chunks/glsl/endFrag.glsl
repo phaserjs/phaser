@@ -1,0 +1,1 @@
+gl_FragColor = outColor;
