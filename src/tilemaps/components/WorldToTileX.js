@@ -4,10 +4,8 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CONST = require('../../const.js');
-
 /**
- * Converts from world X coordinates (pixels) to orthogonal tile X coordinates (tile units), factoring in the
+ * Converts from world X coordinates (pixels) to tile X coordinates (tile units), factoring in the
  * layer's position, scale and scroll.
  *
  * @function Phaser.Tilemaps.Components.WorldToTileX
@@ -20,9 +18,8 @@ var CONST = require('../../const.js');
  *
  * @return {number} The X location in tile units.
  */
-var OrthoWorldToTileX = function (worldX, snapToFloor, camera, layer)
+var WorldToTileX = function (worldX, snapToFloor, camera, layer)
 {
-
     if (snapToFloor === undefined) { snapToFloor = true; }
 
     var tileWidth = layer.baseTileWidth;
@@ -42,27 +39,6 @@ var OrthoWorldToTileX = function (worldX, snapToFloor, camera, layer)
     return snapToFloor
         ? Math.floor(worldX / tileWidth)
         : worldX / tileWidth;
-   
-};
-
-var nullFunc = function ()
-{
-    console.warn('With the current map type you have to use the WorldToTileXY function.');
-    return null;
-};
-
-var WorldToTileX = function (orientation)
-{
-    switch (orientation)
-    {
-        case CONST.ORTHOGONAL:
-            return OrthoWorldToTileX;
-                
-        default:
-            return nullFunc;
-                
-    }
-
 };
 
 module.exports = WorldToTileX;
