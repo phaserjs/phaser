@@ -2254,8 +2254,8 @@ var World = new Class({
 
             tilemapLayer = tile.tilemapLayer;
 
-            var point = tilemapLayer.tileToWorldXY(tile.x,tile.y);
-            
+            var point = tilemapLayer.tileToWorldXY(tile.x, tile.y);
+
             tileWorldRect.left = point.x;
             tileWorldRect.top = point.y;
 
