@@ -170,6 +170,7 @@ var LightsManager = new Class({
 
             if (distance < light.radius + cameraRadius)
             {
+                lights[i].dirty = true;
                 culledLights.push(lights[i]);
             }
         }
