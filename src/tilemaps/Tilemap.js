@@ -262,18 +262,25 @@ var Tilemap = new Class({
          */
         this.hexSideLength = mapData.hexSideLength;
 
+        var orientation = this.orientation;
+
         /**
-         * Components used for conversions between real world coordinates and tile coordinates,
-         * initialized here to prevent switching between them at runtime depending on map orientation.
-         * refer to the components themselves for documentation.
-         * @since 3.2.2
+         * Functions used to handle world to tile, and tile to world, conversion.
+         * Cached here for internal use by public methods such as `worldToTileXY`, etc.
+         *
+         * @name Phaser.Tilemaps.Tilemap#_convert
+         * @private
+         * @type {object}
+         * @since 3.50.0
          */
-        this.WorldToTileXY = TilemapComponents.WorldToTileXY(this.orientation);
-        this.WorldToTileX = TilemapComponents.WorldToTileX(this.orientation);
-        this.WorldToTileY = TilemapComponents.WorldToTileY(this.orientation);
-        this.TileToWorldXY = TilemapComponents.TileToWorldXY(this.orientation);
-        this.TileToWorldX = TilemapComponents.TileToWorldX(this.orientation);
-        this.TileToWorldY = TilemapComponents.TileToWorldY(this.orientation);
+        this._convert = {
+            WorldToTileXY: TilemapComponents.GetWorldToTileXYFunction(orientation),
+            WorldToTileX: TilemapComponents.GetWorldToTileXFunction(orientation),
+            WorldToTileY: TilemapComponents.GetWorldToTileYFunction(orientation),
+            TileToWorldXY: TilemapComponents.GetTileToWorldXYFunction(orientation),
+            TileToWorldX: TilemapComponents.GetTileToWorldXFunction(orientation),
+            TileToWorldY: TilemapComponents.GetTileToWorldYFunction(orientation)
+        };
     },
 
     /**
@@ -2369,7 +2376,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return this.TileToWorldX(tileX, camera, layer);
+        return this._convert.TileToWorldX(tileX, camera, layer);
     },
 
     /**
@@ -2394,7 +2401,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return this.TileToWorldY(tileX, camera, layer);
+        return this._convert.TileToWorldY(tileX, camera, layer);
     },
 
     /**
@@ -2422,7 +2429,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return this.TileToWorldXY(tileX, tileY, point, camera, layer);
+        return this._convert.TileToWorldXY(tileX, tileY, point, camera, layer);
     },
 
     /**
@@ -2493,7 +2500,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return this.WorldToTileX(worldX, snapToFloor, camera, layer);
+        return this._convert.WorldToTileX(worldX, snapToFloor, camera, layer);
     },
 
     /**
@@ -2518,7 +2525,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return this.WorldToTileY(worldY, snapToFloor, camera, layer);
+        return this._convert.WorldToTileY(worldY, snapToFloor, camera, layer);
     },
 
     /**
@@ -2546,7 +2553,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return this.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, layer);
+        return this._convert.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, layer);
     },
 
     /**
