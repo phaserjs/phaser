@@ -8,15 +8,16 @@ var Geom = require('../../geom/');
 var GetTilesWithin = require('./GetTilesWithin');
 var Intersects = require('../../geom/intersects/');
 var NOOP = require('../../utils/NOOP');
-
+var Vector2 = require('../../math/Vector2');
 
 var TriangleToRectangle = function (triangle, rect)
 {
     return Intersects.RectangleToTriangle(rect, triangle);
 };
 
-// Note: Could possibly be optimized by copying the shape and shifting it into tilemapLayer
-// coordinates instead of shifting the tiles.
+var point = new Vector2();
+var pointStart = new Vector2();
+var pointEnd = new Vector2();
 
 /**
  * Gets the tiles that overlap with the given shape in the given layer. The shape must be a Circle,
@@ -70,12 +71,14 @@ var GetTilesWithinShape = function (shape, filteringOptions, camera, layer)
     }
 
     // Top left corner of the shapes's bounding box, rounded down to include partial tiles
-    var pointStart = layer.tilemapLayer.worldToTileXY(shape.left, shape.top, true, undefined, camera);
+    layer.tilemapLayer.worldToTileXY(shape.left, shape.top, true, pointStart, camera);
+
     var xStart = pointStart.x;
     var yStart = pointStart.y;
 
     // Bottom right corner of the shapes's bounding box, rounded up to include partial tiles
-    var pointEnd = layer.tilemapLayer.worldToTileXY(shape.right, shape.bottom, true, undefined, camera);
+    layer.tilemapLayer.worldToTileXY(shape.right, shape.bottom, true, pointEnd, camera);
+
     var xEnd = Math.ceil(pointEnd.x);
     var yEnd = Math.ceil(pointEnd.y);
 
@@ -83,6 +86,7 @@ var GetTilesWithinShape = function (shape, filteringOptions, camera, layer)
     // to grab tiles for shapes that don't have a height or width (e.g. a horizontal line).
     var width = Math.max(xEnd - xStart, 1);
     var height = Math.max(yEnd - yStart, 1);
+
     var tiles = GetTilesWithin(xStart, yStart, width, height, filteringOptions, layer);
 
     var tileWidth = layer.tileWidth;
@@ -100,9 +104,12 @@ var GetTilesWithinShape = function (shape, filteringOptions, camera, layer)
     for (var i = 0; i < tiles.length; i++)
     {
         var tile = tiles[i];
-        var point = layer.tilemapLayer.tileToWorldXY(tile.x, tile.y, undefined, camera, layer);
+
+        layer.tilemapLayer.tileToWorldXY(tile.x, tile.y, point, camera, layer);
+
         tileRect.x = point.x;
         tileRect.y = point.y;
+
         if (intersectTest(shape, tileRect))
         {
             results.push(tile);
