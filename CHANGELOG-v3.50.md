@@ -404,14 +404,22 @@ The Tilemap system now supports isometric, hexagonal and staggered map types, al
 * `Phaser.Types.Tilemaps.TilemapOrientationType` is a new type def that holds the 4 types of map orientation now supported.
 * The `Tile.updatePixelXY` method now updates the tile XY position based on map type.
 * `Tilemap.hexSideLength` is a new property that holds the length of the hexagon sides, if using Hexagonal Tilemaps.
-* `Tilemaps.Components.GetWorldToTileXFunction` is a new function that returns the correct conversion function to use.
-* `Tilemaps.Components.GetWorldToTileYFunction` is a new function that returns the correct conversion function to use.
-* `Tilemaps.Components.GetWorldToTileXYFunction` is a new function that returns the correct conversion function to use.
-* `Tilemaps.Components.HexagonalWorldToTileY` is a new function that converts world Y coordinates from pixels to hexagonal tile Y coordinates.
-* `Tilemaps.Components.StaggeredWorldToTileY` is a new function that converts world Y coordinates from pixels to staggered tile Y coordinates.
+* `Tilemaps.Components.HexagonalWorldToTileY` is a new function that converts a world Y coordinate to hexagonal tile Y coordinate.
+* `Tilemaps.Components.StaggeredWorldToTileY` is a new function that converts a world Y coordinate to staggered tile Y coordinate.
 * `Tilemaps.Components.HexagonalWorldToTileXY` is a new function that converts world coordinates to hexagonal tile coordinates.
 * `Tilemaps.Components.IsometricWorldToTileXY` is a new function that converts world coordinates to isometric tile coordinates.
 * `Tilemaps.Components.StaggeredWorldToTileXY` is a new function that converts world coordinates to staggered tile coordinates.
+* `Tilemaps.Components.HexagonalTileToWorldY` is a new function that converts a hexagonal Y coordinate to a world coordinate.
+* `Tilemaps.Components.StaggeredTileToWorldY` is a new function that converts a staggered Y coordinate to a world coordinate.
+* `Tilemaps.Components.HexagonalTileToWorldXY` is a new function that converts hexagonal tile coordinates to world coordinates.
+* `Tilemaps.Components.IsometricTileToWorldXY` is a new function that converts isometric tile coordinates to world coordinates.
+* `Tilemaps.Components.StaggeredTileToWorldXY` is a new function that converts staggered tile coordinates to world coordinates.
+* `Tilemaps.Components.GetTileToWorldXFunction` is a new function that returns the correct conversion function to use.
+* `Tilemaps.Components.GetTileToWorldYFunction` is a new function that returns the correct conversion function to use.
+* `Tilemaps.Components.GetTileToWorldXXFunction` is a new function that returns the correct conversion function to use.
+* `Tilemaps.Components.GetWorldToTileXFunction` is a new function that returns the correct conversion function to use.
+* `Tilemaps.Components.GetWorldToTileYFunction` is a new function that returns the correct conversion function to use.
+* `Tilemaps.Components.GetWorldToTileXYFunction` is a new function that returns the correct conversion function to use.
 
 ### Mesh Game Object - New Features, Updates and API Changes
 
