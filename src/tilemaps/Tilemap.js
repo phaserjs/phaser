@@ -68,6 +68,15 @@ var Tileset = require('./Tileset');
  * child called 'Layer 1'. In the Tilemap object, 'Layer 1' will have the name
  * 'ParentGroup/Layer 1'.
  *
+ * As of Phaser 3.50.0 the Tilemap API now supports the following types of map:
+ *
+ * 1) Orthogonal
+ * 2) Isometric
+ * 3) Hexagonal
+ * 4) Staggered
+ *
+ * Prior to this release, only orthogonal maps were supported.
+ *
  * @class Tilemap
  * @memberof Phaser.Tilemaps
  * @constructor
