@@ -399,7 +399,11 @@ The Animation API has had a significant overhaul to improve playback handling. I
 
 ### Tilemap - New Features, Updates and API Changes
 
-The Tilemap system now supports isometric, hexagonal and staggered map types, along with the previous orthogonal format.
+The Tilemap system now supports isometric, hexagonal and staggered map types, along with the previous orthogonal format, thanks to a PR from @svipal.
+
+You can now export maps using any of these orientations from the Tiled Map Editor and load them into Phaser using the standard tilemap loading API.
+
+The following are all of the new components and functions that made this possible:
 
 * `Phaser.Types.Tilemaps.TilemapOrientationType` is a new type def that holds the 4 types of map orientation now supported.
 * The `Tile.updatePixelXY` method now updates the tile XY position based on map type.
@@ -434,7 +438,6 @@ The Tilemap system now supports isometric, hexagonal and staggered map types, al
 * `Tilemaps.Components.HexagonalCullBounds` is a new function that calculates the cull bounds for a hexagonal map.
 * `Tilemaps.Components.StaggeredCullBounds` is a new function that calculates the cull bounds for a staggered map.
 * `Tilemaps.Components.RunCull` is a new function that runs the culling process from the combined bounds and tilemap.
-
 * `Tilemap._convert` is a new internal private hash of tilemap conversion functions used by the public API.
 
 ### Mesh Game Object - New Features, Updates and API Changes
