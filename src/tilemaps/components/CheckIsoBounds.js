@@ -5,25 +5,24 @@
  */
 
 /**
- * Sets the tiles in the given rectangular area (in tile coordinates) of the layer with the
- * specified index. Tiles will be set to collide if the given index is a colliding index.
- * Collision information in the region will be recalculated.
+ * Checks if the given tile coordinate is within the isometric layer bounds, or not.
  *
  * @function Phaser.Tilemaps.Components.CheckIsoBounds
- * @private
- * @since 3.50.iso
+ * @since 3.50.0
  *
  * @param {integer} tileX - The x coordinate, in tiles, not pixels.
  * @param {integer} tileY - The y coordinate, in tiles, not pixels.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to check against.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to run the cull check against.
+ *
+ * @return {boolean} Returns `true` if the coordinates are within the iso bounds.
  */
-var CheckIsoBounds = function (tileX,tileY,layer,camera)
+var CheckIsoBounds = function (tileX, tileY, layer, camera)
 {
     var tilemapLayer = layer.tilemapLayer;
     var cullDistances = tilemapLayer.isoCullDistances;
     var pos = tilemapLayer.tileToWorldXY(tileX,tileY,undefined,camera);
-    
+
     // we always subtract 1/2 of the tile's height/width to make the culling distance start from the center of the tiles.
     return pos.x > camera.worldView.x + tilemapLayer.scaleX * layer.tileWidth * (- cullDistances.x - 1 / 2)
         && pos.x < camera.worldView.right + tilemapLayer.scaleX * layer.tileWidth * (cullDistances.x - 1 / 2)
