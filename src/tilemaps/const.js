@@ -56,27 +56,33 @@ var CONST = {
      * Get the Tilemap orientation from the given string.
      *
      * @name Phaser.Tilemaps.fromOrientationString
-     * @const
      * @type {function}
      * @since 3.50.0
+     *
+     * @param {string} [orientation] - The orientation type as a string.
+     *
+     * @return {Phaser.Types.Tilemaps.TilemapOrientationType} The Tilemap Orientation type.
      */
     fromOrientationString: function (orientation)
     {
-        var constor = CONST.ORTHOGONAL;
+        orientation = orientation.toLowerCase;
 
         if (orientation === 'isometric')
         {
-            constor = CONST.ISOMETRIC;
+            return CONST.ISOMETRIC;
         }
         else if (orientation === 'staggered')
         {
-            constor = CONST.STAGGERED;
+            return CONST.STAGGERED;
         }
         else if (orientation === 'hexagonal')
         {
-            constor = CONST.HEXAGONAL;
+            return CONST.HEXAGONAL;
         }
-        return constor;
+        else
+        {
+            return CONST.ORTHOGONAL;
+        }
     }
 
 };
