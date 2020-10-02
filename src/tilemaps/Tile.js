@@ -4,7 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CONST = require('../const.js');
+var CONST = require('./const.js');
 var Class = require('../utils/Class');
 var Components = require('../gameobjects/components');
 var Rectangle = require('../geom/rectangle');
@@ -303,7 +303,7 @@ var Tile = new Class({
      *
      * @param {Phaser.Tilemaps.Tile} tile - The tile to copy from.
      *
-     * @return {Phaser.Tilemaps.Tile} This Tile object.
+     * @return {this} This Tile object instance.
      */
     copy: function (tile)
     {
@@ -552,7 +552,7 @@ var Tile = new Class({
      *
      * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate interesting faces for this tile and its neighbors.
      *
-     * @return {Phaser.Tilemaps.Tile} This Tile object.
+     * @return {this} This Tile object instance.
      */
     resetCollision: function (recalculateFaces)
     {
@@ -587,7 +587,7 @@ var Tile = new Class({
      * @method Phaser.Tilemaps.Tile#resetFaces
      * @since 3.0.0
      *
-     * @return {Phaser.Tilemaps.Tile} This Tile object.
+     * @return {this} This Tile object instance.
      */
     resetFaces: function ()
     {
@@ -612,7 +612,7 @@ var Tile = new Class({
      * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate interesting faces
      * for this tile and its neighbors.
      *
-     * @return {Phaser.Tilemaps.Tile} This Tile object.
+     * @return {this} This Tile object instance.
      */
     setCollision: function (left, right, up, down, recalculateFaces)
     {
@@ -654,7 +654,7 @@ var Tile = new Class({
      * @param {function} callback - Callback function.
      * @param {object} context - Callback will be called within this context.
      *
-     * @return {Phaser.Tilemaps.Tile} This Tile object.
+     * @return {this} This Tile object instance.
      */
     setCollisionCallback: function (callback, context)
     {
@@ -683,7 +683,7 @@ var Tile = new Class({
      * @param {integer} baseWidth - The base width a tile in the map (in pixels).
      * @param {integer} baseHeight - The base height of the tile in pixels (in pixels).
      *
-     * @return {Phaser.Tilemaps.Tile} This Tile object.
+     * @return {this} This Tile object instance.
      */
     setSize: function (tileWidth, tileHeight, baseWidth, baseHeight)
     {
@@ -698,43 +698,48 @@ var Tile = new Class({
     },
 
     /**
-     * Used internally. Updates the tile's world XY position based on the current tile size.
+     * Used internally. Updates the tiles world XY position based on the current tile size.
      *
      * @method Phaser.Tilemaps.Tile#updatePixelXY
      * @since 3.0.0
      *
-     * @return {Phaser.Tilemaps.Tile} This Tile object.
+     * @return {this} This Tile object instance.
      */
     updatePixelXY: function ()
     {
-        if (this.layer.orientation === CONST.ISOMETRIC)
+        var orientation = this.layer.orientation;
+
+        if (orientation === CONST.ORTHOGONAL)
         {
-            // reminder : for the tilemap to be centered we have to move the image to the right with the camera !
-            // this is crucial for wordtotile, tiletoworld to work.
+            //  In orthogonal mode, Tiled places tiles on a grid of baseWidth x baseHeight. The origin for a tile is the
+            //  bottom left, while the Phaser renderer assumes the origin is the top left. The y
+            //  coordinate needs to be adjusted by the difference.
+
+            this.pixelX = this.x * this.baseWidth;
+            this.pixelY = this.y * this.baseHeight;
+        }
+        else if (orientation === CONST.ISOMETRIC)
+        {
+            //  Reminder: For the tilemap to be centered we have to move the image to the right with the camera!
+            //  This is crucial for wordtotile, tiletoworld to work.
+
             this.pixelX = (this.x - this.y) * this.baseWidth * 0.5;
             this.pixelY = (this.x + this.y) * this.baseHeight * 0.5;
         }
-        else if (this.layer.orientation === CONST.STAGGERED)
+        else if (orientation === CONST.STAGGERED)
         {
             this.pixelX = this.x * this.baseWidth + this.y % 2 * (this.baseWidth / 2);
             this.pixelY = this.y * (this.baseHeight / 2);
         }
-        else if (this.layer.orientation === CONST.HEXAGONAL)
+        else if (orientation === CONST.HEXAGONAL)
         {
             var sidel = this.layer.hexSideLength;
             var rowHeight = ((this.baseHeight - sidel) / 2 + sidel);
+
             this.pixelX = this.x * this.baseWidth + this.y % 2 * (this.baseWidth / 2);
             this.pixelY = this.y * rowHeight;
         }
-        else if (this.layer.orientation === CONST.ORTHOGONAL)
-        {
-            // In orthogonal mode, Tiled places tiles on a grid of baseWidth x baseHeight. The origin for a tile is the
-            // bottom left, while the Phaser renderer assumes the origin is the top left. The y
-            // coordinate needs to be adjusted by the difference.
-            this.pixelX = this.x * this.baseWidth;
-            this.pixelY = this.y * this.baseHeight;
-            
-        }
+
         return this;
     },
 
