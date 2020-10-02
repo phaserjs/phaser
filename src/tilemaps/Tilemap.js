@@ -253,18 +253,19 @@ var Tilemap = new Class({
         this.currentLayerIndex = 0;
 
         /**
-         * Optional : Only for hexagonal tilemaps.
          * The length of the horizontal sides of the hexagon.
-         * @name Phaser.Tilemaps.MapData#tiles
+         * Only used for hexagonal Tilemaps.
+         *
+         * @name Phaser.Tilemaps.Tilemap#hexSideLength
          * @type {integer}
-         * @since 3.0.0
+         * @since 3.50.0
          */
         this.hexSideLength = mapData.hexSideLength;
 
         /**
          * Components used for conversions between real world coordinates and tile coordinates,
          * initialized here to prevent switching between them at runtime depending on map orientation.
-         * refer to the components themselves for documentation. 
+         * refer to the components themselves for documentation.
          * @since 3.2.2
          */
         this.WorldToTileXY = TilemapComponents.WorldToTileXY(this.orientation);
@@ -2414,7 +2415,7 @@ var Tilemap = new Class({
      *
      * @return {?Phaser.Math.Vector2} Returns a point, or null if the layer given was invalid.
      */
-    
+
     tileToWorldXY: function (tileX, tileY, point, camera, layer)
     {
         layer = this.getLayer(layer);
