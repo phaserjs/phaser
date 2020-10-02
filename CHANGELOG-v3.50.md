@@ -404,6 +404,12 @@ The Tilemap system now supports isometric, hexagonal and staggered map types, al
 * `Phaser.Types.Tilemaps.TilemapOrientationType` is a new type def that holds the 4 types of map orientation now supported.
 * The `Tile.updatePixelXY` method now updates the tile XY position based on map type.
 * `Tilemap.hexSideLength` is a new property that holds the length of the hexagon sides, if using Hexagonal Tilemaps.
+* `DynamicTilemapLayer.isoCullDistances` is a new Vector2 property that allows you to control how far the tiles will still be rendered for, out of the camera bounds, before they are culled.
+* `StaticTilemapLayer.isoCullDistances` is a new Vector2 property that allows you to control how far the tiles will still be rendered for, out of the camera bounds, before they are culled.
+* `LayerData.orientation` is a new property that holds the tilemap layers orientation constant.
+* `LayerData.hexSideLength` is a new property that holds the length of the hexagon sides, if using Hexagonal Tilemaps.
+* `MapData.orientation` is a new property that holds the tilemap layers orientation constant.
+* `MapData.hexSideLength` is a new property that holds the length of the hexagon sides, if using Hexagonal Tilemaps.
 * `Tilemaps.Components.HexagonalWorldToTileY` is a new function that converts a world Y coordinate to hexagonal tile Y coordinate.
 * `Tilemaps.Components.StaggeredWorldToTileY` is a new function that converts a world Y coordinate to staggered tile Y coordinate.
 * `Tilemaps.Components.HexagonalWorldToTileXY` is a new function that converts world coordinates to hexagonal tile coordinates.
@@ -420,6 +426,7 @@ The Tilemap system now supports isometric, hexagonal and staggered map types, al
 * `Tilemaps.Components.GetWorldToTileXFunction` is a new function that returns the correct conversion function to use.
 * `Tilemaps.Components.GetWorldToTileYFunction` is a new function that returns the correct conversion function to use.
 * `Tilemaps.Components.GetWorldToTileXYFunction` is a new function that returns the correct conversion function to use.
+* `Tilemap._convert` is a new internal private hash of tilemap conversion functions used by the public API.
 
 ### Mesh Game Object - New Features, Updates and API Changes
 
