@@ -397,6 +397,22 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * `GenerateFrameNumbers` can now accept the `start` and `end` parameters in reverse order, meaning you can now do `{ start: 10, end: 1 }` to create the animation in reverse.
 * `GenerateFrameNames` can now accept the `start` and `end` parameters in reverse order, meaning you can now do `{ start: 10, end: 1 }` to create the animation in reverse.
 
+### Tilemap - New Features, Updates and API Changes
+
+The Tilemap system now supports isometric, hexagonal and staggered map types, along with the previous orthogonal format.
+
+* `Phaser.Types.Tilemaps.TilemapOrientationType` is a new type def that holds the 4 types of map orientation now supported.
+* The `Tile.updatePixelXY` method now updates the tile XY position based on map type.
+* `Tilemap.hexSideLength` is a new property that holds the length of the hexagon sides, if using Hexagonal Tilemaps.
+* `Tilemaps.Components.GetWorldToTileXFunction` is a new function that returns the correct conversion function to use.
+* `Tilemaps.Components.GetWorldToTileYFunction` is a new function that returns the correct conversion function to use.
+* `Tilemaps.Components.GetWorldToTileXYFunction` is a new function that returns the correct conversion function to use.
+* `Tilemaps.Components.HexagonalWorldToTileY` is a new function that converts world Y coordinates from pixels to hexagonal tile Y coordinates.
+* `Tilemaps.Components.StaggeredWorldToTileY` is a new function that converts world Y coordinates from pixels to staggered tile Y coordinates.
+* `Tilemaps.Components.HexagonalWorldToTileXY` is a new function that converts world coordinates to hexagonal tile coordinates.
+* `Tilemaps.Components.IsometricWorldToTileXY` is a new function that converts world coordinates to isometric tile coordinates.
+* `Tilemaps.Components.StaggeredWorldToTileXY` is a new function that converts world coordinates to staggered tile coordinates.
+
 ### Mesh Game Object - New Features, Updates and API Changes
 
 //  TODO
