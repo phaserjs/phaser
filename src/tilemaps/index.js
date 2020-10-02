@@ -4,11 +4,14 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var CONST = require('./const');
+var Extend = require('../utils/object/Extend');
+
 /**
  * @namespace Phaser.Tilemaps
  */
 
-module.exports = {
+var PhaserTilemaps = {
 
     Components: require('./components'),
     Parsers: require('./parsers'),
@@ -30,3 +33,11 @@ module.exports = {
     StaticTilemapLayer: require('./staticlayer/StaticTilemapLayer')
 
 };
+
+//   Merge in the consts
+
+PhaserTilemaps = Extend(false, PhaserTilemaps, CONST);
+
+//  Export it
+
+module.exports = PhaserTilemaps;
