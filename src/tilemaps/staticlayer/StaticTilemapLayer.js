@@ -223,25 +223,33 @@ var StaticTilemapLayer = new Class({
         this.cullPaddingY = 1;
 
         /**
-         * Canvas only.
-         *
          * The callback that is invoked when the tiles are culled.
          *
-         * By default it will call `TilemapComponents.CullTiles` but you can override this to call any function you like.
+         * For a Static Tilemap Layer this is only used for the Canvas Renderer.
          *
-         * It will be sent 3 arguments:
+         * It will call a different function based on the map orientation:
+         *
+         * Orthogonal (the default) is `TilemapComponents.CullTiles`
+         * Isometric is `TilemapComponents.IsometricCullTiles`
+         * Hexagonal is `TilemapComponents.HexagonalCullTiles`
+         * Staggered is `TilemapComponents.StaggeredCullTiles`
+         *
+         * Howevr, you can override this to call any function you like.
+         *
+         * It will be sent 4 arguments:
          *
          * 1. The Phaser.Tilemaps.LayerData object for this Layer
          * 2. The Camera that is culling the layer. You can check its `dirty` property to see if it has changed since the last cull.
          * 3. A reference to the `culledTiles` array, which should be used to store the tiles you want rendered.
+         * 4. The Render Order constant.
          *
          * See the `TilemapComponents.CullTiles` source code for details on implementing your own culling system.
          *
          * @name Phaser.Tilemaps.StaticTilemapLayer#cullCallback
          * @type {function}
-         * @since 3.12.0
+         * @since 3.11.0
          */
-        this.cullCallback = TilemapComponents.CullTiles;
+        this.cullCallback = TilemapComponents.GetCullTilesFunction(this.layer.orientation);
 
         /**
          * A reference to the renderer.

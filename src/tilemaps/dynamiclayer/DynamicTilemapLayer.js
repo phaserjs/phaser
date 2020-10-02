@@ -208,13 +208,21 @@ var DynamicTilemapLayer = new Class({
         /**
          * The callback that is invoked when the tiles are culled.
          *
-         * By default it will call `TilemapComponents.CullTiles` but you can override this to call any function you like.
+         * It will call a different function based on the map orientation:
          *
-         * It will be sent 3 arguments:
+         * Orthogonal (the default) is `TilemapComponents.CullTiles`
+         * Isometric is `TilemapComponents.IsometricCullTiles`
+         * Hexagonal is `TilemapComponents.HexagonalCullTiles`
+         * Staggered is `TilemapComponents.StaggeredCullTiles`
+         *
+         * Howevr, you can override this to call any function you like.
+         *
+         * It will be sent 4 arguments:
          *
          * 1. The Phaser.Tilemaps.LayerData object for this Layer
          * 2. The Camera that is culling the layer. You can check its `dirty` property to see if it has changed since the last cull.
          * 3. A reference to the `culledTiles` array, which should be used to store the tiles you want rendered.
+         * 4. The Render Order constant.
          *
          * See the `TilemapComponents.CullTiles` source code for details on implementing your own culling system.
          *
@@ -222,9 +230,7 @@ var DynamicTilemapLayer = new Class({
          * @type {function}
          * @since 3.11.0
          */
-        this.cullCallback = TilemapComponents.CullTiles(this.layer.orientation);
-
-        //  TODO ^^^
+        this.cullCallback = TilemapComponents.GetCullTilesFunction(this.layer.orientation);
 
         /**
          * The rendering (draw) order of the tiles in this layer.
