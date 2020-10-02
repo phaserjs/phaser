@@ -426,6 +426,15 @@ The Tilemap system now supports isometric, hexagonal and staggered map types, al
 * `Tilemaps.Components.GetWorldToTileXFunction` is a new function that returns the correct conversion function to use.
 * `Tilemaps.Components.GetWorldToTileYFunction` is a new function that returns the correct conversion function to use.
 * `Tilemaps.Components.GetWorldToTileXYFunction` is a new function that returns the correct conversion function to use.
+* `Tilemaps.Components.GetCullTilesFunction` is a new function that returns the correct culling function to use.
+* `Tilemaps.Components.HexagonalCullTiles` is a new function that culls tiles in a hexagonal map.
+* `Tilemaps.Components.StaggeredCullTiles` is a new function that culls tiles in a staggered map.
+* `Tilemaps.Components.IsometricCullTiles` is a new function that culls tiles in a isometric map.
+* `Tilemaps.Components.CullBounds` is a new function that calculates the cull bounds for an orthogonal map.
+* `Tilemaps.Components.HexagonalCullBounds` is a new function that calculates the cull bounds for a hexagonal map.
+* `Tilemaps.Components.StaggeredCullBounds` is a new function that calculates the cull bounds for a staggered map.
+* `Tilemaps.Components.RunCull` is a new function that runs the culling process from the combined bounds and tilemap.
+
 * `Tilemap._convert` is a new internal private hash of tilemap conversion functions used by the public API.
 
 ### Mesh Game Object - New Features, Updates and API Changes
