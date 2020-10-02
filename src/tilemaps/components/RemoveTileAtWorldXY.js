@@ -5,7 +5,9 @@
  */
 
 var RemoveTileAt = require('./RemoveTileAt');
+var Vector2 = require('../../math/Vector2');
 
+var point = new Vector2();
 
 /**
  * Removes the tile at the given world coordinates in the specified layer and updates the layer's
@@ -20,15 +22,14 @@ var RemoveTileAt = require('./RemoveTileAt');
  * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
- * 
+ *
  * @return {Phaser.Tilemaps.Tile} The Tile object that was removed.
  */
 var RemoveTileAtWorldXY = function (worldX, worldY, replaceWithNull, recalculateFaces, camera, layer)
 {
-    var point = layer.tilemapLayer.worldToTileXY(worldX, worldY, true, undefined, camera, layer);
-    var tileX = point.x;
-    var tileY = point.y;
-    return RemoveTileAt(tileX, tileY, replaceWithNull, recalculateFaces, layer);
+    layer.tilemapLayer.worldToTileXY(worldX, worldY, true, point, camera, layer);
+
+    return RemoveTileAt(point.x, point.y, replaceWithNull, recalculateFaces, layer);
 };
 
 module.exports = RemoveTileAtWorldXY;

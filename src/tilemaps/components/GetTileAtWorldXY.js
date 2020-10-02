@@ -28,10 +28,7 @@ var GetTileAtWorldXY = function (worldX, worldY, nonNull, camera, layer)
 {
     layer.tilemapLayer.worldToTileXY(worldX, worldY, true, point, camera);
 
-    var tileX = point.x;
-    var tileY = point.y;
-
-    return GetTileAt(tileX, tileY, nonNull, layer);
+    return GetTileAt(point.x, point.y, nonNull, layer);
 };
 
 module.exports = GetTileAtWorldXY;

@@ -5,6 +5,9 @@
  */
 
 var PutTileAt = require('./PutTileAt');
+var Vector2 = require('../../math/Vector2');
+
+var point = new Vector2();
 
 /**
  * Puts a tile at the given world coordinates (pixels) in the specified layer. You can pass in either
@@ -21,15 +24,14 @@ var PutTileAt = require('./PutTileAt');
  * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
- * 
+ *
  * @return {Phaser.Tilemaps.Tile} The Tile object that was created or added to this map.
  */
 var PutTileAtWorldXY = function (tile, worldX, worldY, recalculateFaces, camera, layer)
 {
-    var point = layer.tilemapLayer.worldToTileXY(worldX, worldY, true, undefined, camera, layer);
-    var tileX = point.x;
-    var tileY = point.y;
-    return PutTileAt(tile, tileX, tileY, recalculateFaces, layer);
+    layer.tilemapLayer.worldToTileXY(worldX, worldY, true, point, camera, layer);
+
+    return PutTileAt(tile, point.x, point.y, recalculateFaces, layer);
 };
 
 module.exports = PutTileAtWorldXY;
