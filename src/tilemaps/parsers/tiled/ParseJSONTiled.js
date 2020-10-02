@@ -4,15 +4,15 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CONST = require('../../../const.js');
+var AssignTileProperties = require('./AssignTileProperties');
+var BuildTilesetIndex = require('./BuildTilesetIndex');
+var CONST = require('../../const');
 var Formats = require('../../Formats');
 var MapData = require('../../mapdata/MapData');
-var ParseTileLayers = require('./ParseTileLayers');
 var ParseImageLayers = require('./ParseImageLayers');
-var ParseTilesets = require('./ParseTilesets');
 var ParseObjectLayers = require('./ParseObjectLayers');
-var BuildTilesetIndex = require('./BuildTilesetIndex');
-var AssignTileProperties = require('./AssignTileProperties');
+var ParseTileLayers = require('./ParseTileLayers');
+var ParseTilesets = require('./ParseTilesets');
 
 /**
  * Parses a Tiled JSON object into a new MapData object.
@@ -33,21 +33,6 @@ var AssignTileProperties = require('./AssignTileProperties');
  */
 var ParseJSONTiled = function (name, json, insertNull)
 {
-    if (json.orientation === 'isometric' || json.orientation === 'staggered')
-    {
-        console.warn('Isometric map types are WIP  in this version of Phaser');
-    }
-    else if (json.orientation === 'hexagonal')
-    {
-        console.warn('Hexagonal map types are WIP in this version of Phaser');
-    }
-    else if (json.orientation !== 'orthogonal')
-    {
-        console.warn('Only orthogonal, hexagonal and  isometric map types are supported in this version of Phaser');
-        return null;
-    }
-
-
     //  Map data will consist of: layers, objects, images, tilesets, sizes
     var mapData = new MapData({
         width: json.width,
@@ -63,9 +48,6 @@ var ParseJSONTiled = function (name, json, insertNull)
         infinite: json.infinite
     });
 
-
-
-
     if (mapData.orientation === CONST.HEXAGONAL)
     {
         mapData.hexSideLength = json.hexsidelength;
@@ -75,6 +57,7 @@ var ParseJSONTiled = function (name, json, insertNull)
     mapData.images = ParseImageLayers(json);
 
     var sets = ParseTilesets(json);
+
     mapData.tilesets = sets.tilesets;
     mapData.imageCollections = sets.imageCollections;
 
