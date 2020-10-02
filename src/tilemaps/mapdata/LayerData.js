@@ -5,8 +5,8 @@
  */
 
 var Class = require('../../utils/Class');
+var CONST = require('../const.js');
 var GetFastValue = require('../../utils/object/GetFastValue');
-var CONST = require('../../const.js');
 
 /**
  * @classdesc
@@ -111,11 +111,11 @@ var LayerData = new Class({
         this.baseTileHeight = GetFastValue(config, 'baseTileHeight', this.tileHeight);
 
         /**
-         * The layer's orientation, necessary to be able to determine a tile's pixelX and pixelY as well as the layer's width and height.
+         * The layers orientation, necessary to be able to determine a tiles pixelX and pixelY as well as the layers width and height.
          *
          * @name Phaser.Tilemaps.LayerData#orientation
          * @type {string}
-         * @since 3.23beta.PR_svipal
+         * @since 3.50.0
          */
         this.orientation = GetFastValue(config, 'orientation', CONST.ORTHOGONAL);
 
@@ -217,16 +217,16 @@ var LayerData = new Class({
          * @since 3.0.0
          */
         this.tilemapLayer = GetFastValue(config, 'tilemapLayer', null);
-    
+
         /**
-         * Optional : Only for hexagonal tilemaps.
          * The length of the horizontal sides of the hexagon.
-         * @name Phaser.Tilemaps.MapData#tiles
+         * Only used for hexagonal orientation Tilemaps.
+         *
+         * @name Phaser.Tilemaps.LayerData#hexSideLength
          * @type {integer}
-         * @since 3.0.0
+         * @since 3.50.0
          */
         this.hexSideLength = GetFastValue(config, 'hexSideLength', 0);
-    
     }
 
 });

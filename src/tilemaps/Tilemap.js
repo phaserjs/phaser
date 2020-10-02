@@ -254,7 +254,7 @@ var Tilemap = new Class({
 
         /**
          * The length of the horizontal sides of the hexagon.
-         * Only used for hexagonal Tilemaps.
+         * Only used for hexagonal orientation Tilemaps.
          *
          * @name Phaser.Tilemaps.Tilemap#hexSideLength
          * @type {integer}
