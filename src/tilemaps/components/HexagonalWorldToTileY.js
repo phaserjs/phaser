@@ -37,13 +37,11 @@ var HexagonalWorldToTileY = function (worldY, snapToFloor, camera, layer)
         tileHeight *= tilemapLayer.scaleY;
     }
 
-    var sidel = layer.hexSideLength;
+    var len = layer.hexSideLength;
 
-    var rowHeight = ((tileHeight - sidel) / 2 + sidel);
+    var rowHeight = ((tileHeight - len) / 2 + len);
 
-    return snapToFloor
-        ? Math.floor(worldY / rowHeight)
-        : worldY / rowHeight;
+    return (snapToFloor) ? Math.floor(worldY / rowHeight) : worldY / rowHeight;
 };
 
 module.exports = HexagonalWorldToTileY;

@@ -37,9 +37,7 @@ var StaggeredWorldToTileY = function (worldY, snapToFloor, camera, layer)
         tileHeight *= tilemapLayer.scaleY;
     }
 
-    return snapToFloor
-        ? Math.floor(worldY / (tileHeight / 2))
-        : worldY / (tileHeight / 2);
+    return (snapToFloor) ? Math.floor(worldY / (tileHeight / 2)) : worldY / (tileHeight / 2);
 };
 
 module.exports = StaggeredWorldToTileY;
