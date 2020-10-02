@@ -4,10 +4,9 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
- 
-var CONST = require('../../const.js');
-var SnapFloor = require('../../math/snap/SnapFloor');
+var CONST = require('../const');
 var SnapCeil = require('../../math/snap/SnapCeil');
+var SnapFloor = require('../../math/snap/SnapFloor');
 
 /**
  * Returns the bounds in the given layer that are within the camera's viewport.
@@ -68,7 +67,7 @@ var HexaGetCullBounds = function (layer, camera)
     //  placed on the grid and we cannot trust layer.baseTileWidth to give us the true size.
     var tileW = Math.floor(tilemap.tileWidth * tilemapLayer.scaleX);
     var tileH = Math.floor(tilemap.tileHeight * tilemapLayer.scaleY);
-    
+
     var sidel = layer.hexSideLength;
     var rowH = ((tileH - sidel) / 2 + sidel);
 

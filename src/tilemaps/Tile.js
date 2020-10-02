@@ -4,7 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CONST = require('./const.js');
+var CONST = require('./const');
 var Class = require('../utils/Class');
 var Components = require('../gameobjects/components');
 var Rectangle = require('../geom/rectangle');

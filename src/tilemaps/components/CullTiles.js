@@ -4,11 +4,11 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CONST = require('../../const.js');
-var SnapFloor = require('../../math/snap/SnapFloor');
-var SnapCeil = require('../../math/snap/SnapCeil');
 var CheckIsoBounds = require('./CheckIsoBounds');
+var CONST = require('../const');
 var GetCullBounds = require('./GetCullBounds');
+var SnapCeil = require('../../math/snap/SnapCeil');
+var SnapFloor = require('../../math/snap/SnapFloor');
 
 /**
  * Orientation-Decorated function that returns the tiles in the given layer that are within the camera's viewport. This is used internally.
@@ -17,7 +17,7 @@ var GetCullBounds = require('./GetCullBounds');
  * @since 3.50.iso
  * --- decorator:
  * @param {function} getCullBounds
- * --- inner function : 
+ * --- inner function :
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to run the cull check against.
  * @param {array} [outputArray] - An optional array to store the Tile objects within.
@@ -27,7 +27,7 @@ var GetCullBounds = require('./GetCullBounds');
 var GetStandardCullTiles = function (getCullBounds)
 {
     console.log('getting standard cull tiles function');
-    
+
     var StandardCullTiles = function (layer, camera, outputArray, renderOrder)
     {
         if (outputArray === undefined) { outputArray = []; }
@@ -61,7 +61,7 @@ var GetStandardCullTiles = function (getCullBounds)
         var y;
         var tile;
 
-    
+
         if (renderOrder === 0)
         {
         //  right-down
@@ -138,7 +138,7 @@ var GetStandardCullTiles = function (getCullBounds)
                 }
             }
         }
-    
+
 
         tilemapLayer.tilesDrawn = outputArray.length;
         tilemapLayer.tilesTotal = mapWidth * mapHeight;
@@ -216,14 +216,14 @@ var IsoCullTiles = function (layer, camera, outputArray, renderOrder)
                 boundsTop = SnapFloor(camera.worldView.y - tilemapLayer.y, rowH, 0, true) - tilemapLayer.cullPaddingY;
                 boundsBottom = SnapCeil(camera.worldView.bottom - tilemapLayer.y, rowH, 0, true) + tilemapLayer.cullPaddingY;
             }
-            
-            
-            
+
+
+
 
             drawLeft = Math.max(0, boundsLeft);
             drawRight = Math.min(mapWidth, boundsRight);
             drawTop = Math.max(0, boundsTop);
-            
+
             drawBottom = Math.min(mapHeight, boundsBottom);
         }
     }
@@ -330,10 +330,10 @@ var IsoCullTiles = function (layer, camera, outputArray, renderOrder)
                         {
                             continue;
                         }
-    
+
                         outputArray.push(tile);
                     }
-                    
+
                 }
             }
         }
@@ -353,7 +353,7 @@ var IsoCullTiles = function (layer, camera, outputArray, renderOrder)
                         {
                             continue;
                         }
-    
+
                         outputArray.push(tile);
                     }
                 }
@@ -375,7 +375,7 @@ var IsoCullTiles = function (layer, camera, outputArray, renderOrder)
                         {
                             continue;
                         }
-    
+
                         outputArray.push(tile);
                     }
                 }
