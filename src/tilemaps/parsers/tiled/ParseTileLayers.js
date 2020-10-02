@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var CONST = require('../../../const.js');
 var Base64Decode = require('./Base64Decode');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var LayerData = require('../../mapdata/LayerData');
@@ -127,8 +128,15 @@ var ParseTileLayers = function (json, insertNull)
                 tileHeight: json.tileheight,
                 alpha: (curGroupState.opacity * curl.opacity),
                 visible: (curGroupState.visible && curl.visible),
-                properties: GetFastValue(curl, 'properties', [])
+                properties: GetFastValue(curl, 'properties', []),
+                orientation: CONST.fromOrientationString(json.orientation)
+                
             });
+
+            if (layerData.orientation === CONST.HEXAGONAL)
+            {
+                layerData.hexSideLength = json.hexsidelength;
+            }
 
             for (var c = 0; c < curl.height; c++)
             {
@@ -200,9 +208,15 @@ var ParseTileLayers = function (json, insertNull)
                 tileHeight: json.tileheight,
                 alpha: (curGroupState.opacity * curl.opacity),
                 visible: (curGroupState.visible && curl.visible),
-                properties: GetFastValue(curl, 'properties', [])
+                properties: GetFastValue(curl, 'properties', []),
+                orientation: CONST.fromOrientationString(json.orientation)
+                
             });
 
+            if (layerData.orientation === CONST.HEXAGONAL)
+            {
+                layerData.hexSideLength = json.hexsidelength;
+            }
             var row = [];
 
             //  Loop through the data field in the JSON.

@@ -13,6 +13,7 @@ var StaticTilemapLayerRender = require('./StaticTilemapLayerRender');
 var TilemapComponents = require('../components');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 var Utils = require('../../renderer/webgl/Utils');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * @classdesc
@@ -152,6 +153,18 @@ var StaticTilemapLayer = new Class({
          * @since 3.12.0
          */
         this.skipCull = false;
+
+        /**
+         * In isometric mode, you can control the amount of distance (in tiles, from the cameras' borders) that the Cameras before culling.
+         * By default the camera will allow 1 full tile in all directions.
+         *
+         * However, there are some instances when you may wish to adjust this, and changing this variable allows you to do so.
+         * 
+         * @name Phaser.Tilemaps.StaticTilemapLayer#isoCullDistances
+         * @type {Phaser.Math.Vector2}
+         * @since 3.23.0
+         */
+        this.isoCullDistances = new Vector2(1, 1);
 
         /**
          * Canvas only.
@@ -368,6 +381,7 @@ var StaticTilemapLayer = new Class({
         {
             this.updateVBOData();
         }, this);
+    
     },
 
     /**
@@ -1359,7 +1373,7 @@ var StaticTilemapLayer = new Class({
      */
     tileToWorldX: function (tileX, camera)
     {
-        return TilemapComponents.TileToWorldX(tileX, camera, this.layer);
+        return this.tilemap.TileToWorldX(tileX, camera, this.layer);
     },
 
     /**
@@ -1376,7 +1390,7 @@ var StaticTilemapLayer = new Class({
      */
     tileToWorldY: function (tileY, camera)
     {
-        return TilemapComponents.TileToWorldY(tileY, camera, this.layer);
+        return this.tilemap.TileToWorldY(tileY, camera, this.layer);
     },
 
     /**
@@ -1396,7 +1410,7 @@ var StaticTilemapLayer = new Class({
      */
     tileToWorldXY: function (tileX, tileY, point, camera)
     {
-        return TilemapComponents.TileToWorldXY(tileX, tileY, point, camera, this.layer);
+        return this.tilemap.TileToWorldXY(tileX, tileY, point, camera, this.layer);
     },
 
     /**
@@ -1415,7 +1429,7 @@ var StaticTilemapLayer = new Class({
      */
     worldToTileX: function (worldX, snapToFloor, camera)
     {
-        return TilemapComponents.WorldToTileX(worldX, snapToFloor, camera, this.layer);
+        return this.tilemap.WorldToTileX(worldX, snapToFloor, camera, this.layer);
     },
 
     /**
@@ -1434,7 +1448,7 @@ var StaticTilemapLayer = new Class({
      */
     worldToTileY: function (worldY, snapToFloor, camera)
     {
-        return TilemapComponents.WorldToTileY(worldY, snapToFloor, camera, this.layer);
+        return this.tilemap.WorldToTileY(worldY, snapToFloor, camera, this.layer);
     },
 
     /**
@@ -1456,7 +1470,7 @@ var StaticTilemapLayer = new Class({
      */
     worldToTileXY: function (worldX, worldY, snapToFloor, point, camera)
     {
-        return TilemapComponents.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, this.layer);
+        return this.tilemap.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, this.layer);
     },
 
     /**

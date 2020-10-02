@@ -8,10 +8,7 @@ var Geom = require('../../geom/');
 var GetTilesWithin = require('./GetTilesWithin');
 var Intersects = require('../../geom/intersects/');
 var NOOP = require('../../utils/NOOP');
-var TileToWorldX = require('./TileToWorldX');
-var TileToWorldY = require('./TileToWorldY');
-var WorldToTileX = require('./WorldToTileX');
-var WorldToTileY = require('./WorldToTileY');
+
 
 var TriangleToRectangle = function (triangle, rect)
 {
@@ -73,12 +70,14 @@ var GetTilesWithinShape = function (shape, filteringOptions, camera, layer)
     }
 
     // Top left corner of the shapes's bounding box, rounded down to include partial tiles
-    var xStart = WorldToTileX(shape.left, true, camera, layer);
-    var yStart = WorldToTileY(shape.top, true, camera, layer);
+    var pointStart = layer.tilemapLayer.worldToTileXY(shape.left, shape.top, true, undefined, camera);
+    var xStart = pointStart.x;
+    var yStart = pointStart.y;
 
     // Bottom right corner of the shapes's bounding box, rounded up to include partial tiles
-    var xEnd = Math.ceil(WorldToTileX(shape.right, false, camera, layer));
-    var yEnd = Math.ceil(WorldToTileY(shape.bottom, false, camera, layer));
+    var pointEnd = layer.tilemapLayer.worldToTileXY(shape.right, shape.bottom, true, undefined, camera);
+    var xEnd = Math.ceil(pointEnd.x);
+    var yEnd = Math.ceil(pointEnd.y);
 
     // Tiles within bounding rectangle of shape. Bounds are forced to be at least 1 x 1 tile in size
     // to grab tiles for shapes that don't have a height or width (e.g. a horizontal line).
@@ -101,10 +100,9 @@ var GetTilesWithinShape = function (shape, filteringOptions, camera, layer)
     for (var i = 0; i < tiles.length; i++)
     {
         var tile = tiles[i];
-
-        tileRect.x = TileToWorldX(tile.x, camera, layer);
-        tileRect.y = TileToWorldY(tile.y, camera, layer);
-
+        var point = layer.tilemapLayer.tileToWorldXY(tile.x, tile.y, undefined, camera, layer);
+        tileRect.x = point.x;
+        tileRect.y = point.y;
         if (intersectTest(shape, tileRect))
         {
             results.push(tile);

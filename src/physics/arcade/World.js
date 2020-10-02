@@ -2254,8 +2254,10 @@ var World = new Class({
 
             tilemapLayer = tile.tilemapLayer;
 
-            tileWorldRect.left = tilemapLayer.tileToWorldX(tile.x);
-            tileWorldRect.top = tilemapLayer.tileToWorldY(tile.y);
+            var point = tilemapLayer.tileToWorldXY(tile.x,tile.y);
+            
+            tileWorldRect.left = point.x;
+            tileWorldRect.top = point.y;
 
             // If the map's base tile size differs from the layer's tile size, only the top of the rect
             // needs to be adjusted since its origin is (0, 1).

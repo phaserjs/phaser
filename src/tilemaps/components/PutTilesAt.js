@@ -22,6 +22,7 @@ var PutTileAt = require('./PutTileAt');
  * @param {integer} tileY - The y coordinate, in tiles, not pixels.
  * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
+ *
  */
 var PutTilesAt = function (tilesArray, tileX, tileY, recalculateFaces, layer)
 {

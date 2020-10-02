@@ -38,7 +38,7 @@ var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer)
     {
         if (layer.data[tileY][tileX] === null)
         {
-            layer.data[tileY][tileX] = new Tile(layer, tile.index, tileX, tileY, tile.width, tile.height);
+            layer.data[tileY][tileX] = new Tile(layer, tile.index, tileX, tileY, layer.tileWidth, layer.tileHeight);
         }
 
         layer.data[tileY][tileX].copy(tile);

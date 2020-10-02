@@ -251,6 +251,28 @@ var Tilemap = new Class({
          * @since 3.0.0
          */
         this.currentLayerIndex = 0;
+
+        /**
+         * Optional : Only for hexagonal tilemaps.
+         * The length of the horizontal sides of the hexagon.
+         * @name Phaser.Tilemaps.MapData#tiles
+         * @type {integer}
+         * @since 3.0.0
+         */
+        this.hexSideLength = mapData.hexSideLength;
+
+        /**
+         * Components used for conversions between real world coordinates and tile coordinates,
+         * initialized here to prevent switching between them at runtime depending on map orientation.
+         * refer to the components themselves for documentation. 
+         * @since 3.2.2
+         */
+        this.WorldToTileXY = TilemapComponents.WorldToTileXY(this.orientation);
+        this.WorldToTileX = TilemapComponents.WorldToTileX(this.orientation);
+        this.WorldToTileY = TilemapComponents.WorldToTileY(this.orientation);
+        this.TileToWorldXY = TilemapComponents.TileToWorldXY(this.orientation);
+        this.TileToWorldX = TilemapComponents.TileToWorldX(this.orientation);
+        this.TileToWorldY = TilemapComponents.TileToWorldY(this.orientation);
     },
 
     /**
@@ -501,7 +523,8 @@ var Tilemap = new Class({
             tileWidth: tileWidth,
             tileHeight: tileHeight,
             width: width,
-            height: height
+            height: height,
+            orientation: this.orientation
         });
 
         var row;
@@ -2345,7 +2368,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return TilemapComponents.TileToWorldX(tileX, camera, layer);
+        return this.TileToWorldX(tileX, camera, layer);
     },
 
     /**
@@ -2370,7 +2393,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return TilemapComponents.TileToWorldY(tileX, camera, layer);
+        return this.TileToWorldY(tileX, camera, layer);
     },
 
     /**
@@ -2391,13 +2414,14 @@ var Tilemap = new Class({
      *
      * @return {?Phaser.Math.Vector2} Returns a point, or null if the layer given was invalid.
      */
+    
     tileToWorldXY: function (tileX, tileY, point, camera, layer)
     {
         layer = this.getLayer(layer);
 
         if (layer === null) { return null; }
 
-        return TilemapComponents.TileToWorldXY(tileX, tileY, point, camera, layer);
+        return this.TileToWorldXY(tileX, tileY, point, camera, layer);
     },
 
     /**
@@ -2468,7 +2492,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return TilemapComponents.WorldToTileX(worldX, snapToFloor, camera, layer);
+        return this.WorldToTileX(worldX, snapToFloor, camera, layer);
     },
 
     /**
@@ -2493,7 +2517,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return TilemapComponents.WorldToTileY(worldY, snapToFloor, camera, layer);
+        return this.WorldToTileY(worldY, snapToFloor, camera, layer);
     },
 
     /**
@@ -2521,7 +2545,7 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        return TilemapComponents.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, layer);
+        return this.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, layer);
     },
 
     /**

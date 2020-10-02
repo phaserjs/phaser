@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var CONST = require('../const.js');
 var Class = require('../utils/Class');
 var Components = require('../gameobjects/components');
 var Rectangle = require('../geom/rectangle');
@@ -706,14 +707,34 @@ var Tile = new Class({
      */
     updatePixelXY: function ()
     {
-        // Tiled places tiles on a grid of baseWidth x baseHeight. The origin for a tile is the
-        // bottom left, while the Phaser renderer assumes the origin is the top left. The y
-        // coordinate needs to be adjusted by the difference.
-        this.pixelX = this.x * this.baseWidth;
-        this.pixelY = this.y * this.baseHeight;
-
-        // this.pixelY = this.y * this.baseHeight - (this.height - this.baseHeight);
-
+        if (this.layer.orientation === CONST.ISOMETRIC)
+        {
+            // reminder : for the tilemap to be centered we have to move the image to the right with the camera !
+            // this is crucial for wordtotile, tiletoworld to work.
+            this.pixelX = (this.x - this.y) * this.baseWidth * 0.5;
+            this.pixelY = (this.x + this.y) * this.baseHeight * 0.5;
+        }
+        else if (this.layer.orientation === CONST.STAGGERED)
+        {
+            this.pixelX = this.x * this.baseWidth + this.y % 2 * (this.baseWidth / 2);
+            this.pixelY = this.y * (this.baseHeight / 2);
+        }
+        else if (this.layer.orientation === CONST.HEXAGONAL)
+        {
+            var sidel = this.layer.hexSideLength;
+            var rowHeight = ((this.baseHeight - sidel) / 2 + sidel);
+            this.pixelX = this.x * this.baseWidth + this.y % 2 * (this.baseWidth / 2);
+            this.pixelY = this.y * rowHeight;
+        }
+        else if (this.layer.orientation === CONST.ORTHOGONAL)
+        {
+            // In orthogonal mode, Tiled places tiles on a grid of baseWidth x baseHeight. The origin for a tile is the
+            // bottom left, while the Phaser renderer assumes the origin is the top left. The y
+            // coordinate needs to be adjusted by the difference.
+            this.pixelX = this.x * this.baseWidth;
+            this.pixelY = this.y * this.baseHeight;
+            
+        }
         return this;
     },
 

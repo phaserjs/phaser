@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var CONST = require('../../../const.js');
 var Formats = require('../../Formats');
 var MapData = require('../../mapdata/MapData');
 var ParseTileLayers = require('./ParseTileLayers');
@@ -32,11 +33,20 @@ var AssignTileProperties = require('./AssignTileProperties');
  */
 var ParseJSONTiled = function (name, json, insertNull)
 {
-    if (json.orientation !== 'orthogonal')
+    if (json.orientation === 'isometric' || json.orientation === 'staggered')
     {
-        console.warn('Only orthogonal map types are supported in this version of Phaser');
+        console.warn('Isometric map types are WIP  in this version of Phaser');
+    }
+    else if (json.orientation === 'hexagonal')
+    {
+        console.warn('Hexagonal map types are WIP in this version of Phaser');
+    }
+    else if (json.orientation !== 'orthogonal')
+    {
+        console.warn('Only orthogonal, hexagonal and  isometric map types are supported in this version of Phaser');
         return null;
     }
+
 
     //  Map data will consist of: layers, objects, images, tilesets, sizes
     var mapData = new MapData({
@@ -45,13 +55,21 @@ var ParseJSONTiled = function (name, json, insertNull)
         name: name,
         tileWidth: json.tilewidth,
         tileHeight: json.tileheight,
-        orientation: json.orientation,
+        orientation: CONST.fromOrientationString(json.orientation),
         format: Formats.TILED_JSON,
         version: json.version,
         properties: json.properties,
         renderOrder: json.renderorder,
         infinite: json.infinite
     });
+
+
+
+
+    if (mapData.orientation === CONST.HEXAGONAL)
+    {
+        mapData.hexSideLength = json.hexsidelength;
+    }
 
     mapData.layers = ParseTileLayers(json, insertNull);
     mapData.images = ParseImageLayers(json);

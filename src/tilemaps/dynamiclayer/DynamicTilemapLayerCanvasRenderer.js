@@ -88,8 +88,8 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, camera, parentM
 
         if (tileTexCoords)
         {
-            var halfWidth = tile.width / 2;
-            var halfHeight = tile.height / 2;
+            var halfWidth = tileset.tileWidth / 2;
+            var halfHeight = tileset.tileHeight / 2;
 
             ctx.save();
 
@@ -110,9 +110,9 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, camera, parentM
             ctx.drawImage(
                 image,
                 tileTexCoords.x, tileTexCoords.y,
-                tile.width, tile.height,
+                tileset.tileWidth , tileset.Height,
                 -halfWidth, -halfHeight,
-                tile.width, tile.height
+                tileset.tileWidth , tileset.tileHeight
             );
 
             ctx.restore();

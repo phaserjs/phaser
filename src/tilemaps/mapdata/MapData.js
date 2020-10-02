@@ -6,6 +6,7 @@
 
 var Class = require('../../utils/Class');
 var GetFastValue = require('../../utils/object/GetFastValue');
+var CONST = require('../../const.js');
 
 /**
  * @classdesc
@@ -116,7 +117,7 @@ var MapData = new Class({
          * @type {string}
          * @since 3.0.0
          */
-        this.orientation = GetFastValue(config, 'orientation', 'orthogonal');
+        this.orientation = GetFastValue(config, 'orientation', CONST.ORTHOGONAL);
 
         /**
          * Determines the draw order of tilemap. Default is right-down
@@ -212,6 +213,15 @@ var MapData = new Class({
          * @since 3.0.0
          */
         this.tiles = GetFastValue(config, 'tiles', []);
+
+        /**
+         * Optional : Only for hexagonal tilemaps.
+         * The length of the horizontal sides of the hexagon.
+         * @name Phaser.Tilemaps.MapData#tiles
+         * @type {integer}
+         * @since 3.0.0
+         */
+        this.hexSideLength = GetFastValue(config, 'hexSideLength', 0);
     }
 
 });
