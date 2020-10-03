@@ -7,6 +7,7 @@
 var Actions = require('../../actions/');
 var Class = require('../../utils/Class');
 var Events = require('../events');
+var EventEmitter = require('eventemitter3');
 var GetAll = require('../../utils/array/GetAll');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
@@ -25,6 +26,7 @@ var Sprite = require('../sprite/Sprite');
  *
  * @class Group
  * @memberof Phaser.GameObjects
+ * @extends Phaser.Events.EventEmitter
  * @constructor
  * @since 3.0.0
  * @param {Phaser.Scene} scene - The scene this group belongs to.
@@ -36,10 +38,14 @@ var Sprite = require('../sprite/Sprite');
  */
 var Group = new Class({
 
+    Extends: EventEmitter,
+
     initialize:
 
     function Group (scene, children, config)
     {
+        EventEmitter.call(this);
+
         //  They can pass in any of the following as the first argument:
 
         //  1) A single child
