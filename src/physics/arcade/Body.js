@@ -1231,6 +1231,7 @@ var Body = new Class({
         if (wasSet)
         {
             this.blocked.none = false;
+            this.updateCenter();
         }
 
         return wasSet;
