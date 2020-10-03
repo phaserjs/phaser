@@ -247,6 +247,10 @@ var TextureManager = new Class({
     /**
      * Adds a new Texture to the Texture Manager created from the given Base64 encoded data.
      *
+     * It works by creating an `Image` DOM object, then setting the `src` attribute to
+     * the given base64 encoded data. As a result, the process is asynchronous by its nature,
+     * so be sure to listen for the events this method dispatches before using the texture.
+     *
      * @method Phaser.Textures.TextureManager#addBase64
      * @fires Phaser.Textures.Events#ADD
      * @fires Phaser.Textures.Events#ERROR
