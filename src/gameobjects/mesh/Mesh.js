@@ -108,7 +108,7 @@ var Mesh = new Class({
          *
          * A Face consists of 3 Vertex objects.
          *
-         * This array is populated during the `setVertices` method.
+         * This array is populated during calls such as `addFace` or `addOBJ`.
          *
          * @name Phaser.GameObjects.Mesh#faces
          * @type {Phaser.Geom.Mesh.Face[]}
@@ -119,7 +119,7 @@ var Mesh = new Class({
         /**
          * An array containing Vertex instances. One instance per vertex in this Mesh.
          *
-         * This array is populated during the `setVertices` method.
+         * This array is populated during calls such as `addVertex` or `addOBJ`.
          *
          * @name Phaser.GameObjects.Mesh#vertices
          * @type {Phaser.Geom.Mesh.Vertex[]}
@@ -131,7 +131,7 @@ var Mesh = new Class({
          * The tint fill mode.
          *
          * `false` = An additive tint (the default), where vertices colors are blended with the texture.
-         * `true` = A fill tint, where the vertices colors replace the texture, but respects texture alpha.
+         * `true` = A fill tint, where the vertex colors replace the texture, but respects texture alpha.
          *
          * @name Phaser.GameObjects.Mesh#tintFill
          * @type {boolean}
@@ -157,6 +157,8 @@ var Mesh = new Class({
          *
          * To disable rendering, set this property back to `null`.
          *
+         * Please note that high vertex count Meshes will struggle to debug properly.
+         *
          * @name Phaser.GameObjects.Mesh#debugCallback
          * @type {function}
          * @since 3.50.0
@@ -177,6 +179,7 @@ var Mesh = new Class({
          * When rendering, skip any Face that isn't counter clockwise?
          *
          * Enable this to hide backward-facing Faces during rendering.
+         *
          * Disable it to render all Faces.
          *
          * @name Phaser.GameObjects.Mesh#hideCCW
@@ -212,8 +215,8 @@ var Mesh = new Class({
     },
 
     /**
-     * Iterates and destroys all current Faces in this Mesh, if any.
-     * Then resets the Face and Vertices arrays.
+     * Iterates and destroys all current Faces in this Mesh, then resets the
+     * `faces` and `vertices` arrays.
      *
      * @method Phaser.GameObjects.Mesh#clearVertices
      * @since 3.50.0
@@ -234,21 +237,21 @@ var Mesh = new Class({
     },
 
     /**
-     * This method will add the model data from a loaded triangulated Wavefront OBJ file to this Mesh.
+     * This method will add the data from a triangulated Wavefront OBJ model file to this Mesh.
      *
-     * The obj should have been loaded via the OBJFile:
+     * The data should have been loaded via the OBJFile:
      *
      * ```javascript
      * this.load.obj(key, url);
      * ```
      *
-     * Then use the key it was loaded under in this call.
+     * Then use the same `key` as the first parameter to this method.
      *
-     * Multiple Mesh objects can use the same model data without impacting on each other.
+     * Multiple Mesh Game Objects can use the same model data without impacting on each other.
      *
      * Make sure your 3D package has triangulated the model data prior to exporting it.
      *
-     * You may add multiple models to a single Mesh, although they will act as one when
+     * You can add multiple models to a single Mesh, although they will act as one when
      * moved or rotated. You can scale the model data, should it be too small, or too large, to see.
      * You can also offset the vertices of the model via the `x`, `y` and `z` parameters.
      *
@@ -275,10 +278,34 @@ var Mesh = new Class({
         return this;
     },
 
-    addGrid: function (width, height, widthSegments, heightSegments)
+    /**
+     * Creates a grid based on the given parameters and adds it to this Mesh.
+     *
+     * The size of the grid is given in pixels.
+     *
+     * You can optionally split the grid into segments both vertically and horizontally. This will
+     * generate two faces per grid segment as a result.
+     *
+     * You may add multiple grids to a single Mesh, although they will act as one when
+     * moved or rotated. You can offset the model via the `posX`, `posY` and `posZ` parameters.
+     *
+     * @method Phaser.GameObjects.Mesh#addGrid
+     * @since 3.50.0
+     *
+     * @param {number} [width=128] - The width of the grid in pixels.
+     * @param {number} [height=128] - The height of the grid in pixels.
+     * @param {number} [widthSegments=1] - The number of segments to split the grid horizontally in to.
+     * @param {number} [heightSegments=1] - The number of segments to split the grid vertically in to.
+     * @param {number} [posX=0] - Offset the grid x position by this amount.
+     * @param {number} [posY=0] - Offset the grid y position by this amount.
+     * @param {number} [posZ=0] - Offset the grid z position by this amount.
+     *
+     * @return {this} This Mesh Game Object.
+     */
+    addGrid: function (width, height, widthSegments, heightSegments, posX, posY, posZ)
     {
-        if (width === undefined) { width = 1; }
-        if (height === undefined) { height = 1; }
+        if (width === undefined) { width = 128; }
+        if (height === undefined) { height = 128; }
         if (widthSegments === undefined) { widthSegments = 1; }
         if (heightSegments === undefined) { heightSegments = 1; }
 
@@ -330,7 +357,7 @@ var Mesh = new Class({
             }
         }
 
-        return { vertices: vertices, uvs: uvs, indices: indices };
+        return this.addModel({ vertices: vertices, uvs: uvs, indices: indices }, 1, posX, posY, posZ);
     },
 
     /**
