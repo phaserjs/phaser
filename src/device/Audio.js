@@ -11,10 +11,10 @@ var Browser = require('./Browser');
  * These values are read-only and populated during the boot sequence of the game.
  * They are then referenced by internal game systems and are available for you to access
  * via `this.sys.game.device.audio` from within any Scene.
- * 
+ *
  * @typedef {object} Phaser.Device.Audio
  * @since 3.0.0
- * 
+ *
  * @property {boolean} audioData - Can this device play HTML Audio tags?
  * @property {boolean} dolby - Can this device play EC-3 Dolby Digital Plus files?
  * @property {boolean} m4a - Can this device can play m4a files.
@@ -70,8 +70,7 @@ function init ()
 
             //  Mimetypes accepted:
             //  developer.mozilla.org/En/Media_formats_supported_by_the_audio_and_video_elements
-            //  bit.ly/iphoneoscodecs
-            if (audioElement.canPlayType('audio/wav; codecs="1"').replace(/^no$/, ''))
+            if (audioElement.canPlayType('audio/wav').replace(/^no$/, ''))
             {
                 Audio.wav = true;
             }
