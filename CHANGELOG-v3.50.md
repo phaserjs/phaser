@@ -29,6 +29,7 @@ Other pipeline changes are as follows:
 * All pipelines will now extract the `attributes` property from the config, allowing you to set it externally.
 * All pipelines will now extract the `topology` property from the config, allowing you to set it externally.
 * The `WebGLPipeline.shouldFlush` method now accepts an optional parameter `amount`. If given, it will return `true` if when the amount is added to the vertex count it will exceed the vertex capacity. The Multi Pipeline has been updated to now use this method instead of performing the comparison multiple times itself.
+* The `RopePipeline` now extends `MultiPipeline` and just changes the topolgy, vastly reducing the filesize.
 
 ### Pipeline Uniform Changes
 
@@ -463,6 +464,7 @@ The following are all of the new components and functions that made this possibl
 * `Pointer.down` will now check if the browser is running under macOS and if the ctrl key was also pressed, if so, it will flag the down event as being a right-click instead of a left-click, as per macOS conventions. Fix #4245 (thanks @BigZaphod)
 * When destroying an interactive Game Object that had `useHandCursor` enabled, it would reset the CSS cursor to default, even if the cursor wasn't over that Game Object. It will now only reset the cursor if it's over the Game Object being destroyed. Fix #5321 (thanks @JstnPwll)
 * The `InputPlugin.shutdown` method will now reset the CSS cursor, in case it was set by any Game Objects in the Scene that have since been destroyed.
+* The `InputPlugin.processOverEvents` has had a duplicate internal loop removed from it (thanks KingCosmic)
 
 ### Tint Updates and Shader Changes
 
@@ -605,7 +607,6 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `StaticTilemapLayer.upload` will now set the vertex attributes and buffer the data, and handles internal checks more efficiently.
 * `StaticTilemapLayer` now includes the `ModelViewProjection` mixin, so it doesn't need to modify the pipeline during rendering.
 * `WebGLRenderer.textureFlush` is a new property that keeps track of the total texture flushes per frame.
-* The `TextureTintStripPipeline` now extends `TextureTintPipeline` and just changes the topolgy, vastly reducing the filesize.
 * `TransformMatrix.getXRound` is a new method that will return the X component, optionally passed via `Math.round`.
 * `TransformMatrix.getYRound` is a new method that will return the Y component, optionally passed via `Math.round`.
 * The `KeyboardPlugin` no longer emits `keydown_` events. These were replaced with `keydown-` events in v3.15. The previous event string was deprecated in v3.20.
@@ -616,7 +617,6 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * The constant `Phaser.Renderer.WebGL.UNSIGNED_BYTE` value has been removed as it wasn't used internally.
 * The constant `Phaser.Renderer.WebGL.UNSIGNED_SHORT` value has been removed as it wasn't used internally.
 * The constant `Phaser.Renderer.WebGL.FLOAT` value has been removed as it wasn't used internally.
-* `global.Phaser = Phaser` has been removed, as it's no longer required by the UMD loader, which should make importing in Angular 10 easier. Fix #5212 (thanks @blackyale)
 * `Pointer.downTime` now stores the event timestamp of when the first button on the input device was pressed down, not just when button 1 was pressed down.
 * `Pointer.upTime` now stores the event timestamp of when the final depressed button on the input device was released, not just when button 1 was released.
 * The `Pointer.getDuration` method now uses the new Pointer `downTime` and `upTime` values, meaning it will accurately report the duration of when any button is being held down, not just the primary one. Fix #5112 (thanks @veleek)
