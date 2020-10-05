@@ -7,13 +7,13 @@
 var AnimationState = require('../../animations/AnimationState');
 var Class = require('../../utils/Class');
 var Components = require('../components');
-var Face = require('../../geom/Face');
+var Face = require('../../geom/mesh/Face');
 var GameObject = require('../GameObject');
 var GameObjectEvents = require('../events');
 var GetCalcMatrix = require('../GetCalcMatrix');
 var MeshRender = require('./MeshRender');
 var StableSort = require('../../utils/array/StableSort');
-var Vertex = require('../../geom/Vertex');
+var Vertex = require('../../geom/mesh/Vertex');
 
 /**
  * @classdesc
@@ -287,7 +287,7 @@ var Mesh = new Class({
      * generate two faces per grid segment as a result.
      *
      * You may add multiple grids to a single Mesh, although they will act as one when
-     * moved or rotated. You can offset the model via the `posX`, `posY` and `posZ` parameters.
+     * moved or rotated. You can offset the model via the `posX` and `posY` parameters.
      *
      * @method Phaser.GameObjects.Mesh#addGrid
      * @since 3.50.0
@@ -298,16 +298,19 @@ var Mesh = new Class({
      * @param {number} [heightSegments=1] - The number of segments to split the grid vertically in to.
      * @param {number} [posX=0] - Offset the grid x position by this amount.
      * @param {number} [posY=0] - Offset the grid y position by this amount.
-     * @param {number} [posZ=0] - Offset the grid z position by this amount.
+     * @param {number|number[]} [colors=0xffffff] - An array of colors, one per vertex, or a single color value applied to all vertices.
+     * @param {number|number[]} [alphas=1] - An array of alpha values, one per vertex, or a single alpha value applied to all vertices.
      *
      * @return {this} This Mesh Game Object.
      */
-    addGrid: function (width, height, widthSegments, heightSegments, posX, posY, posZ)
+    addGrid: function (width, height, widthSegments, heightSegments, posX, posY, colors, alphas)
     {
         if (width === undefined) { width = 128; }
         if (height === undefined) { height = 128; }
         if (widthSegments === undefined) { widthSegments = 1; }
         if (heightSegments === undefined) { heightSegments = 1; }
+        if (posX === undefined) { posX = 0; }
+        if (posY === undefined) { posY = 0; }
 
         var halfWidth = width / 2;
         var halfHeight = height / 2;
@@ -328,11 +331,11 @@ var Mesh = new Class({
 
         for (iy = 0; iy < gridY1; iy++)
         {
-            var y = iy * segmentHeight - halfHeight;
+            var y = posY + (iy * segmentHeight - halfHeight);
 
             for (ix = 0; ix < gridX1; ix++)
             {
-                var x = ix * segmentWidth - halfWidth;
+                var x = posX + (ix * segmentWidth - halfWidth);
 
                 vertices.push(x, -y);
 
@@ -357,7 +360,7 @@ var Mesh = new Class({
             }
         }
 
-        return this.addModel({ vertices: vertices, uvs: uvs, indices: indices }, 1, posX, posY, posZ);
+        return this.addVertices(vertices, uvs, indices, colors, alphas);
     },
 
     /**
