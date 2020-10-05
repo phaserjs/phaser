@@ -686,6 +686,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * The `Line` Game Object will now default its width and height to 1, rather than zero. This allows you to give Line objects a physics body (although you will still need to re-adjust the center of the body manually). Fix #4596 (thanks @andrewaustin)
 * Internally, the `Quaternion` class now has 4 new private properties: `_x`, `_y`, `_z` and `_w` and 4 new getters and setters for the public versions. It also now passes most methods via `set` to allow for the onChange callback to be invoked. This does not change the public-facing API.
 * `Group` now extends `EventEmitter`, allowing you to emit custom events from within a Group.
+* `Device.Audio.wav` now uses `audio/wav` as the `canPlayType` check string, instead of `audio/wav; codecs="1"`, which should allow iOS13 to play wav files again.
 
 ### Bug Fixes
 
