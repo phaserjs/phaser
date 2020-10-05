@@ -11,6 +11,7 @@ src/structs/RTree.js
 src/layer3d/
 plugins/spine/dist/
 plugins/spine/src/runtimes/
+scripts/
 webpack.*
 webpack.config.js
 webpack.dist.config.js
