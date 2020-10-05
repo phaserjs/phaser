@@ -1688,34 +1688,31 @@ var InputPlugin = new Class({
                 var gameObject = previouslyOver[i];
 
                 //  Call onOut for everything in the previouslyOver array
-                for (i = 0; i < total; i++)
+                gameObject = previouslyOver[i];
+
+                if (!gameObject.input)
                 {
-                    gameObject = previouslyOver[i];
+                    continue;
+                }
 
-                    if (!gameObject.input)
-                    {
-                        continue;
-                    }
+                manager.resetCursor(gameObject.input);
 
-                    manager.resetCursor(gameObject.input);
+                gameObject.emit(Events.GAMEOBJECT_POINTER_OUT, pointer, _eventContainer);
 
-                    gameObject.emit(Events.GAMEOBJECT_POINTER_OUT, pointer, _eventContainer);
+                totalInteracted++;
 
-                    totalInteracted++;
+                if (_eventData.cancelled || !gameObject.input)
+                {
+                    aborted = true;
+                    break;
+                }
 
-                    if (_eventData.cancelled || !gameObject.input)
-                    {
-                        aborted = true;
-                        break;
-                    }
+                this.emit(Events.GAMEOBJECT_OUT, pointer, gameObject, _eventContainer);
 
-                    this.emit(Events.GAMEOBJECT_OUT, pointer, gameObject, _eventContainer);
-
-                    if (_eventData.cancelled || !gameObject.input)
-                    {
-                        aborted = true;
-                        break;
-                    }
+                if (_eventData.cancelled || !gameObject.input)
+                {
+                    aborted = true;
+                    break;
                 }
 
                 if (!aborted)
