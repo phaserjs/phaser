@@ -8589,7 +8589,6 @@ var Class = __webpack_require__(/*! ../../utils/Class */ "../../../src/utils/Cla
 var Components = __webpack_require__(/*! ../components */ "../../../src/gameobjects/components/index.js");
 var Events = __webpack_require__(/*! ../events */ "../../../src/gameobjects/events/index.js");
 var GameObject = __webpack_require__(/*! ../GameObject */ "../../../src/gameobjects/GameObject.js");
-var GameObjectEvents = __webpack_require__(/*! ../events */ "../../../src/gameobjects/events/index.js");
 var Rectangle = __webpack_require__(/*! ../../geom/rectangle/Rectangle */ "../../../src/geom/rectangle/Rectangle.js");
 var Render = __webpack_require__(/*! ./ContainerRender */ "../../../src/gameobjects/container/ContainerRender.js");
 var Union = __webpack_require__(/*! ../../geom/rectangle/Union */ "../../../src/geom/rectangle/Union.js");
@@ -8622,7 +8621,7 @@ var Vector2 = __webpack_require__(/*! ../../math/Vector2 */ "../../../src/math/V
  *
  * Containers can be enabled for input. Because they do not have a texture you need to provide a shape for them
  * to use as their hit area. Container children can also be enabled for input, independent of the Container.
- * 
+ *
  * If input enabling a _child_ you should not set both the `origin` and a **negative** scale factor on the child,
  * or the input area will become misaligned.
  *
@@ -9038,7 +9037,7 @@ var Container = new Class({
         //  Is only on the Display List via this Container
         if (!this.scene.sys.displayList.exists(gameObject))
         {
-            gameObject.emit(GameObjectEvents.ADDED_TO_SCENE, gameObject, this.scene);
+            gameObject.emit(Events.ADDED_TO_SCENE, gameObject, this.scene);
         }
     },
 
@@ -9063,7 +9062,7 @@ var Container = new Class({
         //  Is only on the Display List via this Container
         if (!this.scene.sys.displayList.exists(gameObject))
         {
-            gameObject.emit(GameObjectEvents.REMOVED_FROM_SCENE, gameObject, this.scene);
+            gameObject.emit(Events.REMOVED_FROM_SCENE, gameObject, this.scene);
         }
     },
 
@@ -14902,6 +14901,294 @@ module.exports = Difference;
 
 /***/ }),
 
+/***/ "../../../src/math/Euler.js":
+/*!********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Euler.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Clamp = __webpack_require__(/*! ./Clamp */ "../../../src/math/Clamp.js");
+var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
+var Matrix4 = __webpack_require__(/*! ./Matrix4 */ "../../../src/math/Matrix4.js");
+var NOOP = __webpack_require__(/*! ../utils/NOOP */ "../../../src/utils/NOOP.js");
+
+var tempMatrix = new Matrix4();
+
+/**
+ * @classdesc
+ *
+ * @class Euler
+ * @memberof Phaser.Math
+ * @constructor
+ * @since 3.50.0
+ *
+ * @param {number} [x] - The x component.
+ * @param {number} [y] - The y component.
+ * @param {number} [z] - The z component.
+ */
+var Euler = new Class({
+
+    initialize:
+
+    function Euler (x, y, z, order)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (z === undefined) { z = 0; }
+        if (order === undefined) { order = Euler.DefaultOrder; }
+
+        this._x = x;
+        this._y = y;
+        this._z = z;
+        this._order = order;
+
+        this.onChangeCallback = NOOP;
+    },
+
+    x: {
+        get: function ()
+        {
+            return this._x;
+        },
+
+        set: function (value)
+        {
+            this._x = value;
+
+            this.onChangeCallback(this);
+        }
+    },
+
+    y: {
+        get: function ()
+        {
+            return this._y;
+        },
+
+        set: function (value)
+        {
+            this._y = value;
+
+            this.onChangeCallback(this);
+        }
+    },
+
+    z: {
+        get: function ()
+        {
+            return this._z;
+        },
+
+        set: function (value)
+        {
+            this._z = value;
+
+            this.onChangeCallback(this);
+        }
+    },
+
+    order: {
+        get: function ()
+        {
+            return this._order;
+        },
+
+        set: function (value)
+        {
+            this._order = value;
+
+            this.onChangeCallback(this);
+        }
+    },
+
+    set: function (x, y, z, order)
+    {
+        if (order === undefined) { order = this._order; }
+
+        this._x = x;
+        this._y = y;
+        this._z = z;
+        this._order = order;
+
+        this.onChangeCallback(this);
+
+        return this;
+    },
+
+    copy: function (euler)
+    {
+        return this.set(euler.x, euler.y, euler.z, euler.order);
+    },
+
+    setFromQuaternion: function (quaternion, order, update)
+    {
+        if (order === undefined) { order = this._order; }
+        if (update === undefined) { update = false; }
+
+        tempMatrix.fromQuat(quaternion);
+
+        return this.setFromRotationMatrix(tempMatrix, order, update);
+    },
+
+    setFromRotationMatrix: function (matrix, order, update)
+    {
+        if (order === undefined) { order = this._order; }
+        if (update === undefined) { update = false; }
+
+        var elements = matrix.val;
+
+        //  Upper 3x3 of matrix is un-scaled rotation matrix
+        var m11 = elements[0];
+        var m12 = elements[4];
+        var m13 = elements[8];
+        var m21 = elements[1];
+        var m22 = elements[5];
+        var m23 = elements[9];
+        var m31 = elements[2];
+        var m32 = elements[6];
+        var m33 = elements[10];
+
+        var x = 0;
+        var y = 0;
+        var z = 0;
+        var epsilon = 0.99999;
+
+        switch (order)
+        {
+            case 'XYZ':
+            {
+                y = Math.asin(Clamp(m13, -1, 1));
+
+                if (Math.abs(m13) < epsilon)
+                {
+                    x = Math.atan2(-m23, m33);
+                    z = Math.atan2(-m12, m11);
+                }
+                else
+                {
+                    x = Math.atan2(m32, m22);
+                }
+
+                break;
+            }
+
+            case 'YXZ':
+            {
+                x = Math.asin(-Clamp(m23, -1, 1));
+
+                if (Math.abs(m23) < epsilon)
+                {
+                    y = Math.atan2(m13, m33);
+                    z = Math.atan2(m21, m22);
+                }
+                else
+                {
+                    y = Math.atan2(-m31, m11);
+                }
+
+                break;
+            }
+
+            case 'ZXY':
+            {
+                x = Math.asin(Clamp(m32, -1, 1));
+
+                if (Math.abs(m32) < epsilon)
+                {
+                    y = Math.atan2(-m31, m33);
+                    z = Math.atan2(-m12, m22);
+                }
+                else
+                {
+                    z = Math.atan2(m21, m11);
+                }
+
+                break;
+            }
+
+            case 'ZYX':
+            {
+                y = Math.asin(-Clamp(m31, -1, 1));
+
+                if (Math.abs(m31) < epsilon)
+                {
+                    x = Math.atan2(m32, m33);
+                    z = Math.atan2(m21, m11);
+                }
+                else
+                {
+                    z = Math.atan2(-m12, m22);
+                }
+
+                break;
+            }
+
+            case 'YZX':
+            {
+                z = Math.asin(Clamp(m21, -1, 1));
+
+                if (Math.abs(m21) < epsilon)
+                {
+                    x = Math.atan2(-m23, m22);
+                    y = Math.atan2(-m31, m11);
+                }
+                else
+                {
+                    y = Math.atan2(m13, m33);
+                }
+
+                break;
+            }
+
+            case 'XZY':
+            {
+                z = Math.asin(-Clamp(m12, -1, 1));
+
+                if (Math.abs(m12) < epsilon)
+                {
+                    x = Math.atan2(m32, m22);
+                    y = Math.atan2(m13, m11);
+                }
+                else
+                {
+                    x = Math.atan2(-m23, m33);
+                }
+
+                break;
+            }
+        }
+
+        this._x = x;
+        this._y = y;
+        this._z = z;
+        this._order = order;
+
+        if (update)
+        {
+            this.onChangeCallback(this);
+        }
+
+        return this;
+    }
+
+});
+
+Euler.RotationOrders = [ 'XYZ', 'YXZ', 'ZXY', 'ZYX', 'YZX', 'XZY' ];
+
+Euler.DefaultOrder = 'XYZ';
+
+module.exports = Euler;
+
+
+/***/ }),
+
 /***/ "../../../src/math/Factorial.js":
 /*!************************************************!*\
   !*** D:/wamp/www/phaser/src/math/Factorial.js ***!
@@ -15820,6 +16107,7 @@ module.exports = Matrix3;
 //  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
 
 var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
+var Vector3 = __webpack_require__(/*! ./Vector3 */ "../../../src/math/Vector3.js");
 
 var EPSILON = 0.000001;
 
@@ -15874,8 +16162,6 @@ var Matrix4 = new Class({
         return new Matrix4(this);
     },
 
-    //  TODO - Should work with basic values
-
     /**
      * This method is an alias for `Matrix4.copy`.
      *
@@ -15889,90 +16175,6 @@ var Matrix4 = new Class({
     set: function (src)
     {
         return this.copy(src);
-    },
-
-    //  TODO - Docs
-    fromRotationXYTranslation: function (rotation, position, translateFirst)
-    {
-        var x = position.x;
-        var y = position.y;
-        var z = position.z;
-
-        var sx = Math.sin(rotation.x);
-        var cx = Math.cos(rotation.x);
-
-        var sy = Math.sin(rotation.y);
-        var cy = Math.cos(rotation.y);
-
-        var a30 = x;
-        var a31 = y;
-        var a32 = z;
-
-        //  Rotate X
-
-        var b21 = -sx;
-
-        //  Rotate Y
-
-        var c01 = 0 - b21 * sy;
-
-        var c02 = 0 - cx * sy;
-
-        var c21 = b21 * cy;
-
-        var c22 = cx * cy;
-
-        //  Translate
-        if (!translateFirst)
-        {
-            // a30 = cy * x + 0 * y + sy * z;
-            a30 = cy * x + sy * z;
-            a31 = c01 * x + cx * y + c21 * z;
-            a32 = c02 * x + sx * y + c22 * z;
-        }
-
-        return this.setValues(
-            cy,
-            c01,
-            c02,
-            0,
-            0,
-            cx,
-            sx,
-            0,
-            sy,
-            c21,
-            c22,
-            0,
-            a30,
-            a31,
-            a32,
-            1
-        );
-    },
-
-    setValues: function (m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33)
-    {
-        var out = this.val;
-
-        out[0] = m00;
-        out[1] = m01;
-        out[2] = m02;
-        out[3] = m03;
-        out[4] = m10;
-        out[5] = m11;
-        out[6] = m12;
-        out[7] = m13;
-        out[8] = m20;
-        out[9] = m21;
-        out[10] = m22;
-        out[11] = m23;
-        out[12] = m30;
-        out[13] = m31;
-        out[14] = m32;
-        out[15] = m33;
-
-        return this;
     },
 
     /**
@@ -16074,6 +16276,53 @@ var Matrix4 = new Class({
         out[13] = 0;
         out[14] = 0;
         out[15] = 0;
+
+        return this;
+    },
+
+    /**
+     * Generates a transform matrix based on the given position, scale and rotation.
+     *
+     * @method Phaser.Math.Matrix4#transform
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Vector3} position - The position vector.
+     * @param {Phaser.Math.Vector3} scale - The scale vector.
+     * @param {Phaser.Math.Quaternion} rotation - The rotation quaternion.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    transform: function (position, scale, rotation)
+    {
+        // var rotMatrix = rotation.toMatrix4(_tempMat1);
+        var rotMatrix = _tempMat1.fromQuat(rotation);
+
+        var rm = rotMatrix.val;
+        var m = this.val;
+
+        var sx = scale.x;
+        var sy = scale.y;
+        var sz = scale.z;
+
+        m[0] = rm[0] * sx;
+        m[1] = rm[1] * sx;
+        m[2] = rm[2] * sx;
+        m[3] = 0;
+
+        m[4] = rm[4] * sy;
+        m[5] = rm[5] * sy;
+        m[6] = rm[6] * sy;
+        m[7] = 0;
+
+        m[8] = rm[8] * sz;
+        m[9] = rm[9] * sz;
+        m[10] = rm[10] * sz;
+        m[11] = 0;
+
+        m[12] = position.x;
+        m[13] = position.y;
+        m[14] = position.z;
+        m[15] = 1;
 
         return this;
     },
@@ -16197,6 +16446,23 @@ var Matrix4 = new Class({
     },
 
     /**
+     * Copies the given Matrix4 into this Matrix and then inverses it.
+     *
+     * @method Phaser.Math.Matrix4#getInverse
+     * @since 3.50.0
+     *
+     * @return {Phaser.Math.Matrix4} m - The Matrix4 to invert into this Matrix4.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    getInverse: function (m)
+    {
+        this.copy(m);
+
+        return this.invert();
+    },
+
+    /**
      * Invert this Matrix.
      *
      * @method Phaser.Math.Matrix4#invert
@@ -16243,12 +16509,12 @@ var Matrix4 = new Class({
         var b10 = a21 * a33 - a23 * a31;
         var b11 = a22 * a33 - a23 * a32;
 
-        // Calculate the determinant
+        //  Calculate the determinant
         var det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
 
         if (!det)
         {
-            return null;
+            return this;
         }
 
         det = 1 / det;
@@ -16374,69 +16640,6 @@ var Matrix4 = new Class({
         return b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
     },
 
-    //  TODO - Docs
-    multiplyToMat4: function (src, out)
-    {
-        var a = this.val;
-        var b = src.val;
-
-        var a00 = a[0];
-        var a01 = a[1];
-        var a02 = a[2];
-        var a03 = a[3];
-        var a10 = a[4];
-        var a11 = a[5];
-        var a12 = a[6];
-        var a13 = a[7];
-        var a20 = a[8];
-        var a21 = a[9];
-        var a22 = a[10];
-        var a23 = a[11];
-        var a30 = a[12];
-        var a31 = a[13];
-        var a32 = a[14];
-        var a33 = a[15];
-
-        var b00 = b[0];
-        var b01 = b[1];
-        var b02 = b[2];
-        var b03 = b[3];
-        var b10 = b[4];
-        var b11 = b[5];
-        var b12 = b[6];
-        var b13 = b[7];
-        var b20 = b[8];
-        var b21 = b[9];
-        var b22 = b[10];
-        var b23 = b[11];
-        var b30 = b[12];
-        var b31 = b[13];
-        var b32 = b[14];
-        var b33 = b[15];
-
-        return out.setValues(
-            b00 * a00 + b01 * a10 + b02 * a20 + b03 * a30,
-            b01 * a01 + b01 * a11 + b02 * a21 + b03 * a31,
-            b02 * a02 + b01 * a12 + b02 * a22 + b03 * a32,
-            b03 * a03 + b01 * a13 + b02 * a23 + b03 * a33,
-
-            b10 * a00 + b11 * a10 + b12 * a20 + b13 * a30,
-            b10 * a01 + b11 * a11 + b12 * a21 + b13 * a31,
-            b10 * a02 + b11 * a12 + b12 * a22 + b13 * a32,
-            b10 * a03 + b11 * a13 + b12 * a23 + b13 * a33,
-
-            b20 * a00 + b21 * a10 + b22 * a20 + b23 * a30,
-            b20 * a01 + b21 * a11 + b22 * a21 + b23 * a31,
-            b20 * a02 + b21 * a12 + b22 * a22 + b23 * a32,
-            b20 * a03 + b21 * a13 + b22 * a23 + b23 * a33,
-
-            b30 * a00 + b31 * a10 + b32 * a20 + b33 * a30,
-            b30 * a01 + b31 * a11 + b32 * a21 + b33 * a31,
-            b30 * a02 + b31 * a12 + b32 * a22 + b33 * a32,
-            b30 * a03 + b31 * a13 + b32 * a23 + b33 * a33
-        );
-    },
-
     /**
      * Multiply this Matrix by the given Matrix.
      *
@@ -16554,6 +16757,97 @@ var Matrix4 = new Class({
         a[15] = m1[12] * m2[3] + m1[13] * m2[7] + m1[14] * m2[11] + m1[15] * m2[15];
 
         return this.fromArray(a);
+    },
+
+    /**
+     * Multiplies the given Matrix4 object with this Matrix.
+     *
+     * This is the same as calling `multiplyMatrices(m, this)`.
+     *
+     * @method Phaser.Math.Matrix4#premultiply
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} m - The Matrix4 to multiply with this one.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    premultiply: function (m)
+    {
+        return this.multiplyMatrices(m, this);
+    },
+
+    /**
+     * Multiplies the two given Matrix4 objects and stores the results in this Matrix.
+     *
+     * @method Phaser.Math.Matrix4#multiplyMatrices
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} a - The first Matrix4 to multiply.
+     * @param {Phaser.Math.Matrix4} b - The second Matrix4 to multiply.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    multiplyMatrices: function (a, b)
+    {
+        var am = a.val;
+        var bm = b.val;
+        var m = this.val;
+
+        var a11 = am[0];
+        var a12 = am[4];
+        var a13 = am[8];
+        var a14 = am[12];
+        var a21 = am[1];
+        var a22 = am[5];
+        var a23 = am[9];
+        var a24 = am[13];
+        var a31 = am[2];
+        var a32 = am[6];
+        var a33 = am[10];
+        var a34 = am[14];
+        var a41 = am[3];
+        var a42 = am[7];
+        var a43 = am[11];
+        var a44 = am[15];
+
+        var b11 = bm[0];
+        var b12 = bm[4];
+        var b13 = bm[8];
+        var b14 = bm[12];
+        var b21 = bm[1];
+        var b22 = bm[5];
+        var b23 = bm[9];
+        var b24 = bm[13];
+        var b31 = bm[2];
+        var b32 = bm[6];
+        var b33 = bm[10];
+        var b34 = bm[14];
+        var b41 = bm[3];
+        var b42 = bm[7];
+        var b43 = bm[11];
+        var b44 = bm[15];
+
+        m[0] = a11 * b11 + a12 * b21 + a13 * b31 + a14 * b41;
+        m[4] = a11 * b12 + a12 * b22 + a13 * b32 + a14 * b42;
+        m[8] = a11 * b13 + a12 * b23 + a13 * b33 + a14 * b43;
+        m[12] = a11 * b14 + a12 * b24 + a13 * b34 + a14 * b44;
+
+        m[1] = a21 * b11 + a22 * b21 + a23 * b31 + a24 * b41;
+        m[5] = a21 * b12 + a22 * b22 + a23 * b32 + a24 * b42;
+        m[9] = a21 * b13 + a22 * b23 + a23 * b33 + a24 * b43;
+        m[13] = a21 * b14 + a22 * b24 + a23 * b34 + a24 * b44;
+
+        m[2] = a31 * b11 + a32 * b21 + a33 * b31 + a34 * b41;
+        m[6] = a31 * b12 + a32 * b22 + a33 * b32 + a34 * b42;
+        m[10] = a31 * b13 + a32 * b23 + a33 * b33 + a34 * b43;
+        m[14] = a31 * b14 + a32 * b24 + a33 * b34 + a34 * b44;
+
+        m[3] = a41 * b11 + a42 * b21 + a43 * b31 + a44 * b41;
+        m[7] = a41 * b12 + a42 * b22 + a43 * b32 + a44 * b42;
+        m[11] = a41 * b13 + a42 * b23 + a43 * b33 + a44 * b43;
+        m[15] = a41 * b14 + a42 * b24 + a43 * b34 + a44 * b44;
+
+        return this;
     },
 
     /**
@@ -17202,6 +17496,66 @@ var Matrix4 = new Class({
     },
 
     /**
+     * Generate a right-handed look-at matrix with the given eye position, target and up axis.
+     *
+     * @method Phaser.Math.Matrix4#lookAtRH
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Vector3} eye - Position of the viewer.
+     * @param {Phaser.Math.Vector3} target - Point the viewer is looking at.
+     * @param {Phaser.Math.Vector3} up - vec3 pointing up.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    lookAtRH: function (eye, target, up)
+    {
+        var m = this.val;
+
+        _z.subVectors(eye, target);
+
+        if (_z.getLengthSquared() === 0)
+        {
+            // eye and target are in the same position
+            _z.z = 1;
+        }
+
+        _z.normalize();
+        _x.crossVectors(up, _z);
+
+        if (_x.getLengthSquared() === 0)
+        {
+            // up and z are parallel
+
+            if (Math.abs(up.z) === 1)
+            {
+                _z.x += 0.0001;
+            }
+            else
+            {
+                _z.z += 0.0001;
+            }
+
+            _z.normalize();
+            _x.crossVectors(up, _z);
+        }
+
+        _x.normalize();
+        _y.crossVectors(_z, _x);
+
+        m[0] = _x.x;
+        m[1] = _x.y;
+        m[2] = _x.z;
+        m[4] = _y.x;
+        m[5] = _y.y;
+        m[6] = _y.z;
+        m[8] = _z.x;
+        m[9] = _z.y;
+        m[10] = _z.z;
+
+        return this;
+    },
+
+    /**
      * Generate a look-at matrix with the given eye position, focal point, and up axis.
      *
      * @method Phaser.Math.Matrix4#lookAt
@@ -17405,12 +17759,35 @@ var Matrix4 = new Class({
         }
 
         return this;
+    },
+
+    /**
+     * Returns the maximum axis scale from this Matrix4.
+     *
+     * @method Phaser.Math.Matrix4#getMaxScaleOnAxis
+     * @since 3.50.0
+     *
+     * @return {number} The maximum axis scale.
+     */
+    getMaxScaleOnAxis: function ()
+    {
+        var m = this.val;
+
+        var scaleXSq = m[0] * m[0] + m[1] * m[1] + m[2] * m[2];
+        var scaleYSq = m[4] * m[4] + m[5] * m[5] + m[6] * m[6];
+        var scaleZSq = m[8] * m[8] + m[9] * m[9] + m[10] * m[10];
+
+        return Math.sqrt(Math.max(scaleXSq, scaleYSq, scaleZSq));
     }
 
 });
 
 var _tempMat1 = new Matrix4();
 var _tempMat2 = new Matrix4();
+
+var _x = new Vector3();
+var _y = new Vector3();
+var _z = new Vector3();
 
 module.exports = Matrix4;
 
@@ -17568,8 +17945,9 @@ module.exports = Percent;
 //  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
 
 var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
-var Vector3 = __webpack_require__(/*! ./Vector3 */ "../../../src/math/Vector3.js");
 var Matrix3 = __webpack_require__(/*! ./Matrix3 */ "../../../src/math/Matrix3.js");
+var NOOP = __webpack_require__(/*! ../utils/NOOP */ "../../../src/utils/NOOP.js");
+var Vector3 = __webpack_require__(/*! ./Vector3 */ "../../../src/math/Vector3.js");
 
 var EPSILON = 0.000001;
 
@@ -17606,52 +17984,141 @@ var Quaternion = new Class({
         /**
          * The x component of this Quaternion.
          *
-         * @name Phaser.Math.Quaternion#x
+         * @name Phaser.Math.Quaternion#_x
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @private
+         * @since 3.50.0
          */
 
         /**
          * The y component of this Quaternion.
          *
-         * @name Phaser.Math.Quaternion#y
+         * @name Phaser.Math.Quaternion#_y
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @private
+         * @since 3.50.0
          */
 
         /**
          * The z component of this Quaternion.
          *
-         * @name Phaser.Math.Quaternion#z
+         * @name Phaser.Math.Quaternion#_z
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @private
+         * @since 3.50.0
          */
 
         /**
          * The w component of this Quaternion.
          *
-         * @name Phaser.Math.Quaternion#w
+         * @name Phaser.Math.Quaternion#_w
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @private
+         * @since 3.50.0
          */
 
-        if (typeof x === 'object')
+        /**
+         * This callback is invoked, if set, each time a value in this quaternion is changed.
+         * The callback is passed one argument, a reference to this quaternion.
+         *
+         * @name Phaser.Math.Quaternion#onChangeCallback
+         * @type {function}
+         * @since 3.50.0
+         */
+        this.onChangeCallback = NOOP;
+
+        this.set(x, y, z, w);
+    },
+
+    /**
+     * The x component of this Quaternion.
+     *
+     * @name Phaser.Math.Quaternion#x
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    x: {
+        get: function ()
         {
-            this.x = x.x || 0;
-            this.y = x.y || 0;
-            this.z = x.z || 0;
-            this.w = x.w || 1;
+            return this._x;
+        },
+
+        set: function (value)
+        {
+            this._x = value;
+
+            this.onChangeCallback(this);
         }
-        else
+    },
+
+    /**
+     * The y component of this Quaternion.
+     *
+     * @name Phaser.Math.Quaternion#y
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    y: {
+        get: function ()
         {
-            this.x = x || 0;
-            this.y = y || 0;
-            this.z = z || 0;
-            this.w = w || 1;
+            return this._y;
+        },
+
+        set: function (value)
+        {
+            this._y = value;
+
+            this.onChangeCallback(this);
+        }
+    },
+
+    /**
+     * The z component of this Quaternion.
+     *
+     * @name Phaser.Math.Quaternion#z
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    z: {
+        get: function ()
+        {
+            return this._z;
+        },
+
+        set: function (value)
+        {
+            this._z = value;
+
+            this.onChangeCallback(this);
+        }
+    },
+
+    /**
+     * The w component of this Quaternion.
+     *
+     * @name Phaser.Math.Quaternion#w
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    w: {
+        get: function ()
+        {
+            return this._w;
+        },
+
+        set: function (value)
+        {
+            this._w = value;
+
+            this.onChangeCallback(this);
         }
     },
 
@@ -17667,16 +18134,11 @@ var Quaternion = new Class({
      */
     copy: function (src)
     {
-        this.x = src.x;
-        this.y = src.y;
-        this.z = src.z;
-        this.w = src.w;
-
-        return this;
+        return this.set(src);
     },
 
     /**
-     * Set the components of this Quaternion.
+     * Set the components of this Quaternion and optionally call the `onChangeCallback`.
      *
      * @method Phaser.Math.Quaternion#set
      * @since 3.0.0
@@ -17685,24 +18147,32 @@ var Quaternion = new Class({
      * @param {number} [y=0] - The y component.
      * @param {number} [z=0] - The z component.
      * @param {number} [w=0] - The w component.
+     * @param {boolean} [update=true] - Call the `onChangeCallback`?
      *
      * @return {Phaser.Math.Quaternion} This Quaternion.
      */
-    set: function (x, y, z, w)
+    set: function (x, y, z, w, update)
     {
+        if (update === undefined) { update = true; }
+
         if (typeof x === 'object')
         {
-            this.x = x.x || 0;
-            this.y = x.y || 0;
-            this.z = x.z || 0;
-            this.w = x.w || 0;
+            this._x = x.x || 0;
+            this._y = x.y || 0;
+            this._z = x.z || 0;
+            this._w = x.w || 0;
         }
         else
         {
-            this.x = x || 0;
-            this.y = y || 0;
-            this.z = z || 0;
-            this.w = w || 0;
+            this._x = x || 0;
+            this._y = y || 0;
+            this._z = z || 0;
+            this._w = w || 0;
+        }
+
+        if (update)
+        {
+            this.onChangeCallback(this);
         }
 
         return this;
@@ -17720,10 +18190,12 @@ var Quaternion = new Class({
      */
     add: function (v)
     {
-        this.x += v.x;
-        this.y += v.y;
-        this.z += v.z;
-        this.w += v.w;
+        this._x += v.x;
+        this._y += v.y;
+        this._z += v.z;
+        this._w += v.w;
+
+        this.onChangeCallback(this);
 
         return this;
     },
@@ -17740,10 +18212,12 @@ var Quaternion = new Class({
      */
     subtract: function (v)
     {
-        this.x -= v.x;
-        this.y -= v.y;
-        this.z -= v.z;
-        this.w -= v.w;
+        this._x -= v.x;
+        this._y -= v.y;
+        this._z -= v.z;
+        this._w -= v.w;
+
+        this.onChangeCallback(this);
 
         return this;
     },
@@ -17760,10 +18234,12 @@ var Quaternion = new Class({
      */
     scale: function (scale)
     {
-        this.x *= scale;
-        this.y *= scale;
-        this.z *= scale;
-        this.w *= scale;
+        this._x *= scale;
+        this._y *= scale;
+        this._z *= scale;
+        this._w *= scale;
+
+        this.onChangeCallback(this);
 
         return this;
     },
@@ -17824,11 +18300,13 @@ var Quaternion = new Class({
         {
             len = 1 / Math.sqrt(len);
 
-            this.x = x * len;
-            this.y = y * len;
-            this.z = z * len;
-            this.w = w * len;
+            this._x = x * len;
+            this._y = y * len;
+            this._z = z * len;
+            this._w = w * len;
         }
+
+        this.onChangeCallback(this);
 
         return this;
     },
@@ -17868,12 +18346,12 @@ var Quaternion = new Class({
         var az = this.z;
         var aw = this.w;
 
-        this.x = ax + t * (v.x - ax);
-        this.y = ay + t * (v.y - ay);
-        this.z = az + t * (v.z - az);
-        this.w = aw + t * (v.w - aw);
-
-        return this;
+        return this.set(
+            ax + t * (v.x - ax),
+            ay + t * (v.y - ay),
+            az + t * (v.z - az),
+            aw + t * (v.w - aw)
+        );
     },
 
     /**
@@ -17905,21 +18383,16 @@ var Quaternion = new Class({
         }
         else if (dot > 0.999999)
         {
-            this.x = 0;
-            this.y = 0;
-            this.z = 0;
-            this.w = 1;
-
-            return this;
+            return this.set(0, 0, 0, 1);
         }
         else
         {
             tmpvec.copy(a).cross(b);
 
-            this.x = tmpvec.x;
-            this.y = tmpvec.y;
-            this.z = tmpvec.z;
-            this.w = 1 + dot;
+            this._x = tmpvec.x;
+            this._y = tmpvec.y;
+            this._z = tmpvec.z;
+            this._w = 1 + dot;
 
             return this.normalize();
         }
@@ -17966,12 +18439,7 @@ var Quaternion = new Class({
      */
     identity: function ()
     {
-        this.x = 0;
-        this.y = 0;
-        this.z = 0;
-        this.w = 1;
-
-        return this;
+        return this.set(0, 0, 0, 1);
     },
 
     /**
@@ -17991,12 +18459,12 @@ var Quaternion = new Class({
 
         var s = Math.sin(rad);
 
-        this.x = s * axis.x;
-        this.y = s * axis.y;
-        this.z = s * axis.z;
-        this.w = Math.cos(rad);
-
-        return this;
+        return this.set(
+            s * axis.x,
+            s * axis.y,
+            s * axis.z,
+            Math.cos(rad)
+        );
     },
 
     /**
@@ -18021,12 +18489,12 @@ var Quaternion = new Class({
         var bz = b.z;
         var bw = b.w;
 
-        this.x = ax * bw + aw * bx + ay * bz - az * by;
-        this.y = ay * bw + aw * by + az * bx - ax * bz;
-        this.z = az * bw + aw * bz + ax * by - ay * bx;
-        this.w = aw * bw - ax * bx - ay * by - az * bz;
-
-        return this;
+        return this.set(
+            ax * bw + aw * bx + ay * bz - az * by,
+            ay * bw + aw * by + az * bx - ax * bz,
+            az * bw + aw * bz + ax * by - ay * bx,
+            aw * bw - ax * bx - ay * by - az * bz
+        );
     },
 
     /**
@@ -18084,12 +18552,12 @@ var Quaternion = new Class({
         }
 
         // calculate final values
-        this.x = scale0 * ax + scale1 * bx;
-        this.y = scale0 * ay + scale1 * by;
-        this.z = scale0 * az + scale1 * bz;
-        this.w = scale0 * aw + scale1 * bw;
-
-        return this;
+        return this.set(
+            scale0 * ax + scale1 * bx,
+            scale0 * ay + scale1 * by,
+            scale0 * az + scale1 * bz,
+            scale0 * aw + scale1 * bw
+        );
     },
 
     /**
@@ -18110,14 +18578,12 @@ var Quaternion = new Class({
         var dot = a0 * a0 + a1 * a1 + a2 * a2 + a3 * a3;
         var invDot = (dot) ? 1 / dot : 0;
 
-        // TODO: Would be faster to return [0,0,0,0] immediately if dot == 0
-
-        this.x = -a0 * invDot;
-        this.y = -a1 * invDot;
-        this.z = -a2 * invDot;
-        this.w = a3 * invDot;
-
-        return this;
+        return this.set(
+            -a0 * invDot,
+            -a1 * invDot,
+            -a2 * invDot,
+            a3 * invDot
+        );
     },
 
     /**
@@ -18132,9 +18598,11 @@ var Quaternion = new Class({
      */
     conjugate: function ()
     {
-        this.x = -this.x;
-        this.y = -this.y;
-        this.z = -this.z;
+        this._x = -this.x;
+        this._y = -this.y;
+        this._z = -this.z;
+
+        this.onChangeCallback(this);
 
         return this;
     },
@@ -18161,12 +18629,12 @@ var Quaternion = new Class({
         var bx = Math.sin(rad);
         var bw = Math.cos(rad);
 
-        this.x = ax * bw + aw * bx;
-        this.y = ay * bw + az * bx;
-        this.z = az * bw - ay * bx;
-        this.w = aw * bw - ax * bx;
-
-        return this;
+        return this.set(
+            ax * bw + aw * bx,
+            ay * bw + az * bx,
+            az * bw - ay * bx,
+            aw * bw - ax * bx
+        );
     },
 
     /**
@@ -18191,12 +18659,12 @@ var Quaternion = new Class({
         var by = Math.sin(rad);
         var bw = Math.cos(rad);
 
-        this.x = ax * bw - az * by;
-        this.y = ay * bw + aw * by;
-        this.z = az * bw + ax * by;
-        this.w = aw * bw - ay * by;
-
-        return this;
+        return this.set(
+            ax * bw - az * by,
+            ay * bw + aw * by,
+            az * bw + ax * by,
+            aw * bw - ay * by
+        );
     },
 
     /**
@@ -18221,12 +18689,12 @@ var Quaternion = new Class({
         var bz = Math.sin(rad);
         var bw = Math.cos(rad);
 
-        this.x = ax * bw + ay * bz;
-        this.y = ay * bw - ax * bz;
-        this.z = az * bw + aw * bz;
-        this.w = aw * bw - az * bz;
-
-        return this;
+        return this.set(
+            ax * bw + ay * bz,
+            ay * bw - ax * bz,
+            az * bw + aw * bz,
+            aw * bw - az * bz
+        );
     },
 
     /**
@@ -18246,6 +18714,190 @@ var Quaternion = new Class({
         var z = this.z;
 
         this.w = -Math.sqrt(1.0 - x * x - y * y - z * z);
+
+        return this;
+    },
+
+    /**
+     * Set this Quaternion from the given Euler, based on Euler order.
+     *
+     * @method Phaser.Math.Quaternion#setFromEuler
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Euler} euler - The Euler to convert from.
+     * @param {boolean} [update=true] - Run the `onChangeCallback`?
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    setFromEuler: function (euler, update)
+    {
+        var x = euler.x / 2;
+        var y = euler.y / 2;
+        var z = euler.z / 2;
+
+        var c1 = Math.cos(x);
+        var c2 = Math.cos(y);
+        var c3 = Math.cos(z);
+
+        var s1 = Math.sin(x);
+        var s2 = Math.sin(y);
+        var s3 = Math.sin(z);
+
+        switch (euler.order)
+        {
+            case 'XYZ':
+            {
+                this.set(
+                    s1 * c2 * c3 + c1 * s2 * s3,
+                    c1 * s2 * c3 - s1 * c2 * s3,
+                    c1 * c2 * s3 + s1 * s2 * c3,
+                    c1 * c2 * c3 - s1 * s2 * s3,
+                    update
+                );
+
+                break;
+            }
+
+            case 'YXZ':
+            {
+                this.set(
+                    s1 * c2 * c3 + c1 * s2 * s3,
+                    c1 * s2 * c3 - s1 * c2 * s3,
+                    c1 * c2 * s3 - s1 * s2 * c3,
+                    c1 * c2 * c3 + s1 * s2 * s3,
+                    update
+                );
+
+                break;
+            }
+
+            case 'ZXY':
+            {
+                this.set(
+                    s1 * c2 * c3 - c1 * s2 * s3,
+                    c1 * s2 * c3 + s1 * c2 * s3,
+                    c1 * c2 * s3 + s1 * s2 * c3,
+                    c1 * c2 * c3 - s1 * s2 * s3,
+                    update
+                );
+
+                break;
+            }
+
+            case 'ZYX':
+            {
+                this.set(
+                    s1 * c2 * c3 - c1 * s2 * s3,
+                    c1 * s2 * c3 + s1 * c2 * s3,
+                    c1 * c2 * s3 - s1 * s2 * c3,
+                    c1 * c2 * c3 + s1 * s2 * s3,
+                    update
+                );
+
+                break;
+            }
+
+            case 'YZX':
+            {
+                this.set(
+                    s1 * c2 * c3 + c1 * s2 * s3,
+                    c1 * s2 * c3 + s1 * c2 * s3,
+                    c1 * c2 * s3 - s1 * s2 * c3,
+                    c1 * c2 * c3 - s1 * s2 * s3,
+                    update
+                );
+
+                break;
+            }
+
+            case 'XZY':
+            {
+                this.set(
+                    s1 * c2 * c3 - c1 * s2 * s3,
+                    c1 * s2 * c3 - s1 * c2 * s3,
+                    c1 * c2 * s3 + s1 * s2 * c3,
+                    c1 * c2 * c3 + s1 * s2 * s3,
+                    update
+                );
+
+                break;
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Sets the rotation of this Quaternion from the given Matrix4.
+     *
+     * @method Phaser.Math.Quaternion#setFromRotationMatrix
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} mat4 - The Matrix4 to set the rotation from.
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    setFromRotationMatrix: function (mat4)
+    {
+        var m = mat4.val;
+
+        var m11 = m[0];
+        var m12 = m[4];
+        var m13 = m[8];
+        var m21 = m[1];
+        var m22 = m[5];
+        var m23 = m[9];
+        var m31 = m[2];
+        var m32 = m[6];
+        var m33 = m[10];
+
+        var trace = m11 + m22 + m33;
+        var s;
+
+        if (trace > 0)
+        {
+            s = 0.5 / Math.sqrt(trace + 1.0);
+
+            this.set(
+                (m32 - m23) * s,
+                (m13 - m31) * s,
+                (m21 - m12) * s,
+                0.25 / s
+            );
+        }
+        else if (m11 > m22 && m11 > m33)
+        {
+            s = 2.0 * Math.sqrt(1.0 + m11 - m22 - m33);
+
+            this.set(
+                0.25 * s,
+                (m12 + m21) / s,
+                (m13 + m31) / s,
+                (m32 - m23) / s
+            );
+        }
+        else if (m22 > m33)
+        {
+            s = 2.0 * Math.sqrt(1.0 + m22 - m11 - m33);
+
+            this.set(
+                (m12 + m21) / s,
+                0.25 * s,
+                (m23 + m32) / s,
+                (m13 - m31) / s
+            );
+        }
+        else
+        {
+            s = 2.0 * Math.sqrt(1.0 + m33 - m11 - m22);
+
+            this.set(
+                (m13 + m31) / s,
+                (m23 + m32) / s,
+                0.25 * s,
+                (m21 - m12) / s
+            );
+        }
 
         return this;
     },
@@ -18281,9 +18933,9 @@ var Quaternion = new Class({
 
             fRoot = 0.5 / fRoot; // 1/(4w)
 
-            this.x = (m[7] - m[5]) * fRoot;
-            this.y = (m[2] - m[6]) * fRoot;
-            this.z = (m[3] - m[1]) * fRoot;
+            this._x = (m[7] - m[5]) * fRoot;
+            this._y = (m[2] - m[6]) * fRoot;
+            this._z = (m[3] - m[1]) * fRoot;
         }
         else
         {
@@ -18312,11 +18964,13 @@ var Quaternion = new Class({
             tmp[j] = (m[j * 3 + i] + m[i * 3 + j]) * fRoot;
             tmp[k] = (m[k * 3 + i] + m[i * 3 + k]) * fRoot;
 
-            this.x = tmp[0];
-            this.y = tmp[1];
-            this.z = tmp[2];
-            this.w = (m[k * 3 + j] - m[j * 3 + k]) * fRoot;
+            this._x = tmp[0];
+            this._y = tmp[1];
+            this._z = tmp[2];
+            this._w = (m[k * 3 + j] - m[j * 3 + k]) * fRoot;
         }
+
+        this.onChangeCallback(this);
 
         return this;
     }
@@ -19976,6 +20630,44 @@ var Vector3 = new Class({
     },
 
     /**
+     * Sets the components of this Vector to be the `Math.min` result from the given vector.
+     *
+     * @method Phaser.Math.Vector3#min
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Vector3} v - The Vector3 to check the minimum values against.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    min: function (v)
+    {
+        this.x = Math.min(this.x, v.x);
+        this.y = Math.min(this.y, v.y);
+        this.z = Math.min(this.z, v.z);
+
+        return this;
+    },
+
+    /**
+     * Sets the components of this Vector to be the `Math.max` result from the given vector.
+     *
+     * @method Phaser.Math.Vector3#max
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Vector3} v - The Vector3 to check the maximum values against.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    max: function (v)
+    {
+        this.x = Math.max(this.x, v.x);
+        this.y = Math.max(this.y, v.y);
+        this.z = Math.max(this.z, v.z);
+
+        return this;
+    },
+
+    /**
      * Make a clone of this Vector3.
      *
      * @method Phaser.Math.Vector3#clone
@@ -19986,6 +20678,26 @@ var Vector3 = new Class({
     clone: function ()
     {
         return new Vector3(this.x, this.y, this.z);
+    },
+
+    /**
+     * Adds the two given Vector3s and sets the results into this Vector3.
+     *
+     * @method Phaser.Math.Vector3#addVectors
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Vector3} a - The first Vector to add.
+     * @param {Phaser.Math.Vector3} b - The second Vector to add.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    addVectors: function (a, b)
+    {
+        this.x = a.x + b.x;
+        this.y = a.y + b.y;
+        this.z = a.z + b.z;
+
+        return this;
     },
 
     /**
@@ -20082,6 +20794,63 @@ var Vector3 = new Class({
     },
 
     /**
+     * Sets the components of this Vector3 from the position of the given Matrix4.
+     *
+     * @method Phaser.Math.Vector3#setFromMatrixPosition
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} mat4 - The Matrix4 to get the position from.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    setFromMatrixPosition: function (m)
+    {
+        return this.fromArray(m.val, 12);
+    },
+
+    /**
+     * Sets the components of this Vector3 from the Matrix4 column specified.
+     *
+     * @method Phaser.Math.Vector3#setFromMatrixColumn
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} mat4 - The Matrix4 to get the column from.
+     * @param {number} index - The column index.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    setFromMatrixColumn: function (mat4, index)
+    {
+        return this.fromArray(mat4.val, index * 4);
+    },
+
+    /**
+     * Sets the components of this Vector3 from the given array, based on the offset.
+     *
+     * Vector3.x = array[offset]
+     * Vector3.y = array[offset + 1]
+     * Vector3.z = array[offset + 2]
+     *
+     * @method Phaser.Math.Vector3#fromArray
+     * @since 3.50.0
+     *
+     * @param {number[]} array - The array of values to get this Vector from.
+     * @param {number} [offset=0] - The offset index into the array.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    fromArray: function (array, offset)
+    {
+        if (offset === undefined) { offset = 0; }
+
+        this.x = array[offset];
+        this.y = array[offset + 1];
+        this.z = array[offset + 2];
+
+        return this;
+    },
+
+    /**
      * Add a given Vector to this Vector. Addition is component-wise.
      *
      * @method Phaser.Math.Vector3#add
@@ -20096,6 +20865,25 @@ var Vector3 = new Class({
         this.x += v.x;
         this.y += v.y;
         this.z += v.z || 0;
+
+        return this;
+    },
+
+    /**
+     * Add the given value to each component of this Vector.
+     *
+     * @method Phaser.Math.Vector3#addScalar
+     * @since 3.50.0
+     *
+     * @param {number} s - The amount to add to this Vector.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    addScalar: function (s)
+    {
+        this.x += s;
+        this.y += s;
+        this.z += s;
 
         return this;
     },
@@ -20397,6 +21185,56 @@ var Vector3 = new Class({
     },
 
     /**
+     * Takes a Matrix3 and applies it to this Vector3.
+     *
+     * @method Phaser.Math.Vector3#applyMatrix3
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix3} mat3 - The Matrix3 to apply to this Vector3.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    applyMatrix3: function (mat3)
+    {
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+        var m = mat3.val;
+
+        this.x = m[0] * x + m[3] * y + m[6] * z;
+        this.y = m[1] * x + m[4] * y + m[7] * z;
+        this.z = m[2] * x + m[5] * y + m[8] * z;
+
+        return this;
+    },
+
+    /**
+     * Takes a Matrix4 and applies it to this Vector3.
+     *
+     * @method Phaser.Math.Vector3#applyMatrix4
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} mat4 - The Matrix4 to apply to this Vector3.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    applyMatrix4: function (mat4)
+    {
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+        var m = mat4.val;
+
+        var w = 1 / (m[3] * x + m[7] * y + m[11] * z + m[15]);
+
+        this.x = (m[0] * x + m[4] * y + m[8] * z + m[12]) * w;
+        this.y = (m[1] * x + m[5] * y + m[9] * z + m[13]) * w;
+        this.z = (m[2] * x + m[6] * y + m[10] * z + m[14]) * w;
+
+        return this;
+    },
+
+    /**
      * Transform this Vector with the given Matrix.
      *
      * @method Phaser.Math.Vector3#transformMat3
@@ -20421,7 +21259,7 @@ var Vector3 = new Class({
     },
 
     /**
-     * Transform this Vector with the given Matrix.
+     * Transform this Vector with the given Matrix4.
      *
      * @method Phaser.Math.Vector3#transformMat4
      * @since 3.0.0
@@ -20550,6 +21388,38 @@ var Vector3 = new Class({
         this.z = (x * a02 + y * a12 + z * a22 + a32) * lw;
 
         return this;
+    },
+
+    /**
+     * Multiplies this Vector3 by the given view and projection matrices.
+     *
+     * @method Phaser.Math.Vector3#projectViewMatrix
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} viewMatrix - A View Matrix.
+     * @param {Phaser.Math.Matrix4} projectionMatrix - A Projection Matrix.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    projectViewMatrix: function (viewMatrix, projectionMatrix)
+    {
+        return this.applyMatrix4(viewMatrix).applyMatrix4(projectionMatrix);
+    },
+
+    /**
+     * Multiplies this Vector3 by the given inversed projection matrix and world matrix.
+     *
+     * @method Phaser.Math.Vector3#unprojectViewMatrix
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} projectionMatrix - An inversed Projection Matrix.
+     * @param {Phaser.Math.Matrix4} worldMatrix - A World View Matrix.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    unprojectViewMatrix: function (projectionMatrix, worldMatrix)
+    {
+        return this.applyMatrix4(projectionMatrix).applyMatrix4(worldMatrix);
     },
 
     /**
@@ -24247,6 +25117,7 @@ var PhaserMath = {
     Clamp: __webpack_require__(/*! ./Clamp */ "../../../src/math/Clamp.js"),
     DegToRad: __webpack_require__(/*! ./DegToRad */ "../../../src/math/DegToRad.js"),
     Difference: __webpack_require__(/*! ./Difference */ "../../../src/math/Difference.js"),
+    Euler: __webpack_require__(/*! ./Euler */ "../../../src/math/Euler.js"),
     Factorial: __webpack_require__(/*! ./Factorial */ "../../../src/math/Factorial.js"),
     FloatBetween: __webpack_require__(/*! ./FloatBetween */ "../../../src/math/FloatBetween.js"),
     FloorTo: __webpack_require__(/*! ./FloorTo */ "../../../src/math/FloorTo.js"),
@@ -26198,17 +27069,7 @@ var PIPELINE_CONST = {
      * @const
      * @since 3.50.0
      */
-    ROPE_PIPELINE: 'RopePipeline',
-
-    /**
-     * The Mesh Pipeline.
-     *
-     * @name Phaser.Renderer.WebGL.Pipelines.MESH_PIPELINE
-     * @type {string}
-     * @const
-     * @since 3.50.0
-     */
-    MESH_PIPELINE: 'MeshPipeline'
+    ROPE_PIPELINE: 'RopePipeline'
 
 };
 
@@ -31151,7 +32012,7 @@ var SpineFile = new Class({
             for (i = 0; i < atlasURL.length; i++)
             {
                 atlas = new TextFile(loader, {
-                    key: key + '_' + i,
+                    key: key + '!' + i,
                     url: atlasURL[i],
                     extension: GetFastValue(config, 'atlasExtension', 'atlas'),
                     xhrSettings: GetFastValue(config, 'atlasXhrSettings')
@@ -31173,7 +32034,7 @@ var SpineFile = new Class({
 
             for (i = 0; i < atlasURL.length; i++)
             {
-                atlas = new TextFile(loader, key + '_' + i, atlasURL[i], atlasXhrSettings);
+                atlas = new TextFile(loader, key + '!' + i, atlasURL[i], atlasXhrSettings);
                 atlas.cache = cache;
 
                 files.push(atlas);
@@ -31289,7 +32150,7 @@ var SpineFile = new Class({
 
                 if (file.type === 'text')
                 {
-                    atlasKey = file.key.replace(/_[\d]$/, '');
+                    atlasKey = file.key.replace(/![\d]$/, '');
 
                     atlasCache = file.cache;
 
@@ -31298,7 +32159,7 @@ var SpineFile = new Class({
                 else
                 {
                     var src = file.key.trim();
-                    var pos = src.indexOf('_');
+                    var pos = src.indexOf('!');
                     var key = src.substr(pos + 1);
 
                     if (!textureManager.exists(key))
