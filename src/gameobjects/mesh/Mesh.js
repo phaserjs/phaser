@@ -66,9 +66,9 @@ var Vertex = require('../../geom/Vertex');
  * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
  * @param {number[]} [vertices] - An array containing the vertices data for this Mesh.
  * @param {number[]} [uvs] - An array containing the uv data for this Mesh.
- * @param {number[]} [indicies] - An array containing the vertex indicies for this Mesh.
- * @param {number|number[]} [colors=0xffffff] - An array containing the color data for this Mesh.
- * @param {number|number[]} [alphas=1] - An array containing the alpha data for this Mesh.
+ * @param {number[]} [indicies] - An optional array containing the vertex indicies for this Mesh. If the data isn't index, pass `null`.
+ * @param {number|number[]} [colors=0xffffff] - An array of colors, one per vertex, or a single color value applied to all vertices.
+ * @param {number|number[]} [alphas=1] - An array of alpha values, one per vertex, or a single alpha value applied to all vertices.
  */
 var Mesh = new Class({
 
