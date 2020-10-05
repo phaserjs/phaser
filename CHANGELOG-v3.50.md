@@ -294,6 +294,7 @@ The way in which Game Objects add themselves to the Scene Update List has change
 * The Spine Plugin `destroy` method will now no longer remove the Game Objects from the Game Object Factory, or dispose of the Scene Renderer. This means when a Scene is destroyed, it will keep the Game Objects in the factory for other Scene's to use. Fix #5279 (thanks @Racoonacoon)
 * `SpinePlugin.gameDestroy` is a new method that is called if the Game instance emits a `destroy` event. It removes the Spine Game Objects from the factory and disposes of the Spine scene renderer.
 * `SpineFile` will now check to see if another identical atlas in the load queue is already loading the texture it needs and will no longer get locked waiting for a file that will never complete. This allows multiple skeleton JSONs to use the same atlas data. Fix #5331 (thanks @Racoonacoon)
+* `SpineFile` now uses a `!` character to split the keys, instead of an underscore, preventing the plugin from incorrectly working out the keys for filenames with underscores in them. Fix #5336 (thanks @Racoonacoon)
 
 ### Animation API - New Features and Updates
 
