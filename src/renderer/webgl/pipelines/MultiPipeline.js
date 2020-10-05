@@ -999,7 +999,6 @@ var MultiPipeline = new Class({
         var tx3 = calcMatrix.getX(xw, y);
         var ty3 = calcMatrix.getY(xw, y);
 
-        // this.setTexture2D(frame.glTexture, 0);
         var unit = this.renderer.setTextureSource(frame.source);
 
         tint = Utils.getTintAppendFloatAlpha(tint, alpha);
@@ -1038,9 +1037,9 @@ var MultiPipeline = new Class({
 
         var unit = this.renderer.setTexture2D(white);
 
-        var tint = Utils.getTintAppendFloatAlpha(color, alpha);
+        var tint = Utils.getTintAppendFloatAlphaAndSwap(color, alpha);
 
-        this.batchQuad(x, y, x, yh, xw, yh, xw, y, 0, 0, 1, 1, tint, tint, tint, tint, 1, white, unit);
+        this.batchQuad(x, y, x, yh, xw, yh, xw, y, 0, 0, 1, 1, tint, tint, tint, tint, 2, white, unit);
     },
 
     /**
@@ -1086,14 +1085,9 @@ var MultiPipeline = new Class({
 
         var frame = this.currentFrame;
 
-        var u0 = frame.u0;
-        var v0 = frame.v0;
-        var u1 = frame.u1;
-        var v1 = frame.v1;
-
         var tint = this.fillTint;
 
-        this.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tint.TL, tint.TR, tint.BL, tint.BR, this.tintEffect);
+        this.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, frame.u0, frame.v0, frame.u1, frame.v1, tint.TL, tint.TR, tint.BL, tint.BR, this.tintEffect);
     },
 
     /**
@@ -1140,7 +1134,9 @@ var MultiPipeline = new Class({
         var u1 = frame.u1;
         var v1 = frame.v1;
 
-        this.batchTri(tx0, ty0, tx1, ty1, tx2, ty2, u0, v0, u1, v1, this.fillTint.TL, this.fillTint.TR, this.fillTint.BL, this.tintEffect);
+        var tint = this.fillTint;
+
+        this.batchTri(tx0, ty0, tx1, ty1, tx2, ty2, u0, v0, u1, v1, tint.TL, tint.TR, tint.BL, this.tintEffect);
     },
 
     /**
@@ -1232,6 +1228,11 @@ var MultiPipeline = new Class({
 
         var frame = this.currentFrame;
 
+        var u0 = frame.u0;
+        var v0 = frame.v0;
+        var u1 = frame.u1;
+        var v1 = frame.v1;
+
         for (var index = 0; index < length; index += 3)
         {
             var p0 = polygonIndexArray[index + 0] * 2;
@@ -1253,11 +1254,6 @@ var MultiPipeline = new Class({
 
             var tx2 = calcMatrix.getX(x2, y2);
             var ty2 = calcMatrix.getY(x2, y2);
-
-            var u0 = frame.u0;
-            var v0 = frame.v0;
-            var u1 = frame.u1;
-            var v1 = frame.v1;
 
             this.batchTri(tx0, ty0, tx1, ty1, tx2, ty2, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintEffect);
         }
