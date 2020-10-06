@@ -282,15 +282,23 @@ var Mesh = new Class({
     },
 
     /**
-     * Creates a grid based on the given parameters and adds it to this Mesh.
+     * Creates a grid based on the given configuration object and adds it to this Mesh.
      *
-     * The size of the grid is given in pixels.
+     * The size of the grid is given in pixels. An example configuration may be:
+     *
+     * `{ width: 256, height: 256, widthSegments: 2, heightSegments: 2, tile: true }`
+     *
+     * This will create a grid Mesh 256 x 256 pixels in size, split into 2x2 segments, with
+     * the texture tiling across the cells.
      *
      * You can optionally split the grid into segments both vertically and horizontally. This will
      * generate two faces per grid segment as a result.
      *
+     * The `tile` parameter allows you to control if the tile will repeat across the grid
+     * segments, or be displayed in full.
+     *
      * You may add multiple grids to a single Mesh, although they will act as one when
-     * moved or rotated. You can offset the grid via the `posX` and `posY` parameters.
+     * moved or rotated. You can offset the grid via the `x` and `y` properties.
      *
      * UV coordinates are generated based on the currently set texture `Frame` of this Mesh. For
      * example, if this Mesh is using a full texture, the UVs will be in the range 0 to 1. If it's
@@ -300,14 +308,7 @@ var Mesh = new Class({
      * @method Phaser.GameObjects.Mesh#addGrid
      * @since 3.50.0
      *
-     * @param {number} [width=128] - The width of the grid in pixels.
-     * @param {number} [height=128] - The height of the grid in pixels.
-     * @param {number} [widthSegments=1] - The number of segments to split the grid horizontally in to.
-     * @param {number} [heightSegments=1] - The number of segments to split the grid vertically in to.
-     * @param {number} [posX=0] - Offset the grid x position by this amount.
-     * @param {number} [posY=0] - Offset the grid y position by this amount.
-     * @param {number|number[]} [colors=0xffffff] - An array of colors, one per vertex, or a single color value applied to all vertices.
-     * @param {number|number[]} [alphas=1] - An array of alpha values, one per vertex, or a single alpha value applied to all vertices.
+     * @param {Phaser.Types.GameObjects.Mesh.MeshGridConfig} config - A Grid configuration object.
      *
      * @return {this} This Mesh Game Object.
      */
