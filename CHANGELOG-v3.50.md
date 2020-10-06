@@ -486,6 +486,12 @@ The Mesh Game Object has been rewritten in v3.50 with a lot of changes to make i
 * The `Mesh.alphas` array has been removed. All color data is now bound in the Vertex instances.
 * The `Mesh.tintFill` property is now a `boolean` and defaults to `false`.
 
+### Quad Game Object Removed
+
+The `Quad` Game Object has been removed from v3.50.0.
+
+You can now create your own Quads easily using the new `Mesh.addGrid` method, which is far more flexible than the old quads were: `this.add.mesh(x, y, texture).addGrid(width, height)` will create a quad of the given size, which you can then manipulate as before.
+
 ### Input / Mouse Updates and API Changes
 
 * `ScaleManager.refresh` is now called when the `Game.READY` event fires. This fixes a bug where the Scale Manager would have the incorrect canvas bounds, because they were calculated before a previous canvas was removed from the DOM. Fix #4862 (thanks @dranitski)
