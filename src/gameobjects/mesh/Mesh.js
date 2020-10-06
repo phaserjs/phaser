@@ -13,6 +13,9 @@ var GameObjectEvents = require('../events');
 var GetCalcMatrix = require('../GetCalcMatrix');
 var GetColor = require('../../display/color/GetColor');
 var GetFastValue = require('../../utils/object/GetFastValue');
+var Matrix4 = require('../../math/Matrix4');
+var Vector3 = require('../../math/Vector3');
+var MeshCamera = require('./MeshCamera');
 var MeshRender = require('./MeshRender');
 var StableSort = require('../../utils/array/StableSort');
 var Vertex = require('../../geom/mesh/Vertex');
@@ -99,6 +102,18 @@ var Mesh = new Class({
         if (texture === undefined) { texture = '__WHITE'; }
 
         GameObject.call(this, scene, 'Mesh');
+
+        /**
+         * A Camera which can be used to control the view of the models being managed
+         * by this Mesh. It will default to have an fov of 45 and be positioned at 0, 0, -10,
+         * with a near of 0.01 and far of 1000. You can change all of these by using the
+         * methods and properties available on the `MeshCamera` class.
+         *
+         * @name Phaser.GameObjects.Mesh#camera
+         * @type {Phaser.GameObjects.MeshCamera}
+         * @since 3.50.0
+         */
+        this.camera = new MeshCamera(45, 0, 0, -10, 0.01, 1000);
 
         /**
          * The Animation State of this Mesh.
@@ -194,9 +209,15 @@ var Mesh = new Class({
          */
         this.hideCCW = true;
 
+        this.transformMatrix = new Matrix4();
+        this._position = new Vector3();
+        this._rotation = new Vector3();
+        this._scale = new Vector3(1, 1, 1);
+
         this.setTexture(texture, frame);
         this.setPosition(x, y);
-        this.setSizeToFrame();
+        this.setSize(800, 600);
+        // this.setSizeToFrame();
         this.initPipeline();
 
         if (vertices)
@@ -1036,6 +1057,23 @@ var Mesh = new Class({
     preUpdate: function (time, delta)
     {
         this.anims.update(time, delta);
+
+        var camera = this.camera;
+
+        camera.update(800, 600);
+
+        var transformMatrix = this.transformMatrix;
+
+        transformMatrix.setWorldMatrix(this._rotation, this._position, this._scale, camera.viewMatrix, camera.projectionMatrix);
+
+        var vertices = this.vertices;
+
+        for (var i = 0; i < vertices.length; i++)
+        {
+            vertices[i].transformCoordinatesLocal(transformMatrix, 800, 600);
+        }
+
+        this.depthSort();
     },
 
     /**

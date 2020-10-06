@@ -44,6 +44,33 @@ var Vertex = new Class({
         Vector3.call(this, x, y, z);
 
         /**
+         * The projected x coordinate of this vertex.
+         *
+         * @name Phaser.Geom.Mesh.Vertex#vx
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.vx = 0;
+
+        /**
+         * The projected y coordinate of this vertex.
+         *
+         * @name Phaser.Geom.Mesh.Vertex#vy
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.vy = 0;
+
+        /**
+         * The projected z coordinate of this vertex.
+         *
+         * @name Phaser.Geom.Mesh.Vertex#vz
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.vz = 0;
+
+        /**
          * UV u coordinate of this vertex.
          *
          * @name Phaser.Geom.Mesh.Vertex#u
@@ -81,9 +108,37 @@ var Vertex = new Class({
     },
 
     /**
+     * Transforms this vertex by the given matrix, storing the results in `vx`, `vy` and `vz`.
+     *
+     * @method Phaser.Geom.Mesh.Vertex#transformCoordinatesLocal
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} transformMatrix - The transform matrix to apply to this vertex.
+     * @param {number} width - The width of the parent Mesh.
+     * @param {number} height - The height of the parent Mesh.
+     */
+    transformCoordinatesLocal: function (transformMatrix, width, height)
+    {
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+
+        var m = transformMatrix.val;
+
+        var tx = (x * m[0]) + (y * m[4]) + (z * m[8]) + m[12];
+        var ty = (x * m[1]) + (y * m[5]) + (z * m[9]) + m[13];
+        var tz = (x * m[2]) + (y * m[6]) + (z * m[10]) + m[14];
+        var tw = (x * m[3]) + (y * m[7]) + (z * m[11]) + m[15];
+
+        this.vx = (tx / tw) * width;
+        this.vy = -(ty / tw) * height;
+        this.vz = (tz / tw);
+    },
+
+    /**
      * Loads the data from this Vertex into the given Typed Arrays.
      *
-     * @method Phaser.Geom.Mesh.Vertex#translate
+     * @method Phaser.Geom.Mesh.Vertex#load
      * @since 3.50.0
      *
      * @param {Float32Array} F32 - A Float32 Array to insert the position, UV and unit data in to.
@@ -103,8 +158,8 @@ var Vertex = new Class({
      */
     load: function (F32, U32, offset, textureUnit, tintEffect, alpha, a, b, c, d, e, f, roundPixels)
     {
-        var tx = this.x * a + this.y * c + e;
-        var ty = this.x * b + this.y * d + f;
+        var tx = this.vx * a + this.vy * c + e;
+        var ty = this.vx * b + this.vy * d + f;
 
         if (roundPixels)
         {
@@ -118,7 +173,8 @@ var Vertex = new Class({
         F32[++offset] = this.v;
         F32[++offset] = textureUnit;
         F32[++offset] = tintEffect;
-        U32[++offset] = Utils.getTintAppendFloatAlpha(this.color, alpha * this.alpha);
+        // U32[++offset] = Utils.getTintAppendFloatAlpha(this.color, alpha * this.alpha);
+        U32[++offset] = Utils.getTintAppendFloatAlpha(0xffffff, 1);
 
         return offset;
     }
