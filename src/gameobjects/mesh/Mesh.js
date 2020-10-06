@@ -255,6 +255,8 @@ var Mesh = new Class({
      * moved or rotated. You can scale the model data, should it be too small, or too large, to see.
      * You can also offset the vertices of the model via the `x`, `y` and `z` parameters.
      *
+     * If you wish to add OBJ data to this Mesh without loading it, you can call the `Mesh.addModel` method directly.
+     *
      * @method Phaser.GameObjects.Mesh#addOBJ
      * @since 3.50.0
      *
@@ -369,7 +371,7 @@ var Mesh = new Class({
      * The obj should have been parsed in advance via the ParseObj function:
      *
      * ```javascript
-     * var data = Phaser.Geom.ParseObj(rawData, flipUV);
+     * var data = Phaser.Geom.Mesh.ParseObj(rawData, flipUV);
      *
      * Mesh.addModel(data);
      * ```
@@ -385,7 +387,7 @@ var Mesh = new Class({
      * @method Phaser.GameObjects.Mesh#addModel
      * @since 3.50.0
      *
-     * @param {array} data - The parsed model data array.
+     * @param {Phaser.Types.Geom.Mesh.OBJData} data - The parsed OBJ model data.
      * @param {number} [scale=1] - An amount to scale the model data by. Use this if the model has exported too small, or large, to see.
      * @param {number} [x=0] - Offset the model x position by this amount.
      * @param {number} [y=0] - Offset the model y position by this amount.

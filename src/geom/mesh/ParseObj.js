@@ -224,16 +224,17 @@ function parseUseMtl (lineItems)
 }
 
 /**
- * Parses a Wavefront OBJ File, extracting the models from it and returning them
- * in an array. The model data *must* be triangulated.
+ * Parses a Wavefront OBJ File, extracting the models from it and returning them in an array.
+ *
+ * The model data *must* be triangulated for a Mesh Game Object to be able to render it.
  *
  * @function Phaser.Geom.Mesh.ParseObj
  * @since 3.50.0
  *
  * @param {string} data - The OBJ File data as a raw string.
- * @param {boolean} [flipUV=true] - Flip the UV data?
+ * @param {boolean} [flipUV=true] - Flip the UV coordinates?
  *
- * @return {object} The parsed model data.
+ * @return {Phaser.Types.Geom.Mesh.OBJData} The parsed model and material data.
  */
 var ParseObj = function (data, flipUV)
 {
