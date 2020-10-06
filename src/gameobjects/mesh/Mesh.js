@@ -11,6 +11,7 @@ var Face = require('../../geom/mesh/Face');
 var GameObject = require('../GameObject');
 var GameObjectEvents = require('../events');
 var GetCalcMatrix = require('../GetCalcMatrix');
+var GetFastValue = require('../../utils/object/GetFastValue');
 var MeshRender = require('./MeshRender');
 var StableSort = require('../../utils/array/StableSort');
 var Vertex = require('../../geom/mesh/Vertex');
@@ -289,7 +290,12 @@ var Mesh = new Class({
      * generate two faces per grid segment as a result.
      *
      * You may add multiple grids to a single Mesh, although they will act as one when
-     * moved or rotated. You can offset the model via the `posX` and `posY` parameters.
+     * moved or rotated. You can offset the grid via the `posX` and `posY` parameters.
+     *
+     * UV coordinates are generated based on the currently set texture `Frame` of this Mesh. For
+     * example, if this Mesh is using a full texture, the UVs will be in the range 0 to 1. If it's
+     * using a frame from a texture, such as from a texture atlas, the UVs will be generated within
+     * the range of that frame.
      *
      * @method Phaser.GameObjects.Mesh#addGrid
      * @since 3.50.0
@@ -305,14 +311,17 @@ var Mesh = new Class({
      *
      * @return {this} This Mesh Game Object.
      */
-    addGrid: function (width, height, widthSegments, heightSegments, posX, posY, colors, alphas)
+    addGrid: function (config)
     {
-        if (width === undefined) { width = 128; }
-        if (height === undefined) { height = 128; }
-        if (widthSegments === undefined) { widthSegments = 1; }
-        if (heightSegments === undefined) { heightSegments = 1; }
-        if (posX === undefined) { posX = 0; }
-        if (posY === undefined) { posY = 0; }
+        var width = GetFastValue(config, 'width', 128);
+        var height = GetFastValue(config, 'height', width);
+        var widthSegments = GetFastValue(config, 'widthSegments', 1);
+        var heightSegments = GetFastValue(config, 'heightSegments', 1);
+        var posX = GetFastValue(config, 'posX', 0);
+        var posY = GetFastValue(config, 'posY', 0);
+        var colors = GetFastValue(config, 'colors', 0xffffff);
+        var alphas = GetFastValue(config, 'alphas', 1);
+        var tile = GetFastValue(config, 'tile', false);
 
         var halfWidth = width / 2;
         var halfHeight = height / 2;
@@ -331,6 +340,16 @@ var Mesh = new Class({
         var ix;
         var iy;
 
+        var frameU0 = this.frame.u0;
+        var frameU1 = this.frame.u1;
+        var frameV0 = this.frame.v0;
+        var frameV1 = this.frame.v1;
+        var frameU = frameU1 - frameU0;
+        var frameV = frameV1 - frameV0;
+
+        console.log('u', frameU0, 'to', frameU1, 'size', frameU);
+        console.log('v', frameV0, 'to', frameV1, 'size', frameV);
+
         for (iy = 0; iy < gridY1; iy++)
         {
             var y = posY + (iy * segmentHeight - halfHeight);
@@ -341,8 +360,25 @@ var Mesh = new Class({
 
                 vertices.push(x, -y);
 
-                uvs.push(ix / gridX);
-                uvs.push(1 - (iy / gridY));
+                if (tile)
+                {
+                    var tu = frameU0 + (ix / frameU);
+                    var tv = frameV0 + -(iy / frameV);
+
+                    uvs.push(
+                        tu,
+                        tv
+                    );
+
+                    console.log(ix, iy, '=>', tu, tv, 'vs', ix / gridX, 1 - (iy / gridY));
+                }
+                else
+                {
+                    uvs.push(
+                        ix / gridX,
+                        1 - (iy / gridY)
+                    );
+                }
             }
         }
 
