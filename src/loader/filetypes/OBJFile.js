@@ -29,7 +29,7 @@ var ParseObj = require('../../geom/mesh/ParseObj');
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {(string|Phaser.Types.Loader.FileTypes.OBJFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.obj`, i.e. if `key` was "alien" then the URL will be "alien.obj".
- * @param {boolean} [flipUV=true] - Flip the UV coordinates stored in the texture locations?
+ * @param {boolean} [flipUV] - Flip the UV coordinates stored in the model data?
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var OBJFile = new Class({
@@ -153,7 +153,7 @@ var OBJFile = new Class({
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.OBJFileConfig|Phaser.Types.Loader.FileTypes.OBJFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.obj`, i.e. if `key` was "alien" then the URL will be "alien.obj".
- * @param {boolean} [flipUVs=true] - Flip the UV coordinates stored in the texture locations?
+ * @param {boolean} [flipUV] - Flip the UV coordinates stored in the model data?
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {this} The Loader instance.
