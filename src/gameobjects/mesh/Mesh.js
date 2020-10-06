@@ -317,8 +317,8 @@ var Mesh = new Class({
         var height = GetFastValue(config, 'height', width);
         var widthSegments = GetFastValue(config, 'widthSegments', 1);
         var heightSegments = GetFastValue(config, 'heightSegments', 1);
-        var posX = GetFastValue(config, 'posX', 0);
-        var posY = GetFastValue(config, 'posY', 0);
+        var posX = GetFastValue(config, 'x', 0);
+        var posY = GetFastValue(config, 'y', 0);
         var colors = GetFastValue(config, 'colors', 0xffffff);
         var alphas = GetFastValue(config, 'alphas', 1);
         var tile = GetFastValue(config, 'tile', false);
@@ -326,8 +326,8 @@ var Mesh = new Class({
         var halfWidth = width / 2;
         var halfHeight = height / 2;
 
-        var gridX = Math.floor(widthSegments) || 1;
-        var gridY = Math.floor(heightSegments) || 1;
+        var gridX = Math.floor(widthSegments);
+        var gridY = Math.floor(heightSegments);
 
         var gridX1 = gridX + 1;
         var gridY1 = gridY + 1;
@@ -335,20 +335,26 @@ var Mesh = new Class({
         var segmentWidth = width / gridX;
         var segmentHeight = height / gridY;
 
-        var vertices = [];
         var uvs = [];
+        var vertices = [];
+        var indices = [];
+
         var ix;
         var iy;
 
-        var frameU0 = this.frame.u0;
-        var frameU1 = this.frame.u1;
-        var frameV0 = this.frame.v0;
-        var frameV1 = this.frame.v1;
+        var frame = this.frame;
+
+        var frameU0 = frame.u0;
+        var frameU1 = frame.u1;
+
+        var frameV0 = frame.v0;
+        var frameV1 = frame.v1;
+
         var frameU = frameU1 - frameU0;
         var frameV = frameV1 - frameV0;
 
-        console.log('u', frameU0, 'to', frameU1, 'size', frameU);
-        console.log('v', frameV0, 'to', frameV1, 'size', frameV);
+        var tv;
+        var tu;
 
         for (iy = 0; iy < gridY1; iy++)
         {
@@ -360,29 +366,17 @@ var Mesh = new Class({
 
                 vertices.push(x, -y);
 
-                if (tile)
+                if (!tile)
                 {
-                    var tu = frameU0 + (ix / frameU);
-                    var tv = frameV0 + -(iy / frameV);
+                    tu = frameU0 + frameU * (ix / gridX);
+                    tv = frameV0 + frameV * (1 - (iy / gridY));
 
-                    uvs.push(
-                        tu,
-                        tv
-                    );
-
-                    console.log(ix, iy, '=>', tu, tv, 'vs', ix / gridX, 1 - (iy / gridY));
-                }
-                else
-                {
-                    uvs.push(
-                        ix / gridX,
-                        1 - (iy / gridY)
-                    );
+                    uvs.push(tu, tv);
                 }
             }
         }
 
-        var indices = [];
+        var tiledVertices = [];
 
         for (iy = 0; iy < gridY; iy++)
         {
@@ -393,12 +387,49 @@ var Mesh = new Class({
                 var c = (ix + 1) + gridX1 * (iy + 1);
                 var d = (ix + 1) + gridX1 * iy;
 
-                indices.push(a, b, d);
-                indices.push(b, c, d);
+                if (!tile)
+                {
+                    indices.push(a, b, d);
+                    indices.push(b, c, d);
+                }
+                else
+                {
+                    a *= 2;
+                    b *= 2;
+                    c *= 2;
+                    d *= 2;
+
+                    tiledVertices.push(
+                        vertices[a], vertices[a + 1],
+                        vertices[b], vertices[b + 1],
+                        vertices[d], vertices[d + 1],
+
+                        vertices[b], vertices[b + 1],
+                        vertices[c], vertices[c + 1],
+                        vertices[d], vertices[d + 1]
+                    );
+
+                    uvs.push(
+                        frameU0, frameV1,
+                        frameU0, frameV0,
+                        frameU1, frameV1,
+
+                        frameU0, frameV0,
+                        frameU1, frameV0,
+                        frameU1, frameV1
+                    );
+                }
             }
         }
 
-        return this.addVertices(vertices, uvs, indices, colors, alphas);
+        if (tile)
+        {
+            return this.addVertices(tiledVertices, uvs, null, colors, alphas);
+        }
+        else
+        {
+            return this.addVertices(vertices, uvs, indices, colors, alphas);
+        }
     },
 
     /**
@@ -708,7 +739,9 @@ var Mesh = new Class({
 
         if (vertices.length !== uvs.length)
         {
-            throw new Error('Mesh - vertices and uv count not equal');
+            console.warn('Mesh vertices and uv count not equal');
+
+            return this;
         }
 
         var i;
