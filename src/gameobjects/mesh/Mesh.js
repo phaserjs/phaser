@@ -11,6 +11,7 @@ var Face = require('../../geom/mesh/Face');
 var GameObject = require('../GameObject');
 var GameObjectEvents = require('../events');
 var GetCalcMatrix = require('../GetCalcMatrix');
+var GetColor = require('../../display/color/GetColor');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var MeshRender = require('./MeshRender');
 var StableSort = require('../../utils/array/StableSort');
@@ -93,6 +94,10 @@ var Mesh = new Class({
 
     function Mesh (scene, x, y, texture, frame, vertices, uvs, indicies, colors, alphas)
     {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (texture === undefined) { texture = '__WHITE'; }
+
         GameObject.call(this, scene, 'Mesh');
 
         /**
@@ -262,6 +267,7 @@ var Mesh = new Class({
      * @since 3.50.0
      *
      * @param {string} key - The key of the model data in the OBJ Cache to add to this Mesh.
+     * @param {string} [material] - An optional Wavefront mtl file, given as a string. Supports `Kd` diffuse rgb value formats. See `parseOBJMaterial` method for details.
      * @param {number} [scale=1] - An amount to scale the model data by. Use this if the model has exported too small, or large, to see.
      * @param {number} [x=0] - Offset the model x position by this amount.
      * @param {number} [y=0] - Offset the model y position by this amount.
@@ -269,13 +275,13 @@ var Mesh = new Class({
      *
      * @return {this} This Mesh Game Object.
      */
-    addOBJ: function (key, scale, x, y, z)
+    addOBJ: function (key, material, scale, x, y, z)
     {
         var data = this.scene.sys.cache.obj.get(key);
 
         if (data)
         {
-            this.addModel(data, scale, x, y, z);
+            this.addModel(data, material, scale, x, y, z);
         }
 
         return this;
@@ -456,6 +462,7 @@ var Mesh = new Class({
      * @since 3.50.0
      *
      * @param {Phaser.Types.Geom.Mesh.OBJData} data - The parsed OBJ model data.
+     * @param {string} [material] - An optional Wavefront mtl file, given as a string. Supports `Kd` diffuse rgb value formats. See `parseOBJMaterial` method for details.
      * @param {number} [scale=1] - An amount to scale the model data by. Use this if the model has exported too small, or large, to see.
      * @param {number} [x=0] - Offset the model x position by this amount.
      * @param {number} [y=0] - Offset the model y position by this amount.
@@ -463,12 +470,17 @@ var Mesh = new Class({
      *
      * @return {this} This Mesh Game Object.
      */
-    addModel: function (data, scale, x, y, z)
+    addModel: function (data, material, scale, x, y, z)
     {
         if (scale === undefined) { scale = 1; }
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
         if (z === undefined) { z = 0; }
+
+        if (material)
+        {
+            material = this.parseOBJMaterial(material);
+        }
 
         for (var m = 0; m < data.models.length; m++)
         {
@@ -498,9 +510,16 @@ var Mesh = new Class({
                 var uv2 = (t2 === -1) ? { u: 0, v: 0 } : textureCoords[t2];
                 var uv3 = (t3 === -1) ? { u: 1, v: 1 } : textureCoords[t3];
 
-                var vert1 = this.addVertex(x + m1.x * scale, y + m1.y * scale, z + m1.z * scale, uv1.u, uv1.v);
-                var vert2 = this.addVertex(x + m2.x * scale, y + m2.y * scale, z + m2.z * scale, uv2.u, uv2.v);
-                var vert3 = this.addVertex(x + m3.x * scale, y + m3.y * scale, z + m3.z * scale, uv3.u, uv3.v);
+                var color = 0xffffff;
+
+                if (material && face.material !== '' && material[face.material])
+                {
+                    color = material[face.material];
+                }
+
+                var vert1 = this.addVertex(x + m1.x * scale, y + m1.y * scale, z + m1.z * scale, uv1.u, uv1.v, color);
+                var vert2 = this.addVertex(x + m2.x * scale, y + m2.y * scale, z + m2.z * scale, uv2.u, uv2.v, color);
+                var vert3 = this.addVertex(x + m3.x * scale, y + m3.y * scale, z + m3.z * scale, uv3.u, uv3.v, color);
 
                 this.addFace(vert1, vert2, vert3);
             }
@@ -637,6 +656,69 @@ var Mesh = new Class({
         StableSort(this.faces, this.sortByDepth);
 
         return this;
+    },
+
+    /**
+     * Takes a Wavefront Material file and extracts the diffuse reflectivity of the named
+     * materials, converts them to integer color values and returns them.
+     *
+     * This is used internally by the `addOBJ` and `addModel` methods, but is exposed for
+     * public consumption as well.
+     *
+     * Note this only works with diffuse values, specified in the `Kd r g b` format, where
+     * `g` and `b` are optional, but `r` is required. It does not support spectral rfl files,
+     * or any other material statement (such as `Ka` or `Ks`)
+     *
+     * @method Phaser.GameObjects.Mesh#parseOBJMaterial
+     * @since 3.50.0
+     *
+     * @param {string} The OBJ MTL file.
+     *
+     * @return {object} The parsed material colors.
+     */
+    parseOBJMaterial: function (mtl)
+    {
+        var output = {};
+
+        var lines = mtl.split('\n');
+
+        var currentMaterial = '';
+
+        for (var i = 0; i < lines.length; i++)
+        {
+            var line = lines[i].trim();
+
+            if (line.indexOf('#') === 0 || line === '')
+            {
+                continue;
+            }
+
+            var lineItems = line.replace(/\s\s+/g, ' ').trim().split(' ');
+
+            switch (lineItems[0].toLowerCase())
+            {
+                case 'newmtl':
+                {
+                    currentMaterial = lineItems[1];
+                    break;
+                }
+
+                //  The diffuse reflectivity of the current material
+                //  Support r, [g], [b] format, where g and b are optional
+                case 'kd':
+                {
+                    var r = Math.floor(lineItems[1] * 255);
+                    var g = (lineItems.length >= 2) ? Math.floor(lineItems[2] * 255) : r;
+                    var b = (lineItems.length >= 3) ? Math.floor(lineItems[3] * 255) : r;
+
+                    output[currentMaterial] = GetColor(r, g, b);
+
+                    break;
+                }
+            }
+        }
+
+        return output;
     },
 
     /**
