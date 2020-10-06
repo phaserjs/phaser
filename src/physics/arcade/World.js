@@ -1466,9 +1466,6 @@ var World = new Class({
      */
     separateCircle: function (body1, body2, overlapOnly, bias)
     {
-        body1.updateCenter();
-        body2.updateCenter();
-
         //  Set the bounding box overlap values into the bodies themselves (hence we don't use the return values here)
         GetOverlapX(body1, body2, false, bias);
         GetOverlapY(body1, body2, false, bias);
