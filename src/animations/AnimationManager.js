@@ -683,6 +683,36 @@ var AnimationManager = new Class({
      *
      * If you're working with a texture atlas, see the `generateFrameNames` method instead.
      *
+     * It's a helper method, designed to make it easier for you to extract frames from sprite sheets.
+     * If you're working with a texture atlas, see the `generateFrameNames` method instead.
+     *
+     * Example:
+     *
+     * If you have a sprite sheet loaded called `explosion` and it contains 12 frames, then you can call this method using:
+     * `this.anims.generateFrameNumbers('explosion', { start: 0, end: 12 })`.
+     *
+     * The `end` value tells it to stop after 12 frames. To create an animation using this method, you can do:
+     *
+     * ```javascript
+     * this.anims.create({
+     *   key: 'boom',
+     *   frames: this.anims.generateFrameNames('explosion', {
+     *     start: 0,
+     *     end: 12
+     *   })
+     * });
+     * ```
+     *
+     * Note that `start` is optional and you don't need to include it if the animation starts from frame 0.
+     *
+     * To specify an animation in reverse, swap the `start` and `end` values.
+     *
+     * If the frames are not sequential, you may pass an array of frame numbers instead, for example:
+     *
+     * `this.anims.generateFrameNumbers('explosion', { frames: [ 0, 1, 2, 1, 2, 3, 4, 0, 1, 2 ] })`
+     *
+     * Please see the animation examples and `GenerateFrameNumbers` config docs for further details.
+     *
      * @method Phaser.Animations.AnimationManager#generateFrameNumbers
      * @since 3.0.0
      *
