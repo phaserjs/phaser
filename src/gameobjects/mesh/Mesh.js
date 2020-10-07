@@ -273,8 +273,6 @@ var Mesh = new Class({
          */
         this.transformMatrix = new Matrix4();
 
-        this.normalMatrix = new Matrix4();
-
         /**
          * Internal cached value.
          *
@@ -1139,12 +1137,6 @@ var Mesh = new Class({
             camera.projectionMatrix
         );
 
-        var normalMatrix = this.normalMatrix;
-
-        normalMatrix.copy(transformMatrix);
-        normalMatrix.invert();
-        normalMatrix.transpose();
-
         var z = camera.position.z;
 
         var vertices = this.vertices;
@@ -1155,8 +1147,6 @@ var Mesh = new Class({
         }
 
         this.depthSort();
-
-        console.log('dirty');
     },
 
     /**
