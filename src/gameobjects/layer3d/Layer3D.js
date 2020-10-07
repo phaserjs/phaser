@@ -320,6 +320,11 @@ var Layer3D = new Class({
 
         var results = [];
 
+        // if (material)
+        // {
+        //     material = this.parseOBJMaterial(material);
+        // }
+
         for (var m = 0; m < data.models.length; m++)
         {
             var modelData = data.models[m];
@@ -360,6 +365,13 @@ var Layer3D = new Class({
                 var uv1 = (t1 === -1) ? defaultUV1 : textureCoords[t1];
                 var uv2 = (t2 === -1) ? defaultUV2 : textureCoords[t2];
                 var uv3 = (t3 === -1) ? defaultUV3 : textureCoords[t3];
+
+                // var color = 0xffffff;
+
+                // if (material && face.material !== '' && material[face.material])
+                // {
+                //     color = material[face.material];
+                // }
 
                 model.addVertex(originX + m1.x * scale, originY + m1.y * scale, originZ + m1.z * scale, uv1.u, uv1.v, n1.x, n1.y, n1.z);
                 model.addVertex(originX + m2.x * scale, originY + m2.y * scale, originZ + m2.z * scale, uv2.u, uv2.v, n2.x, n2.y, n2.z);
