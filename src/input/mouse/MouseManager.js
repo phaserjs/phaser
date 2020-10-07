@@ -73,6 +73,16 @@ var MouseManager = new Class({
         this.preventDefaultMove = true;
 
         /**
+         * If `true` the DOM `wheel` event will have `preventDefault` set.
+         *
+         * @name Phaser.Input.Mouse.MouseManager#preventDefaultWheel
+         * @type {boolean}
+         * @default true
+         * @since 3.50.0
+         */
+        this.preventDefaultWheel = false;
+
+        /**
          * A boolean that controls if the Mouse Manager is enabled or not.
          * Can be toggled on the fly.
          *
@@ -237,6 +247,7 @@ var MouseManager = new Class({
         this.preventDefaultDown = config.inputMousePreventDefaultDown;
         this.preventDefaultUp = config.inputMousePreventDefaultUp;
         this.preventDefaultMove = config.inputMousePreventDefaultMove;
+        this.preventDefaultWheel = config.inputMousePreventDefaultWheel;
 
         if (!this.target)
         {
@@ -437,6 +448,11 @@ var MouseManager = new Class({
             {
                 manager.onMouseWheel(event);
             }
+
+            if (_this.preventDefaultWheel && event.target === canvas)
+            {
+                event.preventDefault();
+            }
         };
 
         var passive = { passive: true };
@@ -446,7 +462,15 @@ var MouseManager = new Class({
         target.addEventListener('mouseup', this.onMouseUp);
         target.addEventListener('mouseover', this.onMouseOver, passive);
         target.addEventListener('mouseout', this.onMouseOut, passive);
-        target.addEventListener('wheel', this.onMouseWheel, passive);
+
+        if (this.preventDefaultWheel)
+        {
+            target.addEventListener('wheel', this.onMouseWheel, { passive: false });
+        }
+        else
+        {
+            target.addEventListener('wheel', this.onMouseWheel, passive);
+        }
 
         if (window && manager.game.config.inputWindowEvents)
         {
