@@ -104,16 +104,19 @@ var Mesh = new Class({
         GameObject.call(this, scene, 'Mesh');
 
         /**
-         * A Camera which can be used to control the view of the models being managed
-         * by this Mesh. It will default to have an fov of 45 and be positioned at 0, 0, -10,
-         * with a near of 0.01 and far of 1000. You can change all of these by using the
-         * methods and properties available on the `MeshCamera` class.
+         * A Camera which can be used to control the view of all faces within this Mesh.
+         *
+         * It will default to have an fov of 45 and be positioned at 0, 0, 0,
+         * with a near of 0.001 and far of 1000.
+         *
+         * You can change all of these by using the methods and properties available
+         * in the `MeshCamera` class, of which this is an instance.
          *
          * @name Phaser.GameObjects.Mesh#camera
          * @type {Phaser.GameObjects.MeshCamera}
          * @since 3.50.0
          */
-        this.camera = new MeshCamera(45, 0, 0, -10, 0.01, 1000);
+        this.camera = new MeshCamera(45, 0, 0, 0, 0.001, 1000);
 
         /**
          * The Animation State of this Mesh.
@@ -209,15 +212,97 @@ var Mesh = new Class({
          */
         this.hideCCW = true;
 
+        /**
+         * A Vector3 containing the 3D position of the model data in this Mesh.
+         *
+         * Changing the values of this property will move all vertices that have been
+         * added to this Mesh. Rather than change the model position, you can also
+         * change the Camera position, depending on the effect you require.
+         *
+         * @name Phaser.Geom.Mesh.Model#modelPosition
+         * @type {Phaser.Math.Vector3}
+         * @since 3.50.0
+         */
+        this.modelPosition = new Vector3();
+
+        /**
+         * A Vector3 containing the 3D scale of the model data in this Mesh.
+         *
+         * Changing the values of this property will scale all vertices that have been
+         * added to this Mesh. Rather than change the model scale, you can also
+         * change the Camera zoom, depending on the effect you require.
+         *
+         * @name Phaser.Geom.Mesh.Model#modelScale
+         * @type {Phaser.Math.Vector3}
+         * @since 3.50.0
+         */
+        this.modelScale = new Vector3(1, 1, 1);
+
+        /**
+         * A Vector3 containing the 3D rotation of the model data in this Mesh.
+         *
+         * Changing the values of this property will rotate all vertices that have been
+         * added to this Mesh. Rather than change the model rotation, you can also
+         * change the Camera rotation, depending on the effect you require.
+         *
+         * @name Phaser.Geom.Mesh.Model#modelRotation
+         * @type {Phaser.Math.Vector3}
+         * @since 3.50.0
+         */
+        this.modelRotation = new Vector3();
+
+        /**
+         * An internal cache, used to compare position, rotation, scale and face data
+         * each frame, to avoid math calculations in `preUpdate`.
+         *
+         * cache structure = position xyz | rotation xyz | scale xyz | face count
+         *
+         * @name Phaser.Geom.Mesh.Model#dirtyCache
+         * @type {number[]}
+         * @private
+         * @since 3.50.0
+         */
+        this.dirtyCache = [ 0, 0, 0, 0, 0, 0, 1, 1, 1, 0 ];
+
+        /**
+         * The transformation matrix for this Mesh.
+         *
+         * @name Phaser.Geom.Mesh.Model#transformMatrix
+         * @type {Phaser.Math.Matrix4}
+         * @since 3.50.0
+         */
         this.transformMatrix = new Matrix4();
-        this._position = new Vector3();
-        this._rotation = new Vector3();
-        this._scale = new Vector3(1, 1, 1);
+
+        this.normalMatrix = new Matrix4();
+
+        /**
+         * Internal cached value.
+         *
+         * @name Phaser.GameObjects.Mesh#_prevWidth
+         * @type {number}
+         * @private
+         * @since 3.50.0
+         */
+        this._prevWidth = 0;
+
+        /**
+         * Internal cached value.
+         *
+         * @name Phaser.GameObjects.Mesh#_prevHeight
+         * @type {number}
+         * @private
+         * @since 3.50.0
+         */
+        this._prevHeight = 0;
+
+        var renderer = scene.sys.renderer;
 
         this.setTexture(texture, frame);
+
         this.setPosition(x, y);
-        this.setSize(800, 600);
-        // this.setSizeToFrame();
+
+        this.setSize(renderer.width, renderer.height);
+
         this.initPipeline();
 
         if (vertices)
@@ -245,12 +330,12 @@ var Mesh = new Class({
      * Iterates and destroys all current Faces in this Mesh, then resets the
      * `faces` and `vertices` arrays.
      *
-     * @method Phaser.GameObjects.Mesh#clearVertices
+     * @method Phaser.GameObjects.Mesh#clear
      * @since 3.50.0
      *
      * @return {this} This Mesh Game Object.
      */
-    clearVertices: function ()
+    clear: function ()
     {
         this.faces.forEach(function (face)
         {
@@ -566,102 +651,6 @@ var Mesh = new Class({
     },
 
     /**
-     * Rotates all vertices of this Mesh around the X axis by the amount given.
-     *
-     * It then runs a depth sort on the faces before returning.
-     *
-     * @method Phaser.GameObjects.Mesh#rotateX
-     * @since 3.50.0
-     *
-     * @param {number} theta - The amount to rotate by in radians.
-     *
-     * @return {this} This Mesh Game Object.
-     */
-    rotateX: function (theta)
-    {
-        var ts = Math.sin(theta);
-        var tc = Math.cos(theta);
-
-        var verts = this.vertices;
-
-        for (var n = 0; n < verts.length; n++)
-        {
-            var vert = verts[n];
-            var y = vert.y;
-            var z = vert.z;
-
-            vert.y = y * tc - z * ts;
-            vert.z = z * tc + y * ts;
-        }
-
-        return this.depthSort();
-    },
-
-    /**
-     * Rotates all vertices of this Mesh around the Y axis by the amount given.
-     *
-     * It then runs a depth sort on the faces before returning.
-     *
-     * @method Phaser.GameObjects.Mesh#rotateY
-     * @since 3.50.0
-     *
-     * @param {number} theta - The amount to rotate by in radians.
-     *
-     * @return {this} This Mesh Game Object.
-     */
-    rotateY: function (theta)
-    {
-        var ts = Math.sin(theta);
-        var tc = Math.cos(theta);
-
-        var verts = this.vertices;
-
-        for (var n = 0; n < verts.length; n++)
-        {
-            var vert = verts[n];
-            var x = vert.x;
-            var z = vert.z;
-
-            vert.x = x * tc - z * ts;
-            vert.z = z * tc + x * ts;
-        }
-
-        return this.depthSort();
-    },
-
-    /**
-     * Rotates all vertices of this Mesh around the Z axis by the amount given.
-     *
-     * It then runs a depth sort on the faces before returning.
-     *
-     * @method Phaser.GameObjects.Mesh#rotateZ
-     * @since 3.50.0
-     *
-     * @param {number} theta - The amount to rotate by in radians.
-     *
-     * @return {this} This Mesh Game Object.
-     */
-    rotateZ: function (theta)
-    {
-        var ts = Math.sin(theta);
-        var tc = Math.cos(theta);
-
-        var verts = this.vertices;
-
-        for (var n = 0; n < verts.length; n++)
-        {
-            var vert = verts[n];
-            var x = vert.x;
-            var y = vert.y;
-
-            vert.x = x * tc - y * ts;
-            vert.y = y * tc + x * ts;
-        }
-
-        return this.depthSort();
-    },
-
-    /**
      * Runs a depth sort across all Faces in this Mesh, comparing their averaged depth.
      *
      * This is called automatically if you use any of the `rotate` methods, but you can
@@ -790,6 +779,8 @@ var Mesh = new Class({
 
         this.faces.push(face);
 
+        this.dirtyCache[9] = -1;
+
         return face;
     },
 
@@ -849,9 +840,7 @@ var Mesh = new Class({
         }
 
         var i;
-        var vert;
         var verts = this.vertices;
-        var faces = this.faces;
 
         var isColorArray = Array.isArray(colors);
         var isAlphaArray = Array.isArray(alphas);
@@ -862,7 +851,7 @@ var Mesh = new Class({
             {
                 var index = indicies[i] * 2;
 
-                vert = new Vertex(
+                this.addVertex(
                     vertices[index],
                     vertices[index + 1],
                     0,
@@ -871,8 +860,6 @@ var Mesh = new Class({
                     (isColorArray) ? colors[i] : colors,
                     (isAlphaArray) ? alphas[i] : alphas
                 );
-
-                verts.push(vert);
             }
         }
         else
@@ -881,7 +868,7 @@ var Mesh = new Class({
 
             for (i = 0; i < vertices.length; i += 2)
             {
-                vert = new Vertex(
+                this.addVertex(
                     vertices[i],
                     vertices[i + 1],
                     0,
@@ -890,8 +877,6 @@ var Mesh = new Class({
                     (isColorArray) ? colors[colorIndex] : colors,
                     (isAlphaArray) ? alphas[colorIndex] : alphas
                 );
-
-                verts.push(vert);
 
                 colorIndex++;
             }
@@ -903,9 +888,7 @@ var Mesh = new Class({
             var vert2 = verts[i + 1];
             var vert3 = verts[i + 2];
 
-            var face = new Face(vert1, vert2, vert3);
-
-            faces.push(face);
+            this.addFace(vert1, vert2, vert3);
         }
 
         return this;
@@ -1045,6 +1028,74 @@ var Mesh = new Class({
     },
 
     /**
+     * Checks if the transformation data in this mesh is dirty.
+     *
+     * This is used internally by the `preUpdate` step to determine if the vertices should
+     * be recalculated or not.
+     *
+     * @method Phaser.GameObjects.Mesh#isDirty
+     * @since 3.50.0
+     *
+     * @return {boolean} Returns `true` if the data of this mesh is dirty, otherwise `false`.
+     */
+    isDirty: function ()
+    {
+        var position = this.modelPosition;
+        var rotation = this.modelRotation;
+        var scale = this.modelScale;
+        var dirtyCache = this.dirtyCache;
+
+        var px = position.x;
+        var py = position.y;
+        var pz = position.z;
+
+        var rx = rotation.x;
+        var ry = rotation.y;
+        var rz = rotation.z;
+
+        var sx = scale.x;
+        var sy = scale.y;
+        var sz = scale.z;
+
+        var faces = this.getFaceCount();
+
+        var pxCached = dirtyCache[0];
+        var pyCached = dirtyCache[1];
+        var pzCached = dirtyCache[2];
+
+        var rxCached = dirtyCache[3];
+        var ryCached = dirtyCache[4];
+        var rzCached = dirtyCache[5];
+
+        var sxCached = dirtyCache[6];
+        var syCached = dirtyCache[7];
+        var szCached = dirtyCache[8];
+
+        var fCached = dirtyCache[9];
+
+        dirtyCache[0] = px;
+        dirtyCache[1] = py;
+        dirtyCache[2] = pz;
+
+        dirtyCache[3] = rx;
+        dirtyCache[4] = ry;
+        dirtyCache[5] = rz;
+
+        dirtyCache[6] = sx;
+        dirtyCache[7] = sy;
+        dirtyCache[8] = sz;
+
+        dirtyCache[9] = faces;
+
+        return (
+            pxCached !== px || pyCached !== py || pzCached !== pz ||
+            rxCached !== rx || ryCached !== ry || rzCached !== rz ||
+            sxCached !== sx || syCached !== sy || szCached !== sz ||
+            fCached !== faces
+        );
+    },
+
+    /**
      * The Mesh update loop.
      *
      * @method Phaser.GameObjects.Mesh#preUpdate
@@ -1060,18 +1111,49 @@ var Mesh = new Class({
 
         var camera = this.camera;
 
-        camera.update(800, 600);
+        if (!camera.dirty && !this.isDirty())
+        {
+            //  If neither the camera or the mesh is dirty we can bail out and save lots of math
+            return;
+        }
+
+        var width = this.width;
+        var height = this.height;
+
+        if (camera.dirty || width !== this._prevWidth || height !== this._prevHeight)
+        {
+            //  Mesh has resized, flow that down to the Camera
+            camera.update(width, height);
+
+            this._prevWidth = width;
+            this._prevHeight = height;
+
+            camera.dirty = false;
+        }
 
         var transformMatrix = this.transformMatrix;
 
-        transformMatrix.setWorldMatrix(this._rotation, this._position, this._scale, camera.viewMatrix, camera.projectionMatrix);
+        transformMatrix.setWorldMatrix(
+            this.modelRotation,
+            this.modelPosition,
+            this.modelScale,
+            camera.viewMatrix,
+            camera.projectionMatrix
+        );
+
+        var normalMatrix = this.normalMatrix.copy(transformMatrix);
+
+        normalMatrix.invert();
+        normalMatrix.transpose();
 
         var vertices = this.vertices;
 
         for (var i = 0; i < vertices.length; i++)
         {
-            vertices[i].transformCoordinatesLocal(transformMatrix, 800, 600);
+            vertices[i].transformCoordinatesLocal(transformMatrix, width, height);
         }
+
+        console.log('dirty');
 
         this.depthSort();
     },
@@ -1114,12 +1196,11 @@ var Mesh = new Class({
      */
     preDestroy: function ()
     {
+        this.clear();
+
         this.anims.destroy();
 
-        this.anims = undefined;
-
-        this.clearVertices();
-
+        this.anims = null;
         this.debugCallback = null;
         this.debugGraphic = null;
     }
