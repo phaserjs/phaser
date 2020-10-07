@@ -116,7 +116,7 @@ var Mesh = new Class({
          * @type {Phaser.GameObjects.MeshCamera}
          * @since 3.50.0
          */
-        this.camera = new MeshCamera(45, 0, 0, 0, 0.001, 1000);
+        this.camera = new MeshCamera(45, 0, 0, -10, 0.001, 1000);
 
         /**
          * The Animation State of this Mesh.
@@ -262,7 +262,7 @@ var Mesh = new Class({
          * @private
          * @since 3.50.0
          */
-        this.dirtyCache = [ 0, 0, 0, 0, 0, 0, 1, 1, 1, 0 ];
+        this.dirtyCache = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
 
         /**
          * The transformation matrix for this Mesh.
@@ -297,10 +297,8 @@ var Mesh = new Class({
 
         var renderer = scene.sys.renderer;
 
-        this.setTexture(texture, frame);
-
         this.setPosition(x, y);
-
+        this.setTexture(texture, frame);
         this.setSize(renderer.width, renderer.height);
 
         this.initPipeline();
@@ -840,7 +838,7 @@ var Mesh = new Class({
         }
 
         var i;
-        var verts = this.vertices;
+        var newVerts = [];
 
         var isColorArray = Array.isArray(colors);
         var isAlphaArray = Array.isArray(alphas);
@@ -851,7 +849,7 @@ var Mesh = new Class({
             {
                 var index = indicies[i] * 2;
 
-                this.addVertex(
+                newVerts.push(this.addVertex(
                     vertices[index],
                     vertices[index + 1],
                     0,
@@ -859,7 +857,7 @@ var Mesh = new Class({
                     uvs[index + 1],
                     (isColorArray) ? colors[i] : colors,
                     (isAlphaArray) ? alphas[i] : alphas
-                );
+                ));
             }
         }
         else
@@ -868,7 +866,7 @@ var Mesh = new Class({
 
             for (i = 0; i < vertices.length; i += 2)
             {
-                this.addVertex(
+                newVerts.push(this.addVertex(
                     vertices[i],
                     vertices[i + 1],
                     0,
@@ -876,17 +874,17 @@ var Mesh = new Class({
                     uvs[i + 1],
                     (isColorArray) ? colors[colorIndex] : colors,
                     (isAlphaArray) ? alphas[colorIndex] : alphas
-                );
+                ));
 
                 colorIndex++;
             }
         }
 
-        for (i = 0; i < verts.length; i += 3)
+        for (i = 0; i < newVerts.length; i += 3)
         {
-            var vert1 = verts[i];
-            var vert2 = verts[i + 1];
-            var vert3 = verts[i + 2];
+            var vert1 = newVerts[i];
+            var vert2 = newVerts[i + 1];
+            var vert3 = newVerts[i + 2];
 
             this.addFace(vert1, vert2, vert3);
         }
@@ -1141,8 +1139,9 @@ var Mesh = new Class({
             camera.projectionMatrix
         );
 
-        var normalMatrix = this.normalMatrix.copy(transformMatrix);
+        var normalMatrix = this.normalMatrix;
 
+        normalMatrix.copy(transformMatrix);
         normalMatrix.invert();
         normalMatrix.transpose();
 
@@ -1153,9 +1152,9 @@ var Mesh = new Class({
             vertices[i].transformCoordinatesLocal(transformMatrix, width, height);
         }
 
-        console.log('dirty');
-
         this.depthSort();
+
+        console.log('dirty');
     },
 
     /**
