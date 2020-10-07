@@ -116,8 +116,9 @@ var Vertex = new Class({
      * @param {Phaser.Math.Matrix4} transformMatrix - The transform matrix to apply to this vertex.
      * @param {number} width - The width of the parent Mesh.
      * @param {number} height - The height of the parent Mesh.
+     * @param {number} cameraZ - The z position of the MeshCamera.
      */
-    transformCoordinatesLocal: function (transformMatrix, width, height)
+    transformCoordinatesLocal: function (transformMatrix, width, height, cameraZ)
     {
         var x = this.x;
         var y = this.y;
@@ -132,7 +133,15 @@ var Vertex = new Class({
 
         this.vx = (tx / tw) * width;
         this.vy = -(ty / tw) * height;
-        this.vz = (tz / tw);
+
+        if (cameraZ <= 0)
+        {
+            this.vz = (tz / tw);
+        }
+        else
+        {
+            this.vz = -(tz / tw);
+        }
     },
 
     /**
