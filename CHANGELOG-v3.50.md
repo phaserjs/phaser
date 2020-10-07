@@ -637,6 +637,9 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `Vector3.applyMatrix4` is a new method that will take a Matrix4 and apply it to the Vector3.
 * `Vector3.projectViewMatrix` is a new method that multiplies the Vector3 by the given view and projection matrices.
 * `Vector3.unprojectViewMatrix` is a new method that multiplies the Vector3 by the given inversed projection matrix and world matrix.
+* `Matrix4.setValues` is a new method that allows you to set all of the matrix components individually. Most internal methods now use this.
+* `Matrix.multiplyToMat4` is a new method that multiplies a Matrix4 by the given `src` Matrix4 and stores the results in the `out` Matrix4.
+* `Matrix4.fromRotationXYTranslation` is a new method that takes the rotation and position vectors and builds this Matrix4 from them.
 * `Matrix4.getMaxScaleOnAxis` is a new method that will return the maximum axis scale from the Matrix4.
 * `Matrix4.lookAtRH` is a new method that will generate a right-handed look-at matrix from the given eye, target and up positions.
 * `Matrix4.transform` is a new method that will generate a transform matrix from the given position and scale vectors and a rotation quaternion.
