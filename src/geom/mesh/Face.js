@@ -85,28 +85,68 @@ var Face = new Class({
      * @method Phaser.Geom.Mesh.Face#getInCenter
      * @since 3.50.0
      *
+     * @param {boolean} [local=true] Return the in center from the un-transformed vertex positions (`true`), or transformed? (`false`)
+     *
      * @return {Phaser.Math.Vector2} A Vector2 containing the in center position of this Face.
      */
-    getInCenter: function ()
+    getInCenter: function (local)
     {
+        if (local === undefined) { local = true; }
+
         var v1 = this.vertex1;
         var v2 = this.vertex2;
         var v3 = this.vertex3;
 
-        var d1 = GetLength(v3.x, v3.y, v2.x, v2.y);
-        var d2 = GetLength(v1.x, v1.y, v3.x, v3.y);
-        var d3 = GetLength(v2.x, v2.y, v1.x, v1.y);
+        var v1x;
+        var v1y;
+
+        var v2x;
+        var v2y;
+
+        var v3x;
+        var v3y;
+
+        if (local)
+        {
+            v1x = v1.x;
+            v1y = v1.y;
+
+            v2x = v2.x;
+            v2y = v2.y;
+
+            v3x = v3.x;
+            v3y = v3.y;
+        }
+        else
+        {
+            v1x = v1.vx;
+            v1y = v1.vy;
+
+            v2x = v2.vx;
+            v2y = v2.vy;
+
+            v3x = v3.vx;
+            v3y = v3.vy;
+        }
+
+        var d1 = GetLength(v3x, v3y, v2x, v2y);
+        var d2 = GetLength(v1x, v1y, v3x, v3y);
+        var d3 = GetLength(v2x, v2y, v1x, v1y);
 
         var p = d1 + d2 + d3;
 
         return this._inCenter.set(
-            (v1.x * d1 + v2.x * d2 + v3.x * d3) / p,
-            (v1.y * d1 + v2.y * d2 + v3.y * d3) / p
+            (v1x * d1 + v2x * d2 + v3x * d3) / p,
+            (v1y * d1 + v2y * d2 + v3y * d3) / p
         );
     },
 
     /**
      * Translates the vertices of this Face by the given amounts.
+     *
+     * The actual vertex positions are adjusted, not their transformed position.
+     *
+     * Therefore, this updates the vertex data directly.
      *
      * @method Phaser.Geom.Mesh.Face#translate
      * @since 3.50.0
@@ -138,6 +178,10 @@ var Face = new Class({
 
     /**
      * Rotates the vertices of this Face to the given angle.
+     *
+     * The actual vertex positions are adjusted, not their transformed positions.
+     *
+     * Therefore, this updates the vertex data directly.
      *
      * @method Phaser.Geom.Mesh.Face#rotate
      * @since 3.50.0
@@ -204,14 +248,18 @@ var Face = new Class({
      */
     contains: function (x, y, calcMatrix)
     {
-        var v1x = this.vertex1.x;
-        var v1y = this.vertex1.y;
+        var vertex1 = this.vertex1;
+        var vertex2 = this.vertex2;
+        var vertex3 = this.vertex3;
 
-        var v2x = this.vertex2.x;
-        var v2y = this.vertex2.y;
+        var v1x = vertex1.vx;
+        var v1y = vertex1.vy;
 
-        var v3x = this.vertex3.x;
-        var v3y = this.vertex3.y;
+        var v2x = vertex2.vx;
+        var v2y = vertex2.vy;
+
+        var v3x = vertex3.vx;
+        var v3y = vertex3.vy;
 
         if (calcMatrix)
         {
@@ -222,14 +270,14 @@ var Face = new Class({
             var e = calcMatrix.e;
             var f = calcMatrix.f;
 
-            v1x = this.vertex1.x * a + this.vertex1.y * c + e;
-            v1y = this.vertex1.x * b + this.vertex1.y * d + f;
+            v1x = vertex1.vx * a + vertex1.vy * c + e;
+            v1y = vertex1.vx * b + vertex1.vy * d + f;
 
-            v2x = this.vertex2.x * a + this.vertex2.y * c + e;
-            v2y = this.vertex2.x * b + this.vertex2.y * d + f;
+            v2x = vertex2.vx * a + vertex2.vy * c + e;
+            v2y = vertex2.vx * b + vertex2.vy * d + f;
 
-            v3x = this.vertex3.x * a + this.vertex3.y * c + e;
-            v3y = this.vertex3.x * b + this.vertex3.y * d + f;
+            v3x = vertex3.vx * a + vertex3.vy * c + e;
+            v3y = vertex3.vx * b + vertex3.vy * d + f;
         }
 
         var t0x = v3x - v1x;
@@ -247,7 +295,7 @@ var Face = new Class({
         var dot11 = (t1x * t1x) + (t1y * t1y);
         var dot12 = (t1x * t2x) + (t1y * t2y);
 
-        // Compute barycentric coordinates
+        //  Compute barycentric coordinates
         var bc = ((dot00 * dot11) - (dot01 * dot01));
         var inv = (bc === 0) ? 0 : (1 / bc);
         var u = ((dot11 * dot02) - (dot01 * dot12)) * inv;
@@ -258,6 +306,8 @@ var Face = new Class({
 
     /**
      * Checks if the vertices in this Face are orientated counter-clockwise, or not.
+     *
+     * It checks the transformed position of the vertex.
      *
      * @method Phaser.Geom.Mesh.Face#isCounterClockwise
      * @since 3.50.0
@@ -270,7 +320,7 @@ var Face = new Class({
         var v2 = this.vertex2;
         var v3 = this.vertex3;
 
-        return (v2.x - v1.x) * (v3.y - v1.y) - (v2.y - v1.y) * (v3.x - v1.x) >= 0;
+        return (v2.vx - v1.vx) * (v3.vy - v1.vy) - (v2.vy - v1.vy) * (v3.vx - v1.vx) >= 0;
     },
 
     /**
@@ -322,6 +372,8 @@ var Face = new Class({
     /**
      * The depth of this Face, which is an average of the z component of all three vertices.
      *
+     * The depth is calculated based on the transformed z value, not the local one.
+     *
      * @name Phaser.Geom.Mesh.Face#depth
      * @type {number}
      * @readonly
@@ -335,7 +387,7 @@ var Face = new Class({
             var v2 = this.vertex2;
             var v3 = this.vertex3;
 
-            return (v1.z + v2.z + v3.z) / 3;
+            return (v1.vz + v2.vz + v3.vz) / 3;
         }
 
     },
