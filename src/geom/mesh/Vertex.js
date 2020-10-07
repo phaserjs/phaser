@@ -173,8 +173,7 @@ var Vertex = new Class({
         F32[++offset] = this.v;
         F32[++offset] = textureUnit;
         F32[++offset] = tintEffect;
-        // U32[++offset] = Utils.getTintAppendFloatAlpha(this.color, alpha * this.alpha);
-        U32[++offset] = Utils.getTintAppendFloatAlpha(0xffffff, 1);
+        U32[++offset] = Utils.getTintAppendFloatAlpha(this.color, alpha * this.alpha);
 
         return offset;
     }
