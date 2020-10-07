@@ -116,7 +116,7 @@ var Mesh = new Class({
          * @type {Phaser.GameObjects.MeshCamera}
          * @since 3.50.0
          */
-        this.camera = new MeshCamera(45, 0, 0, -10, 0.001, 1000);
+        this.camera = new MeshCamera(45, 0, 0, 0, 0.001, 1000);
 
         /**
          * The Animation State of this Mesh.
@@ -1145,11 +1145,13 @@ var Mesh = new Class({
         normalMatrix.invert();
         normalMatrix.transpose();
 
+        var z = camera.position.z;
+
         var vertices = this.vertices;
 
         for (var i = 0; i < vertices.length; i++)
         {
-            vertices[i].transformCoordinatesLocal(transformMatrix, width, height);
+            vertices[i].transformCoordinatesLocal(transformMatrix, width, height, z);
         }
 
         this.depthSort();
