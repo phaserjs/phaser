@@ -48,30 +48,28 @@ var MeshCamera = new Class({
 
     panX: function (v)
     {
-        this.updateViewMatrix();
-
         this.position.addScale(this.right, v);
+
+        this.updateViewMatrix();
     },
 
     panY: function (v)
     {
-        this.updateViewMatrix();
-
         this.position.y += this.up.y * v;
 
-        if (this.mode === MeshCamera.MODE_ORBIT)
+        if (this.mode !== MeshCamera.MODE_ORBIT)
         {
             //  Can only move up and down the y axix in orbit mode
-            return;
+            this.position.x += this.up.x * v;
+            this.position.z += this.up.z * v;
         }
 
-        this.position.x += this.up.x * v;
-        this.position.z += this.up.z * v;
+        this.updateViewMatrix();
     },
 
     panZ: function (v)
     {
-        this.updateViewMatrix();
+        // this.updateViewMatrix();
 
         if (this.mode === MeshCamera.MODE_ORBIT)
         {
@@ -83,6 +81,8 @@ var MeshCamera = new Class({
             //  In freemode to move forward, we need to move based on our forward which is relative to our current rotation
             this.position.addScale(this.forward, v);
         }
+
+        this.updateViewMatrix();
     },
 
     //  To have different modes of movements, this function handles the view matrix update for the transform object.
