@@ -312,15 +312,19 @@ var Face = new Class({
      * @method Phaser.Geom.Mesh.Face#isCounterClockwise
      * @since 3.50.0
      *
+     * @param {number} z - The z-axis value to test against. Typically the `MeshCamera.position.z`.
+     *
      * @return {boolean} `true` if the vertices in this Face run counter-clockwise, otherwise `false`.
      */
-    isCounterClockwise: function ()
+    isCounterClockwise: function (z)
     {
         var v1 = this.vertex1;
         var v2 = this.vertex2;
         var v3 = this.vertex3;
 
-        return (v2.vx - v1.vx) * (v3.vy - v1.vy) - (v2.vy - v1.vy) * (v3.vx - v1.vx) >= 0;
+        var d = (v2.vx - v1.vx) * (v3.vy - v1.vy) - (v2.vy - v1.vy) * (v3.vx - v1.vx);
+
+        return (z <= 0) ? d >= 0 : d < 0;
     },
 
     /**
