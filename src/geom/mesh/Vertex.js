@@ -71,6 +71,33 @@ var Vertex = new Class({
         this.vz = 0;
 
         /**
+         * The projected x coordinate of this vertex.
+         *
+         * @name Phaser.Geom.Mesh.Vertex#vx
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.nx = 0;
+
+        /**
+         * The projected y coordinate of this vertex.
+         *
+         * @name Phaser.Geom.Mesh.Vertex#vy
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.ny = 0;
+
+        /**
+         * The projected z coordinate of this vertex.
+         *
+         * @name Phaser.Geom.Mesh.Vertex#vz
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.nz = 0;
+
+        /**
          * UV u coordinate of this vertex.
          *
          * @name Phaser.Geom.Mesh.Vertex#u
@@ -105,6 +132,15 @@ var Vertex = new Class({
          * @since 3.50.0
          */
         this.alpha = alpha;
+    },
+
+    setNormals: function (nx, ny, nz)
+    {
+        this.nx = nx;
+        this.ny = ny;
+        this.nz = nz;
+
+        return this;
     },
 
     /**

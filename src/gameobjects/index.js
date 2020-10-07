@@ -124,12 +124,15 @@ if (typeof WEBGL_RENDERER)
     //  WebGL only Game Objects
     GameObjects.Shader = require('./shader/Shader');
     GameObjects.Mesh = require('./mesh/Mesh');
+    GameObjects.Layer3D = require('./layer3d/Layer3D');
 
     GameObjects.Factories.Shader = require('./shader/ShaderFactory');
     GameObjects.Factories.Mesh = require('./mesh/MeshFactory');
+    GameObjects.Factories.Layer3D = require('./layer3d/Layer3DFactory');
 
     GameObjects.Creators.Shader = require('./shader/ShaderCreator');
     GameObjects.Creators.Mesh = require('./mesh/MeshCreator');
+    GameObjects.Creators.Layer3D = require('./layer3d/Layer3DCreator');
 
     GameObjects.Light = require('./lights/Light');
     GameObjects.LightsManager = require('./lights/LightsManager');
