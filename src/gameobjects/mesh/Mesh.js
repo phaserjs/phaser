@@ -7,6 +7,7 @@
 var AnimationState = require('../../animations/AnimationState');
 var Class = require('../../utils/Class');
 var Components = require('../components');
+var DegToRad = require('../../math/DegToRad');
 var Face = require('../../geom/mesh/Face');
 var GameObject = require('../GameObject');
 var GameObjectEvents = require('../events');
@@ -15,7 +16,6 @@ var GetColor = require('../../display/color/GetColor');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Matrix4 = require('../../math/Matrix4');
 var Vector3 = require('../../math/Vector3');
-var MeshCamera = require('./MeshCamera');
 var MeshRender = require('./MeshRender');
 var StableSort = require('../../utils/array/StableSort');
 var Vertex = require('../../geom/mesh/Vertex');
@@ -102,21 +102,6 @@ var Mesh = new Class({
         if (texture === undefined) { texture = '__WHITE'; }
 
         GameObject.call(this, scene, 'Mesh');
-
-        /**
-         * A Camera which can be used to control the view of all faces within this Mesh.
-         *
-         * It will default to have an fov of 45 and be positioned at 0, 0, 0,
-         * with a near of 0.001 and far of 1000.
-         *
-         * You can change all of these by using the methods and properties available
-         * in the `MeshCamera` class, of which this is an instance.
-         *
-         * @name Phaser.GameObjects.Mesh#camera
-         * @type {Phaser.GameObjects.MeshCamera}
-         * @since 3.50.0
-         */
-        this.camera = new MeshCamera(45, 0, 0, 0, 0.001, 1000);
 
         /**
          * The Animation State of this Mesh.
@@ -213,11 +198,15 @@ var Mesh = new Class({
         this.hideCCW = true;
 
         /**
-         * A Vector3 containing the 3D position of the model data in this Mesh.
+         * A Vector3 containing the 3D position of the vertices in this Mesh.
          *
-         * Changing the values of this property will move all vertices that have been
-         * added to this Mesh. Rather than change the model position, you can also
-         * change the Camera position, depending on the effect you require.
+         * Modifying the components of this property will allow you to reposition where
+         * the vertices are rendered within the Mesh. This happens in the `preUpdate` phase,
+         * where each vertex is transformed using the view and projection matrices.
+         *
+         * Changing this property will impact all vertices being rendered by this Mesh.
+         *
+         * You can also adjust the 'view' by using the `pan` methods.
          *
          * @name Phaser.Geom.Mesh.Model#modelPosition
          * @type {Phaser.Math.Vector3}
@@ -226,11 +215,13 @@ var Mesh = new Class({
         this.modelPosition = new Vector3();
 
         /**
-         * A Vector3 containing the 3D scale of the model data in this Mesh.
+         * A Vector3 containing the 3D scale of the vertices in this Mesh.
          *
-         * Changing the values of this property will scale all vertices that have been
-         * added to this Mesh. Rather than change the model scale, you can also
-         * change the Camera zoom, depending on the effect you require.
+         * Modifying the components of this property will allow you to scale
+         * the vertices within the Mesh. This happens in the `preUpdate` phase,
+         * where each vertex is transformed using the view and projection matrices.
+         *
+         * Changing this property will impact all vertices being rendered by this Mesh.
          *
          * @name Phaser.Geom.Mesh.Model#modelScale
          * @type {Phaser.Math.Vector3}
@@ -239,11 +230,13 @@ var Mesh = new Class({
         this.modelScale = new Vector3(1, 1, 1);
 
         /**
-         * A Vector3 containing the 3D rotation of the model data in this Mesh.
+         * A Vector3 containing the 3D rotation of the vertices in this Mesh.
          *
-         * Changing the values of this property will rotate all vertices that have been
-         * added to this Mesh. Rather than change the model rotation, you can also
-         * change the Camera rotation, depending on the effect you require.
+         * Modifying the components of this property will allow you to rotate
+         * the vertices within the Mesh. This happens in the `preUpdate` phase,
+         * where each vertex is transformed using the view and projection matrices.
+         *
+         * Changing this property will impact all vertices being rendered by this Mesh.
          *
          * @name Phaser.Geom.Mesh.Model#modelRotation
          * @type {Phaser.Math.Vector3}
@@ -255,14 +248,14 @@ var Mesh = new Class({
          * An internal cache, used to compare position, rotation, scale and face data
          * each frame, to avoid math calculations in `preUpdate`.
          *
-         * cache structure = position xyz | rotation xyz | scale xyz | face count
+         * Cache structure = position xyz | rotation xyz | scale xyz | face count | view
          *
          * @name Phaser.Geom.Mesh.Model#dirtyCache
          * @type {number[]}
          * @private
          * @since 3.50.0
          */
-        this.dirtyCache = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
+        this.dirtyCache = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
 
         /**
          * The transformation matrix for this Mesh.
@@ -274,32 +267,44 @@ var Mesh = new Class({
         this.transformMatrix = new Matrix4();
 
         /**
-         * Internal cached value.
+         * The view position for this Mesh.
          *
-         * @name Phaser.GameObjects.Mesh#_prevWidth
-         * @type {number}
-         * @private
+         * Use the methods`panX`, `panY` and `panZ` to adjust the view.
+         *
+         * @name Phaser.Geom.Mesh.Model#viewPosition
+         * @type {Phaser.Math.Vector3}
          * @since 3.50.0
          */
-        this._prevWidth = 0;
+        this.viewPosition = new Vector3();
 
         /**
-         * Internal cached value.
+         * The view matrix for this Mesh.
          *
-         * @name Phaser.GameObjects.Mesh#_prevHeight
-         * @type {number}
-         * @private
+         * @name Phaser.Geom.Mesh.Model#viewMatrix
+         * @type {Phaser.Math.Matrix4}
          * @since 3.50.0
          */
-        this._prevHeight = 0;
+        this.viewMatrix = new Matrix4();
+
+        /**
+         * The projection matrix for this Mesh.
+         *
+         * Update it with the `updateProjectionMatix` method.
+         *
+         * @name Phaser.Geom.Mesh.Model#projectionMatrix
+         * @type {Phaser.Math.Matrix4}
+         * @since 3.50.0
+         */
+        this.projectionMatrix = new Matrix4();
 
         var renderer = scene.sys.renderer;
 
         this.setPosition(x, y);
         this.setTexture(texture, frame);
         this.setSize(renderer.width, renderer.height);
-
         this.initPipeline();
+
+        this.updateProjectionMatrix(renderer.width, renderer.height, 45, 0.01, 1000);
 
         if (vertices)
         {
@@ -320,6 +325,82 @@ var Mesh = new Class({
     removedFromScene: function ()
     {
         this.scene.sys.updateList.remove(this);
+    },
+
+    /**
+     * Translates the view position of this Mesh on the x axis by the given amount.
+     *
+     * @method Phaser.GameObjects.Mesh#panX
+     * @since 3.50.0
+     *
+     * @param {number} v - The amount to pan by.
+     */
+    panX: function (v)
+    {
+        this.viewPosition.addScale(Vector3.LEFT, v);
+
+        this.dirtyCache[10] = 1;
+
+        return this;
+    },
+
+    /**
+     * Translates the view position of this Mesh on the y axis by the given amount.
+     *
+     * @method Phaser.GameObjects.Mesh#panY
+     * @since 3.50.0
+     *
+     * @param {number} v - The amount to pan by.
+     */
+    panY: function (v)
+    {
+        this.viewPosition.y += Vector3.DOWN.y * v;
+
+        this.dirtyCache[10] = 1;
+
+        return this;
+    },
+
+    /**
+     * Translates the view position of this Mesh on the z axis by the given amount.
+     *
+     * @method Phaser.GameObjects.Mesh#panZ
+     * @since 3.50.0
+     *
+     * @param {number} v - The amount to pan by.
+     */
+    panZ: function (amount)
+    {
+        this.viewPosition.z += amount;
+
+        this.dirtyCache[10] = 1;
+
+        return this;
+    },
+
+    /**
+     * Builds a new projection matrix from the given values.
+     *
+     * @method Phaser.GameObjects.Mesh#updateProjectionMatrix
+     * @since 3.50.0
+     *
+     * @param {number} width - The width of the renderer.
+     * @param {number} height - The height of the renderer.
+     * @param {number} [fov=45] - The field of view, in degrees.
+     * @param {number} [near=0.01] - The near value of the view.
+     * @param {number} [fofarv=1000] - The far value of the view.
+     */
+    updateProjectionMatrix: function (width, height, fov, near, far)
+    {
+        if (fov === undefined) { fov = 45; }
+        if (near === undefined) { near = 0.01; }
+        if (far === undefined) { far = 1000; }
+
+        this.projectionMatrix.perspective(DegToRad(fov), width / height, near, far);
+
+        this.dirtyCache[10] = 1;
+
+        return this;
     },
 
     /**
@@ -1105,26 +1186,27 @@ var Mesh = new Class({
     {
         this.anims.update(time, delta);
 
-        var camera = this.camera;
+        var dirty = this.dirtyCache;
 
-        if (!camera.dirty && !this.isDirty())
+        if (!dirty[10] && !this.isDirty())
         {
-            //  If neither the camera or the mesh is dirty we can bail out and save lots of math
+            //  If neither the view or the mesh is dirty we can bail out and save lots of math
             return;
         }
 
         var width = this.width;
         var height = this.height;
 
-        if (camera.dirty || width !== this._prevWidth || height !== this._prevHeight)
+        var viewMatrix = this.viewMatrix;
+        var viewPosition = this.viewPosition;
+
+        if (dirty[10])
         {
-            //  Mesh has resized, flow that down to the Camera
-            camera.update(width, height);
+            viewMatrix.identity();
+            viewMatrix.translate(viewPosition);
+            viewMatrix.invert();
 
-            this._prevWidth = width;
-            this._prevHeight = height;
-
-            camera.dirty = false;
+            dirty[10] = 0;
         }
 
         var transformMatrix = this.transformMatrix;
@@ -1133,11 +1215,11 @@ var Mesh = new Class({
             this.modelRotation,
             this.modelPosition,
             this.modelScale,
-            camera.viewMatrix,
-            camera.projectionMatrix
+            this.viewMatrix,
+            this.projectionMatrix
         );
 
-        var z = camera.position.z;
+        var z = viewPosition.z;
 
         var vertices = this.vertices;
 

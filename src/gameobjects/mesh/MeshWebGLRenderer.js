@@ -53,7 +53,7 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var e = calcMatrix.e;
     var f = calcMatrix.f;
 
-    var z = src.camera.position.z;
+    var z = src.viewPosition.z;
 
     var roundPixels = camera.roundPixels;
     var alpha = camera.alpha * src.alpha;
