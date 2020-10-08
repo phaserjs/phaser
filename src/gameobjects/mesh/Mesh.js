@@ -235,6 +235,9 @@ var Mesh = new Class({
         /**
          * A Vector3 containing the 3D rotation of the vertices in this Mesh.
          *
+         * The values should be given in radians, i.e. to rotate the vertices by 90
+         * degrees you can use `modelRotation.x = Phaser.Math.DegToRad(90)`.
+         *
          * Modifying the components of this property will allow you to rotate
          * the vertices within the Mesh. This happens in the `preUpdate` phase,
          * where each vertex is transformed using the view and projection matrices.
@@ -452,19 +455,23 @@ var Mesh = new Class({
      *
      * @param {string} key - The key of the model data in the OBJ Cache to add to this Mesh.
      * @param {number} [scale=1] - An amount to scale the model data by. Use this if the model has exported too small, or large, to see.
-     * @param {number} [x=0] - Offset the model x position by this amount.
-     * @param {number} [y=0] - Offset the model y position by this amount.
-     * @param {number} [z=0] - Offset the model z position by this amount.
+     * @param {number} [x=0] - Translate the model x position by this amount.
+     * @param {number} [y=0] - Translate the model y position by this amount.
+     * @param {number} [z=0] - Translate the model z position by this amount.
+     * @param {number} [rotateX=0] - Rotate the model on the x axis by this amount, in radians.
+     * @param {number} [rotateY=0] - Rotate the model on the y axis by this amount, in radians.
+     * @param {number} [rotateZ=0] - Rotate the model on the z axis by this amount, in radians.
+     * @param {boolean} [zIsUp=true] - Is the z axis up (true), or is y axis up (false)?
      *
      * @return {this} This Mesh Game Object.
      */
-    addVerticesFromObj: function (key, scale, x, y, z)
+    addVerticesFromObj: function (key, scale, x, y, z, rotateX, rotateY, rotateZ, zIsUp)
     {
         var data = this.scene.sys.cache.obj.get(key);
 
         if (data)
         {
-            GenerateObjVerts(data, this, scale, x, y, z);
+            GenerateObjVerts(data, this, scale, x, y, z, rotateX, rotateY, rotateZ, zIsUp);
         }
 
         return this;

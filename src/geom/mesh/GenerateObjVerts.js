@@ -5,7 +5,13 @@
  */
 
 var Face = require('./Face');
+var Matrix4 = require('../../math/Matrix4');
+var Vector3 = require('../../math/Vector3');
 var Vertex = require('./Vertex');
+
+var tempPosition = new Vector3();
+var tempRotation = new Vector3();
+var tempMatrix = new Matrix4();
 
 /**
  * This method will return an object containing Face and Vertex instances, generated
@@ -44,18 +50,26 @@ var Vertex = require('./Vertex');
  * @param {Phaser.Types.Geom.Mesh.OBJData} data - The parsed OBJ model data.
  * @param {Phaser.GameObjects.Mesh} [mesh] - An optional Mesh Game Object. If given, the generated Faces will be automatically added to this Mesh. Set to `null` to skip.
  * @param {number} [scale=1] - An amount to scale the model data by. Use this if the model has exported too small, or large, to see.
- * @param {number} [x=0] - Offset the model x position by this amount.
- * @param {number} [y=0] - Offset the model y position by this amount.
- * @param {number} [z=0] - Offset the model z position by this amount.
+ * @param {number} [x=0] - Translate the model x position by this amount.
+ * @param {number} [y=0] - Translate the model y position by this amount.
+ * @param {number} [z=0] - Translate the model z position by this amount.
+ * @param {number} [rotateX=0] - Rotate the model on the x axis by this amount, in radians.
+ * @param {number} [rotateY=0] - Rotate the model on the y axis by this amount, in radians.
+ * @param {number} [rotateZ=0] - Rotate the model on the z axis by this amount, in radians.
+ * @param {boolean} [zIsUp=true] - Is the z axis up (true), or is y axis up (false)?
  *
  * @return {Phaser.Types.Geom.Mesh.GenerateVertsResult} The parsed Face and Vertex objects.
  */
-var GenerateObjVerts = function (data, mesh, scale, x, y, z)
+var GenerateObjVerts = function (data, mesh, scale, x, y, z, rotateX, rotateY, rotateZ, zIsUp)
 {
     if (scale === undefined) { scale = 1; }
     if (x === undefined) { x = 0; }
     if (y === undefined) { y = 0; }
     if (z === undefined) { z = 0; }
+    if (rotateX === undefined) { rotateX = 0; }
+    if (rotateY === undefined) { rotateY = 0; }
+    if (rotateZ === undefined) { rotateZ = 0; }
+    if (zIsUp === undefined) { zIsUp = true; }
 
     var result = {
         faces: [],
@@ -63,6 +77,10 @@ var GenerateObjVerts = function (data, mesh, scale, x, y, z)
     };
 
     var materials = data.materials;
+
+    tempPosition.set(x, y, z);
+    tempRotation.set(rotateX, rotateY, rotateZ);
+    tempMatrix.fromRotationXYTranslation(tempRotation, tempPosition, zIsUp);
 
     for (var m = 0; m < data.models.length; m++)
     {
@@ -99,9 +117,9 @@ var GenerateObjVerts = function (data, mesh, scale, x, y, z)
                 color = materials[face.material];
             }
 
-            var vert1 = new Vertex(x + m1.x * scale, y + m1.y * scale, z + m1.z * scale, uv1.u, uv1.v, color);
-            var vert2 = new Vertex(x + m2.x * scale, y + m2.y * scale, z + m2.z * scale, uv2.u, uv2.v, color);
-            var vert3 = new Vertex(x + m3.x * scale, y + m3.y * scale, z + m3.z * scale, uv3.u, uv3.v, color);
+            var vert1 = new Vertex(m1.x * scale, m1.y * scale, m1.z * scale, uv1.u, uv1.v, color).transformMat4(tempMatrix);
+            var vert2 = new Vertex(m2.x * scale, m2.y * scale, m2.z * scale, uv2.u, uv2.v, color).transformMat4(tempMatrix);
+            var vert3 = new Vertex(m3.x * scale, m3.y * scale, m3.z * scale, uv3.u, uv3.v, color).transformMat4(tempMatrix);
 
             result.verts.push(vert1, vert2, vert3);
             result.faces.push(new Face(vert1, vert2, vert3));
