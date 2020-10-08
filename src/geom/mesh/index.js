@@ -12,6 +12,7 @@ var Mesh = {
 
     Face: require('./Face'),
     ParseObj: require('./ParseObj'),
+    ParseObjMaterial: require('./ParseObjMaterial'),
     Vertex: require('./Vertex')
 
 };
