@@ -555,6 +555,7 @@ Prior to v3.50 an Arcade Physics Body could be one of two states: immovable, or 
 * The `Arcade.Body.resetFlags` method has a new optional boolean parameter `clear`. If set, it clears the `wasTouching` flags on the Body. This happens automatically when `Body.reset` is called. Previous to this, the flags were not reset until the next physics step (thanks @samme)
 * `Physics.Arcade.ProcessX` is a new set of functions, called by the `SeparateX` function, that handles all of the different collision tests, checks and resolutions. These functions are not exposed in the public API.
 * `Physics.Arcade.ProcessY` is a new set of functions, called by the `SeparateY` function, that handles all of the different collision tests, checks and resolutions. These functions are not exposed in the public API.
+* `Arcade.Body.center` values were incorrect after collisions with the world bounds or (for rectangular bodies) after collisions with another body. The body center is now updated after those separations (thanks @samme)
 
 ### Loader Cache Changes
 
