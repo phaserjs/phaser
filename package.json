@@ -84,7 +84,7 @@
   "dependencies": {
     "eventemitter3": "^4.0.7",
     "exports-loader": "^1.1.0",
-    "imports-loader": "^1.1.0",
+    "imports-loader": "^1.2.0",
     "path": "^0.12.7"
   }
 }
