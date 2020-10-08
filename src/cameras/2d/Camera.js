@@ -816,6 +816,9 @@ var Camera = new Class({
         {
             originX = Math.round(originX);
             originY = Math.round(originY);
+
+            sx = Math.round(sx);
+            sy = Math.round(sy);
         }
 
         //  Values are in pixels and not impacted by zooming the Camera
@@ -832,12 +835,16 @@ var Camera = new Class({
         var displayWidth = width / zoom;
         var displayHeight = height / zoom;
 
-        this.worldView.setTo(
-            midX - (displayWidth / 2),
-            midY - (displayHeight / 2),
-            displayWidth,
-            displayHeight
-        );
+        var vwx = midX - (displayWidth / 2);
+        var vwy = midY - (displayHeight / 2);
+
+        if (this.roundPixels)
+        {
+            vwx = Math.round(vwx);
+            vwy = Math.round(vwy);
+        }
+
+        this.worldView.setTo(vwx, vwy, displayWidth, displayHeight);
 
         matrix.applyITRS(this.x + originX, this.y + originY, this.rotation, zoom, zoom);
         matrix.translate(-originX, -originY);
