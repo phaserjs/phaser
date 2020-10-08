@@ -38,7 +38,9 @@ var TextFile = new Class({
 
     function TextFile (loader, key, url, xhrSettings)
     {
+        var type = 'text';
         var extension = 'txt';
+        var cache = loader.cacheManager.text;
 
         if (IsPlainObject(key))
         {
@@ -48,11 +50,13 @@ var TextFile = new Class({
             url = GetFastValue(config, 'url');
             xhrSettings = GetFastValue(config, 'xhrSettings');
             extension = GetFastValue(config, 'extension', extension);
+            type = GetFastValue(config, 'type', type);
+            cache = GetFastValue(config, 'cache', cache);
         }
 
         var fileConfig = {
-            type: 'text',
-            cache: loader.cacheManager.text,
+            type: type,
+            cache: cache,
             extension: extension,
             responseType: 'text',
             key: key,

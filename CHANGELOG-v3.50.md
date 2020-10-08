@@ -558,7 +558,7 @@ Prior to v3.50 an Arcade Physics Body could be one of two states: immovable, or 
 
 ### Loader Cache Changes
 
-When loading any of the file types listed below it will no longer store the data file in the cache. For example, when loading a Texture Atlas using a JSON File, it would store the parsed image data in the Texture Manager and also store the JSON in the JSON Cache under the same key. This has changed in 3.50. The data files are no longer cached, as they are not required by the textures once parsing is completed, which happens during load. This helps free-up memory (how much depends on the size of your data files) and also allows you to easily remove textures based on just their key, without also having to clear out the corresponding data cache.
+When loading any of the file types listed below it will no longer store the data file in the cache. For example, when loading a Texture Atlas using a JSON File, it used to store the parsed image data in the Texture Manager and also store the JSON in the JSON Cache under the same key. This has changed in 3.50. The data files are no longer cached, as they are not required by the textures once parsing is completed, which happens during load. This helps free-up memory. How much depends on the size of your data files. And also allows you to easily remove textures based on just their key, without also having to clear out the corresponding data cache.
 
 * `AtlasJSONFile` no longer stores the JSON in the JSON Cache once the texture has been created.
 * `AtlasXMLFile` no longer stores the XML in the XML Cache once the texture has been created.
@@ -700,6 +700,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * Internally, the `Quaternion` class now has 4 new private properties: `_x`, `_y`, `_z` and `_w` and 4 new getters and setters for the public versions. It also now passes most methods via `set` to allow for the onChange callback to be invoked. This does not change the public-facing API.
 * `Group` now extends `EventEmitter`, allowing you to emit custom events from within a Group.
 * `Device.Audio.wav` now uses `audio/wav` as the `canPlayType` check string, instead of `audio/wav; codecs="1"`, which should allow iOS13 to play wav files again.
+* In the `Loader.FileTypes.TextFile` config you can now override the type and cache destination for the file.
 
 ### Bug Fixes
 
