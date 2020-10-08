@@ -10,7 +10,7 @@ var Class = require('../utils/Class');
  * @classdesc
  * A MultiFile is a special kind of parent that contains two, or more, Files as children and looks after
  * the loading and processing of them all. It is commonly extended and used as a base class for file types such as AtlasJSON or BitmapFont.
- * 
+ *
  * You shouldn't create an instance of a MultiFile directly, but should extend it with your own class, setting a custom type and processing methods.
  *
  * @class MultiFile
@@ -29,6 +29,17 @@ var MultiFile = new Class({
 
     function MultiFile (loader, type, key, files)
     {
+        var finalFiles = [];
+
+        //  Clean out any potential 'null' or 'undefined' file entries
+        files.forEach(function (file)
+        {
+            if (file)
+            {
+                finalFiles.push(file);
+            }
+        });
+
         /**
          * A reference to the Loader that is going to load this file.
          *
@@ -73,7 +84,7 @@ var MultiFile = new Class({
          * @type {Phaser.Loader.File[]}
          * @since 3.7.0
          */
-        this.files = files;
+        this.files = finalFiles;
 
         /**
          * The completion status of this MultiFile.
@@ -93,7 +104,7 @@ var MultiFile = new Class({
          * @since 3.7.0
          */
 
-        this.pending = files.length;
+        this.pending = finalFiles.length;
 
         /**
          * The number of files that failed to load.
@@ -145,9 +156,9 @@ var MultiFile = new Class({
         this.prefix = loader.prefix;
 
         //  Link the files
-        for (var i = 0; i < files.length; i++)
+        for (var i = 0; i < finalFiles.length; i++)
         {
-            files[i].multiFile = this;
+            finalFiles[i].multiFile = this;
         }
     },
 
