@@ -30,11 +30,14 @@ GameObjectCreator.register('mesh', function (config, addToScene)
     var key = GetAdvancedValue(config, 'key', null);
     var frame = GetAdvancedValue(config, 'frame', null);
     var vertices = GetValue(config, 'vertices', []);
-    var colors = GetValue(config, 'colors', []);
-    var alphas = GetValue(config, 'alphas', []);
-    var uv = GetValue(config, 'uv', []);
+    var uvs = GetValue(config, 'uvs', []);
+    var indicies = GetValue(config, 'indicies', []);
+    var containsZ = GetValue(config, 'containsZ', false);
+    var normals = GetValue(config, 'normals', []);
+    var colors = GetValue(config, 'colors', 0xffffff);
+    var alphas = GetValue(config, 'alphas', 1);
 
-    var mesh = new Mesh(this.scene, 0, 0, vertices, uv, colors, alphas, key, frame);
+    var mesh = new Mesh(this.scene, 0, 0, key, frame, vertices, uvs, indicies, containsZ, normals, colors, alphas);
 
     if (addToScene !== undefined)
     {
@@ -45,5 +48,3 @@ GameObjectCreator.register('mesh', function (config, addToScene)
 
     return mesh;
 });
-
-//  When registering a factory function 'this' refers to the GameObjectCreator context.

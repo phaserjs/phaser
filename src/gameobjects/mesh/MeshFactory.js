@@ -20,26 +20,20 @@ var GameObjectFactory = require('../GameObjectFactory');
  * @param {number} [y] - The vertical position of this Game Object in the world.
  * @param {string|Phaser.Textures.Texture} [texture] - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
- * @param {number[]} [vertices] - An array containing the vertices data for this Mesh.
- * @param {number[]} [uvs] - An array containing the uv data for this Mesh.
- * @param {number[]} [indicies] - An array containing the vertex indicies for this Mesh.
- * @param {number|number[]} [colors=0xffffff] - An array containing the color data for this Mesh.
- * @param {number|number[]} [alphas=1] - An array containing the alpha data for this Mesh.
+ * @param {number[]} vertices - The vertices array. Either `xy` pairs, or `xyz` if the `containsZ` parameter is `true`.
+ * @param {number[]} uvs - The UVs pairs array.
+ * @param {number[]} [indicies] - Optional vertex indicies array. If you don't have one, pass `null` or an empty array.
+ * @param {boolean} [containsZ=false] - Does the vertices data include a `z` component?
+ * @param {number[]} [normals] - Optional vertex normals array. If you don't have one, pass `null` or an empty array.
+ * @param {number|number[]} [colors=0xffffff] - An array of colors, one per vertex, or a single color value applied to all vertices.
+ * @param {number|number[]} [alphas=1] - An array of alpha values, one per vertex, or a single alpha value applied to all vertices.
  *
  * @return {Phaser.GameObjects.Mesh} The Game Object that was created.
  */
 if (typeof WEBGL_RENDERER)
 {
-    GameObjectFactory.register('mesh', function (x, y, texture, frame, vertices, uvs, indicies, colors, alphas)
+    GameObjectFactory.register('mesh', function (x, y, texture, frame, vertices, uvs, indicies, containsZ, normals, colors, alphas)
     {
-        return this.displayList.add(new Mesh(this.scene, x, y, texture, frame, vertices, uvs, indicies, colors, alphas));
+        return this.displayList.add(new Mesh(this.scene, x, y, texture, frame, vertices, uvs, indicies, containsZ, normals, colors, alphas));
     });
 }
-
-//  When registering a factory function 'this' refers to the GameObjectFactory context.
-//
-//  There are several properties available to use:
-//
-//  this.scene - a reference to the Scene that owns the GameObjectFactory
-//  this.displayList - a reference to the Display List the Scene owns
-//  this.updateList - a reference to the Update List the Scene owns

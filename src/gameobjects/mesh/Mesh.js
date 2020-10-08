@@ -11,12 +11,13 @@ var DegToRad = require('../../math/DegToRad');
 var Face = require('../../geom/mesh/Face');
 var GameObject = require('../GameObject');
 var GameObjectEvents = require('../events');
+var GenerateVerts = require('../../geom/mesh/GenerateVerts');
+var GenerateObjVerts = require('../../geom/mesh/GenerateObjVerts');
 var GetCalcMatrix = require('../GetCalcMatrix');
-var GetFastValue = require('../../utils/object/GetFastValue');
 var Matrix4 = require('../../math/Matrix4');
-var Vector3 = require('../../math/Vector3');
 var MeshRender = require('./MeshRender');
 var StableSort = require('../../utils/array/StableSort');
+var Vector3 = require('../../math/Vector3');
 var Vertex = require('../../geom/mesh/Vertex');
 
 /**
@@ -32,9 +33,10 @@ var Vertex = require('../../geom/mesh/Vertex');
  * Sprites, or Sprites where you need fine-grained control over the vertices in order to
  * achieve special effects in your games. Note that rendering still takes place using Phasers
  * orthographic camera. As a result, all depth and face tests are done in orthographic space.
+ *
  * The rendering process will iterate through the faces of this Mesh and render out each vertex
  * within that is considered as being counter-clockwise. Because of this you should be careful
- * not to use model data with too many vertices.
+ * not to use model data with too many vertices, or complex overlapping geometry.
  *
  * In short, if you want to remake Crysis, use a 3D engine, not a Mesh. However, if you want
  * to easily add some small fun 3D elements into your game, or create some special effects involving
@@ -68,9 +70,11 @@ var Vertex = require('../../geom/mesh/Vertex');
  * @param {number} [y] - The vertical position of this Game Object in the world.
  * @param {string|Phaser.Textures.Texture} [texture] - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
- * @param {number[]} [vertices] - An array containing the vertices data for this Mesh.
- * @param {number[]} [uvs] - An array containing the uv data for this Mesh.
- * @param {number[]} [indicies] - An optional array containing the vertex indicies for this Mesh. If the data isn't index, pass `null`.
+ * @param {number[]} vertices - The vertices array. Either `xy` pairs, or `xyz` if the `containsZ` parameter is `true`.
+ * @param {number[]} uvs - The UVs pairs array.
+ * @param {number[]} [indicies] - Optional vertex indicies array. If you don't have one, pass `null` or an empty array.
+ * @param {boolean} [containsZ=false] - Does the vertices data include a `z` component?
+ * @param {number[]} [normals] - Optional vertex normals array. If you don't have one, pass `null` or an empty array.
  * @param {number|number[]} [colors=0xffffff] - An array of colors, one per vertex, or a single color value applied to all vertices.
  * @param {number|number[]} [alphas=1] - An array of alpha values, one per vertex, or a single alpha value applied to all vertices.
  */
@@ -94,7 +98,7 @@ var Mesh = new Class({
 
     initialize:
 
-    function Mesh (scene, x, y, texture, frame, vertices, uvs, indicies, colors, alphas)
+    function Mesh (scene, x, y, texture, frame, vertices, uvs, indicies, containsZ, normals, colors, alphas)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -116,7 +120,7 @@ var Mesh = new Class({
          *
          * A Face consists of 3 Vertex objects.
          *
-         * This array is populated during calls such as `addFace` or `addOBJ`.
+         * This array is populated during calls such as `addVertices` or `addOBJ`.
          *
          * @name Phaser.GameObjects.Mesh#faces
          * @type {Phaser.Geom.Mesh.Face[]}
@@ -307,7 +311,7 @@ var Mesh = new Class({
 
         if (vertices)
         {
-            this.addVertices(vertices, uvs, indicies, colors, alphas);
+            this.addVertices(vertices, uvs, indicies, containsZ, normals, colors, alphas);
         }
 
         this.on(GameObjectEvents.ADDED_TO_SCENE, this.addedToScene, this);
@@ -443,9 +447,7 @@ var Mesh = new Class({
      * moved or rotated. You can scale the model data, should it be too small, or too large, to see.
      * You can also offset the vertices of the model via the `x`, `y` and `z` parameters.
      *
-     * If you wish to add OBJ data to this Mesh without loading it, you can call the `Mesh.addModel` method directly.
-     *
-     * @method Phaser.GameObjects.Mesh#addOBJ
+     * @method Phaser.GameObjects.Mesh#addVerticesFromObj
      * @since 3.50.0
      *
      * @param {string} key - The key of the model data in the OBJ Cache to add to this Mesh.
@@ -456,250 +458,13 @@ var Mesh = new Class({
      *
      * @return {this} This Mesh Game Object.
      */
-    addOBJ: function (key, scale, x, y, z)
+    addVerticesFromObj: function (key, scale, x, y, z)
     {
         var data = this.scene.sys.cache.obj.get(key);
 
         if (data)
         {
-            this.addModel(data, scale, x, y, z);
-        }
-
-        return this;
-    },
-
-    /**
-     * Creates a grid based on the given configuration object and adds it to this Mesh.
-     *
-     * The size of the grid is given in pixels. An example configuration may be:
-     *
-     * `{ width: 256, height: 256, widthSegments: 2, heightSegments: 2, tile: true }`
-     *
-     * This will create a grid Mesh 256 x 256 pixels in size, split into 2x2 segments, with
-     * the texture tiling across the cells.
-     *
-     * You can optionally split the grid into segments both vertically and horizontally. This will
-     * generate two faces per grid segment as a result.
-     *
-     * The `tile` parameter allows you to control if the tile will repeat across the grid
-     * segments, or be displayed in full.
-     *
-     * You may add multiple grids to a single Mesh, although they will act as one when
-     * moved or rotated. You can offset the grid via the `x` and `y` properties.
-     *
-     * UV coordinates are generated based on the currently set texture `Frame` of this Mesh. For
-     * example, if this Mesh is using a full texture, the UVs will be in the range 0 to 1. If it's
-     * using a frame from a texture, such as from a texture atlas, the UVs will be generated within
-     * the range of that frame.
-     *
-     * @method Phaser.GameObjects.Mesh#addGrid
-     * @since 3.50.0
-     *
-     * @param {Phaser.Types.GameObjects.Mesh.MeshGridConfig} config - A Grid configuration object.
-     *
-     * @return {this} This Mesh Game Object.
-     */
-    addGrid: function (config)
-    {
-        var width = GetFastValue(config, 'width', 128);
-        var height = GetFastValue(config, 'height', width);
-        var widthSegments = GetFastValue(config, 'widthSegments', 1);
-        var heightSegments = GetFastValue(config, 'heightSegments', 1);
-        var posX = GetFastValue(config, 'x', 0);
-        var posY = GetFastValue(config, 'y', 0);
-        var colors = GetFastValue(config, 'colors', 0xffffff);
-        var alphas = GetFastValue(config, 'alphas', 1);
-        var tile = GetFastValue(config, 'tile', false);
-
-        var halfWidth = width / 2;
-        var halfHeight = height / 2;
-
-        var gridX = Math.floor(widthSegments);
-        var gridY = Math.floor(heightSegments);
-
-        var gridX1 = gridX + 1;
-        var gridY1 = gridY + 1;
-
-        var segmentWidth = width / gridX;
-        var segmentHeight = height / gridY;
-
-        var uvs = [];
-        var vertices = [];
-        var indices = [];
-
-        var ix;
-        var iy;
-
-        var frame = this.frame;
-
-        var frameU0 = frame.u0;
-        var frameU1 = frame.u1;
-
-        var frameV0 = frame.v0;
-        var frameV1 = frame.v1;
-
-        var frameU = frameU1 - frameU0;
-        var frameV = frameV1 - frameV0;
-
-        var tv;
-        var tu;
-
-        for (iy = 0; iy < gridY1; iy++)
-        {
-            var y = posY + (iy * segmentHeight - halfHeight);
-
-            for (ix = 0; ix < gridX1; ix++)
-            {
-                var x = posX + (ix * segmentWidth - halfWidth);
-
-                vertices.push(x, -y);
-
-                if (!tile)
-                {
-                    tu = frameU0 + frameU * (ix / gridX);
-                    tv = frameV0 + frameV * (1 - (iy / gridY));
-
-                    uvs.push(tu, tv);
-                }
-            }
-        }
-
-        var tiledVertices = [];
-
-        for (iy = 0; iy < gridY; iy++)
-        {
-            for (ix = 0; ix < gridX; ix++)
-            {
-                var a = ix + gridX1 * iy;
-                var b = ix + gridX1 * (iy + 1);
-                var c = (ix + 1) + gridX1 * (iy + 1);
-                var d = (ix + 1) + gridX1 * iy;
-
-                if (!tile)
-                {
-                    indices.push(a, b, d);
-                    indices.push(b, c, d);
-                }
-                else
-                {
-                    a *= 2;
-                    b *= 2;
-                    c *= 2;
-                    d *= 2;
-
-                    tiledVertices.push(
-                        vertices[a], vertices[a + 1],
-                        vertices[b], vertices[b + 1],
-                        vertices[d], vertices[d + 1],
-
-                        vertices[b], vertices[b + 1],
-                        vertices[c], vertices[c + 1],
-                        vertices[d], vertices[d + 1]
-                    );
-
-                    uvs.push(
-                        frameU0, frameV1,
-                        frameU0, frameV0,
-                        frameU1, frameV1,
-
-                        frameU0, frameV0,
-                        frameU1, frameV0,
-                        frameU1, frameV1
-                    );
-                }
-            }
-        }
-
-        if (tile)
-        {
-            return this.addVertices(tiledVertices, uvs, null, colors, alphas);
-        }
-        else
-        {
-            return this.addVertices(vertices, uvs, indices, colors, alphas);
-        }
-    },
-
-    /**
-     * This method will add parsed triangulated OBJ model data to this Mesh.
-     *
-     * The obj should have been parsed in advance via the ParseObj function:
-     *
-     * ```javascript
-     * var data = Phaser.Geom.Mesh.ParseObj(rawData, flipUV);
-     *
-     * Mesh.addModel(data);
-     * ```
-     *
-     * Multiple Mesh objects can use the same model data without impacting on each other.
-     *
-     * Make sure your 3D package has triangulated the model data prior to exporting it.
-     *
-     * You may add multiple models to a single Mesh, although they will act as one when
-     * moved or rotated. You can scale the model data, should it be too small (or large) to visualize.
-     * You can also offset the model via the `x`, `y` and `z` parameters.
-     *
-     * @method Phaser.GameObjects.Mesh#addModel
-     * @since 3.50.0
-     *
-     * @param {Phaser.Types.Geom.Mesh.OBJData} data - The parsed OBJ model data.
-     * @param {number} [scale=1] - An amount to scale the model data by. Use this if the model has exported too small, or large, to see.
-     * @param {number} [x=0] - Offset the model x position by this amount.
-     * @param {number} [y=0] - Offset the model y position by this amount.
-     * @param {number} [z=0] - Offset the model z position by this amount.
-     *
-     * @return {this} This Mesh Game Object.
-     */
-    addModel: function (data, scale, x, y, z)
-    {
-        if (scale === undefined) { scale = 1; }
-        if (x === undefined) { x = 0; }
-        if (y === undefined) { y = 0; }
-        if (z === undefined) { z = 0; }
-
-        var materials = data.materials;
-
-        for (var m = 0; m < data.models.length; m++)
-        {
-            var model = data.models[m];
-
-            var vertices = model.vertices;
-            var textureCoords = model.textureCoords;
-            var faces = model.faces;
-
-            for (var i = 0; i < faces.length; i++)
-            {
-                var face = faces[i];
-
-                var v1 = face.vertices[0];
-                var v2 = face.vertices[1];
-                var v3 = face.vertices[2];
-
-                var m1 = vertices[v1.vertexIndex];
-                var m2 = vertices[v2.vertexIndex];
-                var m3 = vertices[v3.vertexIndex];
-
-                var t1 = v1.textureCoordsIndex;
-                var t2 = v2.textureCoordsIndex;
-                var t3 = v3.textureCoordsIndex;
-
-                var uv1 = (t1 === -1) ? { u: 0, v: 1 } : textureCoords[t1];
-                var uv2 = (t2 === -1) ? { u: 0, v: 0 } : textureCoords[t2];
-                var uv3 = (t3 === -1) ? { u: 1, v: 1 } : textureCoords[t3];
-
-                var color = 0xffffff;
-
-                if (face.material !== '' && materials[face.material])
-                {
-                    color = materials[face.material];
-                }
-
-                var vert1 = this.addVertex(x + m1.x * scale, y + m1.y * scale, z + m1.z * scale, uv1.u, uv1.v, color);
-                var vert2 = this.addVertex(x + m2.x * scale, y + m2.y * scale, z + m2.z * scale, uv2.u, uv2.v, color);
-                var vert3 = this.addVertex(x + m3.x * scale, y + m3.y * scale, z + m3.z * scale, uv3.u, uv3.v, color);
-
-                this.addFace(vert1, vert2, vert3);
-            }
+            GenerateObjVerts(data, this, scale, x, y, z);
         }
 
         return this;
@@ -793,11 +558,25 @@ var Mesh = new Class({
     },
 
     /**
-     * Adds new vertices to this Mesh by parsing the given arrays.
+     * Adds new vertices to this Mesh by parsing the given data.
      *
-     * The `vertices` parameter is a numeric array consisting of `x` and `y` pairs.
+     * This method will take vertex data in one of two formats, based on the `containsZ` parameter.
+     *
+     * If your vertex data are `x`, `y` pairs, then `containsZ` should be `false` (this is the default)
+     *
+     * If your vertex data is groups of `x`, `y` and `z` values, then the `containsZ` parameter must be true.
+     *
      * The `uvs` parameter is a numeric array consisting of `u` and `v` pairs.
+     *
+     * The `normals` parameter is a numeric array consisting of `x`, `y` vertex normal values and, if `containsZ` is true, `z` values as well.
+     *
      * The `indicies` parameter is an optional array that, if given, is an indexed list of vertices to be added.
+     *
+     * The `colors` parameter is an optional array, or single value, that if given sets the color of each vertex created.
+     *
+     * The `alphas` parameter is an optional array, or single value, that if given sets the alpha of each vertex created.
+     *
+     * When providing indexed data it is assumed that _all_ of the arrays are indexed, not just the vertices.
      *
      * The following example will create a 256 x 256 sized quad using an index array:
      *
@@ -818,86 +597,35 @@ var Mesh = new Class({
      *
      * const indices = [ 0, 2, 1, 2, 3, 1 ];
      *
-     * Mesh.addVertices(vertices, uvs, indicies);
+     * mesh.addVertices(vertices, uvs, indicies);
      * ```
      *
-     * Vertices must be provided as x/y pairs, there is no `z` component used in this call. For that, please see
-     * `addModel` instead.
+     * If the data is not indexed, it's assumed that the arrays all contain sequential data.
      *
      * @method Phaser.GameObjects.Mesh#addVertices
      * @since 3.50.0
      *
-     * @param {number[]} vertices - The vertices array.
-     * @param {number[]} uvs - The UVs array.
-     * @param {number[]} [indicies] - Optional vertex indicies array.
+     * @param {number[]} vertices - The vertices array. Either `xy` pairs, or `xyz` if the `containsZ` parameter is `true`.
+     * @param {number[]} uvs - The UVs pairs array.
+     * @param {number[]} [indicies] - Optional vertex indicies array. If you don't have one, pass `null` or an empty array.
+     * @param {boolean} [containsZ=false] - Does the vertices data include a `z` component?
+     * @param {number[]} [normals] - Optional vertex normals array. If you don't have one, pass `null` or an empty array.
      * @param {number|number[]} [colors=0xffffff] - An array of colors, one per vertex, or a single color value applied to all vertices.
      * @param {number|number[]} [alphas=1] - An array of alpha values, one per vertex, or a single alpha value applied to all vertices.
      *
      * @return {this} This Mesh Game Object.
      */
-    addVertices: function (vertices, uvs, indicies, colors, alphas)
+    addVertices: function (vertices, uvs, indicies, containsZ, normals, colors, alphas)
     {
-        if (colors === undefined) { colors = 0xffffff; }
-        if (alphas === undefined) { alphas = 1; }
+        var result = GenerateVerts(vertices, uvs, indicies, containsZ, normals, colors, alphas);
 
-        if (vertices.length !== uvs.length)
+        if (result)
         {
-            console.warn('Mesh vertices and uv count not equal');
-
-            return this;
+            this.faces = this.faces.concat(result.faces);
+            this.vertices = this.vertices.concat(result.vertices);
         }
 
-        var i;
-        var newVerts = [];
-
-        var isColorArray = Array.isArray(colors);
-        var isAlphaArray = Array.isArray(alphas);
-
-        if (Array.isArray(indicies) && indicies.length > 0)
-        {
-            for (i = 0; i < indicies.length; i++)
-            {
-                var index = indicies[i] * 2;
-
-                newVerts.push(this.addVertex(
-                    vertices[index],
-                    vertices[index + 1],
-                    0,
-                    uvs[index],
-                    uvs[index + 1],
-                    (isColorArray) ? colors[i] : colors,
-                    (isAlphaArray) ? alphas[i] : alphas
-                ));
-            }
-        }
-        else
-        {
-            var colorIndex = 0;
-
-            for (i = 0; i < vertices.length; i += 2)
-            {
-                newVerts.push(this.addVertex(
-                    vertices[i],
-                    vertices[i + 1],
-                    0,
-                    uvs[i],
-                    uvs[i + 1],
-                    (isColorArray) ? colors[colorIndex] : colors,
-                    (isAlphaArray) ? alphas[colorIndex] : alphas
-                ));
-
-                colorIndex++;
-            }
-        }
-
-        for (i = 0; i < newVerts.length; i += 3)
-        {
-            var vert1 = newVerts[i];
-            var vert2 = newVerts[i + 1];
-            var vert3 = newVerts[i + 2];
-
-            this.addFace(vert1, vert2, vert3);
-        }
+        this.dirtyCache[9] = -1;
 
         return this;
     },
