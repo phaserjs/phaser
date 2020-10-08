@@ -5,12 +5,13 @@
  */
 
 var Class = require('../../utils/Class');
-var CONST = require('../const');
-var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
+var MultiFile = require('../MultiFile');
 var ParseObj = require('../../geom/mesh/ParseObj');
+var ParseObjMaterial = require('../../geom/mesh/ParseObjMaterial');
+var TextFile = require('./TextFile');
 
 /**
  * @classdesc
@@ -21,68 +22,117 @@ var ParseObj = require('../../geom/mesh/ParseObj');
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#obj.
  *
  * @class OBJFile
- * @extends Phaser.Loader.File
+ * @extends Phaser.Loader.MultiFile
  * @memberof Phaser.Loader.FileTypes
  * @constructor
  * @since 3.50.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {(string|Phaser.Types.Loader.FileTypes.OBJFileConfig)} key - The key to use for this file, or a file configuration object.
- * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.obj`, i.e. if `key` was "alien" then the URL will be "alien.obj".
+ * @param {string} [objURL] - The absolute or relative URL to load the obj file from. If undefined or `null` it will be set to `<key>.obj`, i.e. if `key` was "alien" then the URL will be "alien.obj".
+ * @param {string} [matURL] - The absolute or relative URL to load the material file from. If undefined or `null` it will be set to `<key>.mat`, i.e. if `key` was "alien" then the URL will be "alien.mat".
  * @param {boolean} [flipUV] - Flip the UV coordinates stored in the model data?
- * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for these files.
  */
 var OBJFile = new Class({
 
-    Extends: File,
+    Extends: MultiFile,
 
     initialize:
 
-    function OBJFile (loader, key, url, flipUV, xhrSettings)
+    function OBJFile (loader, key, objURL, matURL, flipUV, xhrSettings)
     {
-        var extension = 'obj';
+        var obj;
+        var mat;
+
+        var cache = loader.cacheManager.obj;
 
         if (IsPlainObject(key))
         {
             var config = key;
 
             key = GetFastValue(config, 'key');
-            url = GetFastValue(config, 'url');
-            flipUV = GetFastValue(config, 'flipUV');
-            xhrSettings = GetFastValue(config, 'xhrSettings');
-            extension = GetFastValue(config, 'extension', extension);
+
+            obj = new TextFile(loader, {
+                key: key,
+                type: 'obj',
+                cache: cache,
+                url: GetFastValue(config, 'url'),
+                extension: GetFastValue(config, 'extension', 'obj'),
+                xhrSettings: GetFastValue(config, 'xhrSettings'),
+                config: {
+                    flipUV: GetFastValue(config, 'flipUV', flipUV)
+                }
+            });
+
+            matURL = GetFastValue(config, 'matURL');
+
+            if (matURL)
+            {
+                mat = new TextFile(loader, {
+                    key: key,
+                    type: 'mat',
+                    cache: cache,
+                    url: matURL,
+                    extension: GetFastValue(config, 'matExtension', 'mat'),
+                    xhrSettings: GetFastValue(config, 'xhrSettings')
+                });
+            }
+        }
+        else
+        {
+            obj = new TextFile(loader, {
+                key: key,
+                url: objURL,
+                type: 'obj',
+                cache: cache,
+                extension: 'obj',
+                xhrSettings: xhrSettings,
+                config: {
+                    flipUV: flipUV
+                }
+            });
+
+            if (matURL)
+            {
+                mat = new TextFile(loader, {
+                    key: key,
+                    url: matURL,
+                    type: 'mat',
+                    cache: cache,
+                    extension: 'mat',
+                    xhrSettings: xhrSettings
+                });
+            }
         }
 
-        var fileConfig = {
-            type: 'text',
-            cache: loader.cacheManager.obj,
-            extension: extension,
-            responseType: 'text',
-            key: key,
-            url: url,
-            xhrSettings: xhrSettings,
-            config: {
-                flipUV: flipUV
-            }
-        };
-
-        File.call(this, loader, fileConfig);
+        MultiFile.call(this, loader, 'obj', key, [ obj, mat ]);
     },
 
     /**
-     * Called automatically by Loader.nextFile.
-     * This method controls what extra work this File does with its loaded data.
+     * Adds this file to its target cache upon successful loading and processing.
      *
-     * @method Phaser.Loader.FileTypes.HTMLFile#onProcess
+     * @method Phaser.Loader.FileTypes.OBJFile#addToCache
      * @since 3.50.0
      */
-    onProcess: function ()
+    addToCache: function ()
     {
-        this.state = CONST.FILE_PROCESSING;
+        if (this.isReadyToProcess())
+        {
+            var obj = this.files[0];
+            var mat = this.files[1];
 
-        this.data = ParseObj(this.xhrLoader.responseText, this.config.flipUV);
+            var objData = ParseObj(obj.data, obj.config.flipUV);
 
-        this.onProcessComplete();
+            if (mat)
+            {
+                objData.materials = ParseObjMaterial(mat.data);
+            }
+
+            obj.cache.add(obj.key, objData);
+
+            this.complete = true;
+        }
     }
 
 });
@@ -100,6 +150,17 @@ var OBJFile = new Class({
  *     this.load.obj('ufo', 'files/spaceship.obj');
  * }
  * ```
+ *
+ * You can optionally also load a Wavefront Material file as well, by providing the 3rd parameter:
+ *
+ * ```javascript
+ * function preload ()
+ * {
+ *     this.load.obj('ufo', 'files/spaceship.obj', 'files/spaceship.mtl');
+ * }
+ * ```
+ *
+ * If given, the material will be parsed and stored along with the obj data in the cache.
  *
  * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
  * or if it's already running, when the next free load slot becomes available. This happens automatically if you
@@ -120,6 +181,7 @@ var OBJFile = new Class({
  * this.load.obj({
  *     key: 'ufo',
  *     url: 'files/spaceship.obj',
+ *     matURL: 'files/spaceship.mtl',
  *     flipUV: true
  * });
  * ```
@@ -152,25 +214,32 @@ var OBJFile = new Class({
  * @since 3.50.0
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.OBJFileConfig|Phaser.Types.Loader.FileTypes.OBJFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
- * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.obj`, i.e. if `key` was "alien" then the URL will be "alien.obj".
+ * @param {string} [objURL] - The absolute or relative URL to load the obj file from. If undefined or `null` it will be set to `<key>.obj`, i.e. if `key` was "alien" then the URL will be "alien.obj".
+ * @param {string} [matURL] - Optional absolute or relative URL to load the obj material file from.
  * @param {boolean} [flipUV] - Flip the UV coordinates stored in the model data?
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {this} The Loader instance.
  */
-FileTypesManager.register('obj', function (key, url, flipUVs, xhrSettings)
+FileTypesManager.register('obj', function (key, objURL, matURL, flipUVs, xhrSettings)
 {
+    var multifile;
+
     if (Array.isArray(key))
     {
         for (var i = 0; i < key.length; i++)
         {
+            multifile = new OBJFile(this, key[i]);
+
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new OBJFile(this, key[i]));
+            this.addFile(multifile.files);
         }
     }
     else
     {
-        this.addFile(new OBJFile(this, key, url, flipUVs, xhrSettings));
+        multifile = new OBJFile(this, key, objURL, matURL, flipUVs, xhrSettings);
+
+        this.addFile(multifile.files);
     }
 
     return this;
