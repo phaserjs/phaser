@@ -29,6 +29,9 @@ var Vector3 = require('../../math/Vector3');
  * @param {number} v - The UV v coordinate of the vertex.
  * @param {number} [color=0xffffff] - The color value of the vertex.
  * @param {number} [alpha=1] - The alpha value of the vertex.
+ * @param {number} [nx=0] - The x normal value of the vertex.
+ * @param {number} [ny=0] - The y normal value of the vertex.
+ * @param {number} [nz=0] - The z normal value of the vertex.
  */
 var Vertex = new Class({
 
