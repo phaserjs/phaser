@@ -701,6 +701,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `Group` now extends `EventEmitter`, allowing you to emit custom events from within a Group.
 * `Device.Audio.wav` now uses `audio/wav` as the `canPlayType` check string, instead of `audio/wav; codecs="1"`, which should allow iOS13 to play wav files again.
 * In the `Loader.FileTypes.TextFile` config you can now override the type and cache destination for the file.
+* `Loader.MultiFile` will now parse the given files array and only add valid entries into the file list, allowing multifiles to now have optional file entries.
 
 ### Bug Fixes
 
