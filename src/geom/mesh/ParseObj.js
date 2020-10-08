@@ -244,6 +244,7 @@ var ParseObj = function (data, flipUV)
 
     //  Store results in here
     var result = {
+        materials: {},
         materialLibraries: [],
         models: []
     };
