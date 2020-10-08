@@ -111,7 +111,7 @@ var GenerateObjVerts = function (data, mesh, scale, x, y, z)
     if (mesh)
     {
         mesh.faces = mesh.faces.concat(result.faces);
-        mesh.vertices = mesh.vertices.concat(result.vertices);
+        mesh.vertices = mesh.vertices.concat(result.verts);
     }
 
     return result;
