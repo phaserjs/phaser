@@ -36,10 +36,13 @@ var Vertex = new Class({
 
     initialize:
 
-    function Vertex (x, y, z, u, v, color, alpha)
+    function Vertex (x, y, z, u, v, color, alpha, nx, ny, nz)
     {
         if (color === undefined) { color = 0xffffff; }
         if (alpha === undefined) { alpha = 1; }
+        if (nx === undefined) { nx = 0; }
+        if (ny === undefined) { ny = 0; }
+        if (nz === undefined) { nz = 0; }
 
         Vector3.call(this, x, y, z);
 
@@ -77,7 +80,7 @@ var Vertex = new Class({
          * @type {number}
          * @since 3.50.0
          */
-        this.nx = 0;
+        this.nx = nx;
 
         /**
          * The projected y coordinate of this vertex.
@@ -86,7 +89,7 @@ var Vertex = new Class({
          * @type {number}
          * @since 3.50.0
          */
-        this.ny = 0;
+        this.ny = ny;
 
         /**
          * The projected z coordinate of this vertex.
@@ -95,7 +98,7 @@ var Vertex = new Class({
          * @type {number}
          * @since 3.50.0
          */
-        this.nz = 0;
+        this.nz = nz;
 
         /**
          * UV u coordinate of this vertex.
@@ -132,15 +135,6 @@ var Vertex = new Class({
          * @since 3.50.0
          */
         this.alpha = alpha;
-    },
-
-    setNormals: function (nx, ny, nz)
-    {
-        this.nx = nx;
-        this.ny = ny;
-        this.nz = nz;
-
-        return this;
     },
 
     /**
