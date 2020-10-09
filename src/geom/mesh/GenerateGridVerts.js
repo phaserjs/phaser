@@ -4,7 +4,15 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Face = require('./Face');
 var GetFastValue = require('../../utils/object/GetFastValue');
+var Matrix4 = require('../../math/Matrix4');
+var Vector3 = require('../../math/Vector3');
+var Vertex = require('./Vertex');
+
+var tempPosition = new Vector3();
+var tempRotation = new Vector3();
+var tempMatrix = new Matrix4();
 
 /**
  * Creates a grid of vertices based on the given configuration object and optionally adds it to a Mesh.
@@ -37,18 +45,32 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  */
 var GenerateGridVerts = function (config)
 {
-    var texture = GetFastValue(config, 'texture');
-    var frame = GetFastValue(config, 'frame');
     var mesh = GetFastValue(config, 'mesh');
+    var texture = GetFastValue(config, 'texture', (mesh) ? mesh.texture : null);
+    var frame = GetFastValue(config, 'frame');
     var width = GetFastValue(config, 'width', 128);
     var height = GetFastValue(config, 'height', width);
     var widthSegments = GetFastValue(config, 'widthSegments', 1);
     var heightSegments = GetFastValue(config, 'heightSegments', widthSegments);
     var posX = GetFastValue(config, 'x', 0);
     var posY = GetFastValue(config, 'y', 0);
-    var colors = GetFastValue(config, 'colors', 0xffffff);
-    var alphas = GetFastValue(config, 'alphas', 1);
+    var posZ = GetFastValue(config, 'z', 0);
+    var rotateX = GetFastValue(config, 'rotateX', 0);
+    var rotateY = GetFastValue(config, 'rotateY', 0);
+    var rotateZ = GetFastValue(config, 'rotateZ', 0);
+    var zIsUp = GetFastValue(config, 'zIsUp', true);
+    var colors = GetFastValue(config, 'colors', [ 0xffffff ]);
+    var alphas = GetFastValue(config, 'alphas', [ 1 ]);
     var tile = GetFastValue(config, 'tile', false);
+
+    var result = {
+        faces: [],
+        verts: []
+    };
+
+    tempPosition.set(posX, posY, posZ);
+    tempRotation.set(rotateX, rotateY, rotateZ);
+    tempMatrix.fromRotationXYTranslation(tempRotation, tempPosition, zIsUp);
 
     var halfWidth = width / 2;
     var halfHeight = height / 2;
@@ -64,110 +86,117 @@ var GenerateGridVerts = function (config)
 
     var uvs = [];
     var vertices = [];
-    var indices = [];
 
     var ix;
     var iy;
 
-    var textureFrame = texture.get(frame);
+    var frameU0 = 0;
+    var frameU1 = 1;
+    var frameV0 = 0;
+    var frameV1 = 1;
 
-    var frameU0 = textureFrame.u0;
-    var frameU1 = textureFrame.u1;
+    if (texture)
+    {
+        var textureFrame = texture.get(frame);
 
-    var frameV0 = textureFrame.v0;
-    var frameV1 = textureFrame.v1;
+        frameU0 = textureFrame.u0;
+        frameU1 = textureFrame.u1;
+        frameV0 = textureFrame.v0;
+        frameV1 = textureFrame.v1;
+    }
 
     var frameU = frameU1 - frameU0;
     var frameV = frameV1 - frameV0;
 
-    var tv;
-    var tu;
-
     for (iy = 0; iy < gridY1; iy++)
     {
-        var y = posY + (iy * segmentHeight - halfHeight);
+        var y = iy * segmentHeight - halfHeight;
 
         for (ix = 0; ix < gridX1; ix++)
         {
-            var x = posX + (ix * segmentWidth - halfWidth);
+            var x = ix * segmentWidth - halfWidth;
 
             vertices.push(x, -y);
 
-            if (!tile)
-            {
-                tu = frameU0 + frameU * (ix / gridX);
-                tv = frameV0 + frameV * (1 - (iy / gridY));
+            var tu = frameU0 + frameU * (ix / gridX);
+            var tv = frameV0 + frameV * (iy / gridY);
 
-                uvs.push(tu, tv);
-            }
+            uvs.push(tu, tv);
         }
     }
 
-    var tiledVertices = [];
+    if (!Array.isArray(colors))
+    {
+        colors = [ colors ];
+    }
+
+    if (!Array.isArray(alphas))
+    {
+        alphas = [ alphas ];
+    }
+
+    var alphaIndex = 0;
+    var colorIndex = 0;
 
     for (iy = 0; iy < gridY; iy++)
     {
         for (ix = 0; ix < gridX; ix++)
         {
-            var a = ix + gridX1 * iy;
-            var b = ix + gridX1 * (iy + 1);
-            var c = (ix + 1) + gridX1 * (iy + 1);
-            var d = (ix + 1) + gridX1 * iy;
+            var a = (ix + gridX1 * iy) * 2;
+            var b = (ix + gridX1 * (iy + 1)) * 2;
+            var c = ((ix + 1) + gridX1 * (iy + 1)) * 2;
+            var d = ((ix + 1) + gridX1 * iy) * 2;
 
-            if (!tile)
+            var color = colors[colorIndex];
+            var alpha = alphas[alphaIndex];
+
+            var vert1 = new Vertex(vertices[a], vertices[a + 1], 0, uvs[a], uvs[a + 1], color, alpha).transformMat4(tempMatrix);
+            var vert2 = new Vertex(vertices[b], vertices[b + 1], 0, uvs[b], uvs[b + 1], color, alpha).transformMat4(tempMatrix);
+            var vert3 = new Vertex(vertices[d], vertices[d + 1], 0, uvs[d], uvs[d + 1], color, alpha).transformMat4(tempMatrix);
+            var vert4 = new Vertex(vertices[b], vertices[b + 1], 0, uvs[b], uvs[b + 1], color, alpha).transformMat4(tempMatrix);
+            var vert5 = new Vertex(vertices[c], vertices[c + 1], 0, uvs[c], uvs[c + 1], color, alpha).transformMat4(tempMatrix);
+            var vert6 = new Vertex(vertices[d], vertices[d + 1], 0, uvs[d], uvs[d + 1], color, alpha).transformMat4(tempMatrix);
+
+            if (tile)
             {
-                indices.push(a, b, d);
-                indices.push(b, c, d);
+                vert1.setUVs(frameU0, frameV1);
+                vert2.setUVs(frameU0, frameV0);
+                vert3.setUVs(frameU1, frameV1);
+                vert4.setUVs(frameU0, frameV0);
+                vert5.setUVs(frameU1, frameV0);
+                vert6.setUVs(frameU1, frameV1);
             }
-            else
+
+            colorIndex++;
+
+            if (colorIndex === colors.length)
             {
-                a *= 2;
-                b *= 2;
-                c *= 2;
-                d *= 2;
-
-                tiledVertices.push(
-                    vertices[a], vertices[a + 1],
-                    vertices[b], vertices[b + 1],
-                    vertices[d], vertices[d + 1],
-
-                    vertices[b], vertices[b + 1],
-                    vertices[c], vertices[c + 1],
-                    vertices[d], vertices[d + 1]
-                );
-
-                uvs.push(
-                    frameU0, frameV1,
-                    frameU0, frameV0,
-                    frameU1, frameV1,
-
-                    frameU0, frameV0,
-                    frameU1, frameV0,
-                    frameU1, frameV1
-                );
+                colorIndex = 0;
             }
+
+            alphaIndex++;
+
+            if (alphaIndex === alphas.length)
+            {
+                alphaIndex = 0;
+            }
+
+            result.verts.push(vert1, vert2, vert3, vert4, vert5, vert6);
+
+            result.faces.push(
+                new Face(vert1, vert2, vert3),
+                new Face(vert4, vert5, vert6)
+            );
         }
     }
 
     if (mesh)
     {
-        if (tile)
-        {
-            mesh.addVertices(tiledVertices, uvs, null, colors, alphas);
-        }
-        else
-        {
-            mesh.addVertices(vertices, uvs, indices, colors, alphas);
-        }
+        mesh.faces = mesh.faces.concat(result.faces);
+        mesh.vertices = mesh.vertices.concat(result.verts);
     }
 
-    return {
-        verts: (tile) ? tiledVertices : vertices,
-        indices: indices,
-        uvs: uvs,
-        colors: colors,
-        alphas: alphas
-    };
+    return result;
 };
 
 module.exports = GenerateGridVerts;
