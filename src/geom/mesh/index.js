@@ -16,6 +16,7 @@ var Mesh = {
     GenerateVerts: require('./GenerateVerts'),
     ParseObj: require('./ParseObj'),
     ParseObjMaterial: require('./ParseObjMaterial'),
+    RotateFace: require('./RotateFace'),
     Vertex: require('./Vertex')
 
 };
