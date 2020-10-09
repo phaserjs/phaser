@@ -211,7 +211,7 @@ var Mesh = new Class({
          *
          * You can also adjust the 'view' by using the `pan` methods.
          *
-         * @name Phaser.Geom.Mesh.Model#modelPosition
+         * @name Phaser.GameObjects.Mesh#modelPosition
          * @type {Phaser.Math.Vector3}
          * @since 3.50.0
          */
@@ -226,7 +226,7 @@ var Mesh = new Class({
          *
          * Changing this property will impact all vertices being rendered by this Mesh.
          *
-         * @name Phaser.Geom.Mesh.Model#modelScale
+         * @name Phaser.GameObjects.Mesh#modelScale
          * @type {Phaser.Math.Vector3}
          * @since 3.50.0
          */
@@ -244,7 +244,7 @@ var Mesh = new Class({
          *
          * Changing this property will impact all vertices being rendered by this Mesh.
          *
-         * @name Phaser.Geom.Mesh.Model#modelRotation
+         * @name Phaser.GameObjects.Mesh#modelRotation
          * @type {Phaser.Math.Vector3}
          * @since 3.50.0
          */
@@ -256,7 +256,7 @@ var Mesh = new Class({
          *
          * Cache structure = position xyz | rotation xyz | scale xyz | face count | view
          *
-         * @name Phaser.Geom.Mesh.Model#dirtyCache
+         * @name Phaser.GameObjects.Mesh#dirtyCache
          * @type {number[]}
          * @private
          * @since 3.50.0
@@ -266,7 +266,7 @@ var Mesh = new Class({
         /**
          * The transformation matrix for this Mesh.
          *
-         * @name Phaser.Geom.Mesh.Model#transformMatrix
+         * @name Phaser.GameObjects.Mesh#transformMatrix
          * @type {Phaser.Math.Matrix4}
          * @since 3.50.0
          */
@@ -277,7 +277,7 @@ var Mesh = new Class({
          *
          * Use the methods`panX`, `panY` and `panZ` to adjust the view.
          *
-         * @name Phaser.Geom.Mesh.Model#viewPosition
+         * @name Phaser.GameObjects.Mesh#viewPosition
          * @type {Phaser.Math.Vector3}
          * @since 3.50.0
          */
@@ -286,7 +286,7 @@ var Mesh = new Class({
         /**
          * The view matrix for this Mesh.
          *
-         * @name Phaser.Geom.Mesh.Model#viewMatrix
+         * @name Phaser.GameObjects.Mesh#viewMatrix
          * @type {Phaser.Math.Matrix4}
          * @since 3.50.0
          */
@@ -297,11 +297,37 @@ var Mesh = new Class({
          *
          * Update it with the `updateProjectionMatix` method.
          *
-         * @name Phaser.Geom.Mesh.Model#projectionMatrix
+         * @name Phaser.GameObjects.Mesh#projectionMatrix
          * @type {Phaser.Math.Matrix4}
          * @since 3.50.0
          */
         this.projectionMatrix = new Matrix4();
+
+        /**
+         * How many faces were rendered by this Mesh Game Object in the last
+         * draw? This is reset in the `preUpdate` method and then incremented
+         * each time a face is drawn. Note that in multi-camera Scenes this
+         * value may exceed that found in `Mesh.getFaceCount` due to
+         * cameras drawing the same faces more than once.
+         *
+         * @name Phaser.GameObjects.Mesh#totalRendered
+         * @type {number}
+         * @readonly
+         * @since 3.50.0
+         */
+        this.totalRendered = 0;
+
+        /**
+         * Internal cache var for the total number of faces rendered this frame.
+         *
+         * See `totalRendered` instead for the actual value.
+         *
+         * @name Phaser.GameObjects.Mesh#totalFrame
+         * @type {number}
+         * @private
+         * @since 3.50.0
+         */
+        this.totalFrame = 0;
 
         var renderer = scene.sys.renderer;
 
@@ -839,7 +865,21 @@ var Mesh = new Class({
     },
 
     /**
-     * The Mesh update loop.
+     * The Mesh update loop. The following takes place in this method:
+     *
+     * First, the Animation State is updated and the `totalRendered` and `totalFrame` properties are set.
+     *
+     * If the view matrix of this Mesh isn't dirty, and the model position, rotate or scale properties are
+     * all clean, then the method returns at this point.
+     *
+     * Otherwise, if the viewPosition is dirty (i.e. from calling a method like `panZ`), then it will
+     * refresh the viewMatrix.
+     *
+     * After this, a new transformMatrix is built and it then iterates through all Faces in this
+     * Mesh, calling `transformCoordinatesLocal` on all of them. Internally, this updates every
+     * vertex, calculating its new transformed position, based on the new transform matrix.
+     *
+     * Finally, the faces are depth sorted.
      *
      * @method Phaser.GameObjects.Mesh#preUpdate
      * @protected
@@ -851,6 +891,9 @@ var Mesh = new Class({
     preUpdate: function (time, delta)
     {
         this.anims.update(time, delta);
+
+        this.totalRendered = this.totalFrame;
+        this.totalFrame = 0;
 
         var dirty = this.dirtyCache;
 
@@ -887,11 +930,11 @@ var Mesh = new Class({
 
         var z = viewPosition.z;
 
-        var vertices = this.vertices;
+        var faces = this.faces;
 
-        for (var i = 0; i < vertices.length; i++)
+        for (var i = 0; i < faces.length; i++)
         {
-            vertices[i].transformCoordinatesLocal(transformMatrix, width, height, z);
+            faces[i].transformCoordinatesLocal(transformMatrix, width, height, z);
         }
 
         this.depthSort();
