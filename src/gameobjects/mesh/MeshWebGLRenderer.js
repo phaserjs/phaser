@@ -55,15 +55,18 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var z = src.viewPosition.z;
 
+    var hideCCW = src.hideCCW;
     var roundPixels = camera.roundPixels;
     var alpha = camera.alpha * src.alpha;
-    var hideCCW = src.hideCCW;
+
+    var totalFacesRendered = 0;
 
     for (var i = 0; i < totalFaces; i++)
     {
         var face = faces[i];
 
-        if (hideCCW && !face.isCounterClockwise(z))
+        //  If face has alpha <= 0, or hideCCW + clockwise, or isn't in camera view, then don't draw it
+        if (!face.isInView(camera, hideCCW, z, alpha, a, b, c, d, e, f, roundPixels))
         {
             continue;
         }
@@ -75,10 +78,9 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
             vertexOffset = 0;
         }
 
-        vertexOffset = face.vertex1.load(F32, U32, vertexOffset, textureUnit, tintEffect, alpha, a, b, c, d, e, f, roundPixels);
-        vertexOffset = face.vertex2.load(F32, U32, vertexOffset, textureUnit, tintEffect, alpha, a, b, c, d, e, f, roundPixels);
-        vertexOffset = face.vertex3.load(F32, U32, vertexOffset, textureUnit, tintEffect, alpha, a, b, c, d, e, f, roundPixels);
+        vertexOffset = face.load(F32, U32, vertexOffset, textureUnit, tintEffect);
 
+        totalFacesRendered++;
         pipeline.vertexCount += 3;
 
         if (debugCallback)
@@ -93,6 +95,8 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
             );
         }
     }
+
+    src.totalFrame += totalFacesRendered;
 
     if (debugCallback)
     {
