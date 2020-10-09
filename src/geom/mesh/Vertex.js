@@ -168,6 +168,25 @@ var Vertex = new Class({
     },
 
     /**
+     * Sets the U and V properties.
+     *
+     * @method Phaser.Geom.Mesh.Vertex#setUVs
+     * @since 3.50.0
+     *
+     * @param {number} u - The UV u coordinate of the vertex.
+     * @param {number} v - The UV v coordinate of the vertex.
+     *
+     * @return {this} This Vertex.
+     */
+    setUVs: function (u, v)
+    {
+        this.u = u;
+        this.v = v;
+
+        return this;
+    },
+
+    /**
      * Transforms this vertex by the given matrix, storing the results in `vx`, `vy` and `vz`.
      *
      * @method Phaser.Geom.Mesh.Vertex#transformCoordinatesLocal
