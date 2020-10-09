@@ -138,6 +138,33 @@ var Vertex = new Class({
          * @since 3.50.0
          */
         this.alpha = alpha;
+
+        /**
+         * The translated x coordinate of this vertex.
+         *
+         * @name Phaser.Geom.Mesh.Vertex#tx
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.tx = 0;
+
+        /**
+         * The translated y coordinate of this vertex.
+         *
+         * @name Phaser.Geom.Mesh.Vertex#ty
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.ty = 0;
+
+        /**
+         * The translated alpha value of this vertex.
+         *
+         * @name Phaser.Geom.Mesh.Vertex#ta
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.ta = 0;
     },
 
     /**
@@ -178,16 +205,11 @@ var Vertex = new Class({
     },
 
     /**
-     * Loads the data from this Vertex into the given Typed Arrays.
+     * Updates this Vertex based on the given transform.
      *
-     * @method Phaser.Geom.Mesh.Vertex#load
+     * @method Phaser.Geom.Mesh.Vertex#update
      * @since 3.50.0
      *
-     * @param {Float32Array} F32 - A Float32 Array to insert the position, UV and unit data in to.
-     * @param {Uint32Array} U32 - A Uint32 Array to insert the color and alpha data in to.
-     * @param {number} offset - The index of the array to insert this Vertex to.
-     * @param {number} textureUnit - The texture unit currently in use.
-     * @param {number} alpha - The alpha of the parent object.
      * @param {number} a - The parent transform matrix data a component.
      * @param {number} b - The parent transform matrix data b component.
      * @param {number} c - The parent transform matrix data c component.
@@ -195,10 +217,11 @@ var Vertex = new Class({
      * @param {number} e - The parent transform matrix data e component.
      * @param {number} f - The parent transform matrix data f component.
      * @param {boolean} roundPixels - Round the vertex position or not?
+     * @param {number} alpha - The alpha of the parent object.
      *
-     * @return {number} The new array offset.
+     * @return {this} This Vertex.
      */
-    load: function (F32, U32, offset, textureUnit, tintEffect, alpha, a, b, c, d, e, f, roundPixels)
+    update: function (a, b, c, d, e, f, roundPixels, alpha)
     {
         var tx = this.vx * a + this.vy * c + e;
         var ty = this.vx * b + this.vy * d + f;
@@ -209,13 +232,35 @@ var Vertex = new Class({
             ty = Math.round(ty);
         }
 
-        F32[++offset] = tx;
-        F32[++offset] = ty;
+        this.tx = tx;
+        this.ty = ty;
+        this.ta = this.alpha * alpha;
+
+        return this;
+    },
+
+    /**
+     * Loads the data from this Vertex into the given Typed Arrays.
+     *
+     * @method Phaser.Geom.Mesh.Vertex#load
+     * @since 3.50.0
+     *
+     * @param {Float32Array} F32 - A Float32 Array to insert the position, UV and unit data in to.
+     * @param {Uint32Array} U32 - A Uint32 Array to insert the color and alpha data in to.
+     * @param {number} offset - The index of the array to insert this Vertex to.
+     * @param {number} textureUnit - The texture unit currently in use.
+     *
+     * @return {number} The new array offset.
+     */
+    load: function (F32, U32, offset, textureUnit, tintEffect)
+    {
+        F32[++offset] = this.tx;
+        F32[++offset] = this.ty;
         F32[++offset] = this.u;
         F32[++offset] = this.v;
         F32[++offset] = textureUnit;
         F32[++offset] = tintEffect;
-        U32[++offset] = Utils.getTintAppendFloatAlpha(this.color, alpha * this.alpha);
+        U32[++offset] = Utils.getTintAppendFloatAlpha(this.color, this.ta);
 
         return offset;
     }

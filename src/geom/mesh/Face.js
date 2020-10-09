@@ -5,8 +5,23 @@
  */
 
 var Class = require('../../utils/Class');
+var Rectangle = require('../rectangle/Rectangle');
+var RectangleToRectangle = require('../intersects/RectangleToRectangle');
 var Vector2 = require('../../math/Vector2');
 
+/**
+ * Returns the length of the line.
+ *
+ * @ignore
+ * @private
+ *
+ * @param {number} x1 - The x1 coordinate.
+ * @param {number} y1 - The y1 coordinate.
+ * @param {number} x2 - The x2 coordinate.
+ * @param {number} y2 - The y2 coordinate.
+ *
+ * @return {number} The length of the line.
+ */
 function GetLength (x1, y1, x2, y2)
 {
     var x = x1 - x2;
@@ -69,6 +84,17 @@ var Face = new Class({
         this.vertex3 = vertex3;
 
         /**
+         * The bounds of this Face.
+         *
+         * Be sure to call the `Face.updateBounds` method _before_ using this property.
+         *
+         * @name Phaser.Geom.Mesh.Face#bounds
+         * @type {Phaser.Geom.Rectangle}
+         * @since 3.50.0
+         */
+        this.bounds = new Rectangle();
+
+        /**
          * The face inCenter. Do not access directly, instead use the `getInCenter` method.
          *
          * @name Phaser.Geom.Mesh.Face#_inCenter
@@ -80,7 +106,7 @@ var Face = new Class({
     },
 
     /**
-     * Calculates and returns the in center position of this Face.
+     * Calculates and returns the in-center position of this Face.
      *
      * @method Phaser.Geom.Mesh.Face#getInCenter
      * @since 3.50.0
@@ -139,96 +165,6 @@ var Face = new Class({
             (v1x * d1 + v2x * d2 + v3x * d3) / p,
             (v1y * d1 + v2y * d2 + v3y * d3) / p
         );
-    },
-
-    /**
-     * Translates the vertices of this Face by the given amounts.
-     *
-     * The actual vertex positions are adjusted, not their transformed position.
-     *
-     * Therefore, this updates the vertex data directly.
-     *
-     * @method Phaser.Geom.Mesh.Face#translate
-     * @since 3.50.0
-     *
-     * @param {number} x - The amount to horizontally translate by.
-     * @param {number} [y=0] - The amount to vertically translate by.
-     *
-     * @return {this} This Face instance.
-     */
-    translate: function (x, y)
-    {
-        if (y === undefined) { y = 0; }
-
-        var v1 = this.vertex1;
-        var v2 = this.vertex2;
-        var v3 = this.vertex3;
-
-        v1.x += x;
-        v1.y += y;
-
-        v2.x += x;
-        v2.y += y;
-
-        v3.x += x;
-        v3.y += y;
-
-        return this;
-    },
-
-    /**
-     * Rotates the vertices of this Face to the given angle.
-     *
-     * The actual vertex positions are adjusted, not their transformed positions.
-     *
-     * Therefore, this updates the vertex data directly.
-     *
-     * @method Phaser.Geom.Mesh.Face#rotate
-     * @since 3.50.0
-     *
-     * @param {number} angle - The angle to rotate to, in radians.
-     * @param {number} [cx] - An optional center of rotation. If not given, the Face in center is used.
-     * @param {number} [cy] - An optional center of rotation. If not given, the Face in center is used.
-     *
-     * @return {this} This Face instance.
-     */
-    rotate: function (angle, cx, cy)
-    {
-        var x;
-        var y;
-
-        //  No point of rotation? Use the inCenter instead, then.
-        if (cx === undefined && cy === undefined)
-        {
-            var inCenter = this.getInCenter();
-
-            x = inCenter.x;
-            y = inCenter.y;
-        }
-
-        var c = Math.cos(angle);
-        var s = Math.sin(angle);
-
-        var v1 = this.vertex1;
-        var v2 = this.vertex2;
-        var v3 = this.vertex3;
-
-        var tx = v1.x - x;
-        var ty = v1.y - y;
-
-        v1.set(tx * c - ty * s + x, tx * s + ty * c + y);
-
-        tx = v2.x - x;
-        ty = v2.y - y;
-
-        v2.set(tx * c - ty * s + x, tx * s + ty * c + y);
-
-        tx = v3.x - x;
-        ty = v3.y - y;
-
-        v3.set(tx * c - ty * s + x, tx * s + ty * c + y);
-
-        return this;
     },
 
     /**
@@ -307,12 +243,12 @@ var Face = new Class({
     /**
      * Checks if the vertices in this Face are orientated counter-clockwise, or not.
      *
-     * It checks the transformed position of the vertex.
+     * It checks the transformed position of the vertices, not the local one.
      *
      * @method Phaser.Geom.Mesh.Face#isCounterClockwise
      * @since 3.50.0
      *
-     * @param {number} z - The z-axis value to test against. Typically the `MeshCamera.position.z`.
+     * @param {number} z - The z-axis value to test against. Typically the `Mesh.modelPosition.z`.
      *
      * @return {boolean} `true` if the vertices in this Face run counter-clockwise, otherwise `false`.
      */
@@ -325,6 +261,181 @@ var Face = new Class({
         var d = (v2.vx - v1.vx) * (v3.vy - v1.vy) - (v2.vy - v1.vy) * (v3.vx - v1.vx);
 
         return (z <= 0) ? d >= 0 : d < 0;
+    },
+
+    /**
+     * Loads the data from this Vertex into the given Typed Arrays.
+     *
+     * @method Phaser.Geom.Mesh.Vertex#load
+     * @since 3.50.0
+     *
+     * @param {Float32Array} F32 - A Float32 Array to insert the position, UV and unit data in to.
+     * @param {Uint32Array} U32 - A Uint32 Array to insert the color and alpha data in to.
+     * @param {number} offset - The index of the array to insert this Vertex to.
+     * @param {number} textureUnit - The texture unit currently in use.
+     * @param {number} alpha - The alpha of the parent object.
+     * @param {number} a - The parent transform matrix data a component.
+     * @param {number} b - The parent transform matrix data b component.
+     * @param {number} c - The parent transform matrix data c component.
+     * @param {number} d - The parent transform matrix data d component.
+     * @param {number} e - The parent transform matrix data e component.
+     * @param {number} f - The parent transform matrix data f component.
+     * @param {boolean} roundPixels - Round the vertex position or not?
+     *
+     * @return {number} The new vertex index array offset.
+     */
+    load: function (F32, U32, offset, textureUnit, tintEffect)
+    {
+        offset = this.vertex1.load(F32, U32, offset, textureUnit, tintEffect);
+        offset = this.vertex2.load(F32, U32, offset, textureUnit, tintEffect);
+        offset = this.vertex3.load(F32, U32, offset, textureUnit, tintEffect);
+
+        return offset;
+    },
+
+    /**
+     * Transforms all Face vertices by the given matrix, storing the results in their `vx`, `vy` and `vz` properties.
+     *
+     * @method Phaser.Geom.Mesh.Face#transformCoordinatesLocal
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} transformMatrix - The transform matrix to apply to this vertex.
+     * @param {number} width - The width of the parent Mesh.
+     * @param {number} height - The height of the parent Mesh.
+     * @param {number} cameraZ - The z position of the MeshCamera.
+     *
+     * @return {this} This Face instance.
+     */
+    transformCoordinatesLocal: function (transformMatrix, width, height, cameraZ)
+    {
+        this.vertex1.transformCoordinatesLocal(transformMatrix, width, height, cameraZ);
+        this.vertex2.transformCoordinatesLocal(transformMatrix, width, height, cameraZ);
+        this.vertex3.transformCoordinatesLocal(transformMatrix, width, height, cameraZ);
+
+        return this;
+    },
+
+    /**
+     * Updates the bounds of this Face, based on the translated values of the vertices.
+     *
+     * Call this method prior to accessing the `Face.bounds` property.
+     *
+     * @method Phaser.Geom.Mesh.Face#updateBounds
+     * @since 3.50.0
+     *
+     * @return {this} This Face instance.
+     */
+    updateBounds: function ()
+    {
+        var v1 = this.vertex1;
+        var v2 = this.vertex2;
+        var v3 = this.vertex3;
+
+        var bounds = this.bounds;
+
+        bounds.x = Math.min(v1.vx, v2.vx, v3.vx);
+        bounds.y = Math.min(v1.vy, v2.vy, v3.vy);
+        bounds.width = Math.max(v1.vx, v2.vx, v3.vx) - bounds.x;
+        bounds.height = Math.max(v1.vy, v2.vy, v3.vy) - bounds.y;
+
+        return this;
+    },
+
+    /**
+     * Checks if this Face is within the view of the given Camera.
+     *
+     * This method is called in the `MeshWebGLRenderer` function. It performs the following tasks:
+     *
+     * First, the `Vertex.update` method is called on each of the vertices. This populates them
+     * with the new translated values, updating their `tx`, `ty` and `ta` properties.
+     *
+     * Then it tests to see if this face is visible due to the alpha values, if not, it returns.
+     *
+     * After this, if `hideCCW` is set, it calls `isCounterClockwise` and returns if not.
+     *
+     * Finally, it will update the `Face.bounds` based on the newly translated vertex values
+     * and return the results of an intersection test between the bounds and the camera world view
+     * rectangle.
+     *
+     * @method Phaser.Geom.Mesh.Face#isInView
+     * @since 3.50.0
+     *
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to check against.
+     * @param {boolean} hideCCW - Test the counter-clockwise orientation of the verts?
+     * @param {number} z - The Cameras z position, used in the CCW test.
+     * @param {number} alpha - The alpha of the parent object.
+     * @param {number} a - The parent transform matrix data a component.
+     * @param {number} b - The parent transform matrix data b component.
+     * @param {number} c - The parent transform matrix data c component.
+     * @param {number} d - The parent transform matrix data d component.
+     * @param {number} e - The parent transform matrix data e component.
+     * @param {number} f - The parent transform matrix data f component.
+     * @param {boolean} roundPixels - Round the vertex position or not?
+     *
+     * @return {boolean} `true` if this Face can be seen by the Camera.
+     */
+    isInView: function (camera, hideCCW, z, alpha, a, b, c, d, e, f, roundPixels)
+    {
+        var v1 = this.vertex1.update(a, b, c, d, e, f, roundPixels, alpha);
+        var v2 = this.vertex2.update(a, b, c, d, e, f, roundPixels, alpha);
+        var v3 = this.vertex3.update(a, b, c, d, e, f, roundPixels, alpha);
+
+        //  Alpha check first
+        if (v1.ta <= 0 && v2.ta <= 0 && v3.ta <= 0)
+        {
+            return false;
+        }
+
+        //  CCW check
+        if (hideCCW && !this.isCounterClockwise(z))
+        {
+            return false;
+        }
+
+        //  Bounds check
+        var bounds = this.bounds;
+
+        bounds.x = Math.min(v1.tx, v2.tx, v3.tx);
+        bounds.y = Math.min(v1.ty, v2.ty, v3.ty);
+        bounds.width = Math.max(v1.tx, v2.tx, v3.tx) - bounds.x;
+        bounds.height = Math.max(v1.ty, v2.ty, v3.ty) - bounds.y;
+
+        return RectangleToRectangle(bounds, camera.worldView);
+    },
+
+    /**
+     * Translates the vertices of this Face by the given amounts.
+     *
+     * The actual vertex positions are adjusted, not their transformed position.
+     *
+     * Therefore, this updates the vertex data directly.
+     *
+     * @method Phaser.Geom.Mesh.Face#translate
+     * @since 3.50.0
+     *
+     * @param {number} x - The amount to horizontally translate by.
+     * @param {number} [y=0] - The amount to vertically translate by.
+     *
+     * @return {this} This Face instance.
+     */
+    translate: function (x, y)
+    {
+        if (y === undefined) { y = 0; }
+
+        var v1 = this.vertex1;
+        var v2 = this.vertex2;
+        var v3 = this.vertex3;
+
+        v1.x += x;
+        v1.y += y;
+
+        v2.x += x;
+        v2.y += y;
+
+        v3.x += x;
+        v3.y += y;
+
+        return this;
     },
 
     /**
