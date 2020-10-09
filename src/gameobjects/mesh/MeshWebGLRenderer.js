@@ -43,8 +43,8 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var tintEffect = src.tintFill;
 
+    var debugFaces = [];
     var debugCallback = src.debugCallback;
-    var debugVerts = [];
 
     var a = calcMatrix.a;
     var b = calcMatrix.b;
@@ -85,14 +85,7 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
         if (debugCallback)
         {
-            debugVerts.push(
-                F32[vertexOffset - 20],
-                F32[vertexOffset - 19],
-                F32[vertexOffset - 13],
-                F32[vertexOffset - 12],
-                F32[vertexOffset - 6],
-                F32[vertexOffset - 5]
-            );
+            debugFaces.push(face);
         }
     }
 
@@ -100,7 +93,7 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     if (debugCallback)
     {
-        debugCallback.call(src, src, src.vertices.length * 2, debugVerts);
+        debugCallback.call(src, src, debugFaces);
     }
 };
 

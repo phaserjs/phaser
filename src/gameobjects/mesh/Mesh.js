@@ -757,16 +757,30 @@ var Mesh = new Class({
      * eventually crashing the browser. This is not done automatically to allow you to debug
      * draw multiple Mesh objects to a single Graphics instance.
      *
-     * The Mesh class has a built-in debug rendering callback `Mesh.renderDebugVerts`, however
+     * The Mesh class has a built-in debug rendering callback `Mesh.renderDebug`, however
      * you can also provide your own callback to be used instead. Do this by setting the `callback` parameter.
      *
      * The callback is invoked _once per render_ and sent the following parameters:
      *
-     * `callback(src, meshLength, verts)`
+     * `callback(src, faces)`
      *
      * `src` is the Mesh instance being debugged.
-     * `meshLength` is the number of mesh vertices in total.
-     * `verts` is an array of the translated vertex coordinates.
+     * `faces` is an array of the Faces that were rendered.
+     *
+     * You can get the final drawn vertex position from a Face object like this:
+     *
+     * ```javascript
+     * let face = faces[i];
+     *
+     * let x0 = face.vertex1.tx;
+     * let y0 = face.vertex1.ty;
+     * let x1 = face.vertex2.tx;
+     * let y1 = face.vertex2.ty;
+     * let x2 = face.vertex3.tx;
+     * let y2 = face.vertex3.ty;
+     *
+     * graphic.strokeTriangle(x0, y0, x1, y1, x2, y2);
+     * ```
      *
      * If using your own callback you do not have to provide a Graphics instance to this method.
      *
@@ -791,7 +805,7 @@ var Mesh = new Class({
         }
         else if (!callback)
         {
-            this.debugCallback = this.renderDebugVerts;
+            this.debugCallback = this.renderDebug;
         }
         else
         {
@@ -946,29 +960,30 @@ var Mesh = new Class({
     },
 
     /**
-     * The built-in Mesh vertices debug rendering method.
+     * The built-in Mesh debug rendering method.
      *
      * See `Mesh.setDebug` for more details.
      *
-     * @method Phaser.GameObjects.Mesh#renderDebugVerts
+     * @method Phaser.GameObjects.Mesh#renderDebug
      * @since 3.50.0
      *
      * @param {Phaser.GameObjects.Mesh} src - The Mesh object being rendered.
-     * @param {integer} meshLength - The number of vertices in the mesh.
-     * @param {number[]} verts - An array of translated vertex coordinates.
+     * @param {Phaser.Geom.Mesh.Face[]} faces - An array of Faces.
      */
-    renderDebugVerts: function (src, meshLength, verts)
+    renderDebug: function (src, faces)
     {
         var graphic = src.debugGraphic;
 
-        for (var i = 0; i < meshLength; i += 6)
+        for (var i = 0; i < faces.length; i++)
         {
-            var x0 = verts[i + 0];
-            var y0 = verts[i + 1];
-            var x1 = verts[i + 2];
-            var y1 = verts[i + 3];
-            var x2 = verts[i + 4];
-            var y2 = verts[i + 5];
+            var face = faces[i];
+
+            var x0 = face.vertex1.tx;
+            var y0 = face.vertex1.ty;
+            var x1 = face.vertex2.tx;
+            var y1 = face.vertex2.ty;
+            var x2 = face.vertex3.tx;
+            var y2 = face.vertex3.ty;
 
             graphic.strokeTriangle(x0, y0, x1, y1, x2, y2);
         }
