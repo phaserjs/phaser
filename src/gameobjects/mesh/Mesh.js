@@ -24,24 +24,29 @@ var Vertex = require('../../geom/mesh/Vertex');
  * @classdesc
  * A Mesh Game Object.
  *
- * The Mesh Game Object allows you to render a group of textured vertices and perform basic manipulation
- * of those vertices, such as rotation, translation or scaling.
+ * The Mesh Game Object allows you to render a group of textured vertices and manipulate
+ * the view of those vertices, such as rotation, translation or scaling.
  *
  * Support for generating mesh data from grids, model data or Wavefront OBJ Files is included.
  *
  * Although you can use this to render 3D objects, its primary use is for displaying more complex
- * Sprites, or Sprites where you need fine-grained control over the vertices in order to
+ * Sprites, or Sprites where you need fine-grained control over the vertice positions in order to
  * achieve special effects in your games. Note that rendering still takes place using Phasers
  * orthographic camera. As a result, all depth and face tests are done in orthographic space.
  *
- * The rendering process will iterate through the faces of this Mesh and render out each vertex
- * within that is considered as being counter-clockwise. Because of this you should be careful
- * not to use model data with too many vertices, or complex overlapping geometry.
+ * The rendering process will iterate through the faces of this Mesh and render out each face
+ * that is considered as being in view of the camera. No depth buffer is used, and because of this,
+ * you should be careful not to use model data with too many vertices, or overlapping geometry,
+ * or you'll probably encounter z-depth fighting. The Mesh was designed to allow for more advanced
+ * 2D layouts, rather than displaying 3D objects, even though it can do this to a degree.
  *
  * In short, if you want to remake Crysis, use a 3D engine, not a Mesh. However, if you want
  * to easily add some small fun 3D elements into your game, or create some special effects involving
  * vertex warping, this is the right object for you. Mesh data becomes part of the WebGL batch,
- * just like standard Sprites, so doesn't introduce any additional shader overhead.
+ * just like standard Sprites, so doesn't introduce any additional shader overhead. Because
+ * the Mesh just generates vertices into the WebGL batch, like any other Sprite, you can use all of
+ * the common Game Object components on a Mesh too, such as a custom pipeline, mask, blend mode
+ * or animated texture.
  *
  * Note that the Mesh object is WebGL only and does not have a Canvas counterpart.
  *
