@@ -65,7 +65,7 @@ var CONST = {
      */
     fromOrientationString: function (orientation)
     {
-        orientation = orientation.toLowerCase;
+        orientation = orientation.toLowerCase();
 
         if (orientation === 'isometric')
         {
