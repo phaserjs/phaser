@@ -2431,7 +2431,6 @@ var Tilemap = new Class({
      *
      * @return {?Phaser.Math.Vector2} Returns a point, or null if the layer given was invalid.
      */
-
     tileToWorldXY: function (tileX, tileY, point, camera, layer)
     {
         layer = this.getLayer(layer);
