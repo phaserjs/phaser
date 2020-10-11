@@ -4,6 +4,10 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Vector2 = require('../../math/Vector2');
+
+var point = new Vector2();
+
 /**
  * Checks if the given tile coordinate is within the isometric layer bounds, or not.
  *
@@ -21,13 +25,13 @@ var CheckIsoBounds = function (tileX, tileY, layer, camera)
 {
     var tilemapLayer = layer.tilemapLayer;
     var cullDistances = tilemapLayer.isoCullDistances;
-    var pos = tilemapLayer.tileToWorldXY(tileX,tileY,undefined,camera);
+    var pos = tilemapLayer.tilemap.tileToWorldXY(tileX, tileY, point, camera, tilemapLayer);
 
     // we always subtract 1/2 of the tile's height/width to make the culling distance start from the center of the tiles.
-    return pos.x > camera.worldView.x + tilemapLayer.scaleX * layer.tileWidth * (- cullDistances.x - 1 / 2)
-        && pos.x < camera.worldView.right + tilemapLayer.scaleX * layer.tileWidth * (cullDistances.x - 1 / 2)
-        && pos.y > camera.worldView.y + tilemapLayer.scaleY * layer.tileHeight * (- cullDistances.y - 1 / 2)
-        && pos.y < camera.worldView.bottom + tilemapLayer.scaleY * layer.tileHeight * (cullDistances.y - 1 / 2);
+    return pos.x > camera.worldView.x + tilemapLayer.scaleX * layer.tileWidth * (-cullDistances.x - 0.5)
+        && pos.x < camera.worldView.right + tilemapLayer.scaleX * layer.tileWidth * (cullDistances.x - 0.5)
+        && pos.y > camera.worldView.y + tilemapLayer.scaleY * layer.tileHeight * (-cullDistances.y - 1.0)
+        && pos.y < camera.worldView.bottom + tilemapLayer.scaleY * layer.tileHeight * (cullDistances.y - 0.5);
 };
 
 module.exports = CheckIsoBounds;
