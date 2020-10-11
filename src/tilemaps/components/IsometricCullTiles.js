@@ -7,7 +7,7 @@
 var CheckIsoBounds = require('./CheckIsoBounds');
 
 /**
- * Returns the tiles in the given layer that are within the camera's viewport. This is used internally.
+ * Returns the tiles in the given layer that are within the cameras viewport. This is used internally.
  *
  * @function Phaser.Tilemaps.Components.IsometricCullTiles
  * @since 3.50.0
@@ -51,7 +51,7 @@ var IsometricCullTiles = function (layer, camera, outputArray, renderOrder)
             {
                 for (x = drawLeft; mapData[y] && x < drawRight; x++)
                 {
-                    if (CheckIsoBounds(x,y,layer,camera))
+                    if (CheckIsoBounds(x, y, layer, camera))
                     {
                         tile = mapData[y][x];
 
@@ -73,7 +73,7 @@ var IsometricCullTiles = function (layer, camera, outputArray, renderOrder)
             {
                 for (x = drawRight; mapData[y] && x >= drawLeft; x--)
                 {
-                    if (CheckIsoBounds(x,y,layer,camera))
+                    if (CheckIsoBounds(x, y, layer, camera))
                     {
                         tile = mapData[y][x];
 
@@ -95,7 +95,7 @@ var IsometricCullTiles = function (layer, camera, outputArray, renderOrder)
             {
                 for (x = drawLeft; mapData[y] && x < drawRight; x++)
                 {
-                    if (CheckIsoBounds(x,y,layer,camera))
+                    if (CheckIsoBounds(x, y, layer, camera))
                     {
                         tile = mapData[y][x];
 
@@ -117,7 +117,7 @@ var IsometricCullTiles = function (layer, camera, outputArray, renderOrder)
             {
                 for (x = drawRight; mapData[y] && x >= drawLeft; x--)
                 {
-                    if (CheckIsoBounds(x,y,layer,camera))
+                    if (CheckIsoBounds(x, y, layer, camera))
                     {
                         tile = mapData[y][x];
 
