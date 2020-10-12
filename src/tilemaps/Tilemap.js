@@ -300,25 +300,31 @@ var Tilemap = new Class({
     /**
      * @ignore
      */
-    createBlankDynamicLayer: function ()
+    createBlankDynamicLayer: function (name, tileset, x, y, width, height, tileWidth, tileHeight)
     {
         console.warn('createBlankDynamicLayer is deprecated. Use createBlankLayer');
+
+        return this.createBlankLayer(name, tileset, x, y, width, height, tileWidth, tileHeight);
     },
 
     /**
      * @ignore
      */
-    createDynamicLayer: function ()
+    createDynamicLayer: function (layerID, tileset, x, y)
     {
         console.warn('createDynamicLayer is deprecated. Use createLayer');
+
+        return this.createLayer(layerID, tileset, x, y);
     },
 
     /**
      * @ignore
      */
-    createStaticLayer: function ()
+    createStaticLayer: function (layerID, tileset, x, y)
     {
         console.warn('createStaticLayer is deprecated. Use createLayer');
+
+        return this.createLayer(layerID, tileset, x, y);
     },
 
     /**
