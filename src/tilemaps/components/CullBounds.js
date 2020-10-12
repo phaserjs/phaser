@@ -4,8 +4,11 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Rectangle = require('../../geom/rectangle/Rectangle');
 var SnapCeil = require('../../math/snap/SnapCeil');
 var SnapFloor = require('../../math/snap/SnapFloor');
+
+var bounds = new Rectangle();
 
 /**
  * Returns the bounds in the given orthogonal layer that are within the cameras viewport.
@@ -17,7 +20,7 @@ var SnapFloor = require('../../math/snap/SnapFloor');
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to run the cull check against.
  *
- * @return {object} An object containing the `left`, `right`, `top` and `bottom` bounds.
+ * @return {Phaser.Geom.Rectangle} A rectangle containing the culled bounds. If you wish to retain this object, clone it, as it's recycled internally.
  */
 var CullBounds = function (layer, camera)
 {
@@ -36,12 +39,12 @@ var CullBounds = function (layer, camera)
     var boundsTop = SnapFloor(camera.worldView.y - tilemapLayer.y, tileH, 0, true) - tilemapLayer.cullPaddingY;
     var boundsBottom = SnapCeil(camera.worldView.bottom - tilemapLayer.y, tileH, 0, true) + tilemapLayer.cullPaddingY;
 
-    return {
-        left: boundsLeft,
-        right: boundsRight,
-        top: boundsTop,
-        bottom: boundsBottom
-    };
+    return bounds.setTo(
+        boundsLeft,
+        boundsTop,
+        (boundsRight - boundsLeft),
+        (boundsBottom - boundsTop)
+    );
 };
 
 module.exports = CullBounds;
