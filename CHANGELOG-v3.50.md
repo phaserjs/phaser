@@ -403,7 +403,7 @@ The Animation API has had a significant overhaul to improve playback handling. I
 
 ### Tilemap - New Features, Updates and API Changes
 
-There are two large changes to Tilemaps in 3.50. If you use tilemaps, you must read this section:
+There are three large changes to Tilemaps in 3.50. If you use tilemaps, you must read this section:
 
 1) The first change is that there are no longer `DynamicTilemapLayer` and `StaticTilemapLayer` classes. They have both been removed and replaced with the new `TilemapLayer` class. This new class consolidates features from both and provides a lot cleaner API experience, as well as speeding up internal logic.
 
@@ -411,7 +411,7 @@ In your game where you use `map.createDynamicLayer` or `map.createStaticLayer` r
 
 2) The second change is that the Tilemap system now supports isometric, hexagonal and staggered isometric map types, along with the previous orthogonal format, thanks to a PR from @svipal. You can now export maps using any of these orientations from the Tiled Map Editor and load them into Phaser using the existing tilemap loading API. No further changes need to take place in the way your maps are loaded.
 
-The following changes are related to the above features and updates:
+3) The `Tilemap.createFromObjects` method has been overhauled to make it much more useful. The method signature has changed and it now takes a new `CreateFromObjectLayerConfig` configuration object, or an array of them, which allows much more fine-grained control over which objects in the Tiled Object Layers are converted and what they are converted to. Previously it could only convert to Sprites, but you can now pass in a custom class, filter based on id, gid or name, even provide a Container to add the created Game Objects in to. Please see the new documentation for this method and the config object for more details. Fix #3817 #4613 (thanks @georgzoeller @Secretmapper)
 
 * The `Tilemap.createDynamicLayer` method has been renamed to `createLayer`.
 * The `Tilemap.createStaticLayer` method has been removed. Use `createLayer` instead.
