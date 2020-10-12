@@ -24,13 +24,11 @@ var PhaserTilemaps = {
     TilemapCreator: require('./TilemapCreator'),
     TilemapFactory: require('./TilemapFactory'),
     Tileset: require('./Tileset'),
+    TilemapLayer: require('./TilemapLayer'),
 
     LayerData: require('./mapdata/LayerData'),
     MapData: require('./mapdata/MapData'),
-    ObjectLayer: require('./mapdata/ObjectLayer'),
-
-    DynamicTilemapLayer: require('./dynamiclayer/DynamicTilemapLayer'),
-    StaticTilemapLayer: require('./staticlayer/StaticTilemapLayer')
+    ObjectLayer: require('./mapdata/ObjectLayer')
 
 };
 

@@ -4,26 +4,25 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Utils = require('../../renderer/webgl/Utils');
+var Utils = require('../renderer/webgl/Utils');
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
  * This method should not be called directly. It is a utility function of the Render module.
  *
- * @method Phaser.Tilemaps.DynamicTilemapLayer#renderWebGL
+ * @method Phaser.Tilemaps.TilemapLayer#renderWebGL
  * @since 3.0.0
  * @private
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
- * @param {Phaser.Tilemaps.DynamicTilemapLayer} src - The Game Object being rendered in this call.
+ * @param {Phaser.Tilemaps.TilemapLayer} src - The Game Object being rendered in this call.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  */
-var DynamicTilemapLayerWebGLRenderer = function (renderer, src, camera)
+var TilemapLayerWebGLRenderer = function (renderer, src, camera)
 {
-    src.cull(camera);
+    var renderTiles = src.cull(camera);
 
-    var renderTiles = src.culledTiles;
     var tileCount = renderTiles.length;
     var alpha = camera.alpha * src.alpha;
 
@@ -52,16 +51,16 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, camera)
 
         var tileset = gidMap[tile.index];
 
-        var texture = tileset.glTexture;
-
-        var textureUnit = pipeline.setTexture2D(texture, src);
-
         var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
 
         if (tileTexCoords === null)
         {
             continue;
         }
+
+        var texture = tileset.glTexture;
+
+        var textureUnit = pipeline.setTexture2D(texture, src);
 
         var frameWidth = tileset.tileWidth;
         var frameHeight = tileset.tileHeight;
@@ -96,4 +95,4 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, camera)
     }
 };
 
-module.exports = DynamicTilemapLayerWebGLRenderer;
+module.exports = TilemapLayerWebGLRenderer;

@@ -1,7 +1,7 @@
 /**
  * @typedef {object} Phaser.Types.Tilemaps.LayerDataConfig
  * @since 3.0.0
- * 
+ *
  * @property {string} [name] - The name of the layer, if specified in Tiled.
  * @property {number} [x=0] - The x offset of where to draw from the top left.
  * @property {number} [y=0] - The y offset of where to draw from the top left.
@@ -21,5 +21,5 @@
  * @property {array} [callbacks] - An array of callbacks.
  * @property {array} [bodies] - An array of physics bodies.
  * @property {array} [data] - An array of the tile data indexes.
- * @property {Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer} [tilemapLayer] - A reference to the Tilemap layer that owns this data.
+ * @property {Phaser.Tilemaps.TilemapLayer} [tilemapLayer] - A reference to the Tilemap layer that owns this data.
  */

@@ -11,7 +11,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 /**
  * @classdesc
  * A class for representing data about about a layer in a map. Maps are parsed from CSV, Tiled,
- * etc. into this format. Tilemap, StaticTilemapLayer and DynamicTilemapLayer have a reference
+ * etc. into this format. Tilemap and TilemapLayer objects have a reference
  * to this data and use it to look up and perform operations on tiles.
  *
  * @class LayerData
@@ -213,7 +213,7 @@ var LayerData = new Class({
          * A reference to the Tilemap layer that owns this data.
          *
          * @name Phaser.Tilemaps.LayerData#tilemapLayer
-         * @type {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)}
+         * @type {Phaser.Tilemaps.TilemapLayer}
          * @since 3.0.0
          */
         this.tilemapLayer = GetFastValue(config, 'tilemapLayer', null);

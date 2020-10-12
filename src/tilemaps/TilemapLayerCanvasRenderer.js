@@ -9,23 +9,23 @@
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
  * This method should not be called directly. It is a utility function of the Render module.
  *
- * @method Phaser.Tilemaps.StaticTilemapLayer#renderCanvas
- * @since 3.0.0
+ * @method Phaser.Tilemaps.TilemapLayer#renderCanvas
+ * @since 3.50.0
  * @private
  *
  * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
- * @param {Phaser.Tilemaps.StaticTilemapLayer} src - The Game Object being rendered in this call.
+ * @param {Phaser.Tilemaps.TilemapLayer} src - The Game Object being rendered in this call.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var StaticTilemapLayerCanvasRenderer = function (renderer, src, camera, parentMatrix)
+var TilemapLayerCanvasRenderer = function (renderer, src, camera, parentMatrix)
 {
-    src.cull(camera);
+    var renderTiles = src.cull(camera);
 
-    var renderTiles = src.culledTiles;
     var tileCount = renderTiles.length;
+    var alpha = camera.alpha * src.alpha;
 
-    if (tileCount === 0)
+    if (tileCount === 0 || alpha <= 0)
     {
         return;
     }
@@ -52,20 +52,18 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, src, camera, parentMa
         layerMatrix.e = src.x;
         layerMatrix.f = src.y;
 
+        //  Multiply by the Sprite matrix, store result in calcMatrix
         camMatrix.multiply(layerMatrix, calcMatrix);
 
         calcMatrix.copyToContext(ctx);
     }
     else
     {
-        //  Undo the camera scroll
         layerMatrix.e -= camera.scrollX * src.scrollFactorX;
         layerMatrix.f -= camera.scrollY * src.scrollFactorY;
 
         layerMatrix.copyToContext(ctx);
     }
-
-    var alpha = camera.alpha * src.alpha;
 
     if (!renderer.antialias || src.scaleX > 1 || src.scaleY > 1)
     {
@@ -88,10 +86,8 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, src, camera, parentMa
 
         if (tileTexCoords)
         {
-            var tileWidth = tileset.tileWidth;
-            var tileHeight = tileset.tileHeight;
-            var halfWidth = tileWidth / 2;
-            var halfHeight = tileHeight / 2;
+            var halfWidth = tileset.tileWidth / 2;
+            var halfHeight = tileset.tileHeight / 2;
 
             ctx.save();
 
@@ -112,9 +108,9 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, src, camera, parentMa
             ctx.drawImage(
                 image,
                 tileTexCoords.x, tileTexCoords.y,
-                tileWidth, tileHeight,
+                tileset.tileWidth , tileset.Height,
                 -halfWidth, -halfHeight,
-                tileWidth, tileHeight
+                tileset.tileWidth , tileset.tileHeight
             );
 
             ctx.restore();
@@ -124,4 +120,4 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, src, camera, parentMa
     ctx.restore();
 };
 
-module.exports = StaticTilemapLayerCanvasRenderer;
+module.exports = TilemapLayerCanvasRenderer;
