@@ -8,9 +8,11 @@ var Class = require('../utils/Class');
 var DegToRad = require('../math/DegToRad');
 var Extend = require('../utils/object/Extend');
 var Formats = require('./Formats');
+var GetFastValue = require('../utils/object/GetFastValue');
 var LayerData = require('./mapdata/LayerData');
 var Rotate = require('../math/Rotate');
 var SpliceOne = require('../utils/array/SpliceOne');
+var Sprite = require('../gameobjects/sprite/Sprite');
 var Tile = require('./Tile');
 var TilemapComponents = require('./components');
 var TilemapLayer = require('./TilemapLayer');
@@ -630,87 +632,188 @@ var Tilemap = new Class({
     },
 
     /**
-     * Creates a Sprite for every object matching the given gid in the map data. All properties from
-     * the map data objectgroup are copied into the `spriteConfig`, so you can use this as an easy
-     * way to configure Sprite properties from within the map editor. For example giving an object a
-     * property of alpha: 0.5 in the map editor will duplicate that when the Sprite is created.
+     * This method will iterate through all of the objects defined in a Tiled Object Layer and then
+     * convert the matching results into Phaser Game Objects (by default, Sprites)
      *
-     * Custom object properties not sharing names with the Sprite's own properties are copied to the
-     * Sprite's {@link Phaser.GameObjects.Sprite#data data store}.
+     * Objects are matched on one of 3 criteria: The Object ID, the Object GID or the Object Name.
+     *
+     * Within Tiled, Object IDs are unique per Object. Object GIDs, however, are shared by all objects
+     * using the same image. Finally, Object Names are strings and the same name can be used on multiple
+     * Objects in Tiled, they do not have to be unique.
+     *
+     * You set the configuration parameter accordingly, based on which type of criteria you wish
+     * to match against. For example, to convert all items on an Object Layer with a `gid` of 26:
+     *
+     * ```javascript
+     * createFromObjects(layerName, {
+     *   gid: 26
+     * });
+     * ```
+     *
+     * Or, to convert objects with the name 'bonus':
+     *
+     * ```javascript
+     * createFromObjects(layerName, {
+     *   name: 'bonus'
+     * });
+     * ```
+     *
+     * Or, to convert an object with a specific id:
+     *
+     * ```javascript
+     * createFromObjects(layerName, {
+     *   id: 9
+     * });
+     * ```
+     *
+     * You should only specify either `id`, `gid`, `name`, or none of them. Do not add more than
+     * one criteria to your config. If you do not specify any criteria, then _all_ objects in the
+     * Object Layer will be converted.
+     *
+     * By default this method will convert objects into `Sprite` instances, but you can override
+     * this by providing your own class type:
+     *
+     * ```javascript
+     * createFromObjects(layerName, {
+     *   gid: 26,
+     *   classType: Coin
+     * });
+     * ```
+     *
+     * This will convert all Objects with a gid of 26 into your custom `Coin` class. You can pass
+     * any class type here, but it _must_ extend `Phaser.GameObjects.GameObject` as its base class.
+     * Your class will always be passed 1 parameter: `scene`, which is a reference to either the Scene
+     * specified in the config object or, if not given, the Scene to which this Tilemap belongs.
+     *
+     * All properties from object are copied into the Game Object, so you can use this as an easy
+     * way to configure properties from within the map editor. For example giving an object a
+     * property of `alpha: 0.5` in Tiled will be reflected in the Game Object that is created.
+     *
+     * Custom object properties that do not exist as a Game Object property are set in the
+     * Game Objects {@link Phaser.GameObjects.GameObject#data data store}.
+     *
+     * You can use set a `container` property in the config. If given, the class will be added to
+     * the Container instance instead of the Scene.
+     *
+     * Finally, you can provide an array of config objects, to convert multiple types of object in
+     * a single call:
+     *
+     * ```javascript
+     * createFromObjects(layerName, [
+     *   {
+     *     gid: 26,
+     *     classType: Coin
+     *   },
+     *   {
+     *     id: 9,
+     *     classType: BossMonster
+     *   },
+     *   {
+     *     name: 'lava',
+     *     classType: LavaTile
+     *   }
+     * ]);
+     * ```
+     *
+     * The signature of this method changed significantly in v3.50.0. Prior to this, it did not take config objects.
      *
      * @method Phaser.Tilemaps.Tilemap#createFromObjects
      * @since 3.0.0
      *
-     * @param {string} name - The name of the object layer (from Tiled) to create Sprites from.
-     * @param {(integer|string)} id - Either the id (object), gid (tile object) or name (object or
-     * tile object) from Tiled. Ids are unique in Tiled, but a gid is shared by all tile objects
-     * with the same graphic. The same name can be used on multiple objects.
-     * @param {Phaser.Types.GameObjects.Sprite.SpriteConfig} spriteConfig - The config object to pass into the Sprite creator (i.e.
-     * scene.make.sprite).
-     * @param {Phaser.Scene} [scene=the scene the map is within] - The Scene to create the Sprites within.
+     * @param {string} objectLayerName - The name of the Tiled object layer to create the Game Objects from.
+     * @param {Phaser.Types.Tilemaps.CreateFromObjectLayerConfig|Phaser.Types.Tilemaps.CreateFromObjectLayerConfig[]} config - A CreateFromObjects configuration object, or an array of them.
      *
-     * @return {Phaser.GameObjects.Sprite[]} An array of the Sprites that were created.
+     * @return {Phaser.GameObjects.GameObject[]} An array containing the Game Objects that were created. Empty if invalid object layer, or no matching id/gid/name was found.
      */
-    createFromObjects: function (name, id, spriteConfig, scene)
+    createFromObjects: function (objectLayerName, config)
     {
-        if (spriteConfig === undefined) { spriteConfig = {}; }
-        if (scene === undefined) { scene = this.scene; }
+        var results = [];
 
-        var objectLayer = this.getObjectLayer(name);
+        var objectLayer = this.getObjectLayer(objectLayerName);
 
         if (!objectLayer)
         {
-            console.warn('Cannot create from object. Invalid objectgroup name given: ' + name);
+            console.warn('createFromObjects: Invalid objectLayerName given: ' + objectLayerName);
 
-            if (typeof layerID === 'string')
-            {
-                console.warn('Valid objectgroup names:\n\t' + this.getObjectLayerNames().join(',\n\t'));
-            }
+            return results;
+        }
 
-            return null;
+        if (!Array.isArray(config))
+        {
+            config = [ config ];
         }
 
         var objects = objectLayer.objects;
-        var sprites = [];
 
-        for (var i = 0; i < objects.length; i++)
+        for (var c = 0; c < config.length; c++)
         {
-            var found = false;
-            var obj = objects[i];
+            var singleConfig = config[c];
 
-            if (obj.gid !== undefined && typeof id === 'number' && obj.gid === id ||
-                obj.id !== undefined && typeof id === 'number' && obj.id === id ||
-                obj.name !== undefined && typeof id === 'string' && obj.name === id)
+            var id = GetFastValue(singleConfig, 'id', null);
+            var gid = GetFastValue(singleConfig, 'gid', null);
+            var name = GetFastValue(singleConfig, 'name', null);
+
+            var obj;
+            var toConvert = [];
+
+            //  Sweep to get all the objects we want to convert in this pass
+            for (var s = 0; s < objects.length; s++)
             {
-                found = true;
+                obj = objects[s];
+
+                if (
+                    (id === null && gid === null && name === null) ||
+                    (id !== null && obj.id === id) ||
+                    (gid !== null && obj.gid === gid) ||
+                    (name !== null && obj.name === name)
+                )
+                {
+                    toConvert.push(obj);
+                }
             }
 
-            if (found)
+            //  Now let's convert them ...
+
+            var classType = GetFastValue(singleConfig, 'classType', Sprite);
+            var scene = GetFastValue(singleConfig, 'scene', this.scene);
+            var container = GetFastValue(singleConfig, 'container', null);
+            var texture = GetFastValue(singleConfig, 'key', null);
+            var frame = GetFastValue(singleConfig, 'frame', null);
+
+            for (var i = 0; i < toConvert.length; i++)
             {
-                var config = Extend({}, spriteConfig, obj.properties);
+                obj = toConvert[i];
 
-                config.x = obj.x;
-                config.y = obj.y;
+                var sprite = new classType(scene);
 
-                var sprite = scene.make.sprite(config);
+                sprite.setName(obj.name);
+                sprite.setPosition(obj.x, obj.y);
+                sprite.setTexture(texture, frame);
 
-                sprite.name = obj.name;
+                if (obj.width)
+                {
+                    sprite.displayWidth = obj.width;
+                }
 
-                if (obj.width) { sprite.displayWidth = obj.width; }
-                if (obj.height) { sprite.displayHeight = obj.height; }
+                if (obj.height)
+                {
+                    sprite.displayHeight = obj.height;
+                }
 
-                // Origin is (0, 1) in Tiled, so find the offset that matches the Sprite's origin.
-                // Do not offset objects with zero dimensions (e.g. points).
+                //  Origin is (0, 1) in Tiled, so find the offset that matches the Sprites origin.
+                //  Do not offset objects with zero dimensions (e.g. points).
                 var offset = {
                     x: sprite.originX * obj.width,
                     y: (sprite.originY - 1) * obj.height
                 };
 
-                // If the object is rotated, then the origin offset also needs to be rotated.
+                //  If the object is rotated, then the origin offset also needs to be rotated.
                 if (obj.rotation)
                 {
                     var angle = DegToRad(obj.rotation);
+
                     Rotate(offset, angle);
+
                     sprite.rotation = angle;
                 }
 
@@ -722,23 +825,38 @@ var Tilemap = new Class({
                     sprite.setFlip(obj.flippedHorizontal, obj.flippedVertical);
                 }
 
-                if (!obj.visible) { sprite.visible = false; }
-
-                for (var key in obj.properties)
+                if (!obj.visible)
                 {
-                    if (sprite.hasOwnProperty(key))
-                    {
-                        continue;
-                    }
-
-                    sprite.setData(key, obj.properties[key]);
+                    sprite.visible = false;
                 }
 
-                sprites.push(sprite);
+                //  Set properties the class may have, or setData those it doesn't
+                for (var key in obj.properties)
+                {
+                    if (sprite[key] !== undefined)
+                    {
+                        sprite[key] = obj.properties[key];
+                    }
+                    else
+                    {
+                        sprite.setData(key, obj.properties[key]);
+                    }
+                }
+
+                if (container)
+                {
+                    container.add(sprite);
+                }
+                else
+                {
+                    scene.add.existing(sprite);
+                }
+
+                results.push(sprite);
             }
         }
 
-        return sprites;
+        return results;
     },
 
     /**
