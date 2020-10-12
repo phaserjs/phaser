@@ -420,7 +420,7 @@ In your game where you use `map.createDynamicLayer` or `map.createStaticLayer` r
 * The `TilemapLayerWebGLRenderer` function will no longer iterate through the layer tilesets, drawing tiles from only that set. Instead all it does now is iterate directly through only the tiles. This allows it to take advantage of the new Multi Texturing pipeline and also draw multi-tileset isometric layers correctly.
 * `Phaser.Types.Tilemaps.TilemapOrientationType` is a new type def that holds the 4 types of map orientation now supported.
 * The `Tile.updatePixelXY` method now updates the tile XY position based on map type.
-* `ParseTilesets` will now correctly handle non-consequtive tile IDs. It also now correctly sets the `maxId` property, fixing a bug where tiles wouldn't render if from IDs outside the expected range. Fix #4367 (thanks @jackfreak)
+* `ParseTilesets` will now correctly handle non-consecutive tile IDs. It also now correctly sets the `maxId` property, fixing a bug where tiles wouldn't render if from IDs outside the expected range. Fix #4367 (thanks @jackfreak)
 * `Tilemap.hexSideLength` is a new property that holds the length of the hexagon sides, if using Hexagonal Tilemaps.
 * `LayerData.orientation` is a new property that holds the tilemap layers orientation constant.
 * `LayerData.hexSideLength` is a new property that holds the length of the hexagon sides, if using Hexagonal Tilemaps.
