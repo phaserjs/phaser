@@ -6,7 +6,6 @@
 
 var Class = require('../utils/Class');
 var DegToRad = require('../math/DegToRad');
-var Extend = require('../utils/object/Extend');
 var Formats = require('./Formats');
 var GetFastValue = require('../utils/object/GetFastValue');
 var LayerData = require('./mapdata/LayerData');
