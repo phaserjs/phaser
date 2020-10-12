@@ -105,7 +105,7 @@ var Tile = new Class({
         this.height = height;
 
         /**
-         * The map's base width of a tile in pixels. Tiled maps support multiple tileset sizes
+         * The maps base width of a tile in pixels. Tiled maps support multiple tileset sizes
          * within one map, but they are still placed at intervals of the base tile size.
          *
          * @name Phaser.Tilemaps.Tile#baseWidth
@@ -115,7 +115,7 @@ var Tile = new Class({
         this.baseWidth = (baseWidth !== undefined) ? baseWidth : width;
 
         /**
-         * The map's base height of a tile in pixels. Tiled maps support multiple tileset sizes
+         * The maps base height of a tile in pixels. Tiled maps support multiple tileset sizes
          * within one map, but they are still placed at intervals of the base tile size.
          *
          * @name Phaser.Tilemaps.Tile#baseHeight
@@ -203,7 +203,7 @@ var Tile = new Class({
         this.collideDown = false;
 
         /**
-         * Whether the tile's left edge is interesting for collisions.
+         * Whether the tiles left edge is interesting for collisions.
          *
          * @name Phaser.Tilemaps.Tile#faceLeft
          * @type {boolean}
@@ -212,7 +212,7 @@ var Tile = new Class({
         this.faceLeft = false;
 
         /**
-         * Whether the tile's right edge is interesting for collisions.
+         * Whether the tiles right edge is interesting for collisions.
          *
          * @name Phaser.Tilemaps.Tile#faceRight
          * @type {boolean}
@@ -221,7 +221,7 @@ var Tile = new Class({
         this.faceRight = false;
 
         /**
-         * Whether the tile's top edge is interesting for collisions.
+         * Whether the tiles top edge is interesting for collisions.
          *
          * @name Phaser.Tilemaps.Tile#faceTop
          * @type {boolean}
@@ -230,7 +230,7 @@ var Tile = new Class({
         this.faceTop = false;
 
         /**
-         * Whether the tile's bottom edge is interesting for collisions.
+         * Whether the tiles bottom edge is interesting for collisions.
          *
          * @name Phaser.Tilemaps.Tile#faceBottom
          * @type {boolean}
@@ -332,7 +332,7 @@ var Tile = new Class({
      * @method Phaser.Tilemaps.Tile#getCollisionGroup
      * @since 3.0.0
      *
-     * @return {?object} tileset
+     * @return {?object} The collision group for this Tile, as defined in the Tileset, or `null` if no group was defined.
      */
     getCollisionGroup: function ()
     {
@@ -348,7 +348,7 @@ var Tile = new Class({
      * @method Phaser.Tilemaps.Tile#getTileData
      * @since 3.0.0
      *
-     * @return {?object} tileset
+     * @return {?object} The tile data for this Tile, as defined in the Tileset, or `null` if no data was defined.
      */
     getTileData: function ()
     {
@@ -364,7 +364,7 @@ var Tile = new Class({
      *
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use to perform the check.
      *
-     * @return {number}
+     * @return {number} The left (x) value of this tile.
      */
     getLeft: function (camera)
     {
@@ -382,7 +382,7 @@ var Tile = new Class({
      *
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use to perform the check.
      *
-     * @return {number}
+     * @return {number} The right (x) value of this tile.
      */
     getRight: function (camera)
     {
@@ -400,7 +400,7 @@ var Tile = new Class({
      *
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use to perform the check.
      *
-     * @return {number}
+     * @return {number} The top (y) value of this tile.
      */
     getTop: function (camera)
     {
@@ -423,11 +423,12 @@ var Tile = new Class({
      *
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use to perform the check.
      *
-     * @return {number}
+     * @return {number} The bottom (y) value of this tile.
      */
     getBottom: function (camera)
     {
         var tilemapLayer = this.tilemapLayer;
+
         return tilemapLayer
             ? this.getTop(camera) + this.height * tilemapLayer.scaleY
             : this.getTop(camera) + this.height;
@@ -444,7 +445,7 @@ var Tile = new Class({
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use to perform the check.
      * @param {Phaser.Geom.Rectangle} [output] - Optional Rectangle object to store the results in.
      *
-     * @return {(Phaser.Geom.Rectangle|object)}
+     * @return {(Phaser.Geom.Rectangle|object)} The bounds of this Tile.
      */
     getBounds: function (camera, output)
     {
@@ -467,7 +468,7 @@ var Tile = new Class({
      *
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use to perform the check.
      *
-     * @return {number}
+     * @return {number} The center x position of this Tile.
      */
     getCenterX: function (camera)
     {
@@ -483,24 +484,11 @@ var Tile = new Class({
      *
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use to perform the check.
      *
-     * @return {number}
+     * @return {number} The center y position of this Tile.
      */
     getCenterY: function (camera)
     {
         return (this.getTop(camera) + this.getBottom(camera)) / 2;
-    },
-
-    /**
-     * Clean up memory.
-     *
-     * @method Phaser.Tilemaps.Tile#destroy
-     * @since 3.0.0
-     */
-    destroy: function ()
-    {
-        this.collisionCallback = undefined;
-        this.collisionCallbackContext = undefined;
-        this.properties = undefined;
     },
 
     /**
@@ -515,7 +503,7 @@ var Tile = new Class({
      * @param {number} right - The right point.
      * @param {number} bottom - The bottom point.
      *
-     * @return {boolean}
+     * @return {boolean} `true` if the Tile intersects with the given dimensions, otherwise `false`.
      */
     intersects: function (x, y, right, bottom)
     {
@@ -538,9 +526,19 @@ var Tile = new Class({
      */
     isInteresting: function (collides, faces)
     {
-        if (collides && faces) { return (this.canCollide || this.hasInterestingFace); }
-        else if (collides) { return this.collides; }
-        else if (faces) { return this.hasInterestingFace; }
+        if (collides && faces)
+        {
+            return (this.canCollide || this.hasInterestingFace);
+        }
+        else if (collides)
+        {
+            return this.collides;
+        }
+        else if (faces)
+        {
+            return this.hasInterestingFace;
+        }
+
         return false;
     },
 
@@ -609,8 +607,7 @@ var Tile = new Class({
      * @param {boolean} [right] - Indicating collide with any object on the right.
      * @param {boolean} [up] - Indicating collide with any object on the top.
      * @param {boolean} [down] - Indicating collide with any object on the bottom.
-     * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate interesting faces
-     * for this tile and its neighbors.
+     * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate interesting faces for this tile and its neighbors.
      *
      * @return {this} This Tile object instance.
      */
@@ -733,14 +730,27 @@ var Tile = new Class({
         }
         else if (orientation === CONST.HEXAGONAL)
         {
-            var sidel = this.layer.hexSideLength;
-            var rowHeight = ((this.baseHeight - sidel) / 2 + sidel);
+            var len = this.layer.hexSideLength;
+            var rowHeight = ((this.baseHeight - len) / 2 + len);
 
             this.pixelX = this.x * this.baseWidth + this.y % 2 * (this.baseWidth / 2);
             this.pixelY = this.y * rowHeight;
         }
 
         return this;
+    },
+
+    /**
+     * Clean up memory.
+     *
+     * @method Phaser.Tilemaps.Tile#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.collisionCallback = undefined;
+        this.collisionCallbackContext = undefined;
+        this.properties = undefined;
     },
 
     /**
@@ -752,10 +762,12 @@ var Tile = new Class({
      * @since 3.0.0
      */
     canCollide: {
+
         get: function ()
         {
             return (this.collideLeft || this.collideRight || this.collideUp || this.collideDown || this.collisionCallback);
         }
+
     },
 
     /**
@@ -767,10 +779,12 @@ var Tile = new Class({
      * @since 3.0.0
      */
     collides: {
+
         get: function ()
         {
             return (this.collideLeft || this.collideRight || this.collideUp || this.collideDown);
         }
+
     },
 
     /**
@@ -782,16 +796,18 @@ var Tile = new Class({
      * @since 3.0.0
      */
     hasInterestingFace: {
+
         get: function ()
         {
             return (this.faceTop || this.faceBottom || this.faceLeft || this.faceRight);
         }
+
     },
 
     /**
      * The tileset that contains this Tile. This is null if accessed from a LayerData instance
-     * before the tile is placed in a StaticTilemapLayer or DynamicTilemapLayer, or if the tile has
-     * an index that doesn't correspond to any of the map's tilesets.
+     * before the tile is placed in a TilemapLayer, or if the tile has an index that doesn't correspond
+     * to any of the maps tilesets.
      *
      * @name Phaser.Tilemaps.Tile#tileset
      * @type {?Phaser.Tilemaps.Tileset}
@@ -821,24 +837,25 @@ var Tile = new Class({
 
     /**
      * The tilemap layer that contains this Tile. This will only return null if accessed from a
-     * LayerData instance before the tile is placed within a StaticTilemapLayer or
-     * DynamicTilemapLayer.
+     * LayerData instance before the tile is placed within a TilemapLayer.
      *
      * @name Phaser.Tilemaps.Tile#tilemapLayer
-     * @type {?Phaser.Tilemaps.StaticTilemapLayer|Phaser.Tilemaps.DynamicTilemapLayer}
+     * @type {?Phaser.Tilemaps.TilemapLayer}
      * @readonly
      * @since 3.0.0
      */
     tilemapLayer: {
+
         get: function ()
         {
             return this.layer.tilemapLayer;
         }
+
     },
 
     /**
      * The tilemap that contains this Tile. This will only return null if accessed from a LayerData
-     * instance before the tile is placed within a StaticTilemapLayer or DynamicTilemapLayer.
+     * instance before the tile is placed within a TilemapLayer.
      *
      * @name Phaser.Tilemaps.Tile#tilemap
      * @type {?Phaser.Tilemaps.Tilemap}
@@ -846,11 +863,14 @@ var Tile = new Class({
      * @since 3.0.0
      */
     tilemap: {
+
         get: function ()
         {
             var tilemapLayer = this.tilemapLayer;
+
             return tilemapLayer ? tilemapLayer.tilemap : null;
         }
+
     }
 
 });
