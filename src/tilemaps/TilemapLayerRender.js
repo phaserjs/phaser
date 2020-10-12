@@ -4,8 +4,8 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var renderWebGL = require('../../utils/NOOP');
-var renderCanvas = require('../../utils/NOOP');
+var renderWebGL = require('../utils/NOOP');
+var renderCanvas = require('../utils/NOOP');
 
 if (typeof WEBGL_RENDERER)
 {

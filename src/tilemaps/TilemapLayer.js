@@ -4,10 +4,10 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Class = require('../../utils/Class');
-var Components = require('../../gameobjects/components');
-var GameObject = require('../../gameobjects/GameObject');
-var TilemapComponents = require('../components');
+var Class = require('../utils/Class');
+var Components = require('../gameobjects/components');
+var GameObject = require('../gameobjects/GameObject');
+var TilemapComponents = require('./components');
 var TilemapLayerRender = require('./TilemapLayerRender');
 
 /**
