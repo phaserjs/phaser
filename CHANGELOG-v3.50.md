@@ -403,17 +403,24 @@ The Animation API has had a significant overhaul to improve playback handling. I
 
 ### Tilemap - New Features, Updates and API Changes
 
-The Tilemap system now supports isometric, hexagonal and staggered map types, along with the previous orthogonal format, thanks to a PR from @svipal.
+There are two large changes to Tilemaps in 3.50. If you use tilemaps, you must read this section:
 
-You can now export maps using any of these orientations from the Tiled Map Editor and load them into Phaser using the standard tilemap loading API.
+1) The first change is that there are no longer `DynamicTilemapLayer` and `StaticTilemapLayer` classes. They have both been removed and replaced with the new `TilemapLayer` class. This new class consolidates features from both and provides a lot cleaner API experience, as well as speeding up internal logic.
 
-The following are all of the new components and functions that made this possible:
+In your game where you use `map.createDynamicLayer` or `map.createStaticLayer` replace it with `map.createLayer` instead.
 
+2) The second change is that the Tilemap system now supports isometric, hexagonal and staggered isometric map types, along with the previous orthogonal format, thanks to a PR from @svipal. You can now export maps using any of these orientations from the Tiled Map Editor and load them into Phaser using the existing tilemap loading API. No further changes need to take place in the way your maps are loaded.
+
+The following changes are related to the above features and updates:
+
+* The `Tilemap.createDynamicLayer` method has been renamed to `createLayer`.
+* The `Tilemap.createStaticLayer` method has been removed. Use `createLayer` instead.
+* The `Tilemap.createBlankDynamicLayer` method has been renamed to `createBlankLayer`.
+* The `Tilemap.convertLayerToStatic` method has been removed as it is no longer required.
+* The `TilemapLayerWebGLRenderer` function will no longer iterate through the layer tilesets, drawing tiles from only that set. Instead all it does now is iterate directly through only the tiles. This allows it to take advantage of the new Multi Texturing pipeline and also draw multi-tileset isometric layers correctly.
 * `Phaser.Types.Tilemaps.TilemapOrientationType` is a new type def that holds the 4 types of map orientation now supported.
 * The `Tile.updatePixelXY` method now updates the tile XY position based on map type.
 * `Tilemap.hexSideLength` is a new property that holds the length of the hexagon sides, if using Hexagonal Tilemaps.
-* `DynamicTilemapLayer.isoCullDistances` is a new Vector2 property that allows you to control how far the tiles will still be rendered for, out of the camera bounds, before they are culled.
-* `StaticTilemapLayer.isoCullDistances` is a new Vector2 property that allows you to control how far the tiles will still be rendered for, out of the camera bounds, before they are culled.
 * `LayerData.orientation` is a new property that holds the tilemap layers orientation constant.
 * `LayerData.hexSideLength` is a new property that holds the length of the hexagon sides, if using Hexagonal Tilemaps.
 * `MapData.orientation` is a new property that holds the tilemap layers orientation constant.
@@ -443,6 +450,7 @@ The following are all of the new components and functions that made this possibl
 * `Tilemaps.Components.StaggeredCullBounds` is a new function that calculates the cull bounds for a staggered map.
 * `Tilemaps.Components.RunCull` is a new function that runs the culling process from the combined bounds and tilemap.
 * `Tilemap._convert` is a new internal private hash of tilemap conversion functions used by the public API.
+* The `Tilemap._isStaticCall` method has been removed and no Tilemap methods now check this, leading to faster execution.
 
 ### Mesh Game Object - New Features, Updates and API Changes
 
