@@ -7,6 +7,7 @@
 var Class = require('../../utils/Class');
 var Light = require('./Light');
 var Utils = require('../../renderer/webgl/Utils');
+var PointLight = require('./PointLight');
 
 /**
  * @callback LightForEach
@@ -94,6 +95,11 @@ var LightsManager = new Class({
          * @since 3.15.0
          */
         this.maxLights = -1;
+    },
+
+    addPointLight: function (x, y, color, radius, intensity)
+    {
+        return this.systems.displayList.add(new PointLight(this.scene, x, y, color, radius, intensity));
     },
 
     /**
