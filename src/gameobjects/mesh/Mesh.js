@@ -897,7 +897,7 @@ var Mesh = new Class({
      * @param {number} time - The current timestamp.
      * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
-    preUpdate: function (time, delta)
+    preUpdate: function ()
     {
         this.totalRendered = this.totalFrame;
         this.totalFrame = 0;
