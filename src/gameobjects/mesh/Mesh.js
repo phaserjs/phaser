@@ -4,7 +4,6 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var AnimationState = require('../../animations/AnimationState');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var DegToRad = require('../../math/DegToRad');
@@ -46,7 +45,7 @@ var Vertex = require('../../geom/mesh/Vertex');
  * just like standard Sprites, so doesn't introduce any additional shader overhead. Because
  * the Mesh just generates vertices into the WebGL batch, like any other Sprite, you can use all of
  * the common Game Object components on a Mesh too, such as a custom pipeline, mask, blend mode
- * or animated texture.
+ * or texture.
  *
  * Note that the Mesh object is WebGL only and does not have a Canvas counterpart.
  *
@@ -110,15 +109,6 @@ var Mesh = new Class({
         if (texture === undefined) { texture = '__WHITE'; }
 
         GameObject.call(this, scene, 'Mesh');
-
-        /**
-         * The Animation State of this Mesh.
-         *
-         * @name Phaser.GameObjects.Mesh#anims
-         * @type {Phaser.Animation.AnimationState}
-         * @since 3.50.0
-         */
-        this.anims = new AnimationState(this);
 
         /**
          * An array containing the Face instances belonging to this Mesh.
@@ -886,7 +876,7 @@ var Mesh = new Class({
     /**
      * The Mesh update loop. The following takes place in this method:
      *
-     * First, the Animation State is updated and the `totalRendered` and `totalFrame` properties are set.
+     * First, the `totalRendered` and `totalFrame` properties are set.
      *
      * If the view matrix of this Mesh isn't dirty, and the model position, rotate or scale properties are
      * all clean, then the method returns at this point.
@@ -909,8 +899,6 @@ var Mesh = new Class({
      */
     preUpdate: function (time, delta)
     {
-        this.anims.update(time, delta);
-
         this.totalRendered = this.totalFrame;
         this.totalFrame = 0;
 
@@ -1000,9 +988,6 @@ var Mesh = new Class({
     {
         this.clear();
 
-        this.anims.destroy();
-
-        this.anims = null;
         this.debugCallback = null;
         this.debugGraphic = null;
     }
