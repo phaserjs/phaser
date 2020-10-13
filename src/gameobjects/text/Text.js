@@ -4,17 +4,17 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var AddToDOM = require('../../../dom/AddToDOM');
-var CanvasPool = require('../../../display/canvas/CanvasPool');
-var Class = require('../../../utils/Class');
-var Components = require('../../components');
-var GameEvents = require('../../../core/events');
-var GameObject = require('../../GameObject');
-var GetTextSize = require('../GetTextSize');
-var GetValue = require('../../../utils/object/GetValue');
-var RemoveFromDOM = require('../../../dom/RemoveFromDOM');
+var AddToDOM = require('../../dom/AddToDOM');
+var CanvasPool = require('../../display/canvas/CanvasPool');
+var Class = require('../../utils/Class');
+var Components = require('../components');
+var GameEvents = require('../../core/events');
+var GameObject = require('../GameObject');
+var GetTextSize = require('./GetTextSize');
+var GetValue = require('../../utils/object/GetValue');
+var RemoveFromDOM = require('../../dom/RemoveFromDOM');
 var TextRender = require('./TextRender');
-var TextStyle = require('../TextStyle');
+var TextStyle = require('./TextStyle');
 
 /**
  * @classdesc

@@ -4,7 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Utils = require('../../../renderer/webgl/Utils');
+var Utils = require('../../renderer/webgl/Utils');
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.

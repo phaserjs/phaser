@@ -39,7 +39,7 @@ var GameObjects = {
     Rope: require('./rope/Rope'),
     Sprite: require('./sprite/Sprite'),
 
-    Text: require('./text/static/Text'),
+    Text: require('./text/Text'),
     GetTextSize: require('./text/GetTextSize'),
     MeasureText: require('./text/MeasureText'),
     TextStyle: require('./text/TextStyle'),
@@ -80,7 +80,7 @@ var GameObjects = {
         Rope: require('./rope/RopeFactory'),
         Sprite: require('./sprite/SpriteFactory'),
         StaticBitmapText: require('./bitmaptext/static/BitmapTextFactory'),
-        Text: require('./text/static/TextFactory'),
+        Text: require('./text/TextFactory'),
         TileSprite: require('./tilesprite/TileSpriteFactory'),
         Zone: require('./zone/ZoneFactory'),
         Video: require('./video/VideoFactory'),
@@ -111,7 +111,7 @@ var GameObjects = {
         Rope: require('./rope/RopeCreator'),
         Sprite: require('./sprite/SpriteCreator'),
         StaticBitmapText: require('./bitmaptext/static/BitmapTextCreator'),
-        Text: require('./text/static/TextCreator'),
+        Text: require('./text/TextCreator'),
         TileSprite: require('./tilesprite/TileSpriteCreator'),
         Zone: require('./zone/ZoneCreator'),
         Video: require('./video/VideoCreator')

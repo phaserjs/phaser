@@ -5,17 +5,17 @@
  */
 
 var Text = require('./Text');
-var GameObjectFactory = require('../../GameObjectFactory');
+var GameObjectFactory = require('../GameObjectFactory');
 
 /**
  * Creates a new Text Game Object and adds it to the Scene.
- * 
+ *
  * A Text Game Object.
- * 
+ *
  * Text objects work by creating their own internal hidden Canvas and then renders text to it using
  * the standard Canvas `fillText` API. It then creates a texture from this canvas which is rendered
  * to your game during the render pass.
- * 
+ *
  * Because it uses the Canvas API you can take advantage of all the features this offers, such as
  * applying gradient fills to the text, or strokes, shadows and more. You can also use custom fonts
  * loaded externally, such as Google or TypeKit Web fonts.
@@ -26,7 +26,7 @@ var GameObjectFactory = require('../../GameObjectFactory');
  *
  * See {@link http://www.jordanm.co.uk/tinytype this compatibility table} for the available default fonts
  * across mobile browsers.
- * 
+ *
  * A note on performance: Every time the contents of a Text object changes, i.e. changing the text being
  * displayed, or the style of the text, it needs to remake the Text canvas, and if on WebGL, re-upload the
  * new texture to the GPU. This can be an expensive operation if used often, or with large quantities of
