@@ -128,7 +128,8 @@ var LightPipeline = new Class({
         config.uniforms = GetFastValue(config, 'uniforms', [
             'uProjectionMatrix',
             'uViewMatrix',
-            'uModelMatrix'
+            'uModelMatrix',
+            'uResolution'
         ]);
 
         WebGLPipeline.call(this, config);
@@ -382,6 +383,7 @@ var LightPipeline = new Class({
      * @param {boolean} [reset=false] - Should the pipeline be fully re-bound after a renderer pipeline clear?
      *
      * @return {this} This WebGLPipeline instance.
+     */
     bind: function (reset)
     {
         if (reset === undefined) { reset = false; }
@@ -391,13 +393,12 @@ var LightPipeline = new Class({
         var renderer = this.renderer;
         var program = this.program;
 
-        renderer.setInt1(program, 'uMainSampler', 0);
-        renderer.setInt1(program, 'uNormSampler', 1);
-        renderer.setFloat2(program, 'uResolution', this.width, this.height);
+        // renderer.setInt1(program, 'uMainSampler', 0);
+        // renderer.setInt1(program, 'uNormSampler', 1);
+        renderer.setFloat2(program, 'uResolution', this.width / 2, this.height / 2);
 
         return this;
     },
-     */
 
     /**
      * Resizes this pipeline and updates the projection.

@@ -11,6 +11,7 @@ module.exports = [
     'attribute vec2 inLightPosition;',
     'attribute vec4 inLightColor;',
     'attribute float inLightRadius;',
+    'attribute float inLightIntensity;',
     '',
     'varying vec4 lightPosition;',
     'varying vec4 lightColor;',

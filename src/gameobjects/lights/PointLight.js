@@ -61,7 +61,7 @@ var PointLight = new Class({
     {
         if (color === undefined) { color = 0xffffff; }
         if (radius === undefined) { radius = 128; }
-        if (intensity === undefined) { intensity = 1; }
+        if (intensity === undefined) { intensity = 10; }
 
         GameObject.call(this, scene, 'PointLight');
 
