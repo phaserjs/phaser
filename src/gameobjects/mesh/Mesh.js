@@ -249,14 +249,14 @@ var Mesh = new Class({
          * An internal cache, used to compare position, rotation, scale and face data
          * each frame, to avoid math calculations in `preUpdate`.
          *
-         * Cache structure = position xyz | rotation xyz | scale xyz | face count | view
+         * Cache structure = position xyz | rotation xyz | scale xyz | face count | view | ortho
          *
          * @name Phaser.GameObjects.Mesh#dirtyCache
          * @type {number[]}
          * @private
          * @since 3.50.0
          */
-        this.dirtyCache = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
+        this.dirtyCache = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
 
         /**
          * The transformation matrix for this Mesh.
@@ -290,7 +290,7 @@ var Mesh = new Class({
         /**
          * The projection matrix for this Mesh.
          *
-         * Update it with the `updateProjectionMatix` method.
+         * Update it with the `setPerspective` or `setOrtho` methods.
          *
          * @name Phaser.GameObjects.Mesh#projectionMatrix
          * @type {Phaser.Math.Matrix4}
@@ -331,7 +331,7 @@ var Mesh = new Class({
         this.setSize(renderer.width, renderer.height);
         this.initPipeline();
 
-        this.updateProjectionMatrix(renderer.width, renderer.height, 45, 0.01, 1000);
+        this.setPerspective(renderer.width, renderer.height, 45, 0.01, 1000);
 
         if (vertices)
         {
@@ -406,18 +406,20 @@ var Mesh = new Class({
     },
 
     /**
-     * Builds a new projection matrix from the given values.
+     * Builds a new perspective projection matrix from the given values.
      *
-     * @method Phaser.GameObjects.Mesh#updateProjectionMatrix
+     * See also `setOrtho`.
+     *
+     * @method Phaser.GameObjects.Mesh#setPerspective
      * @since 3.50.0
      *
      * @param {number} width - The width of the renderer.
      * @param {number} height - The height of the renderer.
      * @param {number} [fov=45] - The field of view, in degrees.
      * @param {number} [near=0.01] - The near value of the view.
-     * @param {number} [fofarv=1000] - The far value of the view.
+     * @param {number} [far=1000] - The far value of the view.
      */
-    updateProjectionMatrix: function (width, height, fov, near, far)
+    setPerspective: function (width, height, fov, near, far)
     {
         if (fov === undefined) { fov = 45; }
         if (near === undefined) { near = 0.01; }
@@ -426,6 +428,37 @@ var Mesh = new Class({
         this.projectionMatrix.perspective(DegToRad(fov), width / height, near, far);
 
         this.dirtyCache[10] = 1;
+        this.dirtyCache[11] = 0;
+
+        return this;
+    },
+
+    /**
+     * Builds a new orthographic projection matrix from the given values.
+     *
+     * If using this mode you will often need to set `Mesh.hideCCW` to `false` as well.
+     *
+     * See also `setPerspective`.
+     *
+     * @method Phaser.GameObjects.Mesh#setOrtho
+     * @since 3.50.0
+     *
+     * @param {number} [scaleX=1] - The default horizontal scale in relation to the renderer dimensions.
+     * @param {number} [scaleY=1] - The default vertical scale in relation to the renderer dimensions.
+     * @param {number} [near=-1000] - The near value of the view.
+     * @param {number} [far=1000] - The far value of the view.
+     */
+    setOrtho: function (scaleX, scaleY, near, far)
+    {
+        if (scaleX === undefined) { scaleX = 1; }
+        if (scaleY === undefined) { scaleY = 1; }
+        if (near === undefined) { near = -1000; }
+        if (far === undefined) { far = 1000; }
+
+        this.projectionMatrix.ortho(-scaleX, scaleX, -scaleY, scaleY, near, far);
+
+        this.dirtyCache[10] = 1;
+        this.dirtyCache[11] = 1;
 
         return this;
     },
