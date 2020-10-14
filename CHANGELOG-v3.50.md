@@ -478,7 +478,8 @@ The Mesh Game Object has been rewritten from scratch in v3.50 with a lot of chan
 * `Mesh.panX` is a new function that will translate the view position of the Mesh on the x axis.
 * `Mesh.panY` is a new function that will translate the view position of the Mesh on the y axis.
 * `Mesh.panZ` is a new function that will translate the view position of the Mesh on the z axis.
-* `Mesh.updateProjectionMatrix` is a new method that allows you to set the projection matrix based on the given size, fov, near and far values.
+* `Mesh.setPerspective` is a new method that allows you to set a perspective projection matrix based on the given dimensions, fov, near and far values.
+* `Mesh.setOrtho` is a new method that allows you to set an orthographic projection matrix based on the given scale, near and far values.
 * `Mesh.clear` is a new method that will destroy all Faces and Vertices and clear the Mesh.
 * `Mesh.depthSort` is a new method that will run a depth sort across all Faces in the Mesh by sorting them based on their average depth.
 * `Mesh.addVertex` is a new method that allows you to add a new single Vertex into the Mesh.
