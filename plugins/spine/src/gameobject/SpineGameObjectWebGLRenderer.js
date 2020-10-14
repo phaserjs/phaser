@@ -75,7 +75,8 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix
     {
         skeleton.scaleX *= -1;
 
-        src.root.rotation = RadToDeg(calcMatrix.rotationNormalized);
+        //  -180 degrees to account for the difference in Spine vs. Phaser rotation when inversely scaled
+        src.root.rotation = Wrap(RadToDeg(calcMatrix.rotationNormalized) - 180, 0, 360);
     }
     else
     {
