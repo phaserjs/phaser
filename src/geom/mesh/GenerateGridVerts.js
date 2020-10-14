@@ -59,9 +59,12 @@ var GenerateGridVerts = function (config)
     var rotateY = GetFastValue(config, 'rotateY', 0);
     var rotateZ = GetFastValue(config, 'rotateZ', 0);
     var zIsUp = GetFastValue(config, 'zIsUp', true);
+    var isOrtho = GetFastValue(config, 'isOrtho', mesh.dirtyCache[11]);
     var colors = GetFastValue(config, 'colors', [ 0xffffff ]);
     var alphas = GetFastValue(config, 'alphas', [ 1 ]);
     var tile = GetFastValue(config, 'tile', false);
+
+    var widthSet = GetFastValue(config, 'width', null);
 
     var result = {
         faces: [],
@@ -71,6 +74,17 @@ var GenerateGridVerts = function (config)
     tempPosition.set(posX, posY, posZ);
     tempRotation.set(rotateX, rotateY, rotateZ);
     tempMatrix.fromRotationXYTranslation(tempRotation, tempPosition, zIsUp);
+
+    //  If the Mesh is ortho and no width/height is given, we'll default to texture sizes (if set!)
+    if (!widthSet && isOrtho && texture)
+    {
+        var textureFrame = texture.get(frame);
+
+        var renderer = mesh.scene.sys.renderer;
+
+        width = textureFrame.width / renderer.height;
+        height = textureFrame.height / renderer.height;
+    }
 
     var halfWidth = width / 2;
     var halfHeight = height / 2;
@@ -95,10 +109,8 @@ var GenerateGridVerts = function (config)
     var frameV0 = 0;
     var frameV1 = 1;
 
-    if (texture)
+    if (textureFrame)
     {
-        var textureFrame = texture.get(frame);
-
         frameU0 = textureFrame.u0;
         frameU1 = textureFrame.u1;
         frameV0 = textureFrame.v0;
