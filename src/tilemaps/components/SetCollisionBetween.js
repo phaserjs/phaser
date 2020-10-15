@@ -31,15 +31,18 @@ var SetCollisionBetween = function (start, stop, collides, recalculateFaces, lay
     if (recalculateFaces === undefined) { recalculateFaces = true; }
     if (updateLayer === undefined) { updateLayer = true; }
 
-    if (start > stop) { return; }
+    if (start > stop)
+    {
+        return;
+    }
 
-    // Update the array of colliding indexes
+    //  Update the array of colliding indexes
     for (var index = start; index <= stop; index++)
     {
         SetLayerCollisionIndex(index, collides, layer);
     }
 
-    // Update the tiles
+    //  Update the tiles
     if (updateLayer)
     {
         for (var ty = 0; ty < layer.height; ty++)
