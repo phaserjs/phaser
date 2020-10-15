@@ -31,13 +31,13 @@ var pointEnd = new Vector2();
  */
 var GetTilesWithinWorldXY = function (worldX, worldY, width, height, filteringOptions, camera, layer)
 {
-    // Top left corner of the rect, rounded down to include partial tiles
+    //  Top left corner of the rect, rounded down to include partial tiles
     layer.tilemapLayer.worldToTileXY(worldX, worldY, true, pointStart, camera);
 
     var xStart = pointStart.x;
     var yStart = pointStart.y;
 
-    // Bottom right corner of the rect, rounded up to include partial tiles
+    //  Bottom right corner of the rect, rounded up to include partial tiles
     layer.tilemapLayer.worldToTileXY(worldX + width, worldY + height, false, pointEnd, camera);
 
     var xEnd = Math.ceil(pointEnd.x);
