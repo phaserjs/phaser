@@ -1134,7 +1134,7 @@ var TilemapLayer = new Class({
      */
     tileToWorldX: function (tileX, camera)
     {
-        return this.tilemap.tileToWorldX(tileX, camera, this.layer);
+        return this.tilemap.tileToWorldX(tileX, camera, this);
     },
 
     /**
@@ -1151,7 +1151,7 @@ var TilemapLayer = new Class({
      */
     tileToWorldY: function (tileY, camera)
     {
-        return this.tilemap.tileToWorldY(tileY, camera, this.layer);
+        return this.tilemap.tileToWorldY(tileY, camera, this);
     },
 
     /**
@@ -1171,7 +1171,7 @@ var TilemapLayer = new Class({
      */
     tileToWorldXY: function (tileX, tileY, point, camera)
     {
-        return this.tilemap.tileToWorldXY(tileX, tileY, point, camera, this.layer);
+        return this.tilemap.tileToWorldXY(tileX, tileY, point, camera, this);
     },
 
     /**
@@ -1224,7 +1224,7 @@ var TilemapLayer = new Class({
      */
     worldToTileX: function (worldX, snapToFloor, camera)
     {
-        return this.tilemap.worldToTileX(worldX, snapToFloor, camera, this.layer);
+        return this.tilemap.worldToTileX(worldX, snapToFloor, camera, this);
     },
 
     /**
@@ -1242,7 +1242,7 @@ var TilemapLayer = new Class({
      */
     worldToTileY: function (worldY, snapToFloor, camera)
     {
-        return this.tilemap.worldToTileY(worldY, snapToFloor, camera, this.layer);
+        return this.tilemap.worldToTileY(worldY, snapToFloor, camera, this);
     },
 
     /**
@@ -1263,7 +1263,7 @@ var TilemapLayer = new Class({
      */
     worldToTileXY: function (worldX, worldY, snapToFloor, point, camera)
     {
-        return this.tilemap.worldToTileXY(worldX, worldY, snapToFloor, point, camera, this.layer);
+        return this.tilemap.worldToTileXY(worldX, worldY, snapToFloor, point, camera, this);
     },
 
     /**
