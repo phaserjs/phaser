@@ -452,6 +452,7 @@ In your game where you use `map.createDynamicLayer` or `map.createStaticLayer` r
 * `Tilemaps.Components.RunCull` is a new function that runs the culling process from the combined bounds and tilemap.
 * `Tilemap._convert` is a new internal private hash of tilemap conversion functions used by the public API.
 * The `Tilemap._isStaticCall` method has been removed and no Tilemap methods now check this, leading to faster execution.
+* The Arcade Physics Sprites vs. Tilemap Layers flow has changed. Previously, it would iterate through a whole bunch of linked functions, taking lots of jumps in the process. It now just calls the `GetTilesWithinWorldXY` component directly, saving lots of overhead.
 
 ### Mesh Game Object - New Features, Updates and API Changes
 
@@ -783,4 +784,4 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
-@samme @16patsle @scott20145 @khasanovbi @mk360 @volkans80 @jaabberwocky @maikthomas @atursams @LearningCode2023 @DylanC @BenjaminDRichards @rexrainbow @Riderrr @spwilson2 @EmilSV @PhaserEditor2D @Gangryong @vinerz
+@samme @16patsle @scott20145 @khasanovbi @mk360 @volkans80 @jaabberwocky @maikthomas @atursams @LearningCode2023 @DylanC @BenjaminDRichards @rexrainbow @Riderrr @spwilson2 @EmilSV @PhaserEditor2D @Gangryong @vinerz @trynx
