@@ -31,14 +31,16 @@ var pointEnd = new Vector2();
  */
 var GetTilesWithinWorldXY = function (worldX, worldY, width, height, filteringOptions, camera, layer)
 {
+    var worldToTileXY = layer.tilemapLayer.tilemap._convert.WorldToTileXY;
+
     //  Top left corner of the rect, rounded down to include partial tiles
-    layer.tilemapLayer.worldToTileXY(worldX, worldY, true, pointStart, camera);
+    worldToTileXY(worldX, worldY, true, pointStart, camera, layer);
 
     var xStart = pointStart.x;
     var yStart = pointStart.y;
 
     //  Bottom right corner of the rect, rounded up to include partial tiles
-    layer.tilemapLayer.worldToTileXY(worldX + width, worldY + height, false, pointEnd, camera);
+    worldToTileXY(worldX + width, worldY + height, false, pointEnd, camera, layer);
 
     var xEnd = Math.ceil(pointEnd.x);
     var yEnd = Math.ceil(pointEnd.y);
