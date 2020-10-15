@@ -91,13 +91,11 @@ var GenerateGridVerts = function (config)
 
     var textureFrame = texture.get(frame);
 
-    //  If the Mesh is ortho and no width/height is given, we'll default to texture sizes (if set!)
-    if (!widthSet && isOrtho && texture)
+    //  If the Mesh is ortho and no width / height is given, we'll default to texture sizes (if set!)
+    if (!widthSet && isOrtho && texture && mesh)
     {
-        var renderer = mesh.scene.sys.renderer;
-
-        width = textureFrame.width / renderer.height;
-        height = textureFrame.height / renderer.height;
+        width = textureFrame.width / mesh.height;
+        height = textureFrame.height / mesh.height;
     }
 
     var halfWidth = width / 2;
