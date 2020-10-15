@@ -2184,9 +2184,6 @@ var World = new Class({
         var w = body.width;
         var h = body.height;
 
-        // TODO: this logic should be encapsulated within the Tilemap API at some point.
-        // If the maps base tile size differs from the layer's tile size, we need to adjust the
-        // selection area by the difference between the two.
         var layerData = tilemapLayer.layer;
 
         if (layerData.tileWidth > layerData.baseTileWidth)
