@@ -413,8 +413,8 @@ var Mesh = new Class({
      * @method Phaser.GameObjects.Mesh#setPerspective
      * @since 3.50.0
      *
-     * @param {number} width - The width of the renderer.
-     * @param {number} height - The height of the renderer.
+     * @param {number} width - The width of the projection matrix. Typically the same as the Mesh and/or Renderer.
+     * @param {number} height - The height of the projection matrix. Typically the same as the Mesh and/or Renderer.
      * @param {number} [fov=45] - The field of view, in degrees.
      * @param {number} [near=0.01] - The near value of the view.
      * @param {number} [far=1000] - The far value of the view.
@@ -443,8 +443,8 @@ var Mesh = new Class({
      * @method Phaser.GameObjects.Mesh#setOrtho
      * @since 3.50.0
      *
-     * @param {number} [scaleX=1] - The default horizontal scale in relation to the renderer dimensions.
-     * @param {number} [scaleY=1] - The default vertical scale in relation to the renderer dimensions.
+     * @param {number} [scaleX=1] - The default horizontal scale in relation to the Mesh / Renderer dimensions.
+     * @param {number} [scaleY=1] - The default vertical scale in relation to the Mesh / Renderer dimensions.
      * @param {number} [near=-1000] - The near value of the view.
      * @param {number} [far=1000] - The far value of the view.
      */
