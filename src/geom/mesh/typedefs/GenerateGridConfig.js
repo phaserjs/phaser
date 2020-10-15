@@ -2,7 +2,7 @@
  * @typedef {object} Phaser.Types.Geom.Mesh.GenerateGridConfig
  * @since 3.50.0
  *
- * @property {(string|Phaser.Textures.Texture)} key - The key of the texture to be used for this Grid, as stored in the Texture Manager, or a Texture instance.
+ * @property {(string|Phaser.Textures.Texture)} texture - The texture to be used for this Grid. Must be a Texture instance. Can also be a string but only if the `mesh` property is set.
  * @property {(string|integer)} [frame] - The name or index of the frame within the Texture.
  * @property {Phaser.GameObjects.Mesh} [mesh] - If specified, the vertices of the generated grid will be added to this Mesh Game Object.
  * @property {number} [width=1] - The width of the grid in 3D units. If you wish to get a pixel accurate grid based on a texture, you can use an Ortho Mesh or the `isOrtho` parameter.

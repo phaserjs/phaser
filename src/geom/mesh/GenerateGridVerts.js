@@ -46,7 +46,7 @@ var tempMatrix = new Matrix4();
 var GenerateGridVerts = function (config)
 {
     var mesh = GetFastValue(config, 'mesh');
-    var texture = GetFastValue(config, 'texture', (mesh) ? mesh.texture : null);
+    var texture = GetFastValue(config, 'texture', null);
     var frame = GetFastValue(config, 'frame');
     var width = GetFastValue(config, 'width', 1);
     var height = GetFastValue(config, 'height', width);
@@ -59,7 +59,7 @@ var GenerateGridVerts = function (config)
     var rotateY = GetFastValue(config, 'rotateY', 0);
     var rotateZ = GetFastValue(config, 'rotateZ', 0);
     var zIsUp = GetFastValue(config, 'zIsUp', true);
-    var isOrtho = GetFastValue(config, 'isOrtho', mesh.dirtyCache[11]);
+    var isOrtho = GetFastValue(config, 'isOrtho', (mesh) ? mesh.dirtyCache[11] : false);
     var colors = GetFastValue(config, 'colors', [ 0xffffff ]);
     var alphas = GetFastValue(config, 'alphas', [ 1 ]);
     var tile = GetFastValue(config, 'tile', false);
@@ -75,11 +75,25 @@ var GenerateGridVerts = function (config)
     tempRotation.set(rotateX, rotateY, rotateZ);
     tempMatrix.fromRotationXYTranslation(tempRotation, tempPosition, zIsUp);
 
+    if (!texture && mesh)
+    {
+        texture = mesh.texture;
+    }
+    else if (mesh && typeof(texture) === 'string')
+    {
+        texture = mesh.scene.sys.textures.get(texture);
+    }
+    else
+    {
+        //  There's nothing more we can do without a texture
+        return result;
+    }
+
+    var textureFrame = texture.get(frame);
+
     //  If the Mesh is ortho and no width/height is given, we'll default to texture sizes (if set!)
     if (!widthSet && isOrtho && texture)
     {
-        var textureFrame = texture.get(frame);
-
         var renderer = mesh.scene.sys.renderer;
 
         width = textureFrame.width / renderer.height;
