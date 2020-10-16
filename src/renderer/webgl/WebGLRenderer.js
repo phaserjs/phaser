@@ -2253,15 +2253,15 @@ var WebGLRenderer = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Scene} scene - The Scene to render.
-     * @param {Phaser.GameObjects.GameObject} children - The Game Object's within the Scene to be rendered.
+     * @param {Phaser.GameObjects.GameObject[]} children - An array of filtered Game Objects that can be rendered by the given Camera.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The Scene Camera to render with.
      */
     render: function (scene, children, camera)
     {
         if (this.contextLost) { return; }
 
-        var list = children.list;
-        var childCount = list.length;
+        // var list = children.list;
+        var childCount = children.length;
 
         this.pipelines.render(scene, camera);
 
@@ -2288,12 +2288,7 @@ var WebGLRenderer = new Class({
         {
             this.finalType = (i === childCount - 1);
 
-            var child = list[i];
-
-            if (!child.willRender(camera))
-            {
-                continue;
-            }
+            var child = children[i];
 
             if (child.blendMode !== this.currentBlendMode)
             {
@@ -2323,7 +2318,14 @@ var WebGLRenderer = new Class({
                 this.currentType = type;
             }
 
-            this.nextTypeMatch = (i < childCount - 1) ? (list[i + 1].type === this.currentType) : false;
+            if (!this.finalType)
+            {
+                this.nextTypeMatch = (children[i + 1].type === this.currentType);
+            }
+            else
+            {
+                this.nextTypeMatch = false;
+            }
 
             child.renderWebGL(this, child, camera);
 
