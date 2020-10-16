@@ -2242,7 +2242,7 @@ var WebGLRenderer = new Class({
     /**
      * The core render step for a Scene Camera.
      *
-     * Iterates through the given Game Object's array and renders them with the given Camera.
+     * Iterates through the given array of Game Objects and renders them with the given Camera.
      *
      * This is called by the `CameraManager.render` method. The Camera Manager instance belongs to a Scene, and is invoked
      * by the Scene Systems.render method.
@@ -2260,7 +2260,6 @@ var WebGLRenderer = new Class({
     {
         if (this.contextLost) { return; }
 
-        // var list = children.list;
         var childCount = children.length;
 
         this.pipelines.render(scene, camera);
