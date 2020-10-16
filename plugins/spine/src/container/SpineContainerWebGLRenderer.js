@@ -70,10 +70,23 @@ var SpineContainerWebGLRenderer = function (renderer, container, camera, parentM
         sceneRenderer.begin();
     }
 
+    var rendererNextType = renderer.nextTypeMatch;
+
+    //  Force these to avoid batch flushing
+    renderer.nextTypeMatch = true;
+    renderer.newType = false;
+
     for (var i = 0; i < children.length; i++)
     {
         var src = children[i];
 
+        if (src.willRender(camera))
+        {
+            src.renderWebGL(renderer, src, camera, transformMatrix);
+        }
+    }
+
+        /*
         var skeleton = src.skeleton;
         var childAlpha = skeleton.color.a;
 
@@ -153,8 +166,11 @@ var SpineContainerWebGLRenderer = function (renderer, container, camera, parentM
         //  Restore alpha
         skeleton.color.a = childAlpha;
     }
+    */
 
-    if (!renderer.nextTypeMatch)
+    renderer.nextTypeMatch = rendererNextType;
+
+    if (!rendererNextType)
     {
         //  The next object in the display list is not a Spine Game Object or Spine Container, so we end the batch
         sceneRenderer.end();
