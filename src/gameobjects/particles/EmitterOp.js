@@ -234,6 +234,10 @@ var EmitterOp = new Class({
 
         var t = typeof value;
 
+        //  Reset them in case they're not changed below
+        this.onEmit = this.defaultEmit;
+        this.onUpdate = this.defaultUpdate;
+
         if (t === 'number')
         {
             //  Explicit static value:
