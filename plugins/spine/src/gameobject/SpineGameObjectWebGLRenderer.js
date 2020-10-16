@@ -80,7 +80,6 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix
         skeleton.scaleY *= -1;
     }
 
-    //  Add autoUpdate option
     skeleton.updateWorldTransform();
 
     //  Draw the current skeleton
