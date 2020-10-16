@@ -335,21 +335,28 @@ var Graphics = new Class({
      * @webglOnly
      * @since 3.12.0
      *
-     * @param {integer} topLeft - The tint being applied to the top-left of the Game Object.
-     * @param {integer} topRight - The tint being applied to the top-right of the Game Object.
-     * @param {integer} bottomLeft - The tint being applied to the bottom-left of the Game Object.
-     * @param {integer} bottomRight - The tint being applied to the bottom-right of the Game Object.
-     * @param {number} [alpha=1] - The fill alpha.
+     * @param {integer} topLeft - The top left fill color.
+     * @param {integer} topRight - The top right fill color.
+     * @param {integer} bottomLeft - The bottom left fill color.
+     * @param {integer} bottomRight - The bottom right fill color. Not used when filling triangles.
+     * @param {number} [alphaTopLeft=1] - The top left alpha value. If you give only this value, it's used for all corners.
+     * @param {number} [alphaTopRight=1] - The top right alpha value.
+     * @param {number} [alphaBottomLeft=1] - The bottom left alpha value.
+     * @param {number} [alphaBottomRight=1] - The bottom right alpha value.
      *
      * @return {this} This Game Object.
      */
-    fillGradientStyle: function (topLeft, topRight, bottomLeft, bottomRight, alpha)
+    fillGradientStyle: function (topLeft, topRight, bottomLeft, bottomRight, alphaTopLeft, alphaTopRight, alphaBottomLeft, alphaBottomRight)
     {
-        if (alpha === undefined) { alpha = 1; }
+        if (alphaTopLeft === undefined) { alphaTopLeft = 1; }
+        if (alphaTopRight === undefined) { alphaTopRight = alphaTopLeft; }
+        if (alphaBottomLeft === undefined) { alphaBottomLeft = alphaTopLeft; }
+        if (alphaBottomRight === undefined) { alphaBottomRight = alphaTopLeft; }
 
         this.commandBuffer.push(
             Commands.GRADIENT_FILL_STYLE,
-            alpha, topLeft, topRight, bottomLeft, bottomRight
+            alphaTopLeft, alphaTopRight, alphaBottomLeft, alphaBottomRight,
+            topLeft, topRight, bottomLeft, bottomRight
         );
 
         return this;

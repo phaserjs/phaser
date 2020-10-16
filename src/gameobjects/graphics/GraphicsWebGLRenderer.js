@@ -177,11 +177,16 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
                 break;
 
             case Commands.GRADIENT_FILL_STYLE:
-                var gradientFillAlpha = commands[++cmdIndex] * alpha;
-                fillTint.TL = getTint(commands[++cmdIndex], gradientFillAlpha);
-                fillTint.TR = getTint(commands[++cmdIndex], gradientFillAlpha);
-                fillTint.BL = getTint(commands[++cmdIndex], gradientFillAlpha);
-                fillTint.BR = getTint(commands[++cmdIndex], gradientFillAlpha);
+
+                var alphaTL = commands[++cmdIndex] * alpha;
+                var alphaTR = commands[++cmdIndex] * alpha;
+                var alphaBL = commands[++cmdIndex] * alpha;
+                var alphaBR = commands[++cmdIndex] * alpha;
+
+                fillTint.TL = getTint(commands[++cmdIndex], alphaTL);
+                fillTint.TR = getTint(commands[++cmdIndex], alphaTR);
+                fillTint.BL = getTint(commands[++cmdIndex], alphaBL);
+                fillTint.BR = getTint(commands[++cmdIndex], alphaBR);
                 break;
 
             case Commands.GRADIENT_LINE_STYLE:
