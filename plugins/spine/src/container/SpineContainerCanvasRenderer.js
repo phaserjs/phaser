@@ -83,7 +83,7 @@ var SpineContainerCanvasRenderer = function (renderer, container, camera, parent
         child.setAlpha(childAlpha * alpha);
 
         //  Render
-        child.renderCanvas(renderer, child, interpolationPercentage, camera, transformMatrix);
+        child.renderCanvas(renderer, child, camera, transformMatrix);
 
         //  Restore original values
         child.setAlpha(childAlpha);
