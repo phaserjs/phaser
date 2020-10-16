@@ -2398,32 +2398,32 @@ var GeometryMask = new Class({
 
         renderer.maskCount--;
 
+        //  Force flush before disabling stencil test
+        renderer.flush();
+
+        var current = renderer.currentMask;
+
         if (renderer.maskStack.length === 0)
         {
             //  If this is the only mask in the stack, flush and disable
-            renderer.flush();
-
-            renderer.currentMask.mask = null;
+            current.mask = null;
 
             gl.disable(gl.STENCIL_TEST);
         }
         else
         {
-            //  Force flush before disabling stencil test
-            renderer.flush();
-
             var prev = renderer.maskStack[renderer.maskStack.length - 1];
 
             prev.mask.applyStencil(renderer, prev.camera, false);
 
             if (renderer.currentCameraMask.mask !== prev.mask)
             {
-                renderer.currentMask.mask = prev.mask;
-                renderer.currentMask.camera = prev.camera;
+                current.mask = prev.mask;
+                current.camera = prev.camera;
             }
             else
             {
-                renderer.currentMask.mask = null;
+                current.mask = null;
             }
         }
     },
@@ -33845,11 +33845,39 @@ var SpineContainerWebGLRenderer = function (renderer, container, camera, parentM
 
     for (var i = 0; i < children.length; i++)
     {
-        var src = children[i];
+        var child = children[i];
 
-        if (src.willRender(camera))
+        if (child.willRender(camera))
         {
-            src.renderWebGL(renderer, src, camera, transformMatrix, container);
+            var mask = child.mask;
+
+            if (mask)
+            {
+                sceneRenderer.end();
+
+                renderer.pipelines.rebind();
+
+                mask.preRenderWebGL(renderer, child, camera);
+
+                renderer.pipelines.clear();
+
+                sceneRenderer.begin();
+            }
+
+            child.renderWebGL(renderer, child, camera, transformMatrix, container);
+
+            if (mask)
+            {
+                sceneRenderer.end();
+
+                renderer.pipelines.rebind();
+
+                mask.postRenderWebGL(renderer, camera);
+
+                renderer.pipelines.clear();
+
+                sceneRenderer.begin();
+            }
         }
     }
 
