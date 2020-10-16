@@ -67,11 +67,39 @@ var SpineContainerWebGLRenderer = function (renderer, container, camera, parentM
 
     for (var i = 0; i < children.length; i++)
     {
-        var src = children[i];
+        var child = children[i];
 
-        if (src.willRender(camera))
+        if (child.willRender(camera))
         {
-            src.renderWebGL(renderer, src, camera, transformMatrix, container);
+            var mask = child.mask;
+
+            if (mask)
+            {
+                sceneRenderer.end();
+
+                renderer.pipelines.rebind();
+
+                mask.preRenderWebGL(renderer, child, camera);
+
+                renderer.pipelines.clear();
+
+                sceneRenderer.begin();
+            }
+
+            child.renderWebGL(renderer, child, camera, transformMatrix, container);
+
+            if (mask)
+            {
+                sceneRenderer.end();
+
+                renderer.pipelines.rebind();
+
+                mask.postRenderWebGL(renderer, camera);
+
+                renderer.pipelines.clear();
+
+                sceneRenderer.begin();
+            }
         }
     }
 
