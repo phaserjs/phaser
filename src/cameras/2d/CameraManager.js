@@ -583,7 +583,7 @@ var CameraManager = new Class({
      * @since 3.0.0
      *
      * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The Renderer that will render the children to this camera.
-     * @param {Phaser.GameObjects.GameObject[]} children - An array of renderable Game Objects.
+     * @param {Phaser.GameObjects.DisplayList} children - The Display List for the Scene.
      */
     render: function (renderer, children)
     {
@@ -596,12 +596,43 @@ var CameraManager = new Class({
 
             if (camera.visible && camera.alpha > 0)
             {
-                //  Hard-coded to 1 for now
-                camera.preRender(1);
+                camera.preRender();
 
-                renderer.render(scene, children, camera);
+                var visibleChildren = this.getVisibleChildren(children.getChildren(), camera);
+
+                renderer.render(scene, visibleChildren, camera);
             }
         }
+    },
+
+    /**
+     * Takes an array of Game Objects and a Camera and returns a new array
+     * containing only those Game Objects that pass the `willRender` test
+     * against the given Camera.
+     *
+     * @method Phaser.Cameras.Scene2D.CameraManager#getVisibleChildren
+     * @since 3.50.0
+     *
+     * @param {Phaser.GameObjects.GameObject[]} children - An array of Game Objects to be checked against the camera.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera to filte the Game Objects against.
+     *
+     * @return {Phaser.GameObjects.GameObject[]} A filtered list of only Game Objects within the Scene that will render against the given Camera.
+     */
+    getVisibleChildren: function (children, camera)
+    {
+        var visible = [];
+
+        for (var i = 0; i < children.length; i++)
+        {
+            var child = children[i];
+
+            if (child.willRender(camera))
+            {
+                visible.push(child);
+            }
+        }
+
+        return visible;
     },
 
     /**
