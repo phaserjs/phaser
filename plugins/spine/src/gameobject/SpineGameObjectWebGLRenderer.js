@@ -4,6 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var Clamp = require('../../../../src/math/Clamp');
 var CounterClockwise = require('../../../../src/math/angle/CounterClockwise');
 var GetCalcMatrix = require('../../../../src/gameobjects/GetCalcMatrix');
 var RadToDeg = require('../../../../src/math/RadToDeg');
@@ -23,7 +24,7 @@ var Wrap = require('../../../../src/math/Wrap');
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix)
+var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix, container)
 {
     var plugin = src.plugin;
     var skeleton = src.skeleton;
@@ -35,6 +36,18 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix
         renderer.pipelines.clear();
 
         sceneRenderer.begin();
+    }
+
+    var scrollFactorX = src.scrollFactorX;
+    var scrollFactorY = src.scrollFactorY;
+    var alpha = skeleton.color.a;
+
+    if (container)
+    {
+        src.scrollFactorX = container.scrollFactorX;
+        src.scrollFactorY = container.scrollFactorY;
+
+        skeleton.color.a = Clamp(alpha * container.alpha, 0, 1);
     }
 
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
@@ -84,6 +97,13 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix
 
     //  Draw the current skeleton
     sceneRenderer.drawSkeleton(skeleton, src.preMultipliedAlpha);
+
+    if (container)
+    {
+        src.scrollFactorX = scrollFactorX;
+        src.scrollFactorY = scrollFactorY;
+        skeleton.color.a = alpha;
+    }
 
     if (plugin.drawDebug || src.drawDebug)
     {
