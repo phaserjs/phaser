@@ -99,7 +99,6 @@ var SpineGameObjectCanvasRenderer = function (renderer, src, camera, parentMatri
         skeleton.scaleY *= -1;
     }
 
-    //  Add autoUpdate option
     skeleton.updateWorldTransform();
 
     skeletonRenderer.ctx = context;
