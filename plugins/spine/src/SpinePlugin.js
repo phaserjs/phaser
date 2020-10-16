@@ -15,6 +15,9 @@ var SpineGameObject = require('./gameobject/SpineGameObject');
 var SpineContainer = require('./container/SpineContainer');
 var NOOP = require('../../../src/utils/NOOP');
 
+//  Plugin specific instance of the Spine Scene Renderer
+var sceneRenderer;
+
 /**
  * @classdesc
  * The Spine Plugin is a Scene based plugin that handles the creation and rendering of Spine Game Objects.
@@ -216,6 +219,8 @@ var SpinePlugin = new Class({
         /**
          * An instance of the Spine WebGL Scene Renderer.
          *
+         * There is only one instance of the Scene Renderer shared across the whole plugin.
+         *
          * Only set if running in WebGL mode.
          *
          * @name SpinePlugin#sceneRenderer
@@ -246,7 +251,7 @@ var SpinePlugin = new Class({
 
         /**
          * A reference to the Spine runtime.
-         * This is the runtime created by Esoteric Software
+         * This is the runtime created by Esoteric Software.
          *
          * @name SpinePlugin#plugin
          * @type {spine}
@@ -436,8 +441,6 @@ var SpinePlugin = new Class({
      */
     bootWebGL: function ()
     {
-        this.sceneRenderer = new Spine.webgl.SceneRenderer(this.renderer.canvas, this.gl, true);
-
         //  Monkeypatch the Spine setBlendMode functions, or batching is destroyed!
 
         var setBlendMode = function (srcBlend, dstBlend)
@@ -457,11 +460,17 @@ var SpinePlugin = new Class({
             }
         };
 
-        this.sceneRenderer.batcher.setBlendMode = setBlendMode;
-        this.sceneRenderer.shapes.setBlendMode = setBlendMode;
+        if (!sceneRenderer)
+        {
+            sceneRenderer = new Spine.webgl.SceneRenderer(this.renderer.canvas, this.gl, true);
+            sceneRenderer.batcher.setBlendMode = setBlendMode;
+            sceneRenderer.shapes.setBlendMode = setBlendMode;
+        }
 
-        this.skeletonRenderer = this.sceneRenderer.skeletonRenderer;
-        this.skeletonDebugRenderer = this.sceneRenderer.skeletonDebugRenderer;
+        //  All share the same instance
+        this.sceneRenderer = sceneRenderer;
+        this.skeletonRenderer = sceneRenderer.skeletonRenderer;
+        this.skeletonDebugRenderer = sceneRenderer.skeletonDebugRenderer;
 
         this.temp1 = new Spine.webgl.Vector3(0, 0, 0);
         this.temp2 = new Spine.webgl.Vector3(0, 0, 0);
@@ -1059,8 +1068,7 @@ var SpinePlugin = new Class({
         sceneRenderer.camera.position.x = viewportWidth / 2;
         sceneRenderer.camera.position.y = viewportHeight / 2;
 
-        sceneRenderer.camera.viewportWidth = viewportWidth;
-        sceneRenderer.camera.viewportHeight = viewportHeight;
+        sceneRenderer.camera.setViewport(viewportWidth, viewportHeight);
     },
 
     /**
@@ -1122,9 +1130,9 @@ var SpinePlugin = new Class({
     {
         this.destroy();
 
-        if (this.sceneRenderer)
+        if (sceneRenderer)
         {
-            this.sceneRenderer.dispose();
+            sceneRenderer.dispose();
         }
 
         this.sceneRenderer = null;
