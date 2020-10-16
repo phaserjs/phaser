@@ -33715,7 +33715,7 @@ var SpineContainerCanvasRenderer = function (renderer, container, camera, parent
         child.setAlpha(childAlpha * alpha);
 
         //  Render
-        child.renderCanvas(renderer, child, interpolationPercentage, camera, transformMatrix);
+        child.renderCanvas(renderer, child, camera, transformMatrix);
 
         //  Restore original values
         child.setAlpha(childAlpha);
@@ -33774,18 +33774,13 @@ module.exports = {
   !*** ./container/SpineContainerWebGLRenderer.js ***!
   \**************************************************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
-
-var CounterClockwise = __webpack_require__(/*! ../../../../src/math/angle/CounterClockwise */ "../../../src/math/angle/CounterClockwise.js");
-var Clamp = __webpack_require__(/*! ../../../../src/math/Clamp */ "../../../src/math/Clamp.js");
-var RadToDeg = __webpack_require__(/*! ../../../../src/math/RadToDeg */ "../../../src/math/RadToDeg.js");
-var Wrap = __webpack_require__(/*! ../../../../src/math/Wrap */ "../../../src/math/Wrap.js");
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -33834,12 +33829,6 @@ var SpineContainerWebGLRenderer = function (renderer, container, camera, parentM
         transformMatrix.applyITRS(container.x, container.y, container.rotation, container.scaleX, container.scaleY);
     }
 
-    var alpha = container.alpha;
-    var scrollFactorX = container.scrollFactorX;
-    var scrollFactorY = container.scrollFactorY;
-
-    var GameObjectRenderMask = 15;
-
     if (renderer.newType)
     {
         //  flush + clear if this is a new type
@@ -33850,7 +33839,7 @@ var SpineContainerWebGLRenderer = function (renderer, container, camera, parentM
 
     var rendererNextType = renderer.nextTypeMatch;
 
-    //  Force these to avoid batch flushing
+    //  Force these to avoid batch flushing during SpineGameObject.renderWebGL
     renderer.nextTypeMatch = true;
     renderer.newType = false;
 
@@ -33860,91 +33849,9 @@ var SpineContainerWebGLRenderer = function (renderer, container, camera, parentM
 
         if (src.willRender(camera))
         {
-            src.renderWebGL(renderer, src, camera, transformMatrix);
+            src.renderWebGL(renderer, src, camera, transformMatrix, container);
         }
     }
-
-        /*
-        var skeleton = src.skeleton;
-        var childAlpha = skeleton.color.a;
-
-        var willRender = !(GameObjectRenderMask !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)) || childAlpha === 0);
-
-        if (!skeleton || !willRender)
-        {
-            continue;
-        }
-
-        var camMatrix = renderer._tempMatrix1;
-        var spriteMatrix = renderer._tempMatrix2;
-        var calcMatrix = renderer._tempMatrix3;
-
-        spriteMatrix.applyITRS(src.x, src.y, src.rotation, Math.abs(src.scaleX), Math.abs(src.scaleY));
-
-        camMatrix.copyFrom(camera.matrix);
-
-        //  Multiply the camera by the parent matrix
-        camMatrix.multiplyWithOffset(transformMatrix, -camera.scrollX * scrollFactorX, -camera.scrollY * scrollFactorY);
-
-        //  Undo the camera scroll
-        spriteMatrix.e = src.x;
-        spriteMatrix.f = src.y;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(spriteMatrix, calcMatrix);
-
-        var viewportHeight = renderer.height;
-
-        skeleton.x = calcMatrix.tx;
-        skeleton.y = viewportHeight - calcMatrix.ty;
-
-        skeleton.scaleX = calcMatrix.scaleX;
-        skeleton.scaleY = calcMatrix.scaleY;
-
-        if (src.scaleX < 0)
-        {
-            skeleton.scaleX *= -1;
-
-            src.root.rotation = RadToDeg(calcMatrix.rotationNormalized);
-        }
-        else
-        {
-            //  +90 degrees to account for the difference in Spine vs. Phaser rotation
-            src.root.rotation = Wrap(RadToDeg(CounterClockwise(calcMatrix.rotationNormalized)) + 90, 0, 360);
-        }
-
-        if (src.scaleY < 0)
-        {
-            skeleton.scaleY *= -1;
-
-            if (src.scaleX < 0)
-            {
-                src.root.rotation -= (RadToDeg(calcMatrix.rotationNormalized) * 2);
-            }
-            else
-            {
-                src.root.rotation += (RadToDeg(calcMatrix.rotationNormalized) * 2);
-            }
-        }
-
-        if (camera.renderToTexture || renderer.currentFramebuffer !== null)
-        {
-            skeleton.y = calcMatrix.ty;
-            skeleton.scaleY *= -1;
-        }
-
-        //  Add autoUpdate option
-        skeleton.updateWorldTransform();
-
-        skeleton.color.a = Clamp(childAlpha * alpha, 0, 1);
-
-        //  Draw the current skeleton
-        sceneRenderer.drawSkeleton(skeleton, src.preMultipliedAlpha);
-
-        //  Restore alpha
-        skeleton.color.a = childAlpha;
-    }
-    */
 
     renderer.nextTypeMatch = rendererNextType;
 
@@ -35856,7 +35763,6 @@ var SpineGameObjectCanvasRenderer = function (renderer, src, camera, parentMatri
         skeleton.scaleY *= -1;
     }
 
-    //  Add autoUpdate option
     skeleton.updateWorldTransform();
 
     skeletonRenderer.ctx = context;
@@ -35923,6 +35829,7 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var Clamp = __webpack_require__(/*! ../../../../src/math/Clamp */ "../../../src/math/Clamp.js");
 var CounterClockwise = __webpack_require__(/*! ../../../../src/math/angle/CounterClockwise */ "../../../src/math/angle/CounterClockwise.js");
 var GetCalcMatrix = __webpack_require__(/*! ../../../../src/gameobjects/GetCalcMatrix */ "../../../src/gameobjects/GetCalcMatrix.js");
 var RadToDeg = __webpack_require__(/*! ../../../../src/math/RadToDeg */ "../../../src/math/RadToDeg.js");
@@ -35942,7 +35849,7 @@ var Wrap = __webpack_require__(/*! ../../../../src/math/Wrap */ "../../../src/ma
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix)
+var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix, container)
 {
     var plugin = src.plugin;
     var skeleton = src.skeleton;
@@ -35954,6 +35861,18 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix
         renderer.pipelines.clear();
 
         sceneRenderer.begin();
+    }
+
+    var scrollFactorX = src.scrollFactorX;
+    var scrollFactorY = src.scrollFactorY;
+    var alpha = skeleton.color.a;
+
+    if (container)
+    {
+        src.scrollFactorX = container.scrollFactorX;
+        src.scrollFactorY = container.scrollFactorY;
+
+        skeleton.color.a = Clamp(alpha * container.alpha, 0, 1);
     }
 
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
@@ -36003,6 +35922,13 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix
 
     //  Draw the current skeleton
     sceneRenderer.drawSkeleton(skeleton, src.preMultipliedAlpha);
+
+    if (container)
+    {
+        src.scrollFactorX = scrollFactorX;
+        src.scrollFactorY = scrollFactorY;
+        skeleton.color.a = alpha;
+    }
 
     if (plugin.drawDebug || src.drawDebug)
     {
