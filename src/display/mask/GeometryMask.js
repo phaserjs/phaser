@@ -226,32 +226,32 @@ var GeometryMask = new Class({
 
         renderer.maskCount--;
 
+        //  Force flush before disabling stencil test
+        renderer.flush();
+
+        var current = renderer.currentMask;
+
         if (renderer.maskStack.length === 0)
         {
             //  If this is the only mask in the stack, flush and disable
-            renderer.flush();
-
-            renderer.currentMask.mask = null;
+            current.mask = null;
 
             gl.disable(gl.STENCIL_TEST);
         }
         else
         {
-            //  Force flush before disabling stencil test
-            renderer.flush();
-
             var prev = renderer.maskStack[renderer.maskStack.length - 1];
 
             prev.mask.applyStencil(renderer, prev.camera, false);
 
             if (renderer.currentCameraMask.mask !== prev.mask)
             {
-                renderer.currentMask.mask = prev.mask;
-                renderer.currentMask.camera = prev.camera;
+                current.mask = prev.mask;
+                current.camera = prev.camera;
             }
             else
             {
-                renderer.currentMask.mask = null;
+                current.mask = null;
             }
         }
     },
