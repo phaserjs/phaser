@@ -296,6 +296,7 @@ The way in which Game Objects add themselves to the Scene Update List has change
 * `SpineFile` will now check to see if another identical atlas in the load queue is already loading the texture it needs and will no longer get locked waiting for a file that will never complete. This allows multiple skeleton JSONs to use the same atlas data. Fix #5331 (thanks @Racoonacoon)
 * `SpineFile` now uses a `!` character to split the keys, instead of an underscore, preventing the plugin from incorrectly working out the keys for filenames with underscores in them. Fix #5336 (thanks @Racoonacoon)
 * `SpineGameObject.willRender` is no longer hard-coded to return `true`. It instead now takes a Camera parameter and performs all of the checks needed before returning. Previously, this happened during the render functions.
+* The Spine Plugin now uses a single instance of the Scene Renderer when running under WebGL. All instances of the plugin (installed per Scene) share the same base Scene Renderer, avoiding duplicate allocations and resizing events under multi-Scene games. Fix #5286 (thanks @spayton BunBunBun)
 
 ### Animation API - New Features and Updates
 
