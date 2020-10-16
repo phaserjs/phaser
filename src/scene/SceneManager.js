@@ -20,7 +20,7 @@ var Systems = require('./Systems');
  *
  * The Scene Manager is a Game level system, responsible for creating, processing and updating all of the
  * Scenes in a Game instance.
- *
+ó *
  *
  * @class SceneManager
  * @memberof Phaser.Scenes
@@ -1156,33 +1156,39 @@ var SceneManager = new Class({
 
         if (scene)
         {
+            var sys = scene.sys;
+
             //  If the Scene is already running (perhaps they called start from a launched sub-Scene?)
             //  then we close it down before starting it again.
-            if (scene.sys.isActive() || scene.sys.isPaused())
+            if (sys.isActive() || sys.isPaused())
             {
-                scene.sys.shutdown();
+                sys.shutdown();
 
-                scene.sys.start(data);
+                sys.sceneUpdate = NOOP;
+
+                sys.start(data);
             }
             else
             {
-                scene.sys.start(data);
+                sys.sceneUpdate = NOOP;
+
+                sys.start(data);
 
                 var loader;
 
-                if (scene.sys.load)
+                if (sys.load)
                 {
-                    loader = scene.sys.load;
+                    loader = sys.load;
                 }
 
                 //  Files payload?
-                if (loader && scene.sys.settings.hasOwnProperty('pack'))
+                if (loader && sys.settings.hasOwnProperty('pack'))
                 {
                     loader.reset();
 
-                    if (loader.addPack({ payload: scene.sys.settings.pack }))
+                    if (loader.addPack({ payload: sys.settings.pack }))
                     {
-                        scene.sys.settings.status = CONST.LOADING;
+                        sys.settings.status = CONST.LOADING;
 
                         loader.once(LoaderEvents.COMPLETE, this.payloadComplete, this);
 
