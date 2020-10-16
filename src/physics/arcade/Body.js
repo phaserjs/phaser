@@ -2073,6 +2073,31 @@ var Body = new Class({
     },
 
     /**
+     * If this Body is using `drag` for deceleration this property controls how the drag is applied.
+     * If set to `true` drag will use a damping effect rather than a linear approach. If you are
+     * creating a game where the Body moves freely at any angle (i.e. like the way the ship moves in
+     * the game Asteroids) then you will get a far smoother and more visually correct deceleration
+     * by using damping, avoiding the axis-drift that is prone with linear deceleration.
+     *
+     * If you enable this property then you should use far smaller `drag` values than with linear, as
+     * they are used as a multiplier on the velocity. Values such as 0.95 will give a nice slow
+     * deceleration, where-as smaller values, such as 0.5 will stop an object almost immediately.
+     *
+     * @method Phaser.Physics.Arcade.Body#setDamping
+     * @since 3.50.0
+     *
+     * @param {boolean} value - `true` to use damping, or `false` to use drag.
+     *
+     * @return {Phaser.Physics.Arcade.Body} This Body object.
+     */
+    setDamping: function (value)
+    {
+        this.useDamping = value;
+
+        return this;
+    },
+
+    /**
      * Sets the Body's horizontal drag.
      *
      * @method Phaser.Physics.Arcade.Body#setDragX
