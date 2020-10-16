@@ -30,15 +30,6 @@ var SpineGameObjectCanvasRenderer = function (renderer, src, camera, parentMatri
     var skeleton = src.skeleton;
     var skeletonRenderer = plugin.skeletonRenderer;
 
-    var GameObjectRenderMask = 15;
-
-    var willRender = !(GameObjectRenderMask !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)));
-
-    if (!skeleton || !willRender)
-    {
-        return;
-    }
-
     var camMatrix = renderer._tempMatrix1;
     var spriteMatrix = renderer._tempMatrix2;
     var calcMatrix = renderer._tempMatrix3;

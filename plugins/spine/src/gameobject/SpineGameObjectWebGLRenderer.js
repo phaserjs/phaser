@@ -27,38 +27,14 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix
 {
     var plugin = src.plugin;
     var skeleton = src.skeleton;
-    var childAlpha = skeleton.color.a;
     var sceneRenderer = plugin.sceneRenderer;
-
-    var GameObjectRenderMask = 15;
-
-    var willRender = !(GameObjectRenderMask !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)) || childAlpha === 0);
-
-    if (!skeleton || !willRender)
-    {
-        //  If there is already a batch running, and the next type isn't a Spine object, or this is the end, we need to close it
-
-        if (sceneRenderer.batcher.isDrawing && (!renderer.nextTypeMatch || renderer.finalType))
-        {
-            //  The next object in the display list is not a Spine object, so we end the batch
-            sceneRenderer.end();
-
-            renderer.pipelines.rebind();
-        }
-
-        if (!renderer.finalType)
-        {
-            //  Reset the current type
-            renderer.currentType = '';
-        }
-
-        return;
-    }
 
     if (renderer.newType)
     {
         //  flush + clear previous pipeline if this is a new type
         renderer.pipelines.clear();
+
+        sceneRenderer.begin();
     }
 
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
@@ -106,11 +82,6 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix
 
     //  Add autoUpdate option
     skeleton.updateWorldTransform();
-
-    if (renderer.newType)
-    {
-        sceneRenderer.begin();
-    }
 
     //  Draw the current skeleton
     sceneRenderer.drawSkeleton(skeleton, src.preMultipliedAlpha);
