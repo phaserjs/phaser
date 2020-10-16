@@ -13,8 +13,8 @@ var SpineContainerRender = require('./SpineContainerRender');
  * A Spine Container is a special kind of Container created specifically for Spine Game Objects.
  *
  * You have all of the same features of a standard Container, but the rendering functions are optimized specifically
- * for Spine Game Objects. You must only add ever Spine Game Objects to this type of Container. Although Phaser will
- * not prevent you from adding other types, they will not render and are likely to throw runtime errors.
+ * for Spine Game Objects. You must only add ever Spine Game Objects, or other Spine Containers, to this type of Container.
+ * Although Phaser will not prevent you from adding other types, they will not render and are likely to throw runtime errors.
  *
  * To create one in a Scene, use the factory methods:
  *
@@ -27,6 +27,10 @@ var SpineContainerRender = require('./SpineContainerRender');
  * ```javascript
  * this.make.spinecontainer();
  * ```
+ *
+ * Note that you should not nest Spine Containers inside regular Containers if you wish to use masks on the
+ * container children. You can, however, mask children of Spine Containers if they are embedded within other
+ * Spine Containers. In short, if you need masking, don't mix and match the types.
  *
  * See the Container documentation for further details about what Containers can do.
  *
