@@ -350,19 +350,25 @@ var CanvasRenderer = new Class({
     },
 
     /**
-     * Renders the Scene to the given Camera.
+     * The core render step for a Scene Camera.
+     *
+     * Iterates through the given array of Game Objects and renders them with the given Camera.
+     *
+     * This is called by the `CameraManager.render` method. The Camera Manager instance belongs to a Scene, and is invoked
+     * by the Scene Systems.render method.
+     *
+     * This method is not called if `Camera.visible` is `false`, or `Camera.alpha` is zero.
      *
      * @method Phaser.Renderer.Canvas.CanvasRenderer#render
      * @since 3.0.0
      *
      * @param {Phaser.Scene} scene - The Scene to render.
-     * @param {Phaser.GameObjects.DisplayList} children - The Game Objects within the Scene to be rendered.
+     * @param {Phaser.GameObjects.GameObject[]} children - An array of filtered Game Objects that can be rendered by the given Camera.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The Scene Camera to render with.
      */
     render: function (scene, children, camera)
     {
-        var list = children.list;
-        var childCount = list.length;
+        var childCount = children.length;
 
         var cx = camera.x;
         var cy = camera.y;
@@ -400,7 +406,7 @@ var CanvasRenderer = new Class({
 
         ctx.globalCompositeOperation = 'source-over';
 
-        this.drawCount += list.length;
+        this.drawCount += childCount;
 
         if (camera.renderToTexture)
         {
@@ -411,12 +417,7 @@ var CanvasRenderer = new Class({
 
         for (var i = 0; i < childCount; i++)
         {
-            var child = list[i];
-
-            if (!child.willRender(camera))
-            {
-                continue;
-            }
+            var child = children[i];
 
             if (child.mask)
             {
