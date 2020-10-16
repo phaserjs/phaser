@@ -729,6 +729,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * In the `Loader.FileTypes.TextFile` config you can now override the type and cache destination for the file.
 * `Loader.MultiFile` will now parse the given files array and only add valid entries into the file list, allowing multifiles to now have optional file entries.
 * The `ParticleEmitter.tint` value is now `0xffffff` (previously, it was `0xffffffff`) to allow particle tints to work in the correct RGB order including alpha (thanks @vforsh)
+* `SceneManager.start` will now reset the `SceneSystems.sceneUpdate` reference to `NOOP`. This gets set back to the Scene update method again during `bootScene` (if it has one) and stops errors with external plugins and multi-part files that may trigger `update` before `create` has been called. Fix #4629 (thanks @Osmose)
 
 ### Bug Fixes
 
