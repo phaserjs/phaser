@@ -11,6 +11,7 @@ var Clamp = require('../../math/Clamp');
 var Class = require('../../utils/Class');
 var Components = require('../../gameobjects/components');
 var Effects = require('./effects');
+var Events = require('./events');
 var Linear = require('../../math/Linear');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var Vector2 = require('../../math/Vector2');
@@ -774,6 +775,8 @@ var Camera = new Class({
             CenterOn(deadzone, this.midPoint.x, this.midPoint.y);
         }
 
+        var emitFollowEvent = false;
+
         if (follow && !this.panEffect.isRunning)
         {
             var fx = (follow.x - this.followOffset.x);
@@ -804,6 +807,8 @@ var Camera = new Class({
                 sx = Linear(sx, fx - originX, this.lerp.x);
                 sy = Linear(sy, fy - originY, this.lerp.y);
             }
+
+            emitFollowEvent = true;
         }
 
         if (this.useBounds)
@@ -850,6 +855,11 @@ var Camera = new Class({
         matrix.translate(-originX, -originY);
 
         this.shakeEffect.preRender();
+
+        if (emitFollowEvent)
+        {
+            this.emit(Events.FOLLOW_UPDATE, this, follow);
+        }
     },
 
     /**
