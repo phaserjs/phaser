@@ -676,6 +676,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `CameraManager.getVisibleChildren` is a new method that is called internally by the `CameraManager.render` method. It filters the DisplayList, so that Game Objects that pass the `willRender` test for the given Camera are added to a sub-list, which is then passed to the renderer. This avoids the renderer having to do any checks on the children, it just renders each one in turn.
 * `Physics.Arcade.Body.setDamping` is a new method that allows you to set the `useDamping` property of a Body in a chainable way. Fix #5352 (thanks @juanitogan)
 * The `GameObjects.Graphics.fillGradientStyle` method can now accept a different alpha value for each of the fill colors. The default is still 1. If you only provide a single alpha, it'll be used for all colors. Fix #5044 (thanks @zhangciwu)
+* `Cameras.Scene2D.Events.FOLLOW_UPDATE` is a new Event that is dispatched by a Camera when it is following a Game Object. It is dispatched every frame, right after the final Camera position and internal matrices have been updated. Use it if you need to react to a camera, using its most current position and the camera is following something. Fix #5253 (thanks @rexrainbow)
 
 ### Updates and API Changes
 
