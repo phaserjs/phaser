@@ -12,10 +12,10 @@ var Components = require('../components');
 var CONST = require('../../const');
 var Frame = require('../../textures/Frame');
 var GameObject = require('../GameObject');
+var GetColor = require('../../display/color/GetColor');
 var NOOP = require('../../utils/NOOP');
 var ProjectOrtho = require('../../renderer/webgl/mvp/ProjectOrtho');
 var Render = require('./RenderTextureRender');
-var Utils = require('../../renderer/webgl/Utils');
 var UUID = require('../../utils/string/UUID');
 
 /**
@@ -563,8 +563,7 @@ var RenderTexture = new Class({
 
             pipeline.drawFillRect(
                 x * sx, (th - height - y) * sy, width * sx, height * sy,
-                Utils.getTintFromFloats(r / 255, g / 255, b / 255, 1),
-                alpha
+                GetColor(b, g, r), alpha
             );
 
             pipeline.flush();
