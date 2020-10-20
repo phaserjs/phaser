@@ -252,17 +252,14 @@ var SpineGameObject = new Class({
      */
     willRender: function (camera)
     {
-        var skeleton = this.skeleton;
-
-        if (!skeleton)
+        if (!this.skeleton)
         {
             return false;
         }
 
         var GameObjectRenderMask = 15;
-        var childAlpha = skeleton.color.a;
 
-        return !(GameObjectRenderMask !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)) || childAlpha === 0);
+        return !(GameObjectRenderMask !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)));
     },
 
     /**
