@@ -425,8 +425,9 @@ var Config = new Class({
          */
         this.backgroundColor = ValueToColor(bgc);
 
-        if (bgc === 0 && this.transparent)
+        if (this.transparent)
         {
+            this.backgroundColor = ValueToColor(0x000000);
             this.backgroundColor.alpha = 0;
         }
 
