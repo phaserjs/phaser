@@ -520,7 +520,12 @@ var Text = new Class({
             {
                 var word = words[j];
                 var wordWidth = context.measureText(word).width;
-                var wordWidthWithSpace = wordWidth + whiteSpaceWidth;
+                var wordWidthWithSpace = wordWidth;
+
+                if (j < lastWordIndex)
+                {
+                    wordWidthWithSpace += whiteSpaceWidth;
+                }
 
                 if (wordWidthWithSpace > spaceLeft)
                 {
