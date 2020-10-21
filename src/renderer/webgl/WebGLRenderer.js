@@ -1608,7 +1608,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Bounds a vertex buffer. If there is a vertex buffer already bound it'll force a pipeline flush.
+     * Binds a vertex buffer. If there is a vertex buffer already bound it'll force a pipeline flush.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setVertexBuffer
      * @since 3.0.0
