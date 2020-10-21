@@ -136,6 +136,12 @@ var MultiPipeline = new Class({
                 location: -1
             }
         ]);
+        config.uniforms = GetFastValue(config, 'uniforms', [
+            'uProjectionMatrix',
+            'uViewMatrix',
+            'uModelMatrix',
+            'uMainSampler'
+        ]);
 
         WebGLPipeline.call(this, config);
 
@@ -308,7 +314,7 @@ var MultiPipeline = new Class({
 
         WebGLPipeline.prototype.bind.call(this, reset);
 
-        this.renderer.setInt1iv(this.program, 'uMainSampler', this.renderer.textureIndexes);
+        this.currentShader.set1iv('uMainSampler', this.renderer.textureIndexes);
 
         return this;
     },
