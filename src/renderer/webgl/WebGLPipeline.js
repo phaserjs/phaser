@@ -15,7 +15,7 @@ var Utils = require('./Utils');
  * The `WebGLPipeline` is a base class used by all of the core Phaser pipelines.
  *
  * It describes the way elements will be rendered in WebGL. Internally, it handles
- * compiling the shaders, creating vertex buffers, assigning primitive topolgy and
+ * compiling the shaders, creating vertex buffers, assigning primitive topology and
  * binding vertex attributes, all based on the given configuration data.
  *
  * The pipeline is configured by passing in a `WebGLPipelineConfig` object. Please
@@ -173,7 +173,7 @@ var WebGLPipeline = new Class({
         }
 
         /**
-         * The handle to a WebGL program.
+         * A reference to the WebGLProgram (shader) that this pipeline is using.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#program
          * @type {WebGLProgram}
@@ -220,23 +220,13 @@ var WebGLPipeline = new Class({
         this.bytes = new Uint8Array(this.vertexData);
 
         /**
-         * This will store the amount of components of 32 bit length.
+         * The amount of vertex attribute components of 32 bit length.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexComponentCount
          * @type {integer}
          * @since 3.0.0
          */
         this.vertexComponentCount = Utils.getComponentCount(this.attributes, gl);
-
-        /**
-         * Indicates if the current pipeline is flushing the contents to the GPU.
-         * When the variable is set the flush function will be locked.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#flushLocked
-         * @type {boolean}
-         * @since 3.1.0
-         */
-        this.flushLocked = false;
 
         /**
          * Indicates if the current pipeline is active or not for this frame only.
@@ -584,10 +574,6 @@ var WebGLPipeline = new Class({
      */
     flush: function ()
     {
-        if (this.flushLocked) { return this; }
-
-        this.flushLocked = true;
-
         var gl = this.gl;
         var vertexCount = this.vertexCount;
         var topology = this.topology;
@@ -595,7 +581,6 @@ var WebGLPipeline = new Class({
 
         if (vertexCount === 0)
         {
-            this.flushLocked = false;
             return;
         }
 
@@ -603,7 +588,6 @@ var WebGLPipeline = new Class({
         gl.drawArrays(topology, 0, vertexCount);
 
         this.vertexCount = 0;
-        this.flushLocked = false;
 
         return this;
     },
