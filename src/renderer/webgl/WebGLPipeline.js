@@ -157,6 +157,7 @@ var WebGLPipeline = new Class({
 
         /**
          * The WebGLBuffer that holds the vertex data.
+         *
          * Created from the `vertices` config ArrayBuffer that was passed in, or set by default, by the pipeline.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexBuffer
@@ -277,8 +278,8 @@ var WebGLPipeline = new Class({
     /**
      * Called when the Game has fully booted and the Renderer has finished setting up.
      *
-     * By this stage all Game level systems are now in place and you can perform any final
-     * tasks that the pipeline may need that relied on game systems such as the Texture Manager.
+     * By this stage all Game level systems are now in place. You can perform any final tasks that the
+     * pipeline may need, that relies on game systems such as the Texture Manager being ready.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#boot
      * @since 3.11.0
@@ -319,7 +320,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * Adds a description of vertex attribute to the pipeline
+     * Adds a description of vertex attribute to the pipeline.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#addAttribute
      * @since 3.2.0
@@ -371,7 +372,9 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * Resizes the properties used to describe the viewport
+     * Resizes the properties used to describe the viewport.
+     *
+     * This method is called automatically by the renderer during its resize handler.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#resize
      * @since 3.0.0
@@ -391,6 +394,8 @@ var WebGLPipeline = new Class({
 
     /**
      * Binds the pipeline resources, including the program, vertex buffer and attribute pointers.
+     *
+     * This method is called every time this pipeline is made the current active pipeline.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#bind
      * @since 3.0.0
@@ -449,6 +454,7 @@ var WebGLPipeline = new Class({
 
     /**
      * Sets the vertex attribute pointers.
+     *
      * This should only be called after the vertex buffer has been bound.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setAttribPointers
@@ -500,10 +506,11 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * This method is called every time a Game Object asks the Pipeline Manager to use this pipeline.
+     * This method is called every time a **Game Object** asks the Pipeline Manager to use this pipeline.
      *
      * Unlike the `bind` method, which is only called once per frame, this is called for every object
-     * that requests it, allowing you to perform per-object GL set-up.
+     * that requests use of this pipeline, allowing you to perform per-object set-up, such as loading
+     * shader uniform data.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onBind
      * @since 3.0.0
@@ -514,12 +521,12 @@ var WebGLPipeline = new Class({
      */
     onBind: function ()
     {
-        // This is for updating uniform data it's called on each bind attempt.
         return this;
     },
 
     /**
-     * Called before each frame is rendered, but after the canvas has been cleared.
+     * This method is called once per frame, right before anything has been rendered, but after the canvas
+     * has been cleared.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onPreRender
      * @since 3.0.0
@@ -528,12 +535,11 @@ var WebGLPipeline = new Class({
      */
     onPreRender: function ()
     {
-        // called once every frame
         return this;
     },
 
     /**
-     * Called before a Scene's Camera is rendered.
+     * This method is called once per frame, for every Camera in a Scene that wants to render.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onRender
      * @since 3.0.0
@@ -545,12 +551,11 @@ var WebGLPipeline = new Class({
      */
     onRender: function ()
     {
-        // called for each camera
         return this;
     },
 
     /**
-     * Called after each frame has been completely rendered and snapshots have been taken.
+     * This method is called once per frame, after all rendering has happened and snapshots have been taken.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onPostRender
      * @since 3.0.0
@@ -559,13 +564,11 @@ var WebGLPipeline = new Class({
      */
     onPostRender: function ()
     {
-        // called once every frame
         return this;
     },
 
     /**
-     * Uploads the vertex data and emits a draw call
-     * for the current batch of vertices.
+     * Uploads the vertex data and emits a draw call for the current batch of vertices.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#flush
      * @since 3.0.0
