@@ -324,6 +324,26 @@ var Mesh = new Class({
          */
         this.totalFrame = 0;
 
+        /**
+         * By default, the Mesh will check to see if its model or view transform has
+         * changed each frame and only recalculate the vertex positions if they have.
+         *
+         * This avoids lots of additional math in the `preUpdate` step when not required.
+         *
+         * However, if you are performing per-Face or per-Vertex manipulation on this Mesh,
+         * such as tweening a Face, or moving it without moving the rest of the Mesh,
+         * then you may need to disable the dirty cache in order for the Mesh to re-render
+         * correctly. You can toggle this property to do that. Please note that leaving
+         * this set to `true` will cause the Mesh to recalculate the position of every single
+         * vertex in it, every single frame. So only really do this if you know you
+         * need it.
+         *
+         * @name Phaser.GameObjects.Mesh#ignoreDirtyCache
+         * @type {boolean}
+         * @since 3.50.0
+         */
+        this.ignoreDirtyCache = false;
+
         var renderer = scene.sys.renderer;
 
         this.setPosition(x, y);
@@ -937,7 +957,7 @@ var Mesh = new Class({
 
         var dirty = this.dirtyCache;
 
-        if (!dirty[10] && !this.isDirty())
+        if (!this.ignoreDirtyCache && !dirty[10] && !this.isDirty())
         {
             //  If neither the view or the mesh is dirty we can bail out and save lots of math
             return;
