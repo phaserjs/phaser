@@ -485,6 +485,39 @@ var Face = new Class({
     },
 
     /**
+     * Set the alpha value of this Face.
+     *
+     * Each vertex is given the same value. If you need to adjust the alpha on a per-vertex basis
+     * then use the `Vertex.alpha` property instead.
+     *
+     * When getting the alpha of this Face, it will return an average of the alpha
+     * component of all three vertices.
+     *
+     * @name Phaser.Geom.Mesh.Face#alpha
+     * @type {number}
+     * @since 3.50.0
+     */
+    alpha: {
+
+        get: function ()
+        {
+            var v1 = this.vertex1;
+            var v2 = this.vertex2;
+            var v3 = this.vertex3;
+
+            return (v1.alpha + v2.alpha + v3.alpha) / 3;
+        },
+
+        set: function (value)
+        {
+            this.vertex1.alpha = value;
+            this.vertex2.alpha = value;
+            this.vertex3.alpha = value;
+        }
+
+    },
+
+    /**
      * The depth of this Face, which is an average of the z component of all three vertices.
      *
      * The depth is calculated based on the transformed z value, not the local one.
