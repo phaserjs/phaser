@@ -8,10 +8,10 @@
 var Class = require('../../utils/Class');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Utils = require('./Utils');
+var WebGLShader = require('./WebGLShader');
 
 /**
  * @classdesc
- *
  * The `WebGLPipeline` is a base class used by all of the core Phaser pipelines.
  *
  * It describes the way elements will be rendered in WebGL. Internally, it handles
@@ -23,7 +23,7 @@ var Utils = require('./Utils');
  * available to you.
  *
  * Usually, you would not extend from this class directly, but would instead extend
- * from one of the core pipelines, such as the Multi Pipeline or Rope Pipeline.
+ * from one of the core pipelines, such as the Multi Pipeline.
  *
  * @class WebGLPipeline
  * @memberof Phaser.Renderer.WebGL
@@ -43,7 +43,7 @@ var WebGLPipeline = new Class({
         var gl = renderer.gl;
 
         /**
-         * Name of the pipeline. Used for identification.
+         * Name of the pipeline. Used for identification and setting from Game Objects.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#name
          * @type {string}
@@ -140,8 +140,11 @@ var WebGLPipeline = new Class({
          *
          * The total is 8 + 8 + 4 + 4 + 4 = 28, which is the default for this property.
          *
+         * Other pipelines may require different totals. Use the config property to set it, as it can't be changed post-creation.
+         *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexSize
          * @type {integer}
+         * @readonly
          * @since 3.0.0
          */
         this.vertexSize = GetFastValue(config, 'vertexSize', 28);
@@ -149,8 +152,11 @@ var WebGLPipeline = new Class({
         /**
          * Raw byte buffer of vertices.
          *
+         * Either set via the config object, or generates a new Array Buffer of size `vertexCapacity * vertexSize`.
+         *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexData
          * @type {ArrayBuffer}
+         * @readonly
          * @since 3.0.0
          */
         this.vertexData = GetFastValue(config, 'vertices', new ArrayBuffer(this.vertexCapacity * this.vertexSize));
@@ -162,6 +168,7 @@ var WebGLPipeline = new Class({
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexBuffer
          * @type {WebGLBuffer}
+         * @readonly
          * @since 3.0.0
          */
         if (GetFastValue(config, 'vertices', null))
@@ -174,13 +181,70 @@ var WebGLPipeline = new Class({
         }
 
         /**
-         * A reference to the WebGLProgram (shader) that this pipeline is using.
+         * The primitive topology which the pipeline will use to submit draw calls.
          *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#program
-         * @type {WebGLProgram}
+         * Defaults to GL_TRIANGLES if not otherwise set in the config.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#topology
+         * @type {GLenum}
          * @since 3.0.0
          */
-        this.program = this.renderer.createProgram(config.vertShader, config.fragShader);
+        this.topology = GetFastValue(config, 'topology', gl.TRIANGLES);
+
+        /**
+         * Uint8 view to the `vertexData` ArrayBuffer. Used for uploading vertex buffer resources to the GPU.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#bytes
+         * @type {Uint8Array}
+         * @since 3.0.0
+         */
+        this.bytes = new Uint8Array(this.vertexData);
+
+        /**
+         * Indicates if the current pipeline is active, or not, for this frame only.
+         *
+         * Reset to `true` in the `onRender` method.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#active
+         * @type {boolean}
+         * @since 3.10.0
+         */
+        this.active = false;
+
+        /**
+         * Holds the most recently assigned texture unit.
+
+         * Treat this value as read-only.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.WebGLPipeline#currentUnit
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.currentUnit = 0;
+
+        /**
+         * Some pipelines require the forced use of texture zero (like the light pipeline).
+         *
+         * This property should be set when that is the case.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#forceZero
+         * @type {boolean}
+         * @since 3.50.0
+         */
+        this.forceZero = false;
+
+        /**
+         * Indicates if this pipeline has booted or not.
+         *
+         * A pipeline boots only when the Game instance itself, and all associated systems, is
+         * fully ready.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#hasBooted
+         * @type {boolean}
+         * @readonly
+         * @since 3.50.0
+         */
+        this.hasBooted = false;
 
         /**
          * Array of objects that describe the vertex attributes.
@@ -192,87 +256,42 @@ var WebGLPipeline = new Class({
         this.attributes = config.attributes;
 
         /**
-         * Array of objects that describe the shader uniforms.
-         * This is populated with their locations when the shader is created.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#uniforms
-         * @type {Phaser.Types.Renderer.WebGL.WebGLPipelineUniformsConfig}
-         * @since 3.50.0
-         */
-        this.uniforms = {};
-
-        /**
-         * The primitive topology which the pipeline will use to submit draw calls.
-         * Defaults to GL_TRIANGLES if not otherwise set.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#topology
-         * @type {GLenum}
-         * @since 3.0.0
-         */
-        this.topology = GetFastValue(config, 'topology', gl.TRIANGLES);
-
-        /**
-         * Uint8 view to the vertex raw buffer. Used for uploading vertex buffer resources to the GPU.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#bytes
-         * @type {Uint8Array}
-         * @since 3.0.0
-         */
-        this.bytes = new Uint8Array(this.vertexData);
-
-        /**
          * The amount of vertex attribute components of 32 bit length.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexComponentCount
          * @type {integer}
          * @since 3.0.0
          */
-        this.vertexComponentCount = Utils.getComponentCount(this.attributes, gl);
+        this.vertexComponentCount = Utils.getComponentCount(this.attributes, this.gl);
 
         /**
-         * Indicates if the current pipeline is active or not for this frame only.
-         * Reset in the onRender method.
+         * An array of all the WebGLShader instances that belong to this pipeline.
          *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#active
-         * @type {boolean}
-         * @since 3.10.0
-         */
-        this.active = false;
-
-        /**
-         * Holds the most recently assigned texture unit.
-         * Treat this value as read-only.
+         * All shaders must use the same attributes, as set by this pipeline, but can manage their own
+         * uniforms.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.WebGLPipeline#currentUnit
-         * @type {number}
+         * These are set in a call to the `setShadersFromConfig` method, which happens automatically,
+         * but can also be called at any point in your game. See the method documentation for details.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#shaders
+         * @type {Phaser.Renderer.WebGL.WebGLShader[]}
          * @since 3.50.0
          */
-        this.currentUnit = 0;
+        this.shaders;
 
         /**
-         * Some pipelines require the forced use of texture zero (like the light pipeline).
-         * This boolean should be set when that is the case.
+         * A reference to the currently bound WebGLShader instance from the `WebGLPipeline.shaders` array.
          *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#forceZero
-         * @type {boolean}
+         * For lots of pipelines, this is the only shader, so it is a quick way to reference it without
+         * an array look-up.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#currentShader
+         * @type {Phaser.Renderer.WebGL.WebGLShader}
          * @since 3.50.0
          */
-        this.forceZero = false;
+        this.currentShader;
 
-        /**
-         * Indicates if the current pipeline has booted or not.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#hasBooted
-         * @type {boolean}
-         * @readonly
-         * @since 3.50.0
-         */
-        this.hasBooted = false;
-
-        if (config.uniforms)
-        {
-            this.setUniformLocations(config.uniforms);
-        }
+        this.setShadersFromConfig(config);
     },
 
     /**
@@ -283,13 +302,11 @@ var WebGLPipeline = new Class({
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#boot
      * @since 3.11.0
-     */
     boot: function ()
     {
-        var renderer = this.renderer;
+        this.currentShader.bind();
 
-        renderer.setProgram(this.program);
-        renderer.setVertexBuffer(this.vertexBuffer);
+        this.renderer.setVertexBuffer(this.vertexBuffer);
 
         this.setAttribPointers(true);
 
@@ -297,26 +314,100 @@ var WebGLPipeline = new Class({
 
         return this;
     },
+     */
 
     /**
-     * Custom pipelines can use this method in order to perform any required pre-batch tasks
-     * for the given Game Object. It must return the texture unit the Game Object was assigned.
+     * Sets the currently active shader within this pipeline.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.WebGLPipeline#setGameObject
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setShader
      * @since 3.50.0
      *
-     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object being rendered or added to the batch.
-     * @param {Phaser.Textures.Frame} [frame] - Optional frame to use. Can override that of the Game Object.
+     * @param {number} index - The index of the shader to set.
      *
-     * @return {number} The texture unit the Game Object has been assigned.
+     * @return {this} This WebGLPipeline instance.
      */
-    setGameObject: function (gameObject, frame)
+    setShader: function (index)
     {
-        if (frame === undefined) { frame = gameObject.frame; }
+        var shader = this.shaders[index];
 
-        this.currentUnit = this.renderer.setTextureSource(frame.source);
+        if (shader)
+        {
+            shader.bind();
 
-        return this.currentUnit;
+            this.currentShader = shader;
+        }
+
+        return this;
+    },
+
+    /**
+     * Searches all shaders in this pipeline for one matching the given name, then returns it.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#getShaderByName
+     * @since 3.50.0
+     *
+     * @param {string} name - The index of the shader to set.
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLShader} The WebGLShader instance, if found.
+     */
+    getShaderByName: function (name)
+    {
+        var shaders = this.shaders;
+
+        for (var i = 0; i < shaders.length; i++)
+        {
+            if (shaders[i].name === name)
+            {
+                return shaders[i];
+            }
+        }
+    },
+
+    /**
+     * Destroys all shaders currently set in the `WebGLPipeline.shaders` array and then parses the given
+     * `config` object, extracting the shaders from it, creating `WebGLShader` instances and finally
+     * setting them into the `shaders` array of this pipeline.
+     *
+     * This is a destructive process. Be very careful when you call it, should you need to.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setShadersFromConfig
+     * @since 3.50.0
+     *
+     * @param {Phaser.Types.Renderer.WebGL.WebGLPipelineConfig} config - The configuration object for this WebGL Pipeline.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    setShadersFromConfig: function (config)
+    {
+        var i;
+        var shaders = this.shaders;
+
+        for (i = 0; i < shaders.length; i++)
+        {
+            shaders[i].destroy();
+        }
+
+        var defaultVertShader = GetFastValue(config, 'vertShader', null);
+        var defaultFragShader = GetFastValue(config, 'fragShader', null);
+        var defaultUniforms = GetFastValue(config, 'uniforms', null);
+
+        var configShaders = GetFastValue(config, 'shaders', []);
+
+        for (i = 0; i < configShaders.length; i++)
+        {
+            var name = GetFastValue(config, 'name', 'default');
+
+            var vertShader = GetFastValue(config, 'vertShader', defaultVertShader);
+            var fragShader = GetFastValue(config, 'fragShader', defaultFragShader);
+            var uniforms = GetFastValue(config, 'uniforms', defaultUniforms);
+
+            configShaders.push(new WebGLShader(this, name, vertShader, fragShader, uniforms));
+        }
+
+        this.shaders = configShaders;
+        this.currentShader = configShaders[0];
+
+        return this;
     },
 
     /**
@@ -348,6 +439,80 @@ var WebGLPipeline = new Class({
         this.vertexComponentCount = Utils.getComponentCount(this.attributes, this.gl);
 
         return this;
+    },
+
+    /**
+     * Sets the vertex attribute pointers.
+     *
+     * This should only be called after the vertex buffer has been bound.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setAttribPointers
+     * @since 3.50.0
+     *
+     * @param {boolean} [reset=false] - Reset the vertex attribute locations?
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    setAttribPointers: function (reset)
+    {
+        if (reset === undefined) { reset = false; }
+
+        var gl = this.gl;
+        var attributes = this.attributes;
+        var vertexSize = this.vertexSize;
+        var program = this.currentShader.program;
+
+        for (var i = 0; i < attributes.length; i++)
+        {
+            var element = attributes[i];
+
+            if (reset)
+            {
+                var location = gl.getAttribLocation(program, element.name);
+
+                if (location >= 0)
+                {
+                    gl.enableVertexAttribArray(location);
+                    gl.vertexAttribPointer(location, element.size, element.type, element.normalized, vertexSize, element.offset);
+                    element.enabled = true;
+                    element.location = location;
+                }
+                else if (location !== -1)
+                {
+                    gl.disableVertexAttribArray(location);
+                }
+            }
+            else if (element.enabled)
+            {
+                gl.vertexAttribPointer(element.location, element.size, element.type, element.normalized, vertexSize, element.offset);
+            }
+            else if (!element.enabled && element.location > -1)
+            {
+                gl.disableVertexAttribArray(element.location);
+                element.location = -1;
+            }
+        }
+    },
+
+    /**
+     * Custom pipelines can use this method in order to perform any required pre-batch tasks
+     * for the given Game Object. It must return the texture unit the Game Object was assigned.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.WebGLPipeline#setGameObject
+     * @since 3.50.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object being rendered or added to the batch.
+     * @param {Phaser.Textures.Frame} [frame] - Optional frame to use. Can override that of the Game Object.
+     *
+     * @return {number} The texture unit the Game Object has been assigned.
+     */
+    setGameObject: function (gameObject, frame)
+    {
+        if (frame === undefined) { frame = gameObject.frame; }
+
+        this.currentUnit = this.renderer.setTextureSource(frame.source);
+
+        return this.currentUnit;
     },
 
     /**
@@ -393,7 +558,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * Binds the pipeline resources, including the program, vertex buffer and attribute pointers.
+     * Binds the pipeline resources, including the give shader, vertex buffer and attribute pointers.
      *
      * This method is called every time this pipeline is made the current active pipeline.
      *
@@ -401,108 +566,26 @@ var WebGLPipeline = new Class({
      * @since 3.0.0
      *
      * @param {boolean} [reset=false] - Should the pipeline be fully re-bound after a renderer pipeline clear?
+     * @param {number} [shader=0] - If this is a multi-shader pipeline, which shader should be bound?
      *
      * @return {this} This WebGLPipeline instance.
      */
-    bind: function (reset)
+    bind: function (reset, shader)
     {
         if (reset === undefined) { reset = false; }
 
-        var vertexBuffer = this.vertexBuffer;
-        var program = this.program;
-        var renderer = this.renderer;
+        if (shader !== undefined)
+        {
+            this.setShader(shader);
+        }
 
-        renderer.setProgram(program);
-        renderer.setVertexBuffer(vertexBuffer);
+        this.currentShader.bind();
+
+        this.renderer.setVertexBuffer(this.vertexBuffer);
 
         this.setAttribPointers(reset);
 
         return this;
-    },
-
-    /**
-     * Sets up the `WebGLPipeline.uniforms` object, populating it with the names
-     * and locations of the shader uniforms.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setUniformLocations
-     * @since 3.50.0
-     *
-     * @param {string[]} uniformNames - An array of the uniform names to get the locations for.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    setUniformLocations: function (uniformNames)
-    {
-        var gl = this.gl;
-        var program = this.program;
-        var uniforms = this.uniforms;
-
-        for (var i = 0; i < uniformNames.length; i++)
-        {
-            var name = uniformNames[i];
-
-            var location = gl.getUniformLocation(program, name);
-
-            if (location !== null)
-            {
-                uniforms[name] = location;
-            }
-        }
-
-        return this;
-    },
-
-    /**
-     * Sets the vertex attribute pointers.
-     *
-     * This should only be called after the vertex buffer has been bound.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setAttribPointers
-     * @since 3.50.0
-     *
-     * @param {boolean} [reset=false] - Reset the vertex attribute locations?
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    setAttribPointers: function (reset)
-    {
-        if (reset === undefined) { reset = false; }
-
-        var gl = this.gl;
-        var attributes = this.attributes;
-        var vertexSize = this.vertexSize;
-        var program = this.program;
-
-        for (var i = 0; i < attributes.length; i++)
-        {
-            var element = attributes[i];
-
-            if (reset)
-            {
-                var location = gl.getAttribLocation(program, element.name);
-
-                if (location >= 0)
-                {
-                    gl.enableVertexAttribArray(location);
-                    gl.vertexAttribPointer(location, element.size, element.type, element.normalized, vertexSize, element.offset);
-                    element.enabled = true;
-                    element.location = location;
-                }
-                else if (location !== -1)
-                {
-                    gl.disableVertexAttribArray(location);
-                }
-            }
-            else if (element.enabled)
-            {
-                gl.vertexAttribPointer(element.location, element.size, element.type, element.normalized, vertexSize, element.offset);
-            }
-            else if (!element.enabled && element.location > -1)
-            {
-                gl.disableVertexAttribArray(element.location);
-                element.location = -1;
-            }
-        }
     },
 
     /**
@@ -596,7 +679,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * Removes all object references in this WebGL Pipeline and removes its program from the WebGL context.
+     * Destroys all shader instances, removes all object references and nulls all external references.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#destroy
      * @since 3.0.0
@@ -605,428 +688,22 @@ var WebGLPipeline = new Class({
      */
     destroy: function ()
     {
-        var gl = this.gl;
+        var shaders = this.shaders;
 
-        gl.deleteProgram(this.program);
-        gl.deleteBuffer(this.vertexBuffer);
+        for (var i = 0; i < shaders.length; i++)
+        {
+            shaders[i].destroy();
+        }
 
-        delete this.program;
-        delete this.vertexBuffer;
-        delete this.gl;
+        this.gl.deleteBuffer(this.vertexBuffer);
 
-        return this;
-    },
-
-    /**
-     * Sets a 1f uniform value based on the given name on this pipeline.
-     *
-     * The pipeline shader must be currently active. You can safely call this method from
-     * pipeline methods such as `bind`, `onBind` and batch related calls.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#set1f
-     * @since 3.50.0
-     *
-     * @param {string} name - The name of the uniform to set.
-     * @param {number} x - The new value of the `float` uniform.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    set1f: function (name, x)
-    {
-        this.gl.uniform1f(this.uniforms[name], x);
-
-        return this;
-    },
-
-    /**
-     * Sets a 2f uniform value based on the given name on this pipeline.
-     *
-     * The pipeline shader must be currently active. You can safely call this method from
-     * pipeline methods such as `bind`, `onBind` and batch related calls.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#set2f
-     * @since 3.50.0
-     *
-     * @param {string} name - The name of the uniform to set.
-     * @param {number} x - The new X component of the `vec2` uniform.
-     * @param {number} y - The new Y component of the `vec2` uniform.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    set2f: function (name, x, y)
-    {
-        this.gl.uniform2f(this.uniforms[name], x, y);
-
-        return this;
-    },
-
-    /**
-     * Sets a 3f uniform value based on the given name on this pipeline.
-     *
-     * The pipeline shader must be currently active. You can safely call this method from
-     * pipeline methods such as `bind`, `onBind` and batch related calls.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#set3f
-     * @since 3.50.0
-     *
-     * @param {string} name - The name of the uniform to set.
-     * @param {number} x - The new X component of the `vec3` uniform.
-     * @param {number} y - The new Y component of the `vec3` uniform.
-     * @param {number} z - The new Z component of the `vec3` uniform.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    set3f: function (name, x, y, z)
-    {
-        this.gl.uniform3f(this.uniforms[name], x, y, z);
-
-        return this;
-    },
-
-    /**
-     * Sets a 4f uniform value based on the given name on this pipeline.
-     *
-     * The pipeline shader must be currently active. You can safely call this method from
-     * pipeline methods such as `bind`, `onBind` and batch related calls.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#set4f
-     * @since 3.50.0
-     *
-     * @param {string} name - The name of the uniform to set.
-     * @param {number} x - X component of the uniform
-     * @param {number} y - Y component of the uniform
-     * @param {number} z - Z component of the uniform
-     * @param {number} w - W component of the uniform
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    set4f: function (name, x, y, z, w)
-    {
-        this.gl.uniform4f(this.uniforms[name], x, y, z, w);
-
-        return this;
-    },
-
-    /**
-     * Sets a 1fv uniform value based on the given name on this pipeline.
-     *
-     * The pipeline shader must be currently active. You can safely call this method from
-     * pipeline methods such as `bind`, `onBind` and batch related calls.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#set1fv
-     * @since 3.50.0
-     *
-     * @param {string} name - The name of the uniform to set.
-     * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    set1fv: function (name, arr)
-    {
-        this.gl.uniform1fv(this.uniforms[name], arr);
-
-        return this;
-    },
-
-    /**
-     * Sets a 2fv uniform value based on the given name on this pipeline.
-     *
-     * The pipeline shader must be currently active. You can safely call this method from
-     * pipeline methods such as `bind`, `onBind` and batch related calls.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#set2fv
-     * @since 3.50.0
-     *
-     * @param {string} name - The name of the uniform to set.
-     * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    set2fv: function (name, arr)
-    {
-        this.gl.uniform2fv(this.uniforms[name], arr);
-
-        return this;
-    },
-
-    /**
-     * Sets a 3fv uniform value based on the given name on this pipeline.
-     *
-     * The pipeline shader must be currently active. You can safely call this method from
-     * pipeline methods such as `bind`, `onBind` and batch related calls.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#set3fv
-     * @since 3.50.0
-     *
-     * @param {string} name - The name of the uniform to set.
-     * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    set3fv: function (name, arr)
-    {
-        this.gl.uniform3fv(this.uniforms[name], arr);
-
-        return this;
-    },
-
-    /**
-     * Sets a 4fv uniform value based on the given name on this pipeline.
-     *
-     * The pipeline shader must be currently active. You can safely call this method from
-     * pipeline methods such as `bind`, `onBind` and batch related calls.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#set4fv
-     * @since 3.50.0
-     *
-     * @param {string} name - The name of the uniform to set.
-     * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    set4fv: function (name, arr)
-    {
-        this.gl.uniform4fv(this.uniforms[name], arr);
-
-        return this;
-    },
-
-    /**
-     * Sets a 1iv uniform value based on the given name on this pipeline.
-     *
-     * The pipeline shader must be currently active. You can safely call this method from
-     * pipeline methods such as `bind`, `onBind` and batch related calls.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#set1iv
-     * @since 3.50.0
-     *
-     * @param {string} name - The name of the uniform to set.
-     * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    set1iv: function (name, arr)
-    {
-        this.gl.uniform1iv(this.uniforms[name], arr);
-
-        return this;
-    },
-
-    /**
-     * Sets a 2iv uniform value based on the given name on this pipeline.
-     *
-     * The pipeline shader must be currently active. You can safely call this method from
-     * pipeline methods such as `bind`, `onBind` and batch related calls.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#set2iv
-     * @since 3.50.0
-     *
-     * @param {string} name - The name of the uniform to set.
-     * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    set2iv: function (name, arr)
-    {
-        this.gl.uniform2iv(this.uniforms[name], arr);
-
-        return this;
-    },
-
-    /**
-     * Sets a 3iv uniform value based on the given name on this pipeline.
-     *
-     * The pipeline shader must be currently active. You can safely call this method from
-     * pipeline methods such as `bind`, `onBind` and batch related calls.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#set3iv
-     * @since 3.50.0
-     *
-     * @param {string} name - The name of the uniform to set.
-     * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    set3iv: function (name, arr)
-    {
-        this.gl.uniform3iv(this.uniforms[name], arr);
-
-        return this;
-    },
-
-    /**
-     * Sets a 4iv uniform value based on the given name on this pipeline.
-     *
-     * The pipeline shader must be currently active. You can safely call this method from
-     * pipeline methods such as `bind`, `onBind` and batch related calls.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#set4iv
-     * @since 3.50.0
-     *
-     * @param {string} name - The name of the uniform to set.
-     * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    set4iv: function (name, arr)
-    {
-        this.gl.uniform4iv(this.uniforms[name], arr);
-
-        return this;
-    },
-
-    /**
-     * Sets a 1i uniform value based on the given name on this pipeline.
-     *
-     * The pipeline shader must be currently active. You can safely call this method from
-     * pipeline methods such as `bind`, `onBind` and batch related calls.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#set1i
-     * @since 3.50.0
-     *
-     * @param {string} name - The name of the uniform to set.
-     * @param {integer} x - The new value of the `int` uniform.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    set1i: function (name, x)
-    {
-        this.gl.uniform1i(this.uniforms[name], x);
-
-        return this;
-    },
-
-    /**
-     * Sets a 2i uniform value based on the given name on this pipeline.
-     *
-     * The pipeline shader must be currently active. You can safely call this method from
-     * pipeline methods such as `bind`, `onBind` and batch related calls.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#set2i
-     * @since 3.50.0
-     *
-     * @param {string} name - The name of the uniform to set.
-     * @param {integer} x - The new X component of the `ivec2` uniform.
-     * @param {integer} y - The new Y component of the `ivec2` uniform.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    set2i: function (name, x, y)
-    {
-        this.gl.uniform2i(this.uniforms[name], x, y);
-
-        return this;
-    },
-
-    /**
-     * Sets a 3i uniform value based on the given name on this pipeline.
-     *
-     * The pipeline shader must be currently active. You can safely call this method from
-     * pipeline methods such as `bind`, `onBind` and batch related calls.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#set3i
-     * @since 3.50.0
-     *
-     * @param {string} name - The name of the uniform to set.
-     * @param {integer} x - The new X component of the `ivec3` uniform.
-     * @param {integer} y - The new Y component of the `ivec3` uniform.
-     * @param {integer} z - The new Z component of the `ivec3` uniform.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    set3i: function (name, x, y, z)
-    {
-        this.gl.uniform3i(this.uniforms[name], x, y, z);
-
-        return this;
-    },
-
-    /**
-     * Sets a 4i uniform value based on the given name on this pipeline.
-     *
-     * The pipeline shader must be currently active. You can safely call this method from
-     * pipeline methods such as `bind`, `onBind` and batch related calls.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#set4i
-     * @since 3.50.0
-     *
-     * @param {string} name - The name of the uniform to set.
-     * @param {integer} x - X component of the uniform
-     * @param {integer} y - Y component of the uniform
-     * @param {integer} z - Z component of the uniform
-     * @param {integer} w - W component of the uniform
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    set4i: function (name, x, y, z, w)
-    {
-        this.gl.uniform4i(this.uniforms[name], x, y, z, w);
-
-        return this;
-    },
-
-    /**
-     * Sets a matrix 2fv uniform value based on the given name on this pipeline.
-     *
-     * The pipeline shader must be currently active. You can safely call this method from
-     * pipeline methods such as `bind`, `onBind` and batch related calls.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setMatrix2fv
-     * @since 3.50.0
-     *
-     * @param {string} name - The name of the uniform to set.
-     * @param {boolean} transpose - Whether to transpose the matrix. Should be `false`.
-     * @param {number[]|Float32Array} matrix - The new values for the `mat2` uniform.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    setMatrix2fv: function (name, transpose, matrix)
-    {
-        this.gl.uniformMatrix2fv(this.uniforms[name], transpose, matrix);
-
-        return this;
-    },
-
-    /**
-     * Sets a matrix 3fv uniform value based on the given name on this pipeline.
-     *
-     * The pipeline shader must be currently active. You can safely call this method from
-     * pipeline methods such as `bind`, `onBind` and batch related calls.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setMatrix3fv
-     * @since 3.50.0
-     *
-     * @param {string} name - The name of the uniform to set.
-     * @param {boolean} transpose - Whether to transpose the matrix. Should be `false`.
-     * @param {Float32Array} matrix - The new values for the `mat3` uniform.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    setMatrix3fv: function (name, transpose, matrix)
-    {
-        this.gl.uniformMatrix3fv(this.uniforms[name], transpose, matrix);
-
-        return this;
-    },
-
-    /**
-     * Sets a matrix 4fv uniform value based on the given name on this pipeline.
-     *
-     * The pipeline shader must be currently active. You can safely call this method from
-     * pipeline methods such as `bind`, `onBind` and batch related calls.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setMatrix4fv
-     * @since 3.50.0
-     *
-     * @param {string} name - The name of the uniform to set.
-     * @param {boolean} transpose - Should the matrix be transpose
-     * @param {Float32Array} matrix - Matrix data
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    setMatrix4fv: function (name, transpose, matrix)
-    {
-        this.gl.uniformMatrix4fv(this.uniforms[name], transpose, matrix);
+        this.game = null;
+        this.renderer = null;
+        this.gl = null;
+        this.view = null;
+        this.shaders = null;
+        this.vertexData = null;
+        this.vertexBuffer = null;
 
         return this;
     }
