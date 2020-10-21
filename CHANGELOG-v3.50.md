@@ -30,6 +30,7 @@ Other pipeline changes are as follows:
 * All pipelines will now extract the `topology` property from the config, allowing you to set it externally.
 * The `WebGLPipeline.shouldFlush` method now accepts an optional parameter `amount`. If given, it will return `true` if when the amount is added to the vertex count it will exceed the vertex capacity. The Multi Pipeline has been updated to now use this method instead of performing the comparison multiple times itself.
 * The `RopePipeline` now extends `MultiPipeline` and just changes the topolgy, vastly reducing the filesize.
+* The `WebGLPipeline.flushLocked` property has been removed. A pipeline can never flush in the middle of a flush anyway, so it was just wasting CPU cycles being set.
 
 ### Pipeline Uniform Changes
 
