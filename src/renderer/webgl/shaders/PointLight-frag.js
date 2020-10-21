@@ -15,8 +15,6 @@ module.exports = [
     '',
     '    float distance = length(center - gl_FragCoord.xy);',
     '',
-    '    // float attenuation = 1.0 / distance;',
-    '    // float attenuation = 1.0 / (0.01 * distance + 0.01 * distance * distance);',
     '    float attenuation = 1.0 / (0.01 * distance * distance);',
     '    float radius = 1.0 - min(distance, lightRadius) / lightRadius;',
     '    float intensity = smoothstep(0.0, 1.0, min(attenuation, radius));',
