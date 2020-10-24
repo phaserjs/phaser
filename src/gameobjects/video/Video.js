@@ -857,6 +857,66 @@ var Video = new Class({
 
         return this;
     },
+    
+    /**
+     * Loads a Video from the given MediaStream object, ready for playback with the `Video.play` method.
+     *
+     * You can control at what point the browser determines the video as being ready for playback via
+     * the `loadEvent` parameter. See https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement
+     * for more details.
+     *
+     * @method Phaser.GameObjects.Video#loadURL
+     * @since 3.20.0
+     *
+     * @param {string} stream - The MediaStream object.
+     * @param {string} [loadEvent='loadeddata'] - The load event to listen for. Either `loadeddata`, `canplay` or `canplaythrough`.
+     * @param {boolean} [noAudio=false] - Does the video have an audio track? If not you can enable auto-playing on it.
+     *
+     * @return {this} This Video Game Object for method chaining.
+     */
+    loadMediaStream: function(stream, loadEvent, noAudio) {
+        if (loadEvent === undefined) { loadEvent = 'loadeddata'; }
+        if (noAudio === undefined) { noAudio = false; }
+
+        if (this.video)
+        {
+            this.stop();
+        }
+
+        if (this.videoTexture)
+        {
+            this.scene.sys.textures.remove(this._key);
+        }
+
+        var video = document.createElement('video');
+
+        video.controls = false;
+
+        if (noAudio)
+        {
+            video.muted = true;
+            video.defaultMuted = true;
+
+            video.setAttribute('autoplay', 'autoplay');
+        }
+
+        video.setAttribute('playsinline', 'playsinline');
+        video.setAttribute('preload', 'auto');
+
+        video.addEventListener('error', this._callbacks.error, true);
+
+        try {
+            video.srcObject = stream;
+        } catch (error) {
+            video.src = window.URL.createObjectURL(stream);
+        }
+
+        video.load();
+
+        this.video = video;
+
+        return this;
+    },
 
     /**
      * This internal method is called automatically if the playback Promise resolves successfully.
