@@ -78,6 +78,17 @@ var WebGLShader = new Class({
     bind: function ()
     {
         this.renderer.setProgram(this.program);
+
+        var pipeline = this.pipeline;
+
+        if (pipeline.mvpDirty)
+        {
+            this.setMatrix4fv('uModelMatrix', false, pipeline.modelMatrix.val);
+            this.setMatrix4fv('uViewMatrix', false, pipeline.viewMatrix.val);
+            this.setMatrix4fv('uProjectionMatrix', false, pipeline.projectionMatrix.val);
+
+            pipeline.mvpDirty = false;
+        }
     },
 
     /**
@@ -320,7 +331,9 @@ var WebGLShader = new Class({
      */
     set1iv: function (name, arr)
     {
-        this.gl.uniform1iv(this.uniforms[name], arr);
+        // this.gl.uniform1iv(this.uniforms[name], arr);
+
+        this.gl.uniform1iv(this.gl.getUniformLocation(this.program, name), arr);
 
         return this;
     },
@@ -539,7 +552,9 @@ var WebGLShader = new Class({
      */
     setMatrix4fv: function (name, transpose, matrix)
     {
-        this.gl.uniformMatrix4fv(this.uniforms[name], transpose, matrix);
+        // this.gl.uniformMatrix4fv(this.uniforms[name], transpose, matrix);
+
+        this.gl.uniformMatrix4fv(this.gl.getUniformLocation(this.program, name), transpose, matrix);
 
         return this;
     }
