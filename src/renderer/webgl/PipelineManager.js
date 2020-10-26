@@ -146,8 +146,6 @@ var PipelineManager = new Class({
         this.add(CONST.SINGLE_PIPELINE, new SinglePipeline({ game: game }));
         this.add(CONST.ROPE_PIPELINE, new RopePipeline({ game: game }));
         this.add(CONST.LIGHT_PIPELINE, new LightPipeline({ game: game }));
-
-        this.set(this.MULTI_PIPELINE);
     },
 
     /**
@@ -176,6 +174,8 @@ var PipelineManager = new Class({
 
         if (!pipelines.has(name))
         {
+            pipeline.name = name;
+
             pipelines.set(name, pipeline);
         }
         else
@@ -183,14 +183,15 @@ var PipelineManager = new Class({
             console.warn('Pipeline exists: ' + name);
         }
 
-        pipeline.name = name;
+        if (renderer.width !== 0 && renderer.height !== 0)
+        {
+            pipeline.resize(renderer.width, renderer.height);
+        }
 
         if (!pipeline.hasBooted)
         {
             pipeline.boot();
         }
-
-        pipeline.resize(renderer.width, renderer.height);
 
         return pipeline;
     },
@@ -361,7 +362,7 @@ var PipelineManager = new Class({
         if (
             current !== pipeline ||
             current.vertexBuffer !== renderer.currentVertexBuffer ||
-            current.program !== renderer.currentProgram
+            current.currentShader.program !== renderer.currentProgram
         )
         {
             renderer.resetTextures();
