@@ -8,8 +8,6 @@
 var Class = require('../../../utils/Class');
 var Earcut = require('../../../geom/polygon/Earcut');
 var GetFastValue = require('../../../utils/object/GetFastValue');
-var ModelViewProjection = require('./components/ModelViewProjection');
-var ProjectOrtho = require('../mvp/ProjectOrtho');
 var ShaderSourceFS = require('../shaders/Multi-frag.js');
 var ShaderSourceVS = require('../shaders/Multi-vert.js');
 var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
@@ -71,10 +69,6 @@ var WebGLPipeline = require('../WebGLPipeline');
 var MultiPipeline = new Class({
 
     Extends: WebGLPipeline,
-
-    Mixins: [
-        ModelViewProjection
-    ],
 
     initialize:
 
@@ -292,8 +286,6 @@ var MultiPipeline = new Class({
          * @since 3.12.0
          */
         this.polygonCache = [];
-
-        this.mvpInit();
     },
 
     /**
@@ -315,43 +307,6 @@ var MultiPipeline = new Class({
         WebGLPipeline.prototype.bind.call(this, reset);
 
         this.currentShader.set1iv('uMainSampler', this.renderer.textureIndexes);
-
-        return this;
-    },
-
-    /**
-     * Called every time a Game Object needs to use this pipeline.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#onBind
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    onBind: function ()
-    {
-        this.mvpUpdate();
-
-        return this;
-    },
-
-    /**
-     * Resizes this pipeline and updates the projection.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#resize
-     * @since 3.0.0
-     *
-     * @param {number} width - The new width.
-     * @param {number} height - The new height.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    resize: function (width, height)
-    {
-        WebGLPipeline.prototype.resize.call(this, width, height);
-
-        ProjectOrtho(this, 0, this.width, this.height, 0, -1000, 1000);
 
         return this;
     },

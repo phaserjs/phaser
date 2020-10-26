@@ -5,7 +5,6 @@
  */
 
 var Class = require('../../../utils/Class');
-var ModelViewProjection = require('./components/ModelViewProjection');
 var MultiPipeline = require('./MultiPipeline');
 
 /**
@@ -48,10 +47,6 @@ var MultiPipeline = require('./MultiPipeline');
 var RopePipeline = new Class({
 
     Extends: MultiPipeline,
-
-    Mixins: [
-        ModelViewProjection
-    ],
 
     initialize:
 

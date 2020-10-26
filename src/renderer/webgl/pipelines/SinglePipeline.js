@@ -6,7 +6,6 @@
 
 var Class = require('../../../utils/Class');
 var GetFastValue = require('../../../utils/object/GetFastValue');
-var ModelViewProjection = require('./components/ModelViewProjection');
 var MultiPipeline = require('./MultiPipeline');
 var ShaderSourceFS = require('../shaders/Single-frag.js');
 var ShaderSourceVS = require('../shaders/Single-vert.js');
@@ -50,10 +49,6 @@ var WebGLPipeline = require('../WebGLPipeline');
 var SinglePipeline = new Class({
 
     Extends: MultiPipeline,
-
-    Mixins: [
-        ModelViewProjection
-    ],
 
     initialize:
 

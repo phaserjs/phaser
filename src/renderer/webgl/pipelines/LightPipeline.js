@@ -7,10 +7,8 @@
 
 var Class = require('../../../utils/Class');
 var GetFastValue = require('../../../utils/object/GetFastValue');
-var ModelViewProjection = require('./components/ModelViewProjection');
 var PointLightShaderSourceFS = require('../shaders/PointLight-frag.js');
 var PointLightShaderSourceVS = require('../shaders/PointLight-vert.js');
-var ProjectOrtho = require('../mvp/ProjectOrtho');
 var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
 var WebGLPipeline = require('../WebGLPipeline');
 
@@ -67,10 +65,6 @@ var LIGHT_COUNT = 10;
 var LightPipeline = new Class({
 
     Extends: WebGLPipeline,
-
-    Mixins: [
-        ModelViewProjection
-    ],
 
     initialize:
 
@@ -207,8 +201,6 @@ var LightPipeline = new Class({
         this.lightCount = 0;
 
         this.forceZero = true;
-
-        this.mvpInit();
     },
 
     /**
@@ -334,7 +326,6 @@ var LightPipeline = new Class({
      */
     onBind: function ()
     {
-        this.mvpUpdate();
 
         return this;
     },
@@ -396,26 +387,6 @@ var LightPipeline = new Class({
         // renderer.setInt1(program, 'uMainSampler', 0);
         // renderer.setInt1(program, 'uNormSampler', 1);
         renderer.setFloat2(program, 'uResolution', this.width / 2, this.height / 2);
-
-        return this;
-    },
-
-    /**
-     * Resizes this pipeline and updates the projection.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#resize
-     * @since 3.0.0
-     *
-     * @param {number} width - The new width.
-     * @param {number} height - The new height.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    resize: function (width, height)
-    {
-        WebGLPipeline.prototype.resize.call(this, width, height);
-
-        ProjectOrtho(this, 0, this.width, this.height, 0, -1000, 1000);
 
         return this;
     },
