@@ -660,7 +660,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * Binds the pipeline resources, including the give shader, vertex buffer and attribute pointers.
+     * Binds the pipeline resources, including the given shader, vertex buffer and attribute pointers.
      *
      * This method is called every time this pipeline is made the current active pipeline.
      *
