@@ -473,9 +473,13 @@ var WebGLPipeline = new Class({
             shaders[i].destroy();
         }
 
-        var defaultVertShader = GetFastValue(config, 'vertShader', null);
-        var defaultFragShader = GetFastValue(config, 'fragShader', null);
-        var defaultUniforms = GetFastValue(config, 'uniforms', null);
+        var vName = 'vertShader';
+        var fName = 'fragShader';
+        var uName = 'uniforms';
+
+        var defaultVertShader = GetFastValue(config, vName, null);
+        var defaultFragShader = GetFastValue(config, fName, null);
+        var defaultUniforms = GetFastValue(config, uName, null);
 
         var configShaders = GetFastValue(config, 'shaders', []);
 
@@ -493,9 +497,9 @@ var WebGLPipeline = new Class({
 
                 var name = GetFastValue(shaderEntry, 'name', 'default');
 
-                var vertShader = GetFastValue(shaderEntry, 'vertShader', defaultVertShader);
-                var fragShader = GetFastValue(shaderEntry, 'fragShader', defaultFragShader);
-                var uniforms = GetFastValue(shaderEntry, 'uniforms', defaultUniforms);
+                var vertShader = GetFastValue(shaderEntry, vName, defaultVertShader);
+                var fragShader = GetFastValue(shaderEntry, fName, defaultFragShader);
+                var uniforms = GetFastValue(shaderEntry, uName, defaultUniforms);
 
                 configShaders.push(new WebGLShader(this, name, vertShader, fragShader, uniforms));
             }
