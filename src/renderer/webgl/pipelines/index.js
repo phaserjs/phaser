@@ -15,7 +15,6 @@ var Pipelines = {
 
     BitmapMaskPipeline: require('./BitmapMaskPipeline'),
     LightPipeline: require('./LightPipeline'),
-    ModelViewProjection: require('./components/ModelViewProjection'),
     MultiPipeline: require('./MultiPipeline'),
     RopePipeline: require('./RopePipeline'),
     SinglePipeline: require('./SinglePipeline')
