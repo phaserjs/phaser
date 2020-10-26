@@ -33,7 +33,7 @@ I'm pleased to announce the immediate availability of Phaser 3.24. This release 
 
 So, please do spend some time digging through the [Change Log](#changelog). I assure you, it's worth while :)
 
-I'd like to send a massive thank-you to everyone who supports [Phaser on Patreon](https://www.patreon.com/photonstorm) (and now even GitHub Sponsors, too!) Your continued backing keeps allowing me to work on Phaser full-time and this great new releases is the very real result of that. If you've ever considered becoming a backer, now is the perfect time!
+I'd like to send a massive thank-you to everyone who supports [Phaser on Patreon](https://www.patreon.com/photonstorm) (and now even GitHub Sponsors, too!) Your continued backing keeps allowing me to work on Phaser full-time and this great new release is the very real result of that. If you've ever considered becoming a backer, now is the perfect time!
 
 As well as all of these updates, development has been progressing rapidly on Phaser 4. If you'd like to stay abreast of developments then I'm now publishing them to the [Phaser Patreon](https://www.patreon.com/photonstorm). Here you can find details about the latest developments and concepts behind Phaser 4.
 
@@ -63,7 +63,7 @@ There are other benefits to [backing Phaser](https://www.patreon.com/join/photon
 
 We use [Patreon](https://www.patreon.com/photonstorm) to manage the backing and you can [support Phaser](https://www.patreon.com/join/photonstorm?) from $1 per month. The amount you pledge is entirely up to you and can be changed as often as you like. Patreon renews monthly, just like Netflix. You can, of course, cancel at any point. Tears will be shed on this end, but that's not your concern.
 
-Extra special thanks to the following companies who's support makes Phaser possible:
+Extra special thanks to the following companies whose support makes Phaser possible:
 
 * [Cerebral Fix](https://cerebralfix.com)
 * [CrossInstall](https://crossinstall.com)
