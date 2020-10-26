@@ -45,7 +45,7 @@ var MATH_CONST = require('../../math/const');
  *
  * Videos can only autoplay if the browser has been unlocked with an interaction, or satisfies the MEI settings.
  * The policies that control autoplaying are vast and vary between browser.
- * You can, ahd should, read more about it here: https://developer.mozilla.org/en-US/docs/Web/Media/Autoplay_guide
+ * You can, and should, read more about it here: https://developer.mozilla.org/en-US/docs/Web/Media/Autoplay_guide
  *
  * If your video doesn't contain any audio, then set the `noAudio` parameter to `true` when the video is _loaded_,
  * and it will often allow the video to play immediately:
