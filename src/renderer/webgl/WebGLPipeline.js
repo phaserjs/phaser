@@ -319,9 +319,29 @@ var WebGLPipeline = new Class({
          */
         this.projectionMatrix = new Matrix4().identity();
 
+        /**
+         * A flag indicating if the MVP matrices are dirty, or not.
+         *
+         * Used by WebGLShader when binding the uniforms.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#mvpDirty
+         * @type {boolean}
+         * @since 3.50.0
+         */
         this.mvpDirty = true;
 
-        this.tempConfig = config;
+        /**
+         * The configuration object that was used to create this pipeline.
+         *
+         * Treat this object as 'read only', because changing it post-creation will not
+         * impact this pipeline in any way. However, it is used internally for cloning
+         * and post-boot set-up.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#config
+         * @type {Phaser.Types.Renderer.WebGL.WebGLPipelineConfig}
+         * @since 3.50.0
+         */
+        this.config = config;
     },
 
     /**
@@ -335,7 +355,7 @@ var WebGLPipeline = new Class({
      */
     boot: function ()
     {
-        this.setShadersFromConfig(this.tempConfig);
+        this.setShadersFromConfig(this.config);
 
         this.renderer.setVertexBuffer(this.vertexBuffer);
 
@@ -347,7 +367,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * Sets the model, projection and view matrices to identity matrices.
+     * Resets the model, projection and view matrices to identity matrices.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#mvpInit
      * @since 3.50.0
@@ -357,6 +377,29 @@ var WebGLPipeline = new Class({
         this.modelMatrix.identity();
         this.projectionMatrix.identity();
         this.viewMatrix.identity();
+    },
+
+    /**
+     * Creates a brand new WebGLPipeline instance based on the configuration object that
+     * was used to create this one.
+     *
+     * The new instance is returned by this method. Note that the new instance is _not_
+     * added to the Pipeline Manager. You will need to add it yourself should you require so.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#mvpInit
+     * @since 3.50.0
+     *
+     * @param {string} name - The new name to give the cloned pipeline.
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} A clone of this WebGLPipeline instance.
+     */
+    clone: function (name)
+    {
+        var clone = new WebGLPipeline(this.config);
+
+        clone.name = name;
+
+        return clone;
     },
 
     /**
