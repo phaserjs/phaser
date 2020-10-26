@@ -331,9 +331,7 @@ var WebGLShader = new Class({
      */
     set1iv: function (name, arr)
     {
-        // this.gl.uniform1iv(this.uniforms[name], arr);
-
-        this.gl.uniform1iv(this.gl.getUniformLocation(this.program, name), arr);
+        this.gl.uniform1iv(this.uniforms[name], arr);
 
         return this;
     },
@@ -552,9 +550,7 @@ var WebGLShader = new Class({
      */
     setMatrix4fv: function (name, transpose, matrix)
     {
-        // this.gl.uniformMatrix4fv(this.uniforms[name], transpose, matrix);
-
-        this.gl.uniformMatrix4fv(this.gl.getUniformLocation(this.program, name), transpose, matrix);
+        this.gl.uniformMatrix4fv(this.uniforms[name], transpose, matrix);
 
         return this;
     }
