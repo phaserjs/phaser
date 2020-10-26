@@ -222,6 +222,26 @@ The `ModelViewProjection` object contained a lot of functions that Phaser never 
 * `viewLoad2D` has been removed.
 * `projOrtho` has been removed.
 
+### WebGLRenderer Shader Functions Removed
+
+All of the following functions have been removed from the WebGL Renderer. They are now available on the WebGLShader classes via the pipelines.
+
+* `WebGLRenderer.setFloat1` has been removed. Use `WebGLShader.set1f` instead.
+* `WebGLRenderer.setFloat2` has been removed. Use `WebGLShader.set2f` instead.
+* `WebGLRenderer.setFloat3` has been removed. Use `WebGLShader.set3f` instead.
+* `WebGLRenderer.setFloat4` has been removed. Use `WebGLShader.set4f` instead.
+* `WebGLRenderer.setFloat1v` has been removed. Use `WebGLShader.set1fv` instead.
+* `WebGLRenderer.setFloat2v` has been removed. Use `WebGLShader.set2fv` instead.
+* `WebGLRenderer.setFloat3v` has been removed. Use `WebGLShader.set3fv` instead.
+* `WebGLRenderer.setFloat4v` has been removed. Use `WebGLShader.set4fv` instead.
+* `WebGLRenderer.setInt1` has been removed. Use `WebGLShader.set1i` instead.
+* `WebGLRenderer.setInt2` has been removed. Use `WebGLShader.set2i` instead.
+* `WebGLRenderer.setInt3` has been removed. Use `WebGLShader.set3i` instead.
+* `WebGLRenderer.setInt4` has been removed. Use `WebGLShader.set4i` instead.
+* `WebGLRenderer.setMatrix2` has been removed. Use `WebGLShader.setMatrix2fv` instead.
+* `WebGLRenderer.setMatrix3` has been removed. Use `WebGLShader.setMatrix3fv` instead.
+* `WebGLRenderer.setMatrix4` has been removed. Use `WebGLShader.setMatrix4fv` instead.
+
 ### BitmapText - New Features, Updates and API Changes
 
 * `BitmapText.setCharacterTint` is a new method that allows you to set a tint color (either additive or fill) on a specific range of characters within a static Bitmap Text. You can specify the start and length offsets and per-corner tint colors.
@@ -618,7 +638,6 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `Geom.Intersects.GetRaysFromPointToPolygon` is a new function that emits rays out from the given point and detects for intersection against all given polygons, returning the points of intersection in the results array.
 * `Geom.Polygon.Translate` is a new function that allows you to translate all the points of a polygon by the given values.
 * `Geom.Polygon.Simplify` is a new function that takes a polygon and simplifies the points by running them through a combination of Douglas-Peucker and Radial Distance algorithms, potentially dramatically reducing the number of points while retaining its shape.
-* `WebGLRenderer.setInt1iv` will allow you to look-up and set a 1iv uniform on the given shader.
 * `Phaser.Types.Math.Vector3Like` is a new data type representing as Vector 3 like object.
 * `Phaser.Types.Math.Vector4Like` is a new data type representing as Vector 4 like object.
 * `Transform.getLocalPoint` is a new method, available on all Game Objects, that takes an `x` / `y` pair and translates them into the local space of the Game Object, factoring in parent transforms and display origins.
