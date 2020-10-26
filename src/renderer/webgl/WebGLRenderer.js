@@ -1848,15 +1848,17 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Wrapper for creating a WebGLProgram
+     * Creates a WebGLProgram instance based on the given vertex and fragment shader source.
+     *
+     * Then compiles, attaches and links the program before returning it.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createProgram
      * @since 3.0.0
      *
-     * @param {string} vertexShader - Source to the vertex shader
-     * @param {string} fragmentShader - Source to the fragment shader
+     * @param {string} vertexShader - The vertex shader source code as a single string.
+     * @param {string} fragmentShader - The fragment shader source code as a single string.
      *
-     * @return {WebGLProgram} Raw WebGLProgram
+     * @return {WebGLProgram} The linked WebGLProgram created from the given shader source.
      */
     createProgram: function (vertexShader, fragmentShader)
     {
