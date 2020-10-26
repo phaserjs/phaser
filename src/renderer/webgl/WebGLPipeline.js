@@ -7,6 +7,7 @@
 
 var Class = require('../../utils/Class');
 var GetFastValue = require('../../utils/object/GetFastValue');
+var Matrix4 = require('../../math/Matrix4');
 var Utils = require('./Utils');
 var WebGLShader = require('./WebGLShader');
 
@@ -277,7 +278,7 @@ var WebGLPipeline = new Class({
          * @type {Phaser.Renderer.WebGL.WebGLShader[]}
          * @since 3.50.0
          */
-        this.shaders;
+        this.shaders = [];
 
         /**
          * A reference to the currently bound WebGLShader instance from the `WebGLPipeline.shaders` array.
@@ -291,7 +292,36 @@ var WebGLPipeline = new Class({
          */
         this.currentShader;
 
-        this.setShadersFromConfig(config);
+        /**
+         * The Model matrix, used by shaders as 'uModelMatrix' uniform.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#modelMatrix
+         * @type {Phaser.Math.Matrix4}
+         * @since 3.50.0
+         */
+        this.modelMatrix = new Matrix4().identity();
+
+        /**
+         * The View matrix, used by shaders as 'uViewMatrix' uniform.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#viewMatrix
+         * @type {Phaser.Math.Matrix4}
+         * @since 3.50.0
+         */
+        this.viewMatrix = new Matrix4().identity();
+
+        /**
+         * The Projection matrix, used by shaders as 'uProjectionMatrix' uniform.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#projectionMatrix
+         * @type {Phaser.Math.Matrix4}
+         * @since 3.50.0
+         */
+        this.projectionMatrix = new Matrix4().identity();
+
+        this.mvpDirty = true;
+
+        this.tempConfig = config;
     },
 
     /**
@@ -302,9 +332,10 @@ var WebGLPipeline = new Class({
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#boot
      * @since 3.11.0
+     */
     boot: function ()
     {
-        this.currentShader.bind();
+        this.setShadersFromConfig(this.tempConfig);
 
         this.renderer.setVertexBuffer(this.vertexBuffer);
 
@@ -314,7 +345,19 @@ var WebGLPipeline = new Class({
 
         return this;
     },
+
+    /**
+     * Sets the model, projection and view matrices to identity matrices.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#mvpInit
+     * @since 3.50.0
      */
+    mvpInit: function ()
+    {
+        this.modelMatrix.identity();
+        this.projectionMatrix.identity();
+        this.viewMatrix.identity();
+    },
 
     /**
      * Sets the currently active shader within this pipeline.
@@ -393,19 +436,31 @@ var WebGLPipeline = new Class({
 
         var configShaders = GetFastValue(config, 'shaders', []);
 
-        for (i = 0; i < configShaders.length; i++)
+        var len = configShaders.length;
+
+        if (len === 0)
         {
-            var name = GetFastValue(config, 'name', 'default');
+            this.shaders = [ new WebGLShader(this, 'default', defaultVertShader, defaultFragShader, defaultUniforms) ];
+        }
+        else
+        {
+            for (i = 0; i < len; i++)
+            {
+                var shaderEntry = configShaders[i];
 
-            var vertShader = GetFastValue(config, 'vertShader', defaultVertShader);
-            var fragShader = GetFastValue(config, 'fragShader', defaultFragShader);
-            var uniforms = GetFastValue(config, 'uniforms', defaultUniforms);
+                var name = GetFastValue(shaderEntry, 'name', 'default');
 
-            configShaders.push(new WebGLShader(this, name, vertShader, fragShader, uniforms));
+                var vertShader = GetFastValue(shaderEntry, 'vertShader', defaultVertShader);
+                var fragShader = GetFastValue(shaderEntry, 'fragShader', defaultFragShader);
+                var uniforms = GetFastValue(shaderEntry, 'uniforms', defaultUniforms);
+
+                configShaders.push(new WebGLShader(this, name, vertShader, fragShader, uniforms));
+            }
+
+            this.shaders = configShaders;
         }
 
-        this.shaders = configShaders;
-        this.currentShader = configShaders[0];
+        this.currentShader = this.shaders[0];
 
         return this;
     },
@@ -553,6 +608,10 @@ var WebGLPipeline = new Class({
     {
         this.width = width;
         this.height = height;
+
+        this.projectionMatrix.ortho(0, width, height, 0, -1000, 1000);
+
+        this.mvpDirty = true;
 
         return this;
     },
