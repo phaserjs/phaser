@@ -266,6 +266,24 @@ var WebGLPipeline = new Class({
         this.vertexComponentCount = Utils.getComponentCount(this.attributes, this.gl);
 
         /**
+         * The WebGLFramebuffer this pipeline is targeting, if any.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#targetFramebuffer
+         * @type {?WebGLFramebuffer}
+         * @since 3.50.0
+         */
+        this.targetFramebuffer = null;
+
+        /**
+         * The WebGLTexture this pipeline is targeting, if any.
+         *
+         * @name Phaser.GameObjects.Shader#targetTexture
+         * @type {?WebGLTexture}
+         * @since 3.50.0
+         */
+        this.targetTexture = null;
+
+        /**
          * An array of all the WebGLShader instances that belong to this pipeline.
          *
          * All shaders must use the same attributes, as set by this pipeline, but can manage their own
@@ -355,7 +373,22 @@ var WebGLPipeline = new Class({
      */
     boot: function ()
     {
-        this.setShadersFromConfig(this.config);
+        var config = this.config;
+
+        var target = GetFastValue(config, 'target', null);
+
+        if (target)
+        {
+            var renderer = this.renderer;
+
+            var width = renderer.width;
+            var height = renderer.height;
+
+            this.targetTexture = renderer.createTextureFromSource(null, width, height, 0);
+            this.targetFramebuffer = renderer.createFramebuffer(width, height, this.targetTexture, false);
+        }
+
+        this.setShadersFromConfig(config);
 
         this.renderer.setVertexBuffer(this.vertexBuffer);
 
