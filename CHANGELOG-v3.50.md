@@ -200,32 +200,27 @@ The Light Pipeline (previously called the Forward Diffuse Light Pipeline), which
 * `LightsManager.destroy` will now clear the `lightPool` array when destroyed, where-as previously it didn't.
 * `LightsManager.cull` now takes the viewport height from the renderer instead of the game config (thanks zenwaichi)
 
-### WebGL ModelViewProjection API Changes
+### WebGL ModelViewProjection Removed
 
-The `ModelViewProjection` object contained a lot of functions that Phaser never used internally. These have now been
-moved to external functions, which can be easily excluded from Custom builds to save space.
+The `ModelViewProjection` object contained a lot of functions that Phaser never used internally. Instead, the functions available in them were already available in the `Math.Matrix4` class. So the pipelines have been updated to use a Matrix4 instead and all of the MVP functions have been removed. The full list of removed functions is below:
 
-If you used any of them in your code, please update to the new function names below:
-
-* `Phaser.Renderer.WebGL.MVP` is a new namespace under which the Model View Projection functions now live.
-* `projIdentity` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ProjectIdentity`
-* `projPersp` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ProjectPerspective`
-* `modelRotateX` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.RotateX`
-* `modelRotateY` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.RotateY`
-* `modelRotateZ` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.RotateZ`
-* `viewLoad` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewLoad`
-* `viewRotateX` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewRotateX`
-* `viewRotateY` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewRotateY`
-* `viewRotateZ` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewRotateZ`
-* `viewScale` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewScale`
-* `viewTranslate` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewTranslate`
-* `modelIdentity` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.Identity`
-* `modelScale` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.Scale`
-* `modelTranslate` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.Translate`
-* `viewIdentity` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewIdentity`
-* `viewLoad2D` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ViewLoad2D`
-* `projOrtho` is now available as a stand-alone function `Phaser.Renderer.WebGL.MVP.ProjectOrtho`
-* `Phaser.Renderer.WebGL.MVP.SetIdentity` is a new function the others use, to save on space.
+* `projIdentity` has been removed.
+* `projPersp` has been removed.
+* `modelRotateX` has been removed.
+* `modelRotateY` has been removed.
+* `modelRotateZ` has been removed.
+* `viewLoad` has been removed.
+* `viewRotateX` has been removed.
+* `viewRotateY` has been removed.
+* `viewRotateZ` has been removed.
+* `viewScale` has been removed.
+* `viewTranslate` has been removed.
+* `modelIdentity` has been removed.
+* `modelScale` has been removed.
+* `modelTranslate` has been removed.
+* `viewIdentity` has been removed.
+* `viewLoad2D` has been removed.
+* `projOrtho` has been removed.
 
 ### BitmapText - New Features, Updates and API Changes
 
@@ -797,4 +792,4 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
-@samme @16patsle @scott20145 @khasanovbi @mk360 @volkans80 @jaabberwocky @maikthomas @atursams @LearningCode2023 @DylanC @BenjaminDRichards @rexrainbow @Riderrr @spwilson2 @EmilSV @PhaserEditor2D @Gangryong @vinerz @trynx
+@samme @16patsle @scott20145 @khasanovbi @mk360 @volkans80 @jaabberwocky @maikthomas @atursams @LearningCode2023 @DylanC @BenjaminDRichards @rexrainbow @Riderrr @spwilson2 @EmilSV @PhaserEditor2D @Gangryong @vinerz @trynx @usufruct99 @pirateksh
