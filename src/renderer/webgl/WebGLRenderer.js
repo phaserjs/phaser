@@ -14,7 +14,6 @@ var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
 var NOOP = require('../../utils/NOOP');
 var PIPELINE_CONST = require('./pipelines/const');
 var PipelineManager = require('./PipelineManager');
-var ProjectOrtho = require('./mvp/ProjectOrtho');
 var ScaleEvents = require('../../scale/events');
 var SpliceOne = require('../../utils/array/SpliceOne');
 var TextureEvents = require('../../textures/events');
@@ -894,6 +893,8 @@ var WebGLRenderer = new Class({
         var baseSize = game.scale.baseSize;
 
         this.resize(baseSize.width, baseSize.height);
+
+        this.pipelines.setMulti();
     },
 
     /**
@@ -1621,7 +1622,7 @@ var WebGLRenderer = new Class({
     {
         var gl = this.gl;
 
-        if (vertexBuffer !== this.currentVertexBuffer)
+        if (vertexBuffer && vertexBuffer !== this.currentVertexBuffer)
         {
             this.flush();
 
@@ -1647,7 +1648,7 @@ var WebGLRenderer = new Class({
     {
         var gl = this.gl;
 
-        if (indexBuffer !== this.currentIndexBuffer)
+        if (indexBuffer && indexBuffer !== this.currentIndexBuffer)
         {
             this.flush();
 
@@ -1888,6 +1889,8 @@ var WebGLRenderer = new Class({
             throw new Error('Link Program failed:\n' + gl.getProgramInfoLog(program));
         }
 
+        gl.useProgram(program);
+
         return program;
     },
 
@@ -1907,11 +1910,9 @@ var WebGLRenderer = new Class({
         var gl = this.gl;
         var vertexBuffer = gl.createBuffer();
 
-        this.setVertexBuffer(vertexBuffer);
-
+        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, initialDataOrSize, bufferUsage);
-
-        this.setVertexBuffer(null);
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
         return vertexBuffer;
     },
@@ -1932,11 +1933,9 @@ var WebGLRenderer = new Class({
         var gl = this.gl;
         var indexBuffer = gl.createBuffer();
 
-        this.setIndexBuffer(indexBuffer);
-
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, initialDataOrSize, bufferUsage);
-
-        this.setIndexBuffer(null);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 
         return indexBuffer;
     },
