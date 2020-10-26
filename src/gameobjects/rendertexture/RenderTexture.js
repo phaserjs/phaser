@@ -14,7 +14,6 @@ var Frame = require('../../textures/Frame');
 var GameObject = require('../GameObject');
 var GetColor = require('../../display/color/GetColor');
 var NOOP = require('../../utils/NOOP');
-var ProjectOrtho = require('../../renderer/webgl/mvp/ProjectOrtho');
 var Render = require('./RenderTextureRender');
 var UUID = require('../../utils/string/UUID');
 
@@ -790,7 +789,10 @@ var RenderTexture = new Class({
 
             var pipeline = this.pipeline;
 
-            ProjectOrtho(pipeline, 0, this.texture.width, 0, this.texture.height, -1000.0, 1000.0);
+            var pipelineWidth = pipeline.width;
+            var pipelineHeight = pipeline.height;
+
+            pipeline.resize(this.texture.width, this.texture.height);
 
             this.batchList(entries, x, y, alpha, tint);
 
@@ -799,7 +801,7 @@ var RenderTexture = new Class({
 
             renderer.resetTextures(true);
 
-            ProjectOrtho(pipeline, 0, pipeline.width, pipeline.height, 0, -1000.0, 1000.0);
+            pipeline.resize(pipelineWidth, pipelineHeight);
         }
         else
         {
@@ -884,7 +886,10 @@ var RenderTexture = new Class({
 
                 var pipeline = this.pipeline;
 
-                ProjectOrtho(pipeline, 0, this.texture.width, 0, this.texture.height, -1000.0, 1000.0);
+                var pipelineWidth = pipeline.width;
+                var pipelineHeight = pipeline.height;
+
+                pipeline.resize(this.texture.width, this.texture.height);
 
                 pipeline.batchTextureFrame(textureFrame, x + this.frame.cutX, y + this.frame.cutY, tint, alpha, camera.matrix, null);
 
@@ -894,7 +899,7 @@ var RenderTexture = new Class({
 
                 renderer.popScissor();
 
-                ProjectOrtho(pipeline, 0, pipeline.width, pipeline.height, 0, -1000.0, 1000.0);
+                pipeline.resize(pipelineWidth, pipelineHeight);
             }
             else
             {
