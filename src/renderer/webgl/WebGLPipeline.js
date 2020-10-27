@@ -284,6 +284,17 @@ var WebGLPipeline = new Class({
         this.targetTexture = null;
 
         /**
+         * When using a targetTexture its dimensions are based on the scale of the WebGLRenderer.
+         *
+         * This value controls how much those dimensions are scaled.
+         *
+         * @name Phaser.GameObjects.Shader#targetScale
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.targetScale = GetFastValue(config, 'targetScale', 1);
+
+        /**
          * An array of all the WebGLShader instances that belong to this pipeline.
          *
          * All shaders must use the same attributes, as set by this pipeline, but can manage their own
@@ -375,17 +386,19 @@ var WebGLPipeline = new Class({
     {
         var config = this.config;
 
-        var target = GetFastValue(config, 'target', null);
+        var target = GetFastValue(config, 'target', false);
 
-        if (target)
+        var renderer = this.renderer;
+
+        var width = renderer.width * this.targetScale;
+        var height = renderer.height * this.targetScale;
+
+        if (target && width > 0 && height > 0)
         {
-            var renderer = this.renderer;
-
-            var width = renderer.width;
-            var height = renderer.height;
-
             this.targetTexture = renderer.createTextureFromSource(null, width, height, 0);
             this.targetFramebuffer = renderer.createFramebuffer(width, height, this.targetTexture, false);
+
+            // this.targetTexture.flipY = flipY;
         }
 
         this.setShadersFromConfig(config);
@@ -691,6 +704,25 @@ var WebGLPipeline = new Class({
 
         this.projectionMatrix.ortho(0, width, height, 0, -1000, 1000);
 
+        //  Resize the target?
+        var target = this.targetTexture;
+
+        if (target)
+        {
+            width *= this.targetScale;
+            height *= this.targetScale;
+
+            var renderer = this.renderer;
+
+            renderer.deleteFramebuffer(this.targetFramebuffer);
+            renderer.deleteTexture(target);
+
+            this.targetTexture = renderer.createTextureFromSource(null, width, height, 0);
+            this.targetFramebuffer = renderer.createFramebuffer(width, height, this.targetTexture, false);
+
+            // this.targetTexture.flipY = flipY;
+        }
+
         this.mvpDirty = true;
 
         return this;
@@ -743,12 +775,17 @@ var WebGLPipeline = new Class({
      */
     onBind: function ()
     {
+        if (this.targetTexture)
+        {
+            this.renderer.setFramebuffer(this.targetFramebuffer);
+        }
+
         return this;
     },
 
     /**
      * This method is called once per frame, right before anything has been rendered, but after the canvas
-     * has been cleared.
+     * has been cleared. If this pipeline has a targetTexture, it will be cleared.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onPreRender
      * @since 3.0.0
@@ -757,6 +794,21 @@ var WebGLPipeline = new Class({
      */
     onPreRender: function ()
     {
+        var gl = this.gl;
+        var renderer = this.renderer;
+        var target = this.targetTexture;
+
+        if (target)
+        {
+            renderer.setFramebuffer(this.targetFramebuffer);
+
+            gl.clearColor(0, 0, 0, 0);
+
+            gl.clear(gl.COLOR_BUFFER_BIT);
+
+            renderer.setFramebuffer(null, false);
+        }
+
         return this;
     },
 
@@ -813,6 +865,477 @@ var WebGLPipeline = new Class({
         gl.drawArrays(topology, 0, vertexCount);
 
         this.vertexCount = 0;
+
+        return this;
+    },
+
+    /**
+     * Sets a 1f uniform value based on the given name on the currently set shader.
+     *
+     * The current shader is bound, before the uniform is set, making it active within the
+     * WebGLRenderer. This means you can safely call this method from a location such as
+     * a Scene `create` or `update` method. However, when working within a Shader file
+     * directly, use the `WebGLShader` method equivalent instead, to avoid the program
+     * being set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#set1f
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     * @param {number} x - The new value of the `float` uniform.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    set1f: function (name, x)
+    {
+        this.currentShader.bind().set1f(name, x);
+
+        return this;
+    },
+
+    /**
+     * Sets a 2f uniform value based on the given name on the currently set shader.
+     *
+     * The current shader is bound, before the uniform is set, making it active within the
+     * WebGLRenderer. This means you can safely call this method from a location such as
+     * a Scene `create` or `update` method. However, when working within a Shader file
+     * directly, use the `WebGLShader` method equivalent instead, to avoid the program
+     * being set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#set2f
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     * @param {number} x - The new X component of the `vec2` uniform.
+     * @param {number} y - The new Y component of the `vec2` uniform.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    set2f: function (name, x, y)
+    {
+        this.currentShader.bind().set2f(name, x, y);
+
+        return this;
+    },
+
+    /**
+     * Sets a 3f uniform value based on the given name on the currently set shader.
+     *
+     * The current shader is bound, before the uniform is set, making it active within the
+     * WebGLRenderer. This means you can safely call this method from a location such as
+     * a Scene `create` or `update` method. However, when working within a Shader file
+     * directly, use the `WebGLShader` method equivalent instead, to avoid the program
+     * being set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#set3f
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     * @param {number} x - The new X component of the `vec3` uniform.
+     * @param {number} y - The new Y component of the `vec3` uniform.
+     * @param {number} z - The new Z component of the `vec3` uniform.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    set3f: function (name, x, y, z)
+    {
+        this.currentShader.bind().set3f(name, x, y, z);
+
+        return this;
+    },
+
+    /**
+     * Sets a 4f uniform value based on the given name on the currently set shader.
+     *
+     * The current shader is bound, before the uniform is set, making it active within the
+     * WebGLRenderer. This means you can safely call this method from a location such as
+     * a Scene `create` or `update` method. However, when working within a Shader file
+     * directly, use the `WebGLShader` method equivalent instead, to avoid the program
+     * being set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#set4f
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     * @param {number} x - X component of the uniform
+     * @param {number} y - Y component of the uniform
+     * @param {number} z - Z component of the uniform
+     * @param {number} w - W component of the uniform
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    set4f: function (name, x, y, z, w)
+    {
+        this.currentShader.bind().set4f(name, x, y, z, w);
+
+        return this;
+    },
+
+    /**
+     * Sets a 1fv uniform value based on the given name on the currently set shader.
+     *
+     * The current shader is bound, before the uniform is set, making it active within the
+     * WebGLRenderer. This means you can safely call this method from a location such as
+     * a Scene `create` or `update` method. However, when working within a Shader file
+     * directly, use the `WebGLShader` method equivalent instead, to avoid the program
+     * being set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#set1fv
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    set1fv: function (name, arr)
+    {
+        this.currentShader.bind().set1fv(name, arr);
+
+        return this;
+    },
+
+    /**
+     * Sets a 2fv uniform value based on the given name on the currently set shader.
+     *
+     * The current shader is bound, before the uniform is set, making it active within the
+     * WebGLRenderer. This means you can safely call this method from a location such as
+     * a Scene `create` or `update` method. However, when working within a Shader file
+     * directly, use the `WebGLShader` method equivalent instead, to avoid the program
+     * being set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#set2fv
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    set2fv: function (name, arr)
+    {
+        this.currentShader.bind().set2fv(name, arr);
+
+        return this;
+    },
+
+    /**
+     * Sets a 3fv uniform value based on the given name on the currently set shader.
+     *
+     * The current shader is bound, before the uniform is set, making it active within the
+     * WebGLRenderer. This means you can safely call this method from a location such as
+     * a Scene `create` or `update` method. However, when working within a Shader file
+     * directly, use the `WebGLShader` method equivalent instead, to avoid the program
+     * being set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#set3fv
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    set3fv: function (name, arr)
+    {
+        this.currentShader.bind().set3fv(name, arr);
+
+        return this;
+    },
+
+    /**
+     * Sets a 4fv uniform value based on the given name on the currently set shader.
+     *
+     * The current shader is bound, before the uniform is set, making it active within the
+     * WebGLRenderer. This means you can safely call this method from a location such as
+     * a Scene `create` or `update` method. However, when working within a Shader file
+     * directly, use the `WebGLShader` method equivalent instead, to avoid the program
+     * being set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#set4fv
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    set4fv: function (name, arr)
+    {
+        this.currentShader.bind().set4fv(name, arr);
+
+        return this;
+    },
+
+    /**
+     * Sets a 1iv uniform value based on the given name on the currently set shader.
+     *
+     * The current shader is bound, before the uniform is set, making it active within the
+     * WebGLRenderer. This means you can safely call this method from a location such as
+     * a Scene `create` or `update` method. However, when working within a Shader file
+     * directly, use the `WebGLShader` method equivalent instead, to avoid the program
+     * being set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#set1iv
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    set1iv: function (name, arr)
+    {
+        this.currentShader.bind().set1iv(name, arr);
+
+        return this;
+    },
+
+    /**
+     * Sets a 2iv uniform value based on the given name on the currently set shader.
+     *
+     * The current shader is bound, before the uniform is set, making it active within the
+     * WebGLRenderer. This means you can safely call this method from a location such as
+     * a Scene `create` or `update` method. However, when working within a Shader file
+     * directly, use the `WebGLShader` method equivalent instead, to avoid the program
+     * being set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#set2iv
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    set2iv: function (name, arr)
+    {
+        this.currentShader.bind().set2iv(name, arr);
+
+        return this;
+    },
+
+    /**
+     * Sets a 3iv uniform value based on the given name on the currently set shader.
+     *
+     * The current shader is bound, before the uniform is set, making it active within the
+     * WebGLRenderer. This means you can safely call this method from a location such as
+     * a Scene `create` or `update` method. However, when working within a Shader file
+     * directly, use the `WebGLShader` method equivalent instead, to avoid the program
+     * being set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#set3iv
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    set3iv: function (name, arr)
+    {
+        this.currentShader.bind().set3iv(name, arr);
+
+        return this;
+    },
+
+    /**
+     * Sets a 4iv uniform value based on the given name on the currently set shader.
+     *
+     * The current shader is bound, before the uniform is set, making it active within the
+     * WebGLRenderer. This means you can safely call this method from a location such as
+     * a Scene `create` or `update` method. However, when working within a Shader file
+     * directly, use the `WebGLShader` method equivalent instead, to avoid the program
+     * being set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#set4iv
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    set4iv: function (name, arr)
+    {
+        this.currentShader.bind().set4iv(name, arr);
+
+        return this;
+    },
+
+    /**
+     * Sets a 1i uniform value based on the given name on the currently set shader.
+     *
+     * The current shader is bound, before the uniform is set, making it active within the
+     * WebGLRenderer. This means you can safely call this method from a location such as
+     * a Scene `create` or `update` method. However, when working within a Shader file
+     * directly, use the `WebGLShader` method equivalent instead, to avoid the program
+     * being set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#set1i
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     * @param {integer} x - The new value of the `int` uniform.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    set1i: function (name, x)
+    {
+        this.currentShader.bind().set1i(name, x);
+
+        return this;
+    },
+
+    /**
+     * Sets a 2i uniform value based on the given name on the currently set shader.
+     *
+     * The current shader is bound, before the uniform is set, making it active within the
+     * WebGLRenderer. This means you can safely call this method from a location such as
+     * a Scene `create` or `update` method. However, when working within a Shader file
+     * directly, use the `WebGLShader` method equivalent instead, to avoid the program
+     * being set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#set2i
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     * @param {integer} x - The new X component of the `ivec2` uniform.
+     * @param {integer} y - The new Y component of the `ivec2` uniform.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    set2i: function (name, x, y)
+    {
+        this.currentShader.bind().set2i(name, x, y);
+
+        return this;
+    },
+
+    /**
+     * Sets a 3i uniform value based on the given name on the currently set shader.
+     *
+     * The current shader is bound, before the uniform is set, making it active within the
+     * WebGLRenderer. This means you can safely call this method from a location such as
+     * a Scene `create` or `update` method. However, when working within a Shader file
+     * directly, use the `WebGLShader` method equivalent instead, to avoid the program
+     * being set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#set3i
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     * @param {integer} x - The new X component of the `ivec3` uniform.
+     * @param {integer} y - The new Y component of the `ivec3` uniform.
+     * @param {integer} z - The new Z component of the `ivec3` uniform.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    set3i: function (name, x, y, z)
+    {
+        this.currentShader.bind().set3i(name, x, y, z);
+
+        return this;
+    },
+
+    /**
+     * Sets a 4i uniform value based on the given name on the currently set shader.
+     *
+     * The current shader is bound, before the uniform is set, making it active within the
+     * WebGLRenderer. This means you can safely call this method from a location such as
+     * a Scene `create` or `update` method. However, when working within a Shader file
+     * directly, use the `WebGLShader` method equivalent instead, to avoid the program
+     * being set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#set4i
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     * @param {integer} x - X component of the uniform
+     * @param {integer} y - Y component of the uniform
+     * @param {integer} z - Z component of the uniform
+     * @param {integer} w - W component of the uniform
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    set4i: function (name, x, y, z, w)
+    {
+        this.currentShader.bind().set4i(name, x, y, z, w);
+
+        return this;
+    },
+
+    /**
+     * Sets a matrix 2fv uniform value based on the given name on the currently set shader.
+     *
+     * The current shader is bound, before the uniform is set, making it active within the
+     * WebGLRenderer. This means you can safely call this method from a location such as
+     * a Scene `create` or `update` method. However, when working within a Shader file
+     * directly, use the `WebGLShader` method equivalent instead, to avoid the program
+     * being set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#setMatrix2fv
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     * @param {boolean} transpose - Whether to transpose the matrix. Should be `false`.
+     * @param {number[]|Float32Array} matrix - The new values for the `mat2` uniform.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    setMatrix2fv: function (name, transpose, matrix)
+    {
+        this.currentShader.bind().setMatrix2fv(name, transpose, matrix);
+
+        return this;
+    },
+
+    /**
+     * Sets a matrix 3fv uniform value based on the given name on the currently set shader.
+     *
+     * The current shader is bound, before the uniform is set, making it active within the
+     * WebGLRenderer. This means you can safely call this method from a location such as
+     * a Scene `create` or `update` method. However, when working within a Shader file
+     * directly, use the `WebGLShader` method equivalent instead, to avoid the program
+     * being set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#setMatrix3fv
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     * @param {boolean} transpose - Whether to transpose the matrix. Should be `false`.
+     * @param {Float32Array} matrix - The new values for the `mat3` uniform.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    setMatrix3fv: function (name, transpose, matrix)
+    {
+        this.currentShader.bind().setMatrix3fv(name, transpose, matrix);
+
+        return this;
+    },
+
+    /**
+     * Sets a matrix 4fv uniform value based on the given name on the currently set shader.
+     *
+     * The current shader is bound, before the uniform is set, making it active within the
+     * WebGLRenderer. This means you can safely call this method from a location such as
+     * a Scene `create` or `update` method. However, when working within a Shader file
+     * directly, use the `WebGLShader` method equivalent instead, to avoid the program
+     * being set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#setMatrix4fv
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     * @param {boolean} transpose - Should the matrix be transpose
+     * @param {Float32Array} matrix - Matrix data
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    setMatrix4fv: function (name, transpose, matrix)
+    {
+        this.currentShader.bind().setMatrix4fv(name, transpose, matrix);
 
         return this;
     },
