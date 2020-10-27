@@ -2771,19 +2771,6 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Returns the maximum number of texture units that can be used in a fragment shader.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#getMaxTextures
-     * @since 3.8.0
-     *
-     * @return {integer} The maximum number of textures WebGL supports.
-     */
-    getMaxTextures: function ()
-    {
-        return this.config.maxTextures;
-    },
-
-    /**
      * Returns the largest texture size (either width or height) that can be created.
      * Note that VRAM may not allow a texture of any given size, it just expresses
      * hardware / driver support for a given size.
