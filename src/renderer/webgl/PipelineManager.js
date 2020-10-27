@@ -274,6 +274,8 @@ var PipelineManager = new Class({
      */
     postRender: function ()
     {
+        this.flush();
+
         var pipelines = this.pipelines;
 
         pipelines.each(function (pipelineName, pipelineInstance)
