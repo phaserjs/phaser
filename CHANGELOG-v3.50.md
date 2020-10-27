@@ -754,6 +754,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * The `WebGLRenderer.nativeTextures` array has been removed and any WebGLTextures created by the renderer are no longer stored within it. All WebGLTexture instances are stored in the `TextureSource` objects anyway, or by local classes such as RenderTexture, so there was no need to have another array taking up memroy.
 * The `WebGLRenderer.deleteTexture` method has a new optional boolean parameter `reset` which allows you to control if the `WebGLRenderer.resetTextures` method is called, or not, after the texture is deleted.
 * `Phaser.Scene.renderer` is a new property available in every Phaser.Scene that gives you a reference to the renderer, either Canvas or WebGL.
+* The `WebGLRenderer.getMaxTextures` method has been removed. This is no longer needed as you can use the `WebGLRenderer.maxTextures` property instead.
 
 ### Bug Fixes
 
