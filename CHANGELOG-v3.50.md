@@ -224,23 +224,23 @@ The `ModelViewProjection` object contained a lot of functions that Phaser never 
 
 ### WebGLRenderer Shader Functions Removed
 
-All of the following functions have been removed from the WebGL Renderer. They are now available on the WebGLShader classes via the pipelines.
+All of the following functions have been removed from the WebGL Renderer. They are now available on the WebGLPipeline and WebGLShader classes:
 
-* `WebGLRenderer.setFloat1` has been removed. Use `WebGLShader.set1f` instead.
-* `WebGLRenderer.setFloat2` has been removed. Use `WebGLShader.set2f` instead.
-* `WebGLRenderer.setFloat3` has been removed. Use `WebGLShader.set3f` instead.
-* `WebGLRenderer.setFloat4` has been removed. Use `WebGLShader.set4f` instead.
-* `WebGLRenderer.setFloat1v` has been removed. Use `WebGLShader.set1fv` instead.
-* `WebGLRenderer.setFloat2v` has been removed. Use `WebGLShader.set2fv` instead.
-* `WebGLRenderer.setFloat3v` has been removed. Use `WebGLShader.set3fv` instead.
-* `WebGLRenderer.setFloat4v` has been removed. Use `WebGLShader.set4fv` instead.
-* `WebGLRenderer.setInt1` has been removed. Use `WebGLShader.set1i` instead.
-* `WebGLRenderer.setInt2` has been removed. Use `WebGLShader.set2i` instead.
-* `WebGLRenderer.setInt3` has been removed. Use `WebGLShader.set3i` instead.
-* `WebGLRenderer.setInt4` has been removed. Use `WebGLShader.set4i` instead.
-* `WebGLRenderer.setMatrix2` has been removed. Use `WebGLShader.setMatrix2fv` instead.
-* `WebGLRenderer.setMatrix3` has been removed. Use `WebGLShader.setMatrix3fv` instead.
-* `WebGLRenderer.setMatrix4` has been removed. Use `WebGLShader.setMatrix4fv` instead.
+* `WebGLRenderer.setFloat1` has been removed. Use `WebGLPipeline.set1f` or `WebGLShader.set1f` instead.
+* `WebGLRenderer.setFloat2` has been removed. Use `WebGLPipeline.set2f` or `WebGLShader.set2f` instead.
+* `WebGLRenderer.setFloat3` has been removed. Use `WebGLPipeline.set3f` or `WebGLShader.set3f` instead.
+* `WebGLRenderer.setFloat4` has been removed. Use `WebGLPipeline.set4f` or `WebGLShader.set4f` instead.
+* `WebGLRenderer.setFloat1v` has been removed. Use `WebGLPipeline.set1fv` or `WebGLShader.set1fv` instead.
+* `WebGLRenderer.setFloat2v` has been removed. Use `WebGLPipeline.set1fv` or `WebGLShader.set2fv` instead.
+* `WebGLRenderer.setFloat3v` has been removed. Use `WebGLPipeline.set1fv` or `WebGLShader.set3fv` instead.
+* `WebGLRenderer.setFloat4v` has been removed. Use `WebGLPipeline.set1fv` or `WebGLShader.set4fv` instead.
+* `WebGLRenderer.setInt1` has been removed. Use `WebGLPipeline.set1fi` or `WebGLShader.set1i` instead.
+* `WebGLRenderer.setInt2` has been removed. Use `WebGLPipeline.set1fi` or `WebGLShader.set2i` instead.
+* `WebGLRenderer.setInt3` has been removed. Use `WebGLPipeline.set1fi` or `WebGLShader.set3i` instead.
+* `WebGLRenderer.setInt4` has been removed. Use `WebGLPipeline.set1fi` or `WebGLShader.set4i` instead.
+* `WebGLRenderer.setMatrix2` has been removed. Use `WebGLPipeline.setMatrix2fv` or `WebGLShader.setMatrix2fv` instead.
+* `WebGLRenderer.setMatrix3` has been removed. Use `WebGLPipeline.setMatrix3fv` or `WebGLShader.setMatrix3fv` instead.
+* `WebGLRenderer.setMatrix4` has been removed. Use `WebGLPipeline.setMatrix4fv` or `WebGLShader.setMatrix4fv` instead.
 
 ### BitmapText - New Features, Updates and API Changes
 
