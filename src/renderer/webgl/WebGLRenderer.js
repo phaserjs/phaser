@@ -1529,45 +1529,47 @@ var WebGLRenderer = new Class({
     {
         if (updateScissor === undefined) { updateScissor = false; }
 
+        if (framebuffer === this.currentFramebuffer)
+        {
+            return this;
+        }
+
         var gl = this.gl;
 
         var width = this.width;
         var height = this.height;
 
-        if (framebuffer !== this.currentFramebuffer)
+        if (framebuffer && framebuffer.renderTexture)
         {
-            if (framebuffer && framebuffer.renderTexture)
+            width = framebuffer.renderTexture.width;
+            height = framebuffer.renderTexture.height;
+        }
+        else
+        {
+            this.flush();
+        }
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+
+        gl.viewport(0, 0, width, height);
+
+        if (updateScissor)
+        {
+            if (framebuffer)
             {
-                width = framebuffer.renderTexture.width;
-                height = framebuffer.renderTexture.height;
+                this.drawingBufferHeight = height;
+
+                this.pushScissor(0, 0, width, height);
             }
             else
             {
-                this.flush();
+                this.drawingBufferHeight = this.height;
+
+                this.popScissor();
             }
-
-            gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
-
-            gl.viewport(0, 0, width, height);
-
-            if (updateScissor)
-            {
-                if (framebuffer)
-                {
-                    this.drawingBufferHeight = height;
-
-                    this.pushScissor(0, 0, width, height);
-                }
-                else
-                {
-                    this.drawingBufferHeight = this.height;
-
-                    this.popScissor();
-                }
-            }
-
-            this.currentFramebuffer = framebuffer;
         }
+
+        this.currentFramebuffer = framebuffer;
 
         return this;
     },
