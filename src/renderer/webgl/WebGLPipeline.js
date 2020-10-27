@@ -6,6 +6,7 @@
  */
 
 var Class = require('../../utils/Class');
+var DeepCopy = require('../../utils/object/DeepCopy');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Matrix4 = require('../../math/Matrix4');
 var Utils = require('./Utils');
@@ -25,6 +26,16 @@ var WebGLShader = require('./WebGLShader');
  *
  * Usually, you would not extend from this class directly, but would instead extend
  * from one of the core pipelines, such as the Multi Pipeline.
+ *
+ * The pipeline flow per render-step is as follows:
+ *
+ * 1) onPreRender - called once at the start of the render step
+ * 2) onRender - call for each Scene Camera that needs to render (so can be multiple times per render step)
+ * 3) Internal flow:
+ * 3a)   bind (only called if a Game Object is using this pipeline and it's not currently active)
+ * 3b)   onBind (called for every Game Object that uses this pipeline)
+ * 3c)   flush (can be called by a Game Object, internal method or from outside by changing pipeline)
+ * 4) onPostRender - called once at the end of the render step
  *
  * @class WebGLPipeline
  * @memberof Phaser.Renderer.WebGL
@@ -248,22 +259,13 @@ var WebGLPipeline = new Class({
         this.hasBooted = false;
 
         /**
-         * Array of objects that describe the vertex attributes.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#attributes
-         * @type {Phaser.Types.Renderer.WebGL.WebGLPipelineAttributesConfig}
-         * @since 3.0.0
-         */
-        this.attributes = config.attributes;
-
-        /**
          * The amount of vertex attribute components of 32 bit length.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexComponentCount
          * @type {integer}
          * @since 3.0.0
          */
-        this.vertexComponentCount = Utils.getComponentCount(this.attributes, this.gl);
+        this.vertexComponentCount = Utils.getComponentCount(config.attributes, this.gl);
 
         /**
          * The WebGLFramebuffer this pipeline is targeting, if any.
@@ -403,6 +405,8 @@ var WebGLPipeline = new Class({
 
         this.setShadersFromConfig(config);
 
+        this.currentShader.bind();
+
         this.renderer.setVertexBuffer(this.vertexBuffer);
 
         this.setAttribPointers(true);
@@ -513,6 +517,7 @@ var WebGLPipeline = new Class({
     {
         var i;
         var shaders = this.shaders;
+        var renderer = this.renderer;
 
         for (i = 0; i < shaders.length; i++)
         {
@@ -522,10 +527,12 @@ var WebGLPipeline = new Class({
         var vName = 'vertShader';
         var fName = 'fragShader';
         var uName = 'uniforms';
+        var aName = 'attributes';
 
         var defaultVertShader = GetFastValue(config, vName, null);
-        var defaultFragShader = GetFastValue(config, fName, null);
+        var defaultFragShader = Utils.parseFragmentShaderMaxTextures(GetFastValue(config, fName, null), renderer.maxTextures);
         var defaultUniforms = GetFastValue(config, uName, null);
+        var defaultAttribs = GetFastValue(config, aName, null);
 
         var configShaders = GetFastValue(config, 'shaders', []);
 
@@ -533,10 +540,12 @@ var WebGLPipeline = new Class({
 
         if (len === 0)
         {
-            this.shaders = [ new WebGLShader(this, 'default', defaultVertShader, defaultFragShader, defaultUniforms) ];
+            this.shaders = [ new WebGLShader(this, 'default', defaultVertShader, defaultFragShader, DeepCopy(defaultAttribs), defaultUniforms) ];
         }
         else
         {
+            var newShaders = [];
+
             for (i = 0; i < len; i++)
             {
                 var shaderEntry = configShaders[i];
@@ -544,47 +553,17 @@ var WebGLPipeline = new Class({
                 var name = GetFastValue(shaderEntry, 'name', 'default');
 
                 var vertShader = GetFastValue(shaderEntry, vName, defaultVertShader);
-                var fragShader = GetFastValue(shaderEntry, fName, defaultFragShader);
+                var fragShader = Utils.parseFragmentShaderMaxTextures(GetFastValue(shaderEntry, fName, defaultFragShader), renderer.maxTextures);
+                var attributes = GetFastValue(shaderEntry, aName, defaultAttribs);
                 var uniforms = GetFastValue(shaderEntry, uName, defaultUniforms);
 
-                configShaders.push(new WebGLShader(this, name, vertShader, fragShader, uniforms));
+                newShaders.push(new WebGLShader(this, name, vertShader, fragShader, DeepCopy(attributes), uniforms));
             }
 
-            this.shaders = configShaders;
+            this.shaders = newShaders;
         }
 
         this.currentShader = this.shaders[0];
-
-        return this;
-    },
-
-    /**
-     * Adds a description of vertex attribute to the pipeline.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#addAttribute
-     * @since 3.2.0
-     *
-     * @param {string} name - Name of the vertex attribute
-     * @param {integer} size - Vertex component size
-     * @param {integer} type - Type of the attribute
-     * @param {boolean} normalized - Is the value normalized to a range
-     * @param {integer} offset - Byte offset to the beginning of the first element in the vertex
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    addAttribute: function (name, size, type, normalized, offset)
-    {
-        this.attributes.push({
-            name: name,
-            size: size,
-            type: this.renderer.glFormats[type],
-            normalized: normalized,
-            offset: offset,
-            enabled: false,
-            location: -1
-        });
-
-        this.vertexComponentCount = Utils.getComponentCount(this.attributes, this.gl);
 
         return this;
     },
@@ -606,8 +585,8 @@ var WebGLPipeline = new Class({
         if (reset === undefined) { reset = false; }
 
         var gl = this.gl;
-        var attributes = this.attributes;
         var vertexSize = this.vertexSize;
+        var attributes = this.currentShader.attributes;
         var program = this.currentShader.program;
 
         for (var i = 0; i < attributes.length; i++)
@@ -729,9 +708,10 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * Binds the pipeline resources, including the given shader, vertex buffer and attribute pointers.
+     * This method is called every time the Pipeline Manager makes this pipeline the currently active one.
      *
-     * This method is called every time this pipeline is made the current active pipeline.
+     * It binds the resources and shader needed for this pipeline, including setting the vertex buffer
+     * and attribute pointers.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#bind
      * @since 3.0.0
