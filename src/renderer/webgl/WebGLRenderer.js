@@ -2224,8 +2224,6 @@ var WebGLRenderer = new Class({
 
         gl.enable(gl.SCISSOR_TEST);
 
-        this.pipelines.preRender();
-
         this.currentScissor = this.defaultScissor;
 
         this.scissorStack.length = 0;
@@ -2241,6 +2239,8 @@ var WebGLRenderer = new Class({
         this.maskStack.length = 0;
 
         this.textureFlush = 0;
+
+        this.pipelines.preRender();
 
         this.pipelines.setMulti();
     },
@@ -2361,9 +2361,7 @@ var WebGLRenderer = new Class({
     {
         if (this.contextLost) { return; }
 
-        this.flush();
-
-        // Unbind custom framebuffer here
+        this.pipelines.postRender();
 
         var state = this.snapshotState;
 
@@ -2373,8 +2371,6 @@ var WebGLRenderer = new Class({
 
             state.callback = null;
         }
-
-        this.pipelines.postRender();
 
         if (this.textureFlush > 0)
         {
