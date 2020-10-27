@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
+var Utils = require('./Utils');
 
 /**
  * @classdesc
@@ -19,13 +20,14 @@ var Class = require('../../utils/Class');
  * @param {string} name - The name of this Shader.
  * @param {string} vertexShader - The vertex shader source code as a single string.
  * @param {string} fragmentShader - The fragment shader source code as a single string.
+ * @param {string[]} attributes -
  * @param {string[]} [uniforms] - An array of shader uniform names that will be looked-up to get the locations for.
  */
 var WebGLShader = new Class({
 
     initialize:
 
-    function WebGLShader (pipeline, name, vertexShader, fragmentShader, uniforms)
+    function WebGLShader (pipeline, name, vertexShader, fragmentShader, attributes, uniforms)
     {
         /**
          * A reference to the WebGLPipeline that owns this Shader.
@@ -73,6 +75,15 @@ var WebGLShader = new Class({
          * @since 3.50.0
          */
         this.program = this.renderer.createProgram(vertexShader, fragmentShader);
+
+        /**
+         * Array of objects that describe the vertex attributes.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#attributes
+         * @type {Phaser.Types.Renderer.WebGL.WebGLPipelineAttributesConfig}
+         * @since 3.50.0
+         */
+        this.attributes = attributes;
 
         /**
          * The uniforms that this shader requires, as set via the configuration object.
