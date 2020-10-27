@@ -342,6 +342,11 @@ var Config = new Class({
         var renderConfig = GetValue(config, 'render', config);
 
         /**
+         * @const {?Phaser.Types.Core.PipelineConfig)} Phaser.Core.Config#pipeline - An object mapping WebGL names to WebGLPipeline classes. These should be class constructors, not instances.
+         */
+        this.pipeline = GetValue(renderConfig, 'pipeline', null);
+
+        /**
          * @const {boolean} Phaser.Core.Config#antialias - When set to `true`, WebGL uses linear interpolation to draw scaled or rotated textures, giving a smooth appearance. When set to `false`, WebGL uses nearest-neighbor interpolation, giving a crisper appearance. `false` also disables antialiasing of the game canvas itself, if the browser supports it, when the game canvas is scaled.
          */
         this.antialias = GetValue(renderConfig, 'antialias', true);

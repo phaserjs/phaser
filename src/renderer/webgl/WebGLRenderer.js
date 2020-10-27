@@ -15,7 +15,6 @@ var NOOP = require('../../utils/NOOP');
 var PIPELINE_CONST = require('./pipelines/const');
 var PipelineManager = require('./PipelineManager');
 var ScaleEvents = require('../../scale/events');
-var SpliceOne = require('../../utils/array/SpliceOne');
 var TextureEvents = require('../../textures/events');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 var Utils = require('./Utils');
@@ -764,7 +763,7 @@ var WebGLRenderer = new Class({
 
         };
 
-        // Load supported extensions
+        //  Load supported extensions
         var exts = gl.getSupportedExtensions();
 
         if (!config.maxTextures || config.maxTextures === -1)
@@ -862,10 +861,23 @@ var WebGLRenderer = new Class({
     boot: function ()
     {
         var game = this.game;
+        var pipelineManager = this.pipelines;
 
-        this.pipelines.boot();
+        var pipelines = game.config.pipeline;
 
-        var multi = this.pipelines.get(PIPELINE_CONST.MULTI_PIPELINE);
+        if (pipelines)
+        {
+            for (var pipelineName in pipelines)
+            {
+                var pipelineInstance = pipelines[pipelineName];
+
+                pipelineManager.add(pipelineName, new pipelineInstance(game));
+            }
+        }
+
+        pipelineManager.boot();
+
+        var multi = pipelineManager.get(PIPELINE_CONST.MULTI_PIPELINE);
 
         this.blankTexture = game.textures.getFrame('__DEFAULT');
         this.whiteTexture = game.textures.getFrame('__WHITE');
@@ -884,7 +896,7 @@ var WebGLRenderer = new Class({
 
         this.resize(baseSize.width, baseSize.height);
 
-        this.pipelines.setMulti();
+        pipelineManager.setMulti();
     },
 
     /**

@@ -32,4 +32,5 @@
  * @property {Phaser.Types.Core.PluginObject|Phaser.Types.Core.PluginObjectItem[]} [plugins] - Plugins to install.
  * @property {Phaser.Types.Core.ScaleConfig} [scale] - The Scale Manager configuration.
  * @property {Phaser.Types.Core.AudioConfig} [audio] - The Audio Configuration object.
+ * @property {Phaser.Types.Core.PipelineConfig} [pipeline] - A WebGL Pipeline configuration object. Can also be part of the `RenderConfig`.
  */

@@ -153,10 +153,18 @@ var PipelineManager = new Class({
      *
      * The name of the instance must be unique within this manager.
      *
-     * Make sure to pass an instance to this method, not a base class. For example:
+     * Make sure to pass an instance to this method, not a base class.
+     *
+     * For example, you should pass it like this:
      *
      * ```javascript
-     * this.add('yourName', new MultiPipeline());`
+     * this.add('yourName', new CustomPipeline());`
+     * ```
+     *
+     * and **not** like this:
+     *
+     * ```javascript
+     * this.add('yourName', CustomPipeline);`
      * ```
      *
      * @method Phaser.Renderer.WebGL.PipelineManager#addPipeline
