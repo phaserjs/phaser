@@ -19,6 +19,8 @@ var Pipeline = {
     /**
      * The initial WebGL pipeline of this Game Object.
      *
+     * If you call `resetPipeline` on this Game Object, the pipeline is reset to this default.
+     *
      * @name Phaser.GameObjects.Components.Pipeline#defaultPipeline
      * @type {Phaser.Renderer.WebGL.WebGLPipeline}
      * @default null
@@ -41,29 +43,34 @@ var Pipeline = {
     /**
      * Sets the initial WebGL Pipeline of this Game Object.
      *
-     * This should only be called during the instantiation of the Game Object.
+     * This should only be called during the instantiation of the Game Object. After that, use `setPipeline`.
      *
      * @method Phaser.GameObjects.Components.Pipeline#initPipeline
      * @webglOnly
      * @since 3.0.0
      *
-     * @param {string} [name=MultiPipeline] - The name of the pipeline to set on this Game Object. Defaults to the Multi Pipeline.
+     * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} pipeline - Either the string-based name of the pipeline, or a pipeline instance to set.
      *
      * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
      */
-    initPipeline: function (name)
+    initPipeline: function (pipeline)
     {
-        if (name === undefined) { name = PIPELINE_CONST.MULTI_PIPELINE; }
+        if (pipeline === undefined) { pipeline = PIPELINE_CONST.MULTI_PIPELINE; }
 
-        var renderer = this.scene.sys.game.renderer;
+        var renderer = this.scene.sys.renderer;
         var pipelines = renderer.pipelines;
 
-        if (pipelines && pipelines.has(name))
+        if (pipelines)
         {
-            this.defaultPipeline = pipelines.get(name);
-            this.pipeline = this.defaultPipeline;
+            var instance = pipelines.get(pipeline);
 
-            return true;
+            if (instance)
+            {
+                this.defaultPipeline = instance;
+                this.pipeline = instance;
+
+                return true;
+            }
         }
 
         return false;
@@ -76,18 +83,23 @@ var Pipeline = {
      * @webglOnly
      * @since 3.0.0
      *
-     * @param {string} name - The name of the pipeline to set on this Game Object.
+     * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} pipeline - Either the string-based name of the pipeline, or a pipeline instance to set.
      *
      * @return {this} This Game Object instance.
      */
-    setPipeline: function (name)
+    setPipeline: function (pipeline)
     {
-        var renderer = this.scene.sys.game.renderer;
+        var renderer = this.scene.sys.renderer;
         var pipelines = renderer.pipelines;
 
-        if (pipelines && pipelines.has(name))
+        if (pipelines)
         {
-            this.pipeline = pipelines.get(name);
+            var instance = pipelines.get(pipeline);
+
+            if (instance)
+            {
+                this.pipeline = instance;
+            }
         }
 
         return this;
