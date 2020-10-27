@@ -297,35 +297,55 @@ var PipelineManager = new Class({
     },
 
     /**
-     * Checks if a pipeline is present in the Pipeline Manager.
+     * Checks if a pipeline is present in this Pipeline Manager.
      *
      * @method Phaser.Renderer.WebGL.PipelineManager#has
      * @since 3.50.0
      *
-     * @param {string} name - The name of the pipeline to check for.
+     * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} pipeline - Either the string-based name of the pipeline to get, or a pipeline instance to look-up.
      *
      * @return {boolean} `true` if the given pipeline is loaded, otherwise `false`.
      */
-    has: function (name)
+    has: function (pipeline)
     {
-        return this.pipelines.has(name);
+        var pipelines = this.pipelines;
+
+        if (typeof pipeline === 'string')
+        {
+            return pipelines.has(pipeline);
+        }
+        else if (pipelines.contains(pipeline))
+        {
+            return true;
+        }
+
+        return false;
     },
 
     /**
-     * Returns the pipeline instance based on the given name.
+     * Returns the pipeline instance based on the given name, or instance.
      *
-     * If no instance exists in this manager, it returns `undefined` instead.
+     * If no instance, or matching name, exists in this manager, it returns `undefined`.
      *
      * @method Phaser.Renderer.WebGL.PipelineManager#get
      * @since 3.50.0
      *
-     * @param {string} name - The name of the pipeline to get.
+     * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} pipeline - Either the string-based name of the pipeline to get, or a pipeline instance to look-up.
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} The pipeline instance, or `undefined` if not found.
      */
-    get: function (name)
+    get: function (pipeline)
     {
-        return this.pipelines.get(name);
+        var pipelines = this.pipelines;
+
+        if (typeof pipeline === 'string')
+        {
+            return pipelines.get(pipeline);
+        }
+        else if (pipelines.contains(pipeline))
+        {
+            return pipeline;
+        }
     },
 
     /**
