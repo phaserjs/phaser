@@ -51,7 +51,7 @@ var BitmapMask = new Class({
 
     function BitmapMask (scene, renderable)
     {
-        var renderer = scene.sys.game.renderer;
+        var renderer = scene.sys.renderer;
 
         /**
          * A reference to either the Canvas or WebGL Renderer that this Mask is using.

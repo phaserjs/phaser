@@ -114,7 +114,7 @@ var LightsManager = new Class({
     {
         if (this.maxLights === -1)
         {
-            this.maxLights = this.scene.sys.game.renderer.config.maxLights;
+            this.maxLights = this.scene.sys.renderer.config.maxLights;
         }
 
         this.active = true;

@@ -354,7 +354,7 @@ var Camera = new Class({
     {
         if (renderToGame === undefined) { renderToGame = true; }
 
-        var renderer = this.scene.sys.game.renderer;
+        var renderer = this.scene.sys.renderer;
 
         if (renderer.gl)
         {
@@ -396,7 +396,7 @@ var Camera = new Class({
     {
         if (typeof pipeline === 'string')
         {
-            var renderer = this.scene.sys.game.renderer;
+            var renderer = this.scene.sys.renderer;
 
             if (renderer.gl && renderer.pipelines.has(pipeline))
             {
@@ -430,7 +430,7 @@ var Camera = new Class({
             return;
         }
 
-        var renderer = this.scene.sys.game.renderer;
+        var renderer = this.scene.sys.renderer;
 
         if (!renderer)
         {

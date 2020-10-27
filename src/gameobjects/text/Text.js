@@ -120,7 +120,7 @@ var Text = new Class({
          * @type {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)}
          * @since 3.12.0
          */
-        this.renderer = scene.sys.game.renderer;
+        this.renderer = scene.sys.renderer;
 
         this.setPosition(x, y);
         this.setOrigin(0, 0);

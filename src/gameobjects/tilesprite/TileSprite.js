@@ -26,10 +26,10 @@ var _FLAG = 8; // 1000
  *
  * You shouldn't ever create a TileSprite any larger than your actual canvas size. If you want to create a large repeating background
  * that scrolls across the whole map of your game, then you create a TileSprite that fits the canvas size and then use the `tilePosition`
- * property to scroll the texture as the player moves. If you create a TileSprite that is thousands of pixels in size then it will 
+ * property to scroll the texture as the player moves. If you create a TileSprite that is thousands of pixels in size then it will
  * consume huge amounts of memory and cause performance issues. Remember: use `tilePosition` to scroll your texture and `tileScale` to
  * adjust the scale of the texture - don't resize the sprite itself or make it larger than it needs.
- * 
+ *
  * An important note about Tile Sprites and NPOT textures: Internally, TileSprite textures use GL_REPEAT to provide
  * seamless repeating of the textures. This, combined with the way in which the textures are handled in WebGL, means
  * they need to be POT (power-of-two) sizes in order to wrap. If you provide a NPOT (non power-of-two) texture to a
@@ -95,7 +95,7 @@ var TileSprite = new Class({
 
     function TileSprite (scene, x, y, width, height, textureKey, frameKey)
     {
-        var renderer = scene.sys.game.renderer;
+        var renderer = scene.sys.renderer;
 
         GameObject.call(this, scene, 'TileSprite');
 

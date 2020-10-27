@@ -99,7 +99,7 @@ var RenderTexture = new Class({
          * @type {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)}
          * @since 3.2.0
          */
-        this.renderer = scene.sys.game.renderer;
+        this.renderer = scene.sys.renderer;
 
         /**
          * A reference to the Texture Manager.
