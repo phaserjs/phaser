@@ -11,6 +11,7 @@
 module.exports = {
 
     Clone: require('./Clone'),
+    DeepCopy: require('./DeepCopy'),
     Extend: require('./Extend'),
     GetAdvancedValue: require('./GetAdvancedValue'),
     GetFastValue: require('./GetFastValue'),
