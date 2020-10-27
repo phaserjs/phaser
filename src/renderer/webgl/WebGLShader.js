@@ -120,6 +120,8 @@ var WebGLShader = new Class({
 
             pipeline.mvpDirty = false;
         }
+
+        return this;
     },
 
     /**
