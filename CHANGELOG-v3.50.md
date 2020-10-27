@@ -692,6 +692,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `Physics.Arcade.Body.setDamping` is a new method that allows you to set the `useDamping` property of a Body in a chainable way. Fix #5352 (thanks @juanitogan)
 * The `GameObjects.Graphics.fillGradientStyle` method can now accept a different alpha value for each of the fill colors. The default is still 1. If you only provide a single alpha, it'll be used for all colors. Fix #5044 (thanks @zhangciwu)
 * `Cameras.Scene2D.Events.FOLLOW_UPDATE` is a new Event that is dispatched by a Camera when it is following a Game Object. It is dispatched every frame, right after the final Camera position and internal matrices have been updated. Use it if you need to react to a camera, using its most current position and the camera is following something. Fix #5253 (thanks @rexrainbow)
+* `Types.Core.PipelineConfig` is a new configuration object that you can set in the Game Config under the `pipeline` property. It allows you to define custom WebGL pipelines as part of the Game Config, so they're automatically installed and ready for use by all Scenes in your game. You can either set the `pipeline` object, or set it under the `render` sub-config.
 
 ### Updates and API Changes
 
@@ -751,6 +752,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * If the Camera has `roundPixels` set it will now round the internal scroll factors and `worldView` during the `preRender` step. Fix #4464 (thanks @Antriel)
 * The `WebGLRenderer.nativeTextures` array has been removed and any WebGLTextures created by the renderer are no longer stored within it. All WebGLTexture instances are stored in the `TextureSource` objects anyway, or by local classes such as RenderTexture, so there was no need to have another array taking up memroy.
 * The `WebGLRenderer.deleteTexture` method has a new optional boolean parameter `reset` which allows you to control if the `WebGLRenderer.resetTextures` method is called, or not, after the texture is deleted.
+* `Phaser.Scene.renderer` is a new property available in every Phaser.Scene that gives you a reference to the renderer, either Canvas or WebGL.
 
 ### Bug Fixes
 
