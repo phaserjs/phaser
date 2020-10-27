@@ -339,7 +339,7 @@ var TextureSource = new Class({
     {
         if (this.glTexture)
         {
-            this.renderer.deleteTexture(this.glTexture);
+            this.renderer.deleteTexture(this.glTexture, false);
         }
 
         if (this.isCanvas)
