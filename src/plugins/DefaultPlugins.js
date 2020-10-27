@@ -31,7 +31,8 @@ var DefaultPlugins = {
         'registry',
         'scale',
         'sound',
-        'textures'
+        'textures',
+        'renderer'
 
     ],
 

@@ -269,6 +269,15 @@ var Scene = new Class({
          * @since 3.0.0
          */
         this.plugins;
+
+        /**
+         * A reference to the renderer instance Phaser is using, either Canvas or WebGL.
+         *
+         * @name Phaser.Scene#renderer
+         * @type {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)}
+         * @since 3.50.0
+         */
+        this.renderer;
     },
 
     /**
