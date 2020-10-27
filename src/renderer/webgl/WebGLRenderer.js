@@ -160,16 +160,6 @@ var WebGLRenderer = new Class({
         this.blendModes = [];
 
         /**
-         * Keeps track of any WebGLTexture created with the current WebGLRenderingContext.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#nativeTextures
-         * @type {array}
-         * @default []
-         * @since 3.0.0
-         */
-        this.nativeTextures = [];
-
-        /**
          * This property is set to `true` if the WebGL context of the renderer is lost.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#contextLost
@@ -1785,8 +1775,6 @@ var WebGLRenderer = new Class({
         texture.glIndex = 0;
         texture.glIndexCounter = -1;
 
-        this.nativeTextures.push(texture);
-
         return texture;
     },
 
@@ -1943,27 +1931,25 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Removes the given texture from the nativeTextures array and then deletes it from the GPU.
+     * Calls `GL.deleteTexture` on the given WebGLTexture and also optionally
+     * resets the currently defined textures.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#deleteTexture
      * @since 3.0.0
      *
      * @param {WebGLTexture} texture - The WebGL Texture to be deleted.
+     * @param {boolean} [reset=false] - Call the `resetTextures` method after deleting this texture?
      *
      * @return {this} This WebGLRenderer instance.
      */
-    deleteTexture: function (texture)
+    deleteTexture: function (texture, reset)
     {
-        var index = this.nativeTextures.indexOf(texture);
-
-        if (index !== -1)
-        {
-            SpliceOne(this.nativeTextures, index);
-        }
-
         this.gl.deleteTexture(texture);
 
-        this.resetTextures();
+        if (reset)
+        {
+            this.resetTextures();
+        }
 
         return this;
     },
@@ -2806,46 +2792,31 @@ var WebGLRenderer = new Class({
      */
     destroy: function ()
     {
-        //  Clear-up anything that should be cleared :)
+        this.canvas.removeEventListener('webglcontextlost', this.contextLostHandler, false);
+        this.canvas.removeEventListener('webglcontextrestored', this.contextRestoredHandler, false);
 
-        var i;
         var gl = this.gl;
 
         var temp = this.tempTextures;
-        var native = this.nativeTextures;
 
-        for (i = 0; i < temp.length; i++)
+        for (var i = 0; i < temp.length; i++)
         {
             gl.deleteTexture(temp[i]);
         }
 
-        for (i = 0; i < native.length; i++)
-        {
-            gl.deleteTexture(native[i]);
-        }
-
-        this.textureIndexes = [];
-        this.nativeTextures = [];
-
         this.pipelines.destroy();
-
         this.defaultCamera.destroy();
 
+        this.maskStack = [];
+        this.extensions = {};
+        this.textureIndexes = [];
+
+        this.gl = null;
+        this.game = null;
+        this.canvas = null;
+        this.contextLost = true;
         this.currentMask = null;
         this.currentCameraMask = null;
-
-        this.canvas.removeEventListener('webglcontextlost', this.contextLostHandler, false);
-        this.canvas.removeEventListener('webglcontextrestored', this.contextRestoredHandler, false);
-
-        this.game = null;
-        this.gl = null;
-        this.canvas = null;
-
-        this.maskStack = [];
-
-        this.contextLost = true;
-
-        this.extensions = {};
     }
 
 });
