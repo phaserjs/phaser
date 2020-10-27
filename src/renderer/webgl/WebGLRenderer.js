@@ -771,6 +771,11 @@ var WebGLRenderer = new Class({
             config.maxTextures = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
         }
 
+        if (!config.maxTextureSize)
+        {
+            config.maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+        }
+
         var extString = 'WEBGL_compressed_texture_';
         var wkExtString = 'WEBKIT_' + extString;
 
