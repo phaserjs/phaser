@@ -749,6 +749,8 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * The `ParticleEmitter.tint` value is now `0xffffff` (previously, it was `0xffffffff`) to allow particle tints to work in the correct RGB order including alpha (thanks @vforsh)
 * `SceneManager.start` will now reset the `SceneSystems.sceneUpdate` reference to `NOOP`. This gets set back to the Scene update method again during `bootScene` (if it has one) and stops errors with external plugins and multi-part files that may trigger `update` before `create` has been called. Fix #4629 (thanks @Osmose)
 * If the Camera has `roundPixels` set it will now round the internal scroll factors and `worldView` during the `preRender` step. Fix #4464 (thanks @Antriel)
+* The `WebGLRenderer.nativeTextures` array has been removed and any WebGLTextures created by the renderer are no longer stored within it. All WebGLTexture instances are stored in the `TextureSource` objects anyway, or by local classes such as RenderTexture, so there was no need to have another array taking up memroy.
+* The `WebGLRenderer.deleteTexture` method has a new optional boolean parameter `reset` which allows you to control if the `WebGLRenderer.resetTextures` method is called, or not, after the texture is deleted.
 
 ### Bug Fixes
 
