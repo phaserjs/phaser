@@ -41,6 +41,16 @@ var Pipeline = {
     pipeline: null,
 
     /**
+     * An object to store pipeline specific data in, to be read by the pipeline this Game Object uses.
+     *
+     * @name Phaser.GameObjects.Components.Pipeline#pipelineData
+     * @type {object}
+     * @webglOnly
+     * @since 3.50.0
+     */
+    pipelineData: {},
+
+    /**
      * Sets the initial WebGL Pipeline of this Game Object.
      *
      * This should only be called during the instantiation of the Game Object. After that, use `setPipeline`.
@@ -87,7 +97,7 @@ var Pipeline = {
      *
      * @return {this} This Game Object instance.
      */
-    setPipeline: function (pipeline)
+    setPipeline: function (pipeline, pipelineData)
     {
         var renderer = this.scene.sys.renderer;
         var pipelines = renderer.pipelines;
@@ -99,8 +109,16 @@ var Pipeline = {
             if (instance)
             {
                 this.pipeline = instance;
+                this.pipelineData = pipelineData;
             }
         }
+
+        return this;
+    },
+
+    setPipelineData: function (key, value)
+    {
+        this.pipelineData[key] = value;
 
         return this;
     },
