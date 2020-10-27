@@ -18,7 +18,7 @@ var Class = require('../utils/Class');
 /**
  * @classdesc
  * The keys of a Map can be arbitrary values.
- * 
+ *
  * ```javascript
  * var map = new Map([
  *    [ 1, 'one' ],
@@ -272,7 +272,9 @@ var Map = new Class({
     },
 
     /**
-     * Passes all entries in this Map to the given callback.
+     * Iterates through all entries in this Map, passing each one to the given callback.
+     *
+     * If the callback returns `false`, the iteration will break.
      *
      * @method Phaser.Structs.Map#each
      * @since 3.0.0
