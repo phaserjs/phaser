@@ -438,7 +438,21 @@ var WebGLPipeline = new Class({
 
         this.hasBooted = true;
 
+        this.onBoot();
+
         return this;
+    },
+
+    /**
+     * This method is called once when this pipeline has finished being set-up
+     * at the end of the boot process. By the time this method is called, all
+     * of the shaders are ready and configured.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#onBoot
+     * @since 3.50.0
+     */
+    onBoot: function ()
+    {
     },
 
     /**
@@ -483,17 +497,43 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setShader
      * @since 3.50.0
      *
-     * @param {number} index - The index of the shader to set.
+     * @param {Phaser.Renderer.WebGL.WebGLPipeline} shader - The shader to set as being current.
+     * @param {boolean} [reset=false] - Should the vertex attribute pointers be fully reset?
      *
      * @return {this} This WebGLPipeline instance.
      */
-    setShader: function (index)
+    setShader: function (shader, reset)
+    {
+        if (shader !== this.currentShader)
+        {
+            this.flush();
+
+            shader.bind(reset);
+
+            this.currentShader = shader;
+        }
+
+        return this;
+    },
+
+    /**
+     * Sets the currently active shader within this pipeline.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setShaderByIndex
+     * @since 3.50.0
+     *
+     * @param {number} index - The index of the shader to set.
+     * @param {boolean} [reset=false] - Should the vertex attribute pointers be fully reset?
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    setShaderByIndex: function (index, reset)
     {
         var shader = this.shaders[index];
 
         if (shader)
         {
-            shader.bind();
+            shader.bind(reset);
 
             this.currentShader = shader;
         }
@@ -1039,12 +1079,15 @@ var WebGLPipeline = new Class({
      *
      * @param {string} name - The name of the uniform to set.
      * @param {number} x - The new value of the `float` uniform.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    set1f: function (name, x)
+    set1f: function (name, x, shader)
     {
-        this.currentShader.bind().set1f(name, x);
+        if (shader === undefined) { shader = this.currentShader; }
+
+        shader.bind().set1f(name, x);
 
         return this;
     },
@@ -1064,12 +1107,15 @@ var WebGLPipeline = new Class({
      * @param {string} name - The name of the uniform to set.
      * @param {number} x - The new X component of the `vec2` uniform.
      * @param {number} y - The new Y component of the `vec2` uniform.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    set2f: function (name, x, y)
+    set2f: function (name, x, y, shader)
     {
-        this.currentShader.bind().set2f(name, x, y);
+        if (shader === undefined) { shader = this.currentShader; }
+
+        shader.bind().set2f(name, x, y);
 
         return this;
     },
@@ -1090,12 +1136,15 @@ var WebGLPipeline = new Class({
      * @param {number} x - The new X component of the `vec3` uniform.
      * @param {number} y - The new Y component of the `vec3` uniform.
      * @param {number} z - The new Z component of the `vec3` uniform.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    set3f: function (name, x, y, z)
+    set3f: function (name, x, y, z, shader)
     {
-        this.currentShader.bind().set3f(name, x, y, z);
+        if (shader === undefined) { shader = this.currentShader; }
+
+        shader.bind().set3f(name, x, y, z);
 
         return this;
     },
@@ -1117,12 +1166,15 @@ var WebGLPipeline = new Class({
      * @param {number} y - Y component of the uniform
      * @param {number} z - Z component of the uniform
      * @param {number} w - W component of the uniform
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    set4f: function (name, x, y, z, w)
+    set4f: function (name, x, y, z, w, shader)
     {
-        this.currentShader.bind().set4f(name, x, y, z, w);
+        if (shader === undefined) { shader = this.currentShader; }
+
+        shader.bind().set4f(name, x, y, z, w);
 
         return this;
     },
@@ -1141,12 +1193,15 @@ var WebGLPipeline = new Class({
      *
      * @param {string} name - The name of the uniform to set.
      * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    set1fv: function (name, arr)
+    set1fv: function (name, arr, shader)
     {
-        this.currentShader.bind().set1fv(name, arr);
+        if (shader === undefined) { shader = this.currentShader; }
+
+        shader.bind().set1fv(name, arr);
 
         return this;
     },
@@ -1165,12 +1220,15 @@ var WebGLPipeline = new Class({
      *
      * @param {string} name - The name of the uniform to set.
      * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    set2fv: function (name, arr)
+    set2fv: function (name, arr, shader)
     {
-        this.currentShader.bind().set2fv(name, arr);
+        if (shader === undefined) { shader = this.currentShader; }
+
+        shader.bind().set2fv(name, arr);
 
         return this;
     },
@@ -1189,12 +1247,15 @@ var WebGLPipeline = new Class({
      *
      * @param {string} name - The name of the uniform to set.
      * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    set3fv: function (name, arr)
+    set3fv: function (name, arr, shader)
     {
-        this.currentShader.bind().set3fv(name, arr);
+        if (shader === undefined) { shader = this.currentShader; }
+
+        shader.bind().set3fv(name, arr);
 
         return this;
     },
@@ -1213,12 +1274,15 @@ var WebGLPipeline = new Class({
      *
      * @param {string} name - The name of the uniform to set.
      * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    set4fv: function (name, arr)
+    set4fv: function (name, arr, shader)
     {
-        this.currentShader.bind().set4fv(name, arr);
+        if (shader === undefined) { shader = this.currentShader; }
+
+        shader.bind().set4fv(name, arr);
 
         return this;
     },
@@ -1237,12 +1301,15 @@ var WebGLPipeline = new Class({
      *
      * @param {string} name - The name of the uniform to set.
      * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    set1iv: function (name, arr)
+    set1iv: function (name, arr, shader)
     {
-        this.currentShader.bind().set1iv(name, arr);
+        if (shader === undefined) { shader = this.currentShader; }
+
+        shader.bind().set1iv(name, arr);
 
         return this;
     },
@@ -1261,12 +1328,15 @@ var WebGLPipeline = new Class({
      *
      * @param {string} name - The name of the uniform to set.
      * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    set2iv: function (name, arr)
+    set2iv: function (name, arr, shader)
     {
-        this.currentShader.bind().set2iv(name, arr);
+        if (shader === undefined) { shader = this.currentShader; }
+
+        shader.bind().set2iv(name, arr);
 
         return this;
     },
@@ -1285,12 +1355,15 @@ var WebGLPipeline = new Class({
      *
      * @param {string} name - The name of the uniform to set.
      * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    set3iv: function (name, arr)
+    set3iv: function (name, arr, shader)
     {
-        this.currentShader.bind().set3iv(name, arr);
+        if (shader === undefined) { shader = this.currentShader; }
+
+        shader.bind().set3iv(name, arr);
 
         return this;
     },
@@ -1309,12 +1382,15 @@ var WebGLPipeline = new Class({
      *
      * @param {string} name - The name of the uniform to set.
      * @param {number[]|Float32Array} arr - The new value to be used for the uniform variable.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    set4iv: function (name, arr)
+    set4iv: function (name, arr, shader)
     {
-        this.currentShader.bind().set4iv(name, arr);
+        if (shader === undefined) { shader = this.currentShader; }
+
+        shader.bind().set4iv(name, arr);
 
         return this;
     },
@@ -1333,12 +1409,15 @@ var WebGLPipeline = new Class({
      *
      * @param {string} name - The name of the uniform to set.
      * @param {integer} x - The new value of the `int` uniform.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    set1i: function (name, x)
+    set1i: function (name, x, shader)
     {
-        this.currentShader.bind().set1i(name, x);
+        if (shader === undefined) { shader = this.currentShader; }
+
+        shader.bind().set1i(name, x);
 
         return this;
     },
@@ -1358,12 +1437,15 @@ var WebGLPipeline = new Class({
      * @param {string} name - The name of the uniform to set.
      * @param {integer} x - The new X component of the `ivec2` uniform.
      * @param {integer} y - The new Y component of the `ivec2` uniform.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    set2i: function (name, x, y)
+    set2i: function (name, x, y, shader)
     {
-        this.currentShader.bind().set2i(name, x, y);
+        if (shader === undefined) { shader = this.currentShader; }
+
+        shader.bind().set2i(name, x, y);
 
         return this;
     },
@@ -1384,12 +1466,15 @@ var WebGLPipeline = new Class({
      * @param {integer} x - The new X component of the `ivec3` uniform.
      * @param {integer} y - The new Y component of the `ivec3` uniform.
      * @param {integer} z - The new Z component of the `ivec3` uniform.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    set3i: function (name, x, y, z)
+    set3i: function (name, x, y, z, shader)
     {
-        this.currentShader.bind().set3i(name, x, y, z);
+        if (shader === undefined) { shader = this.currentShader; }
+
+        shader.bind().set3i(name, x, y, z);
 
         return this;
     },
@@ -1407,16 +1492,19 @@ var WebGLPipeline = new Class({
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
-     * @param {integer} x - X component of the uniform
-     * @param {integer} y - Y component of the uniform
-     * @param {integer} z - Z component of the uniform
-     * @param {integer} w - W component of the uniform
+     * @param {integer} x - X component of the uniform.
+     * @param {integer} y - Y component of the uniform.
+     * @param {integer} z - Z component of the uniform.
+     * @param {integer} w - W component of the uniform.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    set4i: function (name, x, y, z, w)
+    set4i: function (name, x, y, z, w, shader)
     {
-        this.currentShader.bind().set4i(name, x, y, z, w);
+        if (shader === undefined) { shader = this.currentShader; }
+
+        shader.bind().set4i(name, x, y, z, w);
 
         return this;
     },
@@ -1436,12 +1524,15 @@ var WebGLPipeline = new Class({
      * @param {string} name - The name of the uniform to set.
      * @param {boolean} transpose - Whether to transpose the matrix. Should be `false`.
      * @param {number[]|Float32Array} matrix - The new values for the `mat2` uniform.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    setMatrix2fv: function (name, transpose, matrix)
+    setMatrix2fv: function (name, transpose, matrix, shader)
     {
-        this.currentShader.bind().setMatrix2fv(name, transpose, matrix);
+        if (shader === undefined) { shader = this.currentShader; }
+
+        shader.bind().setMatrix2fv(name, transpose, matrix);
 
         return this;
     },
@@ -1461,12 +1552,15 @@ var WebGLPipeline = new Class({
      * @param {string} name - The name of the uniform to set.
      * @param {boolean} transpose - Whether to transpose the matrix. Should be `false`.
      * @param {Float32Array} matrix - The new values for the `mat3` uniform.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    setMatrix3fv: function (name, transpose, matrix)
+    setMatrix3fv: function (name, transpose, matrix, shader)
     {
-        this.currentShader.bind().setMatrix3fv(name, transpose, matrix);
+        if (shader === undefined) { shader = this.currentShader; }
+
+        shader.bind().setMatrix3fv(name, transpose, matrix);
 
         return this;
     },
@@ -1486,12 +1580,15 @@ var WebGLPipeline = new Class({
      * @param {string} name - The name of the uniform to set.
      * @param {boolean} transpose - Should the matrix be transpose
      * @param {Float32Array} matrix - Matrix data
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    setMatrix4fv: function (name, transpose, matrix)
+    setMatrix4fv: function (name, transpose, matrix, shader)
     {
-        this.currentShader.bind().setMatrix4fv(name, transpose, matrix);
+        if (shader === undefined) { shader = this.currentShader; }
+
+        shader.bind().setMatrix4fv(name, transpose, matrix);
 
         return this;
     },
