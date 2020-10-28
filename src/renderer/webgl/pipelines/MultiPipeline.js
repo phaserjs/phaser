@@ -12,6 +12,7 @@ var ShaderSourceFS = require('../shaders/Multi-frag.js');
 var ShaderSourceVS = require('../shaders/Multi-vert.js');
 var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
 var Utils = require('../Utils');
+var WEBGL_CONST = require('../const');
 var WebGLPipeline = require('../WebGLPipeline');
 
 /**
@@ -75,11 +76,8 @@ var MultiPipeline = new Class({
     function MultiPipeline (config)
     {
         var renderer = config.game.renderer;
-        var gl = renderer.gl;
 
         var fragmentShaderSource = GetFastValue(config, 'fragShader', ShaderSourceFS);
-
-        //  Vertex Size = attribute size added together (2 + 2 + 1 + 1 + 4) inc maxTextures
 
         config.fragShader = Utils.parseFragmentShaderMaxTextures(fragmentShaderSource, renderer.maxTextures);
         config.vertShader = GetFastValue(config, 'vertShader', ShaderSourceVS);
@@ -87,47 +85,28 @@ var MultiPipeline = new Class({
             {
                 name: 'inPosition',
                 size: 2,
-                type: gl.FLOAT,
-                normalized: false,
-                offset: 0,
-                enabled: false,
-                location: -1
+                type: WEBGL_CONST.FLOAT
             },
             {
                 name: 'inTexCoord',
                 size: 2,
-                type: gl.FLOAT,
-                normalized: false,
-                offset: 8,
-                enabled: false,
-                location: -1
+                type: WEBGL_CONST.FLOAT
             },
             {
                 name: 'inTexId',
                 size: 1,
-                type: gl.FLOAT,
-                normalized: false,
-                offset: 16,
-                enabled: false,
-                location: -1
+                type: WEBGL_CONST.FLOAT
             },
             {
                 name: 'inTintEffect',
                 size: 1,
-                type: gl.FLOAT,
-                normalized: false,
-                offset: 20,
-                enabled: false,
-                location: -1
+                type: WEBGL_CONST.FLOAT
             },
             {
                 name: 'inTint',
                 size: 4,
-                type: gl.UNSIGNED_BYTE,
-                normalized: true,
-                offset: 24,
-                enabled: false,
-                location: -1
+                type: WEBGL_CONST.UNSIGNED_BYTE,
+                normalized: true
             }
         ]);
         config.uniforms = GetFastValue(config, 'uniforms', [
@@ -138,24 +117,6 @@ var MultiPipeline = new Class({
         ]);
 
         WebGLPipeline.call(this, config);
-
-        /**
-         * Float32 view of the array buffer containing the pipeline's vertices.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#vertexViewF32
-         * @type {Float32Array}
-         * @since 3.0.0
-         */
-        this.vertexViewF32 = new Float32Array(this.vertexData);
-
-        /**
-         * Uint32 view of the array buffer containing the pipeline's vertices.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#vertexViewU32
-         * @type {Uint32Array}
-         * @since 3.0.0
-         */
-        this.vertexViewU32 = new Uint32Array(this.vertexData);
 
         /**
          * A temporary Transform Matrix, re-used internally during batching.
@@ -342,7 +303,7 @@ var MultiPipeline = new Class({
     {
         var gl = this.gl;
         var vertexCount = this.vertexCount;
-        var vertexSize = this.vertexSize;
+        var vertexSize = this.currentShader.vertexSize;
 
         if (vertexCount > 0)
         {
@@ -517,209 +478,6 @@ var MultiPipeline = new Class({
         var tintEffect = sprite.tintFill;
 
         this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, unit);
-    },
-
-    /**
-     * Adds the vertices data into the batch and flushes if full.
-     *
-     * Assumes 6 vertices in the following arrangement:
-     *
-     * ```
-     * 0----3
-     * |\  B|
-     * | \  |
-     * |  \ |
-     * | A \|
-     * |    \
-     * 1----2
-     * ```
-     *
-     * Where tx0/ty0 = 0, tx1/ty1 = 1, tx2/ty2 = 2 and tx3/ty3 = 3
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#batchQuad
-     * @since 3.12.0
-     *
-     * @param {number} x0 - The top-left x position.
-     * @param {number} y0 - The top-left y position.
-     * @param {number} x1 - The bottom-left x position.
-     * @param {number} y1 - The bottom-left y position.
-     * @param {number} x2 - The bottom-right x position.
-     * @param {number} y2 - The bottom-right y position.
-     * @param {number} x3 - The top-right x position.
-     * @param {number} y3 - The top-right y position.
-     * @param {number} u0 - UV u0 value.
-     * @param {number} v0 - UV v0 value.
-     * @param {number} u1 - UV u1 value.
-     * @param {number} v1 - UV v1 value.
-     * @param {number} tintTL - The top-left tint color value.
-     * @param {number} tintTR - The top-right tint color value.
-     * @param {number} tintBL - The bottom-left tint color value.
-     * @param {number} tintBR - The bottom-right tint color value.
-     * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
-     * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch if a flush occurs.
-     * @param {integer} [unit=0] - Texture unit to which the texture needs to be bound.
-     *
-     * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
-     */
-    batchQuad: function (x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, unit)
-    {
-        if (unit === undefined) { unit = this.currentUnit; }
-
-        var hasFlushed = false;
-
-        if (this.shouldFlush(6))
-        {
-            this.flush();
-
-            hasFlushed = true;
-
-            unit = this.setTexture2D(texture);
-        }
-
-        var vertexViewF32 = this.vertexViewF32;
-        var vertexViewU32 = this.vertexViewU32;
-
-        var vertexOffset = (this.vertexCount * this.vertexComponentCount) - 1;
-
-        vertexViewF32[++vertexOffset] = x0;
-        vertexViewF32[++vertexOffset] = y0;
-        vertexViewF32[++vertexOffset] = u0;
-        vertexViewF32[++vertexOffset] = v0;
-        vertexViewF32[++vertexOffset] = unit;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintTL;
-
-        vertexViewF32[++vertexOffset] = x1;
-        vertexViewF32[++vertexOffset] = y1;
-        vertexViewF32[++vertexOffset] = u0;
-        vertexViewF32[++vertexOffset] = v1;
-        vertexViewF32[++vertexOffset] = unit;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintBL;
-
-        vertexViewF32[++vertexOffset] = x2;
-        vertexViewF32[++vertexOffset] = y2;
-        vertexViewF32[++vertexOffset] = u1;
-        vertexViewF32[++vertexOffset] = v1;
-        vertexViewF32[++vertexOffset] = unit;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintBR;
-
-        vertexViewF32[++vertexOffset] = x0;
-        vertexViewF32[++vertexOffset] = y0;
-        vertexViewF32[++vertexOffset] = u0;
-        vertexViewF32[++vertexOffset] = v0;
-        vertexViewF32[++vertexOffset] = unit;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintTL;
-
-        vertexViewF32[++vertexOffset] = x2;
-        vertexViewF32[++vertexOffset] = y2;
-        vertexViewF32[++vertexOffset] = u1;
-        vertexViewF32[++vertexOffset] = v1;
-        vertexViewF32[++vertexOffset] = unit;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintBR;
-
-        vertexViewF32[++vertexOffset] = x3;
-        vertexViewF32[++vertexOffset] = y3;
-        vertexViewF32[++vertexOffset] = u1;
-        vertexViewF32[++vertexOffset] = v0;
-        vertexViewF32[++vertexOffset] = unit;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintTR;
-
-        this.vertexCount += 6;
-
-        return hasFlushed;
-    },
-
-    /**
-     * Adds the vertices data into the batch and flushes if full.
-     *
-     * Assumes 3 vertices in the following arrangement:
-     *
-     * ```
-     * 0
-     * |\
-     * | \
-     * |  \
-     * |   \
-     * |    \
-     * 1-----2
-     * ```
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#batchTri
-     * @since 3.12.0
-     *
-     * @param {number} x1 - The bottom-left x position.
-     * @param {number} y1 - The bottom-left y position.
-     * @param {number} x2 - The bottom-right x position.
-     * @param {number} y2 - The bottom-right y position.
-     * @param {number} x3 - The top-right x position.
-     * @param {number} y3 - The top-right y position.
-     * @param {number} u0 - UV u0 value.
-     * @param {number} v0 - UV v0 value.
-     * @param {number} u1 - UV u1 value.
-     * @param {number} v1 - UV v1 value.
-     * @param {number} tintTL - The top-left tint color value.
-     * @param {number} tintTR - The top-right tint color value.
-     * @param {number} tintBL - The bottom-left tint color value.
-     * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
-     * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch if a flush occurs.
-     * @param {integer} [unit=0] - Texture unit to which the texture needs to be bound.
-     *
-     * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
-     */
-    batchTri: function (x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintEffect, texture, unit)
-    {
-        if (unit === undefined) { unit = this.currentUnit; }
-
-        var hasFlushed = false;
-
-        if (this.shouldFlush(3))
-        {
-            this.flush();
-
-            hasFlushed = true;
-
-            unit = this.setTexture2D(texture);
-        }
-
-        var vertexViewF32 = this.vertexViewF32;
-        var vertexViewU32 = this.vertexViewU32;
-
-        var vertexOffset = (this.vertexCount * this.vertexComponentCount) - 1;
-
-        tintEffect = 1;
-
-        vertexViewF32[++vertexOffset] = x1;
-        vertexViewF32[++vertexOffset] = y1;
-        vertexViewF32[++vertexOffset] = u0;
-        vertexViewF32[++vertexOffset] = v0;
-        vertexViewF32[++vertexOffset] = unit;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintTL;
-
-        vertexViewF32[++vertexOffset] = x2;
-        vertexViewF32[++vertexOffset] = y2;
-        vertexViewF32[++vertexOffset] = u0;
-        vertexViewF32[++vertexOffset] = v1;
-        vertexViewF32[++vertexOffset] = unit;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintTR;
-
-        vertexViewF32[++vertexOffset] = x3;
-        vertexViewF32[++vertexOffset] = y3;
-        vertexViewF32[++vertexOffset] = u1;
-        vertexViewF32[++vertexOffset] = v1;
-        vertexViewF32[++vertexOffset] = unit;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintBL;
-
-        this.vertexCount += 3;
-
-        return hasFlushed;
     },
 
     /**
