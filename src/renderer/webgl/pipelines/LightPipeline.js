@@ -10,6 +10,7 @@ var GetFastValue = require('../../../utils/object/GetFastValue');
 var PointLightShaderSourceFS = require('../shaders/PointLight-frag.js');
 var PointLightShaderSourceVS = require('../shaders/PointLight-vert.js');
 var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
+var WEBGL_CONST = require('../const');
 var WebGLPipeline = require('../WebGLPipeline');
 
 var LIGHT_COUNT = 10;
@@ -70,8 +71,6 @@ var LightPipeline = new Class({
 
     function LightPipeline (config)
     {
-        var gl = config.game.renderer.gl;
-
         LIGHT_COUNT = config.game.renderer.config.maxLights;
 
         // var fragmentShaderSource = GetFastValue(config, 'fragShader', ShaderSourceFS);
@@ -79,46 +78,28 @@ var LightPipeline = new Class({
 
         config.fragShader = GetFastValue(config, 'fragShader', PointLightShaderSourceFS);
         config.vertShader = GetFastValue(config, 'vertShader', PointLightShaderSourceVS);
-        config.vertexSize = GetFastValue(config, 'vertexSize', 36);
         config.attributes = GetFastValue(config, 'attributes', [
             {
                 name: 'inPosition',
                 size: 2,
-                type: gl.FLOAT,
-                normalized: false,
-                offset: 0,
-                enabled: false,
-                location: -1
+                type: WEBGL_CONST.FLOAT
             },
             {
                 name: 'inLightPosition',
                 size: 2,
-                type: gl.FLOAT,
-                normalized: false,
-                offset: 8,
-                enabled: false,
-                location: -1
+                type: WEBGL_CONST.FLOAT
             },
             {
                 name: 'inLightRadius',
                 size: 1,
-                type: gl.FLOAT,
-                normalized: false,
-                offset: 16,
-                enabled: false,
-                location: -1
+                type: WEBGL_CONST.FLOAT
             },
             {
                 name: 'inLightColor',
                 size: 4,
-                type: gl.FLOAT,
-                normalized: false,
-                offset: 20,
-                enabled: false,
-                location: -1
+                type: WEBGL_CONST.FLOAT
             }
         ]);
-
         config.uniforms = GetFastValue(config, 'uniforms', [
             'uProjectionMatrix',
             'uViewMatrix',
@@ -127,15 +108,6 @@ var LightPipeline = new Class({
         ]);
 
         WebGLPipeline.call(this, config);
-
-        /**
-         * Float32 view of the array buffer containing the pipeline's vertices.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#vertexViewF32
-         * @type {Float32Array}
-         * @since 3.0.0
-         */
-        this.vertexViewF32 = new Float32Array(this.vertexData);
 
         /**
          * A temporary Transform Matrix, re-used internally during batching.

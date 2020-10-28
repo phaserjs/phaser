@@ -9,6 +9,7 @@ var Class = require('../../../utils/Class');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var ShaderSourceFS = require('../shaders/BitmapMask-frag.js');
 var ShaderSourceVS = require('../shaders/BitmapMask-vert.js');
+var WEBGL_CONST = require('../const');
 var WebGLPipeline = require('../WebGLPipeline');
 
 /**
@@ -57,11 +58,7 @@ var BitmapMaskPipeline = new Class({
             {
                 name: 'inPosition',
                 size: 2,
-                type: config.game.renderer.gl.FLOAT,
-                normalized: false,
-                offset: 0,
-                enabled: false,
-                location: -1
+                type: WEBGL_CONST.FLOAT
             }
         ]);
         config.uniforms = GetFastValue(config, 'uniforms', [
