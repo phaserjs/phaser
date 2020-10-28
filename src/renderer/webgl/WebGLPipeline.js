@@ -688,7 +688,7 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#bind
      * @since 3.0.0
      *
-     * @param {boolean} [reset=false] - Should the pipeline be fully re-bound after a renderer pipeline clear?
+     * @param {boolean} [reset=false] - Should the vertex attribute pointers be fully reset?
      * @param {number} [shader=0] - If this is a multi-shader pipeline, which shader should be bound?
      *
      * @return {this} This WebGLPipeline instance.
@@ -702,11 +702,9 @@ var WebGLPipeline = new Class({
             this.setShader(shader);
         }
 
-        this.currentShader.bind(false);
-
         this.renderer.setVertexBuffer(this.vertexBuffer);
 
-        this.currentShader.setAttribPointers(reset);
+        this.currentShader.bind(reset);
 
         return this;
     },
@@ -805,18 +803,23 @@ var WebGLPipeline = new Class({
     {
         var gl = this.gl;
         var vertexCount = this.vertexCount;
-        var topology = this.topology;
         var vertexSize = this.currentShader.vertexSize;
 
-        if (vertexCount === 0)
+        if (vertexCount > 0)
         {
-            return;
+            if (vertexCount === this.vertexCapacity)
+            {
+                gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.DYNAMIC_DRAW);
+            }
+            else
+            {
+                gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
+            }
+
+            gl.drawArrays(this.topology, 0, vertexCount);
+
+            this.vertexCount = 0;
         }
-
-        gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
-        gl.drawArrays(topology, 0, vertexCount);
-
-        this.vertexCount = 0;
 
         return this;
     },
@@ -992,8 +995,6 @@ var WebGLPipeline = new Class({
         var vertexViewU32 = this.vertexViewU32;
 
         var vertexOffset = (this.vertexCount * this.currentShader.vertexComponentCount) - 1;
-
-        // tintEffect = 1;
 
         vertexViewF32[++vertexOffset] = x0;
         vertexViewF32[++vertexOffset] = y0;
