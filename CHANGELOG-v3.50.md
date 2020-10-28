@@ -167,6 +167,7 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `WebGLPipeline.setAttribPointers` is a new method that will set the vertex attribute pointers for the pipeline.
 * `WebGLRenderer.unbindTextures` is a new method that will activate and then null bind all WebGL textures.
 * `Renderer.WebGL.Utils.parseFragmentShaderMaxTextures` is a new function that will take fragment shader source and search it for `%count%` and `%forloop%` declarations, replacing them with the required GLSL for multi-texture support, returning the modified source.
+* The `WebGL.Utils.getComponentCount` function has been removed as this is no longer required internally.
 
 ### Light Pipeline Changes
 
