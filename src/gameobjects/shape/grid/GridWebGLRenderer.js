@@ -27,7 +27,7 @@ var GridWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var result = GetCalcMatrix(src, camera, parentMatrix);
 
-    var calcMatrix = pipeline._tempMatrix3.copyFrom(result.calc);
+    var calcMatrix = renderer._tempMatrix3.copyFrom(result.calc);
 
     calcMatrix.translate(-src._displayOriginX, -src._displayOriginY);
 

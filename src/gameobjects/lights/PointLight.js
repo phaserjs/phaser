@@ -177,11 +177,11 @@ var PointLight = new Class({
 
     renderWebGL: function (renderer, src, camera, parentTransformMatrix)
     {
-        var pipeline = renderer.pipelines.set(this.pipeline);
+        renderer.pipelines.set(src.pipeline);
 
-        var camMatrix = pipeline._tempMatrix1;
-        var lightMatrix = pipeline._tempMatrix2;
-        var calcMatrix = pipeline._tempMatrix3;
+        var camMatrix = renderer._tempMatrix1;
+        var lightMatrix = renderer._tempMatrix2;
+        var calcMatrix = renderer._tempMatrix3;
 
         var width = src.width;
         var height = src.height;

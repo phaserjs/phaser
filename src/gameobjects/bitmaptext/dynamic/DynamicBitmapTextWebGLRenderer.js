@@ -38,7 +38,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
     var spriteMatrix = result.sprite;
     var calcMatrix = result.calc;
 
-    var fontMatrix = pipeline._tempMatrix4;
+    var fontMatrix = renderer._tempMatrix4;
 
     var crop = (src.cropWidth > 0 || src.cropHeight > 0);
 

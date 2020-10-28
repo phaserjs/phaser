@@ -34,7 +34,7 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var cameraScrollX = camera.scrollX * src.scrollFactorX;
     var cameraScrollY = camera.scrollY * src.scrollFactorY;
 
-    var calcMatrix = pipeline._tempMatrix1;
+    var calcMatrix = renderer._tempMatrix1;
 
     calcMatrix.copyFrom(camera.matrix);
 

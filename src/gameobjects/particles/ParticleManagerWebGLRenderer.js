@@ -32,10 +32,10 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
 
     var pipeline = renderer.pipelines.set(this.pipeline);
 
-    var camMatrix = pipeline._tempMatrix1;
-    var calcMatrix = pipeline._tempMatrix2;
-    var particleMatrix = pipeline._tempMatrix3;
-    var managerMatrix = pipeline._tempMatrix4;
+    var camMatrix = renderer._tempMatrix1;
+    var calcMatrix = renderer._tempMatrix2;
+    var particleMatrix = renderer._tempMatrix3;
+    var managerMatrix = renderer._tempMatrix4;
 
     if (parentMatrix)
     {

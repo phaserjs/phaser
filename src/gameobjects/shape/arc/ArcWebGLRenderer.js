@@ -28,7 +28,7 @@ var ArcWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var result = GetCalcMatrix(src, camera, parentMatrix);
 
-    var calcMatrix = pipeline._tempMatrix3.copyFrom(result.calc);
+    var calcMatrix = renderer._tempMatrix1.copyFrom(result.calc);
 
     var dx = src._displayOriginX;
     var dy = src._displayOriginY;
