@@ -8,6 +8,7 @@ uniform mat4 uModelMatrix;
 
 attribute vec2 inPosition;
 attribute vec2 inTexCoord;
+attribute float inTexId;
 attribute float inTintEffect;
 attribute vec4 inTint;
 
