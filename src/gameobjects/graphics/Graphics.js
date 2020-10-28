@@ -12,18 +12,17 @@ var ComponentsBlendMode = require('../components/BlendMode');
 var ComponentsDepth = require('../components/Depth');
 var ComponentsMask = require('../components/Mask');
 var ComponentsPipeline = require('../components/Pipeline');
+var ComponentsScrollFactor = require('../components/ScrollFactor');
 var ComponentsTransform = require('../components/Transform');
 var ComponentsVisible = require('../components/Visible');
-var ComponentsScrollFactor = require('../components/ScrollFactor');
-
-var TransformMatrix = require('../components/TransformMatrix');
-
 var Ellipse = require('../../geom/ellipse/Ellipse');
 var GameObject = require('../GameObject');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
 var MATH_CONST = require('../../math/const');
+var PIPELINES_CONST = require('../../renderer/webgl/pipelines/const');
 var Render = require('./GraphicsRender');
+var TransformMatrix = require('../components/TransformMatrix');
 
 /**
  * @classdesc
@@ -110,7 +109,7 @@ var Graphics = new Class({
         GameObject.call(this, scene, 'Graphics');
 
         this.setPosition(x, y);
-        this.initPipeline();
+        this.initPipeline(PIPELINES_CONST.GRAPHICS_PIPELINE);
 
         /**
          * The horizontal display origin of the Graphics.
