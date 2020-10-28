@@ -124,38 +124,6 @@ module.exports = {
     },
 
     /**
-     * Counts how many attributes of 32 bits a vertex has
-     *
-     * @function Phaser.Renderer.WebGL.Utils.getComponentCount
-     * @since 3.0.0
-     *
-     * @param {array} attributes - Array of attributes
-     * @param {WebGLRenderingContext} glContext - WebGLContext used for check types
-     *
-     * @return {number} Count of 32 bit attributes in vertex
-     */
-    getComponentCount: function (attributes, glContext)
-    {
-        var count = 0;
-
-        for (var index = 0; index < attributes.length; ++index)
-        {
-            var element = attributes[index];
-
-            if (element.type === glContext.FLOAT)
-            {
-                count += element.size;
-            }
-            else
-            {
-                count += 1;
-            }
-        }
-
-        return count;
-    },
-
-    /**
      * Check to see how many texture units the GPU supports, based on the given config value.
      * Then tests this against the maximum number of iterations GLSL can support.
      *
