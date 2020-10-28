@@ -6,6 +6,7 @@
 
 var Class = require('../../utils/Class');
 var Utils = require('./Utils');
+var WEBGL_CONST = require('./const');
 
 /**
  * @classdesc
@@ -20,7 +21,7 @@ var Utils = require('./Utils');
  * @param {string} name - The name of this Shader.
  * @param {string} vertexShader - The vertex shader source code as a single string.
  * @param {string} fragmentShader - The fragment shader source code as a single string.
- * @param {string[]} attributes -
+ * @param {Phaser.Types.Renderer.WebGL.WebGLPipelineAttributesConfig[]} attributes - An array of attributes.
  * @param {string[]} [uniforms] - An array of shader uniform names that will be looked-up to get the locations for.
  */
 var WebGLShader = new Class({
@@ -80,10 +81,43 @@ var WebGLShader = new Class({
          * Array of objects that describe the vertex attributes.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#attributes
-         * @type {Phaser.Types.Renderer.WebGL.WebGLPipelineAttributesConfig}
+         * @type {Phaser.Types.Renderer.WebGL.WebGLPipelineAttribute[]}
          * @since 3.50.0
          */
-        this.attributes = attributes;
+        this.attributes;
+
+        /**
+         * The amount of vertex attribute components of 32 bit length.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLShader#vertexComponentCount
+         * @type {integer}
+         * @since 3.50.0
+         */
+        this.vertexComponentCount = 0;
+
+        /**
+         * The size, in bytes, of a single vertex.
+         *
+         * This is derived by adding together all of the vertex attributes.
+         *
+         * For example, the Multi Pipeline has the following attributes:
+         *
+         * inPosition - (size 2 x gl.FLOAT) = 8
+         * inTexCoord - (size 2 x gl.FLOAT) = 8
+         * inTexId - (size 1 x gl.FLOAT) = 4
+         * inTintEffect - (size 1 x gl.FLOAT) = 4
+         * inTint - (size 4 x gl.UNSIGNED_BYTE) = 4
+         *
+         * The total is 8 + 8 + 4 + 4 + 4 = 28, which is the default for this property.
+         *
+         * This is calculated automatically during the `createAttributes` method.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLShader#vertexSize
+         * @type {integer}
+         * @readonly
+         * @since 3.50.0
+         */
+        this.vertexSize = 0;
 
         /**
          * The uniforms that this shader requires, as set via the configuration object.
@@ -98,10 +132,67 @@ var WebGLShader = new Class({
          */
         this.uniforms = {};
 
+        this.createAttributes(attributes);
+
         if (uniforms)
         {
             this.setUniformLocations(uniforms);
         }
+    },
+
+    /**
+     * Takes the vertex attributes array and parses it, creating the resulting array that is stored
+     * in this shaders `attributes` property, calculating the offset, normalization and location
+     * in the process.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#createAttributes
+     * @since 3.50.0
+     *
+     * @param {Phaser.Types.Renderer.WebGL.WebGLPipelineAttributesConfig[]} attributes - An array of attributes configs.
+     */
+    createAttributes: function (attributes)
+    {
+        var count = 0;
+        var offset = 0;
+        var result = [];
+
+        this.vertexComponentCount = 0;
+
+        for (var i = 0; i < attributes.length; i++)
+        {
+            var element = attributes[i];
+
+            var name = element.name;
+            var size = element.size; // i.e. 1 for a float, 2 for a vec2, 4 for a vec4, etc
+            var type = element.type.enum; // The GLenum
+            var typeSize = element.type.size; // The size in bytes of the type
+            var normalized = (element.normalized) ? true : false;
+
+            result.push({
+                name: name,
+                size: size,
+                type: type,
+                normalized: normalized,
+                offset: offset,
+                enabled: false,
+                location: -1
+            });
+
+            if (typeSize === 4)
+            {
+                count += size;
+            }
+            else
+            {
+                count++;
+            }
+
+            offset += size * typeSize;
+        }
+
+        this.vertexSize = offset;
+        this.vertexComponentCount = count;
+        this.attributes = result;
     },
 
     /**
@@ -117,7 +208,7 @@ var WebGLShader = new Class({
      *
      * @return {this} This WebGLShader instance.
      */
-    bind: function ()
+    bind: function (reset)
     {
         this.renderer.setProgram(this.program);
 
@@ -130,6 +221,73 @@ var WebGLShader = new Class({
             this.setMatrix4fv('uProjectionMatrix', false, pipeline.projectionMatrix.val);
 
             pipeline.mvpDirty = false;
+        }
+
+        // this.setAttribPointers(reset);
+
+        return this;
+    },
+
+    /**
+     * Sets the vertex attribute pointers.
+     *
+     * This should only be called after the vertex buffer has been bound.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setAttribPointers
+     * @since 3.50.0
+     *
+     * @param {boolean} [reset=false] - Reset the vertex attribute locations?
+     *
+     * @return {this} This WebGLShader instance.
+     */
+    setAttribPointers: function (reset)
+    {
+        if (reset === undefined) { reset = false; }
+
+        var gl = this.gl;
+        var vertexSize = this.vertexSize;
+        var attributes = this.attributes;
+        var program = this.program;
+
+        for (var i = 0; i < attributes.length; i++)
+        {
+            var element = attributes[i];
+
+            var size = element.size;
+            var type = element.type;
+            var offset = element.offset;
+            var enabled = element.enabled;
+            var location = element.location;
+            var normalized = (element.normalized) ? true : false;
+
+            if (reset)
+            {
+                var attribLocation = gl.getAttribLocation(program, element.name);
+
+                if (attribLocation >= 0)
+                {
+                    gl.enableVertexAttribArray(attribLocation);
+
+                    gl.vertexAttribPointer(attribLocation, size, type, normalized, vertexSize, offset);
+
+                    element.enabled = true;
+                    element.location = attribLocation;
+                }
+                else if (attribLocation !== -1)
+                {
+                    gl.disableVertexAttribArray(attribLocation);
+                }
+            }
+            else if (enabled)
+            {
+                gl.vertexAttribPointer(location, size, type, normalized, vertexSize, offset);
+            }
+            else if (!enabled && location > -1)
+            {
+                gl.disableVertexAttribArray(location);
+
+                element.location = -1;
+            }
         }
 
         return this;
