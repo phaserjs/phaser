@@ -5,8 +5,6 @@
  */
 
 var Class = require('../../utils/Class');
-var Utils = require('./Utils');
-var WEBGL_CONST = require('./const');
 
 /**
  * @classdesc
@@ -80,7 +78,7 @@ var WebGLShader = new Class({
         /**
          * Array of objects that describe the vertex attributes.
          *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#attributes
+         * @name Phaser.Renderer.WebGL.WebGLShader#attributes
          * @type {Phaser.Types.Renderer.WebGL.WebGLPipelineAttribute[]}
          * @since 3.50.0
          */
@@ -108,7 +106,7 @@ var WebGLShader = new Class({
          * inTintEffect - (size 1 x gl.FLOAT) = 4
          * inTint - (size 4 x gl.UNSIGNED_BYTE) = 4
          *
-         * The total is 8 + 8 + 4 + 4 + 4 = 28, which is the default for this property.
+         * The total, in this case, is 8 + 8 + 4 + 4 + 4 = 28.
          *
          * This is calculated automatically during the `createAttributes` method.
          *
@@ -141,9 +139,14 @@ var WebGLShader = new Class({
     },
 
     /**
-     * Takes the vertex attributes array and parses it, creating the resulting array that is stored
+     * Takes the vertex attributes config and parses it, creating the resulting array that is stored
      * in this shaders `attributes` property, calculating the offset, normalization and location
      * in the process.
+     *
+     * Calling this method resets `WebGLShader.attributes`, `WebGLShader.vertexSize` and
+     * `WebGLShader.vertexComponentCount`.
+     *
+     * It is called automatically when this class is created, but can be called manually if required.
      *
      * @method Phaser.Renderer.WebGL.WebGLShader#createAttributes
      * @since 3.50.0
@@ -206,6 +209,8 @@ var WebGLShader = new Class({
      * @method Phaser.Renderer.WebGL.WebGLShader#bind
      * @since 3.50.0
      *
+     * @param {boolean} [reset=false] - Should the vertex attribute pointers be fully reset?
+     *
      * @return {this} This WebGLShader instance.
      */
     bind: function (reset)
@@ -223,7 +228,7 @@ var WebGLShader = new Class({
             pipeline.mvpDirty = false;
         }
 
-        // this.setAttribPointers(reset);
+        this.setAttribPointers(reset);
 
         return this;
     },
@@ -233,7 +238,9 @@ var WebGLShader = new Class({
      *
      * This should only be called after the vertex buffer has been bound.
      *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setAttribPointers
+     * It is called automatically during the `bind` method.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#setAttribPointers
      * @since 3.50.0
      *
      * @param {boolean} [reset=false] - Reset the vertex attribute locations?
@@ -755,6 +762,8 @@ var WebGLShader = new Class({
         this.program = null;
         this.pipeline = null;
         this.renderer = null;
+        this.attributes = null;
+        this.uniforms = null;
     }
 
 });
