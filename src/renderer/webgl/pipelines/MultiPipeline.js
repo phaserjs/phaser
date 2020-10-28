@@ -203,7 +203,7 @@ var MultiPipeline = new Class({
     batchSprite: function (sprite, camera, parentTransformMatrix)
     {
         //  Will cause a flush if this isn't the current pipeline, vertexbuffer or program
-        this.renderer.pipelines.set(this);
+        this.renderer.pipelines.set(this, sprite);
 
         var camMatrix = this._tempMatrix1;
         var spriteMatrix = this._tempMatrix2;
