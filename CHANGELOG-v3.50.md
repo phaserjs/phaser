@@ -10,6 +10,8 @@ Due to the huge amount of work that has taken place in this area, all of the pip
 * `TextureTintStripPipeline` is now called the `RopePipeline`.
 * `ForwardDiffuseLightPipeline` is now called the `LightPipeline`.
 
+There is also the new `GraphicsPipeline`. Previously, the `TextureTintPipeline` was responsible for rendering all Sprites, Graphics and Shape objects. Now, it only renders Sprites. All Graphics and Shapes are handled by the new `GraphicsPipeline` which uses its own shaders.
+
 To match the new pipeline names, the shader source code has also been renamed.
 
 * `ForwardDiffuse.frag` is now called `Light.frag`.
@@ -18,6 +20,7 @@ To match the new pipeline names, the shader source code has also been renamed.
 
 Other pipeline changes are as follows:
 
+* None of the shaders or pipelines use the `uViewMatrix` and `uModelMatrix` uniforms any longer. These were always just plain identity matrices, so there is no point spending CPU and GPU time to set them as uniforms, or use them in the shaders. Should you need these uniforms, you can add them to your own custom pipelines.
 * `Types.Renderer.WebGL.WebGLPipelineConfig` is a new TypeDef that helps you easily configure your own Custom Pipeline when using TypeScript and also provides better JSDocs.
 * `Types.Renderer.WebGL.WebGLPipelineAttributesConfig` is a new TypeDef that helps you easily configure the attributes for your own Custom Pipelines when using TypeScript and also provides better JSDocs.
 * All pipelines will now work out the `renderer` property automatically, so it's no longer required in the config.
@@ -696,6 +699,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `Cameras.Scene2D.Events.FOLLOW_UPDATE` is a new Event that is dispatched by a Camera when it is following a Game Object. It is dispatched every frame, right after the final Camera position and internal matrices have been updated. Use it if you need to react to a camera, using its most current position and the camera is following something. Fix #5253 (thanks @rexrainbow)
 * `Types.Core.PipelineConfig` is a new configuration object that you can set in the Game Config under the `pipeline` property. It allows you to define custom WebGL pipelines as part of the Game Config, so they're automatically installed and ready for use by all Scenes in your game. You can either set the `pipeline` object, or set it under the `render` sub-config.
 * `Utils.Object.DeepCopy` is a new function that will recursively deep copy an array of object.
+* `WebGLRenderer.resetProgram` is a new method that will rebind the current program, without flushing or changing any properties.
 
 ### Updates and API Changes
 
@@ -757,6 +761,8 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * The `WebGLRenderer.deleteTexture` method has a new optional boolean parameter `reset` which allows you to control if the `WebGLRenderer.resetTextures` method is called, or not, after the texture is deleted.
 * `Phaser.Scene.renderer` is a new property available in every Phaser.Scene that gives you a reference to the renderer, either Canvas or WebGL.
 * The `WebGLRenderer.getMaxTextures` method has been removed. This is no longer needed as you can use the `WebGLRenderer.maxTextures` property instead.
+* The `WebGLRenderer.setProgram` method now returns a boolean. `true` if the program was set, otherwise `false`.
+* The `WebGLRenderer.setVertexBuffer` method now returns a boolean. `true` if the buffer was set, otherwise `false`.
 
 ### Bug Fixes
 
