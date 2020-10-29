@@ -221,7 +221,7 @@ var Container = new Class({
          * @name Phaser.GameObjects.Container#scrollFactorX
          * @type {number}
          * @default 1
-         * @since 3.0.0
+         * @since 3.4.0
          */
         this.scrollFactorX = 1;
 
@@ -248,9 +248,19 @@ var Container = new Class({
          * @name Phaser.GameObjects.Container#scrollFactorY
          * @type {number}
          * @default 1
-         * @since 3.0.0
+         * @since 3.4.0
          */
         this.scrollFactorY = 1;
+
+        /**
+         * Internal property that tracks if the Container has a custom pipeline, or not.
+         *
+         * @name Phaser.GameObjects.Container#forcePipeline
+         * @type {boolean}
+         * @private
+         * @since 3.50.0
+         */
+        this.forcePipeline = false;
 
         this.setPosition(x, y);
 
@@ -1184,7 +1194,7 @@ var Container = new Class({
      * them from physics bodies if not accounted for in your code.
      *
      * @method Phaser.GameObjects.Container#setScrollFactor
-     * @since 3.0.0
+     * @since 3.4.0
      *
      * @param {number} x - The horizontal scroll factor of this Game Object.
      * @param {number} [y=x] - The vertical scroll factor of this Game Object. If not set it will use the `x` value.
@@ -1207,6 +1217,54 @@ var Container = new Class({
         }
 
         return this;
+    },
+
+    /**
+     * Sets the active WebGL Pipeline of this Game Object.
+     *
+     * @method Phaser.GameObjects.Container#setPipeline
+     * @webglOnly
+     * @since 3.4.0
+     *
+     * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} pipeline - Either the string-based name of the pipeline, or a pipeline instance to set.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setPipeline: function (pipeline, pipelineData)
+    {
+        var renderer = this.scene.sys.renderer;
+        var pipelines = renderer.pipelines;
+
+        if (pipelines)
+        {
+            var instance = pipelines.get(pipeline);
+
+            if (instance)
+            {
+                this.pipeline = instance;
+                this.pipelineData = pipelineData;
+                this.forcePipeline = true;
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Resets the WebGL Pipeline of this Game Object back to the default it was created with.
+     *
+     * @method Phaser.GameObjects.Container#resetPipeline
+     * @webglOnly
+     * @since 3.4.0
+     *
+     * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
+     */
+    resetPipeline: function ()
+    {
+        this.pipeline = this.defaultPipeline;
+        this.forcePipeline = false;
+
+        return (this.pipeline !== null);
     },
 
     /**
