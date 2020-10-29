@@ -172,6 +172,38 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `Renderer.WebGL.Utils.parseFragmentShaderMaxTextures` is a new function that will take fragment shader source and search it for `%count%` and `%forloop%` declarations, replacing them with the required GLSL for multi-texture support, returning the modified source.
 * The `WebGL.Utils.getComponentCount` function has been removed as this is no longer required internally.
 
+### WebGLRenderer New Features, Updates and API Changes
+
+* `WebGLRenderer.instancedArraysExtension` is a new property that holds the WebGL Extension for instanced array drawing, if supported by the browser.
+* `WebGLRenderer.vaoExtension` is a new property that holds a reference to the Vertex Array Object WebGL Extension, if supported by the browser.
+* `WebGLRenderer.resetProgram` is a new method that will rebind the current program, without flushing or changing any properties.
+* `WebGLRenderer.textureFlush` is a new property that keeps track of the total texture flushes per frame.
+* `WebGLRenderer.finalType` is a new boolean property that signifies if the current Game Object being rendered is the final one in the list.
+* The `WebGLRenderer.updateCanvasTexture` method will now set `gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL` to true, which should stop issues where you update a Text Game Object, having added a Render Texture or Spine Game Object to the Scene after it, which switches the PMA setting. Fix #5064 #5155 (thanks @hugoruscitti @immangrove-supertree)
+* `WebGLRenderer.previousPipeline` is a new property that is set during a call to `clearPipeline` and used during calls to `rebindPipeline`, allowing the renderer to rebind any previous pipeline, not just the Multi Pipeline.
+* The `WebGLRenderer.rebindPipeline` method has been changed slightly. Previously, you had to specify the `pipelineInstance`, but this is now optional. If you don't, it will use the new `previousPipeline` property instead. If not set, or none given, it will now return without throwing gl errors as well.
+* `WebGLRenderer.defaultScissor` is a new property that holds the default scissor dimensions for the renderer. This is modified during `resize` and avoids continuous array generation in the `preRender` loop.
+* The `WebGLRenderer.nativeTextures` array has been removed and any WebGLTextures created by the renderer are no longer stored within it. All WebGLTexture instances are stored in the `TextureSource` objects anyway, or by local classes such as RenderTexture, so there was no need to have another array taking up memroy.
+* The `WebGLRenderer.deleteTexture` method has a new optional boolean parameter `reset` which allows you to control if the `WebGLRenderer.resetTextures` method is called, or not, after the texture is deleted.
+* The `WebGLRenderer.getMaxTextures` method has been removed. This is no longer needed as you can use the `WebGLRenderer.maxTextures` property instead.
+* The `WebGLRenderer.setProgram` method now returns a boolean. `true` if the program was set, otherwise `false`.
+* The `WebGLRenderer.setVertexBuffer` method now returns a boolean. `true` if the buffer was set, otherwise `false`.
+* `WebGLRenderer.setFloat1` has been removed. Use `WebGLPipeline.set1f` or `WebGLShader.set1f` instead.
+* `WebGLRenderer.setFloat2` has been removed. Use `WebGLPipeline.set2f` or `WebGLShader.set2f` instead.
+* `WebGLRenderer.setFloat3` has been removed. Use `WebGLPipeline.set3f` or `WebGLShader.set3f` instead.
+* `WebGLRenderer.setFloat4` has been removed. Use `WebGLPipeline.set4f` or `WebGLShader.set4f` instead.
+* `WebGLRenderer.setFloat1v` has been removed. Use `WebGLPipeline.set1fv` or `WebGLShader.set1fv` instead.
+* `WebGLRenderer.setFloat2v` has been removed. Use `WebGLPipeline.set1fv` or `WebGLShader.set2fv` instead.
+* `WebGLRenderer.setFloat3v` has been removed. Use `WebGLPipeline.set1fv` or `WebGLShader.set3fv` instead.
+* `WebGLRenderer.setFloat4v` has been removed. Use `WebGLPipeline.set1fv` or `WebGLShader.set4fv` instead.
+* `WebGLRenderer.setInt1` has been removed. Use `WebGLPipeline.set1fi` or `WebGLShader.set1i` instead.
+* `WebGLRenderer.setInt2` has been removed. Use `WebGLPipeline.set1fi` or `WebGLShader.set2i` instead.
+* `WebGLRenderer.setInt3` has been removed. Use `WebGLPipeline.set1fi` or `WebGLShader.set3i` instead.
+* `WebGLRenderer.setInt4` has been removed. Use `WebGLPipeline.set1fi` or `WebGLShader.set4i` instead.
+* `WebGLRenderer.setMatrix2` has been removed. Use `WebGLPipeline.setMatrix2fv` or `WebGLShader.setMatrix2fv` instead.
+* `WebGLRenderer.setMatrix3` has been removed. Use `WebGLPipeline.setMatrix3fv` or `WebGLShader.setMatrix3fv` instead.
+* `WebGLRenderer.setMatrix4` has been removed. Use `WebGLPipeline.setMatrix4fv` or `WebGLShader.setMatrix4fv` instead.
+
 ### Light Pipeline Changes
 
 The Light Pipeline (previously called the Forward Diffuse Light Pipeline), which is responsible for rendering lights under WebGL, has been rewritten to work with the new Multi Pipeline features. Lots of redundant code has been removed and the following changes and improvements took place:
@@ -226,26 +258,6 @@ The `ModelViewProjection` object contained a lot of functions that Phaser never 
 * `viewIdentity` has been removed.
 * `viewLoad2D` has been removed.
 * `projOrtho` has been removed.
-
-### WebGLRenderer Shader Functions Removed
-
-All of the following functions have been removed from the WebGL Renderer. They are now available on the WebGLPipeline and WebGLShader classes:
-
-* `WebGLRenderer.setFloat1` has been removed. Use `WebGLPipeline.set1f` or `WebGLShader.set1f` instead.
-* `WebGLRenderer.setFloat2` has been removed. Use `WebGLPipeline.set2f` or `WebGLShader.set2f` instead.
-* `WebGLRenderer.setFloat3` has been removed. Use `WebGLPipeline.set3f` or `WebGLShader.set3f` instead.
-* `WebGLRenderer.setFloat4` has been removed. Use `WebGLPipeline.set4f` or `WebGLShader.set4f` instead.
-* `WebGLRenderer.setFloat1v` has been removed. Use `WebGLPipeline.set1fv` or `WebGLShader.set1fv` instead.
-* `WebGLRenderer.setFloat2v` has been removed. Use `WebGLPipeline.set1fv` or `WebGLShader.set2fv` instead.
-* `WebGLRenderer.setFloat3v` has been removed. Use `WebGLPipeline.set1fv` or `WebGLShader.set3fv` instead.
-* `WebGLRenderer.setFloat4v` has been removed. Use `WebGLPipeline.set1fv` or `WebGLShader.set4fv` instead.
-* `WebGLRenderer.setInt1` has been removed. Use `WebGLPipeline.set1fi` or `WebGLShader.set1i` instead.
-* `WebGLRenderer.setInt2` has been removed. Use `WebGLPipeline.set1fi` or `WebGLShader.set2i` instead.
-* `WebGLRenderer.setInt3` has been removed. Use `WebGLPipeline.set1fi` or `WebGLShader.set3i` instead.
-* `WebGLRenderer.setInt4` has been removed. Use `WebGLPipeline.set1fi` or `WebGLShader.set4i` instead.
-* `WebGLRenderer.setMatrix2` has been removed. Use `WebGLPipeline.setMatrix2fv` or `WebGLShader.setMatrix2fv` instead.
-* `WebGLRenderer.setMatrix3` has been removed. Use `WebGLPipeline.setMatrix3fv` or `WebGLShader.setMatrix3fv` instead.
-* `WebGLRenderer.setMatrix4` has been removed. Use `WebGLPipeline.setMatrix4fv` or `WebGLShader.setMatrix4fv` instead.
 
 ### BitmapText - New Features, Updates and API Changes
 
@@ -434,7 +446,7 @@ In your game where you use `map.createDynamicLayer` or `map.createStaticLayer` r
 
 2) The second change is that the Tilemap system now supports isometric, hexagonal and staggered isometric map types, along with the previous orthogonal format, thanks to a PR from @svipal. You can now export maps using any of these orientations from the Tiled Map Editor and load them into Phaser using the existing tilemap loading API. No further changes need to take place in the way your maps are loaded.
 
-3) The `Tilemap.createFromObjects` method has been overhauled to make it much more useful. The method signature has changed and it now takes a new `CreateFromObjectLayerConfig` configuration object, or an array of them, which allows much more fine-grained control over which objects in the Tiled Object Layers are converted and what they are converted to. Previously it could only convert to Sprites, but you can now pass in a custom class, filter based on id, gid or name, even provide a Container to add the created Game Objects in to. Please see the new documentation for this method and the config object for more details. Fix #3817 #4613 (thanks @georgzoeller @Secretmapper)
+3) The `Tilemap.createFromObjects` method has been overhauled to make it much more useful. The method signature has changed and it now takes a new `CreateFromObjectLayerConfig` configuration object, or an array of them, which allows much more fine-grained control over which objects in the Tiled Object Layers are converted and what they are converted to. Previously it could only convert to Sprites, but you can now pass in a custom class, filter based on id, gid or name, even provide a Container to add the created Game Objects to. Please see the new documentation for this method and the config object for more details. Fix #3817 #4613 (thanks @georgzoeller @Secretmapper)
 
 * The `Tilemap.createDynamicLayer` method has been renamed to `createLayer`.
 * The `Tilemap.createStaticLayer` method has been removed. Use `createLayer` instead.
@@ -577,7 +589,7 @@ This has all changed in 3.50, as outlined below. Tint values are now used direct
 * The `Rope.tintFill` property is now a boolean, not an integer, and can no longer take `2` as a value for a complete fill. Instead, you should provide a solid color texture with no alpha.
 * As a result of the change to the shader, all uses of the WebGL Util function `getTintAppendFloatAlphaAndSwap` have been replaced with `getTintAppendFloatAlpha` instead.
 * As a result of the change to the shader, the Multi Pipeline now uses the `WebGLRenderer.whiteTexture` and `tintEffect` mode of 1 by default, instead of mode 2 (which has been removed) and a transparent texture. This ensures Graphics and Shapes objects still render correctly under the new smaller shader code.
-* `WebGLRenderer.whiteTexture` is a new property that is a reference to a pure white 4x4 texture that is created during Boot by the Texture Manager. The Multi Pipeline uses this internally for all Graphic, Shape and fill rendering.
+* `WebGLRenderer.whiteTexture` is a new property that is a reference to a pure white 4x4 texture that is created during Boot by the Texture Manager. The Graphics Pipeline uses this internally for all geometry fill rendering.
 * The `TextureManager` now generates a new texture with the key `__WHITE` durings its boot process. This is a pure white 4x4 texture used by the Graphics pipelines.
 * `Config.images.white` is a new Game Config property that specifies the 4x4 white PNG texture used by Graphics rendering. You can override this via the config, but only do so if needed.
 
@@ -691,15 +703,12 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `Matrix4.multiplyMatrices` is a new method that multiplies two given Matrix4 objects and stores the results in the Matrix4.
 * `Matrix4.premultiply` is a new method that takes a Matrix4 and multiplies it by the current Matrix4.
 * `Matrix4.getInverse` is a new method that takes a Matrix4, copies it to the current matrix, then returns the inverse of it.
-* `WebGLRenderer.instancedArraysExtension` is a new property that holds the WebGL Extension for instanced array drawing, if supported by the browser.
-* `WebGLRenderer.vaoExtension` is a new property that holds a reference to the Vertex Array Object WebGL Extension, if supported by the browser.
 * `CameraManager.getVisibleChildren` is a new method that is called internally by the `CameraManager.render` method. It filters the DisplayList, so that Game Objects that pass the `willRender` test for the given Camera are added to a sub-list, which is then passed to the renderer. This avoids the renderer having to do any checks on the children, it just renders each one in turn.
 * `Physics.Arcade.Body.setDamping` is a new method that allows you to set the `useDamping` property of a Body in a chainable way. Fix #5352 (thanks @juanitogan)
 * The `GameObjects.Graphics.fillGradientStyle` method can now accept a different alpha value for each of the fill colors. The default is still 1. If you only provide a single alpha, it'll be used for all colors. Fix #5044 (thanks @zhangciwu)
 * `Cameras.Scene2D.Events.FOLLOW_UPDATE` is a new Event that is dispatched by a Camera when it is following a Game Object. It is dispatched every frame, right after the final Camera position and internal matrices have been updated. Use it if you need to react to a camera, using its most current position and the camera is following something. Fix #5253 (thanks @rexrainbow)
 * `Types.Core.PipelineConfig` is a new configuration object that you can set in the Game Config under the `pipeline` property. It allows you to define custom WebGL pipelines as part of the Game Config, so they're automatically installed and ready for use by all Scenes in your game. You can either set the `pipeline` object, or set it under the `render` sub-config.
 * `Utils.Object.DeepCopy` is a new function that will recursively deep copy an array of object.
-* `WebGLRenderer.resetProgram` is a new method that will rebind the current program, without flushing or changing any properties.
 
 ### Updates and API Changes
 
@@ -709,7 +718,6 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * Removed the Deferred Diffuse fragment and vertex shaders from the project, as they're not used.
 * `StaticTilemapLayer.upload` will now set the vertex attributes and buffer the data, and handles internal checks more efficiently.
 * `StaticTilemapLayer` now includes the `ModelViewProjection` mixin, so it doesn't need to modify the pipeline during rendering.
-* `WebGLRenderer.textureFlush` is a new property that keeps track of the total texture flushes per frame.
 * `TransformMatrix.getXRound` is a new method that will return the X component, optionally passed via `Math.round`.
 * `TransformMatrix.getYRound` is a new method that will return the Y component, optionally passed via `Math.round`.
 * The `KeyboardPlugin` no longer emits `keydown_` events. These were replaced with `keydown-` events in v3.15. The previous event string was deprecated in v3.20.
@@ -725,13 +733,9 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * The `Pointer.getDuration` method now uses the new Pointer `downTime` and `upTime` values, meaning it will accurately report the duration of when any button is being held down, not just the primary one. Fix #5112 (thanks @veleek)
 * The `BaseShader` default vertex shader now includes the `outTexCoord` vec2 varying, mapped to be the same as that found in the pipeline shaders. Fix #5120 (@pavel-shirobok)
 * When using the `GameObjectCreator` for `Containers` you can now specify the `children` property in the configuration object.
-* `WebGLRenderer.finalType` is a new boolean property that signifies if the current Game Object being rendered is the final one in the list.
-* The `WebGLRenderer.updateCanvasTexture` method will now set `gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL` to true, which should stop issues where you update a Text Game Object, having added a Render Texture or Spine Game Object to the Scene after it, which switches the PMA setting. Fix #5064 #5155 (thanks @hugoruscitti @immangrove-supertree)
 * `Textures.Parsers.JSONHash` will now perform a `hasOwnProperty` check when iterating the frames, skipping anything that isn't a direct property. This should allow you to use generated atlas data that comes from `JSON.parse`. Fix #4768 (thanks @RollinSafary)
 * The `Camera3D` Plugin has been rebuilt for Phaser 3.50 and the webpack config updated. This plugin is now considered deprecated and will not be updated beyond this release.
 * `Tween.seek` will no longer issue a console warning for `'Tween.seek duration too long'`, it's now up to you to check on the performance of tween seeking.
-* `WebGLRenderer.previousPipeline` is a new property that is set during a call to `clearPipeline` and used during calls to `rebindPipeline`, allowing the renderer to rebind any previous pipeline, not just the Multi Pipeline.
-* The `WebGLRenderer.rebindPipeline` method has been changed slightly. Previously, you had to specify the `pipelineInstance`, but this is now optional. If you don't, it will use the new `previousPipeline` property instead. If not set, or none given, it will now return without throwing gl errors as well.
 * If `inputWindowEvents` is set in the Game Config, then the `MouseManager` will now listen for the events on `window.top` instead of just `window`, which should help in situations where the pointer is released outside of an embedded iframe. This check is wrapped in a `try/catch` block, as not all sites allow access to `window.top` (specifically in cross-origin iframe situations) Fix #4824 (thanks @rexrainbow)
 * `MouseManager.isTop` is a new boolean read-only property that flags if the mouse event listeners were attached to `window.top` (true), or just `window` (false). By default Phaser will attempt `window.top`, but this isn't possible in all environments, such as cross-origin iframes, so it will fall back to `window` in those cases and set this property to false (thanks BunBunBun)
 * `Types.GameObjects.Text.GetTextSizeObject` is a new type def for the GetTextSize function results.
@@ -746,7 +750,6 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * Setting the `pixelArt` config option will now set `antialiasGL` to `false`, as well as `antialias`. Fix #5309 (thanks @Vegita2)
 * The `Shape` class now includes the `ComputedSize` component properties and methods directly in the class, rather than applying as a mixin. `setSize` is now flagged as being `private`, because it shouldn't be used on Shape classes, which was leading to confusion as it appeared in the public-facing API. Fix #4811 (thanks @aolsx)
 * The `Loader.maxParallelDownloads` value is now set to 6 if running on Android, or 32 on any other OS. This avoids `net::ERR_FAILED` issues specifically on Android. You can still override this in the Game Config if you wish. Fix #4957 (thanks @RollinSafary)
-* `WebGLRenderer.defaultScissor` is a new property that holds the default scissor dimensions for the renderer. This is modified during `resize` and avoids continuous array generation in the `preRender` loop.
 * When running an Arcade Physics `overlap` test against a `StaticBody`, it will no longer set the `blocked` states of the dynamic body. If you are doing a collision test, they will still be set, but they're skipped for overlap-only tests. Fix #4435 (thanks @samme)
 * The `Line` Game Object will now default its width and height to 1, rather than zero. This allows you to give Line objects a physics body (although you will still need to re-adjust the center of the body manually). Fix #4596 (thanks @andrewaustin)
 * Internally, the `Quaternion` class now has 4 new private properties: `_x`, `_y`, `_z` and `_w` and 4 new getters and setters for the public versions. It also now passes most methods via `set` to allow for the onChange callback to be invoked. This does not change the public-facing API.
@@ -757,12 +760,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * The `ParticleEmitter.tint` value is now `0xffffff` (previously, it was `0xffffffff`) to allow particle tints to work in the correct RGB order including alpha (thanks @vforsh)
 * `SceneManager.start` will now reset the `SceneSystems.sceneUpdate` reference to `NOOP`. This gets set back to the Scene update method again during `bootScene` (if it has one) and stops errors with external plugins and multi-part files that may trigger `update` before `create` has been called. Fix #4629 (thanks @Osmose)
 * If the Camera has `roundPixels` set it will now round the internal scroll factors and `worldView` during the `preRender` step. Fix #4464 (thanks @Antriel)
-* The `WebGLRenderer.nativeTextures` array has been removed and any WebGLTextures created by the renderer are no longer stored within it. All WebGLTexture instances are stored in the `TextureSource` objects anyway, or by local classes such as RenderTexture, so there was no need to have another array taking up memroy.
-* The `WebGLRenderer.deleteTexture` method has a new optional boolean parameter `reset` which allows you to control if the `WebGLRenderer.resetTextures` method is called, or not, after the texture is deleted.
 * `Phaser.Scene.renderer` is a new property available in every Phaser.Scene that gives you a reference to the renderer, either Canvas or WebGL.
-* The `WebGLRenderer.getMaxTextures` method has been removed. This is no longer needed as you can use the `WebGLRenderer.maxTextures` property instead.
-* The `WebGLRenderer.setProgram` method now returns a boolean. `true` if the program was set, otherwise `false`.
-* The `WebGLRenderer.setVertexBuffer` method now returns a boolean. `true` if the buffer was set, otherwise `false`.
 
 ### Bug Fixes
 
