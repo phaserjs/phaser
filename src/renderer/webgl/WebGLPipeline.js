@@ -508,6 +508,8 @@ var WebGLPipeline = new Class({
         {
             this.flush();
 
+            this.renderer.setVertexBuffer(this.vertexBuffer);
+
             shader.bind(reset);
 
             this.currentShader = shader;
