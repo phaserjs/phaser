@@ -93,8 +93,6 @@ var GraphicsPipeline = new Class({
         ]);
         config.uniforms = GetFastValue(config, 'uniforms', [
             'uProjectionMatrix',
-            'uViewMatrix',
-            'uModelMatrix',
             'uMainSampler'
         ]);
 

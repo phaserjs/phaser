@@ -102,8 +102,6 @@ var LightPipeline = new Class({
         ]);
         config.uniforms = GetFastValue(config, 'uniforms', [
             'uProjectionMatrix',
-            'uViewMatrix',
-            'uModelMatrix',
             'uResolution'
         ]);
 

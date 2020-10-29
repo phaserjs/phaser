@@ -110,8 +110,6 @@ var MultiPipeline = new Class({
         ]);
         config.uniforms = GetFastValue(config, 'uniforms', [
             'uProjectionMatrix',
-            'uViewMatrix',
-            'uModelMatrix',
             'uMainSampler'
         ]);
 
@@ -339,7 +337,7 @@ var MultiPipeline = new Class({
             this.flush();
         }
 
-        var unit = this.setGameObject(sprite);
+        var unit = this.setGameObject(sprite, frame);
 
         var tintEffect = sprite.tintFill;
 
