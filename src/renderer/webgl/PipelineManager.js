@@ -243,6 +243,9 @@ var PipelineManager = new Class({
         {
             pipelineInstance.onPreRender();
         });
+
+        //  So the first Game Object to set the pipeline will cause a full bind:
+        this.renderer.currentProgram = null;
     },
 
     /**
