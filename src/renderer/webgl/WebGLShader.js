@@ -201,34 +201,23 @@ var WebGLShader = new Class({
     /**
      * Sets the program this shader uses as being the active shader in the WebGL Renderer.
      *
-     * Then, if the parent pipeline model-view-projection is dirty, sets the uniform matrix4
-     * values for each.
-     *
      * This method is called every time the parent pipeline is made the current active pipeline.
      *
      * @method Phaser.Renderer.WebGL.WebGLShader#bind
      * @since 3.50.0
      *
-     * @param {boolean} [reset=false] - Should the vertex attribute pointers be fully reset?
+     * @param {boolean} [setAttributes=false] - Should the vertex attribute pointers be set?
      *
      * @return {this} This WebGLShader instance.
      */
-    bind: function (reset)
+    bind: function (setAttributes)
     {
         this.renderer.setProgram(this.program);
 
-        var pipeline = this.pipeline;
-
-        if (pipeline.mvpDirty)
+        if (setAttributes)
         {
-            this.setMatrix4fv('uModelMatrix', false, pipeline.modelMatrix.val);
-            this.setMatrix4fv('uViewMatrix', false, pipeline.viewMatrix.val);
-            this.setMatrix4fv('uProjectionMatrix', false, pipeline.projectionMatrix.val);
-
-            pipeline.mvpDirty = false;
+            this.setAttribPointers();
         }
-
-        this.setAttribPointers(reset);
 
         return this;
     },
