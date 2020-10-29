@@ -207,11 +207,20 @@ var WebGLShader = new Class({
      * @since 3.50.0
      *
      * @param {boolean} [setAttributes=false] - Should the vertex attribute pointers be set?
+     * @param {boolean} [flush=false] - Flush the pipeline before binding this shader?
      *
      * @return {this} This WebGLShader instance.
      */
-    bind: function (setAttributes)
+    bind: function (setAttributes, flush)
     {
+        if (setAttributes === undefined) { setAttributes = false; }
+        if (flush === undefined) { flush = false; }
+
+        if (flush)
+        {
+            this.pipeline.flush();
+        }
+
         this.renderer.setProgram(this.program);
 
         if (setAttributes)
