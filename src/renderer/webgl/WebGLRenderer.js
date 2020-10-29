@@ -833,7 +833,7 @@ var WebGLRenderer = new Class({
 
             gl.bindTexture(gl.TEXTURE_2D, tempTexture);
 
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([ 255, 255, 255, 255 ]));
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([ 0, 0, 255, 255 ]));
 
             tempTextures[index] = tempTexture;
 
@@ -1448,16 +1448,22 @@ var WebGLRenderer = new Class({
         var gl = this.gl;
         var temp = this.tempTextures;
 
-        var total = (all) ? temp.length : 2;
-
-        for (var i = 0; i < total; i++)
-        {
-            gl.activeTexture(gl.TEXTURE0 + i);
-            gl.bindTexture(gl.TEXTURE_2D, temp[i]);
-        }
-
         if (all)
         {
+            for (var i = 0; i < temp.length; i++)
+            {
+                gl.activeTexture(gl.TEXTURE0 + i);
+                gl.bindTexture(gl.TEXTURE_2D, temp[i]);
+            }
+
+            gl.activeTexture(gl.TEXTURE1);
+            gl.bindTexture(gl.TEXTURE_2D, temp[1]);
+        }
+        else
+        {
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, temp[0]);
+
             gl.activeTexture(gl.TEXTURE1);
             gl.bindTexture(gl.TEXTURE_2D, temp[1]);
         }
@@ -1592,59 +1598,87 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Binds a program. If there was another program already bound it will force a pipeline flush.
+     * Binds a shader program.
+     *
+     * If there was a different program already bound it will force a pipeline flush first.
+     *
+     * If the same program given to this method is already set as the current program, no change
+     * will take place and this method will return `false`.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setProgram
      * @since 3.0.0
      *
      * @param {WebGLProgram} program - The program that needs to be bound.
      *
-     * @return {this} This WebGLRenderer instance.
+     * @return {boolean} `true` if the given program was bound, otherwise `false`.
      */
     setProgram: function (program)
     {
-        var gl = this.gl;
-
         if (program !== this.currentProgram)
         {
             this.flush();
 
-            gl.useProgram(program);
+            this.gl.useProgram(program);
 
             this.currentProgram = program;
+
+            return true;
         }
+
+        return false;
+    },
+
+    /**
+     * Rebinds whatever program `WebGLRenderer.currentProgram` is set as, without
+     * changing anything, or flushing.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#resetProgram
+     * @since 3.50.0
+     *
+     * @return {this} This WebGLRenderer instance.
+     */
+    resetProgram: function ()
+    {
+        this.gl.useProgram(this.currentProgram);
 
         return this;
     },
 
     /**
-     * Binds a vertex buffer. If there is a vertex buffer already bound it'll force a pipeline flush.
+     * Binds a vertex buffer.
+     *
+     * If there was a different vertex buffer already bound it will force a pipeline flush first.
+     *
+     * If the same buffer given to this method is already set as the current buffer, no change
+     * will take place and this method will return `false`.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setVertexBuffer
      * @since 3.0.0
      *
      * @param {WebGLBuffer} vertexBuffer - The buffer that needs to be bound.
      *
-     * @return {this} This WebGLRenderer instance.
+     * @return {boolean} `true` if the given buffer was bound, otherwise `false`.
      */
     setVertexBuffer: function (vertexBuffer)
     {
-        var gl = this.gl;
-
         if (vertexBuffer && vertexBuffer !== this.currentVertexBuffer)
         {
+            var gl = this.gl;
+
             this.flush();
 
             gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 
             this.currentVertexBuffer = vertexBuffer;
+
+            return true;
         }
 
-        return this;
+        return false;
     },
 
     /**
-     * Bounds a index buffer. If there is a index buffer already bound it'll force a pipeline flush.
+     * Binds an index buffer. If there is an index buffer already bound it'll force a pipeline flush.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setIndexBuffer
      * @since 3.0.0
@@ -2241,8 +2275,6 @@ var WebGLRenderer = new Class({
         this.textureFlush = 0;
 
         this.pipelines.preRender();
-
-        this.pipelines.setMulti();
     },
 
     /**
