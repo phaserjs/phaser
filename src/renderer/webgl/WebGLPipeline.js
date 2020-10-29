@@ -303,24 +303,6 @@ var WebGLPipeline = new Class({
         this.currentShader;
 
         /**
-         * The Model matrix, used by shaders as 'uModelMatrix' uniform.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#modelMatrix
-         * @type {Phaser.Math.Matrix4}
-         * @since 3.50.0
-         */
-        this.modelMatrix = new Matrix4().identity();
-
-        /**
-         * The View matrix, used by shaders as 'uViewMatrix' uniform.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#viewMatrix
-         * @type {Phaser.Math.Matrix4}
-         * @since 3.50.0
-         */
-        this.viewMatrix = new Matrix4().identity();
-
-        /**
          * The Projection matrix, used by shaders as 'uProjectionMatrix' uniform.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#projectionMatrix
@@ -328,17 +310,6 @@ var WebGLPipeline = new Class({
          * @since 3.50.0
          */
         this.projectionMatrix = new Matrix4().identity();
-
-        /**
-         * A flag indicating if the MVP matrices are dirty, or not.
-         *
-         * Used by WebGLShader when binding the uniforms.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#mvpDirty
-         * @type {boolean}
-         * @since 3.50.0
-         */
-        this.mvpDirty = true;
 
         /**
          * The configuration object that was used to create this pipeline.
@@ -456,19 +427,6 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * Resets the model, projection and view matrices to identity matrices.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#mvpInit
-     * @since 3.50.0
-     */
-    mvpInit: function ()
-    {
-        this.modelMatrix.identity();
-        this.projectionMatrix.identity();
-        this.viewMatrix.identity();
-    },
-
-    /**
      * Creates a brand new WebGLPipeline instance based on the configuration object that
      * was used to create this one.
      *
@@ -504,15 +462,31 @@ var WebGLPipeline = new Class({
      */
     setShader: function (shader, reset)
     {
-        if (shader !== this.currentShader)
+        var renderer = this.renderer;
+
+        if (shader !== this.currentShader || renderer.currentProgram !== this.currentShader.program)
         {
             this.flush();
 
-            this.renderer.setVertexBuffer(this.vertexBuffer);
+            renderer.resetTextures();
+
+            renderer.setVertexBuffer(this.vertexBuffer);
 
             shader.bind(reset);
 
             this.currentShader = shader;
+        }
+
+        return this;
+    },
+
+    switchShader: function (shader)
+    {
+        var renderer = this.renderer;
+
+        if (renderer.currentProgram !== shader.program)
+        {
+            shader.switch();
         }
 
         return this;
@@ -607,7 +581,7 @@ var WebGLPipeline = new Class({
 
         if (len === 0)
         {
-            this.shaders = [ new WebGLShader(this, 'default', defaultVertShader, defaultFragShader, DeepCopy(defaultAttribs), defaultUniforms) ];
+            this.shaders = [ new WebGLShader(this, 'default', defaultVertShader, defaultFragShader, DeepCopy(defaultAttribs), DeepCopy(defaultUniforms)) ];
         }
         else
         {
@@ -624,7 +598,7 @@ var WebGLPipeline = new Class({
                 var attributes = GetFastValue(shaderEntry, aName, defaultAttribs);
                 var uniforms = GetFastValue(shaderEntry, uName, defaultUniforms);
 
-                newShaders.push(new WebGLShader(this, name, vertShader, fragShader, DeepCopy(attributes), uniforms));
+                newShaders.push(new WebGLShader(this, name, vertShader, fragShader, DeepCopy(attributes), DeepCopy(uniforms)));
             }
 
             this.shaders = newShaders;
@@ -695,7 +669,9 @@ var WebGLPipeline = new Class({
         this.width = width;
         this.height = height;
 
-        this.projectionMatrix.ortho(0, width, height, 0, -1000, 1000);
+        var projectionMatrix = this.projectionMatrix;
+
+        projectionMatrix.ortho(0, width, height, 0, -1000, 1000);
 
         //  Resize the target?
         var target = this.targetTexture;
@@ -716,7 +692,12 @@ var WebGLPipeline = new Class({
             // this.targetTexture.flipY = flipY;
         }
 
-        this.mvpDirty = true;
+        var shaders = this.shaders;
+
+        for (var i = 0; i < shaders.length; i++)
+        {
+            this.setMatrix4fv('uProjectionMatrix', false, projectionMatrix.val, shaders[i]);
+        }
 
         return this;
     },
@@ -730,23 +711,13 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#bind
      * @since 3.0.0
      *
-     * @param {boolean} [reset=false] - Should the vertex attribute pointers be fully reset?
-     * @param {number} [shader=0] - If this is a multi-shader pipeline, which shader should be bound?
-     *
      * @return {this} This WebGLPipeline instance.
      */
-    bind: function (reset, shader)
+    bind: function ()
     {
-        if (reset === undefined) { reset = false; }
+        var wasBound = this.renderer.setVertexBuffer(this.vertexBuffer);
 
-        if (shader !== undefined)
-        {
-            this.setShader(shader);
-        }
-
-        this.renderer.setVertexBuffer(this.vertexBuffer);
-
-        this.currentShader.bind(reset);
+        this.currentShader.bind(wasBound);
 
         return this;
     },
@@ -843,12 +814,13 @@ var WebGLPipeline = new Class({
      */
     flush: function ()
     {
-        var gl = this.gl;
         var vertexCount = this.vertexCount;
-        var vertexSize = this.currentShader.vertexSize;
 
         if (vertexCount > 0)
         {
+            var gl = this.gl;
+            var vertexSize = this.currentShader.vertexSize;
+
             if (vertexCount === this.vertexCapacity)
             {
                 gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.DYNAMIC_DRAW);
@@ -859,6 +831,9 @@ var WebGLPipeline = new Class({
             }
 
             gl.drawArrays(this.topology, 0, vertexCount);
+
+            // console.log(this.vertexViewF32);
+            // debugger;
 
             this.vertexCount = 0;
         }
