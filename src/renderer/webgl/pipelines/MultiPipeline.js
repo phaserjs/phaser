@@ -42,8 +42,6 @@ var WebGLPipeline = require('../WebGLPipeline');
  * The default shader uniforms for this pipeline are:
  *
  * `uProjectionMatrix` (mat4)
- * `uViewMatrix` (mat4)
- * `uModelMatrix` (mat4)
  * `uMainSampler` (sampler2D array)
  *
  * If you wish to create a custom pipeline extending from this one, you can use two string
@@ -156,13 +154,11 @@ var MultiPipeline = new Class({
      *
      * @return {this} This WebGLPipeline instance.
      */
-    bind: function ()
+    boot: function ()
     {
-        WebGLPipeline.prototype.bind.call(this);
+        WebGLPipeline.prototype.boot.call(this);
 
         this.currentShader.set1iv('uMainSampler', this.renderer.textureIndexes);
-
-        return this;
     },
 
     /**

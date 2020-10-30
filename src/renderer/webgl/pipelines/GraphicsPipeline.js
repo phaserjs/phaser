@@ -95,6 +95,7 @@ var GraphicsPipeline = new Class({
             'uProjectionMatrix',
             'uMainSampler'
         ]);
+        config.forceZero = true;
 
         WebGLPipeline.call(this, config);
 
@@ -227,8 +228,13 @@ var GraphicsPipeline = new Class({
          * @since 3.12.0
          */
         this.polygonCache = [];
+    },
 
-        this.forceZero = true;
+    boot: function ()
+    {
+        WebGLPipeline.prototype.boot.call(this);
+
+        this.set1i('uMainSampler', 0);
     },
 
     /**

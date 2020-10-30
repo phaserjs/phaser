@@ -14,6 +14,7 @@ var Extend = require('../../../utils/object/Extend');
 var Pipelines = {
 
     BitmapMaskPipeline: require('./BitmapMaskPipeline'),
+    CameraPipeline: require('./CameraPipeline'),
     GraphicsPipeline: require('./GraphicsPipeline'),
     LightPipeline: require('./LightPipeline'),
     MultiPipeline: require('./MultiPipeline'),

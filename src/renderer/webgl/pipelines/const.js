@@ -64,8 +64,17 @@ var PIPELINE_CONST = {
      * @const
      * @since 3.50.0
      */
-    GRAPHICS_PIPELINE: 'GraphicsPipeline'
+    GRAPHICS_PIPELINE: 'GraphicsPipeline',
 
+    /**
+     * The Camera Pipeline.
+     *
+     * @name Phaser.Renderer.WebGL.Pipelines.CAMERA_PIPELINE
+     * @type {string}
+     * @const
+     * @since 3.50.0
+     */
+    CAMERA_PIPELINE: 'CameraPipeline'
 };
 
 module.exports = PIPELINE_CONST;
