@@ -788,6 +788,42 @@ var WebGLPipeline = new Class({
     },
 
     /**
+     * This method is called every time this pipeline is asked to flush its batch.
+     *
+     * It is called immediately before the gl.bufferData and gl.drawArray calls are made, so you can
+     * perform any final pre-render modifications. To apply changes post-render, see `onPostFlush`.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#onFlush
+     * @since 3.0.0
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    onFlush: function ()
+    {
+        return this;
+    },
+
+    /**
+     * This method is called immediately after this pipeline has finished flushing its batch.
+     *
+     * It is called after the `gl.drawArray` call.
+     *
+     * You can perform additional post-render effects, but be careful not to call `flush`
+     * from within this method, or you'll cause an infinite loop.
+     *
+     * To apply changes post-render, see `onFlush`.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#onPostFlush
+     * @since 3.0.0
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    onPostFlush: function ()
+    {
+        return this;
+    },
+
+    /**
      * Uploads the vertex data and emits a draw call for the current batch of vertices.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#flush
@@ -801,6 +837,8 @@ var WebGLPipeline = new Class({
 
         if (vertexCount > 0)
         {
+            this.onFlush();
+
             var gl = this.gl;
             var vertexSize = this.currentShader.vertexSize;
 
@@ -816,6 +854,8 @@ var WebGLPipeline = new Class({
             gl.drawArrays(this.topology, 0, vertexCount);
 
             this.vertexCount = 0;
+
+            this.onPostFlush();
         }
 
         return this;
