@@ -901,7 +901,7 @@ var WebGLRenderer = new Class({
 
         this.resize(baseSize.width, baseSize.height);
 
-        pipelineManager.setMulti();
+        // pipelineManager.setMulti();
     },
 
     /**
@@ -2076,8 +2076,28 @@ var WebGLRenderer = new Class({
 
         var color = camera.backgroundColor;
 
-        var MultiPipeline = this.pipelines.MULTI_PIPELINE;
+        this.pushScissor(cx, cy, cw, ch);
 
+        if (camera.mask)
+        {
+            this.currentCameraMask.mask = camera.mask;
+            this.currentCameraMask.camera = camera._maskCamera;
+
+            camera.mask.preRenderWebGL(this, camera, camera._maskCamera);
+        }
+
+        if (color.alphaGL > 0)
+        {
+            var pipeline = this.pipelines.setCameraPipeline();
+
+            pipeline.drawFillRect(
+                cx, cy, cw, ch,
+                Utils.getTintFromFloats(color.redGL, color.greenGL, color.blueGL, 1),
+                color.alphaGL
+            );
+        }
+
+        /*
         if (camera.renderToTexture)
         {
             this.flush();
@@ -2125,15 +2145,16 @@ var WebGLRenderer = new Class({
                 camera.mask.preRenderWebGL(this, camera, camera._maskCamera);
             }
 
-            if (color.alphaGL > 0)
-            {
-                MultiPipeline.drawFillRect(
-                    cx, cy, cw , ch,
-                    Utils.getTintFromFloats(color.redGL, color.greenGL, color.blueGL, 1),
-                    color.alphaGL
-                );
-            }
+            // if (color.alphaGL > 0)
+            // {
+            //     MultiPipeline.drawFillRect(
+            //         cx, cy, cw , ch,
+            //         Utils.getTintFromFloats(color.redGL, color.greenGL, color.blueGL, 1),
+            //         color.alphaGL
+            //     );
+            // }
         }
+        */
     },
 
     /**
@@ -2163,7 +2184,8 @@ var WebGLRenderer = new Class({
 
     /**
      * Controls the post-render operations for the given camera.
-     * Renders the foreground camera effects like flash and fading. It resets the current scissor state.
+     *
+     * Renders the foreground camera effects like flash and fading, then resets the current scissor state.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#postRenderCamera
      * @since 3.0.0
@@ -2172,15 +2194,19 @@ var WebGLRenderer = new Class({
      */
     postRenderCamera: function (camera)
     {
-        var multiPipeline = this.pipelines.setMulti();
+        if (camera.flashEffect.isRunning || camera.fadeEffect.isRunning)
+        {
+            var pipeline = this.pipelines.setCameraPipeline();
 
-        camera.flashEffect.postRenderWebGL(multiPipeline, Utils.getTintFromFloats);
-        camera.fadeEffect.postRenderWebGL(multiPipeline, Utils.getTintFromFloats);
+            camera.flashEffect.postRenderWebGL(pipeline, Utils.getTintFromFloats);
+            camera.fadeEffect.postRenderWebGL(pipeline, Utils.getTintFromFloats);
+        }
 
         camera.dirty = false;
 
         this.popScissor();
 
+        /*
         if (camera.renderToTexture)
         {
             multiPipeline.flush();
@@ -2223,6 +2249,7 @@ var WebGLRenderer = new Class({
             //  Force clear the current texture so that items next in the batch (like Graphics) don't try and use it
             this.setBlankTexture(true);
         }
+        */
 
         if (camera.mask)
         {
