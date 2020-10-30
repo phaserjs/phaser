@@ -231,7 +231,7 @@ var WebGLPipeline = new Class({
          * @type {boolean}
          * @since 3.50.0
          */
-        this.forceZero = false;
+        this.forceZero = GetFastValue(config, 'forceZero', false);
 
         /**
          * Indicates if this pipeline has booted or not.
@@ -375,7 +375,7 @@ var WebGLPipeline = new Class({
             }
         }
 
-        this.vertexCapacity = GetFastValue(config, 'vertexCapacity', renderer.config.batchSize * vertexComponentCount);
+        this.vertexCapacity = GetFastValue(config, 'vertexCapacity', renderer.config.batchSize) * vertexComponentCount;
 
         var data = GetFastValue(config, 'vertices', new ArrayBuffer(this.vertexCapacity * vertexSize));
 
@@ -410,8 +410,6 @@ var WebGLPipeline = new Class({
         this.hasBooted = true;
 
         this.onBoot();
-
-        return this;
     },
 
     /**
@@ -423,6 +421,21 @@ var WebGLPipeline = new Class({
      * @since 3.50.0
      */
     onBoot: function ()
+    {
+    },
+
+    /**
+     * This method is called once when this pipeline has finished being set-up
+     * at the end of the boot process. By the time this method is called, all
+     * of the shaders are ready and configured.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#onResize
+     * @since 3.50.0
+     *
+     * @param {number} width - The new width of this WebGL Pipeline.
+     * @param {number} height - The new height of this WebGL Pipeline.
+     */
+    onResize: function ()
     {
     },
 
@@ -659,8 +672,15 @@ var WebGLPipeline = new Class({
 
         for (var i = 0; i < shaders.length; i++)
         {
-            this.setMatrix4fv('uProjectionMatrix', false, projectionMatrix.val, shaders[i]);
+            var shader = shaders[i];
+
+            if (shader.hasUniform('uProjectionMatrix'))
+            {
+                this.setMatrix4fv('uProjectionMatrix', false, projectionMatrix.val, shaders[i]);
+            }
         }
+
+        this.onResize(width, height);
 
         return this;
     },
@@ -1024,7 +1044,7 @@ var WebGLPipeline = new Class({
     {
         if (shader === undefined) { shader = this.currentShader; }
 
-        shader.bind(false, true).set1f(name, x);
+        shader.set1f(name, x);
 
         return this;
     },
@@ -1052,7 +1072,7 @@ var WebGLPipeline = new Class({
     {
         if (shader === undefined) { shader = this.currentShader; }
 
-        shader.bind(false, true).set2f(name, x, y);
+        shader.set2f(name, x, y);
 
         return this;
     },
@@ -1081,7 +1101,7 @@ var WebGLPipeline = new Class({
     {
         if (shader === undefined) { shader = this.currentShader; }
 
-        shader.bind(false, true).set3f(name, x, y, z);
+        shader.set3f(name, x, y, z);
 
         return this;
     },
@@ -1111,7 +1131,7 @@ var WebGLPipeline = new Class({
     {
         if (shader === undefined) { shader = this.currentShader; }
 
-        shader.bind(false, true).set4f(name, x, y, z, w);
+        shader.set4f(name, x, y, z, w);
 
         return this;
     },
@@ -1138,7 +1158,7 @@ var WebGLPipeline = new Class({
     {
         if (shader === undefined) { shader = this.currentShader; }
 
-        shader.bind(false, true).set1fv(name, arr);
+        shader.set1fv(name, arr);
 
         return this;
     },
@@ -1165,7 +1185,7 @@ var WebGLPipeline = new Class({
     {
         if (shader === undefined) { shader = this.currentShader; }
 
-        shader.bind(false, true).set2fv(name, arr);
+        shader.set2fv(name, arr);
 
         return this;
     },
@@ -1192,7 +1212,7 @@ var WebGLPipeline = new Class({
     {
         if (shader === undefined) { shader = this.currentShader; }
 
-        shader.bind(false, true).set3fv(name, arr);
+        shader.set3fv(name, arr);
 
         return this;
     },
@@ -1219,7 +1239,7 @@ var WebGLPipeline = new Class({
     {
         if (shader === undefined) { shader = this.currentShader; }
 
-        shader.bind(false, true).set4fv(name, arr);
+        shader.set4fv(name, arr);
 
         return this;
     },
@@ -1246,7 +1266,7 @@ var WebGLPipeline = new Class({
     {
         if (shader === undefined) { shader = this.currentShader; }
 
-        shader.bind(false, true).set1iv(name, arr);
+        shader.set1iv(name, arr);
 
         return this;
     },
@@ -1273,7 +1293,7 @@ var WebGLPipeline = new Class({
     {
         if (shader === undefined) { shader = this.currentShader; }
 
-        shader.bind(false, true).set2iv(name, arr);
+        shader.set2iv(name, arr);
 
         return this;
     },
@@ -1300,7 +1320,7 @@ var WebGLPipeline = new Class({
     {
         if (shader === undefined) { shader = this.currentShader; }
 
-        shader.bind(false, true).set3iv(name, arr);
+        shader.set3iv(name, arr);
 
         return this;
     },
@@ -1327,7 +1347,7 @@ var WebGLPipeline = new Class({
     {
         if (shader === undefined) { shader = this.currentShader; }
 
-        shader.bind(false, true).set4iv(name, arr);
+        shader.set4iv(name, arr);
 
         return this;
     },
@@ -1354,7 +1374,7 @@ var WebGLPipeline = new Class({
     {
         if (shader === undefined) { shader = this.currentShader; }
 
-        shader.bind(false, true).set1i(name, x);
+        shader.set1i(name, x);
 
         return this;
     },
@@ -1382,7 +1402,7 @@ var WebGLPipeline = new Class({
     {
         if (shader === undefined) { shader = this.currentShader; }
 
-        shader.bind(false, true).set2i(name, x, y);
+        shader.set2i(name, x, y);
 
         return this;
     },
@@ -1411,7 +1431,7 @@ var WebGLPipeline = new Class({
     {
         if (shader === undefined) { shader = this.currentShader; }
 
-        shader.bind(false, true).set3i(name, x, y, z);
+        shader.set3i(name, x, y, z);
 
         return this;
     },
@@ -1441,7 +1461,7 @@ var WebGLPipeline = new Class({
     {
         if (shader === undefined) { shader = this.currentShader; }
 
-        shader.bind(false, true).set4i(name, x, y, z, w);
+        shader.set4i(name, x, y, z, w);
 
         return this;
     },
@@ -1469,7 +1489,7 @@ var WebGLPipeline = new Class({
     {
         if (shader === undefined) { shader = this.currentShader; }
 
-        shader.bind(false, true).setMatrix2fv(name, transpose, matrix);
+        shader.setMatrix2fv(name, transpose, matrix);
 
         return this;
     },
@@ -1497,7 +1517,7 @@ var WebGLPipeline = new Class({
     {
         if (shader === undefined) { shader = this.currentShader; }
 
-        shader.bind(false, true).setMatrix3fv(name, transpose, matrix);
+        shader.setMatrix3fv(name, transpose, matrix);
 
         return this;
     },
@@ -1525,7 +1545,7 @@ var WebGLPipeline = new Class({
     {
         if (shader === undefined) { shader = this.currentShader; }
 
-        shader.bind(false, true).setMatrix4fv(name, transpose, matrix);
+        shader.setMatrix4fv(name, transpose, matrix);
 
         return this;
     },
