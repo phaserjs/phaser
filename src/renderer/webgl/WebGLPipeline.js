@@ -862,6 +862,44 @@ var WebGLPipeline = new Class({
     },
 
     /**
+     * Adds a single vertex to the current vertex buffer and increments the
+     * `vertexCount` property by 1.
+     *
+     * This method is called directly by `batchTri` and `batchQuad`.
+     *
+     * It does not perform any batch limit checking itself, so if you need to call
+     * this method directly, do so in the same way that `batchQuad` does, for example.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#batchVert
+     * @since 3.50.0
+     *
+     * @param {number} x - The vertex x position.
+     * @param {number} y - The vertex y position.
+     * @param {number} u - UV u value.
+     * @param {number} v - UV v value.
+     * @param {integer} unit - Texture unit to which the texture needs to be bound.
+     * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
+     * @param {number} tint - The tint color value.
+     */
+    batchVert: function (x, y, u, v, unit, tintEffect, tint)
+    {
+        var vertexViewF32 = this.vertexViewF32;
+        var vertexViewU32 = this.vertexViewU32;
+
+        var vertexOffset = (this.vertexCount * this.currentShader.vertexComponentCount) - 1;
+
+        vertexViewF32[++vertexOffset] = x;
+        vertexViewF32[++vertexOffset] = y;
+        vertexViewF32[++vertexOffset] = u;
+        vertexViewF32[++vertexOffset] = v;
+        vertexViewF32[++vertexOffset] = unit;
+        vertexViewF32[++vertexOffset] = tintEffect;
+        vertexViewU32[++vertexOffset] = tint;
+
+        this.vertexCount++;
+    },
+
+    /**
      * Adds the vertices data into the batch and flushes if full.
      *
      * Assumes 6 vertices in the following arrangement:
@@ -918,60 +956,12 @@ var WebGLPipeline = new Class({
             unit = this.setTexture2D(texture);
         }
 
-        var vertexViewF32 = this.vertexViewF32;
-        var vertexViewU32 = this.vertexViewU32;
-
-        var vertexOffset = (this.vertexCount * this.currentShader.vertexComponentCount) - 1;
-
-        vertexViewF32[++vertexOffset] = x0;
-        vertexViewF32[++vertexOffset] = y0;
-        vertexViewF32[++vertexOffset] = u0;
-        vertexViewF32[++vertexOffset] = v0;
-        vertexViewF32[++vertexOffset] = unit;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintTL;
-
-        vertexViewF32[++vertexOffset] = x1;
-        vertexViewF32[++vertexOffset] = y1;
-        vertexViewF32[++vertexOffset] = u0;
-        vertexViewF32[++vertexOffset] = v1;
-        vertexViewF32[++vertexOffset] = unit;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintBL;
-
-        vertexViewF32[++vertexOffset] = x2;
-        vertexViewF32[++vertexOffset] = y2;
-        vertexViewF32[++vertexOffset] = u1;
-        vertexViewF32[++vertexOffset] = v1;
-        vertexViewF32[++vertexOffset] = unit;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintBR;
-
-        vertexViewF32[++vertexOffset] = x0;
-        vertexViewF32[++vertexOffset] = y0;
-        vertexViewF32[++vertexOffset] = u0;
-        vertexViewF32[++vertexOffset] = v0;
-        vertexViewF32[++vertexOffset] = unit;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintTL;
-
-        vertexViewF32[++vertexOffset] = x2;
-        vertexViewF32[++vertexOffset] = y2;
-        vertexViewF32[++vertexOffset] = u1;
-        vertexViewF32[++vertexOffset] = v1;
-        vertexViewF32[++vertexOffset] = unit;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintBR;
-
-        vertexViewF32[++vertexOffset] = x3;
-        vertexViewF32[++vertexOffset] = y3;
-        vertexViewF32[++vertexOffset] = u1;
-        vertexViewF32[++vertexOffset] = v0;
-        vertexViewF32[++vertexOffset] = unit;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintTR;
-
-        this.vertexCount += 6;
+        this.batchVert(x0, y0, u0, v0, unit, tintEffect, tintTL);
+        this.batchVert(x1, y1, u0, v1, unit, tintEffect, tintBL);
+        this.batchVert(x2, y2, u1, v1, unit, tintEffect, tintBR);
+        this.batchVert(x0, y0, u0, v0, unit, tintEffect, tintTL);
+        this.batchVert(x2, y2, u1, v1, unit, tintEffect, tintBR);
+        this.batchVert(x3, y3, u1, v0, unit, tintEffect, tintTR);
 
         return hasFlushed;
     },
@@ -1028,36 +1018,9 @@ var WebGLPipeline = new Class({
             unit = this.setTexture2D(texture);
         }
 
-        var vertexViewF32 = this.vertexViewF32;
-        var vertexViewU32 = this.vertexViewU32;
-
-        var vertexOffset = (this.vertexCount * this.currentShader.vertexComponentCount) - 1;
-
-        vertexViewF32[++vertexOffset] = x0;
-        vertexViewF32[++vertexOffset] = y0;
-        vertexViewF32[++vertexOffset] = u0;
-        vertexViewF32[++vertexOffset] = v0;
-        vertexViewF32[++vertexOffset] = unit;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintTL;
-
-        vertexViewF32[++vertexOffset] = x1;
-        vertexViewF32[++vertexOffset] = y1;
-        vertexViewF32[++vertexOffset] = u0;
-        vertexViewF32[++vertexOffset] = v1;
-        vertexViewF32[++vertexOffset] = unit;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintTR;
-
-        vertexViewF32[++vertexOffset] = x2;
-        vertexViewF32[++vertexOffset] = y2;
-        vertexViewF32[++vertexOffset] = u1;
-        vertexViewF32[++vertexOffset] = v1;
-        vertexViewF32[++vertexOffset] = unit;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintBL;
-
-        this.vertexCount += 3;
+        this.batchVert(x0, y0, u0, v0, unit, tintEffect, tintTL);
+        this.batchVert(x1, y1, u0, v1, unit, tintEffect, tintTR);
+        this.batchVert(x2, y2, u1, v1, unit, tintEffect, tintBL);
 
         return hasFlushed;
     },
