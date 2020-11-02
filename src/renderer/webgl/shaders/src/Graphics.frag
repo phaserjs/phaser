@@ -8,24 +8,13 @@ varying vec2 outTexCoord;
 varying float outTintEffect;
 varying vec4 outTint;
 
+// uniform vec2 repeat = vec2(2, 2);
+
 void main()
 {
-    vec4 texture = texture2D(uMainSampler, outTexCoord);
-    vec4 texel = vec4(outTint.bgr * outTint.a, outTint.a);
+    // pixel = v_colour * texture2D(t0, vec2(mod(tex_coords.x * repeat.x, 1), mod(tex_coords.y * repeat.y, 1)));
 
-    //  Multiply texture tint
-    vec4 color = texture * texel;
-
-    if (outTintEffect == 1.0)
-    {
-        //  Solid color + texture alpha
-        color.rgb = mix(texture.rgb, outTint.bgr * outTint.a, texture.a);
-    }
-    else if (outTintEffect == 2.0)
-    {
-        //  Solid color, no texture
-        color = texel;
-    }
+    vec4 color = vec4(outTint.bgr * outTint.a, outTint.a);
 
     gl_FragColor = color;
 }
