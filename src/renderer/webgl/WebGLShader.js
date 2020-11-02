@@ -369,6 +369,11 @@ var WebGLShader = new Class({
     {
         var uniform = this.uniforms[name];
 
+        if (!uniform)
+        {
+            return this;
+        }
+
         if (uniform.value1 !== value1)
         {
             uniform.value1 = value1;
@@ -407,6 +412,11 @@ var WebGLShader = new Class({
     setUniform2: function (setter, name, value1, value2)
     {
         var uniform = this.uniforms[name];
+
+        if (!uniform)
+        {
+            return this;
+        }
 
         if (uniform.value1 !== value1 || uniform.value2 !== value2)
         {
@@ -448,6 +458,11 @@ var WebGLShader = new Class({
     setUniform3: function (setter, name, value1, value2, value3)
     {
         var uniform = this.uniforms[name];
+
+        if (!uniform)
+        {
+            return this;
+        }
 
         if (uniform.value1 !== value1 || uniform.value2 !== value2 || uniform.value3 !== value3)
         {
@@ -491,6 +506,11 @@ var WebGLShader = new Class({
     setUniform4: function (setter, name, value1, value2, value3, value4)
     {
         var uniform = this.uniforms[name];
+
+        if (!uniform)
+        {
+            return this;
+        }
 
         if (uniform.value1 !== value1 || uniform.value2 !== value2 || uniform.value3 !== value3 || uniform.value4 !== value4)
         {
