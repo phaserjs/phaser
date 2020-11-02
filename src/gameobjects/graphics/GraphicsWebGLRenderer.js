@@ -130,7 +130,7 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
             case Commands.FILL_PATH:
                 for (pathIndex = 0; pathIndex < path.length; pathIndex++)
                 {
-                    pipeline.setTexture2D(currentTexture, src);
+                    // pipeline.setTexture2D(currentTexture, src);
 
                     pipeline.batchFillPath(
                         path[pathIndex].points,
@@ -143,7 +143,7 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
             case Commands.STROKE_PATH:
                 for (pathIndex = 0; pathIndex < path.length; pathIndex++)
                 {
-                    pipeline.setTexture2D(currentTexture, src);
+                    // pipeline.setTexture2D(currentTexture, src);
 
                     pipeline.batchStrokePath(
                         path[pathIndex].points,
@@ -257,7 +257,7 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
                 break;
 
             case Commands.FILL_RECT:
-                pipeline.setTexture2D(currentTexture, src);
+                // pipeline.setTexture2D(currentTexture, src);
                 pipeline.batchFillRect(
                     commands[++cmdIndex],
                     commands[++cmdIndex],
@@ -269,7 +269,7 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
                 break;
 
             case Commands.FILL_TRIANGLE:
-                pipeline.setTexture2D(currentTexture, src);
+                // pipeline.setTexture2D(currentTexture, src);
                 pipeline.batchFillTriangle(
                     commands[++cmdIndex],
                     commands[++cmdIndex],
@@ -283,7 +283,7 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
                 break;
 
             case Commands.STROKE_TRIANGLE:
-                pipeline.setTexture2D(currentTexture, src);
+                // pipeline.setTexture2D(currentTexture, src);
                 pipeline.batchStrokeTriangle(
                     commands[++cmdIndex],
                     commands[++cmdIndex],
@@ -338,6 +338,7 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
                 currentMatrix.rotate(commands[++cmdIndex]);
                 break;
 
+            /*
             case Commands.SET_TEXTURE:
                 var frame = commands[++cmdIndex];
                 var mode = commands[++cmdIndex];
@@ -355,6 +356,7 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
                 pipeline.tintEffect = 2;
                 currentTexture = renderer.tempTextures[0];
                 break;
+            */
         }
     }
 };
