@@ -22,7 +22,6 @@ var GetValue = require('../../utils/object/GetValue');
 var MATH_CONST = require('../../math/const');
 var PIPELINES_CONST = require('../../renderer/webgl/pipelines/const');
 var Render = require('./GraphicsRender');
-var TransformMatrix = require('../components/TransformMatrix');
 
 /**
  * @classdesc
@@ -200,36 +199,6 @@ var Graphics = new Class({
          * @since 3.0.0
          */
         this._lineWidth = 1.0;
-
-        /**
-         * A temporary Transform Matrix, re-used internally during batching.
-         *
-         * @name Phaser.GameObjects.Graphics#_tempMatrix1
-         * @private
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 3.17.0
-         */
-        this._tempMatrix1 = new TransformMatrix();
-
-        /**
-         * A temporary Transform Matrix, re-used internally during batching.
-         *
-         * @name Phaser.GameObjects.Graphics#_tempMatrix2
-         * @private
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 3.17.0
-         */
-        this._tempMatrix2 = new TransformMatrix();
-
-        /**
-         * A temporary Transform Matrix, re-used internally during batching.
-         *
-         * @name Phaser.GameObjects.Graphics#_tempMatrix3
-         * @private
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 3.17.0
-         */
-        this._tempMatrix3 = new TransformMatrix();
 
         this.setDefaultStyles(options);
     },
