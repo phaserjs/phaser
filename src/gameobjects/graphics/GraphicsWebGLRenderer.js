@@ -5,9 +5,10 @@
  */
 
 var Commands = require('./Commands');
+var GetCalcMatrix = require('../GetCalcMatrix');
+var TransformMatrix = require('../components/TransformMatrix');
 var Utils = require('../../renderer/webgl/Utils');
 
-//  TODO: Remove the use of this
 var Point = function (x, y, width)
 {
     this.x = x;
@@ -15,7 +16,6 @@ var Point = function (x, y, width)
     this.width = width;
 };
 
-//  TODO: Remove the use of this
 var Path = function (x, y, width)
 {
     this.points = [];
@@ -24,6 +24,7 @@ var Path = function (x, y, width)
 };
 
 var matrixStack = [];
+var tempMatrix = new TransformMatrix();
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -48,36 +49,9 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var pipeline = renderer.pipelines.set(this.pipeline, src);
 
-    var camMatrix = src._tempMatrix1;
-    var graphicsMatrix = src._tempMatrix2;
-    var currentMatrix = src._tempMatrix3;
+    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
-    currentMatrix.loadIdentity();
-
-    graphicsMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
-
-    camMatrix.copyFrom(camera.matrix);
-
-    if (parentMatrix)
-    {
-        //  Multiply the camera by the parent matrix
-        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
-
-        //  Undo the camera scroll
-        graphicsMatrix.e = src.x;
-        graphicsMatrix.f = src.y;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(graphicsMatrix);
-    }
-    else
-    {
-        graphicsMatrix.e -= camera.scrollX * src.scrollFactorX;
-        graphicsMatrix.f -= camera.scrollY * src.scrollFactorY;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(graphicsMatrix);
-    }
+    var currentMatrix = tempMatrix.loadIdentity();
 
     var commands = src.commandBuffer;
     var alpha = camera.alpha * src.alpha;
@@ -101,9 +75,6 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var getTint = Utils.getTintAppendFloatAlpha;
 
-    //  Set to a white texture, not a blank one, so Lights2D works too!
-    var currentTexture = renderer.whiteTexture;
-
     for (var cmdIndex = 0; cmdIndex < commands.length; cmdIndex++)
     {
         cmd = commands[cmdIndex];
@@ -111,14 +82,15 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
         switch (cmd)
         {
             case Commands.BEGIN_PATH:
-
+            {
                 path.length = 0;
                 lastPath = null;
                 pathOpen = true;
                 break;
+            }
 
             case Commands.CLOSE_PATH:
-
+            {
                 pathOpen = false;
 
                 if (lastPath && lastPath.points.length)
@@ -126,36 +98,38 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
                     lastPath.points.push(lastPath.points[0]);
                 }
                 break;
+            }
 
             case Commands.FILL_PATH:
+            {
                 for (pathIndex = 0; pathIndex < path.length; pathIndex++)
                 {
-                    // pipeline.setTexture2D(currentTexture, src);
-
                     pipeline.batchFillPath(
                         path[pathIndex].points,
                         currentMatrix,
-                        camMatrix
+                        calcMatrix
                     );
                 }
                 break;
+            }
 
             case Commands.STROKE_PATH:
+            {
                 for (pathIndex = 0; pathIndex < path.length; pathIndex++)
                 {
-                    // pipeline.setTexture2D(currentTexture, src);
-
                     pipeline.batchStrokePath(
                         path[pathIndex].points,
                         lineWidth,
                         pathOpen,
                         currentMatrix,
-                        camMatrix
+                        calcMatrix
                     );
                 }
                 break;
+            }
 
             case Commands.LINE_STYLE:
+            {
                 lineWidth = commands[++cmdIndex];
                 var strokeColor = commands[++cmdIndex];
                 var strokeAlpha = commands[++cmdIndex] * alpha;
@@ -165,8 +139,10 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
                 strokeTint.BL = strokeTintColor;
                 strokeTint.BR = strokeTintColor;
                 break;
+            }
 
             case Commands.FILL_STYLE:
+            {
                 var fillColor = commands[++cmdIndex];
                 var fillAlpha = commands[++cmdIndex] * alpha;
                 var fillTintColor = getTint(fillColor, fillAlpha);
@@ -175,9 +151,10 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
                 fillTint.BL = fillTintColor;
                 fillTint.BR = fillTintColor;
                 break;
+            }
 
             case Commands.GRADIENT_FILL_STYLE:
-
+            {
                 var alphaTL = commands[++cmdIndex] * alpha;
                 var alphaTR = commands[++cmdIndex] * alpha;
                 var alphaBL = commands[++cmdIndex] * alpha;
@@ -188,8 +165,10 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
                 fillTint.BL = getTint(commands[++cmdIndex], alphaBL);
                 fillTint.BR = getTint(commands[++cmdIndex], alphaBR);
                 break;
+            }
 
             case Commands.GRADIENT_LINE_STYLE:
+            {
                 lineWidth = commands[++cmdIndex];
                 var gradientLineAlpha = commands[++cmdIndex] * alpha;
                 strokeTint.TL = getTint(commands[++cmdIndex], gradientLineAlpha);
@@ -197,8 +176,10 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
                 strokeTint.BL = getTint(commands[++cmdIndex], gradientLineAlpha);
                 strokeTint.BR = getTint(commands[++cmdIndex], gradientLineAlpha);
                 break;
+            }
 
             case Commands.ARC:
+            {
                 var iteration = 0;
                 var x = commands[++cmdIndex];
                 var y = commands[++cmdIndex];
@@ -255,21 +236,23 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
                 lastPath.points.push(new Point(tx, ty, lineWidth));
 
                 break;
+            }
 
             case Commands.FILL_RECT:
-                // pipeline.setTexture2D(currentTexture, src);
+            {
                 pipeline.batchFillRect(
                     commands[++cmdIndex],
                     commands[++cmdIndex],
                     commands[++cmdIndex],
                     commands[++cmdIndex],
                     currentMatrix,
-                    camMatrix
+                    calcMatrix
                 );
                 break;
+            }
 
             case Commands.FILL_TRIANGLE:
-                // pipeline.setTexture2D(currentTexture, src);
+            {
                 pipeline.batchFillTriangle(
                     commands[++cmdIndex],
                     commands[++cmdIndex],
@@ -278,12 +261,13 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
                     commands[++cmdIndex],
                     commands[++cmdIndex],
                     currentMatrix,
-                    camMatrix
+                    calcMatrix
                 );
                 break;
+            }
 
             case Commands.STROKE_TRIANGLE:
-                // pipeline.setTexture2D(currentTexture, src);
+            {
                 pipeline.batchStrokeTriangle(
                     commands[++cmdIndex],
                     commands[++cmdIndex],
@@ -293,11 +277,13 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
                     commands[++cmdIndex],
                     lineWidth,
                     currentMatrix,
-                    camMatrix
+                    calcMatrix
                 );
                 break;
+            }
 
             case Commands.LINE_TO:
+            {
                 if (lastPath !== null)
                 {
                     lastPath.points.push(new Point(commands[++cmdIndex], commands[++cmdIndex], lineWidth));
@@ -308,55 +294,48 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
                     path.push(lastPath);
                 }
                 break;
+            }
 
             case Commands.MOVE_TO:
+            {
                 lastPath = new Path(commands[++cmdIndex], commands[++cmdIndex], lineWidth);
                 path.push(lastPath);
                 break;
+            }
 
             case Commands.SAVE:
+            {
                 matrixStack.push(currentMatrix.copyToArray());
                 break;
+            }
 
             case Commands.RESTORE:
+            {
                 currentMatrix.copyFromArray(matrixStack.pop());
                 break;
+            }
 
             case Commands.TRANSLATE:
+            {
                 x = commands[++cmdIndex];
                 y = commands[++cmdIndex];
                 currentMatrix.translate(x, y);
                 break;
+            }
 
             case Commands.SCALE:
+            {
                 x = commands[++cmdIndex];
                 y = commands[++cmdIndex];
                 currentMatrix.scale(x, y);
                 break;
+            }
 
             case Commands.ROTATE:
+            {
                 currentMatrix.rotate(commands[++cmdIndex]);
                 break;
-
-            /*
-            case Commands.SET_TEXTURE:
-                var frame = commands[++cmdIndex];
-                var mode = commands[++cmdIndex];
-
-                pipeline.currentFrame = frame;
-                pipeline.setTexture2D(frame.glTexture, src);
-                pipeline.tintEffect = mode;
-
-                currentTexture = frame.glTexture;
-
-                break;
-
-            case Commands.CLEAR_TEXTURE:
-                pipeline.currentFrame = renderer.blankTexture;
-                pipeline.tintEffect = 2;
-                currentTexture = renderer.tempTextures[0];
-                break;
-            */
+            }
         }
     }
 };
