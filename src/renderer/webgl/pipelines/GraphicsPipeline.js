@@ -238,29 +238,6 @@ var GraphicsPipeline = new Class({
     },
 
     /**
-     * Called every time the pipeline is bound by the renderer.
-     * Sets the shader program, vertex buffer and other resources.
-     * Should only be called when changing pipeline.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.GraphicsPipeline#bind
-     * @since 3.50.0
-     *
-     * @param {boolean} [reset=false] - Should the pipeline be fully re-bound after a renderer pipeline clear?
-     *
-     * @return {this} This WebGLPipeline instance.
-    bind: function (reset)
-    {
-        if (reset === undefined) { reset = false; }
-
-        WebGLPipeline.prototype.bind.call(this, reset);
-
-        this.currentShader.set1iv('uMainSampler', this.renderer.textureIndexes);
-
-        return this;
-    },
-     */
-
-    /**
      * Assigns a texture to the current batch. If a different texture is already set it creates a new batch object.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.GraphicsPipeline#setTexture2D
