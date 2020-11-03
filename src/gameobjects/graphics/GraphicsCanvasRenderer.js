@@ -229,10 +229,6 @@ var GraphicsCanvasRenderer = function (renderer, src, camera, parentMatrix, rend
             case Commands.GRADIENT_LINE_STYLE:
                 index += 6;
                 break;
-
-            case Commands.SET_TEXTURE:
-                index += 2;
-                break;
         }
     }
 
