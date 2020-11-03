@@ -437,6 +437,11 @@ var PipelineManager = new Class({
         {
             this.flush();
 
+            if (this.current)
+            {
+                this.current.unbind();
+            }
+
             this.current = pipeline;
 
             pipeline.bind();
