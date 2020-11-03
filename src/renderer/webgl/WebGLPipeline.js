@@ -870,7 +870,7 @@ var WebGLPipeline = new Class({
      * It does not perform any batch limit checking itself, so if you need to call
      * this method directly, do so in the same way that `batchQuad` does, for example.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#batchVert
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#batchVert
      * @since 3.50.0
      *
      * @param {number} x - The vertex x position.
@@ -916,8 +916,8 @@ var WebGLPipeline = new Class({
      *
      * Where tx0/ty0 = 0, tx1/ty1 = 1, tx2/ty2 = 2 and tx3/ty3 = 3
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#batchQuad
-     * @since 3.12.0
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#batchQuad
+     * @since 3.50.0
      *
      * @param {number} x0 - The top-left x position.
      * @param {number} y0 - The top-left y position.
@@ -981,8 +981,8 @@ var WebGLPipeline = new Class({
      * 1-----2
      * ```
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#batchTri
-     * @since 3.12.0
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#batchTri
+     * @since 3.50.0
      *
      * @param {number} x1 - The bottom-left x position.
      * @param {number} y1 - The bottom-left y position.
@@ -1034,7 +1034,7 @@ var WebGLPipeline = new Class({
      * directly, use the `WebGLShader` method equivalent instead, to avoid the program
      * being set.
      *
-     * @method Phaser.Renderer.WebGL.WebGLShader#set1f
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#set1f
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
@@ -1061,7 +1061,7 @@ var WebGLPipeline = new Class({
      * directly, use the `WebGLShader` method equivalent instead, to avoid the program
      * being set.
      *
-     * @method Phaser.Renderer.WebGL.WebGLShader#set2f
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#set2f
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
@@ -1089,7 +1089,7 @@ var WebGLPipeline = new Class({
      * directly, use the `WebGLShader` method equivalent instead, to avoid the program
      * being set.
      *
-     * @method Phaser.Renderer.WebGL.WebGLShader#set3f
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#set3f
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
@@ -1118,7 +1118,7 @@ var WebGLPipeline = new Class({
      * directly, use the `WebGLShader` method equivalent instead, to avoid the program
      * being set.
      *
-     * @method Phaser.Renderer.WebGL.WebGLShader#set4f
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#set4f
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
@@ -1148,7 +1148,7 @@ var WebGLPipeline = new Class({
      * directly, use the `WebGLShader` method equivalent instead, to avoid the program
      * being set.
      *
-     * @method Phaser.Renderer.WebGL.WebGLShader#set1fv
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#set1fv
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
@@ -1175,7 +1175,7 @@ var WebGLPipeline = new Class({
      * directly, use the `WebGLShader` method equivalent instead, to avoid the program
      * being set.
      *
-     * @method Phaser.Renderer.WebGL.WebGLShader#set2fv
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#set2fv
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
@@ -1202,7 +1202,7 @@ var WebGLPipeline = new Class({
      * directly, use the `WebGLShader` method equivalent instead, to avoid the program
      * being set.
      *
-     * @method Phaser.Renderer.WebGL.WebGLShader#set3fv
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#set3fv
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
@@ -1229,7 +1229,7 @@ var WebGLPipeline = new Class({
      * directly, use the `WebGLShader` method equivalent instead, to avoid the program
      * being set.
      *
-     * @method Phaser.Renderer.WebGL.WebGLShader#set4fv
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#set4fv
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
@@ -1256,7 +1256,7 @@ var WebGLPipeline = new Class({
      * directly, use the `WebGLShader` method equivalent instead, to avoid the program
      * being set.
      *
-     * @method Phaser.Renderer.WebGL.WebGLShader#set1iv
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#set1iv
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
@@ -1283,7 +1283,7 @@ var WebGLPipeline = new Class({
      * directly, use the `WebGLShader` method equivalent instead, to avoid the program
      * being set.
      *
-     * @method Phaser.Renderer.WebGL.WebGLShader#set2iv
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#set2iv
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
@@ -1310,7 +1310,7 @@ var WebGLPipeline = new Class({
      * directly, use the `WebGLShader` method equivalent instead, to avoid the program
      * being set.
      *
-     * @method Phaser.Renderer.WebGL.WebGLShader#set3iv
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#set3iv
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
@@ -1337,7 +1337,7 @@ var WebGLPipeline = new Class({
      * directly, use the `WebGLShader` method equivalent instead, to avoid the program
      * being set.
      *
-     * @method Phaser.Renderer.WebGL.WebGLShader#set4iv
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#set4iv
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
@@ -1364,7 +1364,7 @@ var WebGLPipeline = new Class({
      * directly, use the `WebGLShader` method equivalent instead, to avoid the program
      * being set.
      *
-     * @method Phaser.Renderer.WebGL.WebGLShader#set1i
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#set1i
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
@@ -1391,7 +1391,7 @@ var WebGLPipeline = new Class({
      * directly, use the `WebGLShader` method equivalent instead, to avoid the program
      * being set.
      *
-     * @method Phaser.Renderer.WebGL.WebGLShader#set2i
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#set2i
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
@@ -1419,7 +1419,7 @@ var WebGLPipeline = new Class({
      * directly, use the `WebGLShader` method equivalent instead, to avoid the program
      * being set.
      *
-     * @method Phaser.Renderer.WebGL.WebGLShader#set3i
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#set3i
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
@@ -1448,7 +1448,7 @@ var WebGLPipeline = new Class({
      * directly, use the `WebGLShader` method equivalent instead, to avoid the program
      * being set.
      *
-     * @method Phaser.Renderer.WebGL.WebGLShader#set4i
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#set4i
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
@@ -1478,7 +1478,7 @@ var WebGLPipeline = new Class({
      * directly, use the `WebGLShader` method equivalent instead, to avoid the program
      * being set.
      *
-     * @method Phaser.Renderer.WebGL.WebGLShader#setMatrix2fv
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setMatrix2fv
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
@@ -1506,7 +1506,7 @@ var WebGLPipeline = new Class({
      * directly, use the `WebGLShader` method equivalent instead, to avoid the program
      * being set.
      *
-     * @method Phaser.Renderer.WebGL.WebGLShader#setMatrix3fv
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setMatrix3fv
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
@@ -1534,7 +1534,7 @@ var WebGLPipeline = new Class({
      * directly, use the `WebGLShader` method equivalent instead, to avoid the program
      * being set.
      *
-     * @method Phaser.Renderer.WebGL.WebGLShader#setMatrix4fv
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setMatrix4fv
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
