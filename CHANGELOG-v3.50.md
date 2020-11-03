@@ -212,6 +212,7 @@ The Graphics Pipeline is a new pipeline added in 3.50 that is responsible for re
 * The private `_tempMatrix1`, 2, 3 and 4 properties have all been removed from the pipeline.
 * A new public `calcMatrix` property has been added, which Shape Game Objects use to maintain transform state during rendering.
 * The Graphics Pipeline no longer makes use of `tintEffect` or any textures.
+* Because Graphics and Shapes now render with their own pipeline, you are able to exclude the pipeline and those Game Objects entirely from custom builds, further reducing the final bundle size.
 
 As a result of these changes the follow features are no longer available:
 
