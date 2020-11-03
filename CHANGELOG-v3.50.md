@@ -10,7 +10,7 @@ Due to the huge amount of work that has taken place in this area, all of the pip
 * `TextureTintStripPipeline` is now called the `RopePipeline`.
 * `ForwardDiffuseLightPipeline` is now called the `LightPipeline`.
 
-There is also the new `GraphicsPipeline`. Previously, the `TextureTintPipeline` was responsible for rendering all Sprites, Graphics and Shape objects. Now, it only renders Sprites. All Graphics and Shapes are handled by the new `GraphicsPipeline` which uses its own shaders.
+There is also the new `GraphicsPipeline`. Previously, the `TextureTintPipeline` was responsible for rendering all Sprites, Graphics and Shape objects. Now, it only renders Sprites. All Graphics and Shapes are handled by the new `GraphicsPipeline` which uses its own shaders. See further below for details about this change.
 
 To match the new pipeline names, the shader source code has also been renamed.
 
@@ -203,6 +203,21 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `WebGLRenderer.setMatrix2` has been removed. Use `WebGLPipeline.setMatrix2fv` or `WebGLShader.setMatrix2fv` instead.
 * `WebGLRenderer.setMatrix3` has been removed. Use `WebGLPipeline.setMatrix3fv` or `WebGLShader.setMatrix3fv` instead.
 * `WebGLRenderer.setMatrix4` has been removed. Use `WebGLPipeline.setMatrix4fv` or `WebGLShader.setMatrix4fv` instead.
+
+### Graphics Pipeline and Graphics Game Object Changes
+
+The Graphics Pipeline is a new pipeline added in 3.50 that is responsible for rendering Graphics Game Objects and all of the Shape Game Objects, such as Arc, Rectangle, Star, etc. Due to the new pipeline some changes have been made:
+
+* The Graphics Pipeline now uses much simpler vertex and fragment shaders, with just two attributes (`inPosition` and `inColor`), making the vertex size and memory-use 57% smaller.
+* The private `_tempMatrix1`, 2, 3 and 4 properties have all been removed from the pipeline.
+* A new public `calcMatrix` property has been added, which Shape Game Objects use to maintain transform state during rendering.
+* The Graphics Pipeline no longer makes use of `tintEffect` or any textures.
+
+As a result of these changes the follow features are no longer available:
+
+* `Graphics.setTexture` has been removed. You can no longer use a texture as a 'fill' for a Graphic. It never worked with any shape other than a Rectangle, anyway, due to UV mapping issues, so is much better handled via the new Mesh Game Object.
+* `Graphics._tempMatrix1`, 2 and 3 have been removed. They're not required internally any longer.
+* `Graphics.renderWebGL` now uses the standard `GetCalcMatrix` function, cutting down on duplicate code significantly.
 
 ### Light Pipeline Changes
 
