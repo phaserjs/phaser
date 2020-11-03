@@ -27,7 +27,7 @@ var GridWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var result = GetCalcMatrix(src, camera, parentMatrix);
 
-    var calcMatrix = renderer._tempMatrix3.copyFrom(result.calc);
+    var calcMatrix = pipeline.calcMatrix.copyFrom(result.calc);
 
     calcMatrix.translate(-src._displayOriginX, -src._displayOriginY);
 
@@ -62,8 +62,6 @@ var GridWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var r = 0;
     var cw = 0;
     var ch = 0;
-
-    pipeline.setTexture2D();
 
     if (showOutline)
     {

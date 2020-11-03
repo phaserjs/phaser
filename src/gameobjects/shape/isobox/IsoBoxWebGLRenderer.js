@@ -27,7 +27,7 @@ var IsoBoxWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var result = GetCalcMatrix(src, camera, parentMatrix);
 
-    var calcMatrix = renderer._tempMatrix3.copyFrom(result.calc);
+    var calcMatrix = pipeline.calcMatrix.copyFrom(result.calc);
 
     var size = src.width;
     var height = src.height;
@@ -56,8 +56,6 @@ var IsoBoxWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var x3;
     var y3;
 
-    pipeline.setTexture2D();
-
     //  Top Face
 
     if (src.showTop)
@@ -76,7 +74,7 @@ var IsoBoxWebGLRenderer = function (renderer, src, camera, parentMatrix)
         x3 = calcMatrix.getX(0, sizeB - height);
         y3 = calcMatrix.getY(0, sizeB - height);
 
-        pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 1);
+        pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, tint, tint, tint, tint);
     }
 
     //  Left Face
@@ -97,7 +95,7 @@ var IsoBoxWebGLRenderer = function (renderer, src, camera, parentMatrix)
         x3 = calcMatrix.getX(-sizeA, -height);
         y3 = calcMatrix.getY(-sizeA, -height);
 
-        pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 1);
+        pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, tint, tint, tint, tint);
     }
 
     //  Right Face
@@ -118,7 +116,7 @@ var IsoBoxWebGLRenderer = function (renderer, src, camera, parentMatrix)
         x3 = calcMatrix.getX(sizeA, -height);
         y3 = calcMatrix.getY(sizeA, -height);
 
-        pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 1);
+        pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, tint, tint, tint, tint);
     }
 };
 

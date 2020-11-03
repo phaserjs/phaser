@@ -28,7 +28,7 @@ var RectangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var result = GetCalcMatrix(src, camera, parentMatrix);
 
-    renderer._tempMatrix3.copyFrom(result.calc);
+    pipeline.calcMatrix.copyFrom(result.calc);
 
     var dx = src._displayOriginX;
     var dy = src._displayOriginY;
@@ -43,8 +43,6 @@ var RectangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
         fillTint.TR = fillTintColor;
         fillTint.BL = fillTintColor;
         fillTint.BR = fillTintColor;
-
-        pipeline.setTexture2D();
 
         pipeline.batchFillRect(
             -dx,

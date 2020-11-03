@@ -28,7 +28,7 @@ var TriangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var result = GetCalcMatrix(src, camera, parentMatrix);
 
-    renderer._tempMatrix3.copyFrom(result.calc);
+    pipeline.calcMatrix.copyFrom(result.calc);
 
     var dx = src._displayOriginX;
     var dy = src._displayOriginY;
@@ -50,8 +50,6 @@ var TriangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
         var y2 = src.geom.y2 - dy;
         var x3 = src.geom.x3 - dx;
         var y3 = src.geom.y3 - dy;
-
-        pipeline.setTexture2D();
 
         pipeline.batchFillTriangle(
             x1,

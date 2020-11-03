@@ -27,7 +27,7 @@ var LineWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var result = GetCalcMatrix(src, camera, parentMatrix);
 
-    renderer._tempMatrix3.copyFrom(result.calc);
+    pipeline.calcMatrix.copyFrom(result.calc);
 
     var dx = src._displayOriginX;
     var dy = src._displayOriginY;
@@ -45,8 +45,6 @@ var LineWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
         var startWidth = src._startWidth;
         var endWidth = src._endWidth;
-
-        pipeline.setTexture2D();
 
         pipeline.batchLine(
             src.geom.x1 - dx,
