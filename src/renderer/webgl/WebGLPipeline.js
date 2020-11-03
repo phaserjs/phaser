@@ -698,11 +698,31 @@ var WebGLPipeline = new Class({
      */
     bind: function ()
     {
+        if (this.targetTexture)
+        {
+            this.renderer.setFramebuffer(this.targetFramebuffer);
+        }
+
         var wasBound = this.renderer.setVertexBuffer(this.vertexBuffer);
 
         this.currentShader.bind(wasBound);
 
         return this;
+    },
+
+    /**
+     * This method is called every time the Pipeline Manager deactivates this pipeline, swapping from
+     * it to another one. This happens after a call to `flush` and before the new pipeline is bound.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#unbind
+     * @since 3.50.0
+     */
+    unbind: function ()
+    {
+        if (this.targetTexture)
+        {
+            this.renderer.setFramebuffer(null);
+        }
     },
 
     /**
@@ -721,11 +741,6 @@ var WebGLPipeline = new Class({
      */
     onBind: function ()
     {
-        if (this.targetTexture)
-        {
-            this.renderer.setFramebuffer(this.targetFramebuffer);
-        }
-
         return this;
     },
 
@@ -809,9 +824,9 @@ var WebGLPipeline = new Class({
      * It is called after the `gl.drawArray` call.
      *
      * You can perform additional post-render effects, but be careful not to call `flush`
-     * from within this method, or you'll cause an infinite loop.
+     * on this pipeline from within this method, or you'll cause an infinite loop.
      *
-     * To apply changes post-render, see `onFlush`.
+     * To apply changes pre-render, see `onFlush`.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onPostFlush
      * @since 3.0.0
@@ -1023,6 +1038,43 @@ var WebGLPipeline = new Class({
         this.batchVert(x2, y2, u1, v1, unit, tintEffect, tintBL);
 
         return hasFlushed;
+    },
+
+    /**
+     * Pushes a filled rectangle into the vertex batch.
+     *
+     * The dimensions are run through `Math.floor` before the quad is generated.
+     *
+     * Rectangle has no transform values and isn't transformed into the local space.
+     *
+     * Used for directly batching untransformed rectangles, such as Camera background colors.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#drawFillRect
+     * @since 3.50.0
+     *
+     * @param {number} x - Horizontal top left coordinate of the rectangle.
+     * @param {number} y - Vertical top left coordinate of the rectangle.
+     * @param {number} width - Width of the rectangle.
+     * @param {number} height - Height of the rectangle.
+     * @param {number} color - Color of the rectangle to draw.
+     * @param {number} alpha - Alpha value of the rectangle to draw.
+     * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch if a flush occurs.
+     */
+    drawFillRect: function (x, y, width, height, color, alpha, texture)
+    {
+        if (texture === undefined) { texture = this.renderer.whiteTexture.glTexture; }
+
+        x = Math.floor(x);
+        y = Math.floor(y);
+
+        var xw = Math.floor(x + width);
+        var yh = Math.floor(y + height);
+
+        var unit = this.renderer.setTexture2D(texture);
+
+        var tint = Utils.getTintAppendFloatAlphaAndSwap(color, alpha);
+
+        this.batchQuad(x, y, x, yh, xw, yh, xw, y, 0, 0, 1, 1, tint, tint, tint, tint, 0, texture, unit);
     },
 
     /**
