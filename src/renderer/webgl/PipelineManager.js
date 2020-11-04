@@ -101,6 +101,26 @@ var PipelineManager = new Class({
         this.previous = null;
 
         /**
+         * Current post pipeline in use by the WebGLRenderer.
+         *
+         * @name Phaser.Renderer.WebGL.PipelineManager#currentPost
+         * @type {Phaser.Renderer.WebGL.WebGLPipeline}
+         * @default null
+         * @since 3.50.0
+         */
+        this.currentPost = null;
+
+        /**
+         * The previous post pipeline that was in use.
+         *
+         * @name Phaser.Renderer.WebGL.PipelineManager#previousPost
+         * @type {Phaser.Renderer.WebGL.WebGLPipeline}
+         * @default null
+         * @since 3.50.0
+         */
+        this.previousPost = null;
+
+        /**
          * A constant-style reference to the Multi Pipeline Instance.
          *
          * This is the default Phaser 3 pipeline and is used by the WebGL Renderer to manage
@@ -138,29 +158,6 @@ var PipelineManager = new Class({
          * @since 3.50.0
          */
         this.CAMERA_PIPELINE = null;
-
-        /**
-         * A stack of pipeline instances that is used to manage when the pipelines
-         * are locked and unlocked.
-         *
-         * Treat this array as read-only.
-         *
-         * @name Phaser.Renderer.WebGL.PipelineManager#stack
-         * @type {array}
-         * @since 3.50.0
-         */
-        this.stack = [];
-
-        /**
-         * Is the Pipeline Manager currently locked from setting a new pipeline?
-         *
-         * Treat this property as read-only.
-         *
-         * @name Phaser.Renderer.WebGL.PipelineManager#locked
-         * @type {boolean}
-         * @since 3.50.0
-         */
-        this.locked = false;
     },
 
     /**
@@ -223,6 +220,7 @@ var PipelineManager = new Class({
         if (!pipelines.has(name))
         {
             pipeline.name = name;
+            pipeline.manager = this;
 
             pipelines.set(name, pipeline);
         }
@@ -231,14 +229,14 @@ var PipelineManager = new Class({
             console.warn('Pipeline exists: ' + name);
         }
 
-        if (renderer.width !== 0 && renderer.height !== 0)
-        {
-            pipeline.resize(renderer.width, renderer.height);
-        }
-
         if (!pipeline.hasBooted)
         {
             pipeline.boot();
+        }
+
+        if (renderer.width !== 0 && renderer.height !== 0)
+        {
+            pipeline.resize(renderer.width, renderer.height);
         }
 
         return pipeline;
@@ -425,15 +423,7 @@ var PipelineManager = new Class({
      */
     set: function (pipeline, gameObject)
     {
-        var renderer = this.renderer;
-        var current = this.current;
-
-        if (
-            !this.locked &&
-            (current !== pipeline ||
-            current.vertexBuffer !== renderer.currentVertexBuffer ||
-            current.currentShader.program !== renderer.currentProgram)
-        )
+        if (!this.isCurrent(pipeline))
         {
             this.flush();
 
@@ -447,83 +437,56 @@ var PipelineManager = new Class({
             pipeline.bind();
         }
 
-        if (!this.locked)
-        {
-            pipeline.onBind(gameObject);
-        }
+        pipeline.onBind(gameObject);
 
         return pipeline;
     },
 
-    /**
-     * Sets the current pipeline to be used by the `WebGLRenderer` and then locks it.
-     *
-     * Once a pipeline is locked, further calls to `PipelineManager.set` are ignored.
-     *
-     * However, another pipeline may also be locked. If this happens, the previous pipeline
-     * is flushed and the new one is locked in place.
-     *
-     * Make sure to call `PipelineManager.unlock` when you're done.
-     *
-     * This method accepts a pipeline instance as its parameter, not the name.
-     *
-     * If the pipeline isn't already the current one it will call `WebGLPipeline.bind` and then `onBind`.
-     *
-     * @method Phaser.Renderer.WebGL.PipelineManager#lock
-     * @since 3.50.0
-     *
-     * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipeline - The pipeline instance to be set as current.
-     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
-     *
-     * @return {this} This Pipeline Manager.
-     */
-    lock: function (pipeline, gameObject)
+    preBatch: function (gameObject)
     {
+        if (!gameObject || !gameObject.postPipeline)
+        {
+            return;
+        }
+
         this.flush();
 
-        this.stack.push({ pipeline: pipeline, gameObject: gameObject });
+        gameObject.postPipeline.postBind(gameObject);
+    },
 
-        this.locked = false;
+    postBatch: function (gameObject)
+    {
+        if (!gameObject || !gameObject.postPipeline)
+        {
+            return;
+        }
 
-        this.set(pipeline, gameObject);
+        this.flush();
 
-        this.locked = true;
-
-        return this;
+        gameObject.postPipeline.postFlush(gameObject);
     },
 
     /**
-     * Flushes the current pipeline, pops the previous one from the locked stack (if any)
-     * and then sets that, locking it in turn. If there aren't any other pipelines on
-     * the stack, the Pipeline Manager is fully unlocked.
+     * Checks to see if the given pipeline is already the active pipeline, both within this
+     * Pipeline Manager, and also has the same vertex buffer and shader set within the Renderer.
      *
-     * @method Phaser.Renderer.WebGL.PipelineManager#unlock
+     * @method Phaser.Renderer.WebGL.PipelineManager#isCurrent
      * @since 3.50.0
      *
-     * @return {this} This Pipeline Manager.
+     * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipeline - The pipeline instance to be checked.
+     *
+     * @return {boolean} `true` if the given pipeline is already the current pipeline, otherwise `false`.
      */
-    unlock: function ()
+    isCurrent: function (pipeline)
     {
-        this.flush();
+        var renderer = this.renderer;
+        var current = this.current;
 
-        this.stack.pop();
-
-        if (this.stack.length > 0)
-        {
-            var previous = this.stack[this.stack.length - 1];
-
-            this.locked = false;
-
-            this.set(previous.pipeline, previous.gameObject);
-
-            this.locked = true;
-        }
-        else
-        {
-            this.locked = false;
-        }
-
-        return this;
+        return !(
+            current !== pipeline ||
+            current.vertexBuffer !== renderer.currentVertexBuffer ||
+            current.currentShader.program !== renderer.currentProgram
+        );
     },
 
     /**
@@ -664,7 +627,6 @@ var PipelineManager = new Class({
         this.renderer = null;
         this.game = null;
         this.pipelines = null;
-        this.stack = null;
         this.current = null;
         this.previous = null;
     }
