@@ -192,8 +192,7 @@ var MultiPipeline = new Class({
      */
     batchSprite: function (sprite, camera, parentTransformMatrix)
     {
-        //  Will cause a flush if this isn't the current pipeline, vertexbuffer or program
-        this.renderer.pipelines.set(this, sprite);
+        this.manager.set(this, sprite);
 
         var camMatrix = this._tempMatrix1;
         var spriteMatrix = this._tempMatrix2;
@@ -303,10 +302,13 @@ var MultiPipeline = new Class({
         var tx3 = calcMatrix.getX(xw, y);
         var ty3 = calcMatrix.getY(xw, y);
 
-        var tintTL = Utils.getTintAppendFloatAlpha(sprite.tintTopLeft, camera.alpha * sprite._alphaTL);
-        var tintTR = Utils.getTintAppendFloatAlpha(sprite.tintTopRight, camera.alpha * sprite._alphaTR);
-        var tintBL = Utils.getTintAppendFloatAlpha(sprite.tintBottomLeft, camera.alpha * sprite._alphaBL);
-        var tintBR = Utils.getTintAppendFloatAlpha(sprite.tintBottomRight, camera.alpha * sprite._alphaBR);
+        var getTint = Utils.getTintAppendFloatAlpha;
+        var cameraAlpha = camera.alpha;
+
+        var tintTL = getTint(sprite.tintTopLeft, cameraAlpha * sprite._alphaTL);
+        var tintTR = getTint(sprite.tintTopRight, cameraAlpha * sprite._alphaTR);
+        var tintBL = getTint(sprite.tintBottomLeft, cameraAlpha * sprite._alphaBL);
+        var tintBR = getTint(sprite.tintBottomRight, cameraAlpha * sprite._alphaBR);
 
         if (camera.roundPixels)
         {
@@ -323,7 +325,6 @@ var MultiPipeline = new Class({
             ty3 = Math.round(ty3);
         }
 
-        //  So batchQuad never assigns a unit to the glTexture, but to the textureSource instead
         if (this.shouldFlush(6))
         {
             this.flush();
@@ -331,9 +332,11 @@ var MultiPipeline = new Class({
 
         var unit = this.setGameObject(sprite, frame);
 
-        var tintEffect = sprite.tintFill;
+        this.manager.preBatch(sprite);
 
-        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, unit);
+        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, sprite.tintEffect, texture, unit);
+
+        this.manager.postBatch(sprite);
     },
 
     /**
@@ -520,7 +523,11 @@ var MultiPipeline = new Class({
             textureUnit = this.renderer.setTexture2D(texture);
         }
 
+        this.manager.preBatch(gameObject);
+
         this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
+
+        this.manager.postBatch(gameObject);
     },
 
     /**
@@ -579,7 +586,7 @@ var MultiPipeline = new Class({
         tint = Utils.getTintAppendFloatAlpha(tint, alpha);
 
         this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, 0, frame.glTexture, unit);
-    },
+    }
 
     /**
      * Pushes a filled rectangle into the vertex batch.
@@ -599,7 +606,6 @@ var MultiPipeline = new Class({
      * @param {number} height - Height of the rectangle.
      * @param {number} color - Color of the rectangle to draw.
      * @param {number} alpha - Alpha value of the rectangle to draw.
-     */
     drawFillRect: function (x, y, width, height, color, alpha)
     {
         x = Math.floor(x);
@@ -616,6 +622,7 @@ var MultiPipeline = new Class({
 
         this.batchQuad(x, y, x, yh, xw, yh, xw, y, 0, 0, 1, 1, tint, tint, tint, tint, 2, white, unit);
     }
+     */
 
 });
 
