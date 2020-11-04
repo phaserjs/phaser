@@ -340,6 +340,16 @@ var WebGLShader = new Class({
         return this;
     },
 
+    /**
+     * Checks to see if the given uniform name exists and is active in this shader.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#hasUniform
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the uniform to check for.
+     *
+     * @return {boolean} `true` if the uniform exists, otherwise `false`.
+     */
     hasUniform: function (name)
     {
         return this.uniforms.hasOwnProperty(name);
