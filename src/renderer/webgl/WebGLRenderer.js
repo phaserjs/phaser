@@ -868,8 +868,19 @@ var WebGLRenderer = new Class({
         var game = this.game;
         var pipelineManager = this.pipelines;
 
+        var baseSize = game.scale.baseSize;
+
+        this.width = baseSize.width;
+        this.height = baseSize.height;
+
+        //  Set-up pipelines
+
+        //  First, default ones
+        pipelineManager.boot();
+
         var pipelines = game.config.pipeline;
 
+        //  Then, custom ones
         if (pipelines)
         {
             for (var pipelineName in pipelines)
@@ -880,14 +891,10 @@ var WebGLRenderer = new Class({
             }
         }
 
-        pipelineManager.boot();
-
-        var multi = pipelineManager.get(PIPELINE_CONST.MULTI_PIPELINE);
+        //  Set-up default textures, fbo and scissor
 
         this.blankTexture = game.textures.getFrame('__DEFAULT');
         this.whiteTexture = game.textures.getFrame('__WHITE');
-
-        multi.currentFrame = this.whiteTexture;
 
         var gl = this.gl;
 
@@ -897,11 +904,7 @@ var WebGLRenderer = new Class({
 
         game.scale.on(ScaleEvents.RESIZE, this.onResize, this);
 
-        var baseSize = game.scale.baseSize;
-
         this.resize(baseSize.width, baseSize.height);
-
-        // pipelineManager.setMulti();
     },
 
     /**
@@ -1997,7 +2000,10 @@ var WebGLRenderer = new Class({
      */
     deleteTexture: function (texture, reset)
     {
-        this.gl.deleteTexture(texture);
+        if (texture)
+        {
+            this.gl.deleteTexture(texture);
+        }
 
         if (reset)
         {
@@ -2019,7 +2025,10 @@ var WebGLRenderer = new Class({
      */
     deleteFramebuffer: function (framebuffer)
     {
-        this.gl.deleteFramebuffer(framebuffer);
+        if (framebuffer)
+        {
+            this.gl.deleteFramebuffer(framebuffer);
+        }
 
         return this;
     },
@@ -2036,7 +2045,10 @@ var WebGLRenderer = new Class({
      */
     deleteProgram: function (program)
     {
-        this.gl.deleteProgram(program);
+        if (program)
+        {
+            this.gl.deleteProgram(program);
+        }
 
         return this;
     },
