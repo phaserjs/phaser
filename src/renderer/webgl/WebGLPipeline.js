@@ -82,6 +82,18 @@ var WebGLPipeline = new Class({
         this.renderer = renderer;
 
         /**
+         * A reference to the WebGL Pipeline Manager.
+         *
+         * This is initially undefined and only set when this pipeline is added
+         * to the manager.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#manager
+         * @type {?Phaser.Renderer.WebGL.PipelineManager}
+         * @since 3.50.0
+         */
+        this.manager;
+
+        /**
          * The WebGL context this WebGL Pipeline uses.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#gl
@@ -276,6 +288,19 @@ var WebGLPipeline = new Class({
         this.targetScale = GetFastValue(config, 'targetScale', 1);
 
         /**
+         * When using a targetTexture this controls if the target is
+         * automatically cleared (via `gl.COLOR_BUFFER_BIT`) during the `postBind` method.
+         *
+         * If you need more control how, or if, the target is cleared, you can disable
+         * this via the config, or even directly at runtime.
+         *
+         * @name Phaser.GameObjects.Shader#targetAutoClear
+         * @type {boolean}
+         * @since 3.50.0
+         */
+        this.targetAutoClear = GetFastValue(config, 'targetAutoClear', true);
+
+        /**
          * An array of all the WebGLShader instances that belong to this pipeline.
          *
          * All shaders must use the same attributes, as set by this pipeline, but can manage their own
@@ -350,8 +375,6 @@ var WebGLPipeline = new Class({
         {
             this.targetTexture = renderer.createTextureFromSource(null, width, height, 0);
             this.targetFramebuffer = renderer.createFramebuffer(width, height, this.targetTexture, false);
-
-            // this.targetTexture.flipY = flipY;
         }
 
         this.setShadersFromConfig(config);
@@ -410,6 +433,24 @@ var WebGLPipeline = new Class({
         this.hasBooted = true;
 
         this.onBoot();
+    },
+
+    clearTarget: function ()
+    {
+        var gl = this.gl;
+        var renderer = this.renderer;
+        var target = this.targetTexture;
+
+        if (target)
+        {
+            renderer.setFramebuffer(this.targetFramebuffer);
+
+            gl.clearColor(0, 0, 0, 0);
+
+            gl.clear(gl.COLOR_BUFFER_BIT);
+
+            renderer.setFramebuffer(null, false);
+        }
     },
 
     /**
@@ -664,8 +705,6 @@ var WebGLPipeline = new Class({
 
             this.targetTexture = renderer.createTextureFromSource(null, width, height, 0);
             this.targetFramebuffer = renderer.createFramebuffer(width, height, this.targetTexture, false);
-
-            // this.targetTexture.flipY = flipY;
         }
 
         var shaders = this.shaders;
@@ -698,14 +737,43 @@ var WebGLPipeline = new Class({
      */
     bind: function ()
     {
-        if (this.targetTexture)
-        {
-            this.renderer.setFramebuffer(this.targetFramebuffer);
-        }
-
         var wasBound = this.renderer.setVertexBuffer(this.vertexBuffer);
 
         this.currentShader.bind(wasBound);
+
+        return this;
+    },
+
+    /**
+     * TODO
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#postBind
+     * @since 3.50.0
+     *
+     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    postBind: function (gameObject)
+    {
+        var renderer = this.renderer;
+        var target = this.targetTexture;
+
+        if (target)
+        {
+            renderer.setFramebuffer(this.targetFramebuffer);
+
+            if (this.targetAutoClear)
+            {
+                var gl = this.gl;
+
+                gl.clearColor(0, 0, 0, 0);
+
+                gl.clear(gl.COLOR_BUFFER_BIT);
+            }
+        }
+
+        this.onPostBind(gameObject);
 
         return this;
     },
@@ -726,133 +794,24 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * This method is called every time a **Game Object** asks the Pipeline Manager to use this pipeline.
-     *
-     * Unlike the `bind` method, which is only called once per frame, this is called for every object
-     * that requests use of this pipeline, allowing you to perform per-object set-up, such as loading
-     * shader uniform data.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#onBind
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    onBind: function ()
-    {
-        return this;
-    },
-
-    /**
-     * This method is called once per frame, right before anything has been rendered, but after the canvas
-     * has been cleared. If this pipeline has a targetTexture, it will be cleared.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#onPreRender
-     * @since 3.0.0
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    onPreRender: function ()
-    {
-        var gl = this.gl;
-        var renderer = this.renderer;
-        var target = this.targetTexture;
-
-        if (target)
-        {
-            renderer.setFramebuffer(this.targetFramebuffer);
-
-            gl.clearColor(0, 0, 0, 0);
-
-            gl.clear(gl.COLOR_BUFFER_BIT);
-
-            renderer.setFramebuffer(null, false);
-        }
-
-        return this;
-    },
-
-    /**
-     * This method is called once per frame, for every Camera in a Scene that wants to render.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#onRender
-     * @since 3.0.0
-     *
-     * @param {Phaser.Scene} scene - The Scene being rendered.
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Scene Camera being rendered with.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    onRender: function ()
-    {
-        return this;
-    },
-
-    /**
-     * This method is called once per frame, after all rendering has happened and snapshots have been taken.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#onPostRender
-     * @since 3.0.0
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    onPostRender: function ()
-    {
-        return this;
-    },
-
-    /**
-     * This method is called every time this pipeline is asked to flush its batch.
-     *
-     * It is called immediately before the gl.bufferData and gl.drawArray calls are made, so you can
-     * perform any final pre-render modifications. To apply changes post-render, see `onPostFlush`.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#onFlush
-     * @since 3.0.0
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    onFlush: function ()
-    {
-        return this;
-    },
-
-    /**
-     * This method is called immediately after this pipeline has finished flushing its batch.
-     *
-     * It is called after the `gl.drawArray` call.
-     *
-     * You can perform additional post-render effects, but be careful not to call `flush`
-     * on this pipeline from within this method, or you'll cause an infinite loop.
-     *
-     * To apply changes pre-render, see `onFlush`.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#onPostFlush
-     * @since 3.0.0
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    onPostFlush: function ()
-    {
-        return this;
-    },
-
-    /**
      * Uploads the vertex data and emits a draw call for the current batch of vertices.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#flush
      * @since 3.0.0
      *
+     * @param {boolean} [isPostFlush=false] - Was this flush invoked as part of a post-process, or not?
+     *
      * @return {this} This WebGLPipeline instance.
      */
-    flush: function ()
+    flush: function (isPostFlush)
     {
+        if (isPostFlush === undefined) { isPostFlush = false; }
+
         var vertexCount = this.vertexCount;
 
         if (vertexCount > 0)
         {
-            this.onFlush();
+            this.onBeforeFlush(isPostFlush);
 
             var gl = this.gl;
             var vertexSize = this.currentShader.vertexSize;
@@ -870,10 +829,171 @@ var WebGLPipeline = new Class({
 
             this.vertexCount = 0;
 
-            this.onPostFlush();
+            this.onAfterFlush(isPostFlush);
         }
 
         return this;
+    },
+
+    /**
+     * TODO
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#postFlush
+     * @since 3.50.0
+     *
+     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    postFlush: function (gameObject)
+    {
+        this.renderer.setFramebuffer(null);
+        this.renderer.resetTextures();
+
+        var wasBound = this.renderer.setVertexBuffer(this.vertexBuffer);
+
+        this.currentShader.bind(wasBound);
+
+        var texture = this.targetTexture;
+        var width = texture.width;
+        var height = texture.height;
+
+        this.drawFillRect(0, 0, width, height, 0x0, 0.5, texture, true);
+
+        this.flush(true);
+
+        this.onPostFlush(gameObject);
+
+        return this;
+    },
+
+    /**
+     * By default this is an empty method hook that you can override and use in your own custom pipelines.
+     *
+     * This method is called every time a **Game Object** asks the Pipeline Manager to use this pipeline.
+     *
+     * Unlike the `bind` method, which is only called once per frame, this is called for every object
+     * that requests use of this pipeline, allowing you to perform per-object set-up, such as loading
+     * shader uniform data.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#onBind
+     * @since 3.50.0
+     *
+     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
+     */
+    onBind: function ()
+    {
+    },
+
+    /**
+     * By default this is an empty method hook that you can override and use in your own custom pipelines.
+     *
+     * This method is called every time a **Game Object** asks the Pipeline Manager to use this pipeline
+     * as the post-render pipeline.
+     *
+     * Unlike the `bind` method, which is only called once per frame, this is called for every object
+     * that requests use of this pipeline, allowing you to perform per-object set-up, such as loading
+     * shader uniform data.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#onPostBind
+     * @since 3.50.0
+     *
+     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
+     */
+    onPostBind: function ()
+    {
+    },
+
+    /**
+     * By default this is an empty method hook that you can override and use in your own custom pipelines.
+     *
+     * TODO
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#onPostFlush
+     * @since 3.50.0
+     *
+     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
+     */
+    onPostFlush: function ()
+    {
+    },
+
+    /**
+     * By default this is an empty method hook that you can override and use in your own custom pipelines.
+     *
+     * This method is called once per frame, right before anything has been rendered, but after the canvas
+     * has been cleared. If this pipeline has a targetTexture, it will be cleared.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#onPreRender
+     * @since 3.50.0
+     */
+    onPreRender: function ()
+    {
+    },
+
+    /**
+     * By default this is an empty method hook that you can override and use in your own custom pipelines.
+     *
+     * This method is called once per frame, for every Camera in a Scene that wants to render.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#onRender
+     * @since 3.50.0
+     *
+     * @param {Phaser.Scene} scene - The Scene being rendered.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Scene Camera being rendered with.
+     */
+    onRender: function ()
+    {
+    },
+
+    /**
+     * By default this is an empty method hook that you can override and use in your own custom pipelines.
+     *
+     * This method is called once per frame, after all rendering has happened and snapshots have been taken.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#onPostRender
+     * @since 3.50.0
+     */
+    onPostRender: function ()
+    {
+    },
+
+    /**
+     * By default this is an empty method hook that you can override and use in your own custom pipelines.
+     *
+     * This method is called every time this pipeline is asked to flush its batch.
+     *
+     * It is called immediately before the gl.bufferData and gl.drawArray calls are made, so you can
+     * perform any final pre-render modifications. To apply changes post-render, see `onPostFlush`.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#onBeforeFlush
+     * @since 3.50.0
+     *
+     * @param {boolean} [isPostFlush=false] - Was this flush invoked as part of a post-process, or not?
+     */
+    onBeforeFlush: function ()
+    {
+    },
+
+    /**
+     * By default this is an empty method hook that you can override and use in your own custom pipelines.
+     *
+     * This method is called immediately after this pipeline has finished flushing its batch.
+     *
+     * It is called after the `gl.drawArrays` call.
+     *
+     * You can perform additional post-render effects, but be careful not to call `flush`
+     * on this pipeline from within this method, or you'll cause an infinite loop.
+     *
+     * To apply changes pre-render, see `onBeforeFlush`.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#onAfterFlush
+     * @since 3.50.0
+     *
+     * @param {boolean} [isPostFlush=false] - Was this flush invoked as part of a post-process, or not?
+     */
+    onAfterFlush: function ()
+    {
     },
 
     /**
@@ -1059,10 +1179,12 @@ var WebGLPipeline = new Class({
      * @param {number} color - Color of the rectangle to draw.
      * @param {number} alpha - Alpha value of the rectangle to draw.
      * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch if a flush occurs.
+     * @param {boolean} [flipUV=true] - Flip the vertical UV coordinates of the texture before rendering?
      */
-    drawFillRect: function (x, y, width, height, color, alpha, texture)
+    drawFillRect: function (x, y, width, height, color, alpha, texture, flipUV)
     {
         if (texture === undefined) { texture = this.renderer.whiteTexture.glTexture; }
+        if (flipUV === undefined) { flipUV = true; }
 
         x = Math.floor(x);
         y = Math.floor(y);
@@ -1074,7 +1196,18 @@ var WebGLPipeline = new Class({
 
         var tint = Utils.getTintAppendFloatAlphaAndSwap(color, alpha);
 
-        this.batchQuad(x, y, x, yh, xw, yh, xw, y, 0, 0, 1, 1, tint, tint, tint, tint, 0, texture, unit);
+        var u0 = 0;
+        var v0 = 0;
+        var u1 = 1;
+        var v1 = 1;
+
+        if (flipUV)
+        {
+            v0 = 1;
+            v1 = 0;
+        }
+
+        this.batchQuad(x, y, x, yh, xw, yh, xw, y, u0, v0, u1, v1, tint, tint, tint, tint, 0, texture, unit);
     },
 
     /**
