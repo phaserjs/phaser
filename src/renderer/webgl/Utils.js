@@ -189,6 +189,11 @@ module.exports = {
      */
     parseFragmentShaderMaxTextures: function (fragmentShaderSource, maxTextures)
     {
+        if (!fragmentShaderSource)
+        {
+            return '';
+        }
+
         var src = '';
 
         for (var i = 0; i < maxTextures; i++)
