@@ -504,9 +504,9 @@ var Shader = new Class({
         var program = renderer.createProgram(this.shader.vertexSrc, this.shader.fragmentSrc);
 
         //  The default uniforms available within the vertex shader
-        renderer.setMatrix4(program, 'uViewMatrix', false, this.viewMatrix);
-        renderer.setMatrix4(program, 'uProjectionMatrix', false, this.projectionMatrix);
-        renderer.setFloat2(program, 'uResolution', this.width, this.height);
+        gl.uniformMatrix4fv(gl.getUniformLocation(program, 'uViewMatrix'), false, this.viewMatrix);
+        gl.uniformMatrix4fv(gl.getUniformLocation(program, 'uProjectionMatrix'), false, this.projectionMatrix);
+        gl.uniform2f(gl.getUniformLocation(program, 'uResolution'), this.width, this.height);
 
         this.program = program;
 
@@ -602,7 +602,12 @@ var Shader = new Class({
 
         var program = this.program;
 
-        this.renderer.setMatrix4(program, 'uProjectionMatrix', false, this.projectionMatrix);
+        var gl = this.gl;
+        var renderer = this.renderer;
+
+        renderer.setProgram(program);
+
+        gl.uniformMatrix4fv(gl.getUniformLocation(program, 'uProjectionMatrix'), false, this.projectionMatrix);
 
         this._rendererWidth = right;
         this._rendererHeight = bottom;
