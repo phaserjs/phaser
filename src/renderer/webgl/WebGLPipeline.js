@@ -696,6 +696,11 @@ var WebGLPipeline = new Class({
      */
     resize: function (width, height)
     {
+        if (width !== this.width || height !== this.height)
+        {
+            this.flush();
+        }
+
         this.width = width;
         this.height = height;
 
@@ -728,7 +733,7 @@ var WebGLPipeline = new Class({
 
             if (shader.hasUniform('uProjectionMatrix'))
             {
-                this.setMatrix4fv('uProjectionMatrix', false, projectionMatrix.val, shaders[i]);
+                this.setMatrix4fv('uProjectionMatrix', false, projectionMatrix.val, shader);
             }
         }
 
@@ -871,7 +876,7 @@ var WebGLPipeline = new Class({
         var width = texture.width;
         var height = texture.height;
 
-        this.drawFillRect(0, 0, width, height, 0x0, 0.5, texture, true);
+        this.drawFillRect(0, 0, width, height, 0x0, 1, texture, true);
 
         this.flush(true);
 
