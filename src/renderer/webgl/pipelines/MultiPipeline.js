@@ -397,9 +397,7 @@ var MultiPipeline = new Class({
         skipFlip,
         textureUnit)
     {
-        var renderer = this.renderer;
-
-        renderer.pipelines.set(this, gameObject);
+        this.manager.set(this, gameObject);
 
         var camMatrix = this._tempMatrix1;
         var spriteMatrix = this._tempMatrix2;
