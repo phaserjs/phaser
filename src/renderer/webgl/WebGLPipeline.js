@@ -598,7 +598,10 @@ var WebGLPipeline = new Class({
 
         if (len === 0)
         {
-            this.shaders = [ new WebGLShader(this, 'default', defaultVertShader, defaultFragShader, DeepCopy(defaultAttribs), DeepCopy(defaultUniforms)) ];
+            if (defaultVertShader && defaultFragShader)
+            {
+                this.shaders = [ new WebGLShader(this, 'default', defaultVertShader, defaultFragShader, DeepCopy(defaultAttribs), DeepCopy(defaultUniforms)) ];
+            }
         }
         else
         {
@@ -615,13 +618,23 @@ var WebGLPipeline = new Class({
                 var attributes = GetFastValue(shaderEntry, aName, defaultAttribs);
                 var uniforms = GetFastValue(shaderEntry, uName, defaultUniforms);
 
-                newShaders.push(new WebGLShader(this, name, vertShader, fragShader, DeepCopy(attributes), DeepCopy(uniforms)));
+                if (vertShader && fragShader)
+                {
+                    newShaders.push(new WebGLShader(this, name, vertShader, fragShader, DeepCopy(attributes), DeepCopy(uniforms)));
+                }
             }
 
             this.shaders = newShaders;
         }
 
-        this.currentShader = this.shaders[0];
+        if (this.shaders.length === 0)
+        {
+            console.warn('Pipeline: ' + this.name + ' - Invalid shader config');
+        }
+        else
+        {
+            this.currentShader = this.shaders[0];
+        }
 
         return this;
     },
