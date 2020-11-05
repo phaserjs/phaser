@@ -489,6 +489,11 @@ var PipelineManager = new Class({
         );
     },
 
+    forceZero: function ()
+    {
+        return (this.current && this.current.forceZero);
+    },
+
     /**
      * Sets the Multi Pipeline to be the currently bound pipeline.
      *
