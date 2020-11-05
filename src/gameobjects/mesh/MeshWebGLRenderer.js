@@ -39,7 +39,7 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var F32 = pipeline.vertexViewF32;
     var U32 = pipeline.vertexViewU32;
 
-    var vertexOffset = (pipeline.vertexCount * pipeline.vertexComponentCount) - 1;
+    var vertexOffset = (pipeline.vertexCount * pipeline.currentShader.vertexComponentCount) - 1;
 
     var tintEffect = src.tintFill;
 
