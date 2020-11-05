@@ -44,17 +44,14 @@ var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix
         transformMatrix.applyITRS(container.x, container.y, container.rotation, container.scaleX, container.scaleY);
     }
 
+    renderer.pipelines.preBatch(this);
+
     var containerHasBlendMode = (container.blendMode !== -1);
 
     if (!containerHasBlendMode)
     {
         //  If Container is SKIP_TEST then set blend mode to be Normal
         renderer.setBlendMode(0);
-    }
-
-    if (container.forcePipeline)
-    {
-        renderer.pipelines.lock(container.pipeline, container);
     }
 
     var alpha = container.alpha;
@@ -141,10 +138,7 @@ var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix
         renderer.newType = false;
     }
 
-    if (container.forcePipeline)
-    {
-        renderer.pipelines.unlock();
-    }
+    renderer.pipelines.postBatch(this);
 };
 
 module.exports = ContainerWebGLRenderer;
