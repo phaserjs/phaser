@@ -179,6 +179,8 @@ var PointLight = new Class({
     {
         renderer.pipelines.set(src.pipeline);
 
+        console.warn('temps removed');
+
         var camMatrix = renderer._tempMatrix1;
         var lightMatrix = renderer._tempMatrix2;
         var calcMatrix = renderer._tempMatrix3;

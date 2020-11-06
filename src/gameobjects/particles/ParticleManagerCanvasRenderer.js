@@ -4,6 +4,13 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var TransformMatrix = require('../components/TransformMatrix');
+
+var tempMatrix1 = new TransformMatrix();
+var tempMatrix2 = new TransformMatrix();
+var tempMatrix3 = new TransformMatrix();
+var tempMatrix4 = new TransformMatrix();
+
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -28,10 +35,10 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, camera, 
         return;
     }
 
-    var camMatrix = renderer._tempMatrix1.copyFrom(camera.matrix);
-    var calcMatrix = renderer._tempMatrix2;
-    var particleMatrix = renderer._tempMatrix3;
-    var managerMatrix = renderer._tempMatrix4;
+    var camMatrix = tempMatrix1.copyFrom(camera.matrix);
+    var calcMatrix = tempMatrix2;
+    var particleMatrix = tempMatrix3;
+    var managerMatrix = tempMatrix4;
 
     if (parentMatrix)
     {

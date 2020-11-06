@@ -191,8 +191,6 @@ var WebGLRenderer = new Class({
             bufferHeight: 0
         };
 
-        // Internal Renderer State (Textures, Framebuffers, Pipelines, Buffers, etc)
-
         /**
          * Cached value for the last texture unit that was used.
          *
@@ -263,7 +261,7 @@ var WebGLRenderer = new Class({
         this.normalTexture;
 
         /**
-         * Current framebuffer in use.
+         * The currently bound framebuffer in use.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentFramebuffer
          * @type {WebGLFramebuffer}
@@ -271,6 +269,15 @@ var WebGLRenderer = new Class({
          * @since 3.0.0
          */
         this.currentFramebuffer = null;
+
+        /**
+         * A stack into which the frame buffer objects are pushed and popped.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#fboStack
+         * @type {WebGLFramebuffer[]}
+         * @since 3.50.0
+         */
+        this.fboStack = [];
 
         /**
          * Current WebGLProgram in use.
@@ -475,46 +482,6 @@ var WebGLRenderer = new Class({
          * @since 3.12.0
          */
         this.defaultCamera = new BaseCamera(0, 0, 0, 0);
-
-        /**
-         * A temporary Transform Matrix, re-used internally during batching.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#_tempMatrix1
-         * @private
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 3.12.0
-         */
-        this._tempMatrix1 = new TransformMatrix();
-
-        /**
-         * A temporary Transform Matrix, re-used internally during batching.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#_tempMatrix2
-         * @private
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 3.12.0
-         */
-        this._tempMatrix2 = new TransformMatrix();
-
-        /**
-         * A temporary Transform Matrix, re-used internally during batching.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#_tempMatrix3
-         * @private
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 3.12.0
-         */
-        this._tempMatrix3 = new TransformMatrix();
-
-        /**
-         * A temporary Transform Matrix, re-used internally during batching.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#_tempMatrix4
-         * @private
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 3.12.0
-         */
-        this._tempMatrix4 = new TransformMatrix();
 
         /**
          * The total number of masks currently stacked.

@@ -5,11 +5,12 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CanvasSnapshot = require('../snapshot/CanvasSnapshot');
 var CameraEvents = require('../../cameras/2d/events');
+var CanvasSnapshot = require('../snapshot/CanvasSnapshot');
 var Class = require('../../utils/Class');
 var CONST = require('../../const');
 var GetBlendModes = require('./utils/GetBlendModes');
+var GetCalcMatrix = require('../../gameobjects/GetCalcMatrix');
 var ScaleEvents = require('../../scale/events');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 
@@ -161,46 +162,6 @@ var CanvasRenderer = new Class({
             type: 'image/png',
             encoder: 0.92
         };
-
-        /**
-         * A temporary Transform Matrix, re-used internally during batching.
-         *
-         * @name Phaser.Renderer.Canvas.CanvasRenderer#_tempMatrix1
-         * @private
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 3.12.0
-         */
-        this._tempMatrix1 = new TransformMatrix();
-
-        /**
-         * A temporary Transform Matrix, re-used internally during batching.
-         *
-         * @name Phaser.Renderer.Canvas.CanvasRenderer#_tempMatrix2
-         * @private
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 3.12.0
-         */
-        this._tempMatrix2 = new TransformMatrix();
-
-        /**
-         * A temporary Transform Matrix, re-used internally during batching.
-         *
-         * @name Phaser.Renderer.Canvas.CanvasRenderer#_tempMatrix3
-         * @private
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 3.12.0
-         */
-        this._tempMatrix3 = new TransformMatrix();
-
-        /**
-         * A temporary Transform Matrix, re-used internally during batching.
-         *
-         * @name Phaser.Renderer.Canvas.CanvasRenderer#_tempMatrix4
-         * @private
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 3.12.0
-         */
-        this._tempMatrix4 = new TransformMatrix();
 
         this.init();
     },
@@ -642,10 +603,6 @@ var CanvasRenderer = new Class({
 
         var ctx = this.currentContext;
 
-        var camMatrix = this._tempMatrix1;
-        var spriteMatrix = this._tempMatrix2;
-        var calcMatrix = this._tempMatrix3;
-
         var cd = frame.canvasData;
 
         var frameX = cd.x;
@@ -729,27 +686,9 @@ var CanvasRenderer = new Class({
             flipY = -1;
         }
 
-        spriteMatrix.applyITRS(sprite.x, sprite.y, sprite.rotation, sprite.scaleX * flipX, sprite.scaleY * flipY);
+        var spriteFlipped = { x: sprite.x, y: sprite.y, rotation: sprite.rotation, scaleX: sprite.scaleX * flipX, scaleY: sprite.scaleY * flipY };
 
-        camMatrix.copyFrom(camera.matrix);
-
-        if (parentTransformMatrix)
-        {
-            //  Multiply the camera by the parent matrix
-            camMatrix.multiplyWithOffset(parentTransformMatrix, -camera.scrollX * sprite.scrollFactorX, -camera.scrollY * sprite.scrollFactorY);
-
-            //  Undo the camera scroll
-            spriteMatrix.e = sprite.x;
-            spriteMatrix.f = sprite.y;
-        }
-        else
-        {
-            spriteMatrix.e -= camera.scrollX * sprite.scrollFactorX;
-            spriteMatrix.f -= camera.scrollY * sprite.scrollFactorY;
-        }
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(spriteMatrix, calcMatrix);
+        var calcMatrix = GetCalcMatrix(spriteFlipped, camera, parentTransformMatrix).calc;
 
         ctx.save();
 

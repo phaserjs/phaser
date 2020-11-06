@@ -4,6 +4,12 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var TransformMatrix = require('../gameobjects/components/TransformMatrix');
+
+var tempMatrix1 = new TransformMatrix();
+var tempMatrix2 = new TransformMatrix();
+var tempMatrix3 = new TransformMatrix();
+
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -30,9 +36,9 @@ var TilemapLayerCanvasRenderer = function (renderer, src, camera, parentMatrix)
         return;
     }
 
-    var camMatrix = renderer._tempMatrix1;
-    var layerMatrix = renderer._tempMatrix2;
-    var calcMatrix = renderer._tempMatrix3;
+    var camMatrix = tempMatrix1;
+    var layerMatrix = tempMatrix2;
+    var calcMatrix = tempMatrix3;
 
     layerMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
 

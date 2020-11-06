@@ -4,7 +4,10 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var TransformMatrix = require('../components/TransformMatrix');
 var Utils = require('../../renderer/webgl/Utils');
+
+var tempMatrix = new TransformMatrix();
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -34,9 +37,7 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var cameraScrollX = camera.scrollX * src.scrollFactorX;
     var cameraScrollY = camera.scrollY * src.scrollFactorY;
 
-    var calcMatrix = renderer._tempMatrix1;
-
-    calcMatrix.copyFrom(camera.matrix);
+    var calcMatrix = tempMatrix.copyFrom(camera.matrix);
 
     if (parentMatrix)
     {

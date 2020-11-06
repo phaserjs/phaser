@@ -4,7 +4,13 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var TransformMatrix = require('../components/TransformMatrix');
 var Utils = require('../../renderer/webgl/Utils');
+
+var tempMatrix1 = new TransformMatrix();
+var tempMatrix2 = new TransformMatrix();
+var tempMatrix3 = new TransformMatrix();
+var tempMatrix4 = new TransformMatrix();
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -32,10 +38,10 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
 
     var pipeline = renderer.pipelines.set(this.pipeline);
 
-    var camMatrix = renderer._tempMatrix1;
-    var calcMatrix = renderer._tempMatrix2;
-    var particleMatrix = renderer._tempMatrix3;
-    var managerMatrix = renderer._tempMatrix4;
+    var camMatrix = tempMatrix1;
+    var calcMatrix = tempMatrix2;
+    var particleMatrix = tempMatrix3;
+    var managerMatrix = tempMatrix4;
 
     if (parentMatrix)
     {

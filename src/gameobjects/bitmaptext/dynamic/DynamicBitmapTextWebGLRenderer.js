@@ -5,7 +5,10 @@
  */
 
 var GetCalcMatrix = require('../../GetCalcMatrix');
+var TransformMatrix = require('../../components/TransformMatrix');
 var Utils = require('../../../renderer/webgl/Utils');
+
+var tempMatrix = new TransformMatrix();
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -38,7 +41,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
     var spriteMatrix = result.sprite;
     var calcMatrix = result.calc;
 
-    var fontMatrix = renderer._tempMatrix4;
+    var fontMatrix = tempMatrix;
 
     var crop = (src.cropWidth > 0 || src.cropHeight > 0);
 
