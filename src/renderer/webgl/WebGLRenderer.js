@@ -5,6 +5,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var ArrayRemove = require('../../utils/array/Remove');
 var BaseCamera = require('../../cameras/2d/BaseCamera');
 var CameraEvents = require('../../cameras/2d/events');
 var Class = require('../../utils/Class');
@@ -12,11 +13,9 @@ var CONST = require('../../const');
 var GameEvents = require('../../core/events');
 var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
 var NOOP = require('../../utils/NOOP');
-var PIPELINE_CONST = require('./pipelines/const');
 var PipelineManager = require('./PipelineManager');
 var ScaleEvents = require('../../scale/events');
 var TextureEvents = require('../../textures/events');
-var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 var Utils = require('./Utils');
 var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
 
@@ -1508,19 +1507,53 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Binds a framebuffer. If there was another framebuffer already bound it will force a pipeline flush.
+     * Pushes a new framebuffer onto the FBO stack and makes it the currently bound framebuffer.
+     *
+     * If there was another framebuffer already bound it will force a pipeline flush.
+     *
+     * Call `popFramebuffer` to remove it again.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#pushFramebuffer
+     * @since 3.50.0
+     *
+     * @param {WebGLFramebuffer} framebuffer - The framebuffer that needs to be bound.
+     * @param {boolean} [updateScissor=false] - Set the gl scissor to match the frame buffer size? Or, if `null` given, pop the scissor from the stack.
+     * @param {boolean} [resetTextures=true] - Should the WebGL Textures be reset after the new framebuffer is bound?
+     *
+     * @return {this} This WebGLRenderer instance.
+     */
+    pushFramebuffer: function (framebuffer, updateScissor, resetTextures)
+    {
+        if (framebuffer === this.currentFramebuffer)
+        {
+            return this;
+        }
+
+        this.fboStack.push(framebuffer);
+
+        return this.setFramebuffer(framebuffer, updateScissor, resetTextures);
+    },
+
+    /**
+     * Sets the given framebuffer as the active and currently bound framebuffer.
+     *
+     * If there was another framebuffer already bound it will force a pipeline flush.
+     *
+     * Typically, you should call `pushFramebuffer` instead of this method.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFramebuffer
      * @since 3.0.0
      *
      * @param {WebGLFramebuffer} framebuffer - The framebuffer that needs to be bound.
      * @param {boolean} [updateScissor=false] - If a framebuffer is given, set the gl scissor to match the frame buffer size? Or, if `null` given, pop the scissor from the stack.
+     * @param {boolean} [resetTextures=true] - Should the WebGL Textures be reset after the new framebuffer is bound?
      *
      * @return {this} This WebGLRenderer instance.
      */
-    setFramebuffer: function (framebuffer, updateScissor)
+    setFramebuffer: function (framebuffer, updateScissor, resetTextures)
     {
         if (updateScissor === undefined) { updateScissor = false; }
+        if (resetTextures === undefined) { resetTextures = true; }
 
         if (framebuffer === this.currentFramebuffer)
         {
@@ -1564,7 +1597,36 @@ var WebGLRenderer = new Class({
 
         this.currentFramebuffer = framebuffer;
 
+        if (resetTextures)
+        {
+            this.resetTextures();
+        }
+
         return this;
+    },
+
+    /**
+     * Pops the previous framebuffer from the fbo stack and sets it.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#popFramebuffer
+     * @since 3.50.0
+     */
+    popFramebuffer: function ()
+    {
+        var fboStack = this.fboStack;
+
+        //  Remove the current fbo
+        fboStack.pop();
+
+        //  Reset the previous framebuffer
+        var framebuffer = fboStack[fboStack.length - 1];
+
+        if (!framebuffer)
+        {
+            framebuffer = null;
+        }
+
+        this.setFramebuffer(framebuffer);
     },
 
     /**
@@ -1995,6 +2057,13 @@ var WebGLRenderer = new Class({
         if (framebuffer)
         {
             this.gl.deleteFramebuffer(framebuffer);
+
+            ArrayRemove(this.fboStack, framebuffer);
+
+            if (this.currentFramebuffer === framebuffer)
+            {
+                this.currentFramebuffer = null;
+            }
         }
 
         return this;
@@ -2847,6 +2916,7 @@ var WebGLRenderer = new Class({
         this.pipelines.destroy();
         this.defaultCamera.destroy();
 
+        this.fboStack = [];
         this.maskStack = [];
         this.extensions = {};
         this.textureIndexes = [];
