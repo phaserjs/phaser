@@ -209,6 +209,30 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `WebGLRenderer.popFramebuffer` is a new method that will pop the current framebuffer off the fbo stack and set the previous one as being active.
 * `WebGLRenderer.setFramebuffer` has a new optional boolean parameter `resetTextures` which will reset the WebGL Textures, if set to `true` (which is the default).
 
+### Camera - New Features, Updates and API Changes
+
+The Camera API has changed in line with the new pipeline updates. To this end, the following changes have taken place:
+
+The Camera class now inherits the `Pipeline` Component. This gives it new features, in line with the other pipelines changes in 3.50, such as `Camera.setPipeline`, `Camera.setPostPipeline`, `Camera.setPipelineData` and so on. This is a much more powerful and flexible way of setting camera effects, rather than it managing its own framebuffer and texture directly.
+
+To that end, the following properties and methods have been removed to tidy things up:
+
+* The `Camera.renderToTexture` property has been removed. Effects are now handled via pipelines.
+* The `Camera.renderToGame` property has been removed. Effects are now handled via pipelines.
+* The `Camera.canvas` property has been removed. Textures are handled by pipelines.
+* The `Camera.context` property has been removed. Textures are handled by pipelines.
+* The `Camera.glTexture` property has been removed. GL Textures are handled by pipelines.
+* The `Camera.framebuffer` property has been removed. GL Framebuffers are handled by pipelines.
+* The `Camera.setRenderToTexture` method has been removed. Effects are now handled via pipelines.
+* The `Camera.clearRenderToTexture` method has been removed. Effects are now handled via pipelines.
+
+These changes mean that you can no longer render a Camera to a canvas in Canvas games.
+
+Other changes and fixes:
+
+* `Cameras.Scene2D.Events.FOLLOW_UPDATE` is a new Event that is dispatched by a Camera when it is following a Game Object. It is dispatched every frame, right after the final Camera position and internal matrices have been updated. Use it if you need to react to a camera, using its most current position and the camera is following something. Fix #5253 (thanks @rexrainbow)
+* If the Camera has `roundPixels` set it will now round the internal scroll factors and `worldView` during the `preRender` step. Fix #4464 (thanks @Antriel)
+
 ### Graphics Pipeline and Graphics Game Object Changes
 
 The Graphics Pipeline is a new pipeline added in 3.50 that is responsible for rendering Graphics Game Objects and all of the Shape Game Objects, such as Arc, Rectangle, Star, etc. Due to the new pipeline some changes have been made:
@@ -727,7 +751,6 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `CameraManager.getVisibleChildren` is a new method that is called internally by the `CameraManager.render` method. It filters the DisplayList, so that Game Objects that pass the `willRender` test for the given Camera are added to a sub-list, which is then passed to the renderer. This avoids the renderer having to do any checks on the children, it just renders each one in turn.
 * `Physics.Arcade.Body.setDamping` is a new method that allows you to set the `useDamping` property of a Body in a chainable way. Fix #5352 (thanks @juanitogan)
 * The `GameObjects.Graphics.fillGradientStyle` method can now accept a different alpha value for each of the fill colors. The default is still 1. If you only provide a single alpha, it'll be used for all colors. Fix #5044 (thanks @zhangciwu)
-* `Cameras.Scene2D.Events.FOLLOW_UPDATE` is a new Event that is dispatched by a Camera when it is following a Game Object. It is dispatched every frame, right after the final Camera position and internal matrices have been updated. Use it if you need to react to a camera, using its most current position and the camera is following something. Fix #5253 (thanks @rexrainbow)
 * `Types.Core.PipelineConfig` is a new configuration object that you can set in the Game Config under the `pipeline` property. It allows you to define custom WebGL pipelines as part of the Game Config, so they're automatically installed and ready for use by all Scenes in your game. You can either set the `pipeline` object, or set it under the `render` sub-config.
 * `Utils.Object.DeepCopy` is a new function that will recursively deep copy an array of object.
 
@@ -780,7 +803,6 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `Loader.MultiFile` will now parse the given files array and only add valid entries into the file list, allowing multifiles to now have optional file entries.
 * The `ParticleEmitter.tint` value is now `0xffffff` (previously, it was `0xffffffff`) to allow particle tints to work in the correct RGB order including alpha (thanks @vforsh)
 * `SceneManager.start` will now reset the `SceneSystems.sceneUpdate` reference to `NOOP`. This gets set back to the Scene update method again during `bootScene` (if it has one) and stops errors with external plugins and multi-part files that may trigger `update` before `create` has been called. Fix #4629 (thanks @Osmose)
-* If the Camera has `roundPixels` set it will now round the internal scroll factors and `worldView` during the `preRender` step. Fix #4464 (thanks @Antriel)
 * `Phaser.Scene.renderer` is a new property available in every Phaser.Scene that gives you a reference to the renderer, either Canvas or WebGL.
 * The `CanvasRenderer._tempMatrix1`, `_tempMatrtix2`, `_tempMatrix3` and `_tempMatrix4` properties have been removed. They were all flagged as private, yet used in lots of places. Instead, Game Objects now manager their own matrices, or use the global `GetCalcMatrix` function instead.
 
