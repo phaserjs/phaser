@@ -10,7 +10,7 @@ var Class = require('../../utils/Class');
  * @classdesc
  * A Render Target encapsulates a WebGL framebuffer and the WebGL Texture that displays it.
  *
- * Instances of this class belong WebGL Pipelines.
+ * Instances of this class are created by, and belong to WebGL Pipelines.
  *
  * @class RenderTarget
  * @memberof Phaser.Renderer.WebGL
@@ -20,14 +20,15 @@ var Class = require('../../utils/Class');
  * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipeline - The WebGLPipeline to which this Render Target belongs.
  * @param {number} width - The width of the WebGL Pipeline.
  * @param {number} height - The height of the WebGL Pipeline.
- * @param {number} scale - The scale of the Render Target. This is a scale factor applied to the pipeline size.
- * @param {boolean} autoClear - Automatically gl clear this framebuffer during render?
+ * @param {number} scale - A value between 0 and 1. Controls the size of this Render Target in relation to the Renderer.
+ * @param {number} minFilter - The minFilter mode of the texture when created. 0 is `LINEAR`, 1 is `NEAREST`.
+ * @param {boolean} autoClear - Automatically clear this framebuffer when bound?
  */
 var RenderTarget = new Class({
 
     initialize:
 
-    function RenderTarget (pipeline, width, height, scale, autoClear)
+    function RenderTarget (pipeline, width, height, scale, minFilter, autoClear)
     {
         /**
          * A reference to the WebGLPipeline that owns this Render Target.
@@ -50,7 +51,9 @@ var RenderTarget = new Class({
         this.renderer = pipeline.renderer;
 
         /**
-         * The WebGLFramebuffer this pipeline is targeting, if any.
+         * The WebGLFramebuffer of this Render Target.
+         *
+         * This is created in the `RenderTarget.resize` method.
          *
          * @name Phaser.Renderer.WebGL.RenderTarget#framebuffer
          * @type {WebGLFramebuffer}
@@ -59,7 +62,9 @@ var RenderTarget = new Class({
         this.framebuffer = null;
 
         /**
-         * The WebGLTexture this pipeline is targeting, if any.
+         * The WebGLTexture of this Render Target.
+         *
+         * This is created in the `RenderTarget.resize` method.
          *
          * @name Phaser.Renderer.WebGL.RenderTarget#texture
          * @type {WebGLTexture}
@@ -68,9 +73,9 @@ var RenderTarget = new Class({
         this.texture = null;
 
         /**
-         * The dimensions of this Render Target are based on the scale of the WebGLRenderer.
+         * A value between 0 and 1. Controls the size of this Render Target in relation to the Renderer.
          *
-         * This value controls how much those dimensions are scaled.
+         * A value of 1 matches it. 0.5 makes the Render Target half the size of the renderer, etc.
          *
          * @name Phaser.Renderer.WebGL.RenderTarget#scale
          * @type {number}
@@ -79,11 +84,20 @@ var RenderTarget = new Class({
         this.scale = scale;
 
         /**
+         * The minFilter mode of the texture. 0 is `LINEAR`, 1 is `NEAREST`.
+         *
+         * @name Phaser.Renderer.WebGL.RenderTarget#minFilter
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.minFilter = minFilter;
+
+        /**
          * Controls if this Render Target is automatically cleared (via `gl.COLOR_BUFFER_BIT`)
-         * during the `WebGLPipeline.postBind` method.
+         * during the `RenderTarget.bind` method.
          *
          * If you need more control over how, or if, the target is cleared, you can disable
-         * this via the config, or even directly at runtime.
+         * this via the config on creation, or even toggle it directly at runtime.
          *
          * @name Phaser.Renderer.WebGL.RenderTarget#autoClear
          * @type {boolean}
@@ -121,7 +135,7 @@ var RenderTarget = new Class({
         width *= this.scale;
         height *= this.scale;
 
-        this.texture = renderer.createTextureFromSource(null, width, height, 0);
+        this.texture = renderer.createTextureFromSource(null, width, height, this.minFilter);
 
         this.framebuffer = renderer.createFramebuffer(width, height, this.texture, false);
 
@@ -129,17 +143,12 @@ var RenderTarget = new Class({
     },
 
     /**
-     * Sets the program this shader uses as being the active shader in the WebGL Renderer.
+     * Pushes this Render Target as the current frame buffer of the renderer.
      *
-     * This method is called every time the parent pipeline is made the current active pipeline.
+     * If `autoClear` is set, then clears the texture.
      *
-     * @method Phaser.Renderer.WebGL.WebGLShader#bind
+     * @method Phaser.Renderer.WebGL.RenderTarget#bind
      * @since 3.50.0
-     *
-     * @param {boolean} [setAttributes=false] - Should the vertex attribute pointers be set?
-     * @param {boolean} [flush=false] - Flush the pipeline before binding this shader?
-     *
-     * @return {this} This WebGLShader instance.
      */
     bind: function ()
     {
@@ -155,19 +164,30 @@ var RenderTarget = new Class({
         }
     },
 
+    /**
+     * Unbinds this Render Target.
+     *
+     * @name Phaser.Renderer.WebGL.RenderTarget#unbind
+     * @since 3.50.0
+     */
     unbind: function ()
     {
         this.renderer.popFramebuffer();
     },
 
+    /**
+     * Draws a quad to the pipeline, using this Render Target texture,
+     * sized so that it fills the renderer.
+     *
+     * @name Phaser.Renderer.WebGL.RenderTarget#draw
+     * @since 3.50.0
+     */
     draw: function ()
     {
-        var texture = this.texture;
+        var width = this.renderer.width;
+        var height = this.renderer.height;
 
-        var width = texture.width;
-        var height = texture.height;
-
-        this.pipeline.drawFillRect(0, 0, width, height, 0x0, 1, texture, true);
+        this.pipeline.drawFillRect(0, 0, width, height, 0, 1, this.texture);
     },
 
     /**
