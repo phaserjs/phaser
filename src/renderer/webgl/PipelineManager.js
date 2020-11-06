@@ -14,6 +14,7 @@ var CameraPipeline = require('./pipelines/CameraPipeline');
 var GraphicsPipeline = require('./pipelines/GraphicsPipeline');
 var LightPipeline = require('./pipelines/LightPipeline');
 var MultiPipeline = require('./pipelines/MultiPipeline');
+var PostFXPipeline = require('./pipelines/PostFXPipeline');
 var RopePipeline = require('./pipelines/RopePipeline');
 var SinglePipeline = require('./pipelines/SinglePipeline');
 
@@ -181,6 +182,7 @@ var PipelineManager = new Class({
 
         this.add(CONST.SINGLE_PIPELINE, new SinglePipeline({ game: game }));
         this.add(CONST.ROPE_PIPELINE, new RopePipeline({ game: game }));
+        this.add(CONST.POSTFX_PIPELINE, new PostFXPipeline({ game: game }));
         this.add(CONST.LIGHT_PIPELINE, new LightPipeline({ game: game }));
         this.add(CONST.GRAPHICS_PIPELINE, new GraphicsPipeline({ game: game }));
     },

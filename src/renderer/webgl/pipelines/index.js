@@ -18,6 +18,7 @@ var Pipelines = {
     GraphicsPipeline: require('./GraphicsPipeline'),
     LightPipeline: require('./LightPipeline'),
     MultiPipeline: require('./MultiPipeline'),
+    PostFXPipeline: require('./PostFXPipeline'),
     RopePipeline: require('./RopePipeline'),
     SinglePipeline: require('./SinglePipeline')
 
