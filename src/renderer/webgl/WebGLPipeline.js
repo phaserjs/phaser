@@ -9,6 +9,7 @@ var Class = require('../../utils/Class');
 var DeepCopy = require('../../utils/object/DeepCopy');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Matrix4 = require('../../math/Matrix4');
+var RenderTarget = require('./RenderTarget');
 var Utils = require('./Utils');
 var WebGLShader = require('./WebGLShader');
 
@@ -259,54 +260,30 @@ var WebGLPipeline = new Class({
         this.hasBooted = false;
 
         /**
-         * The WebGLFramebuffer this pipeline is targeting, if any.
+         * An array of RenderTarget instances that belong to this pipeline.
          *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#targetFramebuffer
-         * @type {?WebGLFramebuffer}
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#renderTargets
+         * @type {Phaser.Renderer.WebGL.RenderTarget[]}
          * @since 3.50.0
          */
-        this.targetFramebuffer = null;
+        this.renderTargets = [];
 
         /**
-         * The WebGLTexture this pipeline is targeting, if any.
+         * A reference to the currently bound Render Target instance from the `WebGLPipeline.renderTargets` array.
          *
-         * @name Phaser.GameObjects.Shader#targetTexture
-         * @type {?WebGLTexture}
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#currentRenderTarget
+         * @type {Phaser.Renderer.WebGL.RenderTarget}
          * @since 3.50.0
          */
-        this.targetTexture = null;
-
-        /**
-         * When using a targetTexture its dimensions are based on the scale of the WebGLRenderer.
-         *
-         * This value controls how much those dimensions are scaled.
-         *
-         * @name Phaser.GameObjects.Shader#targetScale
-         * @type {number}
-         * @since 3.50.0
-         */
-        this.targetScale = GetFastValue(config, 'targetScale', 1);
-
-        /**
-         * When using a targetTexture this controls if the target is
-         * automatically cleared (via `gl.COLOR_BUFFER_BIT`) during the `postBind` method.
-         *
-         * If you need more control how, or if, the target is cleared, you can disable
-         * this via the config, or even directly at runtime.
-         *
-         * @name Phaser.GameObjects.Shader#targetAutoClear
-         * @type {boolean}
-         * @since 3.50.0
-         */
-        this.targetAutoClear = GetFastValue(config, 'targetAutoClear', true);
+        this.currentRenderTarget;
 
         /**
          * An array of all the WebGLShader instances that belong to this pipeline.
          *
-         * All shaders must use the same attributes, as set by this pipeline, but can manage their own
-         * uniforms.
+         * Shaders manage their own attributes and uniforms, but share the same vertex data buffer,
+         * which belongs to this pipeline.
          *
-         * These are set in a call to the `setShadersFromConfig` method, which happens automatically,
+         * Shaders are set in a call to the `setShadersFromConfig` method, which happens automatically,
          * but can also be called at any point in your game. See the method documentation for details.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#shaders
@@ -361,26 +338,56 @@ var WebGLPipeline = new Class({
      */
     boot: function ()
     {
+        var i;
         var gl = this.gl;
         var config = this.config;
-
-        var target = GetFastValue(config, 'target', false);
-
         var renderer = this.renderer;
 
-        var width = renderer.width * this.targetScale;
-        var height = renderer.height * this.targetScale;
+        //  Create the Render Targets
 
-        if (target && width > 0 && height > 0)
+        var renderTargets = this.renderTargets;
+
+        var targets = GetFastValue(config, 'renderTarget', false);
+
+        //  If boolean, set to number = 1
+        if (typeof(targets) === 'boolean' && targets)
         {
-            this.targetTexture = renderer.createTextureFromSource(null, width, height, 0);
-            this.targetFramebuffer = renderer.createFramebuffer(width, height, this.targetTexture, false);
+            targets = 1;
         }
+
+        var width = renderer.width;
+        var height = renderer.height;
+
+        if (typeof(targets) === 'number')
+        {
+            //  Create this many default RTs
+            for (i = 0; i < targets; i++)
+            {
+                renderTargets.push(new RenderTarget(this, width, height, 1, true));
+            }
+        }
+        else if (Array.isArray(targets))
+        {
+            for (i = 0; i < targets.length; i++)
+            {
+                var scale = GetFastValue(targets[i], 'scale', 1);
+                var autoClear = GetFastValue(targets[i], 'autoClear', 1);
+
+                renderTargets.push(new RenderTarget(this, width, height, scale, autoClear));
+            }
+        }
+
+        if (renderTargets.length)
+        {
+            //  Default to the first one in the array
+            this.currentRenderTarget = renderTargets[0];
+        }
+
+        //  Create the Shaders
 
         this.setShadersFromConfig(config);
 
         //  Which shader has the largest vertex size?
-        var i;
         var shaders = this.shaders;
         var vertexSize = 0;
         var vertexComponentCount = 0;
@@ -433,24 +440,6 @@ var WebGLPipeline = new Class({
         this.hasBooted = true;
 
         this.onBoot();
-    },
-
-    clearTarget: function ()
-    {
-        var gl = this.gl;
-        var renderer = this.renderer;
-        var target = this.targetTexture;
-
-        if (target)
-        {
-            renderer.setFramebuffer(this.targetFramebuffer);
-
-            gl.clearColor(0, 0, 0, 0);
-
-            gl.clear(gl.COLOR_BUFFER_BIT);
-
-            renderer.setFramebuffer(null, false);
-        }
     },
 
     /**
@@ -708,26 +697,18 @@ var WebGLPipeline = new Class({
 
         projectionMatrix.ortho(0, width, height, 0, -1000, 1000);
 
-        //  Resize the target?
-        var target = this.targetTexture;
+        var i;
 
-        if (target)
+        var targets = this.renderTargets;
+
+        for (i = 0; i < targets.length; i++)
         {
-            width *= this.targetScale;
-            height *= this.targetScale;
-
-            var renderer = this.renderer;
-
-            renderer.deleteFramebuffer(this.targetFramebuffer);
-            renderer.deleteTexture(target);
-
-            this.targetTexture = renderer.createTextureFromSource(null, width, height, 0);
-            this.targetFramebuffer = renderer.createFramebuffer(width, height, this.targetTexture, false);
+            targets[i].resize(width, height);
         }
 
         var shaders = this.shaders;
 
-        for (var i = 0; i < shaders.length; i++)
+        for (i = 0; i < shaders.length; i++)
         {
             var shader = shaders[i];
 
@@ -774,21 +755,9 @@ var WebGLPipeline = new Class({
      */
     postBind: function (gameObject)
     {
-        var renderer = this.renderer;
-        var target = this.targetTexture;
-
-        if (target)
+        if (this.currentRenderTarget)
         {
-            renderer.pushFramebuffer(this.targetFramebuffer);
-
-            if (this.targetAutoClear)
-            {
-                var gl = this.gl;
-
-                gl.clearColor(0, 0, 0, 0);
-
-                gl.clear(gl.COLOR_BUFFER_BIT);
-            }
+            this.currentRenderTarget.bind();
         }
 
         this.onPostBind(gameObject);
@@ -805,9 +774,9 @@ var WebGLPipeline = new Class({
      */
     unbind: function ()
     {
-        if (this.targetTexture)
+        if (this.currentRenderTarget)
         {
-            this.renderer.setFramebuffer(null);
+            this.this.currentRenderTarget.unbind();
         }
     },
 
@@ -865,19 +834,23 @@ var WebGLPipeline = new Class({
      */
     postFlush: function (gameObject)
     {
-        this.renderer.popFramebuffer();
+        var target = this.currentRenderTarget;
+
+        if (target)
+        {
+            target.unbind();
+        }
 
         var wasBound = this.renderer.setVertexBuffer(this.vertexBuffer);
 
         this.currentShader.bind(wasBound);
 
-        var texture = this.targetTexture;
-        var width = texture.width;
-        var height = texture.height;
+        if (target)
+        {
+            target.draw();
 
-        this.drawFillRect(0, 0, width, height, 0x0, 1, texture, true);
-
-        this.flush(true);
+            this.flush(true);
+        }
 
         this.onPostFlush(gameObject);
 
