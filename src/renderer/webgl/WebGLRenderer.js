@@ -1909,7 +1909,7 @@ var WebGLRenderer = new Class({
                 36061: 'Framebuffer Unsupported'
             };
 
-            throw new Error('Framebuffer incomplete. Framebuffer status: ' + errors[complete]);
+            throw new Error('Framebuffer status: ' + errors[complete]);
         }
 
         framebuffer.renderTexture = renderTexture;
