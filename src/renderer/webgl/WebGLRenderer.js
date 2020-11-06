@@ -1518,7 +1518,7 @@ var WebGLRenderer = new Class({
      *
      * @param {WebGLFramebuffer} framebuffer - The framebuffer that needs to be bound.
      * @param {boolean} [updateScissor=false] - Set the gl scissor to match the frame buffer size? Or, if `null` given, pop the scissor from the stack.
-     * @param {boolean} [resetTextures=true] - Should the WebGL Textures be reset after the new framebuffer is bound?
+     * @param {boolean} [resetTextures=false] - Should the WebGL Textures be reset after the new framebuffer is bound?
      *
      * @return {this} This WebGLRenderer instance.
      */
@@ -1546,14 +1546,14 @@ var WebGLRenderer = new Class({
      *
      * @param {WebGLFramebuffer} framebuffer - The framebuffer that needs to be bound.
      * @param {boolean} [updateScissor=false] - If a framebuffer is given, set the gl scissor to match the frame buffer size? Or, if `null` given, pop the scissor from the stack.
-     * @param {boolean} [resetTextures=true] - Should the WebGL Textures be reset after the new framebuffer is bound?
+     * @param {boolean} [resetTextures=false] - Should the WebGL Textures be reset after the new framebuffer is bound?
      *
      * @return {this} This WebGLRenderer instance.
      */
     setFramebuffer: function (framebuffer, updateScissor, resetTextures)
     {
         if (updateScissor === undefined) { updateScissor = false; }
-        if (resetTextures === undefined) { resetTextures = true; }
+        if (resetTextures === undefined) { resetTextures = false; }
 
         if (framebuffer === this.currentFramebuffer)
         {
@@ -1626,7 +1626,7 @@ var WebGLRenderer = new Class({
             framebuffer = null;
         }
 
-        this.setFramebuffer(framebuffer);
+        this.setFramebuffer(framebuffer, false, true);
     },
 
     /**
@@ -1864,15 +1864,15 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Wrapper for creating WebGLFramebuffer.
+     * Creates a WebGL Framebuffer object and optionally binds a depth stencil render buffer.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createFramebuffer
      * @since 3.0.0
      *
-     * @param {integer} width - Width in pixels of the framebuffer
-     * @param {integer} height - Height in pixels of the framebuffer
-     * @param {WebGLTexture} renderTexture - The color texture to where the color pixels are written
-     * @param {boolean} addDepthStencilBuffer - Indicates if the current framebuffer support depth and stencil buffers
+     * @param {integer} width - If `addDepthStencilBuffer` is true, this controls the width of the depth stencil.
+     * @param {integer} height - If `addDepthStencilBuffer` is true, this controls the height of the depth stencil.
+     * @param {WebGLTexture} renderTexture - The color texture where the color pixels are written.
+     * @param {boolean} [addDepthStencilBuffer=false] - Create a Renderbuffer for the depth stencil?
      *
      * @return {WebGLFramebuffer} Raw WebGLFramebuffer
      */
@@ -1887,6 +1887,7 @@ var WebGLRenderer = new Class({
         if (addDepthStencilBuffer)
         {
             var depthStencilBuffer = gl.createRenderbuffer();
+
             gl.bindRenderbuffer(gl.RENDERBUFFER, depthStencilBuffer);
             gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, width, height);
             gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, depthStencilBuffer);
@@ -1915,7 +1916,7 @@ var WebGLRenderer = new Class({
 
         this.setFramebuffer(null);
 
-        this.resetTextures(true);
+        this.resetTextures();
 
         return framebuffer;
     },
