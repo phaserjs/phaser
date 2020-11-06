@@ -363,7 +363,7 @@ var WebGLPipeline = new Class({
             //  Create this many default RTs
             for (i = 0; i < targets; i++)
             {
-                renderTargets.push(new RenderTarget(this, width, height, 1, true));
+                renderTargets.push(new RenderTarget(this, width, height, 1, 0, true));
             }
         }
         else if (Array.isArray(targets))
@@ -371,9 +371,10 @@ var WebGLPipeline = new Class({
             for (i = 0; i < targets.length; i++)
             {
                 var scale = GetFastValue(targets[i], 'scale', 1);
+                var minFilter = GetFastValue(targets[i], 'minFilter', 0);
                 var autoClear = GetFastValue(targets[i], 'autoClear', 1);
 
-                renderTargets.push(new RenderTarget(this, width, height, scale, autoClear));
+                renderTargets.push(new RenderTarget(this, width, height, scale, minFilter, autoClear));
             }
         }
 
