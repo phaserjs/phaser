@@ -204,6 +204,10 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `WebGLRenderer.setMatrix3` has been removed. Use `WebGLPipeline.setMatrix3fv` or `WebGLShader.setMatrix3fv` instead.
 * `WebGLRenderer.setMatrix4` has been removed. Use `WebGLPipeline.setMatrix4fv` or `WebGLShader.setMatrix4fv` instead.
 * The `WebGLRenderer._tempMatrix1`, `_tempMatrtix2`, `_tempMatrix3` and `_tempMatrix4` properties have been removed. They were all flagged as private, yet used in lots of places. Instead, Game Objects now manager their own matrices, or use the global `GetCalcMatrix` function instead.
+* `WebGLRenderer.fboStack` is a new property that maintains a stack of framebuffer objects, used for pipelines supporting multiple render targets.
+* `WebGLRenderer.pushFramebuffer` is a new method that is used to push a framebuffer onto the fbo stack before setting it as the current framebuffer. This should now be called in place of `setFramebuffer`. Remember to call `popFramebuffer` after using it.
+* `WebGLRenderer.popFramebuffer` is a new method that will pop the current framebuffer off the fbo stack and set the previous one as being active.
+* `WebGLRenderer.setFramebuffer` has a new optional boolean parameter `resetTextures` which will reset the WebGL Textures, if set to `true` (which is the default).
 
 ### Graphics Pipeline and Graphics Game Object Changes
 
