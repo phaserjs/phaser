@@ -186,6 +186,10 @@ var Pipeline = {
                     this.pipelineData = DeepCopy(pipelineData);
                 }
             }
+            else
+            {
+                this.postPipeline = null;
+            }
         }
 
         return this;
