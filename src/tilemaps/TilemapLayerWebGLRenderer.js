@@ -32,7 +32,7 @@ var TilemapLayerWebGLRenderer = function (renderer, src, camera)
     }
 
     var gidMap = src.gidMap;
-    var pipeline = renderer.pipelines.set(src.pipeline);
+    var pipeline = renderer.pipelines.set(src.pipeline, src);
 
     var getTint = Utils.getTintAppendFloatAlpha;
 
@@ -44,6 +44,10 @@ var TilemapLayerWebGLRenderer = function (renderer, src, camera)
 
     var sx = src.scaleX;
     var sy = src.scaleY;
+
+    var pipelines = renderer.pipelines;
+
+    pipelines.preBatch(src);
 
     for (var i = 0; i < tileCount; i++)
     {
@@ -93,6 +97,8 @@ var TilemapLayerWebGLRenderer = function (renderer, src, camera)
             textureUnit
         );
     }
+
+    pipelines.postBatch(src);
 };
 
 module.exports = TilemapLayerWebGLRenderer;
