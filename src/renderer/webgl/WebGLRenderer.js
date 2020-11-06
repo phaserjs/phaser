@@ -2125,6 +2125,8 @@ var WebGLRenderer = new Class({
 
         var color = camera.backgroundColor;
 
+        this.pipelines.preBatch(camera);
+
         this.pushScissor(cx, cy, cw, ch);
 
         if (camera.mask)
@@ -2146,64 +2148,10 @@ var WebGLRenderer = new Class({
             );
         }
 
-        /*
-        if (camera.renderToTexture)
+        if (camera.postPipeline)
         {
-            this.flush();
-
-            this.pushScissor(cx, cy, cw, -ch);
-
-            this.setFramebuffer(camera.framebuffer);
-
-            var gl = this.gl;
-
-            gl.clearColor(0, 0, 0, 0);
-
-            gl.clear(gl.COLOR_BUFFER_BIT);
-
-            ProjectOrtho(MultiPipeline, cx, cw + cx, cy, ch + cy, -1000, 1000);
-
-            if (camera.mask)
-            {
-                this.currentCameraMask.mask = camera.mask;
-                this.currentCameraMask.camera = camera._maskCamera;
-
-                camera.mask.preRenderWebGL(this, camera, camera._maskCamera);
-            }
-
-            if (color.alphaGL > 0)
-            {
-                MultiPipeline.drawFillRect(
-                    cx, cy, cw + cx, ch + cy,
-                    Utils.getTintFromFloats(color.redGL, color.greenGL, color.blueGL, 1),
-                    color.alphaGL
-                );
-            }
-
             camera.emit(CameraEvents.PRE_RENDER, camera);
         }
-        else
-        {
-            this.pushScissor(cx, cy, cw, ch);
-
-            if (camera.mask)
-            {
-                this.currentCameraMask.mask = camera.mask;
-                this.currentCameraMask.camera = camera._maskCamera;
-
-                camera.mask.preRenderWebGL(this, camera, camera._maskCamera);
-            }
-
-            // if (color.alphaGL > 0)
-            // {
-            //     MultiPipeline.drawFillRect(
-            //         cx, cy, cw , ch,
-            //         Utils.getTintFromFloats(color.redGL, color.greenGL, color.blueGL, 1),
-            //         color.alphaGL
-            //     );
-            // }
-        }
-        */
     },
 
     /**
@@ -2255,56 +2203,20 @@ var WebGLRenderer = new Class({
 
         this.popScissor();
 
-        /*
-        if (camera.renderToTexture)
-        {
-            multiPipeline.flush();
-
-            this.setFramebuffer(null);
-
-            camera.emit(CameraEvents.POST_RENDER, camera);
-
-            if (camera.renderToGame)
-            {
-                ProjectOrtho(multiPipeline, 0, multiPipeline.width, multiPipeline.height, 0, -1000.0, 1000.0);
-
-                var getTint = Utils.getTintAppendFloatAlpha;
-
-                var pipeline = (camera.pipeline) ? camera.pipeline : multiPipeline;
-
-                pipeline.batchTexture(
-                    camera,
-                    camera.glTexture,
-                    camera.width, camera.height,
-                    camera.x, camera.y,
-                    camera.width, camera.height,
-                    1, 1,
-                    0,
-                    camera.flipX, !camera.flipY,
-                    1, 1,
-                    0, 0,
-                    0, 0, camera.width, camera.height,
-                    getTint(camera.tintTopLeft, camera._alphaTL),
-                    getTint(camera.tintTopRight, camera._alphaTR),
-                    getTint(camera.tintBottomLeft, camera._alphaBL),
-                    getTint(camera.tintBottomRight, camera._alphaBR),
-                    camera.tintFill,
-                    0, 0,
-                    this.defaultCamera,
-                    null
-                );
-            }
-
-            //  Force clear the current texture so that items next in the batch (like Graphics) don't try and use it
-            this.setBlankTexture(true);
-        }
-        */
-
         if (camera.mask)
         {
             this.currentCameraMask.mask = null;
 
             camera.mask.postRenderWebGL(this, camera._maskCamera);
+        }
+
+        if (camera.postPipeline)
+        {
+            camera.emit(CameraEvents.POST_RENDER, camera);
+
+            this.pipelines.postBatch(camera);
+
+            this.resetTextures();
         }
     },
 
