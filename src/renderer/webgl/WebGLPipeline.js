@@ -779,7 +779,7 @@ var WebGLPipeline = new Class({
 
         if (target)
         {
-            renderer.setFramebuffer(this.targetFramebuffer);
+            renderer.pushFramebuffer(this.targetFramebuffer);
 
             if (this.targetAutoClear)
             {
@@ -865,8 +865,7 @@ var WebGLPipeline = new Class({
      */
     postFlush: function (gameObject)
     {
-        this.renderer.setFramebuffer(null);
-        this.renderer.resetTextures();
+        this.renderer.popFramebuffer();
 
         var wasBound = this.renderer.setVertexBuffer(this.vertexBuffer);
 
