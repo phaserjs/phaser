@@ -521,11 +521,12 @@ var MultiPipeline = new Class({
             textureUnit = this.renderer.setTexture2D(texture);
         }
 
-        this.manager.preBatch(gameObject);
+        //  TODO - parameter toggle?
+        // this.manager.preBatch(gameObject);
 
         this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
 
-        this.manager.postBatch(gameObject);
+        // this.manager.postBatch(gameObject);
     },
 
     /**
@@ -585,42 +586,6 @@ var MultiPipeline = new Class({
 
         this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, 0, frame.glTexture, unit);
     }
-
-    /**
-     * Pushes a filled rectangle into the vertex batch.
-     *
-     * The dimensions are run through `Math.floor` before the quad is generated.
-     *
-     * Rectangle has no transform values and isn't transformed into the local space.
-     *
-     * Used for directly batching untransformed rectangles, such as Camera background colors.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#drawFillRect
-     * @since 3.12.0
-     *
-     * @param {number} x - Horizontal top left coordinate of the rectangle.
-     * @param {number} y - Vertical top left coordinate of the rectangle.
-     * @param {number} width - Width of the rectangle.
-     * @param {number} height - Height of the rectangle.
-     * @param {number} color - Color of the rectangle to draw.
-     * @param {number} alpha - Alpha value of the rectangle to draw.
-    drawFillRect: function (x, y, width, height, color, alpha)
-    {
-        x = Math.floor(x);
-        y = Math.floor(y);
-
-        var xw = Math.floor(x + width);
-        var yh = Math.floor(y + height);
-
-        var white = this.renderer.whiteTexture.glTexture;
-
-        var unit = this.renderer.setTexture2D(white);
-
-        var tint = Utils.getTintAppendFloatAlphaAndSwap(color, alpha);
-
-        this.batchQuad(x, y, x, yh, xw, yh, xw, y, 0, 0, 1, 1, tint, tint, tint, tint, 2, white, unit);
-    }
-     */
 
 });
 
