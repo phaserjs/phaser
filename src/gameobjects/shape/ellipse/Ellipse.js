@@ -125,6 +125,9 @@ var Ellipse = new Class({
      */
     setSize: function (width, height)
     {
+        this.width = width;
+        this.height = height;
+        this.geom.setPosition(width / 2, height / 2);
         this.geom.setSize(width, height);
 
         return this.updateData();
