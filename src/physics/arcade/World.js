@@ -1518,6 +1518,9 @@ var World = new Class({
             overlap = (body1.halfWidth + body2.halfWidth) - DistanceBetween(body1.center.x, body1.center.y, body2.center.x, body2.center.y);
         }
 
+        body1.overlapR = overlap;
+        body2.overlapR = overlap;
+
         //  Can't separate two immovable bodies, or a body with its own custom separation logic
         if (overlapOnly || overlap === 0 || (body1.immovable && body2.immovable) || body1.customSeparateX || body2.customSeparateX)
         {
