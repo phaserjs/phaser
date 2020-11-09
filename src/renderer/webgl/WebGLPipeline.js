@@ -1223,7 +1223,7 @@ var WebGLPipeline = new Class({
             v1 = 0;
         }
 
-        this.batchQuad(x, y, x, yh, xw, yh, xw, y, u0, v0, u1, v1, tint, tint, tint, tint, 0, texture, unit);
+        this.batchQuad(null, x, y, x, yh, xw, yh, xw, y, u0, v0, u1, v1, tint, tint, tint, tint, 0, texture, unit);
     },
 
     /**

@@ -135,7 +135,7 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
 
             var tint = getTint(particle.tint, alpha);
 
-            pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect, texture, textureUnit);
+            pipeline.batchQuad(emitter, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect, texture, textureUnit);
         }
 
         if (emitter.mask)
