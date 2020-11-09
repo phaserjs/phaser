@@ -807,6 +807,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `SceneManager.start` will now reset the `SceneSystems.sceneUpdate` reference to `NOOP`. This gets set back to the Scene update method again during `bootScene` (if it has one) and stops errors with external plugins and multi-part files that may trigger `update` before `create` has been called. Fix #4629 (thanks @Osmose)
 * `Phaser.Scene.renderer` is a new property available in every Phaser.Scene that gives you a reference to the renderer, either Canvas or WebGL.
 * The `CanvasRenderer._tempMatrix1`, `_tempMatrtix2`, `_tempMatrix3` and `_tempMatrix4` properties have been removed. They were all flagged as private, yet used in lots of places. Instead, Game Objects now manager their own matrices, or use the global `GetCalcMatrix` function instead.
+* Since iOS 13, iPads now identify as MacOS devices. A new maxTouchPoint check is now part of the `Device.OS` tests, stopping iPads from being flagged as desktop devices. Fix #5389 (thanks @SBCGames)
 
 ### Bug Fixes
 
