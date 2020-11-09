@@ -372,7 +372,8 @@ var StaticBody = new Class({
         this.checkCollision = { none: false, up: true, down: true, left: true, right: true };
 
         /**
-         * Whether this StaticBody has ever collided with another body and in which direction.
+         * This property is kept for compatibility with Dynamic Bodies.
+         * Avoid using it.
          *
          * @name Phaser.Physics.Arcade.StaticBody#touching
          * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
@@ -381,7 +382,9 @@ var StaticBody = new Class({
         this.touching = { none: true, up: false, down: false, left: false, right: false };
 
         /**
-         * Whether this StaticBody was colliding with another body during the last step or any previous step, and in which direction.
+         * This property is kept for compatibility with Dynamic Bodies.
+         * Avoid using it.
+         * The values are always false for a Static Body.
          *
          * @name Phaser.Physics.Arcade.StaticBody#wasTouching
          * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
@@ -390,7 +393,8 @@ var StaticBody = new Class({
         this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
 
         /**
-         * Whether this StaticBody has ever collided with a tile or the world boundary.
+         * This property is kept for compatibility with Dynamic Bodies.
+         * Avoid using it.
          *
          * @name Phaser.Physics.Arcade.StaticBody#blocked
          * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
