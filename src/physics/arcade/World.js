@@ -1248,6 +1248,7 @@ var World = new Class({
             if (useDamping)
             {
                 //  Damping based deceleration
+                dragX = Math.pow(dragX, delta);
 
                 velocityX *= dragX;
 
@@ -1287,6 +1288,8 @@ var World = new Class({
             if (useDamping)
             {
                 //  Damping based deceleration
+                dragY = Math.pow(dragY, delta);
+
                 velocityY *= dragY;
 
                 speed = Math.sqrt(velocityX * velocityX + velocityY * velocityY);

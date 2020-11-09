@@ -335,10 +335,11 @@ var Body = new Class({
         /**
          * When `useDamping` is false (the default), this is absolute loss of velocity due to movement, in pixels per second squared.
          *
-         * When `useDamping` is true, this is 1 minus the damping factor.
+         * When `useDamping` is true, this is a damping multiplier between 0 and 1.
+         * A value of 0 means the Body stops instantly.
+         * A value of 0.01 mean the Body loses 99% of its velocity per second.
+         * A value of 0.1 means the Body loses 90% of its velocity per second.
          * A value of 1 means the Body loses no velocity.
-         * A value of 0.95 means the Body loses 5% of its velocity per step.
-         * A value of 0.5 means the Body loses 50% of its velocity per step.
          *
          * The x and y components are applied separately.
          *
@@ -486,8 +487,8 @@ var Body = new Class({
          * by using damping, avoiding the axis-drift that is prone with linear deceleration.
          *
          * If you enable this property then you should use far smaller `drag` values than with linear, as
-         * they are used as a multiplier on the velocity. Values such as 0.95 will give a nice slow
-         * deceleration, where-as smaller values, such as 0.5 will stop an object almost immediately.
+         * they are used as a multiplier on the velocity. Values such as 0.05 will give a nice slow
+         * deceleration.
          *
          * @name Phaser.Physics.Arcade.Body#useDamping
          * @type {boolean}
