@@ -110,13 +110,12 @@ var Pipeline = {
      * @since 3.0.0
      *
      * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} pipeline - Either the string-based name of the pipeline, or a pipeline instance to set.
-     * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} [postPipeline] - The post-render pipeline. Set to `null` to skip if you need to set `pipelineData`. Can be either the string-based name of the pipeline, or a pipeline instance to set.
      * @param {object} [pipelineData] - Optional pipeline data object that is _deep copied_ into the `pipelineData` property of this Game Object.
      * @param {boolean} [copyData=true] - Should the pipeline data object be _deep copied_ into the `pipelineData` property of this Game Object? If `false` it will be set by reference instead.
      *
      * @return {this} This Game Object instance.
      */
-    setPipeline: function (pipeline, postPipeline, pipelineData, copyData)
+    setPipeline: function (pipeline, pipelineData, copyData)
     {
         var renderer = this.scene.sys.renderer;
         var pipelines = renderer.pipelines;
@@ -128,16 +127,6 @@ var Pipeline = {
             if (instance)
             {
                 this.pipeline = instance;
-            }
-
-            if (postPipeline)
-            {
-                instance = pipelines.get(postPipeline);
-
-                if (instance)
-                {
-                    this.postPipeline = instance;
-                }
             }
 
             if (pipelineData)
@@ -165,10 +154,11 @@ var Pipeline = {
      *
      * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} pipeline - Either the string-based name of the pipeline, or a pipeline instance to set.
      * @param {object} [pipelineData] - Optional pipeline data object that is _deep copied_ into the `pipelineData` property of this Game Object.
+     * @param {boolean} [copyData=true] - Should the pipeline data object be _deep copied_ into the `pipelineData` property of this Game Object? If `false` it will be set by reference instead.
      *
      * @return {this} This Game Object instance.
      */
-    setPostPipeline: function (pipeline, pipelineData)
+    setPostPipeline: function (pipeline, pipelineData, copyData)
     {
         var renderer = this.scene.sys.renderer;
         var pipelines = renderer.pipelines;
@@ -180,15 +170,15 @@ var Pipeline = {
             if (instance)
             {
                 this.postPipeline = instance;
-
-                if (pipelineData)
-                {
-                    this.pipelineData = DeepCopy(pipelineData);
-                }
             }
             else
             {
                 this.postPipeline = null;
+            }
+
+            if (pipelineData)
+            {
+                this.pipelineData = (copyData) ? DeepCopy(pipelineData) : pipelineData;
             }
         }
 
