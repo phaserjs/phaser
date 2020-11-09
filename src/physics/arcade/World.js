@@ -983,7 +983,7 @@ var World = new Class({
                 }
             }
 
-            this.emit(Events.WORLD_STEP);
+            this.emit(Events.WORLD_STEP, fixedDelta);
         }
 
         //  Process any additional steps this frame
@@ -1042,7 +1042,7 @@ var World = new Class({
             }
         }
 
-        this.emit(Events.WORLD_STEP);
+        this.emit(Events.WORLD_STEP, delta);
 
         this.stepsLastFrame++;
     },
