@@ -334,7 +334,7 @@ var MultiPipeline = new Class({
 
         this.manager.preBatch(sprite);
 
-        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, sprite.tintEffect, texture, unit);
+        this.batchQuad(sprite, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, sprite.tintEffect, texture, unit);
 
         this.manager.postBatch(sprite);
     },
@@ -524,7 +524,7 @@ var MultiPipeline = new Class({
         //  TODO - parameter toggle?
         // this.manager.preBatch(gameObject);
 
-        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
+        this.batchQuad(gameObject, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
 
         // this.manager.postBatch(gameObject);
     },
@@ -584,7 +584,7 @@ var MultiPipeline = new Class({
 
         tint = Utils.getTintAppendFloatAlpha(tint, alpha);
 
-        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, 0, frame.glTexture, unit);
+        this.batchQuad(null, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, 0, frame.glTexture, unit);
     }
 
 });

@@ -458,7 +458,8 @@ var WebGLPipeline = new Class({
     /**
      * This method is called once when this pipeline has finished being set-up
      * at the end of the boot process. By the time this method is called, all
-     * of the shaders are ready and configured.
+     * of the shaders are ready and configured. It's also called if the renderer
+     * changes size.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onResize
      * @since 3.50.0
@@ -879,6 +880,24 @@ var WebGLPipeline = new Class({
     /**
      * By default this is an empty method hook that you can override and use in your own custom pipelines.
      *
+     * This method is called every time the `batchQuad` or `batchTri` methods are called. If this was
+     * as a result of a Game Object, then the Game Object refernce is passed to this hook too.
+     *
+     * This hook is called _after_ the quad (or tri) has been added to the batch, so you can safely
+     * call 'flush' from within this.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#onBatch
+     * @since 3.50.0
+     *
+     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
+     */
+    onBatch: function ()
+    {
+    },
+
+    /**
+     * By default this is an empty method hook that you can override and use in your own custom pipelines.
+     *
      * This method is called every time a **Game Object** asks the Pipeline Manager to use this pipeline
      * as the post-render pipeline.
      *
@@ -1045,6 +1064,7 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#batchQuad
      * @since 3.50.0
      *
+     * @param {(Phaser.GameObjects.GameObject|null)} gameObject - The Game Object, if any, drawing this quad.
      * @param {number} x0 - The top-left x position.
      * @param {number} y0 - The top-left y position.
      * @param {number} x1 - The bottom-left x position.
@@ -1067,7 +1087,7 @@ var WebGLPipeline = new Class({
      *
      * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
      */
-    batchQuad: function (x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, unit)
+    batchQuad: function (gameObject, x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, unit)
     {
         if (unit === undefined) { unit = this.currentUnit; }
 
@@ -1088,6 +1108,8 @@ var WebGLPipeline = new Class({
         this.batchVert(x0, y0, u0, v0, unit, tintEffect, tintTL);
         this.batchVert(x2, y2, u1, v1, unit, tintEffect, tintBR);
         this.batchVert(x3, y3, u1, v0, unit, tintEffect, tintTR);
+
+        this.onBatch(gameObject);
 
         return hasFlushed;
     },
@@ -1110,6 +1132,7 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#batchTri
      * @since 3.50.0
      *
+     * @param {(Phaser.GameObjects.GameObject|null)} gameObject - The Game Object, if any, drawing this quad.
      * @param {number} x1 - The bottom-left x position.
      * @param {number} y1 - The bottom-left y position.
      * @param {number} x2 - The bottom-right x position.
@@ -1129,7 +1152,7 @@ var WebGLPipeline = new Class({
      *
      * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
      */
-    batchTri: function (x0, y0, x1, y1, x2, y2, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintEffect, texture, unit)
+    batchTri: function (gameObject, x0, y0, x1, y1, x2, y2, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintEffect, texture, unit)
     {
         if (unit === undefined) { unit = this.currentUnit; }
 
@@ -1147,6 +1170,8 @@ var WebGLPipeline = new Class({
         this.batchVert(x0, y0, u0, v0, unit, tintEffect, tintTL);
         this.batchVert(x1, y1, u0, v1, unit, tintEffect, tintTR);
         this.batchVert(x2, y2, u1, v1, unit, tintEffect, tintBL);
+
+        this.onBatch(gameObject);
 
         return hasFlushed;
     },
