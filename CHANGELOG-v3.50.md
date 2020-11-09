@@ -658,6 +658,8 @@ Prior to v3.50 an Arcade Physics Body could be one of two states: immovable, or 
 * `Physics.Arcade.ProcessX` is a new set of functions, called by the `SeparateX` function, that handles all of the different collision tests, checks and resolutions. These functions are not exposed in the public API.
 * `Physics.Arcade.ProcessY` is a new set of functions, called by the `SeparateY` function, that handles all of the different collision tests, checks and resolutions. These functions are not exposed in the public API.
 * `Arcade.Body.center` values were incorrect after collisions with the world bounds or (for rectangular bodies) after collisions with another body. The body center is now updated after those separations (thanks @samme)
+* The Arcade Physics `WORLD_STEP` event now has a new parameter: the delta argument (thanks @samme)
+* The Arcade Body `drag` property has been redefined when damping is used and scales the damping multiplier by the physics step delta. Drag is now the velocity retained after 1 second instead of after 1 step, when damping is used. This makes damping consistent for different physics step rates and more accurate when fixedStep is off. If you use `drag` you will need to change any existing drag values to get the same effects as before. Convert `drag` to `drag ^ 60` or `drag ^ fps` if you use a different step rate (thanks @samme)
 
 ### Loader Cache Changes
 
@@ -837,6 +839,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `Particles.EmitterOp.setMethods` will now reset both `onEmit` and `onUpdate` to their default values. This allows you to reconfigure an emitter op with a new type of value and not have it stuck on the previous one. Fix #3663 (thanks @samme)
 * `Particles.EmitterOp` now cleanly separates between the different types of property configuration options. `start | end` will now ease between the two values, `min | max` will pick a random value between them and `random: []` will pick a random element. They no longer get mixed together. Fix #3608 (thanks @samme)
 * When setting both `transparent: true` and `backgroundColor` in the Game Config, it would ignore the transparency and use the color anyway. If transparent, the game is now fully transparent. Fix #5362 (thanks @Hoshinokoe)
+* The `Ellipse` Game Object now will update the width, height, and geometric position in the `setSize` method (thanks @PhaserEditor2D)
 
 ### Namespace Updates
 
