@@ -5,6 +5,8 @@
  */
 
 var Class = require('../../utils/Class');
+var GetFastValue = require('../../utils/object/GetFastValue');
+var WEBGL_CONST = require('./const');
 
 /**
  * @classdesc
@@ -167,8 +169,10 @@ var WebGLShader = new Class({
 
             var name = element.name;
             var size = element.size; // i.e. 1 for a float, 2 for a vec2, 4 for a vec4, etc
-            var type = element.type.enum; // The GLenum
-            var typeSize = element.type.size; // The size in bytes of the type
+            var glType = GetFastValue(element, 'type', WEBGL_CONST.FLOAT);
+            var type = glType.enum; // The GLenum
+            var typeSize = glType.size; // The size in bytes of the type
+
             var normalized = (element.normalized) ? true : false;
 
             result.push({
