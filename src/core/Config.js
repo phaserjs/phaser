@@ -409,7 +409,7 @@ var Config = new Class({
         this.powerPreference = GetValue(renderConfig, 'powerPreference', 'default');
 
         /**
-         * @const {integer} Phaser.Core.Config#batchSize - The default WebGL Batch size.
+         * @const {integer} Phaser.Core.Config#batchSize - The default WebGL Batch size. Represents the number of _quads_ that can be added to a single batch.
          */
         this.batchSize = GetValue(renderConfig, 'batchSize', 4096);
 
