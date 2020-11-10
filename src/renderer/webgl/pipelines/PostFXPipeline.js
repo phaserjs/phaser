@@ -46,7 +46,7 @@ var PostFXPipeline = new Class({
     {
         config.fragShader = GetFastValue(config, 'fragShader', ShaderSourceFS);
         config.vertShader = GetFastValue(config, 'vertShader', ShaderSourceVS);
-        config.vertexCapacity = GetFastValue(config, 'vertexCapacity', 1);
+        config.batchSize = GetFastValue(config, 'batchSize', 1);
         config.uniforms = GetFastValue(config, 'uniforms', [
             'uProjectionMatrix',
             'uMainSampler'
