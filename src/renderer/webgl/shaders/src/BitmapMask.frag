@@ -22,6 +22,6 @@ void main()
     {
         alpha *= (1.0 - maskColor.a);
     }
-    
+
     gl_FragColor = vec4(mainColor.rgb * alpha, alpha);
 }
