@@ -43,6 +43,8 @@ var RopeWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var textureUnit = pipeline.setGameObject(src);
 
+    pipeline.manager.preBatch(src);
+
     var vertexViewF32 = pipeline.vertexViewF32;
     var vertexViewU32 = pipeline.vertexViewU32;
 
@@ -97,6 +99,8 @@ var RopeWebGLRenderer = function (renderer, src, camera, parentMatrix)
     }
 
     pipeline.vertexCount += vertexCount;
+
+    pipeline.manager.postBatch(src);
 };
 
 module.exports = RopeWebGLRenderer;
