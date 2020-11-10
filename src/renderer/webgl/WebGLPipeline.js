@@ -391,7 +391,6 @@ var WebGLPipeline = new Class({
         //  Which shader has the largest vertex size?
         var shaders = this.shaders;
         var vertexSize = 0;
-        var vertexComponentCount = 0;
 
         for (i = 0; i < shaders.length; i++)
         {
@@ -399,15 +398,13 @@ var WebGLPipeline = new Class({
             {
                 vertexSize = shaders[i].vertexSize;
             }
-
-            if (shaders[i].vertexComponentCount > vertexComponentCount)
-            {
-                vertexComponentCount = shaders[i].vertexComponentCount;
-            }
         }
 
+        var batchSize = GetFastValue(config, 'batchSize', renderer.config.batchSize);
+
         //  * 6 because there are 6 vertices in a quad and 'batchSize' represents the quantity of quads in the batch
-        this.vertexCapacity = (GetFastValue(config, 'vertexCapacity', renderer.config.batchSize) * 6) * vertexComponentCount;
+
+        this.vertexCapacity = batchSize * 6;
 
         var data = GetFastValue(config, 'vertices', new ArrayBuffer(this.vertexCapacity * vertexSize));
 
@@ -670,7 +667,7 @@ var WebGLPipeline = new Class({
     {
         if (amount === undefined) { amount = 0; }
 
-        return (this.vertexCount + amount >= this.vertexCapacity);
+        return (this.vertexCount + amount > this.vertexCapacity);
     },
 
     /**
