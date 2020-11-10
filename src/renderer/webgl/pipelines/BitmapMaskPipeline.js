@@ -51,7 +51,7 @@ var BitmapMaskPipeline = new Class({
     {
         config.fragShader = GetFastValue(config, 'fragShader', ShaderSourceFS),
         config.vertShader = GetFastValue(config, 'vertShader', ShaderSourceVS),
-        config.vertexCapacity = GetFastValue(config, 'vertexCapacity', 3),
+        config.batchSize = GetFastValue(config, 'batchSize', 1),
         config.vertices = GetFastValue(config, 'vertices', new Float32Array([ -1, 1, -1, -7, 7, 1 ]).buffer),
         config.attributes = GetFastValue(config, 'attributes', [
             {
@@ -186,6 +186,8 @@ var BitmapMaskPipeline = new Class({
 
             //  Finally, draw a triangle filling the whole screen
             gl.drawArrays(this.topology, 0, 3);
+
+            renderer.resetTextures();
         }
     }
 
