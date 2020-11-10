@@ -10,7 +10,6 @@ var CONST = require('./pipelines/const');
 
 //  Default Phaser 3 Pipelines
 var BitmapMaskPipeline = require('./pipelines/BitmapMaskPipeline');
-var CameraPipeline = require('./pipelines/CameraPipeline');
 var GraphicsPipeline = require('./pipelines/GraphicsPipeline');
 var LightPipeline = require('./pipelines/LightPipeline');
 var MultiPipeline = require('./pipelines/MultiPipeline');
@@ -148,17 +147,18 @@ var PipelineManager = new Class({
         this.BITMAPMASK_PIPELINE = null;
 
         /**
-         * A constant-style reference to the Camera Pipeline Instance.
+         * A constant-style reference to the Post FX Pipeline Instance.
          *
          * This is the default Phaser 3 camera pipeline and is used by cameras to handle
-         * their pre and post render effects. This property is set during the `boot` method.
+         * their pre and post render, as well as used by other Game Objects for
+         * post-render effects. This property is set during the `boot` method.
          *
-         * @name Phaser.Renderer.WebGL.PipelineManager#CAMERA_PIPELINE
-         * @type {Phaser.Renderer.WebGL.Pipelines.CameraPipeline}
+         * @name Phaser.Renderer.WebGL.PipelineManager#POSTFX_PIPELINE
+         * @type {Phaser.Renderer.WebGL.Pipelines.PostFXPipeline}
          * @default null
          * @since 3.50.0
          */
-        this.CAMERA_PIPELINE = null;
+        this.POSTFX_PIPELINE = null;
     },
 
     /**
@@ -178,11 +178,10 @@ var PipelineManager = new Class({
 
         this.MULTI_PIPELINE = this.add(CONST.MULTI_PIPELINE, new MultiPipeline({ game: game }));
         this.BITMAPMASK_PIPELINE = this.add(CONST.BITMAPMASK_PIPELINE, new BitmapMaskPipeline({ game: game }));
-        this.CAMERA_PIPELINE = this.add(CONST.CAMERA_PIPELINE, new CameraPipeline({ game: game }));
+        this.POSTFX_PIPELINE = this.add(CONST.POSTFX_PIPELINE, new PostFXPipeline({ game: game }));
 
         this.add(CONST.SINGLE_PIPELINE, new SinglePipeline({ game: game }));
         this.add(CONST.ROPE_PIPELINE, new RopePipeline({ game: game }));
-        this.add(CONST.POSTFX_PIPELINE, new PostFXPipeline({ game: game }));
         this.add(CONST.LIGHT_PIPELINE, new LightPipeline({ game: game }));
         this.add(CONST.GRAPHICS_PIPELINE, new GraphicsPipeline({ game: game }));
     },

@@ -67,16 +67,6 @@ var PIPELINE_CONST = {
     GRAPHICS_PIPELINE: 'GraphicsPipeline',
 
     /**
-     * The Camera Pipeline.
-     *
-     * @name Phaser.Renderer.WebGL.Pipelines.CAMERA_PIPELINE
-     * @type {string}
-     * @const
-     * @since 3.50.0
-     */
-    CAMERA_PIPELINE: 'CameraPipeline',
-
-    /**
      * The Post FX Pipeline.
      *
      * @name Phaser.Renderer.WebGL.Pipelines.POSTFX_PIPELINE
