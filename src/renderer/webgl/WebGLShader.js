@@ -236,6 +236,25 @@ var WebGLShader = new Class({
     },
 
     /**
+     * Sets the program this shader uses as being the active shader in the WebGL Renderer.
+     *
+     * Then resets all of the attribute pointers.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#rebind
+     * @since 3.50.0
+     *
+     * @return {this} This WebGLShader instance.
+     */
+    rebind: function ()
+    {
+        this.renderer.setProgram(this.program);
+
+        this.setAttribPointers(true);
+
+        return this;
+    },
+
+    /**
      * Sets the vertex attribute pointers.
      *
      * This should only be called after the vertex buffer has been bound.

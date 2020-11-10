@@ -744,6 +744,34 @@ var WebGLPipeline = new Class({
     },
 
     /**
+     * This method is called every time the Pipeline Manager rebinds this pipeline.
+     *
+     * It resets all shaders this pipeline uses, setting their attributes again.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#rebind
+     * @since 3.0.0
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    rebind: function ()
+    {
+        this.renderer.setVertexBuffer(this.vertexBuffer);
+
+        var shaders = this.shaders;
+
+        for (var i = 0; i < shaders.length; i++)
+        {
+            shaders[i].rebind();
+        }
+
+        this.currentShader = shaders[0];
+
+        this.onRebind();
+
+        return this;
+    },
+
+    /**
      * TODO
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#postBind
@@ -872,6 +900,20 @@ var WebGLPipeline = new Class({
      * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
      */
     onBind: function ()
+    {
+    },
+
+    /**
+     * By default this is an empty method hook that you can override and use in your own custom pipelines.
+     *
+     * This method is called when the Pipeline Manager needs to rebind this pipeline. This happens after a
+     * pipeline has been cleared, usually when passing control over to a 3rd party WebGL library, like Spine,
+     * and then returing to Phaser again.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#onRebind
+     * @since 3.50.0
+     */
+    onRebind: function ()
     {
     },
 
