@@ -1967,18 +1967,10 @@ var BitmapMask = new Class({
         this.maskFramebuffer = null;
 
         /**
-         * The previous framebuffer set in the renderer before this one was enabled.
-         *
-         * @name Phaser.Display.Masks.BitmapMask#prevFramebuffer
-         * @type {WebGLFramebuffer}
-         * @since 3.17.0
-         */
-        this.prevFramebuffer = null;
-
-        /**
          * Whether to invert the masks alpha.
          *
-         * If `true`, the alpha of the masking pixel will be inverted before it's multiplied with the masked pixel. Essentially, this means that a masked area will be visible only if the corresponding area in the mask is invisible.
+         * If `true`, the alpha of the masking pixel will be inverted before it's multiplied with the masked pixel.
+         * Essentially, this means that a masked area will be visible only if the corresponding area in the mask is invisible.
          *
          * @name Phaser.Display.Masks.BitmapMask#invertAlpha
          * @type {boolean}
