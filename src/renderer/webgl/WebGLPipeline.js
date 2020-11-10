@@ -406,7 +406,8 @@ var WebGLPipeline = new Class({
             }
         }
 
-        this.vertexCapacity = GetFastValue(config, 'vertexCapacity', renderer.config.batchSize) * vertexComponentCount;
+        //  * 6 because there are 6 vertices in a quad and 'batchSize' represents the quantity of quads in the batch
+        this.vertexCapacity = (GetFastValue(config, 'vertexCapacity', renderer.config.batchSize) * 6) * vertexComponentCount;
 
         var data = GetFastValue(config, 'vertices', new ArrayBuffer(this.vertexCapacity * vertexSize));
 
@@ -1208,7 +1209,7 @@ var WebGLPipeline = new Class({
         var xw = Math.floor(x + width);
         var yh = Math.floor(y + height);
 
-        var unit = this.renderer.setTexture2D(texture);
+        var unit = this.setTexture2D(texture);
 
         var tint = Utils.getTintAppendFloatAlphaAndSwap(color, alpha);
 
@@ -1224,6 +1225,26 @@ var WebGLPipeline = new Class({
         }
 
         this.batchQuad(null, x, y, x, yh, xw, yh, xw, y, u0, v0, u1, v1, tint, tint, tint, tint, 0, texture, unit);
+    },
+
+    /**
+     * Sets the texture to be bound to the next available texture unit and returns
+     * the unit id.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setTexture2D
+     * @since 3.50.0
+     *
+     * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch. If not given uses `whiteTexture`.
+     *
+     * @return {number} The assigned texture unit.
+     */
+    setTexture2D: function (texture)
+    {
+        if (texture === undefined) { texture = this.renderer.whiteTexture.glTexture; }
+
+        this.currentUnit = this.renderer.setTexture2D(texture);
+
+        return this.currentUnit;
     },
 
     /**

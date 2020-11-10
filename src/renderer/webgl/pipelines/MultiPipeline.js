@@ -162,25 +162,6 @@ var MultiPipeline = new Class({
     },
 
     /**
-     * Assigns a texture to the current batch. If a different texture is already set it creates a new batch object.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#setTexture2D
-     * @since 3.1.0
-     *
-     * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch. If not given uses blankTexture.
-     *
-     * @return {number} The assigned texture unit.
-     */
-    setTexture2D: function (texture)
-    {
-        if (texture === undefined) { texture = this.renderer.whiteTexture.glTexture; }
-
-        this.currentUnit = this.renderer.setTexture2D(texture);
-
-        return this.currentUnit;
-    },
-
-    /**
      * Takes a Sprite Game Object, or any object that extends it, and adds it to the batch.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#batchSprite
