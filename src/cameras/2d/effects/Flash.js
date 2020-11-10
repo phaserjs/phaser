@@ -314,7 +314,7 @@ var Flash = new Class({
      */
     effectComplete: function ()
     {
-        this._alpha = this.alpha
+        this.alpha = this._alpha
         this._onUpdate = null;
         this._onUpdateScope = null;
 
