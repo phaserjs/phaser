@@ -582,12 +582,9 @@ var PipelineManager = new Class({
 
         renderer.setBlendMode(0, true);
 
-        renderer.resetTextures();
-
         this.current = pipeline;
 
-        pipeline.bind(true);
-        pipeline.onBind();
+        pipeline.rebind();
     },
 
     /**
