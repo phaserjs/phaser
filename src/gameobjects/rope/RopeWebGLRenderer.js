@@ -46,7 +46,7 @@ var RopeWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var vertexViewF32 = pipeline.vertexViewF32;
     var vertexViewU32 = pipeline.vertexViewU32;
 
-    var vertexOffset = (pipeline.vertexCount * pipeline.vertexComponentCount) - 1;
+    var vertexOffset = (pipeline.vertexCount * pipeline.currentShader.vertexComponentCount) - 1;
 
     var colorIndex = 0;
 
