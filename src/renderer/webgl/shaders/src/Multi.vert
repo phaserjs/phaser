@@ -24,4 +24,3 @@ void main ()
     outTint = inTint;
     outTintEffect = inTintEffect;
 }
-

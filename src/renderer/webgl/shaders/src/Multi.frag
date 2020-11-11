@@ -9,7 +9,7 @@ varying float outTexId;
 varying float outTintEffect;
 varying vec4 outTint;
 
-void main()
+void main ()
 {
     vec4 texture;
 

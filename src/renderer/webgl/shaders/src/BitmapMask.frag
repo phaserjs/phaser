@@ -7,7 +7,7 @@ uniform sampler2D uMainSampler;
 uniform sampler2D uMaskSampler;
 uniform bool uInvertMaskAlpha;
 
-void main()
+void main ()
 {
     vec2 uv = gl_FragCoord.xy / uResolution;
     vec4 mainColor = texture2D(uMainSampler, uv);

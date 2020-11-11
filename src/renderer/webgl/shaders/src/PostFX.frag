@@ -6,7 +6,7 @@ uniform sampler2D uMainSampler;
 
 varying vec2 outTexCoord;
 
-void main()
+void main ()
 {
     gl_FragColor = texture2D(uMainSampler, outTexCoord);
 }

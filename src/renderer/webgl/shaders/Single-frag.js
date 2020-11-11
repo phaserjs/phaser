@@ -9,7 +9,7 @@ module.exports = [
     'varying float outTintEffect;',
     'varying vec4 outTint;',
     '',
-    'void main()',
+    'void main ()',
     '{',
     '    vec4 texture = texture2D(uMainSampler, outTexCoord);',
     '    vec4 texel = vec4(outTint.bgr * outTint.a, outTint.a);',

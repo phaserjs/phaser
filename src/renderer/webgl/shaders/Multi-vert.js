@@ -25,6 +25,5 @@ module.exports = [
     '    outTint = inTint;',
     '    outTintEffect = inTintEffect;',
     '}',
-    '',
     ''
 ].join('\n');

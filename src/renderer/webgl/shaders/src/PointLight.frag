@@ -8,7 +8,7 @@ varying vec4 lightPosition;
 varying vec4 lightColor;
 varying float lightRadius;
 
-void main()
+void main ()
 {
     vec2 center = vec2((lightPosition.x + 1.0) * uResolution.x, (lightPosition.y + 1.0) * uResolution.y);
 
