@@ -412,11 +412,11 @@ var WebGLPipeline = new Class({
 
         if (GetFastValue(config, 'vertices', null))
         {
-            this.vertexBuffer = renderer.createVertexBuffer(data, gl.STREAM_DRAW);
+            this.vertexBuffer = renderer.createVertexBuffer(data, gl.STATIC_DRAW);
         }
         else
         {
-            this.vertexBuffer = renderer.createVertexBuffer(data.byteLength, gl.STREAM_DRAW);
+            this.vertexBuffer = renderer.createVertexBuffer(data.byteLength, gl.DYNAMIC_DRAW);
         }
 
         this.bytes = new Uint8Array(data);
@@ -431,7 +431,7 @@ var WebGLPipeline = new Class({
 
         for (i = 0; i < shaders.length; i++)
         {
-            shaders[i].setAttribPointers(true);
+            shaders[i].rebind();
         }
 
         this.currentShader.bind();
@@ -732,13 +732,19 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#bind
      * @since 3.0.0
      *
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [currentShader] - The shader to set as being current.
+     *
      * @return {this} This WebGLPipeline instance.
      */
-    bind: function ()
+    bind: function (currentShader)
     {
+        if (currentShader === undefined) { currentShader = this.currentShader; }
+
         var wasBound = this.renderer.setVertexBuffer(this.vertexBuffer);
 
-        this.currentShader.bind(wasBound);
+        currentShader.bind(wasBound);
+
+        this.currentShader = currentShader;
 
         return this;
     },
@@ -804,7 +810,7 @@ var WebGLPipeline = new Class({
     {
         if (this.currentRenderTarget)
         {
-            this.this.currentRenderTarget.unbind();
+            this.currentRenderTarget.unbind();
         }
     },
 
@@ -875,14 +881,23 @@ var WebGLPipeline = new Class({
 
         if (target)
         {
-            target.draw();
+            this.draw(target);
 
-            this.flush(true);
+            // target.draw();
+
+            // this.flush(true);
         }
 
         this.onPostFlush(gameObject);
 
         return this;
+    },
+
+    draw: function (renderTarget)
+    {
+        //  Post Pipelines can override this as needed
+        this.manager.copyFrame(renderTarget);
+
     },
 
     /**
