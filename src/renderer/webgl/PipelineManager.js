@@ -5,8 +5,8 @@
  */
 
 var Class = require('../../utils/Class');
-var CustomMap = require('../../structs/Map');
 var CONST = require('./pipelines/const');
+var CustomMap = require('../../structs/Map');
 
 //  Default Phaser 3 Pipelines
 var BitmapMaskPipeline = require('./pipelines/BitmapMaskPipeline');
@@ -16,6 +16,7 @@ var MultiPipeline = require('./pipelines/MultiPipeline');
 var PostFXPipeline = require('./pipelines/PostFXPipeline');
 var RopePipeline = require('./pipelines/RopePipeline');
 var SinglePipeline = require('./pipelines/SinglePipeline');
+var UtilityPipeline = require('./pipelines/UtilityPipeline');
 
 /**
  * @classdesc
@@ -159,6 +160,16 @@ var PipelineManager = new Class({
          * @since 3.50.0
          */
         this.POSTFX_PIPELINE = null;
+
+        /**
+         * A constant-style reference to the Utility Pipeline Instance.
+         *
+         * @name Phaser.Renderer.WebGL.PipelineManager#UTILITY_PIPELINE
+         * @type {Phaser.Renderer.WebGL.Pipelines.UtilityPipeline}
+         * @default null
+         * @since 3.50.0
+         */
+        this.UTILITY_PIPELINE = null;
     },
 
     /**
@@ -179,6 +190,7 @@ var PipelineManager = new Class({
         this.MULTI_PIPELINE = this.add(CONST.MULTI_PIPELINE, new MultiPipeline({ game: game }));
         this.BITMAPMASK_PIPELINE = this.add(CONST.BITMAPMASK_PIPELINE, new BitmapMaskPipeline({ game: game }));
         this.POSTFX_PIPELINE = this.add(CONST.POSTFX_PIPELINE, new PostFXPipeline({ game: game }));
+        this.UTILITY_PIPELINE = this.add(CONST.UTILITY_PIPELINE, new UtilityPipeline({ game: game }));
 
         this.add(CONST.SINGLE_PIPELINE, new SinglePipeline({ game: game }));
         this.add(CONST.ROPE_PIPELINE, new RopePipeline({ game: game }));
@@ -419,12 +431,13 @@ var PipelineManager = new Class({
      *
      * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipeline - The pipeline instance to be set as current.
      * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [currentShader] - The shader to set as being current.
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} The pipeline that was set.
      */
-    set: function (pipeline, gameObject)
+    set: function (pipeline, gameObject, currentShader)
     {
-        if (!this.isCurrent(pipeline))
+        if (!this.isCurrent(pipeline, currentShader))
         {
             this.flush();
 
@@ -435,7 +448,7 @@ var PipelineManager = new Class({
 
             this.current = pipeline;
 
-            pipeline.bind();
+            pipeline.bind(currentShader);
         }
 
         pipeline.onBind(gameObject);
@@ -475,19 +488,36 @@ var PipelineManager = new Class({
      * @since 3.50.0
      *
      * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipeline - The pipeline instance to be checked.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [currentShader] - The shader to set as being current.
      *
      * @return {boolean} `true` if the given pipeline is already the current pipeline, otherwise `false`.
      */
-    isCurrent: function (pipeline)
+    isCurrent: function (pipeline, currentShader)
     {
         var renderer = this.renderer;
         var current = this.current;
 
+        if (current && !currentShader)
+        {
+            currentShader = current.currentShader;
+        }
+
         return !(
             current !== pipeline ||
             current.vertexBuffer !== renderer.currentVertexBuffer ||
-            current.currentShader.program !== renderer.currentProgram
+            currentShader.program !== renderer.currentProgram
         );
+    },
+
+    copyFrame: function (source, target, brightness)
+    {
+        if (brightness === undefined) { brightness = 1; }
+
+        var pipeline = this.setUtility(this.UTILITY_PIPELINE.copyShader);
+
+        pipeline.copyFrame(source, target, brightness);
+
+        return this;
     },
 
     forceZero: function ()
@@ -523,6 +553,23 @@ var PipelineManager = new Class({
     setCameraPipeline: function ()
     {
         return this.set(this.CAMERA_PIPELINE);
+    },
+
+    /**
+     * Sets the Utility Pipeline to be the currently bound pipeline.
+     *
+     * This is the default Phaser 3 rendering pipeline.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#setUtility
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [currentShader] - The shader to set as being current.
+     *
+     * @return {Phaser.Renderer.WebGL.Pipelines.UtilityPipeline} The Utility Pipeline instance.
+     */
+    setUtility: function (currentShader)
+    {
+        return this.set(this.UTILITY_PIPELINE, null, currentShader);
     },
 
     /**
