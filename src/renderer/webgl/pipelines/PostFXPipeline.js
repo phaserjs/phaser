@@ -71,7 +71,7 @@ var PostFXPipeline = new Class({
     {
         WebGLPipeline.prototype.boot.call(this);
 
-        this.set1i('uMainSampler', 1);
+        this.set1i('uMainSampler', 0);
     },
 
     batchVert: function (x, y, u, v, unit)
