@@ -73,6 +73,26 @@ var RenderTarget = new Class({
         this.texture = null;
 
         /**
+         * The width of the texture.
+         *
+         * @name Phaser.Renderer.WebGL.RenderTarget#width
+         * @type {number}
+         * @readonly
+         * @since 3.50.0
+         */
+        this.width = 0;
+
+        /**
+         * The height of the texture.
+         *
+         * @name Phaser.Renderer.WebGL.RenderTarget#height
+         * @type {number}
+         * @readonly
+         * @since 3.50.0
+         */
+        this.height = 0;
+
+        /**
          * A value between 0 and 1. Controls the size of this Render Target in relation to the Renderer.
          *
          * A value of 1 matches it. 0.5 makes the Render Target half the size of the renderer, etc.
@@ -136,8 +156,10 @@ var RenderTarget = new Class({
         height *= this.scale;
 
         this.texture = renderer.createTextureFromSource(null, width, height, this.minFilter);
-
         this.framebuffer = renderer.createFramebuffer(width, height, this.texture, false);
+
+        this.width = width;
+        this.height = height;
 
         return this;
     },
@@ -181,14 +203,14 @@ var RenderTarget = new Class({
      *
      * @name Phaser.Renderer.WebGL.RenderTarget#draw
      * @since 3.50.0
-     */
-    draw: function ()
-    {
-        var width = this.renderer.width;
-        var height = this.renderer.height;
+     draw: function ()
+     {
+         var width = this.renderer.width;
+         var height = this.renderer.height;
 
-        this.pipeline.drawFillRect(0, 0, width, height, 0, 1, this.texture);
-    },
+         this.pipeline.drawFillRect(0, 0, width, height, 0, 1, this.texture);
+        },
+    */
 
     /**
      * Removes all external references from this class and deletes the
