@@ -74,7 +74,17 @@ var PIPELINE_CONST = {
      * @const
      * @since 3.50.0
      */
-    POSTFX_PIPELINE: 'PostFXPipeline'
+    POSTFX_PIPELINE: 'PostFXPipeline',
+
+    /**
+     * The Utility Pipeline.
+     *
+     * @name Phaser.Renderer.WebGL.Pipelines.UTILITY_PIPELINE
+     * @type {string}
+     * @const
+     * @since 3.50.0
+     */
+    UTILITY_PIPELINE: 'UtilityPipeline'
 };
 
 module.exports = PIPELINE_CONST;
