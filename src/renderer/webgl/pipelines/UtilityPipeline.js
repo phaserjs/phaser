@@ -6,6 +6,7 @@
 
 var AddBlendFS = require('../shaders/AddBlend-frag.js');
 var Class = require('../../../utils/Class');
+var ColorMatrix = require('../../../display/ColorMatrix');
 var ColorMatrixFS = require('../shaders/ColorMatrix-frag.js');
 var CopyFS = require('../shaders/Copy-frag.js');
 var GetFastValue = require('../../../utils/object/GetFastValue');
@@ -67,7 +68,6 @@ var UtilityPipeline = new Class({
                 name: 'Copy',
                 fragShader: CopyFS,
                 uniforms: [
-                    'uProjectionMatrix',
                     'uMainSampler',
                     'uBrightness'
                 ]
@@ -76,7 +76,6 @@ var UtilityPipeline = new Class({
                 name: 'AddBlend',
                 fragShader: AddBlendFS,
                 uniforms: [
-                    'uProjectionMatrix',
                     'uMainSampler1',
                     'uMainSampler2',
                     'uStrength'
@@ -86,7 +85,6 @@ var UtilityPipeline = new Class({
                 name: 'LinearBlend',
                 fragShader: LinearBlendFS,
                 uniforms: [
-                    'uProjectionMatrix',
                     'uMainSampler1',
                     'uMainSampler2',
                     'uStrength'
@@ -96,7 +94,6 @@ var UtilityPipeline = new Class({
                 name: 'ColorMatrix',
                 fragShader: ColorMatrixFS,
                 uniforms: [
-                    'uProjectionMatrix',
                     'uMainSampler',
                     'uColorMatrix'
                 ]
@@ -115,10 +112,22 @@ var UtilityPipeline = new Class({
             }
         ]);
 
-        config.vertices = new Float32Array([ -1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1 ]);
+        //  x, y, u, v (x/y in NDC)
+
+        config.vertices = new Float32Array([
+            -1, -1, 0, 0,
+            -1, 1, 0, 1,
+            1, 1, 1, 1,
+            -1, -1, 0, 0,
+            1, 1, 1, 1,
+            1, -1, 1, 0
+        ]);
+
         config.batchSize = 1;
 
         WebGLPipeline.call(this, config);
+
+        this.colorMatrix = new ColorMatrix();
 
         this.copyShader;
         this.addShader;
@@ -159,9 +168,7 @@ var UtilityPipeline = new Class({
 
         var gl = this.gl;
 
-        window.spector.setMarker('cf1');
-
-        this.set1i('uMainSampler', 1, this.copyShader);
+        this.set1i('uMainSampler', 0, this.copyShader);
         this.set1f('uBrightness', brightness, this.copyShader);
 
         if (target)
@@ -173,15 +180,10 @@ var UtilityPipeline = new Class({
             gl.viewport(0, 0, source.width, source.height);
         }
 
-        window.spector.clearMarker();
-        window.spector.setMarker('cf2');
-
-        gl.activeTexture(gl.TEXTURE1);
+        gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source.texture);
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.fullFrame1.framebuffer);
-
-        // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
         if (target)
         {
@@ -190,11 +192,11 @@ var UtilityPipeline = new Class({
 
         if (clearAlpha)
         {
-            // gl.clearColor(0, 0, 0, 0);
+            gl.clearColor(0, 0, 0, 0);
         }
         else
         {
-            // gl.clearColor(0, 0, 0, 1);
+            gl.clearColor(0, 0, 0, 1);
         }
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
@@ -202,22 +204,71 @@ var UtilityPipeline = new Class({
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.bindTexture(gl.TEXTURE_2D, null);
-
-        window.spector.clearMarker();
     },
 
-    batchVert: function (x, y, u, v)
+    drawFrame: function (source, target)
     {
-        var vertexViewF32 = this.vertexViewF32;
+        var gl = this.gl;
 
-        var vertexOffset = (this.vertexCount * this.currentShader.vertexComponentCount) - 1;
+        this.set1i('uMainSampler', 0, this.colorMatrixShader);
+        this.set1fv('uColorMatrix', this.colorMatrix.getData(), this.colorMatrixShader);
 
-        vertexViewF32[++vertexOffset] = x;
-        vertexViewF32[++vertexOffset] = y;
-        vertexViewF32[++vertexOffset] = u;
-        vertexViewF32[++vertexOffset] = v;
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, source.texture);
 
-        this.vertexCount++;
+        // gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+        if (target)
+        {
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
+        }
+
+        // if (clearAlpha)
+        // {
+            // gl.clearColor(0, 0, 0, 0);
+        // }
+        // else
+        // {
+            // gl.clearColor(0, 0, 0, 1);
+        // }
+
+        gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.bindTexture(gl.TEXTURE_2D, null);
+    },
+
+    bindAndDraw: function (source, target)
+    {
+        var gl = this.gl;
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, source.texture);
+
+        // gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+        if (target)
+        {
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
+        }
+
+        // if (clearAlpha)
+        // {
+            // gl.clearColor(0, 0, 0, 0);
+        // }
+        // else
+        // {
+            // gl.clearColor(0, 0, 0, 1);
+        // }
+
+        gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.bindTexture(gl.TEXTURE_2D, null);
     }
 
 });
