@@ -520,6 +520,24 @@ var PipelineManager = new Class({
         return this;
     },
 
+    drawFrame: function (source, target)
+    {
+        var pipeline = this.setUtility(this.UTILITY_PIPELINE.colorMatrixShader);
+
+        pipeline.drawFrame(source, target);
+
+        return this;
+    },
+
+    bindAndDraw: function (source, target)
+    {
+        var pipeline = this.setUtility(this.UTILITY_PIPELINE.colorMatrixShader);
+
+        pipeline.bindAndDraw(source, target);
+
+        return this;
+    },
+
     forceZero: function ()
     {
         return (this.current && this.current.forceZero);
