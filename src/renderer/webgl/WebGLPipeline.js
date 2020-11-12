@@ -881,11 +881,7 @@ var WebGLPipeline = new Class({
 
         if (target)
         {
-            this.draw(target);
-
-            // target.draw();
-
-            // this.flush(true);
+            this.onDraw(target);
         }
 
         this.onPostFlush(gameObject);
@@ -893,10 +889,11 @@ var WebGLPipeline = new Class({
         return this;
     },
 
-    draw: function (renderTarget)
+    onDraw: function (renderTarget)
     {
         //  Post Pipelines can override this as needed
         this.manager.copyFrame(renderTarget);
+
 
     },
 
