@@ -198,21 +198,6 @@ var RenderTarget = new Class({
     },
 
     /**
-     * Draws a quad to the pipeline, using this Render Target texture,
-     * sized so that it fills the renderer.
-     *
-     * @name Phaser.Renderer.WebGL.RenderTarget#draw
-     * @since 3.50.0
-     draw: function ()
-     {
-         var width = this.renderer.width;
-         var height = this.renderer.height;
-
-         this.pipeline.drawFillRect(0, 0, width, height, 0, 1, this.texture);
-        },
-    */
-
-    /**
      * Removes all external references from this class and deletes the
      * WebGL framebuffer and texture instances.
      *
