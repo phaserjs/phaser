@@ -671,6 +671,28 @@ When loading any of the file types listed below it will no longer store the data
 * `BitmapFontFile` no longer stores the XML in the XML Cache once the texture has been created.
 * You can now use `TextureManager.remove` to remove a texture and not have to worry about clearing the corresponding JSON or XML cache entry as well in order to reload a new texture using the same key. Fix #5323 (thanks @TedGriggs)
 
+### ColorMatrix
+
+* `Phaser.Display.ColorMatrix` is a new class that allows you to create and manipulate a 5x5 color matrix, which can be used by shaders or graphics operations.
+* The `ColorMatrix.set` method allows you to set the values of a ColorMatrix.
+* The `ColorMatrix.reset` method will reset the ColorMatrix to its default values.
+* The `ColorMatrix.getData` method will return the data in the ColorMatrix as a Float32Array, useful for setting in a shader uniform.
+* The `ColorMatrix.brightness` method lets you set the brightness of the ColorMatrix.
+* The `ColorMatrix.saturation` method lets you set the saturation of the ColorMatrix.
+* The `ColorMatrix.hue` method lets you rotate the hues of the ColorMatrix by the given amount.
+* The `ColorMatrix.grayscale` method converts the ColorMatrix to grayscale.
+* The `ColorMatrix.contrast` method lets you set the contrast of the ColorMatrix.
+* The `ColorMatrix.negative` method converts the ColorMatrix to negative values.
+* The `ColorMatrix.desaturateLuminance` method applies a desaturated luminance to the ColorMatrix.
+* The `ColorMatrix.sepia` method applies a sepia tone to the ColorMatrix.
+* The `ColorMatrix.brown` method applies a brown tone to the ColorMatrix.
+* The `ColorMatrix.vintagePinhole` method applies a vintage pinhole color effect to the ColorMatrix.
+* The `ColorMatrix.kodachrome` method applies a kodachrome color effect to the ColorMatrix.
+* The `ColorMatrix.technicolor` method applies a technicolor color effect to the ColorMatrix.
+* The `ColorMatrix.polaroid` method applies a polaroid color effect to the ColorMatrix.
+* The `ColorMatrix.shiftToBGR` method shifts the values of the ColorMatrix into BGR order.
+* The `ColorMatrix.multiply` method multiplies two ColorMatrix data sets together.
+
 ### Removal of 'resolution' property from across the API
 
 For legacy reasons, Phaser 3 has never properly supported HighDPI devices. It will render happily to them of course, but wouldn't let you set a 'resolution' for the Canvas beyond 1. Earlier versions of 3.x had a resolution property in the Game Config, but it was never fully implemented (for example, it would break zooming cameras). When the Scale Manager was introduced in v3.16 we forced the resolution to be 1 to avoid it breaking anything else internally.
