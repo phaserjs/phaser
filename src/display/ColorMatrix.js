@@ -33,7 +33,13 @@ var ColorMatrix = new Class({
          * @private
          * @since 3.50.0
          */
-        this._matrix;
+        this._matrix = [
+            1, 0, 0, 0, 0,
+            0, 1, 0, 0, 0,
+            0, 0, 1, 0, 0,
+            0, 0, 0, 1, 0,
+            0, 0, 0, 0, 1
+        ];
 
         /**
          * Is the ColorMatrix array dirty?
@@ -56,8 +62,6 @@ var ColorMatrix = new Class({
          * @since 3.50.0
          */
         this._data;
-
-        this.reset();
     },
 
     /**
@@ -89,13 +93,40 @@ var ColorMatrix = new Class({
      */
     reset: function ()
     {
-        this._matrix = [
-            1, 0, 0, 0, 0,
-            0, 1, 0, 0, 0,
-            0, 0, 1, 0, 0,
-            0, 0, 0, 1, 0,
-            0, 0, 0, 0, 1
-        ];
+        //  Long-winded, but saves on gc, which happens a lot in Post FX Shaders
+        //  that reset the ColorMatrix every frame.
+
+        var m = this._matrix;
+
+        m[0] = 1;
+        m[1] = 0;
+        m[2] = 0;
+        m[3] = 0;
+        m[4] = 0;
+
+        m[5] = 0;
+        m[6] = 1;
+        m[7] = 0;
+        m[8] = 0;
+        m[9] = 0;
+
+        m[10] = 0;
+        m[11] = 0;
+        m[12] = 1;
+        m[13] = 0;
+        m[14] = 0;
+
+        m[15] = 0;
+        m[16] = 0;
+        m[17] = 0;
+        m[18] = 1;
+        m[19] = 0;
+
+        m[20] = 0;
+        m[21] = 0;
+        m[22] = 0;
+        m[23] = 0;
+        m[24] = 1;
 
         this._dirty = true;
 
