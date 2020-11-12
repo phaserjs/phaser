@@ -15,6 +15,7 @@ module.exports = {
     Bounds: require('./bounds'),
     Canvas: require('./canvas'),
     Color: require('./color'),
+    ColorMatrix: require('./ColorMatrix'),
     Masks: require('./mask'),
     RGB: require('./RGB')
 
