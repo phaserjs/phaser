@@ -1610,6 +1610,8 @@ var WebGLRenderer = new Class({
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#popFramebuffer
      * @since 3.50.0
+     *
+     * @return {WebGLFramebuffer} The Framebuffer that was set, or `null` if there aren't any more in the stack.
      */
     popFramebuffer: function ()
     {
@@ -1627,6 +1629,8 @@ var WebGLRenderer = new Class({
         }
 
         this.setFramebuffer(framebuffer, false, true);
+
+        return framebuffer;
     },
 
     /**
@@ -2125,7 +2129,7 @@ var WebGLRenderer = new Class({
 
         var color = camera.backgroundColor;
 
-        this.pipelines.preBatch(camera);
+        this.pipelines.preBatchCamera(camera);
 
         this.pushScissor(cx, cy, cw, ch);
 
@@ -2214,7 +2218,7 @@ var WebGLRenderer = new Class({
         {
             camera.emit(CameraEvents.POST_RENDER, camera);
 
-            this.pipelines.postBatch(camera);
+            this.pipelines.postBatchCamera(camera);
 
             this.resetTextures();
         }
