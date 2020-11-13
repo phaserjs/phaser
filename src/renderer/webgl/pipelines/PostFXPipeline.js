@@ -265,11 +265,10 @@ var PostFXPipeline = new Class({
     {
         this.bind(currentShader);
 
-        if (this.currentTarget)
-        {
-            //  Pop out this pipelines renderTarget
-            this.renderer.popFramebuffer();
-        }
+        this.set1i('uMainSampler', 0);
+
+        //  Pop out this pipelines renderTarget
+        this.renderer.popFramebuffer();
 
         var gl = this.gl;
 
@@ -279,7 +278,7 @@ var PostFXPipeline = new Class({
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-        gl.bindTexture(gl.TEXTURE_2D, null);
+        this.renderer.resetTextures();
     }
 
 });
