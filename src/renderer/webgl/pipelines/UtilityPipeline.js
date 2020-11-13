@@ -17,20 +17,29 @@ var WebGLPipeline = require('../WebGLPipeline');
 
 /**
  * @classdesc
- * TODO
+ * The Utility Pipeline is a special-use pipeline that belongs to the Pipeline Manager.
  *
- * The fragment shader it uses can be found in `shaders/src/PostFX.frag`.
- * The vertex shader it uses can be found in `shaders/src/PostFX.vert`.
+ * It provides 4 shaders and handy associated methods:
+ *
+ * 1) Copy Shader. A fast texture to texture copy shader with optional brightness setting.
+ * 2) Additive Blend Mode Shader. Blends two textures using an additive blend mode.
+ * 3) Linear Blend Mode Shader. Blends two textures using a linear blend mode.
+ * 4) Color Matrix Copy Shader. Draws a texture to a target using a Color Matrix.
+ *
+ * You typically do not extend or access this pipeline directly, but instead go
+ * via the following methods in the Pipeline Manager:
+ *
+ * `copyFrame`
+ * `drawFrame`
+ * `blendFrames`
+ * `blendFramesAdditive`
  *
  * The default shader attributes for this pipeline are:
  *
  * `inPosition` (vec2, offset 0)
  * `inTexCoord` (vec2, offset 8)
  *
- * The default shader uniforms for this pipeline are:
- *
- * `uProjectionMatrix` (mat4)
- * `uMainSampler` (sampler2D)
+ * This pipeline has a hard-coded batch size of 1 and a hard coded set of vertices.
  *
  * @class UtilityPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
@@ -48,7 +57,7 @@ var UtilityPipeline = new Class({
 
     function UtilityPipeline (config)
     {
-        config.renderTarget = [
+        config.renderTarget = GetFastValue(config, 'renderTarget', [
             {
                 scale: 1
             },
@@ -61,9 +70,11 @@ var UtilityPipeline = new Class({
             {
                 scale: 0.5
             }
-        ];
-        config.vertShader = QuadVS;
-        config.shaders = [
+        ]);
+
+        config.vertShader = GetFastValue(config, 'vertShader', QuadVS);
+
+        config.shaders = GetFastValue(config, 'shaders', [
             {
                 name: 'Copy',
                 fragShader: CopyFS,
@@ -98,7 +109,8 @@ var UtilityPipeline = new Class({
                     'uColorMatrix'
                 ]
             }
-        ];
+        ]);
+
         config.attributes = GetFastValue(config, 'attributes', [
             {
                 name: 'inPosition',
@@ -113,7 +125,6 @@ var UtilityPipeline = new Class({
         ]);
 
         //  x, y, u, v (x/y in NDC)
-
         config.vertices = new Float32Array([
             -1, -1, 0, 0,
             -1, 1, 0, 1,
@@ -127,16 +138,123 @@ var UtilityPipeline = new Class({
 
         WebGLPipeline.call(this, config);
 
+        /**
+         * A default Color Matrix, used by the Color Matrix Shader when one
+         * isn't provided.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#colorMatrix
+         * @type {Phaser.Display.ColorMatrix}
+         * @since 3.50.0
+         */
         this.colorMatrix = new ColorMatrix();
 
+        /**
+         * A reference to the Copy Shader belonging to this Utility Pipeline.
+         *
+         * This property is set during the `boot` method.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#copyShader
+         * @type {Phaser.Renderer.WebGL.WebGLShader}
+         * @default null
+         * @since 3.50.0
+         */
         this.copyShader;
+
+        /**
+         * A reference to the Additive Blend Shader belonging to this Utility Pipeline.
+         *
+         * This property is set during the `boot` method.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#addShader
+         * @type {Phaser.Renderer.WebGL.WebGLShader}
+         * @since 3.50.0
+         */
         this.addShader;
+
+        /**
+         * A reference to the Linear Blend Shader belonging to this Utility Pipeline.
+         *
+         * This property is set during the `boot` method.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#linearShader
+         * @type {Phaser.Renderer.WebGL.WebGLShader}
+         * @since 3.50.0
+         */
         this.linearShader;
+
+        /**
+         * A reference to the Color Matrix Shader belonging to this Utility Pipeline.
+         *
+         * This property is set during the `boot` method.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#colorMatrixShader
+         * @type {Phaser.Renderer.WebGL.WebGLShader}
+         * @since 3.50.0
+         */
         this.colorMatrixShader;
 
+        /**
+         * A reference to the Full Frame 1 Render Target.
+         *
+         * This property is set during the `boot` method.
+         *
+         * This Render Target is the full size of the renderer.
+         *
+         * You can use this directly in Post FX Pipelines for multi-target effects.
+         * However, be aware that these targets are shared between all post fx pipelines.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#fullFrame1
+         * @type {Phaser.Renderer.WebGL.RenderTarget}
+         * @since 3.50.0
+         */
         this.fullFrame1;
+
+        /**
+         * A reference to the Full Frame 2 Render Target.
+         *
+         * This property is set during the `boot` method.
+         *
+         * This Render Target is the full size of the renderer.
+         *
+         * You can use this directly in Post FX Pipelines for multi-target effects.
+         * However, be aware that these targets are shared between all post fx pipelines.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#fullFrame2
+         * @type {Phaser.Renderer.WebGL.RenderTarget}
+         * @since 3.50.0
+         */
         this.fullFrame2;
+
+        /**
+         * A reference to the Half Frame 1 Render Target.
+         *
+         * This property is set during the `boot` method.
+         *
+         * This Render Target is half the size of the renderer.
+         *
+         * You can use this directly in Post FX Pipelines for multi-target effects.
+         * However, be aware that these targets are shared between all post fx pipelines.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#halfFrame1
+         * @type {Phaser.Renderer.WebGL.RenderTarget}
+         * @since 3.50.0
+         */
         this.halfFrame1;
+
+        /**
+         * A reference to the Half Frame 2 Render Target.
+         *
+         * This property is set during the `boot` method.
+         *
+         * This Render Target is half the size of the renderer.
+         *
+         * You can use this directly in Post FX Pipelines for multi-target effects.
+         * However, be aware that these targets are shared between all post fx pipelines.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#halfFrame2
+         * @type {Phaser.Renderer.WebGL.RenderTarget}
+         * @since 3.50.0
+         */
         this.halfFrame2;
     },
 
@@ -156,11 +274,25 @@ var UtilityPipeline = new Class({
         this.fullFrame2 = targets[1];
         this.halfFrame1 = targets[2];
         this.halfFrame2 = targets[3];
-
-        console.log(this);
     },
 
-    //  params = RenderTargets
+    /**
+     * Copy the `source` Render Target to the `target` Render Target.
+     *
+     * You can optionally set the brightness factor of the copy.
+     *
+     * The difference between this method and `drawFrame` is that this method
+     * uses a faster copy shader, where only the brightness can be modified.
+     * If you need color level manipulation, see `drawFrame` instead.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#copyFrame
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The target Render Target.
+     * @param {number} [brightness=1] - The brightness value applied to the frame copy.
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     */
     copyFrame: function (source, target, brightness, clearAlpha)
     {
         if (brightness === undefined) { brightness = 1; }
@@ -207,6 +339,23 @@ var UtilityPipeline = new Class({
         gl.bindTexture(gl.TEXTURE_2D, null);
     },
 
+    /**
+     * Copy the `source` Render Target to the `target` Render Target, using the
+     * given Color Matrix.
+     *
+     * The difference between this method and `copyFrame` is that this method
+     * uses a color matrix shader, where you have full control over the luminance
+     * values used during the copy. If you don't need this, you can use the faster
+     * `copyFrame` method instead.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#drawFrame
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The target Render Target.
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     * @param {Phaser.Display.ColorMatrix} [colorMatrix] - The Color Matrix to use when performing the draw.
+     */
     drawFrame: function (source, target, clearAlpha, colorMatrix)
     {
         if (clearAlpha === undefined) { clearAlpha = true; }
@@ -243,6 +392,20 @@ var UtilityPipeline = new Class({
         gl.bindTexture(gl.TEXTURE_2D, null);
     },
 
+    /**
+     * Draws the `source1` and `source2` Render Targets to the `target` Render Target
+     * using a linear blend effect, which is controlled by the `strength` parameter.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#blendFrames
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source1 - The first source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source2 - The second source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The target Render Target.
+     * @param {number} [strength=1] - The strength of the blend.
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [blendShader] - The shader to use during the blend copy.
+     */
     blendFrames: function (source1, source2, target, strength, clearAlpha, blendShader)
     {
         if (strength === undefined) { strength = 1; }
@@ -287,6 +450,24 @@ var UtilityPipeline = new Class({
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
         gl.bindTexture(gl.TEXTURE_2D, null);
+    },
+
+    /**
+     * Draws the `source1` and `source2` Render Targets to the `target` Render Target
+     * using an additive blend effect, which is controlled by the `strength` parameter.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#blendFramesAdditive
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source1 - The first source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source2 - The second source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The target Render Target.
+     * @param {number} [strength=1] - The strength of the blend.
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     */
+    blendFramesAdditive: function (source1, source2, target, strength, clearAlpha)
+    {
+        this.blendFrames(source1, source2, target, strength, clearAlpha, this.addShader);
     }
 
 });
