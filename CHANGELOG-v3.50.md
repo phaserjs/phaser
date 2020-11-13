@@ -673,19 +673,23 @@ When loading any of the file types listed below it will no longer store the data
 
 ### ColorMatrix
 
-* `Phaser.Display.ColorMatrix` is a new class that allows you to create and manipulate a 5x5 color matrix, which can be used by shaders or graphics operations.
+* `Phaser.Display.ColorMatrix` is a new class that allows you to create and manipulate a 5x4 color matrix, which can be used by shaders or graphics operations.
 * The `ColorMatrix.set` method allows you to set the values of a ColorMatrix.
 * The `ColorMatrix.reset` method will reset the ColorMatrix to its default values.
 * The `ColorMatrix.getData` method will return the data in the ColorMatrix as a Float32Array, useful for setting in a shader uniform.
 * The `ColorMatrix.brightness` method lets you set the brightness of the ColorMatrix.
-* The `ColorMatrix.saturation` method lets you set the saturation of the ColorMatrix.
+* The `ColorMatrix.saturate` method lets you set the saturation of the ColorMatrix.
+* The `ColorMatrix.desaturate` method lets you desaturate the colors in the ColorMatrix.
 * The `ColorMatrix.hue` method lets you rotate the hues of the ColorMatrix by the given amount.
 * The `ColorMatrix.grayscale` method converts the ColorMatrix to grayscale.
+* The `ColorMatrix.blackWhite` method converts the ColorMatrix to black and whites.
 * The `ColorMatrix.contrast` method lets you set the contrast of the ColorMatrix.
 * The `ColorMatrix.negative` method converts the ColorMatrix to negative values.
 * The `ColorMatrix.desaturateLuminance` method applies a desaturated luminance to the ColorMatrix.
 * The `ColorMatrix.sepia` method applies a sepia tone to the ColorMatrix.
 * The `ColorMatrix.brown` method applies a brown tone to the ColorMatrix.
+* The `ColorMatrix.night` method applies a night time effect to the ColorMatrix.
+* The `ColorMatrix.lsd` method applies a trippy color effect to the ColorMatrix.
 * The `ColorMatrix.vintagePinhole` method applies a vintage pinhole color effect to the ColorMatrix.
 * The `ColorMatrix.kodachrome` method applies a kodachrome color effect to the ColorMatrix.
 * The `ColorMatrix.technicolor` method applies a technicolor color effect to the ColorMatrix.
