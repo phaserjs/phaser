@@ -313,11 +313,7 @@ var MultiPipeline = new Class({
 
         var unit = this.setGameObject(sprite, frame);
 
-        this.manager.preBatch(sprite);
-
         this.batchQuad(sprite, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, sprite.tintEffect, texture, unit);
-
-        this.manager.postBatch(sprite);
     },
 
     /**
@@ -502,12 +498,7 @@ var MultiPipeline = new Class({
             textureUnit = this.renderer.setTexture2D(texture);
         }
 
-        //  TODO - parameter toggle?
-        // this.manager.preBatch(gameObject);
-
         this.batchQuad(gameObject, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
-
-        // this.manager.postBatch(gameObject);
     },
 
     /**
