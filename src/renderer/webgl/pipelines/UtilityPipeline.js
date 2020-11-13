@@ -183,10 +183,9 @@ var UtilityPipeline = new Class({
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source.texture);
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.fullFrame1.framebuffer);
-
         if (target)
         {
+            gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
         }
 
@@ -199,6 +198,8 @@ var UtilityPipeline = new Class({
             gl.clearColor(0, 0, 0, 1);
         }
 
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
@@ -206,68 +207,85 @@ var UtilityPipeline = new Class({
         gl.bindTexture(gl.TEXTURE_2D, null);
     },
 
-    drawFrame: function (source, target)
+    drawFrame: function (source, target, clearAlpha, colorMatrix)
     {
+        if (clearAlpha === undefined) { clearAlpha = true; }
+        if (colorMatrix === undefined) { colorMatrix = this.colorMatrix; }
+
         var gl = this.gl;
 
         this.set1i('uMainSampler', 0, this.colorMatrixShader);
-        this.set1fv('uColorMatrix', this.colorMatrix.getData(), this.colorMatrixShader);
+        this.set1fv('uColorMatrix', colorMatrix.getData(), this.colorMatrixShader);
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source.texture);
 
-        // gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
         if (target)
         {
+            gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
         }
 
-        // if (clearAlpha)
-        // {
-            // gl.clearColor(0, 0, 0, 0);
-        // }
-        // else
-        // {
-            // gl.clearColor(0, 0, 0, 1);
-        // }
+        if (clearAlpha)
+        {
+            gl.clearColor(0, 0, 0, 0);
+        }
+        else
+        {
+            gl.clearColor(0, 0, 0, 1);
+        }
+
+        gl.clear(gl.COLOR_BUFFER_BIT);
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-        // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.bindTexture(gl.TEXTURE_2D, null);
     },
 
-    bindAndDraw: function (source, target)
+    blendFrames: function (source1, source2, target, strength, clearAlpha, blendShader)
     {
+        if (strength === undefined) { strength = 1; }
+        if (clearAlpha === undefined) { clearAlpha = true; }
+        if (blendShader === undefined) { blendShader = this.linearShader; }
+
         var gl = this.gl;
 
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, source.texture);
+        this.set1i('uMainSampler1', 0, blendShader);
+        this.set1i('uMainSampler2', 1, blendShader);
+        this.set1f('uStrength', strength, blendShader);
 
-        // gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, source1.texture);
+
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, source2.texture);
 
         if (target)
         {
+            gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
+            gl.viewport(0, 0, target.width, target.height);
+        }
+        else
+        {
+            gl.viewport(0, 0, source1.width, source1.height);
         }
 
-        // if (clearAlpha)
-        // {
-            // gl.clearColor(0, 0, 0, 0);
-        // }
-        // else
-        // {
-            // gl.clearColor(0, 0, 0, 1);
-        // }
+        if (clearAlpha)
+        {
+            gl.clearColor(0, 0, 0, 0);
+        }
+        else
+        {
+            gl.clearColor(0, 0, 0, 1);
+        }
+
+        gl.clear(gl.COLOR_BUFFER_BIT);
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-        // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.bindTexture(gl.TEXTURE_2D, null);
     }
 
