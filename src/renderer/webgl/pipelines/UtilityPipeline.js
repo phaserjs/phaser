@@ -106,7 +106,8 @@ var UtilityPipeline = new Class({
                 fragShader: ColorMatrixFS,
                 uniforms: [
                     'uMainSampler',
-                    'uColorMatrix'
+                    'uColorMatrix',
+                    'uAlpha'
                 ]
             }
         ]);
@@ -303,22 +304,18 @@ var UtilityPipeline = new Class({
         this.set1i('uMainSampler', 0, this.copyShader);
         this.set1f('uBrightness', brightness, this.copyShader);
 
-        if (target)
-        {
-            gl.viewport(0, 0, target.width, target.height);
-        }
-        else
-        {
-            gl.viewport(0, 0, source.width, source.height);
-        }
-
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source.texture);
 
         if (target)
         {
+            gl.viewport(0, 0, target.width, target.height);
             gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
+        }
+        else
+        {
+            gl.viewport(0, 0, source.width, source.height);
         }
 
         if (clearAlpha)
@@ -365,14 +362,20 @@ var UtilityPipeline = new Class({
 
         this.set1i('uMainSampler', 0, this.colorMatrixShader);
         this.set1fv('uColorMatrix', colorMatrix.getData(), this.colorMatrixShader);
+        this.set1f('uAlpha', colorMatrix.alpha, this.colorMatrixShader);
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source.texture);
 
         if (target)
         {
+            gl.viewport(0, 0, target.width, target.height);
             gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
+        }
+        else
+        {
+            gl.viewport(0, 0, source.width, source.height);
         }
 
         if (clearAlpha)
@@ -389,6 +392,7 @@ var UtilityPipeline = new Class({
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.bindTexture(gl.TEXTURE_2D, null);
     },
 
