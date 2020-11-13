@@ -3,8 +3,6 @@ module.exports = [
     '',
     'precision mediump float;',
     '',
-    'uniform mat4 uProjectionMatrix;',
-    '',
     'attribute vec2 inPosition;',
     'attribute vec2 inTexCoord;',
     '',
@@ -13,11 +11,10 @@ module.exports = [
     '',
     'void main ()',
     '{',
-    '    // gl_Position = uProjectionMatrix * vec4(inPosition, 1.0, 1.0);',
-    '    gl_Position = vec4(inPosition, 0, 1);',
-    '',
     '    outFragCoord = inPosition.xy * 0.5 + 0.5;',
     '    outTexCoord = inTexCoord;',
+    '',
+    '    gl_Position = vec4(inPosition, 0, 1);',
     '}',
     ''
 ].join('\n');
