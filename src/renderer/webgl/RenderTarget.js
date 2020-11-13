@@ -191,10 +191,12 @@ var RenderTarget = new Class({
      *
      * @name Phaser.Renderer.WebGL.RenderTarget#unbind
      * @since 3.50.0
+     *
+     * @return {WebGLFramebuffer} The Framebuffer that was set, or `null` if there aren't any more in the stack.
      */
     unbind: function ()
     {
-        this.renderer.popFramebuffer();
+        return this.renderer.popFramebuffer();
     },
 
     /**
