@@ -778,7 +778,10 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * TODO
+     * This method is called as a result of the `WebGLPipeline.batchQuad` method, right before a quad
+     * belonging to a Game Object is about to be added to the batch. When this is called, the
+     * renderer has just performed a flush. It will bind the current render target, if any are set
+     * and finally call the `onPreBatch` hook.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#preBatch
      * @since 3.50.0
@@ -800,7 +803,12 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * TODO
+     * This method is called as a result of the `WebGLPipeline.batchQuad` method, right after a quad
+     * belonging to a Game Object has been added to the batch. When this is called, the
+     * renderer has just performed a flush.
+     *
+     * It calls the `onDraw` hook followed by the `onPostBatch` hook, which can be used to perform
+     * additional Post FX Pipeline processing.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#postBatch
      * @since 3.50.0
@@ -818,6 +826,21 @@ var WebGLPipeline = new Class({
         return this;
     },
 
+    /**
+     * This method is only used by Post FX Pipelines and those that extend from them.
+     *
+     * This method is called every time the `postBatch` method is called and is passed a
+     * reference to the current render target.
+     *
+     * At the very least a Post FX Pipeline should call `this.bindAndDraw(renderTarget)`,
+     * however, you can do as much additional processing as you like in this method if
+     * you override it from within your own pipelines.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#onDraw
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} renderTarget - The Render Target.
+     */
     onDraw: function ()
     {
     },
@@ -932,12 +955,7 @@ var WebGLPipeline = new Class({
     /**
      * By default this is an empty method hook that you can override and use in your own custom pipelines.
      *
-     * This method is called every time a **Game Object** asks the Pipeline Manager to use this pipeline
-     * as the post-render pipeline.
-     *
-     * Unlike the `bind` method, which is only called once per frame, this is called for every object
-     * that requests use of this pipeline, allowing you to perform per-object set-up, such as loading
-     * shader uniform data.
+     * This method is called immediately before a **Game Object** is about to add itself to the batch.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onPreBatch
      * @since 3.50.0
@@ -951,7 +969,7 @@ var WebGLPipeline = new Class({
     /**
      * By default this is an empty method hook that you can override and use in your own custom pipelines.
      *
-     * TODO
+     * This method is called immediately after a **Game Object** has been added to the batch.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onPostBatch
      * @since 3.50.0

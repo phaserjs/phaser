@@ -26,8 +26,7 @@ var WebGLPipeline = require('../WebGLPipeline');
  *
  * The default shader uniforms for this pipeline are:
  *
- * `uProjectionMatrix` (mat4)
- * `uMainSampler` (sampler2D)
+  * `uMainSampler` (sampler2D)
  *
  * @class PostFXPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
@@ -170,32 +169,107 @@ var PostFXPipeline = new Class({
         this.bindAndDraw(renderTarget);
     },
 
+    /**
+     * Copy the `source` Render Target to the `target` Render Target.
+     *
+     * You can optionally set the brightness factor of the copy.
+     *
+     * The difference between this method and `drawFrame` is that this method
+     * uses a faster copy shader, where only the brightness can be modified.
+     * If you need color level manipulation, see `drawFrame` instead.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#copyFrame
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The target Render Target.
+     * @param {number} [brightness=1] - The brightness value applied to the frame copy.
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     */
     copyFrame: function (source, target, brightness, clearAlpha)
     {
         this.manager.copyFrame(source, target, brightness, clearAlpha);
     },
 
+    /**
+     * Copy the `source` Render Target to the `target` Render Target, using the
+     * given Color Matrix.
+     *
+     * The difference between this method and `copyFrame` is that this method
+     * uses a color matrix shader, where you have full control over the luminance
+     * values used during the copy. If you don't need this, you can use the faster
+     * `copyFrame` method instead.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#drawFrame
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The target Render Target.
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     */
     drawFrame: function (source, target, clearAlpha)
     {
         this.manager.drawFrame(source, target, clearAlpha, this.colorMatrix);
     },
 
+    /**
+     * Draws the `source1` and `source2` Render Targets to the `target` Render Target
+     * using a linear blend effect, which is controlled by the `strength` parameter.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#blendFrames
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source1 - The first source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source2 - The second source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The target Render Target.
+     * @param {number} [strength=1] - The strength of the blend.
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     */
     blendFrames: function (source1, source2, target, strength, clearAlpha)
     {
         this.manager.blendFrames(source1, source2, target, strength, clearAlpha);
     },
 
+    /**
+     * Draws the `source1` and `source2` Render Targets to the `target` Render Target
+     * using an additive blend effect, which is controlled by the `strength` parameter.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#blendFramesAdditive
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source1 - The first source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source2 - The second source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The target Render Target.
+     * @param {number} [strength=1] - The strength of the blend.
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     */
     blendFramesAdditive: function (source1, source2, target, strength, clearAlpha)
     {
         this.manager.blendFramesAdditive(source1, source2, target, strength, clearAlpha);
     },
 
+    /**
+     * Binds this pipeline, pops the framebuffer then draws the `source`
+     * Render Target to the framebuffer currently set in the renderer (after the fbo stack pop).
+     *
+     * You can optionally set the shader to be used for the draw here, if this is a multi-shader
+     * pipeline.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#bindAndDraw
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The Render Target to draw from.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [currentShader] - The shader to use during the draw.
+     */
     bindAndDraw: function (source, currentShader)
     {
         this.bind(currentShader);
 
-        //  Pop out this pipelines renderTarget
-        this.renderer.popFramebuffer();
+        if (this.currentTarget)
+        {
+            //  Pop out this pipelines renderTarget
+            this.renderer.popFramebuffer();
+        }
 
         var gl = this.gl;
 
@@ -206,8 +280,6 @@ var PostFXPipeline = new Class({
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
         gl.bindTexture(gl.TEXTURE_2D, null);
-
-        // this.renderer.resetTextures();
     }
 
 });
