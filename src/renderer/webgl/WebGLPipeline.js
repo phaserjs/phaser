@@ -780,23 +780,46 @@ var WebGLPipeline = new Class({
     /**
      * TODO
      *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#postBind
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#preBatch
      * @since 3.50.0
      *
      * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    postBind: function (gameObject)
+    preBatch: function (gameObject)
     {
         if (this.currentRenderTarget)
         {
             this.currentRenderTarget.bind();
         }
 
-        this.onPostBind(gameObject);
+        this.onPreBatch(gameObject);
 
         return this;
+    },
+
+    /**
+     * TODO
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#postBatch
+     * @since 3.50.0
+     *
+     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    postBatch: function (gameObject)
+    {
+        this.onDraw(this.currentRenderTarget);
+
+        this.onPostBatch(gameObject);
+
+        return this;
+    },
+
+    onDraw: function ()
+    {
     },
 
     /**
@@ -854,47 +877,6 @@ var WebGLPipeline = new Class({
         }
 
         return this;
-    },
-
-    /**
-     * TODO
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#postFlush
-     * @since 3.50.0
-     *
-     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    postFlush: function (gameObject)
-    {
-        var target = this.currentRenderTarget;
-
-        if (target)
-        {
-            target.unbind();
-        }
-
-        var wasBound = this.renderer.setVertexBuffer(this.vertexBuffer);
-
-        this.currentShader.bind(wasBound);
-
-        if (target)
-        {
-            this.onDraw(target);
-        }
-
-        this.onPostFlush(gameObject);
-
-        return this;
-    },
-
-    onDraw: function (renderTarget)
-    {
-        //  Post Pipelines can override this as needed
-        this.manager.copyFrame(renderTarget);
-
-
     },
 
     /**
@@ -957,12 +939,12 @@ var WebGLPipeline = new Class({
      * that requests use of this pipeline, allowing you to perform per-object set-up, such as loading
      * shader uniform data.
      *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#onPostBind
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#onPreBatch
      * @since 3.50.0
      *
      * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
      */
-    onPostBind: function ()
+    onPreBatch: function ()
     {
     },
 
@@ -971,12 +953,12 @@ var WebGLPipeline = new Class({
      *
      * TODO
      *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#onPostFlush
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#onPostBatch
      * @since 3.50.0
      *
      * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
      */
-    onPostFlush: function ()
+    onPostBatch: function ()
     {
     },
 
@@ -1026,7 +1008,7 @@ var WebGLPipeline = new Class({
      * This method is called every time this pipeline is asked to flush its batch.
      *
      * It is called immediately before the gl.bufferData and gl.drawArray calls are made, so you can
-     * perform any final pre-render modifications. To apply changes post-render, see `onPostFlush`.
+     * perform any final pre-render modifications. To apply changes post-render, see `onPostBatch`.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onBeforeFlush
      * @since 3.50.0
@@ -1143,6 +1125,13 @@ var WebGLPipeline = new Class({
     {
         if (unit === undefined) { unit = this.currentUnit; }
 
+        var postPipeline = (gameObject && gameObject.postPipeline);
+
+        if (postPipeline)
+        {
+            this.manager.preBatch(gameObject);
+        }
+
         var hasFlushed = false;
 
         if (this.shouldFlush(6))
@@ -1162,6 +1151,11 @@ var WebGLPipeline = new Class({
         this.batchVert(x3, y3, u1, v0, unit, tintEffect, tintTR);
 
         this.onBatch(gameObject);
+
+        if (postPipeline)
+        {
+            this.manager.postBatch(gameObject);
+        }
 
         return hasFlushed;
     },
