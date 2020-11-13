@@ -170,6 +170,70 @@ var PipelineManager = new Class({
          * @since 3.50.0
          */
         this.UTILITY_PIPELINE = null;
+
+        /**
+         * A reference to the Full Frame 1 Render Target that belongs to the
+         * Utility Pipeline. This property is set during the `boot` method.
+         *
+         * This Render Target is the full size of the renderer.
+         *
+         * You can use this directly in Post FX Pipelines for multi-target effects.
+         * However, be aware that these targets are shared between all post fx pipelines.
+         *
+         * @name Phaser.Renderer.WebGL.PipelineManager#fullFrame1
+         * @type {Phaser.Renderer.WebGL.RenderTarget}
+         * @default null
+         * @since 3.50.0
+         */
+        this.fullFrame1;
+
+        /**
+         * A reference to the Full Frame 2 Render Target that belongs to the
+         * Utility Pipeline. This property is set during the `boot` method.
+         *
+         * This Render Target is the full size of the renderer.
+         *
+         * You can use this directly in Post FX Pipelines for multi-target effects.
+         * However, be aware that these targets are shared between all post fx pipelines.
+         *
+         * @name Phaser.Renderer.WebGL.PipelineManager#fullFrame2
+         * @type {Phaser.Renderer.WebGL.RenderTarget}
+         * @default null
+         * @since 3.50.0
+         */
+        this.fullFrame2;
+
+        /**
+         * A reference to the Half Frame 1 Render Target that belongs to the
+         * Utility Pipeline. This property is set during the `boot` method.
+         *
+         * This Render Target is half the size of the renderer.
+         *
+         * You can use this directly in Post FX Pipelines for multi-target effects.
+         * However, be aware that these targets are shared between all post fx pipelines.
+         *
+         * @name Phaser.Renderer.WebGL.PipelineManager#halfFrame1
+         * @type {Phaser.Renderer.WebGL.RenderTarget}
+         * @default null
+         * @since 3.50.0
+         */
+        this.halfFrame1;
+
+        /**
+         * A reference to the Half Frame 2 Render Target that belongs to the
+         * Utility Pipeline. This property is set during the `boot` method.
+         *
+         * This Render Target is half the size of the renderer.
+         *
+         * You can use this directly in Post FX Pipelines for multi-target effects.
+         * However, be aware that these targets are shared between all post fx pipelines.
+         *
+         * @name Phaser.Renderer.WebGL.PipelineManager#halfFrame2
+         * @type {Phaser.Renderer.WebGL.RenderTarget}
+         * @default null
+         * @since 3.50.0
+         */
+        this.halfFrame2;
     },
 
     /**
@@ -187,15 +251,24 @@ var PipelineManager = new Class({
     {
         var game = this.game;
 
+        //  Must always be set first, before any other pipeline
+        this.UTILITY_PIPELINE = this.add(CONST.UTILITY_PIPELINE, new UtilityPipeline({ game: game }));
+
         this.MULTI_PIPELINE = this.add(CONST.MULTI_PIPELINE, new MultiPipeline({ game: game }));
         this.BITMAPMASK_PIPELINE = this.add(CONST.BITMAPMASK_PIPELINE, new BitmapMaskPipeline({ game: game }));
         this.POSTFX_PIPELINE = this.add(CONST.POSTFX_PIPELINE, new PostFXPipeline({ game: game }));
-        this.UTILITY_PIPELINE = this.add(CONST.UTILITY_PIPELINE, new UtilityPipeline({ game: game }));
 
         this.add(CONST.SINGLE_PIPELINE, new SinglePipeline({ game: game }));
         this.add(CONST.ROPE_PIPELINE, new RopePipeline({ game: game }));
         this.add(CONST.LIGHT_PIPELINE, new LightPipeline({ game: game }));
         this.add(CONST.GRAPHICS_PIPELINE, new GraphicsPipeline({ game: game }));
+
+        var utility = this.UTILITY_PIPELINE;
+
+        this.fullFrame1 = utility.fullFrame1;
+        this.fullFrame2 = utility.fullFrame2;
+        this.halfFrame1 = utility.halfFrame1;
+        this.halfFrame2 = utility.halfFrame2;
     },
 
     /**
@@ -456,6 +529,17 @@ var PipelineManager = new Class({
         return pipeline;
     },
 
+    /**
+     * This method is called by the `WebGLPipeline.batchQuad` method, right before a quad
+     * belonging to a Game Object is about to be added to the batch. It causes a batch
+     * flush, then calls the `preBatch` method on the post-fx pipeline belonging to the
+     * Game Object.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#preBatch
+     * @since 3.50.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object about to be batched.
+     */
     preBatch: function (gameObject)
     {
         this.flush();
@@ -463,6 +547,17 @@ var PipelineManager = new Class({
         gameObject.postPipeline.preBatch(gameObject);
     },
 
+    /**
+     * This method is called by the `WebGLPipeline.batchQuad` method, right after a quad
+     * belonging to a Game Object has been added to the batch. It causes a batch
+     * flush, then calls the `postBatch` method on the post-fx pipeline belonging to the
+     * Game Object.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#postBatch
+     * @since 3.50.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was just added to the batch.
+     */
     postBatch: function (gameObject)
     {
         this.flush();
@@ -470,6 +565,17 @@ var PipelineManager = new Class({
         gameObject.postPipeline.postBatch(gameObject);
     },
 
+    /**
+     * Called at the start of the `WebGLRenderer.preRenderCamera` method.
+     *
+     * If the Camera has a postPipeline set, it will flush the batch and then call the
+     * `preBatch` method on the post-fx pipeline belonging to the Camera.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#preBatchCamera
+     * @since 3.50.0
+     *
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera being pre-rendered.
+     */
     preBatchCamera: function (camera)
     {
         if (camera.postPipeline)
@@ -480,6 +586,17 @@ var PipelineManager = new Class({
         }
     },
 
+    /**
+     * Called at the end of the `WebGLRenderer.postRenderCamera` method.
+     *
+     * If the Camera has a postPipeline set, it will flush the batch and then call the
+     * `postBatch` method on the post-fx pipeline belonging to the Camera.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#postBatchCamera
+     * @since 3.50.0
+     *
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that was just rendered.
+     */
     postBatchCamera: function (camera)
     {
         if (camera.postPipeline)
@@ -519,6 +636,27 @@ var PipelineManager = new Class({
         );
     },
 
+    /**
+     * Copy the `source` Render Target to the `target` Render Target.
+     *
+     * You can optionally set the brightness factor of the copy.
+     *
+     * The difference between this method and `drawFrame` is that this method
+     * uses a faster copy shader, where only the brightness can be modified.
+     * If you need color level manipulation, see `drawFrame` instead.
+     *
+     * The copy itself is handled by the Utility Pipeline.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#copyFrame
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The target Render Target.
+     * @param {number} [brightness=1] - The brightness value applied to the frame copy.
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     *
+     * @return {this} This Pipeline Manager instance.
+     */
     copyFrame: function (source, target, brightness, clearAlpha)
     {
         var pipeline = this.setUtility(this.UTILITY_PIPELINE.copyShader);
@@ -528,6 +666,27 @@ var PipelineManager = new Class({
         return this;
     },
 
+    /**
+     * Copy the `source` Render Target to the `target` Render Target, using the
+     * given Color Matrix.
+     *
+     * The difference between this method and `copyFrame` is that this method
+     * uses a color matrix shader, where you have full control over the luminance
+     * values used during the copy. If you don't need this, you can use the faster
+     * `copyFrame` method instead.
+     *
+     * The copy itself is handled by the Utility Pipeline.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#drawFrame
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The target Render Target.
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     * @param {Phaser.Display.ColorMatrix} [colorMatrix] - The Color Matrix to use when performing the draw.
+     *
+     * @return {this} This Pipeline Manager instance.
+     */
     drawFrame: function (source, target, clearAlpha, colorMatrix)
     {
         var pipeline = this.setUtility(this.UTILITY_PIPELINE.colorMatrixShader);
@@ -537,6 +696,23 @@ var PipelineManager = new Class({
         return this;
     },
 
+    /**
+     * Draws the `source1` and `source2` Render Targets to the `target` Render Target
+     * using a linear blend effect, which is controlled by the `strength` parameter.
+     *
+     * The draw itself is handled by the Utility Pipeline.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#blendFrames
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source1 - The first source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source2 - The second source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The target Render Target.
+     * @param {number} [strength=1] - The strength of the blend.
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     *
+     * @return {this} This Pipeline Manager instance.
+     */
     blendFrames: function (source1, source2, target, strength, clearAlpha)
     {
         var pipeline = this.setUtility(this.UTILITY_PIPELINE.linearShader);
@@ -546,6 +722,23 @@ var PipelineManager = new Class({
         return this;
     },
 
+    /**
+     * Draws the `source1` and `source2` Render Targets to the `target` Render Target
+     * using an additive blend effect, which is controlled by the `strength` parameter.
+     *
+     * The draw itself is handled by the Utility Pipeline.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#blendFramesAdditive
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source1 - The first source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source2 - The second source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The target Render Target.
+     * @param {number} [strength=1] - The strength of the blend.
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     *
+     * @return {this} This Pipeline Manager instance.
+     */
     blendFramesAdditive: function (source1, source2, target, strength, clearAlpha)
     {
         var pipeline = this.setUtility(this.UTILITY_PIPELINE.addShader);
@@ -555,6 +748,14 @@ var PipelineManager = new Class({
         return this;
     },
 
+    /**
+     * Returns `true` if the current pipeline is forced to use texture unit zero.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#forceZero
+     * @since 3.50.0
+     *
+     * @return {boolean} `true` if the current pipeline is forced to use texture unit zero.
+     */
     forceZero: function ()
     {
         return (this.current && this.current.forceZero);
