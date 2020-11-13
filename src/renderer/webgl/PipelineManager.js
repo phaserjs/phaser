@@ -458,26 +458,36 @@ var PipelineManager = new Class({
 
     preBatch: function (gameObject)
     {
-        if (!gameObject || !gameObject.postPipeline)
-        {
-            return;
-        }
-
         this.flush();
 
-        gameObject.postPipeline.postBind(gameObject);
+        gameObject.postPipeline.preBatch(gameObject);
     },
 
     postBatch: function (gameObject)
     {
-        if (!gameObject || !gameObject.postPipeline)
-        {
-            return;
-        }
-
         this.flush();
 
-        gameObject.postPipeline.postFlush(gameObject);
+        gameObject.postPipeline.postBatch(gameObject);
+    },
+
+    preBatchCamera: function (camera)
+    {
+        if (camera.postPipeline)
+        {
+            this.flush();
+
+            camera.postPipeline.preBatch(camera);
+        }
+    },
+
+    postBatchCamera: function (camera)
+    {
+        if (camera.postPipeline)
+        {
+            this.flush();
+
+            camera.postPipeline.postBatch(camera);
+        }
     },
 
     /**
@@ -509,31 +519,38 @@ var PipelineManager = new Class({
         );
     },
 
-    copyFrame: function (source, target, brightness)
+    copyFrame: function (source, target, brightness, clearAlpha)
     {
-        if (brightness === undefined) { brightness = 1; }
-
         var pipeline = this.setUtility(this.UTILITY_PIPELINE.copyShader);
 
-        pipeline.copyFrame(source, target, brightness);
+        pipeline.copyFrame(source, target, brightness, clearAlpha);
 
         return this;
     },
 
-    drawFrame: function (source, target)
+    drawFrame: function (source, target, clearAlpha, colorMatrix)
     {
         var pipeline = this.setUtility(this.UTILITY_PIPELINE.colorMatrixShader);
 
-        pipeline.drawFrame(source, target);
+        pipeline.drawFrame(source, target, clearAlpha, colorMatrix);
 
         return this;
     },
 
-    bindAndDraw: function (source, target)
+    blendFrames: function (source1, source2, target, strength, clearAlpha)
     {
-        var pipeline = this.setUtility(this.UTILITY_PIPELINE.colorMatrixShader);
+        var pipeline = this.setUtility(this.UTILITY_PIPELINE.linearShader);
 
-        pipeline.bindAndDraw(source, target);
+        pipeline.blendFrames(source1, source2, target, strength, clearAlpha);
+
+        return this;
+    },
+
+    blendFramesAdditive: function (source1, source2, target, strength, clearAlpha)
+    {
+        var pipeline = this.setUtility(this.UTILITY_PIPELINE.addShader);
+
+        pipeline.blendFrames(source1, source2, target, strength, clearAlpha);
 
         return this;
     },
