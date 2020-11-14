@@ -249,28 +249,41 @@ var PostFXPipeline = new Class({
     },
 
     /**
-     * Binds this pipeline, pops the framebuffer then draws the `source`
-     * Render Target to the framebuffer currently set in the renderer (after the fbo stack pop).
+     * Binds this pipeline and draws the `source` Render Target to the `target` Render Target.
+     *
+     * If no `target` is specified, it will pop the framebuffer from the Renderers FBO stack
+     * and use that instead, which should be done when you need to draw the final results of
+     * this pipeline to the game canvas.
      *
      * You can optionally set the shader to be used for the draw here, if this is a multi-shader
-     * pipeline.
+     * pipeline. By default `currentShader` will be used. If you need to set a shader but not
+     * a target, just pass `null` as the `target` parameter.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#bindAndDraw
      * @since 3.50.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} source - The Render Target to draw from.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The Render Target to draw to. If not set, it will pop the fbo from the stack.
      * @param {Phaser.Renderer.WebGL.WebGLShader} [currentShader] - The shader to use during the draw.
      */
-    bindAndDraw: function (source, currentShader)
+    bindAndDraw: function (source, target, currentShader)
     {
+        var gl = this.gl;
+
         this.bind(currentShader);
 
         this.set1i('uMainSampler', 0);
 
-        //  Pop out this pipelines renderTarget
-        this.renderer.popFramebuffer();
-
-        var gl = this.gl;
+        if (target)
+        {
+            gl.viewport(0, 0, target.width, target.height);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
+        }
+        else
+        {
+            this.renderer.popFramebuffer();
+        }
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source.texture);
@@ -278,7 +291,10 @@ var PostFXPipeline = new Class({
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-        this.renderer.resetTextures();
+        if (!target)
+        {
+            this.renderer.resetTextures();
+        }
     }
 
 });
