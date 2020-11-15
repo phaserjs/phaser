@@ -342,40 +342,28 @@ var UtilityPipeline = new Class({
     },
 
     /**
-     * Binds this pipeline and draws the `source` Render Target to the `target` Render Target.
+     * Pops the framebuffer from the renderers FBO stack and sets that as the active target,
+     * then draws the `source` Render Target to it. It then resets the renderer textures.
      *
-     * If no `target` is specified, it will pop the framebuffer from the Renderers FBO stack
-     * and use that instead, which should be done when you need to draw the final results of
-     * this pipeline to the game canvas.
+     * This should be done when you need to draw the _final_ results of a pipeline to the game
+     * canvas, or the next framebuffer in line on the FBO stack. You should only call this once
+     * in the `onDraw` handler and it should be the final thing called. Be careful not to call
+     * this if you need to actually use the pipeline shader, instead of the copy shader. In
+     * those cases, use the `bindAndDraw` method.
      *
-     * You can optionally set the shader to be used for the draw here, if this is a multi-shader
-     * pipeline. By default `currentShader` will be used. If you need to set a shader but not
-     * a target, just pass `null` as the `target` parameter.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#bindAndDraw
+     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#copyToGame
      * @since 3.50.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} source - The Render Target to draw from.
-     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The Render Target to draw to. If not set, it will pop the fbo from the stack.
-     * @param {Phaser.Renderer.WebGL.WebGLShader} [currentShader] - The shader to use during the draw.
-    bindAndDraw: function (source, target)
+     */
+    copyToGame: function (source)
     {
         var gl = this.gl;
 
-        this.bind(currentShader);
+        this.set1i('uMainSampler', 0, this.copyShader);
+        this.set1f('uBrightness', 1, this.copyShader);
 
-        this.set1i('uMainSampler', 0);
-
-        if (target)
-        {
-            gl.viewport(0, 0, target.width, target.height);
-            gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
-            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
-        }
-        else
-        {
-            this.renderer.popFramebuffer();
-        }
+        this.renderer.popFramebuffer();
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source.texture);
@@ -383,16 +371,8 @@ var UtilityPipeline = new Class({
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-        if (!target)
-        {
-            this.renderer.resetTextures();
-        }
-        else
-        {
-            gl.bindTexture(gl.TEXTURE_2D, null);
-        }
+        this.renderer.resetTextures();
     },
-     */
 
     /**
      * Copy the `source` Render Target to the `target` Render Target, using the

@@ -193,6 +193,26 @@ var PostFXPipeline = new Class({
     },
 
     /**
+     * Pops the framebuffer from the renderers FBO stack and sets that as the active target,
+     * then draws the `source` Render Target to it. It then resets the renderer textures.
+     *
+     * This should be done when you need to draw the _final_ results of a pipeline to the game
+     * canvas, or the next framebuffer in line on the FBO stack. You should only call this once
+     * in the `onDraw` handler and it should be the final thing called. Be careful not to call
+     * this if you need to actually use the pipeline shader, instead of the copy shader. In
+     * those cases, use the `bindAndDraw` method.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#copyToGame
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The Render Target to draw from.
+     */
+    copyToGame: function (source)
+    {
+        this.manager.copyToGame(source);
+    },
+
+    /**
      * Copy the `source` Render Target to the `target` Render Target, using the
      * given Color Matrix.
      *
