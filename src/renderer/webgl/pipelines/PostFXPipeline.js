@@ -285,10 +285,15 @@ var PostFXPipeline = new Class({
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} source - The Render Target to draw from.
      * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The Render Target to draw to. If not set, it will pop the fbo from the stack.
+     * @param {boolean} [clear=true] - Clear the target before copying? Only used if `target` parameter is set.
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
      * @param {Phaser.Renderer.WebGL.WebGLShader} [currentShader] - The shader to use during the draw.
      */
-    bindAndDraw: function (source, target, currentShader)
+    bindAndDraw: function (source, target, clear, clearAlpha, currentShader)
     {
+        if (clear === undefined) { clear = true; }
+        if (clearAlpha === undefined) { clearAlpha = true; }
+
         var gl = this.gl;
 
         this.bind(currentShader);
@@ -300,6 +305,20 @@ var PostFXPipeline = new Class({
             gl.viewport(0, 0, target.width, target.height);
             gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
+
+            if (clear)
+            {
+                if (clearAlpha)
+                {
+                    gl.clearColor(0, 0, 0, 0);
+                }
+                else
+                {
+                    gl.clearColor(0, 0, 0, 1);
+                }
+
+                gl.clear(gl.COLOR_BUFFER_BIT);
+            }
         }
         else
         {
