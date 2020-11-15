@@ -292,11 +292,13 @@ var UtilityPipeline = new Class({
      * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
      * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The target Render Target.
      * @param {number} [brightness=1] - The brightness value applied to the frame copy.
+     * @param {boolean} [clear=true] - Clear the target before copying?
      * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
      */
-    copyFrame: function (source, target, brightness, clearAlpha)
+    copyFrame: function (source, target, brightness, clear, clearAlpha)
     {
         if (brightness === undefined) { brightness = 1; }
+        if (clear === undefined) { clear = true; }
         if (clearAlpha === undefined) { clearAlpha = true; }
 
         var gl = this.gl;
@@ -318,16 +320,19 @@ var UtilityPipeline = new Class({
             gl.viewport(0, 0, source.width, source.height);
         }
 
-        if (clearAlpha)
+        if (clear)
         {
-            gl.clearColor(0, 0, 0, 0);
-        }
-        else
-        {
-            gl.clearColor(0, 0, 0, 1);
-        }
+            if (clearAlpha)
+            {
+                gl.clearColor(0, 0, 0, 0);
+            }
+            else
+            {
+                gl.clearColor(0, 0, 0, 1);
+            }
 
-        gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+        }
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -335,6 +340,59 @@ var UtilityPipeline = new Class({
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.bindTexture(gl.TEXTURE_2D, null);
     },
+
+    /**
+     * Binds this pipeline and draws the `source` Render Target to the `target` Render Target.
+     *
+     * If no `target` is specified, it will pop the framebuffer from the Renderers FBO stack
+     * and use that instead, which should be done when you need to draw the final results of
+     * this pipeline to the game canvas.
+     *
+     * You can optionally set the shader to be used for the draw here, if this is a multi-shader
+     * pipeline. By default `currentShader` will be used. If you need to set a shader but not
+     * a target, just pass `null` as the `target` parameter.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#bindAndDraw
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The Render Target to draw from.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The Render Target to draw to. If not set, it will pop the fbo from the stack.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [currentShader] - The shader to use during the draw.
+    bindAndDraw: function (source, target)
+    {
+        var gl = this.gl;
+
+        this.bind(currentShader);
+
+        this.set1i('uMainSampler', 0);
+
+        if (target)
+        {
+            gl.viewport(0, 0, target.width, target.height);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
+        }
+        else
+        {
+            this.renderer.popFramebuffer();
+        }
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, source.texture);
+
+        gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        if (!target)
+        {
+            this.renderer.resetTextures();
+        }
+        else
+        {
+            gl.bindTexture(gl.TEXTURE_2D, null);
+        }
+    },
+     */
 
     /**
      * Copy the `source` Render Target to the `target` Render Target, using the
@@ -453,6 +511,7 @@ var UtilityPipeline = new Class({
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.bindTexture(gl.TEXTURE_2D, null);
     },
 
@@ -472,6 +531,41 @@ var UtilityPipeline = new Class({
     blendFramesAdditive: function (source1, source2, target, strength, clearAlpha)
     {
         this.blendFrames(source1, source2, target, strength, clearAlpha, this.addShader);
+    },
+
+    /**
+     * Clears the given Render Target.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#clearFrame
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The Render Target to clear.
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     */
+    clearFrame: function (target, clearAlpha)
+    {
+        if (clearAlpha === undefined) { clearAlpha = true; }
+
+        var gl = this.gl;
+
+        gl.viewport(0, 0, target.width, target.height);
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
+
+        if (clearAlpha)
+        {
+            gl.clearColor(0, 0, 0, 0);
+        }
+        else
+        {
+            gl.clearColor(0, 0, 0, 1);
+        }
+
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        var fbo = this.renderer.currentFramebuffer;
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
     }
 
 });

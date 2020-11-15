@@ -653,15 +653,16 @@ var PipelineManager = new Class({
      * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
      * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The target Render Target.
      * @param {number} [brightness=1] - The brightness value applied to the frame copy.
+     * @param {boolean} [clear=true] - Clear the target before copying?
      * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
      *
      * @return {this} This Pipeline Manager instance.
      */
-    copyFrame: function (source, target, brightness, clearAlpha)
+    copyFrame: function (source, target, brightness, clear, clearAlpha)
     {
         var pipeline = this.setUtility(this.UTILITY_PIPELINE.copyShader);
 
-        pipeline.copyFrame(source, target, brightness, clearAlpha);
+        pipeline.copyFrame(source, target, brightness, clear, clearAlpha);
 
         return this;
     },
@@ -744,6 +745,22 @@ var PipelineManager = new Class({
         var pipeline = this.setUtility(this.UTILITY_PIPELINE.addShader);
 
         pipeline.blendFrames(source1, source2, target, strength, clearAlpha);
+
+        return this;
+    },
+
+    /**
+     * Clears the given Render Target.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#clearFrame
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The Render Target to clear.
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     */
+    clearFrame: function (target, clearAlpha)
+    {
+        this.UTILITY_PIPELINE.clearFrame(target, clearAlpha);
 
         return this;
     },

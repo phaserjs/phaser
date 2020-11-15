@@ -184,11 +184,12 @@ var PostFXPipeline = new Class({
      * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
      * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The target Render Target.
      * @param {number} [brightness=1] - The brightness value applied to the frame copy.
+     * @param {boolean} [clear=true] - Clear the target before copying?
      * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
      */
-    copyFrame: function (source, target, brightness, clearAlpha)
+    copyFrame: function (source, target, brightness, clear, clearAlpha)
     {
-        this.manager.copyFrame(source, target, brightness, clearAlpha);
+        this.manager.copyFrame(source, target, brightness, clear, clearAlpha);
     },
 
     /**
@@ -294,6 +295,10 @@ var PostFXPipeline = new Class({
         if (!target)
         {
             this.renderer.resetTextures();
+        }
+        else
+        {
+            gl.bindTexture(gl.TEXTURE_2D, null);
         }
     }
 
