@@ -1547,13 +1547,15 @@ var WebGLRenderer = new Class({
      * @param {WebGLFramebuffer} framebuffer - The framebuffer that needs to be bound.
      * @param {boolean} [updateScissor=false] - If a framebuffer is given, set the gl scissor to match the frame buffer size? Or, if `null` given, pop the scissor from the stack.
      * @param {boolean} [resetTextures=false] - Should the WebGL Textures be reset after the new framebuffer is bound?
+     * @param {boolean} [setViewport=true] - Should the WebGL viewport be set?
      *
      * @return {this} This WebGLRenderer instance.
      */
-    setFramebuffer: function (framebuffer, updateScissor, resetTextures)
+    setFramebuffer: function (framebuffer, updateScissor, resetTextures, setViewport)
     {
         if (updateScissor === undefined) { updateScissor = false; }
         if (resetTextures === undefined) { resetTextures = false; }
+        if (setViewport === undefined) { setViewport = true; }
 
         if (framebuffer === this.currentFramebuffer)
         {
@@ -1577,7 +1579,10 @@ var WebGLRenderer = new Class({
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
 
-        gl.viewport(0, 0, width, height);
+        if (setViewport)
+        {
+            gl.viewport(0, 0, width, height);
+        }
 
         if (updateScissor)
         {
@@ -1611,10 +1616,18 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#popFramebuffer
      * @since 3.50.0
      *
+     * @param {boolean} [updateScissor=false] - If a framebuffer is given, set the gl scissor to match the frame buffer size? Or, if `null` given, pop the scissor from the stack.
+     * @param {boolean} [resetTextures=true] - Should the WebGL Textures be reset after the new framebuffer is bound?
+     * @param {boolean} [setViewport=true] - Should the WebGL viewport be set?
+     *
      * @return {WebGLFramebuffer} The Framebuffer that was set, or `null` if there aren't any more in the stack.
      */
-    popFramebuffer: function ()
+    popFramebuffer: function (updateScissor, resetTextures, setViewport)
     {
+        if (updateScissor === undefined) { updateScissor = false; }
+        if (resetTextures === undefined) { resetTextures = false; }
+        if (setViewport === undefined) { setViewport = true; }
+
         var fboStack = this.fboStack;
 
         //  Remove the current fbo
@@ -1628,7 +1641,7 @@ var WebGLRenderer = new Class({
             framebuffer = null;
         }
 
-        this.setFramebuffer(framebuffer, false, true);
+        this.setFramebuffer(framebuffer, updateScissor, resetTextures, setViewport);
 
         return framebuffer;
     },
