@@ -2143,11 +2143,11 @@ var WebGLRenderer = new Class({
 
         if (color.alphaGL > 0)
         {
-            var pipeline = this.pipelines.setCameraPipeline();
+            var pipeline = this.pipelines.setMulti();
 
             pipeline.drawFillRect(
                 cx, cy, cw, ch,
-                Utils.getTintFromFloats(color.redGL, color.greenGL, color.blueGL, 1),
+                Utils.getTintFromFloats(color.blueGL, color.greenGL, color.redGL, 1),
                 color.alphaGL
             );
         }
@@ -2197,7 +2197,7 @@ var WebGLRenderer = new Class({
     {
         if (camera.flashEffect.isRunning || camera.fadeEffect.isRunning)
         {
-            var pipeline = this.pipelines.setCameraPipeline();
+            var pipeline = this.pipelines.setMulti();
 
             camera.flashEffect.postRenderWebGL(pipeline, Utils.getTintFromFloats);
             camera.fadeEffect.postRenderWebGL(pipeline, Utils.getTintFromFloats);
@@ -2219,8 +2219,6 @@ var WebGLRenderer = new Class({
             camera.emit(CameraEvents.POST_RENDER, camera);
 
             this.pipelines.postBatchCamera(camera);
-
-            this.resetTextures();
         }
     },
 

@@ -315,12 +315,12 @@ var Fade = new Class({
 
         var camera = this.camera;
         var red = this.red / 255;
-        var blue = this.blue / 255;
         var green = this.green / 255;
+        var blue = this.blue / 255;
 
         pipeline.drawFillRect(
             camera.x, camera.y, camera.width, camera.height,
-            getTintFunction(red, green, blue, 1),
+            getTintFunction(blue, green, red, 1),
             this.alpha
         );
 
