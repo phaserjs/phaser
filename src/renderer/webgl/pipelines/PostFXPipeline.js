@@ -295,6 +295,7 @@ var PostFXPipeline = new Class({
         if (clearAlpha === undefined) { clearAlpha = true; }
 
         var gl = this.gl;
+        var renderer = this.renderer;
 
         this.bind(currentShader);
 
@@ -322,7 +323,12 @@ var PostFXPipeline = new Class({
         }
         else
         {
-            this.renderer.popFramebuffer();
+            renderer.popFramebuffer(false, false, false);
+
+            if (!renderer.currentFramebuffer)
+            {
+                gl.viewport(0, 0, renderer.width, renderer.height);
+            }
         }
 
         gl.activeTexture(gl.TEXTURE0);
@@ -333,11 +339,12 @@ var PostFXPipeline = new Class({
 
         if (!target)
         {
-            this.renderer.resetTextures();
+            renderer.resetTextures();
         }
         else
         {
             gl.bindTexture(gl.TEXTURE_2D, null);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         }
     }
 
