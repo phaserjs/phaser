@@ -581,7 +581,10 @@ var PipelineManager = new Class({
     {
         this.flush();
 
-        gameObject.postPipeline.preBatch(gameObject);
+        if (gameObject.postPipeline)
+        {
+            gameObject.postPipeline.preBatch(gameObject);
+        }
     },
 
     /**
@@ -599,7 +602,10 @@ var PipelineManager = new Class({
     {
         this.flush();
 
-        gameObject.postPipeline.postBatch(gameObject);
+        if (gameObject.postPipeline)
+        {
+            gameObject.postPipeline.postBatch(gameObject);
+        }
     },
 
     /**
