@@ -530,6 +530,43 @@ var PipelineManager = new Class({
     },
 
     /**
+     * Sets the current post pipeline to be used by the `WebGLRenderer`.
+     *
+     * This method accepts a pipeline instance as its parameter, not the name.
+     *
+     * If the pipeline isn't already the current one it will call `WebGLPipeline.bind` and then `onBind`.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#setPost
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipeline - The post pipeline instance to be set as current.
+     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [currentShader] - The shader to set as being current.
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} The post pipeline that was set.
+     */
+    setPost: function (pipeline, gameObject, currentShader)
+    {
+        if (!this.isCurrentPost(pipeline, currentShader))
+        {
+            this.flush();
+
+            if (this.currentPost)
+            {
+                this.currentPost.unbind();
+            }
+
+            this.currentPost = pipeline;
+
+            pipeline.bind(currentShader);
+        }
+
+        pipeline.onBind(gameObject);
+
+        return pipeline;
+    },
+
+    /**
      * This method is called by the `WebGLPipeline.batchQuad` method, right before a quad
      * belonging to a Game Object is about to be added to the batch. It causes a batch
      * flush, then calls the `preBatch` method on the post-fx pipeline belonging to the
@@ -623,6 +660,35 @@ var PipelineManager = new Class({
     {
         var renderer = this.renderer;
         var current = this.current;
+
+        if (current && !currentShader)
+        {
+            currentShader = current.currentShader;
+        }
+
+        return !(
+            current !== pipeline ||
+            current.vertexBuffer !== renderer.currentVertexBuffer ||
+            currentShader.program !== renderer.currentProgram
+        );
+    },
+
+    /**
+     * Checks to see if the given post pipeline is already the active pipeline, both within this
+     * Pipeline Manager, and also has the same vertex buffer and shader set within the Renderer.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#isCurrentPost
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipeline - The pipeline instance to be checked.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [currentShader] - The shader to set as being current.
+     *
+     * @return {boolean} `true` if the given pipeline is already the current pipeline, otherwise `false`.
+     */
+    isCurrentPost: function (pipeline, currentShader)
+    {
+        var renderer = this.renderer;
+        var current = this.currentPost;
 
         if (current && !currentShader)
         {
@@ -818,24 +884,7 @@ var PipelineManager = new Class({
     },
 
     /**
-     * Sets the Camera Pipeline to be the currently bound pipeline.
-     *
-     * This is the default Phaser 3 pipeline for cameras.
-     *
-     * @method Phaser.Renderer.WebGL.PipelineManager#setCameraPipeline
-     * @since 3.50.0
-     *
-     * @return {Phaser.Renderer.WebGL.Pipelines.CameraPipeline} The Camera Pipeline instance.
-     */
-    setCameraPipeline: function ()
-    {
-        return this.set(this.CAMERA_PIPELINE);
-    },
-
-    /**
      * Sets the Utility Pipeline to be the currently bound pipeline.
-     *
-     * This is the default Phaser 3 rendering pipeline.
      *
      * @method Phaser.Renderer.WebGL.PipelineManager#setUtility
      * @since 3.50.0
@@ -846,7 +895,7 @@ var PipelineManager = new Class({
      */
     setUtility: function (currentShader)
     {
-        return this.set(this.UTILITY_PIPELINE, null, currentShader);
+        return this.setPost(this.UTILITY_PIPELINE, null, currentShader);
     },
 
     /**
