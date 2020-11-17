@@ -348,7 +348,7 @@ var PostFXPipeline = new Class({
 
         if (!target)
         {
-            gl.bindTexture(gl.TEXTURE_2D, null);
+            renderer.resetTextures();
         }
         else
         {
