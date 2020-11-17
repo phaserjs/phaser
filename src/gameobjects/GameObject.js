@@ -705,6 +705,16 @@ var GameObject = new Class({
             this.body = undefined;
         }
 
+        if (this.hasPostPipeline)
+        {
+            var pipelines = this.postPipelines;
+
+            for (var i = 0; i < pipelines.length; i++)
+            {
+                pipelines[i].destroy();
+            }
+        }
+
         //  Tell the Scene to re-sort the children
         if (!fromScene)
         {
