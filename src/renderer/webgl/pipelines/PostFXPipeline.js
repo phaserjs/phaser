@@ -74,6 +74,8 @@ var PostFXPipeline = new Class({
 
         WebGLPipeline.call(this, config);
 
+        this.isPostFX = true;
+
         /**
          * A Color Matrix instance belonging to this pipeline.
          *
@@ -148,6 +150,13 @@ var PostFXPipeline = new Class({
          * @since 3.50.0
          */
         this.halfFrame2;
+
+        if (this.renderer.isBooted)
+        {
+            this.manager = this.renderer.pipelines;
+
+            this.boot();
+        }
     },
 
     boot: function ()
@@ -339,7 +348,7 @@ var PostFXPipeline = new Class({
 
         if (!target)
         {
-            renderer.resetTextures();
+            gl.bindTexture(gl.TEXTURE_2D, null);
         }
         else
         {
