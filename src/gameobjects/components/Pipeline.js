@@ -161,7 +161,7 @@ var Pipeline = {
      * Post Pipelines are invoked after this Game Object has rendered to its target and
      * are commonly used for post-fx.
      *
-     * The post pipelines instances are appended to the `postPipelines` array belonging to this
+     * The post pipelines are appended to the `postPipelines` array belonging to this
      * Game Object. When the renderer processes this Game Object, it iterates through the post
      * pipelines in the order in which they appear in the array. If you are stacking together
      * multiple effects, be aware that the order is important.
@@ -169,8 +169,7 @@ var Pipeline = {
      * If you call this method multiple times, the new pipelines will be appended to any existing
      * post pipelines already set. Use the `resetPostPipeline` method to clear them first, if required.
      *
-     * You can optionally also sets the `pipelineData` property, if the parameter is given
-     * and the pipeline is successfully set.
+     * You can optionally also sets the `pipelineData` property, if the parameter is given.
      *
      * Both the pipeline and post pipelines share the pipeline data object together.
      *
@@ -249,6 +248,32 @@ var Pipeline = {
         }
 
         return this;
+    },
+
+    /**
+     * Gets a Post Pipeline instance from this Game Object, based on the given name, and returns it.
+     *
+     * @method Phaser.GameObjects.Components.Pipeline#getPostPipeline
+     * @webglOnly
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the Post Pipeline to get.
+     *
+     * @return {Phaser.Renderer.WebGL.Pipelines.PostFXPipeline} The first Post Pipeline matching the name, or undefined if no match.
+     */
+    getPostPipeline: function (pipeline)
+    {
+        var pipelines = this.postPipelines;
+
+        for (var i = 0; i < pipelines.length; i++)
+        {
+            var instance = pipelines[i];
+
+            if ((typeof pipeline === 'string' && instance.name === name) || instance instanceof pipeline)
+            {
+                return instance;
+            }
+        }
     },
 
     /**
