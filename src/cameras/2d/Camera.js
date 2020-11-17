@@ -69,6 +69,9 @@ var Camera = new Class({
     {
         BaseCamera.call(this, x, y, width, height);
 
+        this.postPipelines = [];
+        this.pipelineData = {};
+
         /**
          * Does this Camera allow the Game Objects it renders to receive input events?
          *
