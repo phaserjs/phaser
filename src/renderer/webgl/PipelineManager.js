@@ -372,7 +372,7 @@ var PipelineManager = new Class({
      * @since 3.50.0
      *
      * @param {string} name - A unique string-based key for the pipeline within the manager.
-     * @param {Class} pipeline - A pipeline class which must extend `PostFXPipeline`.
+     * @param {function} pipeline - A pipeline class which must extend `PostFXPipeline`.
      *
      * @return {this} This Pipeline Manager.
      */
