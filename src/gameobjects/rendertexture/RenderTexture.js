@@ -521,7 +521,6 @@ var RenderTexture = new Class({
     {
         var gl = this.gl;
         var frame = this.frame;
-        var texture = this.texture;
         var camera = this.camera;
         var renderer = this.renderer;
 
