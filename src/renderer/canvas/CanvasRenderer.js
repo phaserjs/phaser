@@ -12,7 +12,6 @@ var CONST = require('../../const');
 var GetBlendModes = require('./utils/GetBlendModes');
 var GetCalcMatrix = require('../../gameobjects/GetCalcMatrix');
 var ScaleEvents = require('../../scale/events');
-var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 
 /**
  * @classdesc
