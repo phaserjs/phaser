@@ -7,6 +7,7 @@
 
 var Class = require('../../utils/Class');
 var DeepCopy = require('../../utils/object/DeepCopy');
+var Events = require('./events');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Matrix4 = require('../../math/Matrix4');
 var RenderTarget = require('./RenderTarget');
@@ -260,6 +261,16 @@ var WebGLPipeline = new Class({
         this.hasBooted = false;
 
         /**
+         * Indicates if this is a Post FX Pipeline, or not.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#isPostFX
+         * @type {boolean}
+         * @readonly
+         * @since 3.50.0
+         */
+        this.isPostFX = false;
+
+        /**
          * An array of RenderTarget instances that belong to this pipeline.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#renderTargets
@@ -311,7 +322,7 @@ var WebGLPipeline = new Class({
          * @type {Phaser.Math.Matrix4}
          * @since 3.50.0
          */
-        this.projectionMatrix = new Matrix4().identity();
+        this.projectionMatrix;
 
         /**
          * The configuration object that was used to create this pipeline.
@@ -342,6 +353,11 @@ var WebGLPipeline = new Class({
         var gl = this.gl;
         var config = this.config;
         var renderer = this.renderer;
+
+        if (!this.isPostFX)
+        {
+            this.projectionMatrix = new Matrix4().identity();
+        }
 
         //  Create the Render Targets
 
@@ -438,6 +454,11 @@ var WebGLPipeline = new Class({
 
         this.hasBooted = true;
 
+        renderer.on(Events.RESIZE, this.resize, this);
+        renderer.on(Events.PRE_RENDER, this.onPreRender, this);
+        renderer.on(Events.RENDER, this.onRender, this);
+        renderer.on(Events.POST_RENDER, this.onPostRender, this);
+
         this.onBoot();
     },
 
@@ -467,29 +488,6 @@ var WebGLPipeline = new Class({
      */
     onResize: function ()
     {
-    },
-
-    /**
-     * Creates a brand new WebGLPipeline instance based on the configuration object that
-     * was used to create this one.
-     *
-     * The new instance is returned by this method. Note that the new instance is _not_
-     * added to the Pipeline Manager. You will need to add it yourself should you require so.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#mvpInit
-     * @since 3.50.0
-     *
-     * @param {string} name - The new name to give the cloned pipeline.
-     *
-     * @return {Phaser.Renderer.WebGL.WebGLPipeline} A clone of this WebGLPipeline instance.
-     */
-    clone: function (name)
-    {
-        var clone = new WebGLPipeline(this.config);
-
-        clone.name = name;
-
-        return clone;
     },
 
     /**
@@ -695,7 +693,11 @@ var WebGLPipeline = new Class({
 
         var projectionMatrix = this.projectionMatrix;
 
-        projectionMatrix.ortho(0, width, height, 0, -1000, 1000);
+        //  Because Post FX Pipelines don't have them
+        if (projectionMatrix)
+        {
+            projectionMatrix.ortho(0, width, height, 0, -1000, 1000);
+        }
 
         var i;
 
@@ -1143,7 +1145,7 @@ var WebGLPipeline = new Class({
     {
         if (unit === undefined) { unit = this.currentUnit; }
 
-        var postPipeline = (gameObject && gameObject.postPipeline);
+        var postPipeline = (gameObject && gameObject.hasPostPipeline);
 
         if (postPipeline)
         {
@@ -1856,6 +1858,13 @@ var WebGLPipeline = new Class({
         }
 
         this.gl.deleteBuffer(this.vertexBuffer);
+
+        var renderer = this.renderer;
+
+        renderer.off(Events.RESIZE, this.resize, this);
+        renderer.off(Events.PRE_RENDER, this.onPreRender, this);
+        renderer.off(Events.RENDER, this.onRender, this);
+        renderer.off(Events.POST_RENDER, this.onPostRender, this);
 
         this.game = null;
         this.renderer = null;
