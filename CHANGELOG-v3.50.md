@@ -208,6 +208,13 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `WebGLRenderer.pushFramebuffer` is a new method that is used to push a framebuffer onto the fbo stack before setting it as the current framebuffer. This should now be called in place of `setFramebuffer`. Remember to call `popFramebuffer` after using it.
 * `WebGLRenderer.popFramebuffer` is a new method that will pop the current framebuffer off the fbo stack and set the previous one as being active.
 * `WebGLRenderer.setFramebuffer` has a new optional boolean parameter `resetTextures` which will reset the WebGL Textures, if set to `true` (which is the default).
+* `WebGLRenderer.isBooted` is a new boolean property that lets you know if the rendere has fully finished booting.
+* The `WebGLRenderer` now extends the Event Emitter, allowing you to listen to renderer specific events.
+* `Phaser.Renderer.WebGL.Events` is a new WebGL Renderer namespace for events.
+* `WebGL.Events.PRE_RENDER` is a new event dispatched by the WebGL Renderer. This happens right at the start of the render process.
+* `WebGL.Events.RENDER` is a new event dispatched by the WebGL Renderer. This happens once for every camera, in every Scene at the start of its render process.
+* `WebGL.Events.POST_RENDER` is a new event dispatched by the WebGL Renderer. This happens right at the end of the render process.
+* `WebGL.Events.RESIZE` is a new event dispatched by the WebGL Renderer whenever it is resized.
 
 ### Camera - New Features, Updates and API Changes
 
