@@ -1850,11 +1850,20 @@ var WebGLPipeline = new Class({
      */
     destroy: function ()
     {
+        var i;
+
         var shaders = this.shaders;
 
-        for (var i = 0; i < shaders.length; i++)
+        for (i = 0; i < shaders.length; i++)
         {
             shaders[i].destroy();
+        }
+
+        var targets = this.renderTargets;
+
+        for (i = 0; i < targets.length; i++)
+        {
+            targets[i].destroy();
         }
 
         this.gl.deleteBuffer(this.vertexBuffer);
@@ -1868,11 +1877,18 @@ var WebGLPipeline = new Class({
 
         this.game = null;
         this.renderer = null;
+        this.manager = null;
         this.gl = null;
         this.view = null;
         this.shaders = null;
+        this.renderTargets = null;
+        this.bytes = null;
+        this.vertexViewF32 = null;
+        this.vertexViewU32 = null;
         this.vertexData = null;
         this.vertexBuffer = null;
+        this.currentShader = null;
+        this.currentRenderTarget = null;
 
         return this;
     }
