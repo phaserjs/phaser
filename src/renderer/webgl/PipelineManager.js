@@ -891,7 +891,7 @@ var PipelineManager = new Class({
      */
     setUtility: function (currentShader)
     {
-        return this.setPost(this.UTILITY_PIPELINE, null, currentShader);
+        return this.UTILITY_PIPELINE.bind(currentShader);
     },
 
     /**
