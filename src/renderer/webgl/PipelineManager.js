@@ -13,7 +13,6 @@ var BitmapMaskPipeline = require('./pipelines/BitmapMaskPipeline');
 var GraphicsPipeline = require('./pipelines/GraphicsPipeline');
 var LightPipeline = require('./pipelines/LightPipeline');
 var MultiPipeline = require('./pipelines/MultiPipeline');
-var PostFXPipeline = require('./pipelines/PostFXPipeline');
 var RopePipeline = require('./pipelines/RopePipeline');
 var SinglePipeline = require('./pipelines/SinglePipeline');
 var UtilityPipeline = require('./pipelines/UtilityPipeline');
@@ -69,6 +68,25 @@ var PipelineManager = new Class({
         this.renderer = renderer;
 
         /**
+         * This map stores all pipeline classes available in this manager.
+         *
+         * The Utility Class must always come first.
+         *
+         * @name Phaser.Renderer.WebGL.PipelineManager#classes
+         * @type {Phaser.Structs.Map.<string, Class>}
+         * @since 3.50.0
+         */
+        this.classes = new CustomMap([
+            [ CONST.UTILITY_PIPELINE, UtilityPipeline ],
+            [ CONST.MULTI_PIPELINE, MultiPipeline ],
+            [ CONST.BITMAPMASK_PIPELINE, BitmapMaskPipeline ],
+            [ CONST.SINGLE_PIPELINE, SinglePipeline ],
+            [ CONST.ROPE_PIPELINE, RopePipeline ],
+            [ CONST.LIGHT_PIPELINE, LightPipeline ],
+            [ CONST.GRAPHICS_PIPELINE, GraphicsPipeline ]
+        ]);
+
+        /**
          * This map stores all pipeline instances in this manager.
          *
          * This is populated with the default pipelines in the `boot` method.
@@ -102,26 +120,6 @@ var PipelineManager = new Class({
         this.previous = null;
 
         /**
-         * Current post pipeline in use by the WebGLRenderer.
-         *
-         * @name Phaser.Renderer.WebGL.PipelineManager#currentPost
-         * @type {Phaser.Renderer.WebGL.WebGLPipeline}
-         * @default null
-         * @since 3.50.0
-         */
-        this.currentPost = null;
-
-        /**
-         * The previous post pipeline that was in use.
-         *
-         * @name Phaser.Renderer.WebGL.PipelineManager#previousPost
-         * @type {Phaser.Renderer.WebGL.WebGLPipeline}
-         * @default null
-         * @since 3.50.0
-         */
-        this.previousPost = null;
-
-        /**
          * A constant-style reference to the Multi Pipeline Instance.
          *
          * This is the default Phaser 3 pipeline and is used by the WebGL Renderer to manage
@@ -146,20 +144,6 @@ var PipelineManager = new Class({
          * @since 3.50.0
          */
         this.BITMAPMASK_PIPELINE = null;
-
-        /**
-         * A constant-style reference to the Post FX Pipeline Instance.
-         *
-         * This is the default Phaser 3 camera pipeline and is used by cameras to handle
-         * their pre and post render, as well as used by other Game Objects for
-         * post-render effects. This property is set during the `boot` method.
-         *
-         * @name Phaser.Renderer.WebGL.PipelineManager#POSTFX_PIPELINE
-         * @type {Phaser.Renderer.WebGL.Pipelines.PostFXPipeline}
-         * @default null
-         * @since 3.50.0
-         */
-        this.POSTFX_PIPELINE = null;
 
         /**
          * A constant-style reference to the Utility Pipeline Instance.
@@ -246,29 +230,57 @@ var PipelineManager = new Class({
      *
      * @method Phaser.Renderer.WebGL.PipelineManager#boot
      * @since 3.50.0
+     *
+     * @param {Phaser.Types.Core.PipelineConfig} [pipelineConfig] - The pipeline configuration object as set in the Game Config.
      */
-    boot: function ()
+    boot: function (pipelineConfig)
     {
+        //  Install each of the default pipelines
+
+        var instance;
+        var _this = this;
         var game = this.game;
 
-        //  Must always be set first, before any other pipeline
-        this.UTILITY_PIPELINE = this.add(CONST.UTILITY_PIPELINE, new UtilityPipeline({ game: game }));
+        this.classes.each(function (name, pipeline)
+        {
+            instance = _this.add(name, new pipeline({ game: game }));
 
-        this.MULTI_PIPELINE = this.add(CONST.MULTI_PIPELINE, new MultiPipeline({ game: game }));
-        this.BITMAPMASK_PIPELINE = this.add(CONST.BITMAPMASK_PIPELINE, new BitmapMaskPipeline({ game: game }));
-        this.POSTFX_PIPELINE = this.add(CONST.POSTFX_PIPELINE, new PostFXPipeline({ game: game }));
+            if (name === CONST.UTILITY_PIPELINE)
+            {
+                _this.UTILITY_PIPELINE = instance;
 
-        this.add(CONST.SINGLE_PIPELINE, new SinglePipeline({ game: game }));
-        this.add(CONST.ROPE_PIPELINE, new RopePipeline({ game: game }));
-        this.add(CONST.LIGHT_PIPELINE, new LightPipeline({ game: game }));
-        this.add(CONST.GRAPHICS_PIPELINE, new GraphicsPipeline({ game: game }));
+                //  FBO references
+                _this.fullFrame1 = instance.fullFrame1;
+                _this.fullFrame2 = instance.fullFrame2;
+                _this.halfFrame1 = instance.halfFrame1;
+                _this.halfFrame2 = instance.halfFrame2;
+            }
+        });
 
-        var utility = this.UTILITY_PIPELINE;
+        //  Our const-like references
+        this.MULTI_PIPELINE = this.get(CONST.MULTI_PIPELINE);
+        this.BITMAPMASK_PIPELINE = this.get(CONST.BITMAPMASK_PIPELINE);
 
-        this.fullFrame1 = utility.fullFrame1;
-        this.fullFrame2 = utility.fullFrame2;
-        this.halfFrame1 = utility.halfFrame1;
-        this.halfFrame2 = utility.halfFrame2;
+        //  And now the ones in the config, if any
+        if (pipelineConfig)
+        {
+            for (var pipelineName in pipelineConfig)
+            {
+                var pipelineClass = pipelineConfig[pipelineName];
+
+                if (!this.has(pipelineName))
+                {
+                    this.classes.set(pipelineName, pipelineClass);
+
+                    instance = new pipelineClass(game);
+
+                    if (!instance.isPostFX)
+                    {
+                        this.add(pipelineName, instance);
+                    }
+                }
+            }
+        }
     },
 
     /**
@@ -290,7 +302,9 @@ var PipelineManager = new Class({
      * this.add('yourName', CustomPipeline);`
      * ```
      *
-     * @method Phaser.Renderer.WebGL.PipelineManager#addPipeline
+     * To add a **Post Pipeline**, see `addPostPipeline` instead.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#add
      * @since 3.50.0
      *
      * @param {string} name - A unique string-based key for the pipeline within the manager.
@@ -300,6 +314,13 @@ var PipelineManager = new Class({
      */
     add: function (name, pipeline)
     {
+        if (pipeline.isPostFX)
+        {
+            console.warn(name + ' is a Post Pipeline. Use `addPostPipeline` instead');
+
+            return;
+        }
+
         var pipelines = this.pipelines;
         var renderer = this.renderer;
 
@@ -329,83 +350,38 @@ var PipelineManager = new Class({
     },
 
     /**
-     * Resizes handler.
+     * Adds a Post Pipeline to this Pipeline Manager.
      *
-     * This is called automatically by the `WebGLRenderer` when the game resizes.
+     * Make sure to pass a base class to this method, not an instance.
      *
-     * @method Phaser.Renderer.WebGL.PipelineManager#resize
+     * For example, you should pass it like this:
+     *
+     * ```javascript
+     * this.addPostPipeline('yourName', CustomPipeline);`
+     * ```
+     *
+     * and **not** like this:
+     *
+     * ```javascript
+     * this.addPostPipeline('yourName', new CustomPipeline());`
+     * ```
+     *
+     * To add a regular pipeline, see the `add` method instead.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#addPostPipeline
      * @since 3.50.0
      *
-     * @param {number} [width] - The new width of the renderer.
-     * @param {number} [height] - The new height of the renderer.
+     * @param {string} name - A unique string-based key for the pipeline within the manager.
+     * @param {Class} pipeline - A pipeline class which must extend `PostFXPipeline`.
+     *
+     * @return {this} This Pipeline Manager.
      */
-    resize: function (width, height)
+    addPostPipeline: function (name, pipeline)
     {
-        var pipelines = this.pipelines;
-
-        pipelines.each(function (pipelineName, pipelineInstance)
+        if (!this.classes.has(name))
         {
-            pipelineInstance.resize(width, height);
-        });
-    },
-
-    /**
-     * Calls the `onPreRender` method on each pipeline in this manager.
-     *
-     * This is called automatically by the `WebGLRenderer.preRender` method.
-     *
-     * @method Phaser.Renderer.WebGL.PipelineManager#preRender
-     * @since 3.50.0
-     */
-    preRender: function ()
-    {
-        var pipelines = this.pipelines;
-
-        pipelines.each(function (pipelineName, pipelineInstance)
-        {
-            pipelineInstance.onPreRender();
-        });
-    },
-
-    /**
-     * Calls the `onRender` method on each pipeline in this manager.
-     *
-     * This is called automatically by the `WebGLRenderer.render` method.
-     *
-     * @method Phaser.Renderer.WebGL.PipelineManager#render
-     * @since 3.50.0
-     *
-     * @param {Phaser.Scene} scene - The Scene to render.
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Scene Camera to render with.
-     */
-    render: function (scene, camera)
-    {
-        var pipelines = this.pipelines;
-
-        pipelines.each(function (pipelineName, pipelineInstance)
-        {
-            pipelineInstance.onRender(scene, camera);
-        });
-    },
-
-    /**
-     * Calls the `onPostRender` method on each pipeline in this manager.
-     *
-     * This is called automatically by the `WebGLRenderer.postRender` method.
-     *
-     * @method Phaser.Renderer.WebGL.PipelineManager#postRender
-     * @since 3.50.0
-     */
-    postRender: function ()
-    {
-        this.flush();
-
-        var pipelines = this.pipelines;
-
-        pipelines.each(function (pipelineName, pipelineInstance)
-        {
-            pipelineInstance.onPostRender();
-        });
+            this.classes.set(name, pipeline);
+        }
     },
 
     /**
@@ -475,7 +451,49 @@ var PipelineManager = new Class({
     },
 
     /**
-     * Removes a pipeline based on the given name.
+     * Returns a _new instance_ of the post pipeline based on the given name, or class.
+     *
+     * If no instance, or matching name, exists in this manager, it returns `undefined`.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#getPostPipeline
+     * @since 3.50.0
+     *
+     * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} pipeline - Either the string-based name of the pipeline to get, or a pipeline instance to look-up.
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} The pipeline instance, or `undefined` if not found.
+     */
+    getPostPipeline: function (pipeline)
+    {
+        var pipelineClasses = this.classes;
+
+        var instance;
+
+        if (typeof pipeline === 'string')
+        {
+            instance = pipelineClasses.get(pipeline);
+        }
+        else if (typeof pipeline === 'function')
+        {
+            //  A class
+            if (pipelineClasses.contains(pipeline))
+            {
+                instance = pipeline;
+            }
+        }
+        else if (typeof pipeline === 'object')
+        {
+            //  Instance
+            instance = pipelineClasses.get(pipeline.name);
+        }
+
+        if (instance)
+        {
+            return new instance(this.game);
+        }
+    },
+
+    /**
+     * Removes a pipeline instance based on the given name.
      *
      * If no pipeline matches the name, this method does nothing.
      *
@@ -486,10 +504,18 @@ var PipelineManager = new Class({
      * @since 3.50.0
      *
      * @param {string} name - The name of the pipeline to be removed.
+     * @param {boolean} [removeClass=true] - Remove the class as well as the instance?
      */
-    remove: function (name)
+    remove: function (name, removeClass)
     {
+        if (removeClass === undefined) { removeClass = true; }
+
         this.pipelines.delete(name);
+
+        if (removeClass)
+        {
+            this.classes.delete(name);
+        }
     },
 
     /**
@@ -499,6 +525,9 @@ var PipelineManager = new Class({
      *
      * If the pipeline isn't already the current one it will call `WebGLPipeline.bind` and then `onBind`.
      *
+     * You cannot set Post FX Pipelines using this method. To use a Post FX Pipeline, you should
+     * apply it to either a Camera, Container or other supporting Game Object.
+     *
      * @method Phaser.Renderer.WebGL.PipelineManager#set
      * @since 3.50.0
      *
@@ -506,10 +535,15 @@ var PipelineManager = new Class({
      * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
      * @param {Phaser.Renderer.WebGL.WebGLShader} [currentShader] - The shader to set as being current.
      *
-     * @return {Phaser.Renderer.WebGL.WebGLPipeline} The pipeline that was set.
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} The pipeline that was set, or undefined if it couldn't be set.
      */
     set: function (pipeline, gameObject, currentShader)
     {
+        if (pipeline.isPostFX)
+        {
+            return;
+        }
+
         if (!this.isCurrent(pipeline, currentShader))
         {
             this.flush();
@@ -530,46 +564,9 @@ var PipelineManager = new Class({
     },
 
     /**
-     * Sets the current post pipeline to be used by the `WebGLRenderer`.
-     *
-     * This method accepts a pipeline instance as its parameter, not the name.
-     *
-     * If the pipeline isn't already the current one it will call `WebGLPipeline.bind` and then `onBind`.
-     *
-     * @method Phaser.Renderer.WebGL.PipelineManager#setPost
-     * @since 3.50.0
-     *
-     * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipeline - The post pipeline instance to be set as current.
-     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
-     * @param {Phaser.Renderer.WebGL.WebGLShader} [currentShader] - The shader to set as being current.
-     *
-     * @return {Phaser.Renderer.WebGL.WebGLPipeline} The post pipeline that was set.
-     */
-    setPost: function (pipeline, gameObject, currentShader)
-    {
-        if (!this.isCurrentPost(pipeline, currentShader))
-        {
-            this.flush();
-
-            if (this.currentPost)
-            {
-                this.currentPost.unbind();
-            }
-
-            this.currentPost = pipeline;
-
-            pipeline.bind(currentShader);
-        }
-
-        pipeline.onBind(gameObject);
-
-        return pipeline;
-    },
-
-    /**
      * This method is called by the `WebGLPipeline.batchQuad` method, right before a quad
      * belonging to a Game Object is about to be added to the batch. It causes a batch
-     * flush, then calls the `preBatch` method on the post-fx pipeline belonging to the
+     * flush, then calls the `preBatch` method on the post-fx pipelines belonging to the
      * Game Object.
      *
      * @method Phaser.Renderer.WebGL.PipelineManager#preBatch
@@ -581,16 +578,22 @@ var PipelineManager = new Class({
     {
         this.flush();
 
-        if (gameObject.postPipeline)
+        if (gameObject.hasPostPipeline)
         {
-            gameObject.postPipeline.preBatch(gameObject);
+            var pipelines = gameObject.postPipelines;
+
+            //  Iterate in reverse because we need them stacked in the order they're in the array
+            for (var i = pipelines.length - 1; i >= 0; i--)
+            {
+                pipelines[i].preBatch(gameObject);
+            }
         }
     },
 
     /**
      * This method is called by the `WebGLPipeline.batchQuad` method, right after a quad
      * belonging to a Game Object has been added to the batch. It causes a batch
-     * flush, then calls the `postBatch` method on the post-fx pipeline belonging to the
+     * flush, then calls the `postBatch` method on the post-fx pipelines belonging to the
      * Game Object.
      *
      * @method Phaser.Renderer.WebGL.PipelineManager#postBatch
@@ -602,38 +605,49 @@ var PipelineManager = new Class({
     {
         this.flush();
 
-        if (gameObject.postPipeline)
+        if (gameObject.hasPostPipeline)
         {
-            gameObject.postPipeline.postBatch(gameObject);
+            var pipelines = gameObject.postPipelines;
+
+            for (var i = 0; i < pipelines.length; i++)
+            {
+                pipelines[i].postBatch(gameObject);
+            }
         }
     },
 
     /**
      * Called at the start of the `WebGLRenderer.preRenderCamera` method.
      *
-     * If the Camera has a postPipeline set, it will flush the batch and then call the
-     * `preBatch` method on the post-fx pipeline belonging to the Camera.
+     * If the Camera has post pipelines set, it will flush the batch and then call the
+     * `preBatch` method on the post-fx pipelines belonging to the Camera.
      *
      * @method Phaser.Renderer.WebGL.PipelineManager#preBatchCamera
      * @since 3.50.0
      *
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera being pre-rendered.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera about to be rendered.
      */
     preBatchCamera: function (camera)
     {
-        if (camera.postPipeline)
+        if (camera.hasPostPipeline)
         {
             this.flush();
 
-            camera.postPipeline.preBatch(camera);
+            var pipelines = camera.postPipelines;
+
+            //  Iterate in reverse because we need them stacked in the order they're in the array
+            for (var i = pipelines.length - 1; i >= 0; i--)
+            {
+                pipelines[i].preBatch(camera);
+            }
         }
     },
 
     /**
      * Called at the end of the `WebGLRenderer.postRenderCamera` method.
      *
-     * If the Camera has a postPipeline set, it will flush the batch and then call the
-     * `postBatch` method on the post-fx pipeline belonging to the Camera.
+     * If the Camera has post pipelines set, it will flush the batch and then call the
+     * `postBatch` method on the post-fx pipelines belonging to the Camera.
      *
      * @method Phaser.Renderer.WebGL.PipelineManager#postBatchCamera
      * @since 3.50.0
@@ -642,11 +656,16 @@ var PipelineManager = new Class({
      */
     postBatchCamera: function (camera)
     {
-        if (camera.postPipeline)
+        if (camera.hasPostPipeline)
         {
             this.flush();
 
-            camera.postPipeline.postBatch(camera);
+            var pipelines = camera.postPipelines;
+
+            for (var i = 0; i < pipelines.length; i++)
+            {
+                pipelines[i].postBatch(camera);
+            }
         }
     },
 
@@ -666,35 +685,6 @@ var PipelineManager = new Class({
     {
         var renderer = this.renderer;
         var current = this.current;
-
-        if (current && !currentShader)
-        {
-            currentShader = current.currentShader;
-        }
-
-        return !(
-            current !== pipeline ||
-            current.vertexBuffer !== renderer.currentVertexBuffer ||
-            currentShader.program !== renderer.currentProgram
-        );
-    },
-
-    /**
-     * Checks to see if the given post pipeline is already the active pipeline, both within this
-     * Pipeline Manager, and also has the same vertex buffer and shader set within the Renderer.
-     *
-     * @method Phaser.Renderer.WebGL.PipelineManager#isCurrentPost
-     * @since 3.50.0
-     *
-     * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipeline - The pipeline instance to be checked.
-     * @param {Phaser.Renderer.WebGL.WebGLShader} [currentShader] - The shader to set as being current.
-     *
-     * @return {boolean} `true` if the given pipeline is already the current pipeline, otherwise `false`.
-     */
-    isCurrentPost: function (pipeline, currentShader)
-    {
-        var renderer = this.renderer;
-        var current = this.currentPost;
 
         if (current && !currentShader)
         {
@@ -1004,10 +994,12 @@ var PipelineManager = new Class({
     {
         this.flush();
 
+        this.classes.clear();
         this.pipelines.clear();
 
         this.renderer = null;
         this.game = null;
+        this.classes = null;
         this.pipelines = null;
         this.current = null;
         this.previous = null;
