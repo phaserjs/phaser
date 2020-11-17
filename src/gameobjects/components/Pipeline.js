@@ -310,7 +310,8 @@ var Pipeline = {
     },
 
     /**
-     * Resets the WebGL Post Pipelines of this Game Object.
+     * Resets the WebGL Post Pipelines of this Game Object. It does this by calling
+     * the `destroy` method on each post pipeline and then clearing the local array.
      *
      * @method Phaser.GameObjects.Components.Pipeline#resetPostPipeline
      * @webglOnly
@@ -321,6 +322,13 @@ var Pipeline = {
     resetPostPipeline: function (resetData)
     {
         if (resetData === undefined) { resetData = false; }
+
+        var pipelines = this.postPipelines;
+
+        for (var i = 0; i < pipelines.length; i++)
+        {
+            pipelines[i].destroy();
+        }
 
         this.postPipelines = [];
         this.hasPostPipeline = false;
