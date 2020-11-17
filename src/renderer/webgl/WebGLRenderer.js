@@ -10,6 +10,8 @@ var BaseCamera = require('../../cameras/2d/BaseCamera');
 var CameraEvents = require('../../cameras/2d/events');
 var Class = require('../../utils/Class');
 var CONST = require('../../const');
+var EventEmitter = require('eventemitter3');
+var Events = require('./events');
 var GameEvents = require('../../core/events');
 var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
 var NOOP = require('../../utils/NOOP');
@@ -37,6 +39,7 @@ var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
  *
  * @class WebGLRenderer
  * @memberof Phaser.Renderer.WebGL
+ * @extends Phaser.Events.EventEmitter
  * @constructor
  * @since 3.0.0
  *
@@ -44,10 +47,14 @@ var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
  */
 var WebGLRenderer = new Class({
 
+    Extends: EventEmitter,
+
     initialize:
 
     function WebGLRenderer (game)
     {
+        EventEmitter.call(this);
+
         var gameConfig = game.config;
 
         var contextCreationConfig = {
@@ -612,6 +619,15 @@ var WebGLRenderer = new Class({
          */
         this.defaultScissor = [ 0, 0, 0, 0 ];
 
+        /**
+         * Has this renderer fully booted yet?
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#isBooted
+         * @type {boolean}
+         * @since 3.50.0
+         */
+        this.isBooted = false;
+
         this.init(this.config);
     },
 
@@ -839,23 +855,11 @@ var WebGLRenderer = new Class({
         this.width = baseSize.width;
         this.height = baseSize.height;
 
+        this.isBooted = true;
+
         //  Set-up pipelines
 
-        //  First, default ones
-        pipelineManager.boot();
-
-        var pipelines = game.config.pipeline;
-
-        //  Then, custom ones
-        if (pipelines)
-        {
-            for (var pipelineName in pipelines)
-            {
-                var pipelineInstance = pipelines[pipelineName];
-
-                pipelineManager.add(pipelineName, new pipelineInstance(game));
-            }
-        }
+        pipelineManager.boot(game.config.pipeline);
 
         //  Set-up default textures, fbo and scissor
 
@@ -895,6 +899,7 @@ var WebGLRenderer = new Class({
      * Resizes the drawing buffer to match that required by the Scale Manager.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#resize
+     * @fires Phaser.Renderer.WebGL.Events#RESIZE
      * @since 3.0.0
      *
      * @param {number} [width] - The new width of the renderer.
@@ -911,8 +916,6 @@ var WebGLRenderer = new Class({
 
         gl.viewport(0, 0, width, height);
 
-        this.pipelines.resize(width, height);
-
         this.drawingBufferHeight = gl.drawingBufferHeight;
 
         gl.scissor(0, (gl.drawingBufferHeight - height), width, height);
@@ -921,6 +924,8 @@ var WebGLRenderer = new Class({
 
         this.defaultScissor[2] = width;
         this.defaultScissor[3] = height;
+
+        this.emit(Events.RESIZE, width, height);
 
         return this;
     },
@@ -2142,6 +2147,8 @@ var WebGLRenderer = new Class({
 
         var color = camera.backgroundColor;
 
+        camera.emit(CameraEvents.PRE_RENDER, camera);
+
         this.pipelines.preBatchCamera(camera);
 
         this.pushScissor(cx, cy, cw, ch);
@@ -2163,11 +2170,6 @@ var WebGLRenderer = new Class({
                 Utils.getTintFromFloats(color.blueGL, color.greenGL, color.redGL, 1),
                 color.alphaGL
             );
-        }
-
-        if (camera.postPipeline)
-        {
-            camera.emit(CameraEvents.PRE_RENDER, camera);
         }
     },
 
@@ -2227,18 +2229,16 @@ var WebGLRenderer = new Class({
             camera.mask.postRenderWebGL(this, camera._maskCamera);
         }
 
-        if (camera.postPipeline)
-        {
-            camera.emit(CameraEvents.POST_RENDER, camera);
+        this.pipelines.postBatchCamera(camera);
 
-            this.pipelines.postBatchCamera(camera);
-        }
+        camera.emit(CameraEvents.POST_RENDER, camera);
     },
 
     /**
      * Clears the current vertex buffer and updates pipelines.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#preRender
+     * @fires Phaser.Renderer.WebGL.Events#PRE_RENDER
      * @since 3.0.0
      */
     preRender: function ()
@@ -2277,7 +2277,7 @@ var WebGLRenderer = new Class({
 
         this.textureFlush = 0;
 
-        this.pipelines.preRender();
+        this.emit(Events.PRE_RENDER);
     },
 
     /**
@@ -2291,6 +2291,7 @@ var WebGLRenderer = new Class({
      * This method is not called if `Camera.visible` is `false`, or `Camera.alpha` is zero.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#render
+     * @fires Phaser.Renderer.WebGL.Events#RENDER
      * @since 3.0.0
      *
      * @param {Phaser.Scene} scene - The Scene to render.
@@ -2303,7 +2304,7 @@ var WebGLRenderer = new Class({
 
         var childCount = children.length;
 
-        this.pipelines.render(scene, camera);
+        this.emit(Events.RENDER, scene, camera);
 
         //   Apply scissor for cam region + render background color, if not transparent
         this.preRenderCamera(camera);
@@ -2390,13 +2391,14 @@ var WebGLRenderer = new Class({
      * The post-render step happens after all Cameras in all Scenes have been rendered.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#postRender
+     * @fires Phaser.Renderer.WebGL.Events#POST_RENDER
      * @since 3.0.0
      */
     postRender: function ()
     {
         if (this.contextLost) { return; }
 
-        this.pipelines.postRender();
+        this.emit(Events.POST_RENDER);
 
         var state = this.snapshotState;
 
@@ -2843,6 +2845,8 @@ var WebGLRenderer = new Class({
 
         this.pipelines.destroy();
         this.defaultCamera.destroy();
+
+        this.removeAllListeners();
 
         this.fboStack = [];
         this.maskStack = [];
