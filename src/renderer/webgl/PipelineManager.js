@@ -458,9 +458,9 @@ var PipelineManager = new Class({
      * @method Phaser.Renderer.WebGL.PipelineManager#getPostPipeline
      * @since 3.50.0
      *
-     * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} pipeline - Either the string-based name of the pipeline to get, or a pipeline instance to look-up.
+     * @param {(string|function|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline)} pipeline - Either the string-based name of the pipeline to get, or a pipeline instance, or class to look-up.
      *
-     * @return {Phaser.Renderer.WebGL.WebGLPipeline} The pipeline instance, or `undefined` if not found.
+     * @return {Phaser.Renderer.WebGL.Pipelines.PostFXPipeline} The pipeline instance, or `undefined` if not found.
      */
     getPostPipeline: function (pipeline)
     {
