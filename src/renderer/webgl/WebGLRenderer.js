@@ -2398,6 +2398,8 @@ var WebGLRenderer = new Class({
     {
         if (this.contextLost) { return; }
 
+        this.flush();
+
         this.emit(Events.POST_RENDER);
 
         var state = this.snapshotState;
