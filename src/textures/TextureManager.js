@@ -390,6 +390,9 @@ var TextureManager = new Class({
      *
      * This allows you to then use the Texture as a normal texture for texture based Game Objects like Sprites.
      *
+     * If the `width` and `height` arguments are omitted, but the WebGL Texture was created by Phaser's WebGL Renderer
+     * and has `glTexture.width` and `glTexture.height` properties, these values will be used instead.
+     *
      * This is a WebGL only feature.
      *
      * @method Phaser.Textures.TextureManager#addGLTexture
@@ -398,8 +401,8 @@ var TextureManager = new Class({
      *
      * @param {string} key - The unique string-based key of the Texture.
      * @param {WebGLTexture} glTexture - The source Render Texture.
-     * @param {number} width - The new width of the Texture.
-     * @param {number} height - The new height of the Texture.
+     * @param {number} [width] - The new width of the Texture. Read from `glTexture.width` if omitted.
+     * @param {number} [height] - The new height of the Texture. Read from `glTexture.height` if omitted.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
@@ -409,6 +412,9 @@ var TextureManager = new Class({
 
         if (this.checkKey(key))
         {
+            if (width === undefined) { width = glTexture.width };
+            if (height === undefined) { height = glTexture.height };
+
             texture = this.create(key, glTexture, width, height);
 
             texture.add('__BASE', 0, 0, 0, width, height);
