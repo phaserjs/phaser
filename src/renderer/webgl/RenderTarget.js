@@ -259,16 +259,7 @@ var RenderTarget = new Class({
         var textureWidth = this.width;
         var textureHeight = this.height;
 
-        var rendererWidth = renderer.width;
-        var rendererHeight = renderer.height;
-
-        var width = Math.max(textureWidth, rendererWidth);
-        var height = Math.max(textureHeight, rendererHeight);
-
-        var x = 0;
-        var y = (textureHeight < rendererHeight) ? textureHeight - rendererHeight : Math.abs(rendererHeight - textureHeight);
-
-        renderer.gl.viewport(x, y, width, height);
+        renderer.gl.viewport(0, 0, textureWidth, textureHeight);
         renderer.gl.disable(renderer.gl.SCISSOR_TEST);
     },
 
