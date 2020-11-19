@@ -801,12 +801,15 @@ var RenderTexture = new Class({
                 var zoomX = 1 - (renderer.width / renderTarget.width);
                 var zoomY = 1 - (renderer.height / renderTarget.height);
 
+                var ox = 0 - renderTarget.width / 2;
+                var oy = 0 - renderTarget.height / 2;
+
                 camera.setZoom(zoomX, zoomY);
                 camera.preRender();
 
                 renderTarget.bind(true);
 
-                this.pipeline.batchTextureFrame(textureFrame, x, y, tint, alpha, camera.matrix, null);
+                this.pipeline.batchTextureFrame(textureFrame, ox + x, oy + y, tint, alpha, camera.matrix, null);
 
                 renderTarget.unbind(true);
             }
