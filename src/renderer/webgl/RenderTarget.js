@@ -212,12 +212,23 @@ var RenderTarget = new Class({
      *
      * If `autoClear` is set, then clears the texture.
      *
+     * If `adjustViewport` is `true` then it will flush the renderer and then adjust the GL viewport.
+     *
      * @method Phaser.Renderer.WebGL.RenderTarget#bind
      * @since 3.50.0
+     *
+     * @param {boolean} [adjustViewport=false] - Adjust the GL viewport by calling `RenderTarget.adjustViewport` ?
      */
-    bind: function ()
+    bind: function (adjustViewport)
     {
-        this.renderer.pushFramebuffer(this.framebuffer);
+        if (adjustViewport === undefined) { adjustViewport = false; }
+
+        if (adjustViewport)
+        {
+            this.renderer.flush();
+        }
+
+        this.renderer.pushFramebuffer(this.framebuffer, false, false, false);
 
         if (this.autoClear)
         {
@@ -227,6 +238,31 @@ var RenderTarget = new Class({
 
             gl.clear(gl.COLOR_BUFFER_BIT);
         }
+
+        if (adjustViewport)
+        {
+            this.adjustViewport();
+        }
+    },
+
+    /**
+     * Adjusts the GL viewport to match the WebGL Renderer width and height,
+     * with a y offset of `RenderTarget.height` - `WebGLRenderer.height`.
+     *
+     * @method Phaser.Renderer.WebGL.RenderTarget#adjustViewport
+     * @since 3.50.0
+     */
+    adjustViewport: function ()
+    {
+        var renderer = this.renderer;
+
+        var rendererWidth = renderer.width;
+        var rendererHeight = renderer.height;
+
+        var x = 0;
+        var y = this.height - rendererHeight;
+
+        renderer.gl.viewport(x, y, rendererWidth, rendererHeight);
     },
 
     /**
@@ -249,15 +285,24 @@ var RenderTarget = new Class({
     },
 
     /**
-     * Unbinds this Render Target.
+     * Unbinds this Render Target and optionally flushes the WebGL Renderer first.
      *
      * @name Phaser.Renderer.WebGL.RenderTarget#unbind
      * @since 3.50.0
      *
+     * @param {boolean} [flush=false] - Flush the WebGL Renderer before unbinding?
+     *
      * @return {WebGLFramebuffer} The Framebuffer that was set, or `null` if there aren't any more in the stack.
      */
-    unbind: function ()
+    unbind: function (flush)
     {
+        if (flush === undefined) { flush = false; }
+
+        if (flush)
+        {
+            this.renderer.flush();
+        }
+
         return this.renderer.popFramebuffer();
     },
 
