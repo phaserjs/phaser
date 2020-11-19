@@ -267,7 +267,7 @@ var RenderTexture = new Class({
         {
             this.drawGameObject = this.batchGameObjectWebGL;
 
-            this.renderTarget = new RenderTarget(renderer, renderer.width, renderer.height, 1, 0, false, true);
+            this.renderTarget = new RenderTarget(renderer, width, height, 1, 0, false);
         }
         else if (renderer.type === CONST.CANVAS)
         {
@@ -345,18 +345,18 @@ var RenderTexture = new Class({
                 this.texture.width = width;
                 this.texture.height = height;
 
-                /*
                 var renderTarget = this.renderTarget;
 
                 if (renderTarget)
                 {
-                    // renderTarget.resize(width, height);
+                    renderTarget.resize(width, height);
+
+                    frame.glTexture = renderTarget.texture;
 
                     frame.source.isRenderTexture = true;
+                    frame.source.isGLTexture = true;
                     frame.source.glTexture = renderTarget.texture;
-                    frame.glTexture = renderTarget.texture;
                 }
-                */
 
                 frame.source.width = width;
                 frame.source.height = height;
@@ -517,9 +517,7 @@ var RenderTexture = new Class({
             var cw = camera.width;
             var ch = camera.height;
 
-            renderer.flush();
-
-            renderTarget.bind();
+            renderTarget.bind(true);
 
             var pipeline = this.pipeline;
 
@@ -726,15 +724,11 @@ var RenderTexture = new Class({
 
         if (renderTarget)
         {
-            renderer.flush();
-
-            renderTarget.bind();
+            renderTarget.bind(true);
 
             this.batchList(entries, x, y, alpha, tint);
 
-            renderer.flush();
-
-            renderTarget.unbind();
+            renderTarget.unbind(true);
         }
         else
         {
@@ -796,7 +790,6 @@ var RenderTexture = new Class({
         }
 
         var camera = this.camera;
-        var renderer = this.renderer;
         var renderTarget = this.renderTarget;
         var textureFrame = this.textureManager.getFrame(key, frame);
 
@@ -806,15 +799,13 @@ var RenderTexture = new Class({
 
             if (renderTarget)
             {
-                renderer.flush();
+                renderTarget.bind(true);
 
-                renderTarget.bind();
+                this.pipeline.batchTextureFrame(textureFrame, x, y, tint, alpha, camera.matrix, null);
 
-                this.pipeline.batchTextureFrame(textureFrame, x + this.frame.cutX, y + this.frame.cutY, tint, alpha, camera.matrix, null);
+                // this.pipeline.batchTextureFrame(textureFrame, x + this.frame.cutX, y + this.frame.cutY, tint, alpha, camera.matrix, null);
 
-                renderer.flush();
-
-                renderTarget.unbind();
+                renderTarget.unbind(true);
             }
             else
             {
@@ -1025,20 +1016,15 @@ var RenderTexture = new Class({
         x += this.frame.cutX;
         y += this.frame.cutY;
 
-        var renderer = this.renderer;
         var renderTarget = this.renderTarget;
 
         if (renderTarget)
         {
-            renderer.flush();
-
-            renderTarget.bind();
+            renderTarget.bind(true);
 
             this.pipeline.batchTextureFrame(textureFrame, x, y, tint, alpha, this.camera.matrix, null);
 
-            renderer.flush();
-
-            renderTarget.unbind();
+            renderTarget.unbind(true);
         }
         else
         {
