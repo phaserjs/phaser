@@ -358,10 +358,35 @@ var RenderTexture = new Class({
                     frame.source.glTexture = renderTarget.texture;
                 }
 
+                var camera = this.camera;
+
                 frame.source.width = width;
                 frame.source.height = height;
 
-                this.camera.setSize(width, height);
+                var renderer = this.renderer;
+                var rendererWidth = renderer.width;
+                var rendererHeight = renderer.height;
+
+                var zoomX = rendererWidth / width;
+                var zoomY = rendererHeight / height;
+
+                camera.setSize(width, height);
+                camera.setZoom(zoomX, zoomY);
+
+                var ox = 0.5;
+                var oy = 0.5;
+
+                if (width !== rendererWidth)
+                {
+                    ox = 0;
+                }
+
+                if (height !== rendererHeight)
+                {
+                    oy = 0;
+                }
+
+                camera.setOrigin(ox, oy);
 
                 frame.setSize(width, height);
 
@@ -790,33 +815,23 @@ var RenderTexture = new Class({
         }
 
         var camera = this.camera;
-        var renderer = this.renderer;
         var renderTarget = this.renderTarget;
         var textureFrame = this.textureManager.getFrame(key, frame);
 
         if (textureFrame)
         {
+            camera.preRender();
+
             if (renderTarget)
             {
-                var zoomX = 1 - (renderer.width / renderTarget.width);
-                var zoomY = 1 - (renderer.height / renderTarget.height);
-
-                var ox = 0 - renderTarget.width / 2;
-                var oy = 0 - renderTarget.height / 2;
-
-                camera.setZoom(zoomX, zoomY);
-                camera.preRender();
-
                 renderTarget.bind(true);
 
-                this.pipeline.batchTextureFrame(textureFrame, ox + x, oy + y, tint, alpha, camera.matrix, null);
+                this.pipeline.batchTextureFrame(textureFrame, x, y, tint, alpha, camera.matrix, null);
 
                 renderTarget.unbind(true);
             }
             else
             {
-                camera.preRender();
-
                 this.batchTextureFrame(textureFrame, x + this.frame.cutX, y + this.frame.cutY, alpha, tint);
             }
 
