@@ -291,7 +291,7 @@ var BaseCamera = new Class({
         this._scrollY = 0;
 
         /**
-         * The Camera zoom value. Change this value to zoom in, or out of, a Scene.
+         * The Camera horizontal zoom value. Change this value to zoom in, or out of, a Scene.
          *
          * A value of 0.5 would zoom the Camera out, so you can now see twice as much
          * of the Scene as before. A value of 2 would zoom the Camera in, so every pixel
@@ -301,13 +301,32 @@ var BaseCamera = new Class({
          *
          * Be careful to never set this value to zero.
          *
-         * @name Phaser.Cameras.Scene2D.BaseCamera#_zoom
+         * @name Phaser.Cameras.Scene2D.BaseCamera#_zoomX
          * @type {number}
          * @private
          * @default 1
-         * @since 3.11.0
+         * @since 3.50.0
          */
-        this._zoom = 1;
+        this._zoomX = 1;
+
+        /**
+         * The Camera vertical zoom value. Change this value to zoom in, or out of, a Scene.
+         *
+         * A value of 0.5 would zoom the Camera out, so you can now see twice as much
+         * of the Scene as before. A value of 2 would zoom the Camera in, so every pixel
+         * now takes up 2 pixels when rendered.
+         *
+         * Set to 1 to return to the default zoom level.
+         *
+         * Be careful to never set this value to zero.
+         *
+         * @name Phaser.Cameras.Scene2D.BaseCamera#_zoomY
+         * @type {number}
+         * @private
+         * @default 1
+         * @since 3.50.0
+         */
+        this._zoomY = 1;
 
         /**
          * The rotation of the Camera in radians.
@@ -793,13 +812,14 @@ var BaseCamera = new Class({
         var c = Math.cos(this.rotation);
         var s = Math.sin(this.rotation);
 
-        var zoom = this.zoom;
+        var zoomX = this.zoomX;
+        var zoomY = this.zoomY;
 
         var scrollX = this.scrollX;
         var scrollY = this.scrollY;
 
-        var sx = x + ((scrollX * c - scrollY * s) * zoom);
-        var sy = y + ((scrollX * s + scrollY * c) * zoom);
+        var sx = x + ((scrollX * c - scrollY * s) * zoomX);
+        var sy = y + ((scrollX * s + scrollY * c) * zoomY);
 
         //  Apply transform to point
         output.x = (sx * ima + sy * imc) + ime;
@@ -864,7 +884,8 @@ var BaseCamera = new Class({
         var halfWidth = width * 0.5;
         var halfHeight = height * 0.5;
 
-        var zoom = this.zoom;
+        var zoomX = this.zoomX;
+        var zoomY = this.zoomY;
         var matrix = this.matrix;
 
         var originX = width * this.originX;
@@ -896,8 +917,8 @@ var BaseCamera = new Class({
         //  Basically the pixel value of what it's looking at in the middle of the cam
         this.midPoint.set(midX, midY);
 
-        var displayWidth = width / zoom;
-        var displayHeight = height / zoom;
+        var displayWidth = width / zoomX;
+        var displayHeight = height / zoomY;
 
         this.worldView.setTo(
             midX - (displayWidth / 2),
@@ -906,7 +927,7 @@ var BaseCamera = new Class({
             displayHeight
         );
 
-        matrix.applyITRS(this.x + originX, this.y + originY, this.rotation, zoom, zoom);
+        matrix.applyITRS(this.x + originX, this.y + originY, this.rotation, zoomX, zoomY);
         matrix.translate(-originX, -originY);
     },
 
@@ -1326,23 +1347,33 @@ var BaseCamera = new Class({
      *
      * Changing the zoom does not impact the Camera viewport in any way, it is only applied during rendering.
      *
+     * As of Phaser 3.50 you can now set the horizontal and vertical zoom values independently.
+     *
      * @method Phaser.Cameras.Scene2D.BaseCamera#setZoom
      * @since 3.0.0
      *
-     * @param {number} [value=1] - The zoom value of the Camera. The minimum it can be is 0.001.
+     * @param {number} [x=1] - The horizontal zoom value of the Camera. The minimum it can be is 0.001.
+     * @param {number} [y=x] - The vertical zoom value of the Camera. The minimum it can be is 0.001.
      *
      * @return {this} This Camera instance.
      */
-    setZoom: function (value)
+    setZoom: function (x, y)
     {
-        if (value === undefined) { value = 1; }
+        if (x === undefined) { x = 1; }
+        if (y === undefined) { y = x; }
 
-        if (value === 0)
+        if (x === 0)
         {
-            value = 0.001;
+            x = 0.001;
         }
 
-        this.zoom = value;
+        if (y === 0)
+        {
+            y = 0.001;
+        }
+
+        this.zoomX = x;
+        this.zoomY = y;
 
         return this;
     },
@@ -1717,12 +1748,76 @@ var BaseCamera = new Class({
 
         get: function ()
         {
-            return this._zoom;
+            return (this._zoomX + this._zoomY) / 2;
         },
 
         set: function (value)
         {
-            this._zoom = value;
+            this._zoomX = value;
+            this._zoomY = value;
+
+            this.dirty = true;
+        }
+
+    },
+
+    /**
+     * The Camera horizontal zoom value. Change this value to zoom in, or out of, a Scene.
+     *
+     * A value of 0.5 would zoom the Camera out, so you can now see twice as much
+     * of the Scene as before. A value of 2 would zoom the Camera in, so every pixel
+     * now takes up 2 pixels when rendered.
+     *
+     * Set to 1 to return to the default zoom level.
+     *
+     * Be careful to never set this value to zero.
+     *
+     * @name Phaser.Cameras.Scene2D.BaseCamera#zoomX
+     * @type {number}
+     * @default 1
+     * @since 3.50.0
+     */
+    zoomX: {
+
+        get: function ()
+        {
+            return this._zoomX;
+        },
+
+        set: function (value)
+        {
+            this._zoomX = value;
+            this.dirty = true;
+        }
+
+    },
+
+    /**
+     * The Camera vertical zoom value. Change this value to zoom in, or out of, a Scene.
+     *
+     * A value of 0.5 would zoom the Camera out, so you can now see twice as much
+     * of the Scene as before. A value of 2 would zoom the Camera in, so every pixel
+     * now takes up 2 pixels when rendered.
+     *
+     * Set to 1 to return to the default zoom level.
+     *
+     * Be careful to never set this value to zero.
+     *
+     * @name Phaser.Cameras.Scene2D.BaseCamera#zoomY
+     * @type {number}
+     * @default 1
+     * @since 3.50.0
+     */
+    zoomY: {
+
+        get: function ()
+        {
+            return this._zoomY;
+        },
+
+        set: function (value)
+        {
+            this._zoomY = value;
             this.dirty = true;
         }
 
@@ -1810,7 +1905,7 @@ var BaseCamera = new Class({
 
         get: function ()
         {
-            return this.width / this.zoom;
+            return this.width / this.zoomX;
         }
 
     },
@@ -1833,7 +1928,7 @@ var BaseCamera = new Class({
 
         get: function ()
         {
-            return this.height / this.zoom;
+            return this.height / this.zoomY;
         }
 
     }
