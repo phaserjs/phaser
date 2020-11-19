@@ -236,6 +236,7 @@ var MultiPipeline = new Class({
         }
 
         //  Auto-invert the flipY if this is coming from a GLTexture
+
         if (sprite.flipY || (frame.source.isGLTexture && !texture.flipY))
         {
             if (!customPivot)
@@ -354,8 +355,6 @@ var MultiPipeline = new Class({
      * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - Parent container.
      * @param {boolean} [skipFlip=false] - Skip the renderTexture check.
      * @param {number} [textureUnit] - Use the currently bound texture unit?
-     * @param {boolean} [cropWidth=0] - Crop the width to the given value?
-     * @param {boolean} [cropHeight=0] - Crop the height to the given value?
      */
     batchTexture: function (
         gameObject,
@@ -374,8 +373,7 @@ var MultiPipeline = new Class({
         camera,
         parentTransformMatrix,
         skipFlip,
-        textureUnit,
-        cropWidth, cropHeight)
+        textureUnit)
     {
         this.manager.set(this, gameObject);
 
@@ -394,12 +392,12 @@ var MultiPipeline = new Class({
         var x = -displayOriginX;
         var y = -displayOriginY;
 
-        if (gameObject.isCropped || cropWidth !== textureWidth || cropHeight !== textureHeight)
+        if (gameObject.isCropped)
         {
             var crop = gameObject._crop;
 
-            cropWidth = Math.max(crop.width, cropWidth);
-            cropHeight = Math.max(crop.height, cropHeight);
+            var cropWidth = crop.width;
+            var cropHeight = crop.height;
 
             width = cropWidth;
             height = cropHeight;
@@ -529,7 +527,7 @@ var MultiPipeline = new Class({
         parentTransformMatrix
     )
     {
-        this.renderer.pipelines.set(this);
+        this.manager.set(this);
 
         var spriteMatrix = this._tempMatrix1.copyFrom(transformMatrix);
         var calcMatrix = this._tempMatrix2;
