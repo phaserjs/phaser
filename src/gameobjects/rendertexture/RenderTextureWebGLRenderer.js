@@ -64,6 +64,8 @@ var RenderTextureWebGLRenderer = function (renderer, src, camera, parentMatrix)
         textureUnit,
         frameWidth, frameHeight
     );
+
+    renderer.resetTextures();
 };
 
 module.exports = RenderTextureWebGLRenderer;

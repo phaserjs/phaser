@@ -13,6 +13,7 @@ var CONST = require('../../const');
 var Frame = require('../../textures/Frame');
 var GameObject = require('../GameObject');
 var NOOP = require('../../utils/NOOP');
+var PIPELINE_CONST = require('../../renderer/webgl/pipelines/const');
 var Render = require('./RenderTextureRender');
 var RenderTarget = require('../../renderer/webgl/RenderTarget');
 var Utils = require('../../renderer/webgl/Utils');
@@ -284,7 +285,7 @@ var RenderTexture = new Class({
 
         this.setOrigin(0, 0);
 
-        this.initPipeline();
+        this.initPipeline(PIPELINE_CONST.SINGLE_PIPELINE);
     },
 
     /**
