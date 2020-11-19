@@ -256,13 +256,20 @@ var RenderTarget = new Class({
     {
         var renderer = this.renderer;
 
+        var textureWidth = this.width;
+        var textureHeight = this.height;
+
         var rendererWidth = renderer.width;
         var rendererHeight = renderer.height;
 
-        var x = 0;
-        var y = this.height - rendererHeight;
+        var width = Math.max(textureWidth, rendererWidth);
+        var height = Math.max(textureHeight, rendererHeight);
 
-        renderer.gl.viewport(x, y, rendererWidth, rendererHeight);
+        var x = 0;
+        var y = (textureHeight < rendererHeight) ? textureHeight - rendererHeight : Math.abs(rendererHeight - textureHeight);
+
+        renderer.gl.viewport(x, y, width, height);
+        renderer.gl.disable(renderer.gl.SCISSOR_TEST);
     },
 
     /**
@@ -298,12 +305,24 @@ var RenderTarget = new Class({
     {
         if (flush === undefined) { flush = false; }
 
+        var renderer = this.renderer;
+
         if (flush)
         {
-            this.renderer.flush();
+            renderer.flush();
+
+            var scissor = renderer.currentScissor;
+            var x = scissor[0];
+            var y = scissor[1];
+            var width = scissor[2];
+            var height = scissor[3];
+
+            renderer.gl.enable(renderer.gl.SCISSOR_TEST);
+
+            renderer.gl.scissor(x, (renderer.drawingBufferHeight - y - height), width, height);
         }
 
-        return this.renderer.popFramebuffer();
+        return renderer.popFramebuffer();
     },
 
     /**
