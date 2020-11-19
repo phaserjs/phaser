@@ -1524,10 +1524,11 @@ var WebGLRenderer = new Class({
      * @param {WebGLFramebuffer} framebuffer - The framebuffer that needs to be bound.
      * @param {boolean} [updateScissor=false] - Set the gl scissor to match the frame buffer size? Or, if `null` given, pop the scissor from the stack.
      * @param {boolean} [resetTextures=false] - Should the WebGL Textures be reset after the new framebuffer is bound?
+     * @param {boolean} [setViewport=true] - Should the WebGL viewport be set?
      *
      * @return {this} This WebGLRenderer instance.
      */
-    pushFramebuffer: function (framebuffer, updateScissor, resetTextures)
+    pushFramebuffer: function (framebuffer, updateScissor, resetTextures, setViewport)
     {
         if (framebuffer === this.currentFramebuffer)
         {
@@ -1536,7 +1537,7 @@ var WebGLRenderer = new Class({
 
         this.fboStack.push(framebuffer);
 
-        return this.setFramebuffer(framebuffer, updateScissor, resetTextures);
+        return this.setFramebuffer(framebuffer, updateScissor, resetTextures, setViewport);
     },
 
     /**
@@ -1572,7 +1573,7 @@ var WebGLRenderer = new Class({
         var width = this.width;
         var height = this.height;
 
-        if (framebuffer && framebuffer.renderTexture)
+        if (framebuffer && framebuffer.renderTexture && setViewport)
         {
             width = framebuffer.renderTexture.width;
             height = framebuffer.renderTexture.height;
