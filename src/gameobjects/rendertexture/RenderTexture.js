@@ -14,6 +14,7 @@ var Frame = require('../../textures/Frame');
 var GameObject = require('../GameObject');
 var NOOP = require('../../utils/NOOP');
 var Render = require('./RenderTextureRender');
+var RenderTarget = require('../../renderer/webgl/RenderTarget');
 var Utils = require('../../renderer/webgl/Utils');
 var UUID = require('../../utils/string/UUID');
 
@@ -140,16 +141,6 @@ var RenderTexture = new Class({
         this.canvas = null;
 
         /**
-         * A reference to the GL Frame Buffer this Render Texture is drawing to.
-         * This is only set if Phaser is running with the WebGL Renderer.
-         *
-         * @name Phaser.GameObjects.RenderTexture#framebuffer
-         * @type {?WebGLFramebuffer}
-         * @since 3.2.0
-         */
-        this.framebuffer = null;
-
-        /**
          * Is this Render Texture dirty or not? If not it won't spend time clearing or filling itself.
          *
          * @name Phaser.GameObjects.RenderTexture#dirty
@@ -253,25 +244,17 @@ var RenderTexture = new Class({
         this.camera = new Camera(0, 0, width, height);
 
         /**
-         * A reference to the WebGL Rendering Context.
+         * The Render Target that belongs to this Render Texture.
          *
-         * @name Phaser.GameObjects.RenderTexture#gl
-         * @type {WebGLRenderingContext}
-         * @default null
-         * @since 3.0.0
-         */
-        this.gl = null;
-
-        /**
-         * A reference to the WebGLTexture that is being rendered to in a WebGL Context.
+         * A Render Target encapsulates a framebuffer and texture for the WebGL Renderer.
          *
-         * @name Phaser.GameObjects.RenderTexture#glTexture
-         * @type {WebGLTexture}
-         * @default null
-         * @readonly
-         * @since 3.19.0
+         * This property remains `null` under Canvas.
+         *
+         * @name Phaser.GameObjects.RenderTexture#renderTarget
+         * @type {Phaser.Renderer.WebGL.RenderTarget}
+         * @since 3.50.0
          */
-        this.glTexture = null;
+        this.renderTarget = null;
 
         var renderer = this.renderer;
 
@@ -281,12 +264,9 @@ var RenderTexture = new Class({
         }
         else if (renderer.type === CONST.WEBGL)
         {
-            var gl = renderer.gl;
-
-            this.gl = gl;
-            this.glTexture = this.frame.source.glTexture;
             this.drawGameObject = this.batchGameObjectWebGL;
-            this.framebuffer = renderer.createFramebuffer(width, height, this.glTexture, false);
+
+            this.renderTarget = new RenderTarget(renderer, renderer.width, renderer.height, 1, 0, false, true);
         }
         else if (renderer.type === CONST.CANVAS)
         {
@@ -351,7 +331,6 @@ var RenderTexture = new Class({
         if (height === undefined) { height = width; }
 
         var frame = this.frame;
-        var renderer = this.renderer;
 
         if (width !== this.width || height !== this.height)
         {
@@ -365,25 +344,18 @@ var RenderTexture = new Class({
                 this.texture.width = width;
                 this.texture.height = height;
 
-                if (this.gl)
+                /*
+                var renderTarget = this.renderTarget;
+
+                if (renderTarget)
                 {
-                    var gl = this.gl;
-
-                    renderer.deleteTexture(frame.source.glTexture);
-                    renderer.deleteFramebuffer(this.framebuffer);
-
-                    var glTexture = renderer.createTexture2D(0, gl.NEAREST, gl.NEAREST, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, null, width, height, false);
-
-                    this.framebuffer = renderer.createFramebuffer(width, height, glTexture, false);
+                    // renderTarget.resize(width, height);
 
                     frame.source.isRenderTexture = true;
-
-                    frame.source.glTexture = glTexture;
-
-                    frame.glTexture = glTexture;
-
-                    this.glTexture = glTexture;
+                    frame.source.glTexture = renderTarget.texture;
+                    frame.glTexture = renderTarget.texture;
                 }
+                */
 
                 frame.source.width = width;
                 frame.source.height = height;
@@ -519,7 +491,6 @@ var RenderTexture = new Class({
      */
     fill: function (rgb, alpha, x, y, width, height)
     {
-        var gl = this.gl;
         var frame = this.frame;
         var camera = this.camera;
         var renderer = this.renderer;
@@ -534,44 +505,22 @@ var RenderTexture = new Class({
         var g = ((rgb >> 8) | 0) & 0xff;
         var b = (rgb | 0) & 0xff;
 
-        camera.preRender(1, 1);
+        var renderTarget = this.renderTarget;
 
-        if (gl)
+        camera.preRender();
+
+        if (renderTarget)
         {
-            // console.log('RT.fill', x, y, width, height);
-
             var cx = camera.x;
             var cy = camera.y;
             var cw = camera.width;
             var ch = camera.height;
 
-            // renderer.resetTextures(true);
-
-            // renderer.pushScissor(cx, cy, cw, -ch);
-
             renderer.flush();
 
-            gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
-
-            // renderer.resetTextures(true);
-
-            // renderer.setFramebuffer(this.framebuffer);
+            renderTarget.bind();
 
             var pipeline = this.pipeline;
-
-            // var tw = texture.width;
-            // var th = texture.height;
-
-            // var rw = pipeline.width;
-            // var rh = pipeline.height;
-
-            // var sx = rw / tw;
-            // var sy = rh / th;
-
-            // pipeline.drawFillRect(
-            //     x * sx, (th - height - y) * sy, width * sx, height * sy,
-            //     GetColor(b, g, r), alpha
-            // );
 
             pipeline.drawFillRect(
                 cx, cy, cw, ch,
@@ -581,12 +530,7 @@ var RenderTexture = new Class({
 
             pipeline.flush();
 
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-            // renderer.setFramebuffer(null);
-            renderer.resetTextures();
-
-            // renderer.popScissor();
+            renderTarget.unbind();
         }
         else
         {
@@ -617,24 +561,11 @@ var RenderTexture = new Class({
     {
         if (this.dirty)
         {
-            var gl = this.gl;
+            var renderTarget = this.renderTarget;
 
-            if (gl)
+            if (renderTarget)
             {
-                var renderer = this.renderer;
-
-                renderer.setFramebuffer(this.framebuffer, true);
-
-                if (this.frame.cutWidth !== this.canvas.width || this.frame.cutHeight !== this.canvas.height)
-                {
-                    gl.scissor(this.frame.cutX, this.frame.cutY, this.frame.cutWidth, this.frame.cutHeight);
-                }
-
-                gl.clearColor(0, 0, 0, 0);
-                gl.clear(gl.COLOR_BUFFER_BIT);
-
-                renderer.setFramebuffer(null, true);
-                renderer.resetTextures(true);
+                renderTarget.clear();
             }
             else
             {
@@ -786,43 +717,23 @@ var RenderTexture = new Class({
             entries = [ entries ];
         }
 
-        var gl = this.gl;
         var camera = this.camera;
         var renderer = this.renderer;
+        var renderTarget = this.renderTarget;
 
-        camera.preRender(1, 1);
+        camera.preRender();
 
-        if (gl)
+        if (renderTarget)
         {
-            var cx = camera.x;
-            var cy = camera.y;
-            var cw = camera.width;
-            var ch = camera.height;
+            renderer.flush();
 
-            renderer.setFramebuffer(this.framebuffer);
-
-            renderer.pushScissor(cx, cy, cw, ch, ch);
-
-            // var pipeline = this.pipeline;
-
-            // var pipelineWidth = pipeline.width;
-            // var pipelineHeight = pipeline.height;
-
-            // pipeline.resize(this.texture.width, this.texture.height);
-
-            // console.log('RT.draw', this.texture.width, this.texture.height);
+            renderTarget.bind();
 
             this.batchList(entries, x, y, alpha, tint);
 
             renderer.flush();
 
-            renderer.setFramebuffer(null);
-
-            renderer.resetTextures(true);
-
-            renderer.currentProgram = null;
-
-            // pipeline.resize(pipelineWidth, pipelineHeight);
+            renderTarget.unbind();
         }
         else
         {
@@ -874,8 +785,6 @@ var RenderTexture = new Class({
         if (y === undefined) { y = 0; }
         if (alpha === undefined) { alpha = this.globalAlpha; }
 
-        console.log('RT.drawFrame');
-
         if (tint === undefined)
         {
             tint = (this.globalTint >> 16) + (this.globalTint & 0xff00) + ((this.globalTint & 0xff) << 16);
@@ -885,46 +794,26 @@ var RenderTexture = new Class({
             tint = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16);
         }
 
-        var gl = this.gl;
         var camera = this.camera;
         var renderer = this.renderer;
+        var renderTarget = this.renderTarget;
         var textureFrame = this.textureManager.getFrame(key, frame);
 
         if (textureFrame)
         {
-            camera.preRender(1, 1);
+            camera.preRender();
 
-            if (gl)
+            if (renderTarget)
             {
-                var cx = camera.x;
-                var cy = camera.y;
-                var cw = camera.width;
-                var ch = camera.height;
+                renderer.flush();
 
-                renderer.resetTextures(true);
+                renderTarget.bind();
 
-                renderer.setFramebuffer(this.framebuffer, false);
+                this.pipeline.batchTextureFrame(textureFrame, x + this.frame.cutX, y + this.frame.cutY, tint, alpha, camera.matrix, null);
 
-                renderer.pushScissor(cx, cy, cw, ch, ch);
+                renderer.flush();
 
-                var pipeline = this.pipeline;
-
-                var pipelineWidth = pipeline.width;
-                var pipelineHeight = pipeline.height;
-
-                pipeline.width = this.texture.width;
-                pipeline.height = this.texture.height;
-
-                pipeline.batchTextureFrame(textureFrame, x + this.frame.cutX, y + this.frame.cutY, tint, alpha, camera.matrix, null);
-
-                pipeline.flush();
-
-                renderer.setFramebuffer(null, false);
-
-                renderer.popScissor();
-
-                pipeline.width = pipelineWidth;
-                pipeline.height = pipelineHeight;
+                renderTarget.unbind();
             }
             else
             {
@@ -1135,9 +1024,20 @@ var RenderTexture = new Class({
         x += this.frame.cutX;
         y += this.frame.cutY;
 
-        if (this.gl)
+        var renderer = this.renderer;
+        var renderTarget = this.renderTarget;
+
+        if (renderTarget)
         {
+            renderer.flush();
+
+            renderTarget.bind();
+
             this.pipeline.batchTextureFrame(textureFrame, x, y, tint, alpha, this.camera.matrix, null);
+
+            renderer.flush();
+
+            renderTarget.unbind();
         }
         else
         {
@@ -1182,9 +1082,9 @@ var RenderTexture = new Class({
      */
     snapshotArea: function (x, y, width, height, callback, type, encoderOptions)
     {
-        if (this.gl)
+        if (this.renderTarget)
         {
-            this.renderer.snapshotFramebuffer(this.framebuffer, this.width, this.height, callback, false, x, y, width, height, type, encoderOptions);
+            this.renderer.snapshotFramebuffer(this.renderTarget.framebuffer, this.width, this.height, callback, false, x, y, width, height, type, encoderOptions);
         }
         else
         {
@@ -1217,9 +1117,9 @@ var RenderTexture = new Class({
      */
     snapshot: function (callback, type, encoderOptions)
     {
-        if (this.gl)
+        if (this.renderTarget)
         {
-            this.renderer.snapshotFramebuffer(this.framebuffer, this.width, this.height, callback, false, 0, 0, this.width, this.height, type, encoderOptions);
+            this.renderer.snapshotFramebuffer(this.renderTarget.framebuffer, this.width, this.height, callback, false, 0, 0, this.width, this.height, type, encoderOptions);
         }
         else
         {
@@ -1251,9 +1151,9 @@ var RenderTexture = new Class({
      */
     snapshotPixel: function (x, y, callback)
     {
-        if (this.gl)
+        if (this.renderTarget)
         {
-            this.renderer.snapshotFramebuffer(this.framebuffer, this.width, this.height, callback, true, x, y);
+            this.renderer.snapshotFramebuffer(this.renderTarget.framebuffer, this.width, this.height, callback, true, x, y);
         }
         else
         {
@@ -1276,9 +1176,9 @@ var RenderTexture = new Class({
         {
             CanvasPool.remove(this.canvas);
 
-            if (this.gl)
+            if (this.renderTarget)
             {
-                this.renderer.deleteFramebuffer(this.framebuffer);
+                this.renderTarget.destroy();
             }
 
             this.texture.destroy();
@@ -1286,9 +1186,7 @@ var RenderTexture = new Class({
 
             this.canvas = null;
             this.context = null;
-            this.framebuffer = null;
             this.texture = null;
-            this.glTexture = null;
         }
     }
 
