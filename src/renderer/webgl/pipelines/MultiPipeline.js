@@ -354,6 +354,8 @@ var MultiPipeline = new Class({
      * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - Parent container.
      * @param {boolean} [skipFlip=false] - Skip the renderTexture check.
      * @param {number} [textureUnit] - Use the currently bound texture unit?
+     * @param {boolean} [cropWidth=0] - Crop the width to the given value?
+     * @param {boolean} [cropHeight=0] - Crop the height to the given value?
      */
     batchTexture: function (
         gameObject,
@@ -372,7 +374,8 @@ var MultiPipeline = new Class({
         camera,
         parentTransformMatrix,
         skipFlip,
-        textureUnit)
+        textureUnit,
+        cropWidth, cropHeight)
     {
         this.manager.set(this, gameObject);
 
@@ -391,15 +394,18 @@ var MultiPipeline = new Class({
         var x = -displayOriginX;
         var y = -displayOriginY;
 
-        if (gameObject.isCropped)
+        if (gameObject.isCropped || cropWidth !== textureWidth || cropHeight !== textureHeight)
         {
             var crop = gameObject._crop;
 
-            width = crop.width;
-            height = crop.height;
+            cropWidth = Math.max(crop.width, cropWidth);
+            cropHeight = Math.max(crop.height, cropHeight);
 
-            srcWidth = crop.width;
-            srcHeight = crop.height;
+            width = cropWidth;
+            height = cropHeight;
+
+            srcWidth = cropWidth;
+            srcHeight = cropHeight;
 
             frameX = crop.x;
             frameY = crop.y;
@@ -409,18 +415,18 @@ var MultiPipeline = new Class({
 
             if (flipX)
             {
-                ox = (frameWidth - crop.x - crop.width);
+                ox = (frameWidth - crop.x - cropWidth);
             }
 
             if (flipY && !texture.isRenderTexture)
             {
-                oy = (frameHeight - crop.y - crop.height);
+                oy = (frameHeight - crop.y - cropHeight);
             }
 
             u0 = (ox / textureWidth) + uOffset;
             v0 = (oy / textureHeight) + vOffset;
-            u1 = (ox + crop.width) / textureWidth + uOffset;
-            v1 = (oy + crop.height) / textureHeight + vOffset;
+            u1 = (ox + cropWidth) / textureWidth + uOffset;
+            v1 = (oy + cropHeight) / textureHeight + vOffset;
 
             x = -displayOriginX + frameX;
             y = -displayOriginY + frameY;
