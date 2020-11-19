@@ -5,41 +5,38 @@
  */
 
 var Class = require('../../utils/Class');
+var Events = require('./events');
 
 /**
  * @classdesc
  * A Render Target encapsulates a WebGL framebuffer and the WebGL Texture that displays it.
  *
- * Instances of this class are created by, and belong to WebGL Pipelines.
+ * Instances of this class are typically created by, and belong to WebGL Pipelines, however
+ * other Game Objects and classes can take advantage of Render Targets as well.
  *
  * @class RenderTarget
  * @memberof Phaser.Renderer.WebGL
  * @constructor
  * @since 3.50.0
  *
- * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipeline - The WebGLPipeline to which this Render Target belongs.
- * @param {number} width - The width of the WebGL Pipeline.
- * @param {number} height - The height of the WebGL Pipeline.
- * @param {number} scale - A value between 0 and 1. Controls the size of this Render Target in relation to the Renderer.
- * @param {number} minFilter - The minFilter mode of the texture when created. 0 is `LINEAR`, 1 is `NEAREST`.
- * @param {boolean} autoClear - Automatically clear this framebuffer when bound?
+ * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the WebGLRenderer.
+ * @param {number} width - The width of this Render Target.
+ * @param {number} height - The height of this Render Target.
+ * @param {number} [scale=1] - A value between 0 and 1. Controls the size of this Render Target in relation to the Renderer.
+ * @param {number} [minFilter=0] - The minFilter mode of the texture when created. 0 is `LINEAR`, 1 is `NEAREST`.
+ * @param {boolean} [autoClear=true] - Automatically clear this framebuffer when bound?
+ * @param {boolean} [autoResize=false] - Automatically resize this Render Target if the WebGL Renderer resizes?
  */
 var RenderTarget = new Class({
 
     initialize:
 
-    function RenderTarget (pipeline, width, height, scale, minFilter, autoClear)
+    function RenderTarget (renderer, width, height, scale, minFilter, autoClear, autoResize)
     {
-        /**
-         * A reference to the WebGLPipeline that owns this Render Target.
-         *
-         * A Render Target class can only belong to a single pipeline.
-         *
-         * @name Phaser.Renderer.WebGL.RenderTarget#pipeline
-         * @type {Phaser.Renderer.WebGL.WebGLPipeline}
-         * @since 3.50.0
-         */
-        this.pipeline = pipeline;
+        if (scale === undefined) { scale = 1; }
+        if (minFilter === undefined) { minFilter = 0; }
+        if (autoClear === undefined) { autoClear = true; }
+        if (autoResize === undefined) { autoResize = false; }
 
         /**
          * A reference to the WebGLRenderer instance.
@@ -48,7 +45,7 @@ var RenderTarget = new Class({
          * @type {Phaser.Renderer.WebGL.WebGLRenderer}
          * @since 3.50.0
          */
-        this.renderer = pipeline.renderer;
+        this.renderer = renderer;
 
         /**
          * The WebGLFramebuffer of this Render Target.
@@ -125,7 +122,53 @@ var RenderTarget = new Class({
          */
         this.autoClear = autoClear;
 
+        /**
+         * Does this Render Target automatically resize when the WebGL Renderer does?
+         *
+         * Modify this property via the `setAutoResize` method.
+         *
+         * @name Phaser.Renderer.WebGL.RenderTarget#autoResize
+         * @type {boolean}
+         * @readonly
+         * @since 3.50.0
+         */
+        this.autoResize = false;
+
         this.resize(width, height);
+
+        if (autoResize)
+        {
+            this.setAutoResize(true);
+        }
+    },
+
+    /**
+     * Sets if this Render Target should automatically resize when the WebGL Renderer
+     * emits a resize event.
+     *
+     * @method Phaser.Renderer.WebGL.RenderTarget#setAutoResize
+     * @since 3.50.0
+     *
+     * @param {boolean} autoResize - Automatically resize this Render Target when the WebGL Renderer resizes?
+     *
+     * @return {this} This RenderTarget instance.
+     */
+    setAutoResize: function (autoResize)
+    {
+        if (autoResize && !this.autoResize)
+        {
+            this.renderer.on(Events.RESIZE, this.resize, this);
+
+            this.autoResize = true;
+        }
+        else if (!autoResize && this.autoResize)
+        {
+            this.renderer.off(Events.RESIZE, this.resize, this);
+
+            this.autoResize = false;
+        }
+
+        return this;
     },
 
     /**
@@ -139,8 +182,8 @@ var RenderTarget = new Class({
      * @method Phaser.Renderer.WebGL.RenderTarget#resize
      * @since 3.50.0
      *
-     * @param {number} width - The new width of the WebGL Pipeline.
-     * @param {number} height - The new height of the WebGL Pipeline.
+     * @param {number} width - The new width of this Render Target.
+     * @param {number} height - The new height of this Render Target.
      *
      * @return {this} This RenderTarget instance.
      */
@@ -178,12 +221,31 @@ var RenderTarget = new Class({
 
         if (this.autoClear)
         {
-            var gl = this.pipeline.gl;
+            var gl = this.renderer.gl;
 
             gl.clearColor(0, 0, 0, 0);
 
             gl.clear(gl.COLOR_BUFFER_BIT);
         }
+    },
+
+    /**
+     * Clears this Render Target.
+     *
+     * @method Phaser.Renderer.WebGL.RenderTarget#clear
+     * @since 3.50.0
+     */
+    clear: function ()
+    {
+        this.renderer.pushFramebuffer(this.framebuffer);
+
+        var gl = this.renderer.gl;
+
+        gl.clearColor(0, 0, 0, 0);
+
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        this.renderer.popFramebuffer();
     },
 
     /**
@@ -210,12 +272,14 @@ var RenderTarget = new Class({
      */
     destroy: function ()
     {
-        var renderer = this.pipeline.renderer;
+        var renderer = this.renderer;
 
         renderer.deleteFramebuffer(this.framebuffer);
         renderer.deleteTexture(this.texture);
 
-        this.pipeline = null;
+        renderer.off(Events.RESIZE, this.resize, this);
+
+        this.renderer = null;
         this.framebuffer = null;
         this.texture = null;
     }
