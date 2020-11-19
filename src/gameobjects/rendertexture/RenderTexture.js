@@ -790,25 +790,30 @@ var RenderTexture = new Class({
         }
 
         var camera = this.camera;
+        var renderer = this.renderer;
         var renderTarget = this.renderTarget;
         var textureFrame = this.textureManager.getFrame(key, frame);
 
         if (textureFrame)
         {
-            camera.preRender();
-
             if (renderTarget)
             {
+                var zoomX = 1 - (renderer.width / renderTarget.width);
+                var zoomY = 1 - (renderer.height / renderTarget.height);
+
+                camera.setZoom(zoomX, zoomY);
+                camera.preRender();
+
                 renderTarget.bind(true);
 
                 this.pipeline.batchTextureFrame(textureFrame, x, y, tint, alpha, camera.matrix, null);
-
-                // this.pipeline.batchTextureFrame(textureFrame, x + this.frame.cutX, y + this.frame.cutY, tint, alpha, camera.matrix, null);
 
                 renderTarget.unbind(true);
             }
             else
             {
+                camera.preRender();
+
                 this.batchTextureFrame(textureFrame, x + this.frame.cutX, y + this.frame.cutY, alpha, tint);
             }
 
