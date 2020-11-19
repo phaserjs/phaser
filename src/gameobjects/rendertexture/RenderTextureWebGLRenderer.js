@@ -22,9 +22,6 @@ var Utils = require('../../renderer/webgl/Utils');
  */
 var RenderTextureWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
-    var frameWidth = src.frame.width;
-    var frameHeight = src.frame.height;
-
     var cameraAlpha = camera.alpha;
 
     var renderTarget = src.renderTarget;
@@ -36,9 +33,6 @@ var RenderTextureWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var pipeline = renderer.pipelines.set(src.pipeline);
 
     var textureUnit = pipeline.setTexture2D(renderTarget.texture);
-
-    var u = 0;
-    var v = 1 - (frameHeight / height);
 
     src.pipeline.batchTexture(
         src,
@@ -57,12 +51,11 @@ var RenderTextureWebGLRenderer = function (renderer, src, camera, parentMatrix)
         getTint(src.tintBottomLeft, cameraAlpha * src._alphaBL),
         getTint(src.tintBottomRight, cameraAlpha * src._alphaBR),
         src.tintFill,
-        u, v,
+        0, 0,
         camera,
         parentMatrix,
         true,
-        textureUnit,
-        frameWidth, frameHeight
+        textureUnit
     );
 
     renderer.resetTextures();
