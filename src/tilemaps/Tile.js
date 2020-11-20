@@ -105,6 +105,24 @@ var Tile = new Class({
         this.height = height;
 
         /**
+         * The right of the tile in pixels.
+         *
+         * @name Phaser.Tilemaps.Tile#right
+         * @type {integer}
+         * @since 3.50.0
+         */
+        this.right = x + width;
+
+        /**
+         * The bottom of the tile in pixels.
+         *
+         * @name Phaser.Tilemaps.Tile#bottom
+         * @type {integer}
+         * @since 3.50.0
+         */
+        this.bottom = y + height;
+
+        /**
          * The maps base width of a tile in pixels. Tiled maps support multiple tileset sizes
          * within one map, but they are still placed at intervals of the base tile size.
          *
