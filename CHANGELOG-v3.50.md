@@ -237,6 +237,10 @@ These changes mean that you can no longer render a Camera to a canvas in Canvas 
 
 Other changes and fixes:
 
+* `Camera.zoomX` is a new property that allows you to specifically set the horizontal zoom factor of a Camera.
+* `Camera.zoomY` is a new property that allows you to specifically set the vertical zoom factor of a Camera.
+* The `Camera.setZoom` method now allows you to pass two parameters: `x` and `y`, to control the `zoomX` and `zoomY` values accordingly.
+* The `Camera.zoom` property now returns an _average_ of the `zoomX` and `zoomY` properties.
 * `Cameras.Scene2D.Events.FOLLOW_UPDATE` is a new Event that is dispatched by a Camera when it is following a Game Object. It is dispatched every frame, right after the final Camera position and internal matrices have been updated. Use it if you need to react to a camera, using its most current position and the camera is following something. Fix #5253 (thanks @rexrainbow)
 * If the Camera has `roundPixels` set it will now round the internal scroll factors and `worldView` during the `preRender` step. Fix #4464 (thanks @Antriel)
 
@@ -250,11 +254,22 @@ The Graphics Pipeline is a new pipeline added in 3.50 that is responsible for re
 * The Graphics Pipeline no longer makes use of `tintEffect` or any textures.
 * Because Graphics and Shapes now render with their own pipeline, you are able to exclude the pipeline and those Game Objects entirely from custom builds, further reducing the final bundle size.
 
-As a result of these changes the follow features are no longer available:
+As a result of these changes the following features are no longer available:
 
 * `Graphics.setTexture` has been removed. You can no longer use a texture as a 'fill' for a Graphic. It never worked with any shape other than a Rectangle, anyway, due to UV mapping issues, so is much better handled via the new Mesh Game Object.
 * `Graphics._tempMatrix1`, 2 and 3 have been removed. They're not required internally any longer.
 * `Graphics.renderWebGL` now uses the standard `GetCalcMatrix` function, cutting down on duplicate code significantly.
+
+### Render Texture Game Object Changes
+
+The Render Texture Game Object has been rewritten to use the new `RenderTarget` class internally, rather than managing its own framebuffer and gl textures directly. The core draw methods are now a lot simpler and no longer require manipulating render pipelines.
+
+As a result of these changes the follow updates have happened:
+
+* `RenderTexture.renderTarget` is a new property that contains a `RenderTarget` instance, which is used for all drawing.
+* The `RenderTexture.framebuffer` property has been removed. You can now access this via `RenderTexture.renderTarget.framebuffer`.
+* The `RenderTexture.glTexture` property has been removed. You can now access this via `RenderTexture.renderTarget.texture`.
+* The `RenderTexture.gl` property has been removed.
 
 ### Light Pipeline Changes
 
