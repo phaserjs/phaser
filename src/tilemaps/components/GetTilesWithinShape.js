@@ -43,31 +43,21 @@ var GetTilesWithinShape = function (shape, filteringOptions, camera, layer)
     // intersectTest is a function with parameters: shape, rect
     var intersectTest = NOOP;
 
-    switch (typeof(shape))
+    if (shape instanceof Geom.Circle)
     {
-        case Geom.Circle:
-        {
-            intersectTest = Intersects.CircleToRectangle;
-            break;
-        }
-
-        case Geom.Rectangle:
-        {
-            intersectTest = Intersects.RectangleToRectangle;
-            break;
-        }
-
-        case Geom.Triangle:
-        {
-            intersectTest = TriangleToRectangle;
-            break;
-        }
-
-        case Geom.Line:
-        {
-            intersectTest = Intersects.LineToRectangle;
-            break;
-        }
+        intersectTest = Intersects.CircleToRectangle;
+    }
+    else if (shape instanceof Geom.Rectangle)
+    {
+        intersectTest = Intersects.RectangleToRectangle;
+    }
+    else if (shape instanceof Geom.Triangle)
+    {
+        intersectTest = TriangleToRectangle;
+    }
+    else if (shape instanceof Geom.Line)
+    {
+        intersectTest = Intersects.LineToRectangle;
     }
 
     // Top left corner of the shapes's bounding box, rounded down to include partial tiles
@@ -105,7 +95,7 @@ var GetTilesWithinShape = function (shape, filteringOptions, camera, layer)
     {
         var tile = tiles[i];
 
-        layer.tilemapLayer.tileToWorldXY(tile.x, tile.y, point, camera, layer);
+        layer.tilemapLayer.tileToWorldXY(tile.x, tile.y, point, camera);
 
         tileRect.x = point.x;
         tileRect.y = point.y;
