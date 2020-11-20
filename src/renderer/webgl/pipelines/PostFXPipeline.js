@@ -77,6 +77,15 @@ var PostFXPipeline = new Class({
         this.isPostFX = true;
 
         /**
+         * If this post-pipeline belongs to a Game Object or Camera, this contains a reference to it.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#gameObject
+         * @type {Phaser.GameObjects.GameObject}
+         * @since 3.50.0
+         */
+        this.gameObject;
+
+        /**
          * A Color Matrix instance belonging to this pipeline.
          *
          * Used during calls to the `drawFrame` method.

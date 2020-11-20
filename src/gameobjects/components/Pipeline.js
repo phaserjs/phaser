@@ -207,7 +207,7 @@ var Pipeline = {
 
             for (var i = 0; i < pipelines.length; i++)
             {
-                var instance = pipelineManager.getPostPipeline(pipelines[i]);
+                var instance = pipelineManager.getPostPipeline(pipelines[i], this);
 
                 if (instance)
                 {
