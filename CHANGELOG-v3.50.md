@@ -897,6 +897,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * When setting both `transparent: true` and `backgroundColor` in the Game Config, it would ignore the transparency and use the color anyway. If transparent, the game is now fully transparent. Fix #5362 (thanks @Hoshinokoe)
 * The `Ellipse` Game Object now will update the width, height, and geometric position in the `setSize` method (thanks @PhaserEditor2D)
 * When measuring the last word in a line in a `Text` Game Object, it no longer adds extra white space to the end (thanks @rexrainbow)
+* `Utils.Array.Remove` would return an incorrect array of removed elements if one of the items to be removed was skipped in the array. Fix #5398 (thanks @year221)
 
 ### Namespace Updates
 
