@@ -12,7 +12,8 @@
             "../../src/phaser-core.js",
             "../../src/physics/matter-js/poly-decomp/",
             "../../src/physics/matter-js/lib",
-            "../../src/polyfills"
+            "../../src/polyfills",
+            "../../src/layer3d"
         ],
         "includePattern": ".+\\.js?$",
         "excludePattern": "(^|\\/|\\\\)_"
