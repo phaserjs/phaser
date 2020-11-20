@@ -284,7 +284,7 @@ var Sprite = new Class({
      *
      * Prior to Phaser 3.50 this method was called 'delayedPlay'.
      *
-     * @method Phaser.GameObjects.Components.Animation#playAfterDelay
+     * @method Phaser.GameObjects.Sprite#playAfterDelay
      * @fires Phaser.Animations.Events#ANIMATION_START
      * @since 3.50.0
      *
@@ -311,7 +311,7 @@ var Sprite = new Class({
      * locally within the Sprite. If it can, it will play the local animation. If not, it will then
      * search the global Animation Manager and look for it there.
      *
-     * @method Phaser.GameObjects.Components.Animation#playAfterRepeat
+     * @method Phaser.GameObjects.Sprite#playAfterRepeat
      * @fires Phaser.Animations.Events#ANIMATION_START
      * @since 3.50.0
      *
