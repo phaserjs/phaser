@@ -269,6 +269,58 @@ var TimerEvent = new Class({
     },
 
     /**
+     * Returns the time interval until the next iteration of the Timer Event.
+     *
+     * @method Phaser.Time.TimerEvent#getRemaining
+     * @since 3.50.0
+     *
+     * @return {number} The time interval in milliseconds.
+     */
+    getRemaining: function ()
+    {
+        return this.delay - this.elapsed;
+    },
+
+    /**
+     * Returns the time interval until the next iteration of the Timer Event in seconds.
+     *
+     * @method Phaser.Time.TimerEvent#getRemainingSeconds
+     * @since 3.50.0
+     *
+     * @return {number} The time interval in seconds.
+     */
+    getRemainingSeconds: function ()
+    {
+        return this.getRemaining() * 0.001;
+    },
+
+    /**
+     * Returns the time interval until the last iteration of the Timer Event.
+     *
+     * @method Phaser.Time.TimerEvent#getOverallRemaining
+     * @since 3.50.0
+     *
+     * @return {number} The time interval in milliseconds.
+     */
+    getOverallRemaining: function ()
+    {
+        return this.delay * (1 + this.repeatCount) - this.elapsed;
+    },
+
+    /**
+     * Returns the time interval until the last iteration of the Timer Event in seconds.
+     *
+     * @method Phaser.Time.TimerEvent#getOverallRemainingSeconds
+     * @since 3.50.0
+     *
+     * @return {number} The time interval in seconds.
+     */
+    getOverallRemainingSeconds: function ()
+    {
+        return this.getOverallRemaining() * 0.001;
+    },
+
+    /**
      * Forces the Timer Event to immediately expire, thus scheduling its removal in the next frame.
      *
      * @method Phaser.Time.TimerEvent#remove
