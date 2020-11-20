@@ -302,15 +302,19 @@ var RenderTarget = new Class({
         {
             renderer.flush();
 
-            var scissor = renderer.currentScissor;
-            var x = scissor[0];
-            var y = scissor[1];
-            var width = scissor[2];
-            var height = scissor[3];
-
             renderer.gl.enable(renderer.gl.SCISSOR_TEST);
 
-            renderer.gl.scissor(x, (renderer.drawingBufferHeight - y - height), width, height);
+            var scissor = renderer.currentScissor;
+
+            if (scissor)
+            {
+                var x = scissor[0];
+                var y = scissor[1];
+                var width = scissor[2];
+                var height = scissor[3];
+
+                renderer.gl.scissor(x, (renderer.drawingBufferHeight - y - height), width, height);
+            }
         }
 
         return renderer.popFramebuffer();
