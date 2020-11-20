@@ -21,14 +21,13 @@ var CalculateFacesWithin = require('./CalculateFacesWithin');
  * @param {integer} height - The height of the area to copy, in tiles, not pixels.
  * @param {integer} destTileX - The x coordinate of the area to copy to, in tiles, not pixels.
  * @param {integer} destTileY - The y coordinate of the area to copy to, in tiles, not pixels.
- * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
+ * @param {boolean} recalculateFaces - `true` if the faces data should be recalculated.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var Copy = function (srcTileX, srcTileY, width, height, destTileX, destTileY, recalculateFaces, layer)
 {
     if (srcTileX < 0) { srcTileX = 0; }
     if (srcTileY < 0) { srcTileY = 0; }
-    if (recalculateFaces === undefined) { recalculateFaces = true; }
 
     var srcTiles = GetTilesWithin(srcTileX, srcTileY, width, height, null, layer);
 

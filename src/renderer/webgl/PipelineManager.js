@@ -838,7 +838,7 @@ var PipelineManager = new Class({
     /**
      * Clears the given Render Target.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#clearFrame
+     * @method Phaser.Renderer.WebGL.PipelineManager#clearFrame
      * @since 3.50.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} target - The Render Target to clear.

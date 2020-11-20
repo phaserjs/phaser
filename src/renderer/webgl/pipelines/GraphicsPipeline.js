@@ -660,8 +660,8 @@ var GraphicsPipeline = new Class({
     /**
      * Destroys all shader instances, removes all object references and nulls all external references.
      *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#destroy
-     * @since 3.0.0
+     * @method Phaser.Renderer.WebGL.Pipelines.GraphicsPipeline#destroy
+     * @since 3.50.0
      *
      * @return {this} This WebGLPipeline instance.
      */
