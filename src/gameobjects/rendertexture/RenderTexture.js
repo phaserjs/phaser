@@ -558,9 +558,6 @@ var RenderTexture = new Class({
                 alpha
             );
 
-            // x * sx, (th - height - y) * sy, width * sx, height * sy,
-
-
             renderTarget.unbind(true);
         }
         else
