@@ -49,6 +49,8 @@ var TilemapLayerWebGLRenderer = function (renderer, src, camera)
 
     pipelines.preBatch(src);
 
+    src.manualPostPipeline = true;
+
     for (var i = 0; i < tileCount; i++)
     {
         var tile = renderTiles[i];
