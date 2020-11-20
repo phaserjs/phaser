@@ -431,6 +431,13 @@ export class Parser {
             for (let paramDoc of doclet.params) {
 
                 // TODO REMOVE TEMP FIX
+
+                if (!paramDoc.name)
+                {
+                    console.log(`Docs Error in '${doclet.longname}' in ${doclet.meta.filename}@${doclet.meta.lineno}`);
+                    console.info(paramDoc);
+                }
+
                 if (paramDoc.name.indexOf('.') != -1) {
                     console.log(`Warning: ignoring param with '.' for '${doclet.longname}' in ${doclet.meta.filename}@${doclet.meta.lineno}`);
 
@@ -553,11 +560,11 @@ export class Parser {
         if (doclet.tags)
             for (let tag of doclet.tags) {
                 if (tag.originalTitle === 'generic') {
-                    
+
                     /**
                      * {string} K - [key]
                      * 1 = string | 2 = null | 3 = K | 4 = key
-                     * 
+                     *
                      * {string=string} K - [key]
                      * 1 = string | 2 = string | 3 = K | 4 = key
                      */
@@ -565,10 +572,10 @@ export class Parser {
                     const [_, _type, _defaultType, _name, _paramsNames] = matches;
 
                     const typeParam = dom.create.typeParameter(
-                        _name, 
+                        _name,
                         _type == null ? null : dom.create.typeParameter(_type)
                     );
-                    
+
                     if(_defaultType != null) {
                         typeParam.defaultType = dom.create.typeParameter(_defaultType);
                     }

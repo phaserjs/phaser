@@ -349,6 +349,10 @@ class Parser {
             obj.jsDocComment = '';
             for (let paramDoc of doclet.params) {
                 // TODO REMOVE TEMP FIX
+                if (!paramDoc.name) {
+                    console.log(`Docs Error in '${doclet.longname}' in ${doclet.meta.filename}@${doclet.meta.lineno}`);
+                    console.log(paramDoc.description);
+                }
                 if (paramDoc.name.indexOf('.') != -1) {
                     console.log(`Warning: ignoring param with '.' for '${doclet.longname}' in ${doclet.meta.filename}@${doclet.meta.lineno}`);
                     let defaultVal = paramDoc.defaultvalue !== undefined ? ` Default ${String(paramDoc.defaultvalue)}.` : '';
