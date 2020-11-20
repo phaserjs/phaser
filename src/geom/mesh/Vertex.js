@@ -79,7 +79,7 @@ var Vertex = new Class({
         /**
          * The projected x coordinate of this vertex.
          *
-         * @name Phaser.Geom.Mesh.Vertex#vx
+         * @name Phaser.Geom.Mesh.Vertex#nx
          * @type {number}
          * @since 3.50.0
          */
@@ -88,7 +88,7 @@ var Vertex = new Class({
         /**
          * The projected y coordinate of this vertex.
          *
-         * @name Phaser.Geom.Mesh.Vertex#vy
+         * @name Phaser.Geom.Mesh.Vertex#ny
          * @type {number}
          * @since 3.50.0
          */
@@ -97,7 +97,7 @@ var Vertex = new Class({
         /**
          * The projected z coordinate of this vertex.
          *
-         * @name Phaser.Geom.Mesh.Vertex#vz
+         * @name Phaser.Geom.Mesh.Vertex#nz
          * @type {number}
          * @since 3.50.0
          */

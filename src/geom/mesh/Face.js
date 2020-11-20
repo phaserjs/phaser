@@ -266,7 +266,7 @@ var Face = new Class({
     /**
      * Loads the data from this Vertex into the given Typed Arrays.
      *
-     * @method Phaser.Geom.Mesh.Vertex#load
+     * @method Phaser.Geom.Mesh.Face#load
      * @since 3.50.0
      *
      * @param {Float32Array} F32 - A Float32 Array to insert the position, UV and unit data in to.
