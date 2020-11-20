@@ -1145,7 +1145,7 @@ var WebGLPipeline = new Class({
     {
         if (unit === undefined) { unit = this.currentUnit; }
 
-        var postPipeline = (gameObject && gameObject.hasPostPipeline);
+        var postPipeline = (gameObject && gameObject.hasPostPipeline && !gameObject.manualPostPipeline);
 
         if (postPipeline)
         {
