@@ -199,7 +199,7 @@ var WebGLPipeline = new Class({
         /**
          * Float32 view of the array buffer containing the pipeline's vertices.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#vertexViewF32
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexViewF32
          * @type {Float32Array}
          * @since 3.0.0
          */
@@ -208,7 +208,7 @@ var WebGLPipeline = new Class({
         /**
          * Uint32 view of the array buffer containing the pipeline's vertices.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#vertexViewU32
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexViewU32
          * @type {Uint32Array}
          * @since 3.0.0
          */
@@ -230,7 +230,7 @@ var WebGLPipeline = new Class({
 
          * Treat this value as read-only.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.WebGLPipeline#currentUnit
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#currentUnit
          * @type {number}
          * @since 3.50.0
          */
@@ -630,7 +630,7 @@ var WebGLPipeline = new Class({
      * Custom pipelines can use this method in order to perform any required pre-batch tasks
      * for the given Game Object. It must return the texture unit the Game Object was assigned.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.WebGLPipeline#setGameObject
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setGameObject
      * @since 3.50.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object being rendered or added to the batch.
@@ -1251,7 +1251,7 @@ var WebGLPipeline = new Class({
      *
      * Used for directly batching untransformed rectangles, such as Camera background colors.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#drawFillRect
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#drawFillRect
      * @since 3.50.0
      *
      * @param {number} x - Horizontal top left coordinate of the rectangle.

@@ -24,7 +24,7 @@ var GEOM_CONST = require('../const');
  * @constructor
  * @since 3.0.0
  *
- * @param {(string|number[]|Phaser.Types.Math.Vector2Like[]|Array<Array<[number]>>)} [points] - List of points defining the perimeter of this Polygon. Several formats are supported:
+ * @param {(string|number[]|Phaser.Types.Math.Vector2Like[])} [points] - List of points defining the perimeter of this Polygon. Several formats are supported:
  * - A string containing paired x y values separated by a single space: `'40 0 40 20 100 20 100 80 40 80 40 100 0 50'`
  * - An array of Point objects: `[new Phaser.Point(x1, y1), ...]`
  * - An array of objects with public x y properties: `[obj1, obj2, ...]`
@@ -105,7 +105,7 @@ var Polygon = new Class({
      * @method Phaser.Geom.Polygon#setTo
      * @since 3.0.0
      *
-     * @param {(string|number[]|Phaser.Types.Math.Vector2Like[]|Array<Array<[number]>>)} [points] - Points defining the perimeter of this polygon. Please check function description above for the different supported formats.
+     * @param {(string|number[]|Phaser.Types.Math.Vector2Like[])} [points] - Points defining the perimeter of this polygon. Please check function description above for the different supported formats.
      *
      * @return {this} This Polygon object.
      */
