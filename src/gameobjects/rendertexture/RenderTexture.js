@@ -527,9 +527,9 @@ var RenderTexture = new Class({
         if (width === undefined) { width = frame.cutWidth; }
         if (height === undefined) { height = frame.cutHeight; }
 
-        var r = ((rgb >> 16) | 0) & 0xff;
-        var g = ((rgb >> 8) | 0) & 0xff;
-        var b = (rgb | 0) & 0xff;
+        var r = (rgb >> 16 & 0xFF) / 255;
+        var g = (rgb >> 8 & 0xFF) / 255;
+        var b = (rgb & 0xFF) / 255;
 
         var renderTarget = this.renderTarget;
 
@@ -537,24 +537,31 @@ var RenderTexture = new Class({
 
         if (renderTarget)
         {
-            var cx = camera.x;
-            var cy = camera.y;
-            var cw = camera.width;
-            var ch = camera.height;
-
             renderTarget.bind(true);
 
             var pipeline = this.pipeline;
 
+            pipeline.manager.set(pipeline);
+
+            var tw = renderTarget.width;
+            var th = renderTarget.height;
+
+            var rw = renderer.width;
+            var rh = renderer.height;
+
+            var sx = rw / tw;
+            var sy = rh / th;
+
             pipeline.drawFillRect(
-                cx, cy, cw, ch,
-                Utils.getTintFromFloats(r, g, b, 1),
+                x * sx, y * sy, width * sx, height * sy,
+                Utils.getTintFromFloats(b, g, r, 1),
                 alpha
             );
 
-            pipeline.flush();
+            // x * sx, (th - height - y) * sy, width * sx, height * sy,
 
-            renderTarget.unbind();
+
+            renderTarget.unbind(true);
         }
         else
         {
