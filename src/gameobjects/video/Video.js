@@ -857,7 +857,7 @@ var Video = new Class({
 
         return this;
     },
-    
+
     /**
      * Loads a Video from the given MediaStream object, ready for playback with the `Video.play` method.
      *
@@ -865,8 +865,8 @@ var Video = new Class({
      * the `loadEvent` parameter. See https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement
      * for more details.
      *
-     * @method Phaser.GameObjects.Video#loadURL
-     * @since 3.20.0
+     * @method Phaser.GameObjects.Video#loadMediaStream
+     * @since 3.50.0
      *
      * @param {string} stream - The MediaStream object.
      * @param {string} [loadEvent='loadeddata'] - The load event to listen for. Either `loadeddata`, `canplay` or `canplaythrough`.
@@ -874,7 +874,8 @@ var Video = new Class({
      *
      * @return {this} This Video Game Object for method chaining.
      */
-    loadMediaStream: function(stream, loadEvent, noAudio) {
+    loadMediaStream: function (stream, loadEvent, noAudio)
+    {
         if (loadEvent === undefined) { loadEvent = 'loadeddata'; }
         if (noAudio === undefined) { noAudio = false; }
 
@@ -905,9 +906,12 @@ var Video = new Class({
 
         video.addEventListener('error', this._callbacks.error, true);
 
-        try {
+        try
+        {
             video.srcObject = stream;
-        } catch (error) {
+        }
+        catch (error)
+        {
             video.src = window.URL.createObjectURL(stream);
         }
 
