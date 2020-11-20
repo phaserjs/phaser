@@ -219,7 +219,7 @@ var LightPipeline = new Class({
 
         var vertexViewF32 = this.vertexViewF32;
 
-        var vertexOffset = (this.vertexCount * this.vertexComponentCount) - 1;
+        var vertexOffset = (this.vertexCount * this.currentShader.vertexComponentCount) - 1;
 
         vertexViewF32[++vertexOffset] = x0;
         vertexViewF32[++vertexOffset] = y0;
@@ -296,8 +296,9 @@ var LightPipeline = new Class({
      */
     onBind: function ()
     {
-
-        return this;
+        this.set1i('uMainSampler', 0);
+        this.set1i('uNormSampler', 1);
+        this.set2f('uResolution', this.width / 2, this.height / 2);
     },
 
     /**
@@ -307,7 +308,6 @@ var LightPipeline = new Class({
      * @since 3.0.0
      *
      * @return {this} This WebGLPipeline instance.
-     */
     flush: function ()
     {
         var gl = this.gl;
@@ -332,6 +332,7 @@ var LightPipeline = new Class({
 
         return this;
     },
+     */
 
     /**
      * Called every time the pipeline is bound by the renderer.
@@ -344,22 +345,22 @@ var LightPipeline = new Class({
      * @param {boolean} [reset=false] - Should the pipeline be fully re-bound after a renderer pipeline clear?
      *
      * @return {this} This WebGLPipeline instance.
-     */
     bind: function (reset)
     {
         if (reset === undefined) { reset = false; }
 
         WebGLPipeline.prototype.bind.call(this, reset);
 
-        var renderer = this.renderer;
-        var program = this.program;
+        // var renderer = this.renderer;
+        // var program = this.program;
 
         // renderer.setInt1(program, 'uMainSampler', 0);
         // renderer.setInt1(program, 'uNormSampler', 1);
-        renderer.setFloat2(program, 'uResolution', this.width / 2, this.height / 2);
+        // renderer.setFloat2(program, 'uResolution', this.width / 2, this.height / 2);
 
         return this;
     },
+     */
 
     /**
      * This function sets all the needed resources for each camera pass.

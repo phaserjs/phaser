@@ -177,13 +177,11 @@ var PointLight = new Class({
 
     renderWebGL: function (renderer, src, camera, parentTransformMatrix)
     {
-        renderer.pipelines.set(src.pipeline);
+        var pipeline = renderer.pipelines.set(src.pipeline);
 
-        console.warn('temps removed');
-
-        var camMatrix = renderer._tempMatrix1;
-        var lightMatrix = renderer._tempMatrix2;
-        var calcMatrix = renderer._tempMatrix3;
+        var camMatrix = pipeline._tempMatrix1;
+        var lightMatrix = pipeline._tempMatrix2;
+        var calcMatrix = pipeline._tempMatrix3;
 
         var width = src.width;
         var height = src.height;
@@ -231,7 +229,7 @@ var PointLight = new Class({
         var tx3 = calcMatrix.getX(xw, y);
         var ty3 = calcMatrix.getY(xw, y);
 
-        this.pipeline.batchLight(src, camera, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, lightX, lightY);
+        pipeline.batchLight(src, camera, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, lightX, lightY);
     }
 
 });
