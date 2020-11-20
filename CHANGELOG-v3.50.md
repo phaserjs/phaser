@@ -803,6 +803,10 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * The `GameObjects.Graphics.fillGradientStyle` method can now accept a different alpha value for each of the fill colors. The default is still 1. If you only provide a single alpha, it'll be used for all colors. Fix #5044 (thanks @zhangciwu)
 * `Types.Core.PipelineConfig` is a new configuration object that you can set in the Game Config under the `pipeline` property. It allows you to define custom WebGL pipelines as part of the Game Config, so they're automatically installed and ready for use by all Scenes in your game. You can either set the `pipeline` object, or set it under the `render` sub-config.
 * `Utils.Object.DeepCopy` is a new function that will recursively deep copy an array of object.
+* `Time.TimerEvent.getRemaining` is a new method that returns the time interval until the next iteration of the Timer Event (thanks @samme)
+* `Time.TimerEvent.getRemainingSeconds` is a new method that returns the time interval until the next iteration of the Timer Event in seconds (thanks @samme)
+* `Time.TimerEvent.getOverallRemaining` is a new method that returns the time interval until the last iteration of the Timer Event (thanks @samme)
+* `Time.TimerEvent.getOverallRemainingSeconds` is a new method that returns the time interval until the last iteration of the Timer Event in seconds (thanks @samme)
 
 ### Updates and API Changes
 
@@ -920,4 +924,4 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
-@samme @16patsle @scott20145 @khasanovbi @mk360 @volkans80 @jaabberwocky @maikthomas @atursams @LearningCode2023 @DylanC @BenjaminDRichards @rexrainbow @Riderrr @spwilson2 @EmilSV @PhaserEditor2D @Gangryong @vinerz @trynx @usufruct99 @pirateksh
+@samme @16patsle @scott20145 @khasanovbi @mk360 @volkans80 @jaabberwocky @maikthomas @atursams @LearningCode2023 @DylanC @BenjaminDRichards @rexrainbow @Riderrr @spwilson2 @EmilSV @PhaserEditor2D @Gangryong @vinerz @trynx @usufruct99 @pirateksh @justin-calleja
