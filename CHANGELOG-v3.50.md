@@ -862,6 +862,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * The `CanvasRenderer._tempMatrix1`, `_tempMatrtix2`, `_tempMatrix3` and `_tempMatrix4` properties have been removed. They were all flagged as private, yet used in lots of places. Instead, Game Objects now manager their own matrices, or use the global `GetCalcMatrix` function instead.
 * Since iOS 13, iPads now identify as MacOS devices. A new maxTouchPoint check is now part of the `Device.OS` tests, stopping iPads from being flagged as desktop devices. Fix #5389 (thanks @SBCGames)
 * The `BitmapMask.prevFramebuffer` property has been removed as it's no longer required, due to the fbo stack in the renderer.
+* The `TextureManager.addGLTexture` method has been updated so that the `width` and `height` parameters are now optional. If not provided, and if available, they will be read from the given WebGLTexture instead (thanks @hexus)
 
 ### Bug Fixes
 
