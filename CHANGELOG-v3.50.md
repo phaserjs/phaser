@@ -894,6 +894,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `Particles.EmitterOp` now cleanly separates between the different types of property configuration options. `start | end` will now ease between the two values, `min | max` will pick a random value between them and `random: []` will pick a random element. They no longer get mixed together. Fix #3608 (thanks @samme)
 * When setting both `transparent: true` and `backgroundColor` in the Game Config, it would ignore the transparency and use the color anyway. If transparent, the game is now fully transparent. Fix #5362 (thanks @Hoshinokoe)
 * The `Ellipse` Game Object now will update the width, height, and geometric position in the `setSize` method (thanks @PhaserEditor2D)
+* When measuring the last word in a line in a `Text` Game Object, it no longer adds extra white space to the end (thanks @rexrainbow)
 
 ### Namespace Updates
 
