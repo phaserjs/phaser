@@ -114,7 +114,7 @@ var LayerData = new Class({
          * The layers orientation, necessary to be able to determine a tiles pixelX and pixelY as well as the layers width and height.
          *
          * @name Phaser.Tilemaps.LayerData#orientation
-         * @type {Phaser.Types.Tilemaps.TilemapOrientationType}
+         * @type {Phaser.Tilemaps.OrientationType}
          * @since 3.50.0
          */
         this.orientation = GetFastValue(config, 'orientation', CONST.ORTHOGONAL);

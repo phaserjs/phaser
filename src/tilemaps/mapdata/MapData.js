@@ -114,7 +114,7 @@ var MapData = new Class({
          * The orientation of the map data (i.e. orthogonal, isometric, hexagonal), default 'orthogonal'.
          *
          * @name Phaser.Tilemaps.MapData#orientation
-         * @type {Phaser.Types.Tilemaps.TilemapOrientationType}
+         * @type {Phaser.Tilemaps.OrientationType}
          * @since 3.50.0
          */
         this.orientation = GetFastValue(config, 'orientation', CONST.ORTHOGONAL);

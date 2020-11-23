@@ -14,7 +14,7 @@ var CONST = require('./ORIENTATION_CONST');
  *
  * @param {string} [orientation] - The orientation type as a string.
  *
- * @return {Phaser.Types.Tilemaps.OrientationType} The Tilemap Orientation type.
+ * @return {Phaser.Tilemaps.OrientationType} The Tilemap Orientation type.
  */
 var FromOrientationString = function (orientation)
 {
