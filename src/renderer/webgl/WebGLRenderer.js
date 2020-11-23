@@ -990,7 +990,7 @@ var WebGLRenderer = new Class({
      * @param {number} height - The height of the scissor.
      * @param {number} [drawingBufferHeight] - Optional drawingBufferHeight override value.
      *
-     * @return {integer[]} An array containing the scissor values.
+     * @return {number[]} An array containing the scissor values.
      */
     pushScissor: function (x, y, width, height, drawingBufferHeight)
     {

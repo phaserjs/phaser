@@ -86,7 +86,7 @@ var Shape = new Class({
          * Holds the earcut polygon path index data for filled rendering.
          *
          * @name Phaser.GameObjects.Shape#pathIndexes
-         * @type {integer[]}
+         * @type {number[]}
          * @readonly
          * @since 3.13.0
          */

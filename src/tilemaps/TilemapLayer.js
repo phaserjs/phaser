@@ -771,7 +771,7 @@ var TilemapLayer = new Class({
      * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
      * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
      * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
-     * @param {integer[]} [indexes] - An array of indexes to randomly draw from during randomization.
+     * @param {number[]} [indexes] - An array of indexes to randomly draw from during randomization.
      *
      * @return {this} This Tilemap Layer object.
      */
@@ -993,7 +993,7 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#setCollisionByExclusion
      * @since 3.50.0
      *
-     * @param {integer[]} indexes - An array of the tile indexes to not be counted for collision.
+     * @param {number[]} indexes - An array of the tile indexes to not be counted for collision.
      * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
      * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the update.
      *

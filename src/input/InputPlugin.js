@@ -350,7 +350,7 @@ var InputPlugin = new Class({
          * A array containing the dragStates, for this Scene, index by the Pointer ID.
          *
          * @name Phaser.Input.InputPlugin#_dragState
-         * @type {integer[]}
+         * @type {number[]}
          * @private
          * @since 3.16.0
          */

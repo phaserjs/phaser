@@ -21,7 +21,7 @@ var GetRandom = require('../../utils/array/GetRandom');
  * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
  * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
  * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
- * @param {integer[]} [indexes] - An array of indexes to randomly draw from during randomization.
+ * @param {number[]} [indexes] - An array of indexes to randomly draw from during randomization.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var Randomize = function (tileX, tileY, width, height, indexes, layer)

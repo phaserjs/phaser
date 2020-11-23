@@ -288,7 +288,7 @@ var TimeStep = new Class({
          * Internal array holding the previous delta values, used for delta smoothing.
          *
          * @name Phaser.Core.TimeStep#deltaHistory
-         * @type {integer[]}
+         * @type {number[]}
          * @since 3.0.0
          */
         this.deltaHistory = [];

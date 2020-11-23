@@ -92,7 +92,7 @@ var KeyboardManager = new Class({
          * can call the `addCapture` method. See also `removeCapture` and `clearCaptures`.
          *
          * @name Phaser.Input.Keyboard.KeyboardManager#captures
-         * @type {integer[]}
+         * @type {number[]}
          * @since 3.16.0
          */
         this.captures = [];

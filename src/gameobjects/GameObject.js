@@ -610,7 +610,7 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#getIndexList
      * @since 3.4.0
      *
-     * @return {integer[]} An array of display list position indexes.
+     * @return {number[]} An array of display list position indexes.
      */
     getIndexList: function ()
     {

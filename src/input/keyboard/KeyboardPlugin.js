@@ -323,7 +323,7 @@ var KeyboardPlugin = new Class({
      * @method Phaser.Input.Keyboard.KeyboardPlugin#getCaptures
      * @since 3.16.0
      *
-     * @return {integer[]} An array of all the currently capturing key codes.
+     * @return {number[]} An array of all the currently capturing key codes.
      */
     getCaptures: function ()
     {
