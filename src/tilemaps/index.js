@@ -4,14 +4,19 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CONST = require('./const');
 var Extend = require('../utils/object/Extend');
+var CONST = require('./const');
 
 /**
  * @namespace Phaser.Tilemaps
+ * 
+ * @borrows Phaser.Tilemaps.Orientation.ORTHOGONAL as ORTHOGONAL
+ * @borrows Phaser.Tilemaps.Orientation.ISOMETRIC as ISOMETRIC
+ * @borrows Phaser.Tilemaps.Orientation.STAGGERED as STAGGERED
+ * @borrows Phaser.Tilemaps.Orientation.HEXAGONAL as HEXAGONAL
  */
 
-var PhaserTilemaps = {
+var Tilemaps = {
 
     Components: require('./components'),
     Parsers: require('./parsers'),
@@ -25,6 +30,7 @@ var PhaserTilemaps = {
     TilemapFactory: require('./TilemapFactory'),
     Tileset: require('./Tileset'),
     TilemapLayer: require('./TilemapLayer'),
+    Orientation: require('./const/ORIENTATION_CONST'),
 
     LayerData: require('./mapdata/LayerData'),
     MapData: require('./mapdata/MapData'),
@@ -32,10 +38,6 @@ var PhaserTilemaps = {
 
 };
 
-//   Merge in the consts
+Tilemaps = Extend(false, Tilemaps, CONST.ORIENTATION);
 
-PhaserTilemaps = Extend(false, PhaserTilemaps, CONST);
-
-//  Export it
-
-module.exports = PhaserTilemaps;
+module.exports = Tilemaps;

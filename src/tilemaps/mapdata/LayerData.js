@@ -5,7 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
-var CONST = require('../const');
+var CONST = require('../const/ORIENTATION_CONST');
 var GetFastValue = require('../../utils/object/GetFastValue');
 
 /**

@@ -1,0 +1,14 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var CONST = {
+
+    FromOrientationString: require('./FromOrientationString'),
+    ORIENTATION: require('./ORIENTATION_CONST')
+
+};
+
+module.exports = CONST;

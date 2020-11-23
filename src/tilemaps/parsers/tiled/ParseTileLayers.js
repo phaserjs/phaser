@@ -5,8 +5,9 @@
  */
 
 var Base64Decode = require('./Base64Decode');
-var CONST = require('../../const');
+var CONST = require('../../const/ORIENTATION_CONST');
 var CreateGroupLayer = require('./CreateGroupLayer');
+var FromOrientationString = require('../../const/FromOrientationString');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var LayerData = require('../../mapdata/LayerData');
 var ParseGID = require('./ParseGID');
@@ -130,7 +131,7 @@ var ParseTileLayers = function (json, insertNull)
                 alpha: (curGroupState.opacity * curl.opacity),
                 visible: (curGroupState.visible && curl.visible),
                 properties: GetFastValue(curl, 'properties', []),
-                orientation: CONST.fromOrientationString(json.orientation)
+                orientation: FromOrientationString(json.orientation)
             });
 
             if (layerData.orientation === CONST.HEXAGONAL)
@@ -208,7 +209,7 @@ var ParseTileLayers = function (json, insertNull)
                 alpha: (curGroupState.opacity * curl.opacity),
                 visible: (curGroupState.visible && curl.visible),
                 properties: GetFastValue(curl, 'properties', []),
-                orientation: CONST.fromOrientationString(json.orientation)
+                orientation: FromOrientationString(json.orientation)
             });
 
             if (layerData.orientation === CONST.HEXAGONAL)

@@ -6,8 +6,9 @@
 
 var AssignTileProperties = require('./AssignTileProperties');
 var BuildTilesetIndex = require('./BuildTilesetIndex');
-var CONST = require('../../const');
+var CONST = require('../../const/ORIENTATION_CONST');
 var Formats = require('../../Formats');
+var FromOrientationString = require('../../const/FromOrientationString');
 var MapData = require('../../mapdata/MapData');
 var ParseImageLayers = require('./ParseImageLayers');
 var ParseObjectLayers = require('./ParseObjectLayers');
@@ -40,7 +41,7 @@ var ParseJSONTiled = function (name, json, insertNull)
         name: name,
         tileWidth: json.tilewidth,
         tileHeight: json.tileheight,
-        orientation: CONST.fromOrientationString(json.orientation),
+        orientation: FromOrientationString(json.orientation),
         format: Formats.TILED_JSON,
         version: json.version,
         properties: json.properties,

@@ -4,7 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CONST = require('../const');
+var CONST = require('../const/ORIENTATION_CONST');
 var CullTiles = require('./CullTiles');
 var HexagonalCullTiles = require('./HexagonalCullTiles');
 var IsometricCullTiles = require('./IsometricCullTiles');

@@ -4,7 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CONST = require('../const');
+var CONST = require('../const/ORIENTATION_CONST');
 var HexagonalTileToWorldY = require('./HexagonalTileToWorldY');
 var NOOP = require('../../utils/NOOP');
 var StaggeredTileToWorldY = require('./StaggeredTileToWorldY');

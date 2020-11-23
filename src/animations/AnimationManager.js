@@ -93,7 +93,7 @@ var AnimationManager = new Class({
          * See the {@link #setMix} method for more details.
          *
          * @name Phaser.Animations.AnimationManager#mixes
-         * @type {Phaser.Structs.Map.<string>}
+         * @type {Phaser.Structs.Map.<string, Phaser.Animations.Animation>}
          * @since 3.50.0
          */
         this.mixes = new CustomMap();
