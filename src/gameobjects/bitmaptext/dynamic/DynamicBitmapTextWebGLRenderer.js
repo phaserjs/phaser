@@ -119,7 +119,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
 
     if (postPipeline)
     {
-        postPipeline.manager.preBatch(src);
+        renderer.pipelines.preBatch(src);
     }
 
     for (var i = 0; i < textLength; i++)
@@ -281,7 +281,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
 
     if (postPipeline)
     {
-        postPipeline.manager.postBatch(src);
+        renderer.pipelines.postBatch(src);
     }
 };
 

@@ -61,7 +61,7 @@ var IsoBoxWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     if (postPipeline)
     {
-        postPipeline.manager.preBatch(src);
+        renderer.pipelines.preBatch(src);
     }
 
     //  Top Face
@@ -129,7 +129,7 @@ var IsoBoxWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     if (postPipeline)
     {
-        postPipeline.manager.postBatch(src);
+        renderer.pipelines.postBatch(src);
     }
 };
 

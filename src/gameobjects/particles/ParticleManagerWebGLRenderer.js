@@ -66,7 +66,7 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
 
     if (postPipeline)
     {
-        postPipeline.manager.preBatch(emitterManager);
+        renderer.pipelines.preBatch(emitterManager);
     }
 
     for (var e = 0; e < emittersLength; e++)
@@ -155,7 +155,7 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
 
     if (postPipeline)
     {
-        postPipeline.manager.postBatch(emitterManager);
+        renderer.pipelines.postBatch(emitterManager);
     }
 };
 

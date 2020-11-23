@@ -48,7 +48,7 @@ var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix
 
     if (postPipeline)
     {
-        postPipeline.manager.preBatch(container);
+        renderer.pipelines.preBatch(container);
     }
 
     var containerHasBlendMode = (container.blendMode !== -1);
@@ -145,7 +145,7 @@ var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix
 
     if (postPipeline)
     {
-        postPipeline.manager.postBatch(container);
+        renderer.pipelines.postBatch(container);
     }
 };
 

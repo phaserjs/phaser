@@ -58,7 +58,7 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     if (postPipeline)
     {
-        postPipeline.manager.preBatch(src);
+        renderer.pipelines.preBatch(src);
     }
 
     for (var index = 0; index < list.length; index++)
@@ -127,7 +127,7 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     if (postPipeline)
     {
-        postPipeline.manager.postBatch(src);
+        renderer.pipelines.postBatch(src);
     }
 };
 

@@ -39,7 +39,7 @@ var StarWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     if (postPipeline)
     {
-        postPipeline.manager.preBatch(src);
+        renderer.pipelines.preBatch(src);
     }
 
     if (src.isFilled)
@@ -54,7 +54,7 @@ var StarWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     if (postPipeline)
     {
-        postPipeline.manager.postBatch(src);
+        renderer.pipelines.postBatch(src);
     }
 };
 

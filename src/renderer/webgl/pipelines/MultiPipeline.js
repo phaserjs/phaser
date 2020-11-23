@@ -318,14 +318,14 @@ var MultiPipeline = new Class({
 
         if (postPipeline)
         {
-            postPipeline.manager.preBatch(gameObject);
+            renderer.pipelines.preBatch(gameObject);
         }
 
         this.batchQuad(gameObject, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, gameObject.tintEffect, texture, unit);
 
         if (postPipeline)
         {
-            postPipeline.manager.postBatch(gameObject);
+            renderer.pipelines.postBatch(gameObject);
         }
     },
 
@@ -518,14 +518,14 @@ var MultiPipeline = new Class({
 
         if (postPipeline)
         {
-            postPipeline.manager.preBatch(gameObject);
+            renderer.pipelines.preBatch(gameObject);
         }
 
         this.batchQuad(gameObject, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
 
         if (postPipeline)
         {
-            postPipeline.manager.postBatch(gameObject);
+            renderer.pipelines.postBatch(gameObject);
         }
     },
 

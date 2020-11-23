@@ -49,7 +49,7 @@ var TilemapLayerWebGLRenderer = function (renderer, src, camera)
 
     if (postPipeline)
     {
-        postPipeline.manager.preBatch(src);
+        renderer.pipelines.preBatch(src);
     }
 
     for (var i = 0; i < tileCount; i++)
@@ -103,7 +103,7 @@ var TilemapLayerWebGLRenderer = function (renderer, src, camera)
 
     if (postPipeline)
     {
-        postPipeline.manager.postBatch(src);
+        renderer.pipelines.postBatch(src);
     }
 };
 

@@ -38,7 +38,7 @@ var RenderTextureWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     if (postPipeline)
     {
-        postPipeline.manager.preBatch(src);
+        renderer.pipelines.preBatch(src);
     }
 
     src.pipeline.batchTexture(
@@ -69,7 +69,7 @@ var RenderTextureWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     if (postPipeline)
     {
-        postPipeline.manager.postBatch(src);
+        renderer.pipelines.postBatch(src);
     }
 };
 

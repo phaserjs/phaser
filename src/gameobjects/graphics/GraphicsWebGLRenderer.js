@@ -53,7 +53,7 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     if (postPipeline)
     {
-        postPipeline.manager.preBatch(src);
+        renderer.pipelines.preBatch(src);
     }
 
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
@@ -348,7 +348,7 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     if (postPipeline)
     {
-        postPipeline.manager.postBatch(src);
+        renderer.pipelines.postBatch(src);
     }
 };
 
