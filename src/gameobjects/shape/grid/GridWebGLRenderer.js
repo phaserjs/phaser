@@ -23,7 +23,7 @@ var Utils = require('../../../renderer/webgl/Utils');
  */
 var GridWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
-    var pipeline = renderer.pipelines.set(this.pipeline);
+    var pipeline = renderer.pipelines.set(src.pipeline);
 
     var result = GetCalcMatrix(src, camera, parentMatrix);
 
@@ -78,6 +78,13 @@ var GridWebGLRenderer = function (renderer, src, camera, parentMatrix)
         {
             cellHeightB--;
         }
+    }
+
+    var postPipeline = (src && src.hasPostPipeline);
+
+    if (postPipeline)
+    {
+        postPipeline.manager.preBatch(src);
     }
 
     if (showCells && src.fillAlpha > 0)
@@ -183,6 +190,11 @@ var GridWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
             pipeline.batchLine(0, y1, width, y1, 1, 1, 1, 0, false);
         }
+    }
+
+    if (postPipeline)
+    {
+        postPipeline.manager.postBatch(src);
     }
 };
 

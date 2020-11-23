@@ -62,6 +62,13 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
 
     var textureUnit = pipeline.setGameObject(emitterManager, emitterManager.defaultFrame);
 
+    var postPipeline = (emitterManager && emitterManager.hasPostPipeline);
+
+    if (postPipeline)
+    {
+        postPipeline.manager.preBatch(emitterManager);
+    }
+
     for (var e = 0; e < emittersLength; e++)
     {
         var emitter = emitters[e];
@@ -144,6 +151,11 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
 
             // pipeline.setTexture2D(texture, 0);
         }
+    }
+
+    if (postPipeline)
+    {
+        postPipeline.manager.postBatch(emitterManager);
     }
 };
 

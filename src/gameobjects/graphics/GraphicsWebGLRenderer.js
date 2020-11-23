@@ -47,7 +47,14 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
         return;
     }
 
-    var pipeline = renderer.pipelines.set(this.pipeline, src);
+    var pipeline = renderer.pipelines.set(src.pipeline, src);
+
+    var postPipeline = (src && src.hasPostPipeline);
+
+    if (postPipeline)
+    {
+        postPipeline.manager.preBatch(src);
+    }
 
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
@@ -337,6 +344,11 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
                 break;
             }
         }
+    }
+
+    if (postPipeline)
+    {
+        postPipeline.manager.postBatch(src);
     }
 };
 

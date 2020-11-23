@@ -61,6 +61,13 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var totalFacesRendered = 0;
 
+    var postPipeline = (src && src.hasPostPipeline && !src.manualPostPipeline);
+
+    if (postPipeline)
+    {
+        postPipeline.manager.preBatch(src);
+    }
+
     for (var i = 0; i < totalFaces; i++)
     {
         var face = faces[i];
@@ -94,6 +101,11 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
     if (debugCallback)
     {
         debugCallback.call(src, src, debugFaces);
+    }
+
+    if (postPipeline)
+    {
+        postPipeline.manager.postBatch(src);
     }
 };
 

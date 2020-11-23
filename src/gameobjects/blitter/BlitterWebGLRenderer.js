@@ -54,6 +54,13 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var alpha = camera.alpha * src.alpha;
     var roundPixels = camera.roundPixels;
 
+    var postPipeline = (src && src.hasPostPipeline);
+
+    if (postPipeline)
+    {
+        postPipeline.manager.preBatch(src);
+    }
+
     for (var index = 0; index < list.length; index++)
     {
         var bob = list[index];
@@ -116,6 +123,11 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
         {
             prevTextureSourceIndex = -1;
         }
+    }
+
+    if (postPipeline)
+    {
+        postPipeline.manager.postBatch(src);
     }
 };
 

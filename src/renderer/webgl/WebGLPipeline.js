@@ -1145,13 +1145,6 @@ var WebGLPipeline = new Class({
     {
         if (unit === undefined) { unit = this.currentUnit; }
 
-        var postPipeline = (gameObject && gameObject.hasPostPipeline && !gameObject.manualPostPipeline);
-
-        if (postPipeline)
-        {
-            this.manager.preBatch(gameObject);
-        }
-
         var hasFlushed = false;
 
         if (this.shouldFlush(6))
@@ -1171,11 +1164,6 @@ var WebGLPipeline = new Class({
         this.batchVert(x3, y3, u1, v0, unit, tintEffect, tintTR);
 
         this.onBatch(gameObject);
-
-        if (postPipeline)
-        {
-            this.manager.postBatch(gameObject);
-        }
 
         return hasFlushed;
     },
