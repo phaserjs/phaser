@@ -31,7 +31,9 @@ export class Parser {
 
         // add declare module
         const phaserPkgModuleDOM = dom.create.module('phaser');
+
         phaserPkgModuleDOM.members.push(dom.create.exportEquals('Phaser'));
+
         this.topLevel.push(phaserPkgModuleDOM);
     }
 
@@ -55,11 +57,13 @@ export class Parser {
     }
 
     private parseObjects(docs: any[]) {
+
+        console.log('Parse Objects');
+
         for (let i = 0; i < docs.length; i++) {
 
             let doclet = docs[i];
 
-            // TODO: Custom temporary rules
             switch (doclet.longname)
             {
                 case 'Phaser.GameObjects.Components.Alpha':
@@ -83,7 +87,6 @@ export class Parser {
                 case 'Phaser.GameObjects.Components.ToJSON':
                 case 'Phaser.GameObjects.Components.Transform':
                 case 'Phaser.GameObjects.Components.Visible':
-                case 'Phaser.Renderer.WebGL.Pipelines.ModelViewProjection':
                     doclet.kind = 'mixin';
                     break;
 
@@ -107,6 +110,8 @@ export class Parser {
             {
                 doclet.kind = 'mixin';
             }
+
+            console.log(`Name: ${doclet.longname} - Kind: ${doclet.kind}`);
 
             let obj: dom.DeclarationBase;
             let container = this.objects;
@@ -144,14 +149,19 @@ export class Parser {
                     break;
             }
 
-            if (obj) {
-                if (container[doclet.longname]) {
+            if (obj)
+            {
+                if (container[doclet.longname])
+                {
                     console.log('Warning: ignoring duplicate doc name: ' + doclet.longname);
                     docs.splice(i--, 1);
                     continue;
                 }
+
                 container[doclet.longname] = obj;
-                if (doclet.description) {
+
+                if (doclet.description)
+                {
                     let otherDocs = obj.jsDocComment || '';
                     obj.jsDocComment = doclet.description.replace(regexEndLine, '$1\n') + otherDocs;
                 }
@@ -159,28 +169,36 @@ export class Parser {
         }
     }
 
-    private resolveObjects(docs: any[]) {
+    private resolveObjects(docs: any[])
+    {
+        console.log('Parse Objects');
+
         let allTypes = new Set<string>();
-        for (let doclet of docs) {
+
+        for (let doclet of docs)
+        {
             let obj = doclet.kind === 'namespace' ? this.namespaces[doclet.longname] : this.objects[doclet.longname];
 
-            if (!obj) {
-
-                //  TODO
+            if (!obj)
+            {
                 console.log(`Warning: Didn't find object for ${doclet.longname}`);
 
                 continue;
             }
 
-            if (!doclet.memberof) {
+            if (!doclet.memberof)
+            {
                 this.topLevel.push(obj as dom.TopLevelDeclaration);
-            } else {
+            }
+            else
+            {
                 let isNamespaceMember = doclet.kind === 'class' || doclet.kind === 'typedef' || doclet.kind == 'namespace' || doclet.isEnum;
+
                 let parent = isNamespaceMember ? this.namespaces[doclet.memberof] : (this.objects[doclet.memberof] || this.namespaces[doclet.memberof]);
 
                 //TODO: this whole section should be removed once stable
                 if (!parent) {
-                    console.log(`${doclet.longname} in ${doclet.meta.filename}@${doclet.meta.lineno} has parent '${doclet.memberof}' that is not defined.`);
+                    console.log(`***-> ${doclet.longname} in ${doclet.meta.filename}@${doclet.meta.lineno} has parent '${doclet.memberof}' that is not defined.`);
                     let parts: string[] = doclet.memberof.split('.');
                     let newParts = [parts.pop()];
                     while (parts.length > 0 && this.objects[parts.join('.')] == null) newParts.unshift(parts.pop());

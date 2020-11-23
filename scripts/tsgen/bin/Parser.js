@@ -36,9 +36,9 @@ class Parser {
         return result;
     }
     parseObjects(docs) {
+        console.log('Parse Objects');
         for (let i = 0; i < docs.length; i++) {
             let doclet = docs[i];
-            // TODO: Custom temporary rules
             switch (doclet.longname) {
                 case 'Phaser.GameObjects.Components.Alpha':
                 case 'Phaser.GameObjects.Components.AlphaSingle':
@@ -61,7 +61,6 @@ class Parser {
                 case 'Phaser.GameObjects.Components.ToJSON':
                 case 'Phaser.GameObjects.Components.Transform':
                 case 'Phaser.GameObjects.Components.Visible':
-                case 'Phaser.Renderer.WebGL.Pipelines.ModelViewProjection':
                     doclet.kind = 'mixin';
                     break;
                 //  Because, sod you TypeScript
@@ -82,6 +81,7 @@ class Parser {
             if ((doclet.longname.indexOf('Phaser.Physics.Arcade.Components.') == 0 || doclet.longname.indexOf('Phaser.Physics.Impact.Components.') == 0 || doclet.longname.indexOf('Phaser.Physics.Matter.Components.') == 0) && doclet.longname.indexOf('#') == -1) {
                 doclet.kind = 'mixin';
             }
+            console.log(`Name: ${doclet.longname} - Kind: ${doclet.kind}`);
             let obj;
             let container = this.objects;
             switch (doclet.kind) {
@@ -131,11 +131,11 @@ class Parser {
         }
     }
     resolveObjects(docs) {
+        console.log('Parse Objects');
         let allTypes = new Set();
         for (let doclet of docs) {
             let obj = doclet.kind === 'namespace' ? this.namespaces[doclet.longname] : this.objects[doclet.longname];
             if (!obj) {
-                //  TODO
                 console.log(`Warning: Didn't find object for ${doclet.longname}`);
                 continue;
             }
@@ -147,7 +147,7 @@ class Parser {
                 let parent = isNamespaceMember ? this.namespaces[doclet.memberof] : (this.objects[doclet.memberof] || this.namespaces[doclet.memberof]);
                 //TODO: this whole section should be removed once stable
                 if (!parent) {
-                    console.log(`${doclet.longname} in ${doclet.meta.filename}@${doclet.meta.lineno} has parent '${doclet.memberof}' that is not defined.`);
+                    console.log(`***-> ${doclet.longname} in ${doclet.meta.filename}@${doclet.meta.lineno} has parent '${doclet.memberof}' that is not defined.`);
                     let parts = doclet.memberof.split('.');
                     let newParts = [parts.pop()];
                     while (parts.length > 0 && this.objects[parts.join('.')] == null)
@@ -351,7 +351,7 @@ class Parser {
                 // TODO REMOVE TEMP FIX
                 if (!paramDoc.name) {
                     console.log(`Docs Error in '${doclet.longname}' in ${doclet.meta.filename}@${doclet.meta.lineno}`);
-                    console.log(paramDoc.description);
+                    console.info(paramDoc);
                 }
                 if (paramDoc.name.indexOf('.') != -1) {
                     console.log(`Warning: ignoring param with '.' for '${doclet.longname}' in ${doclet.meta.filename}@${doclet.meta.lineno}`);
