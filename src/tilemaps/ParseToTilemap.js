@@ -24,7 +24,7 @@ var Tilemap = require('./Tilemap');
  * @param {number} [tileHeight=32] - The height of a tile in pixels.
  * @param {number} [width=10] - The width of the map in tiles.
  * @param {number} [height=10] - The height of the map in tiles.
- * @param {integer[][]} [data] - Instead of loading from the cache, you can also load directly from
+ * @param {number[][]} [data] - Instead of loading from the cache, you can also load directly from
  * a 2D array of tile indexes.
  * @param {boolean} [insertNull=false] - Controls how empty tiles, tiles with an index of -1, in the
  * map data are handled. If `true`, empty locations will get a value of `null`. If `false`, empty

@@ -16,7 +16,7 @@ var Tile = require('../Tile');
  * @since 3.0.0
  *
  * @param {string} name - The name of the tilemap, used to set the name on the MapData.
- * @param {integer[][]} data - 2D array, CSV string or Tiled JSON object.
+ * @param {number[][]} data - 2D array, CSV string or Tiled JSON object.
  * @param {number} tileWidth - The width of a tile in pixels.
  * @param {number} tileHeight - The height of a tile in pixels.
  * @param {boolean} insertNull - Controls how empty tiles, tiles with an index of -1, in the map

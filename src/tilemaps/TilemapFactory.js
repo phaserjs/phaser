@@ -25,7 +25,7 @@ var ParseToTilemap = require('./ParseToTilemap');
  * default.
  * @param {number} [height=10] - The height of the map in tiles. Pass in `null` to leave as the
  * default.
- * @param {integer[][]} [data] - Instead of loading from the cache, you can also load directly from
+ * @param {number[][]} [data] - Instead of loading from the cache, you can also load directly from
  * a 2D array of tile indexes. Pass in `null` for no data.
  * @param {boolean} [insertNull=false] - Controls how empty tiles, tiles with an index of -1, in the
  * map data are handled. If `true`, empty locations will get a value of `null`. If `false`, empty
