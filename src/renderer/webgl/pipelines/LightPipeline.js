@@ -294,6 +294,7 @@ var LightPipeline = new Class({
      * This function sets all the needed resources for each camera pass.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#onRender
+     * @ignore
      * @since 3.0.0
      *
      * @param {Phaser.Scene} scene - The Scene being rendered.
@@ -419,6 +420,7 @@ var LightPipeline = new Class({
      * Assigns a texture to the current batch. If a different texture is already set it creates a new batch object.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#setTexture2D
+     * @ignore
      * @since 3.50.0
      *
      * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch. If not given uses blankTexture.
@@ -454,6 +456,7 @@ var LightPipeline = new Class({
      * for the given Game Object. It must return the texture unit the Game Object was assigned.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#setGameObject
+     * @ignore
      * @since 3.50.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object being rendered or added to the batch.

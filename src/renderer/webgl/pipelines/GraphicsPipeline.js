@@ -571,6 +571,7 @@ var GraphicsPipeline = new Class({
      * Where tx0/ty0 = 0, tx1/ty1 = 1, tx2/ty2 = 2 and tx3/ty3 = 3
      *
      * @method Phaser.Renderer.WebGL.Pipelines.GraphicsPipeline#batchQuad
+     * @override
      * @since 3.50.0
      *
      * @param {number} x0 - The top-left x position.
@@ -625,6 +626,7 @@ var GraphicsPipeline = new Class({
      * ```
      *
      * @method Phaser.Renderer.WebGL.Pipelines.GraphicsPipeline#batchTri
+     * @override
      * @since 3.50.0
      *
      * @param {number} x1 - The bottom-left x position.

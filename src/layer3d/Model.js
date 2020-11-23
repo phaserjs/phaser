@@ -76,7 +76,7 @@ var Model = new Class({
          * The Animation State of this Model.
          *
          * @name Phaser.Geom.Mesh.Model#anims
-         * @type {Phaser.Animation.AnimationState}
+         * @type {Phaser.Animations.AnimationState}
          * @since 3.50.0
          */
         this.anims = new AnimationState(this);

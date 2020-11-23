@@ -899,7 +899,7 @@ var Factory = new Class({
      * @param {(Phaser.Types.Physics.Matter.MatterBodyConfig|MatterJS.Body)} [options] - A Matter Body configuration object, or an instance of a Matter Body.
      * @param {boolean} [addToWorld=true] - Add this Matter Body to the World?
      *
-     * @return {Phaser.Physics.Matter.MatterGameObject} The Game Object that had the Matter Components injected into it.
+     * @return {(Phaser.Physics.Matter.Image|Phaser.Physics.Matter.Sprite|Phaser.GameObjects.GameObject)} The Game Object that had the Matter Components injected into it.
      */
     gameObject: function (gameObject, options, addToWorld)
     {

@@ -2051,10 +2051,10 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Group} group - The first object to check for collision.
-     * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - The second object to check for collision.
-     * @param {ArcadePhysicsCallback} [collideCallback] - An optional callback function that is called if the objects collide.
-     * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
-     * @param {any} [callbackContext] - The context in which to run the callbacks.
+     * @param {Phaser.Tilemaps.TilemapLayer} tilemapLayer - The second object to check for collision.
+     * @param {ArcadePhysicsCallback} collideCallback - An optional callback function that is called if the objects collide.
+     * @param {ArcadePhysicsCallback} processCallback - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
+     * @param {any} callbackContext - The context in which to run the callbacks.
      * @param {boolean} overlapOnly - Whether this is a collision or overlap check.
      *
      * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
@@ -2169,7 +2169,7 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} sprite - The first object to check for collision.
-     * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - The second object to check for collision.
+     * @param {Phaser.Tilemaps.TilemapLayer} tilemapLayer - The second object to check for collision.
      * @param {ArcadePhysicsCallback} [collideCallback] - An optional callback function that is called if the objects collide.
      * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
      * @param {any} [callbackContext] - The context in which to run the callbacks.
@@ -2231,7 +2231,7 @@ var World = new Class({
      * @since 3.17.0
      *
      * @param {Phaser.GameObjects.GameObject} sprite - The first object to check for collision.
-     * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - The second object to check for collision.
+     * @param {Phaser.Tilemaps.TilemapLayer} tilemapLayer - The second object to check for collision.
      * @param {ArcadePhysicsCallback} [collideCallback] - An optional callback function that is called if the objects collide.
      * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
      * @param {any} [callbackContext] - The context in which to run the callbacks.

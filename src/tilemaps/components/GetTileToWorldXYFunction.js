@@ -19,7 +19,7 @@ var TileToWorldXY = require('./TileToWorldXY');
  *
  * @param {number} orientation - The Tilemap orientation constant.
  *
- * @return {(Phaser.Tilemaps.Components.TileToWorldXY|Phaser.Tilemaps.Components.IsometricTileToWorldXY|Phaser.Tilemaps.Components.HexagonalTileToWorldXY|Phaser.Tilemaps.Components.StaggeredTileToWorldXY)} The function to use to translate tiles for the given map type.
+ * @return {function} The function to use to translate tiles for the given map type.
  */
 var GetTileToWorldXYFunction = function (orientation)
 {

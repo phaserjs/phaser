@@ -88,7 +88,7 @@ var Rope = new Class({
          * The Animation State of this Rope.
          *
          * @name Phaser.GameObjects.Rope#anims
-         * @type {Phaser.Animation.AnimationState}
+         * @type {Phaser.Animations.AnimationState}
          * @since 3.23.0
          */
         this.anims = new AnimationState(this);
