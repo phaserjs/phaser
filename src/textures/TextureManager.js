@@ -305,7 +305,7 @@ var TextureManager = new Class({
      * @since 3.12.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(string|integer)} [frame] - The string-based name, or integer based index, of the Frame to get from the Texture.
+     * @param {(string|number)} [frame] - The string-based name, or integer based index, of the Frame to get from the Texture.
      * @param {string} [type='image/png'] - A DOMString indicating the image format. The default format type is image/png.
      * @param {number} [encoderOptions=0.92] - A Number between 0 and 1 indicating the image quality to use for image formats that use lossy compression such as image/jpeg and image/webp. If this argument is anything else, the default value for image quality is used. The default value is 0.92. Other arguments are ignored.
      *
@@ -951,7 +951,7 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(string|integer)} frame - The string or index of the Frame to be cloned.
+     * @param {(string|number)} frame - The string or index of the Frame to be cloned.
      *
      * @return {Phaser.Textures.Frame} A Clone of the given Frame.
      */
@@ -970,7 +970,7 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(string|integer)} [frame] - The string-based name, or integer based index, of the Frame to get from the Texture.
+     * @param {(string|number)} [frame] - The string-based name, or integer based index, of the Frame to get from the Texture.
      *
      * @return {Phaser.Textures.Frame} A Texture Frame object.
      */
@@ -1017,7 +1017,7 @@ var TextureManager = new Class({
      * @param {number} x - The x coordinate of the pixel within the Texture.
      * @param {number} y - The y coordinate of the pixel within the Texture.
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(string|integer)} [frame] - The string or index of the Frame.
+     * @param {(string|number)} [frame] - The string or index of the Frame.
      *
      * @return {?Phaser.Display.Color} A Color object populated with the color values of the requested pixel,
      * or `null` if the coordinates were out of bounds.
@@ -1064,7 +1064,7 @@ var TextureManager = new Class({
      * @param {number} x - The x coordinate of the pixel within the Texture.
      * @param {number} y - The y coordinate of the pixel within the Texture.
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(string|integer)} [frame] - The string or index of the Frame.
+     * @param {(string|number)} [frame] - The string or index of the Frame.
      *
      * @return {number} A value between 0 and 255, or `null` if the coordinates were out of bounds.
      */
@@ -1108,7 +1108,7 @@ var TextureManager = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object the texture would be set on.
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(string|integer)} [frame] - The string or index of the Frame.
+     * @param {(string|number)} [frame] - The string or index of the Frame.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object the texture was set on.
      */

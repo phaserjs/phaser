@@ -47,17 +47,17 @@ var Config = new Class({
         var defaultBannerTextColor = '#ffffff';
 
         /**
-         * @const {(integer|string)} Phaser.Core.Config#width - The width of the underlying canvas, in pixels.
+         * @const {(number|string)} Phaser.Core.Config#width - The width of the underlying canvas, in pixels.
          */
         this.width = GetValue(config, 'width', 1024);
 
         /**
-         * @const {(integer|string)} Phaser.Core.Config#height - The height of the underlying canvas, in pixels.
+         * @const {(number|string)} Phaser.Core.Config#height - The height of the underlying canvas, in pixels.
          */
         this.height = GetValue(config, 'height', 768);
 
         /**
-         * @const {(Phaser.Scale.ZoomType|integer)} Phaser.Core.Config#zoom - The zoom factor, as used by the Scale Manager.
+         * @const {(Phaser.Scale.ZoomType|number)} Phaser.Core.Config#zoom - The zoom factor, as used by the Scale Manager.
          */
         this.zoom = GetValue(config, 'zoom', 1);
 
@@ -220,7 +220,7 @@ var Config = new Class({
         this.inputKeyboardEventTarget = GetValue(config, 'input.keyboard.target', window);
 
         /**
-         * @const {?integer[]} Phaser.Core.Config#inputKeyboardCapture - `preventDefault` will be called on every non-modified key which has a key code in this array. By default, it is empty.
+         * @const {?number[]} Phaser.Core.Config#inputKeyboardCapture - `preventDefault` will be called on every non-modified key which has a key code in this array. By default, it is empty.
          */
         this.inputKeyboardCapture = GetValue(config, 'input.keyboard.capture', []);
 

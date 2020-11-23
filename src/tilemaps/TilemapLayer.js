@@ -317,7 +317,7 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#setRenderOrder
      * @since 3.50.0
      *
-     * @param {(integer|string)} renderOrder - The render (draw) order value. Either an integer between 0 and 3, or a string: 'right-down', 'left-down', 'right-up' or 'left-up'.
+     * @param {(number|string)} renderOrder - The render (draw) order value. Either an integer between 0 and 3, or a string: 'right-down', 'left-down', 'right-up' or 'left-up'.
      *
      * @return {this} This Tilemap Layer object.
      */
@@ -389,8 +389,8 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#createFromTiles
      * @since 3.50.0
      *
-     * @param {(integer|array)} indexes - The tile index, or array of indexes, to create Sprites from.
-     * @param {(integer|array)} replacements - The tile index, or array of indexes, to change a converted
+     * @param {(number|array)} indexes - The tile index, or array of indexes, to create Sprites from.
+     * @param {(number|array)} replacements - The tile index, or array of indexes, to change a converted
      * tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a
      * one-to-one mapping with the indexes array.
      * @param {Phaser.Types.GameObjects.Sprite.SpriteConfig} spriteConfig - The config object to pass into the Sprite creator (i.e.
@@ -699,7 +699,7 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#putTileAt
      * @since 3.50.0
      *
-     * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
+     * @param {(number|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
      * @param {number} tileX - The x coordinate, in tiles, not pixels.
      * @param {number} tileY - The y coordinate, in tiles, not pixels.
      * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
@@ -720,7 +720,7 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#putTileAtWorldXY
      * @since 3.50.0
      *
-     * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
+     * @param {(number|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
      * @param {number} worldX - The x coordinate, in pixels.
      * @param {number} worldY - The y coordinate, in pixels.
      * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
@@ -743,7 +743,7 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#putTilesAt
      * @since 3.50.0
      *
-     * @param {(integer[]|integer[][]|Phaser.Tilemaps.Tile[]|Phaser.Tilemaps.Tile[][])} tile - A row (array) or grid (2D array) of Tiles or tile indexes to place.
+     * @param {(number[]|number[][]|Phaser.Tilemaps.Tile[]|Phaser.Tilemaps.Tile[][])} tile - A row (array) or grid (2D array) of Tiles or tile indexes to place.
      * @param {number} tileX - The x coordinate, in tiles, not pixels.
      * @param {number} tileY - The y coordinate, in tiles, not pixels.
      * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
@@ -923,7 +923,7 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#setCollision
      * @since 3.50.0
      *
-     * @param {(integer|array)} indexes - Either a single tile index, or an array of tile indexes.
+     * @param {(number|array)} indexes - Either a single tile index, or an array of tile indexes.
      * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
      * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the update.
      * @param {boolean} [updateLayer=true] - If true, updates the current tiles on the layer. Set to false if no tiles have been placed for significant performance boost.
@@ -1036,7 +1036,7 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#setTileIndexCallback
      * @since 3.50.0
      *
-     * @param {(integer|integer[])} indexes - Either a single tile index, or an array of tile indexes to have a collision callback set for.
+     * @param {(number|number[])} indexes - Either a single tile index, or an array of tile indexes to have a collision callback set for.
      * @param {function} callback - The callback that will be invoked when the tile is collided with.
      * @param {object} callbackContext - The context under which the callback is called.
      *

@@ -18,7 +18,7 @@ var point = new Vector2();
  * @function Phaser.Tilemaps.Components.PutTileAtWorldXY
  * @since 3.0.0
  *
- * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
+ * @param {(number|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
  * @param {number} worldX - The x coordinate, in pixels.
  * @param {number} worldY - The y coordinate, in pixels.
  * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.

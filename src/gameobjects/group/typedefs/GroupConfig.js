@@ -7,7 +7,7 @@
  * @property {?boolean} [active=true] - Sets {@link Phaser.GameObjects.Group#active}.
  * @property {?number} [maxSize=-1] - Sets {@link Phaser.GameObjects.Group#maxSize}.
  * @property {?string} [defaultKey=null] - Sets {@link Phaser.GameObjects.Group#defaultKey}.
- * @property {?(string|integer)} [defaultFrame=null] - Sets {@link Phaser.GameObjects.Group#defaultFrame}.
+ * @property {?(string|number)} [defaultFrame=null] - Sets {@link Phaser.GameObjects.Group#defaultFrame}.
  * @property {?boolean} [runChildUpdate=false] - Sets {@link Phaser.GameObjects.Group#runChildUpdate}.
  * @property {?Phaser.Types.GameObjects.Group.GroupCallback} [createCallback=null] - Sets {@link Phaser.GameObjects.Group#createCallback}.
  * @property {?Phaser.Types.GameObjects.Group.GroupCallback} [removeCallback=null] - Sets {@link Phaser.GameObjects.Group#removeCallback}.

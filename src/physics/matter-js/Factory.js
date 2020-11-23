@@ -380,7 +380,7 @@ var Factory = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
-     * @param {(string|integer)} frame - An optional frame from the Texture this Game Object is rendering with. Set to `null` to skip this value.
+     * @param {(string|number)} frame - An optional frame from the Texture this Game Object is rendering with. Set to `null` to skip this value.
      * @param {number} x - The horizontal position of this composite in the world.
      * @param {number} y - The vertical position of this composite in the world.
      * @param {number} columns - The number of columns in the grid.
@@ -812,7 +812,7 @@ var Factory = new Class({
      * @param {number} x - The horizontal position of this Game Object in the world.
      * @param {number} y - The vertical position of this Game Object in the world.
      * @param {string} key - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
-     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with. Set to `null` to skip this value.
+     * @param {(string|number)} [frame] - An optional frame from the Texture this Game Object is rendering with. Set to `null` to skip this value.
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      *
      * @return {Phaser.Physics.Matter.Image} The Matter Image Game Object.
@@ -868,7 +868,7 @@ var Factory = new Class({
      * @param {number} x - The horizontal position of this Game Object in the world.
      * @param {number} y - The vertical position of this Game Object in the world.
      * @param {string} key - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
-     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with. Set to `null` to skip this value.
+     * @param {(string|number)} [frame] - An optional frame from the Texture this Game Object is rendering with. Set to `null` to skip this value.
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      *
      * @return {Phaser.Physics.Matter.Sprite} The Matter Sprite Game Object.

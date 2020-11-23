@@ -49,8 +49,8 @@ var Vector2 = require('../../math/Vector2');
  * @param {number} [x=0] - The horizontal position of this Game Object in the world.
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {string} [texture] - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager. If not given, `__DEFAULT` is used.
- * @param {(string|integer|null)} [frame] - An optional frame from the Texture this Game Object is rendering with.
- * @param {(integer|Phaser.Types.Math.Vector2Like[])} [points=2] - An array containing the vertices data for this Rope, or a number that indicates how many segments to split the texture frame into. If none is provided a simple quad is created. See `setPoints` to set this post-creation.
+ * @param {(string|number|null)} [frame] - An optional frame from the Texture this Game Object is rendering with.
+ * @param {(number|Phaser.Types.Math.Vector2Like[])} [points=2] - An array containing the vertices data for this Rope, or a number that indicates how many segments to split the texture frame into. If none is provided a simple quad is created. See `setPoints` to set this post-creation.
  * @param {boolean} [horizontal=true] - Should the vertices of this Rope be aligned horizontally (`true`), or vertically (`false`)?
  * @param {number[]} [colors] - An optional array containing the color data for this Rope. You should provide one color value per pair of vertices.
  * @param {number[]} [alphas] - An optional array containing the alpha data for this Rope. You should provide one alpha value per pair of vertices.
@@ -370,7 +370,7 @@ var Rope = new Class({
      * @method Phaser.GameObjects.Rope#setHorizontal
      * @since 3.23.0
      *
-     * @param {(integer|Phaser.Types.Math.Vector2Like[])} [points] - An array containing the vertices data for this Rope, or a number that indicates how many segments to split the texture frame into. If none is provided the current points length is used.
+     * @param {(number|Phaser.Types.Math.Vector2Like[])} [points] - An array containing the vertices data for this Rope, or a number that indicates how many segments to split the texture frame into. If none is provided the current points length is used.
      * @param {(number|number[])} [colors] - Either a single color value, or an array of values.
      * @param {(number|number[])} [alphas] - Either a single alpha value, or an array of values.
      *
@@ -399,7 +399,7 @@ var Rope = new Class({
      * @method Phaser.GameObjects.Rope#setVertical
      * @since 3.23.0
      *
-     * @param {(integer|Phaser.Types.Math.Vector2Like[])} [points] - An array containing the vertices data for this Rope, or a number that indicates how many segments to split the texture frame into. If none is provided the current points length is used.
+     * @param {(number|Phaser.Types.Math.Vector2Like[])} [points] - An array containing the vertices data for this Rope, or a number that indicates how many segments to split the texture frame into. If none is provided the current points length is used.
      * @param {(number|number[])} [colors] - Either a single color value, or an array of values.
      * @param {(number|number[])} [alphas] - Either a single alpha value, or an array of values.
      *
@@ -667,7 +667,7 @@ var Rope = new Class({
      * @method Phaser.GameObjects.Rope#setPoints
      * @since 3.23.0
      *
-     * @param {(integer|Phaser.Types.Math.Vector2Like[])} [points=2] - An array containing the vertices data for this Rope, or a number that indicates how many segments to split the texture frame into. If none is provided a simple quad is created.
+     * @param {(number|Phaser.Types.Math.Vector2Like[])} [points=2] - An array containing the vertices data for this Rope, or a number that indicates how many segments to split the texture frame into. If none is provided a simple quad is created.
      * @param {(number|number[])} [colors] - Either a single color value, or an array of values.
      * @param {(number|number[])} [alphas] - Either a single alpha value, or an array of values.
      *

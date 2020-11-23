@@ -24,7 +24,7 @@ var Vector3 = require('../../math/Vector3');
  * @param {Phaser.GameObjects.Layer3D} layer - A reference to the Layer3D instance that this model belongs to.
  * @param {number} verticesCount - The total number of vertices this model can contain.
  * @param {string|Phaser.Textures.Texture} [texture] - The key, or instance of the Texture this model will use to render with, as stored in the Texture Manager.
- * @param {string|integer} [frame] - An optional frame from the Texture this model is rendering with. Ensure your UV data also matches this frame.
+ * @param {string|number} [frame] - An optional frame from the Texture this model is rendering with. Ensure your UV data also matches this frame.
  * @param {number} [x=0] - The x position of the Model.
  * @param {number} [y=0] - The y position of the Model.
  * @param {number} [z=0] - The z position of the Model.

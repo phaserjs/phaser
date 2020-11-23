@@ -35,7 +35,7 @@ var BuildGameObjectAnimation = function (sprite, config)
     {
         //  { anims: {
         //              key: string
-        //              startFrame: [string|integer]
+        //              startFrame: [string|number]
         //              delay: [float]
         //              repeat: [integer]
         //              repeatDelay: [float]

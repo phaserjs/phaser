@@ -67,7 +67,7 @@ var _FLAG = 8; // 1000
  * @param {number} width - The width of the Game Object. If zero it will use the size of the texture frame.
  * @param {number} height - The height of the Game Object. If zero it will use the size of the texture frame.
  * @param {string} textureKey - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
- * @param {(string|integer)} [frameKey] - An optional frame from the Texture this Game Object is rendering with.
+ * @param {(string|number)} [frameKey] - An optional frame from the Texture this Game Object is rendering with.
  */
 var TileSprite = new Class({
 
@@ -295,7 +295,7 @@ var TileSprite = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The key of the texture to be used, as stored in the Texture Manager.
-     * @param {(string|integer)} [frame] - The name or index of the frame within the Texture.
+     * @param {(string|number)} [frame] - The name or index of the frame within the Texture.
      *
      * @return {this} This Game Object instance.
      */
@@ -316,7 +316,7 @@ var TileSprite = new Class({
      * @method Phaser.GameObjects.TileSprite#setFrame
      * @since 3.0.0
      *
-     * @param {(string|integer)} frame - The name or index of the frame within the Texture.
+     * @param {(string|number)} frame - The name or index of the frame within the Texture.
      *
      * @return {this} This Game Object instance.
      */

@@ -177,7 +177,7 @@ var Group = new Class({
          * A default texture frame to use when creating new group members.
          *
          * @name Phaser.GameObjects.Group#defaultFrame
-         * @type {(string|integer)}
+         * @type {(string|number)}
          * @since 3.0.0
          */
         this.defaultFrame = GetFastValue(config, 'defaultFrame', null);
@@ -279,7 +279,7 @@ var Group = new Class({
      * @param {number} [x=0] - The horizontal position of the new Game Object in the world.
      * @param {number} [y=0] - The vertical position of the new Game Object in the world.
      * @param {string} [key=defaultKey] - The texture key of the new Game Object.
-     * @param {(string|integer)} [frame=defaultFrame] - The texture frame of the new Game Object.
+     * @param {(string|number)} [frame=defaultFrame] - The texture frame of the new Game Object.
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of the new Game Object.
      * @param {boolean} [active=true] - The {@link Phaser.GameObjects.GameObject#active} state of the new Game Object.
      *
@@ -801,7 +801,7 @@ var Group = new Class({
      * @param {number} [x] - The horizontal position of the Game Object in the world.
      * @param {number} [y] - The vertical position of the Game Object in the world.
      * @param {string} [key=defaultKey] - The texture key assigned to a new Game Object (if one is created).
-     * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
+     * @param {(string|number)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
      *
      * @return {?any} The first matching group member, or a newly created member, or null.
@@ -827,7 +827,7 @@ var Group = new Class({
      * @param {number} [x] - The horizontal position of the Game Object in the world.
      * @param {number} [y] - The vertical position of the Game Object in the world.
      * @param {string} [key=defaultKey] - The texture key assigned to a new Game Object (if one is created).
-     * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
+     * @param {(string|number)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
      *
      * @return {?any} The first matching group member, or a newly created member, or null.
@@ -852,7 +852,7 @@ var Group = new Class({
      * @param {number} [x] - The horizontal position of the Game Object in the world.
      * @param {number} [y] - The vertical position of the Game Object in the world.
      * @param {string} [key=defaultKey] - The texture key assigned to a new Game Object (if one is created).
-     * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
+     * @param {(string|number)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
      *
      * @return {?any} The first matching group member, or a newly created member, or null.
@@ -878,7 +878,7 @@ var Group = new Class({
      * @param {number} [x] - The horizontal position of the Game Object in the world.
      * @param {number} [y] - The vertical position of the Game Object in the world.
      * @param {string} [key=defaultKey] - The texture key assigned to a new Game Object (if one is created).
-     * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
+     * @param {(string|number)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
      *
      * @return {?any} The first matching group member, or a newly created member, or null.
@@ -906,7 +906,7 @@ var Group = new Class({
      * @param {number} [x] - The horizontal position of the Game Object in the world.
      * @param {number} [y] - The vertical position of the Game Object in the world.
      * @param {string} [key=defaultKey] - The texture key assigned to a new Game Object (if one is created).
-     * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
+     * @param {(string|number)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
      *
      * @return {?any} The first matching group member, or a newly created member, or null.
@@ -1005,7 +1005,7 @@ var Group = new Class({
      * @param {number} [x] - The horizontal position of the Game Object in the world.
      * @param {number} [y] - The vertical position of the Game Object in the world.
      * @param {string} [key=defaultKey] - The texture key assigned to a new Game Object (if one is created).
-     * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
+     * @param {(string|number)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
      *
      * @return {?any} The first inactive group member, or a newly created member, or null.
@@ -1029,7 +1029,7 @@ var Group = new Class({
      * @param {number} [x] - The horizontal position of the Game Object in the world.
      * @param {number} [y] - The vertical position of the Game Object in the world.
      * @param {string} [key=defaultKey] - The texture key assigned to a new Game Object (if one is created).
-     * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
+     * @param {(string|number)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
      *
      * @return {any} The first active group member, or a newly created member, or null.
@@ -1054,7 +1054,7 @@ var Group = new Class({
      * @param {number} [x] - The horizontal position of the Game Object in the world.
      * @param {number} [y] - The vertical position of the Game Object in the world.
      * @param {string} [key=defaultKey] - The texture key assigned to a new Game Object (if one is created).
-     * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
+     * @param {(string|number)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
      *
      * @return {any} The first inactive group member, or a newly created member, or null.

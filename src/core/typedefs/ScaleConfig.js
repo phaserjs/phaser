@@ -2,9 +2,9 @@
  * @typedef {object} Phaser.Types.Core.ScaleConfig
  * @since 3.16.0
  *
- * @property {(integer|string)} [width=1024] - The base width of your game. Can be an integer or a string: '100%'. If a string it will only work if you have set a parent element that has a size.
- * @property {(integer|string)} [height=768] - The base height of your game. Can be an integer or a string: '100%'. If a string it will only work if you have set a parent element that has a size.
- * @property {(Phaser.Scale.ZoomType|integer)} [zoom=1] - The zoom value of the game canvas.
+ * @property {(number|string)} [width=1024] - The base width of your game. Can be an integer or a string: '100%'. If a string it will only work if you have set a parent element that has a size.
+ * @property {(number|string)} [height=768] - The base height of your game. Can be an integer or a string: '100%'. If a string it will only work if you have set a parent element that has a size.
+ * @property {(Phaser.Scale.ZoomType|number)} [zoom=1] - The zoom value of the game canvas.
  * @property {?(HTMLElement|string)} [parent] - The DOM element that will contain the game canvas, or its `id`. If undefined, or if the named element doesn't exist, the game canvas is inserted directly into the document body. If `null` no parent will be used and you are responsible for adding the canvas to your environment.
  * @property {boolean} [expandParent=true] - Is the Scale Manager allowed to adjust the CSS height property of the parent and/or document body to be 100%?
  * @property {Phaser.Scale.ScaleModeType} [mode=Phaser.Scale.ScaleModes.NONE] - The scale mode.

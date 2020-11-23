@@ -20,7 +20,7 @@ var GameObjectFactory = require('../GameObjectFactory');
  * @param {number} width - The width of the Game Object. If zero it will use the size of the texture frame.
  * @param {number} height - The height of the Game Object. If zero it will use the size of the texture frame.
  * @param {(string|Phaser.Textures.Texture)} texture - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
- * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
+ * @param {(string|number)} [frame] - An optional frame from the Texture this Game Object is rendering with.
  *
  * @return {Phaser.GameObjects.TileSprite} The Game Object that was created.
  */

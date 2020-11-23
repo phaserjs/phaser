@@ -19,7 +19,7 @@ var GameObjectFactory = require('../GameObjectFactory');
  * @param {number} [x] - The horizontal position of this Game Object in the world.
  * @param {number} [y] - The vertical position of this Game Object in the world.
  * @param {string|Phaser.Textures.Texture} [texture] - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
- * @param {string|integer} [frame] - An optional frame from the Texture this Game Object is rendering with.
+ * @param {string|number} [frame] - An optional frame from the Texture this Game Object is rendering with.
  * @param {number[]} [vertices] - The vertices array. Either `xy` pairs, or `xyz` if the `containsZ` parameter is `true`.
  * @param {number[]} [uvs] - The UVs pairs array.
  * @param {number[]} [indicies] - Optional vertex indicies array. If you don't have one, pass `null` or an empty array.

@@ -301,7 +301,7 @@ var KeyboardManager = new Class({
      * @method Phaser.Input.Keyboard.KeyboardManager#addCapture
      * @since 3.16.0
      *
-     * @param {(string|integer|integer[]|any[])} keycode - The Key Codes to enable capture for, preventing them reaching the browser.
+     * @param {(string|number|number[]|any[])} keycode - The Key Codes to enable capture for, preventing them reaching the browser.
      */
     addCapture: function (keycode)
     {
@@ -368,7 +368,7 @@ var KeyboardManager = new Class({
      * @method Phaser.Input.Keyboard.KeyboardManager#removeCapture
      * @since 3.16.0
      *
-     * @param {(string|integer|integer[]|any[])} keycode - The Key Codes to disable capture for, allowing them reaching the browser again.
+     * @param {(string|number|number[]|any[])} keycode - The Key Codes to disable capture for, allowing them reaching the browser again.
      */
     removeCapture: function (keycode)
     {

@@ -17,7 +17,7 @@ var Tilemap = require('./Tilemap');
  *
  * @function Phaser.Tilemaps.ParseToTilemap
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scene} scene - The Scene to which this Tilemap belongs.
  * @param {string} [key] - The key in the Phaser cache that corresponds to the loaded tilemap data.
  * @param {number} [tileWidth=32] - The width of a tile in pixels.
@@ -32,7 +32,7 @@ var Tilemap = require('./Tilemap');
  * the tile data doesn't need to change then setting this value to `true` will help with memory
  * consumption. However if your map is small or you need to update the tiles dynamically, then leave
  * the default value set.
- * 
+ *
  * @return {Phaser.Tilemaps.Tilemap}
  */
 var ParseToTilemap = function (scene, key, tileWidth, tileHeight, width, height, data, insertNull)

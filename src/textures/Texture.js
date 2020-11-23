@@ -16,7 +16,7 @@ var TEXTURE_MISSING_ERROR = 'Texture.frame missing: ';
  * The Frames represent the different areas of the Texture. For example a texture atlas
  * may have many Frames, one for each element within the atlas. Where-as a single image would have
  * just one frame, that encompasses the whole image.
- * 
+ *
  * Every Texture, no matter where it comes from, always has at least 1 frame called the `__BASE` frame.
  * This frame represents the entirety of the source image.
  *
@@ -115,7 +115,7 @@ var Texture = new Class({
 
         /**
          * The total number of Frames in this Texture, including the `__BASE` frame.
-         * 
+         *
          * A Texture will always contain at least 1 frame because every Texture contains a `__BASE` frame by default,
          * in addition to any extra frames that have been added to it, such as when parsing a Sprite Sheet or Texture Atlas.
          *
@@ -137,13 +137,13 @@ var Texture = new Class({
      * Adds a new Frame to this Texture.
      *
      * A Frame is a rectangular region of a TextureSource with a unique index or string-based key.
-     * 
+     *
      * The name given must be unique within this Texture. If it already exists, this method will return `null`.
      *
      * @method Phaser.Textures.Texture#add
      * @since 3.0.0
      *
-     * @param {(integer|string)} name - The name of this Frame. The name is unique within the Texture.
+     * @param {(number|string)} name - The name of this Frame. The name is unique within the Texture.
      * @param {number} sourceIndex - The index of the TextureSource that this Frame is a part of.
      * @param {number} x - The x coordinate of the top-left of this Frame.
      * @param {number} y - The y coordinate of the top-left of this Frame.
@@ -179,7 +179,7 @@ var Texture = new Class({
 
     /**
      * Removes the given Frame from this Texture. The Frame is destroyed immediately.
-     * 
+     *
      * Any Game Objects using this Frame should stop using it _before_ you remove it,
      * as it does not happen automatically.
      *
@@ -231,7 +231,7 @@ var Texture = new Class({
      * @method Phaser.Textures.Texture#get
      * @since 3.0.0
      *
-     * @param {(string|integer)} [name] - The string-based name, or integer based index, of the Frame to get from this Texture.
+     * @param {(string|number)} [name] - The string-based name, or integer based index, of the Frame to get from this Texture.
      *
      * @return {Phaser.Textures.Frame} The Texture Frame.
      */
@@ -356,7 +356,7 @@ var Texture = new Class({
      * @method Phaser.Textures.Texture#getSourceImage
      * @since 3.0.0
      *
-     * @param {(string|integer)} [name] - The string-based name, or integer based index, of the Frame to get from this Texture.
+     * @param {(string|number)} [name] - The string-based name, or integer based index, of the Frame to get from this Texture.
      *
      * @return {(HTMLImageElement|HTMLCanvasElement|Phaser.GameObjects.RenderTexture)} The DOM Image, Canvas Element or Render Texture.
      */
@@ -390,7 +390,7 @@ var Texture = new Class({
      * @method Phaser.Textures.Texture#getDataSourceImage
      * @since 3.7.0
      *
-     * @param {(string|integer)} [name] - The string-based name, or integer based index, of the Frame to get from this Texture.
+     * @param {(string|number)} [name] - The string-based name, or integer based index, of the Frame to get from this Texture.
      *
      * @return {(HTMLImageElement|HTMLCanvasElement)} The DOM Image or Canvas Element.
      */
@@ -435,7 +435,7 @@ var Texture = new Class({
         {
             data = [ data ];
         }
-        
+
         for (var i = 0; i < data.length; i++)
         {
             var source = this.source[i];

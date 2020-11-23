@@ -795,7 +795,7 @@ var RenderTexture = new Class({
      * @since 3.12.0
      *
      * @param {string} key - The key of the texture to be used, as stored in the Texture Manager.
-     * @param {(string|integer)} [frame] - The name or index of the frame within the Texture.
+     * @param {(string|number)} [frame] - The name or index of the frame within the Texture.
      * @param {number} [x=0] - The x position to draw the frame at.
      * @param {number} [y=0] - The y position to draw the frame at.
      * @param {number} [alpha] - The alpha to use. If not specified it uses the `globalAlpha` property.
@@ -1007,7 +1007,7 @@ var RenderTexture = new Class({
      * @since 3.12.0
      *
      * @param {string} key - The key of the texture to be used, as stored in the Texture Manager.
-     * @param {(string|integer)} [frame] - The name or index of the frame within the Texture.
+     * @param {(string|number)} [frame] - The name or index of the frame within the Texture.
      * @param {number} [x=0] - The x position to offset the Game Object by.
      * @param {number} [y=0] - The y position to offset the Game Object by.
      * @param {number} [alpha] - The alpha to use. If not specified it uses the `globalAlpha` property.

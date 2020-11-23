@@ -1010,7 +1010,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setFrame
      * @since 3.0.0
      *
-     * @param {(array|string|integer|Phaser.Types.GameObjects.Particles.ParticleEmitterFrameConfig)} frames - One or more texture frames, or a configuration object.
+     * @param {(array|string|number|Phaser.Types.GameObjects.Particles.ParticleEmitterFrameConfig)} frames - One or more texture frames, or a configuration object.
      * @param {boolean} [pickRandom=true] - Whether frames should be assigned at random from `frames`.
      * @param {number} [quantity=1] - The number of consecutive particles that will receive each frame.
      *
