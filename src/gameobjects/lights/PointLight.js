@@ -179,9 +179,9 @@ var PointLight = new Class({
     {
         var pipeline = renderer.pipelines.set(src.pipeline);
 
-        var camMatrix = pipeline._tempMatrix1;
-        var lightMatrix = pipeline._tempMatrix2;
-        var calcMatrix = pipeline._tempMatrix3;
+        var camMatrix = pipeline.tempMatrix1;
+        var lightMatrix = pipeline.tempMatrix2;
+        var calcMatrix = pipeline.tempMatrix3;
 
         var width = src.width;
         var height = src.height;

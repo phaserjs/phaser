@@ -7,6 +7,7 @@
 
 var Class = require('../../../utils/Class');
 var GetFastValue = require('../../../utils/object/GetFastValue');
+var LightShaderSourceFS = require('../shaders/Light-frag.js');
 var PointLightShaderSourceFS = require('../shaders/PointLight-frag.js');
 var PointLightShaderSourceVS = require('../shaders/PointLight-vert.js');
 var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
@@ -73,11 +74,22 @@ var LightPipeline = new Class({
     {
         LIGHT_COUNT = config.game.renderer.config.maxLights;
 
-        // var fragmentShaderSource = GetFastValue(config, 'fragShader', ShaderSourceFS);
-        // config.fragShader = fragmentShaderSource.replace('%LIGHT_COUNT%', LIGHT_COUNT.toString());
+        config.shaders = GetFastValue(config, 'shaders', [
+            {
+                name: 'PointLight',
+                fragShader: PointLightShaderSourceFS,
+                vertShader: PointLightShaderSourceVS,
+                uniforms: [
+                    'uProjectionMatrix',
+                    'uResolution'
+                ]
+            },
+            {
+                name: 'Light',
+                fragShader: LightShaderSourceFS.replace('%LIGHT_COUNT%', LIGHT_COUNT.toString())
+            }
+        ]);
 
-        config.fragShader = GetFastValue(config, 'fragShader', PointLightShaderSourceFS);
-        config.vertShader = GetFastValue(config, 'vertShader', PointLightShaderSourceVS);
         config.attributes = GetFastValue(config, 'attributes', [
             {
                 name: 'inPosition',
@@ -100,42 +112,35 @@ var LightPipeline = new Class({
                 type: WEBGL_CONST.FLOAT
             }
         ]);
-        config.uniforms = GetFastValue(config, 'uniforms', [
-            'uProjectionMatrix',
-            'uResolution'
-        ]);
 
         WebGLPipeline.call(this, config);
 
         /**
          * A temporary Transform Matrix, re-used internally during batching.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#_tempMatrix1
-         * @private
+         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#tempMatrix1
          * @type {Phaser.GameObjects.Components.TransformMatrix}
          * @since 3.11.0
          */
-        this._tempMatrix1 = new TransformMatrix();
+        this.tempMatrix1 = new TransformMatrix();
 
         /**
          * A temporary Transform Matrix, re-used internally during batching.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#_tempMatrix2
-         * @private
+         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#tempMatrix2
          * @type {Phaser.GameObjects.Components.TransformMatrix}
          * @since 3.11.0
          */
-        this._tempMatrix2 = new TransformMatrix();
+        this.tempMatrix2 = new TransformMatrix();
 
         /**
          * A temporary Transform Matrix, re-used internally during batching.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#_tempMatrix3
-         * @private
+         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#tempMatrix3
          * @type {Phaser.GameObjects.Components.TransformMatrix}
          * @since 3.11.0
          */
-        this._tempMatrix3 = new TransformMatrix();
+        this.tempMatrix3 = new TransformMatrix();
 
         /**
          * Inverse rotation matrix for normal map rotations.
@@ -171,6 +176,9 @@ var LightPipeline = new Class({
         this.lightCount = 0;
 
         this.forceZero = true;
+
+        this.pointLightShader;
+        this.lightShader;
     },
 
     /**
@@ -179,7 +187,7 @@ var LightPipeline = new Class({
      * By this stage all Game level systems are now in place and you can perform any final
      * tasks that the pipeline may need that relied on game systems such as the Texture Manager.
      *
-     * @method Phaser.Renderer.WebGL.LightPipeline#boot
+     * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#boot
      * @since 3.11.0
      */
     boot: function ()
@@ -198,7 +206,47 @@ var LightPipeline = new Class({
 
         this.defaultNormalMap = { glTexture: tempTexture };
 
-        return this;
+        this.pointLightShader = this.shaders[0];
+        this.lightShader = this.shaders[1];
+    },
+
+    /**
+     * Adds a single vertex to the current vertex buffer and increments the
+     * `vertexCount` property by 1.
+     *
+     * This method is called directly by `batchTri` and `batchQuad`.
+     *
+     * It does not perform any batch limit checking itself, so if you need to call
+     * this method directly, do so in the same way that `batchQuad` does, for example.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#batchVert
+     * @since 3.50.0
+     *
+     * @param {number} x - The vertex x position.
+     * @param {number} y - The vertex y position.
+     * @param {number} u - UV u value.
+     * @param {number} v - UV v value.
+     * @param {integer} unit - Texture unit to which the texture needs to be bound.
+     * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
+     * @param {number} tint - The tint color value.
+     */
+    batchVert: function (x, y, lightX, lightY, radius, r, g, b, a)
+    {
+        var vertexViewF32 = this.vertexViewF32;
+
+        var vertexOffset = (this.vertexCount * this.currentShader.vertexComponentCount) - 1;
+
+        vertexViewF32[++vertexOffset] = x;
+        vertexViewF32[++vertexOffset] = y;
+        vertexViewF32[++vertexOffset] = lightX;
+        vertexViewF32[++vertexOffset] = lightY;
+        vertexViewF32[++vertexOffset] = radius;
+        vertexViewF32[++vertexOffset] = r;
+        vertexViewF32[++vertexOffset] = g;
+        vertexViewF32[++vertexOffset] = b;
+        vertexViewF32[++vertexOffset] = a;
+
+        this.vertexCount++;
     },
 
     batchLight: function (light, camera, x0, y0, x1, y1, x2, y2, x3, y3, lightX, lightY)
@@ -217,71 +265,12 @@ var LightPipeline = new Class({
             this.flush();
         }
 
-        var vertexViewF32 = this.vertexViewF32;
-
-        var vertexOffset = (this.vertexCount * this.currentShader.vertexComponentCount) - 1;
-
-        vertexViewF32[++vertexOffset] = x0;
-        vertexViewF32[++vertexOffset] = y0;
-        vertexViewF32[++vertexOffset] = lightX;
-        vertexViewF32[++vertexOffset] = lightY;
-        vertexViewF32[++vertexOffset] = radius;
-        vertexViewF32[++vertexOffset] = r;
-        vertexViewF32[++vertexOffset] = g;
-        vertexViewF32[++vertexOffset] = b;
-        vertexViewF32[++vertexOffset] = a;
-
-        vertexViewF32[++vertexOffset] = x1;
-        vertexViewF32[++vertexOffset] = y1;
-        vertexViewF32[++vertexOffset] = lightX;
-        vertexViewF32[++vertexOffset] = lightY;
-        vertexViewF32[++vertexOffset] = radius;
-        vertexViewF32[++vertexOffset] = r;
-        vertexViewF32[++vertexOffset] = g;
-        vertexViewF32[++vertexOffset] = b;
-        vertexViewF32[++vertexOffset] = a;
-
-        vertexViewF32[++vertexOffset] = x2;
-        vertexViewF32[++vertexOffset] = y2;
-        vertexViewF32[++vertexOffset] = lightX;
-        vertexViewF32[++vertexOffset] = lightY;
-        vertexViewF32[++vertexOffset] = radius;
-        vertexViewF32[++vertexOffset] = r;
-        vertexViewF32[++vertexOffset] = g;
-        vertexViewF32[++vertexOffset] = b;
-        vertexViewF32[++vertexOffset] = a;
-
-        vertexViewF32[++vertexOffset] = x0;
-        vertexViewF32[++vertexOffset] = y0;
-        vertexViewF32[++vertexOffset] = lightX;
-        vertexViewF32[++vertexOffset] = lightY;
-        vertexViewF32[++vertexOffset] = radius;
-        vertexViewF32[++vertexOffset] = r;
-        vertexViewF32[++vertexOffset] = g;
-        vertexViewF32[++vertexOffset] = b;
-        vertexViewF32[++vertexOffset] = a;
-
-        vertexViewF32[++vertexOffset] = x2;
-        vertexViewF32[++vertexOffset] = y2;
-        vertexViewF32[++vertexOffset] = lightX;
-        vertexViewF32[++vertexOffset] = lightY;
-        vertexViewF32[++vertexOffset] = radius;
-        vertexViewF32[++vertexOffset] = r;
-        vertexViewF32[++vertexOffset] = g;
-        vertexViewF32[++vertexOffset] = b;
-        vertexViewF32[++vertexOffset] = a;
-
-        vertexViewF32[++vertexOffset] = x3;
-        vertexViewF32[++vertexOffset] = y3;
-        vertexViewF32[++vertexOffset] = lightX;
-        vertexViewF32[++vertexOffset] = lightY;
-        vertexViewF32[++vertexOffset] = radius;
-        vertexViewF32[++vertexOffset] = r;
-        vertexViewF32[++vertexOffset] = g;
-        vertexViewF32[++vertexOffset] = b;
-        vertexViewF32[++vertexOffset] = a;
-
-        this.vertexCount += 6;
+        this.batchVert(x0, y0, lightX, lightY, radius, r, g, b, a);
+        this.batchVert(x1, y1, lightX, lightY, radius, r, g, b, a);
+        this.batchVert(x2, y2, lightX, lightY, radius, r, g, b, a);
+        this.batchVert(x0, y0, lightX, lightY, radius, r, g, b, a);
+        this.batchVert(x2, y2, lightX, lightY, radius, r, g, b, a);
+        this.batchVert(x3, y3, lightX, lightY, radius, r, g, b, a);
     },
 
     /**
@@ -300,67 +289,6 @@ var LightPipeline = new Class({
         this.set1i('uNormSampler', 1);
         this.set2f('uResolution', this.width / 2, this.height / 2);
     },
-
-    /**
-     * Uploads the vertex data and emits a draw call for the current batch of vertices.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#flush
-     * @since 3.0.0
-     *
-     * @return {this} This WebGLPipeline instance.
-    flush: function ()
-    {
-        var gl = this.gl;
-        var vertexCount = this.vertexCount;
-        var vertexSize = this.vertexSize;
-
-        if (vertexCount > 0)
-        {
-            if (vertexCount === this.vertexCapacity)
-            {
-                gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.DYNAMIC_DRAW);
-            }
-            else
-            {
-                gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
-            }
-
-            gl.drawArrays(this.topology, 0, vertexCount);
-
-            this.vertexCount = 0;
-        }
-
-        return this;
-    },
-     */
-
-    /**
-     * Called every time the pipeline is bound by the renderer.
-     * Sets the shader program, vertex buffer and other resources.
-     * Should only be called when changing pipeline.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#bind
-     * @since 3.50.0
-     *
-     * @param {boolean} [reset=false] - Should the pipeline be fully re-bound after a renderer pipeline clear?
-     *
-     * @return {this} This WebGLPipeline instance.
-    bind: function (reset)
-    {
-        if (reset === undefined) { reset = false; }
-
-        WebGLPipeline.prototype.bind.call(this, reset);
-
-        // var renderer = this.renderer;
-        // var program = this.program;
-
-        // renderer.setInt1(program, 'uMainSampler', 0);
-        // renderer.setInt1(program, 'uNormSampler', 1);
-        // renderer.setFloat2(program, 'uResolution', this.width / 2, this.height / 2);
-
-        return this;
-    },
-     */
 
     /**
      * This function sets all the needed resources for each camera pass.
