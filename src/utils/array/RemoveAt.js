@@ -17,7 +17,7 @@ var SpliceOne = require('./SpliceOne');
  * @since 3.4.0
  *
  * @param {array} array - The array to be modified.
- * @param {integer} index - The array index to remove the item from. The index must be in bounds or it will throw an error.
+ * @param {number} index - The array index to remove the item from. The index must be in bounds or it will throw an error.
  * @param {function} [callback] - A callback to be invoked for the item removed from the array.
  * @param {object} [context] - The context in which the callback is invoked.
  *

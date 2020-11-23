@@ -115,10 +115,10 @@ var Tint = {
      * @webglOnly
      * @since 3.0.0
      *
-     * @param {integer} [topLeft=0xffffff] - The tint being applied to the top-left of the Game Object. If no other values are given this value is applied evenly, tinting the whole Game Object.
-     * @param {integer} [topRight] - The tint being applied to the top-right of the Game Object.
-     * @param {integer} [bottomLeft] - The tint being applied to the bottom-left of the Game Object.
-     * @param {integer} [bottomRight] - The tint being applied to the bottom-right of the Game Object.
+     * @param {number} [topLeft=0xffffff] - The tint being applied to the top-left of the Game Object. If no other values are given this value is applied evenly, tinting the whole Game Object.
+     * @param {number} [topRight] - The tint being applied to the top-right of the Game Object.
+     * @param {number} [bottomLeft] - The tint being applied to the bottom-left of the Game Object.
+     * @param {number} [bottomRight] - The tint being applied to the bottom-right of the Game Object.
      *
      * @return {this} This Game Object instance.
      */
@@ -164,10 +164,10 @@ var Tint = {
      * @webglOnly
      * @since 3.11.0
      *
-     * @param {integer} [topLeft=0xffffff] - The tint being applied to the top-left of the Game Object. If not other values are given this value is applied evenly, tinting the whole Game Object.
-     * @param {integer} [topRight] - The tint being applied to the top-right of the Game Object.
-     * @param {integer} [bottomLeft] - The tint being applied to the bottom-left of the Game Object.
-     * @param {integer} [bottomRight] - The tint being applied to the bottom-right of the Game Object.
+     * @param {number} [topLeft=0xffffff] - The tint being applied to the top-left of the Game Object. If not other values are given this value is applied evenly, tinting the whole Game Object.
+     * @param {number} [topRight] - The tint being applied to the top-right of the Game Object.
+     * @param {number} [bottomLeft] - The tint being applied to the bottom-left of the Game Object.
+     * @param {number} [bottomRight] - The tint being applied to the bottom-right of the Game Object.
      *
      * @return {this} This Game Object instance.
      */
@@ -185,7 +185,7 @@ var Tint = {
      * This property is a setter-only. Use the properties `tintTopLeft` etc to read the current tint value.
      *
      * @name Phaser.GameObjects.Components.Tint#tint
-     * @type {integer}
+     * @type {number}
      * @webglOnly
      * @since 3.0.0
      */

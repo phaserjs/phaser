@@ -10,7 +10,7 @@ var INPUT_CONST = {
      * The mouse pointer is being held down.
      * 
      * @name Phaser.Input.MOUSE_DOWN
-     * @type {integer}
+     * @type {number}
      * @since 3.10.0
      */
     MOUSE_DOWN: 0,
@@ -19,7 +19,7 @@ var INPUT_CONST = {
      * The mouse pointer is being moved.
      * 
      * @name Phaser.Input.MOUSE_MOVE
-     * @type {integer}
+     * @type {number}
      * @since 3.10.0
      */
     MOUSE_MOVE: 1,
@@ -28,7 +28,7 @@ var INPUT_CONST = {
      * The mouse pointer is released.
      * 
      * @name Phaser.Input.MOUSE_UP
-     * @type {integer}
+     * @type {number}
      * @since 3.10.0
      */
     MOUSE_UP: 2,
@@ -37,7 +37,7 @@ var INPUT_CONST = {
      * A touch pointer has been started.
      * 
      * @name Phaser.Input.TOUCH_START
-     * @type {integer}
+     * @type {number}
      * @since 3.10.0
      */
     TOUCH_START: 3,
@@ -46,7 +46,7 @@ var INPUT_CONST = {
      * A touch pointer has been started.
      * 
      * @name Phaser.Input.TOUCH_MOVE
-     * @type {integer}
+     * @type {number}
      * @since 3.10.0
      */
     TOUCH_MOVE: 4,
@@ -55,7 +55,7 @@ var INPUT_CONST = {
      * A touch pointer has been started.
      * 
      * @name Phaser.Input.TOUCH_END
-     * @type {integer}
+     * @type {number}
      * @since 3.10.0
      */
     TOUCH_END: 5,
@@ -64,7 +64,7 @@ var INPUT_CONST = {
      * The pointer lock has changed.
      * 
      * @name Phaser.Input.POINTER_LOCK_CHANGE
-     * @type {integer}
+     * @type {number}
      * @since 3.10.0
      */
     POINTER_LOCK_CHANGE: 6,
@@ -73,7 +73,7 @@ var INPUT_CONST = {
      * A touch pointer has been been cancelled by the browser.
      * 
      * @name Phaser.Input.TOUCH_CANCEL
-     * @type {integer}
+     * @type {number}
      * @since 3.15.0
      */
     TOUCH_CANCEL: 7,
@@ -82,7 +82,7 @@ var INPUT_CONST = {
      * The mouse wheel changes.
      * 
      * @name Phaser.Input.MOUSE_WHEEL
-     * @type {integer}
+     * @type {number}
      * @since 3.18.0
      */
     MOUSE_WHEEL: 8

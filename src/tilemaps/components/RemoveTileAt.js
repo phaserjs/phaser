@@ -15,8 +15,8 @@ var CalculateFacesAt = require('./CalculateFacesAt');
  * @function Phaser.Tilemaps.Components.RemoveTileAt
  * @since 3.0.0
  *
- * @param {integer} tileX - The x coordinate.
- * @param {integer} tileY - The y coordinate.
+ * @param {number} tileX - The x coordinate.
+ * @param {number} tileY - The y coordinate.
  * @param {boolean} [replaceWithNull=true] - If true, this will replace the tile at the specified location with null instead of a Tile with an index of -1.
  * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.

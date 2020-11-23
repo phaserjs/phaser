@@ -90,7 +90,7 @@ var WebGLShader = new Class({
          * The amount of vertex attribute components of 32 bit length.
          *
          * @name Phaser.Renderer.WebGL.WebGLShader#vertexComponentCount
-         * @type {integer}
+         * @type {number}
          * @since 3.50.0
          */
         this.vertexComponentCount = 0;
@@ -113,7 +113,7 @@ var WebGLShader = new Class({
          * This is calculated automatically during the `createAttributes` method.
          *
          * @name Phaser.Renderer.WebGL.WebGLShader#vertexSize
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @since 3.50.0
          */
@@ -845,7 +845,7 @@ var WebGLShader = new Class({
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
-     * @param {integer} x - The new value of the `int` uniform.
+     * @param {number} x - The new value of the `int` uniform.
      *
      * @return {this} This WebGLShader instance.
      */
@@ -867,8 +867,8 @@ var WebGLShader = new Class({
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
-     * @param {integer} x - The new X component of the `ivec2` uniform.
-     * @param {integer} y - The new Y component of the `ivec2` uniform.
+     * @param {number} x - The new X component of the `ivec2` uniform.
+     * @param {number} y - The new Y component of the `ivec2` uniform.
      *
      * @return {this} This WebGLShader instance.
      */
@@ -890,9 +890,9 @@ var WebGLShader = new Class({
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
-     * @param {integer} x - The new X component of the `ivec3` uniform.
-     * @param {integer} y - The new Y component of the `ivec3` uniform.
-     * @param {integer} z - The new Z component of the `ivec3` uniform.
+     * @param {number} x - The new X component of the `ivec3` uniform.
+     * @param {number} y - The new Y component of the `ivec3` uniform.
+     * @param {number} z - The new Z component of the `ivec3` uniform.
      *
      * @return {this} This WebGLShader instance.
      */
@@ -914,10 +914,10 @@ var WebGLShader = new Class({
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
-     * @param {integer} x - X component of the uniform
-     * @param {integer} y - Y component of the uniform
-     * @param {integer} z - Z component of the uniform
-     * @param {integer} w - W component of the uniform
+     * @param {number} x - X component of the uniform
+     * @param {number} y - Y component of the uniform
+     * @param {number} z - Z component of the uniform
+     * @param {number} w - W component of the uniform
      *
      * @return {this} This WebGLShader instance.
      */

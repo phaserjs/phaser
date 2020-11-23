@@ -325,8 +325,8 @@ var MultiPipeline = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - Source GameObject.
      * @param {WebGLTexture} texture - Raw WebGLTexture associated with the quad.
-     * @param {integer} textureWidth - Real texture width.
-     * @param {integer} textureHeight - Real texture height.
+     * @param {number} textureWidth - Real texture width.
+     * @param {number} textureHeight - Real texture height.
      * @param {number} srcX - X coordinate of the quad.
      * @param {number} srcY - Y coordinate of the quad.
      * @param {number} srcWidth - Width of the quad.
@@ -344,10 +344,10 @@ var MultiPipeline = new Class({
      * @param {number} frameY - Y coordinate of the texture frame.
      * @param {number} frameWidth - Width of the texture frame.
      * @param {number} frameHeight - Height of the texture frame.
-     * @param {integer} tintTL - Tint for top left.
-     * @param {integer} tintTR - Tint for top right.
-     * @param {integer} tintBL - Tint for bottom left.
-     * @param {integer} tintBR - Tint for bottom right.
+     * @param {number} tintTL - Tint for top left.
+     * @param {number} tintTR - Tint for top right.
+     * @param {number} tintBL - Tint for bottom left.
+     * @param {number} tintBR - Tint for bottom right.
      * @param {number} tintEffect - The tint effect.
      * @param {number} uOffset - Horizontal offset on texture coordinate.
      * @param {number} vOffset - Vertical offset on texture coordinate.

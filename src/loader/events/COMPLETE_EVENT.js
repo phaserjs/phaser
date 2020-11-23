@@ -16,7 +16,7 @@
  * @since 3.0.0
  * 
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader Plugin that dispatched this event.
- * @param {integer} totalComplete - The total number of files that successfully loaded.
- * @param {integer} totalFailed - The total number of files that failed to load.
+ * @param {number} totalComplete - The total number of files that successfully loaded.
+ * @param {number} totalFailed - The total number of files that failed to load.
  */
 module.exports = 'complete';

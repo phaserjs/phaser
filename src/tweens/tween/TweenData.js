@@ -15,7 +15,7 @@
  * @since 3.0.0
  *
  * @param {any} target - The target to tween.
- * @param {integer} index - The target index within the Tween targets array.
+ * @param {number} index - The target index within the Tween targets array.
  * @param {string} key - The property of the target to tween.
  * @param {function} getEnd - What the property will be at the END of the Tween.
  * @param {function} getStart - What the property will be at the START of the Tween.

@@ -464,7 +464,7 @@ var ParticleEmitter = new Class({
          * 0 means unlimited.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#maxParticles
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -641,7 +641,7 @@ var ParticleEmitter = new Class({
          * The blend mode of this emitter's particles.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#blendMode
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          * @see Phaser.GameObjects.Particles.ParticleEmitter#setBlendMode
          */
@@ -685,7 +685,7 @@ var ParticleEmitter = new Class({
          * The current texture frame, as an index of {@link Phaser.GameObjects.Particles.ParticleEmitter#frames}.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#currentFrame
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          * @see Phaser.GameObjects.Particles.ParticleEmitter#setFrame
@@ -707,7 +707,7 @@ var ParticleEmitter = new Class({
          * The number of consecutive particles that receive a single texture frame (per frame cycle).
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#frameQuantity
-         * @type {integer}
+         * @type {number}
          * @default 1
          * @since 3.0.0
          * @see Phaser.GameObjects.Particles.ParticleEmitter#setFrame
@@ -749,7 +749,7 @@ var ParticleEmitter = new Class({
          * Counts up to {@link Phaser.GameObjects.Particles.ParticleEmitter#frameQuantity}.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#_frameCounter
-         * @type {integer}
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -1012,7 +1012,7 @@ var ParticleEmitter = new Class({
      *
      * @param {(array|string|integer|Phaser.Types.GameObjects.Particles.ParticleEmitterFrameConfig)} frames - One or more texture frames, or a configuration object.
      * @param {boolean} [pickRandom=true] - Whether frames should be assigned at random from `frames`.
-     * @param {integer} [quantity=1] - The number of consecutive particles that will receive each frame.
+     * @param {number} [quantity=1] - The number of consecutive particles that will receive each frame.
      *
      * @return {this} This Particle Emitter.
      */
@@ -1534,7 +1534,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#reserve
      * @since 3.0.0
      *
-     * @param {integer} particleCount - The number of particles to create.
+     * @param {number} particleCount - The number of particles to create.
      *
      * @return {this} This Particle Emitter.
      */
@@ -1556,7 +1556,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#getAliveParticleCount
      * @since 3.0.0
      *
-     * @return {integer} The number of particles with `active=true`.
+     * @return {number} The number of particles with `active=true`.
      */
     getAliveParticleCount: function ()
     {
@@ -1569,7 +1569,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#getDeadParticleCount
      * @since 3.0.0
      *
-     * @return {integer} The number of particles with `active=false`.
+     * @return {number} The number of particles with `active=false`.
      */
     getDeadParticleCount: function ()
     {
@@ -1582,7 +1582,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#getParticleCount
      * @since 3.0.0
      *
-     * @return {integer} The number of particles, including both alive and dead.
+     * @return {number} The number of particles, including both alive and dead.
      */
     getParticleCount: function ()
     {
@@ -1864,7 +1864,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#explode
      * @since 3.0.0
      *
-     * @param {integer} count - The amount of Particles to emit.
+     * @param {number} count - The amount of Particles to emit.
      * @param {number} x - The x coordinate to emit the Particles from.
      * @param {number} y - The y coordinate to emit the Particles from.
      *
@@ -1885,7 +1885,7 @@ var ParticleEmitter = new Class({
      *
      * @param {number} [x=this.x] - The x coordinate to emit the Particles from.
      * @param {number} [y=this.x] - The y coordinate to emit the Particles from.
-     * @param {integer} [count=this.quantity] - The number of Particles to emit.
+     * @param {number} [count=this.quantity] - The number of Particles to emit.
      *
      * @return {Phaser.GameObjects.Particles.Particle} The most recently emitted Particle.
      */
@@ -1900,7 +1900,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#emitParticle
      * @since 3.0.0
      *
-     * @param {integer} [count=this.quantity] - The number of Particles to emit.
+     * @param {number} [count=this.quantity] - The number of Particles to emit.
      * @param {number} [x=this.x] - The x coordinate to emit the Particles from.
      * @param {number} [y=this.x] - The y coordinate to emit the Particles from.
      *
@@ -1962,7 +1962,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#preUpdate
      * @since 3.0.0
      *
-     * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
+     * @param {number} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
      * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
     preUpdate: function (time, delta)
@@ -2058,7 +2058,7 @@ var ParticleEmitter = new Class({
      * @param {object} a - The first particle.
      * @param {object} b - The second particle.
      *
-     * @return {integer} The difference of a and b's y coordinates.
+     * @return {number} The difference of a and b's y coordinates.
      */
     depthSortCallback: function (a, b)
     {

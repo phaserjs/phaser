@@ -41,7 +41,7 @@ var Line = new Class({
          * Used for fast type comparisons.
          *
          * @name Phaser.Geom.Line#type
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @since 3.19.0
          */
@@ -115,8 +115,8 @@ var Line = new Class({
      *
      * @generic {Phaser.Geom.Point[]} O - [output,$return]
      *
-     * @param {integer} quantity - The number of points to place on the line. Set to `0` to use `stepRate` instead.
-     * @param {integer} [stepRate] - The distance between each point on the line. When set, `quantity` is implied and should be set to `0`.
+     * @param {number} quantity - The number of points to place on the line. Set to `0` to use `stepRate` instead.
+     * @param {number} [stepRate] - The distance between each point on the line. When set, `quantity` is implied and should be set to `0`.
      * @param {(array|Phaser.Geom.Point[])} [output] - An optional array of Points, or point-like objects, to store the coordinates of the points on the line.
      *
      * @return {(array|Phaser.Geom.Point[])} An array of Points, or point-like objects, containing the coordinates of the points on the line.

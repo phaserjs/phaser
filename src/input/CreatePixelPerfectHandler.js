@@ -13,7 +13,7 @@
  * @since 3.10.0
  *
  * @param {Phaser.Textures.TextureManager} textureManager - A reference to the Texture Manager.
- * @param {integer} alphaTolerance - The alpha level that the pixel should be above to be included as a successful interaction.
+ * @param {number} alphaTolerance - The alpha level that the pixel should be above to be included as a successful interaction.
  *
  * @return {function} The new Pixel Perfect Handler function.
  */

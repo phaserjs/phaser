@@ -278,10 +278,10 @@ var Camera = new Class({
      * @fires Phaser.Cameras.Scene2D.Events#FADE_IN_COMPLETE
      * @since 3.3.0
      *
-     * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
-     * @param {integer} [red=0] - The amount to fade the red channel towards. A value between 0 and 255.
-     * @param {integer} [green=0] - The amount to fade the green channel towards. A value between 0 and 255.
-     * @param {integer} [blue=0] - The amount to fade the blue channel towards. A value between 0 and 255.
+     * @param {number} [duration=1000] - The duration of the effect in milliseconds.
+     * @param {number} [red=0] - The amount to fade the red channel towards. A value between 0 and 255.
+     * @param {number} [green=0] - The amount to fade the green channel towards. A value between 0 and 255.
+     * @param {number} [blue=0] - The amount to fade the blue channel towards. A value between 0 and 255.
      * @param {function} [callback] - This callback will be invoked every frame for the duration of the effect.
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
@@ -302,10 +302,10 @@ var Camera = new Class({
      * @fires Phaser.Cameras.Scene2D.Events#FADE_OUT_COMPLETE
      * @since 3.3.0
      *
-     * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
-     * @param {integer} [red=0] - The amount to fade the red channel towards. A value between 0 and 255.
-     * @param {integer} [green=0] - The amount to fade the green channel towards. A value between 0 and 255.
-     * @param {integer} [blue=0] - The amount to fade the blue channel towards. A value between 0 and 255.
+     * @param {number} [duration=1000] - The duration of the effect in milliseconds.
+     * @param {number} [red=0] - The amount to fade the red channel towards. A value between 0 and 255.
+     * @param {number} [green=0] - The amount to fade the green channel towards. A value between 0 and 255.
+     * @param {number} [blue=0] - The amount to fade the blue channel towards. A value between 0 and 255.
      * @param {function} [callback] - This callback will be invoked every frame for the duration of the effect.
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
@@ -325,10 +325,10 @@ var Camera = new Class({
      * @fires Phaser.Cameras.Scene2D.Events#FADE_IN_COMPLETE
      * @since 3.5.0
      *
-     * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
-     * @param {integer} [red=0] - The amount to fade the red channel towards. A value between 0 and 255.
-     * @param {integer} [green=0] - The amount to fade the green channel towards. A value between 0 and 255.
-     * @param {integer} [blue=0] - The amount to fade the blue channel towards. A value between 0 and 255.
+     * @param {number} [duration=1000] - The duration of the effect in milliseconds.
+     * @param {number} [red=0] - The amount to fade the red channel towards. A value between 0 and 255.
+     * @param {number} [green=0] - The amount to fade the green channel towards. A value between 0 and 255.
+     * @param {number} [blue=0] - The amount to fade the blue channel towards. A value between 0 and 255.
      * @param {boolean} [force=false] - Force the effect to start immediately, even if already running.
      * @param {function} [callback] - This callback will be invoked every frame for the duration of the effect.
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
@@ -349,10 +349,10 @@ var Camera = new Class({
      * @fires Phaser.Cameras.Scene2D.Events#FADE_OUT_COMPLETE
      * @since 3.0.0
      *
-     * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
-     * @param {integer} [red=0] - The amount to fade the red channel towards. A value between 0 and 255.
-     * @param {integer} [green=0] - The amount to fade the green channel towards. A value between 0 and 255.
-     * @param {integer} [blue=0] - The amount to fade the blue channel towards. A value between 0 and 255.
+     * @param {number} [duration=1000] - The duration of the effect in milliseconds.
+     * @param {number} [red=0] - The amount to fade the red channel towards. A value between 0 and 255.
+     * @param {number} [green=0] - The amount to fade the green channel towards. A value between 0 and 255.
+     * @param {number} [blue=0] - The amount to fade the blue channel towards. A value between 0 and 255.
      * @param {boolean} [force=false] - Force the effect to start immediately, even if already running.
      * @param {function} [callback] - This callback will be invoked every frame for the duration of the effect.
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
@@ -373,10 +373,10 @@ var Camera = new Class({
      * @fires Phaser.Cameras.Scene2D.Events#FLASH_COMPLETE
      * @since 3.0.0
      *
-     * @param {integer} [duration=250] - The duration of the effect in milliseconds.
-     * @param {integer} [red=255] - The amount to fade the red channel towards. A value between 0 and 255.
-     * @param {integer} [green=255] - The amount to fade the green channel towards. A value between 0 and 255.
-     * @param {integer} [blue=255] - The amount to fade the blue channel towards. A value between 0 and 255.
+     * @param {number} [duration=250] - The duration of the effect in milliseconds.
+     * @param {number} [red=255] - The amount to fade the red channel towards. A value between 0 and 255.
+     * @param {number} [green=255] - The amount to fade the green channel towards. A value between 0 and 255.
+     * @param {number} [blue=255] - The amount to fade the blue channel towards. A value between 0 and 255.
      * @param {boolean} [force=false] - Force the effect to start immediately, even if already running.
      * @param {function} [callback] - This callback will be invoked every frame for the duration of the effect.
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
@@ -397,7 +397,7 @@ var Camera = new Class({
      * @fires Phaser.Cameras.Scene2D.Events#SHAKE_COMPLETE
      * @since 3.0.0
      *
-     * @param {integer} [duration=100] - The duration of the effect in milliseconds.
+     * @param {number} [duration=100] - The duration of the effect in milliseconds.
      * @param {(number|Phaser.Math.Vector2)} [intensity=0.05] - The intensity of the shake.
      * @param {boolean} [force=false] - Force the shake effect to start immediately, even if already running.
      * @param {function} [callback] - This callback will be invoked every frame for the duration of the effect.
@@ -422,7 +422,7 @@ var Camera = new Class({
      *
      * @param {number} x - The destination x coordinate to scroll the center of the Camera viewport to.
      * @param {number} y - The destination y coordinate to scroll the center of the Camera viewport to.
-     * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
+     * @param {number} [duration=1000] - The duration of the effect in milliseconds.
      * @param {(string|function)} [ease='Linear'] - The ease to use for the pan. Can be any of the Phaser Easing constants or a custom function.
      * @param {boolean} [force=false] - Force the pan effect to start immediately, even if already running.
      * @param {Phaser.Types.Cameras.Scene2D.CameraPanCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
@@ -446,7 +446,7 @@ var Camera = new Class({
      *
      * @param {number} radians - The destination angle in radians to rotate the Camera viewport to. If the angle is positive then the rotation is clockwise else anticlockwise
      * @param {boolean} [shortestPath=false] - If shortest path is set to true the camera will rotate in the quickest direction clockwise or anti-clockwise.
-     * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
+     * @param {number} [duration=1000] - The duration of the effect in milliseconds.
      * @param {(string|function)} [ease='Linear'] - The ease to use for the rotation. Can be any of the Phaser Easing constants or a custom function.
      * @param {boolean} [force=false] - Force the rotation effect to start immediately, even if already running.
      * @param {CameraRotateCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
@@ -470,7 +470,7 @@ var Camera = new Class({
      * @since 3.11.0
      *
      * @param {number} zoom - The target Camera zoom value.
-     * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
+     * @param {number} [duration=1000] - The duration of the effect in milliseconds.
      * @param {(string|function)} [ease='Linear'] - The ease to use for the pan. Can be any of the Phaser Easing constants or a custom function.
      * @param {boolean} [force=false] - Force the pan effect to start immediately, even if already running.
      * @param {Phaser.Types.Cameras.Scene2D.CameraPanCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
@@ -761,7 +761,7 @@ var Camera = new Class({
      * @protected
      * @since 3.0.0
      *
-     * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
+     * @param {number} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
      * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
     update: function (time, delta)

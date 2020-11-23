@@ -12,6 +12,6 @@
  * @property {WidthHeight} [max] - The maximum width the canvas can be scaled up to.
  * @property {boolean} [autoRound=false] - Automatically round the display and style sizes of the canvas. This can help with performance in lower-powered devices.
  * @property {Phaser.Scale.CenterType} [autoCenter=Phaser.Scale.Center.NO_CENTER] - Automatically center the canvas within the parent?
- * @property {integer} [resizeInterval=500] - How many ms should elapse before checking if the browser size has changed?
+ * @property {number} [resizeInterval=500] - How many ms should elapse before checking if the browser size has changed?
  * @property {?(HTMLElement|string)} [fullscreenTarget] - The DOM element that will be sent into full screen mode, or its `id`. If undefined Phaser will create its own div and insert the canvas into it when entering fullscreen mode.
  */

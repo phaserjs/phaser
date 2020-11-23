@@ -48,7 +48,7 @@ var Triangle = new Class({
          * Used for fast type comparisons.
          *
          * @name Phaser.Geom.Triangle#type
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @since 3.19.0
          */
@@ -157,7 +157,7 @@ var Triangle = new Class({
      *
      * @generic {Phaser.Geom.Point[]} O - [output,$return]
      *
-     * @param {integer} quantity - Number of points to be generated. Can be falsey when `stepRate` should be used. All points have the same distance along the triangle.
+     * @param {number} quantity - Number of points to be generated. Can be falsey when `stepRate` should be used. All points have the same distance along the triangle.
      * @param {number} [stepRate] - Distance between two points. Will only be used when `quantity` is falsey.
      * @param {(array|Phaser.Geom.Point[])} [output] - Optional Array for writing the calculated points into. Otherwise a new array will be created.
      *

@@ -40,7 +40,7 @@ var GameObjectFactory = require('../../GameObjectFactory');
  * @param {string} font - The key of the font to use from the BitmapFont cache.
  * @param {(string|string[])} [text] - The string, or array of strings, to be set as the content of this Bitmap Text.
  * @param {number} [size] - The font size to set.
- * @param {integer} [align=0] - The alignment of the text in a multi-line BitmapText object.
+ * @param {number} [align=0] - The alignment of the text in a multi-line BitmapText object.
  *
  * @return {Phaser.GameObjects.BitmapText} The Game Object that was created.
  */

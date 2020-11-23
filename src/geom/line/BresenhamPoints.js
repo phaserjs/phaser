@@ -13,7 +13,7 @@
  * @since 3.0.0
  *
  * @param {Phaser.Geom.Line} line - The line.
- * @param {integer} [stepRate=1] - The optional step rate for the points on the line.
+ * @param {number} [stepRate=1] - The optional step rate for the points on the line.
  * @param {Phaser.Types.Math.Vector2Like[]} [results] - An optional array to push the resulting coordinates into.
  *
  * @return {Phaser.Types.Math.Vector2Like[]} The array of coordinates on the line.

@@ -14,8 +14,8 @@ var SpliceOne = require('./SpliceOne');
  * @since 3.0.0
  *
  * @param {array} array - The array to removed a random element from.
- * @param {integer} [start=0] - The array index to start the search from.
- * @param {integer} [length=array.length] - Optional restriction on the number of elements to randomly select from.
+ * @param {number} [start=0] - The array index to start the search from.
+ * @param {number} [length=array.length] - Optional restriction on the number of elements to randomly select from.
  *
  * @return {object} The random element that was removed, or `null` if there were no array elements that fell within the given range.
  */

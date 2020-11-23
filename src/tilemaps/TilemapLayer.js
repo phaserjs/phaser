@@ -35,7 +35,7 @@ var TilemapLayerRender = require('./TilemapLayerRender');
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs.
  * @param {Phaser.Tilemaps.Tilemap} tilemap - The Tilemap this layer is a part of.
- * @param {integer} layerIndex - The index of the LayerData associated with this layer.
+ * @param {number} layerIndex - The index of the LayerData associated with this layer.
  * @param {(string|string[]|Phaser.Tilemaps.Tileset|Phaser.Tilemaps.Tileset[])} tileset - The tileset, or an array of tilesets, used to render this layer. Can be a string or a Tileset object.
  * @param {number} [x=0] - The world x position where the top left of this layer will be placed.
  * @param {number} [y=0] - The world y position where the top left of this layer will be placed.
@@ -88,7 +88,7 @@ var TilemapLayer = new Class({
          * The index of the LayerData associated with this layer.
          *
          * @name Phaser.Tilemaps.TilemapLayer#layerIndex
-         * @type {integer}
+         * @type {number}
          * @since 3.50.0
          */
         this.layerIndex = layerIndex;
@@ -119,7 +119,7 @@ var TilemapLayer = new Class({
          * The total number of tiles drawn by the renderer in the last frame.
          *
          * @name Phaser.Tilemaps.TilemapLayer#tilesDrawn
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @since 3.50.0
          */
@@ -129,7 +129,7 @@ var TilemapLayer = new Class({
          * The total number of tiles in this layer. Updated every frame.
          *
          * @name Phaser.Tilemaps.TilemapLayer#tilesTotal
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @since 3.50.0
          */
@@ -164,7 +164,7 @@ var TilemapLayer = new Class({
          * See the method `setCullPadding` for more details.
          *
          * @name Phaser.Tilemaps.TilemapLayer#cullPaddingX
-         * @type {integer}
+         * @type {number}
          * @default 1
          * @since 3.50.0
          */
@@ -176,7 +176,7 @@ var TilemapLayer = new Class({
          * See the method `setCullPadding` for more details.
          *
          * @name Phaser.Tilemaps.TilemapLayer#cullPaddingY
-         * @type {integer}
+         * @type {number}
          * @default 1
          * @since 3.50.0
          */
@@ -225,7 +225,7 @@ var TilemapLayer = new Class({
          * This can be changed via the `setRenderOrder` method.
          *
          * @name Phaser.Tilemaps.TilemapLayer#_renderOrder
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @private
          * @since 3.50.0
@@ -346,8 +346,8 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#calculateFacesAt
      * @since 3.50.0
      *
-     * @param {integer} tileX - The x coordinate.
-     * @param {integer} tileY - The y coordinate.
+     * @param {number} tileX - The x coordinate.
+     * @param {number} tileY - The y coordinate.
      *
      * @return {this} This Tilemap Layer object.
      */
@@ -366,10 +366,10 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#calculateFacesWithin
      * @since 3.50.0
      *
-     * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
      *
      * @return {this} This Tilemap Layer object.
      */
@@ -429,12 +429,12 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#copy
      * @since 3.50.0
      *
-     * @param {integer} srcTileX - The x coordinate of the area to copy from, in tiles, not pixels.
-     * @param {integer} srcTileY - The y coordinate of the area to copy from, in tiles, not pixels.
-     * @param {integer} width - The width of the area to copy, in tiles, not pixels.
-     * @param {integer} height - The height of the area to copy, in tiles, not pixels.
-     * @param {integer} destTileX - The x coordinate of the area to copy to, in tiles, not pixels.
-     * @param {integer} destTileY - The y coordinate of the area to copy to, in tiles, not pixels.
+     * @param {number} srcTileX - The x coordinate of the area to copy from, in tiles, not pixels.
+     * @param {number} srcTileY - The y coordinate of the area to copy from, in tiles, not pixels.
+     * @param {number} width - The width of the area to copy, in tiles, not pixels.
+     * @param {number} height - The height of the area to copy, in tiles, not pixels.
+     * @param {number} destTileX - The x coordinate of the area to copy to, in tiles, not pixels.
+     * @param {number} destTileY - The y coordinate of the area to copy to, in tiles, not pixels.
      * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
      *
      * @return {this} This Tilemap Layer object.
@@ -454,11 +454,11 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#fill
      * @since 3.50.0
      *
-     * @param {integer} index - The tile index to fill the area with.
-     * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {number} index - The tile index to fill the area with.
+     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
      * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
      *
      * @return {this} This Tilemap Layer object.
@@ -482,10 +482,10 @@ var TilemapLayer = new Class({
      * callback as the first and only parameter. The callback should return true for tiles that pass the
      * filter.
      * @param {object} [context] - The context under which the callback should be run.
-     * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area to filter.
-     * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area to filter.
-     * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area to filter.
+     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area to filter.
+     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
      * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      *
      * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects.
@@ -505,8 +505,8 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#findByIndex
      * @since 3.50.0
      *
-     * @param {integer} index - The tile index value to search for.
-     * @param {integer} [skip=0] - The number of times to skip a matching tile before returning.
+     * @param {number} index - The tile index value to search for.
+     * @param {number} [skip=0] - The number of times to skip a matching tile before returning.
      * @param {boolean} [reverse=false] - If true it will scan the layer in reverse, starting at the bottom-right. Otherwise it scans from the top-left.
      *
      * @return {Phaser.Tilemaps.Tile} The first matching Tile object.
@@ -526,10 +526,10 @@ var TilemapLayer = new Class({
      *
      * @param {FindTileCallback} callback - The callback. Each tile in the given area will be passed to this callback as the first and only parameter.
      * @param {object} [context] - The context under which the callback should be run.
-     * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area to search.
-     * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area to search.
-     * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area to search.
+     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area to search.
+     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
      * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      *
      * @return {?Phaser.Tilemaps.Tile} The first Tile found at the given location.
@@ -548,10 +548,10 @@ var TilemapLayer = new Class({
      *
      * @param {EachTileCallback} callback - The callback. Each tile in the given area will be passed to this callback as the first and only parameter.
      * @param {object} [context] - The context, or scope, under which the callback should be run.
-     * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area to search.
-     * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area to search.
-     * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area to search.
+     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area to search.
+     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
      * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      *
      * @return {this} This Tilemap Layer object.
@@ -569,8 +569,8 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#getTileAt
      * @since 3.50.0
      *
-     * @param {integer} tileX - X position to get the tile from (given in tile units, not pixels).
-     * @param {integer} tileY - Y position to get the tile from (given in tile units, not pixels).
+     * @param {number} tileX - X position to get the tile from (given in tile units, not pixels).
+     * @param {number} tileY - Y position to get the tile from (given in tile units, not pixels).
      * @param {boolean} [nonNull=false] - If true getTile won't return null for empty tiles, but a Tile object with an index of -1.
      *
      * @return {Phaser.Tilemaps.Tile} The Tile at the given coordinates or null if no tile was found or the coordinates were invalid.
@@ -604,10 +604,10 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#getTilesWithin
      * @since 3.50.0
      *
-     * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
      * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      *
      * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects found within the area.
@@ -662,8 +662,8 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#hasTileAt
      * @since 3.50.0
      *
-     * @param {integer} tileX - The x coordinate, in tiles, not pixels.
-     * @param {integer} tileY - The y coordinate, in tiles, not pixels.
+     * @param {number} tileX - The x coordinate, in tiles, not pixels.
+     * @param {number} tileY - The y coordinate, in tiles, not pixels.
      *
      * @return {boolean} `true` if a tile was found at the given location, otherwise `false`.
      */
@@ -700,8 +700,8 @@ var TilemapLayer = new Class({
      * @since 3.50.0
      *
      * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
-     * @param {integer} tileX - The x coordinate, in tiles, not pixels.
-     * @param {integer} tileY - The y coordinate, in tiles, not pixels.
+     * @param {number} tileX - The x coordinate, in tiles, not pixels.
+     * @param {number} tileY - The y coordinate, in tiles, not pixels.
      * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
      *
      * @return {Phaser.Tilemaps.Tile} The Tile object that was inserted at the given coordinates.
@@ -744,8 +744,8 @@ var TilemapLayer = new Class({
      * @since 3.50.0
      *
      * @param {(integer[]|integer[][]|Phaser.Tilemaps.Tile[]|Phaser.Tilemaps.Tile[][])} tile - A row (array) or grid (2D array) of Tiles or tile indexes to place.
-     * @param {integer} tileX - The x coordinate, in tiles, not pixels.
-     * @param {integer} tileY - The y coordinate, in tiles, not pixels.
+     * @param {number} tileX - The x coordinate, in tiles, not pixels.
+     * @param {number} tileY - The y coordinate, in tiles, not pixels.
      * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
      *
      * @return {this} This Tilemap Layer object.
@@ -767,10 +767,10 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#randomize
      * @since 3.50.0
      *
-     * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
      * @param {integer[]} [indexes] - An array of indexes to randomly draw from during randomization.
      *
      * @return {this} This Tilemap Layer object.
@@ -789,8 +789,8 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#removeTileAt
      * @since 3.50.0
      *
-     * @param {integer} tileX - The x coordinate, in tiles, not pixels.
-     * @param {integer} tileY - The y coordinate, in tiles, not pixels.
+     * @param {number} tileX - The x coordinate, in tiles, not pixels.
+     * @param {number} tileY - The y coordinate, in tiles, not pixels.
      * @param {boolean} [replaceWithNull=true] - If true, this will replace the tile at the specified location with null instead of a Tile with an index of -1.
      * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
      *
@@ -850,12 +850,12 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#replaceByIndex
      * @since 3.50.0
      *
-     * @param {integer} findIndex - The index of the tile to search for.
-     * @param {integer} newIndex - The index of the tile to replace it with.
-     * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {number} findIndex - The index of the tile to search for.
+     * @param {number} newIndex - The index of the tile to replace it with.
+     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
      *
      * @return {this} This Tilemap Layer object.
      */
@@ -899,8 +899,8 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#setCullPadding
      * @since 3.50.0
      *
-     * @param {integer} [paddingX=1] - The amount of extra horizontal tiles to add to the cull check padding.
-     * @param {integer} [paddingY=1] - The amount of extra vertical tiles to add to the cull check padding.
+     * @param {number} [paddingX=1] - The amount of extra horizontal tiles to add to the cull check padding.
+     * @param {number} [paddingY=1] - The amount of extra vertical tiles to add to the cull check padding.
      *
      * @return {this} This Tilemap Layer object.
      */
@@ -946,8 +946,8 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#setCollisionBetween
      * @since 3.50.0
      *
-     * @param {integer} start - The first index of the tile to be set for collision.
-     * @param {integer} stop - The last index of the tile to be set for collision.
+     * @param {number} start - The first index of the tile to be set for collision.
+     * @param {number} stop - The last index of the tile to be set for collision.
      * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
      * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the update.
      *
@@ -1057,10 +1057,10 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#setTileLocationCallback
      * @since 3.50.0
      *
-     * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
      * @param {function} [callback] - The callback that will be invoked when the tile is collided with.
      * @param {object} [callbackContext] - The context, or scope, under which the callback is invoked.
      *
@@ -1082,10 +1082,10 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#shuffle
      * @since 3.50.0
      *
-     * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
      *
      * @return {this} This Tilemap Layer object.
      */
@@ -1104,12 +1104,12 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#swapByIndex
      * @since 3.50.0
      *
-     * @param {integer} tileA - First tile index.
-     * @param {integer} tileB - Second tile index.
-     * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {number} tileA - First tile index.
+     * @param {number} tileB - Second tile index.
+     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
      *
      * @return {this} This Tilemap Layer object.
      */
@@ -1127,7 +1127,7 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#tileToWorldX
      * @since 3.50.0
      *
-     * @param {integer} tileX - The x coordinate, in tiles, not pixels.
+     * @param {number} tileX - The x coordinate, in tiles, not pixels.
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when calculating the tile index from the world values.
      *
      * @return {number} The Tile X coordinate converted to pixels.
@@ -1144,7 +1144,7 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#tileToWorldY
      * @since 3.50.0
      *
-     * @param {integer} tileY - The y coordinate, in tiles, not pixels.
+     * @param {number} tileY - The y coordinate, in tiles, not pixels.
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when calculating the tile index from the world values.
      *
      * @return {number} The Tile Y coordinate converted to pixels.
@@ -1162,8 +1162,8 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#tileToWorldXY
      * @since 3.50.0
      *
-     * @param {integer} tileX - The x coordinate, in tiles, not pixels.
-     * @param {integer} tileY - The y coordinate, in tiles, not pixels.
+     * @param {number} tileX - The x coordinate, in tiles, not pixels.
+     * @param {number} tileY - The y coordinate, in tiles, not pixels.
      * @param {Phaser.Math.Vector2} [point] - A Vector2 to store the coordinates in. If not given a new Vector2 is created.
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when calculating the tile index from the world values.
      *
@@ -1192,10 +1192,10 @@ var TilemapLayer = new Class({
      * @method Phaser.Tilemaps.TilemapLayer#weightedRandomize
      * @since 3.50.0
      *
-     * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
      * @param {object[]} [weightedIndexes] - An array of objects to randomly draw from during
      * randomization. They should be in the form: { index: 0, weight: 4 } or
      * { index: [0, 1], weight: 4 } if you wish to draw from multiple tile indexes.

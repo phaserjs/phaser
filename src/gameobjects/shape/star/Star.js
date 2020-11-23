@@ -66,7 +66,7 @@ var Star = new Class({
          * The number of points in the star.
          *
          * @name Phaser.GameObjects.Star#_points
-         * @type {integer}
+         * @type {number}
          * @private
          * @since 3.13.0
          */
@@ -113,7 +113,7 @@ var Star = new Class({
      * @method Phaser.GameObjects.Star#setPoints
      * @since 3.13.0
      * 
-     * @param {integer} value - The amount of points the Star will have.
+     * @param {number} value - The amount of points the Star will have.
      *
      * @return {this} This Game Object instance.
      */
@@ -164,7 +164,7 @@ var Star = new Class({
      * The number of points that make up the Star shape.
      *
      * @name Phaser.GameObjects.Star#points
-     * @type {integer}
+     * @type {number}
      * @default 5
      * @since 3.13.0
      */

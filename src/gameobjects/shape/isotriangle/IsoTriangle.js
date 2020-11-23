@@ -68,7 +68,7 @@ var IsoTriangle = new Class({
          * The projection level of the iso box. Change this to change the 'angle' at which you are looking at the box.
          *
          * @name Phaser.GameObjects.IsoTriangle#projection
-         * @type {integer}
+         * @type {number}
          * @default 4
          * @since 3.13.0
          */
@@ -156,7 +156,7 @@ var IsoTriangle = new Class({
      * @method Phaser.GameObjects.IsoTriangle#setProjection
      * @since 3.13.0
      * 
-     * @param {integer} value - The value to set the projection to.
+     * @param {number} value - The value to set the projection to.
      *
      * @return {this} This Game Object instance.
      */

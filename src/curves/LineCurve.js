@@ -68,7 +68,7 @@ var LineCurve = new Class({
          * The quantity of arc length divisions within the curve.
          *
          * @name Phaser.Curves.Line#arcLengthDivisions
-         * @type {integer}
+         * @type {number}
          * @default 1
          * @since 3.0.0
          */
@@ -201,8 +201,8 @@ var LineCurve = new Class({
      * @since 3.0.0
      *
      * @param {number} u - A float between 0 and 1.
-     * @param {integer} distance - The distance, in pixels.
-     * @param {integer} [divisions] - Optional amount of divisions.
+     * @param {number} distance - The distance, in pixels.
+     * @param {number} [divisions] - Optional amount of divisions.
      *
      * @return {number} The equidistant value.
      */

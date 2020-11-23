@@ -223,7 +223,7 @@ var LayerData = new Class({
          * Only used for hexagonal orientation Tilemaps.
          *
          * @name Phaser.Tilemaps.LayerData#hexSideLength
-         * @type {integer}
+         * @type {number}
          * @since 3.50.0
          */
         this.hexSideLength = GetFastValue(config, 'hexSideLength', 0);

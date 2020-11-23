@@ -141,7 +141,7 @@ var File = new Class({
          * The current state of the file. One of the FILE_CONST values.
          *
          * @name Phaser.Loader.File#state
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.state = (typeof(this.url) === 'function') ? CONST.FILE_POPULATED : CONST.FILE_PENDING;

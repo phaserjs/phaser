@@ -657,7 +657,7 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#shouldFlush
      * @since 3.0.0
      *
-     * @param {integer} [amount=0] - Will the batch need to flush if this many vertices are added to it?
+     * @param {number} [amount=0] - Will the batch need to flush if this many vertices are added to it?
      *
      * @return {boolean} `true` if the current batch should be flushed, otherwise `false`.
      */
@@ -1076,7 +1076,7 @@ var WebGLPipeline = new Class({
      * @param {number} y - The vertex y position.
      * @param {number} u - UV u value.
      * @param {number} v - UV v value.
-     * @param {integer} unit - Texture unit to which the texture needs to be bound.
+     * @param {number} unit - Texture unit to which the texture needs to be bound.
      * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
      * @param {number} tint - The tint color value.
      */
@@ -1137,7 +1137,7 @@ var WebGLPipeline = new Class({
      * @param {number} tintBR - The bottom-right tint color value.
      * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
      * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch if a flush occurs.
-     * @param {integer} [unit=0] - Texture unit to which the texture needs to be bound.
+     * @param {number} [unit=0] - Texture unit to which the texture needs to be bound.
      *
      * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
      */
@@ -1214,7 +1214,7 @@ var WebGLPipeline = new Class({
      * @param {number} tintBL - The bottom-left tint color value.
      * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
      * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch if a flush occurs.
-     * @param {integer} [unit=0] - Texture unit to which the texture needs to be bound.
+     * @param {number} [unit=0] - Texture unit to which the texture needs to be bound.
      *
      * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
      */
@@ -1655,7 +1655,7 @@ var WebGLPipeline = new Class({
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
-     * @param {integer} x - The new value of the `int` uniform.
+     * @param {number} x - The new value of the `int` uniform.
      * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
@@ -1682,8 +1682,8 @@ var WebGLPipeline = new Class({
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
-     * @param {integer} x - The new X component of the `ivec2` uniform.
-     * @param {integer} y - The new Y component of the `ivec2` uniform.
+     * @param {number} x - The new X component of the `ivec2` uniform.
+     * @param {number} y - The new Y component of the `ivec2` uniform.
      * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
@@ -1710,9 +1710,9 @@ var WebGLPipeline = new Class({
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
-     * @param {integer} x - The new X component of the `ivec3` uniform.
-     * @param {integer} y - The new Y component of the `ivec3` uniform.
-     * @param {integer} z - The new Z component of the `ivec3` uniform.
+     * @param {number} x - The new X component of the `ivec3` uniform.
+     * @param {number} y - The new Y component of the `ivec3` uniform.
+     * @param {number} z - The new Z component of the `ivec3` uniform.
      * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
@@ -1739,10 +1739,10 @@ var WebGLPipeline = new Class({
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
-     * @param {integer} x - X component of the uniform.
-     * @param {integer} y - Y component of the uniform.
-     * @param {integer} z - Z component of the uniform.
-     * @param {integer} w - W component of the uniform.
+     * @param {number} x - X component of the uniform.
+     * @param {number} y - Y component of the uniform.
+     * @param {number} z - Z component of the uniform.
+     * @param {number} w - W component of the uniform.
      * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.

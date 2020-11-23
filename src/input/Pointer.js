@@ -33,7 +33,7 @@ var OS = require('../device/OS');
  * @since 3.0.0
  *
  * @param {Phaser.Input.InputManager} manager - A reference to the Input Manager.
- * @param {integer} id - The internal ID of this Pointer.
+ * @param {number} id - The internal ID of this Pointer.
  */
 var Pointer = new Class({
 
@@ -54,7 +54,7 @@ var Pointer = new Class({
          * The internal ID of this Pointer.
          *
          * @name Phaser.Input.Pointer#id
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @since 3.0.0
          */
@@ -115,7 +115,7 @@ var Pointer = new Class({
          * however, it should behave as if the left button was clicked in the standard button layout.
          *
          * @name Phaser.Input.Pointer#button
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @default 0
          * @since 3.18.0
@@ -134,7 +134,7 @@ var Pointer = new Class({
          * In this case, the values are read from right to left.
          *
          * @name Phaser.Input.Pointer#buttons
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -1171,7 +1171,7 @@ var Pointer = new Class({
      * @method Phaser.Input.Pointer#getInterpolatedPosition
      * @since 3.11.0
      *
-     * @param {integer} [steps=10] - The number of interpolation steps to use.
+     * @param {number} [steps=10] - The number of interpolation steps to use.
      * @param {array} [out] - An array to store the results in. If not provided a new one will be created.
      *
      * @return {array} An array of interpolated values.

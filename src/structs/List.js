@@ -62,7 +62,7 @@ var List = new Class({
          * This is used internally when iterating through the list with the {@link #first}, {@link #last}, {@link #get}, and {@link #previous} properties.
          *
          * @name Phaser.Structs.List#position
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -130,7 +130,7 @@ var List = new Class({
      * @genericUse {T} - [child,$return]
      *
      * @param {*} child - The item, or array of items, to add to the list.
-     * @param {integer} [index=0] - The index in the list at which the element(s) will be inserted.
+     * @param {number} [index=0] - The index in the list at which the element(s) will be inserted.
      * @param {boolean} [skipCallback=false] - Skip calling the List.addCallback if this child is added successfully.
      *
      * @return {*} The List's underlying array.
@@ -155,7 +155,7 @@ var List = new Class({
      *
      * @genericUse {T} - [$return]
      *
-     * @param {integer} index - The index of the item.
+     * @param {number} index - The index of the item.
      *
      * @return {*} The retrieved item, or `undefined` if it's outside the List's bounds.
      */
@@ -174,7 +174,7 @@ var List = new Class({
      *
      * @param {*} child - The item to locate.
      *
-     * @return {integer} The index of the item within the List, or -1 if it's not in the List.
+     * @return {number} The index of the item within the List, or -1 if it's not in the List.
      */
     getIndex: function (child)
     {
@@ -243,8 +243,8 @@ var List = new Class({
      *
      * @genericUse {T | null} - [$return]
      *
-     * @param {integer} [startIndex=0] - Offset from the front of the group (lowest child).
-     * @param {integer} [length=(to top)] - Restriction on the number of values you want to randomly select from.
+     * @param {number} [startIndex=0] - Offset from the front of the group (lowest child).
+     * @param {number} [length=(to top)] - Restriction on the number of values you want to randomly select from.
      *
      * @return {?*} A random child of this Group.
      */
@@ -296,8 +296,8 @@ var List = new Class({
      *
      * @param {string} [property] - An optional property to test against the value argument.
      * @param {*} [value] - If property is set then Child.property must strictly equal this value to be included in the results.
-     * @param {integer} [startIndex] - The first child index to start the search from.
-     * @param {integer} [endIndex] - The last child index to search up until.
+     * @param {number} [startIndex] - The first child index to start the search from.
+     * @param {number} [endIndex] - The last child index to search up until.
      *
      * @return {Array.<*>} All items of the List which match the given criterion, if any.
      */
@@ -317,7 +317,7 @@ var List = new Class({
      * @param {string} property - The property to test on each item.
      * @param {*} value - The value to test the property against.
      *
-     * @return {integer} The total number of matching elements.
+     * @return {number} The total number of matching elements.
      */
     count: function (property, value)
     {
@@ -349,7 +349,7 @@ var List = new Class({
      * @genericUse {T} - [child,$return]
      *
      * @param {*} child - The item to move.
-     * @param {integer} index - Moves an item in the List to a new position.
+     * @param {number} index - Moves an item in the List to a new position.
      *
      * @return {*} The item that was moved.
      */
@@ -391,7 +391,7 @@ var List = new Class({
      *
      * @genericUse {T} - [$return]
      *
-     * @param {integer} index - The position to remove the item from.
+     * @param {number} index - The position to remove the item from.
      * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
      *
      * @return {*} The item that was removed.
@@ -416,8 +416,8 @@ var List = new Class({
      *
      * @genericUse {T[]} - [$return]
      *
-     * @param {integer} [startIndex=0] - The index to start removing from.
-     * @param {integer} [endIndex] - The position to stop removing at. The item at this position won't be removed.
+     * @param {number} [startIndex=0] - The index to start removing from.
+     * @param {number} [endIndex] - The position to stop removing at. The item at this position won't be removed.
      * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
      *
      * @return {Array.<*>} An array of the items which were removed.
@@ -609,8 +609,8 @@ var List = new Class({
      *
      * @param {string} property - The name of the property to set.
      * @param {*} value - The value to set the property to.
-     * @param {integer} [startIndex] - The first child index to start the search from.
-     * @param {integer} [endIndex] - The last child index to search up until.
+     * @param {number} [startIndex] - The first child index to start the search from.
+     * @param {number} [endIndex] - The last child index to search up until.
      */
     setAll: function (property, value, startIndex, endIndex)
     {
@@ -680,7 +680,7 @@ var List = new Class({
      * The number of items inside the List.
      *
      * @name Phaser.Structs.List#length
-     * @type {integer}
+     * @type {number}
      * @readonly
      * @since 3.0.0
      */

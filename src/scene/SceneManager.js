@@ -1267,7 +1267,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#getAt
      * @since 3.0.0
      *
-     * @param {integer} index - The index of the Scene to retrieve.
+     * @param {number} index - The index of the Scene to retrieve.
      *
      * @return {(Phaser.Scene|undefined)} The Scene.
      */
@@ -1284,7 +1284,7 @@ var SceneManager = new Class({
      *
      * @param {(string|Phaser.Scene)} key - The key of the Scene.
      *
-     * @return {integer} The index of the Scene.
+     * @return {number} The index of the Scene.
      */
     getIndex: function (key)
     {

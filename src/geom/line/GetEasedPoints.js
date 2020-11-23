@@ -37,7 +37,7 @@ var Point = require('../point/Point');
  *
  * @param {Phaser.Geom.Line} line - The Line object.
  * @param {(string|function)} ease - The ease to use. This can be either a string from the EaseMap, or a custom function.
- * @param {integer} quantity - The number of points to return. Note that if you provide a `collinearThreshold`, the resulting array may not always contain this number of points.
+ * @param {number} quantity - The number of points to return. Note that if you provide a `collinearThreshold`, the resulting array may not always contain this number of points.
  * @param {number} [collinearThreshold=0] - An optional threshold. The final array is reduced so that each point is spaced out at least this distance apart. This helps reduce clustering in noisey eases.
  * @param {number[]} [easeParams] - An optional array of ease parameters to go with the ease.
  *

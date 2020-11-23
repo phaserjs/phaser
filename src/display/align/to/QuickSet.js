@@ -32,7 +32,7 @@ AlignToMap[ALIGN_CONST.TOP_RIGHT] = require('./TopRight');
  *
  * @param {Phaser.GameObjects.GameObject} child - The Game Object that will be positioned.
  * @param {Phaser.GameObjects.GameObject} alignTo - The Game Object to base the alignment position on.
- * @param {integer} position - The position to align the Game Object with. This is an align constant, such as `Phaser.Display.Align.LEFT_CENTER`.
+ * @param {number} position - The position to align the Game Object with. This is an align constant, such as `Phaser.Display.Align.LEFT_CENTER`.
  * @param {number} [offsetX=0] - Optional horizontal offset from the position.
  * @param {number} [offsetY=0] - Optional vertical offset from the position.
  *

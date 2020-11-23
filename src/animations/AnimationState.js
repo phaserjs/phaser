@@ -438,7 +438,7 @@ var AnimationState = new Class({
          * 3 = Waiting for specific frame
          *
          * @name Phaser.Animations.AnimationState#_pendingStop
-         * @type {integer}
+         * @type {number}
          * @private
          * @since 3.4.0
          */
@@ -680,7 +680,7 @@ var AnimationState = new Class({
      * @since 3.50.0
      *
      * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object.
-     * @param {integer} delay - The delay, in milliseconds, to wait before starting the animation playing.
+     * @param {number} delay - The delay, in milliseconds, to wait before starting the animation playing.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -726,7 +726,7 @@ var AnimationState = new Class({
      * @since 3.50.0
      *
      * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object.
-     * @param {integer} [repeatCount=1] - How many times should the animation repeat before the next one starts?
+     * @param {number} [repeatCount=1] - How many times should the animation repeat before the next one starts?
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -1175,7 +1175,7 @@ var AnimationState = new Class({
      * @method Phaser.Animations.AnimationState#setRepeat
      * @since 3.4.0
      *
-     * @param {integer} value - The number of times that the animation should repeat.
+     * @param {number} value - The number of times that the animation should repeat.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -1351,7 +1351,7 @@ var AnimationState = new Class({
      * @fires Phaser.Animations.Events#ANIMATION_STOP
      * @since 3.4.0
      *
-     * @param {integer} delay - The number of milliseconds to wait before stopping this animation.
+     * @param {number} delay - The number of milliseconds to wait before stopping this animation.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -1379,7 +1379,7 @@ var AnimationState = new Class({
      * @fires Phaser.Animations.Events#ANIMATION_STOP
      * @since 3.50.0
      *
-     * @param {integer} [repeatCount=1] - How many times should the animation repeat before stopping?
+     * @param {number} [repeatCount=1] - How many times should the animation repeat before stopping?
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -1432,7 +1432,7 @@ var AnimationState = new Class({
      * @method Phaser.Animations.AnimationState#getTotalFrames
      * @since 3.4.0
      *
-     * @return {integer} The total number of frames in the current animation, or zero if no animation has been loaded.
+     * @return {number} The total number of frames in the current animation, or zero if no animation has been loaded.
      */
     getTotalFrames: function ()
     {

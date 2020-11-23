@@ -253,7 +253,7 @@ var GLSLFile = new Class({
      * @since 3.17.0
      *
      * @param {string[]} data - The array of shader data to process.
-     * @param {integer} offset - The offset to start processing from.
+     * @param {number} offset - The offset to start processing from.
      *
      * @return {any} The processed shader block, or null.
      */

@@ -17,8 +17,8 @@ var SetLayerCollisionIndex = require('./SetLayerCollisionIndex');
  * @function Phaser.Tilemaps.Components.SetCollisionBetween
  * @since 3.0.0
  *
- * @param {integer} start - The first index of the tile to be set for collision.
- * @param {integer} stop - The last index of the tile to be set for collision.
+ * @param {number} start - The first index of the tile to be set for collision.
+ * @param {number} stop - The last index of the tile to be set for collision.
  * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
  * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the update.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.

@@ -354,7 +354,7 @@ var ScaleManager = new Class({
          * checked here.
          *
          * @name Phaser.Scale.ScaleManager#resizeInterval
-         * @type {integer}
+         * @type {number}
          * @since 3.16.0
          */
         this.resizeInterval = 500;
@@ -363,7 +363,7 @@ var ScaleManager = new Class({
          * Internal size interval tracker.
          *
          * @name Phaser.Scale.ScaleManager#_lastCheck
-         * @type {integer}
+         * @type {number}
          * @private
          * @since 3.16.0
          */
@@ -848,7 +848,7 @@ var ScaleManager = new Class({
      * @fires Phaser.Scale.Events#RESIZE
      * @since 3.16.0
      *
-     * @param {integer} value - The new zoom value of the game.
+     * @param {number} value - The new zoom value of the game.
      *
      * @return {this} The Scale Manager instance.
      */
@@ -1048,7 +1048,7 @@ var ScaleManager = new Class({
      * @method Phaser.Scale.ScaleManager#getMaxZoom
      * @since 3.16.0
      *
-     * @return {integer} The maximum possible zoom factor. At a minimum this value is always at least 1.
+     * @return {number} The maximum possible zoom factor. At a minimum this value is always at least 1.
      */
     getMaxZoom: function ()
     {

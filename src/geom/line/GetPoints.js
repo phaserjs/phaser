@@ -21,7 +21,7 @@ var Point = require('../point/Point');
  * @generic {Phaser.Geom.Point[]} O - [out,$return]
  *
  * @param {Phaser.Geom.Line} line - The line.
- * @param {integer} quantity - The number of points to place on the line. Set to `0` to use `stepRate` instead.
+ * @param {number} quantity - The number of points to place on the line. Set to `0` to use `stepRate` instead.
  * @param {number} [stepRate] - The distance between each point on the line. When set, `quantity` is implied and should be set to `0`.
  * @param {(array|Phaser.Geom.Point[])} [out] - An optional array of Points, or point-like objects, to store the coordinates of the points on the line.
  *

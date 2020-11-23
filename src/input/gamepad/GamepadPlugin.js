@@ -533,7 +533,7 @@ var GamepadPlugin = new Class({
      * The total number of connected game pads.
      *
      * @name Phaser.Input.Gamepad.GamepadPlugin#total
-     * @type {integer}
+     * @type {number}
      * @since 3.10.0
      */
     total: {

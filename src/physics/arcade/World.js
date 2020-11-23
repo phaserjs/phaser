@@ -322,7 +322,7 @@ var World = new Class({
          * to allow more items per node and less node division.
          *
          * @name Phaser.Physics.Arcade.World#maxEntries
-         * @type {integer}
+         * @type {number}
          * @default 16
          * @since 3.0.0
          */
@@ -432,7 +432,7 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group|Phaser.GameObjects.Group[])} object - The object, or objects, on which to create the bodies.
-     * @param {integer} [bodyType] - The type of Body to create. Either `DYNAMIC_BODY` or `STATIC_BODY`.
+     * @param {number} [bodyType] - The type of Body to create. Either `DYNAMIC_BODY` or `STATIC_BODY`.
      */
     enable: function (object, bodyType)
     {
@@ -499,7 +499,7 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} object - The Game Object on which to create the body.
-     * @param {integer} [bodyType] - The type of Body to create. Either `DYNAMIC_BODY` or `STATIC_BODY`.
+     * @param {number} [bodyType] - The type of Body to create. Either `DYNAMIC_BODY` or `STATIC_BODY`.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object on which the body was created.
      */
@@ -895,7 +895,7 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#setFPS
      * @since 3.10.0
      *
-     * @param {integer} framerate - The frame rate to advance the simulation at.
+     * @param {number} framerate - The frame rate to advance the simulation at.
      *
      * @return {this} This World object.
      */

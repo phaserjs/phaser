@@ -19,7 +19,7 @@
  * @event Phaser.Input.Gamepad.Events#GAMEPAD_BUTTON_UP
  * @since 3.10.0
  * 
- * @param {integer} index - The index of the button that was released.
+ * @param {number} index - The index of the button that was released.
  * @param {number} value - The value of the button at the time it was released. Between 0 and 1. Some Gamepads have pressure-sensitive buttons.
  * @param {Phaser.Input.Gamepad.Button} button - A reference to the Button which was released.
  */

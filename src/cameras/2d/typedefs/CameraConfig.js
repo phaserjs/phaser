@@ -3,10 +3,10 @@
  * @since 3.0.0
  *
  * @property {string} [name=''] - The name of the Camera.
- * @property {integer} [x=0] - The horizontal position of the Camera viewport.
- * @property {integer} [y=0] - The vertical position of the Camera viewport.
- * @property {integer} [width] - The width of the Camera viewport.
- * @property {integer} [height] - The height of the Camera viewport.
+ * @property {number} [x=0] - The horizontal position of the Camera viewport.
+ * @property {number} [y=0] - The vertical position of the Camera viewport.
+ * @property {number} [width] - The width of the Camera viewport.
+ * @property {number} [height] - The height of the Camera viewport.
  * @property {number} [zoom=1] - The default zoom level of the Camera.
  * @property {number} [rotation=0] - The rotation of the Camera, in radians.
  * @property {boolean} [roundPixels=false] - Should the Camera round pixels before rendering?

@@ -149,7 +149,7 @@ var CubicBezierCurve = new Class({
      * @generic {Phaser.GameObjects.Graphics} G - [graphics,$return]
      *
      * @param {Phaser.GameObjects.Graphics} graphics - The graphics object this curve should be drawn to.
-     * @param {integer} [pointsTotal=32] - The number of intermediary points that make up this curve. A higher number of points will result in a smoother curve.
+     * @param {number} [pointsTotal=32] - The number of intermediary points that make up this curve. A higher number of points will result in a smoother curve.
      *
      * @return {Phaser.GameObjects.Graphics} The graphics object this curve was drawn to. Useful for method chaining.
      */

@@ -13,8 +13,8 @@ var IsInLayerBounds = require('./IsInLayerBounds');
  * @function Phaser.Tilemaps.Components.HasTileAt
  * @since 3.0.0
  *
- * @param {integer} tileX - X position to get the tile from (given in tile units, not pixels).
- * @param {integer} tileY - Y position to get the tile from (given in tile units, not pixels).
+ * @param {number} tileX - X position to get the tile from (given in tile units, not pixels).
+ * @param {number} tileY - Y position to get the tile from (given in tile units, not pixels).
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
  * @return {?boolean} Returns a boolean, or null if the layer given was invalid.

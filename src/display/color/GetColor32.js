@@ -10,10 +10,10 @@
  * @function Phaser.Display.Color.GetColor32
  * @since 3.0.0
  *
- * @param {integer} red - The red color value. A number between 0 and 255.
- * @param {integer} green - The green color value. A number between 0 and 255.
- * @param {integer} blue - The blue color value. A number between 0 and 255.
- * @param {integer} alpha - The alpha color value. A number between 0 and 255.
+ * @param {number} red - The red color value. A number between 0 and 255.
+ * @param {number} green - The green color value. A number between 0 and 255.
+ * @param {number} blue - The blue color value. A number between 0 and 255.
+ * @param {number} alpha - The alpha color value. A number between 0 and 255.
  *
  * @return {number} The combined color value.
  */

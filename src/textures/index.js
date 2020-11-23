@@ -15,7 +15,7 @@ var FilterMode = require('./const');
  * Linear filter type.
  * 
  * @name Phaser.Textures.LINEAR
- * @type {integer}
+ * @type {number}
  * @const
  * @since 3.0.0
  */
@@ -24,7 +24,7 @@ var FilterMode = require('./const');
  * Nearest Neighbor filter type.
  * 
  * @name Phaser.Textures.NEAREST
- * @type {integer}
+ * @type {number}
  * @const
  * @since 3.0.0
  */

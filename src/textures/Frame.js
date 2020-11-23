@@ -19,7 +19,7 @@ var Extend = require('../utils/object/Extend');
  *
  * @param {Phaser.Textures.Texture} texture - The Texture this Frame is a part of.
  * @param {(integer|string)} name - The name of this Frame. The name is unique within the Texture.
- * @param {integer} sourceIndex - The index of the TextureSource that this Frame is a part of.
+ * @param {number} sourceIndex - The index of the TextureSource that this Frame is a part of.
  * @param {number} x - The x coordinate of the top-left of this Frame.
  * @param {number} y - The y coordinate of the top-left of this Frame.
  * @param {number} width - The width of this Frame.
@@ -63,7 +63,7 @@ var Frame = new Class({
          * The index of the TextureSource in the Texture sources array.
          *
          * @name Phaser.Textures.Frame#sourceIndex
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.sourceIndex = sourceIndex;
@@ -82,7 +82,7 @@ var Frame = new Class({
          * X position within the source image to cut from.
          *
          * @name Phaser.Textures.Frame#cutX
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.cutX;
@@ -91,7 +91,7 @@ var Frame = new Class({
          * Y position within the source image to cut from.
          *
          * @name Phaser.Textures.Frame#cutY
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.cutY;
@@ -100,7 +100,7 @@ var Frame = new Class({
          * The width of the area in the source image to cut.
          *
          * @name Phaser.Textures.Frame#cutWidth
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.cutWidth;
@@ -109,7 +109,7 @@ var Frame = new Class({
          * The height of the area in the source image to cut.
          *
          * @name Phaser.Textures.Frame#cutHeight
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.cutHeight;
@@ -118,7 +118,7 @@ var Frame = new Class({
          * The X rendering offset of this Frame, taking trim into account.
          *
          * @name Phaser.Textures.Frame#x
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -128,7 +128,7 @@ var Frame = new Class({
          * The Y rendering offset of this Frame, taking trim into account.
          *
          * @name Phaser.Textures.Frame#y
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -138,7 +138,7 @@ var Frame = new Class({
          * The rendering width of this Frame, taking trim into account.
          *
          * @name Phaser.Textures.Frame#width
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.width;
@@ -147,7 +147,7 @@ var Frame = new Class({
          * The rendering height of this Frame, taking trim into account.
          *
          * @name Phaser.Textures.Frame#height
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.height;
@@ -157,7 +157,7 @@ var Frame = new Class({
          * Precalculated for the renderer.
          *
          * @name Phaser.Textures.Frame#halfWidth
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.halfWidth;
@@ -167,7 +167,7 @@ var Frame = new Class({
          * Precalculated for the renderer.
          *
          * @name Phaser.Textures.Frame#halfHeight
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.halfHeight;
@@ -176,7 +176,7 @@ var Frame = new Class({
          * The x center of this frame, floored.
          *
          * @name Phaser.Textures.Frame#centerX
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.centerX;
@@ -185,7 +185,7 @@ var Frame = new Class({
          * The y center of this frame, floored.
          *
          * @name Phaser.Textures.Frame#centerY
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.centerY;
@@ -241,7 +241,7 @@ var Frame = new Class({
          * 1 = Round
          *
          * @name Phaser.Textures.Frame#autoRound
-         * @type {integer}
+         * @type {number}
          * @default -1
          * @since 3.0.0
          */
@@ -347,10 +347,10 @@ var Frame = new Class({
      * @method Phaser.Textures.Frame#setSize
      * @since 3.7.0
      *
-     * @param {integer} width - The width of the frame before being trimmed.
-     * @param {integer} height - The height of the frame before being trimmed.
-     * @param {integer} [x=0] - The x coordinate of the top-left of this Frame.
-     * @param {integer} [y=0] - The y coordinate of the top-left of this Frame.
+     * @param {number} width - The width of the frame before being trimmed.
+     * @param {number} height - The height of the frame before being trimmed.
+     * @param {number} [x=0] - The x coordinate of the top-left of this Frame.
+     * @param {number} [y=0] - The y coordinate of the top-left of this Frame.
      *
      * @return {Phaser.Textures.Frame} This Frame object.
      */

@@ -93,7 +93,7 @@ var Body = new Class({
          * The color of this Body on the debug display.
          *
          * @name Phaser.Physics.Arcade.Body#debugBodyColor
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.debugBodyColor = world.defaults.bodyDebugColor;
@@ -576,7 +576,7 @@ var Body = new Class({
          * If the Body is moving on both axes, this describes motion on the vertical axis only.
          *
          * @name Phaser.Physics.Arcade.Body#facing
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          *
          * @see Phaser.Physics.Arcade.FACING_UP
@@ -759,7 +759,7 @@ var Body = new Class({
          * The Body's physics type (dynamic or static).
          *
          * @name Phaser.Physics.Arcade.Body#physicsType
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @default Phaser.Physics.Arcade.DYNAMIC_BODY
          * @since 3.0.0
@@ -1267,8 +1267,8 @@ var Body = new Class({
      * @method Phaser.Physics.Arcade.Body#setSize
      * @since 3.0.0
      *
-     * @param {integer} [width] - The width of the Body in pixels. Cannot be zero. If not given, and the parent Game Object has a frame, it will use the frame width.
-     * @param {integer} [height] - The height of the Body in pixels. Cannot be zero. If not given, and the parent Game Object has a frame, it will use the frame height.
+     * @param {number} [width] - The width of the Body in pixels. Cannot be zero. If not given, and the parent Game Object has a frame, it will use the frame width.
+     * @param {number} [height] - The height of the Body in pixels. Cannot be zero. If not given, and the parent Game Object has a frame, it will use the frame height.
      * @param {boolean} [center=true] - Modify the Body's `offset`, placing the Body's center on its Game Object's center. Only works if the Game Object has the `getCenter` method.
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.

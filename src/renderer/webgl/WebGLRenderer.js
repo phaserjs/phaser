@@ -101,7 +101,7 @@ var WebGLRenderer = new Class({
          * A constant which allows the renderer to be easily identified as a WebGL Renderer.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#type
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.type = CONST.WEBGL;
@@ -128,7 +128,7 @@ var WebGLRenderer = new Class({
          * This is populated in the onResize event handler.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#width
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.width = 0;
@@ -138,7 +138,7 @@ var WebGLRenderer = new Class({
          * This is populated in the onResize event handler.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#height
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.height = 0;
@@ -201,7 +201,7 @@ var WebGLRenderer = new Class({
          * Cached value for the last texture unit that was used.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentActiveTexture
-         * @type {integer}
+         * @type {number}
          * @since 3.1.0
          */
         this.currentActiveTexture = 0;
@@ -211,7 +211,7 @@ var WebGLRenderer = new Class({
          * This value is constantly updated and should be treated as read-only by your code.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#startActiveTexture
-         * @type {integer}
+         * @type {number}
          * @since 3.50.0
          */
         this.startActiveTexture = 0;
@@ -221,7 +221,7 @@ var WebGLRenderer = new Class({
          * This is set via the Game Config `maxTextures` property and should never be changed after boot.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#maxTextures
-         * @type {integer}
+         * @type {number}
          * @since 3.50.0
          */
         this.maxTextures = 0;
@@ -319,7 +319,7 @@ var WebGLRenderer = new Class({
          * Current blend mode in use
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentBlendMode
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.currentBlendMode = Infinity;
@@ -493,7 +493,7 @@ var WebGLRenderer = new Class({
          * The total number of masks currently stacked.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#maskCount
-         * @type {integer}
+         * @type {number}
          * @since 3.17.0
          */
         this.maskCount = 0;
@@ -984,11 +984,11 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#pushScissor
      * @since 3.0.0
      *
-     * @param {integer} x - The x position of the scissor.
-     * @param {integer} y - The y position of the scissor.
-     * @param {integer} width - The width of the scissor.
-     * @param {integer} height - The height of the scissor.
-     * @param {integer} [drawingBufferHeight] - Optional drawingBufferHeight override value.
+     * @param {number} x - The x position of the scissor.
+     * @param {number} y - The y position of the scissor.
+     * @param {number} width - The width of the scissor.
+     * @param {number} height - The height of the scissor.
+     * @param {number} [drawingBufferHeight] - Optional drawingBufferHeight override value.
      *
      * @return {integer[]} An array containing the scissor values.
      */
@@ -1015,11 +1015,11 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setScissor
      * @since 3.0.0
      *
-     * @param {integer} x - The x position of the scissor.
-     * @param {integer} y - The y position of the scissor.
-     * @param {integer} width - The width of the scissor.
-     * @param {integer} height - The height of the scissor.
-     * @param {integer} [drawingBufferHeight] - Optional drawingBufferHeight override value.
+     * @param {number} x - The x position of the scissor.
+     * @param {number} y - The y position of the scissor.
+     * @param {number} width - The width of the scissor.
+     * @param {number} height - The height of the scissor.
+     * @param {number} [drawingBufferHeight] - Optional drawingBufferHeight override value.
      */
     setScissor: function (x, y, width, height, drawingBufferHeight)
     {
@@ -1099,7 +1099,7 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setBlendMode
      * @since 3.0.0
      *
-     * @param {integer} blendModeId - The blend mode to be set. Can be a `BlendModes` const or an integer value.
+     * @param {number} blendModeId - The blend mode to be set. Can be a `BlendModes` const or an integer value.
      * @param {boolean} [force=false] - Force the blend mode to be set, regardless of the currently set blend mode.
      *
      * @return {boolean} `true` if the blend mode was changed as a result of this call, forcing a flush, otherwise `false`.
@@ -1146,7 +1146,7 @@ var WebGLRenderer = new Class({
      * @param {GLenum[]} func - An array containing the WebGL functions to use for the source and the destination blending factors, respectively. See the possible constants for {@link WebGLRenderingContext#blendFunc()}.
      * @param {GLenum} equation - The equation to use for combining the RGB and alpha components of a new pixel with a rendered one. See the possible constants for {@link WebGLRenderingContext#blendEquation()}.
      *
-     * @return {integer} The index of the new blend mode, used for referencing it in the future.
+     * @return {number} The index of the new blend mode, used for referencing it in the future.
      */
     addBlendMode: function (func, equation)
     {
@@ -1161,7 +1161,7 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#updateBlendMode
      * @since 3.0.0
      *
-     * @param {integer} index - The index of the custom blend mode.
+     * @param {number} index - The index of the custom blend mode.
      * @param {function} func - The function to use for the blend mode.
      * @param {function} equation - The equation to use for the blend mode.
      *
@@ -1189,7 +1189,7 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#removeBlendMode
      * @since 3.0.0
      *
-     * @param {integer} index - The index of the custom blend mode to be removed.
+     * @param {number} index - The index of the custom blend mode to be removed.
      *
      * @return {this} This WebGLRenderer instance.
      */
@@ -1765,9 +1765,9 @@ var WebGLRenderer = new Class({
      * @since 3.0.0
      *
      * @param {object} source - The source of the texture.
-     * @param {integer} width - The width of the texture.
-     * @param {integer} height - The height of the texture.
-     * @param {integer} scaleMode - The scale mode to be used by the texture.
+     * @param {number} width - The width of the texture.
+     * @param {number} height - The height of the texture.
+     * @param {number} scaleMode - The scale mode to be used by the texture.
      *
      * @return {?WebGLTexture} The WebGL Texture that was created, or `null` if it couldn't be created.
      */
@@ -1813,15 +1813,15 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createTexture2D
      * @since 3.0.0
      *
-     * @param {integer} mipLevel - Mip level of the texture.
-     * @param {integer} minFilter - Filtering of the texture.
-     * @param {integer} magFilter - Filtering of the texture.
-     * @param {integer} wrapT - Wrapping mode of the texture.
-     * @param {integer} wrapS - Wrapping mode of the texture.
-     * @param {integer} format - Which format does the texture use.
+     * @param {number} mipLevel - Mip level of the texture.
+     * @param {number} minFilter - Filtering of the texture.
+     * @param {number} magFilter - Filtering of the texture.
+     * @param {number} wrapT - Wrapping mode of the texture.
+     * @param {number} wrapS - Wrapping mode of the texture.
+     * @param {number} format - Which format does the texture use.
      * @param {?object} pixels - pixel data.
-     * @param {integer} width - Width of the texture in pixels.
-     * @param {integer} height - Height of the texture in pixels.
+     * @param {number} width - Width of the texture in pixels.
+     * @param {number} height - Height of the texture in pixels.
      * @param {boolean} [pma=true] - Does the texture have premultiplied alpha?
      * @param {boolean} [forceSize=false] - If `true` it will use the width and height passed to this method, regardless of the pixels dimension.
      * @param {boolean} [flipY=false] - Sets the `UNPACK_FLIP_Y_WEBGL` flag the WebGL Texture uses during upload.
@@ -1892,8 +1892,8 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createFramebuffer
      * @since 3.0.0
      *
-     * @param {integer} width - If `addDepthStencilBuffer` is true, this controls the width of the depth stencil.
-     * @param {integer} height - If `addDepthStencilBuffer` is true, this controls the height of the depth stencil.
+     * @param {number} width - If `addDepthStencilBuffer` is true, this controls the width of the depth stencil.
+     * @param {number} height - If `addDepthStencilBuffer` is true, this controls the height of the depth stencil.
      * @param {WebGLTexture} renderTexture - The color texture where the color pixels are written.
      * @param {boolean} [addDepthStencilBuffer=false] - Create a Renderbuffer for the depth stencil?
      *
@@ -2000,7 +2000,7 @@ var WebGLRenderer = new Class({
      * @since 3.0.0
      *
      * @param {ArrayBuffer} initialDataOrSize - It's either ArrayBuffer or an integer indicating the size of the vbo
-     * @param {integer} bufferUsage - How the buffer is used. gl.DYNAMIC_DRAW, gl.STATIC_DRAW or gl.STREAM_DRAW
+     * @param {number} bufferUsage - How the buffer is used. gl.DYNAMIC_DRAW, gl.STATIC_DRAW or gl.STREAM_DRAW
      *
      * @return {WebGLBuffer} Raw vertex buffer
      */
@@ -2023,7 +2023,7 @@ var WebGLRenderer = new Class({
      * @since 3.0.0
      *
      * @param {ArrayBuffer} initialDataOrSize - Either ArrayBuffer or an integer indicating the size of the vbo.
-     * @param {integer} bufferUsage - How the buffer is used. gl.DYNAMIC_DRAW, gl.STATIC_DRAW or gl.STREAM_DRAW.
+     * @param {number} bufferUsage - How the buffer is used. gl.DYNAMIC_DRAW, gl.STATIC_DRAW or gl.STREAM_DRAW.
      *
      * @return {WebGLBuffer} Raw index buffer
      */
@@ -2462,10 +2462,10 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#snapshotArea
      * @since 3.16.0
      *
-     * @param {integer} x - The x coordinate to grab from.
-     * @param {integer} y - The y coordinate to grab from.
-     * @param {integer} width - The width of the area to grab.
-     * @param {integer} height - The height of the area to grab.
+     * @param {number} x - The x coordinate to grab from.
+     * @param {number} y - The y coordinate to grab from.
+     * @param {number} width - The width of the area to grab.
+     * @param {number} height - The height of the area to grab.
      * @param {Phaser.Types.Renderer.Snapshot.SnapshotCallback} callback - The Function to invoke after the snapshot image is created.
      * @param {string} [type='image/png'] - The format of the image to create, usually `image/png` or `image/jpeg`.
      * @param {number} [encoderOptions=0.92] - The image quality, between 0 and 1. Used for image formats with lossy compression, such as `image/jpeg`.
@@ -2503,8 +2503,8 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#snapshotPixel
      * @since 3.16.0
      *
-     * @param {integer} x - The x coordinate of the pixel to get.
-     * @param {integer} y - The y coordinate of the pixel to get.
+     * @param {number} x - The x coordinate of the pixel to get.
+     * @param {number} y - The y coordinate of the pixel to get.
      * @param {Phaser.Types.Renderer.Snapshot.SnapshotCallback} callback - The Function to invoke after the snapshot pixel data is extracted.
      *
      * @return {this} This WebGL Renderer.
@@ -2532,14 +2532,14 @@ var WebGLRenderer = new Class({
      * @since 3.19.0
      *
      * @param {WebGLFramebuffer} framebuffer - The framebuffer to grab from.
-     * @param {integer} bufferWidth - The width of the framebuffer.
-     * @param {integer} bufferHeight - The height of the framebuffer.
+     * @param {number} bufferWidth - The width of the framebuffer.
+     * @param {number} bufferHeight - The height of the framebuffer.
      * @param {Phaser.Types.Renderer.Snapshot.SnapshotCallback} callback - The Function to invoke after the snapshot image is created.
      * @param {boolean} [getPixel=false] - Grab a single pixel as a Color object, or an area as an Image object?
-     * @param {integer} [x=0] - The x coordinate to grab from.
-     * @param {integer} [y=0] - The y coordinate to grab from.
-     * @param {integer} [width=bufferWidth] - The width of the area to grab.
-     * @param {integer} [height=bufferHeight] - The height of the area to grab.
+     * @param {number} [x=0] - The x coordinate to grab from.
+     * @param {number} [y=0] - The y coordinate to grab from.
+     * @param {number} [width=bufferWidth] - The width of the area to grab.
+     * @param {number} [height=bufferHeight] - The height of the area to grab.
      * @param {string} [type='image/png'] - The format of the image to create, usually `image/png` or `image/jpeg`.
      * @param {number} [encoderOptions=0.92] - The image quality, between 0 and 1. Used for image formats with lossy compression, such as `image/jpeg`.
      *
@@ -2784,8 +2784,8 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setTextureFilter
      * @since 3.0.0
      *
-     * @param {integer} texture - The texture to set the filter for.
-     * @param {integer} filter - The filter to set. 0 for linear filtering, 1 for nearest neighbor (blocky) filtering.
+     * @param {number} texture - The texture to set the filter for.
+     * @param {number} filter - The filter to set. 0 for linear filtering, 1 for nearest neighbor (blocky) filtering.
      *
      * @return {this} This WebGL Renderer instance.
      */
@@ -2819,7 +2819,7 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#getMaxTextureSize
      * @since 3.8.0
      *
-     * @return {integer} The maximum supported texture size.
+     * @return {number} The maximum supported texture size.
      */
     getMaxTextureSize: function ()
     {

@@ -71,7 +71,7 @@ var MultiFile = new Class({
          * The current index being used by multi-file loaders to avoid key clashes.
          *
          * @name Phaser.Loader.MultiFile#multiKeyIndex
-         * @type {integer}
+         * @type {number}
          * @private
          * @since 3.20.0
          */
@@ -100,7 +100,7 @@ var MultiFile = new Class({
          * The number of files to load.
          *
          * @name Phaser.Loader.MultiFile#pending
-         * @type {integer}
+         * @type {number}
          * @since 3.7.0
          */
 
@@ -110,7 +110,7 @@ var MultiFile = new Class({
          * The number of files that failed to load.
          *
          * @name Phaser.Loader.MultiFile#failed
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.7.0
          */

@@ -88,7 +88,7 @@ var Animation = new Class({
          * The frame rate of playback in frames per second (default 24 if duration is null)
          *
          * @name Phaser.Animations.Animation#frameRate
-         * @type {integer}
+         * @type {number}
          * @default 24
          * @since 3.0.0
          */
@@ -100,7 +100,7 @@ var Animation = new Class({
          * otherwise the `frameRate` is derived from `duration`.
          *
          * @name Phaser.Animations.Animation#duration
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.duration = GetValue(config, 'duration', null);
@@ -109,7 +109,7 @@ var Animation = new Class({
          * How many ms per frame, not including frame specific modifiers.
          *
          * @name Phaser.Animations.Animation#msPerFrame
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.msPerFrame;
@@ -128,7 +128,7 @@ var Animation = new Class({
          * The delay in ms before the playback will begin.
          *
          * @name Phaser.Animations.Animation#delay
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -138,7 +138,7 @@ var Animation = new Class({
          * Number of times to repeat the animation. Set to -1 to repeat forever.
          *
          * @name Phaser.Animations.Animation#repeat
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -148,7 +148,7 @@ var Animation = new Class({
          * The delay in ms before the a repeat play starts.
          *
          * @name Phaser.Animations.Animation#repeatDelay
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -276,7 +276,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#addFrameAt
      * @since 3.0.0
      *
-     * @param {integer} index - The index to insert the frame at within the animation.
+     * @param {number} index - The index to insert the frame at within the animation.
      * @param {(string|Phaser.Types.Animations.AnimationFrame[])} config - Either a string, in which case it will use all frames from a texture with the matching key, or an array of Animation Frame configuration objects.
      *
      * @return {this} This Animation object.
@@ -315,7 +315,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#checkFrame
      * @since 3.0.0
      *
-     * @param {integer} index - The index to be checked.
+     * @param {number} index - The index to be checked.
      *
      * @return {boolean} `true` if the index is valid, otherwise `false`.
      */
@@ -349,7 +349,7 @@ var Animation = new Class({
      * @protected
      * @since 3.0.0
      *
-     * @param {integer} index - The index in the AnimationFrame array
+     * @param {number} index - The index in the AnimationFrame array
      *
      * @return {Phaser.Animations.AnimationFrame} The frame at the index provided from the animation sequence
      */
@@ -688,7 +688,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#removeFrameAt
      * @since 3.0.0
      *
-     * @param {integer} index - The index in the AnimationFrame array
+     * @param {number} index - The index in the AnimationFrame array
      *
      * @return {this} This Animation object.
      */

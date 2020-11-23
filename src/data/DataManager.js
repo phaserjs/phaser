@@ -674,7 +674,7 @@ var DataManager = new Class({
      * Return the total number of entries in this Data Manager.
      *
      * @name Phaser.Data.DataManager#count
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     count: {

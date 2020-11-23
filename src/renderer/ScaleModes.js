@@ -17,7 +17,7 @@ var ScaleModes = {
      * Default Scale Mode (Linear).
      * 
      * @name Phaser.ScaleModes.DEFAULT
-     * @type {integer}
+     * @type {number}
      * @readonly
      * @since 3.0.0
      */
@@ -27,7 +27,7 @@ var ScaleModes = {
      * Linear Scale Mode.
      * 
      * @name Phaser.ScaleModes.LINEAR
-     * @type {integer}
+     * @type {number}
      * @readonly
      * @since 3.0.0
      */
@@ -37,7 +37,7 @@ var ScaleModes = {
      * Nearest Scale Mode.
      * 
      * @name Phaser.ScaleModes.NEAREST
-     * @type {integer}
+     * @type {number}
      * @readonly
      * @since 3.0.0
      */

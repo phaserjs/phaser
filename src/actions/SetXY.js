@@ -24,8 +24,8 @@ var PropertyValueSet = require('./PropertyValueSet');
  * @param {number} [y=x] - The amount to set the `y` property to. If `undefined` or `null` it uses the `x` value.
  * @param {number} [stepX=0] - This is added to the `x` amount, multiplied by the iteration counter.
  * @param {number} [stepY=0] - This is added to the `y` amount, multiplied by the iteration counter.
- * @param {integer} [index=0] - An optional offset to start searching from within the items array.
- * @param {integer} [direction=1] - The direction to iterate through the array. 1 is from beginning to end, -1 from end to beginning.
+ * @param {number} [index=0] - An optional offset to start searching from within the items array.
+ * @param {number} [direction=1] - The direction to iterate through the array. 1 is from beginning to end, -1 from end to beginning.
  *
  * @return {(array|Phaser.GameObjects.GameObject[])} The array of objects that were passed to this Action.
  */

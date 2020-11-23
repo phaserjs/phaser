@@ -12,10 +12,10 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @function Phaser.Tilemaps.Components.GetTilesWithin
  * @since 3.0.0
  *
- * @param {integer} tileX - The left most tile index (in tile coordinates) to use as the origin of the area.
- * @param {integer} tileY - The top most tile index (in tile coordinates) to use as the origin of the area.
- * @param {integer} width - How many tiles wide from the `tileX` index the area will be.
- * @param {integer} height - How many tiles tall from the `tileY` index the area will be.
+ * @param {number} tileX - The left most tile index (in tile coordinates) to use as the origin of the area.
+ * @param {number} tileY - The top most tile index (in tile coordinates) to use as the origin of the area.
+ * @param {number} width - How many tiles wide from the `tileX` index the area will be.
+ * @param {number} height - How many tiles tall from the `tileY` index the area will be.
  * @param {Phaser.Types.Tilemaps.GetTilesWithinFilteringOptions} GetTilesWithinFilteringOptions - Optional filters to apply when getting the tiles.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *

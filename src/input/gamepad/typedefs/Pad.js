@@ -5,5 +5,5 @@
  * @since 3.10.0
  *
  * @property {string} id - The ID of the Gamepad.
- * @property {integer} index - The index of the Gamepad.
+ * @property {number} index - The index of the Gamepad.
  */

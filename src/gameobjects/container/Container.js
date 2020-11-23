@@ -136,7 +136,7 @@ var Container = new Class({
          * the maximum limit the Container can grow in size to.
          *
          * @name Phaser.GameObjects.Container#maxSize
-         * @type {integer}
+         * @type {number}
          * @default -1
          * @since 3.4.0
          */
@@ -146,7 +146,7 @@ var Container = new Class({
          * The cursor position.
          *
          * @name Phaser.GameObjects.Container#position
-         * @type {integer}
+         * @type {number}
          * @since 3.4.0
          */
         this.position = 0;
@@ -574,7 +574,7 @@ var Container = new Class({
      * @since 3.4.0
      *
      * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} child - The Game Object, or array of Game Objects, to add to the Container.
-     * @param {integer} [index=0] - The position to insert the Game Object/s at.
+     * @param {number} [index=0] - The position to insert the Game Object/s at.
      *
      * @return {this} This Container instance.
      */
@@ -591,7 +591,7 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#getAt
      * @since 3.4.0
      *
-     * @param {integer} index - The position to get the Game Object from.
+     * @param {number} index - The position to get the Game Object from.
      *
      * @return {?Phaser.GameObjects.GameObject} The Game Object at the specified index, or `null` if none found.
      */
@@ -608,7 +608,7 @@ var Container = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to search for in this Container.
      *
-     * @return {integer} The index of the Game Object in this Container, or -1 if not found.
+     * @return {number} The index of the Game Object in this Container, or -1 if not found.
      */
     getIndex: function (child)
     {
@@ -669,8 +669,8 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#getRandom
      * @since 3.4.0
      *
-     * @param {integer} [startIndex=0] - An optional start index.
-     * @param {integer} [length] - An optional length, the total number of elements (from the startIndex) to choose from.
+     * @param {number} [startIndex=0] - An optional start index.
+     * @param {number} [length] - An optional length, the total number of elements (from the startIndex) to choose from.
      *
      * @return {?Phaser.GameObjects.GameObject} A random child from the Container, or `null` if the Container is empty.
      */
@@ -694,8 +694,8 @@ var Container = new Class({
      *
      * @param {string} property - The property to test on each Game Object in the Container.
      * @param {*} value - The value to test the property against. Must pass a strict (`===`) comparison check.
-     * @param {integer} [startIndex=0] - An optional start index to search from.
-     * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
+     * @param {number} [startIndex=0] - An optional start index to search from.
+     * @param {number} [endIndex=Container.length] - An optional end index to search up to (but not included)
      *
      * @return {?Phaser.GameObjects.GameObject} The first matching Game Object, or `null` if none was found.
      */
@@ -724,8 +724,8 @@ var Container = new Class({
      *
      * @param {string} [property] - The property to test on each Game Object in the Container.
      * @param {any} [value] - If property is set then the `property` must strictly equal this value to be included in the results.
-     * @param {integer} [startIndex=0] - An optional start index to search from.
-     * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
+     * @param {number} [startIndex=0] - An optional start index to search from.
+     * @param {number} [endIndex=Container.length] - An optional end index to search up to (but not included)
      *
      * @return {Phaser.GameObjects.GameObject[]} An array of matching Game Objects from this Container.
      */
@@ -747,10 +747,10 @@ var Container = new Class({
      *
      * @param {string} property - The property to check.
      * @param {any} value - The value to check.
-     * @param {integer} [startIndex=0] - An optional start index to search from.
-     * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
+     * @param {number} [startIndex=0] - An optional start index to search from.
+     * @param {number} [endIndex=Container.length] - An optional end index to search up to (but not included)
      *
-     * @return {integer} The total number of Game Objects in this Container with a property matching the given value.
+     * @return {number} The total number of Game Objects in this Container with a property matching the given value.
      */
     count: function (property, value, startIndex, endIndex)
     {
@@ -788,7 +788,7 @@ var Container = new Class({
      * @since 3.4.0
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to move.
-     * @param {integer} index - The new position of the Game Object in this Container.
+     * @param {number} index - The new position of the Game Object in this Container.
      *
      * @return {this} This Container instance.
      */
@@ -842,7 +842,7 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#removeAt
      * @since 3.4.0
      *
-     * @param {integer} index - The index of the Game Object to be removed.
+     * @param {number} index - The index of the Game Object to be removed.
      * @param {boolean} [destroyChild=false] - Optionally call `destroy` on the Game Object if successfully removed from this Container.
      *
      * @return {this} This Container instance.
@@ -867,8 +867,8 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#removeBetween
      * @since 3.4.0
      *
-     * @param {integer} [startIndex=0] - An optional start index to search from.
-     * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
+     * @param {number} [startIndex=0] - An optional start index to search from.
+     * @param {number} [endIndex=Container.length] - An optional end index to search up to (but not included)
      * @param {boolean} [destroyChild=false] - Optionally call `destroy` on each Game Object successfully removed from this Container.
      *
      * @return {this} This Container instance.
@@ -1075,8 +1075,8 @@ var Container = new Class({
      *
      * @param {string} property - The property that must exist on the Game Object.
      * @param {any} value - The value to get the property to.
-     * @param {integer} [startIndex=0] - An optional start index to search from.
-     * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
+     * @param {number} [startIndex=0] - An optional start index to search from.
+     * @param {number} [endIndex=Container.length] - An optional end index to search up to (but not included)
      *
      * @return {this} This Container instance.
      */
@@ -1217,7 +1217,7 @@ var Container = new Class({
      * The number of Game Objects inside this Container.
      *
      * @name Phaser.GameObjects.Container#length
-     * @type {integer}
+     * @type {number}
      * @readonly
      * @since 3.4.0
      */

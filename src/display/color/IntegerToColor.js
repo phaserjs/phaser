@@ -13,7 +13,7 @@ var IntegerToRGB = require('./IntegerToRGB');
  * @function Phaser.Display.Color.IntegerToColor
  * @since 3.0.0
  *
- * @param {integer} input - The color value to convert into a Color object.
+ * @param {number} input - The color value to convert into a Color object.
  *
  * @return {Phaser.Display.Color} A Color object.
  */

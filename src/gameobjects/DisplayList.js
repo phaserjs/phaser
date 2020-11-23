@@ -181,7 +181,7 @@ var DisplayList = new Class({
      * @param {Phaser.GameObjects.GameObject} childA - The first Game Object.
      * @param {Phaser.GameObjects.GameObject} childB - The second Game Object.
      *
-     * @return {integer} The difference between the depths of each Game Object.
+     * @return {number} The difference between the depths of each Game Object.
      */
     sortByDepth: function (childA, childB)
     {

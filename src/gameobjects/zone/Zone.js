@@ -94,7 +94,7 @@ var Zone = new Class({
          * display lists without causing a batch flush.
          *
          * @name Phaser.GameObjects.Zone#blendMode
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.blendMode = BlendModes.NORMAL;

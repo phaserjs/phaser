@@ -77,7 +77,7 @@ var Config = new Class({
         this.expandParent = GetValue(config, 'expandParent', true);
 
         /**
-         * @const {integer} Phaser.Core.Config#autoRound - Automatically round the display and style sizes of the canvas. This can help with performance in lower-powered devices.
+         * @const {number} Phaser.Core.Config#autoRound - Automatically round the display and style sizes of the canvas. This can help with performance in lower-powered devices.
          */
         this.autoRound = GetValue(config, 'autoRound', false);
 
@@ -87,7 +87,7 @@ var Config = new Class({
         this.autoCenter = GetValue(config, 'autoCenter', 0);
 
         /**
-         * @const {integer} Phaser.Core.Config#resizeInterval - How many ms should elapse before checking if the browser size has changed?
+         * @const {number} Phaser.Core.Config#resizeInterval - How many ms should elapse before checking if the browser size has changed?
          */
         this.resizeInterval = GetValue(config, 'resizeInterval', 500);
 
@@ -97,22 +97,22 @@ var Config = new Class({
         this.fullscreenTarget = GetValue(config, 'fullscreenTarget', null);
 
         /**
-         * @const {integer} Phaser.Core.Config#minWidth - The minimum width, in pixels, the canvas will scale down to. A value of zero means no minimum.
+         * @const {number} Phaser.Core.Config#minWidth - The minimum width, in pixels, the canvas will scale down to. A value of zero means no minimum.
          */
         this.minWidth = GetValue(config, 'minWidth', 0);
 
         /**
-         * @const {integer} Phaser.Core.Config#maxWidth - The maximum width, in pixels, the canvas will scale up to. A value of zero means no maximum.
+         * @const {number} Phaser.Core.Config#maxWidth - The maximum width, in pixels, the canvas will scale up to. A value of zero means no maximum.
          */
         this.maxWidth = GetValue(config, 'maxWidth', 0);
 
         /**
-         * @const {integer} Phaser.Core.Config#minHeight - The minimum height, in pixels, the canvas will scale down to. A value of zero means no minimum.
+         * @const {number} Phaser.Core.Config#minHeight - The minimum height, in pixels, the canvas will scale down to. A value of zero means no minimum.
          */
         this.minHeight = GetValue(config, 'minHeight', 0);
 
         /**
-         * @const {integer} Phaser.Core.Config#maxHeight - The maximum height, in pixels, the canvas will scale up to. A value of zero means no maximum.
+         * @const {number} Phaser.Core.Config#maxHeight - The maximum height, in pixels, the canvas will scale up to. A value of zero means no maximum.
          */
         this.maxHeight = GetValue(config, 'maxHeight', 0);
 
@@ -270,12 +270,12 @@ var Config = new Class({
         this.inputTouchCapture = GetValue(config, 'input.touch.capture', true);
 
         /**
-         * @const {integer} Phaser.Core.Config#inputActivePointers - The number of Pointer objects created by default. In a mouse-only, or non-multi touch game, you can leave this as 1.
+         * @const {number} Phaser.Core.Config#inputActivePointers - The number of Pointer objects created by default. In a mouse-only, or non-multi touch game, you can leave this as 1.
          */
         this.inputActivePointers = GetValue(config, 'input.activePointers', 1);
 
         /**
-         * @const {integer} Phaser.Core.Config#inputSmoothFactor - The smoothing factor to apply during Pointer movement. See {@link Phaser.Input.Pointer#smoothFactor}.
+         * @const {number} Phaser.Core.Config#inputSmoothFactor - The smoothing factor to apply during Pointer movement. See {@link Phaser.Input.Pointer#smoothFactor}.
          */
         this.inputSmoothFactor = GetValue(config, 'input.smoothFactor', 0);
 
@@ -409,17 +409,17 @@ var Config = new Class({
         this.powerPreference = GetValue(renderConfig, 'powerPreference', 'default');
 
         /**
-         * @const {integer} Phaser.Core.Config#batchSize - The default WebGL Batch size. Represents the number of _quads_ that can be added to a single batch.
+         * @const {number} Phaser.Core.Config#batchSize - The default WebGL Batch size. Represents the number of _quads_ that can be added to a single batch.
          */
         this.batchSize = GetValue(renderConfig, 'batchSize', 4096);
 
         /**
-         * @const {integer} Phaser.Core.Config#maxTextures - When in WebGL mode, this sets the maximum number of GPU Textures to use. The default, -1, will use all available units. The WebGL1 spec says all browsers should provide a minimum of 8.
+         * @const {number} Phaser.Core.Config#maxTextures - When in WebGL mode, this sets the maximum number of GPU Textures to use. The default, -1, will use all available units. The WebGL1 spec says all browsers should provide a minimum of 8.
          */
         this.maxTextures = GetValue(renderConfig, 'maxTextures', -1);
 
         /**
-         * @const {integer} Phaser.Core.Config#maxLights - The maximum number of lights allowed to be visible within range of a single Camera in the LightManager.
+         * @const {number} Phaser.Core.Config#maxLights - The maximum number of lights allowed to be visible within range of a single Camera in the LightManager.
          */
         this.maxLights = GetValue(renderConfig, 'maxLights', 10);
 
@@ -467,7 +467,7 @@ var Config = new Class({
         this.loaderPath = GetValue(config, 'loader.path', '');
 
         /**
-         * @const {integer} Phaser.Core.Config#loaderMaxParallelDownloads - Maximum parallel downloads allowed for resources (Default to 32).
+         * @const {number} Phaser.Core.Config#loaderMaxParallelDownloads - Maximum parallel downloads allowed for resources (Default to 32).
          */
         var defaultParallel = (Device.os.android) ? 6 : 32;
 
@@ -499,7 +499,7 @@ var Config = new Class({
         this.loaderPassword = GetValue(config, 'loader.password', '');
 
         /**
-         * @const {integer} Phaser.Core.Config#loaderTimeout - Optional XHR timeout value, in ms.
+         * @const {number} Phaser.Core.Config#loaderTimeout - Optional XHR timeout value, in ms.
          */
         this.loaderTimeout = GetValue(config, 'loader.timeout', 0);
 

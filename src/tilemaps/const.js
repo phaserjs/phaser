@@ -17,7 +17,7 @@ var CONST = {
      *
      * @name Phaser.Tilemaps.ORTHOGONAL
      * @const
-     * @type {integer}
+     * @type {number}
      * @since 3.50.0
      */
     ORTHOGONAL: 0,
@@ -27,7 +27,7 @@ var CONST = {
      *
      * @name Phaser.Tilemaps.ISOMETRIC
      * @const
-     * @type {integer}
+     * @type {number}
      * @since 3.50.0
      */
     ISOMETRIC: 1,
@@ -37,7 +37,7 @@ var CONST = {
      *
      * @name Phaser.Tilemaps.STAGGERED
      * @const
-     * @type {integer}
+     * @type {number}
      * @since 3.50.0
      */
     STAGGERED: 2,
@@ -47,7 +47,7 @@ var CONST = {
      *
      * @name Phaser.Tilemaps.HEXAGONAL
      * @const
-     * @type {integer}
+     * @type {number}
      * @since 3.50.0
      */
     HEXAGONAL: 3,

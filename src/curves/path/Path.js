@@ -276,7 +276,7 @@ var Path = new Class({
      * @generic {Phaser.GameObjects.Graphics} G - [out,$return]
      *
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics Game Object to draw to.
-     * @param {integer} [pointsTotal=32] - The number of points to draw for each Curve. Higher numbers result in a smoother curve but require more processing.
+     * @param {number} [pointsTotal=32] - The number of points to draw for each Curve. Higher numbers result in a smoother curve but require more processing.
      *
      * @return {Phaser.GameObjects.Graphics} The Graphics object which was drawn to.
      */
@@ -305,8 +305,8 @@ var Path = new Class({
      *
      * @param {number} [xRadius=0] - The horizontal radius of ellipse.
      * @param {number} [yRadius=0] - The vertical radius of ellipse.
-     * @param {integer} [startAngle=0] - The start angle of the ellipse, in degrees.
-     * @param {integer} [endAngle=360] - The end angle of the ellipse, in degrees.
+     * @param {number} [startAngle=0] - The start angle of the ellipse, in degrees.
+     * @param {number} [endAngle=360] - The end angle of the ellipse, in degrees.
      * @param {boolean} [clockwise=false] - Whether the ellipse angles are given as clockwise (`true`) or counter-clockwise (`false`).
      * @param {number} [rotation=0] - The rotation of the ellipse, in degrees.
      *
@@ -392,7 +392,7 @@ var Path = new Class({
      * @generic {Phaser.Math.Vector2} O - [out,$return]
      *
      * @param {Phaser.Geom.Rectangle} [out] - The Rectangle to store the bounds in.
-     * @param {integer} [accuracy=16] - The accuracy of the bounds calculations. Higher values are more accurate at the cost of calculation speed.
+     * @param {number} [accuracy=16] - The accuracy of the bounds calculations. Higher values are more accurate at the cost of calculation speed.
      *
      * @return {Phaser.Geom.Rectangle} The modified `out` Rectangle, or a new Rectangle if none was provided.
      */
@@ -574,7 +574,7 @@ var Path = new Class({
      * @method Phaser.Curves.Path#getPoints
      * @since 3.0.0
      *
-     * @param {integer} [divisions=12] - The number of divisions per resolution per curve.
+     * @param {number} [divisions=12] - The number of divisions per resolution per curve.
      *
      * @return {Phaser.Math.Vector2[]} An array of Vector2 objects that containing the points along the Path.
      */
@@ -651,7 +651,7 @@ var Path = new Class({
      * @method Phaser.Curves.Path#getSpacedPoints
      * @since 3.0.0
      *
-     * @param {integer} [divisions=40] - The amount of points to divide this Path into.
+     * @param {number} [divisions=40] - The amount of points to divide this Path into.
      *
      * @return {Phaser.Math.Vector2[]} A list of the points this path was subdivided into.
      */

@@ -90,7 +90,7 @@ var UpdateList = new Class({
          * The total number of items awaiting processing.
          *
          * @name Phaser.GameObjects.UpdateList#_toProcess
-         * @type {integer}
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -287,7 +287,7 @@ var UpdateList = new Class({
      * The number of entries in the active list.
      *
      * @name Phaser.GameObjects.UpdateList#length
-     * @type {integer}
+     * @type {number}
      * @readonly
      * @since 3.20.0
      */

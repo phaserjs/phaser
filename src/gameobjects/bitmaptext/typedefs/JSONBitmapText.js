@@ -7,5 +7,5 @@
  * @property {string} text - The text that this Bitmap Text displays.
  * @property {number} fontSize - The size of the font.
  * @property {number} letterSpacing - Adds / Removes spacing between characters.
- * @property {integer} align - The alignment of the text in a multi-line BitmapText object.
+ * @property {number} align - The alignment of the text in a multi-line BitmapText object.
  */

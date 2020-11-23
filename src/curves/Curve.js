@@ -41,7 +41,7 @@ var Curve = new Class({
          * The default number of divisions within the curve.
          *
          * @name Phaser.Curves.Curve#defaultDivisions
-         * @type {integer}
+         * @type {number}
          * @default 5
          * @since 3.0.0
          */
@@ -51,7 +51,7 @@ var Curve = new Class({
          * The quantity of arc length divisions within the curve.
          *
          * @name Phaser.Curves.Curve#arcLengthDivisions
-         * @type {integer}
+         * @type {number}
          * @default 100
          * @since 3.0.0
          */
@@ -120,7 +120,7 @@ var Curve = new Class({
      * @generic {Phaser.GameObjects.Graphics} G - [graphics,$return]
      *
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics instance onto which this curve will be drawn.
-     * @param {integer} [pointsTotal=32] - The resolution of the curve. The higher the value the smoother it will render, at the cost of rendering performance.
+     * @param {number} [pointsTotal=32] - The resolution of the curve. The higher the value the smoother it will render, at the cost of rendering performance.
      *
      * @return {Phaser.GameObjects.Graphics} The Graphics object to which the curve was drawn.
      */
@@ -142,7 +142,7 @@ var Curve = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Geom.Rectangle} [out] - The Rectangle to store the bounds in. If falsey a new object will be created.
-     * @param {integer} [accuracy=16] - The accuracy of the bounds calculations.
+     * @param {number} [accuracy=16] - The accuracy of the bounds calculations.
      *
      * @return {Phaser.Geom.Rectangle} A Rectangle object holding the bounds of this curve. If `out` was given it will be this object.
      */
@@ -173,7 +173,7 @@ var Curve = new Class({
      * @method Phaser.Curves.Curve#getDistancePoints
      * @since 3.0.0
      *
-     * @param {integer} distance - The distance, in pixels, between each point along the curve.
+     * @param {number} distance - The distance, in pixels, between each point along the curve.
      *
      * @return {Phaser.Geom.Point[]} An Array of Point objects.
      */
@@ -233,7 +233,7 @@ var Curve = new Class({
      * @method Phaser.Curves.Curve#getLengths
      * @since 3.0.0
      *
-     * @param {integer} [divisions] - The number of divisions or segments.
+     * @param {number} [divisions] - The number of divisions or segments.
      *
      * @return {number[]} An array of cumulative lengths.
      */
@@ -315,7 +315,7 @@ var Curve = new Class({
      *
      * @generic {Phaser.Math.Vector2[]} O - [out,$return]
      *
-     * @param {integer} [divisions] - The number of divisions to make.
+     * @param {number} [divisions] - The number of divisions to make.
      * @param {number} [stepRate] - The curve distance between points, implying `divisions`.
      * @param {(array|Phaser.Math.Vector2[])} [out] - An optional array to store the points in.
      *
@@ -375,7 +375,7 @@ var Curve = new Class({
      * @method Phaser.Curves.Curve#getSpacedPoints
      * @since 3.0.0
      *
-     * @param {integer} [divisions=this.defaultDivisions] - The number of divisions to make.
+     * @param {number} [divisions=this.defaultDivisions] - The number of divisions to make.
      * @param {number} [stepRate] - Step between points. Used to calculate the number of points to return when divisions is falsy. Ignored if divisions is positive.
      * @param {(array|Phaser.Math.Vector2[])} [out] - An optional array to store the points in.
      *
@@ -495,8 +495,8 @@ var Curve = new Class({
      * @method Phaser.Curves.Curve#getTFromDistance
      * @since 3.0.0
      *
-     * @param {integer} distance - The distance, in pixels.
-     * @param {integer} [divisions] - Optional amount of divisions.
+     * @param {number} distance - The distance, in pixels.
+     * @param {number} [divisions] - Optional amount of divisions.
      *
      * @return {number} The distance.
      */
@@ -517,8 +517,8 @@ var Curve = new Class({
      * @since 3.0.0
      *
      * @param {number} u - A float between 0 and 1.
-     * @param {integer} distance - The distance, in pixels.
-     * @param {integer} [divisions] - Optional amount of divisions.
+     * @param {number} distance - The distance, in pixels.
+     * @param {number} [divisions] - Optional amount of divisions.
      *
      * @return {number} The equidistant value.
      */

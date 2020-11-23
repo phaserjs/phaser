@@ -30,8 +30,8 @@ var GameObjectFactory = require('../../GameObjectFactory');
  * @param {number} [x=0] - The horizontal position of this Game Object in the world.
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {number} [radius=128] - The radius of the arc.
- * @param {integer} [startAngle=0] - The start angle of the arc, in degrees.
- * @param {integer} [endAngle=360] - The end angle of the arc, in degrees.
+ * @param {number} [startAngle=0] - The start angle of the arc, in degrees.
+ * @param {number} [endAngle=360] - The end angle of the arc, in degrees.
  * @param {boolean} [anticlockwise=false] - The winding order of the start and end angles.
  * @param {number} [fillColor] - The color the arc will be filled with, i.e. 0xff0000 for red.
  * @param {number} [fillAlpha] - The alpha the arc will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.

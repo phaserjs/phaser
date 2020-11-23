@@ -10,7 +10,7 @@ var GEOM_CONST = {
      * A Circle Geometry object type.
      * 
      * @name Phaser.Geom.CIRCLE
-     * @type {integer}
+     * @type {number}
      * @since 3.19.0
      */
     CIRCLE: 0,
@@ -19,7 +19,7 @@ var GEOM_CONST = {
      * An Ellipse Geometry object type.
      * 
      * @name Phaser.Geom.ELLIPSE
-     * @type {integer}
+     * @type {number}
      * @since 3.19.0
      */
     ELLIPSE: 1,
@@ -28,7 +28,7 @@ var GEOM_CONST = {
      * A Line Geometry object type.
      * 
      * @name Phaser.Geom.LINE
-     * @type {integer}
+     * @type {number}
      * @since 3.19.0
      */
     LINE: 2,
@@ -37,7 +37,7 @@ var GEOM_CONST = {
      * A Point Geometry object type.
      * 
      * @name Phaser.Geom.POINT
-     * @type {integer}
+     * @type {number}
      * @since 3.19.0
      */
     POINT: 3,
@@ -46,7 +46,7 @@ var GEOM_CONST = {
      * A Polygon Geometry object type.
      * 
      * @name Phaser.Geom.POLYGON
-     * @type {integer}
+     * @type {number}
      * @since 3.19.0
      */
     POLYGON: 4,
@@ -55,7 +55,7 @@ var GEOM_CONST = {
      * A Rectangle Geometry object type.
      * 
      * @name Phaser.Geom.RECTANGLE
-     * @type {integer}
+     * @type {number}
      * @since 3.19.0
      */
     RECTANGLE: 5,
@@ -64,7 +64,7 @@ var GEOM_CONST = {
      * A Triangle Geometry object type.
      * 
      * @name Phaser.Geom.TRIANGLE
-     * @type {integer}
+     * @type {number}
      * @since 3.19.0
      */
     TRIANGLE: 6

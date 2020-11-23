@@ -560,7 +560,7 @@ var Mesh = new Class({
      * @param {Phaser.Geom.Mesh.Face} faceA - The first Face.
      * @param {Phaser.Geom.Mesh.Face} faceB - The second Face.
      *
-     * @return {integer} The difference between the depths of each Face.
+     * @return {number} The difference between the depths of each Face.
      */
     sortByDepth: function (faceA, faceB)
     {

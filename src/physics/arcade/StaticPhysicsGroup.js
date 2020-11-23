@@ -94,7 +94,7 @@ var StaticPhysicsGroup = new Class({
          * The scene this group belongs to.
          *
          * @name Phaser.Physics.Arcade.StaticGroup#physicsType
-         * @type {integer}
+         * @type {number}
          * @default Phaser.Physics.Arcade.STATIC_BODY
          * @since 3.0.0
          */

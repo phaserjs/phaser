@@ -14,7 +14,7 @@
  * @param {boolean} [async=true] - Should the XHR request use async or not?
  * @param {string} [user=''] - Optional username for the XHR request.
  * @param {string} [password=''] - Optional password for the XHR request.
- * @param {integer} [timeout=0] - Optional XHR timeout value.
+ * @param {number} [timeout=0] - Optional XHR timeout value.
  * @param {boolean} [withCredentials=false] - Optional XHR withCredentials value.
  *
  * @return {Phaser.Types.Loader.XHRSettingsObject} The XHRSettings object as used by the Loader.

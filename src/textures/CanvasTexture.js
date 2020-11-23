@@ -40,8 +40,8 @@ var Texture = require('./Texture');
  * @param {Phaser.Textures.TextureManager} manager - A reference to the Texture Manager this Texture belongs to.
  * @param {string} key - The unique string-based key of this Texture.
  * @param {HTMLCanvasElement} source - The canvas element that is used as the base of this texture.
- * @param {integer} width - The width of the canvas.
- * @param {integer} height - The height of the canvas.
+ * @param {number} width - The width of the canvas.
+ * @param {number} height - The height of the canvas.
  */
 var CanvasTexture = new Class({
 
@@ -91,7 +91,7 @@ var CanvasTexture = new Class({
          *
          * @name Phaser.Textures.CanvasTexture#width
          * @readonly
-         * @type {integer}
+         * @type {number}
          * @since 3.7.0
          */
         this.width = width;
@@ -102,7 +102,7 @@ var CanvasTexture = new Class({
          *
          * @name Phaser.Textures.CanvasTexture#height
          * @readonly
-         * @type {integer}
+         * @type {number}
          * @since 3.7.0
          */
         this.height = height;
@@ -217,8 +217,8 @@ var CanvasTexture = new Class({
      * @method Phaser.Textures.CanvasTexture#draw
      * @since 3.13.0
      * 
-     * @param {integer} x - The x coordinate to draw the source at.
-     * @param {integer} y - The y coordinate to draw the source at.
+     * @param {number} x - The x coordinate to draw the source at.
+     * @param {number} y - The y coordinate to draw the source at.
      * @param {(HTMLImageElement|HTMLCanvasElement)} source - The element to draw to this canvas.
      * 
      * @return {Phaser.Textures.CanvasTexture} This CanvasTexture.
@@ -239,8 +239,8 @@ var CanvasTexture = new Class({
      * 
      * @param {string} key - The unique string-based key of the Texture.
      * @param {(string|integer)} [frame] - The string-based name, or integer based index, of the Frame to get from the Texture.
-     * @param {integer} [x=0] - The x coordinate to draw the source at.
-     * @param {integer} [y=0] - The y coordinate to draw the source at.
+     * @param {number} [x=0] - The x coordinate to draw the source at.
+     * @param {number} [y=0] - The y coordinate to draw the source at.
      * 
      * @return {Phaser.Textures.CanvasTexture} This CanvasTexture.
      */
@@ -285,12 +285,12 @@ var CanvasTexture = new Class({
      * @method Phaser.Textures.CanvasTexture#setPixel
      * @since 3.16.0
      * 
-     * @param {integer} x - The x coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
-     * @param {integer} y - The y coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
-     * @param {integer} red - The red color value. A number between 0 and 255.
-     * @param {integer} green - The green color value. A number between 0 and 255.
-     * @param {integer} blue - The blue color value. A number between 0 and 255.
-     * @param {integer} [alpha=255] - The alpha value. A number between 0 and 255.
+     * @param {number} x - The x coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {number} y - The y coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {number} red - The red color value. A number between 0 and 255.
+     * @param {number} green - The green color value. A number between 0 and 255.
+     * @param {number} blue - The blue color value. A number between 0 and 255.
+     * @param {number} [alpha=255] - The alpha value. A number between 0 and 255.
      * 
      * @return {this} This CanvasTexture.
      */
@@ -325,12 +325,12 @@ var CanvasTexture = new Class({
      * @since 3.16.0
      * 
      * @param {ImageData} imageData - The ImageData to put at the given location.
-     * @param {integer} x - The x coordinate to put the imageData. Must lay within the dimensions of this CanvasTexture and be an integer.
-     * @param {integer} y - The y coordinate to put the imageData. Must lay within the dimensions of this CanvasTexture and be an integer.
-     * @param {integer} [dirtyX=0] - Horizontal position (x coordinate) of the top-left corner from which the image data will be extracted.
-     * @param {integer} [dirtyY=0] - Vertical position (x coordinate) of the top-left corner from which the image data will be extracted.
-     * @param {integer} [dirtyWidth] - Width of the rectangle to be painted. Defaults to the width of the image data.
-     * @param {integer} [dirtyHeight] - Height of the rectangle to be painted. Defaults to the height of the image data.
+     * @param {number} x - The x coordinate to put the imageData. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {number} y - The y coordinate to put the imageData. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {number} [dirtyX=0] - Horizontal position (x coordinate) of the top-left corner from which the image data will be extracted.
+     * @param {number} [dirtyY=0] - Vertical position (x coordinate) of the top-left corner from which the image data will be extracted.
+     * @param {number} [dirtyWidth] - Width of the rectangle to be painted. Defaults to the width of the image data.
+     * @param {number} [dirtyHeight] - Height of the rectangle to be painted. Defaults to the height of the image data.
      * 
      * @return {this} This CanvasTexture.
      */
@@ -353,10 +353,10 @@ var CanvasTexture = new Class({
      * @method Phaser.Textures.CanvasTexture#getData
      * @since 3.16.0
      * 
-     * @param {integer} x - The x coordinate of the top-left of the area to get the ImageData from. Must lay within the dimensions of this CanvasTexture and be an integer.
-     * @param {integer} y - The y coordinate of the top-left of the area to get the ImageData from. Must lay within the dimensions of this CanvasTexture and be an integer.
-     * @param {integer} width - The width of the rectangle from which the ImageData will be extracted. Positive values are to the right, and negative to the left.
-     * @param {integer} height - The height of the rectangle from which the ImageData will be extracted. Positive values are down, and negative are up.
+     * @param {number} x - The x coordinate of the top-left of the area to get the ImageData from. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {number} y - The y coordinate of the top-left of the area to get the ImageData from. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {number} width - The width of the rectangle from which the ImageData will be extracted. Positive values are to the right, and negative to the left.
+     * @param {number} height - The height of the rectangle from which the ImageData will be extracted. Positive values are down, and negative are up.
      * 
      * @return {ImageData} The ImageData extracted from this CanvasTexture.
      */
@@ -381,8 +381,8 @@ var CanvasTexture = new Class({
      * @method Phaser.Textures.CanvasTexture#getPixel
      * @since 3.13.0
      * 
-     * @param {integer} x - The x coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
-     * @param {integer} y - The y coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {number} x - The x coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {number} y - The y coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
      * @param {Phaser.Display.Color} [out] - A Color object to store the pixel values in. If not provided a new Color object will be created.
      * 
      * @return {Phaser.Display.Color} An object with the red, green, blue and alpha values set in the r, g, b and a properties.
@@ -423,10 +423,10 @@ var CanvasTexture = new Class({
      * @method Phaser.Textures.CanvasTexture#getPixels
      * @since 3.16.0
      * 
-     * @param {integer} [x=0] - The x coordinate of the top-left of the region. Must lay within the dimensions of this CanvasTexture and be an integer.
-     * @param {integer} [y=0] - The y coordinate of the top-left of the region. Must lay within the dimensions of this CanvasTexture and be an integer.
-     * @param {integer} [width] - The width of the region to get. Must be an integer. Defaults to the canvas width if not given.
-     * @param {integer} [height] - The height of the region to get. Must be an integer. If not given will be set to the `width`.
+     * @param {number} [x=0] - The x coordinate of the top-left of the region. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {number} [y=0] - The y coordinate of the top-left of the region. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {number} [width] - The width of the region to get. Must be an integer. Defaults to the canvas width if not given.
+     * @param {number} [height] - The height of the region to get. Must be an integer. If not given will be set to the `width`.
      * 
      * @return {Phaser.Types.Textures.PixelConfig[][]} A 2d array of Pixel objects.
      */
@@ -477,10 +477,10 @@ var CanvasTexture = new Class({
      * @method Phaser.Textures.CanvasTexture#getIndex
      * @since 3.16.0
      * 
-     * @param {integer} x - The x coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
-     * @param {integer} y - The y coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {number} x - The x coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {number} y - The y coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
      * 
-     * @return {integer} 
+     * @return {number} 
      */
     getIndex: function (x, y)
     {
@@ -547,10 +547,10 @@ var CanvasTexture = new Class({
      * @method Phaser.Textures.CanvasTexture#clear
      * @since 3.7.0
      * 
-     * @param {integer} [x=0] - The x coordinate of the top-left of the region to clear.
-     * @param {integer} [y=0] - The y coordinate of the top-left of the region to clear.
-     * @param {integer} [width] - The width of the region.
-     * @param {integer} [height] - The height of the region.
+     * @param {number} [x=0] - The x coordinate of the top-left of the region to clear.
+     * @param {number} [y=0] - The y coordinate of the top-left of the region to clear.
+     * @param {number} [width] - The width of the region.
+     * @param {number} [height] - The height of the region.
      *
      * @return {Phaser.Textures.CanvasTexture} The Canvas Texture.
      */
@@ -572,8 +572,8 @@ var CanvasTexture = new Class({
      * @method Phaser.Textures.CanvasTexture#setSize
      * @since 3.7.0
      *
-     * @param {integer} width - The new width of the Canvas.
-     * @param {integer} [height] - The new height of the Canvas. If not given it will use the width as the height.
+     * @param {number} width - The new width of the Canvas.
+     * @param {number} [height] - The new height of the Canvas. If not given it will use the width as the height.
      *
      * @return {Phaser.Textures.CanvasTexture} The Canvas Texture.
      */

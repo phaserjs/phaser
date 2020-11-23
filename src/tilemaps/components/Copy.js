@@ -15,12 +15,12 @@ var CalculateFacesWithin = require('./CalculateFacesWithin');
  * @function Phaser.Tilemaps.Components.Copy
  * @since 3.0.0
  *
- * @param {integer} srcTileX - The x coordinate of the area to copy from, in tiles, not pixels.
- * @param {integer} srcTileY - The y coordinate of the area to copy from, in tiles, not pixels.
- * @param {integer} width - The width of the area to copy, in tiles, not pixels.
- * @param {integer} height - The height of the area to copy, in tiles, not pixels.
- * @param {integer} destTileX - The x coordinate of the area to copy to, in tiles, not pixels.
- * @param {integer} destTileY - The y coordinate of the area to copy to, in tiles, not pixels.
+ * @param {number} srcTileX - The x coordinate of the area to copy from, in tiles, not pixels.
+ * @param {number} srcTileY - The y coordinate of the area to copy from, in tiles, not pixels.
+ * @param {number} width - The width of the area to copy, in tiles, not pixels.
+ * @param {number} height - The height of the area to copy, in tiles, not pixels.
+ * @param {number} destTileX - The x coordinate of the area to copy to, in tiles, not pixels.
+ * @param {number} destTileY - The y coordinate of the area to copy to, in tiles, not pixels.
  * @param {boolean} recalculateFaces - `true` if the faces data should be recalculated.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */

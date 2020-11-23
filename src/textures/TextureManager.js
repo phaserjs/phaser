@@ -104,7 +104,7 @@ var TextureManager = new Class({
          * An counting value used for emitting 'ready' event after all of managers in game is loaded.
          *
          * @name Phaser.Textures.TextureManager#_pending
-         * @type {integer}
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -525,8 +525,8 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {integer} [width=256] - The width of the Canvas element.
-     * @param {integer} [height=256] - The height of the Canvas element.
+     * @param {number} [width=256] - The width of the Canvas element.
+     * @param {number} [height=256] - The height of the Canvas element.
      *
      * @return {?Phaser.Textures.CanvasTexture} The Canvas Texture that was created, or `null` if the key is already in use.
      */
@@ -876,8 +876,8 @@ var TextureManager = new Class({
      *
      * @param {string} key - The unique string-based key of the Texture.
      * @param {HTMLImageElement} source - The source Image element.
-     * @param {integer} width - The width of the Texture.
-     * @param {integer} height - The height of the Texture.
+     * @param {number} width - The width of the Texture.
+     * @param {number} height - The height of the Texture.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
@@ -1014,8 +1014,8 @@ var TextureManager = new Class({
      * @method Phaser.Textures.TextureManager#getPixel
      * @since 3.0.0
      *
-     * @param {integer} x - The x coordinate of the pixel within the Texture.
-     * @param {integer} y - The y coordinate of the pixel within the Texture.
+     * @param {number} x - The x coordinate of the pixel within the Texture.
+     * @param {number} y - The y coordinate of the pixel within the Texture.
      * @param {string} key - The unique string-based key of the Texture.
      * @param {(string|integer)} [frame] - The string or index of the Frame.
      *
@@ -1061,12 +1061,12 @@ var TextureManager = new Class({
      * @method Phaser.Textures.TextureManager#getPixelAlpha
      * @since 3.10.0
      *
-     * @param {integer} x - The x coordinate of the pixel within the Texture.
-     * @param {integer} y - The y coordinate of the pixel within the Texture.
+     * @param {number} x - The x coordinate of the pixel within the Texture.
+     * @param {number} y - The y coordinate of the pixel within the Texture.
      * @param {string} key - The unique string-based key of the Texture.
      * @param {(string|integer)} [frame] - The string or index of the Frame.
      *
-     * @return {integer} A value between 0 and 255, or `null` if the coordinates were out of bounds.
+     * @return {number} A value between 0 and 255, or `null` if the coordinates were out of bounds.
      */
     getPixelAlpha: function (x, y, key, frame)
     {

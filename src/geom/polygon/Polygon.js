@@ -42,7 +42,7 @@ var Polygon = new Class({
          * Used for fast type comparisons.
          *
          * @name Phaser.Geom.Polygon#type
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @since 3.19.0
          */
@@ -212,7 +212,7 @@ var Polygon = new Class({
      *
      * @generic {Phaser.Geom.Point[]} O - [output,$return]
      *
-     * @param {integer} quantity - The amount of points to return. If a falsey value the quantity will be derived from the `stepRate` instead.
+     * @param {number} quantity - The amount of points to return. If a falsey value the quantity will be derived from the `stepRate` instead.
      * @param {number} [stepRate] - Sets the quantity by getting the perimeter of the Polygon and dividing it by the stepRate.
      * @param {(array|Phaser.Geom.Point[])} [output] - An array to insert the points in to. If not provided a new array will be created.
      *

@@ -105,7 +105,7 @@ var MapData = new Class({
          * The format of the map data.
          *
          * @name Phaser.Tilemaps.MapData#format
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.format = GetFastValue(config, 'format', null);
@@ -219,7 +219,7 @@ var MapData = new Class({
          * Only used for hexagonal orientation Tilemaps.
          *
          * @name Phaser.Tilemaps.MapData#hexSideLength
-         * @type {integer}
+         * @type {number}
          * @since 3.50.0
          */
         this.hexSideLength = GetFastValue(config, 'hexSideLength', 0);

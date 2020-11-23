@@ -10,7 +10,7 @@ var GetTilesWithin = require('./GetTilesWithin');
  * @callback FindTileCallback
  *
  * @param {Phaser.Tilemaps.Tile} value - The Tile.
- * @param {integer} index - The index of the tile.
+ * @param {number} index - The index of the tile.
  * @param {Phaser.Tilemaps.Tile[]} array - An array of Tile objects.
  *
  * @return {boolean} Return `true` if the callback should run, otherwise `false`.
@@ -26,10 +26,10 @@ var GetTilesWithin = require('./GetTilesWithin');
  *
  * @param {FindTileCallback} callback - The callback. Each tile in the given area will be passed to this callback as the first and only parameter.
  * @param {object} [context] - The context under which the callback should be run.
- * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area to filter.
- * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area to filter.
- * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
- * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+ * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area to filter.
+ * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area to filter.
+ * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+ * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
  * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
  * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have -1 for an index.
  * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on at least one side.

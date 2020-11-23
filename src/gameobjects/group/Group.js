@@ -155,7 +155,7 @@ var Group = new Class({
          * The maximum size of this group, if used as a pool. -1 is no limit.
          *
          * @name Phaser.GameObjects.Group#maxSize
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          * @default -1
          */
@@ -755,7 +755,7 @@ var Group = new Class({
      * @method Phaser.GameObjects.Group#getLength
      * @since 3.0.0
      *
-     * @return {integer}
+     * @return {number}
      */
     getLength: function ()
     {
@@ -776,8 +776,8 @@ var Group = new Class({
      *
      * @param {string} [property] - The property to test on each array element.
      * @param {*} [value] - The value to test the property against. Must pass a strict (`===`) comparison check.
-     * @param {integer} [startIndex] - An optional start index to search from.
-     * @param {integer} [endIndex] - An optional end index to search to.
+     * @param {number} [startIndex] - An optional start index to search from.
+     * @param {number} [endIndex] - An optional end index to search to.
      *
      * @return {any[]} An array of matching Group members. The array will be empty if nothing matched.
      */
@@ -821,7 +821,7 @@ var Group = new Class({
      * @method Phaser.GameObjects.Group#getFirstNth
      * @since 3.6.0
      *
-     * @param {integer} nth - The nth matching Group member to search for.
+     * @param {number} nth - The nth matching Group member to search for.
      * @param {boolean} [state=false] - The {@link Phaser.GameObjects.GameObject#active} value to match.
      * @param {boolean} [createIfNull=false] - Create a new Game Object if no matching members are found, using the following arguments.
      * @param {number} [x] - The horizontal position of the Game Object in the world.
@@ -872,7 +872,7 @@ var Group = new Class({
      * @method Phaser.GameObjects.Group#getLastNth
      * @since 3.6.0
      *
-     * @param {integer} nth - The nth matching Group member to search for.
+     * @param {number} nth - The nth matching Group member to search for.
      * @param {boolean} [state=false] - The {@link Phaser.GameObjects.GameObject#active} value to match.
      * @param {boolean} [createIfNull=false] - Create a new Game Object if no matching members are found, using the following arguments.
      * @param {number} [x] - The horizontal position of the Game Object in the world.
@@ -900,7 +900,7 @@ var Group = new Class({
      * @since 3.6.0
      *
      * @param {boolean} forwards - Search front to back or back to front?
-     * @param {integer} nth - Stop matching after nth successful matches.
+     * @param {number} nth - Stop matching after nth successful matches.
      * @param {boolean} [state=false] - The {@link Phaser.GameObjects.GameObject#active} value to match.
      * @param {boolean} [createIfNull=false] - Create a new Game Object if no matching members are found, using the following arguments.
      * @param {number} [x] - The horizontal position of the Game Object in the world.
@@ -1110,7 +1110,7 @@ var Group = new Class({
      *
      * @param {boolean} [value=true] - Count active (true) or inactive (false) group members.
      *
-     * @return {integer} The number of group members with an active state matching the `active` argument.
+     * @return {number} The number of group members with an active state matching the `active` argument.
      */
     countActive: function (value)
     {
@@ -1135,7 +1135,7 @@ var Group = new Class({
      * @method Phaser.GameObjects.Group#getTotalUsed
      * @since 3.0.0
      *
-     * @return {integer} The number of group members with an active state of true.
+     * @return {number} The number of group members with an active state of true.
      */
     getTotalUsed: function ()
     {
@@ -1150,7 +1150,7 @@ var Group = new Class({
      * @method Phaser.GameObjects.Group#getTotalFree
      * @since 3.0.0
      *
-     * @return {integer} maxSize minus the number of active group numbers; or a large number (if maxSize is -1).
+     * @return {number} maxSize minus the number of active group numbers; or a large number (if maxSize is -1).
      */
     getTotalFree: function ()
     {
@@ -1205,8 +1205,8 @@ var Group = new Class({
      * @param {string} key - The property to be updated.
      * @param {number} value - The amount to set the property to.
      * @param {number} [step=0] - This is added to the `value` amount, multiplied by the iteration counter.
-     * @param {integer} [index=0] - An optional offset to start searching from within the items array.
-     * @param {integer} [direction=1] - The direction to iterate through the array. 1 is from beginning to end, -1 from end to beginning.
+     * @param {number} [index=0] - An optional offset to start searching from within the items array.
+     * @param {number} [direction=1] - The direction to iterate through the array. 1 is from beginning to end, -1 from end to beginning.
      *
      * @return {this} This Group object.
      */
@@ -1226,8 +1226,8 @@ var Group = new Class({
      * @param {string} key - The property to be updated.
      * @param {number} value - The amount to set the property to.
      * @param {number} [step=0] - This is added to the `value` amount, multiplied by the iteration counter.
-     * @param {integer} [index=0] - An optional offset to start searching from within the items array.
-     * @param {integer} [direction=1] - The direction to iterate through the array. 1 is from beginning to end, -1 from end to beginning.
+     * @param {number} [index=0] - An optional offset to start searching from within the items array.
+     * @param {number} [direction=1] - The direction to iterate through the array. 1 is from beginning to end, -1 from end to beginning.
      *
      * @return {this} This Group object.
      */
@@ -1361,7 +1361,7 @@ var Group = new Class({
      *
      * @param {number} x - The x coordinate to place the first item in the array at.
      * @param {number} y - The y coordinate to place the first item in the array at.
-     * @param {integer} [direction=0] - The iteration direction. 0 = first to last and 1 = last to first.
+     * @param {number} [direction=0] - The iteration direction. 0 = first to last and 1 = last to first.
      *
      * @return {this} This Group object.
      */
@@ -1667,8 +1667,8 @@ var Group = new Class({
      * @since 3.21.0
      *
      * @param {boolean} value - The value to set the property to.
-     * @param {integer} [index=0] - An optional offset to start searching from within the items array.
-     * @param {integer} [direction=1] - The direction to iterate through the array. 1 is from beginning to end, -1 from end to beginning.
+     * @param {number} [index=0] - An optional offset to start searching from within the items array.
+     * @param {number} [direction=1] - The direction to iterate through the array. 1 is from beginning to end, -1 from end to beginning.
      *
      * @return {this} This Group object.
      */

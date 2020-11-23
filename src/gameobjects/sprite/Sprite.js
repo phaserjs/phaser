@@ -289,7 +289,7 @@ var Sprite = new Class({
      * @since 3.50.0
      *
      * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object.
-     * @param {integer} delay - The delay, in milliseconds, to wait before starting the animation playing.
+     * @param {number} delay - The delay, in milliseconds, to wait before starting the animation playing.
      *
      * @return {this} This Game Object.
      */
@@ -316,7 +316,7 @@ var Sprite = new Class({
      * @since 3.50.0
      *
      * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object.
-     * @param {integer} [repeatCount=1] - How many times should the animation repeat before the next one starts?
+     * @param {number} [repeatCount=1] - How many times should the animation repeat before the next one starts?
      *
      * @return {this} This Game Object.
      */
@@ -389,7 +389,7 @@ var Sprite = new Class({
      * @fires Phaser.Animations.Events#ANIMATION_STOP
      * @since 3.50.0
      *
-     * @param {integer} delay - The number of milliseconds to wait before stopping this animation.
+     * @param {number} delay - The number of milliseconds to wait before stopping this animation.
      *
      * @return {this} This Game Object.
      */
@@ -412,7 +412,7 @@ var Sprite = new Class({
      * @fires Phaser.Animations.Events#ANIMATION_STOP
      * @since 3.50.0
      *
-     * @param {integer} [repeatCount=1] - How many times should the animation repeat before stopping?
+     * @param {number} [repeatCount=1] - How many times should the animation repeat before stopping?
      *
      * @return {this} This Game Object.
      */

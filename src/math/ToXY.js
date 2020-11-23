@@ -16,9 +16,9 @@ var Vector2 = require('./Vector2');
  * @function Phaser.Math.ToXY
  * @since 3.19.0
  *
- * @param {integer} index - The position within the grid to get the x/y value for.
- * @param {integer} width - The width of the grid.
- * @param {integer} height - The height of the grid.
+ * @param {number} index - The position within the grid to get the x/y value for.
+ * @param {number} width - The width of the grid.
+ * @param {number} height - The height of the grid.
  * @param {Phaser.Math.Vector2} [out] - An optional Vector2 to store the result in. If not given, a new Vector2 instance will be created.
  *
  * @return {Phaser.Math.Vector2} A Vector2 where the x and y properties contain the given grid index.

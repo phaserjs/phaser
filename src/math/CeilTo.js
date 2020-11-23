@@ -14,7 +14,7 @@
  *
  * @param {number} value - The value to round.
  * @param {number} [place=0] - The place to round to.
- * @param {integer} [base=10] - The base to round in. Default is 10 for decimal.
+ * @param {number} [base=10] - The base to round in. Default is 10 for decimal.
  *
  * @return {number} The rounded value.
  */

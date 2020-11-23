@@ -64,8 +64,8 @@ var _FLAG = 8; // 1000
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
- * @param {integer} width - The width of the Game Object. If zero it will use the size of the texture frame.
- * @param {integer} height - The height of the Game Object. If zero it will use the size of the texture frame.
+ * @param {number} width - The width of the Game Object. If zero it will use the size of the texture frame.
+ * @param {number} height - The height of the Game Object. If zero it will use the size of the texture frame.
  * @param {string} textureKey - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {(string|integer)} [frameKey] - An optional frame from the Texture this Game Object is rendering with.
  */
@@ -226,7 +226,7 @@ var TileSprite = new Class({
          * The next power of two value from the width of the Fill Pattern frame.
          *
          * @name Phaser.GameObjects.TileSprite#potWidth
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.potWidth = GetPowerOfTwo(displayFrame.width);
@@ -235,7 +235,7 @@ var TileSprite = new Class({
          * The next power of two value from the height of the Fill Pattern frame.
          *
          * @name Phaser.GameObjects.TileSprite#potHeight
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.potHeight = GetPowerOfTwo(displayFrame.height);

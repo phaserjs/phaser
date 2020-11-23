@@ -12,7 +12,7 @@
  * @since 3.0.0
  *
  * @param {array} array - The array to splice from.
- * @param {integer} index - The index of the item which should be spliced.
+ * @param {number} index - The index of the item which should be spliced.
  *
  * @return {*} The item which was spliced (removed).
  */

@@ -15,7 +15,7 @@ var CheckIsoBounds = require('./CheckIsoBounds');
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to run the cull check against.
  * @param {array} [outputArray] - An optional array to store the Tile objects within.
- * @param {integer} [renderOrder=0] - The rendering order constant.
+ * @param {number} [renderOrder=0] - The rendering order constant.
  *
  * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects.
  */

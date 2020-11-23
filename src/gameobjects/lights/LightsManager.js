@@ -90,7 +90,7 @@ var LightsManager = new Class({
          * Change this via the `maxLights` property in your game config, as it cannot be changed at runtime.
          *
          * @name Phaser.GameObjects.LightsManager#maxLights
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @since 3.15.0
          */
@@ -238,7 +238,7 @@ var LightsManager = new Class({
      * @method Phaser.GameObjects.LightsManager#getMaxVisibleLights
      * @since 3.0.0
      *
-     * @return {integer} The maximum number of Lights allowed to appear at once.
+     * @return {number} The maximum number of Lights allowed to appear at once.
      */
     getMaxVisibleLights: function ()
     {
@@ -251,7 +251,7 @@ var LightsManager = new Class({
      * @method Phaser.GameObjects.LightsManager#getLightCount
      * @since 3.0.0
      *
-     * @return {integer} The number of Lights managed by this Lights Manager.
+     * @return {number} The number of Lights managed by this Lights Manager.
      */
     getLightCount: function ()
     {

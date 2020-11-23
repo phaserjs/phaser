@@ -56,8 +56,8 @@ var UUID = require('../../utils/string/UUID');
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {number} [x=0] - The horizontal position of this Game Object in the world.
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
- * @param {integer} [width=32] - The width of the Render Texture.
- * @param {integer} [height=32] - The height of the Render Texture.
+ * @param {number} [width=32] - The width of the Render Texture.
+ * @param {number} [height=32] - The height of the Render Texture.
  * @property {string} [key] - The texture key to make the RenderTexture from.
  * @property {string} [frame] - the frame to make the RenderTexture from.
  */
@@ -432,7 +432,7 @@ var RenderTexture = new Class({
      * @method Phaser.GameObjects.RenderTexture#setGlobalTint
      * @since 3.2.0
      *
-     * @param {integer} tint - The tint value.
+     * @param {number} tint - The tint value.
      *
      * @return {this} This Render Texture.
      */
@@ -1084,10 +1084,10 @@ var RenderTexture = new Class({
      * @method Phaser.GameObjects.RenderTexture#snapshotArea
      * @since 3.19.0
      *
-     * @param {integer} x - The x coordinate to grab from.
-     * @param {integer} y - The y coordinate to grab from.
-     * @param {integer} width - The width of the area to grab.
-     * @param {integer} height - The height of the area to grab.
+     * @param {number} x - The x coordinate to grab from.
+     * @param {number} y - The y coordinate to grab from.
+     * @param {number} width - The width of the area to grab.
+     * @param {number} height - The height of the area to grab.
      * @param {Phaser.Types.Renderer.Snapshot.SnapshotCallback} callback - The Function to invoke after the snapshot image is created.
      * @param {string} [type='image/png'] - The format of the image to create, usually `image/png` or `image/jpeg`.
      * @param {number} [encoderOptions=0.92] - The image quality, between 0 and 1. Used for image formats with lossy compression, such as `image/jpeg`.
@@ -1157,8 +1157,8 @@ var RenderTexture = new Class({
      * @method Phaser.GameObjects.RenderTexture#snapshotPixel
      * @since 3.19.0
      *
-     * @param {integer} x - The x coordinate of the pixel to get.
-     * @param {integer} y - The y coordinate of the pixel to get.
+     * @param {number} x - The x coordinate of the pixel to get.
+     * @param {number} y - The y coordinate of the pixel to get.
      * @param {Phaser.Types.Renderer.Snapshot.SnapshotCallback} callback - The Function to invoke after the snapshot pixel data is extracted.
      *
      * @return {this} This Render Texture instance.

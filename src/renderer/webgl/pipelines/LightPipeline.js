@@ -226,7 +226,7 @@ var LightPipeline = new Class({
      * @param {number} y - The vertex y position.
      * @param {number} u - UV u value.
      * @param {number} v - UV v value.
-     * @param {integer} unit - Texture unit to which the texture needs to be bound.
+     * @param {number} unit - Texture unit to which the texture needs to be bound.
      * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
      * @param {number} tint - The tint color value.
      */

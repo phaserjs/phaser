@@ -29,10 +29,10 @@ var Vector2 = require('../math/Vector2');
  * @param {number} [y=0] - The y coordinate of the ellipse.
  * @param {number} [xRadius=0] - The horizontal radius of ellipse.
  * @param {number} [yRadius=0] - The vertical radius of ellipse.
- * @param {integer} [startAngle=0] - The start angle of the ellipse, in degrees.
- * @param {integer} [endAngle=360] - The end angle of the ellipse, in degrees.
+ * @param {number} [startAngle=0] - The start angle of the ellipse, in degrees.
+ * @param {number} [endAngle=360] - The end angle of the ellipse, in degrees.
  * @param {boolean} [clockwise=false] - Whether the ellipse angles are given as clockwise (`true`) or counter-clockwise (`false`).
- * @param {integer} [rotation=0] - The rotation of the ellipse, in degrees.
+ * @param {number} [rotation=0] - The rotation of the ellipse, in degrees.
  */
 var EllipseCurve = new Class({
 

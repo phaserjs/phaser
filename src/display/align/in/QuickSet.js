@@ -33,7 +33,7 @@ AlignInMap[ALIGN_CONST.RIGHT_TOP] = AlignInMap[ALIGN_CONST.TOP_RIGHT];
  *
  * @param {Phaser.GameObjects.GameObject} child - The Game Object that will be positioned.
  * @param {Phaser.GameObjects.GameObject} alignIn - The Game Object to base the alignment position on.
- * @param {integer} position - The position to align the Game Object with. This is an align constant, such as `ALIGN_CONST.LEFT_CENTER`.
+ * @param {number} position - The position to align the Game Object with. This is an align constant, such as `ALIGN_CONST.LEFT_CENTER`.
  * @param {number} [offsetX=0] - Optional horizontal offset from the position.
  * @param {number} [offsetY=0] - Optional vertical offset from the position.
  *

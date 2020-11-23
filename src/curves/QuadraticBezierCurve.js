@@ -141,7 +141,7 @@ var QuadraticBezier = new Class({
      * @generic {Phaser.GameObjects.Graphics} G - [graphics,$return]
      *
      * @param {Phaser.GameObjects.Graphics} graphics - `Graphics` object to draw onto.
-     * @param {integer} [pointsTotal=32] - Number of points to be used for drawing the curve. Higher numbers result in smoother curve but require more processing.
+     * @param {number} [pointsTotal=32] - Number of points to be used for drawing the curve. Higher numbers result in smoother curve but require more processing.
      *
      * @return {Phaser.GameObjects.Graphics} `Graphics` object that was drawn to.
      */

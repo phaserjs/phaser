@@ -16,10 +16,10 @@ var ShuffleArray = require('../../utils/array/Shuffle');
  * @function Phaser.Tilemaps.Components.Shuffle
  * @since 3.0.0
  *
- * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
- * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
- * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
- * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+ * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
+ * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
+ * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+ * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var Shuffle = function (tileX, tileY, width, height, layer)

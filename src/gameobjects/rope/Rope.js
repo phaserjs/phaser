@@ -333,7 +333,7 @@ var Rope = new Class({
      *
      * @param {string} key - The string-based key of the animation to play.
      * @param {boolean} [ignoreIfPlaying=false] - If an animation is already playing then ignore this call.
-     * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
+     * @param {number} [startFrame=0] - Optionally start the animation playing from this frame index.
      *
      * @return {this} This Game Object.
      */
@@ -847,7 +847,7 @@ var Rope = new Class({
      * @method Phaser.GameObjects.Rope#resizeArrays
      * @since 3.23.0
      *
-     * @param {integer} newSize - The amount of segments to split the Rope in to.
+     * @param {number} newSize - The amount of segments to split the Rope in to.
      *
      * @return {this} This Game Object instance.
      */
@@ -1006,7 +1006,7 @@ var Rope = new Class({
      * @since 3.23.0
      *
      * @param {Phaser.GameObjects.Rope} src - The Rope object being rendered.
-     * @param {integer} meshLength - The number of vertices in the mesh.
+     * @param {number} meshLength - The number of vertices in the mesh.
      * @param {number[]} verts - An array of translated vertex coordinates.
      */
     renderDebugVerts: function (src, meshLength, verts)

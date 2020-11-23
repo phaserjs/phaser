@@ -23,10 +23,10 @@ var RGBToHSV = require('./RGBToHSV');
  * @constructor
  * @since 3.0.0
  *
- * @param {integer} [red=0] - The red color value. A number between 0 and 255.
- * @param {integer} [green=0] - The green color value. A number between 0 and 255.
- * @param {integer} [blue=0] - The blue color value. A number between 0 and 255.
- * @param {integer} [alpha=255] - The alpha value. A number between 0 and 255.
+ * @param {number} [red=0] - The red color value. A number between 0 and 255.
+ * @param {number} [green=0] - The green color value. A number between 0 and 255.
+ * @param {number} [blue=0] - The blue color value. A number between 0 and 255.
+ * @param {number} [alpha=255] - The alpha value. A number between 0 and 255.
  */
 var Color = new Class({
 
@@ -202,10 +202,10 @@ var Color = new Class({
      * @method Phaser.Display.Color#setTo
      * @since 3.0.0
      *
-     * @param {integer} red - The red color value. A number between 0 and 255.
-     * @param {integer} green - The green color value. A number between 0 and 255.
-     * @param {integer} blue - The blue color value. A number between 0 and 255.
-     * @param {integer} [alpha=255] - The alpha value. A number between 0 and 255.
+     * @param {number} red - The red color value. A number between 0 and 255.
+     * @param {number} green - The green color value. A number between 0 and 255.
+     * @param {number} blue - The blue color value. A number between 0 and 255.
+     * @param {number} [alpha=255] - The alpha value. A number between 0 and 255.
      * @param {boolean} [updateHSV=true] - Update the HSV values after setting the RGB values?
      *
      * @return {Phaser.Display.Color} This Color object.
@@ -375,7 +375,7 @@ var Color = new Class({
      * @method Phaser.Display.Color#gray
      * @since 3.13.0
      * 
-     * @param {integer} shade - A value between 0 and 255.
+     * @param {number} shade - A value between 0 and 255.
      *
      * @return {Phaser.Display.Color} This Color object.
      */
@@ -390,8 +390,8 @@ var Color = new Class({
      * @method Phaser.Display.Color#random
      * @since 3.13.0
      * 
-     * @param {integer} [min=0] - The minimum random color value. Between 0 and 255.
-     * @param {integer} [max=255] - The maximum random color value. Between 0 and 255.
+     * @param {number} [min=0] - The minimum random color value. Between 0 and 255.
+     * @param {number} [max=255] - The maximum random color value. Between 0 and 255.
      *
      * @return {Phaser.Display.Color} This Color object.
      */
@@ -413,8 +413,8 @@ var Color = new Class({
      * @method Phaser.Display.Color#randomGray
      * @since 3.13.0
      * 
-     * @param {integer} [min=0] - The minimum random color value. Between 0 and 255.
-     * @param {integer} [max=255] - The maximum random color value. Between 0 and 255.
+     * @param {number} [min=0] - The minimum random color value. Between 0 and 255.
+     * @param {number} [max=255] - The maximum random color value. Between 0 and 255.
      *
      * @return {Phaser.Display.Color} This Color object.
      */
@@ -435,7 +435,7 @@ var Color = new Class({
      * @method Phaser.Display.Color#saturate
      * @since 3.13.0
      * 
-     * @param {integer} amount - The percentage amount to change this color by. A value between 0 and 100.
+     * @param {number} amount - The percentage amount to change this color by. A value between 0 and 100.
      *
      * @return {Phaser.Display.Color} This Color object.
      */
@@ -453,7 +453,7 @@ var Color = new Class({
      * @method Phaser.Display.Color#desaturate
      * @since 3.13.0
      * 
-     * @param {integer} amount - The percentage amount to change this color by. A value between 0 and 100.
+     * @param {number} amount - The percentage amount to change this color by. A value between 0 and 100.
      *
      * @return {Phaser.Display.Color} This Color object.
      */
@@ -470,7 +470,7 @@ var Color = new Class({
      * @method Phaser.Display.Color#lighten
      * @since 3.13.0
      * 
-     * @param {integer} amount - The percentage amount to change this color by. A value between 0 and 100.
+     * @param {number} amount - The percentage amount to change this color by. A value between 0 and 100.
      *
      * @return {Phaser.Display.Color} This Color object.
      */
@@ -487,7 +487,7 @@ var Color = new Class({
      * @method Phaser.Display.Color#darken
      * @since 3.13.0
      * 
-     * @param {integer} amount - The percentage amount to change this color by. A value between 0 and 100.
+     * @param {number} amount - The percentage amount to change this color by. A value between 0 and 100.
      *
      * @return {Phaser.Display.Color} This Color object.
      */
@@ -504,7 +504,7 @@ var Color = new Class({
      * @method Phaser.Display.Color#brighten
      * @since 3.13.0
      * 
-     * @param {integer} amount - The percentage amount to change this color by. A value between 0 and 100.
+     * @param {number} amount - The percentage amount to change this color by. A value between 0 and 100.
      *
      * @return {Phaser.Display.Color} This Color object.
      */

@@ -17,7 +17,7 @@
  * @since 3.20.0
  * 
  * @param {Phaser.GameObjects.Video} video - The Video Game Object which raised the event.
- * @param {integer} width - The width of the video.
- * @param {integer} height - The height of the video.
+ * @param {number} width - The width of the video.
+ * @param {number} height - The height of the video.
  */
 module.exports = 'created';

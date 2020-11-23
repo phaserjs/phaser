@@ -14,8 +14,8 @@ var point = new Vector2();
  * @function Phaser.Tilemaps.Components.CheckIsoBounds
  * @since 3.50.0
  *
- * @param {integer} tileX - The x coordinate, in tiles, not pixels.
- * @param {integer} tileY - The y coordinate, in tiles, not pixels.
+ * @param {number} tileX - The x coordinate, in tiles, not pixels.
+ * @param {number} tileY - The y coordinate, in tiles, not pixels.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to check against.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to run the cull check against.
  *

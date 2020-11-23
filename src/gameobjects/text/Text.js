@@ -1088,7 +1088,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setMaxLines
      * @since 3.0.0
      *
-     * @param {integer} [max=0] - The maximum number of lines to draw.
+     * @param {number} [max=0] - The maximum number of lines to draw.
      *
      * @return {this} This Text object.
      */

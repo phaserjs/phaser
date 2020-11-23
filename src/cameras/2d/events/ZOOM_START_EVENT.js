@@ -14,7 +14,7 @@
  * 
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
  * @param {Phaser.Cameras.Scene2D.Effects.Zoom} effect - A reference to the effect instance.
- * @param {integer} duration - The duration of the effect.
+ * @param {number} duration - The duration of the effect.
  * @param {number} zoom - The destination zoom value.
  */
 module.exports = 'camerazoomstart';

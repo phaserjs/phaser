@@ -473,7 +473,7 @@ var PluginManager = new Class({
      *
      * @param {string} key - The unique plugin key.
      *
-     * @return {integer} The index of the plugin within the plugins array.
+     * @return {number} The index of the plugin within the plugins array.
      */
     getIndex: function (key)
     {

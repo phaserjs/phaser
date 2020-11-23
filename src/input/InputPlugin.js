@@ -200,7 +200,7 @@ var InputPlugin = new Class({
          * Set to 0 to poll constantly. Set to -1 to only poll on user movement.
          *
          * @name Phaser.Input.InputPlugin#pollRate
-         * @type {integer}
+         * @type {number}
          * @default -1
          * @since 3.0.0
          */
@@ -667,7 +667,7 @@ var InputPlugin = new Class({
      * @fires Phaser.Input.Events#UPDATE
      * @since 3.0.0
      *
-     * @param {integer} type - The type of event to process.
+     * @param {number} type - The type of event to process.
      * @param {Phaser.Input.Pointer[]} pointers - An array of Pointers on which the event occurred.
      *
      * @return {boolean} `true` if this Scene has captured the input events from all other Scenes, otherwise `false`.
@@ -957,7 +957,7 @@ var InputPlugin = new Class({
      *
      * @param {Phaser.Input.Pointer} pointer - The Pointer being tested.
      *
-     * @return {integer} The total number of objects interacted with.
+     * @return {number} The total number of objects interacted with.
      */
     processDownEvents: function (pointer)
     {
@@ -1033,7 +1033,7 @@ var InputPlugin = new Class({
      *
      * @param {Phaser.Input.Pointer} pointer - The Pointer to get the drag state for.
      *
-     * @return {integer} The drag state of the given Pointer.
+     * @return {number} The drag state of the given Pointer.
      */
     getDragState: function (pointer)
     {
@@ -1056,7 +1056,7 @@ var InputPlugin = new Class({
      * @since 3.16.0
      *
      * @param {Phaser.Input.Pointer} pointer - The Pointer to set the drag state for.
-     * @param {integer} state - The drag state value. An integer between 0 and 5.
+     * @param {number} state - The drag state value. An integer between 0 and 5.
      */
     setDragState: function (pointer, state)
     {
@@ -1110,7 +1110,7 @@ var InputPlugin = new Class({
      *
      * @param {Phaser.Input.Pointer} pointer - The Pointer to process the drag event on.
      *
-     * @return {integer} The number of items that DRAG_START was called on.
+     * @return {number} The number of items that DRAG_START was called on.
      */
     processDragStartList: function (pointer)
     {
@@ -1159,7 +1159,7 @@ var InputPlugin = new Class({
      *
      * @param {Phaser.Input.Pointer} pointer - The Pointer to process the drag event on.
      *
-     * @return {integer} The number of items that were collected on the drag list.
+     * @return {number} The number of items that were collected on the drag list.
      */
     processDragDownEvent: function (pointer)
     {
@@ -1239,7 +1239,7 @@ var InputPlugin = new Class({
      *
      * @param {Phaser.Input.Pointer} pointer - The Pointer to process the drag event on.
      *
-     * @return {integer} The number of items that were updated by this drag event.
+     * @return {number} The number of items that were updated by this drag event.
      */
     processDragMoveEvent: function (pointer)
     {
@@ -1379,7 +1379,7 @@ var InputPlugin = new Class({
      *
      * @param {Phaser.Input.Pointer} pointer - The Pointer to process the drag event on.
      *
-     * @return {integer} The number of items that were updated by this drag event.
+     * @return {number} The number of items that were updated by this drag event.
      */
     processDragUpEvent: function (pointer)
     {
@@ -1444,7 +1444,7 @@ var InputPlugin = new Class({
      *
      * @param {Phaser.Input.Pointer} pointer - The pointer to check for events against.
      *
-     * @return {integer} The total number of objects interacted with.
+     * @return {number} The total number of objects interacted with.
      */
     processMoveEvents: function (pointer)
     {
@@ -1512,7 +1512,7 @@ var InputPlugin = new Class({
      *
      * @param {Phaser.Input.Pointer} pointer - The pointer to check for events against.
      *
-     * @return {integer} The total number of objects interacted with.
+     * @return {number} The total number of objects interacted with.
      */
     processWheelEvent: function (pointer)
     {
@@ -1580,7 +1580,7 @@ var InputPlugin = new Class({
      *
      * @param {Phaser.Input.Pointer} pointer - The pointer to check for events against.
      *
-     * @return {integer} The total number of objects interacted with.
+     * @return {number} The total number of objects interacted with.
      */
     processOverEvents: function (pointer)
     {
@@ -1660,7 +1660,7 @@ var InputPlugin = new Class({
      *
      * @param {Phaser.Input.Pointer} pointer - The pointer to check for events against.
      *
-     * @return {integer} The total number of objects interacted with.
+     * @return {number} The total number of objects interacted with.
      */
     processOutEvents: function (pointer)
     {
@@ -1742,7 +1742,7 @@ var InputPlugin = new Class({
      *
      * @param {Phaser.Input.Pointer} pointer - The pointer to check for events against.
      *
-     * @return {integer} The total number of objects interacted with.
+     * @return {number} The total number of objects interacted with.
      */
     processOverOutEvents: function (pointer)
     {
@@ -1918,7 +1918,7 @@ var InputPlugin = new Class({
      *
      * @param {Phaser.Input.Pointer} pointer - The pointer to check for events against.
      *
-     * @return {integer} The total number of objects interacted with.
+     * @return {number} The total number of objects interacted with.
      */
     processUpEvents: function (pointer)
     {
@@ -2087,7 +2087,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#makePixelPerfect
      * @since 3.10.0
      *
-     * @param {integer} [alphaTolerance=1] - The alpha level that the pixel should be above to be included as a successful interaction.
+     * @param {number} [alphaTolerance=1] - The alpha level that the pixel should be above to be included as a successful interaction.
      *
      * @return {function} A Pixel Perfect Handler for use as a hitArea shape callback.
      */
@@ -2657,7 +2657,7 @@ var InputPlugin = new Class({
      * @param {Phaser.GameObjects.GameObject} childA - The first Game Object to compare.
      * @param {Phaser.GameObjects.GameObject} childB - The second Game Object to compare.
      *
-     * @return {integer} Returns either a negative or positive integer, or zero if they match.
+     * @return {number} Returns either a negative or positive integer, or zero if they match.
      */
     sortHandlerGO: function (childA, childB)
     {
@@ -2745,7 +2745,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#addPointer
      * @since 3.10.0
      *
-     * @param {integer} [quantity=1] The number of new Pointers to create. A maximum of 10 is allowed in total.
+     * @param {number} [quantity=1] The number of new Pointers to create. A maximum of 10 is allowed in total.
      *
      * @return {Phaser.Input.Pointer[]} An array containing all of the new Pointer objects that were created.
      */

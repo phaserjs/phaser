@@ -110,7 +110,7 @@ var Shader = new Class({
          * This Game Object cannot have a blend mode, so skip all checks.
          *
          * @name Phaser.GameObjects.Shader#blendMode
-         * @type {integer}
+         * @type {number}
          * @private
          * @since 3.17.0
          */
@@ -673,9 +673,9 @@ var Shader = new Class({
      *
      * @param {string} uniformKey - The key of the sampler2D uniform to be updated, i.e. `iChannel0`.
      * @param {WebGLTexture} texture - A WebGLTexture reference.
-     * @param {integer} width - The width of the texture.
-     * @param {integer} height - The height of the texture.
-     * @param {integer} [textureIndex=0] - The texture index.
+     * @param {number} width - The width of the texture.
+     * @param {number} height - The height of the texture.
+     * @param {number} [textureIndex=0] - The texture index.
      * @param {any} [textureData] - Additional texture data.
      *
      * @return {this} This Shader instance.
@@ -714,7 +714,7 @@ var Shader = new Class({
      *
      * @param {string} uniformKey - The key of the sampler2D uniform to be updated, i.e. `iChannel0`.
      * @param {string} textureKey - The key of the texture, as stored in the Texture Manager. Must already be loaded.
-     * @param {integer} [textureIndex=0] - The texture index.
+     * @param {number} [textureIndex=0] - The texture index.
      * @param {any} [textureData] - Additional texture data.
      *
      * @return {this} This Shader instance.

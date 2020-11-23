@@ -24,8 +24,8 @@ var ScaleModes = require('../renderer/ScaleModes');
  *
  * @param {Phaser.Textures.Texture} texture - The Texture this TextureSource belongs to.
  * @param {(HTMLImageElement|HTMLCanvasElement|HTMLVideoElement|Phaser.GameObjects.RenderTexture|WebGLTexture)} source - The source image data.
- * @param {integer} [width] - Optional width of the source image. If not given it's derived from the source itself.
- * @param {integer} [height] - Optional height of the source image. If not given it's derived from the source itself.
+ * @param {number} [width] - Optional width of the source image. If not given it's derived from the source itself.
+ * @param {number} [height] - Optional height of the source image. If not given it's derived from the source itself.
  * @param {boolean} [flipY=false] - Sets the `UNPACK_FLIP_Y_WEBGL` flag the WebGL Texture uses during upload.
  */
 var TextureSource = new Class({
@@ -82,7 +82,7 @@ var TextureSource = new Class({
          * Currently un-used.
          *
          * @name Phaser.Textures.TextureSource#compressionAlgorithm
-         * @type {integer}
+         * @type {number}
          * @default null
          * @since 3.0.0
          */
@@ -103,7 +103,7 @@ var TextureSource = new Class({
          * the `naturalWidth` and then `width` properties of the source image.
          *
          * @name Phaser.Textures.TextureSource#width
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.width = width || source.naturalWidth || source.videoWidth || source.width || 0;
@@ -113,7 +113,7 @@ var TextureSource = new Class({
          * the `naturalHeight` and then `height` properties of the source image.
          *
          * @name Phaser.Textures.TextureSource#height
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.height = height || source.naturalHeight || source.videoHeight || source.height || 0;

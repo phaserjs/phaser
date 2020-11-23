@@ -171,7 +171,7 @@ var InputManager = new Class({
          * setting the `input.activePointers` property in the Game Config.
          *
          * @name Phaser.Input.InputManager#pointersTotal
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @since 3.10.0
          */
@@ -478,7 +478,7 @@ var InputManager = new Class({
      * @method Phaser.Input.InputManager#addPointer
      * @since 3.10.0
      *
-     * @param {integer} [quantity=1] The number of new Pointers to create. A maximum of 10 is allowed in total.
+     * @param {number} [quantity=1] The number of new Pointers to create. A maximum of 10 is allowed in total.
      *
      * @return {Phaser.Input.Pointer[]} An array containing all of the new Pointer objects that were created.
      */
@@ -519,7 +519,7 @@ var InputManager = new Class({
      * @method Phaser.Input.InputManager#updateInputPlugins
      * @since 3.16.0
      *
-     * @param {integer} type - The type of event to process.
+     * @param {number} type - The type of event to process.
      * @param {Phaser.Input.Pointer[]} pointers - An array of Pointers on which the event occurred.
      */
     updateInputPlugins: function (type, pointers)

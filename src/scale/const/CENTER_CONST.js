@@ -29,7 +29,7 @@ module.exports = {
      * You can still center it yourself via CSS.
      * 
      * @name Phaser.Scale.Center.NO_CENTER
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.16.0
      */
@@ -43,7 +43,7 @@ module.exports = {
      * game canvas, and does not factor in any other CSS styles you may have applied.
      * 
      * @name Phaser.Scale.Center.CENTER_BOTH
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.16.0
      */
@@ -57,7 +57,7 @@ module.exports = {
      * game canvas, and does not factor in any other CSS styles you may have applied.
      * 
      * @name Phaser.Scale.Center.CENTER_HORIZONTALLY
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.16.0
      */
@@ -71,7 +71,7 @@ module.exports = {
      * game canvas, and does not factor in any other CSS styles you may have applied.
      * 
      * @name Phaser.Scale.Center.CENTER_VERTICALLY
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.16.0
      */

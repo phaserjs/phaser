@@ -62,7 +62,7 @@ var Curve = new Class({
          * The number of points used to draw the curve. Higher values create smoother renders at the cost of more triangles being drawn.
          *
          * @name Phaser.GameObjects.Curve#_smoothness
-         * @type {integer}
+         * @type {number}
          * @private
          * @since 3.13.0
          */
@@ -96,7 +96,7 @@ var Curve = new Class({
      * Increase this value for smoother curves, at the cost of more polygons being rendered.
      *
      * @name Phaser.GameObjects.Curve#smoothness
-     * @type {integer}
+     * @type {number}
      * @default 32
      * @since 3.13.0
      */
@@ -124,7 +124,7 @@ var Curve = new Class({
      * @method Phaser.GameObjects.Curve#setSmoothness
      * @since 3.13.0
      * 
-     * @param {integer} value - The value to set the smoothness to.
+     * @param {number} value - The value to set the smoothness to.
      *
      * @return {this} This Game Object instance.
      */

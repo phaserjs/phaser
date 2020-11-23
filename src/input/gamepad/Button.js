@@ -18,7 +18,7 @@ var Events = require('./events');
  * @since 3.0.0
  *
  * @param {Phaser.Input.Gamepad.Gamepad} pad - A reference to the Gamepad that this Button belongs to.
- * @param {integer} index - The index of this Button.
+ * @param {number} index - The index of this Button.
  */
 var Button = new Class({
 
@@ -48,7 +48,7 @@ var Button = new Class({
          * The index of this Button.
          *
          * @name Phaser.Input.Gamepad.Button#index
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.index = index;

@@ -112,7 +112,7 @@ var GameObject = new Class({
          * Reserved for future use by plugins and the Input Manager.
          *
          * @name Phaser.GameObjects.GameObject#tabIndex
-         * @type {integer}
+         * @type {number}
          * @default -1
          * @since 3.0.0
          */
@@ -136,7 +136,7 @@ var GameObject = new Class({
          * If those components are not used by your custom class then you can use this bitmask as you wish.
          *
          * @name Phaser.GameObjects.GameObject#renderFlags
-         * @type {integer}
+         * @type {number}
          * @default 15
          * @since 3.0.0
          */
@@ -728,7 +728,7 @@ var GameObject = new Class({
 /**
  * The bitmask that `GameObject.renderFlags` is compared against to determine if the Game Object will render or not.
  *
- * @constant {integer} RENDER_MASK
+ * @constant {number} RENDER_MASK
  * @memberof Phaser.GameObjects.GameObject
  * @default
  */
