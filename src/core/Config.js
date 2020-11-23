@@ -332,7 +332,7 @@ var Config = new Class({
         }
 
         /**
-         * @const {?Phaser.Types.Core.FPSConfig} Phaser.Core.Config#fps - The Frame Rate Configuration object, as parsed by the Timestep class.
+         * @const {Phaser.Types.Core.FPSConfig} Phaser.Core.Config#fps - The Frame Rate Configuration object, as parsed by the Timestep class.
          */
         this.fps = GetValue(config, 'fps', null);
 
@@ -342,7 +342,7 @@ var Config = new Class({
         var renderConfig = GetValue(config, 'render', config);
 
         /**
-         * @const {?Phaser.Types.Core.PipelineConfig)} Phaser.Core.Config#pipeline - An object mapping WebGL names to WebGLPipeline classes. These should be class constructors, not instances.
+         * @const {Phaser.Types.Core.PipelineConfig)} Phaser.Core.Config#pipeline - An object mapping WebGL names to WebGLPipeline classes. These should be class constructors, not instances.
          */
         this.pipeline = GetValue(renderConfig, 'pipeline', null);
 
