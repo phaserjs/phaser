@@ -21,15 +21,12 @@ var HasValue = require('../../utils/object/HasValue');
  * @since 3.0.0
  *
  * @param {object} properties - An object with tile properties and corresponding values that should be checked.
- * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
- * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the update.
+ * @param {boolean} collides - If true it will enable collision. If false it will clear collision.
+ * @param {boolean} recalculateFaces - Whether or not to recalculate the tile faces after the update.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var SetCollisionByProperty = function (properties, collides, recalculateFaces, layer)
 {
-    if (collides === undefined) { collides = true; }
-    if (recalculateFaces === undefined) { recalculateFaces = true; }
-
     for (var ty = 0; ty < layer.height; ty++)
     {
         for (var tx = 0; tx < layer.width; tx++)
@@ -43,6 +40,7 @@ var SetCollisionByProperty = function (properties, collides, recalculateFaces, l
                 if (!HasValue(tile.properties, property)) { continue; }
 
                 var values = properties[property];
+
                 if (!Array.isArray(values))
                 {
                     values = [ values ];

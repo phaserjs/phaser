@@ -16,17 +16,16 @@ var Vector2 = require('../../math/Vector2');
  *
  * @param {number} worldX - The x coordinate to be converted, in pixels, not tiles.
  * @param {number} worldY - The y coordinate to be converted, in pixels, not tiles.
- * @param {boolean} [snapToFloor=true] - Whether or not to round the tile coordinates down to the nearest integer.
- * @param {Phaser.Math.Vector2} [point] - A Vector2 to store the coordinates in. If not given a new Vector2 is created.
- * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
+ * @param {boolean} snapToFloor - Whether or not to round the tile coordinates down to the nearest integer.
+ * @param {Phaser.Math.Vector2} point - A Vector2 to store the coordinates in. If not given a new Vector2 is created.
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
  * @return {Phaser.Math.Vector2} The XY location in tile units.
  */
 var HexagonalWorldToTileXY = function (worldX, worldY, snapToFloor, point, camera, layer)
 {
-    if (snapToFloor === undefined) { snapToFloor = true; }
-    if (point === undefined) { point = new Vector2(); }
+    if (!point) { point = new Vector2(); }
 
     var tileWidth = layer.baseTileWidth;
     var tileHeight = layer.baseTileHeight;
@@ -34,7 +33,7 @@ var HexagonalWorldToTileXY = function (worldX, worldY, snapToFloor, point, camer
 
     if (tilemapLayer)
     {
-        if (camera === undefined) { camera = tilemapLayer.scene.cameras.main; }
+        if (!camera) { camera = tilemapLayer.scene.cameras.main; }
 
         // Find the world position relative to the static or dynamic layer's top left origin,
         // factoring in the camera's vertical scroll

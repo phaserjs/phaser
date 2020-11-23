@@ -24,23 +24,24 @@ var GetTilesWithin = require('./GetTilesWithin');
  * @function Phaser.Tilemaps.Components.WeightedRandomize
  * @since 3.0.0
  *
- * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
- * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
- * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
- * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
- * @param {object[]} [weightedIndexes] - An array of objects to randomly draw from during
+ * @param {number} tileX - The left most tile index (in tile coordinates) to use as the origin of the area.
+ * @param {number} tileY - The top most tile index (in tile coordinates) to use as the origin of the area.
+ * @param {number} width - How many tiles wide from the `tileX` index the area will be.
+ * @param {number} height - How many tiles tall from the `tileY` index the area will be.
+ * @param {object[]} weightedIndexes - An array of objects to randomly draw from during
  * randomization. They should be in the form: { index: 0, weight: 4 } or
  * { index: [0, 1], weight: 4 } if you wish to draw from multiple tile indexes.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var WeightedRandomize = function (tileX, tileY, width, height, weightedIndexes, layer)
 {
-    if (weightedIndexes === undefined) { return; }
+    if (!weightedIndexes) { return; }
 
     var i;
     var tiles = GetTilesWithin(tileX, tileY, width, height, null, layer);
 
     var weightTotal = 0;
+
     for (i = 0; i < weightedIndexes.length; i++)
     {
         weightTotal += weightedIndexes[i].weight;

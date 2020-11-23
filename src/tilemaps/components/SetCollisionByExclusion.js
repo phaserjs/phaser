@@ -17,14 +17,12 @@ var SetLayerCollisionIndex = require('./SetLayerCollisionIndex');
  * @since 3.0.0
  *
  * @param {number[]} indexes - An array of the tile indexes to not be counted for collision.
- * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
- * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the update.
+ * @param {boolean} collides - If true it will enable collision. If false it will clear collision.
+ * @param {boolean} recalculateFaces - Whether or not to recalculate the tile faces after the update.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var SetCollisionByExclusion = function (indexes, collides, recalculateFaces, layer)
 {
-    if (collides === undefined) { collides = true; }
-    if (recalculateFaces === undefined) { recalculateFaces = true; }
     if (!Array.isArray(indexes)) { indexes = [ indexes ]; }
 
     // Note: this only updates layer.collideIndexes for tile indexes found currently in the layer
@@ -33,6 +31,7 @@ var SetCollisionByExclusion = function (indexes, collides, recalculateFaces, lay
         for (var tx = 0; tx < layer.width; tx++)
         {
             var tile = layer.data[ty][tx];
+
             if (tile && indexes.indexOf(tile.index) === -1)
             {
                 SetTileCollision(tile, collides);

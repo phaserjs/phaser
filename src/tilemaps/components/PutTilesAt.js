@@ -20,13 +20,11 @@ var PutTileAt = require('./PutTileAt');
  * @param {(number[]|number[][]|Phaser.Tilemaps.Tile[]|Phaser.Tilemaps.Tile[][])} tile - A row (array) or grid (2D array) of Tiles or tile indexes to place.
  * @param {number} tileX - The x coordinate, in tiles, not pixels.
  * @param {number} tileY - The y coordinate, in tiles, not pixels.
- * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
+ * @param {boolean} recalculateFaces - `true` if the faces data should be recalculated.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var PutTilesAt = function (tilesArray, tileX, tileY, recalculateFaces, layer)
 {
-    if (recalculateFaces === undefined) { recalculateFaces = true; }
-
     if (!Array.isArray(tilesArray))
     {
         return null;

@@ -17,16 +17,13 @@ var SetLayerCollisionIndex = require('./SetLayerCollisionIndex');
  * @since 3.0.0
  *
  * @param {(number|array)} indexes - Either a single tile index, or an array of tile indexes.
- * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
- * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the update.
+ * @param {boolean} collides - If true it will enable collision. If false it will clear collision.
+ * @param {boolean} recalculateFaces - Whether or not to recalculate the tile faces after the update.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
- * @param {boolean} updateLayer - If true, updates the current tiles on the layer. Set to
- * false if no tiles have been placed for significant performance boost.
+ * @param {boolean} [updateLayer=true] - If true, updates the current tiles on the layer. Set to false if no tiles have been placed for significant performance boost.
  */
 var SetCollision = function (indexes, collides, recalculateFaces, layer, updateLayer)
 {
-    if (collides === undefined) { collides = true; }
-    if (recalculateFaces === undefined) { recalculateFaces = true; }
     if (!Array.isArray(indexes)) { indexes = [ indexes ]; }
     if (updateLayer === undefined) { updateLayer = true; }
 
