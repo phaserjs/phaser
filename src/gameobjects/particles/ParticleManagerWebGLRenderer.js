@@ -36,7 +36,7 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
         return;
     }
 
-    var pipeline = renderer.pipelines.set(this.pipeline);
+    var pipeline = renderer.pipelines.set(emitterManager.pipeline);
 
     var camMatrix = tempMatrix1;
     var calcMatrix = tempMatrix2;
@@ -92,7 +92,7 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
         {
             emitter.mask.preRenderWebGL(renderer, emitter, camera);
 
-            // pipeline.setTexture2D(texture, 0);
+            renderer.pipelines.set(emitterManager.pipeline);
         }
 
         var tintEffect = 0;
@@ -148,8 +148,6 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
         if (emitter.mask)
         {
             emitter.mask.postRenderWebGL(renderer, camera);
-
-            // pipeline.setTexture2D(texture, 0);
         }
     }
 
