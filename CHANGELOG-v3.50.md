@@ -898,6 +898,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * The `Ellipse` Game Object now will update the width, height, and geometric position in the `setSize` method (thanks @PhaserEditor2D)
 * When measuring the last word in a line in a `Text` Game Object, it no longer adds extra white space to the end (thanks @rexrainbow)
 * `Utils.Array.Remove` would return an incorrect array of removed elements if one of the items to be removed was skipped in the array. Fix #5398 (thanks @year221)
+* `Geom.Intersects.TriangleToLine` wouldn't return `true` if the start or end of the Line fell inside the Triangle, only if the entire Line did. It now checks the start and end points correctly. (thanks @wiserim)
 
 ### Namespace Updates
 
