@@ -1301,6 +1301,31 @@ var WebGLPipeline = new Class({
     },
 
     /**
+     * Activates the given Render Target texture and binds it to the
+     * requested WebGL texture slot.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#bindRenderTarget
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The Render Target to activate and bind.
+     * @param {number} [unit=0] - The WebGL texture ID to activate. Defaults to `gl.TEXTURE0`.
+     *
+     * @return {this} This WebGL Pipeline instance.
+     */
+    bindRenderTarget: function (target, unit)
+    {
+        if (unit === undefined) { unit = 0; }
+
+        var gl = this.gl;
+
+        gl.activeTexture(gl.TEXTURE0 + unit);
+
+        gl.bindTexture(gl.TEXTURE_2D, target.texture);
+
+        return this;
+    },
+
+    /**
      * Sets a 1f uniform value based on the given name on the currently set shader.
      *
      * The current shader is bound, before the uniform is set, making it active within the
