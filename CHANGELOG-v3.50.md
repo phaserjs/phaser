@@ -808,6 +808,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `Time.TimerEvent.getOverallRemaining` is a new method that returns the time interval until the last iteration of the Timer Event (thanks @samme)
 * `Time.TimerEvent.getOverallRemainingSeconds` is a new method that returns the time interval until the last iteration of the Timer Event in seconds (thanks @samme)
 * `GameObjects.Video.loadMediaStream` is a new method that allows you to hook a Video Game Object up to a Media Stream, rather than a URL, allowing you to stream video from a source such as a webcam (thanks @pirateksh)
+* `Display.Color.ColorSpectrum` is a new function that will return an array of 1024 Color Object elements aligned in a Color Spectrum layout, where the darkest colors have been omitted.
 
 ### Updates and API Changes
 
