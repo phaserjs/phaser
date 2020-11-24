@@ -4,7 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Contains = require('../triangle/Contains');
+var ContainsPoint = require('../triangle/ContainsPoint');
 var LineToLine = require('./LineToLine');
 
 /**
@@ -23,7 +23,7 @@ var LineToLine = require('./LineToLine');
 var TriangleToLine = function (triangle, line)
 {
     //  If the Triangle contains either the start or end point of the line, it intersects
-    if (Contains(triangle, line.getPointA()) || Contains(triangle, line.getPointB()))
+    if (ContainsPoint(triangle, line.getPointA()) || ContainsPoint(triangle, line.getPointB()))
     {
         return true;
     }
