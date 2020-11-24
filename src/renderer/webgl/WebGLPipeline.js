@@ -1301,6 +1301,30 @@ var WebGLPipeline = new Class({
     },
 
     /**
+     * Activates the given WebGL Texture and binds it to the requested texture slot.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#bindTexture
+     * @since 3.50.0
+     *
+     * @param {WebGLTexture} [target] - The WebGLTexture to activate and bind.
+     * @param {number} [unit=0] - The WebGL texture ID to activate. Defaults to `gl.TEXTURE0`.
+     *
+     * @return {this} This WebGL Pipeline instance.
+     */
+    bindTexture: function (texture, unit)
+    {
+        if (unit === undefined) { unit = 0; }
+
+        var gl = this.gl;
+
+        gl.activeTexture(gl.TEXTURE0 + unit);
+
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+
+        return this;
+    },
+
+    /**
      * Activates the given Render Target texture and binds it to the
      * requested WebGL texture slot.
      *
@@ -1314,15 +1338,7 @@ var WebGLPipeline = new Class({
      */
     bindRenderTarget: function (target, unit)
     {
-        if (unit === undefined) { unit = 0; }
-
-        var gl = this.gl;
-
-        gl.activeTexture(gl.TEXTURE0 + unit);
-
-        gl.bindTexture(gl.TEXTURE_2D, target.texture);
-
-        return this;
+        return this.bindTexture(target.texture, unit);
     },
 
     /**
