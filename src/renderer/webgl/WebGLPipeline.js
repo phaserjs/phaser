@@ -1342,6 +1342,25 @@ var WebGLPipeline = new Class({
     },
 
     /**
+     * Sets the current duration into a 1f uniform value based on the given name.
+     *
+     * This can be used for mapping time uniform values, such as `iTime`.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setTime
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    setTime: function (uniform)
+    {
+        this.set1f(uniform, this.game.loop.getDuration());
+
+        return this;
+    },
+
+    /**
      * Sets a 1f uniform value based on the given name on the currently set shader.
      *
      * The current shader is bound, before the uniform is set, making it active within the
