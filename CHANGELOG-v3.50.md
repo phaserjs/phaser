@@ -555,6 +555,8 @@ In your game where you use `map.createDynamicLayer` or `map.createStaticLayer` r
 * `Tilemap._convert` is a new internal private hash of tilemap conversion functions used by the public API.
 * The `Tilemap._isStaticCall` method has been removed and no Tilemap methods now check this, leading to faster execution.
 * The Arcade Physics Sprites vs. Tilemap Layers flow has changed. Previously, it would iterate through a whole bunch of linked functions, taking lots of jumps in the process. It now just calls the `GetTilesWithinWorldXY` component directly, saving lots of overhead.
+* The method `Tilemap.weightedRandomize` has changed so that the parameter `weightedIndexes` is now first in the method and is non-optional. Previously, it was the 5th parameter and incorrectly flagged as optional.
+* The method `TilemapLayer.weightedRandomize` has changed so that the parameter `weightedIndexes` is now first in the method and is non-optional. Previously, it was the 5th parameter and incorrectly flagged as optional.
 
 ### Mesh Game Object - New Features, Updates and API Changes
 
