@@ -1623,7 +1623,7 @@ var WebGLRenderer = new Class({
      * @since 3.50.0
      *
      * @param {boolean} [updateScissor=false] - If a framebuffer is given, set the gl scissor to match the frame buffer size? Or, if `null` given, pop the scissor from the stack.
-     * @param {boolean} [resetTextures=true] - Should the WebGL Textures be reset after the new framebuffer is bound?
+     * @param {boolean} [resetTextures=false] - Should the WebGL Textures be reset after the new framebuffer is bound?
      * @param {boolean} [setViewport=true] - Should the WebGL viewport be set?
      *
      * @return {WebGLFramebuffer} The Framebuffer that was set, or `null` if there aren't any more in the stack.
