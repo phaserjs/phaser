@@ -709,9 +709,9 @@ When loading any of the file types listed below it will no longer store the data
 * The `ColorMatrix.negative` method converts the ColorMatrix to negative values.
 * The `ColorMatrix.desaturateLuminance` method applies a desaturated luminance to the ColorMatrix.
 * The `ColorMatrix.sepia` method applies a sepia tone to the ColorMatrix.
-* The `ColorMatrix.brown` method applies a brown tone to the ColorMatrix.
 * The `ColorMatrix.night` method applies a night time effect to the ColorMatrix.
 * The `ColorMatrix.lsd` method applies a trippy color effect to the ColorMatrix.
+* The `ColorMatrix.brown` method applies a brown tone to the ColorMatrix.
 * The `ColorMatrix.vintagePinhole` method applies a vintage pinhole color effect to the ColorMatrix.
 * The `ColorMatrix.kodachrome` method applies a kodachrome color effect to the ColorMatrix.
 * The `ColorMatrix.technicolor` method applies a technicolor color effect to the ColorMatrix.
@@ -900,6 +900,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * When measuring the last word in a line in a `Text` Game Object, it no longer adds extra white space to the end (thanks @rexrainbow)
 * `Utils.Array.Remove` would return an incorrect array of removed elements if one of the items to be removed was skipped in the array. Fix #5398 (thanks @year221)
 * `Geom.Intersects.TriangleToLine` wouldn't return `true` if the start or end of the Line fell inside the Triangle, only if the entire Line did. It now checks the start and end points correctly. (thanks @wiserim)
+* Using a Bitmap Mask and a Blend Mode in WebGL would reset the blend mode when the mask was rendered, causing the Game Object to have no blend mode. Fix #5409 (thanks @jcyuan)
 
 ### Namespace Updates
 
