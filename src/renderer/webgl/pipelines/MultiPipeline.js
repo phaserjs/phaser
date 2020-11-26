@@ -272,17 +272,19 @@ var MultiPipeline = new Class({
         var xw = x + frameWidth;
         var yh = y + frameHeight;
 
-        var tx0 = calcMatrix.getX(x, y);
-        var ty0 = calcMatrix.getY(x, y);
+        var roundPixels = camera.roundPixels;
 
-        var tx1 = calcMatrix.getX(x, yh);
-        var ty1 = calcMatrix.getY(x, yh);
+        var tx0 = calcMatrix.getXRound(x, y, roundPixels);
+        var ty0 = calcMatrix.getYRound(x, y, roundPixels);
 
-        var tx2 = calcMatrix.getX(xw, yh);
-        var ty2 = calcMatrix.getY(xw, yh);
+        var tx1 = calcMatrix.getXRound(x, yh, roundPixels);
+        var ty1 = calcMatrix.getYRound(x, yh, roundPixels);
 
-        var tx3 = calcMatrix.getX(xw, y);
-        var ty3 = calcMatrix.getY(xw, y);
+        var tx2 = calcMatrix.getXRound(xw, yh, roundPixels);
+        var ty2 = calcMatrix.getYRound(xw, yh, roundPixels);
+
+        var tx3 = calcMatrix.getXRound(xw, y, roundPixels);
+        var ty3 = calcMatrix.getYRound(xw, y, roundPixels);
 
         var getTint = Utils.getTintAppendFloatAlpha;
         var cameraAlpha = camera.alpha;
@@ -291,21 +293,6 @@ var MultiPipeline = new Class({
         var tintTR = getTint(gameObject.tintTopRight, cameraAlpha * gameObject._alphaTR);
         var tintBL = getTint(gameObject.tintBottomLeft, cameraAlpha * gameObject._alphaBL);
         var tintBR = getTint(gameObject.tintBottomRight, cameraAlpha * gameObject._alphaBR);
-
-        if (camera.roundPixels)
-        {
-            tx0 = Math.round(tx0);
-            ty0 = Math.round(ty0);
-
-            tx1 = Math.round(tx1);
-            ty1 = Math.round(ty1);
-
-            tx2 = Math.round(tx2);
-            ty2 = Math.round(ty2);
-
-            tx3 = Math.round(tx3);
-            ty3 = Math.round(ty3);
-        }
 
         if (this.shouldFlush(6))
         {
@@ -474,32 +461,19 @@ var MultiPipeline = new Class({
         //  Multiply by the Sprite matrix, store result in calcMatrix
         camMatrix.multiply(spriteMatrix, calcMatrix);
 
-        var tx0 = calcMatrix.getX(x, y);
-        var ty0 = calcMatrix.getY(x, y);
+        var roundPixels = camera.roundPixels;
 
-        var tx1 = calcMatrix.getX(x, yh);
-        var ty1 = calcMatrix.getY(x, yh);
+        var tx0 = calcMatrix.getXRound(x, y, roundPixels);
+        var ty0 = calcMatrix.getYRound(x, y, roundPixels);
 
-        var tx2 = calcMatrix.getX(xw, yh);
-        var ty2 = calcMatrix.getY(xw, yh);
+        var tx1 = calcMatrix.getXRound(x, yh, roundPixels);
+        var ty1 = calcMatrix.getYRound(x, yh, roundPixels);
 
-        var tx3 = calcMatrix.getX(xw, y);
-        var ty3 = calcMatrix.getY(xw, y);
+        var tx2 = calcMatrix.getXRound(xw, yh, roundPixels);
+        var ty2 = calcMatrix.getYRound(xw, yh, roundPixels);
 
-        if (camera.roundPixels)
-        {
-            tx0 = Math.round(tx0);
-            ty0 = Math.round(ty0);
-
-            tx1 = Math.round(tx1);
-            ty1 = Math.round(ty1);
-
-            tx2 = Math.round(tx2);
-            ty2 = Math.round(ty2);
-
-            tx3 = Math.round(tx3);
-            ty3 = Math.round(ty3);
-        }
+        var tx3 = calcMatrix.getXRound(xw, y, roundPixels);
+        var ty3 = calcMatrix.getYRound(xw, y, roundPixels);
 
         if (textureUnit === undefined)
         {
