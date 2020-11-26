@@ -22,6 +22,9 @@ var CalculateFacesWithin = require('./CalculateFacesWithin');
  */
 var SetCollisionFromCollisionGroup = function (collides, recalculateFaces, layer)
 {
+    if (collides === undefined) { collides = true; }
+    if (recalculateFaces === undefined) { recalculateFaces = true; }
+
     for (var ty = 0; ty < layer.height; ty++)
     {
         for (var tx = 0; tx < layer.width; tx++)

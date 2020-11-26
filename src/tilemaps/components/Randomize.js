@@ -27,7 +27,7 @@ var GetRandom = require('../../utils/array/GetRandom');
 var Randomize = function (tileX, tileY, width, height, indexes, layer)
 {
     var i;
-    var tiles = GetTilesWithin(tileX, tileY, width, height, null, layer);
+    var tiles = GetTilesWithin(tileX, tileY, width, height, {}, layer);
 
     // If no indices are given, then find all the unique indexes within the specified region
     if (!indexes)

@@ -28,6 +28,8 @@ var SetTileCollision = require('./SetTileCollision');
  */
 var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer)
 {
+    if (recalculateFaces === undefined) { recalculateFaces = true; }
+
     if (!IsInLayerBounds(tileX, tileY, layer))
     {
         return null;

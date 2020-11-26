@@ -20,6 +20,8 @@
  */
 var WorldToTileY = function (worldY, snapToFloor, camera, layer)
 {
+    if (snapToFloor === undefined) { snapToFloor = true; }
+
     var tileHeight = layer.baseTileHeight;
     var tilemapLayer = layer.tilemapLayer;
 

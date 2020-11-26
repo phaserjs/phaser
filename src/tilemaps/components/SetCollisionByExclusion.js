@@ -23,7 +23,13 @@ var SetLayerCollisionIndex = require('./SetLayerCollisionIndex');
  */
 var SetCollisionByExclusion = function (indexes, collides, recalculateFaces, layer)
 {
-    if (!Array.isArray(indexes)) { indexes = [ indexes ]; }
+    if (collides === undefined) { collides = true; }
+    if (recalculateFaces === undefined) { recalculateFaces = true; }
+
+    if (!Array.isArray(indexes))
+    {
+        indexes = [ indexes ];
+    }
 
     // Note: this only updates layer.collideIndexes for tile indexes found currently in the layer
     for (var ty = 0; ty < layer.height; ty++)

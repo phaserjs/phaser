@@ -107,20 +107,24 @@ var Tile = new Class({
         /**
          * The right of the tile in pixels.
          *
+         * Set in the `updatePixelXY` method.
+         *
          * @name Phaser.Tilemaps.Tile#right
          * @type {number}
          * @since 3.50.0
          */
-        this.right = x + width;
+        this.right;
 
         /**
          * The bottom of the tile in pixels.
+         *
+         * Set in the `updatePixelXY` method.
          *
          * @name Phaser.Tilemaps.Tile#bottom
          * @type {number}
          * @since 3.50.0
          */
-        this.bottom = y + height;
+        this.bottom;
 
         /**
          * The maps base width of a tile in pixels. Tiled maps support multiple tileset sizes
@@ -263,7 +267,7 @@ var Tile = new Class({
          * @type {function}
          * @since 3.0.0
          */
-        this.collisionCallback = null;
+        this.collisionCallback = undefined;
 
         /**
          * The context in which the collision callback will be called.
@@ -755,6 +759,9 @@ var Tile = new Class({
             this.pixelY = this.y * rowHeight;
         }
 
+        this.right = this.pixelX + this.baseWidth;
+        this.bottom = this.pixelY + this.baseHeight;
+
         return this;
     },
 
@@ -783,7 +790,7 @@ var Tile = new Class({
 
         get: function ()
         {
-            return (this.collideLeft || this.collideRight || this.collideUp || this.collideDown || this.collisionCallback);
+            return (this.collideLeft || this.collideRight || this.collideUp || this.collideDown || (this.collisionCallback !== undefined));
         }
 
     },

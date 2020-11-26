@@ -26,6 +26,8 @@ var SetLayerCollisionIndex = require('./SetLayerCollisionIndex');
  */
 var SetCollisionBetween = function (start, stop, collides, recalculateFaces, layer, updateLayer)
 {
+    if (collides === undefined) { collides = true; }
+    if (recalculateFaces === undefined) { recalculateFaces = true; }
     if (updateLayer === undefined) { updateLayer = true; }
 
     if (start > stop)

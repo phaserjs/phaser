@@ -24,8 +24,14 @@ var SetLayerCollisionIndex = require('./SetLayerCollisionIndex');
  */
 var SetCollision = function (indexes, collides, recalculateFaces, layer, updateLayer)
 {
-    if (!Array.isArray(indexes)) { indexes = [ indexes ]; }
+    if (collides === undefined) { collides = true; }
+    if (recalculateFaces === undefined) { recalculateFaces = true; }
     if (updateLayer === undefined) { updateLayer = true; }
+
+    if (!Array.isArray(indexes))
+    {
+        indexes = [ indexes ];
+    }
 
     // Update the array of colliding indexes
     for (var i = 0; i < indexes.length; i++)

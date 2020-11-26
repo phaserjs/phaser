@@ -27,6 +27,7 @@ var GetTilesWithin = function (tileX, tileY, width, height, filteringOptions, la
     if (tileY === undefined) { tileY = 0; }
     if (width === undefined) { width = layer.width; }
     if (height === undefined) { height = layer.height; }
+    if (!filteringOptions) { filteringOptions = {}; }
 
     var isNotEmpty = GetFastValue(filteringOptions, 'isNotEmpty', false);
     var isColliding = GetFastValue(filteringOptions, 'isColliding', false);

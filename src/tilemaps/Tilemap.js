@@ -872,8 +872,8 @@ var Tilemap = new Class({
      * tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a
      * one-to-one mapping with the indexes array.
      * @param {Phaser.Types.GameObjects.Sprite.SpriteConfig} spriteConfig - The config object to pass into the Sprite creator (i.e. scene.make.sprite).
-     * @param {Phaser.Scene} [scene=scene the map is within] - The Scene to create the Sprites within.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
+     * @param {Phaser.Scene} [scene] - The Scene to create the Sprites within.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when calculating the tile index from the world values.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.GameObjects.Sprite[]} Returns an array of Tiles, or null if the layer given was invalid.
@@ -899,10 +899,10 @@ var Tilemap = new Class({
      * @since 3.0.0
      *
      * @param {number} index - The tile index to fill the area with.
-     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {number} [tileX] - The left most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [tileY] - The top most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [width] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height] - How many tiles tall from the `tileY` index the area will be.
      * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
@@ -910,6 +910,8 @@ var Tilemap = new Class({
      */
     fill: function (index, tileX, tileY, width, height, recalculateFaces, layer)
     {
+        if (recalculateFaces === undefined) { recalculateFaces = true; }
+
         layer = this.getLayer(layer);
 
         if (layer === null) { return null; }
@@ -964,10 +966,10 @@ var Tilemap = new Class({
      * callback as the first and only parameter. The callback should return true for tiles that pass the
      * filter.
      * @param {object} [context] - The context under which the callback should be run.
-     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area to filter.
-     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area to filter.
-     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {number} [tileX] - The left most tile index (in tile coordinates) to use as the origin of the area to filter.
+     * @param {number} [tileY] - The top most tile index (in tile coordinates) to use as the origin of the area to filter.
+     * @param {number} [width] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height] - How many tiles tall from the `tileY` index the area will be.
      * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
@@ -1052,10 +1054,10 @@ var Tilemap = new Class({
      *
      * @param {FindTileCallback} callback - The callback. Each tile in the given area will be passed to this callback as the first and only parameter.
      * @param {object} [context] - The context under which the callback should be run.
-     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area to search.
-     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area to search.
-     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {number} [tileX] - The left most tile index (in tile coordinates) to use as the origin of the area to search.
+     * @param {number} [tileY] - The top most tile index (in tile coordinates) to use as the origin of the area to search.
+     * @param {number} [width] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height] - How many tiles tall from the `tileY` index the area will be.
      * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The Tile layer to run the search on. If not provided will use the current layer.
      *
@@ -1081,10 +1083,10 @@ var Tilemap = new Class({
      *
      * @param {EachTileCallback} callback - The callback. Each tile in the given area will be passed to this callback as the first and only parameter.
      * @param {object} [context] - The context under which the callback should be run.
-     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area to search.
-     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area to search.
-     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {number} [tileX] - The left most tile index (in tile coordinates) to use as the origin of the area to search.
+     * @param {number} [tileY] - The top most tile index (in tile coordinates) to use as the origin of the area to search.
+     * @param {number} [width] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height] - How many tiles tall from the `tileY` index the area will be.
      * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The Tile layer to run the search on. If not provided will use the current layer.
      *
@@ -1278,7 +1280,7 @@ var Tilemap = new Class({
      *
      * @param {number} tileX - X position to get the tile from (given in tile units, not pixels).
      * @param {number} tileY - Y position to get the tile from (given in tile units, not pixels).
-     * @param {boolean} [nonNull=false] - If true getTile won't return null for empty tiles, but a Tile object with an index of -1.
+     * @param {boolean} [nonNull] - If true getTile won't return null for empty tiles, but a Tile object with an index of -1.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tile} Returns a Tile, or null if the layer given was invalid.
@@ -1302,8 +1304,8 @@ var Tilemap = new Class({
      *
      * @param {number} worldX - X position to get the tile from (given in pixels)
      * @param {number} worldY - Y position to get the tile from (given in pixels)
-     * @param {boolean} [nonNull=false] - If true, function won't return null for empty tiles, but a Tile object with an index of -1.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
+     * @param {boolean} [nonNull] - If true, function won't return null for empty tiles, but a Tile object with an index of -1.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when calculating the tile index from the world values.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tile} Returns a Tile, or null if the layer given was invalid.
@@ -1346,10 +1348,10 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#getTilesWithin
      * @since 3.0.0
      *
-     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {number} [tileX] - The left most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [tileY] - The top most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [width] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height] - How many tiles tall from the `tileY` index the area will be.
      * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
@@ -1375,7 +1377,7 @@ var Tilemap = new Class({
      *
      * @param {(Phaser.Geom.Circle|Phaser.Geom.Line|Phaser.Geom.Rectangle|Phaser.Geom.Triangle)} shape - A shape in world (pixel) coordinates
      * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when factoring in which tiles to return.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when factoring in which tiles to return.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tile[]} Returns an array of Tiles, or null if the layer given was invalid.
@@ -1402,7 +1404,7 @@ var Tilemap = new Class({
      * @param {number} width - The width of the area.
      * @param {number} height - The height of the area.
      * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when factoring in which tiles to return.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when factoring in which tiles to return.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tile[]} Returns an array of Tiles, or null if the layer given was invalid.
@@ -1484,7 +1486,7 @@ var Tilemap = new Class({
      *
      * @param {number} worldX - The x coordinate, in pixels.
      * @param {number} worldY - The y coordinate, in pixels.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when factoring in which tiles to return.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when factoring in which tiles to return.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?boolean} Returns a boolean, or null if the layer given was invalid.
@@ -1532,13 +1534,15 @@ var Tilemap = new Class({
      * @param {(number|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
      * @param {number} tileX - The x coordinate, in tiles, not pixels.
      * @param {number} tileY - The y coordinate, in tiles, not pixels.
-     * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
+     * @param {boolean} [recalculateFaces] - `true` if the faces data should be recalculated.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tile} Returns a Tile, or null if the layer given was invalid or the coordinates were out of bounds.
      */
     putTileAt: function (tile, tileX, tileY, recalculateFaces, layer)
     {
+        if (recalculateFaces === undefined) { recalculateFaces = true; }
+
         layer = this.getLayer(layer);
 
         if (layer === null) { return null; }
@@ -1560,14 +1564,16 @@ var Tilemap = new Class({
      * @param {(number|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
      * @param {number} worldX - The x coordinate, in pixels.
      * @param {number} worldY - The y coordinate, in pixels.
-     * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
+     * @param {boolean} [recalculateFaces] - `true` if the faces data should be recalculated.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when calculating the tile index from the world values.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tile} Returns a Tile, or null if the layer given was invalid.
      */
     putTileAtWorldXY: function (tile, worldX, worldY, recalculateFaces, camera, layer)
     {
+        if (recalculateFaces === undefined) { recalculateFaces = true; }
+
         layer = this.getLayer(layer);
 
         if (layer === null) { return null; }
@@ -1590,13 +1596,15 @@ var Tilemap = new Class({
      * @param {(number[]|number[][]|Phaser.Tilemaps.Tile[]|Phaser.Tilemaps.Tile[][])} tile - A row (array) or grid (2D array) of Tiles or tile indexes to place.
      * @param {number} tileX - The x coordinate, in tiles, not pixels.
      * @param {number} tileY - The y coordinate, in tiles, not pixels.
-     * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
+     * @param {boolean} [recalculateFaces] - `true` if the faces data should be recalculated.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Returns this, or null if the layer given was invalid.
      */
     putTilesAt: function (tilesArray, tileX, tileY, recalculateFaces, layer)
     {
+        if (recalculateFaces === undefined) { recalculateFaces = true; }
+
         layer = this.getLayer(layer);
 
         if (layer === null) { return null; }
@@ -1618,10 +1626,10 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#randomize
      * @since 3.0.0
      *
-     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {number} [tileX] - The left most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [tileY] - The top most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [width] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height] - How many tiles tall from the `tileY` index the area will be.
      * @param {number[]} [indexes] - An array of indexes to randomly draw from during randomization.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
@@ -1675,10 +1683,10 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#calculateFacesWithin
      * @since 3.0.0
      *
-     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {number} [tileX] - The left most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [tileY] - The top most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [width] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height] - How many tiles tall from the `tileY` index the area will be.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Returns this, or null if the layer given was invalid.
@@ -1849,14 +1857,17 @@ var Tilemap = new Class({
      *
      * @param {number} tileX - The x coordinate, in tiles, not pixels.
      * @param {number} tileY - The y coordinate, in tiles, not pixels.
-     * @param {boolean} [replaceWithNull=true] - If true, this will replace the tile at the specified location with null instead of a Tile with an index of -1.
-     * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
+     * @param {boolean} [replaceWithNull] - If `true` (the default), this will replace the tile at the specified location with null instead of a Tile with an index of -1.
+     * @param {boolean} [recalculateFaces] - If `true` (the default), the faces data will be recalculated.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tile} Returns the Tile that was removed, or null if the layer given was invalid.
      */
     removeTileAt: function (tileX, tileY, replaceWithNull, recalculateFaces, layer)
     {
+        if (replaceWithNull === undefined) { replaceWithNull = true; }
+        if (recalculateFaces === undefined) { recalculateFaces = true; }
+
         layer = this.getLayer(layer);
 
         if (layer === null) { return null; }
@@ -1874,15 +1885,18 @@ var Tilemap = new Class({
      *
      * @param {number} worldX - The x coordinate, in pixels.
      * @param {number} worldY - The y coordinate, in pixels.
-     * @param {boolean} [replaceWithNull=true] - If true, this will replace the tile at the specified location with null instead of a Tile with an index of -1.
-     * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
+     * @param {boolean} [replaceWithNull] - If `true` (the default), this will replace the tile at the specified location with null instead of a Tile with an index of -1.
+     * @param {boolean} [recalculateFaces] - If `true` (the default), the faces data will be recalculated.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when calculating the tile index from the world values.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tile} Returns a Tile, or null if the layer given was invalid.
      */
     removeTileAtWorldXY: function (worldX, worldY, replaceWithNull, recalculateFaces, camera, layer)
     {
+        if (replaceWithNull === undefined) { replaceWithNull = true; }
+        if (recalculateFaces === undefined) { recalculateFaces = true; }
+
         layer = this.getLayer(layer);
 
         if (layer === null) { return null; }
@@ -1902,7 +1916,7 @@ var Tilemap = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Graphics} graphics - The target Graphics object to draw upon.
-     * @param {Phaser.Types.Tilemaps.StyleConfig} styleConfig - An object specifying the colors to use for the debug drawing.
+     * @param {Phaser.Types.Tilemaps.StyleConfig} [styleConfig] - An object specifying the colors to use for the debug drawing.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Return this Tilemap object, or null if the layer given was invalid.
@@ -1929,9 +1943,9 @@ var Tilemap = new Class({
      * @since 3.17.0
      *
      * @param {Phaser.GameObjects.Graphics} graphics - The target Graphics object to draw upon.
-     * @param {Phaser.Types.Tilemaps.StyleConfig} styleConfig - An object specifying the colors to use for the debug drawing.
+     * @param {Phaser.Types.Tilemaps.StyleConfig} [styleConfig] - An object specifying the colors to use for the debug drawing.
      *
-     * @return {?Phaser.Tilemaps.Tilemap} Return this Tilemap object, or null if the layer given was invalid.
+     * @return {this} This Tilemap instance.
      */
     renderDebugFull: function (graphics, styleConfig)
     {
@@ -1957,10 +1971,10 @@ var Tilemap = new Class({
      *
      * @param {number} findIndex - The index of the tile to search for.
      * @param {number} newIndex - The index of the tile to replace it with.
-     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {number} [tileX] - The left most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [tileY] - The top most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [width] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height] - How many tiles tall from the `tileY` index the area will be.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Return this Tilemap object, or null if the layer given was invalid.
@@ -1987,8 +2001,8 @@ var Tilemap = new Class({
      * @since 3.0.0
      *
      * @param {(number|array)} indexes - Either a single tile index, or an array of tile indexes.
-     * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
-     * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the update.
+     * @param {boolean} [collides] - If true it will enable collision. If false it will clear collision.
+     * @param {boolean} [recalculateFaces] - Whether or not to recalculate the tile faces after the update.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      * @param {boolean} [updateLayer=true] - If true, updates the current tiles on the layer. Set to false if no tiles have been placed for significant performance boost.
      *
@@ -1996,6 +2010,10 @@ var Tilemap = new Class({
      */
     setCollision: function (indexes, collides, recalculateFaces, layer, updateLayer)
     {
+        if (collides === undefined) { collides = true; }
+        if (recalculateFaces === undefined) { recalculateFaces = true; }
+        if (updateLayer === undefined) { updateLayer = true; }
+
         layer = this.getLayer(layer);
 
         if (layer === null) { return null; }
@@ -2018,14 +2036,17 @@ var Tilemap = new Class({
      *
      * @param {number} start - The first index of the tile to be set for collision.
      * @param {number} stop - The last index of the tile to be set for collision.
-     * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
-     * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the update.
+     * @param {boolean} [collides] - If true it will enable collision. If false it will clear collision.
+     * @param {boolean} [recalculateFaces] - Whether or not to recalculate the tile faces after the update.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Return this Tilemap object, or null if the layer given was invalid.
      */
     setCollisionBetween: function (start, stop, collides, recalculateFaces, layer)
     {
+        if (collides === undefined) { collides = true; }
+        if (recalculateFaces === undefined) { recalculateFaces = true; }
+
         layer = this.getLayer(layer);
 
         if (layer === null) { return null; }
@@ -2050,14 +2071,17 @@ var Tilemap = new Class({
      * @since 3.0.0
      *
      * @param {object} properties - An object with tile properties and corresponding values that should be checked.
-     * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
-     * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the update.
+     * @param {boolean} [collides] - If true it will enable collision. If false it will clear collision.
+     * @param {boolean} [recalculateFaces] - Whether or not to recalculate the tile faces after the update.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Return this Tilemap object, or null if the layer given was invalid.
      */
     setCollisionByProperty: function (properties, collides, recalculateFaces, layer)
     {
+        if (collides === undefined) { collides = true; }
+        if (recalculateFaces === undefined) { recalculateFaces = true; }
+
         layer = this.getLayer(layer);
 
         if (layer === null) { return null; }
@@ -2078,14 +2102,17 @@ var Tilemap = new Class({
      * @since 3.0.0
      *
      * @param {number[]} indexes - An array of the tile indexes to not be counted for collision.
-     * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
-     * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the update.
+     * @param {boolean} [collides] - If true it will enable collision. If false it will clear collision.
+     * @param {boolean} [recalculateFaces] - Whether or not to recalculate the tile faces after the update.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Return this Tilemap object, or null if the layer given was invalid.
      */
     setCollisionByExclusion: function (indexes, collides, recalculateFaces, layer)
     {
+        if (collides === undefined) { collides = true; }
+        if (recalculateFaces === undefined) { recalculateFaces = true; }
+
         layer = this.getLayer(layer);
 
         if (layer === null) { return null; }
@@ -2106,14 +2133,17 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#setCollisionFromCollisionGroup
      * @since 3.0.0
      *
-     * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
-     * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the update.
+     * @param {boolean} [collides] - If true it will enable collision. If false it will clear collision.
+     * @param {boolean} [recalculateFaces] - Whether or not to recalculate the tile faces after the update.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Return this Tilemap object, or null if the layer given was invalid.
      */
     setCollisionFromCollisionGroup: function (collides, recalculateFaces, layer)
     {
+        if (collides === undefined) { collides = true; }
+        if (recalculateFaces === undefined) { recalculateFaces = true; }
+
         layer = this.getLayer(layer);
 
         if (layer === null) { return null; }
@@ -2305,10 +2335,10 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#shuffle
      * @since 3.0.0
      *
-     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {number} [tileX] - The left most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [tileY] - The top most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [width] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height] - How many tiles tall from the `tileY` index the area will be.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Return this Tilemap object, or null if the layer given was invalid.
@@ -2336,10 +2366,10 @@ var Tilemap = new Class({
      *
      * @param {number} tileA - First tile index.
      * @param {number} tileB - Second tile index.
-     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {number} [tileX] - The left most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [tileY] - The top most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [width] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height] - How many tiles tall from the `tileY` index the area will be.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Return this Tilemap object, or null if the layer given was invalid.
@@ -2365,7 +2395,7 @@ var Tilemap = new Class({
      * @since 3.0.0
      *
      * @param {number} tileX - The x coordinate, in tiles, not pixels.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when calculating the tile index from the world values.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?number} Returns a number, or null if the layer given was invalid.
@@ -2389,7 +2419,7 @@ var Tilemap = new Class({
      * @since 3.0.0
      *
      * @param {number} tileY - The y coordinate, in tiles, not pixels.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when calculating the tile index from the world values.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?number} Returns a number, or null if the layer given was invalid.
@@ -2416,7 +2446,7 @@ var Tilemap = new Class({
      * @param {number} tileX - The x coordinate, in tiles, not pixels.
      * @param {number} tileY - The y coordinate, in tiles, not pixels.
      * @param {Phaser.Math.Vector2} [vec2] - A Vector2 to store the coordinates in. If not given a new Vector2 is created.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when calculating the tile index from the world values.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Math.Vector2} Returns a Vector2, or null if the layer given was invalid.
@@ -2450,18 +2480,16 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#weightedRandomize
      * @since 3.0.0
      *
-     * @param {number} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {number} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
-     * @param {number} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
-     * @param {number} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
-     * @param {object[]} [weightedIndexes] - An array of objects to randomly draw from during
-     * randomization. They should be in the form: { index: 0, weight: 4 } or
-     * { index: [0, 1], weight: 4 } if you wish to draw from multiple tile indexes.
+     * @param {object[]} weightedIndexes - An array of objects to randomly draw from during randomization. They should be in the form: { index: 0, weight: 4 } or { index: [0, 1], weight: 4 } if you wish to draw from multiple tile indexes.
+     * @param {number} [tileX] - The left most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [tileY] - The top most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {number} [width] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height] - How many tiles tall from the `tileY` index the area will be.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Return this Tilemap object, or null if the layer given was invalid.
      */
-    weightedRandomize: function (tileX, tileY, width, height, weightedIndexes, layer)
+    weightedRandomize: function (weightedIndexes, tileX, tileY, width, height, layer)
     {
         layer = this.getLayer(layer);
 
@@ -2482,8 +2510,8 @@ var Tilemap = new Class({
      * @since 3.0.0
      *
      * @param {number} worldX - The x coordinate to be converted, in pixels, not tiles.
-     * @param {boolean} [snapToFloor=true] - Whether or not to round the tile coordinate down to the nearest integer.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
+     * @param {boolean} [snapToFloor] - Whether or not to round the tile coordinate down to the nearest integer.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when calculating the tile index from the world values.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?number} Returns a number, or null if the layer given was invalid.
@@ -2507,8 +2535,8 @@ var Tilemap = new Class({
      * @since 3.0.0
      *
      * @param {number} worldY - The y coordinate to be converted, in pixels, not tiles.
-     * @param {boolean} [snapToFloor=true] - Whether or not to round the tile coordinate down to the nearest integer.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
+     * @param {boolean} [snapToFloor] - Whether or not to round the tile coordinate down to the nearest integer.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when calculating the tile index from the world values.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?number} Returns a number, or null if the layer given was invalid.
@@ -2534,9 +2562,9 @@ var Tilemap = new Class({
      *
      * @param {number} worldX - The x coordinate to be converted, in pixels, not tiles.
      * @param {number} worldY - The y coordinate to be converted, in pixels, not tiles.
-     * @param {boolean} [snapToFloor=true] - Whether or not to round the tile coordinate down to the nearest integer.
+     * @param {boolean} [snapToFloor] - Whether or not to round the tile coordinate down to the nearest integer.
      * @param {Phaser.Math.Vector2} [vec2] - A Vector2 to store the coordinates in. If not given a new Vector2 is created.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when calculating the tile index from the world values.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Math.Vector2} Returns a vec2, or null if the layer given was invalid.

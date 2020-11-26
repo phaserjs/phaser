@@ -26,6 +26,8 @@ var CalculateFacesWithin = require('./CalculateFacesWithin');
  */
 var Copy = function (srcTileX, srcTileY, width, height, destTileX, destTileY, recalculateFaces, layer)
 {
+    if (recalculateFaces === undefined) { recalculateFaces = true; }
+
     if (srcTileX < 0) { srcTileX = 0; }
     if (srcTileY < 0) { srcTileY = 0; }
 

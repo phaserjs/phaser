@@ -25,6 +25,9 @@ var CalculateFacesAt = require('./CalculateFacesAt');
  */
 var RemoveTileAt = function (tileX, tileY, replaceWithNull, recalculateFaces, layer)
 {
+    if (replaceWithNull === undefined) { replaceWithNull = true; }
+    if (recalculateFaces === undefined) { recalculateFaces = true; }
+
     if (!IsInLayerBounds(tileX, tileY, layer))
     {
         return null;
