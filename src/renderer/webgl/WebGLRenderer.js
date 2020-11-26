@@ -2332,11 +2332,6 @@ var WebGLRenderer = new Class({
 
             var child = children[i];
 
-            if (child.blendMode !== this.currentBlendMode)
-            {
-                this.setBlendMode(child.blendMode);
-            }
-
             var mask = child.mask;
 
             current = this.currentMask;
@@ -2350,6 +2345,11 @@ var WebGLRenderer = new Class({
             if (mask && current.mask !== mask)
             {
                 mask.preRenderWebGL(this, child, camera);
+            }
+
+            if (child.blendMode !== this.currentBlendMode)
+            {
+                this.setBlendMode(child.blendMode);
             }
 
             var type = child.type;
