@@ -354,17 +354,17 @@ var AnimationManager = new Class({
      *
      * This was tested with Aseprite 1.2.25.
      *
-     * This will export a png and json file which you can load using the Atlas Loader, i.e.:
+     * This will export a png and json file which you can load using the Aseprite Loader, i.e.:
      *
      * ```javascript
      * function preload ()
      * {
      *     this.load.path = 'assets/animations/aseprite/';
-     *     this.load.atlas('paladin', 'paladin.png', 'paladin.json');
+     *     this.load.aseprite('paladin', 'paladin.png', 'paladin.json');
      * }
      * ```
      *
-     * Once exported, you can call this method from within a Scene with the 'atlas' key:
+     * Once loaded, you can call this method from within a Scene with the 'atlas' key:
      *
      * ```javascript
      * this.anims.createFromAseprite('paladin');
