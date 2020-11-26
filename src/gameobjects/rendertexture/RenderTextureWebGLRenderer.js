@@ -36,7 +36,7 @@ var RenderTextureWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     renderer.pipelines.preBatch(src);
 
-    src.pipeline.batchTexture(
+    pipeline.batchTexture(
         src,
         renderTarget.texture,
         width, height,

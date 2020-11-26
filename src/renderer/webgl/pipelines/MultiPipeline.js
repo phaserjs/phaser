@@ -420,7 +420,7 @@ var MultiPipeline = new Class({
                 ox = (frameWidth - crop.x - cropWidth);
             }
 
-            if (flipY && !texture.isRenderTexture)
+            if (flipY)
             {
                 oy = (frameHeight - crop.y - cropHeight);
             }
