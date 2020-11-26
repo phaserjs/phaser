@@ -755,6 +755,8 @@ var RenderTexture = new Class({
         {
             renderTarget.bind(true);
 
+            renderer.resetTextures(true);
+
             this.batchList(entries, x, y, alpha, tint);
 
             renderTarget.unbind(true);
@@ -1047,11 +1049,7 @@ var RenderTexture = new Class({
 
         if (renderTarget)
         {
-            renderTarget.bind(true);
-
             this.pipeline.batchTextureFrame(textureFrame, x, y, tint, alpha, this.camera.matrix, null);
-
-            renderTarget.unbind(true);
         }
         else
         {
