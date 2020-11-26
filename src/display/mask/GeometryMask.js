@@ -51,6 +51,8 @@ var GeometryMask = new Class({
          * Similar to the BitmapMasks invertAlpha setting this to true will then hide all pixels
          * drawn to the Geometry Mask.
          *
+         * This is a WebGL only feature.
+         *
          * @name Phaser.Display.Masks.GeometryMask#invertAlpha
          * @type {boolean}
          * @since 3.16.0
@@ -97,7 +99,10 @@ var GeometryMask = new Class({
 
     /**
      * Sets the `invertAlpha` property of this Geometry Mask.
+     *
      * Inverting the alpha essentially flips the way the mask works.
+     *
+     * This is a WebGL only feature.
      *
      * @method Phaser.Display.Masks.GeometryMask#setInvertAlpha
      * @since 3.17.0
