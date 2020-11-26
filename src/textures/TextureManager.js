@@ -412,8 +412,8 @@ var TextureManager = new Class({
 
         if (this.checkKey(key))
         {
-            if (width === undefined) { width = glTexture.width };
-            if (height === undefined) { height = glTexture.height };
+            if (width === undefined) { width = glTexture.width; }
+            if (height === undefined) { height = glTexture.height; }
 
             texture = this.create(key, glTexture, width, height);
 
