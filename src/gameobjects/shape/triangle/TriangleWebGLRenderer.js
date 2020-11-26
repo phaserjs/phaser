@@ -34,12 +34,7 @@ var TriangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var dy = src._displayOriginY;
     var alpha = camera.alpha * src.alpha;
 
-    var postPipeline = (src && src.hasPostPipeline);
-
-    if (postPipeline)
-    {
-        renderer.pipelines.preBatch(src);
-    }
+    renderer.pipelines.preBatch(src);
 
     if (src.isFilled)
     {
@@ -75,10 +70,7 @@ var TriangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
         StrokePathWebGL(pipeline, src, alpha, dx, dy);
     }
 
-    if (postPipeline)
-    {
-        renderer.pipelines.postBatch(src);
-    }
+    renderer.pipelines.postBatch(src);
 };
 
 module.exports = TriangleWebGLRenderer;

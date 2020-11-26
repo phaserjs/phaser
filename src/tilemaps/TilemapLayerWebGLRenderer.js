@@ -45,12 +45,7 @@ var TilemapLayerWebGLRenderer = function (renderer, src, camera)
     var sx = src.scaleX;
     var sy = src.scaleY;
 
-    var postPipeline = (src && src.hasPostPipeline);
-
-    if (postPipeline)
-    {
-        renderer.pipelines.preBatch(src);
-    }
+    renderer.pipelines.preBatch(src);
 
     for (var i = 0; i < tileCount; i++)
     {
@@ -101,10 +96,7 @@ var TilemapLayerWebGLRenderer = function (renderer, src, camera)
         );
     }
 
-    if (postPipeline)
-    {
-        renderer.pipelines.postBatch(src);
-    }
+    renderer.pipelines.postBatch(src);
 };
 
 module.exports = TilemapLayerWebGLRenderer;

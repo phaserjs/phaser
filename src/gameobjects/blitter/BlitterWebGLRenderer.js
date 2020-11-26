@@ -54,12 +54,7 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var alpha = camera.alpha * src.alpha;
     var roundPixels = camera.roundPixels;
 
-    var postPipeline = (src && src.hasPostPipeline);
-
-    if (postPipeline)
-    {
-        renderer.pipelines.preBatch(src);
-    }
+    renderer.pipelines.preBatch(src);
 
     for (var index = 0; index < list.length; index++)
     {
@@ -125,10 +120,7 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
         }
     }
 
-    if (postPipeline)
-    {
-        renderer.pipelines.postBatch(src);
-    }
+    renderer.pipelines.postBatch(src);
 };
 
 module.exports = BlitterWebGLRenderer;

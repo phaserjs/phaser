@@ -584,10 +584,10 @@ var PipelineManager = new Class({
      */
     preBatch: function (gameObject)
     {
-        this.flush();
-
         if (gameObject.hasPostPipeline)
         {
+            this.flush();
+
             var pipelines = gameObject.postPipelines;
 
             //  Iterate in reverse because we need them stacked in the order they're in the array
@@ -611,10 +611,10 @@ var PipelineManager = new Class({
      */
     postBatch: function (gameObject)
     {
-        this.flush();
-
         if (gameObject.hasPostPipeline)
         {
+            this.flush();
+
             var pipelines = gameObject.postPipelines;
 
             for (var i = 0; i < pipelines.length; i++)

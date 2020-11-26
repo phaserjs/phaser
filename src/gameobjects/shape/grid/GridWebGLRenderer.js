@@ -80,12 +80,7 @@ var GridWebGLRenderer = function (renderer, src, camera, parentMatrix)
         }
     }
 
-    var postPipeline = (src && src.hasPostPipeline);
-
-    if (postPipeline)
-    {
-        renderer.pipelines.preBatch(src);
-    }
+    renderer.pipelines.preBatch(src);
 
     if (showCells && src.fillAlpha > 0)
     {
@@ -192,10 +187,7 @@ var GridWebGLRenderer = function (renderer, src, camera, parentMatrix)
         }
     }
 
-    if (postPipeline)
-    {
-        renderer.pipelines.postBatch(src);
-    }
+    renderer.pipelines.postBatch(src);
 };
 
 module.exports = GridWebGLRenderer;

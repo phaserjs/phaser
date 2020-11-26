@@ -62,12 +62,7 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
 
     var textureUnit = pipeline.setGameObject(emitterManager, emitterManager.defaultFrame);
 
-    var postPipeline = (emitterManager && emitterManager.hasPostPipeline);
-
-    if (postPipeline)
-    {
-        renderer.pipelines.preBatch(emitterManager);
-    }
+    renderer.pipelines.preBatch(emitterManager);
 
     for (var e = 0; e < emittersLength; e++)
     {
@@ -151,10 +146,7 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
         }
     }
 
-    if (postPipeline)
-    {
-        renderer.pipelines.postBatch(emitterManager);
-    }
+    renderer.pipelines.postBatch(emitterManager);
 };
 
 module.exports = ParticleManagerWebGLRenderer;

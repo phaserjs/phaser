@@ -49,12 +49,7 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var pipeline = renderer.pipelines.set(src.pipeline, src);
 
-    var postPipeline = (src && src.hasPostPipeline);
-
-    if (postPipeline)
-    {
-        renderer.pipelines.preBatch(src);
-    }
+    renderer.pipelines.preBatch(src);
 
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
@@ -346,10 +341,7 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
         }
     }
 
-    if (postPipeline)
-    {
-        renderer.pipelines.postBatch(src);
-    }
+    renderer.pipelines.postBatch(src);
 };
 
 module.exports = GraphicsWebGLRenderer;

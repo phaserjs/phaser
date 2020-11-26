@@ -44,12 +44,7 @@ var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix
         transformMatrix.applyITRS(container.x, container.y, container.rotation, container.scaleX, container.scaleY);
     }
 
-    var postPipeline = (container && container.hasPostPipeline);
-
-    if (postPipeline)
-    {
-        renderer.pipelines.preBatch(container);
-    }
+    renderer.pipelines.preBatch(container);
 
     var containerHasBlendMode = (container.blendMode !== -1);
 
@@ -143,10 +138,7 @@ var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix
         renderer.newType = false;
     }
 
-    if (postPipeline)
-    {
-        renderer.pipelines.postBatch(container);
-    }
+    renderer.pipelines.postBatch(container);
 };
 
 module.exports = ContainerWebGLRenderer;

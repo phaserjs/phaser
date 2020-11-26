@@ -35,12 +35,7 @@ var PolygonWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var alpha = camera.alpha * src.alpha;
 
-    var postPipeline = (src && src.hasPostPipeline);
-
-    if (postPipeline)
-    {
-        renderer.pipelines.preBatch(src);
-    }
+    renderer.pipelines.preBatch(src);
 
     if (src.isFilled)
     {
@@ -52,10 +47,7 @@ var PolygonWebGLRenderer = function (renderer, src, camera, parentMatrix)
         StrokePathWebGL(pipeline, src, alpha, dx, dy);
     }
 
-    if (postPipeline)
-    {
-        renderer.pipelines.postBatch(src);
-    }
+    renderer.pipelines.postBatch(src);
 };
 
 module.exports = PolygonWebGLRenderer;

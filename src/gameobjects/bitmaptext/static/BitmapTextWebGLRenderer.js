@@ -66,12 +66,7 @@ var BitmapTextWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var dropShadow = (dropShadowX !== 0 || dropShadowY !== 0);
 
-    var postPipeline = (src && src.hasPostPipeline);
-
-    if (postPipeline)
-    {
-        renderer.pipelines.preBatch(src);
-    }
+    renderer.pipelines.preBatch(src);
 
     if (dropShadow)
     {
@@ -128,10 +123,7 @@ var BitmapTextWebGLRenderer = function (renderer, src, camera, parentMatrix)
         // pipeline.drawFillRect(tx0, ty0, tx2 - tx0, ty2 - ty0, 0x00ff00, 0.5);
     }
 
-    if (postPipeline)
-    {
-        renderer.pipelines.postBatch(src);
-    }
+    renderer.pipelines.postBatch(src);
 };
 
 module.exports = BitmapTextWebGLRenderer;

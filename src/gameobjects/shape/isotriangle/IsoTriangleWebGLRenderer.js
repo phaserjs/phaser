@@ -44,12 +44,7 @@ var IsoTriangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
         return;
     }
 
-    var postPipeline = (src && src.hasPostPipeline);
-
-    if (postPipeline)
-    {
-        renderer.pipelines.preBatch(src);
-    }
+    renderer.pipelines.preBatch(src);
 
     var tint;
 
@@ -147,10 +142,7 @@ var IsoTriangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
         pipeline.batchTri(x0, y0, x1, y1, x2, y2, tint, tint, tint);
     }
 
-    if (postPipeline)
-    {
-        renderer.pipelines.postBatch(src);
-    }
+    renderer.pipelines.postBatch(src);
 };
 
 module.exports = IsoTriangleWebGLRenderer;

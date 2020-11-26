@@ -27,13 +27,6 @@ var TextWebGLRenderer = function (renderer, src, camera, parentMatrix)
         return;
     }
 
-    var postPipeline = (src && src.hasPostPipeline);
-
-    if (postPipeline)
-    {
-        renderer.pipelines.preBatch(src);
-    }
-
     var frame = src.frame;
     var width = frame.width;
     var height = frame.height;
@@ -41,6 +34,8 @@ var TextWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var pipeline = renderer.pipelines.set(src.pipeline, src);
 
     var textureUnit = pipeline.setTexture2D(frame.glTexture, src);
+
+    renderer.pipelines.preBatch(src);
 
     pipeline.batchTexture(
         src,
@@ -66,10 +61,7 @@ var TextWebGLRenderer = function (renderer, src, camera, parentMatrix)
         textureUnit
     );
 
-    if (postPipeline)
-    {
-        renderer.pipelines.postBatch(src);
-    }
+    renderer.pipelines.postBatch(src);
 };
 
 module.exports = TextWebGLRenderer;

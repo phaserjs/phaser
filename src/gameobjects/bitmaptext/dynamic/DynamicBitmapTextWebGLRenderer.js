@@ -115,12 +115,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
     var displayCallback = src.displayCallback;
     var callbackData = src.callbackData;
 
-    var postPipeline = (src && src.hasPostPipeline);
-
-    if (postPipeline)
-    {
-        renderer.pipelines.preBatch(src);
-    }
+    renderer.pipelines.preBatch(src);
 
     for (var i = 0; i < textLength; i++)
     {
@@ -279,10 +274,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
         renderer.popScissor();
     }
 
-    if (postPipeline)
-    {
-        renderer.pipelines.postBatch(src);
-    }
+    renderer.pipelines.postBatch(src);
 };
 
 module.exports = DynamicBitmapTextWebGLRenderer;

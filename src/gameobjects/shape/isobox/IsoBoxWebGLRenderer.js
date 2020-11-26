@@ -57,12 +57,7 @@ var IsoBoxWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var y3;
 
 
-    var postPipeline = (src && src.hasPostPipeline);
-
-    if (postPipeline)
-    {
-        renderer.pipelines.preBatch(src);
-    }
+    renderer.pipelines.preBatch(src);
 
     //  Top Face
 
@@ -127,10 +122,7 @@ var IsoBoxWebGLRenderer = function (renderer, src, camera, parentMatrix)
         pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, tint, tint, tint, tint);
     }
 
-    if (postPipeline)
-    {
-        renderer.pipelines.postBatch(src);
-    }
+    renderer.pipelines.postBatch(src);
 };
 
 module.exports = IsoBoxWebGLRenderer;
