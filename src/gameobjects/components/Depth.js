@@ -7,7 +7,7 @@
 /**
  * Provides methods used for setting the depth of a Game Object.
  * Should be applied as a mixin and not used directly.
- * 
+ *
  * @namespace Phaser.GameObjects.Components.Depth
  * @since 3.0.0
  */
@@ -16,7 +16,7 @@ var Depth = {
 
     /**
      * Private internal value. Holds the depth of the Game Object.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Depth#_depth
      * @type {number}
      * @private
@@ -26,8 +26,21 @@ var Depth = {
     _depth: 0,
 
     /**
+     * Holds a reference to the Display List responsible for depth sorting
+     * this Game Object. This is set automatically when this Game Object is
+     * added to the Display List in a Scene, or to a Layer. You should treat
+     * this property as being read-only.
+     *
+     * @name Phaser.GameObjects.Components.Depth#depthList
+     * @type {(Phaser.GameObjects.DisplayList|Phaser.GameObjects.Layer)}
+     * @default null
+     * @since 3.50.0
+     */
+    depthList: null,
+
+    /**
      * The depth of this Game Object within the Scene.
-     * 
+     *
      * The depth is also known as the 'z-index' in some environments, and allows you to change the rendering order
      * of Game Objects, without actually moving their position in the display list.
      *
@@ -35,7 +48,7 @@ var Depth = {
      * value will always render in front of one with a lower value.
      *
      * Setting the depth will queue a depth sort event within the Scene.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Depth#depth
      * @type {number}
      * @since 3.0.0
@@ -49,7 +62,11 @@ var Depth = {
 
         set: function (value)
         {
-            this.scene.sys.queueDepthSort();
+            if (this.depthList)
+            {
+                this.depthList.queueDepthSort();
+            }
+
             this._depth = value;
         }
 
@@ -57,7 +74,7 @@ var Depth = {
 
     /**
      * The depth of this Game Object within the Scene.
-     * 
+     *
      * The depth is also known as the 'z-index' in some environments, and allows you to change the rendering order
      * of Game Objects, without actually moving their position in the display list.
      *
@@ -65,12 +82,12 @@ var Depth = {
      * value will always render in front of one with a lower value.
      *
      * Setting the depth will queue a depth sort event within the Scene.
-     * 
+     *
      * @method Phaser.GameObjects.Components.Depth#setDepth
      * @since 3.0.0
      *
      * @param {number} value - The depth of this Game Object.
-     * 
+     *
      * @return {this} This Game Object instance.
      */
     setDepth: function (value)
