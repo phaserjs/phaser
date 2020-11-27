@@ -42,17 +42,20 @@ var Phaser = {
         GameObject: require('./gameobjects/GameObject'),
         Graphics: require('./gameobjects/graphics/Graphics.js'),
         Image: require('./gameobjects/image/Image'),
+        Layer: require('./gameobjects/layer/Layer'),
         Sprite: require('./gameobjects/sprite/Sprite'),
         Text: require('./gameobjects/text/static/Text'),
         Factories: {
             Graphics: require('./gameobjects/graphics/GraphicsFactory'),
             Image: require('./gameobjects/image/ImageFactory'),
+            Layer: require('./gameobjects/layer/LayerFactory'),
             Sprite: require('./gameobjects/sprite/SpriteFactory'),
             Text: require('./gameobjects/text/static/TextFactory')
         },
         Creators: {
             Graphics: require('./gameobjects/graphics/GraphicsCreator'),
             Image: require('./gameobjects/image/ImageCreator'),
+            Layer: require('./gameobjects/layer/LayerCreator'),
             Sprite: require('./gameobjects/sprite/SpriteCreator'),
             Text: require('./gameobjects/text/static/TextCreator')
         }
