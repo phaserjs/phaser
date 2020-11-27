@@ -618,6 +618,34 @@ The `Quad` Game Object has been removed from v3.50.0.
 
 You can now create your own Quads easily using the new `Geom.Mesh.GenerateGridVerts` function, which is far more flexible than the old quads were.
 
+### Layer Game Object
+
+A Layer is a special type of Game Object that acts as a Display List. You can add any type of Game Object to a Layer, just as you would to a Scene. Layers can be used to visually group together 'layers' of Game Objects:
+
+```javascript
+const spaceman = this.add.sprite(150, 300, 'spaceman');
+const bunny = this.add.sprite(400, 300, 'bunny');
+const elephant = this.add.sprite(650, 300, 'elephant');
+
+const layer = this.add.layer();
+
+layer.add([ spaceman, bunny, elephant ]);
+```
+
+The 3 sprites in the example above will now be managed by the Layer they were added to. Therefore, if you then set `layer.setVisible(false)` they would all vanish from the display.
+
+You can also control the depth of the Game Objects within the Layer. For example, calling the `setDepth` method of a child of a Layer will allow you to adjust the depth of that child _within the Layer itself_, rather than the whole Scene. The Layer, too, can have its depth set as well.
+
+The Layer class also offers many different methods for manipulating the list, such as the methods `moveUp`, `moveDown`, `sendToBack`, `bringToTop` and so on. These allow you to change the display list position of the Layers children, causing it to adjust the order in which they are rendered. Using `setDepth` on a child allows you to override this.
+
+Layers can have Post FX Pipelines set, which allows you to easily enable a post pipeline across a whole range of children, which, depending on the effect, can often be far more efficient that doing so on a per-child basis.
+
+Layers have no position or size within the Scene. This means you cannot enable a Layer for physics or input, or change the position, rotation or scale of a Layer. They also have no scroll factor, texture, tint, origin, crop or bounds.
+
+If you need those kind of features then you should use a Container instead. Containers can be added to Layers, but Layers cannot be added to Containers.
+
+However, you can set the Alpha, Blend Mode, Depth, Mask and Visible state of a Layer. These settings will impact all children being rendered by the Layer.
+
 ### Input / Mouse Updates and API Changes
 
 * `ScaleManager.refresh` is now called when the `Game.READY` event fires. This fixes a bug where the Scale Manager would have the incorrect canvas bounds, because they were calculated before a previous canvas was removed from the DOM. Fix #4862 (thanks @dranitski)
@@ -812,6 +840,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `GameObjects.Video.loadMediaStream` is a new method that allows you to hook a Video Game Object up to a Media Stream, rather than a URL, allowing you to stream video from a source such as a webcam (thanks @pirateksh)
 * `Display.Color.ColorSpectrum` is a new function that will return an array of 1024 Color Object elements aligned in a Color Spectrum layout, where the darkest colors have been omitted.
 * `AsepriteFile` is a new File Type for the Loader that allows you to load Aseprite images and animation data for use with the new Aseprite animation features. You can call this via `this.load.asesprite(png, json)`.
+* `GameObject.displayList` is a new property that contains a reference to the Display List to which the Game Object has been added. This will typically either by the Display List owned by a Scene, or a Layer Game Object. You should treat this property as read-only.
 
 ### Updates and API Changes
 
