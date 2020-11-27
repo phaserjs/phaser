@@ -1,6 +1,5 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @author       Felipe Alfonso <@bitnenfer>
  * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
@@ -704,13 +703,9 @@ var Layer = new Class({
      * @method Phaser.GameObjects.Layer#destroy
      * @fires Phaser.GameObjects.Events#DESTROY
      * @since 3.50.0
-     *
-     * @param {boolean} [fromScene=false] - Is this Game Object being destroyed as the result of a Scene shutdown?
      */
-    destroy: function (fromScene)
+    destroy: function ()
     {
-        if (fromScene === undefined) { fromScene = false; }
-
         //  This Game Object has already been destroyed
         if (!this.scene || this.ignoreDestroy)
         {
@@ -723,7 +718,7 @@ var Layer = new Class({
 
         this.emit(GameObjectEvents.DESTROY, this);
 
-        if (!fromScene && this.displayList)
+        if (this.displayList)
         {
             this.displayList.remove(this);
             this.displayList.queueDepthSort();

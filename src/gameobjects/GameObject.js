@@ -673,13 +673,9 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#destroy
      * @fires Phaser.GameObjects.Events#DESTROY
      * @since 3.0.0
-     *
-     * @param {boolean} [fromScene=false] - Is this Game Object being destroyed as the result of a Scene shutdown?
      */
-    destroy: function (fromScene)
+    destroy: function ()
     {
-        if (fromScene === undefined) { fromScene = false; }
-
         //  This Game Object has already been destroyed
         if (!this.scene || this.ignoreDestroy)
         {
@@ -691,11 +687,15 @@ var GameObject = new Class({
             this.preDestroy.call(this);
         }
 
+        this.removeAllListeners();
+        this.resetPostPipeline(true);
+
         this.emit(Events.DESTROY, this);
 
-        if (!fromScene)
+        if (this.displayList)
         {
             this.displayList.remove(this);
+            this.displayList.queueDepthSort();
         }
 
         if (this.input)
@@ -719,22 +719,12 @@ var GameObject = new Class({
             this.body = undefined;
         }
 
-        this.resetPostPipeline(true);
-
-        //  Tell the Scene to re-sort the children
-        if (!fromScene)
-        {
-            this.displayList.queueDepthSort();
-        }
-
         this.active = false;
         this.visible = false;
 
         this.scene = undefined;
         this.displayList = undefined;
         this.parentContainer = undefined;
-
-        this.removeAllListeners();
     }
 
 });
