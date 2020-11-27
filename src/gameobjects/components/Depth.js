@@ -26,19 +26,6 @@ var Depth = {
     _depth: 0,
 
     /**
-     * Holds a reference to the Display List responsible for depth sorting
-     * this Game Object. This is set automatically when this Game Object is
-     * added to the Display List in a Scene, or to a Layer. You should treat
-     * this property as being read-only.
-     *
-     * @name Phaser.GameObjects.Components.Depth#depthList
-     * @type {(Phaser.GameObjects.DisplayList|Phaser.GameObjects.Layer)}
-     * @default null
-     * @since 3.50.0
-     */
-    depthList: null,
-
-    /**
      * The depth of this Game Object within the Scene.
      *
      * The depth is also known as the 'z-index' in some environments, and allows you to change the rendering order
@@ -62,9 +49,9 @@ var Depth = {
 
         set: function (value)
         {
-            if (this.depthList)
+            if (this.displayList)
             {
-                this.depthList.queueDepthSort();
+                this.displayList.queueDepthSort();
             }
 
             this._depth = value;

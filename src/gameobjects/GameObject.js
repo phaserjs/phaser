@@ -50,6 +50,20 @@ var GameObject = new Class({
         this.scene = scene;
 
         /**
+         * Holds a reference to the Display List that contains this Game Object.
+         *
+         * This is set automatically when this Game Object is added to a Scene or Layer.
+         *
+         * You should treat this property as being read-only.
+         *
+         * @name Phaser.GameObjects.GameObject#displayList
+         * @type {(Phaser.GameObjects.DisplayList|Phaser.GameObjects.Layer)}
+         * @default null
+         * @since 3.50.0
+         */
+        this.displayList = null;
+
+        /**
          * A textual representation of this Game Object, i.e. `sprite`.
          * Used internally by Phaser but is available for your own custom classes to populate.
          *
@@ -679,16 +693,15 @@ var GameObject = new Class({
 
         this.emit(Events.DESTROY, this);
 
-        var sys = this.scene.sys;
-
         if (!fromScene)
         {
-            sys.displayList.remove(this);
+            this.displayList.remove(this);
         }
 
         if (this.input)
         {
-            sys.input.clear(this);
+            this.scene.sys.input.clear(this);
+
             this.input = undefined;
         }
 
@@ -702,6 +715,7 @@ var GameObject = new Class({
         if (this.body)
         {
             this.body.destroy();
+
             this.body = undefined;
         }
 
@@ -710,14 +724,14 @@ var GameObject = new Class({
         //  Tell the Scene to re-sort the children
         if (!fromScene)
         {
-            sys.queueDepthSort();
+            this.displayList.queueDepthSort();
         }
 
         this.active = false;
         this.visible = false;
 
         this.scene = undefined;
-
+        this.displayList = undefined;
         this.parentContainer = undefined;
 
         this.removeAllListeners();

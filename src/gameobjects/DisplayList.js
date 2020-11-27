@@ -110,7 +110,14 @@ var DisplayList = new Class({
     {
         gameObject.emit(GameObjectEvents.ADDED_TO_SCENE, gameObject, this.scene);
 
-        gameObject.depthList = this;
+        if (gameObject.displayList)
+        {
+            gameObject.displayList.remove(gameObject);
+        }
+
+        gameObject.displayList = this;
+
+        this.queueDepthSort();
 
         this.events.emit(SceneEvents.ADDED_TO_SCENE, gameObject, this.scene);
     },
@@ -130,7 +137,9 @@ var DisplayList = new Class({
     {
         gameObject.emit(GameObjectEvents.REMOVED_FROM_SCENE, gameObject, this.scene);
 
-        gameObject.depthList = null;
+        gameObject.displayList = null;
+
+        this.queueDepthSort();
 
         this.events.emit(SceneEvents.REMOVED_FROM_SCENE, gameObject, this.scene);
     },
