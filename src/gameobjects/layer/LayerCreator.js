@@ -1,6 +1,5 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @author       Felipe Alfonso <@bitnenfer>
  * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
