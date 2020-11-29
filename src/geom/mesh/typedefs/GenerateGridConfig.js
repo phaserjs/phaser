@@ -15,6 +15,5 @@
  * @property {number|number[]} [alphas=1] - An array of alpha values, one per vertex, or a single alpha value applied to all vertices.
  * @property {boolean} [tile=false] - Should the texture tile (repeat) across the grid segments, or display as a single texture?
  * @property {boolean} [isOrtho=false] - If set and using a texture with an ortho Mesh, the `width` and `height` parameters will be calculated based on the frame size for you.
- * @property {boolean} [flipX=false] - If set and using a texture, horizontally flipping render result.
  * @property {boolean} [flipY=false] - If set and using a texture, vertically flipping render result.
  */
