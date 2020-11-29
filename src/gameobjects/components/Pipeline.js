@@ -267,7 +267,7 @@ var Pipeline = {
      * @webglOnly
      * @since 3.50.0
      *
-     * @param {string} name - The name of the Post Pipeline to get.
+     * @param {string|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline} pipeline - The string-based name of the pipeline, or a pipeline class.
      *
      * @return {Phaser.Renderer.WebGL.Pipelines.PostFXPipeline} The first Post Pipeline matching the name, or undefined if no match.
      */
@@ -279,7 +279,7 @@ var Pipeline = {
         {
             var instance = pipelines[i];
 
-            if ((typeof pipeline === 'string' && instance.name === name) || instance instanceof pipeline)
+            if ((typeof pipeline === 'string' && instance.name === pipeline) || instance instanceof pipeline)
             {
                 return instance;
             }
