@@ -63,6 +63,7 @@ var GenerateGridVerts = function (config)
     var colors = GetFastValue(config, 'colors', [ 0xffffff ]);
     var alphas = GetFastValue(config, 'alphas', [ 1 ]);
     var tile = GetFastValue(config, 'tile', false);
+    var flipY = GetFastValue(config, 'flipY', false);
 
     var widthSet = GetFastValue(config, 'width', null);
 
@@ -125,8 +126,17 @@ var GenerateGridVerts = function (config)
     {
         frameU0 = textureFrame.u0;
         frameU1 = textureFrame.u1;
-        frameV0 = textureFrame.v0;
-        frameV1 = textureFrame.v1;
+
+        if (!flipY)
+        {
+            frameV0 = textureFrame.v0;
+            frameV1 = textureFrame.v1;
+        }
+        else
+        {
+            frameV0 = textureFrame.v1;
+            frameV1 = textureFrame.v0;
+        }
     }
 
     var frameU = frameU1 - frameU0;
