@@ -9,13 +9,23 @@ var GetColor = require('./GetColor');
 /**
  * Return an array of Colors in a Color Spectrum.
  *
+ * The spectrum colors flow in the order: red, yellow, green, blue.
+ *
+ * By default this function will return an array with 1024 elements in.
+ *
+ * However, you can reduce this to a smaller quantity if needed, by specitying the `limit` parameter.
+ *
  * @function Phaser.Display.Color.ColorSpectrum
  * @since 3.50.0
  *
- * @return {Phaser.Types.Display.ColorObject[]} An array containing 1024 elements, where each contains a Color Object.
+ * @param {number} [limit=1024] - How many colors should be returned? The maximum is 1024 but you can set a smaller quantity if required.
+ *
+ * @return {Phaser.Types.Display.ColorObject[]} An array containing `limit` parameter number of elements, where each contains a Color Object.
  */
-var ColorSpectrum = function ()
+var ColorSpectrum = function (limit)
 {
+    if (limit === undefined) { limit = 1024; }
+
     var colors = [];
 
     var range = 255;
@@ -56,7 +66,26 @@ var ColorSpectrum = function ()
         colors.push({ r: r, g: g, b: b, color: GetColor(r, g, b) });
     }
 
-    return colors;
+    if (limit === 1024)
+    {
+        return colors;
+    }
+    else
+    {
+        var out = [];
+
+        var t = 0;
+        var inc = 1024 / limit;
+
+        for (i = 0; i < limit; i++)
+        {
+            out.push(colors[Math.floor(t)]);
+
+            t += inc;
+        }
+
+        return out;
+    }
 };
 
 module.exports = ColorSpectrum;
