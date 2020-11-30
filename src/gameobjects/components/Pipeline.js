@@ -6,6 +6,7 @@
 
 var DeepCopy = require('../../utils/object/DeepCopy');
 var PIPELINE_CONST = require('../../renderer/webgl/pipelines/const');
+var SpliceOne = require('../../utils/array/SpliceOne');
 
 /**
  * Provides methods used for setting the WebGL rendering pipeline of a Game Object.
@@ -347,6 +348,40 @@ var Pipeline = {
         {
             this.pipelineData = {};
         }
+    },
+
+    /**
+     * Removes a single Post Pipeline instance from this Game Object, based on the given name, and destroys it.
+     *
+     * If you wish to remove all Post Pipelines use the `resetPostPipeline` method instead.
+     *
+     * @method Phaser.GameObjects.Components.Pipeline#removePostPipeline
+     * @webglOnly
+     * @since 3.50.0
+     *
+     * @param {string|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline} pipeline - The string-based name of the pipeline, or a pipeline class.
+     *
+     * @return {this} This Game Object.
+     */
+    removePostPipeline: function (pipeline)
+    {
+        var pipelines = this.postPipelines;
+
+        for (var i = 0; i < pipelines.length; i++)
+        {
+            var instance = pipelines[i];
+
+            if ((typeof pipeline === 'string' && instance.name === pipeline) || instance instanceof pipeline)
+            {
+                instance.destroy();
+
+                SpliceOne(pipelines, i);
+
+                return this;
+            }
+        }
+
+        return this;
     },
 
     /**
