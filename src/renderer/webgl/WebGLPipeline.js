@@ -943,7 +943,7 @@ var WebGLPipeline = new Class({
      * By default this is an empty method hook that you can override and use in your own custom pipelines.
      *
      * This method is called every time the `batchQuad` or `batchTri` methods are called. If this was
-     * as a result of a Game Object, then the Game Object refernce is passed to this hook too.
+     * as a result of a Game Object, then the Game Object reference is passed to this hook too.
      *
      * This hook is called _after_ the quad (or tri) has been added to the batch, so you can safely
      * call 'flush' from within this.
@@ -989,7 +989,7 @@ var WebGLPipeline = new Class({
      * By default this is an empty method hook that you can override and use in your own custom pipelines.
      *
      * This method is called once per frame, right before anything has been rendered, but after the canvas
-     * has been cleared. If this pipeline has a targetTexture, it will be cleared.
+     * has been cleared. If this pipeline has a render target, it will be cleared.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onPreRender
      * @since 3.50.0
@@ -1001,7 +1001,7 @@ var WebGLPipeline = new Class({
     /**
      * By default this is an empty method hook that you can override and use in your own custom pipelines.
      *
-     * This method is called once per frame, for every Camera in a Scene that wants to render.
+     * This method is called _once per frame_, by every Camera in a Scene that wants to render.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onRender
      * @since 3.50.0
@@ -1016,7 +1016,7 @@ var WebGLPipeline = new Class({
     /**
      * By default this is an empty method hook that you can override and use in your own custom pipelines.
      *
-     * This method is called once per frame, after all rendering has happened and snapshots have been taken.
+     * This method is called _once per frame_, after all rendering has happened and snapshots have been taken.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onPostRender
      * @since 3.50.0
@@ -1030,7 +1030,7 @@ var WebGLPipeline = new Class({
      *
      * This method is called every time this pipeline is asked to flush its batch.
      *
-     * It is called immediately before the gl.bufferData and gl.drawArray calls are made, so you can
+     * It is called immediately before the `gl.bufferData` and `gl.drawArray` calls are made, so you can
      * perform any final pre-render modifications. To apply changes post-render, see `onPostBatch`.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onBeforeFlush
