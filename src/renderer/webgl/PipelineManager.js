@@ -593,7 +593,12 @@ var PipelineManager = new Class({
             //  Iterate in reverse because we need them stacked in the order they're in the array
             for (var i = pipelines.length - 1; i >= 0; i--)
             {
-                pipelines[i].preBatch(gameObject);
+                var pipeline = pipelines[i];
+
+                if (pipeline.active)
+                {
+                    pipeline.preBatch(gameObject);
+                }
             }
         }
     },
@@ -619,7 +624,12 @@ var PipelineManager = new Class({
 
             for (var i = 0; i < pipelines.length; i++)
             {
-                pipelines[i].postBatch(gameObject);
+                var pipeline = pipelines[i];
+
+                if (pipeline.active)
+                {
+                    pipeline.postBatch(gameObject);
+                }
             }
         }
     },
@@ -646,7 +656,12 @@ var PipelineManager = new Class({
             //  Iterate in reverse because we need them stacked in the order they're in the array
             for (var i = pipelines.length - 1; i >= 0; i--)
             {
-                pipelines[i].preBatch(camera);
+                var pipeline = pipelines[i];
+
+                if (pipeline.active)
+                {
+                    pipeline.preBatch(camera);
+                }
             }
         }
     },
@@ -672,7 +687,12 @@ var PipelineManager = new Class({
 
             for (var i = 0; i < pipelines.length; i++)
             {
-                pipelines[i].postBatch(camera);
+                var pipeline = pipelines[i];
+
+                if (pipeline.active)
+                {
+                    pipeline.postBatch(camera);
+                }
             }
         }
     },

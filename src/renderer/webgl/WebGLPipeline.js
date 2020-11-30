@@ -215,15 +215,15 @@ var WebGLPipeline = new Class({
         this.vertexViewU32;
 
         /**
-         * Indicates if the current pipeline is active, or not, for this frame only.
+         * Indicates if the current pipeline is active, or not.
          *
-         * Reset to `true` in the `onRender` method.
+         * Toggle this property to enable or disable a pipeline from rendering anything.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#active
          * @type {boolean}
          * @since 3.10.0
          */
-        this.active = false;
+        this.active = true;
 
         /**
          * Holds the most recently assigned texture unit.
@@ -885,16 +885,19 @@ var WebGLPipeline = new Class({
             var gl = this.gl;
             var vertexSize = this.currentShader.vertexSize;
 
-            if (vertexCount === this.vertexCapacity)
+            if (this.active)
             {
-                gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.DYNAMIC_DRAW);
-            }
-            else
-            {
-                gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
-            }
+                if (vertexCount === this.vertexCapacity)
+                {
+                    gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.DYNAMIC_DRAW);
+                }
+                else
+                {
+                    gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
+                }
 
-            gl.drawArrays(this.topology, 0, vertexCount);
+                gl.drawArrays(this.topology, 0, vertexCount);
+            }
 
             this.vertexCount = 0;
 
