@@ -13,6 +13,7 @@ var BitmapMaskPipeline = require('./pipelines/BitmapMaskPipeline');
 var GraphicsPipeline = require('./pipelines/GraphicsPipeline');
 var LightPipeline = require('./pipelines/LightPipeline');
 var MultiPipeline = require('./pipelines/MultiPipeline');
+var PointLightPipeline = require('./pipelines/PointLightPipeline');
 var RopePipeline = require('./pipelines/RopePipeline');
 var SinglePipeline = require('./pipelines/SinglePipeline');
 var UtilityPipeline = require('./pipelines/UtilityPipeline');
@@ -83,6 +84,7 @@ var PipelineManager = new Class({
             [ CONST.SINGLE_PIPELINE, SinglePipeline ],
             [ CONST.ROPE_PIPELINE, RopePipeline ],
             [ CONST.LIGHT_PIPELINE, LightPipeline ],
+            [ CONST.POINTLIGHT_PIPELINE, PointLightPipeline ],
             [ CONST.GRAPHICS_PIPELINE, GraphicsPipeline ]
         ]);
 
