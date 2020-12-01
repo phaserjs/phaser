@@ -36,6 +36,10 @@ Other pipeline changes are as follows:
 * The `WebGLPipeline.flushLocked` property has been removed. A pipeline can never flush in the middle of a flush anyway, so it was just wasting CPU cycles being set.
 * You can now pass a pipeline instance to the `GameObject.setPipeline` method, as well as a string.
 
+### Post FX Pipelines
+
+TODO - Explain them here + pipeline component updates.
+
 ### Pipeline Uniform Changes
 
 Piplines now have a new `uniforms` array that can be passed in with the config. All default pipelines now set these. The array contains the names, as strings, of all uniforms your pipeline shader uses. Once the pipeline shader has been successfully linked, it will use the array of names to look-up the `WebGLUniformLocation` of all uniforms specified. These are stored in the new `WebGLPipeline.uniforms` object. This takes place in the new `WebGLPipeline.setUniformLocations` method.
