@@ -27,6 +27,16 @@ var PIPELINE_CONST = {
     LIGHT_PIPELINE: 'Light2D',
 
     /**
+     * The Point Light Pipeline.
+     *
+     * @name Phaser.Renderer.WebGL.Pipelines.POINTLIGHT_PIPELINE
+     * @type {string}
+     * @const
+     * @since 3.50.0
+     */
+    POINTLIGHT_PIPELINE: 'PointLightPipeline',
+
+    /**
      * The Single Texture Pipeline.
      *
      * @name Phaser.Renderer.WebGL.Pipelines.SINGLE_PIPELINE
