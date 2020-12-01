@@ -12,14 +12,14 @@ var GameObjectFactory = require('../GameObjectFactory');
  *
  * Note: This method will only be available if the Light Layer Game Object has been built into Phaser.
  *
- * @method Phaser.GameObjects.GameObjectFactory#lightlayer
+ * @method Phaser.GameObjects.GameObjectFactory#lightLayer
  * @since 3.50.0
  *
  * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} [children] - An optional array of Game Objects to add to this Layer.
  *
  * @return {Phaser.GameObjects.LightLayer} The Game Object that was created.
  */
-GameObjectFactory.register('lightlayer', function (children)
+GameObjectFactory.register('lightLayer', function (children)
 {
     return this.displayList.add(new LightLayer(this.scene, children));
 });

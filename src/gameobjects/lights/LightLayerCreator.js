@@ -14,7 +14,7 @@ var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
  *
  * Note: This method will only be available if the Light Layer Game Object has been built into Phaser.
  *
- * @method Phaser.GameObjects.GameObjectCreator#lightlayer
+ * @method Phaser.GameObjects.GameObjectCreator#lightLayer
  * @since 3.50.0
  *
  * @param {object} config - The configuration object this Game Object will use to create itself.
@@ -22,7 +22,7 @@ var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
  *
  * @return {Phaser.GameObjects.LightLayer} The Game Object that was created.
  */
-GameObjectCreator.register('lightlayer', function (config, addToScene)
+GameObjectCreator.register('lightLayer', function (config, addToScene)
 {
     if (config === undefined) { config = {}; }
 
