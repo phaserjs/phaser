@@ -168,7 +168,7 @@ var WebGLShader = new Class({
             var element = attributes[i];
 
             var name = element.name;
-            var size = element.size; // i.e. 1 for a float, 2 for a vec2, 4 for a vec4, etc
+            var size = GetFastValue(element, 'size', 1); // i.e. 1 for a float, 2 for a vec2, 4 for a vec4, etc
             var glType = GetFastValue(element, 'type', WEBGL_CONST.FLOAT);
             var type = glType.enum; // The GLenum
             var typeSize = glType.size; // The size in bytes of the type
