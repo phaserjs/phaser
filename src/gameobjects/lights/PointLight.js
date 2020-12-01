@@ -7,17 +7,14 @@
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
+var GetCalcMatrix = require('../GetCalcMatrix');
 var IntegerToRGB = require('../../display/color/IntegerToRGB');
 var RGB = require('../../display/RGB');
 
 /**
  * @classdesc
- * An Image Game Object.
  *
- * An Image is a light-weight Game Object useful for the display of static images in your game,
- * such as logos, backgrounds, scenery or other non-animated elements. Images can have input
- * events and physics bodies, or be tweened, tinted or scrolled. The main difference between an
- * Image and a Sprite is that you cannot animate an Image as they do not have the Animation component.
+ * TODO
  *
  * @class PointLight
  * @extends Phaser.GameObjects.GameObject
@@ -57,15 +54,16 @@ var PointLight = new Class({
 
     initialize:
 
-    function PointLight (scene, x, y, color, radius, intensity)
+    function PointLight (scene, x, y, color, radius, intensity, falloff)
     {
         if (color === undefined) { color = 0xffffff; }
         if (radius === undefined) { radius = 128; }
-        if (intensity === undefined) { intensity = 10; }
+        if (intensity === undefined) { intensity = 1; }
+        if (falloff === undefined) { falloff = radius * 2; }
 
         GameObject.call(this, scene, 'PointLight');
 
-        this.initPipeline('Light2D');
+        this.initPipeline('PointLightPipeline');
 
         this.setPosition(x, y);
 
@@ -78,40 +76,48 @@ var PointLight = new Class({
         );
 
         this.intensity = intensity;
+        this.attenuation = 0.1;
 
         //  read only:
-        this.width = radius * 2;
-        this.height = radius * 2;
+        this.width = falloff * 2;
+        this.height = falloff * 2;
 
         //  private
-        this._radius = radius;
+        this.radius = radius;
+        this._falloff = falloff;
     },
 
-    radius: {
+    // radius: {
+
+    //     get: function ()
+    //     {
+    //         return this._radius;
+    //     },
+
+    //     set: function (value)
+    //     {
+    //         this._radius = value;
+    //     }
+
+    // },
+
+    falloff: {
 
         get: function ()
         {
-            return this._radius;
+            return this._falloff;
         },
 
         set: function (value)
         {
-            this._radius = value;
+            this._falloff = value;
+
             this.width = value * 2;
             this.height = value * 2;
         }
 
     },
 
-    /**
-     * Internal value to allow Containers to be used for input and physics.
-     * Do not change this value. It has no effect other than to break things.
-     *
-     * @name Phaser.GameObjects.Container#originX
-     * @type {number}
-     * @readonly
-     * @since 3.4.0
-     */
     originX: {
 
         get: function ()
@@ -121,15 +127,6 @@ var PointLight = new Class({
 
     },
 
-    /**
-     * Internal value to allow Containers to be used for input and physics.
-     * Do not change this value. It has no effect other than to break things.
-     *
-     * @name Phaser.GameObjects.Container#originY
-     * @type {number}
-     * @readonly
-     * @since 3.4.0
-     */
     originY: {
 
         get: function ()
@@ -139,15 +136,6 @@ var PointLight = new Class({
 
     },
 
-    /**
-     * Internal value to allow Containers to be used for input and physics.
-     * Do not change this value. It has no effect other than to break things.
-     *
-     * @name Phaser.GameObjects.Container#displayOriginX
-     * @type {number}
-     * @readonly
-     * @since 3.4.0
-     */
     displayOriginX: {
 
         get: function ()
@@ -157,15 +145,6 @@ var PointLight = new Class({
 
     },
 
-    /**
-     * Internal value to allow Containers to be used for input and physics.
-     * Do not change this value. It has no effect other than to break things.
-     *
-     * @name Phaser.GameObjects.Container#displayOriginY
-     * @type {number}
-     * @readonly
-     * @since 3.4.0
-     */
     displayOriginY: {
 
         get: function ()
@@ -175,44 +154,20 @@ var PointLight = new Class({
 
     },
 
-    renderWebGL: function (renderer, src, camera, parentTransformMatrix)
+    renderWebGL: function (renderer, src, camera, parentMatrix)
     {
         var pipeline = renderer.pipelines.set(src.pipeline);
 
-        var camMatrix = pipeline.tempMatrix1;
-        var lightMatrix = pipeline.tempMatrix2;
-        var calcMatrix = pipeline.tempMatrix3;
+        var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
         var width = src.width;
         var height = src.height;
 
-        var x = -src.radius;
-        var y = -src.radius;
+        var x = -src._falloff;
+        var y = -src._falloff;
 
         var xw = x + width;
         var yh = y + height;
-
-        lightMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
-
-        camMatrix.copyFrom(camera.matrix);
-
-        if (parentTransformMatrix)
-        {
-            //  Multiply the camera by the parent matrix
-            camMatrix.multiplyWithOffset(parentTransformMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
-
-            //  Undo the camera scroll
-            lightMatrix.e = src.x;
-            lightMatrix.f = src.y;
-        }
-        else
-        {
-            lightMatrix.e -= camera.scrollX * src.scrollFactorX;
-            lightMatrix.f -= camera.scrollY * src.scrollFactorY;
-        }
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(lightMatrix, calcMatrix);
 
         var lightX = calcMatrix.getX(0, 0);
         var lightY = calcMatrix.getY(0, 0);
@@ -229,7 +184,7 @@ var PointLight = new Class({
         var tx3 = calcMatrix.getX(xw, y);
         var ty3 = calcMatrix.getY(xw, y);
 
-        pipeline.batchLight(src, camera, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, lightX, lightY);
+        pipeline.batchPointLight(src, camera, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, lightX, lightY);
     }
 
 });
