@@ -277,7 +277,7 @@ var LightPipeline = new Class({
 
         var normalTexture = this.getNormalMap(gameObject);
 
-        if (renderer.isNewNormalMap())
+        if (renderer.isNewNormalMap(texture, normalTexture))
         {
             this.flush();
 
