@@ -55,8 +55,7 @@ var GraphicsPipeline = new Class({
         config.attributes = GetFastValue(config, 'attributes', [
             {
                 name: 'inPosition',
-                size: 2,
-                type: WEBGL_CONST.FLOAT
+                size: 2
             },
             {
                 name: 'inColor',
@@ -64,9 +63,6 @@ var GraphicsPipeline = new Class({
                 type: WEBGL_CONST.UNSIGNED_BYTE,
                 normalized: true
             }
-        ]);
-        config.uniforms = GetFastValue(config, 'uniforms', [
-            'uProjectionMatrix'
         ]);
 
         WebGLPipeline.call(this, config);

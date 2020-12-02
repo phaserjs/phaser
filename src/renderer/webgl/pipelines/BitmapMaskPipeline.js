@@ -60,12 +60,6 @@ var BitmapMaskPipeline = new Class({
                 type: WEBGL_CONST.FLOAT
             }
         ]);
-        config.uniforms = GetFastValue(config, 'uniforms', [
-            'uResolution',
-            'uMainSampler',
-            'uMaskSampler',
-            'uInvertMaskAlpha'
-        ]);
 
         WebGLPipeline.call(this, config);
     },

@@ -20,10 +20,6 @@ var PointLightPipeline = new Class({
     {
         config.vertShader = GetFastValue(config, 'vertShader', PointLightShaderSourceVS);
         config.fragShader = GetFastValue(config, 'fragShader', PointLightShaderSourceFS);
-        config.uniforms = GetFastValue(config, 'uniforms', [
-            'uProjectionMatrix',
-            'uResolution'
-        ]);
         config.attributes = GetFastValue(config, 'attributes', [
             {
                 name: 'inPosition',

@@ -12,7 +12,6 @@ var CopyFS = require('../shaders/Copy-frag.js');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var LinearBlendFS = require('../shaders/LinearBlend-frag.js');
 var QuadVS = require('../shaders/Quad-vert.js');
-var WEBGL_CONST = require('../const');
 var WebGLPipeline = require('../WebGLPipeline');
 
 /**
@@ -77,51 +76,30 @@ var UtilityPipeline = new Class({
         config.shaders = GetFastValue(config, 'shaders', [
             {
                 name: 'Copy',
-                fragShader: CopyFS,
-                uniforms: [
-                    'uMainSampler',
-                    'uBrightness'
-                ]
+                fragShader: CopyFS
             },
             {
                 name: 'AddBlend',
-                fragShader: AddBlendFS,
-                uniforms: [
-                    'uMainSampler1',
-                    'uMainSampler2',
-                    'uStrength'
-                ]
+                fragShader: AddBlendFS
             },
             {
                 name: 'LinearBlend',
-                fragShader: LinearBlendFS,
-                uniforms: [
-                    'uMainSampler1',
-                    'uMainSampler2',
-                    'uStrength'
-                ]
+                fragShader: LinearBlendFS
             },
             {
                 name: 'ColorMatrix',
-                fragShader: ColorMatrixFS,
-                uniforms: [
-                    'uMainSampler',
-                    'uColorMatrix',
-                    'uAlpha'
-                ]
+                fragShader: ColorMatrixFS
             }
         ]);
 
         config.attributes = GetFastValue(config, 'attributes', [
             {
                 name: 'inPosition',
-                size: 2,
-                type: WEBGL_CONST.FLOAT
+                size: 2
             },
             {
                 name: 'inTexCoord',
-                size: 2,
-                type: WEBGL_CONST.FLOAT
+                size: 2
             }
         ]);
 

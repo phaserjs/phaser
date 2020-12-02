@@ -9,7 +9,6 @@ var ColorMatrix = require('../../../display/ColorMatrix');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var ShaderSourceFS = require('../shaders/PostFX-frag.js');
 var ShaderSourceVS = require('../shaders/Quad-vert.js');
-var WEBGL_CONST = require('../const');
 var WebGLPipeline = require('../WebGLPipeline');
 
 /**
@@ -47,19 +46,14 @@ var PostFXPipeline = new Class({
         config.renderTarget = GetFastValue(config, 'renderTarget', 1);
         config.fragShader = GetFastValue(config, 'fragShader', ShaderSourceFS);
         config.vertShader = GetFastValue(config, 'vertShader', ShaderSourceVS);
-        config.uniforms = GetFastValue(config, 'uniforms', [
-            'uMainSampler'
-        ]);
         config.attributes = GetFastValue(config, 'attributes', [
             {
                 name: 'inPosition',
-                size: 2,
-                type: WEBGL_CONST.FLOAT
+                size: 2
             },
             {
                 name: 'inTexCoord',
-                size: 2,
-                type: WEBGL_CONST.FLOAT
+                size: 2
             }
         ]);
         config.batchSize = 1;
