@@ -745,6 +745,8 @@ var WebGLPipeline = new Class({
 
         this.currentShader = currentShader;
 
+        this.onActive(currentShader);
+
         return this;
     },
 
@@ -907,11 +909,33 @@ var WebGLPipeline = new Class({
     /**
      * By default this is an empty method hook that you can override and use in your own custom pipelines.
      *
-     * This method is called every time a **Game Object** asks the Pipeline Manager to use this pipeline.
+     * This method is called every time the Pipeline Manager makes this the active pipeline. It is called
+     * at the end of the `WebGLPipeline.bind` method, after the current shader has been set. The current
+     * shader is passed to this hook.
      *
-     * Unlike the `bind` method, which is only called once per frame, this is called for every object
-     * that requests use of this pipeline, allowing you to perform per-object set-up, such as loading
-     * shader uniform data.
+     * For example, if a display list has 3 Sprites in it that all use the same pipeline, this hook will
+     * only be called for the first one, as the 2nd and 3rd Sprites do not cause the pipeline to be changed.
+     *
+     * If you need to listen for that event instead, use the `onBind` hook.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#onActive
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.WebGLShader} currentShader - The shader that was set as current.
+     */
+    onActive: function ()
+    {
+    },
+
+    /**
+     * By default this is an empty method hook that you can override and use in your own custom pipelines.
+     *
+     * This method is called every time a **Game Object** asks the Pipeline Manager to use this pipeline,
+     * even if the pipeline is already active.
+     *
+     * Unlike the `onActive` method, which is only called when the Pipeline Manager makes this pipeline
+     * active, this hook is called for every Game Object that requests use of this pipeline, allowing you to
+     * perform per-object set-up, such as loading shader uniform data.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onBind
      * @since 3.50.0
