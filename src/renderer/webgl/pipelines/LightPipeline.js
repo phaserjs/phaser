@@ -8,14 +8,13 @@
 var Class = require('../../../utils/Class');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var LightShaderSourceFS = require('../shaders/Light-frag.js');
-var SinglePipeline = require('./SinglePipeline');
+var MultiPipeline = require('./MultiPipeline');
 var WebGLPipeline = require('../WebGLPipeline');
 
 var LIGHT_COUNT = 10;
 
 /**
  * @classdesc
- *
  * The Light Pipeline is an extension of the Multi Pipeline and uses a custom shader
  * designed to handle forward diffused rendering of 2D lights in a Scene.
  *
@@ -63,7 +62,7 @@ var LIGHT_COUNT = 10;
  */
 var LightPipeline = new Class({
 
-    Extends: SinglePipeline,
+    Extends: MultiPipeline,
 
     initialize:
 
@@ -73,7 +72,7 @@ var LightPipeline = new Class({
 
         config.fragShader = GetFastValue(config, 'fragShader', LightShaderSourceFS).replace('%LIGHT_COUNT%', LIGHT_COUNT.toString());
 
-        SinglePipeline.call(this, config);
+        MultiPipeline.call(this, config);
 
         /**
          * Inverse rotation matrix for normal map rotations.
@@ -135,18 +134,10 @@ var LightPipeline = new Class({
         this.defaultNormalMap = { glTexture: tempTexture };
     },
 
-    /**
-     * Called every time a Game Object needs to use this pipeline.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#onBind
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    onBind: function ()
+    onActive: function ()
     {
+        this.renderer.resetTextures();
+
         this.set1i('uMainSampler', 0);
         this.set1i('uNormSampler', 1);
         this.set2f('uResolution', this.width / 2, this.height / 2);
