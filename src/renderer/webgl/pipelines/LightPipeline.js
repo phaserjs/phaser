@@ -9,9 +9,11 @@ var Class = require('../../../utils/Class');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var LightShaderSourceFS = require('../shaders/Light-frag.js');
 var MultiPipeline = require('./MultiPipeline');
+var Vec2 = require('../../../math/Vector2');
 var WebGLPipeline = require('../WebGLPipeline');
 
 var LIGHT_COUNT = 10;
+var tempVec2 = new Vec2();
 
 /**
  * @classdesc
@@ -97,15 +99,6 @@ var LightPipeline = new Class({
          * @since 3.50.0
          */
         this.defaultNormalMap;
-
-        /**
-         * Stores the previous number of lights rendered.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.LightPipeline#lightCount
-         * @type {number}
-         * @since 3.50.0
-         */
-        this.lightCount = 0;
     },
 
     /**
@@ -162,56 +155,35 @@ var LightPipeline = new Class({
             return;
         }
 
-        var lights = lightManager.cull(camera);
-        var lightCount = Math.min(lights.length, LIGHT_COUNT);
-
-        if (lightCount === 0)
-        {
-            return;
-        }
+        var lights = lightManager.getLights(camera);
 
         var renderer = this.renderer;
         var cameraMatrix = camera.matrix;
-        var point = { x: 0, y: 0 };
         var height = renderer.height;
         var i;
 
-        //  Reset lights if we've a different total (probably not strict enough test)
-        if (lightCount !== this.lightCount)
+        for (i = 0; i < LIGHT_COUNT; i++)
         {
-            for (i = 0; i < LIGHT_COUNT; i++)
-            {
-                this.set1f('uLights[' + i + '].radius', 0);
-            }
-
-            this.lightCount = lightCount;
+            this.set1f('uLights[' + i + '].radius', 0);
         }
 
-
-        if (camera.dirty)
-        {
-            this.set4f('uCamera', camera.x, camera.y, camera.rotation, camera.zoom);
-        }
+        this.set4f('uCamera', camera.x, camera.y, camera.rotation, camera.zoom);
 
         this.set3f('uAmbientLightColor', lightManager.ambientColor.r, lightManager.ambientColor.g, lightManager.ambientColor.b);
 
-        for (i = 0; i < lightCount; i++)
+        for (i = 0; i < lights.length; i++)
         {
-            var light = lights[i];
+            var light = lights[i].light;
+            var color = light.color;
+
             var lightName = 'uLights[' + i + '].';
 
-            cameraMatrix.transformPoint(light.x, light.y, point);
+            cameraMatrix.transformPoint(light.x, light.y, tempVec2);
 
-            this.set2f(lightName + 'position', point.x - (camera.scrollX * light.scrollFactorX * camera.zoom), height - (point.y - (camera.scrollY * light.scrollFactorY) * camera.zoom));
-
-            if (light.dirty)
-            {
-                this.set3f(lightName + 'color', light.r, light.g, light.b);
-                this.set1f(lightName + 'intensity', light.intensity);
-                this.set1f(lightName + 'radius', light.radius);
-
-                light.dirty = false;
-            }
+            this.set2f(lightName + 'position', tempVec2.x - (camera.scrollX * light.scrollFactorX * camera.zoom), height - (tempVec2.y - (camera.scrollY * light.scrollFactorY) * camera.zoom));
+            this.set3f(lightName + 'color', color.r, color.g, color.b);
+            this.set1f(lightName + 'intensity', light.intensity);
+            this.set1f(lightName + 'radius', light.radius);
         }
 
         this.currentNormalMapRotation = null;
