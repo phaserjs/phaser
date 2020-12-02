@@ -688,7 +688,11 @@ var GameObject = new Class({
         }
 
         this.removeAllListeners();
-        this.resetPostPipeline(true);
+
+        if (this.postPipelines)
+        {
+            this.resetPostPipeline(true);
+        }
 
         this.emit(Events.DESTROY, this);
 
