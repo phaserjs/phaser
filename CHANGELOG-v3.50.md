@@ -283,12 +283,10 @@ The Light Pipeline (previously called the Forward Diffuse Light Pipeline), which
 * Fixed a bug in the way lights were handled that caused Tilemaps to render one tile at a time, causing massive slow down. They're now batched properly, making a combination of lights and tilemaps possible again.
 * The Bitmap Text (Static and Dynamic) Game Objects now support rendering with normal maps.
 * The TileSprite Game Objects now support rendering with normal maps.
-* Mesh and Quad Game Objects now support rendering with normal maps.
-* The Graphics Game Objects now support rendering in Light2d. You can even use normal map textures for the texture fills.
+* Mesh Game Objects now support rendering with normal maps.
 * Particle Emitter Game Object now supports rendering in Light2d.
-* All Shape Game Objects (Rectangle, IsoBox, Star, Polygon, etc) now support rendering in Light2d.
 * The Text Game Object now supports rendering in Light2d, no matter which font, stroke or style it is using.
-* Both Static and Dynamic Tilemap Layer Game Objects now support the Light2d pipeline, with or without normal maps.
+* Tilemap Layer Game Objects now support the Light2d pipeline, with or without normal maps.
 * The pipeline will no longer look-up and set all of the light uniforms unless the `Light` is dirty.
 * The pipeline will no longer reset all of the lights unless the quantity of lights has changed.
 * The `ForwardDiffuseLightPipeline.defaultNormalMap` property has changed, it's now an object with a `glTexture` property that maps to the pipelines default normal map.
