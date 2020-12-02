@@ -264,7 +264,7 @@ As a result of these changes the following features are no longer available:
 * `Graphics._tempMatrix1`, 2 and 3 have been removed. They're not required internally any longer.
 * `Graphics.renderWebGL` now uses the standard `GetCalcMatrix` function, cutting down on duplicate code significantly.
 
-### Render Texture Game Object Changes
+### Render Texture Game Object - New Features, API Changes and Bug Fixes
 
 The Render Texture Game Object has been rewritten to use the new `RenderTarget` class internally, rather than managing its own framebuffer and gl textures directly. The core draw methods are now a lot simpler and no longer require manipulating render pipelines.
 
@@ -274,6 +274,19 @@ As a result of these changes the follow updates have happened:
 * The `RenderTexture.framebuffer` property has been removed. You can now access this via `RenderTexture.renderTarget.framebuffer`.
 * The `RenderTexture.glTexture` property has been removed. You can now access this via `RenderTexture.renderTarget.texture`.
 * The `RenderTexture.gl` property has been removed.
+
+Render Textures have the following new features:
+
+* `RenderTexture.beginDraw` is a new method that allows you to create a batched draw to the Render Texture. Use this method to begin the batch.
+* `RenderTexture.batchDraw` is a new method that allows you to batch the drawing of an object to the Render Texture. You should never call this method unless you have previously started a batch with `beginDraw`. You can call this method as many times as you like, to draw as many objects as you like, without causing a framebuffer bind.
+* `RenderTexture.batchDrawFrame` is a new method that allows you to batch the drawing of a texture frame to the Render Texture. You should never call this method unless you have previously started a batch with `beginDraw`. You can call this method as many times as you like, to draw as many frames as you like, without causing a framebuffer bind.
+* `RenderTexture.endDraw` is a new method that ends a previously created batched draw on the Render Texture. Use it to write all of your batch changes to the Render Texture.
+* You can now draw a `Group` to a `RenderTexture`. Previously, it failed to pass the camera across, resulting in none of the Group children being drawn. Fix #5330 (thanks @somnolik)
+
+Render Textures have the following bug fixes:
+
+* `RenderTexture.resize` (which is called from `setSize`) wouldn't correctly set the `TextureSource.glTexture` property, leading to `bindTexture: attempt to use a deleted object` errors under WebGL.
+* `RenderTexture.fill` would fail to fill the correct area under WebGL if the RenderTexture wasn't the same size as the Canvas. It now fills the given region properly.
 
 ### Light Pipeline Changes
 
@@ -902,8 +915,6 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 
 ### Bug Fixes
 
-* `RenderTexture.resize` (which is called from `setSize`) wouldn't correctly set the `TextureSource.glTexture` property, leading to `bindTexture: attempt to use a deleted object` errors under WebGL.
-* `RenderTexture.fill` would fail to fill the correct area under WebGL if the RenderTexture wasn't the same size as the Canvas. It now fills the given region properly.
 * The `MatterAttractors` plugin, which enables attractors between bodies, has been fixed. The original plugin only worked if the body with the attractor was _first_ in the world bodies list. It can now attract any body, no matter where in the world list it is. Fix #5160 (thanks @strahius)
 * The `KeyboardManager` and `KeyboardPlugin` were both still checking for the `InputManager.useQueue` property, which was removed several versions ago.
 * In Arcade Physics, Dynamic bodies would no longer hit walls when riding on horizontally moving platforms. The horizontal (and vertical) friction is now re-applied correctly in these edge-cases. Fix #5210 (thanks @Dercetech @samme)
@@ -927,7 +938,6 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * Creating a Bitmap Mask from a texture atlas that was then used to mask another Game Object also using that same texture atlas would throw the error `GL_INVALID_OPERATION : glDrawArrays: Source and destination textures of the draw are the same.`. It now renders as expected. Fix #4675 (thanks @JacobCaron)
 * When using the same asset for a Game Object to be used as a mask, it would make other Game Objects using the same asset, that appeared above the mask in the display list, to not render. Fix #4767 (thanks @smjnab)
 * When taking a `snapshot` in WebGL it would often have an extra line of empty pixels at the top of the resulting image, due to a rounding error in the `WebGLSnapshot` function. Fix #4956 (thanks @gammafp @telinc1)
-* You can now draw a `Group` to a `RenderTexture`. Previously, it failed to pass the camera across, resulting in none of the Group children being drawn. Fix #5330 (thanks @somnolik)
 * `Particles.EmitterOp.setMethods` will now reset both `onEmit` and `onUpdate` to their default values. This allows you to reconfigure an emitter op with a new type of value and not have it stuck on the previous one. Fix #3663 (thanks @samme)
 * `Particles.EmitterOp` now cleanly separates between the different types of property configuration options. `start | end` will now ease between the two values, `min | max` will pick a random value between them and `random: []` will pick a random element. They no longer get mixed together. Fix #3608 (thanks @samme)
 * When setting both `transparent: true` and `backgroundColor` in the Game Config, it would ignore the transparency and use the color anyway. If transparent, the game is now fully transparent. Fix #5362 (thanks @Hoshinokoe)
