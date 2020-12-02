@@ -729,48 +729,9 @@ var RenderTexture = new Class({
      */
     draw: function (entries, x, y, alpha, tint)
     {
-        if (alpha === undefined) { alpha = this.globalAlpha; }
-
-        if (tint === undefined)
-        {
-            tint = (this.globalTint >> 16) + (this.globalTint & 0xff00) + ((this.globalTint & 0xff) << 16);
-        }
-        else
-        {
-            tint = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16);
-        }
-
-        if (!Array.isArray(entries))
-        {
-            entries = [ entries ];
-        }
-
-        var camera = this.camera;
-        var renderer = this.renderer;
-        var renderTarget = this.renderTarget;
-
-        camera.preRender();
-
-        if (renderTarget)
-        {
-            renderTarget.bind(true);
-
-            renderer.resetTextures(true);
-
-            this.batchList(entries, x, y, alpha, tint);
-
-            renderTarget.unbind(true);
-        }
-        else
-        {
-            renderer.setContext(this.context);
-
-            this.batchList(entries, x, y, alpha, tint);
-
-            renderer.setContext();
-        }
-
-        this.dirty = true;
+        this.beginDraw();
+        this.batchDraw(entries, x, y, alpha, tint);
+        this.endDraw();
 
         return this;
     },
@@ -807,6 +768,228 @@ var RenderTexture = new Class({
      */
     drawFrame: function (key, frame, x, y, alpha, tint)
     {
+        this.beginDraw();
+        this.batchDrawFrame(key, frame, x, y, alpha, tint);
+        this.endDraw();
+
+        return this;
+    },
+
+    /**
+     * Use this method if you need to batch draw a large number of Game Objects to
+     * this Render Texture in a single go, or on a frequent basis.
+     *
+     * This method starts the beginning of a batched draw.
+     *
+     * It is faster than calling `draw`, but you must be very careful to manage the
+     * flow of code and remember to call `endDraw()`. If you don't need to draw large
+     * numbers of objects it's much safer and easier to use the `draw` method instead.
+     *
+     * The flow should be:
+     *
+     * ```javascript
+     * // Call once:
+     * RenderTexture.beginDraw();
+     *
+     * // repeat n times:
+     * RenderTexture.batchDraw();
+     * // or
+     * RenderTexture.batchDrawFrame();
+     *
+     * // Call once:
+     * RenderTexture.endDraw();
+     * ```
+     *
+     * Do not call any methods other than `batchDraw`, `batchDrawFrame`, or `endDraw` once you
+     * have started a batch. Also, be very careful not to destroy this Render Texture while the
+     * batch is still open, or call `beginDraw` again.
+     *
+     * @method Phaser.GameObjects.RenderTexture#beginDraw
+     * @since 3.50.0
+     *
+     * @return {this} This Render Texture instance.
+     */
+    beginDraw: function ()
+    {
+        var camera = this.camera;
+        var renderer = this.renderer;
+        var renderTarget = this.renderTarget;
+
+        camera.preRender();
+
+        if (renderTarget)
+        {
+            renderTarget.bind(true);
+
+            renderer.resetTextures(true);
+        }
+        else
+        {
+            renderer.setContext(this.context);
+        }
+
+        return this;
+    },
+
+    /**
+     * Use this method if you have already called `beginDraw` and need to batch
+     * draw a large number of objects to this Render Texture.
+     *
+     * This method batches the drawing of the given objects to this Render Texture,
+     * without causing a bind or batch flush.
+     *
+     * It is faster than calling `draw`, but you must be very careful to manage the
+     * flow of code and remember to call `endDraw()`. If you don't need to draw large
+     * numbers of objects it's much safer and easier to use the `draw` method instead.
+     *
+     * The flow should be:
+     *
+     * ```javascript
+     * // Call once:
+     * RenderTexture.beginDraw();
+     *
+     * // repeat n times:
+     * RenderTexture.batchDraw();
+     * // or
+     * RenderTexture.batchDrawFrame();
+     *
+     * // Call once:
+     * RenderTexture.endDraw();
+     * ```
+     *
+     * Do not call any methods other than `batchDraw`, `batchDrawFrame`, or `endDraw` once you
+     * have started a batch. Also, be very careful not to destroy this Render Texture while the
+     * batch is still open, or call `beginDraw` again.
+     *
+     * Draws the given object, or an array of objects, to this Render Texture.
+     *
+     * It can accept any of the following:
+     *
+     * * Any renderable Game Object, such as a Sprite, Text, Graphics or TileSprite.
+     * * Dynamic and Static Tilemap Layers.
+     * * A Group. The contents of which will be iterated and drawn in turn.
+     * * A Container. The contents of which will be iterated fully, and drawn in turn.
+     * * A Scene's Display List. Pass in `Scene.children` to draw the whole list.
+     * * Another Render Texture.
+     * * A Texture Frame instance.
+     * * A string. This is used to look-up a texture from the Texture Manager.
+     *
+     * Note: You cannot draw a Render Texture to itself.
+     *
+     * If passing in a Group or Container it will only draw children that return `true`
+     * when their `willRender()` method is called. I.e. a Container with 10 children,
+     * 5 of which have `visible=false` will only draw the 5 visible ones.
+     *
+     * If passing in an array of Game Objects it will draw them all, regardless if
+     * they pass a `willRender` check or not.
+     *
+     * You can pass in a string in which case it will look for a texture in the Texture
+     * Manager matching that string, and draw the base frame. If you need to specify
+     * exactly which frame to draw then use the method `drawFrame` instead.
+     *
+     * You can pass in the `x` and `y` coordinates to draw the objects at. The use of
+     * the coordinates differ based on what objects are being drawn. If the object is
+     * a Group, Container or Display List, the coordinates are _added_ to the positions
+     * of the children. For all other types of object, the coordinates are exact.
+     *
+     * The `alpha` and `tint` values are only used by Texture Frames.
+     * Game Objects use their own alpha and tint values when being drawn.
+     *
+     * @method Phaser.GameObjects.RenderTexture#batchDraw
+     * @since 3.50.0
+     *
+     * @param {any} entries - Any renderable Game Object, or Group, Container, Display List, other Render Texture, Texture Frame or an array of any of these.
+     * @param {number} [x] - The x position to draw the Frame at, or the offset applied to the object.
+     * @param {number} [y] - The y position to draw the Frame at, or the offset applied to the object.
+     * @param {number} [alpha] -  The alpha value. Only used for Texture Frames and if not specified defaults to the `globalAlpha` property. Game Objects use their own current alpha value.
+     * @param {number} [tint] -  WebGL only. The tint color value. Only used for Texture Frames and if not specified defaults to the `globalTint` property. Game Objects use their own current tint value.
+     *
+     * @return {this} This Render Texture instance.
+     */
+    batchDraw: function (entries, x, y, alpha, tint)
+    {
+        if (alpha === undefined) { alpha = this.globalAlpha; }
+
+        if (tint === undefined)
+        {
+            tint = (this.globalTint >> 16) + (this.globalTint & 0xff00) + ((this.globalTint & 0xff) << 16);
+        }
+        else
+        {
+            tint = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16);
+        }
+
+        if (!Array.isArray(entries))
+        {
+            entries = [ entries ];
+        }
+
+        this.batchList(entries, x, y, alpha, tint);
+
+        return this;
+    },
+
+    /**
+     * Use this method if you have already called `beginDraw` and need to batch
+     * draw a large number of texture frames to this Render Texture.
+     *
+     * This method batches the drawing of the given frames to this Render Texture,
+     * without causing a bind or batch flush.
+     *
+     * It is faster than calling `drawFrame`, but you must be very careful to manage the
+     * flow of code and remember to call `endDraw()`. If you don't need to draw large
+     * numbers of frames it's much safer and easier to use the `drawFrame` method instead.
+     *
+     * The flow should be:
+     *
+     * ```javascript
+     * // Call once:
+     * RenderTexture.beginDraw();
+     *
+     * // repeat n times:
+     * RenderTexture.batchDraw();
+     * // or
+     * RenderTexture.batchDrawFrame();
+     *
+     * // Call once:
+     * RenderTexture.endDraw();
+     * ```
+     *
+     * Do not call any methods other than `batchDraw`, `batchDrawFrame`, or `endDraw` once you
+     * have started a batch. Also, be very careful not to destroy this Render Texture while the
+     * batch is still open, or call `beginDraw` again.
+     *
+     * Draws the Texture Frame to the Render Texture at the given position.
+     *
+     * Textures are referenced by their string-based keys, as stored in the Texture Manager.
+     *
+     * ```javascript
+     * var rt = this.add.renderTexture(0, 0, 800, 600);
+     * rt.drawFrame(key, frame);
+     * ```
+     *
+     * You can optionally provide a position, alpha and tint value to apply to the frame
+     * before it is drawn.
+     *
+     * Calling this method will cause a batch flush, so if you've got a stack of things to draw
+     * in a tight loop, try using the `draw` method instead.
+     *
+     * If you need to draw a Sprite to this Render Texture, use the `draw` method instead.
+     *
+     * @method Phaser.GameObjects.RenderTexture#batchDrawFrame
+     * @since 3.50.0
+     *
+     * @param {string} key - The key of the texture to be used, as stored in the Texture Manager.
+     * @param {(string|number)} [frame] - The name or index of the frame within the Texture.
+     * @param {number} [x=0] - The x position to draw the frame at.
+     * @param {number} [y=0] - The y position to draw the frame at.
+     * @param {number} [alpha] - The alpha to use. If not specified it uses the `globalAlpha` property.
+     * @param {number} [tint] - WebGL only. The tint color to use. If not specified it uses the `globalTint` property.
+     *
+     * @return {this} This Render Texture instance.
+     */
+    batchDrawFrame: function (key, frame, x, y, alpha, tint)
+    {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
         if (alpha === undefined) { alpha = this.globalAlpha; }
@@ -826,23 +1009,67 @@ var RenderTexture = new Class({
 
         if (textureFrame)
         {
-            camera.preRender();
-
             if (renderTarget)
             {
-                renderTarget.bind(true);
-
                 this.pipeline.batchTextureFrame(textureFrame, x, y, tint, alpha, camera.matrix, null);
-
-                renderTarget.unbind(true);
             }
             else
             {
                 this.batchTextureFrame(textureFrame, x + this.frame.cutX, y + this.frame.cutY, alpha, tint);
             }
-
-            this.dirty = true;
         }
+
+        return this;
+    },
+
+    /**
+     * Use this method to finish batch drawing to this Render Texture.
+     *
+     * Never call this method without first calling `beginDraw`.
+     *
+     * It is faster than calling `draw`, but you must be very careful to manage the
+     * flow of code and remember to call `endDraw()`. If you don't need to draw large
+     * numbers of objects it's much safer and easier to use the `draw` method instead.
+     *
+     * The flow should be:
+     *
+     * ```javascript
+     * // Call once:
+     * RenderTexture.beginDraw();
+     *
+     * // repeat n times:
+     * RenderTexture.batchDraw();
+     * // or
+     * RenderTexture.batchDrawFrame();
+     *
+     * // Call once:
+     * RenderTexture.endDraw();
+     * ```
+     *
+     * Do not call any methods other than `batchDraw`, `batchDrawFrame`, or `endDraw` once you
+     * have started a batch. Also, be very careful not to destroy this Render Texture while the
+     * batch is still open, or call `beginDraw` again.
+     *
+     * @method Phaser.GameObjects.RenderTexture#endDraw
+     * @since 3.50.0
+     *
+     * @return {this} This Render Texture instance.
+     */
+    endDraw: function ()
+    {
+        var renderer = this.renderer;
+        var renderTarget = this.renderTarget;
+
+        if (renderTarget)
+        {
+            renderTarget.unbind(true);
+        }
+        else
+        {
+            renderer.setContext();
+        }
+
+        this.dirty = true;
 
         return this;
     },
