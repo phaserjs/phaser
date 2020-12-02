@@ -53,16 +53,6 @@ var Pipeline = {
     hasPostPipeline: false,
 
     /**
-     * Does this Game Object manage its Post Pipeline directly?
-     *
-     * @name Phaser.GameObjects.Components.Pipeline#manualPostPipeline
-     * @type {boolean}
-     * @webglOnly
-     * @since 3.50.0
-     */
-    manualPostPipeline: false,
-
-    /**
      * The WebGL Post FX Pipelines this Game Object uses for post-render effects.
      *
      * The pipelines are processed in the order in which they appear in this array.
