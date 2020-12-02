@@ -185,14 +185,12 @@ var LightPipeline = new Class({
         var height = renderer.height;
         var i;
 
+        //  Reset lights if we've a different total (probably not strict enough test)
         if (lightCount !== this.lightCount)
         {
-            //  Reset lights
             for (i = 0; i < LIGHT_COUNT; i++)
             {
                 this.set1f('uLights[' + i + '].radius', 0);
-
-                // renderer.setFloat1(program, 'uLights[' + i + '].radius', 0);
             }
 
             this.lightCount = lightCount;
@@ -214,8 +212,6 @@ var LightPipeline = new Class({
             cameraMatrix.transformPoint(light.x, light.y, point);
 
             this.set2f(lightName + 'position', point.x - (camera.scrollX * light.scrollFactorX * camera.zoom), height - (point.y - (camera.scrollY * light.scrollFactorY) * camera.zoom));
-
-            // renderer.setFloat2(program, lightName + 'position', point.x - (camera.scrollX * light.scrollFactorX * camera.zoom), height - (point.y - (camera.scrollY * light.scrollFactorY) * camera.zoom));
 
             if (light.dirty)
             {
