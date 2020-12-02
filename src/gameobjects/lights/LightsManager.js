@@ -6,8 +6,8 @@
 
 var Class = require('../../utils/Class');
 var Light = require('./Light');
+var PointLight = require('../pointlight/PointLight');
 var Utils = require('../../renderer/webgl/Utils');
-var PointLight = require('./PointLight');
 
 /**
  * @callback LightForEach

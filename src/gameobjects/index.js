@@ -127,15 +127,15 @@ if (typeof WEBGL_RENDERER)
 {
     GameObjects.Shader = require('./shader/Shader');
     GameObjects.Mesh = require('./mesh/Mesh');
-    GameObjects.LightLayer = require('./lights/LightLayer');
+    GameObjects.PointLight = require('./pointlight/PointLight');
 
     GameObjects.Factories.Shader = require('./shader/ShaderFactory');
     GameObjects.Factories.Mesh = require('./mesh/MeshFactory');
-    GameObjects.Factories.LightLayer = require('./lights/LightLayerFactory');
+    GameObjects.Factories.PointLight = require('./pointlight/PointLightFactory');
 
     GameObjects.Creators.Shader = require('./shader/ShaderCreator');
     GameObjects.Creators.Mesh = require('./mesh/MeshCreator');
-    GameObjects.Creators.LightLayer = require('./lights/LightLayerCreator');
+    GameObjects.Creators.PointLight = require('./pointlight/PointLightCreator');
 
     GameObjects.Light = require('./lights/Light');
     GameObjects.LightsManager = require('./lights/LightsManager');

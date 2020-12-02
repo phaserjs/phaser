@@ -9,7 +9,7 @@ var renderCanvas = require('../../utils/NOOP');
 
 if (typeof WEBGL_RENDERER)
 {
-    renderWebGL = require('./LightLayerWebGLRenderer');
+    renderWebGL = require('./PointLightWebGLRenderer');
 }
 
 module.exports = {
