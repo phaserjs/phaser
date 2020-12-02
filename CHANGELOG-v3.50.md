@@ -268,7 +268,7 @@ As a result of these changes the following features are no longer available:
 
 The Render Texture Game Object has been rewritten to use the new `RenderTarget` class internally, rather than managing its own framebuffer and gl textures directly. The core draw methods are now a lot simpler and no longer require manipulating render pipelines.
 
-As a result of these changes the follow updates have happened:
+As a result of these changes the following updates have happened:
 
 * `RenderTexture.renderTarget` is a new property that contains a `RenderTarget` instance, which is used for all drawing.
 * The `RenderTexture.framebuffer` property has been removed. You can now access this via `RenderTexture.renderTarget.framebuffer`.
