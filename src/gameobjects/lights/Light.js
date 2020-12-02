@@ -4,7 +4,10 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Circle = require('../../geom/circle/Circle');
 var Class = require('../../utils/Class');
+var Components = require('../components');
+var RGB = require('../../display/RGB');
 var Utils = require('../../renderer/webgl/Utils');
 
 /**
@@ -18,9 +21,13 @@ var Utils = require('../../renderer/webgl/Utils');
  * They can also simply be used to represent a point light for your own purposes.
  *
  * @class Light
+ * @extends Phaser.Geom.Circle
  * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
+ *
+ * @extends Phaser.GameObjects.Components.ScrollFactor
+ * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {number} x - The horizontal position of the light.
  * @param {number} y - The vertical position of the light.
@@ -32,99 +39,63 @@ var Utils = require('../../renderer/webgl/Utils');
  */
 var Light = new Class({
 
+    Extends: Circle,
+
+    Mixins: [
+        Components.ScrollFactor,
+        Components.Visible
+    ],
+
     initialize:
 
     function Light (x, y, radius, r, g, b, intensity)
     {
-        /**
-         * The horizontal position of the light.
-         *
-         * @name Phaser.GameObjects.Light#_x
-         * @type {number}
-         * @private
-         * @since 3.0.0
-         */
-        this._x = x;
+        Circle.call(this, x, y, radius);
 
         /**
-         * The vertical position of the light.
+         * The color of the light.
          *
-         * @name Phaser.GameObjects.Light#_y
-         * @type {number}
-         * @private
-         * @since 3.0.0
+         * @name Phaser.GameObjects.Light#color
+         * @type {Phaser.Display.RGB}
+         * @since 3.50.0
          */
-        this._y = y;
-
-        /**
-         * The radius of the light.
-         *
-         * @name Phaser.GameObjects.Light#_radius
-         * @type {number}
-         * @private
-         * @since 3.0.0
-         */
-        this._radius = radius;
-
-        /**
-         * The red color of the light. A value between 0 and 1.
-         *
-         * @name Phaser.GameObjects.Light#_r
-         * @type {number}
-         * @private
-         * @since 3.0.0
-         */
-        this._r = r;
-
-        /**
-         * The green color of the light. A value between 0 and 1.
-         *
-         * @name Phaser.GameObjects.Light#_g
-         * @type {number}
-         * @private
-         * @since 3.0.0
-         */
-        this._g = g;
-
-        /**
-         * The blue color of the light. A value between 0 and 1.
-         *
-         * @name Phaser.GameObjects.Light#_b
-         * @type {number}
-         * @private
-         * @since 3.0.0
-         */
-        this._b = b;
+        this.color = new RGB(r, g, b);
 
         /**
          * The intensity of the light.
          *
-         * @name Phaser.GameObjects.Light#_intensity
+         * @name Phaser.GameObjects.Light#intensity
          * @type {number}
-         * @private
-         * @since 3.0.0
+         * @since 3.50.0
          */
-        this._intensity = intensity;
+        this.intensity = intensity;
 
         /**
-         * The horizontal scroll factor of the light.
+         * The flags that are compared against `RENDER_MASK` to determine if this Game Object will render or not.
+         * The bits are 0001 | 0010 | 0100 | 1000 set by the components Visible, Alpha, Transform and Texture respectively.
+         * If those components are not used by your custom class then you can use this bitmask as you wish.
          *
-         * @name Phaser.GameObjects.Light#_scrollFactorX
+         * @name Phaser.GameObjects.GameObject#renderFlags
          * @type {number}
-         * @private
+         * @default 15
          * @since 3.0.0
          */
-        this._scrollFactorX = 1;
+        this.renderFlags = 15;
 
         /**
-         * The vertical scroll factor of the light.
+         * A bitmask that controls if this Game Object is drawn by a Camera or not.
+         * Not usually set directly, instead call `Camera.ignore`, however you can
+         * set this property directly using the Camera.id property:
          *
-         * @name Phaser.GameObjects.Light#_scrollFactorY
+         * @example
+         * this.cameraFilter |= camera.id
+         *
+         * @name Phaser.GameObjects.GameObject#cameraFilter
          * @type {number}
-         * @private
+         * @default 0
          * @since 3.0.0
          */
-        this._scrollFactorY = 1;
+        this.cameraFilter = 0;
 
         /**
          * The dirty state of the light. A dirty light will reset all of its shader attributes.
@@ -134,70 +105,24 @@ var Light = new Class({
          * @since 3.50.0
          */
         this.dirty = true;
+
+        this.setScrollFactor(1, 1);
     },
 
     /**
-     * Set the properties of the light.
+     * Compares the renderMask with the renderFlags to see if this Game Object will render or not.
+     * Also checks the Game Object against the given Cameras exclusion list.
      *
-     * Sets both horizontal and vertical scroll factor to 1. Use {@link Phaser.GameObjects.Light#setScrollFactor} to set
-     * the scroll factor.
+     * @method Phaser.GameObjects.Light#willRender
+     * @since 3.50.0
      *
-     * @method Phaser.GameObjects.Light#set
-     * @since 3.0.0
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to check against this Game Object.
      *
-     * @param {number} x - The horizontal position of the light.
-     * @param {number} y - The vertical position of the light.
-     * @param {number} radius - The radius of the light.
-     * @param {number} r - The red color. A value between 0 and 1.
-     * @param {number} g - The green color. A value between 0 and 1.
-     * @param {number} b - The blue color. A value between 0 and 1.
-     * @param {number} intensity - The intensity of the light.
-     *
-     * @return {this} This Light object.
+     * @return {boolean} True if the Game Object should be rendered, otherwise false.
      */
-    set: function (x, y, radius, r, g, b, intensity)
+    willRender: function (camera)
     {
-        this._x = x;
-        this._y = y;
-
-        this._radius = radius;
-
-        this._r = r;
-        this._g = g;
-        this._b = b;
-
-        this._intensity = intensity;
-
-        this._scrollFactorX = 1;
-        this._scrollFactorY = 1;
-
-        this.dirty = true;
-
-        return this;
-    },
-
-    /**
-     * Set the scroll factor of the light.
-     *
-     * @method Phaser.GameObjects.Light#setScrollFactor
-     * @since 3.0.0
-     *
-     * @param {number} [x=1] - The horizontal scroll factor of the light.
-     * @param {number} [y=x] - The vertical scroll factor of the light.
-     *
-     * @return {this} This Light object.
-     */
-    setScrollFactor: function (x, y)
-    {
-        if (x === undefined) { x = 1; }
-        if (y === undefined) { y = x; }
-
-        this._scrollFactorX = x;
-        this._scrollFactorY = y;
-
-        this.dirty = true;
-
-        return this;
+        return !(Light.RENDER_MASK !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)));
     },
 
     /**
@@ -214,9 +139,7 @@ var Light = new Class({
     {
         var color = Utils.getFloatsFromUintRGB(rgb);
 
-        this._r = color[0];
-        this._g = color[1];
-        this._b = color[2];
+        this.color.set(color[0], color[1], color[2]);
 
         this.dirty = true;
 
@@ -235,28 +158,7 @@ var Light = new Class({
      */
     setIntensity: function (intensity)
     {
-        this._intensity = intensity;
-
-        this.dirty = true;
-
-        return this;
-    },
-
-    /**
-     * Set the position of the light.
-     *
-     * @method Phaser.GameObjects.Light#setPosition
-     * @since 3.0.0
-     *
-     * @param {number} x - The horizontal position of the light.
-     * @param {number} y - The vertical position of the light.
-     *
-     * @return {this} This Light object.
-     */
-    setPosition: function (x, y)
-    {
-        this._x = x;
-        this._y = y;
+        this.intensity = intensity;
 
         this.dirty = true;
 
@@ -275,211 +177,22 @@ var Light = new Class({
      */
     setRadius: function (radius)
     {
-        this._radius = radius;
+        this.radius = radius;
 
         this.dirty = true;
 
         return this;
-    },
-
-    /**
-     * The horizontal position of the light.
-     *
-     * @name Phaser.GameObjects.Light#x
-     * @type {number}
-     * @since 3.0.0
-     */
-    x: {
-
-        get: function ()
-        {
-            return this._x;
-        },
-
-        set: function (value)
-        {
-            this._x = value;
-            this.dirty = true;
-        }
-
-    },
-
-    /**
-     * The vertical position of the light.
-     *
-     * @name Phaser.GameObjects.Light#y
-     * @type {number}
-     * @since 3.0.0
-     */
-    y: {
-
-        get: function ()
-        {
-            return this._y;
-        },
-
-        set: function (value)
-        {
-            this._y = value;
-            this.dirty = true;
-        }
-
-    },
-
-    /**
-     * The radius of the light.
-     *
-     * @name Phaser.GameObjects.Light#radius
-     * @type {number}
-     * @since 3.0.0
-     */
-    radius: {
-
-        get: function ()
-        {
-            return this._radius;
-        },
-
-        set: function (value)
-        {
-            this._radius = value;
-            this.dirty = true;
-        }
-
-    },
-
-    /**
-     * The red color of the light. A value between 0 and 1.
-     *
-     * @name Phaser.GameObjects.Light#r
-     * @type {number}
-     * @since 3.0.0
-     */
-    r: {
-
-        get: function ()
-        {
-            return this._r;
-        },
-
-        set: function (value)
-        {
-            this._r = value;
-            this.dirty = true;
-        }
-
-    },
-
-    /**
-     * The green color of the light. A value between 0 and 1.
-     *
-     * @name Phaser.GameObjects.Light#g
-     * @type {number}
-     * @since 3.0.0
-     */
-    g: {
-
-        get: function ()
-        {
-            return this._g;
-        },
-
-        set: function (value)
-        {
-            this._g = value;
-            this.dirty = true;
-        }
-
-    },
-
-    /**
-     * The blue color of the light. A value between 0 and 1.
-     *
-     * @name Phaser.GameObjects.Light#b
-     * @type {number}
-     * @since 3.0.0
-     */
-    b: {
-
-        get: function ()
-        {
-            return this._b;
-        },
-
-        set: function (value)
-        {
-            this._b = value;
-            this.dirty = true;
-        }
-
-    },
-
-    /**
-     * The intensity of the light.
-     *
-     * @name Phaser.GameObjects.Light#intensity
-     * @type {number}
-     * @since 3.0.0
-     */
-    intensity: {
-
-        get: function ()
-        {
-            return this._intensity;
-        },
-
-        set: function (value)
-        {
-            this._intensity = value;
-            this.dirty = true;
-        }
-
-    },
-
-    /**
-     * The horizontal scroll factor of the light.
-     *
-     * @name Phaser.GameObjects.Light#scrollFactorX
-     * @type {number}
-     * @since 3.0.0
-     */
-    scrollFactorX: {
-
-        get: function ()
-        {
-            return this._scrollFactorX;
-        },
-
-        set: function (value)
-        {
-            this._scrollFactorX = value;
-            this.dirty = true;
-        }
-
-    },
-
-    /**
-     * The vertical scroll factor of the light.
-     *
-     * @name Phaser.GameObjects.Light#scrollFactorY
-     * @type {number}
-     * @since 3.0.0
-     */
-    scrollFactorY: {
-
-        get: function ()
-        {
-            return this._scrollFactorY;
-        },
-
-        set: function (value)
-        {
-            this._scrollFactorY = value;
-            this.dirty = true;
-        }
-
     }
 
 });
+
+/**
+ * The bitmask that `GameObject.renderFlags` is compared against to determine if the Game Object will render or not.
+ *
+ * @constant {number} RENDER_MASK
+ * @memberof Phaser.GameObjects.Light
+ * @default
+ */
+Light.RENDER_MASK = 15;
 
 module.exports = Light;
