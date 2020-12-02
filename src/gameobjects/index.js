@@ -137,9 +137,9 @@ if (typeof WEBGL_RENDERER)
     GameObjects.Creators.Mesh = require('./mesh/MeshCreator');
     GameObjects.Creators.LightLayer = require('./lights/LightLayerCreator');
 
-    // GameObjects.Light = require('./lights/Light');
-    // GameObjects.LightsManager = require('./lights/LightsManager');
-    // GameObjects.LightsPlugin = require('./lights/LightsPlugin');
+    GameObjects.Light = require('./lights/Light');
+    GameObjects.LightsManager = require('./lights/LightsManager');
+    GameObjects.LightsPlugin = require('./lights/LightsPlugin');
 }
 
 module.exports = GameObjects;
