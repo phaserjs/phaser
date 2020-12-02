@@ -9,7 +9,6 @@ var Class = require('../../../utils/Class');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var LightShaderSourceFS = require('../shaders/Light-frag.js');
 var SinglePipeline = require('./SinglePipeline');
-var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
 var WebGLPipeline = require('../WebGLPipeline');
 
 var LIGHT_COUNT = 10;
@@ -75,33 +74,6 @@ var LightPipeline = new Class({
         config.fragShader = GetFastValue(config, 'fragShader', LightShaderSourceFS).replace('%LIGHT_COUNT%', LIGHT_COUNT.toString());
 
         SinglePipeline.call(this, config);
-
-        /**
-         * A temporary Transform Matrix, re-used internally during batching.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#tempMatrix1
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 3.11.0
-         */
-        this.tempMatrix1 = new TransformMatrix();
-
-        /**
-         * A temporary Transform Matrix, re-used internally during batching.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#tempMatrix2
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 3.11.0
-         */
-        this.tempMatrix2 = new TransformMatrix();
-
-        /**
-         * A temporary Transform Matrix, re-used internally during batching.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.MultiPipeline#tempMatrix3
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 3.11.0
-         */
-        this.tempMatrix3 = new TransformMatrix();
 
         /**
          * Inverse rotation matrix for normal map rotations.
@@ -189,19 +161,14 @@ var LightPipeline = new Class({
      *
      * @param {Phaser.Scene} scene - The Scene being rendered.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The Scene Camera being rendered with.
-     *
-     * @return {this} This WebGLPipeline instance.
      */
     onRender: function (scene, camera)
     {
-        this.active = false;
-
         var lightManager = scene.sys.lights;
 
         if (!lightManager || lightManager.lights.length <= 0 || !lightManager.active)
         {
-            //  Passthru
-            return this;
+            return;
         }
 
         var lights = lightManager.cull(camera);
@@ -209,36 +176,35 @@ var LightPipeline = new Class({
 
         if (lightCount === 0)
         {
-            return this;
+            return;
         }
 
-        this.active = true;
-
         var renderer = this.renderer;
-        var program = this.program;
         var cameraMatrix = camera.matrix;
-        var point = {x: 0, y: 0};
+        var point = { x: 0, y: 0 };
         var height = renderer.height;
         var i;
 
         if (lightCount !== this.lightCount)
         {
+            //  Reset lights
             for (i = 0; i < LIGHT_COUNT; i++)
             {
-                //  Reset lights
-                renderer.setFloat1(program, 'uLights[' + i + '].radius', 0);
+                this.set1f('uLights[' + i + '].radius', 0);
+
+                // renderer.setFloat1(program, 'uLights[' + i + '].radius', 0);
             }
 
             this.lightCount = lightCount;
         }
 
+
         if (camera.dirty)
         {
-            renderer.setFloat4(program, 'uCamera', camera.x, camera.y, camera.rotation, camera.zoom);
+            this.set4f('uCamera', camera.x, camera.y, camera.rotation, camera.zoom);
         }
 
-        //  TODO - Only if dirty! and cache the location
-        renderer.setFloat3(program, 'uAmbientLightColor', lightManager.ambientColor.r, lightManager.ambientColor.g, lightManager.ambientColor.b);
+        this.set3f('uAmbientLightColor', lightManager.ambientColor.r, lightManager.ambientColor.g, lightManager.ambientColor.b);
 
         for (i = 0; i < lightCount; i++)
         {
@@ -247,21 +213,21 @@ var LightPipeline = new Class({
 
             cameraMatrix.transformPoint(light.x, light.y, point);
 
-            //  TODO - Cache the uniform locations!!!
-            renderer.setFloat2(program, lightName + 'position', point.x - (camera.scrollX * light.scrollFactorX * camera.zoom), height - (point.y - (camera.scrollY * light.scrollFactorY) * camera.zoom));
+            this.set2f(lightName + 'position', point.x - (camera.scrollX * light.scrollFactorX * camera.zoom), height - (point.y - (camera.scrollY * light.scrollFactorY) * camera.zoom));
+
+            // renderer.setFloat2(program, lightName + 'position', point.x - (camera.scrollX * light.scrollFactorX * camera.zoom), height - (point.y - (camera.scrollY * light.scrollFactorY) * camera.zoom));
 
             if (light.dirty)
             {
-                renderer.setFloat3(program, lightName + 'color', light.r, light.g, light.b);
-                renderer.setFloat1(program, lightName + 'intensity', light.intensity);
-                renderer.setFloat1(program, lightName + 'radius', light.radius);
+                this.set3f(lightName + 'color', light.r, light.g, light.b);
+                this.set1f(lightName + 'intensity', light.intensity);
+                this.set1f(lightName + 'radius', light.radius);
+
                 light.dirty = false;
             }
         }
 
         this.currentNormalMapRotation = null;
-
-        return this;
     },
 
     /**
@@ -300,7 +266,7 @@ var LightPipeline = new Class({
                 inverseRotationMatrix[1] = inverseRotationMatrix[3] = 0;
             }
 
-            this.renderer.setMatrix3(this.program, 'uInverseRotationMatrix', false, inverseRotationMatrix);
+            this.setMatrix3fv('uInverseRotationMatrix', false, inverseRotationMatrix);
 
             this.currentNormalMapRotation = rotation;
         }
