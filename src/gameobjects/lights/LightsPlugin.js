@@ -31,6 +31,8 @@ var SceneEvents = require('../../scene/events');
  * sprite.setPipeline('Light2D');
  * ```
  *
+ * Note that you cannot use this pipeline on Graphics Game Objects or Shape Game Objects.
+ *
  * @class LightsPlugin
  * @extends Phaser.GameObjects.LightsManager
  * @memberof Phaser.GameObjects
