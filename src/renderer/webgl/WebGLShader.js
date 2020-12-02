@@ -22,13 +22,12 @@ var WEBGL_CONST = require('./const');
  * @param {string} vertexShader - The vertex shader source code as a single string.
  * @param {string} fragmentShader - The fragment shader source code as a single string.
  * @param {Phaser.Types.Renderer.WebGL.WebGLPipelineAttributesConfig[]} attributes - An array of attributes.
- * @param {string[]} [uniforms] - An array of shader uniform names that will be looked-up to get the locations for.
  */
 var WebGLShader = new Class({
 
     initialize:
 
-    function WebGLShader (pipeline, name, vertexShader, fragmentShader, attributes, uniforms)
+    function WebGLShader (pipeline, name, vertexShader, fragmentShader, attributes)
     {
         /**
          * A reference to the WebGLPipeline that owns this Shader.
@@ -120,11 +119,11 @@ var WebGLShader = new Class({
         this.vertexSize = 0;
 
         /**
-         * The uniforms that this shader requires, as set via the configuration object.
+         * The active uniforms that this shader has.
          *
-         * This is an object that maps the uniform names to their WebGL location.
+         * This is an object that maps the uniform names to their WebGL location and cached values.
          *
-         * It is populated with their locations via the `setUniformLocations` method.
+         * It is populated automatically via the `createUniforms` method.
          *
          * @name Phaser.Renderer.WebGL.WebGLShader#uniforms
          * @type {Phaser.Types.Renderer.WebGL.WebGLPipelineUniformsConfig}
@@ -133,11 +132,7 @@ var WebGLShader = new Class({
         this.uniforms = {};
 
         this.createAttributes(attributes);
-
-        if (uniforms)
-        {
-            this.setUniformLocations(uniforms);
-        }
+        this.createUniforms();
     },
 
     /**
@@ -325,38 +320,83 @@ var WebGLShader = new Class({
      * Sets up the `WebGLShader.uniforms` object, populating it with the names
      * and locations of the shader uniforms this shader requires.
      *
+     * It works by first calling `gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS)` to
+     * find out how many active uniforms this shader has. It then iterates through them,
+     * calling `gl.getActiveUniform` to get the WebGL Active Info from each one. Finally,
+     * the name and location are stored in the local array.
+     *
      * This method is called automatically when this class is created.
      *
-     * @method Phaser.Renderer.WebGL.WebGLShader#setUniformLocations
+     * @method Phaser.Renderer.WebGL.WebGLShader#createUniforms
      * @since 3.50.0
-     *
-     * @param {string[]} uniformNames - An array of the uniform names to get the locations for.
      *
      * @return {this} This WebGLShader instance.
      */
-    setUniformLocations: function (uniformNames)
+    createUniforms: function ()
     {
         var gl = this.gl;
         var program = this.program;
         var uniforms = this.uniforms;
 
-        for (var i = 0; i < uniformNames.length; i++)
+        var i;
+        var name;
+        var location;
+
+        //  Look-up all active uniforms
+
+        var totalUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
+
+        for (i = 0; i < totalUniforms; i++)
         {
-            var name = uniformNames[i];
+            var info = gl.getActiveUniform(program, i);
 
-            var location = gl.getUniformLocation(program, name);
-
-            if (location !== null)
+            if (info)
             {
-                uniforms[name] =
+                name = info.name;
+
+                location = gl.getUniformLocation(program, name);
+
+                if (location !== null)
                 {
-                    name: name,
-                    location: location,
-                    value1: null,
-                    value2: null,
-                    value3: null,
-                    value4: null
-                };
+                    uniforms[name] =
+                    {
+                        name: name,
+                        location: location,
+                        value1: null,
+                        value2: null,
+                        value3: null,
+                        value4: null
+                    };
+                }
+
+                //  If the uniform name contains [] for an array struct,
+                //  we'll add an entry for the non-struct name as well.
+                //  Such as uMainSampler[12] = uMainSampler
+
+                var struct = name.indexOf('[');
+
+                if (struct > 0)
+                {
+                    name = name.substr(0, struct);
+
+                    if (!uniforms.hasOwnProperty(name))
+                    {
+                        location = gl.getUniformLocation(program, name);
+
+                        if (location !== null)
+                        {
+                            uniforms[name] =
+                            {
+                                name: name,
+                                location: location,
+                                value1: null,
+                                value2: null,
+                                value3: null,
+                                value4: null
+                            };
+                        }
+                    }
+                }
             }
         }
 

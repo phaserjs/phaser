@@ -571,12 +571,10 @@ var WebGLPipeline = new Class({
 
         var vName = 'vertShader';
         var fName = 'fragShader';
-        var uName = 'uniforms';
         var aName = 'attributes';
 
         var defaultVertShader = GetFastValue(config, vName, null);
         var defaultFragShader = Utils.parseFragmentShaderMaxTextures(GetFastValue(config, fName, null), renderer.maxTextures);
-        var defaultUniforms = GetFastValue(config, uName, null);
         var defaultAttribs = GetFastValue(config, aName, null);
 
         var configShaders = GetFastValue(config, 'shaders', []);
@@ -587,7 +585,7 @@ var WebGLPipeline = new Class({
         {
             if (defaultVertShader && defaultFragShader)
             {
-                this.shaders = [ new WebGLShader(this, 'default', defaultVertShader, defaultFragShader, DeepCopy(defaultAttribs), DeepCopy(defaultUniforms)) ];
+                this.shaders = [ new WebGLShader(this, 'default', defaultVertShader, defaultFragShader, DeepCopy(defaultAttribs)) ];
             }
         }
         else
@@ -603,11 +601,10 @@ var WebGLPipeline = new Class({
                 var vertShader = GetFastValue(shaderEntry, vName, defaultVertShader);
                 var fragShader = Utils.parseFragmentShaderMaxTextures(GetFastValue(shaderEntry, fName, defaultFragShader), renderer.maxTextures);
                 var attributes = GetFastValue(shaderEntry, aName, defaultAttribs);
-                var uniforms = GetFastValue(shaderEntry, uName, defaultUniforms);
 
                 if (vertShader && fragShader)
                 {
-                    newShaders.push(new WebGLShader(this, name, vertShader, fragShader, DeepCopy(attributes), DeepCopy(uniforms)));
+                    newShaders.push(new WebGLShader(this, name, vertShader, fragShader, DeepCopy(attributes)));
                 }
             }
 
@@ -948,6 +945,9 @@ var WebGLPipeline = new Class({
      * This hook is called _after_ the quad (or tri) has been added to the batch, so you can safely
      * call 'flush' from within this.
      *
+     * Note that Game Objects may call `batchQuad` or `batchTri` multiple times for a single draw,
+     * for example the Graphics Game Object.
+     *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onBatch
      * @since 3.50.0
      *
@@ -989,7 +989,7 @@ var WebGLPipeline = new Class({
      * By default this is an empty method hook that you can override and use in your own custom pipelines.
      *
      * This method is called once per frame, right before anything has been rendered, but after the canvas
-     * has been cleared. If this pipeline has a render target, it will be cleared.
+     * has been cleared. If this pipeline has a render target, it will also have been cleared by this point.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onPreRender
      * @since 3.50.0
@@ -1002,6 +1002,8 @@ var WebGLPipeline = new Class({
      * By default this is an empty method hook that you can override and use in your own custom pipelines.
      *
      * This method is called _once per frame_, by every Camera in a Scene that wants to render.
+     *
+     * It is called at the start of the rendering process, before anything has been drawn to the Camera.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onRender
      * @since 3.50.0
@@ -1018,6 +1020,9 @@ var WebGLPipeline = new Class({
      *
      * This method is called _once per frame_, after all rendering has happened and snapshots have been taken.
      *
+     * It is called at the very end of the rendering process, once all Cameras, for all Scenes, have
+     * been rendered.
+     *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onPostRender
      * @since 3.50.0
      */
@@ -1031,7 +1036,7 @@ var WebGLPipeline = new Class({
      * This method is called every time this pipeline is asked to flush its batch.
      *
      * It is called immediately before the `gl.bufferData` and `gl.drawArray` calls are made, so you can
-     * perform any final pre-render modifications. To apply changes post-render, see `onPostBatch`.
+     * perform any final pre-render modifications. To apply changes post-render, see `onAfterFlush`.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onBeforeFlush
      * @since 3.50.0
