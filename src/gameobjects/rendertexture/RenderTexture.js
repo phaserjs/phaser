@@ -1286,7 +1286,7 @@ var RenderTexture = new Class({
 
             var matrix = this.camera.matrix;
 
-            ctx.globalAlpha = this.globalAlpha;
+            ctx.globalAlpha = alpha;
 
             ctx.setTransform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
 
