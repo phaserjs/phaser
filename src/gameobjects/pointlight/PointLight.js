@@ -56,11 +56,12 @@ var PointLight = new Class({
 
     initialize:
 
-    function PointLight (scene, x, y, color, radius, intensity)
+    function PointLight (scene, x, y, color, radius, intensity, attenuation)
     {
         if (color === undefined) { color = 0xffffff; }
         if (radius === undefined) { radius = 128; }
         if (intensity === undefined) { intensity = 1; }
+        if (attenuation === undefined) { attenuation = 0.1; }
 
         GameObject.call(this, scene, 'PointLight');
 
@@ -70,14 +71,10 @@ var PointLight = new Class({
 
         var rgb = IntegerToRGB(color);
 
-        this.color = new RGB(
-            rgb.r / 255,
-            rgb.g / 255,
-            rgb.b / 255
-        );
+        this.color = new RGB(rgb.r, rgb.g, rgb.b);
 
         this.intensity = intensity;
-        this.attenuation = 0.1;
+        this.attenuation = attenuation;
 
         //  read only:
         this.width = radius * 2;

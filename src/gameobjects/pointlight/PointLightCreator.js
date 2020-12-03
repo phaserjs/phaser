@@ -29,8 +29,9 @@ GameObjectCreator.register('pointlight', function (config, addToScene)
     var color = GetAdvancedValue(config, 'color', 0xffffff);
     var radius = GetAdvancedValue(config, 'radius', 128);
     var intensity = GetAdvancedValue(config, 'intensity', 1);
+    var attenuation = GetAdvancedValue(config, 'attenuation', 0.1);
 
-    var layer = new PointLight(this.scene, 0, 0, color, radius, intensity);
+    var layer = new PointLight(this.scene, 0, 0, color, radius, intensity, attenuation);
 
     if (addToScene !== undefined)
     {
