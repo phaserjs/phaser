@@ -707,13 +707,17 @@ var WebGLPipeline = new Class({
 
         var shaders = this.shaders;
 
+        var name = 'uProjectionMatrix';
+
         for (i = 0; i < shaders.length; i++)
         {
             var shader = shaders[i];
 
-            if (shader.hasUniform('uProjectionMatrix'))
+            if (shader.hasUniform(name))
             {
-                this.setMatrix4fv('uProjectionMatrix', false, projectionMatrix.val, shader);
+                shader.resetUniform(name);
+
+                shader.setMatrix4fv(name, false, projectionMatrix.val, shader);
             }
         }
 
