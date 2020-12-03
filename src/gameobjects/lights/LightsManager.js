@@ -163,7 +163,7 @@ var LightsManager = new Class({
             }
         }
 
-        if (visibleLights > this.maxLights)
+        if (visibleLights.length > this.maxLights)
         {
             //  We've got too many lights, so sort by distance from camera and cull those far away
             //  This isn't ideal because it doesn't factor in the radius of the lights, but it'll do for now
@@ -181,7 +181,7 @@ var LightsManager = new Class({
 
     sortByDistance: function (a, b)
     {
-        return (a.distance < b.distance);
+        return (a.distance >= b.distance);
     },
 
     /**
