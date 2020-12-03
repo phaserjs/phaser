@@ -287,6 +287,7 @@ Render Textures have the following bug fixes:
 
 * `RenderTexture.resize` (which is called from `setSize`) wouldn't correctly set the `TextureSource.glTexture` property, leading to `bindTexture: attempt to use a deleted object` errors under WebGL.
 * `RenderTexture.fill` would fail to fill the correct area under WebGL if the RenderTexture wasn't the same size as the Canvas. It now fills the given region properly.
+* `RenderTexture.erase` has never worked when using the Canvas Renderer and a texture frame, only with Game Objects. It now works with both. Fix #5422 (thanks @vforsh)
 
 ### Light Pipeline Changes
 
