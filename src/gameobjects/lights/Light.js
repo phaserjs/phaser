@@ -97,15 +97,6 @@ var Light = new Class({
          */
         this.cameraFilter = 0;
 
-        /**
-         * The dirty state of the light. A dirty light will reset all of its shader attributes.
-         *
-         * @name Phaser.GameObjects.Light#dirty
-         * @type {boolean}
-         * @since 3.50.0
-         */
-        this.dirty = true;
-
         this.setScrollFactor(1, 1);
     },
 
@@ -141,8 +132,6 @@ var Light = new Class({
 
         this.color.set(color[0], color[1], color[2]);
 
-        this.dirty = true;
-
         return this;
     },
 
@@ -160,8 +149,6 @@ var Light = new Class({
     {
         this.intensity = intensity;
 
-        this.dirty = true;
-
         return this;
     },
 
@@ -178,8 +165,6 @@ var Light = new Class({
     setRadius: function (radius)
     {
         this.radius = radius;
-
-        this.dirty = true;
 
         return this;
     }
