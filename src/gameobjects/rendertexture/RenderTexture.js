@@ -484,6 +484,10 @@ var RenderTexture = new Class({
      * by using the `Texture.add` method. After doing this, you can then allow Game Objects
      * to use a specific frame from a Render Texture.
      *
+     * If you destroy this Render Texture, any Game Object using it via the Texture Manager will
+     * stop rendering. Ensure you remove the texture from the Texture Manager and any Game Objects
+     * using it first, before destroying this Render Texture.
+     *
      * @method Phaser.GameObjects.RenderTexture#saveTexture
      * @since 3.12.0
      *
