@@ -6,6 +6,7 @@
 
 var Class = require('../../utils/Class');
 var GameEvents = require('../../core/events');
+var RenderEvents = require('../../renderer/webgl/events');
 
 /**
  * @classdesc
@@ -72,7 +73,7 @@ var BitmapMask = new Class({
         this.bitmapMask = renderable;
 
         /**
-         * The texture used for the mask's framebuffer.
+         * The texture used for the masks framebuffer.
          *
          * @name Phaser.Display.Masks.BitmapMask#maskTexture
          * @type {WebGLTexture}
@@ -144,6 +145,8 @@ var BitmapMask = new Class({
         this.createMask();
 
         scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, this.createMask, this);
+
+        renderer.on(RenderEvents.RESIZE, this.createMask, this);
     },
 
     /**
@@ -295,6 +298,8 @@ var BitmapMask = new Class({
     destroy: function ()
     {
         this.clearMask();
+
+        this.renderer.off(RenderEvents.RESIZE, this.createMask, this);
 
         this.bitmapMask = null;
         this.prevFramebuffer = null;
