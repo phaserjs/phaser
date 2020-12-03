@@ -496,7 +496,7 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setShader
      * @since 3.50.0
      *
-     * @param {Phaser.Renderer.WebGL.WebGLPipeline} shader - The shader to set as being current.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} shader - The shader to set as being current.
      * @param {boolean} [setAttributes=false] - Should the vertex attribute pointers be set?
      *
      * @return {this} This WebGLPipeline instance.
